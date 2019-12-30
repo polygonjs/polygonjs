@@ -3,20 +3,20 @@
 	"version": "1.0.0",
 	"description": "",
 	"private": true,
-	"main": "polygonjs-engine.js",
+	"main": "./dist/polygonjs-engine.js",
+	"types": "./dist/types",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"watch": "webpack --watch",
-		"start": "webpack-dev-server --env.NODE_ENV=development --config webpack/dev.js",
+		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config webpack/dev.js",
 		"build": "webpack --env.NODE_ENV=production --env.production --progress --config webpack/prod.js"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"dependencies": {
-		"qunit": "^2.9.3"
-	},
+	"dependencies": {},
 	"devDependencies": {
+		"qunit": "^2.9.3",
 		"@types/lodash": "^4.14.149",
 		"@types/qunit": "^2.9.0",
 		"@typescript-eslint/eslint-plugin": "^2.13.0",

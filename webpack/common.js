@@ -5,7 +5,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 module.exports = {
 	entry: {
 		'polygonjs-engine': './src/index.ts',
-		test: './test/index.ts',
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
@@ -13,12 +12,6 @@ module.exports = {
 			title: 'Index',
 			// filename: 'index.html',
 			chunks: ['polygonjs-engine'],
-		}),
-		new HtmlWebpackPlugin({
-			title: 'Test',
-			filename: 'test',
-			template: 'test/index.html',
-			chunks: ['test'],
 		}),
 	],
 	output: {
