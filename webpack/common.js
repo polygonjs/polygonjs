@@ -2,6 +2,14 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
+// console.log(
+// 	'__dirname',
+// 	__dirname,
+// 	path.resolve(__dirname, '../dist'),
+// 	path.resolve(__dirname, '../node_modules'),
+// 	path.resolve(__dirname, '../node_modules/three')
+// )
+
 module.exports = {
 	entry: {
 		'polygonjs-engine': './src/index.ts',
@@ -21,6 +29,7 @@ module.exports = {
 		library: 'POLY',
 	},
 	resolve: {
+		// modules: [path.resolve(__dirname, '../node_modules')],
 		extensions: ['.ts', '.js'],
 		alias: {
 			src: path.resolve(__dirname, '../src'),

@@ -1,8 +1,9 @@
 import {Print} from './print'
-import {TsLintTest} from './core/tslinttest'
 
-import lodashReduce from 'lodash/reduce'
+const lodashReduce = require('lodash/reduce')
 import numRef from './ref.json'
+
+import './core/ThreeDebug'
 
 console.log(`mode:${process.env.NODE_ENV}`)
 console.log(numRef, numRef)
@@ -25,7 +26,8 @@ export function numToWord(num: number): string {
 	// 	return ref.num === num ? ref.word : accum;
 	// }, '');
 }
-lodashReduce([], (a, e) => {
+console.log('lodashReduce', lodashReduce)
+lodashReduce([], (a: any, e: any) => {
 	return [a, e]
 })
 
@@ -59,7 +61,6 @@ function component(): HTMLElement {
 	btn.innerHTML = 'Click me and check the console!'
 	btn.onclick = (): void => {
 		Print()
-		new TsLintTest('bla2')
 	}
 	element.appendChild(btn)
 

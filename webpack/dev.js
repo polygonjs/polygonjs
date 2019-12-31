@@ -3,8 +3,8 @@ const common = require('./common.js')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = (env) => {
-	console.log('NODE_ENV: ', env.NODE_ENV)
-	console.log('Production: ', env.production)
+	// console.log('NODE_ENV: ', env.NODE_ENV)
+	// console.log('Production: ', env.production)
 
 	common.entry.test = './test/index.ts'
 

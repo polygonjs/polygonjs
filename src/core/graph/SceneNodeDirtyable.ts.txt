@@ -1,0 +1,34 @@
+// namespace THREE {
+// 	import {Scene} from 'three/src/scenes/Scene'
+// }
+// var THREE = require('three');
+import {Scene} from 'three'
+// const THREE = {Scene}
+import {CoreObject} from 'src/core/Object'
+import {Dirtyable} from './concerns/Dirtyable'
+// import {Scene} from 'src/engine/Scene'
+// import {Cooker} from './Cooker'
+import {GraphNode} from './concerns/GraphNode'
+
+export class SceneNodeDirtyable extends GraphNode(Dirtyable(CoreObject)) {
+	_scene: Scene
+	_display_scene: THREE.Scene
+
+	constructor() {
+		super()
+	}
+
+	set_scene(scene: Scene): void {
+		throw 'SceneNodeDirtyable.set_scene requires implementation'
+	}
+	scene(): Scene {
+		return this._scene
+	}
+	cooker() {
+		return this._scene.cooker()
+	}
+
+	dirty_successors(): Array<SceneNodeDirtyable> {
+		return this.graph_successors()
+	}
+}

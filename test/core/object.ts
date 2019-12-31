@@ -3,7 +3,7 @@
 // import {Object3D} from 'three/src/core/Object3D';
 // import {Mesh} from 'three/src/objects/Mesh';
 // const THREE = {Mesh, Object3D, PerspectiveCamera, Vector3};
-import {CoreObject} from 'src/core/object'
+import {CoreObject} from '../../src/core/Object'
 
 // import {BaseNode} from 'src/Engine/Node/_Base'
 // import {BaseNodeObj} from 'src/Engine/Node/Obj/_Base'
