@@ -7,9 +7,15 @@
 		"allowSyntheticDefaultImports": true,
 		"allowJs": true,
 		"sourceMap": true,
-		"declaration": true,
-		"declarationDir": "./dist/types",
-		"importHelpers": true
+		// declaration creates problems with anonymous classes from mixins
+		// "declaration": true,
+		// "declarationDir": "./dist/types",
+		"importHelpers": true,
+		"baseUrl": "./",
+		"paths": {
+			"src": ["src"],
+			"modules": ["modules"]
+		}
 	},
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", "modules"]
 }

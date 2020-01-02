@@ -10,6 +10,12 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 // 	path.resolve(__dirname, '../node_modules/three')
 // )
 
+// make sure to sync those paths in tsconfig.js
+const alias = {
+	src: path.resolve(__dirname, '../src/'),
+	modules: path.resolve(__dirname, '../modules/'),
+}
+
 module.exports = {
 	entry: {
 		'polygonjs-engine': './src/index.ts',
@@ -31,9 +37,7 @@ module.exports = {
 	resolve: {
 		// modules: [path.resolve(__dirname, '../node_modules')],
 		extensions: ['.ts', '.js'],
-		alias: {
-			src: path.resolve(__dirname, '../src'),
-		},
+		alias: alias,
 	},
 	module: {
 		rules: [

@@ -1,0 +1,190 @@
+// import {ObjectLoader} from 'three/src/loaders/ObjectLoader'
+// import {Object3D} from 'three/src/core/Object3D'
+// const THREE = {Object3D, ObjectLoader}
+// import lodash_isArray from 'lodash/isArray'
+// // import {CoreString} from 'src/Core/String';
+
+// // import {GeometryLoaderModule} from './Geometry/_Module';
+// // import {DRACOLoader} from './Geometry/DRACOLoader';
+// // import {JsonData} from './Geometry/JsonData'
+// import {CoreScriptLoader} from './Script'
+// import axios from 'axios'
+// import {JsonDataLoader} from './Geometry/JsonData'
+
+// const GLTFLoaders = ['DDSLoader', 'DRACOLoader', 'GLTFLoader']
+// const SCRIPT_URLS_BY_EXT = {
+// 	gltf: GLTFLoaders,
+// 	glb: GLTFLoaders,
+// 	obj: 'OBJLoader',
+// }
+// const THREE_LOADER_BY_EXT = {
+// 	gltf: 'GLTFLoader',
+// 	glb: 'GLTFLoader',
+// 	obj: 'OBJLoader',
+// }
+// // const DRACO_EXTENSIONS = ['gltf', 'glb']
+// const DRACO_EXTENSIONS = ['drc']
+
+// export enum LoaderType {
+// 	AUTO = 'auto',
+// 	JSON_DATA = 'json_data',
+// 	// THREEJS_JSON = 'threejs_json',
+// }
+// export const LOADER_TYPES = [
+// 	LoaderType.AUTO,
+// 	LoaderType.JSON_DATA,
+// 	// LoaderType.THREEJS_JSON,
+// ]
+
+// export class CoreLoaderGeometry {
+
+// 	private ext: string
+
+// 	constructor(
+// 		private url: string,
+// 		private type: LoaderType,
+// 		private requester: any
+// 		) {
+// 		const elements = this.url.split('.');
+// 		this.ext = elements[elements.length - 1].toLowerCase();
+// 		if (this.ext === 'zip') {
+// 			this.ext = elements[elements.length - 2];
+// 		}
+// 		if(!this.type){
+// 			console.error("CoreLoaderGeometry type is not valid", this.type)
+// 		}
+// 	}
+
+// 	load(on_success, on_error) {
+// 		let loader
+// 		switch (this.type){
+
+// 			case LoaderType.AUTO:
+// 				this.load_auto().then(object=>{
+// 					on_success(object)
+// 				}).catch(error=>{
+// 					on_error(error)
+// 				})
+// 				break
+// 			case LoaderType.JSON_DATA:
+// 				loader = new JsonDataLoader(this.requester)
+// 				loader.load(
+// 					this.url,
+// 					(
+// 						(object) => {
+// 							this.on_load_success(object).then(obj=>{
+// 								on_success(obj)
+// 							})
+// 						}
+// 					),
+// 					null,
+// 					on_error
+// 					)
+// 				break
+// 			default:
+// 					on_error("type not valid")
+
+// 		}
+// 	}
+
+// 	load_auto():Promise<any>{
+// 		return new Promise(async (resolve, reject)=>{
+// 			const url = this.url.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+
+// 			if(this.ext == 'json'){
+// 				axios.get(url).then(response=>{
+// 					const obj_loader = new THREE.ObjectLoader();
+// 					obj_loader.parse( response.data, ( obj )=>{
+// 						resolve(this.on_load_success(obj.children[0]))
+// 					})
+// 				}).catch(error=>{
+// 					reject(error)
+// 				})
+
+// 			} else {
+// 				CoreLoaderGeometry.loader_for_ext(this.ext).then(loader=>{
+// 					if (loader) {
+// 						loader.load(
+// 							url,
+// 							(
+// 								(object) => {
+// 									this.on_load_success(object).then((object2)=>{
+// 										resolve(object2)
+// 									});
+// 								}
+// 							),
+// 							null,
+// 							((error_message) => {
+// 								reject(error_message)
+// 							})
+// 							);
+// 					} else {
+// 						const error_message = `format not supported (${this.ext})`;
+// 						console.warn(error_message);
+// 						reject(error_message);
+// 					}
+// 				})
+// 			}
+
+// 		})
+// 	}
+
+// 	async on_load_success(object) {
+// 		// console.log("animation?", object.animations)
+// 		// if(object.animations){
+// 		// 	await CoreScriptLoader.load('/three/js/utils/SkeletonUtils')
+// 		// }
+// 		switch (this.ext) {
+// 			case 'gltf':
+// 				return this.on_load_succes_gltf(object)
+// 			case 'glb':
+// 				return this.on_load_succes_gltf(object)
+// 			case 'obj':
+// 				return [object] //.children
+// 			default:
+// 				return [object]
+// 		}
+// 	}
+
+// 	on_load_succes_gltf(gltf): THREE.Object3D[]{
+// 		const scene = gltf['scene']
+// 		scene.animations = gltf.animations
+
+// 		return [scene] //.children
+// 	}
+
+// 	static async loader_for_ext(ext: string){
+
+// 		const ext_lowercase = ext.toLowerCase()
+// 		let script_names = SCRIPT_URLS_BY_EXT[ext_lowercase]
+// 		if(script_names){
+// 			if (!lodash_isArray(script_names)){
+// 				script_names = [script_names]
+// 			}
+// 			let imported_modules = {};
+// 			let imported_module;
+// 			for(let script_name of script_names){
+// 				imported_module = await CoreScriptLoader.load_module_three_loader(script_name)
+// 				imported_modules[script_name] = imported_module
+// 			}
+
+// 			const loader_class_name = THREE_LOADER_BY_EXT[ext_lowercase]
+// 			const loader_class = imported_module[loader_class_name]
+// 			if(loader_class){
+// 				const loader = new loader_class()
+
+// 				if (DRACO_EXTENSIONS.includes(ext_lowercase)) {
+// 					const DRACOLoader = imported_modules.DRACOLoader.DRACOLoader
+// 					const draco_loader = new DRACOLoader()
+// 					// const decoder_path = '/three/js/libs/draco/gltf/'
+// 					// DRACOLoader.setDecoderPath( decoder_path );
+// 					// draco_loader.setDecoderPath( decoder_path );
+// 					loader.setDRACOLoader( draco_loader );
+// 				}
+
+// 				return loader;
+// 			}
+// 		}
+// 	}
+
+// };
