@@ -147,7 +147,7 @@ export class CorePerformance {
 
 		console.log('--------------- PERF RECORDINGS -----------')
 		//console.log("sorted_durations", sorted_durations)
-		// let previous_duration = start_time
+		let previous_duration = start_time
 		const table_entries = []
 		for (let duration of sorted_durations) {
 			const names = names_by_duration[duration]
@@ -159,7 +159,7 @@ export class CorePerformance {
 				table_entries.push(entry)
 			}
 
-			// previous_duration = duration
+			previous_duration = duration
 		}
 
 		console.table(table_entries)

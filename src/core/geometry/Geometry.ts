@@ -446,10 +446,10 @@ export class CoreGeometry {
 					] = new_values
 
 					const old_attrib = old_geometry.getAttribute(attribute_name)
-					const old_attrib_array = old_attrib.array
+					// const old_attrib_array = old_attrib.array
 					const new_attrib_indices = []
 					for (let point of points) {
-						const old_index = old_attrib_array[point.index()]
+						// const old_index = old_attrib_array[point.index()]
 						const new_index =
 							new_index_by_value[
 								point.attrib_value(attribute_name)
