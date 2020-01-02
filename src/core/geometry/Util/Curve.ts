@@ -56,7 +56,7 @@ export class CoreGeometryUtilCurve {
 		attrib_names: string[],
 		attrib_sizes_by_name: NumbersByString
 	) {
-		let new_positions: number[] = []
+		// let new_positions: number[] = []
 		const new_indices: number[] = []
 
 		const new_attribute_values_by_name: NumbersArrayByString = {}
@@ -87,7 +87,7 @@ export class CoreGeometryUtilCurve {
 			}
 		})
 
-		new_positions = lodash_flatten(new_positions)
+		// new_positions = lodash_flatten(new_positions)
 		const geometry = new BufferGeometry()
 
 		attrib_names.forEach((attrib_name) => {

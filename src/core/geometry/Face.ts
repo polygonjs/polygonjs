@@ -163,7 +163,7 @@ export class CoreFace {
 		intersect_point: Vector3,
 		attrib: BufferAttribute
 	) {
-		let point_index, i, sum
+		// let point_index, i, sum
 		const point_indices = [face.a, face.b, face.c]
 		const position_attrib = geometry.getAttribute('position')
 		const position_attrib_array = position_attrib.array

@@ -6,15 +6,15 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry'
 import {Box3} from 'three/src/math/Box3'
 import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute'
 
-const THREE = {
-	Box3,
-	BufferGeometry,
-	Float32BufferAttribute,
-	Int32BufferAttribute,
-	InterleavedBufferAttribute,
-	Vector2,
-	Vector3,
-}
+// const THREE = {
+// 	Box3,
+// 	BufferGeometry,
+// 	Float32BufferAttribute,
+// 	Int32BufferAttribute,
+// 	InterleavedBufferAttribute,
+// 	Vector2,
+// 	Vector3,
+// }
 import lodash_range from 'lodash/range'
 import lodash_uniq from 'lodash/uniq'
 import lodash_each from 'lodash/each'
@@ -422,7 +422,7 @@ export class CoreGeometry {
 
 			// attributes
 			const {attributes} = old_geometry
-			const new_attributes = {}
+			// const new_attributes = {}
 			for (let attribute_name of Object.keys(attributes)) {
 				const attrib_values = old_geometry_wrapper.user_data_attribs()[
 					attribute_name

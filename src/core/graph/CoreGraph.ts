@@ -142,11 +142,7 @@ export class CoreGraph {
 	}
 	predecessors(node_owner: any) {
 		const ids = this.predecessor_ids(node_owner.graph_node_id())
-		if (ids) {
-			return this.nodes_from_ids(ids)
-		} else {
-			;[]
-		}
+		return this.nodes_from_ids(ids)
 	}
 	successor_ids(id: string): string[] {
 		const ids = this._graph.successors(id) || []

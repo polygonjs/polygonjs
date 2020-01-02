@@ -49,10 +49,10 @@ export class CoreAttribute {
 			i++
 		}
 
-		return (data = {
+		return {
 			indices,
 			values,
-		})
+		}
 	}
 
 	static default_value(size: number) {

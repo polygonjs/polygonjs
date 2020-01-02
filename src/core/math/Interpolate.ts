@@ -183,22 +183,22 @@ export class CoreInterpolate {
 		})
 
 		// TODO: we could have 2 modes of interpolation?
-		return (new_value = (() => {
-			switch (attrib_size) {
-				// when 1 then lodash_sum(weighted_values_src) / values_src.length # mode 1
-				case 1:
-					return lodash_max(weighted_values_src) // mode 2
-				default:
-					throw 'interpolation with multiple vectors not implemented yet'
-				// var new_vector = weighted_values_src[0].clone();
-				// new_vector.x = lodash_sum(lodash_map(weighted_values, 'x')) / total_weight;
-				// new_vector.y = lodash_sum(lodash_map(weighted_values, 'y')) / total_weight;
-				// if (new_vector.z != null) {
-				// 	new_vector.z = lodash_sum(lodash_map(weighted_values, 'z')) / total_weight;
-				// }
-				// return new_vector;
-			}
-		})())
+		// return (new_value = (() => {
+		switch (attrib_size) {
+			// when 1 then lodash_sum(weighted_values_src) / values_src.length # mode 1
+			case 1:
+				return lodash_max(weighted_values_src) // mode 2
+			default:
+				throw 'interpolation with multiple vectors not implemented yet'
+			// var new_vector = weighted_values_src[0].clone();
+			// new_vector.x = lodash_sum(lodash_map(weighted_values, 'x')) / total_weight;
+			// new_vector.y = lodash_sum(lodash_map(weighted_values, 'y')) / total_weight;
+			// if (new_vector.z != null) {
+			// 	new_vector.z = lodash_sum(lodash_map(weighted_values, 'z')) / total_weight;
+			// }
+			// return new_vector;
+		}
+		// })())
 	}
 
 	// https://math.stackexchange.com/questions/1336386/weighted-average-distance-between-3-or-more-positions
@@ -218,7 +218,6 @@ export class CoreInterpolate {
 		current_position: Vector3,
 		other_positions: Vector3[]
 	) {
-		let weights
 		const dist_to_positions = lodash_map(
 			other_positions,
 			(other_position) => current_position.distanceTo(other_position)
@@ -226,17 +225,16 @@ export class CoreInterpolate {
 
 		const distance_total = lodash_sum(dist_to_positions)
 
-		return (weights = [
+		return [
 			dist_to_positions[1] / distance_total,
 			dist_to_positions[0] / distance_total,
-		])
+		]
 	}
 
 	static _weights_from_3(
 		current_position: Vector3,
 		other_positions: Vector3[]
 	) {
-		let weights
 		const dist_to_positions = lodash_map(
 			other_positions,
 			(other_position) => current_position.distanceTo(other_position)
@@ -248,10 +246,10 @@ export class CoreInterpolate {
 			dist_to_positions[1] * dist_to_positions[2],
 		])
 
-		return (weights = [
+		return [
 			(dist_to_positions[1] * dist_to_positions[2]) / distance_total,
 			(dist_to_positions[0] * dist_to_positions[2]) / distance_total,
 			(dist_to_positions[0] * dist_to_positions[1]) / distance_total,
-		])
+		]
 	}
 }
