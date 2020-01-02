@@ -6,11 +6,11 @@
 	"main": "./dist/polygonjs-engine.js",
 	"types": "./dist/types",
 	"scripts": {
-		"test": "jest",
 		"watch": "webpack --watch",
 		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config webpack/dev.js",
 		"build": "webpack --env.NODE_ENV=production --env.production --progress --config webpack/prod.js",
-		"analyze": "webpack --env.NODE_ENV=production --env.production --config webpack/prod.js --profile --json > webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer webpack/stats.json"
+		"analyze": "webpack --env.NODE_ENV=production --env.production --config webpack/prod.js --profile --json > webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer webpack/stats.json",
+		"test": "jest --collectCoverage"
 	},
 	"keywords": [],
 	"author": "",

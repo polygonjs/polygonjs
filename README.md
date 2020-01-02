@@ -28,6 +28,11 @@ Polygonjs allows you to create interactive 3D apps for the web. [Try our example
 -   run `yarn`
 -   run `npm run build`
 
+# run the test suite
+
+-   run `yarn`
+-   run `npm test`
+
 ### Change log
 
 [Releases](https://github.com/polygonjs/polygonjs-engine/releases)

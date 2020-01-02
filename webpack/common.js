@@ -2,15 +2,9 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
-// console.log(
-// 	'__dirname',
-// 	__dirname,
-// 	path.resolve(__dirname, '../dist'),
-// 	path.resolve(__dirname, '../node_modules'),
-// 	path.resolve(__dirname, '../node_modules/three')
-// )
-
-// make sure to sync those paths in tsconfig.js
+// make sure to sync those paths in:
+// - tsconfig.js
+// - jest.config.js
 const alias = {
 	src: path.resolve(__dirname, '../src/'),
 	modules: path.resolve(__dirname, '../modules/'),
