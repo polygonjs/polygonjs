@@ -19,14 +19,14 @@ export function NamedGraphNode<TBase extends Constructor>(Base: TBase) {
 				this._name_graph_node || this._create_name_graph_node())
 		}
 		protected _create_name_graph_node(): NameGraphNode {
-			const node = new NameGraphNode(this)
+			const node = new NameGraphNode(this.self)
 			node.set_scene(this.self.scene())
 			return node
 		}
 	}
 }
-class DummyClass {}
-export class NamedGraphNodeClass extends NamedGraphNode(DummyClass) {
+// class DummyClass {}
+export class NamedGraphNodeClass extends NamedGraphNode(NodeSimple) {
 	// constructor(private _owner: NamedGraphNodeClass) {
 	// 	super()
 	// }
