@@ -2,6 +2,19 @@
 	"name": "polygonjs-engine",
 	"version": "1.0.0",
 	"description": "",
+	"repository": {
+		"url": "git@github.com:polygonjs/polygonjs-engine.git",
+		"type": "git"
+	},
+	"keywords": [
+		"3D",
+		"javascript",
+		"webgl",
+		"procedural",
+		"node-based"
+	],
+	"author": "Guillaume Fradin",
+	"license": "MIT",
 	"private": true,
 	"main": "./dist/polygonjs-engine.js",
 	"types": "./dist/types",
@@ -12,9 +25,6 @@
 		"analyze": "webpack --env.NODE_ENV=production --env.production --config webpack/prod.js --profile --json > webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer webpack/stats.json",
 		"test": "jest --collectCoverage"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
 	"dependencies": {
 		"@dagrejs/graphlib": "dagrejs/graphlib",
 		"axios": "^0.19.0",
