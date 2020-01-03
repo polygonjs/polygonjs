@@ -37,7 +37,7 @@ Polygonjs allows you to create interactive 3D apps for the web. [Try our example
 
 [Releases](https://github.com/polygonjs/polygonjs-engine/releases)
 
-[npm]: https://img.shields.io/npm/v/three.svg
+[npm]: https://img.shields.io/npm/v/polygonjs-engine.svg
 [npm-url]: https://www.npmjs.com/package/polygonjs-engine
 [build-size]: https://badgen.net/bundlephobia/minzip/polygonjs-engine
 [build-size-url]: https://bundlephobia.com/result?p=polygonjs-engine

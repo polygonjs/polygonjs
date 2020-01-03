@@ -10,11 +10,13 @@
 		// declaration creates problems with anonymous classes from mixins
 		// "declaration": true,
 		// "declarationDir": "./dist/types",
+		"experimentalDecorators": true,
 		"importHelpers": true,
 		"baseUrl": "./",
 		"paths": {
 			"src": ["src"],
-			"modules": ["modules"]
+			"modules": ["modules"],
+			"tests": ["tests"]
 		}
 	},
 	"exclude": ["node_modules", "modules"]
