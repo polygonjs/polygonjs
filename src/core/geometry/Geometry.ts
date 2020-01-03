@@ -1,5 +1,5 @@
 import {Vector3} from 'three/src/math/Vector3'
-import {Vector2} from 'three/src/math/Vector2'
+// import {Vector2} from 'three/src/math/Vector2'
 import {Int32BufferAttribute} from 'three/src/core/BufferAttribute'
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute'
 import {BufferGeometry} from 'three/src/core/BufferGeometry'

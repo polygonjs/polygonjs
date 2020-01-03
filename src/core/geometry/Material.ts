@@ -2,6 +2,7 @@ import lodash_isArray from 'lodash/isArray'
 
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial'
 import {Object3D} from 'three/src/core/Object3D'
+import {Mesh} from 'three/src/objects/Mesh'
 import {Material} from 'three/src/materials/Material'
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial'
 import {PolyScene} from 'src/engine/scene/PolyScene'
@@ -11,7 +12,7 @@ enum CustomMaterialName {
 	customDepthMaterial = 'customDepthMaterial',
 	customDepthDOFMaterial = 'customDepthDOFMaterial',
 }
-interface ObjectWithCustomMaterial extends Object3D {
+export interface ObjectWithCustomMaterials extends Mesh {
 	customDistanceMaterial: ShaderMaterial
 	customDepthMaterial: ShaderMaterial
 	customDepthDOFMaterial: ShaderMaterial
@@ -54,7 +55,7 @@ export class CoreMaterial {
 				const mat_name = name as CustomMaterialName
 				// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
 				const custom_material = material.custom_materials[mat_name]
-				;(object as ObjectWithCustomMaterial)[
+				;(object as ObjectWithCustomMaterials)[
 					mat_name
 				] = custom_material
 				custom_material.needsUpdate = true

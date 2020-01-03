@@ -15,7 +15,7 @@ import {Box3} from 'three/src/math/Box3'
 import {CoreObject} from './Object'
 import {CoreGeometry} from './Geometry'
 import {CoreAttribute} from './Attribute'
-// import {Core} from 'src/Core/_Module'
+// import {Core} from 'src/core/_Module'
 import {CoreString} from 'src/core/String'
 import {CoreConstant, AttribClass} from './Constant'
 

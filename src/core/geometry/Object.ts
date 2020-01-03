@@ -89,6 +89,8 @@ export class CoreObject {
 			!lodash_isString(value)
 		) {
 			data = (value as Vector3).toArray()
+		} else {
+			data = value
 		}
 		this._object.userData[ATTRIBUTES][name] = data
 	}

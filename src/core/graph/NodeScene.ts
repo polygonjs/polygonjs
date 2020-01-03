@@ -1,3 +1,9 @@
+import {CorePerformance} from 'src/core/performance/CorePerformance'
+import {PolyScene} from 'src/engine/scene/PolyScene'
+
+import {ContextOwner} from './concerns/ContextOwner'
+import {SceneNodeDirtyable} from './SceneNodeDirtyable'
+
 interface EmitsCountByEventName {
 	[propName: string]: number
 }
@@ -5,12 +11,6 @@ export interface EmitPayload {
 	emitter: NodeScene
 	data?: object
 }
-
-import {CorePerformance} from 'src/core/performance/CorePerformance'
-import {PolyScene} from 'src/engine/scene/PolyScene'
-
-import {ContextOwner} from './concerns/ContextOwner'
-import {SceneNodeDirtyable} from './SceneNodeDirtyable'
 
 export class NodeScene extends ContextOwner(SceneNodeDirtyable) {
 	_emits_count_by_event_name: EmitsCountByEventName = {}

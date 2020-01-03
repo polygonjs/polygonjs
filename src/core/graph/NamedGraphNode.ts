@@ -1,4 +1,4 @@
-// import {CoreString} from 'src/Core/String';
+// import {CoreString} from 'src/core/String';
 import {NodeSimple} from './NodeSimple'
 import {NameGraphNode} from './NameGraphNode'
 // import {CoreObject} from '../Object'

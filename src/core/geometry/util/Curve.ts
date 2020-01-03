@@ -1,5 +1,5 @@
-import lodash_flatten from 'lodash/flatten'
-import lodash_map from 'lodash/map'
+// import lodash_flatten from 'lodash/flatten'
+// import lodash_map from 'lodash/map'
 
 import {CoreGeometry} from '../Geometry'
 import {CorePoint} from '../Point'

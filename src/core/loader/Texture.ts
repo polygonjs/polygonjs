@@ -5,12 +5,12 @@
 // import {Float32BufferAttribute} from 'three/src/core/BufferAttribute'
 // const THREE = {Float32BufferAttribute, RepeatWrapping, Texture, TextureLoader, VideoTexture}
 // import lodash_isArray from 'lodash/isArray'
-// import {CoreScriptLoader} from 'src/Core/Loader/Script'
-// import {CoreGeometry} from 'src/Core/Geometry/Geometry'
-// import {CoreWalker} from 'src/Core/Walker'
+// import {CoreScriptLoader} from 'src/core/Loader/Script'
+// import {CoreGeometry} from 'src/core/Geometry/Geometry'
+// import {CoreWalker} from 'src/core/Walker'
 
-// import {BaseNode} from 'src/Engine/Node/_Base'
-// import {BaseParam} from 'src/Engine/Param/_Base'
+// import {BaseNode} from 'src/engine/Node/_Base'
+// import {BaseParam} from 'src/engine/Param/_Base'
 
 // export class CoreTextureLoader {
 

@@ -9,7 +9,7 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute'
 import {CorePoint} from './Point'
 import {CoreGeometry} from './Geometry'
 import {CoreMath} from 'src/core/math/_Module'
-// import {CoreInterpolate} from 'src/Core/Math/Interpolate'
+// import {CoreInterpolate} from 'src/core/Math/Interpolate'
 
 interface FaceLike {
 	a: number

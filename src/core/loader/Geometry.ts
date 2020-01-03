@@ -2,7 +2,7 @@
 // import {Object3D} from 'three/src/core/Object3D'
 // const THREE = {Object3D, ObjectLoader}
 // import lodash_isArray from 'lodash/isArray'
-// // import {CoreString} from 'src/Core/String';
+// // import {CoreString} from 'src/core/String';
 
 // // import {GeometryLoaderModule} from './Geometry/_Module';
 // // import {DRACOLoader} from './Geometry/DRACOLoader';

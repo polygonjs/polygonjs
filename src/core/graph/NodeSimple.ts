@@ -1,4 +1,4 @@
-// import {CoreObject} from 'src/Core/Object';
+// import {CoreObject} from 'src/core/Object';
 // import {Dirtyable} from './Concern/Dirtyable';
 import {SceneNodeDirtyable} from './SceneNodeDirtyable'
 // import {GraphNode} from './Concern/GraphNode';

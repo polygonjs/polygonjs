@@ -6,10 +6,11 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 // - tsconfig.js
 // - jest.config.js
 const alias = {
-	src: path.resolve(__dirname, '../src/'),
+	src: path.resolve(__dirname, '../src'),
 	modules: path.resolve(__dirname, '../modules/'),
 	tests: path.resolve(__dirname, '../tests/'),
 }
+console.log(path.resolve(__dirname, '../tsconfig.json'))
 
 module.exports = {
 	entry: {

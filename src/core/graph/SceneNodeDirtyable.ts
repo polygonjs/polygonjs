@@ -25,10 +25,12 @@ export class SceneNodeDirtyable extends GraphNode(Dirtyable(CoreObject)) {
 		return this.graph_successors()
 	}
 	set_scene(scene: PolyScene) {
+		console.warn(this)
 		throw 'SceneNodeDirtyable.set_scene requires implementation'
 	}
-	graph_successors(): Array<SceneNodeDirtyable> {
-		throw 'SceneNodeDirtyable.set_scene requires implementation'
-		return []
-	}
+	// graph_successors(): Array<SceneNodeDirtyable> {
+	// 	console.warn(this)
+	// 	throw 'SceneNodeDirtyable.graph_successors requires implementation'
+	// 	return []
+	// }
 }

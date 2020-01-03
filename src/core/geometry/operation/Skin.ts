@@ -1,7 +1,7 @@
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute'
 import {BufferGeometry} from 'three/src/core/BufferGeometry'
 import {CoreGeometry} from '../Geometry'
-import lodash_range from 'lodash/range'
+// import lodash_range from 'lodash/range'
 import lodash_flatten from 'lodash/flatten'
 import lodash_intersection from 'lodash/intersection'
 import lodash_concat from 'lodash/concat'

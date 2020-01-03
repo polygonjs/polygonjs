@@ -1,4 +1,4 @@
-// // import {Core} from 'src/Core/_Module';
+// // import {Core} from 'src/core/_Module';
 // import lodash_isArray from 'lodash/isArray'
 // import lodash_isObject from 'lodash/isObject'
 // import lodash_flatten from 'lodash/flatten'
@@ -10,10 +10,10 @@
 // // import UrlLoader from '../UrlLoader';
 // import axios from 'axios'
 // import {CoreString} from 'src/core/String'
-// import {CoreGeometry} from 'src/Core/Geometry/Geometry'
-// import {CoreConstant} from 'src/Core/Geometry/Constant'
-// import {CoreAttributeData} from 'src/Core/Geometry/AttributeData'
-// import {CoreAttribute} from 'src/Core/Geometry/Attribute'
+// import {CoreGeometry} from 'src/core/Geometry/Geometry'
+// import {CoreConstant} from 'src/core/Geometry/Constant'
+// import {CoreAttributeData} from 'src/core/Geometry/AttributeData'
+// import {CoreAttribute} from 'src/core/Geometry/Attribute'
 
 // const DEEP_ATTRIB_SEPARATOR = ':'
 

@@ -1,4 +1,3 @@
-// import {CoreObject} from 'src/core/CoreObject'
 import {NodeScene} from 'src/core/graph/NodeScene'
 
 // TODO: I may not need the ContextOwner in this class
@@ -36,9 +35,9 @@ export abstract class Scene extends NodeScene {
 		return null // if no null, some nodes are returned
 	}
 	set_graph_successors_dirty(scene: Scene) {
-		throw 'Scene.set_graph_successors_dirty requires implementation'
+		// throw 'Scene.set_graph_successors_dirty requires implementation'
 	}
 	emit(event_type: string) {
-		throw 'Scene.emit requires implementation'
+		// throw 'Scene.emit requires implementation'
 	}
 }
