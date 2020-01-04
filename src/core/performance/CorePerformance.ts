@@ -121,7 +121,7 @@ export class CorePerformance {
 	}
 
 	print_recordings() {
-		const start_time = this._start_time
+		// const start_time = this._start_time
 		const durations_by_name = lodash_clone(this._durations_by_name)
 		const durations_count_by_name = lodash_clone(
 			this._durations_count_by_name
@@ -143,11 +143,12 @@ export class CorePerformance {
 			names_by_duration[duration].push(name)
 		}
 
-		const sorted_durations = lodash_uniq(durations.sort())
+		durations.sort((a, b) => a - b)
+		const sorted_durations = lodash_uniq(durations)
 
 		console.log('--------------- PERF RECORDINGS -----------')
 		//console.log("sorted_durations", sorted_durations)
-		let previous_duration = start_time
+		// let previous_duration = start_time
 		const table_entries = []
 		for (let duration of sorted_durations) {
 			const names = names_by_duration[duration]
@@ -159,7 +160,7 @@ export class CorePerformance {
 				table_entries.push(entry)
 			}
 
-			previous_duration = duration
+			// previous_duration = duration
 		}
 
 		console.table(table_entries)

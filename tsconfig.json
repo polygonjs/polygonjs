@@ -1,7 +1,20 @@
 {
 	"compilerOptions": {
-		"outDir": "./dist/",
+		// rules
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": false,
+		"noUnusedLocals": true,
+		// "strict": true, // noImplicitAny, noImplicitThis, alwaysStrict, strictNullChecks
 		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"alwaysStrict": true,
+		"strictNullChecks": false,
+
+		// decorators
+		"experimentalDecorators": true,
+
+		// output & paths
+		"outDir": "./dist/",
 		"module": "commonjs",
 		"target": "es5",
 		"allowSyntheticDefaultImports": true,
@@ -10,7 +23,6 @@
 		// declaration creates problems with anonymous classes from mixins
 		// "declaration": true,
 		// "declarationDir": "./dist/types",
-		"experimentalDecorators": true,
 		"importHelpers": true,
 		"baseUrl": "./",
 		"paths": {

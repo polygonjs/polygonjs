@@ -6,7 +6,6 @@ import {Color} from 'three/src/math/Color'
 import {BufferGeometry} from 'three/src/core/BufferGeometry'
 import {AnimationClip} from 'three/src/animation/AnimationClip'
 import {Material} from 'three/src/materials/Material'
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial'
 import {SkinnedMesh} from 'three/src/objects/SkinnedMesh'
 import {Bone} from 'three/src/objects/Bone'
 
@@ -15,6 +14,7 @@ import {CoreGeometry} from './Geometry'
 import {GroupString} from './Group'
 import {CoreAttribute} from './Attribute'
 import {CoreConstant} from './Constant'
+import {CorePoint} from './Point'
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material'
 import {CoreString} from 'src/core/String'
 
@@ -36,12 +36,11 @@ interface MaterialWithColor extends Material {
 export class CoreObject {
 	_index: number
 
-	constructor(private _object: Object3D, private _attributes = {}) {
+	constructor(private _object: Object3D) {
 		if (this._object.userData[ATTRIBUTES] == null) {
 			this._object.userData[ATTRIBUTES] = {}
 		}
 	}
-	//
 
 	set_index(i: number) {
 		this._index = i
@@ -60,17 +59,21 @@ export class CoreObject {
 		const geo = this.geometry()
 		if (geo) {
 			return new CoreGeometry(geo)
+		} else {
+			return null
 		}
 	}
 	points() {
 		return this.core_geometry().points()
 	}
-	points_from_group(group: GroupString) {
+	points_from_group(group: GroupString): CorePoint[] {
 		if (group) {
 			const indices = CoreString.indices(group)
 			if (indices) {
 				const points = this.points()
 				return indices.map((i) => points[i])
+			} else {
+				return []
 			}
 		} else {
 			return this.points()
@@ -178,6 +181,8 @@ export class CoreObject {
 					return 2
 				case Vector3:
 					return 3
+				default:
+					return 0
 			}
 		}
 	}

@@ -1,9 +1,9 @@
-interface BooleanByString {
-	[propName: string]: boolean
-}
+// interface BooleanByString {
+// 	[propName: string]: boolean
+// }
 
 export class CoreStylesheetLoader {
-	private static _loaded_state_by_url: BooleanByString = {}
+	// private static _loaded_state_by_url: BooleanByString = {}
 
 	static load(url: string) {
 		// return new Promise((resolve, reject)=>{
@@ -32,7 +32,7 @@ export class CoreStylesheetLoader {
 				// 	// this._load_callbacks_by_url[url].push(resolve)
 				// }
 			} else {
-				stylesheet = document.createElement('link') as HTMLLinkElement
+				stylesheet = document.createElement('link')
 				stylesheet.type = 'text/css'
 				stylesheet.rel = 'stylesheet'
 

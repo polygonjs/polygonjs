@@ -12,8 +12,11 @@ export class CoreGeometryUtilCurve {
 		const accumulated_curve_point_indices = []
 		let last_index_added: number = null
 
-		indices.forEach((index, i) => {
+		// indices.forEach((index, i) => {
+		let index: number
+		for (let i = 0; i < indices.length; i++) {
 			if (i % 2 === 1) {
+				index = indices[i]
 				const previous_index = indices[i - 1]
 
 				// if the last added index, from the previous segment
@@ -29,7 +32,7 @@ export class CoreGeometryUtilCurve {
 					}
 
 					curve_point_indices.push(index)
-					return (last_index_added = index)
+					last_index_added = index
 				} else {
 					// otherwise we create a new curve
 					accumulated_curve_point_indices.push(curve_point_indices)
@@ -39,10 +42,10 @@ export class CoreGeometryUtilCurve {
 
 					// and reset the array
 					curve_point_indices = [previous_index, index]
-					return (last_index_added = index)
+					last_index_added = index
 				}
 			}
-		})
+		}
 
 		// also create with the remaining ones
 		accumulated_curve_point_indices.push(curve_point_indices)

@@ -17,7 +17,7 @@ const ATTRIB_NAMES_SEPARATOR = /[, ]/ //[',', ' ']
 // const ALL = LETTERS + LETTERS_UPPERCASE + NUMBERS
 
 const TAIL_DIGIT_MATCH_REGEXP = /\d+$/
-const DIGIT_PREDEDED_BY_UNDERSCOPE = /_\d$/
+// const DIGIT_PREDEDED_BY_UNDERSCOPE = /_\d$/
 const INDICES_LIST_SEPARATOR = /,| /
 
 export class CoreString {

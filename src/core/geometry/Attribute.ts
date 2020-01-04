@@ -26,7 +26,6 @@ export class CoreAttribute {
 	}
 
 	static array_to_indexed_arrays(array: number[]) {
-		let data
 		const index_by_value: NumbersByString = {}
 		let current_index = 0
 		const indices = []

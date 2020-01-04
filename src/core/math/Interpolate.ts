@@ -114,6 +114,8 @@ export class CoreInterpolate {
 							(1 - blend) * value_src_as_vec3.y,
 						blend * value_dest.z + (1 - blend) * value_src_as_vec3.z
 					)
+				default:
+					return null
 			}
 		}
 	}
@@ -138,34 +140,34 @@ export class CoreInterpolate {
 		distance_threshold: number,
 		blend_with: number
 	) {
-		let new_value
-		const positions_src = lodash_map(points_src, (point) =>
-			point.position()
-		)
-		const values_src = lodash_map(points_src, (point) =>
-			point.attrib_value(attrib_name)
-		)
-		const position_dest = point_dest.position()
+		// let new_value
+		// const positions_src = lodash_map(points_src, (point) =>
+		// 	point.position()
+		// )
+		// const values_src = lodash_map(points_src, (point) =>
+		// 	point.attrib_value(attrib_name)
+		// )
+		// const position_dest = point_dest.position()
 		const attrib_size = point_dest.attrib_size(attrib_name)
 
-		const distances = lodash_map(positions_src, (src_position) =>
-			src_position.distanceTo(position_dest)
-		)
+		// const distances = lodash_map(positions_src, (src_position) =>
+		// 	src_position.distanceTo(position_dest)
+		// )
 		// distances = distances.sort()
 		// max_dist = lodash_last(distances)
-		const max_dist = distance_threshold + blend_with
+		// const max_dist = distance_threshold + blend_with
 
-		const weights = lodash_map(positions_src, (src_position, i) => {
-			const distance = distances[i]
-			//1 - Math.smootherstep(distance, 0, max_dist*1.1)
-			return this._weight_from_distance(
-				distance,
-				distance_threshold,
-				blend_with
-			)
-		})
+		// const weights = lodash_map(positions_src, (src_position, i) => {
+		// 	const distance = distances[i]
+		// 	//1 - Math.smootherstep(distance, 0, max_dist*1.1)
+		// 	return this._weight_from_distance(
+		// 		distance,
+		// 		distance_threshold,
+		// 		blend_with
+		// 	)
+		// })
 
-		const total_weight = lodash_sum(weights)
+		// const total_weight = lodash_sum(weights)
 
 		// weighted_values = lodash_map values_src, (src_value, i)->
 		// 	switch attrib_size

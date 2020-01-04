@@ -1,6 +1,16 @@
 import {PolyScene} from 'src/engine/scene/PolyScene'
 new PolyScene()
 
+// const script = document.createElement('script')
+// const image = document.createElement('image')
+// const span = document.createElement('span')
+
+// interface NodeSopTypeMap {
+// 	"box": NodeSopBox;
+// 	"circle": NodeSopCircle;
+// }
+// create_node<K extends keyof NodeSopTypeMap>(node_type: K): NodeSopTypeMap[K];
+
 // import {Print} from './print'
 
 // const lodashReduce = require('lodash/reduce')

@@ -1,11 +1,9 @@
-import lodash_times from 'lodash/times'
 // import jimp from 'jimp';
 // jimp.js is now async,
 // and created via packs/jimp.ts
 
-import {Texture} from 'three/src/textures/Texture'
-import {Color} from 'three/src/math/Color'
-const THREE = {Color, Texture}
+// import {Texture} from 'three/src/textures/Texture'
+// import {Color} from 'three/src/math/Color'
 
 export class CoreImage {
 	constructor() {}
@@ -87,7 +85,7 @@ export class CoreImage {
 		})
 	}
 	static image_to_datauri(image: HTMLImageElement): string {
-		const canvas = document.createElement('canvas') as HTMLCanvasElement
+		const canvas = document.createElement('canvas')
 		canvas.width = image.width
 		canvas.height = image.height
 		const context = canvas.getContext('2d')
@@ -96,7 +94,7 @@ export class CoreImage {
 		return canvas.toDataURL()
 	}
 	static image_data_to_data_uri(image_data: ImageData): string {
-		const canvas = document.createElement('canvas') as HTMLCanvasElement
+		const canvas = document.createElement('canvas')
 		const context = canvas.getContext('2d')
 		canvas.width = image_data.width
 		canvas.height = image_data.height

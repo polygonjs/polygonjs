@@ -1,10 +1,8 @@
-import {PolyScene} from './scene/PolyScene'
-
 declare global {
 	const POLY: Poly
 }
 
-class Poly {
+export class Poly {
 	in_worker_thread() {
 		return false
 	}

@@ -6,7 +6,7 @@ import {Quaternion} from 'three/src/math/Quaternion'
 import {Matrix4} from 'three/src/math/Matrix4'
 import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry'
 import {InstancedBufferAttribute} from 'three/src/core/InstancedBufferAttribute'
-import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry'
+// import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry'
 // const THREE = {BoxBufferGeometry, InstancedBufferAttribute, InstancedBufferGeometry, Matrix4, Quaternion, Vector2, Vector3}
 
 import {CorePoint} from './Point'
