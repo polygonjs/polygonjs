@@ -32,6 +32,9 @@ interface Object3DWithAnimations extends Object3D {
 interface MaterialWithColor extends Material {
 	color: Color
 }
+interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
+	readonly isSkinnedMesh: boolean
+}
 
 export class CoreObject {
 	_index: number
@@ -245,7 +248,7 @@ export class CoreObject {
 			}
 
 			const skinned_node = node as SkinnedMesh
-			if (skinned_node.isSkinnedMesh) {
+			if ((skinned_node as SkinnedMeshWithisSkinnedMesh).isSkinnedMesh) {
 				var clonedMesh = skinned_node
 				var sourceMesh = src_node
 				var sourceBones = sourceMesh.skeleton.bones

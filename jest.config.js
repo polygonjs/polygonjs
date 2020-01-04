@@ -14,7 +14,7 @@
 // })
 module.exports = {
 	preset: 'ts-jest',
-	testEnvironment: 'jsdom',
+	testEnvironment: 'node',
 	testMatch: ['**/tests/*/**/*.ts'],
 	// testMatch: ['**/tests/index.ts'],
 	moduleNameMapper: {
