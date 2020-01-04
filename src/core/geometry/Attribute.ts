@@ -25,7 +25,7 @@ export class CoreAttribute {
 		return ATTRIB_NAME_MAP[name] || name
 	}
 
-	static array_to_indexed_arrays(array: number[]) {
+	static array_to_indexed_arrays(array: string[]) {
 		const index_by_value: NumbersByString = {}
 		let current_index = 0
 		const indices = []

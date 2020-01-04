@@ -7,7 +7,23 @@ export class Assert {
 	static notOk(statement: any) {
 		expect(statement).not.toBeTruthy()
 	}
+	static equal(a: any, b: any) {
+		expect(a).toEqual(b)
+	}
+	static notEqual(a: any, b: any) {
+		expect(a).not.toEqual(b)
+	}
+	static deepEqual(a: any, b: any) {
+		expect(a).toStrictEqual(b)
+	}
 }
+// declare global {
+// 	const Assert: typeof Asserter
+// 	interface window {
+// 		Assert: typeof Asserter
+// 	}
+// }
+// window.Assert = Asserter
 
 // declare global {
 // 	// namespace QUnit {

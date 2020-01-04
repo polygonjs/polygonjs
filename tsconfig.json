@@ -31,5 +31,5 @@
 			"tests": ["tests"]
 		}
 	},
-	"exclude": ["node_modules", "modules"]
+	"exclude": ["node_modules", "modules", "dist"]
 }

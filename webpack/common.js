@@ -10,7 +10,6 @@ const alias = {
 	modules: path.resolve(__dirname, '../modules/'),
 	tests: path.resolve(__dirname, '../tests/'),
 }
-console.log(path.resolve(__dirname, '../tsconfig.json'))
 
 module.exports = {
 	entry: {

@@ -23,7 +23,8 @@
 		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config webpack/dev.js",
 		"build": "webpack --env.NODE_ENV=production --env.production --progress --config webpack/prod.js",
 		"analyze": "webpack --env.NODE_ENV=production --env.production --config webpack/prod.js --profile --json > webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer webpack/stats.json",
-		"test": "jest --collectCoverage"
+		"test": "jest --collectCoverage",
+		"test_debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
 	},
 	"dependencies": {
 		"@dagrejs/graphlib": "dagrejs/graphlib",
@@ -43,6 +44,7 @@
 		"eslint": "^6.8.0",
 		"html-webpack-plugin": "^3.2.0",
 		"jest": "^24.9.0",
+		"mocha": "^6.2.2",
 		"prettier": "1.19.1",
 		"qunit": "^2.9.3",
 		"ts-jest": "^24.2.0",
