@@ -18,6 +18,7 @@
 		"module": "commonjs",
 		"target": "es5",
 		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true, // for lodash imports (https://github.com/lodash/lodash/issues/3192)
 		"allowJs": true,
 		"sourceMap": true,
 		// declaration creates problems with anonymous classes from mixins

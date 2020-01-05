@@ -1,15 +1,13 @@
-import lodash_range = require('lodash/range')
-import lodash_uniq = require('lodash/uniq')
-import lodash_trim = require('lodash/trim')
-import lodash_compact = require('lodash/compact')
-import lodash_flatten = require('lodash/flatten')
-import lodash_padEnd = require('lodash/padEnd')
-import lodash_capitalize = require('lodash/capitalize')
-import lodash_snakeCase = require('lodash/snakeCase')
-import lodash_upperFirst = require('lodash/upperFirst')
-import lodash_camelCase = require('lodash/camelCase')
-
-console.log(lodash_padEnd)
+import lodash_range from 'lodash/range'
+import lodash_uniq from 'lodash/uniq'
+import lodash_trim from 'lodash/trim'
+import lodash_compact from 'lodash/compact'
+import lodash_flatten from 'lodash/flatten'
+import lodash_padEnd from 'lodash/padEnd'
+import lodash_capitalize from 'lodash/capitalize'
+import lodash_snakeCase from 'lodash/snakeCase'
+import lodash_upperFirst from 'lodash/upperFirst'
+import lodash_camelCase from 'lodash/camelCase'
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/ //[',', ' ']
 

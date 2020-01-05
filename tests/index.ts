@@ -1,2 +1,3 @@
-import './core/Object'
-import './core/String'
+import './tests'
+
+QUnit.start()
