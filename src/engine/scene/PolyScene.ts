@@ -90,4 +90,5 @@ export class PolyScene {
 	is_loading() {
 		return true
 	}
+	root(): any {}
 }
