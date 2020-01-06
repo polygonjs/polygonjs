@@ -1,18 +1,18 @@
-// import {BaseNode} from 'src/Engine/Node/_Base'
-// import {BaseParam} from 'src/Engine/Param/_Base'
+import {BaseNode} from 'src/engine/nodes/_Base'
+import {BaseParam} from 'src/engine/params/_Base'
 // import {NodeSimple} from 'src/Core/Graph/NodeSimple'
 
-import {NamedGraphNodeClass} from './graph/NamedGraphNode'
-// type NodeOrParam = NamedGraphNode
+// import {NamedGraphNodeClass} from './graph/NamedGraphNode'
+type NodeOrParam = BaseNode | BaseParam
 
 const SEPARATOR = '/'
 export class DecomposedPath {
-	named_nodes: NamedGraphNodeClass[] = []
+	named_nodes: NodeOrParam[] = []
 	private graph_node_ids: string[] = []
 	private node_element_by_graph_node_id: StringsByString = {}
 
 	constructor() {}
-	add_node(name: string, node: NamedGraphNodeClass) {
+	add_node(name: string, node: NodeOrParam) {
 		if (name == node.name()) {
 			this.named_nodes.push(node)
 		}
@@ -21,7 +21,7 @@ export class DecomposedPath {
 		this.node_element_by_graph_node_id[node.graph_node_id()] = name
 	}
 
-	update_from_name_change(node: NamedGraphNodeClass) {
+	update_from_name_change(node: NodeOrParam) {
 		const named_graph_node_ids = this.named_nodes.map((n) => {
 			return n.graph_node_id()
 		})

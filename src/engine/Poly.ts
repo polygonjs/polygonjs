@@ -6,4 +6,5 @@ export class Poly {
 	in_worker_thread() {
 		return false
 	}
+	desktop_controller(): any {}
 }

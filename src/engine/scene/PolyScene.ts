@@ -90,5 +90,13 @@ export class PolyScene {
 	is_loading() {
 		return true
 	}
+	loaded(): boolean {
+		return true
+	}
 	root(): any {}
+	context(): any {}
+
+	uuid() {
+		return 'test-uuid'
+	}
 }
