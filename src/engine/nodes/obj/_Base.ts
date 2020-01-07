@@ -5,12 +5,10 @@ import {BaseNodeSop} from '../Sop/_Base';
 import {LookAt} from './Concerns/LookAt';
 import {Named} from './Concerns/Named';
 
-import {NodeContext} from 'src/Engine/Poly';
-
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
 
-export class BaseObjectNode extends LookAt(Named(BaseNode)) {
+export class BaseObjNode extends LookAt(Named(BaseNode)) {
 	static node_context(): NodeContext {
 		return NodeContext.OBJ;
 	}

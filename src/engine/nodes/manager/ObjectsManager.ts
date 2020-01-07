@@ -5,34 +5,31 @@ import lodash_map from 'lodash/map';
 import {BaseNodeManager} from './_Base';
 import {CoreObject} from 'src/core/Object';
 import {BaseNode} from '../_Base';
-import {BaseNodeObj} from '../objects/_Base';
-import {BaseNodeObjGeo} from '../objects/Geo';
+import {BaseObjNode} from '../obj/_Base';
+import {BaseNodeObjGeo} from '../obj/Geo';
 
-import {BaseManager} from 'src/engine/nodes/objects/_BaseManager';
-import {BaseCamera} from 'src/engine/nodes/objects/_BaseCamera';
-import {BaseLight} from 'src/engine/nodes/objects/_BaseLight';
-import {Events} from 'src/engine/nodes/objects/Events';
-import {Materials} from 'src/engine/nodes/objects/Materials';
-import {FogObj} from 'src/engine/nodes/objects/Fog';
+import {BaseManager} from 'src/engine/nodes/obj/_BaseManager';
+import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseLight} from 'src/engine/nodes/obj/_BaseLight';
+import {Events} from 'src/engine/nodes/obj/Events';
+import {Materials} from 'src/engine/nodes/obj/Materials';
+import {FogObj} from 'src/engine/nodes/obj/Fog';
 
+import 'src/engine/Poly';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
-
-interface NodeByString {
-	[propName: string]: BaseNode;
-}
 
 export class ObjectsManagerNode extends BaseNodeManager {
 	static type() {
 		return 'obj';
 	}
 	children_context() {
-		return NodeContext.OBJECT;
+		return NodeContext.OBJ;
 	}
 
 	private _object: Group = new Group();
-	private _queued_nodes_by_id: NodeByString = {};
-	private _queued_nodes_by_path: NodeByString = {};
+	private _queued_nodes_by_id: Dictionary<BaseNode> = {};
+	private _queued_nodes_by_path: Dictionary<BaseNode> = {};
 
 	constructor() {
 		super();
@@ -75,7 +72,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		}
 	}
 
-	async process_queue(callback) {
+	async process_queue() {
 		this._queued_nodes_by_path = {};
 		const ids = Object.keys(this._queued_nodes_by_id);
 		for (let id of ids) {
@@ -107,9 +104,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 		this._process_queue_start = performance.now();
 		Promise.all(promises).then(() => {
-			window.POLY.log(
-				`SCENE LOADED '${this.scene().name()}' in ${performance.now() - this._process_queue_start}`
-			);
+			POLY.log(`SCENE LOADED '${this.scene().name()}' in ${performance.now() - this._process_queue_start}`);
 			// this.scene().performance().print()
 
 			// do the update here if there are no objects to load
@@ -220,8 +215,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	}
 
 	remove_from_scene(node: BaseNode) {
-		if (this._is_node_fog(node)) {
-		} else {
+		if (!this._is_node_fog(node)) {
 			const object = node.object();
 			if (object != null) {
 				const parent_object = object.parent;
@@ -242,7 +236,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	async expected_loading_geo_nodes_by_id() {
 		const geo_nodes = this.nodes_by_type('geo');
-		const node_by_id = {};
+		const node_by_id: Dictionary<BaseNode> = {};
 		for (let geo_node of geo_nodes) {
 			const is_displayed = await geo_node.is_displayed_p();
 			if (is_displayed) {

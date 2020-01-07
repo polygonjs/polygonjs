@@ -1,6 +1,6 @@
 import {CoreWalker} from 'src/core/Walker';
 import {CoreString} from 'src/core/String';
-import CoreSelection from 'src/core/NodeSelection';
+// import CoreSelection from 'src/core/NodeSelection';
 import lodash_keys from 'lodash/keys';
 import lodash_sortBy from 'lodash/sortBy';
 import lodash_values from 'lodash/values';
@@ -19,7 +19,7 @@ interface HierarchyOptions {
 export function HierarchyChildrenOwner<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		protected self: BaseNode = (<unknown>this) as BaseNode;
-		_selection: CoreSelection;
+		// _selection: CoreSelection;
 		_children_allowed: boolean = false;
 		_children: Dictionary<BaseNode>;
 		_children_by_type: Dictionary<string[]> = {};
@@ -49,57 +49,51 @@ export function HierarchyChildrenOwner<TBase extends Constructor>(Base: TBase) {
 			}
 		}
 
-		static node_context(): NodeContext {
-			throw 'requires override';
-		}
-		node_context(): NodeContext {
-			return (this.constructor as typeof(BaseNode)).node_context();
-		}
 		node_context_signature() {
-			return `${this.node_context()}/${this.self.type()}`;
+			return `${this.self.node_context()}/${this.self.type()}`;
 		}
 		children_context(): NodeContext {
 			return null;
 		}
 
-		selection() {
-			return this._selection;
-		}
+		// selection() {
+		// 	return this._selection;
+		// }
 
 		// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
-		set_child_name(node: BaseNode, new_name: string):void {
-			//return if node.name() == new_name
-			let current_child_with_name;
-			new_name = new_name.replace(/[^A-Za-z0-9]/g, '_');
-			new_name = new_name.replace(/^[0-9]/, '_'); // replace first char if not a letter
+		// set_child_name(node: BaseNode, new_name: string): void {
+		// 	//return if node.name() == new_name
+		// 	let current_child_with_name;
+		// 	new_name = new_name.replace(/[^A-Za-z0-9]/g, '_');
+		// 	new_name = new_name.replace(/^[0-9]/, '_'); // replace first char if not a letter
 
-			if ((current_child_with_name = this._children[new_name]) != null) {
-				// only return if found node is same as argument node, and if new_name is same as current_name
-				if (node.name() === new_name && current_child_with_name.graph_node_id() === node.graph_node_id()) {
-					return;
-				}
+		// 	if ((current_child_with_name = this._children[new_name]) != null) {
+		// 		// only return if found node is same as argument node, and if new_name is same as current_name
+		// 		if (node.name() === new_name && current_child_with_name.graph_node_id() === node.graph_node_id()) {
+		// 			return;
+		// 		}
 
-				// increment new_name
-				new_name = CoreString.increment(new_name);
+		// 		// increment new_name
+		// 		new_name = CoreString.increment(new_name);
 
-				return this.set_child_name(node, new_name);
-			} else {
-				// let current_child;
-				const current_name = node.name();
+		// 		return this.set_child_name(node, new_name);
+		// 	} else {
+		// 		// let current_child;
+		// 		const current_name = node.name();
 
-				// delete old entry if node was in _children with old name
-				const current_child = this._children[current_name];
-				if (current_child) {
-					delete this._children[current_name];
-				}
+		// 		// delete old entry if node was in _children with old name
+		// 		const current_child = this._children[current_name];
+		// 		if (current_child) {
+		// 			delete this._children[current_name];
+		// 		}
 
-				// add to new name
-				this._children[new_name] = node;
-				node._set_name(new_name);
-				this._add_to_nodes_by_type(node);
-				this.self.scene().add_to_instanciated_node(node);
-			}
-		}
+		// 		// add to new name
+		// 		this._children[new_name] = node;
+		// 		node._set_name(new_name);
+		// 		this._add_to_nodes_by_type(node);
+		// 		this.self.scene().add_to_instanciated_node(node);
+		// 	}
+		// }
 
 		available_children_classes() {
 			return POLY.registered_nodes(this.children_context(), this.self.type());
@@ -166,7 +160,7 @@ export function HierarchyChildrenOwner<TBase extends Constructor>(Base: TBase) {
 			}
 			this.self.emit('node_created', {child_node: node});
 			this.self.on_child_add(node);
-			if (this.scene().on_create_lifecycle_hook_allowed()) {
+			if (this.self.scene().on_create_lifecycle_hook_allowed()) {
 				node.on_create();
 			}
 			this.post_add_node(node);
@@ -175,7 +169,7 @@ export function HierarchyChildrenOwner<TBase extends Constructor>(Base: TBase) {
 				this._children_node.add_graph_input(node);
 			}
 			if (node.require_webgl2()) {
-				this.scene().set_require_webgl2();
+				this.self.scene().set_require_webgl2();
 			}
 
 			return node;
@@ -224,7 +218,7 @@ export function HierarchyChildrenOwner<TBase extends Constructor>(Base: TBase) {
 				node.set_parent(null);
 				delete this._children[node.name()];
 				this._remove_from_nodes_by_type(node);
-				this.scene().remove_from_instanciated_node(node);
+				this.self.scene().remove_from_instanciated_node(node);
 
 				this.self.on_child_remove(node);
 				node.on_delete();
@@ -338,12 +332,12 @@ export function HierarchyChildrenOwner<TBase extends Constructor>(Base: TBase) {
 		// children_map: ->
 		// 	@_children
 
-		traverse_children(callback: (arg0:BaseNode)=>void) {
+		traverse_children(callback: (arg0: BaseNode) => void) {
 			for (let child of this.children()) {
 				callback(child);
 
 				// if (child.traverse_children != null) { // TODO: typescript
-					child.traverse_children(callback);
+				child.traverse_children(callback);
 				// }
 			}
 		}

@@ -34,10 +34,6 @@ import {Vector3Param} from 'src/engine/params/Vector3';
 import {Vector4Param} from 'src/engine/params/Vector4';
 import {RampValue} from 'src/engine/params/ramp/RampValue';
 
-document.createElement('script');
-
-// createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementCreationOptions): HTMLElementTagNameMap[K];
-
 const ParamConstructorMap = {
 	[ParamType.BOOLEAN]: BooleanParam,
 	[ParamType.BUTTON]: ButtonParam,

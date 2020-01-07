@@ -1,26 +1,26 @@
 // import {VertexColors} from 'three/src/constants'
-import {SkinnedMesh} from 'three/src/objects/SkinnedMesh'
-import {Scene} from 'three/src/scenes/Scene'
-import {Points} from 'three/src/objects/Points'
-import {Object3D} from 'three/src/core/Object3D'
-import {NoColors} from 'three/src/constants'
-import {Mesh} from 'three/src/objects/Mesh'
-import {LineSegments} from 'three/src/objects/LineSegments'
-import {Group} from 'three/src/objects/Group'
-import {FrontSide} from 'three/src/constants'
+import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
+import {Scene} from 'three/src/scenes/Scene';
+import {Points} from 'three/src/objects/Points';
+import {Object3D} from 'three/src/core/Object3D';
+import {NoColors} from 'three/src/constants';
+import {Mesh} from 'three/src/objects/Mesh';
+import {LineSegments} from 'three/src/objects/LineSegments';
+import {Group} from 'three/src/objects/Group';
+import {FrontSide} from 'three/src/constants';
 // import {DoubleSide} from 'three/src/constants'
-import {Color} from 'three/src/math/Color'
-import {Bone} from 'three/src/objects/Bone'
+import {Color} from 'three/src/math/Color';
+import {Bone} from 'three/src/objects/Bone';
 // import {AdditiveBlending} from 'three/src/constants'
-import {Material} from 'three/src/materials/Material'
-import {PointsMaterial} from 'three/src/materials/PointsMaterial'
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial'
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial'
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial'
+import {Material} from 'three/src/materials/Material';
+import {PointsMaterial} from 'three/src/materials/PointsMaterial';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 // const THREE = {AdditiveBlending, Bone, Color, DoubleSide, FrontSide, Group, LineBasicMaterial, LineSegments, Mesh, MeshLambertMaterial, MeshStandardMaterial, NoColors, Object3D, Points, PointsMaterial, Scene, SkinnedMesh, VertexColors}
 
 interface MaterialsByString {
-	[propName: string]: Material
+	[propName: string]: Material;
 }
 
 // export enum AttribClass {
@@ -77,7 +77,7 @@ const materials: MaterialsByString = {
 		color: 0xffffff,
 		linewidth: 1,
 	}),
-}
+};
 
 export enum ObjectType {
 	MESH = 'MESH',
@@ -87,13 +87,13 @@ export enum ObjectType {
 
 export enum AttribClass {
 	VERTEX = 0,
-	OBJECT = 0,
+	OBJECT = 1,
 }
 
 export const CoreConstant = {
 	ATTRIB_CLASS: {
-		VERTEX: 0,
-		OBJECT: 1,
+		VERTEX: AttribClass.VERTEX,
+		OBJECT: AttribClass.OBJECT,
 	},
 
 	ATTRIB_TYPE: {
@@ -102,9 +102,10 @@ export const CoreConstant = {
 	},
 
 	OBJECT_TYPE: {
-		MESH: Mesh.name,
-		POINTS: Points.name,
-		LINE_SEGMENTS: LineSegments.name,
+		// TODO: typescript
+		MESH: ObjectType.MESH,
+		POINTS: ObjectType.POINTS,
+		LINE_SEGMENTS: ObjectType.LINE_SEGMENTS,
 	},
 	OBJECT_TYPES: [Mesh.name, Points.name, LineSegments.name],
 	CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME: {
@@ -133,7 +134,7 @@ export const CoreConstant = {
 		[LineSegments.name]: 'LINE_SEGMENTS',
 	},
 	MATERIALS: materials,
-}
+};
 
 // CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Scene.name] = 'Scene'
 // CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Group.name] = 'Group'

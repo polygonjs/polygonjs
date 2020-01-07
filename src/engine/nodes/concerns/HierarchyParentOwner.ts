@@ -5,9 +5,9 @@ export function HierarchyParentOwner<TBase extends Constructor>(Base: TBase) {
 		protected self: BaseNode = (<unknown>this) as BaseNode;
 		_parent: BaseNode;
 
-		_init_hierarchy_parent_owner() {
-			this._parent = null;
-		}
+		// _init_hierarchy_parent_owner() {
+		// 	this._parent = null;
+		// }
 
 		// set_scene: (scene)->
 		// 	@_scene = scene
@@ -24,9 +24,9 @@ export function HierarchyParentOwner<TBase extends Constructor>(Base: TBase) {
 		post_set_parent() {}
 		//
 
-		parent() {
-			return this._parent;
-		}
+		// parent() {
+		// 	return this._parent;
+		// }
 		root() {
 			return this.self._scene.root();
 		}

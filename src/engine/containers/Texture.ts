@@ -4,9 +4,9 @@ import {TypedContainer} from './_Base';
 export class TextureContainer extends TypedContainer<Texture> {
 	_content: Texture;
 
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 
 	// set_texture(texture: Texture){
 	// 	if (this._content != null) {

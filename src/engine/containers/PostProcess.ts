@@ -3,9 +3,9 @@ import {TypedContainer} from './_Base';
 export class PostProcessContainer extends TypedContainer<any> {
 	_content: any;
 
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 
 	render_pass() {
 		return this._content;

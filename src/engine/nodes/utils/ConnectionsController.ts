@@ -3,35 +3,37 @@ import lodash_last from 'lodash/last';
 import lodash_compact from 'lodash/compact';
 import {NodeConnection} from '../utils/NodeConnection';
 
-interface NodeConnectionByString {
-	[propName: string]: NodeConnection;
-}
-interface NodeConnectionByStringByString {
-	[propName: string]: NodeConnectionByString;
-}
+// interface NodeConnectionByString {
+// 	[propName: string]: NodeConnection;
+// }
+// interface NodeConnectionByStringByString {
+// 	[propName: string]: NodeConnectionByString;
+// }
 
-export function ConnectionsOwner<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		protected self: BaseNode = (<unknown>this) as BaseNode;
+export class ConnectionsController {
 
 		private _input_connections: NodeConnection[] = [];
-		private _output_connections: NodeConnectionByStringByString = {};
+		private _output_connections: Dictionary<Dictionary<NodeConnection>> = {};
+
+		constructor(protected _node: BaseNode){
+
+		}
 
 		add_input_connection(connection: NodeConnection) {
-			this._input_connections[connection.input_index()] = connection;
+			this._input_connections[connection.input_index] = connection;
 		}
 		add_output_connection(connection: NodeConnection) {
-			const output_index = connection.output_index();
-			const uuid = connection.uuid();
+			const output_index = connection.output_index;
+			const uuid = connection.uuid;
 			this._output_connections[output_index] = this._output_connections[output_index] || {};
 			this._output_connections[output_index][uuid] = connection;
 		}
 		remove_input_connection(connection: NodeConnection) {
-			this._input_connections[connection.input_index()] = null;
+			this._input_connections[connection.input_index] = null;
 		}
 		remove_output_connection(connection: NodeConnection) {
-			const output_index = connection.output_index();
-			const uuid = connection.uuid();
+			const output_index = connection.output_index;
+			const uuid = connection.uuid;
 			delete this._output_connections[output_index][uuid];
 		}
 

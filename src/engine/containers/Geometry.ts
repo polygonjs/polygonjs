@@ -29,10 +29,10 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	_points_count: number;
 	_bounding_box: Box3;
 
-	constructor() {
-		super();
-		// this._materials = [];
-	}
+	// constructor() {
+	// 	super();
+	// 	// this._materials = [];
+	// }
 
 	// _post_set_content(){
 	// 	this._core_group = this._core_group || new CoreGroup()

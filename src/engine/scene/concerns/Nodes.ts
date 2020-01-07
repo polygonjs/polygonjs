@@ -2,7 +2,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import lodash_concat from 'lodash/concat';
 import lodash_flatten from 'lodash/flatten';
 import lodash_compact from 'lodash/compact';
-import {ObjectsManagerNode} from 'src/engine/nodes/managers/ObjectsManager';
+import {ObjectsManagerNode} from 'src/engine/nodes/manager/ObjectsManager';
 import {CoreString} from 'src/core/String';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 import {BaseNode} from 'src/engine/nodes/_Base';

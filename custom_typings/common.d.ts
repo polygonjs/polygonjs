@@ -69,12 +69,13 @@ declare enum ParamType {
 }
 declare enum NodeContext {
 	MANAGER = 'managers',
-	OBJECT = 'objects',
-	GEOMETRY = 'geometry',
-	MATERIAL = 'material',
+	OBJ = 'objects',
+	SOP = 'sop',
+	MAT = 'mat',
 	COP = 'cop',
 	POST = 'post',
 	GL = 'gl',
+	EVENT = 'event',
 }
 
 // math

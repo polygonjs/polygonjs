@@ -7,11 +7,11 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 // }
 
 export abstract class TypedContainer<T> extends CoreObject {
-	protected _node: BaseNode;
+	// protected _node: BaseNode;
 	// protected _eval_key: number
 	protected _content: T;
 
-	constructor() {
+	constructor(protected _node: BaseNode) {
 		super();
 		// this.update_eval_key();
 		this.set_content(this._default_content());
@@ -60,7 +60,7 @@ export abstract class TypedContainer<T> extends CoreObject {
 		return this._content;
 	}
 	protected _post_set_content() {}
-	protected core_content() {
+	public core_content() {
 		return this._content;
 	}
 	protected core_content_cloned() {

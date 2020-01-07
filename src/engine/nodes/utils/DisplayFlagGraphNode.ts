@@ -2,7 +2,7 @@ import {NodeSimple} from 'src/core/graph/NodeSimple';
 import {BaseNode} from 'src/engine/nodes/_Base';
 
 export class DisplayFlagGraphNode extends NodeSimple {
-	constructor(private _owner: BaseNode) {
+	constructor(protected _owner: BaseNode) {
 		// {
 		//   // Hack: trick Babel/TypeScript into allowing this before super.
 		//   if (false) { super(); }
@@ -10,7 +10,7 @@ export class DisplayFlagGraphNode extends NodeSimple {
 		//   let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
 		//   eval(`${thisName} = this;`);
 		// }
-		super();
+		super('DisplayFlagGraphNode');
 		this._owner = _owner;
 
 		this.add_post_dirty_hook(this._owner_post_display_flag_node_set_dirty.bind(this));

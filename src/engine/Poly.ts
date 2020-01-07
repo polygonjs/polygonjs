@@ -19,7 +19,7 @@ export class Poly {
 	player_mode(): boolean {
 		return false;
 	}
-	registered_nodes(): Array<typeof BaseNode> {
+	registered_nodes(test: string, test2: string): Dictionary<typeof BaseNode> {
 		return [];
 	}
 }
