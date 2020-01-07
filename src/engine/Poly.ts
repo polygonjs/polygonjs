@@ -1,10 +1,25 @@
+import {BaseNode} from './nodes/_Base';
+import {PolyScene} from './scene/PolyScene';
+import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
 declare global {
-	const POLY: Poly
+	const POLY: Poly;
 }
 
 export class Poly {
+	renderers_controller: any;
+	scenes_by_uuid: Dictionary<PolyScene>;
+	public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
+
 	in_worker_thread() {
-		return false
+		return false;
 	}
 	desktop_controller(): any {}
+	notify_scene_loaded(scene: PolyScene) {}
+
+	player_mode(): boolean {
+		return false;
+	}
+	registered_nodes(): Array<typeof BaseNode> {
+		return [];
+	}
 }

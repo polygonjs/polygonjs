@@ -1,12 +1,9 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
 import {Texture} from 'three/src/textures/Texture'
 // import {NearestFilter, LinearEncoding, HalfFloatType} from 'three/src/constants'
-
-// import EquirectangularToCubeGenerator from 'src/Core/Utils/EquirectangularToCubeGenerator';
-// import PMREMGenerator from 'src/Core/Utils/PMREMGenerator';
-// import PMREMCubeUVPacker from 'src/Core/Utils/PMREMCubeUVPacker';
-
-// import {CoreScriptLoader} from 'src/Core/Loader/Script'
+// import EquirectangularToCubeGenerator from 'src/core/Utils/EquirectangularToCubeGenerator';
+// import PMREMGenerator from 'src/core/Utils/PMREMGenerator';
+// import PMREMCubeUVPacker from 'src/core/Utils/PMREMCubeUVPacker';
 
 interface RendererByString {
 	[propName: string]: WebGLRenderer
@@ -40,39 +37,37 @@ export class RenderersController {
 	rendering_context(canvas: HTMLCanvasElement): WebGLRenderingContext {
 		let gl: WebGLRenderingContext
 		if (this._require_webgl2) {
-			gl = this._rendering_context_webgl2(canvas)
-			if (!gl) {
-				gl = this._rendering_context_webgl(canvas)
-			}
-		} else {
-			gl = this._rendering_context_webgl(canvas)
+			gl = this._rendering_context_webgl(canvas, true)
+		}
+		if (!gl) {
+			gl = this._rendering_context_webgl(canvas, false)
 		}
 
-		gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)
+		// gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)
 		// to test data texture
 		// gl.getExtension('OES_texture_float')
 		// gl.getExtension('OES_texture_float_linear')
 
 		return gl
 	}
-	private _rendering_context_webgl2(
-		canvas: HTMLCanvasElement
-	): WebGLRenderingContext {
-		let gl = canvas.getContext('webgl2', CONTEXT_OPTIONS)
+	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext {
+		let context_name = webgl2 ? 'webgl2' : 'webgl'
+		let gl = canvas.getContext(context_name, CONTEXT_OPTIONS)
 		if (!gl) {
-			gl = canvas.getContext('experimental-webgl2', CONTEXT_OPTIONS)
+			context_name = webgl2 ? 'experimental-webgl2' : 'experimental-webgl'
+			gl = canvas.getContext(context_name, CONTEXT_OPTIONS)
 		}
 		return gl as WebGLRenderingContext
 	}
-	private _rendering_context_webgl(
-		canvas: HTMLCanvasElement
-	): WebGLRenderingContext {
-		let gl = canvas.getContext('webgl', CONTEXT_OPTIONS)
-		if (!gl) {
-			gl = canvas.getContext('experimental-webgl', CONTEXT_OPTIONS)
-		}
-		return gl as WebGLRenderingContext
-	}
+	// private _rendering_context_webgl(
+	// 	canvas: HTMLCanvasElement
+	// ): WebGLRenderingContext {
+	// 	let gl = canvas.getContext('webgl', CONTEXT_OPTIONS)
+	// 	if (!gl) {
+	// 		gl = canvas.getContext('experimental-webgl', CONTEXT_OPTIONS)
+	// 	}
+	// 	return gl as WebGLRenderingContext
+	// }
 
 	register_renderer(renderer: POLYWebGLRenderer) {
 		if (renderer._polygon_id) {

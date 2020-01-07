@@ -2,7 +2,7 @@ import {NodeScene} from 'src/core/graph/NodeScene'
 
 // TODO: I may not need the ContextOwner in this class
 // so I could do a NodeScene child class without it?
-export abstract class Scene extends NodeScene {
+export class SceneContext extends NodeScene {
 	private _frame: number = 1.0
 
 	constructor() {

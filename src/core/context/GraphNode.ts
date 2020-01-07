@@ -1,45 +1,45 @@
-import {CoreObject} from 'src/core/Object'
-import {NodeSimple} from 'src/core/graph/NodeSimple'
+import {CoreObject} from 'src/core/Object';
+import {NodeSimple} from 'src/core/graph/NodeSimple';
 
 export class GraphNode extends CoreObject {
-	_frame: number
-	_param: any
-	_container: any
-	_entity_graph_node: any
-	_entity: any
+	_frame: number;
+	_param: any;
+	_container: any;
+	_entity_graph_node: any;
+	_entity: any;
 
 	constructor(private _node: any) {
-		super()
+		super();
 	}
 
 	node() {
-		return this._node
+		return this._node;
 	}
 
 	set_param(param: any) {
-		return (this._param = param)
+		return (this._param = param);
 	}
 	param() {
-		return this._param
+		return this._param;
 	}
 
 	set_frame(frame: number) {
 		if (frame !== this._frame) {
-			this._frame = frame
+			this._frame = frame;
 		}
 	}
 	//this.node().set_dirty()
 	reset_frame() {
-		this._frame = null
+		this._frame = null;
 	}
 	frame() {
-		let f = this._frame
+		let f = this._frame;
 		if (f == null) {
 			f = this.node()
 				.scene()
-				.frame()
+				.frame();
 		}
-		return f
+		return f;
 	}
 
 	//
@@ -48,7 +48,7 @@ export class GraphNode extends CoreObject {
 	//
 	//
 	set_geometry_container(container: any) {
-		return (this._container = container)
+		return (this._container = container);
 	}
 	// center: (component)->
 	// 	bbox = @_container.bounding_box()
@@ -61,24 +61,23 @@ export class GraphNode extends CoreObject {
 	//
 	//
 	entity_graph_node() {
-		return (this._entity_graph_node =
-			this._entity_graph_node || this.create_entity_graph_node())
+		return (this._entity_graph_node = this._entity_graph_node || this.create_entity_graph_node());
 	}
 	private create_entity_graph_node() {
-		const node = new NodeSimple()
-		node.set_scene(this.node().scene())
-		return node
+		const node = new NodeSimple('GraphNode.create_entity_graph_node');
+		node.set_scene(this.node().scene());
+		return node;
 	}
 	set_entity(entity: any) {
-		this._entity = entity
-		this.entity_graph_node().set_dirty()
-		return this._node.invalidates_param_results() // TODO: that probably shouldn't need to happen
+		this._entity = entity;
+		this.entity_graph_node().set_dirty();
+		// this._node.invalidates_param_results() // TODO: that probably shouldn't need to happen
 	}
 	entity() {
-		return this._entity
+		return this._entity;
 	}
 	attrib_value(attrib_name: string) {
-		return this._entity.attrib_value(attrib_name)
+		return this._entity.attrib_value(attrib_name);
 	}
 }
 // if attrib_name == 'ptnum'

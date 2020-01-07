@@ -1,6 +1,6 @@
 import {BaseNode} from 'src/engine/nodes/_Base'
 import {BaseParam} from 'src/engine/params/_Base'
-// import {NodeSimple} from 'src/Core/Graph/NodeSimple'
+// import {NodeSimple} from 'src/core/Graph/NodeSimple'
 
 // import {NamedGraphNodeClass} from './graph/NamedGraphNode'
 type NodeOrParam = BaseNode | BaseParam

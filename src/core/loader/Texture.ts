@@ -9,7 +9,7 @@
 // import {CoreGeometry} from 'src/core/Geometry/Geometry'
 // import {CoreWalker} from 'src/core/Walker'
 
-// import {BaseNode} from 'src/engine/Node/_Base'
+// import {BaseNode} from 'src/engine/nodes/_Base'
 // import {BaseParam} from 'src/engine/Param/_Base'
 
 // export class CoreTextureLoader {

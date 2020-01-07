@@ -1,13 +1,13 @@
-import {Vector3} from 'three/src/math/Vector3'
+import {Vector3} from 'three/src/math/Vector3';
 // import {Object3D} from 'three/src/core/Object3D'
 // import {Group} from 'three/src/objects/Group'
-import {Mesh} from 'three/src/objects/Mesh'
-import {Box3} from 'three/src/math/Box3'
-import {BaseContainer} from './_Base'
-import {CoreGroup} from 'src/core/geometry/Group'
+import {Mesh} from 'three/src/objects/Mesh';
+import {Box3} from 'three/src/math/Box3';
+import {TypedContainer} from './_Base';
+import {CoreGroup} from 'src/core/geometry/Group';
 // import {CoreObject} from 'src/core/geometry/Object'
-import {CoreGeometry} from 'src/core/geometry/Geometry'
-import {BufferGeometry} from 'three'
+import {CoreGeometry} from 'src/core/geometry/Geometry';
+import {BufferGeometry} from 'three';
 // import {CoreConstant} from 'src/core/geometry/Constant'
 
 // const CoreGeometryGroup = CoreGroup
@@ -20,17 +20,17 @@ import {BufferGeometry} from 'three'
 // interface BooleanByString {
 // 	[propName: string]: boolean
 // }
-export class GeometryContainer extends BaseContainer<CoreGroup> {
+export class GeometryContainer extends TypedContainer<CoreGroup> {
 	// protected _group: Group = new Group()
 	// private _objects_by_uuid: BooleanByString = {}
 	// protected _content: Object3D[] = []
-	protected _core_group: CoreGroup
+	protected _core_group: CoreGroup;
 
-	_points_count: number
-	_bounding_box: Box3
+	_points_count: number;
+	_bounding_box: Box3;
 
 	constructor() {
-		super()
+		super();
 		// this._materials = [];
 	}
 
@@ -44,20 +44,20 @@ export class GeometryContainer extends BaseContainer<CoreGroup> {
 	// 	return this._content.map(object=>CoreObject.clone(object))
 	// }
 	core_content(): CoreGroup {
-		return this._core_group
+		return this._core_group;
 	}
 	core_content_cloned(): CoreGroup {
 		if (this._core_group) {
-			return this._core_group.clone()
+			return this._core_group.clone();
 		}
 	}
 	reset_caches() {
-		this._core_group = null
-		this._points_count = null
-		this._bounding_box = null
+		this._core_group = null;
+		this._points_count = null;
+		this._bounding_box = null;
 	}
 	_default_content() {
-		return new CoreGroup()
+		return new CoreGroup();
 	}
 
 	// set_geometry: (geometry)->
@@ -90,7 +90,7 @@ export class GeometryContainer extends BaseContainer<CoreGroup> {
 	// 	// return new CoreGroup(this.group(options));
 	// }
 	core_group() {
-		return this._core_group //this.group_wrapper(options)
+		return this._core_group; //this.group_wrapper(options)
 	}
 
 	// object(options){
@@ -170,13 +170,13 @@ export class GeometryContainer extends BaseContainer<CoreGroup> {
 
 	private first_object() {
 		if (this._content) {
-			return this._content.objects()[0]
+			return this._content.objects()[0];
 		}
 	}
 	private first_geometry(): BufferGeometry {
-		const object = this.first_object()
+		const object = this.first_object();
 		if (object) {
-			return (object as Mesh).geometry as BufferGeometry
+			return (object as Mesh).geometry as BufferGeometry;
 		}
 	}
 
@@ -187,101 +187,99 @@ export class GeometryContainer extends BaseContainer<CoreGroup> {
 		// }
 		// return count
 		if (this._content) {
-			return this._content.objects().length
+			return this._content.objects().length;
 		} else {
-			return 0
+			return 0;
 		}
 	}
 	objects_visible_count(): number {
-		let count = 0
+		let count = 0;
 		if (this._content) {
-			count = this._content.objects().filter((c) => c.visible).length // lodash_filter(this._content, c=> c.visible).length;
+			count = this._content.objects().filter((c) => c.visible).length; // lodash_filter(this._content, c=> c.visible).length;
 		}
-		return count
+		return count;
 	}
 	objects_count_by_type() {
-		const count_by_type: NumbersByString = {}
+		const count_by_type: NumbersByString = {};
 		if (this._content) {
 			for (let core_object of this.core_group().core_objects()) {
-				const human_type = core_object.human_type()
+				const human_type = core_object.human_type();
 				if (count_by_type[human_type] == null) {
-					count_by_type[human_type] = 0
+					count_by_type[human_type] = 0;
 				}
-				count_by_type[human_type] += 1
+				count_by_type[human_type] += 1;
 			}
 		}
-		return count_by_type
+		return count_by_type;
 	}
 	objects_names_by_type() {
-		const names_by_type: StringsArrayByString = {}
+		const names_by_type: StringsArrayByString = {};
 		if (this._content) {
 			for (let core_object of this.core_group().core_objects()) {
-				const human_type = core_object.human_type()
-				names_by_type[human_type] = names_by_type[human_type] || []
-				names_by_type[human_type].push(core_object.name())
+				const human_type = core_object.human_type();
+				names_by_type[human_type] = names_by_type[human_type] || [];
+				names_by_type[human_type].push(core_object.name());
 			}
 		}
-		return names_by_type
+		return names_by_type;
 	}
 
 	vertex_attribute_names() {
-		let names: string[] = []
-		const geometry = this.first_geometry()
+		let names: string[] = [];
+		const geometry = this.first_geometry();
 		if (geometry) {
-			names = Object.keys(geometry.attributes)
+			names = Object.keys(geometry.attributes);
 		}
-		return names
+		return names;
 	}
 	vertex_attribute_sizes_by_name() {
-		let sizes_by_name: NumbersByString = {}
-		const geometry = this.first_geometry()
+		let sizes_by_name: NumbersByString = {};
+		const geometry = this.first_geometry();
 		if (geometry) {
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
-				const attrib = geometry.attributes[attrib_name]
-				sizes_by_name[attrib_name] = attrib.itemSize
-			})
+				const attrib = geometry.attributes[attrib_name];
+				sizes_by_name[attrib_name] = attrib.itemSize;
+			});
 		}
-		return sizes_by_name
+		return sizes_by_name;
 	}
 	vertex_attribute_types_by_name() {
-		let types_by_name: NumbersByString = {}
-		const geometry = this.first_geometry()
+		let types_by_name: NumbersByString = {};
+		const geometry = this.first_geometry();
 		if (geometry) {
-			const core_geo = new CoreGeometry(geometry)
+			const core_geo = new CoreGeometry(geometry);
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
-				types_by_name[attrib_name] = core_geo.attrib_type(attrib_name)
-			})
+				types_by_name[attrib_name] = core_geo.attrib_type(attrib_name);
+			});
 		}
-		return types_by_name
+		return types_by_name;
 	}
 	object_attribute_names() {
-		let names: string[] = []
-		const object = this.first_object()
+		let names: string[] = [];
+		const object = this.first_object();
 		if (object) {
-			names = Object.keys(object.userData['attributes'] || {})
+			names = Object.keys(object.userData['attributes'] || {});
 		}
-		return names
+		return names;
 	}
 
 	points_count() {
-		return this._points_count != null
-			? this._points_count
-			: (this._points_count = this._compute_points_count())
+		return this._points_count != null ? this._points_count : (this._points_count = this._compute_points_count());
 	}
 
 	_compute_points_count() {
-		let points_count = 0
+		let points_count = 0;
 		if (this._content) {
 			for (let object of this._content.objects()) {
 				object.traverse((object) => {
-					const geometry = (object as Mesh).geometry as BufferGeometry
+					const geometry = (object as Mesh).geometry as BufferGeometry;
 					if (geometry) {
-						points_count += CoreGeometry.points_count(geometry)
+						points_count += CoreGeometry.points_count(geometry);
 					}
-				})
+				});
 			}
 		}
-		return points_count
+		return points_count;
 	}
 	//@_content.userData['points_count']
 	//Core.Geometry.Geometry.points_count(@_content)
@@ -304,30 +302,28 @@ export class GeometryContainer extends BaseContainer<CoreGroup> {
 	//
 	//
 	bounding_box(): Box3 {
-		return this._bounding_box != null
-			? this._bounding_box
-			: (this._bounding_box = this._compute_bounding_box())
+		return this._bounding_box != null ? this._bounding_box : (this._bounding_box = this._compute_bounding_box());
 	}
 	center(): Vector3 {
-		const center = new Vector3()
-		this.bounding_box().getCenter(center)
-		return center
+		const center = new Vector3();
+		this.bounding_box().getCenter(center);
+		return center;
 	}
 	size(): Vector3 {
-		const size = new Vector3()
-		this.bounding_box().getSize(size)
-		return size
+		const size = new Vector3();
+		this.bounding_box().getSize(size);
+		return size;
 	}
 
 	private _compute_bounding_box() {
-		const bbox = new Box3()
+		const bbox = new Box3();
 		if (this._content) {
 			for (let object of this._content.objects()) {
 				// const box = new Box3()
 				// bbox.setFromObject(object);
-				bbox.expandByObject(object)
+				bbox.expandByObject(object);
 			}
 		}
-		return bbox
+		return bbox;
 	}
 }

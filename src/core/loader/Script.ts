@@ -41,16 +41,13 @@ export class CoreScriptLoader {
 			} else {
 				const id = url.replace(/[\W_]+/g, '_')
 				// let script = document.querySelector(`script[src="${url}"]`)
-				let script: HTMLScriptElement = document.getElementById(
-					id
-				) as HTMLScriptElement
+				let script: HTMLScriptElement = document.getElementById(id) as HTMLScriptElement
 
 				if (script) {
 					if (this._loaded_state_by_url[url]) {
 						resolve()
 					} else {
-						this._load_callbacks_by_url[url] =
-							this._load_callbacks_by_url[url] || []
+						this._load_callbacks_by_url[url] = this._load_callbacks_by_url[url] || []
 						this._load_callbacks_by_url[url].push(resolve)
 					}
 				} else {
@@ -64,8 +61,7 @@ export class CoreScriptLoader {
 						resolve()
 
 						if (CoreScriptLoader._load_callbacks_by_url[url]) {
-							for (let callback of CoreScriptLoader
-								._load_callbacks_by_url[url]) {
+							for (let callback of CoreScriptLoader._load_callbacks_by_url[url]) {
 								callback()
 							}
 							delete CoreScriptLoader._load_callbacks_by_url[url]
@@ -106,7 +102,7 @@ export class CoreScriptLoader {
 	// }
 
 	static load_module(path: string) {
-		// COMMENT NEXT LINE WHEN EXPORTING FOR ACTIVEDESIGN
+		// COMMENT NEXT LINE WHEN EXPORTING
 		return import(`modules/${path}`)
 	}
 	static load_module_three(path: string) {

@@ -3,7 +3,7 @@
 	"trailingComma": "es5",
 	"tabWidth": 4,
 	"useTabs": true,
-	"semi": false,
+	"semi": true,
 	"singleQuote": true,
 	"bracketSpacing": false,
 	"arrowParens": "always",

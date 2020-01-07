@@ -1,52 +1,52 @@
-import {CoreObject} from 'src/core/Object'
+import {CoreObject} from 'src/core/Object';
 
-import {BaseNode} from 'src/engine/nodes/_Base'
+import {BaseNode} from 'src/engine/nodes/_Base';
 
 // interface ContentOption {
 // 	clone?: boolean
 // }
 
-export abstract class BaseContainer<T> extends CoreObject {
-	protected _node: BaseNode
+export abstract class TypedContainer<T> extends CoreObject {
+	protected _node: BaseNode;
 	// protected _eval_key: number
-	protected _content: T
+	protected _content: T;
 
 	constructor() {
-		super()
+		super();
 		// this.update_eval_key();
-		this.set_content(this._default_content())
+		this.set_content(this._default_content());
 	}
 
 	set_node(node: BaseNode) {
-		this._node = node
+		this._node = node;
 	}
 	node(): BaseNode {
-		return this._node
+		return this._node;
 	}
 
 	clone() {
-		let content
-		const cloned_container = new (<any>this.constructor)() as BaseContainer<T>
-		cloned_container.set_node(this.node())
+		let content;
+		const cloned_container = new (<any>this.constructor)() as TypedContainer<T>;
+		cloned_container.set_node(this.node());
 		if ((content = this.content()) != null) {
-			cloned_container.set_content(content) //, this.eval_key() );
+			cloned_container.set_content(content); //, this.eval_key() );
 		}
-		return cloned_container
+		return cloned_container;
 	}
 	reset_caches() {}
 	_default_content(): T {
-		return null
+		return null;
 	}
 
 	set_content(content: T) {
 		//, eval_key?: number){
-		this.reset_caches()
-		this._content = content || this._default_content()
+		this.reset_caches();
+		this._content = content || this._default_content();
 		// this.update_eval_key(eval_key);
-		this._post_set_content()
+		this._post_set_content();
 	}
 	has_content(): boolean {
-		return this._content != null
+		return this._content != null;
 	}
 	// content(options: ContentOption = {}) {
 	// 	const clone = options['clone'] || false
@@ -57,14 +57,14 @@ export abstract class BaseContainer<T> extends CoreObject {
 	// 	}
 	// }
 	content() {
-		return this._content
+		return this._content;
 	}
 	protected _post_set_content() {}
 	protected core_content() {
-		return this._content
+		return this._content;
 	}
 	protected core_content_cloned() {
-		return this._content
+		return this._content;
 	}
 	// abstract clone_content(): T
 
@@ -76,6 +76,8 @@ export abstract class BaseContainer<T> extends CoreObject {
 	// }
 
 	infos(): object {
-		return []
+		return [];
 	}
 }
+
+export class BaseContainer extends TypedContainer<any> {}
