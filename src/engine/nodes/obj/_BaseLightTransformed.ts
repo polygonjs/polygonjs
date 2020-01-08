@@ -1,9 +1,8 @@
-import {BaseLight} from './_BaseLight';
+import {BaseLightObjNode} from './_BaseLight';
 
-import {CoreTransform} from 'src/Core/Transform';
+import {CoreTransform} from 'src/core/Transform';
 
-
-import {Transformed} from './Concerns/Transformed';
+// import {Transformed} from './Concerns/Transformed';
 
 // class BaseModules extends BaseLight {
 // 	constructor() {
@@ -12,31 +11,27 @@ import {Transformed} from './Concerns/Transformed';
 // }
 // window.include_instance_methods(BaseModules, Transformed.instance_methods);
 
-export class BaseLightTransformed extends Transformed(BaseLight) {
-
+export abstract class BaseLightTransformedObjNode extends BaseLightObjNode {
 	constructor() {
 		super();
 	}
 
-
 	create_params() {
-		this.within_param_folder('transform', ()=>{
+		this.within_param_folder('transform', () => {
 			CoreTransform.create_params(this);
-		})
-		this.within_param_folder('light', ()=>{
+		});
+		this.within_param_folder('light', () => {
 			this.create_light_params();
-		})
-		this.within_param_folder('shadows', ()=>{
+		});
+		this.within_param_folder('shadows', () => {
 			this.create_shadow_params_main();
-		})
+		});
 	}
-
 
 	cook() {
-		this.update_transform();
+		this.transform_controller.update();
 		this.update_light_params();
 		this.update_shadow_params();
-		this.end_cook();
+		this.cook_controller.end_cook();
 	}
 }
-

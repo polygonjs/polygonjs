@@ -39,8 +39,8 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		this.flags.add_display();
 		// this.flags.add_bypass({has_bypass_flag: false});
 
-		this.set_min_inputs_count(0);
-		this.set_max_inputs_count(0);
+		// this.set_min_inputs_count(0);
+		// this.set_max_inputs_count(0);
 	}
 	//@_object_uuid_by_node_graph_id = {}
 
@@ -57,8 +57,9 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	object() {
 		return this._object;
 	}
+	// TODO: typescript: there may be a better way to convert
 	create_node(type: string): BaseObjNode {
-		return super.create_node(type);
+		return super.create_node(type) as BaseObjNode;
 	}
 
 	multiple_display_flags_allowed() {

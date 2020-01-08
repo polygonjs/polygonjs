@@ -48,13 +48,12 @@ export class BaseSopNode extends BaseNode {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	protected _container: GeometryContainer = new GeometryContainer(this);
-
 	// _master_group: Group
 	// _objects: Object3D[] = []
 
 	constructor() {
 		super();
+		this.container_controller.init(GeometryContainer);
 		this.flags.add_display();
 		this.flags.add_bypass();
 		// this.container_controller.init(CONTAINER_CLASS);

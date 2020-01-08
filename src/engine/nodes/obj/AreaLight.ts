@@ -1,8 +1,5 @@
-
-import {ParamType} from 'src/Engine/Param/_Module'
-import {BaseLightTransformed} from './_BaseLightTransformed';
-import {RectAreaLight} from 'three/src/lights/RectAreaLight'
-const THREE = {RectAreaLight}
+import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
+import {RectAreaLight} from 'three/src/lights/RectAreaLight';
 
 // attempt to load immediately, to ensure that async lights
 // are not going to trigger material recompilations
@@ -13,55 +10,56 @@ const THREE = {RectAreaLight}
 // well.. that changes nothing.
 // instead I should do this maybe:
 // scene.display_scene().traverse((object)=>{if(object.material){object.material.needsUpdate = true}})
-// or maybe I should only instanciate a THREE.RectAreaLight after having called init()
-import {CoreScriptLoader} from 'src/Core/Loader/Script'
+// or maybe I should only instanciate a RectAreaLight after having called init()
+import {CoreScriptLoader} from 'src/core/loader/Script';
 
-export class AreaLight extends BaseLightTransformed {
-
+export class AreaLight extends BaseLightTransformedObjNode {
+	@ParamC('color') _param_color: Color;
+	@ParamC('intensity') _param_intensity: number;
+	@ParamC('width') _param_width: number;
+	@ParamC('height') _param_height: number;
+	protected _object: RectAreaLight;
+	get object() {
+		return this._object;
+	}
 	constructor() {
 		super();
 	}
-	static type() { return 'area_light'; }
+	static type() {
+		return 'area_light';
+	}
 
 	create_object() {
-		const object = new THREE.RectAreaLight(0xffffff, 1, 1, 1);
+		const object = new RectAreaLight(0xffffff, 1, 1, 1);
 
 		return object;
 	}
 
 	create_light_params() {
-		this.add_param( ParamType.COLOR, 'color', [1,1,1] );
-		this.add_param( ParamType.FLOAT, 'intensity', 1, {range: [0, 10]} );
-		this.add_param( ParamType.FLOAT, 'width', 1, {range: [0, 10]} );
-		this.add_param( ParamType.FLOAT, 'height', 1, {range: [0, 10]} );
+		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
+		this.add_param(ParamType.FLOAT, 'intensity', 1, {range: [0, 10]});
+		this.add_param(ParamType.FLOAT, 'width', 1, {range: [0, 10]});
+		this.add_param(ParamType.FLOAT, 'height', 1, {range: [0, 10]});
 	}
 
 	update_light_params() {
-		let object;
-		if ((object = this.object()) != null) {
-
-			object.color = this._param_color;
-			object.intensity = this._param_intensity;
-			object.width = this._param_width;
-			object.height = this._param_height;
-		}
+		this.object.color = this._param_color;
+		this.object.intensity = this._param_intensity;
+		this.object.width = this._param_width;
+		this.object.height = this._param_height;
 	}
 
 	async cook() {
-		const {RectAreaLightUniformsLib} = await CoreScriptLoader.load_module_three_light("RectAreaLightUniformsLib")
+		const {RectAreaLightUniformsLib} = await CoreScriptLoader.load_module_three_light('RectAreaLightUniformsLib');
 		// const module = RectAreaLightUniformsLib
-		if(!RectAreaLightUniformsLib.initialized){
+		if (!RectAreaLightUniformsLib.initialized) {
 			RectAreaLightUniformsLib.init();
-			RectAreaLightUniformsLib.initialized = true
+			RectAreaLightUniformsLib.initialized = true;
 		}
 
-
-		this.update_transform();
+		this.transform_controller.update();
 		this.update_light_params();
 		this.update_shadow_params();
-		this.end_cook();
+		this.cook_controller.end_cook();
 	}
-
 }
-
-

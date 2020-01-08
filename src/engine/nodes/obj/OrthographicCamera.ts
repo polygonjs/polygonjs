@@ -1,11 +1,9 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {Group} from 'three/src/objects/Group';
-import {CameraHelper} from 'three/src/helpers/CameraHelper';
-const THREE = {CameraHelper, Group, OrthographicCamera, Vector2};
+// import {Group} from 'three/src/objects/Group';
+// import {CameraHelper} from 'three/src/helpers/CameraHelper';
 import lodash_clamp from 'lodash/clamp';
-import {BaseCamera, BASE_CAMERA_DEFAULT} from './_BaseCamera';
-import lodash_isNaN from 'lodash/isNaN';
+import {BaseCameraObjNode, BASE_CAMERA_DEFAULT} from './_BaseCamera';
 
 import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
 
@@ -16,11 +14,11 @@ const DEFAULT = {
 	bottom: -0.5,
 };
 
-export class OrthographicCameraObj extends BaseCamera {
-	_object: THREE.OrthographicCamera;
+export class OrthographicCameraObj extends BaseCameraObjNode {
+	protected _object: OrthographicCamera;
 	_param_size: number;
-	_param_vertical_size_range: THREE.Vector2;
-	_param_horizontal_size_range: THREE.Vector2;
+	_param_vertical_size_range: Vector2;
+	_param_horizontal_size_range: Vector2;
 
 	protected get background_controller_constructor() {
 		return OrthographicCameraBackgroundController;
@@ -34,7 +32,7 @@ export class OrthographicCameraObj extends BaseCamera {
 	}
 
 	create_object() {
-		return new THREE.OrthographicCamera(
+		return new OrthographicCamera(
 			DEFAULT.left * 2,
 			DEFAULT.right * 2,
 			DEFAULT.top * 2,
@@ -43,8 +41,8 @@ export class OrthographicCameraObj extends BaseCamera {
 			BASE_CAMERA_DEFAULT.far
 		);
 	}
-	//@_helper = new THREE.CameraHelper( @_camera )
-	//group = new THREE.Group()
+	//@_helper = new CameraHelper( @_camera )
+	//group = new Group()
 	//group.add(@_camera)
 	//group.add(@_helper)
 
@@ -99,7 +97,7 @@ export class OrthographicCameraObj extends BaseCamera {
 		}
 	}
 
-	private get_zoom(size: number, range: THREE.Vector2) {
+	private get_zoom(size: number, range: Vector2) {
 		let zoom = 1;
 		if (range) {
 			if (size < range.x || size > range.y) {

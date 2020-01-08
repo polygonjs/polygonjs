@@ -17,7 +17,7 @@ export class TransformController {
 		}
 	}
 
-	update_transform(matrix?: Matrix4) {
+	update(matrix?: Matrix4) {
 		const object = this.node.object;
 		// const update_full_matrix = false; // if true the camera controls do not work anymore
 		//matrix = Core.Transform.matrix_from_node_with_transform_params(this)

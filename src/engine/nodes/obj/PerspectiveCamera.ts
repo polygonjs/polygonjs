@@ -3,7 +3,7 @@ import lodash_clamp from 'lodash/clamp';
 import {Vector2} from 'three/src/math/Vector2';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 const THREE = {PerspectiveCamera, Vector2};
-import {BaseCamera, BASE_CAMERA_DEFAULT} from './_BaseCamera';
+import {BaseCameraObjNode, BASE_CAMERA_DEFAULT} from './_BaseCamera';
 import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
 
 const DEFAULT = {
@@ -12,7 +12,7 @@ const DEFAULT = {
 
 // const EVENT_CHANGE = { type: 'change' };
 
-export class PerspectiveCameraObj extends BaseCamera {
+export class PerspectiveCameraObj extends BaseCameraObjNode {
 	static type() {
 		return 'perspective_camera';
 	}

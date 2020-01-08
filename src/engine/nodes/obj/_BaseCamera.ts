@@ -3,6 +3,8 @@ import {Camera} from 'three/src/cameras/Camera';
 
 import {CoreTransform} from 'src/core/Transform';
 import {BaseObjNode} from './_Base';
+import {ControlsController} from './utils/cameras/ControlsController';
+import {LayersController} from './utils/LayersController';
 import {PostProcessController} from './utils/cameras/PostProcessController';
 
 // import {Dirtyable} from './Concerns/Dirtyable';
@@ -14,14 +16,14 @@ import {PostProcessController} from './utils/cameras/PostProcessController';
 // import {CameraControls} from './Concerns/CameraControls';
 // import {File} from 'src/Engine/Node/Cop/File'
 import {ThreejsViewer} from 'src/engine/viewers/Threejs';
-import {BaseBackgroundController} from './utils/cameras/Background/_BaseController';
-interface CameraWithNearAndFar extends Camera {
+import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
+export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
 	updateProjectionMatrix: () => void;
+	getFocalLength: () => void;
 }
 
-import {LayersController} from './utils/LayersController';
 // import {ControlsController} from './utils/ControlsController';
 // class BaseModules extends Base {
 // 	constructor() {
@@ -41,8 +43,8 @@ export const BASE_CAMERA_DEFAULT = {
 	far: 100.0,
 };
 
-export class BaseCamera extends BaseObjNode {
-	protected _object: CameraWithNearAndFar;
+export class BaseCameraObjNode extends BaseObjNode {
+	protected _object: OrthoOrPerspCamera;
 	get object() {
 		return this._object;
 	}
@@ -58,6 +60,10 @@ export class BaseCamera extends BaseObjNode {
 	}
 	protected get background_controller_constructor() {
 		return BaseBackgroundController;
+	}
+	protected _controls_controller: ControlsController;
+	get controls_controller() {
+		return (this._controls_controller = this._controls_controller || new ControlsController(this));
 	}
 	protected _layers_controller: LayersController;
 	get layers_controller() {
@@ -112,9 +118,9 @@ export class BaseCamera extends BaseObjNode {
 	// 	lines
 
 	async cook() {
-		this.update_transform();
-		this.update_layers();
-		await this.update_background();
+		this.transform_controller.update();
+		this.layers_controller.update();
+		await this.background_controller.update();
 
 		if (this._object.near != this._param_near || this._object.far != this._param_far) {
 			this._object.near = this._param_near;
@@ -122,9 +128,9 @@ export class BaseCamera extends BaseObjNode {
 			this._object.updateProjectionMatrix();
 		}
 
-		await this.update_composer_passes();
+		await this.post_process_controller.update_composer_passes();
 		this.update_camera();
-		this.update_controls();
+		this.controls_controller.update_controls();
 
 		// TODO: ideally the update transform and update camera
 		// can both return if the camera has changed
@@ -160,7 +166,7 @@ export class BaseCamera extends BaseObjNode {
 			this._update_for_aspect_ratio();
 		}
 	}
-	abstract _update_for_aspect_ratio() {}
+	protected _update_for_aspect_ratio(): void {}
 
 	update_transform_params_from_object() {
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})

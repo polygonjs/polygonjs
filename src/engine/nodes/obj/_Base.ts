@@ -25,7 +25,6 @@ export class BaseObjNode extends BaseNode {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	protected _container: ObjectContainer = new ObjectContainer(this);
 	protected _object: Object3D;
 	_sop_loaded: boolean = false;
 
@@ -40,6 +39,7 @@ export class BaseObjNode extends BaseNode {
 
 	constructor() {
 		super();
+		this.container_controller.init(ObjectContainer);
 		this._object = this._create_object_with_attributes();
 		// this._init_container_owner('Object');
 		this.flags.add_display();

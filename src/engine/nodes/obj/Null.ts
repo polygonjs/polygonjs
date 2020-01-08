@@ -1,8 +1,6 @@
 import {BaseObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
-const THREE = {Group};
 
-import {Transformed} from './Concerns/Transformed';
 import {CoreTransform} from 'src/core/Transform';
 
 // class BaseModules extends Base {
@@ -13,7 +11,7 @@ import {CoreTransform} from 'src/core/Transform';
 // window.include_instance_methods(BaseModules, Dirtyable.instance_methods);
 // window.include_instance_methods(BaseModules, Transformed.instance_methods);
 
-export class NullObj extends Transformed(BaseObjNode) {
+export class NullObj extends BaseObjNode {
 	constructor() {
 		super();
 
@@ -29,7 +27,7 @@ export class NullObj extends Transformed(BaseObjNode) {
 
 	//@_group = new THREE.Group()
 	create_object() {
-		return new THREE.Group();
+		return new Group();
 	}
 
 	create_params() {
@@ -38,7 +36,7 @@ export class NullObj extends Transformed(BaseObjNode) {
 	}
 
 	cook() {
-		this.update_transform();
+		this.transform_controller.update();
 		this.cook_controller.end_cook();
 	}
 }

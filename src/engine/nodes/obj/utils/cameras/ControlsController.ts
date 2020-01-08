@@ -1,18 +1,17 @@
-import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseCameraControls} from 'src/engine/nodes/events/_BaseCameraControls';
-import {CameraControlsConfig} from 'src/engine/nodes/events/CameraControls/Config';
-import {BaseCameraControls} from 'src/engine/nodes/events/_BaseCameraControls';
+import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraControlsEventNode, CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
+import {CameraControlsConfig} from 'src/engine/nodes/event/utils/CameraControlConfig';
 import {BaseParam} from 'src/engine/params/_Base';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
 export class ControlsController {
 	_applied_controls_by_element_id: Dictionary<Dictionary<boolean>> = {};
-	private _controls_node: BaseCameraControls;
+	private _controls_node: BaseCameraControlsEventNode;
 	private controls_start_listener: () => void;
 	private controls_end_listener: () => void;
 
-	constructor(private node: BaseCamera) {}
+	constructor(private node: BaseCameraObjNode) {}
 
 	controls_param(): BaseParam {
 		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
@@ -20,9 +19,9 @@ export class ControlsController {
 		}
 	}
 
-	controls_node(): BaseCameraControls {
-		if (this.self.has_param(CONTROLS_PARAM_NAME)) {
-			return this.self.param(CONTROLS_PARAM_NAME).found_node();
+	controls_node(): BaseCameraControlsEventNode {
+		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
+			return this.node.params.get_operator_path(CONTROLS_PARAM_NAME).found_node() as BaseCameraControlsEventNode;
 		}
 	}
 
@@ -48,7 +47,7 @@ export class ControlsController {
 			let controls_aleady_applied = false;
 			if (
 				this._applied_controls_by_element_id[html_element.id] &&
-				this._applied_controls_by_element_id[html_element.id][controls_id] == true
+				this._applied_controls_by_element_id[html_element.id][controls_id]
 			) {
 				controls_aleady_applied = true;
 			}
@@ -60,9 +59,9 @@ export class ControlsController {
 
 				// request_container forces a cook
 				//controls_node.request_container (controls_container)=>
-				const controls = await controls_node.apply_controls(this.self.object(), html_element);
-				const config = new CameraControlsConfig(this.self.graph_node_id(), controls_node, controls);
-				controls_node.set_from_camera_node(controls, this);
+				const controls = await controls_node.apply_controls(this.node.object, html_element);
+				const config = new CameraControlsConfig(this.node.graph_node_id(), controls_node, controls);
+				controls_node.set_from_camera_node(controls, this.node);
 				this.set_controls_events(controls);
 				return config;
 			}
@@ -89,7 +88,7 @@ export class ControlsController {
 		// }
 		// this._last_control_node_id = null
 	}
-	set_controls_events(controls: any) {
+	set_controls_events(controls: CameraControls) {
 		// restore target (for orbit controls only for now)
 		// to ensure that camera does not reset its target on 0,0,0 on first move
 		// const controls_node = this.controls_node()
@@ -110,14 +109,15 @@ export class ControlsController {
 		controls.addEventListener('end', this.controls_end_listener);
 	}
 
-	on_controls_start(controls: any) {
+	on_controls_start(controls: CameraControls) {
 		// this.param('is_updating').set(1)
 	}
-	on_controls_end(controls: any) {
+	on_controls_end(controls: CameraControls) {
 		// this.param('is_updating').set(0)
 		if (controls.target) {
-			this.self.param('target').set(controls.target.toArray());
+			const val = controls.target.toArray() as [number, number, number];
+			this.node.params.set_vector3('target', val);
 		}
-		this.self.update_transform_params_from_object();
+		this.node.update_transform_params_from_object();
 	}
 }

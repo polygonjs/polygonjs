@@ -24,7 +24,10 @@ import {StringParam} from 'src/engine/params/String';
 import {Vector2Param} from 'src/engine/params/Vector2';
 import {Vector3Param} from 'src/engine/params/Vector3';
 import {Vector4Param} from 'src/engine/params/Vector4';
-import {Vector3} from 'three';
+
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Color} from 'three/src/math/Color';
 // import {RampValue} from 'src/engine/params/ramp/RampValue';
 
 const ParamConstructorMap = {
@@ -43,6 +46,73 @@ const ParamConstructorMap = {
 };
 
 const NODE_SIMPLE_NAME = 'params';
+
+function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
+	const key_s = key as string;
+	if (key_s != `_param_${name}`) {
+		console.warn('param name inconsistent');
+	}
+	const param = target.params.get(name);
+	if (param.type() != type) {
+		console.warn('param type inconsistent');
+	}
+}
+const _ParamB = function ParamF(name: string) {
+	return <T extends BaseNode>(target: T, key: keyof T) => {
+		_ParamCheckNameConsistency(name, target, key, ParamType.BOOLEAN);
+		Object.defineProperty(target, key, {
+			get: () => target.params.boolean(name),
+		});
+	};
+};
+const _ParamF = function ParamF(name: string) {
+	return <T extends BaseNode>(target: T, key: keyof T) => {
+		_ParamCheckNameConsistency(name, target, key, ParamType.FLOAT);
+		Object.defineProperty(target, key, {
+			get: () => target.params.float(name),
+		});
+	};
+};
+const _ParamS = function ParamF(name: string) {
+	return <T extends BaseNode>(target: T, key: keyof T) => {
+		_ParamCheckNameConsistency(name, target, key, ParamType.STRING);
+		Object.defineProperty(target, key, {
+			get: () => target.params.string(name),
+		});
+	};
+};
+const _ParamV2 = function ParamF(name: string) {
+	return <T extends BaseNode>(target: T, key: keyof T) => {
+		_ParamCheckNameConsistency(name, target, key, ParamType.VECTOR2);
+		Object.defineProperty(target, key, {
+			get: () => target.params.vector2(name),
+		});
+	};
+};
+const _ParamV3 = function ParamF(name: string) {
+	return <T extends BaseNode>(target: T, key: keyof T) => {
+		_ParamCheckNameConsistency(name, target, key, ParamType.VECTOR3);
+		Object.defineProperty(target, key, {
+			get: () => target.params.vector3(name),
+		});
+	};
+};
+const _ParamC = function ParamF(name: string) {
+	return <T extends BaseNode>(target: T, key: keyof T) => {
+		_ParamCheckNameConsistency(name, target, key, ParamType.COLOR);
+		Object.defineProperty(target, key, {
+			get: () => target.params.color(name),
+		});
+	};
+};
+declare global {
+	const ParamB: typeof _ParamB;
+	const ParamF: typeof _ParamF;
+	const ParamS: typeof _ParamS;
+	const ParamV2: typeof _ParamV2;
+	const ParamV3: typeof _ParamV3;
+	const ParamC: typeof _ParamC;
+}
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
@@ -113,6 +183,22 @@ export class ParamsController {
 	// 	// return lodash_concat(lodash_values(this._params), lodash_values(this._spare_params));
 	// 	return lodash_values(this._params);
 	// }
+
+	private set_with_type(name: string, value: any, type: ParamType) {
+		const param = this.param_with_type(name, type);
+		if (param) {
+			param.set(value);
+		} else {
+			console.warn(`param ${name} not found with type ${type}`);
+		}
+	}
+	set_float(name: string, value: number) {
+		this.set_with_type(name, value, ParamType.FLOAT);
+	}
+	set_vector3(name: string, value: [number, number, number]) {
+		this.set_with_type(name, value, ParamType.VECTOR3);
+	}
+
 	has_param(name: string) {
 		return this._params_by_name[name] != null;
 	}
@@ -122,20 +208,27 @@ export class ParamsController {
 	get(name: string) {
 		return this.param(name);
 	}
-	get_operator_path(name: string): OperatorPathParam {
+	param_with_type(name: string, type: ParamType) {
 		const param = this.param(name);
-		if (param && param.type() == OperatorPathParam.type()) {
-			return param as OperatorPathParam;
+		if (param && param.type() == type) {
+			return param;
 		}
+	}
+	get_operator_path(name: string): OperatorPathParam {
+		return this.param_with_type(name, ParamType.OPERATOR_PATH) as OperatorPathParam;
 	}
 	value(name: string) {
 		return this.param(name).value();
 	}
 	value_with_type(name: string, type: ParamType) {
-		const param = this.param(name);
-		if (param && param.type() == type) {
-			return param.value();
-		}
+		return this.param_with_type(name, type).value();
+		// const param = this.param(name);
+		// if (param && param.type() == type) {
+		// 	return param.value();
+		// }
+	}
+	boolean(name: string) {
+		return this.value_with_type(name, ParamType.FLOAT) as boolean;
 	}
 	float(name: string) {
 		return this.value_with_type(name, ParamType.FLOAT) as number;
@@ -143,8 +236,17 @@ export class ParamsController {
 	integer(name: string) {
 		return this.value_with_type(name, ParamType.INTEGER) as number;
 	}
+	string(name: string) {
+		return this.value_with_type(name, ParamType.STRING) as string;
+	}
+	vector2(name: string) {
+		return this.value_with_type(name, ParamType.VECTOR2) as Vector2;
+	}
 	vector3(name: string) {
-		return this.value_with_type(name, ParamType.FLOAT) as Vector3;
+		return this.value_with_type(name, ParamType.VECTOR3) as Vector3;
+	}
+	color(name: string) {
+		return this.value_with_type(name, ParamType.COLOR) as Color;
 	}
 
 	param(name: string) {
@@ -160,9 +262,9 @@ export class ParamsController {
 			return null;
 		}
 	}
-	param_cache_name(param_name: string) {
-		return `_param_${param_name}`;
-	}
+	// param_cache_name(param_name: string) {
+	// 	return `_param_${param_name}`;
+	// }
 
 	delete_params(param_names: string[]) {
 		for (let param_name of param_names) {
@@ -170,7 +272,7 @@ export class ParamsController {
 		}
 		this._update_caches();
 	}
-	private delete_param(param_name: string) {
+	delete_param(param_name: string) {
 		const param = this._params_by_name[param_name];
 		if (param) {
 			this._params_node.remove_graph_input(this._params_by_name[param_name]);

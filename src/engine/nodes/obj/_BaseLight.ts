@@ -1,4 +1,6 @@
 import {BaseObjNode} from './_Base';
+import {Light} from 'three/src/lights/Light';
+import {Color} from 'three/src/math/Color';
 
 // class BaseModules extends Base {
 // 	constructor() {
@@ -7,9 +9,15 @@ import {BaseObjNode} from './_Base';
 // }
 // window.include_instance_methods(BaseModules, Dirtyable.instance_methods);
 
-export class BaseLight extends BaseNodeObj {
+export abstract class BaseLightObjNode extends BaseObjNode {
+	protected _object: Light;
+	protected _color_with_intensity = new Color(0x00000);
+	get object() {
+		return this._object;
+	}
 	constructor() {
 		super();
+		this.flags.add_display();
 		this._init_dirtyable_hook();
 	}
 
@@ -19,10 +27,13 @@ export class BaseLight extends BaseNodeObj {
 	}
 
 	create_shadow_params_main() {
-		if (this.object().shadow != null) {
+		if (this.object.shadow != null) {
 			return this.create_shadow_params();
 		}
 	}
+
+	abstract create_light_params(): void;
+	abstract update_light_params(): void;
 
 	create_shadow_params() {
 		return;
@@ -44,16 +55,14 @@ export class BaseLight extends BaseNodeObj {
 	cook() {
 		this.update_light_params();
 		this.update_shadow_params();
-		this.end_cook();
+		this.cook_controller.end_cook();
 	}
 
 	update_shadow_params() {
-		let object;
-		return;
+		// let object;
+		// return;
 		// if (((object = this.object()) != null) && (object.shadow != null)) {
-
 		// 	object.castShadow = this._param_cast_shadow;
-
 		// 	object.shadow.mapSize.width = this._param_shadow_res.x;
 		// 	object.shadow.mapSize.height = this._param_shadow_res.y;
 		// 	object.shadow.camera.near = this._param_shadow_near;
@@ -62,10 +71,13 @@ export class BaseLight extends BaseNodeObj {
 		// }
 	}
 
-	color() {
-		return this._param_color.clone().multiplyScalar(this._param_intensity);
+	get color_with_intensity() {
+		const color = this.params.color('color');
+		const intensity = this.params.float('intensity');
+		this._color_with_intensity.copy(color).multiplyScalar(intensity);
+		return this._color_with_intensity;
 	}
-	active() {
-		return this.display_flag_state();
+	get active(): boolean {
+		return this.flags.display.active;
 	}
 }

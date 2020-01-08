@@ -124,8 +124,6 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 		return (this._io = this._io || new IOController(this));
 	}
 
-	protected _container: BaseContainer;
-
 	constructor() {
 		super();
 
@@ -212,7 +210,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	add_param(
 		type: ParamType.BOOLEAN,
 		name: string,
-		default_value: BooleanAsNumber,
+		default_value: BooleanAsNumber | string,
 		options?: ParamOptions
 	): BooleanParam;
 	add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam;
@@ -222,8 +220,13 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 		default_value: [number, number, number],
 		options?: ParamOptions
 	): ColorParam;
-	add_param(type: ParamType.FLOAT, name: string, default_value: number, options?: ParamOptions): FloatParam;
-	add_param(type: ParamType.INTEGER, name: string, default_value: number, options?: ParamOptions): IntegerParam;
+	add_param(type: ParamType.FLOAT, name: string, default_value: number | string, options?: ParamOptions): FloatParam;
+	add_param(
+		type: ParamType.INTEGER,
+		name: string,
+		default_value: number | string,
+		options?: ParamOptions
+	): IntegerParam;
 	add_param(
 		type: ParamType.OPERATOR_PATH,
 		name: string,
@@ -236,19 +239,19 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	add_param(
 		type: ParamType.VECTOR2,
 		name: string,
-		default_value: [number, number],
+		default_value: [number | string, number | string],
 		options?: ParamOptions
 	): Vector2Param;
 	add_param(
 		type: ParamType.VECTOR3,
 		name: string,
-		default_value: [number, number, number],
+		default_value: [number | string, number | string, number | string],
 		options?: ParamOptions
 	): Vector3Param;
 	add_param(
 		type: ParamType.VECTOR4,
 		name: string,
-		default_value: [number, number, number, number],
+		default_value: [number | string, number | string, number | string, number | string],
 		options?: ParamOptions
 	): Vector4Param;
 	add_param(type: ParamType, name: string, default_value: any, options?: ParamOptions): BaseParam {
@@ -280,10 +283,6 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 		this.cook_controller.end_cook(message);
 	}
 
-	get container() {
-		return this._container;
-	}
-
 	// hierarchy
 	create_node(type: string) {
 		return this.children_controller.create_node(type);
@@ -301,6 +300,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	emit(event_name: 'node_named_outputs_updated'): void;
 	emit(event_name: 'node_named_inputs_updated'): void;
 	emit(event_name: 'node_inputs_updated'): void;
+	emit(event_name: 'params_updated'): void;
 	emit(event_name: string, data: object = null): void {
 		super.emit(event_name, data);
 	}

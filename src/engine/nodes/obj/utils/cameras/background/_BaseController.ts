@@ -1,4 +1,4 @@
-import {Vector3} from 'three/src/math/Vector3';
+// import {Vector3} from 'three/src/math/Vector3';
 // import {Texture} from 'three/src/textures/Texture';
 import {Raycaster} from 'three/src/core/Raycaster';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
@@ -22,8 +22,8 @@ export class BaseBackgroundController {
 	private _param_use_background: boolean;
 	private _param_use_material: boolean;
 	private _param_background_color: Color;
-	private _param_background_material: string;
-	private _param_background_ratio: number;
+	// private _param_background_material: string;
+	// private _param_background_ratio: number;
 
 	private _screen_quad: Mesh;
 	private _screen_quad_flat_material: MeshBasicMaterial;
@@ -106,9 +106,10 @@ export class BaseBackgroundController {
 	// 		return this._background_texture
 	// 	}
 	// }
-	async update_background() {
+	protected update_screen_quad() {}
+	async update() {
 		if (this.use_background()) {
-			this.node.update_screen_quad();
+			this.update_screen_quad();
 
 			await this.update_background_color();
 			if (this.use_background_material()) {
@@ -140,14 +141,14 @@ export class BaseBackgroundController {
 	}
 
 	private async update_background_material() {
-		const bg_node = this.node.param('background_material').found_node();
+		const bg_node = this.node.params.get_operator_path('background_material').found_node();
 		if (bg_node) {
-			await bg_node.request_container_p();
+			await bg_node.request_container();
 			const material = bg_node.material();
 			this.screen_quad.material = material;
 			// this.screen_quad().material.uniforms.uTexture.value = texture
 		} else {
-			this.node.set_error('bg node not found');
+			this.node.states.error.set('bg node not found');
 		}
 	}
 }

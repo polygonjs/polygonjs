@@ -6,9 +6,9 @@ import {CoreTransform} from 'src/core/Transform';
 
 import {BaseNode} from '../_Base';
 //import Layers from './Concerns/Layers'
-import {Transformed} from './Concerns/Transformed';
+// import {Transformed} from './Concerns/Transformed';
 
-export class BaseNodeObjGeo extends Transformed(BaseObjNode) {
+export class BaseNodeObjGeo extends BaseObjNode {
 	static type() {
 		return 'geo';
 	}
@@ -106,9 +106,8 @@ export class BaseNodeObjGeo extends Transformed(BaseObjNode) {
 		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
 		//this._update_object_params(group, matrix)
 
-		const group = this.group();
-		group.visible = this.flags.display.active;
-		this.update_transform(matrix);
+		this.group.visible = this.flags.display.active;
+		this.transform_controller.update(matrix);
 		//this.update_layers()
 
 		this.cook_controller.end_cook();

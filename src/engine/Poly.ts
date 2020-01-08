@@ -1,6 +1,6 @@
 import {BaseNode} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
-import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
+// import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
 declare global {
 	const POLY: Poly;
 }
@@ -8,7 +8,7 @@ declare global {
 export class Poly {
 	renderers_controller: any;
 	scenes_by_uuid: Dictionary<PolyScene>;
-	public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
+	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	in_worker_thread() {
 		return false;
@@ -20,6 +20,6 @@ export class Poly {
 		return false;
 	}
 	registered_nodes(test: string, test2: string): Dictionary<typeof BaseNode> {
-		return [];
+		return {};
 	}
 }

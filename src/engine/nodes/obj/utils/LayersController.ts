@@ -12,7 +12,7 @@ export class LayersController {
 		});
 	}
 
-	update_layers() {
+	update() {
 		const object = this.node.object;
 		// const affected_objects = [object];
 		// if (object.cloned_cameras != null) {

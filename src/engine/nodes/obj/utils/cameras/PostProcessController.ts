@@ -1,11 +1,13 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {LinearFilter, RGBAFormat, ACESFilmicToneMapping, sRGBEncoding} from 'three/src/constants';
+// import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {ACESFilmicToneMapping, sRGBEncoding} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 
 import lodash_range from 'lodash/range';
-import {BaseParam} from 'src/engine/params/_Base';
-import {BaseNodePostProcess} from 'src/engine/nodes/post/_Base';
+// import {BaseParam} from 'src/engine/params/_Base';
+import {BooleanParam} from 'src/engine/params/Boolean';
+import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+import {BasePostProcessNode} from 'src/engine/nodes/post/_Base';
 import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
@@ -19,25 +21,25 @@ export class PostProcessController {
 	private _composers_set_in_progress_by_canvas_id: Dictionary<boolean> = {};
 	private _fetch_post_process_nodes_in_progress: boolean;
 	// private _render_passes: any[] = []
-	private _post_process_nodes: BaseNodePostProcess[] = [];
+	private _post_process_nodes: BasePostProcessNode[] = [];
 
-	private _post_process_use_node_path_params: BaseParam[] = [];
-	private _post_process_node_path_params: BaseParam[] = [];
+	private _post_process_use_node_path_params: BooleanParam[] = [];
+	private _post_process_node_path_params: OperatorPathParam[] = [];
 
 	constructor(private node: BaseCamera) {}
 
 	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			if (this._param_do_post_process) {
+			if (this.node.params.boolean('do_post_process')) {
 				const composer = this.composer(canvas);
 				if (composer) {
 					composer.setSize(size.x, size.y);
 					composer.render();
 				}
 			} else {
-				this.self.setup_for_aspect_ratio(aspect);
-				renderer.render(this._display_scene, this.self._object);
+				this.node.setup_for_aspect_ratio(aspect);
+				renderer.render(this.node.scene().display_scene(), this.node.object);
 			}
 		}
 	}
@@ -47,7 +49,7 @@ export class PostProcessController {
 	}
 
 	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer {
-		const gl = window.POLY.renderers_controller.rendering_context(canvas);
+		const gl = POLY.renderers_controller.rendering_context(canvas);
 
 		const renderer = new WebGLRenderer({
 			canvas: canvas,
@@ -75,7 +77,7 @@ export class PostProcessController {
 		// renderer.extensions.get( 'WEBGL_color_buffer_float' );
 		// renderer.extensions.get( 'WEBGL_draw_buffers' );
 
-		window.POLY.renderers_controller.register_renderer(renderer);
+		POLY.renderers_controller.register_renderer(renderer);
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		this.set_renderer_size(canvas, size);
 		renderer.setPixelRatio(window.devicePixelRatio);
@@ -85,7 +87,7 @@ export class PostProcessController {
 	delete_renderer(canvas: HTMLCanvasElement) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			window.POLY.renderers_controller.deregister_renderer(renderer);
+			POLY.renderers_controller.deregister_renderer(renderer);
 		}
 	}
 	set_renderer_size(canvas: HTMLCanvasElement, size: Vector2) {
@@ -131,8 +133,8 @@ export class PostProcessController {
 		}*/
 	}
 
-	protected async update_composer_passes() {
-		if (this._param_do_post_process) {
+	async update_composer_passes() {
+		if (this.node.params.boolean('do_post_process')) {
 			this._post_process_nodes = [];
 			if (this._fetch_post_process_nodes_in_progress) {
 				return;
@@ -145,13 +147,12 @@ export class PostProcessController {
 				for (let i of lodash_range(4)) {
 					const toggle_param = this._post_process_use_node_path_params[i];
 					// const use_node = await toggle_param.eval_p()
-					const tcache_name = this.self.param_cache_name(toggle_param.name());
-					const use_node = this[tcache_name];
+					const use_node = toggle_param.value();
 					if (use_node) {
 						const param = this._post_process_node_path_params[i];
-						const post_process_node = param.found_node();
+						const post_process_node = param.found_node() as BasePostProcessNode;
 						if (post_process_node) {
-							await post_process_node.request_container_p();
+							await post_process_node.request_container();
 							// const render_pass = container.render_pass()
 							// this._render_passes.push(render_pass)
 							this._post_process_nodes.push(post_process_node);
@@ -189,12 +190,17 @@ export class PostProcessController {
 
 		this.clear_render_passes(composer);
 
-		const render_scene_pass = new RenderPass(this._display_scene, this._object);
+		const render_scene_pass = new RenderPass(this.node.scene().display_scene(), this.node.object);
 		render_scene_pass.clearAlpha = 0;
 		composer.addPass(render_scene_pass);
 
 		for (let post_process_node of this._post_process_nodes) {
-			post_process_node.apply_to_composer(composer, this._object, this._resolution_by_canvas_id[id], this);
+			post_process_node.apply_to_composer(
+				composer,
+				this.node.object,
+				this._resolution_by_canvas_id[id],
+				this.node
+			);
 		}
 		delete this._composers_set_in_progress_by_canvas_id[id];
 	}
@@ -221,7 +227,7 @@ export class PostProcessController {
 		// made this current node dirty
 	}
 
-	private add_params() {
+	add_params() {
 		this.node.within_param_folder('post_process', () => {
 			this.node.add_param(ParamType.BOOLEAN, 'do_post_process', 0);
 
@@ -232,13 +238,13 @@ export class PostProcessController {
 
 				const visible_options = {
 					do_post_process: 1,
+					[toggle_param.name()]: 1,
 				};
-				visible_options[toggle_param.name()] = 1;
 				const node_path_options = {
 					node_selection: {context: NodeContext.POST},
 					visible_if: visible_options,
 				};
-				const param = this.self.add_param(
+				const param = this.node.add_param(
 					ParamType.OPERATOR_PATH,
 					`post_process_node${i + 1}`,
 					'',

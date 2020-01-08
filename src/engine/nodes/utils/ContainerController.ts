@@ -11,8 +11,17 @@ type Callback = (container: BaseContainer) => void;
 
 export class ContainerController {
 	_callbacks: Callback[] = [];
+	protected _container: BaseContainer;
+	protected _container_class: typeof BaseContainer;
 
 	constructor(protected node: BaseNode) {}
+
+	init(container_class: typeof BaseContainer) {
+		this._container = new container_class(this.node);
+	}
+	get container() {
+		return this._container;
+	}
 	// protected self: BaseNode = (<unknown>this) as BaseNode;
 	// _container: BaseContainer;
 
