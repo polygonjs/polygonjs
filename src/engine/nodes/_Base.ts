@@ -38,13 +38,28 @@ import {ContainerController} from './utils/ContainerController';
 import {CookController} from './utils/CookController';
 import {NodeSerializer} from './utils/Serializer';
 import {ParamsController} from './utils/ParamsController';
+import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {NameController} from './utils/NameController';
 import {IOController} from './utils/IOController';
 
 import CoreSelection from 'src/core/NodeSelection';
 import {BaseContainer} from '../containers/_Base';
 
-interface BaseNodeVisitor {
+import {BaseParam} from 'src/engine/params/_Base';
+import {BooleanParam} from 'src/engine/params/Boolean';
+import {ButtonParam} from 'src/engine/params/Button';
+import {ColorParam} from 'src/engine/params/Color';
+import {FloatParam} from 'src/engine/params/Float';
+import {IntegerParam} from 'src/engine/params/Integer';
+import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+import {RampParam} from 'src/engine/params/Ramp';
+import {SeparatorParam} from 'src/engine/params/Separator';
+import {StringParam} from 'src/engine/params/String';
+import {Vector2Param} from 'src/engine/params/Vector2';
+import {Vector3Param} from 'src/engine/params/Vector3';
+import {Vector4Param} from 'src/engine/params/Vector4';
+
+export interface BaseNodeVisitor {
 	node: (node: BaseNode) => void;
 }
 
@@ -173,7 +188,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 
 	set_scene(scene: PolyScene) {
 		super.set_scene(scene);
-		this._init_graph_node_inputs();
+		// this.io.inputs._init_graph_node_inputs();
 	}
 
 	visit(visitor: BaseNodeVisitor) {
@@ -190,6 +205,57 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	}
 	full_path(): string {
 		return this.parent_controller.full_path();
+	}
+
+	// params
+	create_params() {}
+	add_param(
+		type: ParamType.BOOLEAN,
+		name: string,
+		default_value: BooleanAsNumber,
+		options?: ParamOptions
+	): BooleanParam;
+	add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam;
+	add_param(
+		type: ParamType.COLOR,
+		name: string,
+		default_value: [number, number, number],
+		options?: ParamOptions
+	): ColorParam;
+	add_param(type: ParamType.FLOAT, name: string, default_value: number, options?: ParamOptions): FloatParam;
+	add_param(type: ParamType.INTEGER, name: string, default_value: number, options?: ParamOptions): IntegerParam;
+	add_param(
+		type: ParamType.OPERATOR_PATH,
+		name: string,
+		default_value: string,
+		options?: ParamOptions
+	): OperatorPathParam;
+	add_param(type: ParamType.RAMP, name: string, default_value: string, options?: ParamOptions): RampParam;
+	add_param(type: ParamType.SEPARATOR, name: string, default_value: null, options?: ParamOptions): SeparatorParam;
+	add_param(type: ParamType.STRING, name: string, default_value: string, options?: ParamOptions): StringParam;
+	add_param(
+		type: ParamType.VECTOR2,
+		name: string,
+		default_value: [number, number],
+		options?: ParamOptions
+	): Vector2Param;
+	add_param(
+		type: ParamType.VECTOR3,
+		name: string,
+		default_value: [number, number, number],
+		options?: ParamOptions
+	): Vector3Param;
+	add_param(
+		type: ParamType.VECTOR4,
+		name: string,
+		default_value: [number, number, number, number],
+		options?: ParamOptions
+	): Vector4Param;
+	add_param(type: ParamType, name: string, default_value: any, options?: ParamOptions): BaseParam {
+		return this._params_controller.add_param(type, name, default_value, options);
+	}
+	within_param_folder(folder_name: string, callback: () => void) {
+		this._params_controller.within_param_folder(folder_name, callback);
 	}
 
 	// cook

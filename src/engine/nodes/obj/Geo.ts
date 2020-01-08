@@ -5,11 +5,10 @@ import {Group} from 'three/src/objects/Group';
 import {CoreTransform} from 'src/core/Transform';
 
 import {BaseNode} from '../_Base';
-import {Dirtyable} from './Concerns/Dirtyable';
 //import Layers from './Concerns/Layers'
 import {Transformed} from './Concerns/Transformed';
 
-export class BaseNodeObjGeo extends Dirtyable(Transformed(BaseObjNode)) {
+export class BaseNodeObjGeo extends Transformed(BaseObjNode) {
 	static type() {
 		return 'geo';
 	}
@@ -22,13 +21,14 @@ export class BaseNodeObjGeo extends Dirtyable(Transformed(BaseObjNode)) {
 
 		this.children_controller.init(NodeContext.SOP);
 
-		this._init_display_flag({
-			multiple_display_flags_allowed: false,
-			affects_hierarchy: true,
-		});
+		this.flags.add_display();
+		// this._init_display_flag({
+		// 	multiple_display_flags_allowed: false,
+		// 	affects_hierarchy: true,
+		// });
 		this._init_dirtyable_hook();
 
-		this.set_inputs_count_to_one_max();
+		this.io.inputs.set_count_to_one_max();
 	}
 
 	create_object() {

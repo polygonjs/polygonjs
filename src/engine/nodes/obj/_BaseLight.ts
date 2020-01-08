@@ -1,6 +1,4 @@
-import {BaseNodeObj} from './_Base';
-
-import {Dirtyable} from './Concerns/Dirtyable';
+import {BaseObjNode} from './_Base';
 
 // class BaseModules extends Base {
 // 	constructor() {
@@ -9,13 +7,11 @@ import {Dirtyable} from './Concerns/Dirtyable';
 // }
 // window.include_instance_methods(BaseModules, Dirtyable.instance_methods);
 
-export class BaseLight extends Dirtyable(BaseNodeObj) {
-
+export class BaseLight extends BaseNodeObj {
 	constructor() {
 		super();
-		this._init_dirtyable_hook()
+		this._init_dirtyable_hook();
 	}
-
 
 	create_params() {
 		this.create_light_params();
@@ -29,7 +25,7 @@ export class BaseLight extends Dirtyable(BaseNodeObj) {
 	}
 
 	create_shadow_params() {
-		return
+		return;
 		// this.add_param('toggle', 'cast_shadows', 1);
 		// shadow_options = {visible_if: {cast_shadows: 1}}
 		// this.add_param( 'vector2', 'shadow_res', [1024, 1024], shadow_options );
@@ -66,7 +62,6 @@ export class BaseLight extends Dirtyable(BaseNodeObj) {
 		// }
 	}
 
-
 	color() {
 		return this._param_color.clone().multiplyScalar(this._param_intensity);
 	}
@@ -74,5 +69,3 @@ export class BaseLight extends Dirtyable(BaseNodeObj) {
 		return this.display_flag_state();
 	}
 }
-
-

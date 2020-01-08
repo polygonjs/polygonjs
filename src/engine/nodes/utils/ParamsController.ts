@@ -24,6 +24,7 @@ import {StringParam} from 'src/engine/params/String';
 import {Vector2Param} from 'src/engine/params/Vector2';
 import {Vector3Param} from 'src/engine/params/Vector3';
 import {Vector4Param} from 'src/engine/params/Vector4';
+import {Vector3} from 'three';
 // import {RampValue} from 'src/engine/params/ramp/RampValue';
 
 const ParamConstructorMap = {
@@ -115,6 +116,36 @@ export class ParamsController {
 	has_param(name: string) {
 		return this._params_by_name[name] != null;
 	}
+	has(name: string) {
+		return this.has_param(name);
+	}
+	get(name: string) {
+		return this.param(name);
+	}
+	get_operator_path(name: string): OperatorPathParam {
+		const param = this.param(name);
+		if (param && param.type() == OperatorPathParam.type()) {
+			return param as OperatorPathParam;
+		}
+	}
+	value(name: string) {
+		return this.param(name).value();
+	}
+	value_with_type(name: string, type: ParamType) {
+		const param = this.param(name);
+		if (param && param.type() == type) {
+			return param.value();
+		}
+	}
+	float(name: string) {
+		return this.value_with_type(name, ParamType.FLOAT) as number;
+	}
+	integer(name: string) {
+		return this.value_with_type(name, ParamType.INTEGER) as number;
+	}
+	vector3(name: string) {
+		return this.value_with_type(name, ParamType.FLOAT) as Vector3;
+	}
 
 	param(name: string) {
 		const p = this._params_by_name[name];
@@ -162,48 +193,6 @@ export class ParamsController {
 		}
 	}
 
-	add_param(
-		type: ParamType.BOOLEAN,
-		name: string,
-		default_value: BooleanAsNumber,
-		options?: ParamOptions
-	): BooleanParam;
-	add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam;
-	add_param(
-		type: ParamType.COLOR,
-		name: string,
-		default_value: [number, number, number],
-		options?: ParamOptions
-	): ColorParam;
-	add_param(type: ParamType.FLOAT, name: string, default_value: number, options?: ParamOptions): FloatParam;
-	add_param(type: ParamType.INTEGER, name: string, default_value: number, options?: ParamOptions): IntegerParam;
-	add_param(
-		type: ParamType.OPERATOR_PATH,
-		name: string,
-		default_value: string,
-		options?: ParamOptions
-	): OperatorPathParam;
-	add_param(type: ParamType.RAMP, name: string, default_value: string, options?: ParamOptions): RampParam;
-	add_param(type: ParamType.SEPARATOR, name: string, default_value: null, options?: ParamOptions): SeparatorParam;
-	add_param(type: ParamType.STRING, name: string, default_value: string, options?: ParamOptions): StringParam;
-	add_param(
-		type: ParamType.VECTOR2,
-		name: string,
-		default_value: [number, number],
-		options?: ParamOptions
-	): Vector2Param;
-	add_param(
-		type: ParamType.VECTOR3,
-		name: string,
-		default_value: [number, number, number],
-		options?: ParamOptions
-	): Vector3Param;
-	add_param(
-		type: ParamType.VECTOR4,
-		name: string,
-		default_value: [number, number, number, number],
-		options?: ParamOptions
-	): Vector4Param;
 	add_param(type: ParamType, name: string, default_value: any, options?: ParamOptions): BaseParam {
 		if (options == null) {
 			options = {};

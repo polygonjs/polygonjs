@@ -105,13 +105,13 @@ export class InputsController {
 		return this._graph_node_inputs[input_index];
 	}
 
-	protected set_inputs_count_to_zero() {
+	set_count_to_zero() {
 		this.set_min_inputs_count(0);
 		this.set_max_inputs_count(0);
 
 		this.init_inputs_clonable_state();
 	}
-	protected set_inputs_count_to_one_max() {
+	set_count_to_one_max() {
 		this.set_min_inputs_count(0);
 		this.set_max_inputs_count(1);
 

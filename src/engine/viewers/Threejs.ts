@@ -4,7 +4,6 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 import {BaseViewer} from './_Base';
 import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
-import {ViewerLoader} from './Loader';
 
 import 'src/engine/Poly';
 
@@ -18,7 +17,6 @@ declare global {
 }
 
 export class ThreejsViewer extends BaseViewer {
-	private _canvas: HTMLCanvasElement;
 	private _request_animation_frame_id: number;
 	private do_render: boolean = true;
 
@@ -29,21 +27,16 @@ export class ThreejsViewer extends BaseViewer {
 
 	private _animate_method: () => void;
 
-	constructor(_element: HTMLElement, protected _scene: PolyScene, camera_node: BaseCamera) {
-		super(_element, _scene, camera_node);
+	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCamera) {
+		super(_container, _scene, camera_node);
 
 		this._canvas = document.createElement('canvas');
 		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');
 
-		this._element.appendChild(this._canvas);
-		this._element.classList.add(CSS_CLASS);
-
-		new ViewerLoader(this._element);
+		this._container.appendChild(this._canvas);
+		this._container.classList.add(CSS_CLASS);
 
 		this._set_events();
-	}
-	canvas(): HTMLCanvasElement {
-		return this._canvas;
 	}
 
 	protected _build() {

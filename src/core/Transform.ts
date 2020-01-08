@@ -9,7 +9,7 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 
 const ROTATION_ORDER = 'XYZ';
 
-interface SetParamsFromMatrixOptions {
+export interface SetParamsFromMatrixOptions {
 	scale?: boolean;
 }
 

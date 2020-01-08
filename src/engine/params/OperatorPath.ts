@@ -11,7 +11,7 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 // }
 // window.include_instance_methods(BaseModules, AsCodeOperatorPath.instance_methods);
 
-export class OperatorPathParam extends AsCodeOperatorPath(Single)<BaseNode> {
+export class OperatorPathParam extends AsCodeOperatorPath(Single)<string> {
 	_path: string;
 	_found_node: BaseNode;
 
