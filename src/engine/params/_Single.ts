@@ -1,4 +1,4 @@
-import {TypedParam} from './_Base'
+import {TypedParam} from './_Base';
 
 export class Single<T> extends TypedParam<T> {
 	// protected _expression: string
@@ -10,7 +10,7 @@ export class Single<T> extends TypedParam<T> {
 	// }
 
 	is_raw_input_default() {
-		return this._raw_input == this._default_value
+		return this._raw_input == this._default_value;
 	}
 	//
 	//
@@ -24,16 +24,16 @@ export class Single<T> extends TypedParam<T> {
 		if (this.is_dirty() || this._value == null) {
 			//this.clear_error()
 			if (this._expression) {
-				const val = await this.eval_raw_expression()
-				this.post_eval_raw(val)
-				return val
+				const val = await this.eval_raw_expression();
+				this.post_eval_raw(val);
+				return val;
 			} else {
-				this._value = this._raw_input
-				this.remove_dirty_state()
-				return this._value
+				this._value = this._raw_input;
+				this.remove_dirty_state();
+				return this._value;
 			}
 		} else {
-			return this._value
+			return this._value;
 		}
 	}
 
@@ -48,25 +48,25 @@ export class Single<T> extends TypedParam<T> {
 	// 	test(this)
 
 	post_eval_raw(value: T) {
-		const previous_value = this._value // TODO: I should probably clone this, to compare if the result has changed, and then execute the callback
-		this._value = value
+		const previous_value = this._value; // TODO: I should probably clone this, to compare if the result has changed, and then execute the callback
+		this._value = value;
 
 		if (this._value != null) {
-			this.clear_error()
+			this.states.error.clear();
 		}
 
-		const was_dirty = this.is_dirty()
-		this.remove_dirty_state()
+		const was_dirty = this.is_dirty();
+		this.remove_dirty_state();
 		// TODO: this gets emitted for every point when in a Point SOP
 		// trying now to only emit if the param was dirty
 		if (was_dirty) {
-			this.emit_param_updated()
+			this.emit_controller.emit_param_updated();
 		}
 
 		// TODO: the callback should only be executed when the result has changed?
 		// but how to make that reliable for vectors
-		if (this.has_callback() && previous_value !== this._value) {
-			return this.execute_callback()
+		if (this.options.has_callback() && previous_value !== this._value) {
+			return this.options.execute_callback();
 		}
 	}
 
@@ -78,7 +78,7 @@ export class Single<T> extends TypedParam<T> {
 		// if !callback?
 		// 	throw "#{this.full_path()} use eval without a callback"
 		// else
-		return await this.eval_raw()
+		return await this.eval_raw();
 	}
 
 	// TODO
@@ -96,19 +96,19 @@ export class Single<T> extends TypedParam<T> {
 	set(new_value: T) {
 		// new_value = this.convert_value(new_value)
 		if (this._value === new_value && !this.has_expression()) {
-			return
+			return;
 		}
 
-		const cooker = this.scene().cooker()
-		cooker.block()
-		this.clear_error()
-		this._value = new_value
-		this.set_expression(null)
-		this.set_dirty()
-		this.execute_callback()
-		cooker.unblock()
+		const cooker = this.scene().cooker();
+		cooker.block();
+		this.states.error.clear();
+		this._value = new_value;
+		this.set_expression(null);
+		this.set_dirty();
+		this.options.execute_callback();
+		cooker.unblock();
 
-		this.emit_param_updated()
+		this.emit_controller.emit_param_updated();
 	}
 	// set_expression(string: string){
 	// 	if ((string === null) && !this.has_expression()) { return; }

@@ -15,17 +15,17 @@ import {ObjectType} from 'src/core/geometry/Constant';
 import {GeometryContainer} from 'src/engine/containers/Geometry';
 // import * as Container from '../../Container/Geometry';
 
-import {AttribTypeParam} from './concerns/AttribTypeParam';
+// import {AttribTypeParam} from './concerns/AttribTypeParam';
 // import {Bypass} from './Concerns/Bypass';
-import {GroupParam} from './concerns/GroupParam';
+// import {GroupParam} from './concerns/GroupParam';
 // import {Named} from './concerns/Named'; // TODO; typescript
-import {ObjectTypeParam} from './concerns/ObjectTypeParam';
+// import {ObjectTypeParam} from './concerns/ObjectTypeParam';
 
 // TODO: do I really need to add attributes in objects?
 // TODO: after setting a node dirty, it should clear its object
 
 // import {RequestContainerGeometryCallback} from 'src/Engine/Container/Geometry'
-const CONTAINER_CLASS = 'Geometry';
+// const CONTAINER_CLASS = 'Geometry';
 
 const MESSAGE = {
 	FROM_SET_CORE_GROUP: 'from set_core_group',
@@ -39,10 +39,7 @@ const MESSAGE = {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-export class BaseSopNode extends AttribTypeParam(
-	// Bypass(
-	GroupParam(ObjectTypeParam(BaseNode))
-) {
+export class BaseSopNode extends BaseNode {
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
 	}
@@ -51,7 +48,7 @@ export class BaseSopNode extends AttribTypeParam(
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	protected _container = new GeometryContainer(this);
+	protected _container: GeometryContainer = new GeometryContainer(this);
 
 	// _master_group: Group
 	// _objects: Object3D[] = []
@@ -60,7 +57,7 @@ export class BaseSopNode extends AttribTypeParam(
 		super();
 		this.flags.add_display();
 		this.flags.add_bypass();
-		this._init_container_owner(CONTAINER_CLASS);
+		// this.container_controller.init(CONTAINER_CLASS);
 	}
 
 	// request_container(callback: RequestContainerGeometryCallback){
@@ -223,7 +220,6 @@ export class BaseSopNode extends AttribTypeParam(
 	}
 
 	_set_object_attributes(object: Object3D) {
-		let material: Material;
 		// if (!this.allow_add_object_attributes()) { return; }
 		// TODO: the exception below are just to debug when a geo could be reused or not cloned properly
 		// I could remove that when more sure it all refreshes fine, and this would allow the null or merge to
@@ -245,15 +241,15 @@ export class BaseSopNode extends AttribTypeParam(
 		// 		geometry.name = this.full_path();
 		// 	}
 		// }
-
-		if ((material = (object as Mesh).material as Material) != null) {
-			let material_node;
+		const material: Material = (object as Mesh).material as Material;
+		if (material) {
 			if (this.scene() == null) {
 				console.log('no scene');
 				throw 'no scene';
 			}
-			if ((material_node = CoreMaterial.node(this.scene(), (object as Mesh).material)) != null) {
-				return material_node.add_render_hook(object);
+			const material_node = CoreMaterial.node(this.scene(), material);
+			if (material_node) {
+				material_node.add_render_hook(object);
 			}
 		}
 	}
@@ -286,11 +282,11 @@ export class BaseSopNode extends AttribTypeParam(
 	// 	// }
 	// }
 
-	_add_index(geometry) {
+	_add_index(geometry: BufferGeometry) {
 		const position_attrib = geometry.getAttribute('position');
 		const position_array = position_attrib.array;
 		const points_count = position_array.length / 3;
-		const indices = [];
+		const indices: number[] = [];
 		lodash_times(points_count, (i) => indices.push(i));
 
 		geometry.setIndex(indices);

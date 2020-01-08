@@ -1,20 +1,18 @@
-import {BaseNodeObj} from './_Base';
-import {Group} from 'three/src/objects/Group'
-const THREE = {Group}
+import {BaseObjNode} from './_Base';
+import {Group} from 'three/src/objects/Group';
+const THREE = {Group};
 
-
-export class BaseManager extends BaseNodeObj {
-
+export class BaseManager extends BaseObjNode {
 	constructor() {
 		super();
 	}
 
-	_init_manager(options={}){
-		this._init_hierarchy_children_owner(options['children'] || {});
+	_init_manager(options = {}) {
+		// this._init_hierarchy_children_owner(options['children'] || {});
 
-		this._init_display_flag({
+		this.flags.add_display({
 			has_display_flag: false,
-			multiple_display_flags_allowed: true
+			multiple_display_flags_allowed: true,
 		});
 
 		this.set_inputs_count_to_zero();
@@ -25,8 +23,7 @@ export class BaseManager extends BaseNodeObj {
 		return new THREE.Group();
 	}
 
-
 	cook() {
-		this.end_cook();
+		this.cook_controller.end_cook();
 	}
 }

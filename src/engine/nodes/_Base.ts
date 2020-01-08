@@ -10,19 +10,19 @@ import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
 // import {ConnectionsOwner} from './concerns/ConnectionsOwner';
 // import {ContainerOwner} from './concerns/ContainerOwner';
 // import {Cook} from './concerns/Cook';
-import {CustomNode} from './concerns/CustomNode';
-import {Dependencies} from './concerns/Dependencies';
+// import {CustomNode} from './concerns/CustomNode';
+// import {Dependencies} from './concerns/old/Dependencies';
 // import {DisplayFlag} from './concerns/DisplayFlag';
 // import {Errored} from './concerns/Errored';
-import {HierarchyChildrenOwner} from './concerns/HierarchyChildrenOwner';
-import {HierarchyParentOwner} from './concerns/HierarchyParentOwner';
-import {InputsClonable} from './concerns/InputsClonable';
-import {InputsOwner} from './concerns/InputsOwner';
+// import {HierarchyChildrenOwner} from './concerns/HierarchyChildrenOwner';
+// import {HierarchyParentOwner} from './concerns/old/HierarchyParentOwner';
+// import {InputsClonable} from './concerns/InputsClonable';
+// import {InputsOwner} from './concerns/InputsOwner';
 // import {Json} from './concerns/Json';
 // import {LifeCycle} from './concerns/old/LifeCycle';
-import {Named} from './concerns/Named';
-import {OutputsOwner} from './concerns/OutputsOwner';
-import {ParamsOwner} from './concerns/ParamsOwner';
+// import {Named} from './concerns/Named';
+// import {OutputsOwner} from './concerns/OutputsOwner';
+// import {ParamsOwner} from './concerns/ParamsOwner';
 // import {Selectable} from './concerns/old/Selectable';
 // import {TimeDependent} from './concerns/TimeDependent';
 // import {UIDataOwner} from './concerns/UIDataOwner';
@@ -36,29 +36,26 @@ import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController'
 import {LifeCycleController} from './utils/LifeCycleController';
 import {ContainerController} from './utils/ContainerController';
 import {CookController} from './utils/CookController';
+import {NodeSerializer} from './utils/Serializer';
+import {ParamsController} from './utils/ParamsController';
+import {NameController} from './utils/NameController';
+import {IOController} from './utils/IOController';
 
 import CoreSelection from 'src/core/NodeSelection';
-import {NodeSerializer} from './utils/Serializer';
 import {BaseContainer} from '../containers/_Base';
 
 interface BaseNodeVisitor {
 	node: (node: BaseNode) => void;
 }
 
-export class BaseNode extends CustomNode(
-	Dependencies(
-		// DisplayFlag(
-		// Errored(
-		HierarchyParentOwner(
-			HierarchyChildrenOwner(
-				InputsClonable(InputsOwner(Named(OutputsOwner(ParamsOwner(NamedGraphNode(NodeScene))))))
-			)
-		)
-		// )
-		// )
-	)
-) {
+interface NodeDeletedEmitData {
 	parent: BaseNode;
+}
+interface NodeCreatedEmitData {
+	child_node: BaseNode;
+}
+
+export class BaseNode extends NamedGraphNode(NodeScene) {
 	private _parent_controller: HierarchyParentController;
 	private _children_controller: HierarchyChildrenController;
 	private _selection: CoreSelection;
@@ -69,6 +66,9 @@ export class BaseNode extends CustomNode(
 	private _serializer: NodeSerializer;
 	private _container_controller: ContainerController;
 	private _cook_controller: CookController;
+	private _params_controller: ParamsController;
+	private _name_controller: NameController;
+	private _io: IOController;
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
@@ -99,6 +99,15 @@ export class BaseNode extends CustomNode(
 	get cook_controller(): CookController {
 		return (this._cook_controller = this._cook_controller || new CookController(this));
 	}
+	get params(): ParamsController {
+		return (this._params_controller = this._params_controller || new ParamsController(this));
+	}
+	get name_controller(): NameController {
+		return (this._name_controller = this._name_controller || new NameController(this));
+	}
+	get io(): IOController {
+		return (this._io = this._io || new IOController(this));
+	}
 
 	protected _container: BaseContainer;
 
@@ -116,7 +125,7 @@ export class BaseNode extends CustomNode(
 		// this._init_cook();
 		// this._init_error();
 		// this._init_inputs();
-		this._init_outputs();
+		// this._init_outputs();
 		// this._init_hierarchy_parent_owner();
 		//this._init_time_dependent()
 		// this._init_ui_data();
@@ -165,11 +174,22 @@ export class BaseNode extends CustomNode(
 	set_scene(scene: PolyScene) {
 		super.set_scene(scene);
 		this._init_graph_node_inputs();
-		this._init_params();
 	}
 
 	visit(visitor: BaseNodeVisitor) {
-		return visitor.node(this.self);
+		return visitor.node(this);
+	}
+	set_parent(parent: BaseNode) {
+		this.parent_controller.set_parent(parent);
+	}
+	get parent() {
+		return this.parent_controller.parent;
+	}
+	root() {
+		return this._scene.root();
+	}
+	full_path(): string {
+		return this.parent_controller.full_path();
 	}
 
 	// cook
@@ -184,18 +204,39 @@ export class BaseNode extends CustomNode(
 		this._container.set_content(content); //, this.self.cook_eval_key());
 		if (content != null) {
 			if (!content.name) {
-				content.name = this.self.full_path();
+				content.name = this.full_path();
 			}
 			if (!content.node) {
 				content.node = this;
 			}
 		}
 		//if @_container.has_content()?
-		this.self.cook_controller.end_cook(message);
+		this.cook_controller.end_cook(message);
 	}
 
 	get container() {
 		return this._container;
+	}
+
+	// hierarchy
+	create_node(type: string) {
+		return this.children_controller.create_node(type);
+	}
+	children() {
+		return this.children_controller.children();
+	}
+
+	// emit
+
+	emit(event_name: 'node_created', data: NodeCreatedEmitData): void;
+	emit(event_name: 'node_deleted', data: NodeDeletedEmitData): void;
+	emit(event_name: 'node_name_update'): void;
+	emit(event_name: 'override_clonable_state_update'): void;
+	emit(event_name: 'node_named_outputs_updated'): void;
+	emit(event_name: 'node_named_inputs_updated'): void;
+	emit(event_name: 'node_inputs_updated'): void;
+	emit(event_name: string, data: object = null): void {
+		super.emit(event_name, data);
 	}
 
 	// root(): BaseNode {

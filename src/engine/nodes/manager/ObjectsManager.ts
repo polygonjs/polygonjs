@@ -23,9 +23,9 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	static type() {
 		return 'obj';
 	}
-	children_context() {
-		return NodeContext.OBJ;
-	}
+	// children_context() {
+	// 	return NodeContext.OBJ;
+	// }
 
 	private _object: Group = new Group();
 	private _queued_nodes_by_id: Dictionary<BaseNode> = {};
@@ -34,10 +34,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	constructor() {
 		super();
 
-		this._init_hierarchy_children_owner();
+		this.children_controller.init(NodeContext.OBJ);
 
-		this._init_display_flag();
-		this._init_bypass_flag({has_bypass_flag: false});
+		this.flags.add_display();
+		// this.flags.add_bypass({has_bypass_flag: false});
 
 		this.set_min_inputs_count(0);
 		this.set_max_inputs_count(0);
@@ -46,7 +46,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	init_display_scene() {
 		this._object.name = '_WORLD_';
-		return this._scene.display_scene().add(this._object);
+		this._scene.display_scene().add(this._object);
 	}
 
 	// TODO: is this method still used?
@@ -57,7 +57,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	object() {
 		return this._object;
 	}
-	create_node(type: string): BaseNodeObj {
+	create_node(type: string): BaseObjNode {
 		return super.create_node(type);
 	}
 

@@ -1,6 +1,6 @@
 import {BaseObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
-const THREE = {Group};
+// const THREE = {Group};
 
 import {CoreTransform} from 'src/core/Transform';
 
@@ -13,14 +13,14 @@ export class BaseNodeObjGeo extends Dirtyable(Transformed(BaseObjNode)) {
 	static type() {
 		return 'geo';
 	}
-	children_context() {
-		return NodeContext.SOP;
-	}
+	// children_context() {
+	// 	return NodeContext.SOP;
+	// }
 
 	constructor() {
 		super();
 
-		this._init_hierarchy_children_owner();
+		this.children_controller.init(NodeContext.SOP);
 
 		this._init_display_flag({
 			multiple_display_flags_allowed: false,
@@ -32,7 +32,7 @@ export class BaseNodeObjGeo extends Dirtyable(Transformed(BaseObjNode)) {
 	}
 
 	create_object() {
-		return new THREE.Group();
+		return new Group();
 	}
 
 	//base_layers_included: -> false
@@ -74,7 +74,7 @@ export class BaseNodeObjGeo extends Dirtyable(Transformed(BaseObjNode)) {
 	}
 
 	is_display_node_cooking(): boolean {
-		if (this.display_flag_state()) {
+		if (this.flags.display.active) {
 			const display_node = this.display_node();
 			return display_node ? display_node.is_dirty() : false;
 		} else {
@@ -94,23 +94,23 @@ export class BaseNodeObjGeo extends Dirtyable(Transformed(BaseObjNode)) {
 		// only to be replaced by the proper one when it is ready.
 		if (this.scene().loaded()) {
 			if (this.children().length == 1) {
-				node.set_display_flag();
+				node.flags.display.set(true);
 			}
 		}
 	}
 	on_create() {
 		// this.create_node('text')
 	}
-	cook(input_containers) {
+	cook() {
 		// TODO: why does it cook twice when changing a param like layers
 		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
 		//this._update_object_params(group, matrix)
 
 		const group = this.group();
-		group.visible = this.display_flag_state();
+		group.visible = this.flags.display.active;
 		this.update_transform(matrix);
 		//this.update_layers()
 
-		this.end_cook();
+		this.cook_controller.end_cook();
 	}
 }

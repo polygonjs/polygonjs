@@ -1,124 +1,113 @@
-import {BaseNode} from 'src/engine/nodes/_Base'
-import {BaseParam} from 'src/engine/params/_Base'
-import {DecomposedPath} from './DecomposedPath'
+import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseParam} from 'src/engine/params/_Base';
+import {DecomposedPath} from './DecomposedPath';
 // import {NodeSimple} from 'src/core/graph/NodeSimple'
 
-import {CoreWalkerEmbed} from './WalkerEmbed'
+import {CoreWalkerEmbed} from './WalkerEmbed';
 
-type NodeOrParam = BaseNode | BaseParam
-
-const SEPARATOR = '/'
+type NodeOrParam = BaseNode | BaseParam;
 
 export class CoreWalker extends CoreWalkerEmbed {
-	static find_param(
-		node_src: BaseNode,
-		path: string,
-		decomposed_path?: DecomposedPath
-	): BaseParam {
+	public static SEPARATOR = '/';
+	public static CURRENT = '.';
+	public static PARENT = '..';
+	public static CURRENT_WITH_SLASH = `${CoreWalker.CURRENT}/`;
+	public static PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
+
+	static find_param(node_src: BaseNode, path: string, decomposed_path?: DecomposedPath): BaseParam {
 		if (!node_src) {
-			return
+			return;
 		}
 
-		const elements = path.split(SEPARATOR)
+		const elements = path.split(CoreWalker.SEPARATOR);
 
 		if (elements.length === 1) {
-			return node_src.param(elements[0])
+			return node_src.param(elements[0]);
 		} else {
-			const node_path = elements
-				.slice(0, +(elements.length - 2) + 1 || undefined)
-				.join(SEPARATOR)
-			const node = this.find_node(node_src, node_path, decomposed_path)
+			const node_path = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
+			const node = this.find_node(node_src, node_path, decomposed_path);
 			if (node != null) {
-				const param_name = elements[elements.length - 1]
-				const param = node.param(param_name)
+				const param_name = elements[elements.length - 1];
+				const param = node.param(param_name);
 				if (decomposed_path) {
-					decomposed_path.add_node(param_name, param)
+					decomposed_path.add_node(param_name, param);
 				}
-				return param
+				return param;
 			} else {
-				return null
+				return null;
 				// throw `no node found for path ${node_path}`;
 			}
 		}
 	}
-	static relative_path(
-		src_graph_node: NodeOrParam,
-		dest_graph_node: NodeOrParam
-	): string {
-		const parent = this.closest_common_parent(
-			src_graph_node,
-			dest_graph_node
-		)
-		const distance = this.distance_to_parent(src_graph_node, parent)
+	static relative_path(src_graph_node: NodeOrParam, dest_graph_node: NodeOrParam): string {
+		const parent = this.closest_common_parent(src_graph_node, dest_graph_node);
+		const distance = this.distance_to_parent(src_graph_node, parent);
 		// const up = lodash_padStart("", (distance-1)*3, "../")
-		let up = ''
+		let up = '';
 		if (distance - 1 > 0) {
-			let i = 0
-			const ups = []
+			let i = 0;
+			const ups = [];
 			while (i++ < distance - 1) {
-				ups.push('..')
+				ups.push(CoreWalker.PARENT);
 			}
-			up = ups.join('/') + '/'
+			up = ups.join(CoreWalker.SEPARATOR) + CoreWalker.SEPARATOR;
 		}
 
 		const parent_path_elements = parent
 			.full_path()
-			.split('/')
-			.filter((e) => e.length > 0)
+			.split(CoreWalker.SEPARATOR)
+			.filter((e) => e.length > 0);
 		const dest_path_elements = dest_graph_node
 			.full_path()
-			.split('/')
-			.filter((e) => e.length > 0)
-		const remaining_elements = []
-		let cmptr = 0
+			.split(CoreWalker.SEPARATOR)
+			.filter((e) => e.length > 0);
+		const remaining_elements = [];
+		let cmptr = 0;
 		for (let dest_path_element of dest_path_elements) {
 			if (!parent_path_elements[cmptr]) {
-				remaining_elements.push(dest_path_element)
+				remaining_elements.push(dest_path_element);
 			}
-			cmptr++
+			cmptr++;
 		}
-		const down = remaining_elements.join('/')
-		return `${up}${down}`
+		const down = remaining_elements.join(CoreWalker.SEPARATOR);
+		return `${up}${down}`;
 	}
 
-	static closest_common_parent(
-		graph_node1: NodeOrParam,
-		graph_node2: NodeOrParam
-	): BaseNode {
-		const parents1 = this.parents(graph_node1).reverse()
-		const parents2 = this.parents(graph_node2).reverse()
+	static closest_common_parent(graph_node1: NodeOrParam, graph_node2: NodeOrParam): BaseNode {
+		const parents1 = this.parents(graph_node1).reverse();
+		const parents2 = this.parents(graph_node2).reverse();
 
-		const min_depth = Math.min(parents1.length, parents2.length)
-		let found_parent = null
+		const min_depth = Math.min(parents1.length, parents2.length);
+		let found_parent = null;
 
 		for (let i = 0; i < min_depth; i++) {
 			if (parents1[i].graph_node_id() == parents2[i].graph_node_id()) {
-				found_parent = parents1[i]
+				found_parent = parents1[i];
 			}
 		}
-		return found_parent
+		return found_parent;
 	}
 	static parents(graph_node: NodeOrParam): BaseNode[] {
-		const parents = []
-		let parent = graph_node.parent()
+		const parents = [];
+		let parent = graph_node.parent();
 		while (parent) {
-			parents.push(parent)
-			parent = parent.parent()
+			parents.push(parent);
+			parent = parent.parent();
 		}
-		return parents
+		return parents;
 	}
 	static distance_to_parent(graph_node: NodeOrParam, dest: BaseNode): number {
-		let distance = 0
-		let current = graph_node
-		const dest_id = dest.graph_node_id()
+		let distance = 0;
+		let current = graph_node;
+		const dest_id = dest.graph_node_id();
 		while (current && current.graph_node_id() != dest_id) {
-			distance += 1
-			current = current.parent()
+			distance += 1;
+			current = current.parent();
 		}
 		if (current.graph_node_id() == dest_id) {
-			return distance
+			return distance;
 		} else {
-			return -1
+			return -1;
 		}
 	}
 	// static make_absolute(node_src: BaseNode, path: string): string {
