@@ -3,12 +3,12 @@ import {BaseParam} from 'src/engine/params/_Base';
 export class TimeDependentState {
 	constructor(protected param: BaseParam) {}
 
-	get active() {
+	get active(): boolean {
 		const frame_graph_node_id = this.param
 			.scene()
-			.context()
+			.time_controller.context()
 			.graph_node_id();
 
-		return this.param.graph_predecessor_ids().contains(frame_graph_node_id);
+		return this.param.graph_predecessor_ids().includes(frame_graph_node_id);
 	}
 }

@@ -36,6 +36,7 @@ import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController'
 import {LifeCycleController} from './utils/LifeCycleController';
 import {ContainerController} from './utils/ContainerController';
 import {CookController} from './utils/CookController';
+import {DependenciesController} from './utils/DependenciesController';
 import {NodeSerializer} from './utils/Serializer';
 import {ParamsController} from './utils/ParamsController';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
@@ -43,7 +44,7 @@ import {NameController} from './utils/NameController';
 import {IOController} from './utils/IOController';
 
 import CoreSelection from 'src/core/NodeSelection';
-import {BaseContainer} from '../containers/_Base';
+// import {BaseContainer} from '../containers/_Base';
 
 import {BaseParam} from 'src/engine/params/_Base';
 import {BooleanParam} from 'src/engine/params/Boolean';
@@ -76,6 +77,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	private _selection: CoreSelection;
 	private _ui_data: UIData;
 	private _flags: FlagsController;
+	private _dependencies_controller: DependenciesController;
 	private _states: StatesController;
 	private _lifecycle: LifeCycleController;
 	private _serializer: NodeSerializer;
@@ -98,6 +100,9 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	}
 	get flags(): FlagsController {
 		return (this._flags = this._flags || new FlagsController(this));
+	}
+	get dependencies_controller(): DependenciesController {
+		return (this._dependencies_controller = this._dependencies_controller || new DependenciesController(this));
 	}
 	get states(): StatesController {
 		return (this._states = this._states || new StatesController(this));
@@ -198,8 +203,8 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	get parent() {
 		return this.parent_controller.parent;
 	}
-	root() {
-		return this._scene.root();
+	get root() {
+		return this._scene.root;
 	}
 	full_path(): string {
 		return this.parent_controller.full_path();
@@ -262,7 +267,9 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	}
 
 	// cook
-	cook(input_contents: any[]) {}
+	cook(input_contents: any[]): any {
+		return null;
+	}
 
 	// container
 	request_container() {
@@ -270,7 +277,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	}
 	set_container(content: any, message: string = null) {
 		// if message?
-		this._container.set_content(content); //, this.self.cook_eval_key());
+		this.container_controller.container.set_content(content); //, this.self.cook_eval_key());
 		if (content != null) {
 			if (!content.name) {
 				content.name = this.full_path();
@@ -290,6 +297,12 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	children() {
 		return this.children_controller.children();
 	}
+	node(path: string) {
+		return this.children_controller.find_node(path);
+	}
+	nodes_by_type(type: string) {
+		return this.children_controller.nodes_by_type(type);
+	}
 
 	// emit
 
@@ -301,8 +314,17 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	emit(event_name: 'node_named_inputs_updated'): void;
 	emit(event_name: 'node_inputs_updated'): void;
 	emit(event_name: 'params_updated'): void;
+	emit(event_name: 'ui_data_updated', data: object): void;
+	emit(event_name: 'node_error_updated'): void;
+	emit(event_name: 'bypass_flag_update'): void;
+	emit(event_name: 'display_flag_update'): void;
 	emit(event_name: string, data: object = null): void {
 		super.emit(event_name, data);
+	}
+
+	// serializer
+	to_json(include_param_components: boolean = false) {
+		return this.serializer.to_json(include_param_components);
 	}
 
 	// root(): BaseNode {

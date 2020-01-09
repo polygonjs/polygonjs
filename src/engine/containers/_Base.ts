@@ -63,7 +63,7 @@ export abstract class TypedContainer<T> extends CoreObject {
 	public core_content() {
 		return this._content;
 	}
-	protected core_content_cloned() {
+	public core_content_cloned() {
 		return this._content;
 	}
 	// abstract clone_content(): T

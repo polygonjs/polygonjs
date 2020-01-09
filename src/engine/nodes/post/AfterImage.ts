@@ -4,7 +4,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {BasePostProcessNode} from './_Base';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 
 export class AfterImage extends BasePostProcessNode {
 	static type() {
@@ -31,7 +31,7 @@ export class AfterImage extends BasePostProcessNode {
 		});
 	}
 
-	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCamera) {
+	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
 		const pass = new this._shader_class();
 		pass.uniforms['damp'].value = this.params.float('damp');
 		composer.addPass(pass);

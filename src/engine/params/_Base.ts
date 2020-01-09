@@ -136,12 +136,12 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 	set_node(node: BaseNode) {
 		if (!node) {
 			if (this._node) {
-				this._node.params_node().remove_graph_input(this);
+				this._node.params.params_node.remove_graph_input(this);
 			}
 		} else {
 			this._node = node;
 			if (this.options.makes_node_dirty_when_dirty()) {
-				node.params_node().add_graph_input(this);
+				node.params.params_node.add_graph_input(this);
 			}
 		}
 
@@ -163,7 +163,7 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 		param.add_graph_input(this);
 		this._parent_param = param;
 	}
-	parent_param(): BaseParam {
+	get parent_param(): BaseParam {
 		return this._parent_param;
 	}
 	has_parent_param(): boolean {
@@ -185,7 +185,7 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 	emit(event_name: 'param_updated'): void;
 	emit(event_name: 'param_deleted'): void;
 	emit(event_name: string, data: object = null): void {
-		if (this.emit_controller.emit_allowed()) {
+		if (this.emit_controller.emit_allowed) {
 			super.emit(event_name, data);
 		}
 	}

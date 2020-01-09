@@ -21,7 +21,7 @@ export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
 	updateProjectionMatrix: () => void;
-	getFocalLength: () => void;
+	getFocalLength?: () => void;
 }
 
 // import {ControlsController} from './utils/ControlsController';

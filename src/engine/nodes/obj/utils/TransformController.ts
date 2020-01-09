@@ -11,9 +11,9 @@ export class TransformController {
 
 	post_set_input() {
 		if (this.node.io.inputs.input(0) != null) {
-			this.node.root().add_to_parent_transform(this.node);
+			this.node.root.add_to_parent_transform(this.node);
 		} else {
-			this.node.root().remove_from_parent_transform(this.node);
+			this.node.root.remove_from_parent_transform(this.node);
 		}
 	}
 

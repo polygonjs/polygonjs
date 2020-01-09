@@ -53,7 +53,7 @@ export class ContainerController {
 
 			this._callbacks.push(resolve);
 
-			const cooker = this.node.scene().cooker();
+			const cooker = this.node.scene().cooker;
 			if (cooker.blocked()) {
 				cooker.enqueue(this);
 			} else {
@@ -76,7 +76,7 @@ export class ContainerController {
 			});
 		} else {
 			if (this.node.is_dirty()) {
-				this.node.container.reset_caches();
+				this.node.container_controller.container.reset_caches();
 				this.node.cook_controller.cook_main();
 			} else {
 				this.notify_requesters();
@@ -100,7 +100,7 @@ export class ContainerController {
 	// 	}
 	// }
 	async request_input_container_p(input_index: number) {
-		const input_node = this.node.input(input_index);
+		const input_node = this.node.io.inputs.input(input_index);
 		if (input_node) {
 			input_node.context().set_frame(this.node.context().frame());
 			const container = await input_node.container_controller.request_container();
@@ -124,7 +124,7 @@ export class ContainerController {
 		}
 
 		if (container == null) {
-			container = this.node.container.clone();
+			container = this.node.container_controller.container.clone();
 		}
 		// removing the clone, as this seems to defeat the no cloning of inputs
 		// container = container || this._container

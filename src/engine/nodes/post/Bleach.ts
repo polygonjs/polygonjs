@@ -2,7 +2,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {BasePostProcessNode} from './_Base';
 import {CoreScriptLoader} from 'src/core/loader/Script';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {ShaderPass} from 'modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
@@ -45,7 +45,7 @@ export class Bleach extends BasePostProcessNode {
 		this.add_param(ParamType.FLOAT, 'opacity', 0.95, {range: [-5, 5], range_locked: [true, true]});
 	}
 
-	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCamera) {
+	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
 		const pass = new ShaderPass(this._shader_class) as ShaderPassWithRequiredUniforms;
 		pass.uniforms['opacity'].value = this._param_opacity;
 

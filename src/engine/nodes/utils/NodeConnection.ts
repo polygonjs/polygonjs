@@ -30,8 +30,8 @@ export class NodeConnection {
 	) {
 		this._uuid = _Math.generateUUID();
 
-		this._node_src.add_output_connection(this);
-		this._node_dest.add_input_connection(this);
+		this._node_src.io.connections.add_output_connection(this);
+		this._node_dest.io.connections.add_input_connection(this);
 	}
 	get uuid() {
 		return this._uuid;
@@ -51,11 +51,11 @@ export class NodeConnection {
 	}
 
 	disconnect(options: DisconnectionOptions = {}) {
-		this._node_src.remove_output_connection(this);
-		this._node_dest.remove_input_connection(this);
+		this._node_src.io.connections.remove_output_connection(this);
+		this._node_dest.io.connections.remove_input_connection(this);
 
 		if (options['set_input'] === true) {
-			this._node_dest.set_input(this._input_index, null);
+			this._node_dest.io.inputs.set_input(this._input_index, null);
 		}
 	}
 }

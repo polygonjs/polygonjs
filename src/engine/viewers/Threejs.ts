@@ -1,9 +1,10 @@
 import {PolyScene} from 'src/engine/scene/PolyScene';
+import {Vector2} from 'three/src/math/Vector2';
 // import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
 // import {Color} from 'three/src/math/Color'
 
 import {BaseViewer} from './_Base';
-import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
 
 import 'src/engine/Poly';
 
@@ -20,14 +21,9 @@ export class ThreejsViewer extends BaseViewer {
 	private _request_animation_frame_id: number;
 	private do_render: boolean = true;
 
-	protected _bound_on_mousedown: (e: MouseEvent) => void;
-	protected _bound_on_mousemove: (e: MouseEvent) => void;
-	protected _bound_on_click: (e: MouseEvent) => void;
-	protected _bound_on_mouseup: (e: MouseEvent) => void;
-
 	private _animate_method: () => void;
 
-	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCamera) {
+	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNode) {
 		super(_container, _scene, camera_node);
 
 		this._canvas = document.createElement('canvas');
@@ -41,57 +37,32 @@ export class ThreejsViewer extends BaseViewer {
 
 	protected _build() {
 		this._init_display();
-		this._init_active();
+		this.activate();
 	}
 
 	dispose() {
 		this._cancel_animate();
-		this._dispose_controls();
+		this.controls_controller.dispose_controls();
 		// this._dispose_graph_node()
 	}
 
 	private _set_events() {
-		this._set_mouse_events();
-		this._canvas.onwebglcontextlost = this._on_webglcontextlost.bind(this);
-		this._canvas.onwebglcontextrestored = this._on_webglcontextrestored.bind(this);
+		this.events_controller.init();
+		this.webgl_controller.init();
 
 		if (POLY.player_mode()) {
-			window.onresize = this.on_resize.bind(this);
+			window.onresize = this.cameras_controller.on_resize.bind(this);
 		}
-	}
-
-	protected _set_mouse_events() {
-		if (this._bound_on_mousedown) {
-			this._canvas.removeEventListener('mousedown', this._bound_on_mousedown);
-		}
-		if (this._bound_on_mousemove) {
-			this._canvas.removeEventListener('mousemove', this._bound_on_mousemove);
-		}
-		if (this._bound_on_click) {
-			this._canvas.removeEventListener('mouseup', this._bound_on_click);
-		}
-		this._bound_on_mousedown = this._bound_on_mousedown || this._on_mousedown.bind(this);
-		this._bound_on_mousemove = this._bound_on_mousemove || this._on_mousemove.bind(this);
-		this._bound_on_mouseup = this._bound_on_mouseup || this._on_mouseup.bind(this);
-
-		this._canvas.addEventListener('mousedown', this._bound_on_mousedown);
-		this._canvas.addEventListener('mousemove', this._bound_on_mousemove);
-		this._canvas.addEventListener('mouseup', this._bound_on_mouseup);
-
-		// this._bound_on_touchmove = this._bound_on_touchmove || this._on_touchmove.bind(this)
-		this._canvas.addEventListener('touchstart', this._bound_on_mousedown, false);
-		this._canvas.addEventListener('touchmove', this._bound_on_mousemove, false);
-		this._canvas.addEventListener('touchend', this._bound_on_mouseup, false);
-		this._canvas.addEventListener('touchcancel', this._bound_on_mouseup, false);
 	}
 	// protected _on_touchmove(event: TouchEvent){
 	// 	console.log("touch", event)
 	// }
 
 	private _init_display() {
-		this._compute_size_and_aspect();
+		this.cameras_controller.compute_size_and_aspect();
+		const size: Vector2 = this.cameras_controller.size;
 
-		this._camera_node.create_renderer(this._canvas, this._size);
+		this.cameras_controller.camera_node.post_process_controller.create_renderer(this._canvas, size);
 		// this.canvas_context = canvas.getContext('2d')
 
 		// init renderer
@@ -127,11 +98,11 @@ export class ThreejsViewer extends BaseViewer {
 
 		//window.display_scene = @display_scene
 
-		this._init_ray_helper();
+		// this._init_ray_helper(); // TODO: typescript
 
 		//@cam_animation_helper = new CameraAnimationHelper(@ray_helper, @event_helper)
 
-		this.prepare_current_camera();
+		this.cameras_controller.prepare_current_camera();
 		// this._add_helpers_to_scene()
 
 		this._animate_method = this.animate.bind(this);
@@ -154,22 +125,26 @@ export class ThreejsViewer extends BaseViewer {
 	private _cancel_animate() {
 		this.do_render = false;
 		cancelAnimationFrame(this._request_animation_frame_id);
-		this._camera_node.delete_renderer(this._canvas);
+		this.cameras_controller.camera_node.post_process_controller.delete_renderer(this._canvas);
 		// POLY.renderers_controller.deregister_renderer(@renderer)
 		// this.dispose_camera()
 	}
 
 	render() {
-		if (this._camera_node) {
-			this._camera_node.render(this._canvas, this._size, this._aspect);
+		if (this.cameras_controller.camera_node) {
+			const size = this.cameras_controller.size;
+			const aspect = this.cameras_controller.aspect;
+			this.cameras_controller.camera_node.post_process_controller.render(this._canvas, size, aspect);
 
-			if (this._controls && this._controls.update) {
-				this._controls.update();
-			}
+			// TODO: typescript
+			// if (this._controls && this._controls.update) {
+			// 	this._controls.update();
+			// }
 
-			if (this._capturer) {
-				this._capturer.perform_capture();
-			}
+			// TODO: typescript
+			// if (this._capturer) {
+			// 	this._capturer.perform_capture();
+			// }
 		} else {
 			console.warn('no camera to render with');
 		}

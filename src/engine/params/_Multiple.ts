@@ -186,7 +186,7 @@ export class TypedMultipleParam<T> extends AsCodeMultiple(TypedParam)<T> {
 	// 		throw "trying to evaluate component with index #{index} which does not exist"
 
 	set(value: T) {
-		const cooker = this.scene().cooker();
+		const cooker = this.scene().cooker;
 		cooker.block();
 		const components = this.components();
 		for (let i = 0; i < components.length; i++) {

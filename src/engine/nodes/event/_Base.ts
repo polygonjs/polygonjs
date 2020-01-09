@@ -19,6 +19,6 @@ export class BaseEventNode extends BaseNode {
 
 	// ensures that event nodes are cooked when scene is loaded
 	_eval_all_params_on_dirty() {
-		this.params.eval_all_params();
+		this.params.eval_all();
 	}
 }

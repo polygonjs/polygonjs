@@ -3,7 +3,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {BasePostProcessNode} from './_Base';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 
 export class DotScreen extends BasePostProcessNode {
 	@ParamV2('center') _param_center: Vector2;
@@ -35,7 +35,7 @@ export class DotScreen extends BasePostProcessNode {
 		this.add_param(ParamType.FLOAT, 'scale', 1.0, {range: [0, 1], range_locked: [false, false]});
 	}
 
-	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCamera) {
+	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
 		// const pass = new THREE[BloomPass_name](
 		// 	this._param_strength,
 		// 	this._param_kernel_size,

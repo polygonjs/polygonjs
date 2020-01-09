@@ -3,7 +3,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {BasePostProcessNode} from './_Base';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 
 export class Film extends BasePostProcessNode {
 	static type() {
@@ -37,7 +37,7 @@ export class Film extends BasePostProcessNode {
 		this.add_param(ParamType.BOOLEAN, 'grayscale', 1);
 	}
 
-	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCamera) {
+	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
 		// const FilmPass_name = 'FilmPass'
 		// const pass = new THREE[BloomPass_name](
 		// 	this._param_strength,

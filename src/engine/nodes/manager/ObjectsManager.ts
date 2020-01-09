@@ -6,11 +6,11 @@ import {BaseNodeManager} from './_Base';
 import {CoreObject} from 'src/core/Object';
 import {BaseNode} from '../_Base';
 import {BaseObjNode} from '../obj/_Base';
-import {BaseNodeObjGeo} from '../obj/Geo';
+import {GeoObjNode} from '../obj/Geo';
 
 import {BaseManager} from 'src/engine/nodes/obj/_BaseManager';
-import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseLight} from 'src/engine/nodes/obj/_BaseLight';
+import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseLightObjNode} from 'src/engine/nodes/obj/_BaseLight';
 import {Events} from 'src/engine/nodes/obj/Events';
 import {Materials} from 'src/engine/nodes/obj/Materials';
 import {FogObj} from 'src/engine/nodes/obj/Fog';
@@ -28,8 +28,11 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// }
 
 	private _object: Group = new Group();
-	private _queued_nodes_by_id: Dictionary<BaseNode> = {};
-	private _queued_nodes_by_path: Dictionary<BaseNode> = {};
+	private _queued_nodes_by_id: Dictionary<BaseObjNode> = {};
+	private _queued_nodes_by_path: Dictionary<BaseObjNode> = {};
+	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
+	private _loaded_geo_node_by_id: Dictionary<boolean> = {};
+	private _process_queue_start: number;
 
 	constructor() {
 		super();
@@ -46,7 +49,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	init_display_scene() {
 		this._object.name = '_WORLD_';
-		this._scene.display_scene().add(this._object);
+		this._scene.display_scene.add(this._object);
 	}
 
 	// TODO: is this method still used?
@@ -66,7 +69,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		return true;
 	}
 
-	add_to_queue(node: BaseNode) {
+	add_to_queue(node: BaseObjNode) {
 		const id = node.graph_node_id();
 		if (this._queued_nodes_by_id[id] == null) {
 			return (this._queued_nodes_by_id[id] = node);
@@ -105,7 +108,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 		this._process_queue_start = performance.now();
 		Promise.all(promises).then(() => {
-			POLY.log(`SCENE LOADED '${this.scene().name()}' in ${performance.now() - this._process_queue_start}`);
+			POLY.log(`SCENE LOADED '${this.scene().name}' in ${performance.now() - this._process_queue_start}`);
 			// this.scene().performance().print()
 
 			// do the update here if there are no objects to load
@@ -116,15 +119,15 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		});
 	}
 
-	update_object(node: BaseNode) {
+	update_object(node: BaseObjNode) {
 		return new Promise((resolve, reject) => {
-			if (!this.scene().auto_updating()) {
+			if (!this.scene().loading_controller.auto_updating) {
 				this.add_to_queue(node);
 				return resolve();
 			} else {
 				let object;
 				// console.log(node.full_path())
-				if ((object = node.object()) != null) {
+				if ((object = node.object) != null) {
 					this.add_to_scene(node);
 				} else {
 					//if POLY.env != 'test'
@@ -142,10 +145,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		return CoreObject.is_a(node, FogObj);
 	}
 	_is_node_camera(node: BaseNode) {
-		return CoreObject.is_a(node, BaseCamera);
+		return CoreObject.is_a(node, BaseCameraObjNode);
 	}
 	_is_node_light(node: BaseNode) {
-		return CoreObject.is_a(node, BaseLight);
+		return CoreObject.is_a(node, BaseLightObjNode);
 	}
 	_is_node_event(node: BaseNode) {
 		return CoreObject.is_a(node, Events);
@@ -169,13 +172,13 @@ export class ObjectsManagerNode extends BaseNodeManager {
 			return null;
 		} else {
 			if (this._is_node_camera(node)) {
-				return this.scene().display_scene();
+				return this.scene().display_scene;
 			} else {
-				const node_input = node.input(0);
+				const node_input = node.io.inputs.input(0) as BaseObjNode;
 				if (node_input != null) {
 					//node_input.request_container (container)=>
 					//	callback(container.object() || @_object)
-					return node_input.object();
+					return node_input.object;
 				} else {
 					return this._object;
 				}
@@ -183,7 +186,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		}
 	}
 
-	add_to_scene(node: BaseNode) {
+	add_to_scene(node: BaseObjNode) {
 		if (this._is_node_fog(node)) {
 			// console.log("fog")
 			// # TODO: ensure fog is removed if we set display or bypass flag
@@ -195,29 +198,29 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		} else {
 			const parent_object = this.get_parent_for_node(node);
 			if (parent_object != null) {
-				node.eval_all_params().then((params_eval_key) => {
-					return node.request_container_p();
+				node.params.eval_all().then((params_eval_key) => {
+					return node.request_container();
 				});
 
-				parent_object.add(node.object());
+				parent_object.add(node.object);
 				return node.request_display_node();
 			} else {
-				node.request_container_p().then(() => {
+				node.request_container().then(() => {
 					// force events and mat to cook and remove the dirty state
 					// ensure that pickers are cooked
 					// TODO: although there has been cases with two picker and
 					// one referencing the other with an expression, and that
 					// expression be evaluated before the second was created
 					// which led to an error. This should not happen
-					node.traverse_children((child) => child.set_dirty());
+					node.children_controller.traverse_children((child) => child.set_dirty());
 				});
 			}
 		}
 	}
 
-	remove_from_scene(node: BaseNode) {
+	remove_from_scene(node: BaseObjNode) {
 		if (!this._is_node_fog(node)) {
-			const object = node.object();
+			const object = node.object;
 			if (object != null) {
 				const parent_object = object.parent;
 				if (parent_object != null) {
@@ -227,7 +230,8 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		}
 	}
 	are_children_cooking(): boolean {
-		for (let child of this.children()) {
+		const children = this.children() as BaseObjNode[];
+		for (let child of children) {
 			if (child.is_display_node_cooking()) {
 				return true;
 			}
@@ -236,10 +240,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	}
 
 	async expected_loading_geo_nodes_by_id() {
-		const geo_nodes = this.nodes_by_type('geo');
-		const node_by_id: Dictionary<BaseNode> = {};
+		const geo_nodes = this.nodes_by_type('geo') as GeoObjNode[];
+		const node_by_id: Dictionary<GeoObjNode> = {};
 		for (let geo_node of geo_nodes) {
-			const is_displayed = await geo_node.is_displayed_p();
+			const is_displayed = await geo_node.is_displayed();
 			if (is_displayed) {
 				node_by_id[geo_node.graph_node_id()] = geo_node;
 			}
@@ -247,7 +251,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		return node_by_id;
 	}
 
-	async notify_geo_loaded(geo_node: BaseNodeObjGeo) {
+	async notify_geo_loaded(geo_node: GeoObjNode) {
 		this._loaded_geo_node_by_id = this._loaded_geo_node_by_id || {};
 		this._loaded_geo_node_by_id[geo_node.graph_node_id()] = true;
 
@@ -256,7 +260,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		const scene = this.scene();
 
 		if (scene) {
-			scene.on_first_object_loaded();
+			scene.loading_controller.on_first_object_loaded();
 
 			if (lodash_isEqual(Object.keys(this._loaded_geo_node_by_id), Object.keys(this._expected_geo_nodes))) {
 				this.update_on_all_objects_loaded();
@@ -266,11 +270,11 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	update_on_all_objects_loaded() {
 		const scene = this.scene();
-		scene.on_all_objects_loaded();
-		scene.cube_cameras_controller().on_all_objects_loaded();
+		scene.loading_controller.on_all_objects_loaded();
+		scene.cube_cameras_controller.on_all_objects_loaded();
 	}
 
-	add_to_parent_transform(node: BaseNode) {
+	add_to_parent_transform(node: BaseObjNode) {
 		this.update_object(node);
 	}
 	// return if !this.scene().loaded()
@@ -282,7 +286,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// 		parent = parent_input_container.object()
 	// 		parent.add(object)
 
-	remove_from_parent_transform(node: BaseNode) {
+	remove_from_parent_transform(node: BaseObjNode) {
 		this.update_object(node);
 	}
 	// return if !this.scene().loaded()
@@ -293,10 +297,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// 	this.get_parent_for_node transformed_node, (parent_object)=>
 	// 		parent_object.add(object)
 
-	on_child_add(node: BaseNode) {
+	on_child_add(node: BaseObjNode) {
 		this.update_object(node);
 	}
-	on_child_remove(node: BaseNode) {
+	on_child_remove(node: BaseObjNode) {
 		this.remove_from_scene(node);
 	}
 }

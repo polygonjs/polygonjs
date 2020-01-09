@@ -173,7 +173,7 @@ export class OptionsController {
 		let cook_options;
 
 		// false as the dirty state will go through the parent param
-		if (this.param.parent_param() != null) {
+		if (this.param.parent_param != null) {
 			return false;
 		}
 
@@ -307,11 +307,11 @@ export class OptionsController {
 	}
 	set_visible_state(state: boolean) {
 		this._options[HIDDEN_OPTION] = !state;
-		this.self.emit('param_visible_updated');
+		this.param.emit('param_visible_updated');
 	}
 
 	is_label_hidden(): boolean {
-		const type = this.self.type();
+		const type = this.param.type();
 		return (
 			this._options[LABEL_OPTION] === false ||
 			type === ParamType.BUTTON ||
@@ -329,17 +329,15 @@ export class OptionsController {
 	}
 	visibility_predecessors() {
 		const predecessor_names = Object.keys(this._options[VISIBLE_IF_OPTION] || {});
-		const node = this.self.node();
+		const node = this.param.node;
 		return lodash_compact(
 			predecessor_names.map((name) => {
-				const param = node.param(name);
+				const param = node.params.get(name);
 				if (param) {
 					return param;
 				} else {
 					console.error(
-						`param ${name} not found as visibility condition for ${this.self.name()} in node ${this.self
-							.node()
-							.type()}`
+						`param ${name} not found as visibility condition for ${this.param.name()} in node ${this.param.node.type()}`
 					);
 				}
 			})

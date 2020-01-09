@@ -6,7 +6,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {BasePostProcessNode} from './_Base';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 import {ShaderPass} from 'modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
@@ -46,7 +46,7 @@ export class Pixel extends BasePostProcessNode {
 		});
 	}
 
-	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCamera) {
+	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
 		const pass = new ShaderPass(this._shader_class) as ShaderPassWithRequiredUniforms;
 		pass.uniforms['resolution'].value = resolution;
 		pass.uniforms['resolution'].value.multiplyScalar(window.devicePixelRatio);

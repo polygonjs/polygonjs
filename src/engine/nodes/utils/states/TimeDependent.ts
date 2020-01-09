@@ -10,10 +10,10 @@ export class TimeDependentState {
 	}
 
 	are_params_time_dependent(): boolean {
-		const param_names = this.node.param_names();
+		const param_names = this.node.params.names;
 		for (let param_name of param_names) {
-			const param = this.node.param(param_name);
-			if (param.is_time_dependent()) {
+			const param = this.node.params.get(param_name);
+			if (param.states.time_dependent.active) {
 				return true;
 			}
 		}
@@ -21,7 +21,7 @@ export class TimeDependentState {
 	}
 
 	are_inputs_time_dependent(): boolean {
-		const inputs = this.node.inputs();
+		const inputs = this.node.io.inputs.inputs();
 		for (let input of inputs) {
 			if (input && input.states.time_dependent.active) {
 				return true;

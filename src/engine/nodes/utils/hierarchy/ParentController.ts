@@ -19,7 +19,7 @@ export class HierarchyParentController {
 			this._parent = parent;
 			if (this._parent) {
 				this.node.set_scene(parent.scene());
-				this.node.request_name_to_parent(NameController.base_name(this.node));
+				this.node.name_controller.request_name_to_parent(NameController.base_name(this.node));
 			}
 			// this.on_set_parent();
 		}

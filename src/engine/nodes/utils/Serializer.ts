@@ -15,12 +15,14 @@ export class NodeSerializer {
 		// });
 		const children_indices = this.node.children().map((node) => (node != null ? node.graph_node_id() : undefined));
 
-		const input_indices = this.node.inputs().map((node) => (node != null ? node.graph_node_id() : undefined));
-		const connection_output_indices = this.node
+		const input_indices = this.node.io.inputs
+			.inputs()
+			.map((node) => (node != null ? node.graph_node_id() : undefined));
+		const connection_output_indices = this.node.io.connections
 			.input_connections()
-			.map((connection) => (connection != null ? connection.output_index() : undefined));
-		const named_inputs = this.node.named_inputs().map((i) => i.to_json());
-		const named_outputs = this.node.named_outputs().map((o) => o.to_json());
+			.map((connection) => (connection != null ? connection.output_index : undefined));
+		const named_inputs = this.node.io.inputs.named_inputs().map((i) => i.to_json());
+		const named_outputs = this.node.io.outputs.named_outputs().map((o) => o.to_json());
 
 		const data = {
 			name: this.node.name(),
@@ -36,8 +38,8 @@ export class NodeSerializer {
 			named_outputs: named_outputs,
 			params: this.to_json_params(include_param_components),
 			spare_params: this.to_json_spare_params(include_param_components),
-			override_clonable_state: this.node.override_clonable_state(),
-			inputs_clonable_state_with_override: this.node.inputs_clonable_state_with_override(),
+			override_clonable_state: this.node.io.inputs.override_clonable_state(),
+			inputs_clonable_state_with_override: this.node.io.inputs.inputs_clonable_state_with_override(),
 			flags: {
 				//has_display: this.has_display_flag()
 				display: this.node.flags?.display?.active,
@@ -46,7 +48,7 @@ export class NodeSerializer {
 			selection: null as object,
 		};
 
-		if (this.node.children_allowed()) {
+		if (this.node.children_controller.children_allowed()) {
 			data['selection'] = this.node.selection.to_json();
 		}
 
@@ -56,7 +58,7 @@ export class NodeSerializer {
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {
 		const params_json_by_name: Dictionary<string> = {};
 		for (let param_name of param_names) {
-			const param = this.node.param(param_name);
+			const param = this.node.params.get(param_name);
 			params_json_by_name[param_name] = param.graph_node_id();
 
 			if (include_components && param.is_multiple()) {
@@ -68,9 +70,9 @@ export class NodeSerializer {
 		return params_json_by_name;
 	}
 	to_json_params(include_components: boolean = false) {
-		return this.to_json_params_from_names(this.node.non_spare_param_names(), include_components);
+		return this.to_json_params_from_names(this.node.params.non_spare_names, include_components);
 	}
 	to_json_spare_params(include_components: boolean = false) {
-		return this.to_json_params_from_names(this.node.spare_param_names(), include_components);
+		return this.to_json_params_from_names(this.node.params.spare_names, include_components);
 	}
 }

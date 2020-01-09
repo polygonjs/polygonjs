@@ -13,6 +13,7 @@ import {CoreMaterial} from 'src/core/geometry/Material';
 import {ObjectType} from 'src/core/geometry/Constant';
 
 import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {BaseMatNode} from '../mat/_Base';
 // import * as Container from '../../Container/Geometry';
 
 // import {AttribTypeParam} from './concerns/AttribTypeParam';
@@ -121,25 +122,25 @@ export class BaseSopNode extends BaseNode {
 		this.set_container(objects, MESSAGE.FROM_SET_OBJECTS);
 	}
 
-	add_object(object: Object3D) {
-		if (object != null) {
-			this.group().add(object);
-			// if (this.allow_add_object_attributes()) {
-			this._set_object_attributes(object);
-			// }
-			return object;
-		}
-	}
-	add_geometry(geometry: BufferGeometry, type: ObjectType) {
-		let object;
-		if (geometry.index == null) {
-			this._add_index(geometry);
-		}
+	// add_object(object: Object3D) {
+	// 	if (object != null) {
+	// 		this.group().add(object);
+	// 		// if (this.allow_add_object_attributes()) {
+	// 		this._set_object_attributes(object);
+	// 		// }
+	// 		return object;
+	// 	}
+	// }
+	// add_geometry(geometry: BufferGeometry, type: ObjectType) {
+	// 	let object;
+	// 	if (geometry.index == null) {
+	// 		this._add_index(geometry);
+	// 	}
 
-		if ((object = this.create_object(geometry, type)) != null) {
-			this.add_object(object);
-		}
-	}
+	// 	if ((object = this.create_object(geometry, type)) != null) {
+	// 		this.add_object(object);
+	// 	}
+	// }
 
 	set_geometry(geometry: BufferGeometry, type?: ObjectType) {
 		// this._clear_objects();
@@ -246,7 +247,7 @@ export class BaseSopNode extends BaseNode {
 				console.log('no scene');
 				throw 'no scene';
 			}
-			const material_node = CoreMaterial.node(this.scene(), material);
+			const material_node = CoreMaterial.node(this.scene(), material) as BaseMatNode;
 			if (material_node) {
 				material_node.add_render_hook(object);
 			}

@@ -5,65 +5,168 @@
 // import {EmitPayload} from 'src/core/graph/NodeScene'
 // import {BaseNode} from '../nodes/_Base'
 
-import {CoreObject} from 'src/core/Object'
-import {Camera} from './concerns/Camera'
-import {CookerMixin} from './concerns/Cooker'
-import {CubeCameras} from './concerns/CubeCameras'
-import {Debug} from './concerns/Debug'
+// import {CoreObject} from 'src/core/Object';
+// import {Debug} from './concerns/Debug';
 // import {Env} from './concerns/Env'
-import {ExpressionRegister} from './concerns/ExpressionRegister'
-import {Frame} from './concerns/Frame'
-import {GraphMixin} from './concerns/Graph'
-import {Js} from './concerns/Js'
-import {Json} from './concerns/Json'
-import {LifeCycle} from './concerns/LifeCycle'
-import {Loading} from './concerns/Loading'
-import {Name} from './concerns/Name'
-import {Nodes} from './concerns/Nodes'
-import {ObjectMixin} from './concerns/Object'
+// import {ExpressionRegister} from './concerns/ExpressionRegister';
+// import {Frame} from './concerns/Frame';
+// import {GraphMixin} from './concerns/Graph';
+// import {Js} from './concerns/Js';
+// import {Json} from './concerns/Json';
+// import {LifeCycle} from './concerns/LifeCycle';
+// import {Loading} from './concerns/Loading';
+// import {Name} from './concerns/Name';
+// import {Nodes} from './concerns/Nodes';
+// import {ObjectMixin} from './concerns/Object';
 // import {PickerNodes} from './concerns/PickerNodes';
-import {PerformanceMixin} from './concerns/Performance'
-import {Renderer} from './concerns/Renderer'
-import {Store} from './concerns/Store'
-import {Uniforms} from './concerns/Uniforms'
+// import {PerformanceMixin} from './concerns/Performance';
+// import {Renderer} from './concerns/Renderer';
+// import {Store} from './concerns/Store'; // TODO: typescript
+// import {Uniforms} from './concerns/Uniforms'; // TODO: typescript
 
-export class PolyScene extends Camera(
-	CookerMixin(
-		CubeCameras(
-			Debug(
-				ExpressionRegister(
-					Frame(
-						GraphMixin(
-							Js(
-								Json(
-									LifeCycle(
-										Loading(
-											Name(
-												Nodes(
-													ObjectMixin(PerformanceMixin(Renderer(Store(Uniforms(CoreObject)))))
-												)
-											)
-										)
-									)
-								)
-							)
-						)
-					)
-				)
-			)
-		)
-	)
-) {
+import {CubeCamerasController} from './utils/CubeCamerasController';
+import {CamerasController} from './utils/CamerasController';
+import {Cooker} from 'src/core/graph/Cooker';
+import {CoreGraph} from 'src/core/graph/CoreGraph';
+import {EmitController} from './utils/EmitController';
+import {LifeCycleController} from './utils/LifeCycleController';
+import {LoadingController} from './utils/LoadingController';
+import {MissingReferencesController} from 'src/engine/expressions/MissingReferencesController';
+import {NodesController} from './utils/NodesController';
+import {CorePerformance} from 'src/core/performance/CorePerformance';
+import {TimeController} from './utils/TimeController';
+import {Serializer} from './utils/Serializer';
+import {UniformsController} from './utils/UniformsController';
+import {WebGLController} from './utils/WebGLController';
+
+import {Scene} from 'three/src/scenes/Scene';
+
+export class PolyScene {
+	protected _display_scene = new Scene();
+	get display_scene() {
+		return this._display_scene;
+	}
+	_uuid: string;
+	set_uuid(uuid: string) {
+		return (this._uuid = uuid);
+	}
+	get uuid() {
+		return this._uuid;
+	}
+	_name: string;
+	set_name(name: string) {
+		return (this._name = name);
+	}
+	get name() {
+		return this._name;
+	}
+
+	protected _cameras_controller = new CamerasController(this);
+	get cameras_controller() {
+		return this._cameras_controller;
+	}
+
+	private _cooker = new Cooker();
+	get cooker() {
+		return this._cooker;
+	}
+
+	private _cube_cameras_controller: CubeCamerasController;
+	get cube_cameras_controller() {
+		return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
+	}
+
+	private _emit_controller: EmitController;
+	get emit_controller() {
+		return (this._emit_controller = this._emit_controller || new EmitController(this));
+	}
+
+	private _graph = new CoreGraph();
+	get graph() {
+		return this._graph;
+	}
+
+	private _lifecycle_controller: LifeCycleController;
+	get lifecycle_controller() {
+		return (this._lifecycle_controller = this._lifecycle_controller || new LifeCycleController(this));
+	}
+	private _loading_controller: LoadingController;
+	get loading_controller() {
+		return (this._loading_controller = this._loading_controller || new LoadingController(this));
+	}
+
+	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController();
+	get missing_expression_references_controller() {
+		return this._missing_expression_references_controller;
+	}
+
+	protected _nodes_controller = new NodesController(this);
+	get nodes_controller() {
+		return this._nodes_controller;
+	}
+
+	protected _performance: CorePerformance;
+	get performance() {
+		return (this._performance = this._performance || new CorePerformance());
+	}
+
+	protected _time_controller = new TimeController(this);
+	get time_controller() {
+		return this._time_controller;
+	}
+	set_frame(frame: number) {
+		this.time_controller.set_frame(frame);
+	}
+	get frame() {
+		return this.time_controller.frame();
+	}
+	play() {
+		this.time_controller.play();
+	}
+	pause() {
+		this.time_controller.pause();
+	}
+
+	private _serializer: Serializer;
+	get serializer() {
+		return (this._serializer = this._serializer || new Serializer(this));
+	}
+	to_json() {
+		return this.serializer.to_json();
+	}
+
+	private _uniforms_controller: UniformsController;
+	get uniforms_controller() {
+		return (this._uniforms_controller = this._uniforms_controller || new UniformsController(this));
+	}
+
+	private _webgl_controller: WebGLController;
+	get webgl_controller() {
+		return (this._webgl_controller = this._webgl_controller || new WebGLController());
+	}
+
 	constructor() {
-		super()
-		this._init_cooker()
 		// this.mark_as_loaded()
-		this._init_performance()
-		this._init_graph()
-		this._init_frame()
-		this._init_cube_cameras_controller()
+		this._graph.set_scene(this);
+		this.time_controller.init();
+		this.nodes_controller.init();
+	}
 
-		this._init_root()
+	// cooker
+	batch_update(callback: () => void) {
+		this._cooker.block();
+
+		callback();
+
+		this._cooker.unblock();
+	}
+
+	// nodes
+	node(path: string) {
+		return this.nodes_controller.node(path);
+	}
+	get root() {
+		return this.nodes_controller.root;
 	}
 }
 

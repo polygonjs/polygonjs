@@ -9,8 +9,9 @@ export class AssetsController {
 	}
 
 	mark_as_referencing_asset(url: string) {
-		if (this.param.options.always_reference_asset()) {
-		}
+		// TODO: typescript: doublecheck this could be commented out
+		// if (this.param.options.always_reference_asset()) {
+		// }
 		this._referenced_asset = url;
 	}
 

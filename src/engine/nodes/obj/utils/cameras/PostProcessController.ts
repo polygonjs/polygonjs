@@ -8,7 +8,7 @@ import lodash_range from 'lodash/range';
 import {BooleanParam} from 'src/engine/params/Boolean';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
 import {BasePostProcessNode} from 'src/engine/nodes/post/_Base';
-import {BaseCamera} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
 
@@ -26,7 +26,7 @@ export class PostProcessController {
 	private _post_process_use_node_path_params: BooleanParam[] = [];
 	private _post_process_node_path_params: OperatorPathParam[] = [];
 
-	constructor(private node: BaseCamera) {}
+	constructor(private node: BaseCameraObjNode) {}
 
 	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
 		const renderer = this.renderer(canvas);
@@ -39,7 +39,7 @@ export class PostProcessController {
 				}
 			} else {
 				this.node.setup_for_aspect_ratio(aspect);
-				renderer.render(this.node.scene().display_scene(), this.node.object);
+				renderer.render(this.node.scene().display_scene, this.node.object);
 			}
 		}
 	}
@@ -190,7 +190,7 @@ export class PostProcessController {
 
 		this.clear_render_passes(composer);
 
-		const render_scene_pass = new RenderPass(this.node.scene().display_scene(), this.node.object);
+		const render_scene_pass = new RenderPass(this.node.scene().display_scene, this.node.object);
 		render_scene_pass.clearAlpha = 0;
 		composer.addPass(render_scene_pass);
 

@@ -1,0 +1,27 @@
+// import {FrontSide} from 'three/src/constants'
+// import {DoubleSide} from 'three/src/constants'
+// import {BackSide} from 'three/src/constants'
+// const THREE = {BackSide, DoubleSide, FrontSide}
+// import {BaseNodeMat} from '../_Base'
+// import {ParamType} from 'src/Engine/Param/_Module'
+
+// export function Side<TBase extends Constructor>(Base: TBase) {
+// 	return class Mixin extends Base {
+
+// 		protected self: BaseNodeMat = <unknown>this as BaseNodeMat
+// 		_param_double_sided: boolean
+// 		_param_front: boolean
+
+// 		_add_side_params(){
+// 			this.self.add_param(ParamType.TOGGLE, 'double_sided', 0);
+// 			this.self.add_param(ParamType.TOGGLE, 'front', 1, {visible_if: {double_sided: false}});
+
+// 			this.self.add_update_method(this._update_side);
+// 		}
+
+// 		_update_side(){
+// 			this.self._material.side = this._param_double_sided ? THREE.DoubleSide :
+// 				(this._param_front ? THREE.FrontSide : THREE.BackSide);
+// 		}
+// 	}
+// }

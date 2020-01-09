@@ -1,0 +1,17 @@
+// import {BaseNodeMat} from '../_Base'
+// import {ParamType} from 'src/Engine/Param/_Module'
+
+// export function Skinning<TBase extends Constructor>(Base: TBase) {
+// 	return class Mixin extends Base {
+// 		protected self: BaseNodeMat = <unknown>this as BaseNodeMat
+
+// 		_add_skinning_params(){
+// 			this.self.add_param( ParamType.TOGGLE, 'skinning', 0 );
+// 		}
+
+// 		_update_skinning() {
+// 			this._material.skinning = this._param_skinning
+// 		}
+
+// 	}
+// }

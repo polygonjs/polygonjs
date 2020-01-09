@@ -1,0 +1,74 @@
+// import {VertexColors} from 'three/src/constants'
+// import {NoColors} from 'three/src/constants'
+// import {Material} from 'three/src/materials/Material'
+// const THREE = {Material, NoColors, VertexColors}
+// import {BaseNodeMat} from '../_Base'
+// import {ParamType} from 'src/Engine/Param/_Module'
+
+// export function Color<TBase extends Constructor>(Base: TBase) {
+// 	return class Mixin extends Base {
+// 		protected self: BaseNodeMat = <unknown>this as BaseNodeMat
+// 		_material: THREE.Material
+
+// 		__has_uniforms(): boolean{
+// 			return this._material && this._material.uniforms != null
+// 		}
+
+// 		__fog_used_in_uniforms():boolean {
+// 			return this._material && ((this._material.uniforms == null) || (this._material.uniforms.use_fog != null));
+// 		}
+
+// 		_add_color_params(options={}){
+// 			this.self.add_param(ParamType.COLOR, 'color', [1,1,1]);
+// 			this.self.add_param(ParamType.TOGGLE, 'use_vertex_colors', 0 );
+
+// 			if(options['flat_shading'] != false){ // for points
+// 				this.self.add_param(ParamType.TOGGLE, 'flat_shading', 0 );
+// 			}
+
+// 			this.self.add_param(ParamType.TOGGLE, 'transparent', 0);
+// 			this.self.add_param(ParamType.FLOAT, 'opacity', 1);
+// 			this.self.add_param(ParamType.FLOAT, 'alpha_test', 0);
+
+// 			if (this.__fog_used_in_uniforms()) {
+// 				this.self.add_param(ParamType.TOGGLE, 'use_fog', 1);
+// 			}
+
+// 			this.self.add_update_method(this._update_color);
+// 		}
+
+// 		_update_color() {
+// 			if(this.__has_uniforms()){
+// 				this._material.uniforms.diffuse.value = this._param_color;
+// 			} else {
+// 				this._material.color = this._param_color;
+// 				this._material.flatShading = this._param_flat_shading;
+// 			}
+
+// 			if(this.__has_uniforms()){
+// 				this._material.uniforms.opacity.value = this._param_opacity;
+// 			} else {
+// 				this._material.opacity = this._param_opacity;
+// 			}
+// 			this._material.transparent = this._param_transparent || (this._material.opacity < 1);
+// 			if (this._material.transparent) {
+// 				this._material.depthTest = true;
+// 			}
+// 			this._material.alphaTest = this._param_alpha_test
+
+// 			this.set_user_vertex_colors(this._material, this._param_use_vertex_colors);
+
+// 			if (this.__fog_used_in_uniforms()) {
+// 				this._material.fog = (this._param_use_fog === true) || (this._param_use_fog === 1);
+// 			}
+// 		}
+// 		//console.log("@_material.fog", this.full_path(), @_param_use_fog, @_material.fog, )
+
+// 		set_user_vertex_colors(material: THREE.Material, use_vertex_colors: boolean){
+// 			material.vertexColors = use_vertex_colors ? THREE.VertexColors : THREE.NoColors;
+// 			if(this.__has_uniforms()){
+// 				material.needsUpdate = true
+// 			}
+// 		}
+// 	}
+// }

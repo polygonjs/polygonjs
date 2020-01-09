@@ -22,4 +22,8 @@ export class Poly {
 	registered_nodes(test: string, test2: string): Dictionary<typeof BaseNode> {
 		return {};
 	}
+
+	log(message: string) {
+		console.log(message);
+	}
 }

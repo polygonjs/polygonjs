@@ -2,7 +2,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {OrthoOrPerspCamera} from 'src/engine/nodes/obj/_BaseCamera';
 
 import {BasePostProcessNode} from './_Base';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 
@@ -79,7 +79,7 @@ export class DepthOfField extends BasePostProcessNode {
 		composer: EffectComposer,
 		camera: OrthoOrPerspCamera,
 		resolution: Vector2,
-		camera_node: BaseCamera
+		camera_node: BaseCameraObjNode
 	) {
 		const pass = new this._pass(this._display_scene, camera, [resolution.x, resolution.y], camera_node);
 

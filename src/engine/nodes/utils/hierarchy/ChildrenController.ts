@@ -80,7 +80,7 @@ export class HierarchyChildrenController {
 			this._children[new_name] = node;
 			node.name_controller.update_name_from_parent(new_name);
 			this._add_to_nodes_by_type(node);
-			this.node.scene().add_to_instanciated_node(node);
+			this.node.scene().nodes_controller.add_to_instanciated_node(node);
 		}
 	}
 
@@ -127,13 +127,13 @@ export class HierarchyChildrenController {
 		child_node.set_parent(this.node);
 		child_node.params.init();
 		child_node.parent_controller.on_set_parent();
-		child_node.post_set_full_path();
+		child_node.name_controller.post_set_full_path();
 		for (let child of child_node.children_controller.children()) {
-			child.post_set_full_path();
+			child.name_controller.post_set_full_path();
 		}
 		this.node.emit('node_created', {child_node: child_node});
 		this.node.lifecycle.on_child_add(child_node);
-		if (this.node.scene().on_create_lifecycle_hook_allowed()) {
+		if (this.node.scene().lifecycle_controller.on_create_hook_allowed()) {
 			child_node.lifecycle.on_create();
 		}
 		// this.post_add_node(child_node);
@@ -142,7 +142,7 @@ export class HierarchyChildrenController {
 			this._children_node.add_graph_input(child_node);
 		}
 		if (child_node.require_webgl2()) {
-			this.node.scene().set_require_webgl2();
+			this.node.scene().webgl_controller.set_require_webgl2();
 		}
 
 		return child_node;
@@ -166,21 +166,21 @@ export class HierarchyChildrenController {
 				this.node.selection.remove([child_node]);
 			}
 
-			const first_connection = child_node.first_input_connection();
-			child_node.input_connections().forEach((input_connection) => {
+			const first_connection = child_node.io.connections.first_input_connection();
+			child_node.io.connections.input_connections().forEach((input_connection) => {
 				if (input_connection) {
 					input_connection.disconnect({set_input: true});
 				}
 			});
-			child_node.output_connections().forEach((output_connection) => {
+			child_node.io.connections.output_connections().forEach((output_connection) => {
 				if (output_connection) {
 					output_connection.disconnect({set_input: true});
 					if (first_connection) {
-						const old_src = first_connection.node_src();
-						const old_output_index = output_connection.output_index();
-						const old_dest = output_connection.node_dest();
-						const old_input_index = output_connection.input_index();
-						old_dest.set_input(old_input_index, old_src, old_output_index);
+						const old_src = first_connection.node_src;
+						const old_output_index = output_connection.output_index;
+						const old_dest = output_connection.node_dest;
+						const old_input_index = output_connection.input_index;
+						old_dest.io.inputs.set_input(old_input_index, old_src, old_output_index);
 					}
 				}
 			});
@@ -192,7 +192,7 @@ export class HierarchyChildrenController {
 			child_node.set_parent(null);
 			delete this._children[child_node.name()];
 			this._remove_from_nodes_by_type(child_node);
-			this.node.scene().remove_from_instanciated_node(child_node);
+			this.node.scene().nodes_controller.remove_from_instanciated_node(child_node);
 
 			this.node.lifecycle.on_child_remove(child_node);
 			child_node.lifecycle.on_delete();
@@ -283,7 +283,7 @@ export class HierarchyChildrenController {
 
 	nodes_by_type(type: string): BaseNode[] {
 		const node_ids = this._children_by_type[type] || [];
-		const graph = this.node.scene().graph();
+		const graph = this.node.scene().graph;
 		return node_ids.map((node_id) => graph.node_from_id(node_id));
 	}
 	// children_and_grandchildren_by_context(context: NodeContext): BaseNode[]{

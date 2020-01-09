@@ -81,15 +81,17 @@ export class OutputsController {
 		this._has_named_outputs = true;
 		this._named_outputs = named_outputs;
 		if (this.node.scene()) {
-			this.node.set_dirty(this);
+			this.node.set_dirty(this.node);
 		}
 		this.node.emit('node_named_outputs_updated');
 	}
 	used_output_names(): string[] {
 		const output_indices = lodash_uniq(
-			this.node.output_connections().map((connection) => (connection ? connection.output_index() : null))
+			this.node.io.connections
+				.output_connections()
+				.map((connection) => (connection ? connection.output_index : null))
 		);
-		const used_output_indices = [];
+		const used_output_indices: number[] = [];
 		output_indices.forEach((index) => {
 			if (lodash_isNumber(index)) {
 				used_output_indices.push(index);

@@ -4,7 +4,7 @@ import {BaseNode} from '../_Base';
 
 import {PostProcessContainer} from 'src/engine/containers/PostProcess';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 
 export abstract class BasePostProcessNode extends BaseNode {
 	static node_context(): NodeContext {
@@ -27,6 +27,6 @@ export abstract class BasePostProcessNode extends BaseNode {
 		composer: EffectComposer,
 		camera: Camera,
 		resolution: Vector2,
-		camera_node: BaseCamera
+		camera_node: BaseCameraObjNode
 	): void;
 }

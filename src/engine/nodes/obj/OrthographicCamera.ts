@@ -69,7 +69,7 @@ export class OrthographicCameraObj extends BaseCameraObjNode {
 		this._update_for_aspect_ratio();
 	}
 
-	private _update_for_aspect_ratio() {
+	protected _update_for_aspect_ratio() {
 		if (this._aspect) {
 			const size = this._param_size || 1;
 			let lock_width = this._param_lock_width;

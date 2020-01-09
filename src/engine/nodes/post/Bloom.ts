@@ -3,7 +3,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {BasePostProcessNode} from './_Base';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCamera} from '../obj/_BaseCamera';
+import {BaseCameraObjNode} from '../obj/_BaseCamera';
 
 export class Bloom extends BasePostProcessNode {
 	@ParamF('strength') _param_strength: number;
@@ -36,7 +36,7 @@ export class Bloom extends BasePostProcessNode {
 		this.add_param(ParamType.FLOAT, 'sigma', 4.0, {range: [-100, 100], range_locked: [false, false]});
 	}
 
-	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCamera) {
+	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
 		const pass = new this._shader_class(this._param_strength);
 
 		composer.addPass(pass);

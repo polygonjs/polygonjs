@@ -195,7 +195,7 @@ export class InputsController {
 			} else {
 				if (existing_input_indices.length > 0) {
 					const promises = existing_input_indices.map((input_index) => {
-						return this.node.eval_required_input_p(input_index);
+						return this.node.io.inputs.eval_required_input_p(input_index);
 					});
 					containers = await Promise.all(promises);
 				}
@@ -272,9 +272,9 @@ export class InputsController {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
 		let output_index = 0;
 		if (node) {
-			if (node.has_named_outputs()) {
+			if (node.io.outputs.has_named_outputs()) {
 				// if(node.has_named_output(output_index_or_name)){
-				output_index = node.get_output_index(output_index_or_name) || 0;
+				output_index = node.io.outputs.get_output_index(output_index_or_name) || 0;
 				// this seems to prevent connecting output 1 from a vec to float to something else
 				// } else {
 				// 	console.warn(`${node.full_path()} has no output '${output_index_or_name}'`)

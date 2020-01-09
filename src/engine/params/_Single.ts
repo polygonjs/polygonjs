@@ -99,7 +99,7 @@ export class Single<T> extends TypedParam<T> {
 			return;
 		}
 
-		const cooker = this.scene().cooker();
+		const cooker = this.scene().cooker;
 		cooker.block();
 		this.states.error.clear();
 		this._value = new_value;

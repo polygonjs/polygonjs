@@ -57,7 +57,7 @@ export class PerspectiveCameraObj extends BaseCameraObjNode {
 		this._update_for_aspect_ratio();
 	}
 
-	private _update_for_aspect_ratio() {
+	protected _update_for_aspect_ratio() {
 		if (this._aspect) {
 			let lock_width = this._param_lock_width;
 			if (lock_width == null) {

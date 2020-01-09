@@ -158,22 +158,22 @@ export class ParamsController {
 	get params_node() {
 		return this._params_node;
 	}
-	get params() {
+	get all() {
 		return this._params_list;
 	}
-	get non_spare_params() {
+	get non_spare() {
 		return this._non_spare_params;
 	}
-	get spare_params() {
+	get spare() {
 		return this._spare_params;
 	}
-	get param_names(): string[] {
+	get names(): string[] {
 		return this._param_names;
 	}
-	get non_spare_param_names(): string[] {
+	get non_spare_names(): string[] {
 		return this._non_spare_param_names;
 	}
-	get spare_param_names(): string[] {
+	get spare_names(): string[] {
 		return this._spare_param_names;
 	}
 	// get params_by_name() {
@@ -256,7 +256,7 @@ export class ParamsController {
 		} else {
 			console.warn(
 				`tried to access param '${name}' in node ${this.node.full_path()}, but existing params are: ${
-					this.param_names
+					this.names
 				}`
 			);
 			return null;
@@ -446,7 +446,7 @@ export class ParamsController {
 	// 	// }
 	// }
 
-	async eval_all_params() {
+	async eval_all() {
 		if (this._params_node.is_dirty() || this._params_added_since_last_params_eval) {
 			// const param_names = lodash_values(this.param_names())
 			// const params = param_names.map(param_name=> this.param(param_name))

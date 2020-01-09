@@ -8,7 +8,7 @@ import {BaseNode} from '../_Base';
 //import Layers from './Concerns/Layers'
 // import {Transformed} from './Concerns/Transformed';
 
-export class BaseNodeObjGeo extends BaseObjNode {
+export class GeoObjNode extends BaseObjNode {
 	static type() {
 		return 'geo';
 	}
@@ -43,34 +43,32 @@ export class BaseNodeObjGeo extends BaseObjNode {
 	//this.create_layers_params()
 
 	request_display_node() {
-		if (!this.scene().auto_updating()) {
+		if (!this.scene().loading_controller.auto_updating) {
 			return;
 		}
 
-		// TODO: remove callback
-		this.is_displayed((is_displayed) => {
-			if (is_displayed) {
-				const display_node = this.display_node();
-				if (display_node) {
-					display_node.request_container_p().then(async (container) => {
-						if (!this._sop_loaded) {
-							this.root().notify_geo_loaded(this);
-						}
-						this._sop_loaded = true;
+		// TODO: typescript
+		// if (this.is_displayed)
+		// 	const display_node = this.display_node();
+		// 	if (display_node) {
+		// 		display_node.request_container_p().then(async (container) => {
+		// 			if (!this._sop_loaded) {
+		// 				this.root().notify_geo_loaded(this);
+		// 			}
+		// 			this._sop_loaded = true;
 
-						const update_needed = await this.display_node_objects_changed(container);
-						if (update_needed) {
-							this.remove_display_node_group();
-							await this.add_display_node_group(container);
-						}
-						// this.set_needsUpdate(container)
-					});
-				} else {
-					this.root().notify_geo_loaded(this);
-					this._sop_loaded = true;
-				}
-			}
-		});
+		// 			const update_needed = await this.display_node_objects_changed(container);
+		// 			if (update_needed) {
+		// 				this.remove_display_node_group();
+		// 				await this.add_display_node_group(container);
+		// 			}
+		// 			// this.set_needsUpdate(container)
+		// 		});
+		// 	} else {
+		// 		this.root().notify_geo_loaded(this);
+		// 		this._sop_loaded = true;
+		// 	}
+		// }
 	}
 
 	is_display_node_cooking(): boolean {
@@ -92,7 +90,7 @@ export class BaseNodeObjGeo extends BaseObjNode {
 		// only to be changed again when the actual display node is set.
 		// Without this, we have a jarring first object being displayed
 		// only to be replaced by the proper one when it is ready.
-		if (this.scene().loaded()) {
+		if (this.scene().loading_controller.loaded) {
 			if (this.children().length == 1) {
 				node.flags.display.set(true);
 			}

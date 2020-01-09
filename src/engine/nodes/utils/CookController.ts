@@ -74,7 +74,7 @@ export class CookController {
 			let input_container;
 			for (let i = 0; i < input_containers.length; i++) {
 				input_container = input_containers[i];
-				if (this.node.input_clonable_state_with_override(i)) {
+				if (this.node.io.inputs.input_clonable_state_with_override(i)) {
 					input_contents.push(input_container.core_content_cloned());
 				} else {
 					input_contents.push(input_container.core_content());
@@ -93,7 +93,7 @@ export class CookController {
 		this._init_cooking_start_time(perf_active);
 		this.node.states.error.clear();
 
-		await this.node.eval_all_params();
+		await this.node.params.eval_all();
 		await this._start_cook_if_no_errors();
 	}
 	// catch e
@@ -176,14 +176,14 @@ export class CookController {
 	async evaluate_inputs_and_params() {
 		//t0 = performance.now()
 
-		const input_containers = await this.node.eval_required_inputs_p();
+		const input_containers = await this.node.io.inputs.eval_required_inputs_p();
 		// const inputs_eval_key = input_containers.map( c => c.eval_key()).join('-');
 
 		if (this.node._performance.recording_started()) {
 			this._cook_time_params_start = performance.now();
 		}
 
-		/*const params_eval_key = */ await this.node.eval_all_params();
+		/*const params_eval_key = */ await this.node.params.eval_all();
 		// const full_eval_key = [inputs_eval_key, params_eval_key].join('+');
 		// if (this.allow_eval_key_check() && (this._last_eval_key != null) && (this._last_eval_key === full_eval_key)) {
 		// 	this._terminate_cook_process('no need to cook');

@@ -29,7 +29,7 @@ export abstract class BaseCameraControlsEventNode extends BaseEventNode {
 		const controls = await this.create_controls_instance(camera, html_element);
 		controls.name = `${this.full_path()}:${camera.name}`;
 		// console.log(this._controls)
-		await this.params.eval_all_params();
+		await this.params.eval_all();
 		this.setup_controls(controls);
 		return controls;
 		// })
