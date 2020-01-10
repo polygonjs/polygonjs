@@ -1,10 +1,11 @@
 // import lodash_each from 'lodash/each'
 // import lodash_isString from 'lodash/isString'
 // import lodash_isNumber from 'lodash/isNumber'
-import {Single} from './_Single'
-import {AsCodeString} from './concerns/visitors/String'
+import {Single} from './_Single';
+import {TypedParamVisitor} from './_Base';
+// import {AsCodeString} from './concerns/visitors/String';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
-import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree'
+import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 
 // class BaseModules extends AsCodeString(Single) {
 // 	constructor() {
@@ -13,15 +14,22 @@ import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree'
 // }
 // window.include_instance_methods(BaseModules, AsCodeString.instance_methods);
 
-export class StringParam extends AsCodeString(Single)<string> {
+interface StringParamVisitor extends TypedParamVisitor {
+	visit_string_param: (param: StringParam) => any;
+}
+
+export class StringParam extends Single<string> {
 	// private _input_string: string
 	// private _expression_controllers: ExpressionController[] = []
 
 	constructor() {
-		super()
+		super();
 	}
 	static type() {
-		return ParamType.STRING
+		return ParamType.STRING;
+	}
+	accepts_visitor(visitor: StringParamVisitor) {
+		return visitor.visit_string_param(this);
 	}
 
 	// convert_value(v): string {
@@ -44,8 +52,8 @@ export class StringParam extends AsCodeString(Single)<string> {
 		// but not the expression controllers caches
 		if (this._raw_input != value) {
 			// this.reset_expression_controllers()
-			this._expression_controller().reset()
-			this._raw_input = value
+			this._expression_controller().reset();
+			this._raw_input = value;
 			// if (this.is_value_expression(new_value)) {
 			// 	this.set_expression(new_value)
 			// } else {
@@ -67,7 +75,7 @@ export class StringParam extends AsCodeString(Single)<string> {
 	// }
 
 	has_expression(): boolean {
-		return this._value_elements(this._raw_input).length > 1
+		return this._value_elements(this._raw_input).length > 1;
 	}
 
 	// private _value_contains_expression(v:string): boolean{
@@ -78,7 +86,7 @@ export class StringParam extends AsCodeString(Single)<string> {
 	// }
 
 	private _value_elements(v: string): string[] {
-		return ParsedTree.string_value_elements(v)
+		return ParsedTree.string_value_elements(v);
 	}
 	// static value_elements(v:string):string[]{
 	// 	return ParsedTree.string_value_elements(v)

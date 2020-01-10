@@ -1,7 +1,8 @@
+import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {CoreWalker} from 'src/core/Walker';
 
-import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
+// import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNode} from 'src/engine/nodes/_Base';
 
 // class BaseModules extends AsCodeOperatorPath(Single) {
@@ -11,9 +12,13 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 // }
 // window.include_instance_methods(BaseModules, AsCodeOperatorPath.instance_methods);
 
-export class OperatorPathParam extends AsCodeOperatorPath(Single)<string> {
+interface OperatorPathParamVisitor extends TypedParamVisitor {
+	visit_operator_path_param: (param: OperatorPathParam) => any;
+}
+
+export class OperatorPathParam extends Single<string> {
 	_path: string;
-	_found_node: BaseNode;
+	_found_node: BaseNode | null;
 
 	constructor() {
 		super();
@@ -22,7 +27,9 @@ export class OperatorPathParam extends AsCodeOperatorPath(Single)<string> {
 	static type() {
 		return ParamType.OPERATOR_PATH;
 	}
-
+	accepts_visitor(visitor: OperatorPathParamVisitor) {
+		return visitor.visit_operator_path_param(this);
+	}
 	// convert_value(v) {
 	// 	return v
 	// }
@@ -36,7 +43,7 @@ export class OperatorPathParam extends AsCodeOperatorPath(Single)<string> {
 		return this._path;
 	}
 
-	async eval() {
+	async eval(): Promise<string> {
 		const path = await this.eval_raw(); //path=> {
 		let node = null;
 
@@ -47,7 +54,7 @@ export class OperatorPathParam extends AsCodeOperatorPath(Single)<string> {
 		if (this._found_node !== node) {
 			const dependent_on_found_node = this.options.dependent_on_found_node();
 
-			if (this._found_node != null) {
+			if (this._found_node) {
 				if (dependent_on_found_node) {
 					this.remove_graph_input(this._found_node);
 				} else {
@@ -55,11 +62,19 @@ export class OperatorPathParam extends AsCodeOperatorPath(Single)<string> {
 				}
 			}
 			this._found_node = node;
-			if (node != null) {
-				if (dependent_on_found_node) {
-					this.add_graph_input(node);
+			if (node) {
+				const expected_context = this.options.node_selection_context;
+				const node_context = node.parent?.children_controller.context;
+				if (expected_context == node_context || expected_context == null) {
+					if (dependent_on_found_node) {
+						this.add_graph_input(node);
+					} else {
+						// this._found_node.add_param_referree(this) // TODO: typescript
+					}
 				} else {
-					// this._found_node.add_param_referree(this) // TODO: typescript
+					this.states.error.set(
+						`node context is ${expected_context} but the params expects a ${node_context}`
+					);
 				}
 			}
 		}

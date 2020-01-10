@@ -1,46 +1,46 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
-import {Texture} from 'three/src/textures/Texture'
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Texture} from 'three/src/textures/Texture';
 // import {NearestFilter, LinearEncoding, HalfFloatType} from 'three/src/constants'
 // import EquirectangularToCubeGenerator from 'src/core/Utils/EquirectangularToCubeGenerator';
 // import PMREMGenerator from 'src/core/Utils/PMREMGenerator';
 // import PMREMCubeUVPacker from 'src/core/Utils/PMREMCubeUVPacker';
 
 interface RendererByString {
-	[propName: string]: WebGLRenderer
+	[propName: string]: WebGLRenderer;
 }
 interface TextureByString {
-	[propName: string]: Texture
+	[propName: string]: Texture;
 }
 
 interface POLYWebGLRenderer extends WebGLRenderer {
-	_polygon_id?: number
+	_polygon_id: number;
 }
 
 const CONTEXT_OPTIONS = {
 	antialias: true,
-}
+};
 
 export class RenderersController {
-	_next_renderer_id: number = 0
-	_next_env_map_id: number = 0
-	_renderers: RendererByString = {}
-	_env_maps: TextureByString = {}
-	private _require_webgl2: boolean = false
+	_next_renderer_id: number = 0;
+	_next_env_map_id: number = 0;
+	_renderers: RendererByString = {};
+	_env_maps: TextureByString = {};
+	private _require_webgl2: boolean = false;
 
 	constructor() {}
 
 	set_require_webgl2() {
 		if (!this._require_webgl2) {
-			this._require_webgl2 = true
+			this._require_webgl2 = true;
 		}
 	}
 	rendering_context(canvas: HTMLCanvasElement): WebGLRenderingContext {
-		let gl: WebGLRenderingContext
+		let gl: WebGLRenderingContext | null = null;
 		if (this._require_webgl2) {
-			gl = this._rendering_context_webgl(canvas, true)
+			gl = this._rendering_context_webgl(canvas, true);
 		}
 		if (!gl) {
-			gl = this._rendering_context_webgl(canvas, false)
+			gl = this._rendering_context_webgl(canvas, false);
 		}
 
 		// gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)
@@ -48,16 +48,16 @@ export class RenderersController {
 		// gl.getExtension('OES_texture_float')
 		// gl.getExtension('OES_texture_float_linear')
 
-		return gl
+		return gl;
 	}
 	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext {
-		let context_name = webgl2 ? 'webgl2' : 'webgl'
-		let gl = canvas.getContext(context_name, CONTEXT_OPTIONS)
+		let context_name = webgl2 ? 'webgl2' : 'webgl';
+		let gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
 		if (!gl) {
-			context_name = webgl2 ? 'experimental-webgl2' : 'experimental-webgl'
-			gl = canvas.getContext(context_name, CONTEXT_OPTIONS)
+			context_name = webgl2 ? 'experimental-webgl2' : 'experimental-webgl';
+			gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
 		}
-		return gl as WebGLRenderingContext
+		return gl as WebGLRenderingContext;
 	}
 	// private _rendering_context_webgl(
 	// 	canvas: HTMLCanvasElement
@@ -71,9 +71,9 @@ export class RenderersController {
 
 	register_renderer(renderer: POLYWebGLRenderer) {
 		if (renderer._polygon_id) {
-			throw new Error('render already registered')
+			throw new Error('render already registered');
 		}
-		renderer._polygon_id = this._next_renderer_id += 1
+		renderer._polygon_id = this._next_renderer_id += 1;
 
 		// there is a bug where 2 renderers are created from the beginning
 		// because the from_json of the viewer_component is called after
@@ -88,20 +88,20 @@ export class RenderersController {
 		// 	console.warn("renderers controller: gl extension not available")
 		// }
 
-		this._renderers[renderer._polygon_id] = renderer
+		this._renderers[renderer._polygon_id] = renderer;
 	}
 	deregister_renderer(renderer: POLYWebGLRenderer) {
-		delete this._renderers[renderer._polygon_id]
-		renderer.dispose()
+		delete this._renderers[renderer._polygon_id];
+		renderer.dispose();
 	}
-	first_renderer(): WebGLRenderer {
-		const first_id = Object.keys(this._renderers)[0]
+	first_renderer(): WebGLRenderer | undefined {
+		const first_id = Object.keys(this._renderers)[0];
 		if (first_id) {
-			return this._renderers[first_id]
+			return this._renderers[first_id];
 		}
 	}
 	renderers(): WebGLRenderer[] {
-		return Object.values(this._renderers)
+		return Object.values(this._renderers);
 	}
 
 	// async register_env_map(env_map: Texture){

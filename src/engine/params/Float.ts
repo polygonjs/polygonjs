@@ -2,14 +2,14 @@
 // import lodash_isString from 'lodash/isString'
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_isNumber from 'lodash/isNumber'
-import {NumericParam} from './_Numeric'
+import {TypedNumericParam} from './_Numeric';
 
-export class FloatParam extends NumericParam<number> {
+export class FloatParam extends TypedNumericParam<number> {
 	// constructor() {
 	// 	super()
 	// }
 	static type() {
-		return ParamType.FLOAT
+		return ParamType.FLOAT;
 	}
 
 	// convert_value(v) {

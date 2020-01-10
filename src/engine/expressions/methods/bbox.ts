@@ -1,18 +1,18 @@
-import {BaseMethod} from './_Base'
-import {MethodDependency} from '../MethodDependency'
-import {Vector3} from 'three/src/math/Vector3'
-import {GeometryContainer} from 'src/engine/containers/Geometry'
+import {BaseMethod} from './_Base';
+import {MethodDependency} from '../MethodDependency';
+import {Vector3} from 'three/src/math/Vector3';
+import {GeometryContainer} from 'src/engine/containers/Geometry';
 
 // import Walker from 'src/core/Walker';
 
-const VECTOR_NAMES = ['min', 'max', 'size', 'center']
-const COMPONENT_NAMES = ['x', 'y', 'z']
+const VECTOR_NAMES = ['min', 'max', 'size', 'center'];
+const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 interface BoxComponents {
-	min: Vector3
-	max: Vector3
-	size: Vector3
-	center: Vector3
+	min: Vector3;
+	max: Vector3;
+	size: Vector3;
+	center: Vector3;
 }
 
 export class Bbox extends BaseMethod {
@@ -23,41 +23,35 @@ export class Bbox extends BaseMethod {
 			['string', 'path to node'],
 			['string', 'vector name, min, max, size or center'],
 			['string', 'component_name, x,y or z'],
-		]
+		];
 	}
 
 	find_dependency(index_or_path: number | string): MethodDependency {
-		return this.create_dependency_from_index_or_path(index_or_path)
+		return this.create_dependency_from_index_or_path(index_or_path);
 	}
 
 	process_arguments(args: any[]): Promise<any> {
-		let value = 0
+		let value = 0;
 		return new Promise(async (resolve, reject) => {
 			if (args.length == 3) {
-				const index_or_path = args[0]
-				const vector_name = args[1]
-				const component_name = args[2]
+				const index_or_path = args[0];
+				const vector_name = args[1];
+				const component_name = args[2];
 
-				let container: GeometryContainer
+				let container: GeometryContainer | null = null;
 				try {
-					container = (await this.get_referenced_node_container(
-						index_or_path
-					)) as GeometryContainer
+					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
 				} catch (e) {
-					reject(e)
+					reject(e);
 				}
 				if (container) {
-					value = this._get_value_from_container(
-						container,
-						vector_name,
-						component_name
-					)
-					resolve(value)
+					value = this._get_value_from_container(container, vector_name, component_name);
+					resolve(value);
 				}
 			} else {
-				resolve(0)
+				resolve(0);
 			}
-		})
+		});
 	}
 
 	private _get_value_from_container(
@@ -66,28 +60,28 @@ export class Bbox extends BaseMethod {
 		component_name: keyof Vector3Components
 	) {
 		if (VECTOR_NAMES.indexOf(vector_name) >= 0) {
-			const bbox = container.bounding_box()
+			const bbox = container.bounding_box();
 
-			let vector = new Vector3()
+			let vector = new Vector3();
 			switch (vector_name) {
 				case 'size':
-					bbox.getSize(vector)
-					break
+					bbox.getSize(vector);
+					break;
 				case 'center':
-					bbox.getCenter(vector)
-					break
+					bbox.getCenter(vector);
+					break;
 				default:
-					vector = bbox[vector_name]
+					vector = bbox[vector_name];
 			}
 
 			if (COMPONENT_NAMES.indexOf(component_name) >= 0) {
 				//(value = vector[component_name])?
-				return vector[component_name]
+				return vector[component_name];
 			} else {
-				return null
+				return -1;
 			}
 		} else {
-			return null
+			return -1;
 		}
 	}
 }

@@ -68,7 +68,7 @@ export class CubeCameraObjNode extends BaseObjNode {
 		this.transform_controller.update(matrix);
 
 		this._cube_camera_scene = this._cube_camera_scene || new Scene();
-		this._cube_camera_objects = this.scene().objects_from_mask(this._param_object_mask);
+		this._cube_camera_objects = this.scene().nodes_controller.objects_from_mask(this._param_object_mask);
 
 		// re-create the cube_camera
 		let camera_recreate_required = false;
@@ -122,8 +122,10 @@ export class CubeCameraObjNode extends BaseObjNode {
 				if (!light_given && this.object_is_light(object)) {
 					light_given = true;
 				}
-				parent_by_child_uuid[object.uuid] = object.parent;
-				this._cube_camera_scene.add(object);
+				if (object.parent) {
+					parent_by_child_uuid[object.uuid] = object.parent;
+					this._cube_camera_scene.add(object);
+				}
 			}
 			if (!light_given) {
 				console.warn('no light is present in the objects rendered by the cubemap');

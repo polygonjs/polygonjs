@@ -3,10 +3,10 @@ import {BaseParam} from 'src/engine/params/_Base';
 // import lodash_values from 'lodash/values';
 
 export class ErrorState {
-	private _message: string;
+	private _message: string | null;
 	constructor(protected node: BaseParam) {}
 
-	set(message: string) {
+	set(message: string | null) {
 		if (this._message != message) {
 			this._message = message;
 		}

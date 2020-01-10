@@ -48,6 +48,9 @@ export class HierarchyChildrenController {
 		}
 		// }
 	}
+	get context() {
+		return this._context;
+	}
 
 	// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
 	set_child_name(node: BaseNode, new_name: string): void {
@@ -202,7 +205,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	find_node(path: string): BaseNode {
+	find_node(path: string): BaseNode | null {
 		if (this._children_allowed != true) {
 			return null;
 		}

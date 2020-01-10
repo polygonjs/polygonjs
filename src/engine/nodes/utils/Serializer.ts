@@ -45,7 +45,7 @@ export class NodeSerializer {
 				display: this.node.flags?.display?.active,
 				bypass: this.node.flags?.bypass?.active,
 			},
-			selection: null as object,
+			selection: null as string[] | null,
 		};
 
 		if (this.node.children_controller.children_allowed()) {
@@ -59,11 +59,13 @@ export class NodeSerializer {
 		const params_json_by_name: Dictionary<string> = {};
 		for (let param_name of param_names) {
 			const param = this.node.params.get(param_name);
-			params_json_by_name[param_name] = param.graph_node_id();
+			if (param) {
+				params_json_by_name[param_name] = param.graph_node_id();
 
-			if (include_components && param.is_multiple()) {
-				for (let component of param.components()) {
-					params_json_by_name[component.name()] = component.graph_node_id();
+				if (include_components && param.is_multiple()) {
+					for (let component of param.components()) {
+						params_json_by_name[component.name()] = component.graph_node_id();
+					}
 				}
 			}
 		}

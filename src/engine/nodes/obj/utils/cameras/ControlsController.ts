@@ -7,22 +7,24 @@ const CONTROLS_PARAM_NAME = 'controls';
 
 export class ControlsController {
 	_applied_controls_by_element_id: Dictionary<Dictionary<boolean>> = {};
-	private _controls_node: BaseCameraControlsEventNode;
+	private _controls_node: BaseCameraControlsEventNode | null;
 	private controls_start_listener: () => void;
 	private controls_end_listener: () => void;
 
 	constructor(private node: BaseCameraObjNode) {}
 
-	controls_param(): BaseParam {
+	controls_param(): BaseParam | null {
 		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
 			return this.node.params.get(CONTROLS_PARAM_NAME);
 		}
+		return null;
 	}
 
-	controls_node(): BaseCameraControlsEventNode {
+	controls_node(): BaseCameraControlsEventNode | null {
 		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
 			return this.node.params.get_operator_path(CONTROLS_PARAM_NAME).found_node() as BaseCameraControlsEventNode;
 		}
+		return null;
 	}
 
 	update_controls() {

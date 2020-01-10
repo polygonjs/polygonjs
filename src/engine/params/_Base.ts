@@ -32,7 +32,7 @@ import {Expression} from './concerns/Expression';
 // import {TimeDependent} from './concerns/TimeDependent';
 // import {Type} from './concerns/Type';
 // import {UIDataOwner} from './concerns/UIDataOwner';
-import {VisitorsBase} from './concerns/visitors/_Base';
+// import {VisitorsBase} from './concerns/visitors/_Base';
 
 import {OptionsController} from './utils/OptionsController';
 import {EmitController} from './utils/EmitController';
@@ -43,7 +43,11 @@ import {UIData} from './utils/UIData';
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
 
-export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeScene))) {
+export interface TypedParamVisitor {
+	visit_typed_param: (param: BaseParam) => any;
+}
+
+export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)) {
 	protected _raw_input: T;
 	protected _default_value: T;
 	protected _value: T;
@@ -84,13 +88,16 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 		// this._init_ui_data()
 	}
 	init_components() {}
+	accepts_visitor(visitor: TypedParamVisitor): any {
+		return visitor.visit_typed_param(this);
+	}
+
 	//
 	// init_expression() {}
 
 	// type
 	static type(): ParamType {
-		// throw "type to be overriden";
-		return null;
+		return ParamType.FLOAT; // adding a type here, but just to not have a compile error
 	}
 	type(): ParamType {
 		return (this.constructor as typeof BaseParam).type();
@@ -114,7 +121,7 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 
 	// TODO: typescript
 	value(): T {
-		return null;
+		return this._value;
 	}
 	set(new_value: T): void {}
 	default_value() {
@@ -133,7 +140,7 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 	}
 
 	// node
-	set_node(node: BaseNode) {
+	set_node(node: BaseNode | null) {
 		if (!node) {
 			if (this._node) {
 				this._node.params.params_node.remove_graph_input(this);
@@ -184,7 +191,7 @@ export class TypedParam<T> extends VisitorsBase(Expression(NamedGraphNode(NodeSc
 	emit(event_name: 'param_visible_updated'): void;
 	emit(event_name: 'param_updated'): void;
 	emit(event_name: 'param_deleted'): void;
-	emit(event_name: string, data: object = null): void {
+	emit(event_name: string, data: object | null = null): void {
 		if (this.emit_controller.emit_allowed) {
 			super.emit(event_name, data);
 		}

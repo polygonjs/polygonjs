@@ -48,7 +48,7 @@ export class NodeScene extends ContextOwner(SceneNodeDirtyable) {
 		return this._emits_count_by_event_name[event_name] || 0;
 	}
 
-	emit(event_name: string, data: object = null): void {
+	emit(event_name: string, data: object | null = null): void {
 		// TODO: it should ideally be when the scene is loading,
 		// but the scene loading time is still too long
 		// although I may only block some events, like param sets and node add

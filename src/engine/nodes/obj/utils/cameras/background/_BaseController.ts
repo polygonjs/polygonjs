@@ -20,8 +20,8 @@ import {BaseMatNode} from 'src/engine/nodes/mat/_Base';
 // import {ScreenQuad} from '../Camera/ScreenQuad'
 
 export class BaseBackgroundController {
-	private _param_use_background: boolean;
-	private _param_use_material: boolean;
+	// private _param_use_background: boolean;
+	// private _param_use_material: boolean;
 	private _param_background_color: Color;
 	// private _param_background_material: string;
 	// private _param_background_ratio: number;
@@ -81,18 +81,20 @@ export class BaseBackgroundController {
 		// } )
 	}
 
-	use_background(): boolean {
-		return this._param_use_background;
+	get use_background(): boolean {
+		return this.node.params.boolean('use_background');
 	}
-	use_background_color(): boolean {
-		return this._param_use_background && !this._param_use_material;
+	get use_background_material(): boolean {
+		return this.use_background && this.node.params.boolean('use_material');
 	}
-	use_background_material(): boolean {
-		return this._param_use_background && this._param_use_material;
+	get use_background_color(): boolean {
+		return this.use_background && !this.node.params.boolean('use_material');
 	}
-	background_color(): Color {
-		if (this.use_background_color()) {
-			return this._param_background_color;
+	get background_color(): Color | null {
+		if (this.use_background_color) {
+			return this.node.params.color('background_color');
+		} else {
+			return null;
 		}
 	}
 	// background_image_url(){
@@ -109,11 +111,11 @@ export class BaseBackgroundController {
 	// }
 	protected update_screen_quad() {}
 	async update() {
-		if (this.use_background()) {
+		if (this.use_background) {
 			this.update_screen_quad();
 
 			await this.update_background_color();
-			if (this.use_background_material()) {
+			if (this.use_background_material) {
 				await this.update_background_material();
 			}
 		} else {

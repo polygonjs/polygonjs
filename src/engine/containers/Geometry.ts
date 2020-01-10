@@ -24,10 +24,10 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	// protected _group: Group = new Group()
 	// private _objects_by_uuid: BooleanByString = {}
 	// protected _content: Object3D[] = []
-	protected _core_group: CoreGroup;
+	protected _core_group: CoreGroup | null;
 
-	_points_count: number;
-	_bounding_box: Box3;
+	_points_count: number | null;
+	_bounding_box: Box3 | null;
 
 	// constructor() {
 	// 	super();
@@ -43,12 +43,14 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	// clone_content(){
 	// 	return this._content.map(object=>CoreObject.clone(object))
 	// }
-	core_content(): CoreGroup {
+	core_content(): CoreGroup | null {
 		return this._core_group;
 	}
-	core_content_cloned(): CoreGroup {
+	core_content_cloned(): CoreGroup | null {
 		if (this._core_group) {
 			return this._core_group.clone();
+		} else {
+			return null;
 		}
 	}
 	reset_caches() {
@@ -56,9 +58,9 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 		this._points_count = null;
 		this._bounding_box = null;
 	}
-	_default_content() {
-		return new CoreGroup();
-	}
+	// _default_content() {
+	// 	return new CoreGroup();
+	// }
 
 	// set_geometry: (geometry)->
 	// 	if @_content?
@@ -173,10 +175,12 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 			return this._content.objects()[0];
 		}
 	}
-	private first_geometry(): BufferGeometry {
+	private first_geometry(): BufferGeometry | null {
 		const object = this.first_object();
 		if (object) {
 			return (object as Mesh).geometry as BufferGeometry;
+		} else {
+			return null;
 		}
 	}
 
@@ -201,8 +205,9 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	}
 	objects_count_by_type() {
 		const count_by_type: NumbersByString = {};
-		if (this._content) {
-			for (let core_object of this.core_group().core_objects()) {
+		const core_group = this.core_group();
+		if (this._content && core_group) {
+			for (let core_object of core_group.core_objects()) {
 				const human_type = core_object.human_type();
 				if (count_by_type[human_type] == null) {
 					count_by_type[human_type] = 0;
@@ -214,8 +219,9 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	}
 	objects_names_by_type() {
 		const names_by_type: StringsArrayByString = {};
-		if (this._content) {
-			for (let core_object of this.core_group().core_objects()) {
+		const core_group = this.core_group();
+		if (this._content && core_group) {
+			for (let core_object of core_group.core_objects()) {
 				const human_type = core_object.human_type();
 				names_by_type[human_type] = names_by_type[human_type] || [];
 				names_by_type[human_type].push(core_object.name());

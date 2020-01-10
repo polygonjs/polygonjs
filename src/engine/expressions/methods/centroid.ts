@@ -1,7 +1,7 @@
-import {BaseMethod} from './_Base'
-import {MethodDependency} from '../MethodDependency'
+import {BaseMethod} from './_Base';
+import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
-import {GeometryContainer} from 'src/engine/containers/Geometry'
+import {GeometryContainer} from 'src/engine/containers/Geometry';
 
 export class Centroid extends BaseMethod {
 	// bbox(0).min.x
@@ -10,11 +10,11 @@ export class Centroid extends BaseMethod {
 		return [
 			['string', 'path to node'],
 			['string', 'component_name, x,y or z'],
-		]
+		];
 	}
 
 	find_dependency(index_or_path: number | string): MethodDependency {
-		return this.create_dependency_from_index_or_path(index_or_path)
+		return this.create_dependency_from_index_or_path(index_or_path);
 	}
 
 	process_arguments(args: any[]): Promise<any> {
@@ -24,36 +24,34 @@ export class Centroid extends BaseMethod {
 			// 	resolve(val)
 			// })
 			if (args.length == 2) {
-				const index_or_path = args[0]
-				const component_name = args[1] as keyof Vector3Components
-				let container: GeometryContainer
+				const index_or_path = args[0];
+				const component_name = args[1] as keyof Vector3Components;
+				let container: GeometryContainer | null = null;
 				try {
-					container = (await this.get_referenced_node_container(
-						index_or_path
-					)) as GeometryContainer
+					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
 				} catch (e) {
-					reject(e)
+					reject(e);
 				}
 
 				if (container) {
-					const bbox = container.bounding_box()
+					const bbox = container.bounding_box();
 					const center = bbox.min
 						.clone()
 						.add(bbox.max)
-						.multiplyScalar(0.5)
+						.multiplyScalar(0.5);
 
-					const value = center[component_name]
+					const value = center[component_name];
 					if (value != null) {
-						resolve(value)
+						resolve(value);
 					} else {
 						// throw "only component names are x, y and z";
-						resolve(0)
+						resolve(0);
 					}
 				}
 			} else {
-				resolve(0)
+				resolve(0);
 			}
-		})
+		});
 		// return this._get_param_value(args[0], args[1], callback);
 	}
 

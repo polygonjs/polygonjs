@@ -3,7 +3,7 @@ import {CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
 
 export class ControlsController {
 	protected _active: boolean = false;
-	protected _controls: CameraControls;
+	protected _controls: CameraControls | null;
 	_bound_on_controls_start: () => void;
 	_bound_on_controls_end: () => void;
 	constructor(private viewer: BaseViewer) {}
@@ -26,7 +26,10 @@ export class ControlsController {
 
 			if (this._controls) {
 				if (this.viewer.active) {
-					this._bind_controls();
+					this._bound_on_controls_start = this._on_controls_start.bind(this);
+					this._bound_on_controls_end = this._on_controls_end.bind(this);
+					this._controls.addEventListener('start', this._bound_on_controls_start);
+					this._controls.addEventListener('end', this._bound_on_controls_end);
 				} else {
 					this.dispose_controls();
 				}
@@ -46,13 +49,6 @@ export class ControlsController {
 			//@_controls = controls
 			// this.$emit('before_controls_apply', controls)
 		}
-	}
-
-	private _bind_controls() {
-		this._bound_on_controls_start = this._on_controls_start.bind(this);
-		this._bound_on_controls_end = this._on_controls_end.bind(this);
-		this._controls.addEventListener('start', this._bound_on_controls_start);
-		this._controls.addEventListener('end', this._bound_on_controls_end);
 	}
 
 	dispose_controls() {

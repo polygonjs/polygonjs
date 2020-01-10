@@ -1,6 +1,7 @@
-import {Single} from './_Single'
+import {TypedParamVisitor} from './_Base';
+import {Single} from './_Single';
 
-import {AsCodeNumeric} from './concerns/visitors/Numeric'
+// import {AsCodeNumeric} from './concerns/visitors/Numeric';
 
 // class BaseModules extends AsCodeNumeric(Single) {
 // 	constructor() {
@@ -9,15 +10,21 @@ import {AsCodeNumeric} from './concerns/visitors/Numeric'
 // }
 // window.include_instance_methods(BaseModules, AsCodeNumeric.instance_methods);
 
-export class NumericParam<T> extends AsCodeNumeric(Single)<T> {
+interface NumericParamVisitor extends TypedParamVisitor {
+	visit_numeric_param: (param: TypedNumericParam<any>) => any;
+}
+
+export class TypedNumericParam<T> extends Single<T> {
 	constructor() {
-		super()
+		super();
 	}
 
 	is_numeric() {
-		return true
+		return true;
 	}
-
+	accepts_visitor(visitor: NumericParamVisitor): any {
+		return visitor.visit_numeric_param(this);
+	}
 	// init_expression() {
 	// 	if (this.is_value_expression(this._default_value)) {
 	// 		return this.set_expression(this._default_value)

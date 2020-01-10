@@ -1,36 +1,34 @@
-import {BaseParam} from 'src/engine/params/_Base'
+import {BaseParam} from 'src/engine/params/_Base';
 // import {ParsedTree} from './ParsedTree'
 // import {LiteralConstructsController} from './LiteralConstructsController'
-import jsep from 'jsep'
+import jsep from 'jsep';
 // import {BaseMethod} from 'src/Engine/Expression/Method/_Base'
 // import {ReferenceSearchResult, MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'
-export const VARIABLE_PREFIX = '$'
+export const VARIABLE_PREFIX = '$';
 
 export abstract class BaseTraverser {
 	// private _parsed_tree: ParsedTree
-	public error_message: string
+	public error_message: string | null;
 
 	constructor(public param: BaseParam) {}
 
 	protected set_error(message: string) {
-		this.error_message = this.error_message || message
+		this.error_message = this.error_message || message;
 		// throw this.error_message
 	}
 
-	traverse_node(node: jsep.Expression): string {
-		const method_name = `traverse_${node.type}`
-		const method = (this as any)[method_name]
+	traverse_node(node: jsep.Expression): string | undefined {
+		const method_name = `traverse_${node.type}`;
+		const method = (this as any)[method_name];
 		if (method) {
-			return (this as any)[method_name](node)
+			return (this as any)[method_name](node);
 		} else {
-			this.set_error(`expression unknown node type: ${node.type}`)
+			this.set_error(`expression unknown node type: ${node.type}`);
 		}
 	}
 
-	protected abstract traverse_CallExpression(
-		node: jsep.CallExpression
-	): string //{
+	protected abstract traverse_CallExpression(node: jsep.CallExpression): string | undefined; //{
 
 	// const method_arguments = node.arguments.map((arg)=>{
 	// 	return this.traverse_node(arg)
@@ -60,52 +58,40 @@ export abstract class BaseTraverser {
 	// this.set_error(`unknown method: ${method_name}`)
 	//}
 	protected traverse_BinaryExpression(node: jsep.BinaryExpression): string {
-		return `${this.traverse_node(node.left)} ${
-			node.operator
-		} ${this.traverse_node(node.right)}`
+		return `${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)}`;
 	}
 	protected traverse_LogicalExpression(node: jsep.LogicalExpression): string {
 		// || or &&
-		return `${this.traverse_node(node.left)} ${
-			node.operator
-		} ${this.traverse_node(node.right)}`
+		return `${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)}`;
 	}
 	protected traverse_MemberExpression(node: jsep.MemberExpression): string {
-		return `${this.traverse_node(node.object)}.${this.traverse_node(
-			node.property
-		)}`
+		return `${this.traverse_node(node.object)}.${this.traverse_node(node.property)}`;
 	}
-	protected traverse_ConditionalExpression(
-		node: jsep.ConditionalExpression
-	): string {
-		return `(${this.traverse_node(node.test)}) ? (${this.traverse_node(
-			node.consequent
-		)}) : (${this.traverse_node(node.alternate)})`
+	protected traverse_ConditionalExpression(node: jsep.ConditionalExpression): string {
+		return `(${this.traverse_node(node.test)}) ? (${this.traverse_node(node.consequent)}) : (${this.traverse_node(
+			node.alternate
+		)})`;
 	}
 
 	// currently only used for string expressions such as
 	// pt_`@ptnum+1`
 	protected traverse_Compound(node: jsep.Compound): string {
-		const args = node.body
-		console.log(args)
-		let traversed_args = []
+		const args = node.body;
+		console.log(args);
+		let traversed_args = [];
 		for (let i = 0; i < args.length; i++) {
-			const arg_node = args[i]
+			const arg_node = args[i];
 			if (arg_node.type == 'Identifier') {
 				if ((arg_node as jsep.Identifier).name[0] == VARIABLE_PREFIX) {
-					traversed_args.push(
-						'`${' + this.traverse_node(arg_node) + '}`'
-					)
+					traversed_args.push('`${' + this.traverse_node(arg_node) + '}`');
 				} else {
-					traversed_args.push(
-						`'${(arg_node as jsep.Identifier).name}'`
-					)
+					traversed_args.push(`'${(arg_node as jsep.Identifier).name}'`);
 				}
 			} else {
-				traversed_args.push('`${' + this.traverse_node(arg_node) + '}`')
+				traversed_args.push('`${' + this.traverse_node(arg_node) + '}`');
 			}
 		}
-		return traversed_args.join(' + ')
+		return traversed_args.join(' + ');
 		// this may work for things like  [1,-2,3][$F%2]
 		// but can be confusing for more operators like [1,-2,3][$F%2][2]
 
@@ -114,9 +100,7 @@ export abstract class BaseTraverser {
 		// this.set_error("unrecognised expression Compound")
 		// return ""
 	}
-	protected abstract traverse_UnaryExpression(
-		node: jsep.UnaryExpression
-	): string //{
+	protected abstract traverse_UnaryExpression(node: jsep.UnaryExpression): string; //{
 
 	// if (node.operator === ATTRIBUTE_PREFIX) {
 	// 	const attrib_name = this.traverse_node(node.argument);
@@ -127,10 +111,10 @@ export abstract class BaseTraverser {
 	//}
 
 	protected traverse_Literal(node: jsep.Literal): string {
-		return `${node.raw}` // 5 or 'string' (raw will include quotes)
+		return `${node.raw}`; // 5 or 'string' (raw will include quotes)
 	}
 
-	protected abstract traverse_Identifier(node: jsep.Identifier): string //{
+	protected abstract traverse_Identifier(node: jsep.Identifier): string | undefined; //{
 	// const identifier_first_char = node.name[0]
 	// if(identifier_first_char == VARIABLE_PREFIX){
 	// 	const identifier_name_without_dollar_sign = node.name.substr(1)

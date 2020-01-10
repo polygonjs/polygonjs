@@ -154,7 +154,7 @@ export class BaseCameraObjNode extends BaseObjNode {
 	//
 
 	set_as_master_camera() {
-		this.scene().set_master_camera_node_path(this.full_path());
+		this.scene().cameras_controller.set_master_camera_node_path(this.full_path());
 	}
 
 	setup_for_aspect_ratio(aspect: number) {

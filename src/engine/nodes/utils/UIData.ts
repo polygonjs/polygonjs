@@ -8,7 +8,7 @@ export class UIData extends CoreUIData {
 	private _width: number = 50;
 	private _border_radius: number = 3;
 	private _color: Color = new Color(0.75, 0.75, 0.75);
-	private _icon: string = null;
+	private _icon: string | null = null;
 	private _layout_vertical: boolean = true;
 	private _comment: string;
 

@@ -7,7 +7,7 @@ export class AttribTypeController {
 
 		node.add_param(ParamType.INTEGER, attrib_name, CoreConstant.ATTRIB_CLASS.VERTEX, {
 			menu: {
-				type: 'radio',
+				// type: 'radio',
 				entries: keys.map((name) => {
 					return {
 						name: name,

@@ -23,7 +23,7 @@ export class CounterEventNode extends BaseEventNode {
 		this.add_post_dirty_hook(this._update_counter_if_required.bind(this));
 	}
 	_update_counter_if_required(dirty_trigger: SceneContext) {
-		if (dirty_trigger == this.scene().context()) {
+		if (dirty_trigger == this.scene().time_controller.context()) {
 			// TODO: this is fucking horrible
 			if (this._param_counter == null) {
 				this._param_counter = this.params.float('counter');
@@ -52,12 +52,12 @@ export class CounterEventNode extends BaseEventNode {
 
 	async post_create_params() {
 		// this._start_value = await this.param('init').eval_p()
-		this.add_graph_input(this.scene().context());
+		this.add_graph_input(this.scene().time_controller.context());
 	}
 
 	update_counter() {
 		const scene = this.scene();
-		if (scene.frame_range()[0] == scene.frame()) {
+		if (scene.frame_range[0] == scene.frame) {
 			this.params.set_float('counter', this.params.float('init'));
 		} else {
 			let new_value = this._param_counter + this._param_increment;

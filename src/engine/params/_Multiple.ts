@@ -7,10 +7,10 @@
 // import lodash_isString from 'lodash/isString'
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_map from 'lodash/map'
-import {TypedParam} from './_Base';
+import {TypedParam, TypedParamVisitor} from './_Base';
 import {FloatParam} from './Float';
 
-import {AsCodeMultiple} from './concerns/visitors/Multiple';
+// import {AsCodeMultiple} from './concerns/visitors/Multiple';
 // import {Vector} from 'three/src/math/Vector2'
 
 // interface ParamVector2Values {
@@ -41,13 +41,18 @@ import {AsCodeMultiple} from './concerns/visitors/Multiple';
 // export interface MultipleParamValueTypeMap {
 // 	Color: Color
 // }
+interface MultipleParamVisitor extends TypedParamVisitor {
+	visit_typed_multiple_param: (param: TypedMultipleParam<any>) => any;
+}
 
-export class TypedMultipleParam<T> extends AsCodeMultiple(TypedParam)<T> {
+export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
 	constructor() {
 		super();
 	}
-
+	accepts_visitor(visitor: MultipleParamVisitor): any {
+		return visitor.visit_typed_multiple_param(this);
+	}
 	static component_names(): string[] {
 		return [];
 	}
@@ -213,25 +218,26 @@ export class TypedMultipleParam<T> extends AsCodeMultiple(TypedParam)<T> {
 		this.emit_controller.emit_param_updated();
 	}
 
-	is_errored(): boolean {
-		const components = this.components();
-		for (let i = 0; i < components.length; i++) {
-			if (components[i].states.error.active) {
-				return true;
-			}
-		}
-		return false;
-	}
+	// no need to check errors on multiple params, as the components should trigger the node anyway
+	// is_errored(): boolean {
+	// 	const components = this.components();
+	// 	for (let i = 0; i < components.length; i++) {
+	// 		if (components[i].states.error.active) {
+	// 			return true;
+	// 		}
+	// 	}
+	// 	return false;
+	// }
 
-	error_message(): string {
-		const components = this.components();
-		for (let i = 0; i < components.length; i++) {
-			if (components[i].states.error.active) {
-				return components[i].states.error.message;
-			}
-		}
-		return null;
-	}
+	// error_message(): string|null {
+	// 	const components = this.components();
+	// 	for (let i = 0; i < components.length; i++) {
+	// 		if (components[i].states.error.active) {
+	// 			return components[i].states.error.message;
+	// 		}
+	// 	}
+	// 	return null;
+	// }
 }
 
 // export class BaseMultipleParam extends TypedMultipleParam<Vector> {}

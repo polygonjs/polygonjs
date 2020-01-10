@@ -14,7 +14,7 @@ export class ParamSerializer {
 			error_message: this.param.states.error.message,
 			is_visible: this.param.options.is_visible(),
 			folder_name: this.param.ui_data.folder_name,
-			components: null as string[],
+			components: null as string[] | null,
 		};
 
 		if (this.param.is_multiple()) {

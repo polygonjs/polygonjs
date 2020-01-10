@@ -1,14 +1,14 @@
 // import lodash_isNumber from 'lodash/isNumber'
 // import lodash_isBoolean from 'lodash/isBoolean'
 
-import {NumericParam} from './_Numeric'
+import {TypedNumericParam} from './_Numeric';
 
-export class IntegerParam extends NumericParam<number> {
+export class IntegerParam extends TypedNumericParam<number> {
 	constructor() {
-		super()
+		super();
 	}
 	static type() {
-		return ParamType.INTEGER
+		return ParamType.INTEGER;
 	}
 
 	// convert_value(v: ParamInputValue): number {
@@ -31,8 +31,8 @@ export class IntegerParam extends NumericParam<number> {
 	// }
 
 	async eval() {
-		const val = await this.eval_raw() //val=> {
-		return parseInt(val)
+		const val = await this.eval_raw(); //val=> {
+		return parseInt(val);
 		//});//
 	}
 }

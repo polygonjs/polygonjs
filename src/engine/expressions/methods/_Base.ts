@@ -9,14 +9,14 @@ import lodash_isNumber from 'lodash/isNumber';
 import {NodeScene} from 'src/core/graph/NodeScene';
 import {BaseContainer} from 'src/engine/containers/_Base';
 
-type NodeOrParam = BaseNode | BaseParam;
+// type NodeOrParam = BaseNode | BaseParam;
 
 export abstract class BaseMethod {
 	public node: BaseNode;
 
 	constructor(public param: BaseParam) {
 		// this._init_update_dependencies_mode();
-		this.node = this.param.node();
+		this.node = this.param.node;
 	}
 
 	static required_arguments(): any[] {
@@ -91,18 +91,18 @@ export abstract class BaseMethod {
 		return referenced_param;
 	}
 
-	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): NodeScene {
+	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): NodeScene | null {
 		const is_index = lodash_isNumber(index_or_path);
 		// let node
 		if (is_index) {
 			const index = index_or_path as number;
-			return this.node.input_graph_node(index) as NodeScene;
+			return (<unknown>this.node.io.inputs.input_graph_node(index)) as NodeScene;
 		} else {
 			const path = index_or_path as string;
 			return this.get_referenced_node(path, decomposed_path);
 		}
 	}
-	get_referenced_node(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNode {
+	get_referenced_node(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNode | null {
 		// if ((index_or_path != null) && (index_or_path.is_a != null) && index_or_path.is_a(BaseNode)) {
 		// 	index_or_path = index_or_path.full_path();
 		// }
@@ -111,7 +111,7 @@ export abstract class BaseMethod {
 			return CoreWalker.find_node(this.node, path, decomposed_path);
 		} else {
 			const index = index_or_path;
-			return this.node.input(index);
+			return this.node.io.inputs.input(index);
 		}
 
 		// if (referenced_node != null) {
@@ -133,25 +133,31 @@ export abstract class BaseMethod {
 		// return referenced_node;
 	}
 
-	abstract find_dependency(args: any): MethodDependency;
+	find_dependency(args: any): MethodDependency | null {
+		return null;
+	}
 
 	create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency {
 		// console.log("is_index", index_or_path)
 		const decomposed_path = new DecomposedPath();
 		const node = this.find_referenced_graph_node(index_or_path, decomposed_path);
-		return this.create_dependency(node, index_or_path, decomposed_path);
+		if (node) {
+			return this.create_dependency(node, index_or_path, decomposed_path);
+		}
 	}
 	create_dependency(
 		node: NodeScene,
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
 	): MethodDependency {
-		return MethodDependency.create(
-			this.param,
-			index_or_path,
-			(<unknown>node) as NodeOrParam, // TODO: typescript
-			decomposed_path.named_nodes
-		);
+		return null;
+		// TODO: typescript
+		// return MethodDependency.create(
+		// 	this.param,
+		// 	index_or_path,
+		// 	(<unknown>node) as NodeOrParam, // TODO: typescript
+		// 	decomposed_path?.named_nodes
+		// );
 	}
 
 	//

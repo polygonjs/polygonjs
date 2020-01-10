@@ -9,13 +9,13 @@ type EntityCallback = (entity: CorePoint, value: number) => void;
 export function Expression<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		protected self: BaseParam = (<unknown>this) as BaseParam;
-		protected _expression: string = null;
-		private expression_controller: ExpressionController = null;
+		protected _expression: string | null = null;
+		private expression_controller: ExpressionController | null = null;
 
-		private _entities: CorePoint[];
-		private _entity_callback: EntityCallback;
+		private _entities: CorePoint[] | null;
+		private _entity_callback: EntityCallback | null;
 
-		set_expression(string: string) {
+		set_expression(string: string | null) {
 			if (string === null && !this.has_expression()) {
 				return;
 			}
@@ -32,7 +32,7 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 			// this._expression_valid = false
 			// this._parse_expression_completed = false
 			this._expression_controller().reset();
-			if (this.self.scene().loading_controller.loaded) {
+			if (this.self.scene().loading_controller.loaded && this._expression) {
 				this._expression_controller().parse_and_update_dependencies(this._expression);
 			}
 
@@ -96,7 +96,9 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 			callback: (entity: CorePoint, value: number) => void
 		) {
 			this.set_entities(entities, callback);
-			await this.eval_raw_expression();
+			if (this._expression) {
+				await this.eval_raw_expression();
+			}
 
 			this.reset_entities();
 		}
@@ -123,12 +125,14 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 
 		protected async eval_raw_expression(): Promise<any> {
 			// this.parse_expression_and_update_dependencies_if_not_done()
-			let value = await this._expression_controller().eval_function(this._expression);
+			if (this._expression) {
+				let value = await this._expression_controller().eval_function(this._expression);
 
-			if (value != null) {
-				// value = this.self.convert_value(value) // TODO: typescript
+				if (value != null) {
+					// value = this.self.convert_value(value) // TODO: typescript
+				}
+				return value;
 			}
-			return value;
 		}
 
 		_expression_controller() {
@@ -136,7 +140,7 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 		}
 
 		update_expression_from_method_dependency_name_change() {
-			this.expression_controller.update_from_method_dependency_name_change();
+			this.expression_controller?.update_from_method_dependency_name_change();
 			// await this.eval_p()
 		}
 	};

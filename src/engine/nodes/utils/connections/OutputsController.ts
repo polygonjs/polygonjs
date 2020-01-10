@@ -42,7 +42,7 @@ export class OutputsController {
 	}
 	protected _get_named_output_index_without_error(name: string): number {
 		const named_outputs = this.named_outputs();
-		let index = null;
+		let index = -1;
 		named_outputs.forEach((output, i) => {
 			if (output.name() == name) {
 				index = i;
@@ -65,12 +65,14 @@ export class OutputsController {
 				if (this.has_named_outputs()) {
 					return this.get_named_output_index(output_index_or_name);
 				} else {
-					throw new Error(`node ${this.node.full_path()} has no named outputs`);
+					console.warn(`node ${this.node.full_path()} has no named outputs`);
+					return -1;
 				}
 			} else {
 				return output_index_or_name;
 			}
 		}
+		return -1;
 	}
 
 	named_output_by_name(name: string): NamedConnection {

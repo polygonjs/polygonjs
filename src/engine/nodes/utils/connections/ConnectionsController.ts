@@ -1,5 +1,4 @@
 import {BaseNode} from '../../_Base';
-import lodash_last from 'lodash/last';
 import lodash_compact from 'lodash/compact';
 import {NodeConnection} from '../NodeConnection';
 
@@ -11,7 +10,7 @@ import {NodeConnection} from '../NodeConnection';
 // }
 
 export class ConnectionsController {
-	private _input_connections: NodeConnection[] = [];
+	private _input_connections: Array<NodeConnection | null> = [];
 	private _output_connections: Dictionary<Dictionary<NodeConnection>> = {};
 
 	constructor(protected _node: BaseNode) {}
@@ -34,14 +33,15 @@ export class ConnectionsController {
 		delete this._output_connections[output_index][uuid];
 	}
 
-	input_connection(index: number): NodeConnection {
+	input_connection(index: number): NodeConnection | null {
 		return this._input_connections[index];
 	}
 	first_input_connection(): NodeConnection {
 		return lodash_compact(this._input_connections)[0];
 	}
 	last_input_connection(): NodeConnection {
-		return lodash_last(lodash_compact(this._input_connections));
+		const connections = lodash_compact(this._input_connections);
+		return connections[connections.length - 1];
 	}
 	input_connections() {
 		return this._input_connections;

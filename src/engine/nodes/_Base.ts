@@ -164,7 +164,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	}
 
 	static required_three_imports(): string[] {
-		return null;
+		return [];
 	}
 	static required_imports() {
 		let three_imports = this.required_three_imports();
@@ -174,7 +174,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 			// }
 			return three_imports.map((e) => `three/examples/jsm/${e}`);
 		} else {
-			return null;
+			return [];
 		}
 	}
 	required_imports() {
@@ -197,7 +197,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	visit(visitor: BaseNodeVisitor) {
 		return visitor.node(this);
 	}
-	set_parent(parent: BaseNode) {
+	set_parent(parent: BaseNode | null) {
 		this.parent_controller.set_parent(parent);
 	}
 	get parent() {
@@ -259,7 +259,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 		default_value: [number | string, number | string, number | string, number | string],
 		options?: ParamOptions
 	): Vector4Param;
-	add_param(type: ParamType, name: string, default_value: any, options?: ParamOptions): BaseParam {
+	add_param(type: ParamType, name: string, default_value: any, options?: ParamOptions): BaseParam | null {
 		return this._params_controller.add_param(type, name, default_value, options);
 	}
 	within_param_folder(folder_name: string, callback: () => void) {
@@ -275,7 +275,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	request_container() {
 		return this.container_controller.request_container();
 	}
-	set_container(content: any, message: string = null) {
+	set_container(content: any, message: string | null = null) {
 		// if message?
 		this.container_controller.container.set_content(content); //, this.self.cook_eval_key());
 		if (content != null) {
@@ -318,7 +318,7 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 	emit(event_name: 'node_error_updated'): void;
 	emit(event_name: 'bypass_flag_update'): void;
 	emit(event_name: 'display_flag_update'): void;
-	emit(event_name: string, data: object = null): void {
+	emit(event_name: string, data: object | null = null): void {
 		super.emit(event_name, data);
 	}
 

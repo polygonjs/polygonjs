@@ -60,7 +60,7 @@ export class ColorsController extends BaseController {
 		this.set_user_vertex_colors(this.material, this._param_use_vertex_colors);
 
 		if (this.__fog_used_in_uniforms()) {
-			this.material.fog = this._param_use_fog === true || this._param_use_fog === 1;
+			this.material.fog = this._param_use_fog;
 		}
 	}
 

@@ -194,7 +194,7 @@ const ATTRIB_MAPPING: AttribMapping = {
 export class FileCopNode extends BaseCopNode {
 	@ParamF('video_time') _param_video_time: number;
 	@ParamS('url') _param_url: string;
-	private _previous_param_url: string;
+	private _previous_param_url: string | null;
 	private _video: HTMLVideoElement;
 
 	static type() {
@@ -226,49 +226,51 @@ export class FileCopNode extends BaseCopNode {
 		});
 
 		// this.add_param(ParamType.FLOAT, 'video_time', 0, {range: [0, 10]})
-		this.add_param(ParamType.INTEGER, 'mapping', UVMapping, {
+		this.add_param(ParamType.INTEGER, 'mapping', UVMapping as number, {
 			menu: {
-				type: 'radio',
 				entries: MAPPINGS.map((m) => {
 					return {
 						name: Object.keys(m)[0],
-						value: Object.values(m)[0],
+						value: Object.values(m)[0] as number,
 					};
 				}),
 			},
 		});
 		for (let wrap_name of ['wrap_s', 'wrap_t']) {
-			this.add_param(ParamType.INTEGER, wrap_name, Object.values(WRAPPINGS[0])[0], {
+			const wrap = Object.values(WRAPPINGS[0])[0] as number;
+			this.add_param(ParamType.INTEGER, wrap_name, wrap, {
 				menu: {
-					type: 'radio',
+					// type: 'radio',
 					entries: WRAPPINGS.map((m) => {
 						return {
 							name: Object.keys(m)[0],
-							value: Object.values(m)[0],
+							value: Object.values(m)[0] as number,
 						};
 					}),
 				},
 			});
 		}
 
-		this.add_param(ParamType.INTEGER, 'mag_filter', Object.values(MAG_FILTERS[0])[0], {
+		const mag_filter = Object.values(MAG_FILTERS[0])[0] as number;
+		this.add_param(ParamType.INTEGER, 'mag_filter', mag_filter, {
 			menu: {
-				type: 'radio',
+				// type: 'radio',
 				entries: MAG_FILTERS.map((m) => {
 					return {
 						name: Object.keys(m)[0],
-						value: Object.values(m)[0],
+						value: Object.values(m)[0] as number,
 					};
 				}),
 			},
 		});
-		this.add_param(ParamType.INTEGER, 'min_filter', Object.values(MIN_FILTERS[0])[0], {
+		const min_filter: number = Object.values(MIN_FILTERS[0])[0] as number;
+		this.add_param(ParamType.INTEGER, 'min_filter', min_filter, {
 			menu: {
-				type: 'radio',
+				// type: 'radio',
 				entries: MIN_FILTERS.map((m) => {
 					return {
 						name: Object.keys(m)[0],
-						value: Object.values(m)[0],
+						value: Object.values(m)[0] as number,
 					};
 				}),
 			},
@@ -295,7 +297,10 @@ export class FileCopNode extends BaseCopNode {
 
 	async cook() {
 		if (this._param_url_changed()) {
-			this._texture = await this._load_texture(this._param_url);
+			const texture = await this._load_texture(this._param_url);
+			if (texture) {
+				this._texture = texture;
+			}
 
 			this._add_video_spare_params_if_required(this._texture);
 			this._previous_param_url = this._param_url;
@@ -340,7 +345,7 @@ export class FileCopNode extends BaseCopNode {
 		this._previous_param_url = null;
 
 		// set the param dirty is preferable, in case this is used to refresh a local asset
-		this.params.get('url').set_dirty();
+		this.params.get('url')?.set_dirty();
 		// this.set_dirty()
 	}
 
@@ -352,15 +357,15 @@ export class FileCopNode extends BaseCopNode {
 		}
 	}
 
-	private _add_video_spare_params_if_required(texture: Texture | VideoTexture) {
+	private _add_video_spare_params_if_required(texture: Texture | VideoTexture | null) {
 		if (texture) {
 			const is_video = texture.constructor == VideoTexture;
 			if (is_video) {
 				this._video = texture.image;
-				if (!this.params.has_param(File.VIDEO_TIME_PARAM_NAME)) {
+				if (!this.params.has_param(FileCopNode.VIDEO_TIME_PARAM_NAME)) {
 					const duration = this._video.duration;
 
-					this.add_param(ParamType.FLOAT, File.VIDEO_TIME_PARAM_NAME, '$T', {
+					this.add_param(ParamType.FLOAT, FileCopNode.VIDEO_TIME_PARAM_NAME, '$T', {
 						spare: true,
 						cook: true,
 						range: [0, duration],
@@ -378,8 +383,8 @@ export class FileCopNode extends BaseCopNode {
 	}
 
 	private _remove_spare_params() {
-		if (this.params.has_param(File.VIDEO_TIME_PARAM_NAME)) {
-			this.params.delete_param(File.VIDEO_TIME_PARAM_NAME);
+		if (this.params.has_param(FileCopNode.VIDEO_TIME_PARAM_NAME)) {
+			this.params.delete_param(FileCopNode.VIDEO_TIME_PARAM_NAME);
 			this.emit('params_updated');
 		}
 	}
@@ -389,10 +394,10 @@ export class FileCopNode extends BaseCopNode {
 	}
 
 	private async _load_texture(url: string) {
-		this._texture_loader = this._texture_loader || new CoreTextureLoader(this, this.params.get('url'));
-
 		let texture;
-		if (url) {
+		const param = this.params.get('url');
+		if (url && param) {
+			this._texture_loader = this._texture_loader || new CoreTextureLoader(this, param);
 			// const ext = lodash_last(url.split('.')).toLowerCase()
 			texture = await this._texture_loader.load_texture_from_url_or_op(url);
 			// if(texture){

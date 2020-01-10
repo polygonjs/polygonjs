@@ -1,4 +1,4 @@
-import {BaseMethod} from './_Base'
+import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
 export class StrConcat extends BaseMethod {
@@ -10,24 +10,24 @@ export class StrConcat extends BaseMethod {
 			// ['string', 'string to get range from'],
 			// ['integer', 'range start'],
 			// ['integer', 'range size'],
-		]
+		];
 	}
 
-	find_dependency(index_or_path: number | string): null {
-		return null
-		// return this.create_dependency_from_index_or_path(index_or_path)
-	}
+	// find_dependency(index_or_path: number | string): null {
+	// 	return null
+	// 	// return this.create_dependency_from_index_or_path(index_or_path)
+	// }
 
 	async process_arguments(args: any[]): Promise<string> {
-		let value = ''
+		let value = '';
 
 		for (let arg of args) {
 			if (arg == null) {
-				arg = ''
+				arg = '';
 			}
-			value += `${arg}`
+			value += `${arg}`;
 		}
 
-		return value
+		return value;
 	}
 }

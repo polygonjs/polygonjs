@@ -20,10 +20,8 @@ export class TextureContainer extends TypedContainer<Texture> {
 	core_content(): Texture {
 		return this._content;
 	}
-	core_content_cloned(): Texture {
-		if (this._content) {
-			return this._content.clone();
-		}
+	core_content_cloned(): Texture | null {
+		return this._content?.clone() || null;
 	}
 
 	object() {
@@ -35,11 +33,12 @@ export class TextureContainer extends TypedContainer<Texture> {
 			return [this._content];
 		}
 	}
-	resolution() {
+	resolution(): [number, number] {
 		if (this._content) {
 			if (this._content.image) {
 				return [this._content.image.width, this._content.image.height];
 			}
 		}
+		return [-1, -1];
 	}
 }

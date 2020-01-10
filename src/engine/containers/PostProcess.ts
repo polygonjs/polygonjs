@@ -15,9 +15,9 @@ export class PostProcessContainer extends TypedContainer<any> {
 		return this.render_pass();
 	}
 
-	infos() {
-		if (this._content != null) {
-			return [this._content];
-		}
-	}
+	// infos() {
+	// 	if (this._content) {
+	// 		return [this._content];
+	// 	}
+	// }
 }

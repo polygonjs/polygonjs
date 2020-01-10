@@ -100,7 +100,7 @@ export class BaseObjNode extends BaseNode {
 	}
 
 	create_object(): Object3D {
-		return null;
+		return new Object3D();
 	}
 	//
 
@@ -123,7 +123,7 @@ export class BaseObjNode extends BaseNode {
 			if (displayed) {
 				object.visible = displayed;
 
-				if (displayed && !this._sop_loaded) {
+				if (!this._sop_loaded) {
 					this.request_display_node();
 				}
 			}

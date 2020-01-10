@@ -13,7 +13,7 @@ export class TimeDependentState {
 		const param_names = this.node.params.names;
 		for (let param_name of param_names) {
 			const param = this.node.params.get(param_name);
-			if (param.states.time_dependent.active) {
+			if (param && param.states.time_dependent.active) {
 				return true;
 			}
 		}

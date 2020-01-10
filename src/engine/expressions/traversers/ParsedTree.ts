@@ -1,52 +1,52 @@
-import jsep from 'jsep'
-jsep.addUnaryOp('@')
+import jsep from 'jsep';
+jsep.addUnaryOp('@');
 // self.jsep = jsep
-let precedence = 10
-jsep.addBinaryOp('**', precedence)
+let precedence = 10;
+jsep.addBinaryOp('**', precedence);
 // precedence = 1
 // jsep.addBinaryOp('`', precedence)
 // const HOUDINI_QUOTE_CODE = 96; // houdini quote
 // const JSEP_COMPOUND = 'Compound'
-const JSEP_IDENTIFIER = 'Identifier'
-const JSEP_LITERAL = 'Literal'
+const JSEP_IDENTIFIER = 'Identifier';
+const JSEP_LITERAL = 'Literal';
 // const JSEP_BINARY_EXPRESSION = 'BynaryExpression'
-const JSEP_CALL_EXPRESSION = 'CallExpression'
-const STRING_EXPRESSION_SEPARATOR = '`'
+const JSEP_CALL_EXPRESSION = 'CallExpression';
+const STRING_EXPRESSION_SEPARATOR = '`';
 
 export class ParsedTree {
-	public node: jsep.Expression
-	public error_message: string = null
+	public node: jsep.Expression | null;
+	public error_message: string | null = null;
 
 	constructor() {}
 
 	parse_expression(string: string) {
 		try {
-			this.reset()
-			this.node = jsep(string)
+			this.reset();
+			this.node = jsep(string);
 		} catch (e) {
-			const message = `could not parse the expression '${string}' (error: ${e})`
-			this.error_message = message
+			const message = `could not parse the expression '${string}' (error: ${e})`;
+			this.error_message = message;
 		}
 	}
 	parse_expression_for_string_param(string: string) {
 		try {
-			this.reset()
+			this.reset();
 
-			const elements = ParsedTree.string_value_elements(string)
-			const nodes = []
+			const elements = ParsedTree.string_value_elements(string);
+			const nodes = [];
 			for (let i = 0; i < elements.length; i++) {
-				const element = elements[i]
-				let node
+				const element = elements[i];
+				let node;
 				if (i % 2 == 1) {
-					node = jsep(element)
+					node = jsep(element);
 				} else {
 					node = {
 						type: JSEP_LITERAL,
 						value: `'${element}'`,
 						raw: `'${element}'`,
-					}
+					};
 				}
-				nodes.push(node)
+				nodes.push(node);
 				// nodes.push({
 				// 	type: JSEP_CALL_EXPRESSION,
 				// 	arguments: [node],
@@ -74,21 +74,21 @@ export class ParsedTree {
 					type: JSEP_IDENTIFIER,
 					name: 'str_concat',
 				},
-			}) as jsep.Compound
+			}) as jsep.Compound;
 
 			// console.log("** parsed:", string, this.node)
 		} catch (e) {
-			const message = `could not parse the expression '${string}' (error: ${e})`
+			const message = `could not parse the expression '${string}' (error: ${e})`;
 			// console.warn(message, e)
-			this.error_message = message
+			this.error_message = message;
 		}
 	}
 
 	static string_value_elements(v: string): string[] {
 		if (v != null) {
-			return `${v}`.split(STRING_EXPRESSION_SEPARATOR)
+			return `${v}`.split(STRING_EXPRESSION_SEPARATOR);
 		} else {
-			return []
+			return [];
 		}
 	}
 	// static string_value_contains_expression(v:string): boolean{
@@ -125,7 +125,7 @@ export class ParsedTree {
 	// }
 
 	private reset() {
-		this.node = null
-		this.error_message = null
+		this.node = null;
+		this.error_message = null;
 	}
 }

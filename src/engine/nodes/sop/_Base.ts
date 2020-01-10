@@ -3,7 +3,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 // import {Group} from 'three/src/objects/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import lodash_includes from 'lodash/includes';
+// import lodash_includes from 'lodash/includes';
 import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
 import {BaseNode} from '../_Base';
@@ -199,24 +199,24 @@ export class BaseSopNode extends BaseNode {
 		if (type == null) {
 			type = CoreConstant.OBJECT_TYPE.MESH;
 		}
-		if (!lodash_includes(CoreConstant.OBJECT_TYPES, type)) {
-			const human_type = CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[type];
-			const human_names = CoreConstant.OBJECT_TYPES.map(
-				(n) => CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[n]
-			);
-			throw `type '${human_type}' not recognized. Available types are ${human_names.join(', ')}.`;
-		}
+		// if (!lodash_includes(CoreConstant.OBJECT_TYPES, type)) {
+		// 	const human_type = CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[type];
+		// 	const human_names = CoreConstant.OBJECT_TYPES.map(
+		// 		(n) => CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[n]
+		// 	);
+		// 	throw `type '${human_type}' not recognized. Available types are ${human_names.join(', ')}.`;
+		// }
 
-		if (geometry != null) {
-			const object_constructor = CoreConstant.CONSTRUCTORS_BY_NAME[type]; //THREE[type];
-			const material = CoreConstant.MATERIALS[type].clone();
-			const object = new object_constructor(geometry, material);
-			object.castShadow = true;
-			object.receiveShadow = true;
-			object.frustumCulled = false;
+		// if (geometry != null) {
+		const object_constructor = CoreConstant.CONSTRUCTORS_BY_NAME[type]; //THREE[type];
+		const material = CoreConstant.MATERIALS[type].clone();
+		const object = new object_constructor(geometry, material);
+		object.castShadow = true;
+		object.receiveShadow = true;
+		object.frustumCulled = false;
 
-			return object;
-		}
+		return object;
+		// }
 	}
 
 	_set_object_attributes(object: Object3D) {

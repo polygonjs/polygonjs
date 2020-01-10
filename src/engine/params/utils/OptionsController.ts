@@ -16,8 +16,8 @@ const EXPRESSION = 'expression';
 const FOR_ENTITIES = 'for_entities';
 const MENU = 'menu';
 const ENTRIES = 'entries';
-const TYPE = 'type';
-const RADIO = 'radio';
+// const TYPE = 'type';
+// const RADIO = 'radio';
 const MULTILINE_OPTION = 'multiline';
 const NODE_SELECTION = 'node_selection';
 const NODE_SELECTION_CONTEXT = 'context';
@@ -57,7 +57,7 @@ export interface ParamOptions {
 	};
 	// menu
 	menu?: {
-		type: 'radio';
+		// type: 'radio';
 		entries: ParamOptionsMenuEntry[];
 	};
 	// multiline
@@ -133,7 +133,7 @@ export class OptionsController {
 
 	// referenced assets
 	always_reference_asset(): boolean {
-		return this._options[ALWAYS_REFERENCE_ASSET_OPTION];
+		return this._options[ALWAYS_REFERENCE_ASSET_OPTION] || false;
 	}
 
 	// callback
@@ -157,10 +157,12 @@ export class OptionsController {
 	}
 	private create_callback_from_string() {
 		const callback_string = this._options[CALLBACK_STRING_OPTION];
-		const callback_function = new Function('node', 'scene', 'window', 'location', callback_string);
-		return () => {
-			callback_function(this.node, this.node.scene(), null, null);
-		};
+		if (callback_string) {
+			const callback_function = new Function('node', 'scene', 'window', 'location', callback_string);
+			return () => {
+				callback_function(this.node, this.node.scene(), null, null);
+			};
+		}
 	}
 
 	// color
@@ -185,12 +187,17 @@ export class OptionsController {
 	}
 
 	// desktop
-	desktop_browse_allowed(): boolean {
-		return this._options[DESKTOP_BROWSE_OPTION] !== undefined;
+	get desktop_browse_option() {
+		return this._options[DESKTOP_BROWSE_OPTION];
 	}
-	desktop_browse_file_type(): string {
-		if (this.desktop_browse_allowed()) {
-			return this._options[DESKTOP_BROWSE_OPTION][FILE_TYPE_OPTION];
+	get desktop_browse_allowed(): boolean {
+		return this.desktop_browse_option != null;
+	}
+	desktop_browse_file_type(): string | null {
+		if (this.desktop_browse_option) {
+			return this.desktop_browse_option[FILE_TYPE_OPTION];
+		} else {
+			return null;
 		}
 	}
 
@@ -198,29 +205,38 @@ export class OptionsController {
 	displays_expression_only() {
 		return this._options[EXPRESSION_ONLY_OPTION] === true;
 	}
-	expression_for_entities() {
+	expression_for_entities(): boolean {
 		const expr_option = this._options[EXPRESSION];
 		if (expr_option) {
-			return expr_option[FOR_ENTITIES] == true;
+			return expr_option[FOR_ENTITIES] || false;
 		}
 		return false;
 	}
 
 	// menu
-	has_menu() {
-		return this.menu_options() != null;
+	get has_menu() {
+		return this.menu_options != null;
 	}
 
-	menu_options() {
+	private get menu_options() {
 		return this._options[MENU];
 	}
+	// private get menu_type() {
+	// 	if(this.menu_options){
+	// 		return this.menu_options[TYPE];
+	// 	}
+	// }
 
-	menu_entries() {
-		return this.menu_options()[ENTRIES];
+	get menu_entries() {
+		if (this.menu_options) {
+			return this.menu_options[ENTRIES];
+		} else {
+			return [];
+		}
 	}
 
 	has_menu_radio() {
-		return this.has_menu() && this.menu_options()[TYPE] === RADIO;
+		return this.has_menu; //&& this.menu_options[TYPE] === RADIO;
 	}
 
 	// multiline
@@ -229,13 +245,12 @@ export class OptionsController {
 	}
 
 	// node selection
-	node_selection_options() {
+	get node_selection_options() {
 		return this._options[NODE_SELECTION];
 	}
-	node_selection_context() {
-		const options = this.node_selection_options();
-		if (options) {
-			return options[NODE_SELECTION_CONTEXT];
+	get node_selection_context() {
+		if (this.node_selection_options) {
+			return this.node_selection_options[NODE_SELECTION_CONTEXT];
 		}
 	}
 
@@ -296,6 +311,7 @@ export class OptionsController {
 		if (texture_options != null) {
 			return texture_options[ENV_OPTION] === true;
 		}
+		return false;
 	}
 
 	// visible
@@ -350,18 +366,20 @@ export class OptionsController {
 	}
 
 	async update_visibility() {
-		const params = this.visibility_predecessors();
-		const promises = params.map((p) => p.eval_p());
 		const options = this._options[VISIBLE_IF_OPTION];
-		this._programatic_visible_state = true;
-		await Promise.all(promises);
-		for (let param of params) {
-			const expected_val = options[param.name()];
-			const val = param.value();
-			if (expected_val != val) {
-				this._programatic_visible_state = false;
+		if (options) {
+			const params = this.visibility_predecessors();
+			const promises = params.map((p) => p.eval_p());
+			this._programatic_visible_state = true;
+			await Promise.all(promises);
+			for (let param of params) {
+				const expected_val = options[param.name()];
+				const val = param.value();
+				if (expected_val != val) {
+					this._programatic_visible_state = false;
+				}
 			}
+			this.param.emit('param_visible_updated');
 		}
-		this.param.emit('param_visible_updated');
 	}
 }

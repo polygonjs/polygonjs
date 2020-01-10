@@ -1,3 +1,4 @@
+import {Color} from 'three/src/math/Color';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {RectAreaLight} from 'three/src/lights/RectAreaLight';
 

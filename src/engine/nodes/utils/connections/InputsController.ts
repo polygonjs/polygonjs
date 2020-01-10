@@ -28,7 +28,7 @@ export interface InputsControllerOptions {
 
 export class InputsController {
 	_graph_node_inputs: InputGraphNode[] = [];
-	_inputs: BaseNode[] = [];
+	_inputs: Array<BaseNode | null> = [];
 	_has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
 	_named_inputs: NamedConnection[] = [];
@@ -181,7 +181,7 @@ export class InputsController {
 	// 	}
 	// }
 	async eval_required_inputs_p() {
-		let containers: BaseContainer[] = [];
+		let containers: Array<BaseContainer | null> = [];
 		if (this._max_inputs_count > 0) {
 			const existing_input_indices: number[] = [];
 			this.inputs().forEach((input, i) => {
@@ -234,7 +234,7 @@ export class InputsController {
 	}
 	protected _get_named_input_index_without_error(name: string): number {
 		const named_inputs = this.named_inputs();
-		let index = null;
+		let index = -1;
 		named_inputs.forEach((input, i) => {
 			if (input.name() == name) {
 				index = i;
@@ -279,7 +279,6 @@ export class InputsController {
 				// } else {
 				// 	console.warn(`${node.full_path()} has no output '${output_index_or_name}'`)
 				// }
-			} else {
 			}
 		}
 
@@ -358,11 +357,11 @@ export class InputsController {
 		});
 	}
 
-	input(input_index: number): BaseNode {
+	input(input_index: number): BaseNode | null {
 		return this._inputs[input_index];
 	}
 	// TODO: the named_input and named_output API really needs to change
-	named_input(input_name: string): BaseNode {
+	named_input(input_name: string): BaseNode | null {
 		if (this.has_named_inputs()) {
 			const input_index = this.get_input_index(input_name);
 			return this._inputs[input_index];
@@ -423,22 +422,22 @@ export class InputsController {
 	}
 	input_clonable_state_with_override(index: number): boolean {
 		const states = this.inputs_clonable_state();
-		for (let i = 0; i < states.length; i++) {
-			switch (states[i]) {
-				case InputCloneMode.ALWAYS:
-					return true;
-					break;
-				case InputCloneMode.NEVER:
-					return false;
-					break;
-				case InputCloneMode.FROM_NODE:
-					return !this._override_clonable_state;
-					break;
-			}
+		// for (let i = 0; i < states.length; i++) {
+		// TODO: typescript: not sure if this loop was justified
+		switch (states[index]) {
+			case InputCloneMode.ALWAYS:
+				return true;
+			case InputCloneMode.NEVER:
+				return false;
+			case InputCloneMode.FROM_NODE:
+				return !this._override_clonable_state;
+			default:
+				return false;
 		}
+		// }
 	}
 
-	protected init_inputs_clonable_state(values: InputCloneMode[] = null) {
+	protected init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
 		if (values) {
 			this._user_inputs_clonable_states = values;
 		}

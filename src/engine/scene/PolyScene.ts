@@ -120,6 +120,9 @@ export class PolyScene {
 	get frame() {
 		return this.time_controller.frame();
 	}
+	get frame_range() {
+		return this.time_controller.frame_range();
+	}
 	play() {
 		this.time_controller.play();
 	}

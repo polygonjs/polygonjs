@@ -125,9 +125,8 @@ export class ObjectsManagerNode extends BaseNodeManager {
 				this.add_to_queue(node);
 				return resolve();
 			} else {
-				let object;
 				// console.log(node.full_path())
-				if ((object = node.object) != null) {
+				if (node.object) {
 					this.add_to_scene(node);
 				} else {
 					//if POLY.env != 'test'

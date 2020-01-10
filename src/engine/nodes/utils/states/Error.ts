@@ -3,10 +3,10 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 // import lodash_values from 'lodash/values';
 
 export class ErrorState {
-	private _message: string;
+	private _message: string | null;
 	constructor(protected node: BaseNode) {}
 
-	set(message: string) {
+	set(message: string | null) {
 		if (this._message != message) {
 			this._message = message;
 			this.on_update();

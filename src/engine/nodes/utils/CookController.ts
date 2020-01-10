@@ -6,8 +6,8 @@ export class CookController {
 	_max_cook_time: number = -1;
 	_cooking_dirty_timestamp: number;
 	_cook_time_with_inputs: number;
-	_cook_time_with_inputs_start: number;
-	_cook_time_start: number;
+	_cook_time_with_inputs_start: number | null;
+	_cook_time_start: number | null;
 	_cook_time: number;
 	_cook_time_params_start: number;
 	_cook_time_params: number;
@@ -36,7 +36,7 @@ export class CookController {
 		}
 	}
 
-	private async _start_cook_if_no_errors(input_contents?: any[]) {
+	private async _start_cook_if_no_errors(input_contents: any[]) {
 		if (this.node.states.error.active) {
 			this.end_cook();
 		} else {
@@ -74,10 +74,12 @@ export class CookController {
 			let input_container;
 			for (let i = 0; i < input_containers.length; i++) {
 				input_container = input_containers[i];
-				if (this.node.io.inputs.input_clonable_state_with_override(i)) {
-					input_contents.push(input_container.core_content_cloned());
-				} else {
-					input_contents.push(input_container.core_content());
+				if (input_container) {
+					if (this.node.io.inputs.input_clonable_state_with_override(i)) {
+						input_contents.push(input_container.core_content_cloned());
+					} else {
+						input_contents.push(input_container.core_content());
+					}
 				}
 			}
 		}
@@ -94,14 +96,14 @@ export class CookController {
 		this.node.states.error.clear();
 
 		await this.node.params.eval_all();
-		await this._start_cook_if_no_errors();
+		await this._start_cook_if_no_errors([]);
 	}
 	// catch e
 	// 	console.error(this.full_path())
 	// 	console.error(e)
 	// 	this.set_error("failed to cook: #{e}")
 
-	end_cook(message?: string) {
+	end_cook(message?: string | null) {
 		this._increase_cooks_count();
 
 		const dirty_timestamp = this.node.dirty_timestamp();
@@ -114,7 +116,7 @@ export class CookController {
 		}
 	}
 
-	_terminate_cook_process(message?: string) {
+	_terminate_cook_process(message?: string | null) {
 		if (this.is_cooking()) {
 			//this._unblock_params_dirty_propagation()
 			this._cooking = false;
@@ -152,7 +154,7 @@ export class CookController {
 				this._cook_time_with_inputs_start = null;
 			}
 
-			if (this._cook_time_params_start != null) {
+			if (this._cook_time_params_start != null && this._cook_time_start != null) {
 				this._cook_time_params = this._cook_time_start - this._cook_time_params_start;
 			}
 

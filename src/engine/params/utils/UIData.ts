@@ -3,7 +3,7 @@ import {NodeScene} from 'src/core/graph/NodeScene';
 import {BaseParam} from '../_Base';
 
 export class UIData extends NodeScene {
-	private _folder_name: string;
+	private _folder_name: string | null;
 
 	constructor(private param: BaseParam) {
 		super();
@@ -21,7 +21,7 @@ export class UIData extends NodeScene {
 		this.param.options.update_visibility();
 	}
 
-	set_folder_name(folder_name: string) {
+	set_folder_name(folder_name: string | null) {
 		this._folder_name = folder_name;
 	}
 	get folder_name() {

@@ -1,10 +1,11 @@
 import {Vector2} from 'three/src/math/Vector2';
-import {OrthoOrPerspCamera} from 'src/engine/nodes/obj/_BaseCamera';
+// import {OrthoOrPerspCamera} from 'src/engine/nodes/obj/_BaseCamera';
 
 import {BasePostProcessNode} from './_Base';
 import {BaseCameraObjNode} from '../obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {CoreScriptLoader} from 'src/core/loader/Script';
+import {PerspectiveCamera} from 'three';
 
 export class DepthOfField extends BasePostProcessNode {
 	@ParamF('strength') _param_focal_depth: number;
@@ -77,7 +78,7 @@ export class DepthOfField extends BasePostProcessNode {
 
 	apply_to_composer(
 		composer: EffectComposer,
-		camera: OrthoOrPerspCamera,
+		camera: PerspectiveCamera,
 		resolution: Vector2,
 		camera_node: BaseCameraObjNode
 	) {

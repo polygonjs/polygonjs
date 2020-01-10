@@ -12,7 +12,7 @@ export class ObjectTypeParamController {
 			/*lodash_merge(other_options, */ {
 				// color: 'purple',
 				menu: {
-					type: 'radio',
+					// type: 'radio',
 					entries: CoreConstant.OBJECT_TYPES.map((name, i) => {
 						return {name: name, value: i};
 					}),

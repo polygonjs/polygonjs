@@ -2,14 +2,14 @@
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_includes from 'lodash/includes'
 // import lodash_isString from 'lodash/isString'
-import {NumericParam} from './_Numeric'
+import {TypedNumericParam} from './_Numeric';
 
-export class BooleanParam extends NumericParam<boolean> {
+export class BooleanParam extends TypedNumericParam<boolean> {
 	constructor() {
-		super()
+		super();
 	}
 	static type() {
-		return ParamType.BOOLEAN
+		return ParamType.BOOLEAN;
 	}
 
 	// convert_value(v: ParamInputValue): boolean {

@@ -59,7 +59,7 @@ export class LoadingController {
 
 			const loader = document.getElementById('scene_loading_container');
 			if (loader) {
-				loader.parentElement.removeChild(loader);
+				loader.parentElement?.removeChild(loader);
 			}
 		}
 	}

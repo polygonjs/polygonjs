@@ -1,7 +1,7 @@
 import {BaseParam} from '../_Base';
 
 export class AssetsController {
-	private _referenced_asset: string = null;
+	private _referenced_asset: string | null = null;
 	constructor(protected param: BaseParam) {}
 
 	reset_referenced_asset() {
@@ -15,7 +15,7 @@ export class AssetsController {
 		this._referenced_asset = url;
 	}
 
-	referenced_asset(): string {
+	referenced_asset(): string | null {
 		if (this.param.options.always_reference_asset()) {
 			return this.param.value();
 		} else {

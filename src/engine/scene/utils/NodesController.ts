@@ -26,14 +26,12 @@ export class NodesController {
 		return this._root;
 	}
 	objects_from_mask(mask: string): Object3D[] {
-		if (mask) {
-			const masks = mask.split(' ');
-			// let geos = this.root().nodes_by_type('geo') as BaseNodeObj[];
-			let nodes = this.root.children() as BaseObjNode[];
-			nodes = nodes.filter((node) => CoreString.matches_one_mask(node.name(), masks));
-			const objects = nodes.map((geo) => geo.object);
-			return lodash_compact(objects) as Object3D[];
-		}
+		const masks = mask.split(' ');
+		// let geos = this.root().nodes_by_type('geo') as BaseNodeObj[];
+		let nodes = this.root.children() as BaseObjNode[];
+		nodes = nodes.filter((node) => CoreString.matches_one_mask(node.name(), masks));
+		const objects = nodes.map((geo) => geo.object);
+		return lodash_compact(objects);
 	}
 	clear() {
 		const children = this.root.children();

@@ -71,8 +71,12 @@ export class ContainerController {
 				// const input_node = this.self.input(input_index);
 				// this.self.post_process_container_request_as_bypassed(input_node)
 				//this.set_container(container.content())
-				this.node.remove_dirty_state();
-				this.notify_requesters(container);
+				if (container) {
+					this.node.remove_dirty_state();
+					this.notify_requesters(container);
+				} else {
+					this.node.states.error.set('input invalid');
+				}
 			});
 		} else {
 			if (this.node.is_dirty()) {
@@ -109,7 +113,7 @@ export class ContainerController {
 			// if this.requires_one_input()
 			this.node.states.error.set(`input ${input_index} required`);
 			this.notify_requesters();
-			//return null;
+			return null;
 		}
 	}
 	notify_requesters(container?: BaseContainer) {

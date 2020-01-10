@@ -14,7 +14,7 @@ export abstract class TypedContainer<T> extends CoreObject {
 	constructor(protected _node: BaseNode) {
 		super();
 		// this.update_eval_key();
-		this.set_content(this._default_content());
+		// this.set_content(this._default_content());
 	}
 
 	set_node(node: BaseNode) {
@@ -34,14 +34,12 @@ export abstract class TypedContainer<T> extends CoreObject {
 		return cloned_container;
 	}
 	reset_caches() {}
-	_default_content(): T {
-		return null;
-	}
+	// abstract _default_content(): T;
 
 	set_content(content: T) {
 		//, eval_key?: number){
 		this.reset_caches();
-		this._content = content || this._default_content();
+		this._content = content; //|| this._default_content();
 		// this.update_eval_key(eval_key);
 		this._post_set_content();
 	}
@@ -60,10 +58,10 @@ export abstract class TypedContainer<T> extends CoreObject {
 		return this._content;
 	}
 	protected _post_set_content() {}
-	public core_content() {
+	public core_content(): T | null {
 		return this._content;
 	}
-	public core_content_cloned() {
+	public core_content_cloned(): T | null {
 		return this._content;
 	}
 	// abstract clone_content(): T
@@ -75,7 +73,7 @@ export abstract class TypedContainer<T> extends CoreObject {
 	// 	return this._eval_key;
 	// }
 
-	infos(): object {
+	infos(): any {
 		return [];
 	}
 }

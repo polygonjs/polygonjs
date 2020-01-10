@@ -1,8 +1,10 @@
 import {BaseViewer} from '../_Base';
 
+const DIST_UNINITIALIZED = -1;
+
 export class EventsController {
 	private _mousedown_pos: Vector2Components;
-	private _mouse_distance_travelled: number = null;
+	private _mouse_distance_travelled: number = DIST_UNINITIALIZED;
 	protected _bound_on_mousedown: (e: MouseEvent) => void;
 	protected _bound_on_mousemove: (e: MouseEvent) => void;
 	protected _bound_on_mouseup: (e: MouseEvent) => void;
@@ -49,7 +51,7 @@ export class EventsController {
 	}
 
 	protected _on_mousemove(event: MouseEvent) {
-		if (this._mouse_distance_travelled !== null) {
+		if (this._mouse_distance_travelled !== DIST_UNINITIALIZED) {
 			this._mouse_distance_travelled += Math.abs(
 				event.pageX - this._mousedown_pos.x + (event.pageY - this._mousedown_pos.y)
 			);
@@ -64,6 +66,6 @@ export class EventsController {
 		if (this._mouse_distance_travelled < 2) {
 			// this.viewer.process_picker_nodes_on_click(event, this.camera_node, this.ray_helper);
 		}
-		this._mouse_distance_travelled = null;
+		this._mouse_distance_travelled = DIST_UNINITIALIZED;
 	}
 }
