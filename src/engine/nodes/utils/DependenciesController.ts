@@ -2,7 +2,7 @@ import lodash_groupBy from 'lodash/groupBy';
 import {BaseNode} from '../_Base';
 
 import {BaseParam} from 'src/engine/params/_Base';
-import {NodeScene} from 'src/core/graph/NodeScene';
+import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
 
 enum METHODS {
 	SUCCESSORS = 'graph_successors',
@@ -30,7 +30,7 @@ export class DependenciesController {
 		return this._find_scene_node_scene_nodes(METHODS.PREDECESSORS);
 	}
 	private _find_scene_node_scene_nodes(method: METHODS) {
-		const params: NodeScene[] = this.node.params.all;
+		const params: CoreGraphNodeScene[] = this.node.params.all;
 		params.push(this.node);
 		const start_nodes = params;
 		let scene_nodes: BaseNode[] = [];
@@ -46,17 +46,17 @@ export class DependenciesController {
 
 		// ensure uniq and not current node
 		scene_nodes = scene_nodes.filter((scene_node) => {
-			return scene_node.graph_node_id() != this.node.graph_node_id();
+			return scene_node.graph_node_id != this.node.graph_node_id;
 		});
-		const scene_nodes_by_graph_node_id = lodash_groupBy(scene_nodes, (n) => n.graph_node_id());
-		const uniq_scene_nodes: NodeScene[] = [];
+		const scene_nodes_by_graph_node_id = lodash_groupBy(scene_nodes, (n) => n.graph_node_id);
+		const uniq_scene_nodes: CoreGraphNodeScene[] = [];
 		Object.keys(scene_nodes_by_graph_node_id).forEach((graph_node_id) => {
 			uniq_scene_nodes.push(scene_nodes_by_graph_node_id[graph_node_id][0]);
 		});
 		return uniq_scene_nodes;
 	}
 
-	private _find_graph_node_scene_nodes(node: NodeScene, method: METHODS, scene_nodes: BaseNode[]) {
+	private _find_graph_node_scene_nodes(node: CoreGraphNodeScene, method: METHODS, scene_nodes: BaseNode[]) {
 		const next_nodes = node[method]();
 		next_nodes.forEach((next_node) => {
 			if (next_node.is_a(BaseParam)) {

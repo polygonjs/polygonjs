@@ -2,8 +2,9 @@
 // import {Vector2} from 'three/src/math/Vector2'
 
 import {CoreWalker} from 'src/core/Walker';
-import {NodeScene} from 'src/core/graph/NodeScene';
-import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
+import {CoreGraphNodeSceneNamed} from 'src/core/graph/CoreGraphNodeSceneNamed';
+// import {NodeScene} from 'src/core/graph/NodeScene';
+// import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
 import {BaseNode} from 'src/engine/nodes/_Base';
 
 // import {CallbackOption} from './concerns/options/Callback'
@@ -23,7 +24,7 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 // import {Emit} from './concerns/Emit';
 // import {Errored} from './concerns/Errored';
 // import {Eval} from './concerns/Eval';
-import {Expression} from './concerns/Expression';
+// import {Expression} from './concerns/Expression';
 // import {Hierarchy} from './concerns/Hierarchy';
 // import {Json} from './concerns/Json';
 // import {Named} from './concerns/Named';
@@ -35,6 +36,7 @@ import {Expression} from './concerns/Expression';
 // import {VisitorsBase} from './concerns/visitors/_Base';
 
 import {OptionsController} from './utils/OptionsController';
+import {ExpressionController} from './utils/ExpressionController';
 import {EmitController} from './utils/EmitController';
 import {ParamSerializer} from './utils/Serializer';
 import {StatesController} from './utils/StatesController';
@@ -47,11 +49,11 @@ export interface TypedParamVisitor {
 	visit_typed_param: (param: BaseParam) => any;
 }
 
-export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)) {
+export abstract class TypedParam<T> extends CoreGraphNodeSceneNamed {
 	protected _raw_input: T;
 	protected _default_value: T;
 	protected _value: T;
-	protected _expression: string;
+	// protected _expression: string;
 	protected _node: BaseNode;
 	protected _parent_param: TypedMultipleParam<any>;
 	protected _components: FloatParam[];
@@ -63,6 +65,10 @@ export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)
 	private _emit_controller: EmitController;
 	get emit_controller(): EmitController {
 		return (this._emit_controller = this._emit_controller || new EmitController(this));
+	}
+	private _expression_controller: ExpressionController;
+	get expression_controller(): ExpressionController {
+		return (this._expression_controller = this._expression_controller || new ExpressionController(this));
 	}
 	private _serializer: ParamSerializer;
 	get serializer(): ParamSerializer {
@@ -77,11 +83,11 @@ export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)
 		return (this._ui_data = this._ui_data || new UIData(this));
 	}
 
-	constructor() {
-		super();
+	// constructor() {
+	// 	super();
 
-		// this.add_post_dirty_hook(this._remove_node_param_cache.bind(this))
-	}
+	// 	// this.add_post_dirty_hook(this._remove_node_param_cache.bind(this))
+	// }
 	initialize() {
 		this.init_components();
 		// this.init_expression()
@@ -99,32 +105,29 @@ export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)
 	static type(): ParamType {
 		return ParamType.FLOAT; // adding a type here, but just to not have a compile error
 	}
-	type(): ParamType {
+	get type(): ParamType {
 		return (this.constructor as typeof BaseParam).type();
 	}
-	is_numeric(): boolean {
+	get is_numeric(): boolean {
 		return false;
 	}
-	is_multiple(): boolean {
+	get is_multiple(): boolean {
 		return false;
 	}
 	// name
 
-	name() {
-		return this._name;
-	}
-	set_name(name: string): void {
-		this._name = name;
-		this.self.name_graph_node().set_dirty();
-		this.self.name_graph_node().remove_dirty_state();
+	set_name(name: string) {
+		super.set_name(name);
+		// this.self.name_graph_node().set_dirty();
+		// this.self.name_graph_node().remove_dirty_state();
 	}
 
 	// TODO: typescript
-	value(): T {
+	get value(): T {
 		return this._value;
 	}
 	set(new_value: T): void {}
-	default_value() {
+	get default_value() {
 		return this._default_value;
 	}
 	is_raw_input_default(value: T): boolean {
@@ -152,8 +155,8 @@ export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)
 			}
 		}
 
-		if (this.is_multiple()) {
-			for (let c of this.self.components()) {
+		if (this.is_multiple) {
+			for (let c of this.components()) {
 				c.set_node(node);
 			}
 		}
@@ -170,17 +173,17 @@ export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)
 		param.add_graph_input(this);
 		this._parent_param = param;
 	}
-	get parent_param(): BaseParam {
+	get parent_param(): TypedMultipleParam<any> {
 		return this._parent_param;
 	}
 	has_parent_param(): boolean {
 		return this._parent_param != null;
 	}
 	full_path(): string {
-		return this.self.node.full_path() + '/' + this.self.name();
+		return this.node.full_path() + '/' + this.name;
 	}
 	path_relative_to(node: BaseNode | BaseParam): string {
-		return CoreWalker.relative_path(node, this.self);
+		return CoreWalker.relative_path(node, this);
 	}
 
 	components() {
@@ -197,6 +200,15 @@ export abstract class TypedParam<T> extends Expression(NamedGraphNode(NodeScene)
 		}
 	}
 
+	// expression
+	set_expression(expression: string | null) {
+		this.expression_controller.set_expression(expression);
+	}
+	has_expression() {
+		return this.expression_controller.active;
+	}
+
+	// serialize
 	to_json() {
 		return this.serializer.to_json();
 	}

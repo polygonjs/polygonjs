@@ -4,10 +4,17 @@ import lodash_flatten from 'lodash/flatten';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 // import {NodeSimple} from './NodeSimple'
 // import {GraphNode} from './concerns/GraphNode'
-import {SceneNodeDirtyable} from './SceneNodeDirtyable';
+// import {SceneNodeDirtyable} from './SceneNodeDirtyable';
 
 // class DummyClass {}
 // class GraphNodeDummy extends Dirtyable(DummyClass) {}
+
+// TODO: typescript, using ids with a specific type (https://basarat.gitbook.io/typescript/main-1/nominaltyping)
+// export interface CoreGraphNodeId extends String {
+// 	// _CoreGraphNodeIdBrand: string;
+// }
+export type CoreGraphNodeId = string;
+import {CoreGraphNode} from './CoreGraphNode';
 
 export class CoreGraph {
 	_graph: Graph;
@@ -32,16 +39,16 @@ export class CoreGraph {
 		return this._scene;
 	}
 
-	next_id(): string {
-		return `${(this._next_id += 1)}`;
+	next_id(): CoreGraphNodeId {
+		return (<unknown>`${(this._next_id += 1)}`) as CoreGraphNodeId;
 	}
 
-	setNode(node_owner: any) {
-		this._graph.setNode(node_owner.graph_node_id(), {owner: node_owner});
+	setNode(node: any) {
+		this._graph.setNode(node.graph_node_id(), {owner: node});
 	}
 
-	removeNode(node_owner: any) {
-		this._graph.removeNode(node_owner.graph_node_id());
+	removeNode(node: any) {
+		this._graph.removeNode(node.graph_node_id());
 	}
 
 	nodes_from_ids(ids: string[]) {
@@ -73,7 +80,7 @@ export class CoreGraph {
 			this._graph.setEdge(src.graph_node_id(), dest.graph_node_id());
 
 			// const scene_auto_updating = this.scene().auto_updating();
-			const scene_loading = this.scene().is_loading();
+			const scene_loading = this.scene().loading_controller.is_loading;
 			const check_if_graph_has_cycle = !scene_loading;
 			let graph_has_cycle = false;
 			if (check_if_graph_has_cycle) {
@@ -94,91 +101,94 @@ export class CoreGraph {
 		}
 	}
 
-	disconnect(src: SceneNodeDirtyable, dest: SceneNodeDirtyable) {
+	disconnect(src: CoreGraphNode, dest: CoreGraphNode) {
 		if (src && dest) {
-			this._graph.removeEdge(src.graph_node_id(), dest.graph_node_id());
+			const src_id_s = src.id;
+			const dest_id_s = dest.id;
+			this._graph.removeEdge(src_id_s, dest_id_s);
 
-			src.clear_successors_cache_with_predecessors();
+			src.dirty_controller.clear_successors_cache_with_predecessors();
 		}
 	}
-	disconnect_predecessors(node_owner: SceneNodeDirtyable) {
-		const predecessors = this.predecessors(node_owner);
+	disconnect_predecessors(node: CoreGraphNode) {
+		const predecessors = this.predecessors(node);
 		for (let predecessor of predecessors) {
-			this.disconnect(predecessor, node_owner);
+			this.disconnect(predecessor, node);
 		}
 	}
-	disconnect_successors(node_owner: SceneNodeDirtyable) {
-		const successors = this.successors(node_owner);
+	disconnect_successors(node: CoreGraphNode) {
+		const successors = this.successors(node);
 		for (let successor of successors) {
-			this.disconnect(node_owner, successor);
+			this.disconnect(node, successor);
 		}
 	}
-	// disconnect_predecessors(node_owner){
-	// 	const node_owner_id = node_owner.graph_node_id();
-	// 	const predecessor_ids = this._graph.predecessors(node_owner_id);
+	// disconnect_predecessors(node){
+	// 	const node_id = node.graph_node_id();
+	// 	const predecessor_ids = this._graph.predecessors(node_id);
 	// 	if( predecessor_ids ){
 	// 		for(let predecessor_id of predecessor_ids){
-	// 			this._graph.removeEdge(predecessor_id, node_owner_id);
+	// 			this._graph.removeEdge(predecessor_id, node_id);
 	// 		}
 	// 	}
 	// }
-	// disconnect_successors(node_owner){
-	// 	const node_owner_id = node_owner.graph_node_id();
-	// 	const successor_ids = this._graph.successors(node_owner_id);
+	// disconnect_successors(node){
+	// 	const node_id = node.graph_node_id();
+	// 	const successor_ids = this._graph.successors(node_id);
 	// 	if (successor_ids) {
 	// 		for(let successor_id of successor_ids){
-	// 			this._graph.removeEdge(node_owner_id, successor_id);
+	// 			this._graph.removeEdge(node_id, successor_id);
 	// 		}
 	// 	}
 	// }
 
-	predecessor_ids(id: string) {
+	predecessor_ids(id: CoreGraphNodeId) {
 		return this._graph.predecessors(id) || [];
 	}
-	predecessors(node_owner: any) {
-		const ids = this.predecessor_ids(node_owner.graph_node_id());
+	predecessors(node: CoreGraphNode) {
+		const ids = this.predecessor_ids(node.id);
 		return this.nodes_from_ids(ids);
 	}
-	successor_ids(id: string): string[] {
-		const ids = this._graph.successors(id) || [];
-		return ids;
+	successor_ids(id: string): CoreGraphNodeId[] {
+		return this._graph.successors(id) || [];
 	}
-	successors(node_owner: any): any[] {
-		const ids = this.successor_ids(node_owner.graph_node_id()) || [];
+	successors(node: CoreGraphNode): CoreGraphNode[] {
+		const ids = this.successor_ids(node.id) || [];
 		return this.nodes_from_ids(ids);
 	}
 
-	all_predecessors(node_owner: any): any[] {
-		const ids = [];
-		let newly_added_ids = this.predecessor_ids(node_owner.graph_node_id());
-		if (newly_added_ids) {
-			ids.push(newly_added_ids);
+	private all_next_ids(node: CoreGraphNode, method: 'successor_ids' | 'predecessor_ids'): CoreGraphNodeId[] {
+		const ids: CoreGraphNodeId[] = [];
+		let next_ids = this[method](node.id);
 
-			while (newly_added_ids && newly_added_ids.length > 0) {
-				const next_ids = newly_added_ids.map((newly_added_id) => {
-					return this.predecessor_ids(newly_added_id);
-				});
-				newly_added_ids = lodash_flatten(next_ids);
-				ids.push(newly_added_ids);
+		while (next_ids.length > 0) {
+			const next_next_ids = [];
+			for (let next_id of next_ids) {
+				for (let next_next_id of this[method](next_id)) {
+					next_next_ids.push(next_next_id);
+				}
+			}
+
+			for (let id of next_ids) {
+				ids.push(id);
+			}
+			for (let id of next_next_ids) {
+				next_ids.push(id);
 			}
 		}
-		return this.nodes_from_ids(lodash_uniq(lodash_flatten(ids)));
+		return ids;
 	}
-
-	all_successors(node_owner: any): any[] {
-		const ids = [];
-		let newly_added_ids = this.successor_ids(node_owner.graph_node_id());
-		ids.push(newly_added_ids);
-
-		while (newly_added_ids.length > 0) {
-			newly_added_ids = lodash_flatten(
-				newly_added_ids.map((newly_added_id) => {
-					return this.successor_ids(newly_added_id);
-				})
-			);
-			ids.push(newly_added_ids);
-		}
-
-		return this.nodes_from_ids(lodash_uniq(lodash_flatten(ids)));
+	all_predecessor_ids(node: CoreGraphNode): CoreGraphNodeId[] {
+		return this.all_next_ids(node, 'predecessor_ids');
+	}
+	all_successor_ids(node: CoreGraphNode): CoreGraphNodeId[] {
+		return this.all_next_ids(node, 'successor_ids');
+	}
+	all_predecessors(node: CoreGraphNode): CoreGraphNode[] {
+		const ids = this.all_successor_ids(node);
+		return this.nodes_from_ids(ids);
+	}
+	all_successors(node: CoreGraphNode): CoreGraphNode[] {
+		const ids = this.all_successor_ids(node);
+		return this.nodes_from_ids(ids);
 	}
 }

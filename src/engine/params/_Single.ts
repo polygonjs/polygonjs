@@ -21,10 +21,11 @@ export class Single<T> extends TypedParam<T> {
 	async eval_raw() {
 		// be careful when saving a result here,
 		// as it fucks it up when evaluating for points (or any list of entities)
-		if (this.is_dirty() || this._value == null) {
+		if (this.is_dirty) {
+			// || this._value == null) { // TODO: typescript: removed check if value is null, as it should not happen
 			//this.clear_error()
-			if (this._expression) {
-				const val = await this.eval_raw_expression();
+			if (this.has_expression()) {
+				const val = await this.expression_controller.eval();
 				this.post_eval_raw(val);
 				return val;
 			} else {
@@ -52,10 +53,11 @@ export class Single<T> extends TypedParam<T> {
 		this._value = value;
 
 		if (this._value != null) {
+			// TODO: typescript: value should never be null, so there should be a different way of setting/clearing error state
 			this.states.error.clear();
 		}
 
-		const was_dirty = this.is_dirty();
+		const was_dirty = this.is_dirty;
 		this.remove_dirty_state();
 		// TODO: this gets emitted for every point when in a Point SOP
 		// trying now to only emit if the param was dirty
@@ -99,7 +101,7 @@ export class Single<T> extends TypedParam<T> {
 			return;
 		}
 
-		const cooker = this.scene().cooker;
+		const cooker = this.scene.cooker;
 		cooker.block();
 		this.states.error.clear();
 		this._value = new_value;

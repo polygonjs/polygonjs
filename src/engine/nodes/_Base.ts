@@ -1,6 +1,6 @@
 import {PolyScene} from '../scene/PolyScene';
-import {NodeScene} from 'src/core/graph/NodeScene';
-import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
+import {CoreGraphNodeSceneNamed} from 'src/core/graph/CoreGraphNodeSceneNamed';
+// import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
 
 // import {BaseParam} from 'src/engine/params/_Base';
 // import {GeometryContainer} from 'src/engine/containers/Geometry';
@@ -71,7 +71,7 @@ interface NodeCreatedEmitData {
 	child_node: BaseNode;
 }
 
-export class BaseNode extends NamedGraphNode(NodeScene) {
+export class BaseNode extends CoreGraphNodeSceneNamed {
 	private _parent_controller: HierarchyParentController;
 	private _children_controller: HierarchyChildrenController;
 	private _selection: CoreSelection;
@@ -212,53 +212,53 @@ export class BaseNode extends NamedGraphNode(NodeScene) {
 
 	// params
 	create_params() {}
-	add_param(
-		type: ParamType.BOOLEAN,
-		name: string,
-		default_value: BooleanAsNumber | string,
-		options?: ParamOptions
-	): BooleanParam;
-	add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam;
-	add_param(
-		type: ParamType.COLOR,
-		name: string,
-		default_value: [number, number, number],
-		options?: ParamOptions
-	): ColorParam;
-	add_param(type: ParamType.FLOAT, name: string, default_value: number | string, options?: ParamOptions): FloatParam;
-	add_param(
-		type: ParamType.INTEGER,
-		name: string,
-		default_value: number | string,
-		options?: ParamOptions
-	): IntegerParam;
-	add_param(
-		type: ParamType.OPERATOR_PATH,
-		name: string,
-		default_value: string,
-		options?: ParamOptions
-	): OperatorPathParam;
-	add_param(type: ParamType.RAMP, name: string, default_value: string, options?: ParamOptions): RampParam;
-	add_param(type: ParamType.SEPARATOR, name: string, default_value: null, options?: ParamOptions): SeparatorParam;
-	add_param(type: ParamType.STRING, name: string, default_value: string, options?: ParamOptions): StringParam;
-	add_param(
-		type: ParamType.VECTOR2,
-		name: string,
-		default_value: [number | string, number | string],
-		options?: ParamOptions
-	): Vector2Param;
-	add_param(
-		type: ParamType.VECTOR3,
-		name: string,
-		default_value: [number | string, number | string, number | string],
-		options?: ParamOptions
-	): Vector3Param;
+	// add_param(
+	// 	type: ParamType.BOOLEAN,
+	// 	name: string,
+	// 	default_value: BooleanAsNumber | string,
+	// 	options?: ParamOptions
+	// ): BooleanParam;
+	// add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam|null;
+	// add_param(
+	// 	type: ParamType.COLOR,
+	// 	name: string,
+	// 	default_value: [number, number, number],
+	// 	options?: ParamOptions
+	// ): ColorParam;
+	// add_param(type: ParamType.FLOAT, name: string, default_value: number | string, options?: ParamOptions): FloatParam;
+	// add_param(
+	// 	type: ParamType.INTEGER,
+	// 	name: string,
+	// 	default_value: number | string,
+	// 	options?: ParamOptions
+	// ): IntegerParam;
+	// add_param(
+	// 	type: ParamType.OPERATOR_PATH,
+	// 	name: string,
+	// 	default_value: string,
+	// 	options?: ParamOptions
+	// ): OperatorPathParam;
+	// add_param(type: ParamType.RAMP, name: string, default_value: string, options?: ParamOptions): RampParam;
+	// add_param(type: ParamType.SEPARATOR, name: string, default_value: null, options?: ParamOptions): SeparatorParam;
+	// add_param(type: ParamType.STRING, name: string, default_value: string, options?: ParamOptions): StringParam;
+	// add_param(
+	// 	type: ParamType.VECTOR2,
+	// 	name: string,
+	// 	default_value: [number | string, number | string],
+	// 	options?: ParamOptions
+	// ): Vector2Param;
+	// add_param(
+	// 	type: ParamType.VECTOR3,
+	// 	name: string,
+	// 	default_value: [number | string, number | string, number | string],
+	// 	options?: ParamOptions
+	// ): Vector3Param;
 	add_param(
 		type: ParamType.VECTOR4,
 		name: string,
 		default_value: [number | string, number | string, number | string, number | string],
 		options?: ParamOptions
-	): Vector4Param;
+	): Vector4Param | null;
 	add_param(type: ParamType, name: string, default_value: any, options?: ParamOptions): BaseParam | null {
 		return this._params_controller.add_param(type, name, default_value, options);
 	}

@@ -19,7 +19,7 @@ export class TypedNumericParam<T> extends Single<T> {
 		super();
 	}
 
-	is_numeric() {
+	get is_numeric {
 		return true;
 	}
 	accepts_visitor(visitor: NumericParamVisitor): any {

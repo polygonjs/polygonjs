@@ -1,12 +1,18 @@
 import {BaseNode} from 'src/engine/nodes/_Base';
 import lodash_isNaN from 'lodash/isNaN';
+import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
 
 type Callback = () => void;
 
 export class NameController {
-	_on_set_name_hooks: Callback[];
-	_on_set_full_path_hooks: Callback[];
-	constructor(protected node: BaseNode) {}
+	private _graph_node_scene: CoreGraphNodeScene;
+	private _on_set_name_hooks: Callback[];
+	private _on_set_full_path_hooks: Callback[];
+
+	constructor(protected node: BaseNode) {
+		this._graph_node_scene = new CoreGraphNodeScene();
+		this._graph_node_scene.set_scene(this.node.scene);
+	}
 
 	static base_name(node: BaseNode) {
 		let base = node.type(); //CoreString.class_name_to_type(this.self.type())
@@ -26,7 +32,7 @@ export class NameController {
 		}
 	}
 	set_name(new_name: string) {
-		if (new_name != this.node.name()) {
+		if (new_name != this.node.name) {
 			this.request_name_to_parent(new_name);
 		}
 	}
@@ -34,9 +40,10 @@ export class NameController {
 		this.node.set_name(new_name);
 		this.post_set_name();
 		this.post_set_full_path();
-		this.node.children_controller.children().forEach((node) => node.name_controller.post_set_full_path());
-		this.node.name_graph_node().set_dirty();
-		this.node.name_graph_node().remove_dirty_state();
+		this.node.children_controller.children().forEach((child_node) => {
+			child_node.name_controller.post_set_full_path(); // TODO: typescript: replace post_set_full_path with execute_on_update_full_path_hooks or on_update_full_path
+		});
+		this._graph_node_scene.set_successors_dirty();
 		this.node.emit('node_name_update');
 	}
 

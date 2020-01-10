@@ -3,7 +3,7 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 import {CoreString} from 'src/core/String';
-import {NodeScene} from 'src/core/graph/NodeScene';
+import {NodeScene} from 'src/core/graph/CoreGraphNodeScene';
 
 export class Opdigits extends BaseMethod {
 	static required_arguments() {
@@ -31,7 +31,7 @@ export class Opdigits extends BaseMethod {
 				const index_or_path = args[0];
 				const node = this.get_referenced_node(index_or_path);
 				if (node) {
-					const name = node.name();
+					const name = node.name;
 					const value = CoreString.tail_digits(name);
 					resolve(value);
 				} else {

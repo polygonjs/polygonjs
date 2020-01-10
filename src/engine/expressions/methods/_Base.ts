@@ -6,7 +6,7 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
-import {NodeScene} from 'src/core/graph/NodeScene';
+import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
 import {BaseContainer} from 'src/engine/containers/_Base';
 
 // type NodeOrParam = BaseNode | BaseParam;
@@ -91,12 +91,15 @@ export abstract class BaseMethod {
 		return referenced_param;
 	}
 
-	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): NodeScene | null {
+	find_referenced_graph_node(
+		index_or_path: number | string,
+		decomposed_path?: DecomposedPath
+	): CoreGraphNodeScene | null {
 		const is_index = lodash_isNumber(index_or_path);
 		// let node
 		if (is_index) {
 			const index = index_or_path as number;
-			return (<unknown>this.node.io.inputs.input_graph_node(index)) as NodeScene;
+			return this.node.io.inputs.input_graph_node(index);
 		} else {
 			const path = index_or_path as string;
 			return this.get_referenced_node(path, decomposed_path);
@@ -146,7 +149,7 @@ export abstract class BaseMethod {
 		}
 	}
 	create_dependency(
-		node: NodeScene,
+		node: CoreGraphNodeScene,
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
 	): MethodDependency {

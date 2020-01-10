@@ -1,13 +1,13 @@
 // import CoreUIData from 'src/core/UIData'
-import {NodeScene} from 'src/core/graph/NodeScene';
+import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
 import {BaseParam} from '../_Base';
 
-export class UIData extends NodeScene {
+export class UIData extends CoreGraphNodeScene {
 	private _folder_name: string | null;
 
 	constructor(private param: BaseParam) {
 		super();
-		this.set_scene(this.param.scene());
+		this.set_scene(this.param.scene);
 
 		this.add_post_dirty_hook(this.update_visibility_and_remove_dirty.bind(this));
 	}

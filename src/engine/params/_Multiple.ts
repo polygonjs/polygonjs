@@ -62,25 +62,24 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	}
 	init_components() {
 		const names = this.component_names();
-		for (let i = 0; i < names.length; i++) {
-			const component_name = names[i];
+		for (let component_name of names) {
 			const component = new this._components_contructor();
 
 			component.set_default_value((this._default_value as any)[component_name]);
 			component.options.copy(this.options);
 
-			component.set_scene(this.scene());
-			component.set_name(`${this.name()}${name}`);
+			component.set_scene(this.scene);
+			component.set_name(`${this.name}${name}`);
 			component.set_parent_param(this);
 			component.initialize();
 			return component;
 		}
 	}
 
-	is_multiple() {
+	get is_multiple() {
 		return true;
 	}
-	is_numeric() {
+	get is_numeric() {
 		return true;
 	}
 	// convert_value(v) {
@@ -119,7 +118,7 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	has_expression() {
 		const components = this.components();
 		for (let i = 0; i < components.length; i++) {
-			if (components[i].has_expression()) {
+			if (components[i].expression_controller.active) {
 				return true;
 			}
 		}
@@ -134,7 +133,7 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 		// if (lodash_isArray(expressions)) {
 		const components = this.components();
 		for (let i = 0; i < components.length; i++) {
-			components[i].set_expression(expression);
+			components[i].expression_controller.set_expression(expression);
 		}
 		// } else {
 		// 	this.components()[0].set_expression(expressions)
@@ -191,7 +190,7 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	// 		throw "trying to evaluate component with index #{index} which does not exist"
 
 	set(value: T) {
-		const cooker = this.scene().cooker;
+		const cooker = this.scene.cooker;
 		cooker.block();
 		const components = this.components();
 		for (let i = 0; i < components.length; i++) {
