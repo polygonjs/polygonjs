@@ -11,7 +11,9 @@ export class FloatParam extends TypedNumericParam<number> {
 	static type() {
 		return ParamType.FLOAT;
 	}
-
+	convert(raw_val: any): number {
+		return parseFloat(raw_val);
+	}
 	// convert_value(v) {
 	// 	// if(lodash_isNumber(v)){
 	// 	// 	//

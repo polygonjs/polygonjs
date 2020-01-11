@@ -2,7 +2,7 @@ import lodash_groupBy from 'lodash/groupBy';
 import {BaseNode} from '../_Base';
 
 import {BaseParam} from 'src/engine/params/_Base';
-import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 enum METHODS {
 	SUCCESSORS = 'graph_successors',
@@ -30,47 +30,47 @@ export class DependenciesController {
 		return this._find_scene_node_scene_nodes(METHODS.PREDECESSORS);
 	}
 	private _find_scene_node_scene_nodes(method: METHODS) {
-		const params: CoreGraphNodeScene[] = this.node.params.all;
+		const params: CoreGraphNode[] = this.node.params.all;
 		params.push(this.node);
 		const start_nodes = params;
-		let scene_nodes: BaseNode[] = [];
-		start_nodes.forEach((start_node) => {
-			this._find_graph_node_scene_nodes(start_node, method, scene_nodes);
-		});
+		let base_nodes: BaseNode[] = [];
+		for (let start_node of start_nodes) {
+			this._find_base_nodes_from_node(start_node, method, base_nodes);
+		}
 
 		if (method == METHODS.SUCCESSORS) {
 			for (let node of this.param_nodes_referree()) {
-				scene_nodes.push(node);
+				base_nodes.push(node);
 			}
 		}
 
 		// ensure uniq and not current node
-		scene_nodes = scene_nodes.filter((scene_node) => {
+		base_nodes = base_nodes.filter((scene_node) => {
 			return scene_node.graph_node_id != this.node.graph_node_id;
 		});
-		const scene_nodes_by_graph_node_id = lodash_groupBy(scene_nodes, (n) => n.graph_node_id);
-		const uniq_scene_nodes: CoreGraphNodeScene[] = [];
-		Object.keys(scene_nodes_by_graph_node_id).forEach((graph_node_id) => {
-			uniq_scene_nodes.push(scene_nodes_by_graph_node_id[graph_node_id][0]);
+		const base_nodes_by_graph_node_id = lodash_groupBy(base_nodes, (n) => n.graph_node_id);
+		const uniq_base_nodes: CoreGraphNode[] = [];
+		Object.keys(base_nodes_by_graph_node_id).forEach((graph_node_id) => {
+			uniq_base_nodes.push(base_nodes_by_graph_node_id[graph_node_id][0]);
 		});
-		return uniq_scene_nodes;
+		return uniq_base_nodes;
 	}
 
-	private _find_graph_node_scene_nodes(node: CoreGraphNodeScene, method: METHODS, scene_nodes: BaseNode[]) {
+	private _find_base_nodes_from_node(node: CoreGraphNode, method: METHODS, base_nodes: BaseNode[]) {
 		const next_nodes = node[method]();
-		next_nodes.forEach((next_node) => {
-			if (next_node.is_a(BaseParam)) {
-				scene_nodes.push(next_node.node());
+		for (let next_node of next_nodes) {
+			if (next_node instanceof BaseParam) {
+				base_nodes.push(next_node.node);
 			} else {
-				if (next_node.is_a(BaseNode)) {
-					scene_nodes.push(next_node);
+				if (next_node instanceof BaseNode) {
+					base_nodes.push(next_node);
 				} else {
-					this._find_graph_node_scene_nodes(next_node, method, scene_nodes);
+					this._find_base_nodes_from_node(next_node, method, base_nodes);
 				}
 			}
-		});
+		}
 
-		return scene_nodes;
+		return base_nodes;
 	}
 
 	//
@@ -81,10 +81,10 @@ export class DependenciesController {
 	//
 	add_param_referree(param: BaseParam) {
 		this._params_referrees_by_graph_node_id = this._params_referrees_by_graph_node_id || {};
-		this._params_referrees_by_graph_node_id[param.graph_node_id()] = param;
+		this._params_referrees_by_graph_node_id[param.graph_node_id] = param;
 	}
 	remove_param_referree(param: BaseParam) {
-		delete this._params_referrees_by_graph_node_id[param.graph_node_id()];
+		delete this._params_referrees_by_graph_node_id[param.graph_node_id];
 	}
 	params_referree(): BaseParam[] {
 		const list = [];
@@ -100,7 +100,7 @@ export class DependenciesController {
 		let node;
 		for (let param of this.params_referree()) {
 			node = param.node;
-			node_by_graph_node_id[node.graph_node_id()] = node;
+			node_by_graph_node_id[node.graph_node_id] = node;
 		}
 		const list = [];
 		for (let graph_node_id of Object.keys(node_by_graph_node_id)) {

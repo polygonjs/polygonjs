@@ -154,7 +154,7 @@ export class BaseCameraObjNode extends BaseObjNode {
 	//
 
 	set_as_master_camera() {
-		this.scene().cameras_controller.set_master_camera_node_path(this.full_path());
+		this.scene.cameras_controller.set_master_camera_node_path(this.full_path());
 	}
 
 	setup_for_aspect_ratio(aspect: number) {
@@ -173,7 +173,7 @@ export class BaseCameraObjNode extends BaseObjNode {
 		CoreTransform.set_params_from_object(this._object, this);
 	}
 	viewer(element: HTMLElement) {
-		return new ThreejsViewer(element, this.scene(), this);
+		return new ThreejsViewer(element, this.scene, this);
 	}
 }
 // 	console.warn "camera #{this.full_path()} has no controls assigned"

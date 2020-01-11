@@ -1,7 +1,7 @@
-import {NodeSimple} from 'src/core/graph/NodeSimple';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {BaseNode} from 'src/engine/nodes/_Base';
 
-export class DisplayFlagGraphNode extends NodeSimple {
+export class DisplayFlagGraphNode extends CoreGraphNode {
 	constructor(protected _owner: BaseNode) {
 		super('DisplayFlagGraphNode');
 		this._owner = _owner;

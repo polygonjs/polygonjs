@@ -11,6 +11,11 @@ import {BasePostProcessNode} from 'src/engine/nodes/post/_Base';
 import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
+import {Pass} from 'modules/three/examples/jsm/postprocessing/Pass';
+
+interface DisposablePass extends Pass {
+	dispose: () => void;
+}
 
 export class PostProcessController {
 	// private _param_do_post_process: boolean;
@@ -39,7 +44,7 @@ export class PostProcessController {
 				}
 			} else {
 				this.node.setup_for_aspect_ratio(aspect);
-				renderer.render(this.node.scene().display_scene, this.node.object);
+				renderer.render(this.node.scene.display_scene, this.node.object);
 			}
 		}
 	}
@@ -147,7 +152,7 @@ export class PostProcessController {
 				for (let i of lodash_range(4)) {
 					const toggle_param = this._post_process_use_node_path_params[i];
 					// const use_node = await toggle_param.eval_p()
-					const use_node = toggle_param.value();
+					const use_node = toggle_param.value;
 					if (use_node) {
 						const param = this._post_process_node_path_params[i];
 						const post_process_node = param.found_node() as BasePostProcessNode;
@@ -190,7 +195,7 @@ export class PostProcessController {
 
 		this.clear_render_passes(composer);
 
-		const render_scene_pass = new RenderPass(this.node.scene().display_scene, this.node.object);
+		const render_scene_pass = new RenderPass(this.node.scene.display_scene, this.node.object);
 		render_scene_pass.clearAlpha = 0;
 		composer.addPass(render_scene_pass);
 
@@ -206,13 +211,16 @@ export class PostProcessController {
 	}
 
 	private clear_render_passes(composer: EffectComposer) {
-		let render_pass;
+		let render_pass: Pass | undefined;
 		while ((render_pass = composer.passes.pop())) {
-			if (render_pass.dispose) {
-				try {
-					render_pass.dispose();
-				} catch (e) {
-					console.warn(e);
+			if (render_pass) {
+				const disposable_pass: DisposablePass = render_pass as DisposablePass;
+				if (typeof disposable_pass.dispose === 'function') {
+					try {
+						disposable_pass.dispose();
+					} catch (e) {
+						console.warn(e);
+					}
 				}
 			}
 		}
@@ -238,7 +246,7 @@ export class PostProcessController {
 
 				const visible_options = {
 					do_post_process: 1,
-					[toggle_param.name()]: 1,
+					[toggle_param.name]: 1,
 				};
 				const node_path_options = {
 					node_selection: {context: NodeContext.POST},

@@ -6,8 +6,8 @@ import {
 	Scene
 } from 'three';
 
-import { DRACOLoader } from 'three';
-import { DDSLoader } from 'three';
+import { DRACOLoader } from './DRACOLoader';
+import { DDSLoader } from './DDSLoader';
 
 export interface GLTF {
 	animations: AnimationClip[];

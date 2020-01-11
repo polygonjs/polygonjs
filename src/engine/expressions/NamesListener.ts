@@ -1,18 +1,18 @@
 // import BaseNode from 'src/engine/nodes/_Base'
 import {BaseParam} from 'src/engine/params/_Base';
 // import {BaseNode} from 'src/engine/nodes/_Base'
-import {NodeSimple} from 'src/core/graph/NodeSimple';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import jsep from 'jsep';
 
 // type NodeOrParam = BaseNode | BaseParam
 
-export class NamesListener extends NodeSimple {
+export class NamesListener extends CoreGraphNode {
 	// private nodes_in_path: NodeOrParam[] = []
 
-	constructor(public param: BaseParam, public node_simple: NodeSimple, public jsep_node: jsep.Expression) {
+	constructor(public param: BaseParam, public node_simple: CoreGraphNode, public jsep_node: jsep.Expression) {
 		super('NamesListener');
 
-		this.set_scene(this.param.scene());
+		this.set_scene(this.param.scene);
 		this.connect_to_nodes_in_path();
 	}
 

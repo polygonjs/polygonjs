@@ -23,7 +23,7 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 				return;
 			}
 
-			const cooker = this.self.scene().cooker;
+			const cooker = this.self.scene.cooker;
 			cooker.block();
 
 			this.self.states.error.clear();
@@ -32,7 +32,7 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 			// this._expression_valid = false
 			// this._parse_expression_completed = false
 			this._expression_controller().reset();
-			if (this.self.scene().loading_controller.loaded && this._expression) {
+			if (this.self.scene.loading_controller.loaded && this._expression) {
 				this._expression_controller().parse_and_update_dependencies(this._expression);
 			}
 
@@ -61,9 +61,9 @@ export function Expression<TBase extends Constructor>(Base: TBase) {
 		// 	this.self.invalidates_result()
 		// 	// this.set_dirty()
 		// }
-		entity() {
-			return this.self.node.context().entity();
-		}
+		// entity() {
+		// 	return this.self.node.context().entity();
+		// }
 		entities() {
 			return this._entities;
 		}

@@ -28,17 +28,14 @@ export default class NodeSelection extends UIData {
 	}
 
 	nodes(): BaseNode[] {
-		return this._node
-			.scene()
-			.graph()
-			.nodes_from_ids(this._node_ids);
+		return this._node.scene.graph.nodes_from_ids(this._node_ids);
 	}
 
 	contains(node: BaseNode): boolean {
-		return this._node_ids.includes(node.graph_node_id());
+		return this._node_ids.includes(node.graph_node_id);
 	}
 	equals(nodes: BaseNode[]): boolean {
-		const node_ids = nodes.map((node) => node.graph_node_id()).sort();
+		const node_ids = nodes.map((node) => node.graph_node_id).sort();
 		return lodash_isEqual(node_ids, this._node_ids);
 	}
 
@@ -50,7 +47,7 @@ export default class NodeSelection extends UIData {
 	add(nodes_to_add: BaseNode[]) {
 		// if (!lodash_isArray(nodes_to_add)) { nodes_to_add = [nodes_to_add]; }
 
-		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id());
+		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id);
 		this._node_ids = lodash_union(this._node_ids, node_ids_to_add);
 
 		return this.update_nodes_ui_data(nodes_to_add);
@@ -59,14 +56,14 @@ export default class NodeSelection extends UIData {
 	remove(nodes_to_remove: BaseNode[]) {
 		// if (!lodash_isArray(nodes_to_remove)) { nodes_to_remove = [nodes_to_remove]; }
 
-		const node_ids_to_remove = nodes_to_remove.map((node) => node.graph_node_id());
+		const node_ids_to_remove = nodes_to_remove.map((node) => node.graph_node_id);
 		this._node_ids = lodash_difference(this._node_ids, node_ids_to_remove);
 
 		this.update_nodes_ui_data(nodes_to_remove);
 	}
 
 	private update_nodes_ui_data(nodes: BaseNode[]) {
-		this.node().emit('selection_update');
+		this.node().emit(NodeEvent.SELECTION_UPDATED);
 	}
 
 	to_json() {

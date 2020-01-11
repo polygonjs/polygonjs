@@ -271,7 +271,7 @@
 // 			}
 // 			// use the name if the node is either not defined or in another parent
 // 			// const parent = this.self.parent()
-// 			// if ((node == null) || (node.parent().graph_node_id() !== parent.graph_node_id())) {
+// 			// if ((node == null) || (node.parent().graph_node_id !== parent.graph_node_id)) {
 // 			// 	if (node_name != null) {
 // 			// 		node = parent.node(node_name);
 // 			// 	}
@@ -329,7 +329,7 @@
 // 		remove_input(node: BaseNode) {
 // 			lodash_each(this.inputs(), (input, index) => {
 // 				if (input != null && node != null) {
-// 					if (input.graph_node_id() === node.graph_node_id()) {
+// 					if (input.graph_node_id === node.graph_node_id) {
 // 						this.set_input(index, null);
 // 					}
 // 				}

@@ -8,13 +8,13 @@ import lodash_isString from 'lodash/isString';
 import {NamedConnection} from '../NamedConnection';
 import {NodeConnection} from '../NodeConnection';
 
-import {NodeSimple} from 'src/core/graph/NodeSimple';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
-export class InputGraphNode extends NodeSimple {
-	constructor(name: string) {
-		super(name);
-	}
-}
+// export class InputGraphNode extends NodeSimple {
+// 	constructor(name: string) {
+// 		super(name);
+// 	}
+// }
 export enum InputCloneMode {
 	ALWAYS = 'always',
 	NEVER = 'never',
@@ -27,7 +27,7 @@ export interface InputsControllerOptions {
 }
 
 export class InputsController {
-	_graph_node_inputs: InputGraphNode[] = [];
+	_graph_node_inputs: CoreGraphNode[] = [];
 	_inputs: Array<BaseNode | null> = [];
 	_has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
@@ -78,7 +78,7 @@ export class InputsController {
 		this._named_inputs = named_inputs;
 		this.set_min_inputs_count(0);
 		this.set_max_inputs_count(named_inputs.length);
-		this.node.emit('node_named_inputs_updated');
+		this.node.emit(NodeEvent.NAMED_INPUTS_UPDATED);
 	}
 	has_named_inputs() {
 		return this._has_named_inputs;
@@ -91,9 +91,9 @@ export class InputsController {
 			this._graph_node_inputs[i] = this._graph_node_inputs[i] || this._create_graph_node_input(i);
 		}
 	}
-	private _create_graph_node_input(index: number): InputGraphNode {
-		const graph_input_node = new InputGraphNode(`input_${index}`);
-		graph_input_node.set_scene(this.node.scene());
+	private _create_graph_node_input(index: number): CoreGraphNode {
+		const graph_input_node = new CoreGraphNode(`input_${index}`);
+		graph_input_node.set_scene(this.node.scene);
 		this.node.add_graph_input(graph_input_node);
 		return graph_input_node;
 	}
@@ -101,7 +101,7 @@ export class InputsController {
 	max_inputs_count(): number {
 		return this._max_inputs_count || 0;
 	}
-	input_graph_node(input_index: number): InputGraphNode {
+	input_graph_node(input_index: number): CoreGraphNode {
 		return this._graph_node_inputs[input_index];
 	}
 
@@ -264,7 +264,7 @@ export class InputsController {
 				throw new Error(`node ${this.node.full_path()} has no named inputs`);
 			}
 		} else {
-			return input_index_or_name as number;
+			return input_index_or_name;
 		}
 	}
 
@@ -292,7 +292,7 @@ export class InputsController {
 		}
 		// use the name if the node is either not defined or in another parent
 		// const parent = this.self.parent()
-		// if ((node == null) || (node.parent().graph_node_id() !== parent.graph_node_id())) {
+		// if ((node == null) || (node.parent().graph_node_id !== parent.graph_node_id)) {
 		// 	if (node_name != null) {
 		// 		node = parent.node(node_name);
 		// 	}
@@ -340,7 +340,7 @@ export class InputsController {
 
 			this.post_set_input();
 			this.node.set_dirty(node);
-			this.node.emit('node_inputs_updated');
+			this.node.emit(NodeEvent.INPUTS_UPDATED);
 		}
 	}
 	// TODO: make hooks like post set dirty hooks
@@ -350,7 +350,7 @@ export class InputsController {
 	remove_input(node: BaseNode) {
 		lodash_each(this.inputs(), (input, index) => {
 			if (input != null && node != null) {
-				if (input.graph_node_id() === node.graph_node_id()) {
+				if (input.graph_node_id === node.graph_node_id) {
 					this.set_input(index, null);
 				}
 			}
@@ -456,7 +456,7 @@ export class InputsController {
 
 	set_override_clonable_state(state: boolean) {
 		this._override_clonable_state = state;
-		this.node.emit('override_clonable_state_update');
+		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
 	}
 	override_clonable_state() {
 		return this._override_clonable_state;

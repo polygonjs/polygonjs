@@ -26,8 +26,9 @@ export class Single<T> extends TypedParam<T> {
 			//this.clear_error()
 			if (this.has_expression()) {
 				const val = await this.expression_controller.eval();
-				this.post_eval_raw(val);
-				return val;
+				const converted: T = this.convert(val);
+				this.post_eval_raw(converted);
+				return converted;
 			} else {
 				this._value = this._raw_input;
 				this.remove_dirty_state();

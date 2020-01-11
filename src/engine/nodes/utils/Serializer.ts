@@ -11,13 +11,13 @@ export class NodeSerializer {
 		// const spare_params_json_by_name = {};
 		// lodash_each(this.node.spare_param_names(), param_name=> {
 		// 	const param = this.node.spare_param(param_name);
-		// 	spare_params_json_by_name[param_name] = param.graph_node_id();
+		// 	spare_params_json_by_name[param_name] = param.graph_node_id;
 		// });
-		const children_indices = this.node.children().map((node) => (node != null ? node.graph_node_id() : undefined));
+		const children_indices = this.node.children().map((node) => (node != null ? node.graph_node_id : undefined));
 
 		const input_indices = this.node.io.inputs
 			.inputs()
-			.map((node) => (node != null ? node.graph_node_id() : undefined));
+			.map((node) => (node != null ? node.graph_node_id : undefined));
 		const connection_output_indices = this.node.io.connections
 			.input_connections()
 			.map((connection) => (connection != null ? connection.output_index : undefined));
@@ -25,10 +25,10 @@ export class NodeSerializer {
 		const named_outputs = this.node.io.outputs.named_outputs().map((o) => o.to_json());
 
 		const data = {
-			name: this.node.name(),
+			name: this.node.name,
 			type: this.node.type(),
-			graph_node_id: this.node.graph_node_id(),
-			is_dirty: this.node.is_dirty(),
+			graph_node_id: this.node.graph_node_id,
+			is_dirty: this.node.is_dirty,
 			ui_data: this.node.ui_data.to_json(),
 			error_message: this.node.states.error.message,
 			children: children_indices,
@@ -60,11 +60,11 @@ export class NodeSerializer {
 		for (let param_name of param_names) {
 			const param = this.node.params.get(param_name);
 			if (param) {
-				params_json_by_name[param_name] = param.graph_node_id();
+				params_json_by_name[param_name] = param.graph_node_id;
 
-				if (include_components && param.is_multiple()) {
+				if (include_components && param.is_multiple) {
 					for (let component of param.components()) {
-						params_json_by_name[component.name()] = component.graph_node_id();
+						params_json_by_name[component.name] = component.graph_node_id;
 					}
 				}
 			}

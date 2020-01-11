@@ -3,7 +3,7 @@ import {BaseViewer} from '../_Base';
 const DIST_UNINITIALIZED = -1;
 
 export class EventsController {
-	private _mousedown_pos: Vector2Components;
+	private _mousedown_pos: Vector2Like;
 	private _mouse_distance_travelled: number = DIST_UNINITIALIZED;
 	protected _bound_on_mousedown: (e: MouseEvent) => void;
 	protected _bound_on_mousemove: (e: MouseEvent) => void;

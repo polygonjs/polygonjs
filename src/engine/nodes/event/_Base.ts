@@ -7,7 +7,7 @@ export class BaseEventNode extends BaseNode {
 	}
 
 	constructor() {
-		super();
+		super('BaseEventNode');
 
 		this.container_controller.init(EventContainer);
 		// this._init_display_flag({

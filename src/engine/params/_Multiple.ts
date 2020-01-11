@@ -47,9 +47,9 @@ interface MultipleParamVisitor extends TypedParamVisitor {
 
 export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 	accepts_visitor(visitor: MultipleParamVisitor): any {
 		return visitor.visit_typed_multiple_param(this);
 	}
@@ -63,7 +63,7 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	init_components() {
 		const names = this.component_names();
 		for (let component_name of names) {
-			const component = new this._components_contructor();
+			const component = new this._components_contructor(`${this.name}${name}`);
 
 			component.set_default_value((this._default_value as any)[component_name]);
 			component.options.copy(this.options);

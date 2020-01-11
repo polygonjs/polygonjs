@@ -3,7 +3,7 @@ import {
 	Camera,
 } from 'three';
 
-import { Pass } from 'three';
+import { Pass } from './Pass';
 
 export class MaskPass extends Pass {
 

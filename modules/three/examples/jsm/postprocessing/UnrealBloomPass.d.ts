@@ -7,7 +7,7 @@ import {
 	WebGLRenderTarget
 } from 'three';
 
-import { Pass } from 'three';
+import { Pass } from './Pass';
 
 export class UnrealBloomPass extends Pass {
 

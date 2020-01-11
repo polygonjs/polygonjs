@@ -8,7 +8,7 @@ export class LookAtController {
 	constructor(private node: BaseObjNode) {}
 
 	get active(): boolean {
-		return this.param.value() != '';
+		return this.param.value != '';
 	}
 	get param(): OperatorPathParam {
 		return this.node.params.get_operator_path('look_at');
@@ -19,8 +19,8 @@ export class LookAtController {
 		//@_look_at_target_object = null
 
 		if (look_at_node) {
-			if (look_at_node.is_a(BaseObjNode)) {
-				this._camera_controller.set_target((look_at_node as BaseObjNode).object);
+			if (look_at_node instanceof BaseObjNode) {
+				this._camera_controller.set_target(look_at_node.object);
 			} else {
 				this.node.states.error.set('look_at node is not an obj');
 			}

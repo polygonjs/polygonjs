@@ -1,5 +1,5 @@
 import {BaseParam} from 'src/engine/params/_Base';
-import {NodeSimple} from 'src/core/graph/NodeSimple';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
 import {BaseMethod} from 'src/engine/expressions/methods/_Base';
@@ -122,7 +122,7 @@ export class FunctionGenerator extends BaseTraverser {
 	private method_index: number = 0;
 
 	public method_dependencies: MethodDependency[] = [];
-	public immutable_dependencies: NodeSimple[] = [];
+	public immutable_dependencies: CoreGraphNode[] = [];
 	// public jsep_dependencies: JsepDependency[] = []
 	// public jsep_nodes_by_missing_paths: JsepsByString = {}
 
@@ -379,19 +379,19 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	//
 	protected traverse_Identifier_F(): string {
-		this.immutable_dependencies.push(this.param.scene().time_controller.context());
+		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
 		return `param.scene().frame()`;
 	}
 	protected traverse_Identifier_FPS(): string {
-		this.immutable_dependencies.push(this.param.scene().time_controller.context());
+		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
 		return `param.scene().fps()`;
 	}
 	protected traverse_Identifier_T(): string {
-		this.immutable_dependencies.push(this.param.scene().time_controller.context());
+		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
 		return `param.scene().time()`;
 	}
 	protected traverse_Identifier_CH(): string {
-		return `${QUOTE}${this.param.name()}${QUOTE}`;
+		return `${QUOTE}${this.param.name}${QUOTE}`;
 	}
 	protected traverse_Identifier_CEX(): string {
 		return this._method_centroid('x');

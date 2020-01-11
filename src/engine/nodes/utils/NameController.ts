@@ -1,17 +1,20 @@
 import {BaseNode} from 'src/engine/nodes/_Base';
 import lodash_isNaN from 'lodash/isNaN';
-import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 type Callback = () => void;
 
 export class NameController {
-	private _graph_node_scene: CoreGraphNodeScene;
+	private _graph_node: CoreGraphNode;
 	private _on_set_name_hooks: Callback[];
 	private _on_set_full_path_hooks: Callback[];
 
 	constructor(protected node: BaseNode) {
-		this._graph_node_scene = new CoreGraphNodeScene();
-		this._graph_node_scene.set_scene(this.node.scene);
+		this._graph_node = new CoreGraphNode('node_name_controller');
+		this._graph_node.set_scene(this.node.scene);
+	}
+	get graph_node() {
+		return this._graph_node;
 	}
 
 	static base_name(node: BaseNode) {
@@ -43,8 +46,8 @@ export class NameController {
 		this.node.children_controller.children().forEach((child_node) => {
 			child_node.name_controller.post_set_full_path(); // TODO: typescript: replace post_set_full_path with execute_on_update_full_path_hooks or on_update_full_path
 		});
-		this._graph_node_scene.set_successors_dirty();
-		this.node.emit('node_name_update');
+		this._graph_node.set_successors_dirty();
+		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 
 	add_post_set_name_hook(hook: Callback) {

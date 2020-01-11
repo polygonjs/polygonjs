@@ -144,7 +144,7 @@ export class OptionsController {
 	execute_callback() {
 		const callback = this.get_callback();
 		if (callback != null) {
-			if (this.node && !this.node.cook_controller.is_cooking()) {
+			if (this.node && !this.node.cook_controller.is_cooking) {
 				callback(this.param);
 			}
 		}
@@ -160,7 +160,7 @@ export class OptionsController {
 		if (callback_string) {
 			const callback_function = new Function('node', 'scene', 'window', 'location', callback_string);
 			return () => {
-				callback_function(this.node, this.node.scene(), null, null);
+				callback_function(this.node, this.node.scene, null, null);
 			};
 		}
 	}
@@ -323,11 +323,11 @@ export class OptionsController {
 	}
 	set_visible_state(state: boolean) {
 		this._options[HIDDEN_OPTION] = !state;
-		this.param.emit('param_visible_updated');
+		this.param.emit(ParamEvent.VISIBLE_UPDATED);
 	}
 
 	is_label_hidden(): boolean {
-		const type = this.param.type();
+		const type = this.param.type;
 		return (
 			this._options[LABEL_OPTION] === false ||
 			type === ParamType.BUTTON ||
@@ -353,7 +353,9 @@ export class OptionsController {
 					return param;
 				} else {
 					console.error(
-						`param ${name} not found as visibility condition for ${this.param.name()} in node ${this.param.node.type()}`
+						`param ${name} not found as visibility condition for ${
+							this.param.name
+						} in node ${this.param.node.type()}`
 					);
 				}
 			})
@@ -373,13 +375,13 @@ export class OptionsController {
 			this._programatic_visible_state = true;
 			await Promise.all(promises);
 			for (let param of params) {
-				const expected_val = options[param.name()];
+				const expected_val = options[param.name];
 				const val = param.value();
 				if (expected_val != val) {
 					this._programatic_visible_state = false;
 				}
 			}
-			this.param.emit('param_visible_updated');
+			this.param.emit(ParamEvent.VISIBLE_UPDATED);
 		}
 	}
 }

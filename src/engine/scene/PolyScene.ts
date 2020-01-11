@@ -26,9 +26,9 @@
 
 import {CubeCamerasController} from './utils/CubeCamerasController';
 import {CamerasController} from './utils/CamerasController';
-import {Cooker} from 'src/core/graph/Cooker';
+import {Cooker} from './utils/Cooker';
 import {CoreGraph} from 'src/core/graph/CoreGraph';
-import {EmitController} from './utils/EmitController';
+import {EventsController} from './utils/EventsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
 import {MissingReferencesController} from 'src/engine/expressions/MissingReferencesController';
@@ -76,9 +76,9 @@ export class PolyScene {
 		return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
 	}
 
-	private _emit_controller: EmitController;
-	get emit_controller() {
-		return (this._emit_controller = this._emit_controller || new EmitController(this));
+	private _events_controller: EventsController;
+	get events_controller() {
+		return (this._events_controller = this._events_controller || new EventsController(this));
 	}
 
 	private _graph = new CoreGraph();
@@ -118,10 +118,10 @@ export class PolyScene {
 		this.time_controller.set_frame(frame);
 	}
 	get frame() {
-		return this.time_controller.frame();
+		return this.time_controller.frame;
 	}
 	get frame_range() {
-		return this.time_controller.frame_range();
+		return this.time_controller.frame_range;
 	}
 	play() {
 		this.time_controller.play();
@@ -151,7 +151,7 @@ export class PolyScene {
 	constructor() {
 		// this.mark_as_loaded()
 		this._graph.set_scene(this);
-		this.time_controller.init();
+		// this.time_controller.init();
 		this.nodes_controller.init();
 	}
 

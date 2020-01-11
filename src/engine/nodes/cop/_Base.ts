@@ -8,7 +8,7 @@ export class BaseCopNode extends BaseNode {
 	}
 
 	constructor() {
-		super();
+		super('BaseCopNode');
 		this.container_controller.init(TextureContainer);
 	}
 

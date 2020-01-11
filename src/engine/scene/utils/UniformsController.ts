@@ -8,7 +8,7 @@ interface IUniformsDictionaryWithFrame extends IUniformsDictionary {
 }
 interface IUniformsDictionaryWithResolution extends IUniformsDictionary {
 	resolution: {
-		value: Vector2Components;
+		value: Vector2Like;
 	};
 }
 

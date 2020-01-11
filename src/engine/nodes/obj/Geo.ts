@@ -5,10 +5,12 @@ import {Group} from 'three/src/objects/Group';
 import {CoreTransform} from 'src/core/Transform';
 
 import {BaseNode} from '../_Base';
+import {DisplayNodeController} from '../utils/DisplayNodeController';
 //import Layers from './Concerns/Layers'
 // import {Transformed} from './Concerns/Transformed';
 
 export class GeoObjNode extends BaseObjNode {
+	private _display_node_controller = new DisplayNodeController(this);
 	static type() {
 		return 'geo';
 	}
@@ -43,7 +45,7 @@ export class GeoObjNode extends BaseObjNode {
 	//this.create_layers_params()
 
 	request_display_node() {
-		if (!this.scene().loading_controller.auto_updating) {
+		if (!this.scene.loading_controller.auto_updating) {
 			return;
 		}
 
@@ -73,8 +75,8 @@ export class GeoObjNode extends BaseObjNode {
 
 	is_display_node_cooking(): boolean {
 		if (this.flags.display.active) {
-			const display_node = this.display_node();
-			return display_node ? display_node.is_dirty() : false;
+			const display_node = this._display_node_controller.display_node;
+			return display_node ? display_node.is_dirty : false;
 		} else {
 			return false;
 		}
@@ -90,7 +92,7 @@ export class GeoObjNode extends BaseObjNode {
 		// only to be changed again when the actual display node is set.
 		// Without this, we have a jarring first object being displayed
 		// only to be replaced by the proper one when it is ready.
-		if (this.scene().loading_controller.loaded) {
+		if (this.scene.loading_controller.loaded) {
 			if (this.children().length == 1) {
 				node.flags.display.set(true);
 			}

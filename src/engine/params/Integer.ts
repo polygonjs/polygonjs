@@ -4,9 +4,9 @@
 import {TypedNumericParam} from './_Numeric';
 
 export class IntegerParam extends TypedNumericParam<number> {
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 	static type() {
 		return ParamType.INTEGER;
 	}
@@ -29,10 +29,14 @@ export class IntegerParam extends TypedNumericParam<number> {
 	// 	// but that means that doing param.set(2.9) would set it to 2
 	// 	return `${v}` !== `${Math.round(parseFloat(v))}`
 	// }
+	convert(raw_val: any): number {
+		return parseInt(raw_val);
+	}
 
 	async eval() {
 		const val = await this.eval_raw(); //val=> {
-		return parseInt(val);
+		const converted: number = this.convert(val);
+		return converted;
 		//});//
 	}
 }

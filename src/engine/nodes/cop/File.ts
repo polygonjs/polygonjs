@@ -372,7 +372,7 @@ export class FileCopNode extends BaseCopNode {
 						range_locked: [true, true],
 					});
 
-					this.emit('params_updated');
+					this.emit(NodeEvent.PARAMS_UPDATED);
 				}
 			} else {
 				this._remove_spare_params();
@@ -385,7 +385,7 @@ export class FileCopNode extends BaseCopNode {
 	private _remove_spare_params() {
 		if (this.params.has_param(FileCopNode.VIDEO_TIME_PARAM_NAME)) {
 			this.params.delete_param(FileCopNode.VIDEO_TIME_PARAM_NAME);
-			this.emit('params_updated');
+			this.emit(NodeEvent.PARAMS_UPDATED);
 		}
 	}
 

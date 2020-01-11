@@ -2,7 +2,7 @@ import {
 	Mesh
 } from 'three';
 
-import { MaterialHandler } from 'three';
+import { MaterialHandler } from './MaterialHandler';
 
 export class MeshReceiver {
 

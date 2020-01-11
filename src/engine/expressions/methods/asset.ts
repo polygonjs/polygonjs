@@ -24,7 +24,7 @@ export class Asset extends BaseMethod {
 	// TODO: add error management
 	request_asset_url(name: string): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const scene = this.node.scene();
+			const scene = this.node.scene;
 			const scene_uuid = scene.uuid;
 
 			let url;

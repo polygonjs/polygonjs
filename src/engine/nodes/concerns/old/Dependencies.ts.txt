@@ -51,9 +51,9 @@ export function Dependencies<TBase extends Constructor>(Base: TBase) {
 
 			// ensure uniq and not current node
 			scene_nodes = scene_nodes.filter((scene_node) => {
-				return scene_node.graph_node_id() != this.self.graph_node_id();
+				return scene_node.graph_node_id != this.self.graph_node_id;
 			});
-			const scene_nodes_by_graph_node_id = lodash_groupBy(scene_nodes, (n) => n.graph_node_id());
+			const scene_nodes_by_graph_node_id = lodash_groupBy(scene_nodes, (n) => n.graph_node_id);
 			const uniq_scene_nodes: NodeScene[] = [];
 			Object.keys(scene_nodes_by_graph_node_id).forEach((graph_node_id) => {
 				uniq_scene_nodes.push(scene_nodes_by_graph_node_id[graph_node_id][0]);
@@ -86,10 +86,10 @@ export function Dependencies<TBase extends Constructor>(Base: TBase) {
 		//
 		add_param_referree(param: BaseParam) {
 			this._params_referrees_by_graph_node_id = this._params_referrees_by_graph_node_id || {};
-			this._params_referrees_by_graph_node_id[param.graph_node_id()] = param;
+			this._params_referrees_by_graph_node_id[param.graph_node_id] = param;
 		}
 		remove_param_referree(param: BaseParam) {
-			delete this._params_referrees_by_graph_node_id[param.graph_node_id()];
+			delete this._params_referrees_by_graph_node_id[param.graph_node_id];
 		}
 		params_referree(): BaseParam[] {
 			const list = [];
@@ -105,7 +105,7 @@ export function Dependencies<TBase extends Constructor>(Base: TBase) {
 			let node;
 			for (let param of this.params_referree()) {
 				node = param.node();
-				node_by_graph_node_id[node.graph_node_id()] = node;
+				node_by_graph_node_id[node.graph_node_id] = node;
 			}
 			const list = [];
 			for (let graph_node_id of Object.keys(node_by_graph_node_id)) {

@@ -1,11 +1,13 @@
-import {CoreGraphNode} from './CoreGraphNode';
+// import {CoreGraphNode} from './CoreGraphNode';
+// import { CoreGraphNodeScene } from './CoreGraphNodeScene';
+import {BaseNode} from 'src/engine/nodes/_Base';
 
-interface CookerQueue {
-	[propName: string]: any;
-}
+// interface CookerQueue {
+// 	[propName: string]: CoreGraphNodeSceneNamed;
+// }
 
 export class Cooker {
-	_queue: CookerQueue = {};
+	_queue: Dictionary<BaseNode> = {};
 	_block_level: number = 0;
 
 	constructor() {
@@ -27,8 +29,8 @@ export class Cooker {
 		return this._block_level > 0;
 	}
 
-	enqueue(graph_node: CoreGraphNode) {
-		this._queue[graph_node.id] = graph_node;
+	enqueue(node: BaseNode) {
+		this._queue[node.graph_node_id] = node;
 	}
 
 	process_queue() {
@@ -36,12 +38,12 @@ export class Cooker {
 			return;
 		}
 
-		let graph_node: CoreGraphNode;
+		let node: BaseNode;
 		for (let id of Object.keys(this._queue)) {
-			graph_node = this._queue[id];
-			if (graph_node) {
+			node = this._queue[id];
+			if (node) {
 				delete this._queue[id];
-				graph_node.process_container_request();
+				node.container_controller.process_container_request();
 			}
 		}
 	}

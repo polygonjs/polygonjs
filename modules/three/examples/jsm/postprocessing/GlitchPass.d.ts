@@ -3,7 +3,7 @@ import {
 	DataTexture
 } from 'three';
 
-import { Pass } from 'three';
+import { Pass } from './Pass';
 
 export class GlitchPass extends Pass {
 

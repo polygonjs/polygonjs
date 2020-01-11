@@ -69,11 +69,11 @@ export class RenderersController {
 	// 	return gl as WebGLRenderingContext
 	// }
 
-	register_renderer(renderer: POLYWebGLRenderer) {
-		if (renderer._polygon_id) {
+	register_renderer(renderer: WebGLRenderer) {
+		if ((renderer as POLYWebGLRenderer)._polygon_id) {
 			throw new Error('render already registered');
 		}
-		renderer._polygon_id = this._next_renderer_id += 1;
+		(renderer as POLYWebGLRenderer)._polygon_id = this._next_renderer_id += 1;
 
 		// there is a bug where 2 renderers are created from the beginning
 		// because the from_json of the viewer_component is called after
@@ -88,17 +88,18 @@ export class RenderersController {
 		// 	console.warn("renderers controller: gl extension not available")
 		// }
 
-		this._renderers[renderer._polygon_id] = renderer;
+		this._renderers[(renderer as POLYWebGLRenderer)._polygon_id] = renderer;
 	}
-	deregister_renderer(renderer: POLYWebGLRenderer) {
-		delete this._renderers[renderer._polygon_id];
+	deregister_renderer(renderer: WebGLRenderer) {
+		delete this._renderers[(renderer as POLYWebGLRenderer)._polygon_id];
 		renderer.dispose();
 	}
-	first_renderer(): WebGLRenderer | undefined {
+	first_renderer(): WebGLRenderer | null {
 		const first_id = Object.keys(this._renderers)[0];
 		if (first_id) {
 			return this._renderers[first_id];
 		}
+		return null;
 	}
 	renderers(): WebGLRenderer[] {
 		return Object.values(this._renderers);

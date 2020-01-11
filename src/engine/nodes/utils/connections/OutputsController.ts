@@ -82,10 +82,10 @@ export class OutputsController {
 	set_named_outputs(named_outputs: NamedConnection[]) {
 		this._has_named_outputs = true;
 		this._named_outputs = named_outputs;
-		if (this.node.scene()) {
+		if (this.node.scene) {
 			this.node.set_dirty(this.node);
 		}
-		this.node.emit('node_named_outputs_updated');
+		this.node.emit(NodeEvent.NAMED_OUTPUTS_UPDATED);
 	}
 	used_output_names(): string[] {
 		const output_indices = lodash_uniq(

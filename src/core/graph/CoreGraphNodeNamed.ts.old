@@ -1,0 +1,11 @@
+import {CoreGraphNode} from './CoreGraphNode';
+
+export class CoreGraphNodeNamed extends CoreGraphNode {
+	protected _name: string;
+	get name() {
+		return this._name;
+	}
+	set_name(name: string) {
+		this._name = name;
+	}
+}

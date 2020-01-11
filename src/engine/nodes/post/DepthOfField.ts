@@ -82,7 +82,7 @@ export class DepthOfField extends BasePostProcessNode {
 		resolution: Vector2,
 		camera_node: BaseCameraObjNode
 	) {
-		const pass = new this._pass(this._display_scene, camera, [resolution.x, resolution.y], camera_node);
+		const pass = new this._pass(this.scene.display_scene, camera, [resolution.x, resolution.y], camera_node);
 
 		pass.processing.bokeh_uniforms['fstop'].value = this._param_f_stop;
 		pass.processing.bokeh_uniforms['maxblur'].value = this._param_max_blur;

@@ -1,0 +1,50 @@
+// import {CoreGraphNode} from './CoreGraphNode';
+// // import { CoreGraphNodeScene } from './CoreGraphNodeScene';
+// import { CoreGraphNodeSceneNamed } from './CoreGraphNodeSceneNamed';
+
+// // interface CookerQueue {
+// // 	[propName: string]: CoreGraphNodeSceneNamed;
+// // }
+
+// export class Cooker {
+// 	_queue: Dictionary<CoreGraphNodeSceneNamed> = {};
+// 	_block_level: number = 0;
+
+// 	constructor() {
+// 		this._queue = {};
+// 		this._block_level = 0;
+// 	}
+
+// 	block() {
+// 		this._block_level += 1;
+// 	}
+// 	unblock() {
+// 		this._block_level -= 1;
+
+// 		this.process_queue();
+// 	}
+// 	// unblock_later: ->
+// 	// 	setTimeout( this.unblock.bind(this), 0 )
+// 	blocked() {
+// 		return this._block_level > 0;
+// 	}
+
+// 	enqueue(node: CoreGraphNodeSceneNamed) {
+// 		this._queue[node.graph_node_id] = node;
+// 	}
+
+// 	process_queue() {
+// 		if (this.blocked()) {
+// 			return;
+// 		}
+
+// 		let graph_node: CoreGraphNodeSceneNamed;
+// 		for (let id of Object.keys(this._queue)) {
+// 			graph_node = this._queue[id];
+// 			if (graph_node) {
+// 				delete this._queue[id];
+// 				graph_node.process_container_request();
+// 			}
+// 		}
+// 	}
+// }

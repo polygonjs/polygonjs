@@ -13,7 +13,7 @@
 // 		}
 
 // 		// set_dirty_allowed (original_trigger_graph_node: NodeScene){
-// 		// 	return original_trigger_graph_node.graph_node_id() != this._context.entity_graph_node().graph_node_id();
+// 		// 	return original_trigger_graph_node.graph_node_id != this._context.entity_graph_node().graph_node_id;
 // 		// }
 // 	}
 // }

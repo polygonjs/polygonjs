@@ -53,9 +53,9 @@ export class ContainerController {
 
 			this._callbacks.push(resolve);
 
-			const cooker = this.node.scene().cooker;
+			const cooker = this.node.scene.cooker;
 			if (cooker.blocked()) {
-				cooker.enqueue(this);
+				cooker.enqueue(this.node);
 			} else {
 				//this.process_container_request()
 				setTimeout(this.process_container_request.bind(this), 0);
@@ -79,7 +79,7 @@ export class ContainerController {
 				}
 			});
 		} else {
-			if (this.node.is_dirty()) {
+			if (this.node.is_dirty) {
 				this.node.container_controller.container.reset_caches();
 				this.node.cook_controller.cook_main();
 			} else {
@@ -106,7 +106,7 @@ export class ContainerController {
 	async request_input_container_p(input_index: number) {
 		const input_node = this.node.io.inputs.input(input_index);
 		if (input_node) {
-			input_node.context().set_frame(this.node.context().frame());
+			input_node.processing_context.copy(this.node.processing_context);
 			const container = await input_node.container_controller.request_container();
 			return container;
 		} else {

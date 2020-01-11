@@ -11,7 +11,7 @@
 // 				value: this.self.value(),
 // 				// expression: this.self.expression(), // TODO: typescript
 // 				// result: this.self.result(),// TODO: typescript
-// 				graph_node_id: this.self.graph_node_id(),
+// 				graph_node_id: this.self.graph_node_id,
 // 				is_dirty: this.self.is_dirty(),
 // 				error_message: this.self.error_message(),
 // 				is_visible: this.self.is_visible(),
@@ -22,7 +22,7 @@
 // 			if (this.self.is_multiple()) {
 // 				data['components'] = this.self
 // 					.components()
-// 					.map((component) => component.graph_node_id())
+// 					.map((component) => component.graph_node_id)
 // 			}
 
 // 			return data

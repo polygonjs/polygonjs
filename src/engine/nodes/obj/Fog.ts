@@ -78,7 +78,7 @@ export class FogObj extends BaseObjNode {
 
 		fog.color.copy(this._param_color);
 
-		this.scene().display_scene.fog = fog;
+		this.scene.display_scene.fog = fog;
 
 		this.cook_controller.end_cook();
 	}

@@ -6,7 +6,7 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
-import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {BaseContainer} from 'src/engine/containers/_Base';
 
 // type NodeOrParam = BaseNode | BaseParam;
@@ -69,7 +69,7 @@ export abstract class BaseMethod {
 		}
 	}
 
-	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParam {
+	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParam | null {
 		const referenced_param = CoreWalker.find_param(this.node, path, decomposed_path);
 
 		// if (referenced_param != null) {
@@ -88,13 +88,10 @@ export abstract class BaseMethod {
 		// 	throw `no param found for argument ${path}`;
 		// }
 
-		return referenced_param;
+		return referenced_param || null;
 	}
 
-	find_referenced_graph_node(
-		index_or_path: number | string,
-		decomposed_path?: DecomposedPath
-	): CoreGraphNodeScene | null {
+	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): CoreGraphNode | null {
 		const is_index = lodash_isNumber(index_or_path);
 		// let node
 		if (is_index) {
@@ -140,19 +137,20 @@ export abstract class BaseMethod {
 		return null;
 	}
 
-	create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency {
+	create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency | null {
 		// console.log("is_index", index_or_path)
 		const decomposed_path = new DecomposedPath();
 		const node = this.find_referenced_graph_node(index_or_path, decomposed_path);
 		if (node) {
 			return this.create_dependency(node, index_or_path, decomposed_path);
 		}
+		return null;
 	}
 	create_dependency(
-		node: CoreGraphNodeScene,
+		node: CoreGraphNode,
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
-	): MethodDependency {
+	): MethodDependency | null {
 		return null;
 		// TODO: typescript
 		// return MethodDependency.create(

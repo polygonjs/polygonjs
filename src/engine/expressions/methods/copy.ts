@@ -1,25 +1,28 @@
-import {BaseMethod} from './_Base'
-import {MethodDependency} from '../MethodDependency'
+import {BaseMethod} from './_Base';
+import {MethodDependency} from '../MethodDependency';
 // import {CoreGroup} from 'src/core/Geometry/Group';
-import {CoreWalker} from 'src/core/Walker'
+import {CoreWalker} from 'src/core/Walker';
 
 export class Copy extends BaseMethod {
 	static required_arguments() {
 		return [
 			['string', 'path to copy'],
 			['integer', 'default value'],
-		]
+		];
 	}
 	static optional_arguments() {
-		return [['string', 'attribute name (optional)']]
+		return [['string', 'attribute name (optional)']];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency {
-		const node = this.find_referenced_graph_node(index_or_path)
+	find_dependency(index_or_path: number | string): MethodDependency | null {
+		const node = this.find_referenced_graph_node(index_or_path);
 		// TODO: add a check to see if the node is a copy SOP
 		// TODO: typescript
-		const stamp_node = node //.stamp_node()
-		return this.create_dependency(stamp_node, index_or_path)
+		const stamp_node = node; //.stamp_node()
+		if (stamp_node) {
+			return this.create_dependency(stamp_node, index_or_path);
+		}
+		return null;
 	}
 	// find_dependencies(index_or_path: number|string): ReferenceSearchResult{
 	// 	// return this.find_node_dependency_from_index_or_path(index_or_path)
@@ -30,26 +33,26 @@ export class Copy extends BaseMethod {
 	process_arguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (args.length == 2 || args.length == 3) {
-				const path = args[0]
-				const default_value = args[1]
+				const path = args[0];
+				const default_value = args[1];
 				// const attribute_name = args[2]
 
-				const copy_sop = CoreWalker.find_node(this.node, path)
+				const copy_sop = CoreWalker.find_node(this.node, path);
 
-				let value
+				let value;
 				if (copy_sop) {
 					// TODO: typescript
 					// value = copy_sop.stamp_value(attribute_name)
 				}
 
 				if (value == null) {
-					value = default_value
+					value = default_value;
 				}
-				resolve(value)
+				resolve(value);
 			} else {
-				resolve(0)
+				resolve(0);
 			}
-		})
+		});
 	}
 	// update_dependencies() {
 	// 	return this.jsep_node()._graph_node.add_graph_input( this.copy_sop.stamp_node() );

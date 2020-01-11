@@ -31,7 +31,7 @@ export class UIData extends CoreUIData {
 	}
 	set_comment(comment: string) {
 		this._comment = comment;
-		this.node.emit('ui_data_updated', this.to_json());
+		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
 	}
 	comment(): string {
 		return this._comment;
@@ -66,7 +66,7 @@ export class UIData extends CoreUIData {
 
 	set_position(new_position: Vector2) {
 		this._position.copy(new_position);
-		this.node.emit('ui_data_updated', this.to_json());
+		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
 	}
 
 	translate(offset: Vector2, snap: boolean = false) {
@@ -77,7 +77,7 @@ export class UIData extends CoreUIData {
 			this._position.y = Math.round(this._position.y);
 		}
 
-		this.node.emit('ui_data_updated', this.to_json());
+		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
 	}
 	// arguments_to_vector(x: number,y: number){
 	// 	if (arguments.length === 2) {

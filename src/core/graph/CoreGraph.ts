@@ -1,6 +1,6 @@
 import {Graph, alg} from '@dagrejs/graphlib';
-import lodash_uniq from 'lodash/uniq';
-import lodash_flatten from 'lodash/flatten';
+// import lodash_uniq from 'lodash/uniq';
+// import lodash_flatten from 'lodash/flatten';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 // import {NodeSimple} from './NodeSimple'
 // import {GraphNode} from './concerns/GraphNode'
@@ -44,11 +44,11 @@ export class CoreGraph {
 	}
 
 	setNode(node: any) {
-		this._graph.setNode(node.graph_node_id(), {owner: node});
+		this._graph.setNode(node.graph_node_id, {owner: node});
 	}
 
 	removeNode(node: any) {
-		this._graph.removeNode(node.graph_node_id());
+		this._graph.removeNode(node.graph_node_id);
 	}
 
 	nodes_from_ids(ids: string[]) {
@@ -73,11 +73,11 @@ export class CoreGraph {
 	}
 
 	connect(src: any, dest: any): boolean {
-		const src_id = src.graph_node_id();
-		const dest_id = dest.graph_node_id();
+		const src_id = src.graph_node_id;
+		const dest_id = dest.graph_node_id;
 
 		if (this._graph.hasNode(src_id) && this._graph.hasNode(dest_id)) {
-			this._graph.setEdge(src.graph_node_id(), dest.graph_node_id());
+			this._graph.setEdge(src.graph_node_id, dest.graph_node_id);
 
 			// const scene_auto_updating = this.scene().auto_updating();
 			const scene_loading = this.scene().loading_controller.is_loading;
@@ -88,7 +88,7 @@ export class CoreGraph {
 			}
 
 			if (graph_has_cycle) {
-				this._graph.removeEdge(src.graph_node_id(), dest.graph_node_id());
+				this._graph.removeEdge(src.graph_node_id, dest.graph_node_id);
 				return false;
 			} else {
 				src.clear_successors_cache_with_predecessors();
@@ -103,8 +103,8 @@ export class CoreGraph {
 
 	disconnect(src: CoreGraphNode, dest: CoreGraphNode) {
 		if (src && dest) {
-			const src_id_s = src.id;
-			const dest_id_s = dest.id;
+			const src_id_s = src.graph_node_id;
+			const dest_id_s = dest.graph_node_id;
 			this._graph.removeEdge(src_id_s, dest_id_s);
 
 			src.dirty_controller.clear_successors_cache_with_predecessors();
@@ -123,7 +123,7 @@ export class CoreGraph {
 		}
 	}
 	// disconnect_predecessors(node){
-	// 	const node_id = node.graph_node_id();
+	// 	const node_id = node.graph_node_id;
 	// 	const predecessor_ids = this._graph.predecessors(node_id);
 	// 	if( predecessor_ids ){
 	// 		for(let predecessor_id of predecessor_ids){
@@ -132,7 +132,7 @@ export class CoreGraph {
 	// 	}
 	// }
 	// disconnect_successors(node){
-	// 	const node_id = node.graph_node_id();
+	// 	const node_id = node.graph_node_id;
 	// 	const successor_ids = this._graph.successors(node_id);
 	// 	if (successor_ids) {
 	// 		for(let successor_id of successor_ids){
@@ -145,20 +145,20 @@ export class CoreGraph {
 		return this._graph.predecessors(id) || [];
 	}
 	predecessors(node: CoreGraphNode) {
-		const ids = this.predecessor_ids(node.id);
+		const ids = this.predecessor_ids(node.graph_node_id);
 		return this.nodes_from_ids(ids);
 	}
 	successor_ids(id: string): CoreGraphNodeId[] {
 		return this._graph.successors(id) || [];
 	}
 	successors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.successor_ids(node.id) || [];
+		const ids = this.successor_ids(node.graph_node_id) || [];
 		return this.nodes_from_ids(ids);
 	}
 
 	private all_next_ids(node: CoreGraphNode, method: 'successor_ids' | 'predecessor_ids'): CoreGraphNodeId[] {
 		const ids: CoreGraphNodeId[] = [];
-		let next_ids = this[method](node.id);
+		let next_ids = this[method](node.graph_node_id);
 
 		while (next_ids.length > 0) {
 			const next_next_ids = [];

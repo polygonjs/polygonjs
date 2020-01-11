@@ -43,9 +43,9 @@ export class ControlsController {
 		if (controls_node) {
 			// keep last_control_node_id to ensure we don't apply the controls more than once
 			// OR it allow the viewer to remain in control of this
-			//if !@_last_control_node_id? || (@_last_control_node_id != controls_node.graph_node_id())
+			//if !@_last_control_node_id? || (@_last_control_node_id != controls_node.graph_node_id)
 			// but for now, the controls are still applied again after mouse up
-			const controls_id = controls_node.graph_node_id();
+			const controls_id = controls_node.graph_node_id;
 			let controls_aleady_applied = false;
 			if (
 				this._applied_controls_by_element_id[html_element.id] &&
@@ -62,7 +62,7 @@ export class ControlsController {
 				// request_container forces a cook
 				//controls_node.request_container (controls_container)=>
 				const controls = await controls_node.apply_controls(this.node.object, html_element);
-				const config = new CameraControlsConfig(this.node.graph_node_id(), controls_node, controls);
+				const config = new CameraControlsConfig(this.node.graph_node_id, controls_node, controls);
 				controls_node.set_from_camera_node(controls, this.node);
 				this.set_controls_events(controls);
 				return config;
@@ -80,7 +80,7 @@ export class ControlsController {
 		if (this._applied_controls_by_element_id[html_element.id]) {
 			const controls_node = this.controls_node();
 			if (controls_node) {
-				const controls_id = controls_node.graph_node_id();
+				const controls_id = controls_node.graph_node_id;
 				delete this._applied_controls_by_element_id[html_element.id][controls_id];
 			}
 		}

@@ -13,7 +13,7 @@ export class Centroid extends BaseMethod {
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency {
+	find_dependency(index_or_path: number | string): MethodDependency | null {
 		return this.create_dependency_from_index_or_path(index_or_path);
 	}
 
@@ -25,7 +25,7 @@ export class Centroid extends BaseMethod {
 			// })
 			if (args.length == 2) {
 				const index_or_path = args[0];
-				const component_name = args[1] as keyof Vector3Components;
+				const component_name = args[1] as keyof Vector3Like;
 				let container: GeometryContainer | null = null;
 				try {
 					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;

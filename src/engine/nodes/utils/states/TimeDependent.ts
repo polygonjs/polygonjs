@@ -31,9 +31,9 @@ export class TimeDependentState {
 	}
 
 	// protected _force_time_dependent() {
-	// 	const predecessor_ids = this.graph_predecessors().map((n) => n.graph_node_id());
+	// 	const predecessor_ids = this.graph_predecessors().map((n) => n.graph_node_id);
 	// 	const scene_context = this.scene().context();
-	// 	if (!lodash_includes(predecessor_ids, scene_context.graph_node_id())) {
+	// 	if (!lodash_includes(predecessor_ids, scene_context.graph_node_id)) {
 	// 		this.self.add_graph_input(scene_context);
 	// 	}
 	// }
@@ -74,9 +74,9 @@ export class TimeDependentState {
 // 		}
 
 // 		protected _force_time_dependent() {
-// 			const predecessor_ids = this.graph_predecessors().map((n) => n.graph_node_id());
+// 			const predecessor_ids = this.graph_predecessors().map((n) => n.graph_node_id);
 // 			const scene_context = this.scene().context();
-// 			if (!lodash_includes(predecessor_ids, scene_context.graph_node_id())) {
+// 			if (!lodash_includes(predecessor_ids, scene_context.graph_node_id)) {
 // 				this.self.add_graph_input(scene_context);
 // 			}
 // 		}

@@ -24,10 +24,13 @@ export class CoreTransform {
 	}
 
 	static matrix_from_node_with_transform_params(node: BaseNode): Matrix4 {
-		const t = node._param_t;
-		const r = node._param_r.clone().multiplyScalar(Math.PI / 180);
-		const s = node._param_s;
-		const scale = node._param_scale;
+		const t = node.params.vector3('t');
+		const r = node.params
+			.vector3('r')
+			.clone()
+			.multiplyScalar(Math.PI / 180);
+		const s = node.params.vector3('s');
+		const scale = node.params.float('scale');
 		return this.matrix(t, r, s, scale);
 	}
 
@@ -72,12 +75,12 @@ export class CoreTransform {
 		// 	if Math.abs(val - rounded) < EPSILON
 		// 		scale[c] = rounded
 
-		node.scene().batch_update(function() {
-			node.param('r').set(rotation.toArray());
-			node.param('t').set(position.toArray());
-			node.param('s').set(scale.toArray());
+		node.scene.batch_update(() => {
+			node.params.get('r')?.set(rotation.toArray());
+			node.params.get('t')?.set(position.toArray());
+			node.params.get('s')?.set(scale.toArray());
 			if (update_scale) {
-				node.param('scale').set(1);
+				node.params.get('scale')?.set(1);
 			}
 		});
 	}
@@ -89,9 +92,9 @@ export class CoreTransform {
 		const position = object.position.toArray();
 		const rotation = object.rotation.toArray().map((c) => c * (180 / Math.PI));
 
-		node.scene().batch_update(function() {
-			node.param('t').set(position);
-			node.param('r').set(rotation);
+		node.scene.batch_update(() => {
+			node.params.get('t')?.set(position);
+			node.params.get('r')?.set(rotation);
 		});
 	}
 

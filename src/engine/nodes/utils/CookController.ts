@@ -4,7 +4,7 @@ export class CookController {
 	_cooking: boolean = false;
 	_cooks_count: number = 0;
 	_max_cook_time: number = -1;
-	_cooking_dirty_timestamp: number;
+	_cooking_dirty_timestamp: number | null;
 	_cook_time_with_inputs: number;
 	_cook_time_with_inputs_start: number | null;
 	_cook_time_start: number | null;
@@ -15,6 +15,15 @@ export class CookController {
 
 	constructor(private node: BaseNode) {}
 
+	get is_cooking(): boolean {
+		return this._cooking === true;
+	}
+	get cooks_count(): number {
+		return this._cooks_count;
+	}
+	get cook_time(): number {
+		return this._cook_time;
+	}
 	// post_set_dirty: (original_trigger_graph_node, direct_trigger_graph_node)->
 	//this.emit 'node_dirty_updated'
 	// this.node_post_set_dirty()
@@ -29,7 +38,7 @@ export class CookController {
 	}
 	private _init_cooking_start_time(perf_active?: boolean) {
 		if (perf_active == null) {
-			perf_active = this.node._performance.recording_started();
+			perf_active = this.node.scene.performance.recording_started();
 		}
 		if (perf_active) {
 			this._cook_time_start = performance.now();
@@ -52,12 +61,12 @@ export class CookController {
 	}
 
 	async cook_main() {
-		if (this.is_cooking()) {
+		if (this.is_cooking) {
 			return;
 		}
 		this._init_cooking_state();
-		this._cooking_dirty_timestamp = this.node.dirty_timestamp();
-		const perf_active = this.node._performance.recording_started();
+		this._cooking_dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
+		const perf_active = this.node.scene.performance.recording_started();
 		if (perf_active) {
 			this._cook_time_with_inputs_start = performance.now();
 		}
@@ -87,11 +96,11 @@ export class CookController {
 		await this._start_cook_if_no_errors(input_contents);
 	}
 	async cook_main_without_inputs() {
-		if (this.is_cooking()) {
+		if (this.is_cooking) {
 			return;
 		}
 		this._init_cooking_state();
-		const perf_active = this.node._performance.recording_started();
+		const perf_active = this.node.scene.performance.recording_started();
 		this._init_cooking_start_time(perf_active);
 		this.node.states.error.clear();
 
@@ -106,31 +115,31 @@ export class CookController {
 	end_cook(message?: string | null) {
 		this._increase_cooks_count();
 
-		const dirty_timestamp = this.node.dirty_timestamp();
+		const dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
 		if (dirty_timestamp == null || dirty_timestamp === this._cooking_dirty_timestamp) {
 			this.node.remove_dirty_state();
-			this._terminate_cook_process(message);
+			this._terminate_cook_process();
 		} else {
 			this._cooking = false;
 			this.cook_main();
 		}
 	}
 
-	_terminate_cook_process(message?: string | null) {
-		if (this.is_cooking()) {
+	_terminate_cook_process() {
+		if (this.is_cooking) {
 			//this._unblock_params_dirty_propagation()
 			this._cooking = false;
 
-			// this._cook_eval_key = `${this.graph_node_id()}/${performance.now()}@${this.context().frame()}`;
+			// this._cook_eval_key = `${this.graph_node_id}/${performance.now()}@${this.context().frame()}`;
 
 			this._record_cook_time();
 			//console.log("END COOK: #{this.full_path()} #{this.cook_time()} (with inputs:#{this.cook_time_with_inputs()}) (cook count: #{@_cooks_count}): #{message}")
 			//this.notify_requesters()
-			return setTimeout(this.node.container_controller.notify_requesters.bind(this), 0);
+			setTimeout(this.node.container_controller.notify_requesters.bind(this), 0);
 		}
 	}
 	private _increase_cooks_count() {
-		if (this.is_cooking()) {
+		if (this.is_cooking) {
 			if (this._cook_time_start != null) {
 				this._cooks_count += 1;
 			}
@@ -146,7 +155,7 @@ export class CookController {
 	// }
 
 	_record_cook_time() {
-		if (this.node._performance.recording_started()) {
+		if (this.node.scene.performance.recording_started()) {
 			const cook_time_end = performance.now();
 
 			if (this._cook_time_with_inputs_start != null) {
@@ -166,8 +175,8 @@ export class CookController {
 			this._max_cook_time = Math.max(this._max_cook_time, this._cook_time);
 		}
 
-		if (this.node._performance.recording_started()) {
-			return this.node._performance.record_node_cook_data(this);
+		if (this.node.scene.performance.recording_started()) {
+			return this.node.scene.performance.record_node_cook_data(this);
 		}
 	}
 
@@ -181,7 +190,7 @@ export class CookController {
 		const input_containers = await this.node.io.inputs.eval_required_inputs_p();
 		// const inputs_eval_key = input_containers.map( c => c.eval_key()).join('-');
 
-		if (this.node._performance.recording_started()) {
+		if (this.node.scene.performance.recording_started()) {
 			this._cook_time_params_start = performance.now();
 		}
 
@@ -195,15 +204,6 @@ export class CookController {
 		return input_containers;
 	}
 
-	is_cooking(): boolean {
-		return this._cooking === true;
-	}
-	cooks_count(): number {
-		return this._cooks_count;
-	}
-	cook_time(): number {
-		return this._cook_time;
-	}
 	//this._time_with_precision(@_cook_time)
 	cook_time_with_inputs() {
 		return this._cook_time_with_inputs;

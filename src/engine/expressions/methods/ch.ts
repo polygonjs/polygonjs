@@ -1,6 +1,7 @@
-import {BaseMethod} from './_Base'
-import {DecomposedPath} from 'src/core/DecomposedPath'
-import {MethodDependency} from '../MethodDependency'
+import {BaseMethod} from './_Base';
+import {DecomposedPath} from 'src/core/DecomposedPath';
+import {MethodDependency} from '../MethodDependency';
+import {BaseParam} from 'src/engine/params/_Base';
 // import Walker from 'src/core/Walker';
 
 export class Ch extends BaseMethod {
@@ -9,20 +10,20 @@ export class Ch extends BaseMethod {
 	// }
 
 	static required_arguments() {
-		return [['string', 'path to param']]
+		return [['string', 'path to param']];
 	}
 
 	// dependencies(args: any[]): any[]{
 	// 	const path = args[0]
 	// 	return [this.get_referenced_param(path)]
 	// }
-	find_dependency(index_or_path: number | string): MethodDependency {
-		const decomposed_path = new DecomposedPath()
-		const param = this.get_referenced_param(
-			index_or_path as string,
-			decomposed_path
-		)
-		return this.create_dependency(param, index_or_path, decomposed_path)
+	find_dependency(index_or_path: number | string): MethodDependency | null {
+		const decomposed_path = new DecomposedPath();
+		const param = this.get_referenced_param(index_or_path as string, decomposed_path);
+		if (param) {
+			return this.create_dependency(param, index_or_path, decomposed_path);
+		}
+		return null;
 		// const reference_search_result = new ReferenceSearchResult()
 		// const param = this.get_referenced_param(index_or_path)
 		// if(param){
@@ -36,14 +37,16 @@ export class Ch extends BaseMethod {
 	// find_dependencies(index_or_path: number|string): MethodDependency{
 	// }
 
-	async process_arguments(args: any[]): Promise<any> {
+	async process_arguments(args: any[]): Promise<number> {
+		let val: number = 0;
 		if (args.length == 1) {
-			const path = args[0]
-			const val = await this.get_referenced_param(path).eval_p()
-			return val
-		} else {
-			return 0
+			const path = args[0];
+			const ref = this.get_referenced_param(path);
+			if (ref && ref instanceof BaseParam) {
+				val = await ref.eval_p();
+			}
 		}
+		return val;
 	}
 
 	// _get_param_value(path, callback){

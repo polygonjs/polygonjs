@@ -38,7 +38,7 @@ export class BaseObjNode extends BaseNode {
 	}
 
 	constructor() {
-		super();
+		super('BaseObjNode');
 		this.container_controller.init(ObjectContainer);
 		this._object = this._create_object_with_attributes();
 		// this._init_container_owner('Object');
@@ -84,7 +84,7 @@ export class BaseObjNode extends BaseNode {
 	_create_object_with_attributes() {
 		const object = this.create_object();
 		if (object != null) {
-			object.name = this.name();
+			object.name = this.name;
 			(object as Object3DWithNode).node = this;
 		}
 		return object;
@@ -152,7 +152,7 @@ export class BaseObjNode extends BaseNode {
 
 	// replaces Dirtyable (TODO: try and replace this method name)
 	protected _init_dirtyable_hook() {
-		this.self.add_post_dirty_hook(this._cook_main_without_inputs_later.bind(this));
+		this.add_post_dirty_hook(this._cook_main_without_inputs_later.bind(this));
 	}
 	private _cook_main_without_inputs_later() {
 		const c = () => {

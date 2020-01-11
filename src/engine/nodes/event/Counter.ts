@@ -2,7 +2,8 @@ import {CoreMath} from 'src/core/math/_Module';
 import {BaseEventNode} from './_Base';
 // import {BaseParam} from 'src/engine/params/_Base';
 import {Vector2} from 'three/src/math/Vector2';
-import {SceneContext} from 'src/core/context/Scene';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+// import {SceneContext} from 'src/core/context/Scene';
 
 export class CounterEventNode extends BaseEventNode {
 	@ParamF('counter') _param_counter: number;
@@ -22,9 +23,9 @@ export class CounterEventNode extends BaseEventNode {
 
 		this.add_post_dirty_hook(this._update_counter_if_required.bind(this));
 	}
-	_update_counter_if_required(dirty_trigger: SceneContext) {
-		if (dirty_trigger == this.scene().time_controller.context()) {
-			// TODO: this is fucking horrible
+	_update_counter_if_required(dirty_trigger: CoreGraphNode) {
+		if (dirty_trigger.graph_node_id == this.scene.time_controller.graph_node.graph_node_id) {
+			// TODO: this is horrible
 			if (this._param_counter == null) {
 				this._param_counter = this.params.float('counter');
 			}
@@ -52,11 +53,11 @@ export class CounterEventNode extends BaseEventNode {
 
 	async post_create_params() {
 		// this._start_value = await this.param('init').eval_p()
-		this.add_graph_input(this.scene().time_controller.context());
+		this.add_graph_input(this.scene.time_controller.graph_node);
 	}
 
 	update_counter() {
-		const scene = this.scene();
+		const scene = this.scene;
 		if (scene.frame_range[0] == scene.frame) {
 			this.params.set_float('counter', this.params.float('init'));
 		} else {

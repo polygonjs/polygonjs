@@ -26,7 +26,7 @@ export class Bbox extends BaseMethod {
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency {
+	find_dependency(index_or_path: number | string): MethodDependency | null {
 		return this.create_dependency_from_index_or_path(index_or_path);
 	}
 
@@ -57,7 +57,7 @@ export class Bbox extends BaseMethod {
 	private _get_value_from_container(
 		container: GeometryContainer,
 		vector_name: keyof BoxComponents,
-		component_name: keyof Vector3Components
+		component_name: keyof Vector3Like
 	) {
 		if (VECTOR_NAMES.indexOf(vector_name) >= 0) {
 			const bbox = container.bounding_box();

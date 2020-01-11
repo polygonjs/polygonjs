@@ -1,7 +1,7 @@
 // import lodash_filter from 'lodash/filter';
 // import lodash_uniq from 'lodash/uniq';
 // import lodash_flatten from 'lodash/flatten';
-import {Cooker} from './Cooker';
+// import {Cooker} from './Cooker';
 import {CoreGraphNode} from './CoreGraphNode';
 
 // not sure how I can have caller: DirtyableMixin if DirtyableMixin is not yet defined
@@ -30,7 +30,10 @@ export class DirtyController {
 	get dirty_count(): number {
 		return this._dirty_count;
 	}
-
+	add_post_dirty_hook(method: PostDirtyHook) {
+		this._post_dirty_hooks = this._post_dirty_hooks || [];
+		this._post_dirty_hooks.push(method);
+	}
 	// using a dirty block doesn't quite work, as I would need to be able
 	// to fetch the graph for all successors that haven't been blocked
 	// block_dirty_propagation: ->
@@ -87,11 +90,7 @@ export class DirtyController {
 		}
 	}
 
-	add_post_dirty_hook(method: PostDirtyHook) {
-		this._post_dirty_hooks = this._post_dirty_hooks || [];
-		this._post_dirty_hooks.push(method);
-	}
-	run_post_dirty_hooks(original_trigger_graph_node: CoreGraphNode) {
+	private run_post_dirty_hooks(original_trigger_graph_node: CoreGraphNode) {
 		if (this._post_dirty_hooks) {
 			for (let hook of this._post_dirty_hooks) {
 				hook(original_trigger_graph_node);
@@ -99,15 +98,15 @@ export class DirtyController {
 		}
 	}
 
-	cooker(): Cooker {
-		throw 'Dirtyable.cooker requires implementation';
-	}
+	// cooker(): Cooker {
+	// 	throw 'Dirtyable.cooker requires implementation';
+	// }
 	set_successors_dirty(original_trigger_graph_node?: CoreGraphNode): void {
-		const cooker = this.cooker();
+		const cooker = this.node.scene.cooker;
 		cooker.block();
 
 		const propagate = false;
-		this._cached_successors = this._cached_successors || this.node.all_successors(); //this._dirtyable_all_successors(original_trigger_graph_node);
+		this._cached_successors = this._cached_successors || this.node.graph_all_successors(); //this._dirtyable_all_successors(original_trigger_graph_node);
 		// successors = successors.filter(n=>!n.is_dirty())
 		for (let successor of this._cached_successors) {
 			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);
@@ -139,7 +138,7 @@ export class DirtyController {
 	}
 	clear_successors_cache_with_predecessors() {
 		this.clear_successors_cache();
-		for (let predecessor of this.node.all_predecessors()) {
+		for (let predecessor of this.node.graph_all_predecessors()) {
 			predecessor.dirty_controller.clear_successors_cache();
 		}
 	}

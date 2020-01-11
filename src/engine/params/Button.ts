@@ -1,10 +1,10 @@
-import {Single} from './_Single'
+import {Single} from './_Single';
 
 export class ButtonParam extends Single<null> {
-	constructor() {
-		super()
-	}
+	// constructor() {
+	// 	super()
+	// }
 	static type() {
-		return ParamType.BUTTON
+		return ParamType.BUTTON;
 	}
 }

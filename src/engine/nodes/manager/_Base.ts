@@ -5,7 +5,7 @@ export class BaseNodeManager extends BaseNode {
 		return NodeContext.MANAGER;
 	}
 
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super('BaseNodeManager');
+	// }
 }

@@ -35,7 +35,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	private _process_queue_start: number;
 
 	constructor() {
-		super();
+		super('ObjectsManagerNode');
 
 		this.children_controller.init(NodeContext.OBJ);
 
@@ -70,7 +70,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	}
 
 	add_to_queue(node: BaseObjNode) {
-		const id = node.graph_node_id();
+		const id = node.graph_node_id;
 		if (this._queued_nodes_by_id[id] == null) {
 			return (this._queued_nodes_by_id[id] = node);
 		}
@@ -108,7 +108,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 		this._process_queue_start = performance.now();
 		Promise.all(promises).then(() => {
-			POLY.log(`SCENE LOADED '${this.scene().name}' in ${performance.now() - this._process_queue_start}`);
+			POLY.log(`SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`);
 			// this.scene().performance().print()
 
 			// do the update here if there are no objects to load
@@ -121,7 +121,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	update_object(node: BaseObjNode) {
 		return new Promise((resolve, reject) => {
-			if (!this.scene().loading_controller.auto_updating) {
+			if (!this.scene.loading_controller.auto_updating) {
 				this.add_to_queue(node);
 				return resolve();
 			} else {
@@ -171,7 +171,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 			return null;
 		} else {
 			if (this._is_node_camera(node)) {
-				return this.scene().display_scene;
+				return this.scene.display_scene;
 			} else {
 				const node_input = node.io.inputs.input(0) as BaseObjNode;
 				if (node_input != null) {
@@ -244,7 +244,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		for (let geo_node of geo_nodes) {
 			const is_displayed = await geo_node.is_displayed();
 			if (is_displayed) {
-				node_by_id[geo_node.graph_node_id()] = geo_node;
+				node_by_id[geo_node.graph_node_id] = geo_node;
 			}
 		}
 		return node_by_id;
@@ -252,14 +252,12 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	async notify_geo_loaded(geo_node: GeoObjNode) {
 		this._loaded_geo_node_by_id = this._loaded_geo_node_by_id || {};
-		this._loaded_geo_node_by_id[geo_node.graph_node_id()] = true;
+		this._loaded_geo_node_by_id[geo_node.graph_node_id] = true;
 
 		this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
 
-		const scene = this.scene();
-
-		if (scene) {
-			scene.loading_controller.on_first_object_loaded();
+		if (this.scene) {
+			this.scene.loading_controller.on_first_object_loaded();
 
 			if (lodash_isEqual(Object.keys(this._loaded_geo_node_by_id), Object.keys(this._expected_geo_nodes))) {
 				this.update_on_all_objects_loaded();
@@ -268,9 +266,8 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	}
 
 	update_on_all_objects_loaded() {
-		const scene = this.scene();
-		scene.loading_controller.on_all_objects_loaded();
-		scene.cube_cameras_controller.on_all_objects_loaded();
+		this.scene.loading_controller.on_all_objects_loaded();
+		this.scene.cube_cameras_controller.on_all_objects_loaded();
 	}
 
 	add_to_parent_transform(node: BaseObjNode) {

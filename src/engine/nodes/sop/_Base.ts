@@ -53,7 +53,7 @@ export class BaseSopNode extends BaseNode {
 	// _objects: Object3D[] = []
 
 	constructor() {
-		super();
+		super('base sop');
 		this.container_controller.init(GeometryContainer);
 		this.flags.add_display();
 		this.flags.add_bypass();
@@ -243,11 +243,11 @@ export class BaseSopNode extends BaseNode {
 		// }
 		const material: Material = (object as Mesh).material as Material;
 		if (material) {
-			if (this.scene() == null) {
+			if (!this.scene) {
 				console.log('no scene');
 				throw 'no scene';
 			}
-			const material_node = CoreMaterial.node(this.scene(), material) as BaseMatNode;
+			const material_node = CoreMaterial.node(this.scene, material) as BaseMatNode;
 			if (material_node) {
 				material_node.add_render_hook(object);
 			}

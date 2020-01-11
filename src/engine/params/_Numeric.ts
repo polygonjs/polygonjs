@@ -15,13 +15,14 @@ interface NumericParamVisitor extends TypedParamVisitor {
 }
 
 export class TypedNumericParam<T> extends Single<T> {
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 
-	get is_numeric {
+	get is_numeric() {
 		return true;
 	}
+
 	accepts_visitor(visitor: NumericParamVisitor): any {
 		return visitor.visit_numeric_param(this);
 	}

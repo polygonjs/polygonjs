@@ -12,10 +12,10 @@ import lodash_sum from 'lodash/sum';
 // 	tr = 'tr',
 // }
 interface Corners2D {
-	bl: Vector2Components;
-	br: Vector2Components;
-	tl: Vector2Components;
-	tr: Vector2Components;
+	bl: Vector2Like;
+	br: Vector2Like;
+	tl: Vector2Like;
+	tr: Vector2Like;
 }
 interface Corners3D {
 	bl: Vector3;
@@ -71,7 +71,7 @@ export class PerspectiveCameraBackgroundController extends BaseBackgroundControl
 			quad.position.z = -0.9999 * far; //.copy(this._bg_center)
 		}
 	}
-	_update_corner_vector(vector: Vector3, coord: Vector2Components) {
+	_update_corner_vector(vector: Vector3, coord: Vector2Like) {
 		this._bg_raycaster.setFromCamera(coord, this.node.object);
 		vector
 			.copy(this._bg_raycaster.ray.direction)

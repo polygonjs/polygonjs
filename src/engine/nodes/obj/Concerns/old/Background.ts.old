@@ -119,7 +119,7 @@
 // 		// 		return this._background_texture
 // 		// 	}
 // 		// }
-// 		_update_corner_vector(vector: Vector3, coord: Vector2Components) {
+// 		_update_corner_vector(vector: Vector3, coord: .Vector2Like) {
 // 			this._bg_raycaster.setFromCamera(coord, this.self.object());
 // 			vector
 // 				.copy(this._bg_raycaster.ray.direction)

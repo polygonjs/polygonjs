@@ -22,9 +22,9 @@ export class StringParam extends Single<string> {
 	// private _input_string: string
 	// private _expression_controllers: ExpressionController[] = []
 
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 	static type() {
 		return ParamType.STRING;
 	}
@@ -52,7 +52,7 @@ export class StringParam extends Single<string> {
 		// but not the expression controllers caches
 		if (this._raw_input != value) {
 			// this.reset_expression_controllers()
-			this._expression_controller().reset();
+			this.expression_controller.reset();
 			this._raw_input = value;
 			// if (this.is_value_expression(new_value)) {
 			// 	this.set_expression(new_value)

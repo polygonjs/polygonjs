@@ -1,7 +1,7 @@
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {PointLight} from 'three/src/lights/PointLight';
-import {Color} from 'three/src/math/Color'
-import { Vector2 } from 'three/src/math/Vector2';
+import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three/src/math/Vector2';
 
 export class PointLightObj extends BaseLightTransformedObjNode {
 	@ParamC('color') _param_color: Color;
@@ -58,7 +58,7 @@ export class PointLightObj extends BaseLightTransformedObjNode {
 		this.object.intensity = this._param_intensity;
 		this.object.decay = this._param_decay;
 
-		this.object.distance = this._param_distance);
+		this.object.distance = this._param_distance;
 	}
 	update_shadow_params() {
 		this.object.castShadow = this._param_cast_shadows;

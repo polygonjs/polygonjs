@@ -26,7 +26,7 @@ export class RampParam extends AsCodeRamp(Single)<RampValue> {
 	static DEFAULT_VALUE = new RampValue('linear', [new RampPoint(0, 0), new RampPoint(1, 1)]);
 
 	constructor() {
-		super();
+		super('ramp');
 
 		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture.bind(this));
 	}
@@ -34,7 +34,7 @@ export class RampParam extends AsCodeRamp(Single)<RampValue> {
 		return visitor.visit_ramp_param(this);
 	}
 	is_raw_input_default(): boolean {
-		return this.value().is_equal(this.default_value());
+		return this.value.is_equal(this.default_value);
 	}
 
 	// convert_value(v) {
@@ -110,7 +110,7 @@ export class RampParam extends AsCodeRamp(Single)<RampValue> {
 		return (this._ramp_interpolant = this._ramp_interpolant || this._create_interpolant());
 	}
 	_create_interpolant() {
-		const points = this.value().points();
+		const points = this.value.points();
 		const sorted_points = lodash_sortBy(points, (point) => point.position());
 		const positions = new Float32Array(sorted_points.length);
 		const values = new Float32Array(sorted_points.length);

@@ -6,7 +6,7 @@ import {BaseFlag} from './Base';
 
 export class BypassFlag extends BaseFlag {
 	on_update() {
-		this.node.emit('bypass_flag_update');
+		this.node.emit(NodeEvent.FLAG_BYPASS_UPDATED);
 		this.node.set_dirty();
 	}
 }

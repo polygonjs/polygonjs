@@ -67,15 +67,15 @@ export class CoreTextureLoader {
 
 	constructor(private _node: BaseNode, private _param: BaseParam) {}
 
-	async load_texture_from_url_or_op(url: string): Promise<Texture | VideoTexture> {
-		let texture: Texture;
+	async load_texture_from_url_or_op(url: string): Promise<Texture | VideoTexture | null> {
+		let texture: Texture | null = null;
 		let found_node;
 
 		if (url.substring(0, 3) == 'op:') {
 			const node_path = url.substring(3);
 			found_node = CoreWalker.find_node(this._node, node_path);
 			if (found_node) {
-				if (found_node.is_a(BaseCopNode)) {
+				if (found_node instanceof BaseCopNode) {
 					const container = (await found_node.request_container()) as TextureContainer;
 					texture = container.texture();
 				} else {
@@ -91,7 +91,7 @@ export class CoreTextureLoader {
 			if (texture) {
 				// param.mark_as_referencing_asset(url)
 				if (this._param.options.texture_as_env()) {
-					texture = await CoreTextureLoader.set_texture_for_env(texture, this._node);
+					// texture = await CoreTextureLoader.set_texture_for_env(texture, this._node);
 				} else {
 					texture = CoreTextureLoader.set_texture_for_mapping(texture);
 				}
@@ -197,8 +197,11 @@ export class CoreTextureLoader {
 		const canvas = document.createElement('canvas');
 		canvas.width = img.width;
 		canvas.height = img.height;
-		canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-		return canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
+		const context = canvas.getContext('2d');
+		if (context) {
+			context.drawImage(img, 0, 0, img.width, img.height);
+			return context.getImageData(0, 0, img.width, img.height);
+		}
 	}
 
 	// TODO: typescript: check what type the pixel_data is
@@ -226,7 +229,7 @@ export class CoreTextureLoader {
 	// 	let attrib_name = attrib_name_elements[0];
 	// 	let component_offset = null;
 	// 	if (attrib_name_elements.length > 1) {
-	// 		const component = attrib_name_elements[1] as keyof Vector4Components
+	// 		const component = attrib_name_elements[1] as keyof Vector4Like
 	// 		component_offset = {x: 0, y: 1, z: 2, w: 3}[component];
 	// 	}
 
@@ -284,11 +287,11 @@ export class CoreTextureLoader {
 		return texture;
 	}
 
-	static async set_texture_for_env(texture: Texture, registerer: BaseNode) {
-		if (registerer._registered_env_map) {
-			POLY.renderers_controller.deregister_env_map(registerer._registered_env_map);
-		}
-		registerer._registered_env_map = await POLY.renderers_controller.register_env_map(texture);
-		return registerer._registered_env_map;
-	}
+	// static async set_texture_for_env(texture: Texture, registerer: BaseNode) {
+	// 	if (registerer._registered_env_map) {
+	// 		POLY.renderers_controller.deregister_env_map(registerer._registered_env_map);
+	// 	}
+	// 	registerer._registered_env_map = await POLY.renderers_controller.register_env_map(texture);
+	// 	return registerer._registered_env_map;
+	// }
 }

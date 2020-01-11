@@ -3,17 +3,22 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 import {CoreString} from 'src/core/String';
-import {NodeScene} from 'src/core/graph/CoreGraphNodeScene';
+// import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 export class Opdigits extends BaseMethod {
 	static required_arguments() {
 		return [['string', 'path to node']];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency {
-		const node = (<unknown>this.find_referenced_graph_node(index_or_path)) as BaseNode;
-		const name_node = node.name_graph_node();
-		return this.create_dependency((<unknown>name_node) as NodeScene, index_or_path);
+	find_dependency(index_or_path: number | string): MethodDependency | null {
+		const node = this.find_referenced_graph_node(index_or_path);
+		if (node) {
+			if (node instanceof BaseNode) {
+				const name_node = node.name_controller.graph_node;
+				return this.create_dependency(name_node, index_or_path);
+			}
+		}
+		return null;
 		// return [this.create_dependency_from_index_or_path(index_or_path)]
 	}
 	// find_dependencies(index_or_path: number|string): ReferenceSearchResult{

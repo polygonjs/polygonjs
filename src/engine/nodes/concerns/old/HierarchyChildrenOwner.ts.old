@@ -69,7 +69,7 @@
 
 // 		// 	if ((current_child_with_name = this._children[new_name]) != null) {
 // 		// 		// only return if found node is same as argument node, and if new_name is same as current_name
-// 		// 		if (node.name() === new_name && current_child_with_name.graph_node_id() === node.graph_node_id()) {
+// 		// 		if (node.name() === new_name && current_child_with_name.graph_node_id === node.graph_node_id) {
 // 		// 			return;
 // 		// 		}
 
@@ -257,7 +257,7 @@
 // 		// }
 
 // 		// _add_to_nodes_by_type(node: BaseNode) {
-// 		// 	const node_id = node.graph_node_id();
+// 		// 	const node_id = node.graph_node_id;
 // 		// 	const type = node.type();
 // 		// 	this._children_by_type[type] = this._children_by_type[type] || [];
 // 		// 	if (!lodash_includes(this._children_by_type[type], node_id)) {
@@ -266,7 +266,7 @@
 // 		// 	this.add_to_children_and_grandchildren_by_context(node);
 // 		// }
 // 		// _remove_from_nodes_by_type(node: BaseNode) {
-// 		// 	const node_id = node.graph_node_id();
+// 		// 	const node_id = node.graph_node_id;
 // 		// 	const type = node.type();
 // 		// 	if (this._children_by_type[type]) {
 // 		// 		const index = this._children_by_type[type].indexOf(node_id);
@@ -280,7 +280,7 @@
 // 		// 	this.remove_from_children_and_grandchildren_by_context(node);
 // 		// }
 // 		// add_to_children_and_grandchildren_by_context(node: BaseNode) {
-// 		// 	const node_id = node.graph_node_id();
+// 		// 	const node_id = node.graph_node_id;
 // 		// 	const type = node.node_context();
 // 		// 	this._children_and_grandchildren_by_context[type] = this._children_and_grandchildren_by_context[type] || [];
 // 		// 	if (!lodash_includes(this._children_and_grandchildren_by_context[type], node_id)) {
@@ -291,7 +291,7 @@
 // 		// 	}
 // 		// }
 // 		// remove_from_children_and_grandchildren_by_context(node: BaseNode) {
-// 		// 	const node_id = node.graph_node_id();
+// 		// 	const node_id = node.graph_node_id;
 // 		// 	const type = node.node_context();
 // 		// 	if (this._children_and_grandchildren_by_context[type]) {
 // 		// 		const index = this._children_and_grandchildren_by_context[type].indexOf(node_id);

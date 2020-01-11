@@ -18,7 +18,7 @@ export class CamerasController {
 	// 	this._is_active = true;
 	// }
 	set_camera_node(camera_node: BaseCameraObjNode) {
-		if (!this._camera_node || camera_node.graph_node_id() != this._camera_node.graph_node_id()) {
+		if (!this._camera_node || camera_node.graph_node_id != this._camera_node.graph_node_id) {
 			this._camera_node = camera_node;
 			// this._camera = camera_node.object;
 		}
@@ -40,7 +40,7 @@ export class CamerasController {
 	}
 	compute_size_and_aspect() {
 		this._update_size();
-		this._camera_node.scene().uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
+		this._camera_node.scene.uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
 		this._aspect = this._get_aspect();
 	}
 
@@ -74,7 +74,7 @@ export class CamerasController {
 			//this.current_camera_node.apply_controls()
 			//this.current_camera_node.prepare_for_viewer(this.aspect())
 			// const name = this.current_camera_node.name()
-			// const graph_node_id = this._camera_node.graph_node_id()
+			// const graph_node_id = this._camera_node.graph_node_id
 			/*const container = */ await this._camera_node.request_container(); // ensure the camera is cooked
 			await this._update_from_camera_container(); //container, graph_node_id)
 		}
@@ -86,7 +86,7 @@ export class CamerasController {
 	async _update_from_camera_container() {
 		//container, graph_node_id:number){
 		// ensure that we get the same as we requested
-		// if(graph_node_id == this._camera_node.graph_node_id()){
+		// if(graph_node_id == this._camera_node.graph_node_id){
 
 		// this.remove_cloned_camera()
 		// cloned_camera = this.current_camera_node.clone_camera()

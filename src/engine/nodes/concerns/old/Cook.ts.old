@@ -125,7 +125,7 @@
 // 				//this._unblock_params_dirty_propagation()
 // 				this._cooking = false;
 
-// 				// this._cook_eval_key = `${this.graph_node_id()}/${performance.now()}@${this.context().frame()}`;
+// 				// this._cook_eval_key = `${this.graph_node_id}/${performance.now()}@${this.context().frame()}`;
 
 // 				this._record_cook_time();
 // 				//console.log("END COOK: #{this.full_path()} #{this.cook_time()} (with inputs:#{this.cook_time_with_inputs()}) (cook count: #{@_cooks_count}): #{message}")

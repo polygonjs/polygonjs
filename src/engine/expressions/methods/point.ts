@@ -12,7 +12,7 @@ export class Point extends BaseMethod {
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency {
+	find_dependency(index_or_path: number | string): MethodDependency | null {
 		return this.create_dependency_from_index_or_path(index_or_path);
 	}
 

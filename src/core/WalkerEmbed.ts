@@ -11,15 +11,15 @@ export class CoreWalkerEmbed {
 		return SEPARATOR;
 	}
 
-	static find_node(node_src: BaseNode, path: string, decomposed_path?: DecomposedPath): BaseNode {
+	static find_node(node_src: BaseNode, path: string, decomposed_path?: DecomposedPath): BaseNode | null {
 		if (!node_src) {
-			return;
+			return null;
 		}
 
 		const elements: string[] = path.split(SEPARATOR).filter((e) => e.length > 0);
 		const first_element = elements[0];
 
-		let next_node: BaseNode = null;
+		let next_node: BaseNode | null = null;
 		if (path[0] === '/') {
 			const path_from_root = path.substr(1);
 			next_node = this.find_node(node_src.root, path_from_root, decomposed_path);

@@ -1,5 +1,5 @@
 import {PolyScene} from '../scene/PolyScene';
-import {CoreGraphNodeSceneNamed} from 'src/core/graph/CoreGraphNodeSceneNamed';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 // import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
 
 // import {BaseParam} from 'src/engine/params/_Base';
@@ -37,10 +37,11 @@ import {LifeCycleController} from './utils/LifeCycleController';
 import {ContainerController} from './utils/ContainerController';
 import {CookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
+import {NameController} from './utils/NameController';
 import {NodeSerializer} from './utils/Serializer';
 import {ParamsController} from './utils/ParamsController';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
-import {NameController} from './utils/NameController';
+import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/IOController';
 
 import CoreSelection from 'src/core/NodeSelection';
@@ -70,9 +71,14 @@ interface NodeDeletedEmitData {
 interface NodeCreatedEmitData {
 	child_node: BaseNode;
 }
+interface NodeUIUpdatedData {
+	x: number;
+	y: number;
+	comment: string;
+}
 
-export class BaseNode extends CoreGraphNodeSceneNamed {
-	private _parent_controller: HierarchyParentController;
+export class BaseNode extends CoreGraphNode {
+	private _parent_controller: HierarchyParentController | null;
 	private _children_controller: HierarchyChildrenController;
 	private _selection: CoreSelection;
 	private _ui_data: UIData;
@@ -84,6 +90,7 @@ export class BaseNode extends CoreGraphNodeSceneNamed {
 	private _container_controller: ContainerController;
 	private _cook_controller: CookController;
 	private _params_controller: ParamsController;
+	private _processing_context: ProcessingContext;
 	private _name_controller: NameController;
 	private _io: IOController;
 	get parent_controller(): HierarchyParentController {
@@ -119,35 +126,38 @@ export class BaseNode extends CoreGraphNodeSceneNamed {
 	get cook_controller(): CookController {
 		return (this._cook_controller = this._cook_controller || new CookController(this));
 	}
-	get params(): ParamsController {
-		return (this._params_controller = this._params_controller || new ParamsController(this));
+	get io(): IOController {
+		return (this._io = this._io || new IOController(this));
 	}
 	get name_controller(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
 	}
-	get io(): IOController {
-		return (this._io = this._io || new IOController(this));
+	get params(): ParamsController {
+		return (this._params_controller = this._params_controller || new ParamsController(this));
+	}
+	get processing_context(): ProcessingContext {
+		return (this._processing_context = this._processing_context || new ProcessingContext(this));
 	}
 
-	constructor() {
-		super();
+	// constructor() {
+	// 	super('base_node');
 
-		// this._init_node_scene()
-		// this._init_context_owner()
-		// this._init_dirtyable()
-		// this._init_graph_node()
+	// 	// this._init_node_scene()
+	// 	// this._init_context_owner()
+	// 	// this._init_dirtyable()
+	// 	// this._init_graph_node()
 
-		// this._init_bypass_flag();
-		// this._init_display_flag();
-		//this._init_context()
-		// this._init_cook();
-		// this._init_error();
-		// this._init_inputs();
-		// this._init_outputs();
-		// this._init_hierarchy_parent_owner();
-		//this._init_time_dependent()
-		// this._init_ui_data();
-	}
+	// 	// this._init_bypass_flag();
+	// 	// this._init_display_flag();
+	// 	//this._init_context()
+	// 	// this._init_cook();
+	// 	// this._init_error();
+	// 	// this._init_inputs();
+	// 	// this._init_outputs();
+	// 	// this._init_hierarchy_parent_owner();
+	// 	//this._init_time_dependent()
+	// 	// this._init_ui_data();
+	// }
 	static type(): string {
 		throw 'type to be overriden';
 	}
@@ -212,47 +222,47 @@ export class BaseNode extends CoreGraphNodeSceneNamed {
 
 	// params
 	create_params() {}
-	// add_param(
-	// 	type: ParamType.BOOLEAN,
-	// 	name: string,
-	// 	default_value: BooleanAsNumber | string,
-	// 	options?: ParamOptions
-	// ): BooleanParam;
-	// add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam|null;
-	// add_param(
-	// 	type: ParamType.COLOR,
-	// 	name: string,
-	// 	default_value: [number, number, number],
-	// 	options?: ParamOptions
-	// ): ColorParam;
-	// add_param(type: ParamType.FLOAT, name: string, default_value: number | string, options?: ParamOptions): FloatParam;
-	// add_param(
-	// 	type: ParamType.INTEGER,
-	// 	name: string,
-	// 	default_value: number | string,
-	// 	options?: ParamOptions
-	// ): IntegerParam;
-	// add_param(
-	// 	type: ParamType.OPERATOR_PATH,
-	// 	name: string,
-	// 	default_value: string,
-	// 	options?: ParamOptions
-	// ): OperatorPathParam;
-	// add_param(type: ParamType.RAMP, name: string, default_value: string, options?: ParamOptions): RampParam;
-	// add_param(type: ParamType.SEPARATOR, name: string, default_value: null, options?: ParamOptions): SeparatorParam;
-	// add_param(type: ParamType.STRING, name: string, default_value: string, options?: ParamOptions): StringParam;
-	// add_param(
-	// 	type: ParamType.VECTOR2,
-	// 	name: string,
-	// 	default_value: [number | string, number | string],
-	// 	options?: ParamOptions
-	// ): Vector2Param;
-	// add_param(
-	// 	type: ParamType.VECTOR3,
-	// 	name: string,
-	// 	default_value: [number | string, number | string, number | string],
-	// 	options?: ParamOptions
-	// ): Vector3Param;
+	add_param(
+		type: ParamType.BOOLEAN,
+		name: string,
+		default_value: BooleanAsNumber | string,
+		options?: ParamOptions
+	): BooleanParam;
+	add_param(type: ParamType.BUTTON, name: string, default_value: null, options?: ParamOptions): ButtonParam | null;
+	add_param(
+		type: ParamType.COLOR,
+		name: string,
+		default_value: [number, number, number],
+		options?: ParamOptions
+	): ColorParam;
+	add_param(type: ParamType.FLOAT, name: string, default_value: number | string, options?: ParamOptions): FloatParam;
+	add_param(
+		type: ParamType.INTEGER,
+		name: string,
+		default_value: number | string,
+		options?: ParamOptions
+	): IntegerParam;
+	add_param(
+		type: ParamType.OPERATOR_PATH,
+		name: string,
+		default_value: string,
+		options?: ParamOptions
+	): OperatorPathParam;
+	add_param(type: ParamType.RAMP, name: string, default_value: string, options?: ParamOptions): RampParam;
+	add_param(type: ParamType.SEPARATOR, name: string, default_value: null, options?: ParamOptions): SeparatorParam;
+	add_param(type: ParamType.STRING, name: string, default_value: string, options?: ParamOptions): StringParam;
+	add_param(
+		type: ParamType.VECTOR2,
+		name: string,
+		default_value: [number | string, number | string],
+		options?: ParamOptions
+	): Vector2Param;
+	add_param(
+		type: ParamType.VECTOR3,
+		name: string,
+		default_value: [number | string, number | string, number | string],
+		options?: ParamOptions
+	): Vector3Param;
 	add_param(
 		type: ParamType.VECTOR4,
 		name: string,
@@ -306,20 +316,22 @@ export class BaseNode extends CoreGraphNodeSceneNamed {
 
 	// emit
 
-	emit(event_name: 'node_created', data: NodeCreatedEmitData): void;
-	emit(event_name: 'node_deleted', data: NodeDeletedEmitData): void;
-	emit(event_name: 'node_name_update'): void;
-	emit(event_name: 'override_clonable_state_update'): void;
-	emit(event_name: 'node_named_outputs_updated'): void;
-	emit(event_name: 'node_named_inputs_updated'): void;
-	emit(event_name: 'node_inputs_updated'): void;
-	emit(event_name: 'params_updated'): void;
-	emit(event_name: 'ui_data_updated', data: object): void;
-	emit(event_name: 'node_error_updated'): void;
-	emit(event_name: 'bypass_flag_update'): void;
-	emit(event_name: 'display_flag_update'): void;
-	emit(event_name: string, data: object | null = null): void {
-		super.emit(event_name, data);
+	emit(event_name: NodeEvent.CREATED, data: NodeCreatedEmitData): void;
+	emit(event_name: NodeEvent.DELETED, data: NodeDeletedEmitData): void;
+	emit(event_name: NodeEvent.NAME_UPDATED): void;
+	emit(event_name: NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE): void;
+	emit(event_name: NodeEvent.NAMED_INPUTS_UPDATED): void;
+	emit(event_name: NodeEvent.NAMED_OUTPUTS_UPDATED): void;
+	emit(event_name: NodeEvent.INPUTS_UPDATED): void;
+	emit(event_name: NodeEvent.PARAMS_UPDATED): void;
+	emit(event_name: NodeEvent.UI_DATA_UPDATED, data: NodeUIUpdatedData): void;
+	emit(event_name: NodeEvent.ERROR_UPDATED): void;
+	emit(event_name: NodeEvent.FLAG_BYPASS_UPDATED): void;
+	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
+	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
+	emit(event_name: NodeEvent, data: object | null = null): void {
+		// super.emit(event_name, data);
+		this.scene.events_controller.dispatch(this, event_name, data);
 	}
 
 	// serializer

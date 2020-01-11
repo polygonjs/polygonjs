@@ -20,10 +20,10 @@ export class OperatorPathParam extends Single<string> {
 	_path: string;
 	_found_node: BaseNode | null;
 
-	constructor() {
-		super();
-		// this._node = null
-	}
+	// constructor() {
+	// 	super();
+	// 	// this._node = null
+	// }
 	static type() {
 		return ParamType.OPERATOR_PATH;
 	}

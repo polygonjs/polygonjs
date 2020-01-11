@@ -29,7 +29,7 @@ export class NodesController {
 		const masks = mask.split(' ');
 		// let geos = this.root().nodes_by_type('geo') as BaseNodeObj[];
 		let nodes = this.root.children() as BaseObjNode[];
-		nodes = nodes.filter((node) => CoreString.matches_one_mask(node.name(), masks));
+		nodes = nodes.filter((node) => CoreString.matches_one_mask(node.name, masks));
 		const objects = nodes.map((geo) => geo.object);
 		return lodash_compact(objects);
 	}
@@ -90,13 +90,13 @@ export class NodesController {
 			this._instanciated_nodes_by_context_and_type[context] || {};
 		this._instanciated_nodes_by_context_and_type[context][node_type] =
 			this._instanciated_nodes_by_context_and_type[context][node_type] || {};
-		this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id()] = node;
+		this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id] = node;
 	}
 
 	remove_from_instanciated_node(node: BaseNode) {
 		const context = node.node_context();
 		const node_type = node.type();
-		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id()];
+		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];
 	}
 
 	instanciated_nodes(context: NodeContext, node_type: string) {

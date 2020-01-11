@@ -2,7 +2,7 @@
 // import {Vector2} from 'three/src/math/Vector2'
 
 import {CoreWalker} from 'src/core/Walker';
-import {CoreGraphNodeSceneNamed} from 'src/core/graph/CoreGraphNodeSceneNamed';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 // import {NodeScene} from 'src/core/graph/NodeScene';
 // import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
 import {BaseNode} from 'src/engine/nodes/_Base';
@@ -49,7 +49,7 @@ export interface TypedParamVisitor {
 	visit_typed_param: (param: BaseParam) => any;
 }
 
-export abstract class TypedParam<T> extends CoreGraphNodeSceneNamed {
+export abstract class TypedParam<T> extends CoreGraphNode {
 	protected _raw_input: T;
 	protected _default_value: T;
 	protected _value: T;
@@ -126,6 +126,9 @@ export abstract class TypedParam<T> extends CoreGraphNodeSceneNamed {
 	get value(): T {
 		return this._value;
 	}
+	convert(raw_val: any): T {
+		return this._default_value;
+	}
 	set(new_value: T): void {}
 	get default_value() {
 		return this._default_value;
@@ -191,12 +194,12 @@ export abstract class TypedParam<T> extends CoreGraphNodeSceneNamed {
 	}
 
 	// emit
-	emit(event_name: 'param_visible_updated'): void;
-	emit(event_name: 'param_updated'): void;
-	emit(event_name: 'param_deleted'): void;
-	emit(event_name: string, data: object | null = null): void {
+	emit(event_name: ParamEvent.VISIBLE_UPDATED): void;
+	emit(event_name: ParamEvent.UPDATED): void;
+	emit(event_name: ParamEvent.DELETED): void;
+	emit(event_name: ParamEvent, data: object | null = null): void {
 		if (this.emit_controller.emit_allowed) {
-			super.emit(event_name, data);
+			this.scene.events_controller.dispatch(this, event_name, data);
 		}
 	}
 

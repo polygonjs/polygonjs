@@ -3,7 +3,7 @@ import {
 	ShaderMaterial
 } from 'three';
 
-import { Pass } from 'three';
+import { Pass } from './Pass';
 
 export class BloomPass extends Pass {
 

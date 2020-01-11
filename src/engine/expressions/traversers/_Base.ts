@@ -18,7 +18,7 @@ export abstract class BaseTraverser {
 		// throw this.error_message
 	}
 
-	traverse_node(node: jsep.Expression): string | undefined {
+	traverse_node(node: jsep.Expression): string | null {
 		const method_name = `traverse_${node.type}`;
 		const method = (this as any)[method_name];
 		if (method) {
@@ -26,6 +26,7 @@ export abstract class BaseTraverser {
 		} else {
 			this.set_error(`expression unknown node type: ${node.type}`);
 		}
+		return null;
 	}
 
 	protected abstract traverse_CallExpression(node: jsep.CallExpression): string | undefined; //{

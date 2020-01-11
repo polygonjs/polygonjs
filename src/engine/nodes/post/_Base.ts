@@ -12,7 +12,7 @@ export abstract class BasePostProcessNode extends BaseNode {
 	}
 
 	constructor() {
-		super();
+		super('BasePostProcessNode');
 		this.container_controller.init(PostProcessContainer);
 
 		// this.io.inputs.set_count_to_zero();

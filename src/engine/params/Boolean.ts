@@ -5,9 +5,9 @@
 import {TypedNumericParam} from './_Numeric';
 
 export class BooleanParam extends TypedNumericParam<boolean> {
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 	static type() {
 		return ParamType.BOOLEAN;
 	}

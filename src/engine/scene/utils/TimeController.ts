@@ -1,23 +1,26 @@
 // import {SceneContext} from 'src/core/context/Scene';
 import {PolyScene} from 'src/engine/scene/PolyScene';
-import {CoreGraphNodeScene} from 'src/core/graph/CoreGraphNodeScene';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 // import {BaseNode} from 'src/engine/nodes/_Base'
 
 type FrameRange = [number, number];
 
 export class TimeController {
 	protected self: PolyScene = (<unknown>this) as PolyScene;
-	_frame: number;
-	_graph_node_scene: CoreGraphNodeScene;
-	_frame_range: FrameRange = [1, 600];
-	_frame_range_locked: [boolean, boolean] = [true, true];
-	_playing: boolean = false;
+	private _frame: number;
+	private _graph_node: CoreGraphNode;
+	private _frame_range: FrameRange = [1, 600];
+	private _frame_range_locked: [boolean, boolean] = [true, true];
+	private _playing: boolean = false;
 	private _fps: number = 60;
 	private _frame_interval: number = 1000 / 60;
 
 	constructor(private scene: PolyScene) {
-		this._graph_node_scene = new CoreGraphNodeScene();
-		this._graph_node_scene.set_scene(this.scene);
+		this._graph_node = new CoreGraphNode('time controller');
+		this._graph_node.set_scene(this.scene);
+	}
+	get graph_node() {
+		return this._graph_node;
 	}
 
 	// init() {
@@ -47,23 +50,23 @@ export class TimeController {
 	}
 	set_frame_range(start_frame: number, end_frame: number) {
 		this._frame_range = [Math.floor(start_frame), Math.floor(end_frame)];
-		this.scene.emit_controller.store_commit('scene_frame_range_updated');
+		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	set_frame_range_locked(start_locked: boolean, end_locked: boolean) {
 		this._frame_range_locked = [start_locked, end_locked];
-		this.scene.emit_controller.store_commit('scene_frame_range_updated');
+		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	set_fps(fps: number) {
 		this._fps = Math.floor(fps);
 		this._frame_interval = 1000 / this._fps;
-		this.scene.emit_controller.store_commit('scene_frame_range_updated'); // TODO: typescript: replace with a more generic name dispatch_event
+		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED); // TODO: typescript: replace with a more generic name dispatch_event
 	}
 
 	set_frame(frame: number) {
 		frame = this._ensure_frame_within_bounds(frame);
 		if (frame != this.frame) {
 			this._frame = frame;
-			this.scene.emit_controller.store_commit('scene_frame_updated');
+			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
 			this.scene.uniforms_controller.update_frame_dependent_uniform_owners();
 		}
 	}
@@ -95,14 +98,14 @@ export class TimeController {
 	}
 	pause() {
 		this._playing = false;
-		this.scene.emit_controller.store_commit('scene_play_state_updated');
+		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
 	}
 	play() {
 		if (this._playing !== true) {
 			setTimeout(this.play_next_frame.bind(this), this._frame_interval);
 		}
 		this._playing = true;
-		this.scene.emit_controller.store_commit('scene_play_state_updated');
+		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
 	}
 	toggle_play_pause() {
 		if (this.playing) {

@@ -28,7 +28,7 @@ export class ErrorState {
 			this.node.set_container(null, `from error '${this._message}'`);
 		}
 
-		this.node.emit('node_error_updated');
+		this.node.emit(NodeEvent.ERROR_UPDATED);
 	}
 }
 

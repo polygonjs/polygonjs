@@ -79,6 +79,7 @@ const materials: MaterialsByString = {
 	}),
 };
 
+// TODO: typescript: check that this works after using uglifier
 export enum ObjectType {
 	MESH = 'MESH',
 	POINTS = 'POINTS',

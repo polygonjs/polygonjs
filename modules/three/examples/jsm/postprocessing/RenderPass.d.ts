@@ -5,7 +5,7 @@ import {
 	Color
 } from 'three';
 
-import { Pass } from 'three';
+import { Pass } from './Pass';
 
 export class RenderPass extends Pass {
 

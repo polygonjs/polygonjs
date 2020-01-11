@@ -35,7 +35,7 @@
 // 		// }
 
 // 		set_camera_node(camera_node: BaseCamera) {
-// 			if (!this._camera_node || camera_node.graph_node_id() != this._camera_node.graph_node_id()) {
+// 			if (!this._camera_node || camera_node.graph_node_id != this._camera_node.graph_node_id) {
 // 				this._camera_node = camera_node;
 // 				this._camera = camera_node.object();
 // 			}
@@ -138,7 +138,7 @@
 // 				//this.current_camera_node.apply_controls()
 // 				//this.current_camera_node.prepare_for_viewer(this.aspect())
 // 				// const name = this.current_camera_node.name()
-// 				// const graph_node_id = this._camera_node.graph_node_id()
+// 				// const graph_node_id = this._camera_node.graph_node_id
 // 				/*const container = */ await this._camera_node.request_container_p(); // ensure the camera is cooked
 // 				await this._update_from_camera_container(); //container, graph_node_id)
 // 			}
@@ -150,7 +150,7 @@
 // 		async _update_from_camera_container() {
 // 			//container, graph_node_id:number){
 // 			// ensure that we get the same as we requested
-// 			// if(graph_node_id == this._camera_node.graph_node_id()){
+// 			// if(graph_node_id == this._camera_node.graph_node_id){
 
 // 			// this.remove_cloned_camera()
 // 			// cloned_camera = this.current_camera_node.clone_camera()

@@ -5,7 +5,7 @@ import {
 } from 'three';
 import {
 	MTLLoader
-} from 'three';
+} from './MTLLoader';
 
 export class OBJLoader extends Loader {
 

@@ -18,7 +18,7 @@ export class BaseMatNode extends BaseNode {
 	// protected _update_methods: RenderHook[] = [];
 
 	constructor() {
-		super();
+		super('BaseMatNode');
 
 		// this._update_methods = [];
 
