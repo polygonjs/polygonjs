@@ -2,6 +2,7 @@ import {BaseObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 
 import {CoreTransform} from 'src/core/Transform';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 // class BaseModules extends Base {
 // 	constructor() {
@@ -11,9 +12,9 @@ import {CoreTransform} from 'src/core/Transform';
 // window.include_instance_methods(BaseModules, Dirtyable.instance_methods);
 // window.include_instance_methods(BaseModules, Transformed.instance_methods);
 
-export class NullObj extends BaseObjNode {
-	constructor() {
-		super();
+export class NullObjNode extends BaseObjNode {
+	constructor(scene: PolyScene) {
+		super(scene, 'NullObjNode');
 
 		//this._init_manager()
 		this.flags.add_display();

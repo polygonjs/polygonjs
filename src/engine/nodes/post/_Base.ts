@@ -6,14 +6,15 @@ import {PostProcessContainer} from 'src/engine/containers/PostProcess';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {BaseCameraObjNode} from '../obj/_BaseCamera';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export abstract class BasePostProcessNode extends BaseNode {
 	static node_context(): NodeContext {
 		return NodeContext.POST;
 	}
 
-	constructor() {
-		super('BasePostProcessNode');
+	constructor(scene: PolyScene) {
+		super(scene, 'BasePostProcessNode');
 		this.container_controller.init(PostProcessContainer);
 
 		// this.io.inputs.set_count_to_zero();

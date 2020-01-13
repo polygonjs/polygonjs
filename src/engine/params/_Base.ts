@@ -58,7 +58,7 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 	// protected _expression: string;
 	protected _node: BaseNode;
 	protected _parent_param: TypedMultipleParam<any>;
-	protected _components: FloatParam[];
+	protected _components: FloatParam[] = [];
 
 	private _options: OptionsController;
 	get options(): OptionsController {
@@ -82,7 +82,7 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 	}
 	private _ui_data: UIData;
 	get ui_data(): UIData {
-		return (this._ui_data = this._ui_data || new UIData(this));
+		return (this._ui_data = this._ui_data || new UIData(this.scene, this));
 	}
 
 	// constructor() {
@@ -90,12 +90,11 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 
 	// 	// this.add_post_dirty_hook(this._remove_node_param_cache.bind(this))
 	// }
-	initialize() {
-		this.init_components();
-		// this.init_expression()
-		// this._init_ui_data()
-	}
-	init_components() {}
+	// initialize() {
+	// 	this.init_components();
+	// 	// this.init_expression()
+	// 	// this._init_ui_data()
+	// }
 	accepts_visitor(visitor: TypedParamVisitor): any {
 		return visitor.visit_typed_param(this);
 	}
@@ -113,11 +112,8 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 	get is_numeric(): boolean {
 		return false;
 	}
-	get is_multiple(): boolean {
-		return false;
-	}
-	// name
 
+	// name
 	set_name(name: string) {
 		super.set_name(name);
 		// this.self.name_graph_node().set_dirty();
@@ -161,7 +157,8 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 		}
 
 		if (this.is_multiple) {
-			for (let c of this.components()) {
+			this.init_components();
+			for (let c of this.components) {
 				c.set_node(node);
 			}
 		}
@@ -191,10 +188,6 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 		return CoreWalker.relative_path(node, this);
 	}
 
-	components() {
-		return this._components;
-	}
-
 	// emit
 	emit(event_name: ParamEvent.VISIBLE_UPDATED): void;
 	emit(event_name: ParamEvent.UPDATED): void;
@@ -204,6 +197,22 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 			this.scene.events_controller.dispatch(this, event_name, data);
 		}
 	}
+
+	// multiple
+	get components() {
+		return this._components;
+	}
+	static get component_names(): string[] {
+		return [];
+	}
+	get component_names(): string[] {
+		const c = (<unknown>this.constructor) as TypedParam<T>;
+		return c.component_names;
+	}
+	get is_multiple(): boolean {
+		return this.component_names.length > 0;
+	}
+	init_components() {}
 
 	// expression
 	set_expression(expression: string | null) {

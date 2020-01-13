@@ -1,13 +1,14 @@
 // import CoreUIData from 'src/core/UIData'
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {BaseParam} from '../_Base';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class UIData extends CoreGraphNode {
 	private _folder_name: string | null;
 
-	constructor(private param: BaseParam) {
-		super('param ui data');
-		this.set_scene(this.param.scene);
+	constructor(scene: PolyScene, private param: BaseParam) {
+		super(scene, 'param ui data');
+		// this.set_scene(this.param.scene);
 
 		this.add_post_dirty_hook(this.update_visibility_and_remove_dirty.bind(this));
 	}

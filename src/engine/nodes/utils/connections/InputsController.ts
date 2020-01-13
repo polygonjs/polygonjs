@@ -40,6 +40,10 @@ export class InputsController {
 	private _override_clonable_state: boolean = false;
 
 	constructor(protected node: BaseNode, options: InputsControllerOptions = {}) {
+		this.set_options(options);
+	}
+
+	set_options(options: InputsControllerOptions) {
 		if (options['min_inputs']) {
 			this.set_min_inputs_count(options['min_inputs']);
 		}
@@ -90,8 +94,8 @@ export class InputsController {
 		}
 	}
 	private _create_graph_node_input(index: number): CoreGraphNode {
-		const graph_input_node = new CoreGraphNode(`input_${index}`);
-		graph_input_node.set_scene(this.node.scene);
+		const graph_input_node = new CoreGraphNode(this.node.scene, `input_${index}`);
+		// graph_input_node.set_scene(this.node.scene);
 		this.node.add_graph_input(graph_input_node);
 		return graph_input_node;
 	}

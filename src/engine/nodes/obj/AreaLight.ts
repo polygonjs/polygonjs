@@ -24,9 +24,7 @@ export class AreaLight extends BaseLightTransformedObjNode {
 	get object() {
 		return this._object;
 	}
-	constructor() {
-		super();
-	}
+
 	static type() {
 		return 'area_light';
 	}

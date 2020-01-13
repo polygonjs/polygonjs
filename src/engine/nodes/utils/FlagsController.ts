@@ -13,7 +13,7 @@ export class FlagsController {
 		if (!this._bypass) {
 			this._bypass = new BypassFlag(this.node);
 		} else {
-			console.warn('bypass flag already created');
+			console.warn('bypass flag already created', this.node);
 		}
 	}
 	get bypass() {
@@ -28,7 +28,7 @@ export class FlagsController {
 		if (!this._display) {
 			this._display = new DisplayFlag(this.node);
 		} else {
-			console.warn('display flag already created');
+			console.warn('display flag already created', this.node);
 		}
 	}
 	get display() {

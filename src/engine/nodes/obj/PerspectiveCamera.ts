@@ -27,10 +27,6 @@ export class PerspectiveCameraObjNode extends BaseCameraObjNode {
 		return PerspectiveCameraBackgroundController;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_object() {
 		return new THREE.PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}

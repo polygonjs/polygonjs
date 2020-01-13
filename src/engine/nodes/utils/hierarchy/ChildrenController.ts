@@ -43,8 +43,8 @@ export class HierarchyChildrenController {
 		if (dependent) {
 			this._is_dependent_on_children = dependent;
 			if (this._is_dependent_on_children) {
-				this._children_node = new CoreGraphNode(NODE_SIMPLE_NAME);
-				this._children_node.set_scene(this.node.scene);
+				this._children_node = new CoreGraphNode(this.node.scene, NODE_SIMPLE_NAME);
+				// this._children_node.set_scene(this.node.scene);
 				this.node.add_graph_input(this._children_node);
 			}
 		}
@@ -116,8 +116,8 @@ export class HierarchyChildrenController {
 				console.error(message);
 				throw message;
 			} else {
-				const child_node = new node_class(`child_node_${node_type}`);
-				child_node.set_scene(this.node.scene);
+				const child_node = new node_class(this.node.scene, `child_node_${node_type}`);
+				// child_node.set_scene(this.node.scene);
 				this.add_node(child_node);
 				return child_node;
 			}

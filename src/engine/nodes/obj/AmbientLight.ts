@@ -6,9 +6,7 @@ import {ParamType} from 'src/engine/poly/ParamType';
 export class AmbientLightObj extends BaseLightObjNode {
 	@ParamC('color') _param_color: Color;
 	@ParamC('intensity') _param_intensity: number;
-	constructor() {
-		super();
-	}
+
 	static type() {
 		return 'ambient_light';
 	}

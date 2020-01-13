@@ -5,13 +5,16 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 // type Constructor<T = {}> = new (...args: any[]) => T;
 export class CoreGraphNode {
-	protected _scene: PolyScene;
+	// protected _scene: PolyScene;
 	private _graph: CoreGraph;
 	private _graph_node_id: CoreGraphNodeId;
 	private _dirty_controller: DirtyController = new DirtyController(this);
 	// protected _name: string;
-	constructor(protected _name: string) {
+	constructor(protected _scene: PolyScene, protected _name: string) {
 		// super(...args);
+		this._graph_node_id = _scene.graph.next_id();
+		_scene.graph.setNode(this);
+		this._graph = _scene.graph;
 	}
 	get name() {
 		return this._name;
@@ -19,14 +22,14 @@ export class CoreGraphNode {
 	set_name(name: string) {
 		this._name = name;
 	}
-	set_scene(scene: PolyScene) {
-		this._scene = scene;
-		// this._graph_node = new CoreGraphNode();
-		// this._graph_node.init(this._scene.graph);
-		this._graph = scene.graph;
-		this._graph_node_id = this.graph.next_id();
-		this.graph.setNode(this);
-	}
+	// set_scene(scene: PolyScene) {
+	// 	this._scene = scene;
+	// 	// this._graph_node = new CoreGraphNode();
+	// 	// this._graph_node.init(this._scene.graph);
+	// 	this._graph = scene.graph;
+	// 	this._graph_node_id = this.graph.next_id();
+	// 	this.graph.setNode(this);
+	// }
 	// init(graph: CoreGraph) {
 	// 	this._graph = graph;
 	// 	this._id = this.graph.next_id();

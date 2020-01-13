@@ -3,7 +3,7 @@ import {CoreConstant} from 'src/core/geometry/Constant';
 import {ParamType} from 'src/engine/poly/ParamType';
 
 export class AttribTypeController {
-	static add_attrib_class_param(node: BaseSopNode, attrib_name = 'attrib_class') {
+	static add_attrib_class_param(node: BaseSopNode<any>, attrib_name = 'attrib_class') {
 		const keys = Object.keys(CoreConstant.ATTRIB_CLASS);
 
 		node.add_param(ParamType.INTEGER, attrib_name, CoreConstant.ATTRIB_CLASS.VERTEX, {

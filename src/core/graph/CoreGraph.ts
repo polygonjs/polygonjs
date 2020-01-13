@@ -43,36 +43,41 @@ export class CoreGraph {
 		return (<unknown>`${(this._next_id += 1)}`) as CoreGraphNodeId;
 	}
 
-	setNode(node: any) {
-		this._graph.setNode(node.graph_node_id, {owner: node});
+	setNode(node: CoreGraphNode) {
+		this._graph.setNode(node.graph_node_id, node);
 	}
 
-	removeNode(node: any) {
+	removeNode(node: CoreGraphNode) {
 		this._graph.removeNode(node.graph_node_id);
 	}
 
 	nodes_from_ids(ids: string[]) {
-		if (ids) {
-			let node: any;
-			return ids.map((id) => {
-				if ((node = this.node_from_id(id)) != null) {
-					return node;
-				} else {
-					return console.warn(`could not find node with id ${id}`);
-				}
-			});
-		} else {
-			return [];
+		const nodes: CoreGraphNode[] = [];
+		for (let id of ids) {
+			const node = this.node_from_id(id);
+			if (node) {
+				nodes.push(node);
+			}
 		}
+		return nodes;
+		// if (ids) {
+		// 	let node: any;
+		// 	return ids.map((id) => {
+		// 		if ((node = this.node_from_id(id)) != null) {
+		// 			return node;
+		// 		} else {
+		// 			return console.warn(`could not find node with id ${id}`);
+		// 		}
+		// 	});
+		// } else {
+		// 	return [];
+		// }
 	}
 	node_from_id(id: string) {
-		let node: any;
-		if ((node = this._graph.node(id)) != null) {
-			return node.owner;
-		}
+		return this._graph.node(id);
 	}
 
-	connect(src: any, dest: any): boolean {
+	connect(src: CoreGraphNode, dest: CoreGraphNode): boolean {
 		const src_id = src.graph_node_id;
 		const dest_id = dest.graph_node_id;
 
@@ -91,7 +96,7 @@ export class CoreGraph {
 				this._graph.removeEdge(src.graph_node_id, dest.graph_node_id);
 				return false;
 			} else {
-				src.clear_successors_cache_with_predecessors();
+				src.dirty_controller.clear_successors_cache_with_predecessors();
 
 				return true;
 			}
@@ -174,6 +179,7 @@ export class CoreGraph {
 			for (let id of next_next_ids) {
 				next_ids.push(id);
 			}
+			next_ids = next_next_ids;
 		}
 		return ids;
 	}

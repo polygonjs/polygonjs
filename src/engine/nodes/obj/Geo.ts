@@ -1,4 +1,4 @@
-import {BaseObjNode} from './_Base';
+import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 // const THREE = {Group};
 
@@ -12,15 +12,20 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {Transformed} from './Concerns/Transformed';
 
 // sop map
-import {BaseSopNode} from '../sop/_Base';
+// import {BaseSopNode} from '../sop/_Base';
 import {BoxSopNode} from '../sop/Box';
 import {TransformSopNode} from '../sop/Transform';
+import {NodeParamsConfig} from 'src/engine/nodes/utils/ParamsConfig';
+import {PolyScene} from 'src/engine/scene/PolyScene';
+
 interface SopNodeTypeMap {
 	box: BoxSopNode;
 	transform: TransformSopNode;
 }
 
-export class GeoObjNode extends BaseObjNode {
+class GeoObjParamConfig extends NodeParamsConfig {}
+
+export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 	private _display_node_controller = new DisplayNodeController(this);
 	static type() {
 		return 'geo';
@@ -29,8 +34,8 @@ export class GeoObjNode extends BaseObjNode {
 	// 	return NodeContext.SOP;
 	// }
 
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'GeoObjNode');
 
 		this.children_controller.init(NodeContext.SOP);
 
@@ -51,7 +56,7 @@ export class GeoObjNode extends BaseObjNode {
 	//base_layers_included: -> false
 
 	create_params() {
-		CoreTransform.create_params(this);
+		// CoreTransform.create_params(this);
 	}
 	//this.create_layers_params()
 
@@ -109,10 +114,12 @@ export class GeoObjNode extends BaseObjNode {
 			}
 		}
 	}
-	create_node<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K];
-	create_node(type: string): BaseSopNode {
-		return super.create_node(type) as BaseSopNode;
+	create_node<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K] {
+		return super.create_node(type) as SopNodeTypeMap[K];
 	}
+	// create_node(type: string): BaseSopNode<any> {
+	// 	return super.create_node(type) as  BaseSopNode<any>;
+	// }
 	on_create() {
 		// this.create_node('text')
 	}

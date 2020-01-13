@@ -15,9 +15,6 @@ export class DirectionalLightObj extends BaseLightTransformedObjNode {
 	static type() {
 		return 'directional_light';
 	}
-	constructor() {
-		super();
-	}
 
 	create_object() {
 		const object = new DirectionalLight();

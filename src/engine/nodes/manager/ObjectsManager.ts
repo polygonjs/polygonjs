@@ -23,6 +23,7 @@ import {CopObjNode} from 'src/engine/nodes/obj/Cop';
 
 import 'src/engine/Poly';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
 
@@ -52,8 +53,8 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	private _loaded_geo_node_by_id: Dictionary<boolean> = {};
 	private _process_queue_start: number;
 
-	constructor() {
-		super('ObjectsManagerNode');
+	constructor(scene: PolyScene) {
+		super(scene, 'ObjectsManagerNode');
 
 		this.children_controller.init(NodeContext.OBJ);
 

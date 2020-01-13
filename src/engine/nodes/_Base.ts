@@ -34,20 +34,14 @@ import {StatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
 import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController';
 import {LifeCycleController} from './utils/LifeCycleController';
-import {ContainerController} from './utils/ContainerController';
+import {TypedContainerController} from './utils/ContainerController';
 import {CookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer} from './utils/Serializer';
-import {
-	ParamsController,
-	ParamBoolean,
-	ParamFloat,
-	ParamString,
-	ParamVector2,
-	ParamVector3,
-	ParamColor,
-} from './utils/ParamsController';
+import {ParamsController} from './utils/ParamsController';
+import {NodeParamsConfig} from './utils/ParamsConfig';
+import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/ParamsValueAccessor';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/IOController';
@@ -72,8 +66,10 @@ import {ParamType} from '../poly/ParamType';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 
+import {TypedContainer} from 'src/engine/containers/_Base';
+
 export interface BaseNodeVisitor {
-	node: (node: BaseNode) => void;
+	visit_node: (node: BaseNode) => void;
 }
 
 interface NodeDeletedEmitData {
@@ -88,7 +84,7 @@ interface NodeUIUpdatedData {
 	comment: string;
 }
 
-export class BaseNode extends CoreGraphNode {
+export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig> extends CoreGraphNode {
 	private _parent_controller: HierarchyParentController | null;
 	private _children_controller: HierarchyChildrenController;
 	private _selection: CoreSelection;
@@ -98,9 +94,12 @@ export class BaseNode extends CoreGraphNode {
 	private _states: StatesController;
 	private _lifecycle: LifeCycleController;
 	private _serializer: NodeSerializer;
-	private _container_controller: ContainerController;
+	private _container_controller: TypedContainerController<T>; // = new T(this)
 	private _cook_controller: CookController;
+
 	private _params_controller: ParamsController;
+	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>(this)) as ParamsValueAccessorType<K>;
+
 	private _processing_context: ProcessingContext;
 	private _name_controller: NameController;
 	private _io: IOController;
@@ -131,8 +130,8 @@ export class BaseNode extends CoreGraphNode {
 	get serializer(): NodeSerializer {
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
-	get container_controller(): ContainerController {
-		return (this._container_controller = this._container_controller || new ContainerController(this));
+	get container_controller(): TypedContainerController<T> {
+		return (this._container_controller = this._container_controller || new TypedContainerController<T>(this));
 	}
 	get cook_controller(): CookController {
 		return (this._cook_controller = this._cook_controller || new CookController(this));
@@ -210,13 +209,13 @@ export class BaseNode extends CoreGraphNode {
 		return c.require_webgl2();
 	}
 
-	set_scene(scene: PolyScene) {
-		super.set_scene(scene);
-		// this.io.inputs._init_graph_node_inputs();
-	}
+	// set_scene(scene: PolyScene) {
+	// 	super.set_scene(scene);
+	// 	// this.io.inputs._init_graph_node_inputs();
+	// }
 
-	visit(visitor: BaseNodeVisitor) {
-		return visitor.node(this);
+	accepts_visitor(visitor: BaseNodeVisitor): any {
+		return visitor.visit_node(this);
 	}
 	set_parent(parent: BaseNode | null) {
 		this.parent_controller.set_parent(parent);
@@ -286,12 +285,6 @@ export class BaseNode extends CoreGraphNode {
 	within_param_folder(folder_name: string, callback: () => void) {
 		this._params_controller.within_param_folder(folder_name, callback);
 	}
-	static ParamBoolean = ParamBoolean;
-	static ParamFloat = ParamFloat;
-	static ParamString = ParamString;
-	static ParamVector2 = ParamVector2;
-	static ParamVector3 = ParamVector3;
-	static ParamColor = ParamColor;
 
 	// cook
 	cook(input_contents: any[]): any {
@@ -422,4 +415,4 @@ export class BaseNode extends CoreGraphNode {
 	// }
 }
 
-// export class BaseNode extends TypedNode<any> {}
+export class BaseNode extends TypedNode<any, any> {}

@@ -1,14 +1,24 @@
 import {BaseNode} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from 'src/renderers/RenderersController';
+import {NodesRegister, RegisterOptions, BaseNodeConstructor} from 'src/engine/poly/NodesRegister';
+import {NodeContext} from './poly/NodeContext';
 // import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
 
 export class Poly {
 	renderers_controller: RenderersController = new RenderersController();
+	nodes_register: NodesRegister = new NodesRegister();
+
 	scenes_by_uuid: Dictionary<PolyScene>;
 	_env: string;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
+	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
+		this.nodes_register.register_node(node, tab_menu_category, options);
+	}
+	registered_nodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNode> {
+		return this.nodes_register.registered_nodes(parent_context, type);
+	}
 	in_worker_thread() {
 		return false;
 	}
@@ -17,9 +27,6 @@ export class Poly {
 
 	player_mode(): boolean {
 		return false;
-	}
-	registered_nodes(test: string, test2: string): Dictionary<typeof BaseNode> {
-		return {};
 	}
 
 	log(message: string) {
@@ -43,4 +50,4 @@ declare global {
 	}
 }
 // make sure not to have library: 'POLY' in webpack for this to work
-window.POLY = new Poly();
+window.POLY = window.POLY || new Poly();

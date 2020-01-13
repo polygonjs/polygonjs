@@ -5,15 +5,15 @@ import {GeometryContainer} from 'src/engine/containers/Geometry';
 
 // import Walker from 'src/core/Walker';
 
-const VECTOR_NAMES = ['min', 'max', 'size', 'center'];
-const COMPONENT_NAMES = ['x', 'y', 'z'];
-
 interface BoxComponents {
 	min: Vector3;
 	max: Vector3;
 	size: Vector3;
 	center: Vector3;
 }
+
+const VECTOR_NAMES: Array<keyof BoxComponents> = ['min', 'max', 'size', 'center'];
+const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 export class Bbox extends BaseMethod {
 	// bbox(0).min.x

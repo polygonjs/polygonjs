@@ -7,6 +7,9 @@ import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
 import {CopObjNode} from 'src/engine/nodes/obj/Cop';
+
+import 'src/engine/poly/registers/All';
+
 window.create_renderer_if_none = () => {
 	const first_renderer = POLY.renderers_controller.first_renderer();
 	if (!first_renderer) {

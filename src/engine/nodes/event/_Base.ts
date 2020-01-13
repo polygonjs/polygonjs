@@ -1,14 +1,15 @@
 import {BaseNode} from '../_Base';
 import {EventContainer} from 'src/engine/containers/Event';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class BaseEventNode extends BaseNode {
 	static node_context(): NodeContext {
 		return NodeContext.EVENT;
 	}
 
-	constructor() {
-		super('BaseEventNode');
+	constructor(scene: PolyScene) {
+		super(scene, 'BaseEventNode');
 
 		this.container_controller.init(EventContainer);
 		// this._init_display_flag({

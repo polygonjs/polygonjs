@@ -12,10 +12,6 @@ import {CoreTransform} from 'src/core/Transform';
 // window.include_instance_methods(BaseModules, Transformed.instance_methods);
 
 export abstract class BaseLightTransformedObjNode extends BaseLightObjNode {
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.within_param_folder('transform', () => {
 			CoreTransform.create_params(this);

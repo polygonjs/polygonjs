@@ -5,7 +5,8 @@ import {Matrix4} from 'three/src/math/Matrix4';
 import {Euler} from 'three/src/math/Euler';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {TypedNode} from 'src/engine/nodes/_Base';
+type BaseNode = TypedNode<any, any>;
 import {ParamType} from 'src/engine/poly/ParamType';
 
 const ROTATION_ORDER = 'XYZ';

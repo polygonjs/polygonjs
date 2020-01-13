@@ -25,9 +25,6 @@ export class OrthographicCameraObjNode extends BaseCameraObjNode {
 		return OrthographicCameraBackgroundController;
 	}
 
-	constructor() {
-		super();
-	}
 	static type() {
 		return 'orthographic_camera';
 	}

@@ -1,14 +1,15 @@
-import {BaseManager} from './_BaseManager';
+import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
-export class CopObjNode extends BaseManager {
+export class CopObjNode extends BaseManagerObjNode {
 	static type() {
 		return 'cop';
 	}
 	// children_context(){ return NodeContext.COP }
 
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'CopObjNode');
 		this.children_controller.init(NodeContext.COP);
 		// this._init_manager();
 	}

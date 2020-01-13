@@ -1,5 +1,5 @@
 import {BaseNode} from '../_Base';
-import {BaseObjNode} from './_Base';
+import {TypedObjNode} from './_Base';
 import {FogExp2} from 'three/src/scenes/FogExp2';
 import {Fog} from 'three/src/scenes/Fog';
 import {Color} from 'three/src/math/Color';
@@ -22,18 +22,28 @@ const DEFAULT = {
 // export Fog = (function() {
 // 	let DEFAULT = undefined;
 // 	Fog = class Fog extends BaseModules {
-export class FogObjNode extends BaseObjNode {
-	@BaseNode.ParamColor('color') _param_color: Color;
-	@BaseNode.ParamBoolean('exponential') _param_exponential: boolean;
-	@BaseNode.ParamFloat('density') _param_density: number;
-	@BaseNode.ParamFloat('near') _param_near: number;
-	@BaseNode.ParamFloat('far') _param_far: number;
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/ParamsConfig';
+import {PolyScene} from 'src/engine/scene/PolyScene';
+class FogObjParamConfig extends NodeParamsConfig {
+	color = new ParamConfig<ParamType.COLOR>(DEFAULT.color.toArray() as [number, number, number]);
+	exponential = new ParamConfig<ParamType.BOOLEAN>(0);
+	density = new ParamConfig<ParamType.FLOAT>(1);
+	near = new ParamConfig<ParamType.FLOAT>(0, {range: [0, 100]});
+	far = new ParamConfig<ParamType.FLOAT>(100, {range: [0, 100]});
+}
+
+export class FogObjNode extends TypedObjNode<FogObjParamConfig> {
+	// @BaseNode.ParamColor('color') _param_color: Color;
+	// @BaseNode.ParamBoolean('exponential') _param_exponential: boolean;
+	// @BaseNode.ParamFloat('density') _param_density: number;
+	// @BaseNode.ParamFloat('near') _param_near: number;
+	// @BaseNode.ParamFloat('far') _param_far: number;
 
 	protected _linear_fog: Fog;
 	protected _linear_fogexp2: FogExp2;
 
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'FogObjNode');
 
 		this.flags.add_display();
 		// this._init_display_flag({
@@ -50,17 +60,17 @@ export class FogObjNode extends BaseObjNode {
 		return 'fog';
 	}
 
-	create_params() {
-		this.add_param(ParamType.COLOR, 'color', DEFAULT.color.toArray() as [number, number, number]);
-		this.add_param(ParamType.BOOLEAN, 'exponential', 0);
-		this.add_param(ParamType.FLOAT, 'density', DEFAULT.density);
-		this.add_param(ParamType.FLOAT, 'near', DEFAULT.near, {
-			range: [0, 100],
-		});
-		this.add_param(ParamType.FLOAT, 'far', DEFAULT.far, {
-			range: [0, 100],
-		});
-	}
+	// create_params() {
+	// 	this.add_param(ParamType.COLOR, 'color', DEFAULT.color.toArray() as [number, number, number]);
+	// 	this.add_param(ParamType.BOOLEAN, 'exponential', 0);
+	// 	this.add_param(ParamType.FLOAT, 'density', DEFAULT.density);
+	// 	this.add_param(ParamType.FLOAT, 'near', DEFAULT.near, {
+	// 		range: [0, 100],
+	// 	});
+	// 	this.add_param(ParamType.FLOAT, 'far', DEFAULT.far, {
+	// 		range: [0, 100],
+	// 	});
+	// }
 
 	// get_fog: (callback)->
 	// 	this.param('exponential').eval (val)=>
@@ -69,16 +79,16 @@ export class FogObjNode extends BaseObjNode {
 
 	cook() {
 		let fog: Fog | FogExp2;
-		if (this._param_exponential) {
-			this._linear_fogexp2.density = this._param_density;
+		if (this.pv.exponential) {
+			this._linear_fogexp2.density = this.pv.density;
 			fog = this._linear_fogexp2;
 		} else {
-			this._linear_fog.near = this._param_near;
-			this._linear_fog.far = this._param_far; // * (1/@_param_intensity)
+			this._linear_fog.near = this.pv.near;
+			this._linear_fog.far = this.pv.far; // * (1/@_param_intensity)
 			fog = this._linear_fog;
 		}
 
-		fog.color.copy(this._param_color);
+		fog.color.copy(this.pv.color);
 
 		this.scene.display_scene.fog = fog;
 

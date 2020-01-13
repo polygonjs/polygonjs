@@ -1,12 +1,14 @@
 import {Object3D} from 'three/src/core/Object3D';
 
-import {BaseNode, BaseNodeVisitor} from '../_Base';
-import {BaseSopNode} from '../sop/_Base';
+import {TypedNode, BaseNode, BaseNodeVisitor} from '../_Base';
+// import {BaseSopNode} from '../sop/_Base';
 // import {LookAt} from './Concerns/LookAt';
 import {ObjectContainer} from 'src/engine/containers/Object';
 import {LookAtController} from './utils/LookAtController';
 import {TransformController} from './utils/TransformController';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeParamsConfig} from '../utils/ParamsConfig';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
@@ -18,7 +20,7 @@ interface BaseObjNodeVisitor extends BaseNodeVisitor {
 	node_obj: (node: BaseObjNode) => void;
 }
 
-export class BaseObjNode extends BaseNode {
+export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectContainer, K> {
 	static node_context(): NodeContext {
 		return NodeContext.OBJ;
 	}
@@ -30,20 +32,20 @@ export class BaseObjNode extends BaseNode {
 	_sop_loaded: boolean = false;
 
 	protected _look_at_controller: LookAtController;
-	get look_at_controller() {
+	get look_at_controller(): LookAtController {
 		return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
 	}
 	protected _transform_controller: TransformController;
-	get transform_controller() {
+	get transform_controller(): TransformController {
 		return (this._transform_controller = this._transform_controller || new TransformController(this));
 	}
 
-	constructor() {
-		super('BaseObjNode');
-		this.container_controller.init(ObjectContainer);
+	constructor(scene: PolyScene, name: string) {
+		super(scene, 'BaseObjNode');
+		// this.container_controller.init(ObjectContainer);
 		this._object = this._create_object_with_attributes();
 		// this._init_container_owner('Object');
-		this.flags.add_display();
+		// this.flags.add_display();
 		this.name_controller.add_post_set_full_path_hook(this.set_group_name.bind(this));
 
 		// this._init_bypass_flag({
@@ -106,9 +108,9 @@ export class BaseObjNode extends BaseNode {
 	//
 
 	// TODO: typescript: there may be a better way to overload this
-	create_node(type: string): BaseSopNode {
-		return super.create_node(type) as BaseSopNode;
-	}
+	// create_node(type: string): BaseSopNode {
+	// 	return super.create_node(type) as BaseSopNode;
+	// }
 
 	request_display_node() {}
 	//
@@ -163,3 +165,6 @@ export class BaseObjNode extends BaseNode {
 		// this.eval_all_params().then( ()=>{ this.cook() } )
 	}
 }
+
+class BoxObjParamConfig extends NodeParamsConfig {}
+export class BaseObjNode extends TypedObjNode<BoxObjParamConfig> {}

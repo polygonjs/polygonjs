@@ -29,9 +29,10 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Color} from 'three/src/math/Color';
 // import {RampValue} from 'src/engine/params/ramp/RampValue';
-import 'src/engine/poly/ParamType';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
+import {RampValue} from 'src/engine/params/ramp/RampValue';
+import {Vector4} from 'three';
 // type ParamConstructorMap = {[key in ParamType]: any};
 
 // enum ParamType {
@@ -67,82 +68,37 @@ const ParamConstructorMap = {
 	[ParamType.VECTOR3]: Vector3Param,
 	[ParamType.VECTOR4]: Vector4Param,
 };
+type StringOrNumber = string | number;
+export type ParamInitValuesTypeMap = {
+	[ParamType.BOOLEAN]: BooleanAsNumber;
+	[ParamType.BUTTON]: null;
+	[ParamType.COLOR]: [StringOrNumber, StringOrNumber, StringOrNumber];
+	[ParamType.FLOAT]: StringOrNumber;
+	[ParamType.INTEGER]: StringOrNumber;
+	[ParamType.OPERATOR_PATH]: string;
+	[ParamType.RAMP]: RampValue;
+	[ParamType.SEPARATOR]: number;
+	[ParamType.STRING]: string;
+	[ParamType.VECTOR2]: [StringOrNumber, StringOrNumber];
+	[ParamType.VECTOR3]: [StringOrNumber, StringOrNumber, StringOrNumber];
+	[ParamType.VECTOR4]: [StringOrNumber, StringOrNumber, StringOrNumber, StringOrNumber];
+};
+export type ParamValuesTypeMap = {
+	[ParamType.BOOLEAN]: boolean;
+	[ParamType.BUTTON]: null;
+	[ParamType.COLOR]: Color;
+	[ParamType.FLOAT]: number;
+	[ParamType.INTEGER]: number;
+	[ParamType.OPERATOR_PATH]: string;
+	[ParamType.RAMP]: RampValue;
+	[ParamType.SEPARATOR]: null;
+	[ParamType.STRING]: string;
+	[ParamType.VECTOR2]: Vector2;
+	[ParamType.VECTOR3]: Vector3;
+	[ParamType.VECTOR4]: Vector4;
+};
 
 const NODE_SIMPLE_NAME = 'params';
-
-function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
-	const key_s = key as string;
-	if (key_s != `_param_${name}`) {
-		console.warn('param name inconsistent');
-	}
-	const param = target.params.get(name);
-	if (param && param.type != type) {
-		console.warn('param type inconsistent');
-	}
-}
-export const ParamBoolean = function ParamF(name: string) {
-	return <T extends BaseNode>(target: T, key: keyof T) => {
-		_ParamCheckNameConsistency(name, target, key, ParamType.BOOLEAN);
-		Object.defineProperty(target, key, {
-			get: () => target.params.boolean(name),
-		});
-	};
-};
-export const ParamFloat = function ParamF(name: string) {
-	return <T extends BaseNode>(target: T, key: keyof T) => {
-		_ParamCheckNameConsistency(name, target, key, ParamType.FLOAT);
-		Object.defineProperty(target, key, {
-			get: () => target.params.float(name),
-		});
-	};
-};
-export const ParamString = function ParamF(name: string) {
-	return <T extends BaseNode>(target: T, key: keyof T) => {
-		_ParamCheckNameConsistency(name, target, key, ParamType.STRING);
-		Object.defineProperty(target, key, {
-			get: () => target.params.string(name),
-		});
-	};
-};
-export const ParamVector2 = function ParamF(name: string) {
-	return <T extends BaseNode>(target: T, key: keyof T) => {
-		_ParamCheckNameConsistency(name, target, key, ParamType.VECTOR2);
-		Object.defineProperty(target, key, {
-			get: () => target.params.vector2(name),
-		});
-	};
-};
-export const ParamVector3 = function ParamF(name: string) {
-	return <T extends BaseNode>(target: T, key: keyof T) => {
-		_ParamCheckNameConsistency(name, target, key, ParamType.VECTOR3);
-		Object.defineProperty(target, key, {
-			get: () => target.params.vector3(name),
-		});
-	};
-};
-export const ParamColor = function ParamF(name: string) {
-	return <T extends BaseNode>(target: T, key: keyof T) => {
-		_ParamCheckNameConsistency(name, target, key, ParamType.COLOR);
-		Object.defineProperty(target, key, {
-			get: () => target.params.color(name),
-		});
-	};
-};
-// declare global {
-// 	const ParamB: typeof _ParamB;
-// 	const ParamF: typeof _ParamF;
-// 	const ParamS: typeof _ParamS;
-// 	const ParamV2: typeof _ParamV2;
-// 	const ParamV3: typeof _ParamV3;
-// 	const ParamC: typeof _ParamC;
-// }
-// declare global {
-// 	interface Window {
-// 		ParamB: typeof _ParamB;
-// 		ParamC: typeof _ParamC;
-// 	}
-// }
-// window.ParamC = _ParamC;
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
@@ -165,8 +121,8 @@ export class ParamsController {
 	private init_dependency_node() {
 		if (!this._params_node) {
 			// TODO: consider not having a params_node for nodes which have no parameters
-			this._params_node = new CoreGraphNode(NODE_SIMPLE_NAME);
-			this._params_node.set_scene(this.node.scene);
+			this._params_node = new CoreGraphNode(this.node.scene, NODE_SIMPLE_NAME);
+			// this._params_node.set_scene(this.node.scene);
 			this.node.add_graph_input(this._params_node);
 		}
 	}
@@ -309,10 +265,10 @@ export class ParamsController {
 			param.set_node(null);
 			delete this._params_by_name[param_name];
 			if (param.is_multiple) {
-				param.components().forEach((component) => {
+				for (let component of param.components) {
 					const child_name = component.name;
 					delete this._params_by_name[child_name];
-				});
+				}
 			}
 
 			// const name_index = this._param_names.indexOf(param_name)
@@ -354,13 +310,13 @@ export class ParamsController {
 					return null;
 				}
 			}
-			const param: BaseParam = new constructor(name);
+			const param: BaseParam = new constructor(this.node.scene, name);
 			param.set_default_value(default_value);
 			param.options.set(options);
 
-			param.set_scene(this.node.scene);
+			// param.set_scene(this.node.scene);
 			param.set_name(name);
-			param.initialize();
+			// param.initialize();
 			param.ui_data.set_folder_name(this.current_param_folder_name());
 
 			this._params_by_name[param.name] = param;
@@ -369,7 +325,7 @@ export class ParamsController {
 			param.set_node(this.node);
 
 			if (param.is_multiple) {
-				for (let component of param.components()) {
+				for (let component of param.components) {
 					this._params_by_name[component.name] = component;
 				}
 			}

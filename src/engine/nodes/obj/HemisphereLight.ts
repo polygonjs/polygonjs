@@ -17,10 +17,6 @@ export class HemisphereLightObj extends BaseLightObjNode {
 		return 'hemisphere_light';
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_object() {
 		return new HemisphereLight();
 	}

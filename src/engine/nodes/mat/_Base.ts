@@ -7,6 +7,7 @@ import {Material} from 'three/src/materials/Material';
 import {MaterialContainer} from 'src/engine/containers/Material';
 import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 // type RenderHook = (object: Object3D) => void;
 
@@ -18,8 +19,8 @@ export class BaseMatNode extends BaseNode {
 	protected _material: Material;
 	// protected _update_methods: RenderHook[] = [];
 
-	constructor() {
-		super('BaseMatNode');
+	constructor(scene: PolyScene) {
+		super(scene, 'BaseMatNode');
 
 		// this._update_methods = [];
 

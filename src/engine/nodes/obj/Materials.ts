@@ -1,14 +1,15 @@
-import {BaseManager} from './_BaseManager';
+import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
-export class MaterialsObjNode extends BaseManager {
+export class MaterialsObjNode extends BaseManagerObjNode {
 	static type() {
 		return 'materials';
 	}
 	// children_context(){ return NodeContext.MAT }
 
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'GeoObjNode');
 		this.children_controller.init(NodeContext.MAT);
 		// TODO: typescript
 		// this._init_manager({

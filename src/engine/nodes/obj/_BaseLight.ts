@@ -1,6 +1,7 @@
 import {BaseObjNode} from './_Base';
 import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 // class BaseModules extends Base {
 // 	constructor() {
@@ -15,8 +16,8 @@ export abstract class BaseLightObjNode extends BaseObjNode {
 	get object() {
 		return this._object;
 	}
-	constructor() {
-		super();
+	constructor(scene: PolyScene, name: string) {
+		super(scene, name);
 		this.flags.add_display();
 		this._init_dirtyable_hook();
 	}

@@ -13,9 +13,13 @@ const DEFAULT_PARAMS = {
 	PIVOT: [0, 0, 0] as [number, number, number],
 };
 
-export class TransformSopNode extends BaseSopNode {
-	@BaseNode.ParamString('group') _param_group: string;
-	@BaseNode.ParamVector3('pivot') _param_pivot: Vector3;
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/ParamsConfig';
+class TransformSopParamConfig extends NodeParamsConfig {
+	group = new ParamConfig<ParamType.STRING>('');
+	pivot = new ParamConfig<ParamType.VECTOR3>([0, 0, 0]);
+}
+
+export class TransformSopNode extends BaseSopNode<TransformSopParamConfig> {
 	static type() {
 		return 'transform';
 	}
@@ -44,24 +48,24 @@ export class TransformSopNode extends BaseSopNode {
 		const objects = input_contents[0].objects();
 		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
 
-		if (this._param_group === '') {
+		if (this.pv.group === '') {
 			for (let object of objects) {
 				let geometry;
 				if ((geometry = object.geometry) != null) {
-					geometry.translate(-this._param_pivot.x, -this._param_pivot.y, -this._param_pivot.z);
+					geometry.translate(-this.pv.pivot.x, -this.pv.pivot.y, -this.pv.pivot.z);
 					geometry.applyMatrix(matrix);
-					geometry.translate(this._param_pivot.x, this._param_pivot.y, this._param_pivot.z);
+					geometry.translate(this.pv.pivot.x, this.pv.pivot.y, this.pv.pivot.z);
 				} else {
 					object.applyMatrix(matrix);
 				}
 			}
 		} else {
 			const core_group = CoreGroup.from_objects(objects);
-			const points = core_group.points_from_group(this._param_group);
+			const points = core_group.points_from_group(this.pv.group);
 			for (let point of points) {
-				const position = point.position().sub(this._param_pivot);
+				const position = point.position().sub(this.pv.pivot);
 				position.applyMatrix4(matrix);
-				point.set_position(position.add(this._param_pivot));
+				point.set_position(position.add(this.pv.pivot));
 			}
 		}
 

@@ -17,8 +17,8 @@ export class TimeController {
 	private _frame_interval: number = 1000 / 60;
 
 	constructor(private scene: PolyScene) {
-		this._graph_node = new CoreGraphNode('time controller');
-		this._graph_node.set_scene(this.scene);
+		this._graph_node = new CoreGraphNode(scene, 'time controller');
+		// this._graph_node.set_scene(this.scene);
 	}
 	get graph_node() {
 		return this._graph_node;

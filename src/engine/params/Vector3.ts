@@ -9,7 +9,7 @@ export class Vector3Param extends TypedMultipleParam<Vector3> {
 	static type() {
 		return ParamType.VECTOR3;
 	}
-	static component_names() {
+	static get component_names() {
 		return COMPONENT_NAMES_VECTOR3;
 	}
 

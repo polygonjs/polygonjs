@@ -1,4 +1,4 @@
-import {BaseContainer} from '../../containers/_Base';
+import {BaseContainer, TypedContainer} from '../../containers/_Base';
 // import {ContainerModule} from '../../containers/_Module';
 import {BaseNode} from '../_Base';
 
@@ -7,17 +7,17 @@ import {BaseNode} from '../_Base';
 
 // type RequestContainerCallback = (container: BaseContainer)=>void
 
-type Callback = (container: BaseContainer) => void;
+// type Callback = (container: TypedContainer<any> | undefined) => void;
 
-export class ContainerController {
-	_callbacks: Callback[] = [];
-	protected _container: BaseContainer;
-	protected _container_class: typeof BaseContainer;
+export class TypedContainerController<T extends TypedContainer<any>> {
+	_callbacks: ((container: T | undefined) => void)[] = [];
+	protected _container: T;
+	// protected _container_class: typeof T;
 
 	constructor(protected node: BaseNode) {}
 
 	init(container_class: typeof BaseContainer) {
-		this._container = new container_class(this.node);
+		this._container = new container_class(this.node) as T;
 	}
 	get container() {
 		return this._container;
@@ -46,7 +46,7 @@ export class ContainerController {
 	// 	}
 	// }
 
-	request_container(): Promise<BaseContainer> {
+	request_container(): Promise<T> {
 		return new Promise((resolve, reject) => {
 			// if window.test
 			// 	window.t1 = performance.now()
@@ -116,7 +116,7 @@ export class ContainerController {
 			return null;
 		}
 	}
-	notify_requesters(container?: BaseContainer) {
+	notify_requesters(container?: T) {
 		// make a copy of the callbacks first,
 		// to ensure that new ones are not added to this list
 		// in side effects from those callbacks
@@ -145,3 +145,5 @@ export class ContainerController {
 		// })();
 	}
 }
+
+export class BaseContainerController extends TypedContainerController<any> {}

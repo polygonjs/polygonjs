@@ -53,32 +53,23 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	accepts_visitor(visitor: MultipleParamVisitor): any {
 		return visitor.visit_typed_multiple_param(this);
 	}
-	static component_names(): string[] {
-		return [];
-	}
-	component_names(): string[] {
-		const c = (<unknown>this.constructor) as TypedMultipleParam<T>;
-		return c.component_names();
-	}
+
 	init_components() {
-		const names = this.component_names();
-		for (let component_name of names) {
-			const component = new this._components_contructor(`${this.name}${name}`);
+		for (let component_name of this.component_names) {
+			const component = new this._components_contructor(this.scene, `${this.name}${name}`);
 
 			component.set_default_value((this._default_value as any)[component_name]);
 			component.options.copy(this.options);
 
-			component.set_scene(this.scene);
+			// component.set_scene(this.scene);
 			component.set_name(`${this.name}${name}`);
 			component.set_parent_param(this);
-			component.initialize();
-			return component;
+
+			// component.initialize();
+			this._components.push(component);
 		}
 	}
 
-	get is_multiple() {
-		return true;
-	}
 	get is_numeric() {
 		return true;
 	}

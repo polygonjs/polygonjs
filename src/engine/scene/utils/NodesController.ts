@@ -18,8 +18,8 @@ export class NodesController {
 	_instanciated_nodes_by_context_and_type: Dictionary<Dictionary<Dictionary<BaseNode>>> = {};
 
 	init() {
-		this._root = new ObjectsManagerNode();
-		this._root.set_scene(this.scene);
+		this._root = new ObjectsManagerNode(this.scene);
+		// this._root.set_scene(this.scene);
 		this._root.init_display_scene();
 	}
 

@@ -17,21 +17,21 @@ export class IOController {
 
 	// inputs
 	init_inputs(options: InputsControllerOptions) {
-		this._inputs = this._inputs || new InputsController(this.node, options);
+		this.inputs.set_options(options);
 	}
 	get inputs() {
-		return this._inputs;
+		return (this._inputs = this._inputs || new InputsController(this.node));
 	}
 	has_inputs() {
 		return this._inputs != null;
 	}
 
 	// outputs
-	init_outputs() {
-		this._outputs = this._outputs || new OutputsController(this.node);
-	}
+	// init_outputs() {
+	// 	this._outputs = this._outputs || new OutputsController(this.node);
+	// }
 	get outputs() {
-		return this._outputs;
+		return (this._outputs = this._outputs || new OutputsController(this.node));
 	}
 	has_outputs() {
 		return this._outputs != null;

@@ -5,7 +5,7 @@ import {CoreConstant} from 'src/core/geometry/Constant';
 import {ParamType} from 'src/engine/poly/ParamType';
 
 export class ObjectTypeParamController {
-	static add_object_type_param(node: BaseSopNode) {
+	static add_object_type_param(node: BaseSopNode<any>) {
 		node.add_param(
 			ParamType.INTEGER,
 			'object_type',

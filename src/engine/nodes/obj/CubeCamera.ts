@@ -11,6 +11,7 @@ import {CoreTransform} from 'src/core/Transform';
 import {BaseObjNode} from './_Base';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {ParamType} from 'src/engine/poly/ParamType';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 // import {Transformed} from './Concerns/Transformed';
 
 const LIGHT_TYPES = ['HemisphereLight', 'SpotLight', 'PointLight'];
@@ -29,8 +30,8 @@ export class CubeCameraObjNode extends BaseObjNode {
 	private _cube_camera_objects: Object3D[];
 	private _cube_camera: CubeCamera;
 
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'CubeCameraObjNode');
 
 		// this._init_display_flag({
 		// 	has_display_flag: false,

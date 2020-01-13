@@ -10,7 +10,7 @@ export class Vector2Param extends TypedMultipleParam<Vector2> {
 		return ParamType.VECTOR2;
 	}
 
-	static component_names() {
+	static get component_names() {
 		return COMPONENT_NAMES_VECTOR2;
 	}
 

@@ -8,7 +8,7 @@ export class ColorParam extends TypedMultipleParam<Color> {
 	static type() {
 		return ParamType.COLOR;
 	}
-	static component_names() {
+	static get component_names() {
 		return COMPONENT_NAMES_COLOR;
 	}
 

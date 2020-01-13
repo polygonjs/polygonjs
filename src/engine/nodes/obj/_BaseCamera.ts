@@ -19,6 +19,7 @@ import {ThreejsViewer} from 'src/engine/viewers/Threejs';
 import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -76,8 +77,8 @@ export class BaseCameraObjNode extends BaseObjNode {
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
 
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'BaseCamera');
 
 		this.io.inputs.set_count_to_one_max();
 		this._init_dirtyable_hook();

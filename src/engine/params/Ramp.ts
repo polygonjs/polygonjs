@@ -11,6 +11,7 @@ import {RampValue, RampPoint} from './ramp/RampValue';
 
 // import {AsCodeRamp} from './concerns/visitors/Ramp';
 import {ParamType} from '../poly/ParamType';
+import {PolyScene} from '../scene/PolyScene';
 
 interface RampParamVisitor extends TypedParamVisitor {
 	visit_ramp_param: (param: RampParam) => any;
@@ -26,8 +27,8 @@ export class RampParam extends Single<RampValue> {
 
 	static DEFAULT_VALUE = new RampValue('linear', [new RampPoint(0, 0), new RampPoint(1, 1)]);
 
-	constructor() {
-		super('ramp');
+	constructor(scene: PolyScene) {
+		super(scene, 'ramp');
 
 		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture.bind(this));
 	}

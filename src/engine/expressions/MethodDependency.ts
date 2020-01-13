@@ -18,9 +18,9 @@ export class MethodDependency extends CoreGraphNode {
 		public path_argument: number | string,
 		public decomposed_path: DecomposedPath
 	) {
-		super('MethodDependency');
+		super(param.scene, 'MethodDependency');
 
-		this.set_scene(this.param.scene);
+		// this.set_scene(this.param.scene);
 
 		this.add_post_dirty_hook(this._update_from_name_change.bind(this));
 	}

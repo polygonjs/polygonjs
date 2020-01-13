@@ -3,6 +3,7 @@ import {PointLight} from 'three/src/lights/PointLight';
 import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {ParamType} from 'src/engine/poly/ParamType';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class PointLightObj extends BaseLightTransformedObjNode {
 	@ParamC('color') _param_color: Color;
@@ -21,8 +22,8 @@ export class PointLightObj extends BaseLightTransformedObjNode {
 	static type() {
 		return 'point_light';
 	}
-	constructor() {
-		super();
+	constructor(scene: PolyScene) {
+		super(scene, 'PointLightObjNode');
 		this.io.inputs.set_count_to_one_max();
 	}
 

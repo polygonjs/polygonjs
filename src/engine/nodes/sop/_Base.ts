@@ -6,7 +6,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 // import lodash_includes from 'lodash/includes';
 import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
-import {BaseNode} from '../_Base';
+import {TypedNode} from '../_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
 import {CoreGroup} from 'src/core/geometry/Group';
 import {CoreMaterial} from 'src/core/geometry/Material';
@@ -15,6 +15,9 @@ import {ObjectType} from 'src/core/geometry/Constant';
 import {GeometryContainer} from 'src/engine/containers/Geometry';
 import {BaseMatNode} from '../mat/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+
+import {NodeParamsConfig} from '../utils/ParamsConfig';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 // import * as Container from '../../Container/Geometry';
 
 // import {AttribTypeParam} from './concerns/AttribTypeParam';
@@ -41,7 +44,7 @@ const MESSAGE = {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-export class BaseSopNode extends BaseNode {
+export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryContainer, K> {
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
 	}
@@ -53,17 +56,17 @@ export class BaseSopNode extends BaseNode {
 	// _master_group: Group
 	// _objects: Object3D[] = []
 
-	constructor() {
-		super('base sop');
+	constructor(scene: PolyScene) {
+		super(scene, 'BaseSopNode');
 		this.container_controller.init(GeometryContainer);
 		this.flags.add_display();
 		this.flags.add_bypass();
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
 
-	request_container() {
-		return super.request_container() as Promise<GeometryContainer>;
-	}
+	// request_container() {
+	// 	return super.request_container(); //as Promise<GeometryContainer>;
+	// }
 
 	//
 	//
