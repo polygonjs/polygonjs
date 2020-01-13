@@ -2,6 +2,7 @@
 // import lodash_isBoolean from 'lodash/isBoolean'
 
 import {TypedNumericParam} from './_Numeric';
+import {ParamType} from '../poly/ParamType';
 
 export class IntegerParam extends TypedNumericParam<number> {
 	// constructor() {

@@ -8,6 +8,7 @@ import {ObjectsManagerNode} from 'src/engine/nodes/manager/ObjectsManager';
 import {CoreString} from 'src/core/String';
 import {BaseNode} from 'src/engine/nodes/_Base';
 import {BaseObjNode} from 'src/engine/nodes/obj/_Base';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 export class NodesController {
 	constructor(private scene: PolyScene) {}

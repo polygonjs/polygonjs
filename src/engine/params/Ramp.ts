@@ -9,13 +9,14 @@ import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {RampValue, RampPoint} from './ramp/RampValue';
 
-import {AsCodeRamp} from './concerns/visitors/Ramp';
+// import {AsCodeRamp} from './concerns/visitors/Ramp';
+import {ParamType} from '../poly/ParamType';
 
 interface RampParamVisitor extends TypedParamVisitor {
 	visit_ramp_param: (param: RampParam) => any;
 }
 
-export class RampParam extends AsCodeRamp(Single)<RampValue> {
+export class RampParam extends Single<RampValue> {
 	static type() {
 		return ParamType.RAMP;
 	}

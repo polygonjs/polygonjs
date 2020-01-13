@@ -44,6 +44,8 @@ import {UIData} from './utils/UIData';
 
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
+import {ParamType} from '../poly/ParamType';
+import {ParamEvent} from '../poly/ParamEvent';
 
 export interface TypedParamVisitor {
 	visit_typed_param: (param: BaseParam) => any;

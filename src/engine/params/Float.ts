@@ -3,6 +3,7 @@
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_isNumber from 'lodash/isNumber'
 import {TypedNumericParam} from './_Numeric';
+import {ParamType} from '../poly/ParamType';
 
 export class FloatParam extends TypedNumericParam<number> {
 	// constructor() {

@@ -5,6 +5,7 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 const THREE = {PerspectiveCamera, Vector2};
 import {BaseCameraObjNode, BASE_CAMERA_DEFAULT} from './_BaseCamera';
 import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 const DEFAULT = {
 	fov: 50,
@@ -12,7 +13,7 @@ const DEFAULT = {
 
 // const EVENT_CHANGE = { type: 'change' };
 
-export class PerspectiveCameraObj extends BaseCameraObjNode {
+export class PerspectiveCameraObjNode extends BaseCameraObjNode {
 	static type() {
 		return 'perspective_camera';
 	}

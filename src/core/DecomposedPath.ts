@@ -10,7 +10,7 @@ const SEPARATOR = CoreWalker.SEPARATOR;
 export class DecomposedPath {
 	named_nodes: NodeOrParam[] = [];
 	private graph_node_ids: string[] = [];
-	private node_element_by_graph_node_id: StringsByString = {};
+	private node_element_by_graph_node_id: Dictionary<string> = {};
 
 	constructor() {}
 	add_node(name: string, node: NodeOrParam) {

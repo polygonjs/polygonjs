@@ -1,5 +1,6 @@
 import {BaseNode} from '../_Base';
 import {EventContainer} from 'src/engine/containers/Event';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 export class BaseEventNode extends BaseNode {
 	static node_context(): NodeContext {

@@ -13,6 +13,7 @@ import {RectAreaLight} from 'three/src/lights/RectAreaLight';
 // scene.display_scene().traverse((object)=>{if(object.material){object.material.needsUpdate = true}})
 // or maybe I should only instanciate a RectAreaLight after having called init()
 import {CoreScriptLoader} from 'src/core/loader/Script';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class AreaLight extends BaseLightTransformedObjNode {
 	@ParamC('color') _param_color: Color;

@@ -7,6 +7,7 @@ import {ParsedTree} from './traversers/ParsedTree';
 import {FunctionGenerator} from './traversers/FunctionGenerator';
 import {ExpressionStringGenerator} from './traversers/ExpressionStringGenerator';
 import {DependenciesController} from './DependenciesController';
+import {ParamType} from '../poly/ParamType';
 
 export class ExpressionController {
 	public parse_completed: boolean = false;

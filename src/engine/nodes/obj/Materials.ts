@@ -1,6 +1,7 @@
 import {BaseManager} from './_BaseManager';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
-export class Materials extends BaseManager {
+export class MaterialsObjNode extends BaseManager {
 	static type() {
 		return 'materials';
 	}

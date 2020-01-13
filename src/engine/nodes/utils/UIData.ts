@@ -2,6 +2,7 @@ import CoreUIData from 'src/core/UIData';
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
 import {BaseNode} from '../_Base';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 export class UIData extends CoreUIData {
 	private _position: Vector2;

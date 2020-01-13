@@ -4,6 +4,7 @@ import {CoreWalker} from 'src/core/Walker';
 
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNode} from 'src/engine/nodes/_Base';
+import {ParamType} from '../poly/ParamType';
 
 // class BaseModules extends AsCodeOperatorPath(Single) {
 // 	constructor() {

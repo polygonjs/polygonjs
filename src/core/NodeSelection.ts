@@ -4,6 +4,7 @@ import lodash_difference from 'lodash/difference';
 import lodash_union from 'lodash/union';
 // import lodash_isArray from 'lodash/isArray'
 import lodash_isEqual from 'lodash/isEqual';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 export default class NodeSelection extends UIData {
 	_node_ids: string[] = [];

@@ -6,8 +6,19 @@ import {CoreTransform} from 'src/core/Transform';
 
 import {BaseNode} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
+import {NodeContext} from 'src/engine/poly/NodeContext';
+
 //import Layers from './Concerns/Layers'
 // import {Transformed} from './Concerns/Transformed';
+
+// sop map
+import {BaseSopNode} from '../sop/_Base';
+import {BoxSopNode} from '../sop/Box';
+import {TransformSopNode} from '../sop/Transform';
+interface SopNodeTypeMap {
+	box: BoxSopNode;
+	transform: TransformSopNode;
+}
 
 export class GeoObjNode extends BaseObjNode {
 	private _display_node_controller = new DisplayNodeController(this);
@@ -97,6 +108,10 @@ export class GeoObjNode extends BaseObjNode {
 				node.flags.display.set(true);
 			}
 		}
+	}
+	create_node<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K];
+	create_node(type: string): BaseSopNode {
+		return super.create_node(type) as BaseSopNode;
 	}
 	on_create() {
 		// this.create_node('text')

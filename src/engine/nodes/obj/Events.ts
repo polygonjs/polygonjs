@@ -1,6 +1,7 @@
 import {BaseManager} from './_BaseManager';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
-export class Events extends BaseManager {
+export class EventsObjNode extends BaseManager {
 	static type() {
 		return 'events';
 	}

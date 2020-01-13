@@ -204,7 +204,7 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 		return count;
 	}
 	objects_count_by_type() {
-		const count_by_type: NumbersByString = {};
+		const count_by_type: Dictionary<number> = {};
 		const core_group = this.core_group();
 		if (this._content && core_group) {
 			for (let core_object of core_group.core_objects()) {
@@ -218,7 +218,7 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 		return count_by_type;
 	}
 	objects_names_by_type() {
-		const names_by_type: StringsArrayByString = {};
+		const names_by_type: Dictionary<string[]> = {};
 		const core_group = this.core_group();
 		if (this._content && core_group) {
 			for (let core_object of core_group.core_objects()) {
@@ -239,7 +239,7 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 		return names;
 	}
 	vertex_attribute_sizes_by_name() {
-		let sizes_by_name: NumbersByString = {};
+		let sizes_by_name: Dictionary<number> = {};
 		const geometry = this.first_geometry();
 		if (geometry) {
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
@@ -250,7 +250,7 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 		return sizes_by_name;
 	}
 	vertex_attribute_types_by_name() {
-		let types_by_name: NumbersByString = {};
+		let types_by_name: Dictionary<number> = {};
 		const geometry = this.first_geometry();
 		if (geometry) {
 			const core_geo = new CoreGeometry(geometry);

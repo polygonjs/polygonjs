@@ -14,6 +14,7 @@ import {ObjectType} from 'src/core/geometry/Constant';
 
 import {GeometryContainer} from 'src/engine/containers/Geometry';
 import {BaseMatNode} from '../mat/_Base';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 // import * as Container from '../../Container/Geometry';
 
 // import {AttribTypeParam} from './concerns/AttribTypeParam';
@@ -60,9 +61,9 @@ export class BaseSopNode extends BaseNode {
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
 
-	// request_container(callback: RequestContainerGeometryCallback){
-	// 	super.request_container(callback)
-	// }
+	request_container() {
+		return super.request_container() as Promise<GeometryContainer>;
+	}
 
 	//
 	//

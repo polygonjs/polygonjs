@@ -17,6 +17,8 @@ import {PostProcessController} from './utils/cameras/PostProcessController';
 // import {File} from 'src/Engine/Node/Cop/File'
 import {ThreejsViewer} from 'src/engine/viewers/Threejs';
 import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;

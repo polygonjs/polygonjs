@@ -114,7 +114,7 @@ export class CoreGeometry {
 		return Object.keys(this._geometry.attributes);
 	}
 	attrib_sizes() {
-		const h: NumbersByString = {};
+		const h: Dictionary<number> = {};
 		for (let attrib_name of this.attrib_names()) {
 			h[attrib_name] = this._geometry.attributes[attrib_name].itemSize;
 		}
@@ -168,7 +168,7 @@ export class CoreGeometry {
 					attribute_added = true;
 				} else {
 					// adding Vector2
-					const vec2 = default_value as Vec2;
+					const vec2 = default_value as Vector2Like;
 					if (size == 2 && vec2.x != null && vec2.y != null) {
 						for (let i = 0; i < this.points_count(); i++) {
 							values.push(vec2.x);
@@ -177,7 +177,7 @@ export class CoreGeometry {
 						attribute_added = true;
 					}
 					// adding Vector3
-					const vec3 = default_value as Vec3;
+					const vec3 = default_value as Vector3Like;
 					if (size == 3 && vec3.x != null && vec3.y != null && vec3.z != null) {
 						for (let i = 0; i < this.points_count(); i++) {
 							values.push(vec3.x);
@@ -187,7 +187,7 @@ export class CoreGeometry {
 						attribute_added = true;
 					}
 					// adding Color
-					const col = default_value as Col;
+					const col = default_value as ColorLike;
 					if (size == 3 && col.r != null && col.g != null && col.b != null) {
 						for (let i = 0; i < this.points_count(); i++) {
 							values.push(col.r);
@@ -197,7 +197,7 @@ export class CoreGeometry {
 						attribute_added = true;
 					}
 					// adding Vector4
-					const vec4 = default_value as Vec4;
+					const vec4 = default_value as Vector4Like;
 					if (size == 4 && vec4.x != null && vec4.y != null && vec4.z != null && vec4.w != null) {
 						for (let i = 0; i < this.points_count(); i++) {
 							values.push(vec4.x);
@@ -363,7 +363,7 @@ export class CoreGeometry {
 			const old_geometry_wrapper = first_point.geometry_wrapper();
 
 			// index
-			const new_index_by_old_index: NumbersByString = {};
+			const new_index_by_old_index: Dictionary<number> = {};
 			lodash_each(points, (point, i) => (new_index_by_old_index[point.index()] = i));
 
 			const indices = this._indices_from_points(new_index_by_old_index, old_geometry, object_type);
@@ -380,7 +380,7 @@ export class CoreGeometry {
 
 				if (is_attrib_indexed) {
 					const new_values = lodash_uniq(points.map((point) => point.attrib_value(attribute_name)));
-					const new_index_by_value: NumbersByString = {};
+					const new_index_by_value: Dictionary<number> = {};
 					lodash_each(new_values, (new_value, i) => (new_index_by_value[new_value] = i));
 
 					geometry_wrapper.user_data_attribs()[attribute_name] = new_values;
@@ -419,7 +419,7 @@ export class CoreGeometry {
 	}
 
 	static _indices_from_points(
-		new_index_by_old_index: NumbersByString,
+		new_index_by_old_index: Dictionary<number>,
 		old_geometry: BufferGeometry,
 		object_type: ObjectType
 	) {
@@ -488,9 +488,9 @@ export class CoreGeometry {
 		const core_geometries = geometries.map((geometry) => new CoreGeometry(geometry));
 		const indexed_attribute_names = core_geometries[0].indexed_attribute_names();
 
-		const new_values_by_attribute_name: StringsArrayByString = {};
+		const new_values_by_attribute_name: Dictionary<string[]> = {};
 		for (let indexed_attribute_name of indexed_attribute_names) {
-			const index_by_values: NumbersByString = {};
+			const index_by_values: Dictionary<number> = {};
 			const all_geometries_points = [];
 			for (let core_geometry of core_geometries) {
 				const geometry_points = core_geometry.points();

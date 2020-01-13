@@ -6,6 +6,7 @@ import lodash_clamp from 'lodash/clamp';
 import {BaseCameraObjNode, BASE_CAMERA_DEFAULT} from './_BaseCamera';
 
 import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 const DEFAULT = {
 	left: -0.5,
@@ -14,7 +15,7 @@ const DEFAULT = {
 	bottom: -0.5,
 };
 
-export class OrthographicCameraObj extends BaseCameraObjNode {
+export class OrthographicCameraObjNode extends BaseCameraObjNode {
 	protected _object: OrthographicCamera;
 	_param_size: number;
 	_param_vertical_size_range: Vector2;

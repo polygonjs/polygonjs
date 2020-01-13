@@ -6,6 +6,7 @@ import {BaseSopNode} from '../sop/_Base';
 import {ObjectContainer} from 'src/engine/containers/Object';
 import {LookAtController} from './utils/LookAtController';
 import {TransformController} from './utils/TransformController';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];

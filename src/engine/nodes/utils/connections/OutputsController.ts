@@ -3,6 +3,7 @@ import {NamedConnection} from '../NamedConnection';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_uniq from 'lodash/uniq';
 import lodash_isString from 'lodash/isString';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 interface OutputsOptions {
 	has_outputs?: boolean;

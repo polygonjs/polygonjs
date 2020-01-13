@@ -23,6 +23,10 @@ import {CoreConstant, AttribClass} from './Constant';
 
 export type GroupString = string;
 
+interface Object3DWithGeometry extends Object3D {
+	geometry: BufferGeometry;
+}
+
 export class CoreGroup {
 	// _group: Group
 	_timestamp: number;
@@ -76,7 +80,7 @@ export class CoreGroup {
 		this._objects = objects;
 	}
 	objects() {
-		return this._objects;
+		return this._objects as Object3DWithGeometry[];
 	}
 	core_objects() {
 		return (this._core_objects = this._core_objects || this._create_core_objects());
@@ -151,10 +155,10 @@ export class CoreGroup {
 	points_from_group(group: GroupString) {
 		if (group) {
 			const indices = CoreString.indices(group);
-			if (indices) {
-				const points = this.points();
-				return indices.map((i) => points[i]);
-			}
+			// if (indices) {
+			const points = this.points();
+			return indices.map((i) => points[i]);
+			// }
 		} else {
 			return this.points();
 		}

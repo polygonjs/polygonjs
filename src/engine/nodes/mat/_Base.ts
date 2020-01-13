@@ -6,6 +6,7 @@ import {Material} from 'three/src/materials/Material';
 
 import {MaterialContainer} from 'src/engine/containers/Material';
 import {Object3D} from 'three/src/core/Object3D';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 // type RenderHook = (object: Object3D) => void;
 

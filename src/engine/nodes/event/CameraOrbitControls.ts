@@ -6,6 +6,7 @@ import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 
 import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class CameraOrbitControlsEventNode extends BaseCameraControlsEventNode {
 	@ParamB('allow_pan') _param_allow_pan: boolean;

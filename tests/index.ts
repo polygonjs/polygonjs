@@ -1,3 +1,4 @@
-import './tests'
+import './helpers/setup';
+import './tests';
 
-QUnit.start()
+QUnit.start();

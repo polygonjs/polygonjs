@@ -1,6 +1,7 @@
 import {BaseManager} from './_BaseManager';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
-export class PostProcess extends BaseManager {
+export class PostProcessObjNode extends BaseManager {
 	static type() {
 		return 'post_process';
 	}

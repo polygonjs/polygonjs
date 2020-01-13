@@ -7,6 +7,8 @@ import lodash_includes from 'lodash/includes';
 import lodash_keys from 'lodash/keys';
 import lodash_sortBy from 'lodash/sortBy';
 import lodash_values from 'lodash/values';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {NameController} from '../NameController';
 
 // interface HierarchyOptions {

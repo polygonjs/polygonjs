@@ -1,6 +1,7 @@
 import {BaseNode} from 'src/engine/nodes/_Base';
 import lodash_isNaN from 'lodash/isNaN';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 type Callback = () => void;
 

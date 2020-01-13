@@ -29,6 +29,29 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Color} from 'three/src/math/Color';
 // import {RampValue} from 'src/engine/params/ramp/RampValue';
+import 'src/engine/poly/ParamType';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamEvent} from 'src/engine/poly/ParamEvent';
+// type ParamConstructorMap = {[key in ParamType]: any};
+
+// enum ParamType {
+// 	BUTTON = 'button',
+// 	COLOR = 'color',
+// 	FLOAT = 'float',
+// 	INTEGER = 'integer',
+// 	OPERATOR_PATH = 'operator_path',
+// 	SEPARATOR = 'separator',
+// 	STRING = 'string',
+// 	BOOLEAN = 'boolean',
+// 	VECTOR2 = 'vector2',
+// 	VECTOR3 = 'vector3',
+// 	VECTOR4 = 'vector4',
+// 	RAMP = 'ramp',
+// }
+// // (window as { ParamType? }).ParamType = ParamType;
+// declare global {
+// 	const ParamType: typeof ParamType;
+// }
 
 const ParamConstructorMap = {
 	[ParamType.BOOLEAN]: BooleanParam,
@@ -57,7 +80,7 @@ function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T,
 		console.warn('param type inconsistent');
 	}
 }
-const _ParamB = function ParamF(name: string) {
+export const ParamBoolean = function ParamF(name: string) {
 	return <T extends BaseNode>(target: T, key: keyof T) => {
 		_ParamCheckNameConsistency(name, target, key, ParamType.BOOLEAN);
 		Object.defineProperty(target, key, {
@@ -65,7 +88,7 @@ const _ParamB = function ParamF(name: string) {
 		});
 	};
 };
-const _ParamF = function ParamF(name: string) {
+export const ParamFloat = function ParamF(name: string) {
 	return <T extends BaseNode>(target: T, key: keyof T) => {
 		_ParamCheckNameConsistency(name, target, key, ParamType.FLOAT);
 		Object.defineProperty(target, key, {
@@ -73,7 +96,7 @@ const _ParamF = function ParamF(name: string) {
 		});
 	};
 };
-const _ParamS = function ParamF(name: string) {
+export const ParamString = function ParamF(name: string) {
 	return <T extends BaseNode>(target: T, key: keyof T) => {
 		_ParamCheckNameConsistency(name, target, key, ParamType.STRING);
 		Object.defineProperty(target, key, {
@@ -81,7 +104,7 @@ const _ParamS = function ParamF(name: string) {
 		});
 	};
 };
-const _ParamV2 = function ParamF(name: string) {
+export const ParamVector2 = function ParamF(name: string) {
 	return <T extends BaseNode>(target: T, key: keyof T) => {
 		_ParamCheckNameConsistency(name, target, key, ParamType.VECTOR2);
 		Object.defineProperty(target, key, {
@@ -89,7 +112,7 @@ const _ParamV2 = function ParamF(name: string) {
 		});
 	};
 };
-const _ParamV3 = function ParamF(name: string) {
+export const ParamVector3 = function ParamF(name: string) {
 	return <T extends BaseNode>(target: T, key: keyof T) => {
 		_ParamCheckNameConsistency(name, target, key, ParamType.VECTOR3);
 		Object.defineProperty(target, key, {
@@ -97,7 +120,7 @@ const _ParamV3 = function ParamF(name: string) {
 		});
 	};
 };
-const _ParamC = function ParamF(name: string) {
+export const ParamColor = function ParamF(name: string) {
 	return <T extends BaseNode>(target: T, key: keyof T) => {
 		_ParamCheckNameConsistency(name, target, key, ParamType.COLOR);
 		Object.defineProperty(target, key, {
@@ -105,14 +128,21 @@ const _ParamC = function ParamF(name: string) {
 		});
 	};
 };
-declare global {
-	const ParamB: typeof _ParamB;
-	const ParamF: typeof _ParamF;
-	const ParamS: typeof _ParamS;
-	const ParamV2: typeof _ParamV2;
-	const ParamV3: typeof _ParamV3;
-	const ParamC: typeof _ParamC;
-}
+// declare global {
+// 	const ParamB: typeof _ParamB;
+// 	const ParamF: typeof _ParamF;
+// 	const ParamS: typeof _ParamS;
+// 	const ParamV2: typeof _ParamV2;
+// 	const ParamV3: typeof _ParamV3;
+// 	const ParamC: typeof _ParamC;
+// }
+// declare global {
+// 	interface Window {
+// 		ParamB: typeof _ParamB;
+// 		ParamC: typeof _ParamC;
+// 	}
+// }
+// window.ParamC = _ParamC;
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;

@@ -39,7 +39,15 @@ import {CookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer} from './utils/Serializer';
-import {ParamsController} from './utils/ParamsController';
+import {
+	ParamsController,
+	ParamBoolean,
+	ParamFloat,
+	ParamString,
+	ParamVector2,
+	ParamVector3,
+	ParamColor,
+} from './utils/ParamsController';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/IOController';
@@ -60,6 +68,9 @@ import {StringParam} from 'src/engine/params/String';
 import {Vector2Param} from 'src/engine/params/Vector2';
 import {Vector3Param} from 'src/engine/params/Vector3';
 import {Vector4Param} from 'src/engine/params/Vector4';
+import {ParamType} from '../poly/ParamType';
+import {NodeEvent} from '../poly/NodeEvent';
+import {NodeContext} from '../poly/NodeContext';
 
 export interface BaseNodeVisitor {
 	node: (node: BaseNode) => void;
@@ -275,6 +286,12 @@ export class BaseNode extends CoreGraphNode {
 	within_param_folder(folder_name: string, callback: () => void) {
 		this._params_controller.within_param_folder(folder_name, callback);
 	}
+	static ParamBoolean = ParamBoolean;
+	static ParamFloat = ParamFloat;
+	static ParamString = ParamString;
+	static ParamVector2 = ParamVector2;
+	static ParamVector3 = ParamVector3;
+	static ParamColor = ParamColor;
 
 	// cook
 	cook(input_contents: any[]): any {

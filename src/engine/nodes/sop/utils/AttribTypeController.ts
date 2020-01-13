@@ -1,5 +1,6 @@
 import {BaseSopNode} from '../_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class AttribTypeController {
 	static add_attrib_class_param(node: BaseSopNode, attrib_name = 'attrib_class') {

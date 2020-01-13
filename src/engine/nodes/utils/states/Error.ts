@@ -1,4 +1,5 @@
 import {BaseNode} from 'src/engine/nodes/_Base';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 // import lodash_includes from 'lodash/includes';
 // import lodash_values from 'lodash/values';
 

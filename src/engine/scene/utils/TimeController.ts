@@ -1,6 +1,7 @@
 // import {SceneContext} from 'src/core/context/Scene';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {SceneEvent} from 'src/engine/poly/SceneEvent';
 // import {BaseNode} from 'src/engine/nodes/_Base'
 
 type FrameRange = [number, number];

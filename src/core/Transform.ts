@@ -6,6 +6,7 @@ import {Euler} from 'three/src/math/Euler';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 import {BaseNode} from 'src/engine/nodes/_Base';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 const ROTATION_ORDER = 'XYZ';
 

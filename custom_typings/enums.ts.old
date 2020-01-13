@@ -1,0 +1,42 @@
+// params
+// type ParamInputValue = number | string
+// type ParamDefaultValue =
+// 	| number
+// 	| string
+// 	| [number, number]
+// 	| [number, number, number]
+// 	| [number, number, number, number]
+
+// enum ParamType {
+// 	BUTTON = 'button',
+// 	COLOR = 'color',
+// 	FLOAT = 'float',
+// 	INTEGER = 'integer',
+// 	OPERATOR_PATH = 'operator_path',
+// 	SEPARATOR = 'separator',
+// 	STRING = 'string',
+// 	BOOLEAN = 'boolean',
+// 	VECTOR2 = 'vector2',
+// 	VECTOR3 = 'vector3',
+// 	VECTOR4 = 'vector4',
+// 	RAMP = 'ramp',
+// }
+// (window as {ParamType?}).ParamType = ParamType;
+
+// enum NodeContext {
+// 	MANAGER = 'managers',
+// 	OBJ = 'objects',
+// 	SOP = 'sop',
+// 	MAT = 'mat',
+// 	COP = 'cop',
+// 	POST = 'post',
+// 	GL = 'gl',
+// 	EVENT = 'event',
+// }
+
+// math
+
+// interface BoxComponents {
+// 	min: Vector3Components
+// 	max: Vector3Components
+// }

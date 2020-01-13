@@ -3,6 +3,7 @@ import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class DirectionalLightObj extends BaseLightTransformedObjNode {
 	@ParamC('color') _param_color: Color;

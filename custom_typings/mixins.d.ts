@@ -1,1 +1,1 @@
-type Constructor<T = {}> = new (...args: any[]) => T
+// type Constructor<T = {}> = new (...args: any[]) => T

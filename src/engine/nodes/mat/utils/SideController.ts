@@ -3,6 +3,7 @@ import {BaseController} from './_BaseController';
 import {FrontSide} from 'three/src/constants';
 import {DoubleSide} from 'three/src/constants';
 import {BackSide} from 'three/src/constants';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class SideController extends BaseController {
 	add_params() {

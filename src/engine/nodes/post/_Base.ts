@@ -5,6 +5,7 @@ import {BaseNode} from '../_Base';
 import {PostProcessContainer} from 'src/engine/containers/PostProcess';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {BaseCameraObjNode} from '../obj/_BaseCamera';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 export abstract class BasePostProcessNode extends BaseNode {
 	static node_context(): NodeContext {

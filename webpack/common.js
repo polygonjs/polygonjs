@@ -36,7 +36,7 @@ module.exports = {
 		// filename: '[name].bundle.js'
 		filename: '[name].js',
 		path: path.resolve(__dirname, '../dist'),
-		library: 'POLY',
+		// library: 'POLY',
 	},
 	resolve: {
 		// modules: [path.resolve(__dirname, '../node_modules')],

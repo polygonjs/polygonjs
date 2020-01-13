@@ -1,6 +1,7 @@
 import {AmbientLight} from 'three/src/lights/AmbientLight';
 import {BaseLightObjNode} from './_BaseLight';
 import {Color} from 'three/src/math/Color';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class AmbientLightObj extends BaseLightObjNode {
 	@ParamC('color') _param_color: Color;

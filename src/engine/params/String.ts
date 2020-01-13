@@ -6,6 +6,7 @@ import {TypedParamVisitor} from './_Base';
 // import {AsCodeString} from './concerns/visitors/String';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
+import {ParamType} from '../poly/ParamType';
 
 // class BaseModules extends AsCodeString(Single) {
 // 	constructor() {

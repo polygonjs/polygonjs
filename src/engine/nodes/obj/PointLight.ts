@@ -2,6 +2,7 @@ import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {PointLight} from 'three/src/lights/PointLight';
 import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class PointLightObj extends BaseLightTransformedObjNode {
 	@ParamC('color') _param_color: Color;

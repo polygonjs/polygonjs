@@ -3,6 +3,8 @@ import {BaseNode} from 'src/engine/nodes/_Base';
 import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isEqual from 'lodash/isEqual';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamEvent} from 'src/engine/poly/ParamEvent';
 
 const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
 const CALLBACK_OPTION = 'callback';

@@ -1,7 +1,9 @@
+import {BaseNode} from '../_Base';
 import {BaseObjNode} from './_Base';
 import {FogExp2} from 'three/src/scenes/FogExp2';
 import {Fog} from 'three/src/scenes/Fog';
 import {Color} from 'three/src/math/Color';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 // class BaseModules extends Base {
 // 	constructor() {
@@ -20,12 +22,12 @@ const DEFAULT = {
 // export Fog = (function() {
 // 	let DEFAULT = undefined;
 // 	Fog = class Fog extends BaseModules {
-export class FogObj extends BaseObjNode {
-	@ParamC('color') _param_color: Color;
-	@ParamB('exponential') _param_exponential: boolean;
-	@ParamF('density') _param_density: number;
-	@ParamF('near') _param_near: number;
-	@ParamF('far') _param_far: number;
+export class FogObjNode extends BaseObjNode {
+	@BaseNode.ParamColor('color') _param_color: Color;
+	@BaseNode.ParamBoolean('exponential') _param_exponential: boolean;
+	@BaseNode.ParamFloat('density') _param_density: number;
+	@BaseNode.ParamFloat('near') _param_near: number;
+	@BaseNode.ParamFloat('far') _param_far: number;
 
 	protected _linear_fog: Fog;
 	protected _linear_fogexp2: FogExp2;

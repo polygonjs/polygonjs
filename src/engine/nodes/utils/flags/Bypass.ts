@@ -1,4 +1,5 @@
 import {BaseFlag} from './Base';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 // export interface BypassOptions {
 // 	has_bypass_flag?: boolean;

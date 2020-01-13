@@ -9,17 +9,15 @@ import {NamedConnection} from '../NamedConnection';
 import {NodeConnection} from '../NodeConnection';
 
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 
 // export class InputGraphNode extends NodeSimple {
 // 	constructor(name: string) {
 // 		super(name);
 // 	}
 // }
-export enum InputCloneMode {
-	ALWAYS = 'always',
-	NEVER = 'never',
-	FROM_NODE = 'from_node',
-}
+
 export interface InputsControllerOptions {
 	min_inputs?: number;
 	max_inputs?: number;
@@ -117,7 +115,7 @@ export class InputsController {
 
 		this.init_inputs_clonable_state();
 	}
-	protected set_inputs_count(min: number, max?: number) {
+	set_count(min: number, max?: number) {
 		if (max == null) {
 			max = min;
 		}
@@ -437,7 +435,7 @@ export class InputsController {
 		// }
 	}
 
-	protected init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
+	init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
 		if (values) {
 			this._user_inputs_clonable_states = values;
 		}

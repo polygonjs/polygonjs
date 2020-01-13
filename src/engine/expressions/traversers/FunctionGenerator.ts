@@ -66,7 +66,7 @@ const LITERAL_CONSTRUCT: LiteralConstructDictionary = {
 	if: LiteralConstructsController.if,
 };
 
-const GLOBAL_CONSTANTS: StringsByString = {};
+const GLOBAL_CONSTANTS: Dictionary<string> = {};
 NATIVE_MATH_CONSTANTS.forEach((name) => {
 	GLOBAL_CONSTANTS[name] = `Math.${name}`;
 });

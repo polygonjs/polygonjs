@@ -1,6 +1,7 @@
 import {Texture} from 'three/src/textures/Texture';
 import {BaseNode} from '../_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 export class BaseCopNode extends BaseNode {
 	static node_context(): NodeContext {

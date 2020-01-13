@@ -13,6 +13,8 @@ import VertexShader from './Image/vert.glsl';
 import FragmentShader from './Image/frag.glsl';
 
 import {FileCopNode} from 'src/engine/nodes/cop/File';
+import {NodeContext} from 'src/engine/poly/NodeContext';
+import {ParamType} from 'src/engine/poly/ParamType';
 // import {FuseActiveDesignPass} from 'src/Engine/Viewer/Fuse/FuseActiveDesignPass'
 
 interface ShaderPassWithRequiredUniforms extends ShaderPass {

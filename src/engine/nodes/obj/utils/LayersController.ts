@@ -1,4 +1,5 @@
 import {BaseObjNode} from 'src/engine/nodes/obj/_Base';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 const PARAM_NAME = 'layer';
 

@@ -54,12 +54,12 @@ export class CoreGeometryUtilCurve {
 		points: CorePoint[],
 		indices: number[],
 		attrib_names: string[],
-		attrib_sizes_by_name: NumbersByString
+		attrib_sizes_by_name: Dictionary<number>
 	) {
 		// let new_positions: number[] = []
 		const new_indices: number[] = [];
 
-		const new_attribute_values_by_name: NumbersArrayByString = {};
+		const new_attribute_values_by_name: Dictionary<number[]> = {};
 		attrib_names.forEach((attrib_name) => {
 			new_attribute_values_by_name[attrib_name] = [];
 		});

@@ -1,6 +1,7 @@
 import {BaseManager} from './_BaseManager';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
-export class Cop extends BaseManager {
+export class CopObjNode extends BaseManager {
 	static type() {
 		return 'cop';
 	}

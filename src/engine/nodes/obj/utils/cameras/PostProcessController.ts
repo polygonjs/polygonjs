@@ -12,6 +12,8 @@ import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
 import {Pass} from 'modules/three/examples/jsm/postprocessing/Pass';
+import {NodeContext} from 'src/engine/poly/NodeContext';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 interface DisposablePass extends Pass {
 	dispose: () => void;

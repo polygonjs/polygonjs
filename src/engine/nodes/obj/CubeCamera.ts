@@ -10,6 +10,7 @@ import {CoreTransform} from 'src/core/Transform';
 
 import {BaseObjNode} from './_Base';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {ParamType} from 'src/engine/poly/ParamType';
 // import {Transformed} from './Concerns/Transformed';
 
 const LIGHT_TYPES = ['HemisphereLight', 'SpotLight', 'PointLight'];

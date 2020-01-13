@@ -6,9 +6,7 @@ import {PerformanceNode} from './PerformanceNode';
 interface NodesCookData {
 	[propName: string]: PerformanceNode;
 }
-interface NumbersByString {
-	[propName: string]: number;
-}
+
 interface StringArrayByString {
 	[propName: string]: string[];
 }
@@ -18,8 +16,8 @@ export class CorePerformance {
 	_start_time: number | null = 0;
 	_previous_timestamp: number = 0;
 	_nodes_cook_data: NodesCookData = {};
-	_durations_by_name: NumbersByString;
-	_durations_count_by_name: NumbersByString;
+	_durations_by_name: Dictionary<number>;
+	_durations_count_by_name: Dictionary<number>;
 	_performance_id: number;
 
 	// constructor(){

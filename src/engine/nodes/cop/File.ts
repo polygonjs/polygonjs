@@ -106,6 +106,8 @@ import {Texture} from 'three/src/textures/Texture';
 import {BaseCopNode} from './_Base';
 // import {BaseParam} from 'src/Engine/Param/_Base'
 import {CoreTextureLoader} from 'src/core/loader/Texture';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 // this used to be named file_in, but I can't recall the decision of not calling it simply 'file'
 // so renaming it back to file for now

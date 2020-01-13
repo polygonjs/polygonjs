@@ -1,61 +1,76 @@
-import 'qunit'
+import 'qunit';
+import {PolyScene} from 'src/engine/scene/PolyScene';
+import {ObjectsManagerNode} from 'src/engine/nodes/manager/ObjectsManager';
+import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
+import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
+import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
+import {CopObjNode} from 'src/engine/nodes/obj/Cop';
+window.create_renderer_if_none = () => {
+	const first_renderer = POLY.renderers_controller.first_renderer();
+	if (!first_renderer) {
+		const renderer = new WebGLRenderer();
+		POLY.renderers_controller.register_renderer(renderer);
+	}
+};
+declare global {
+	interface Window {
+		create_renderer_if_none: () => void;
+		sleep: (time: number) => void;
+		scene: PolyScene;
+		root: ObjectsManagerNode;
+		perpective_camera1: PerspectiveCameraObjNode;
+		geo1: GeoObjNode;
+		MAT: MaterialsObjNode;
+		POST: PostProcessObjNode;
+		COP: CopObjNode;
+	}
+}
+QUnit.testStart(() => {
+	// return new Promise(async (resolve, reject) => {
+	window.scene = new PolyScene();
+	window.scene.set_name('test scene');
+	window.scene.set_uuid('test');
+	window.POLY.set_env('test');
 
-// QUnit.testStart( () => {
-// 	return new Promise(async(resolve, reject) =>{
+	const root = window.scene.root;
+	window.root = root;
+	window.perpective_camera1 = root.create_node('perspective_camera');
+	window.geo1 = root.create_node('geo');
+	window.MAT = root.create_node('materials');
+	window.MAT.set_name('MAT');
+	window.POST = root.create_node('post_process');
+	window.POST.set_name('POST');
+	window.COP = root.create_node('cop');
+	window.COP.set_name('COP');
 
-// 		window.scene = new Scene()
-// 		window.scene.set_name('test scene')
-// 		window.scene.set_uuid('test')
-// 		window.POLY.set_env_override('test')
+	window.scene.loading_controller.set_auto_update(true);
+	window.scene.loading_controller.mark_as_loaded();
 
-// 		const root = window.scene.root()
-// 		window.perpective_camera1 = <unknown>root.create_node('perspective_camera') as PerspectiveCamera
-// 		window.geo1 = <unknown>root.create_node('geo') as BaseNodeObjGeo
-// 		window.MAT = <unknown>root.create_node('materials') as Materials
-// 		window.MAT.set_name("MAT")
-// 		window.POST = <unknown>root.create_node('post_process') as PostProcess
-// 		window.POST.set_name("POST")
-// 		window.COP = <unknown>root.create_node('cop') as Cop
-// 		window.COP.set_name("COP")
+	// resolve();
+	// });
+});
 
-// 		await window.scene.set_auto_update(true)
-// 		await window.scene.mark_as_loaded()
+// window.POLY.set = 'test';
 
-// 		resolve();
-// 	});
-// });
+// import './Runner/Helper';
+// import './Helper';
+// import './Core/_Module';
+// import './Engine/_Module';
+// import './Editor/_Module';
 
-// window.POLY.env = 'test'
+// window.test_runner_manager.run()
 
-// import './Runner/Helper'
-// import './Helper'
-// import './Core/_Module'
-// import './Engine/_Module'
-// import './Editor/_Module'
+// console.log('Qunit start');
+// QUnit.start();
+// console.log('Qunit started');
 
-// // window.test_runner_manager.run()
-
-// console.log("Qunit start")
-// QUnit.start()
-// console.log("Qunit started")
-
-// window.sleep = (time)=>{
-// 	return new Promise((resolve, reject)=>{
-// 		setTimeout(()=>{
-// 			// console.log("slept for ", time)
-// 			resolve()
-// 		}, time)
-// 	})
-// }
-
-// import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
-// const THREE = {WebGLRenderer}
-// window.create_renderer_if_none = ()=>{
-
-// 	const first_renderer = POLY.renderers_controller.first_renderer()
-// 	if(!first_renderer){
-// 		const renderer = new THREE.WebGLRenderer()
-// 		POLY.renderers_controller.register_renderer(renderer)
-// 	}
-
-// }
+window.sleep = (time) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			// console.log("slept for ", time)
+			resolve();
+		}, time);
+	});
+};

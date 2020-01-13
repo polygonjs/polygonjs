@@ -1,7 +1,8 @@
 import {BaseSopNode} from '../_Base';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class GroupParamController {
-	static _add_group_param(node: BaseSopNode) {
+	static add_param(node: BaseSopNode) {
 		node.add_param(ParamType.STRING, 'group', '');
 	}
 }

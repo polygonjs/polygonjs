@@ -6,18 +6,36 @@ import {BaseNodeManager} from './_Base';
 import {CoreObject} from 'src/core/Object';
 import {BaseNode} from '../_Base';
 import {BaseObjNode} from '../obj/_Base';
-import {GeoObjNode} from '../obj/Geo';
 
 import {BaseManager} from 'src/engine/nodes/obj/_BaseManager';
 import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseLightObjNode} from 'src/engine/nodes/obj/_BaseLight';
-import {Events} from 'src/engine/nodes/obj/Events';
-import {Materials} from 'src/engine/nodes/obj/Materials';
-import {FogObj} from 'src/engine/nodes/obj/Fog';
+
+// obj nodes
+import {EventsObjNode} from 'src/engine/nodes/obj/Events';
+import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
+import {FogObjNode} from 'src/engine/nodes/obj/Fog';
+import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
+import {OrthographicCameraObjNode} from 'src/engine/nodes/obj/OrthographicCamera';
+import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
+import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
+import {CopObjNode} from 'src/engine/nodes/obj/Cop';
 
 import 'src/engine/Poly';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
+
+interface ObjNodeTypeMap {
+	cop: CopObjNode;
+	events: EventsObjNode;
+	fog: FogObjNode;
+	geo: GeoObjNode;
+	materials: MaterialsObjNode;
+	perspective_camera: PerspectiveCameraObjNode;
+	post_process: PostProcessObjNode;
+	orthographic_camera: OrthographicCameraObjNode;
+}
 
 export class ObjectsManagerNode extends BaseNodeManager {
 	static type() {
@@ -60,7 +78,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	object() {
 		return this._object;
 	}
-	// TODO: typescript: there may be a better way to convert
+	create_node<K extends keyof ObjNodeTypeMap>(type: K): ObjNodeTypeMap[K];
 	create_node(type: string): BaseObjNode {
 		return super.create_node(type) as BaseObjNode;
 	}
@@ -141,7 +159,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		return CoreObject.is_a(node, BaseManager);
 	}
 	_is_node_fog(node: BaseNode) {
-		return CoreObject.is_a(node, FogObj);
+		return CoreObject.is_a(node, FogObjNode);
 	}
 	_is_node_camera(node: BaseNode) {
 		return CoreObject.is_a(node, BaseCameraObjNode);
@@ -150,10 +168,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		return CoreObject.is_a(node, BaseLightObjNode);
 	}
 	_is_node_event(node: BaseNode) {
-		return CoreObject.is_a(node, Events);
+		return CoreObject.is_a(node, EventsObjNode);
 	}
 	_is_node_mat(node: BaseNode) {
-		return CoreObject.is_a(node, Materials);
+		return CoreObject.is_a(node, MaterialsObjNode);
 	}
 
 	//

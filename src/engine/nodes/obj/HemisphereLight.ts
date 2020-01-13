@@ -2,6 +2,7 @@ import {HemisphereLight} from 'three/src/lights/HemisphereLight';
 import {BaseLightObjNode} from './_BaseLight';
 import {Color} from 'three/src/math/Color';
 import {Vector3} from 'three/src/math/Vector3';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class HemisphereLightObj extends BaseLightObjNode {
 	@ParamC('sky_color') _param_sky_color: Color;

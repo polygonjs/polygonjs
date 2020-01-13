@@ -5,6 +5,7 @@ import {NoColors} from 'three/src/constants';
 import {Material} from 'three/src/materials/Material';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {Color} from 'three/src/math/Color';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 interface AddParamsOptions {
 	flat_shading?: boolean;

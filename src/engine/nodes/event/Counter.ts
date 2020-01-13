@@ -3,6 +3,7 @@ import {BaseEventNode} from './_Base';
 // import {BaseParam} from 'src/engine/params/_Base';
 import {Vector2} from 'three/src/math/Vector2';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {ParamType} from 'src/engine/poly/ParamType';
 // import {SceneContext} from 'src/core/context/Scene';
 
 export class CounterEventNode extends BaseEventNode {
