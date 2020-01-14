@@ -1,6 +1,5 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class EventsObjNode extends BaseManagerObjNode {
 	static type() {
@@ -10,8 +9,7 @@ export class EventsObjNode extends BaseManagerObjNode {
 	// 	return NodeContext.EVENT;
 	// }
 
-	constructor(scene: PolyScene) {
-		super(scene, 'EventsObjNode');
+	initialize_node() {
 		this.children_controller.init(NodeContext.EVENT);
 		// this._init_manager();
 	}

@@ -38,10 +38,6 @@ export class Bleach extends BasePostProcessNode {
 		return BleachBypassShader;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'opacity', 0.95, {range: [-5, 5], range_locked: [true, true]});
 	}

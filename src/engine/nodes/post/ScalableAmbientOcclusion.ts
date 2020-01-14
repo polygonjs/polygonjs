@@ -27,10 +27,6 @@
 
 // 	private _param_output_type: number;
 
-// 	constructor() {
-// 		super();
-// 	}
-
 // 	create_params() {
 // 		this.self.add_param(ParamType.INTEGER, "output_type", 0, {
 // 			menu: {

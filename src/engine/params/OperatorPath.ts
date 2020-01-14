@@ -6,25 +6,14 @@ import {CoreWalker} from 'src/core/Walker';
 import {BaseNode} from 'src/engine/nodes/_Base';
 import {ParamType} from '../poly/ParamType';
 
-// class BaseModules extends AsCodeOperatorPath(Single) {
-// 	constructor() {
-// 		super();
-// 	}
-// }
-// window.include_instance_methods(BaseModules, AsCodeOperatorPath.instance_methods);
-
 interface OperatorPathParamVisitor extends TypedParamVisitor {
 	visit_operator_path_param: (param: OperatorPathParam) => any;
 }
 
-export class OperatorPathParam extends Single<string> {
+export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	_path: string;
 	_found_node: BaseNode | null;
 
-	// constructor() {
-	// 	super();
-	// 	// this._node = null
-	// }
 	static type() {
 		return ParamType.OPERATOR_PATH;
 	}

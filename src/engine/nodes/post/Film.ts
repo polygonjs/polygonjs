@@ -28,9 +28,6 @@ export class Film extends BasePostProcessNode {
 	private _param_scanlines_count: number;
 	private _param_grayscale: boolean;
 
-	constructor() {
-		super();
-	}
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'noise_intensity', 0.5, {range: [0, 1], range_locked: [false, false]});
 		this.add_param(ParamType.FLOAT, 'scanlines_intensity', 0.05, {range: [0, 1], range_locked: [true, false]});

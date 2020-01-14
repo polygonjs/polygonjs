@@ -8,8 +8,7 @@ export class PostProcessObjNode extends BaseManagerObjNode {
 	}
 	// children_context(){ return NodeContext.POST }
 
-	constructor(scene: PolyScene) {
-		super(scene, 'PostProcessObjNode');
+	initialize_node() {
 		this.children_controller.init(NodeContext.POST);
 		// this._init_manager();
 	}

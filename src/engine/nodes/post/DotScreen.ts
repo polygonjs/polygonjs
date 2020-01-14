@@ -26,10 +26,6 @@ export class DotScreen extends BasePostProcessNode {
 		return DotScreenPass;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.VECTOR2, 'center', [0.5, 0.5]);
 		this.add_param(ParamType.FLOAT, 'angle', 1.57, {range: [0, 10], range_locked: [false, false]});

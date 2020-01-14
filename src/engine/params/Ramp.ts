@@ -17,7 +17,7 @@ interface RampParamVisitor extends TypedParamVisitor {
 	visit_ramp_param: (param: RampParam) => any;
 }
 
-export class RampParam extends Single<RampValue> {
+export class RampParam extends Single<ParamType.RAMP> {
 	static type() {
 		return ParamType.RAMP;
 	}
@@ -27,9 +27,7 @@ export class RampParam extends Single<RampValue> {
 
 	static DEFAULT_VALUE = new RampValue('linear', [new RampPoint(0, 0), new RampPoint(1, 1)]);
 
-	constructor(scene: PolyScene) {
-		super(scene, 'ramp');
-
+	initialize_param() {
 		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture.bind(this));
 	}
 	accepts_visitor(visitor: RampParamVisitor) {

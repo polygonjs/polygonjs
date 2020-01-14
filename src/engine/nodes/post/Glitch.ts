@@ -25,10 +25,6 @@ export class Glitch extends BasePostProcessNode {
 
 	private _param_go_wild: boolean;
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.BOOLEAN, 'go_wild', 0);
 	}

@@ -13,11 +13,11 @@ import {CoreMaterial} from 'src/core/geometry/Material';
 import {ObjectType} from 'src/core/geometry/Constant';
 
 import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {TypedContainerController} from '../utils/ContainerController';
 import {BaseMatNode} from '../mat/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
-import {NodeParamsConfig} from '../utils/ParamsConfig';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // import * as Container from '../../Container/Geometry';
 
 // import {AttribTypeParam} from './concerns/AttribTypeParam';
@@ -45,6 +45,11 @@ const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
 export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryContainer, K> {
+	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
+		this,
+		GeometryContainer
+	);
+
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
 	}
@@ -56,8 +61,7 @@ export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryC
 	// _master_group: Group
 	// _objects: Object3D[] = []
 
-	constructor(scene: PolyScene) {
-		super(scene, 'BaseSopNode');
+	initialize_node() {
 		this.container_controller.init(GeometryContainer);
 		this.flags.add_display();
 		this.flags.add_bypass();

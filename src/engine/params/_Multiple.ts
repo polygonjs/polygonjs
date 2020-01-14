@@ -9,7 +9,8 @@
 // import lodash_map from 'lodash/map'
 import {TypedParam, TypedParamVisitor} from './_Base';
 import {FloatParam} from './Float';
-
+import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamType} from '../poly/ParamType';
 // import {AsCodeMultiple} from './concerns/visitors/Multiple';
 // import {Vector} from 'three/src/math/Vector2'
 
@@ -45,24 +46,21 @@ interface MultipleParamVisitor extends TypedParamVisitor {
 	visit_typed_multiple_param: (param: TypedMultipleParam<any>) => any;
 }
 
-export abstract class TypedMultipleParam<T> extends TypedParam<T> {
+export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
-	// constructor() {
-	// 	super();
-	// }
+
 	accepts_visitor(visitor: MultipleParamVisitor): any {
 		return visitor.visit_typed_multiple_param(this);
 	}
 
 	init_components() {
 		for (let component_name of this.component_names) {
-			const component = new this._components_contructor(this.scene, `${this.name}${name}`);
-
+			const component = new this._components_contructor(this.scene); //, `${this.name}${name}`);
 			component.set_default_value((this._default_value as any)[component_name]);
 			component.options.copy(this.options);
 
 			// component.set_scene(this.scene);
-			component.set_name(`${this.name}${name}`);
+			component.set_name(`${this.name}${component_name}`);
 			component.set_parent_param(this);
 
 			// component.initialize();
@@ -73,6 +71,7 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	get is_numeric() {
 		return true;
 	}
+
 	// convert_value(v) {
 	// 	if (lodash_isBoolean(v)) {
 	// 		v = v ? 1 : 0
@@ -107,9 +106,8 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	// }
 
 	has_expression() {
-		const components = this.components();
-		for (let i = 0; i < components.length; i++) {
-			if (components[i].expression_controller.active) {
+		for (let c of this.components) {
+			if (c.expression_controller.active) {
 				return true;
 			}
 		}
@@ -122,9 +120,8 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	// }
 	set_expression(expression: string) {
 		// if (lodash_isArray(expressions)) {
-		const components = this.components();
-		for (let i = 0; i < components.length; i++) {
-			components[i].expression_controller.set_expression(expression);
+		for (let c of this.components) {
+			c.expression_controller.set_expression(expression);
 		}
 		// } else {
 		// 	this.components()[0].set_expression(expressions)
@@ -132,9 +129,8 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	}
 
 	is_raw_input_default() {
-		const components = this.components();
-		for (let i = 0; i < components.length; i++) {
-			if (!components[i].is_raw_input_default()) {
+		for (let c of this.components) {
+			if (!c.is_raw_input_default()) {
 				return false;
 			}
 		}
@@ -142,15 +138,15 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	}
 
 	async eval_components() {
-		const components = this.components();
+		const components = this.components;
 		// const component_evaluation_states = lodash_map(components, ()=> false);
 		// const expected_values_count = components.length;
 		// const component_values = [];
 		// let component;
 		// return lodash_each(this.components(), (component, index)=> {
 		const promises = [];
-		for (let i = 0; i < components.length; i++) {
-			promises.push(components[i].eval_p()); //component_value=> {
+		for (let c of components) {
+			promises.push(c.eval_p()); //component_value=> {
 		}
 		const component_values = await Promise.all(promises);
 		// component_values[index] = component_value;
@@ -180,12 +176,12 @@ export abstract class TypedMultipleParam<T> extends TypedParam<T> {
 	// 	else
 	// 		throw "trying to evaluate component with index #{index} which does not exist"
 
-	set(value: T) {
+	set(value: ParamValuesTypeMap[T]) {
 		const cooker = this.scene.cooker;
 		cooker.block();
-		const components = this.components();
-		for (let i = 0; i < components.length; i++) {
-			components[i].emit_controller.block_parent_emit();
+		const components = this.components;
+		for (let c of components) {
+			c.emit_controller.block_parent_emit();
 		}
 
 		// if (lodash_isArray(values)) {

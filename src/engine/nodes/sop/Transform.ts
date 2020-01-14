@@ -1,6 +1,3 @@
-import {Vector3} from 'three/src/math/Vector3';
-
-import {BaseNode} from '../_Base';
 import {BaseSopNode} from './_Base';
 import {GroupParamController} from './utils/GroupParamController';
 
@@ -13,13 +10,15 @@ const DEFAULT_PARAMS = {
 	PIVOT: [0, 0, 0] as [number, number, number],
 };
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class TransformSopParamConfig extends NodeParamsConfig {
-	group = new ParamConfig<ParamType.STRING>('');
-	pivot = new ParamConfig<ParamType.VECTOR3>([0, 0, 0]);
+	group = ParamConfig.STRING('');
+	pivot = ParamConfig.VECTOR3([0, 0, 0]);
 }
+const ParamsConfig = new TransformSopParamConfig();
 
 export class TransformSopNode extends BaseSopNode<TransformSopParamConfig> {
+	params_config = ParamsConfig;
 	static type() {
 		return 'transform';
 	}
@@ -31,9 +30,9 @@ export class TransformSopNode extends BaseSopNode<TransformSopParamConfig> {
 		return ['geometry to transform'];
 	}
 
-	constructor() {
-		super();
-
+	// constructor(scene: PolyScene) {
+	// 	super(scene);
+	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}

@@ -30,9 +30,7 @@ export class CubeCameraObjNode extends BaseObjNode {
 	private _cube_camera_objects: Object3D[];
 	private _cube_camera: CubeCamera;
 
-	constructor(scene: PolyScene) {
-		super(scene, 'CubeCameraObjNode');
-
+	initialize_node() {
 		// this._init_display_flag({
 		// 	has_display_flag: false,
 		// });

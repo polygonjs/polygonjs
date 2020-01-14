@@ -1,10 +1,9 @@
 import {TypedParam} from './_Base';
+import {ParamType} from '../poly/ParamType';
+import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 
-export class Single<T> extends TypedParam<T> {
+export class Single<T extends ParamType> extends TypedParam<T> {
 	// protected _expression: string
-	// constructor() {
-	// 	super()
-	// }
 	// convert_value(value: any) {
 	// 	return value
 	// }
@@ -26,11 +25,11 @@ export class Single<T> extends TypedParam<T> {
 			//this.clear_error()
 			if (this.has_expression()) {
 				const val = await this.expression_controller.eval();
-				const converted: T = this.convert(val);
+				const converted = this.convert(val);
 				this.post_eval_raw(converted);
 				return converted;
 			} else {
-				this._value = this._raw_input;
+				this._value = this.convert(this._raw_input);
 				this.remove_dirty_state();
 				return this._value;
 			}
@@ -49,7 +48,7 @@ export class Single<T> extends TypedParam<T> {
 	// 		await a.eval_with_promise()
 	// 	test(this)
 
-	post_eval_raw(value: T) {
+	post_eval_raw(value: ParamValuesTypeMap[T]) {
 		const previous_value = this._value; // TODO: I should probably clone this, to compare if the result has changed, and then execute the callback
 		this._value = value;
 
@@ -96,7 +95,7 @@ export class Single<T> extends TypedParam<T> {
 	// 		this.eval(callback)
 	// 	setTimeout(c, 50)
 
-	set(new_value: T) {
+	set(new_value: ParamValuesTypeMap[T]) {
 		// new_value = this.convert_value(new_value)
 		if (this._value === new_value && !this.has_expression()) {
 			return;

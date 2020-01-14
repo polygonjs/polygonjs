@@ -5,10 +5,7 @@
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
 
-export class BooleanParam extends TypedNumericParam<boolean> {
-	// constructor() {
-	// 	super();
-	// }
+export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static type() {
 		return ParamType.BOOLEAN;
 	}

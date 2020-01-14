@@ -59,8 +59,7 @@
 // 	private _fragment_shader: string;
 // 	private _assembler: ShaderAssemblerTexture;
 
-// 	constructor() {
-// 		super();
+// 	initialize_node() {
 
 // 		this._init_common_shader_builder(ShaderAssemblerTexture, {
 // 			has_display_flag: true

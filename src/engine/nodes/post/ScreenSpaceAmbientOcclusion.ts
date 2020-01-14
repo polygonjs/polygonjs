@@ -34,10 +34,6 @@
 // 	private _param_min_distance: number;
 // 	private _param_max_distance: number;
 
-// 	constructor() {
-// 		super();
-// 	}
-
 // 	create_params() {
 // 		this.self.add_param(ParamType.INTEGER, "output_type", 0, {
 // 			menu: {

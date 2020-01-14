@@ -25,14 +25,14 @@ export class EmitController {
 	block_emit() {
 		this._blocked_emit = true;
 		if (this.param.is_multiple) {
-			this.param.components().forEach((c: BaseParam) => c.emit_controller.block_emit());
+			this.param.components.forEach((c: BaseParam) => c.emit_controller.block_emit());
 		}
 		return true;
 	}
 	unblock_emit() {
 		this._blocked_emit = false;
 		if (this.param.is_multiple) {
-			this.param.components().forEach((c: BaseParam) => c.emit_controller.unblock_emit());
+			this.param.components.forEach((c: BaseParam) => c.emit_controller.unblock_emit());
 		}
 		return true;
 	}

@@ -8,8 +8,7 @@ export class CopObjNode extends BaseManagerObjNode {
 	}
 	// children_context(){ return NodeContext.COP }
 
-	constructor(scene: PolyScene) {
-		super(scene, 'CopObjNode');
+	initialize_node() {
 		this.children_controller.init(NodeContext.COP);
 		// this._init_manager();
 	}

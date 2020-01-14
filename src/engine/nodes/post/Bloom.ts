@@ -27,10 +27,6 @@ export class Bloom extends BasePostProcessNode {
 		return BloomPass;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'strength', 0.5, {range: [0, 1], range_locked: [false, false]});
 		this.add_param(ParamType.INTEGER, 'kernel_size', 25, {range: [0, 100], range_locked: [true, false]});

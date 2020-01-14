@@ -38,10 +38,6 @@ export class DepthOfField extends BasePostProcessNode {
 		return BokehPass2;
 	}
 
-	constructor() {
-		super();
-	}
-
 	static saturate(x: number) {
 		return Math.max(0, Math.min(1, x));
 	}

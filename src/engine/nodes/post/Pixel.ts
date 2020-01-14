@@ -36,10 +36,6 @@ export class Pixel extends BasePostProcessNode {
 
 	private _param_pixel_size: number;
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.INTEGER, 'pixel_size', 16, {
 			range: [1, 50],

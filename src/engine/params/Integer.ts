@@ -4,10 +4,7 @@
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
 
-export class IntegerParam extends TypedNumericParam<number> {
-	// constructor() {
-	// 	super();
-	// }
+export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
 		return ParamType.INTEGER;
 	}

@@ -5,23 +5,22 @@ import {CoreGroup} from 'src/core/geometry/Group';
 // import {Vector3} from 'three/src/math/Vector3';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
 // import {CoreGeometry} from 'src/core/geometry/Geometry'
-import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from 'src/engine/poly/ParamType';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/ParamsConfig';
-class BoxSopParamConfig extends NodeParamsConfig {
-	size = new ParamConfig<ParamType.FLOAT>(1);
-	divisions = new ParamConfig<ParamType.FLOAT>(1, {
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class BoxSopParamsConfig extends NodeParamsConfig {
+	size = ParamConfig.FLOAT(1);
+	divisions = ParamConfig.FLOAT(1, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});
-	center = new ParamConfig<ParamType.VECTOR3>([0, 0, 0]);
+	center = ParamConfig.VECTOR3([0, 0, 0]);
 }
+const ParamsConfig = new BoxSopParamsConfig();
 
-export class BoxSopNode extends BaseSopNode<BoxSopParamConfig> {
-	// @BaseNode.ParamVector3('center') _param_center: Vector3;
-	// @BaseNode.ParamFloat('divisions') _param_divisions: number;
-	// @BaseNode.ParamFloat('size') _param_size: number;
+export class BoxSopNode extends BaseSopNode<BoxSopParamsConfig> {
+	params_config = ParamsConfig;
 	static type() {
 		return 'box';
 	}
@@ -30,12 +29,13 @@ export class BoxSopNode extends BaseSopNode<BoxSopParamConfig> {
 		return ['geometry to create bounding box from (optional)'];
 	}
 
-	constructor() {
-		super();
+	// constructor(scene: PolyScene) {
+	// 	super(scene);
+	// }
+	initialize_node() {
 		this.io.inputs.set_count_to_one_max();
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
 	}
-
 	// create_params() {
 	// 	this.add_param(ParamType.FLOAT, 'size', 1);
 	// 	this.add_param(ParamType.INTEGER, 'divisions', 1, {

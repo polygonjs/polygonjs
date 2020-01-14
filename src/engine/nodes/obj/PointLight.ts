@@ -22,8 +22,7 @@ export class PointLightObj extends BaseLightTransformedObjNode {
 	static type() {
 		return 'point_light';
 	}
-	constructor(scene: PolyScene) {
-		super(scene, 'PointLightObjNode');
+	initialize_node() {
 		this.io.inputs.set_count_to_one_max();
 	}
 

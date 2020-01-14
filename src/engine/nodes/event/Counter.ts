@@ -18,8 +18,7 @@ export class CounterEventNode extends BaseEventNode {
 		return 'counter';
 	}
 
-	constructor() {
-		super();
+	initialize_node() {
 		// this.set_inputs_count_to_zero();
 
 		this.add_post_dirty_hook(this._update_counter_if_required.bind(this));

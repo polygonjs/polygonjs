@@ -8,24 +8,14 @@ import {TypedParamVisitor} from './_Base';
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
 
-// class BaseModules extends AsCodeString(Single) {
-// 	constructor() {
-// 		super();
-// 	}
-// }
-// window.include_instance_methods(BaseModules, AsCodeString.instance_methods);
-
 interface StringParamVisitor extends TypedParamVisitor {
 	visit_string_param: (param: StringParam) => any;
 }
 
-export class StringParam extends Single<string> {
+export class StringParam extends Single<ParamType.STRING> {
 	// private _input_string: string
 	// private _expression_controllers: ExpressionController[] = []
 
-	// constructor() {
-	// 	super();
-	// }
 	static type() {
 		return ParamType.STRING;
 	}

@@ -41,7 +41,7 @@
 
 // 	private _param_resolution: Vector2;
 
-// 	constructor() {
+// 	initialize_node() {
 // 		super();
 
 // 		this.set_inputs_count_to_zero();

@@ -1,10 +1,10 @@
 import {TypedMultipleParam} from './_Multiple';
-// import {ParamFloat} from './Float'
+import lodash_isArray from 'lodash/isArray';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
 
 const COMPONENT_NAMES_COLOR = ['r', 'g', 'b'];
-export class ColorParam extends TypedMultipleParam<Color> {
+export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	static type() {
 		return ParamType.COLOR;
 	}
@@ -18,5 +18,11 @@ export class ColorParam extends TypedMultipleParam<Color> {
 		this._value.g = cs[1];
 		this._value.b = cs[2];
 		return this._value;
+	}
+	convert(input: any) {
+		if (lodash_isArray(input)) {
+			return new Color().fromArray(input);
+		}
+		return new Color();
 	}
 }

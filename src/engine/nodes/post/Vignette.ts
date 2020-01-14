@@ -31,10 +31,6 @@ export class Vignette extends BasePostProcessNode {
 		return VignetteShader;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'offset', 1, {range: [0, 1], range_locked: [false, false]});
 		this.add_param(ParamType.FLOAT, 'darkness', 1, {range: [0, 2], range_locked: [true, false]});

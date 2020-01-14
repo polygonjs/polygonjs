@@ -8,8 +8,7 @@ export class MaterialsObjNode extends BaseManagerObjNode {
 	}
 	// children_context(){ return NodeContext.MAT }
 
-	constructor(scene: PolyScene) {
-		super(scene, 'GeoObjNode');
+	initialize_node() {
 		this.children_controller.init(NodeContext.MAT);
 		// TODO: typescript
 		// this._init_manager({

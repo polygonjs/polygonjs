@@ -4,13 +4,6 @@ import {CoreTransform} from 'src/core/Transform';
 
 // import {Transformed} from './Concerns/Transformed';
 
-// class BaseModules extends BaseLight {
-// 	constructor() {
-// 		super();
-// 	}
-// }
-// window.include_instance_methods(BaseModules, Transformed.instance_methods);
-
 export abstract class BaseLightTransformedObjNode extends BaseLightObjNode {
 	create_params() {
 		this.within_param_folder('transform', () => {

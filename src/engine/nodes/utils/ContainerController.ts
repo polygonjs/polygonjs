@@ -14,11 +14,14 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 	protected _container: T;
 	// protected _container_class: typeof T;
 
-	constructor(protected node: BaseNode) {}
-
-	init(container_class: typeof BaseContainer) {
+	constructor(protected node: BaseNode, container_class: typeof BaseContainer) {
 		this._container = new container_class(this.node) as T;
 	}
+
+	// init(container_class: typeof BaseContainer) {
+	// 	console.log('container init', this.node);
+	// 	this._container = new container_class(this.node) as T;
+	// }
 	get container() {
 		return this._container;
 	}
@@ -80,6 +83,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 			});
 		} else {
 			if (this.node.is_dirty) {
+				console.log(this.node, this.node.container_controller);
 				this.node.container_controller.container.reset_caches();
 				this.node.cook_controller.cook_main();
 			} else {

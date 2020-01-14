@@ -5,10 +5,7 @@
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
 
-export class FloatParam extends TypedNumericParam<number> {
-	// constructor() {
-	// 	super()
-	// }
+export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	static type() {
 		return ParamType.FLOAT;
 	}

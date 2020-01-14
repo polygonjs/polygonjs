@@ -50,10 +50,6 @@ export class Image extends BasePostProcessNode {
 		};
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.OPERATOR_PATH, 'map', FileCopNode.DEFAULT_NODE_PATH.UV, {
 			// texture: texture_options,

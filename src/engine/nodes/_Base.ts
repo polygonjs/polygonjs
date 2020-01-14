@@ -39,9 +39,9 @@ import {CookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer} from './utils/Serializer';
-import {ParamsController} from './utils/ParamsController';
-import {NodeParamsConfig} from './utils/ParamsConfig';
-import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/ParamsValueAccessor';
+import {ParamsController} from './utils/params/ParamsController';
+import {NodeParamsConfig} from './utils/params/ParamsConfig';
+import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/params/ParamsValueAccessor';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/IOController';
@@ -94,10 +94,11 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 	private _states: StatesController;
 	private _lifecycle: LifeCycleController;
 	private _serializer: NodeSerializer;
-	private _container_controller: TypedContainerController<T>; // = new T(this)
+	container_controller: TypedContainerController<T>;
 	private _cook_controller: CookController;
 
 	private _params_controller: ParamsController;
+	readonly params_config: K;
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>(this)) as ParamsValueAccessorType<K>;
 
 	private _processing_context: ProcessingContext;
@@ -130,9 +131,9 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 	get serializer(): NodeSerializer {
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
-	get container_controller(): TypedContainerController<T> {
-		return (this._container_controller = this._container_controller || new TypedContainerController<T>(this));
-	}
+	// get container_controller(): TypedContainerController<T> {
+	// 	return (this._container_controller = this._container_controller || new TypedContainerController<T>(this));
+	// }
 	get cook_controller(): CookController {
 		return (this._cook_controller = this._cook_controller || new CookController(this));
 	}
@@ -149,6 +150,11 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 		return (this._processing_context = this._processing_context || new ProcessingContext(this));
 	}
 
+	constructor(scene: PolyScene, name: string = 'BaseNode') {
+		super(scene, name);
+		this.initialize_node();
+	}
+	initialize_node() {}
 	// constructor() {
 	// 	super('base_node');
 

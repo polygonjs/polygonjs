@@ -26,11 +26,6 @@ export class CameraOrbitControlsEventNode extends BaseCameraControlsEventNode {
 		return ['controls/OrbitControls'];
 	}
 
-	constructor() {
-		super();
-		// this/.set_inputs_count_to_zero();
-	}
-
 	create_params() {
 		this.add_param(ParamType.BOOLEAN, 'allow_pan', 1);
 		this.add_param(ParamType.BOOLEAN, 'allow_rotate', 1);

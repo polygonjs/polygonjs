@@ -29,10 +29,6 @@ export class Sepia extends BasePostProcessNode {
 	private _shader_class: any;
 	private _param_amount: number;
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'amount', 0.5, {range: [0, 1], range_locked: [false, false]});
 	}

@@ -18,7 +18,7 @@ export class ParamSerializer {
 		};
 
 		if (this.param.is_multiple) {
-			data['components'] = this.param.components().map((component) => component.graph_node_id);
+			data['components'] = this.param.components.map((component) => component.graph_node_id);
 		}
 
 		return data;

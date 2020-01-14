@@ -26,8 +26,7 @@
 
 // 	// private _texture_loader: CoreTextureLoader
 
-// 	constructor() {
-// 		super();
+// 	initialize_node() {
 
 // 		this.io.inputs.set_inputs_count(1);
 

@@ -213,9 +213,7 @@ export class FileCopNode extends BaseCopNode {
 		ENV_MAP: '/COP/env_map',
 	};
 
-	constructor() {
-		super();
-
+	initialize_node() {
 		this.io.inputs.set_count_to_zero();
 	}
 

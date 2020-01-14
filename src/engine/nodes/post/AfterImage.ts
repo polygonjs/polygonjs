@@ -21,10 +21,6 @@ export class AfterImage extends BasePostProcessNode {
 		return AfterimagePass;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'damp', 0.96, {
 			range: [0, 1],

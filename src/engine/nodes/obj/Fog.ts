@@ -5,13 +5,6 @@ import {Fog} from 'three/src/scenes/Fog';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from 'src/engine/poly/ParamType';
 
-// class BaseModules extends Base {
-// 	constructor() {
-// 		super();
-// 	}
-// }
-// window.include_instance_methods(BaseModules, Dirtyable.instance_methods);
-
 const DEFAULT = {
 	color: new Color(1, 1, 1),
 	near: 0,
@@ -22,8 +15,7 @@ const DEFAULT = {
 // export Fog = (function() {
 // 	let DEFAULT = undefined;
 // 	Fog = class Fog extends BaseModules {
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/ParamsConfig';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class FogObjParamConfig extends NodeParamsConfig {
 	color = new ParamConfig<ParamType.COLOR>(DEFAULT.color.toArray() as [number, number, number]);
 	exponential = new ParamConfig<ParamType.BOOLEAN>(0);
@@ -42,9 +34,7 @@ export class FogObjNode extends TypedObjNode<FogObjParamConfig> {
 	protected _linear_fog: Fog;
 	protected _linear_fogexp2: FogExp2;
 
-	constructor(scene: PolyScene) {
-		super(scene, 'FogObjNode');
-
+	initialize_node() {
 		this.flags.add_display();
 		// this._init_display_flag({
 		// 	multiple_display_flags_allowed: false,

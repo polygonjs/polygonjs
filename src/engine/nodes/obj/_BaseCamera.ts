@@ -2,7 +2,7 @@ import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
 
 import {CoreTransform} from 'src/core/Transform';
-import {BaseObjNode} from './_Base';
+import {TypedObjNode} from './_Base';
 import {ControlsController} from './utils/cameras/ControlsController';
 import {LayersController} from './utils/LayersController';
 import {PostProcessController} from './utils/cameras/PostProcessController';
@@ -19,7 +19,8 @@ import {ThreejsViewer} from 'src/engine/viewers/Threejs';
 import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -28,11 +29,7 @@ export interface OrthoOrPerspCamera extends Camera {
 }
 
 // import {ControlsController} from './utils/ControlsController';
-// class BaseModules extends Base {
-// 	constructor() {
-// 		super();
-// 	}
-// }
+
 // window.include_instance_methods(BaseModules, Dirtyable.instance_methods);
 // window.include_instance_methods(BaseModules, Layers.instance_methods);
 // window.include_instance_methods(BaseModules, Transformed.instance_methods);
@@ -46,7 +43,7 @@ export const BASE_CAMERA_DEFAULT = {
 	far: 100.0,
 };
 
-export class BaseCameraObjNode extends BaseObjNode {
+export class BaseCameraObjNode<K extends NodeParamsConfig> extends TypedObjNode<K> {
 	protected _object: OrthoOrPerspCamera;
 	get object() {
 		return this._object;
@@ -77,9 +74,7 @@ export class BaseCameraObjNode extends BaseObjNode {
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
 
-	constructor(scene: PolyScene) {
-		super(scene, 'BaseCamera');
-
+	initialize_node() {
 		this.io.inputs.set_count_to_one_max();
 		this._init_dirtyable_hook();
 	}

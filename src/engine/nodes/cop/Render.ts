@@ -45,8 +45,7 @@
 // 	private _aspect: number;
 // 	private _camera_node: BaseCameraNode;
 
-// 	constructor() {
-// 		super();
+// 	initialize_node() {
 
 // 		this.set_inputs_count_to_zero(0);
 

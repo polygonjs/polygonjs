@@ -15,7 +15,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {BaseSopNode} from '../sop/_Base';
 import {BoxSopNode} from '../sop/Box';
 import {TransformSopNode} from '../sop/Transform';
-import {NodeParamsConfig} from 'src/engine/nodes/utils/ParamsConfig';
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
 interface SopNodeTypeMap {
@@ -34,9 +34,7 @@ export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 	// 	return NodeContext.SOP;
 	// }
 
-	constructor(scene: PolyScene) {
-		super(scene, 'GeoObjNode');
-
+	initialize_node() {
 		this.children_controller.init(NodeContext.SOP);
 
 		this.flags.add_display();

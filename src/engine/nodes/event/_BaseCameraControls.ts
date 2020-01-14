@@ -12,10 +12,6 @@ export interface CameraControls extends OrbitControls {
 }
 
 export abstract class BaseCameraControlsEventNode extends BaseEventNode {
-	constructor() {
-		super();
-	}
-
 	// controls() {
 	// 	return this._controls;
 	// }

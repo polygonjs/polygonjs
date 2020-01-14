@@ -46,15 +46,18 @@ import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
+import {PolyScene} from '../scene/PolyScene';
+
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 
 export interface TypedParamVisitor {
 	visit_typed_param: (param: BaseParam) => any;
 }
 
-export abstract class TypedParam<T> extends CoreGraphNode {
-	protected _raw_input: T;
-	protected _default_value: T;
-	protected _value: T;
+export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
+	protected _raw_input: string;
+	protected _default_value: ParamValuesTypeMap[T];
+	protected _value: ParamValuesTypeMap[T];
 	// protected _expression: string;
 	protected _node: BaseNode;
 	protected _parent_param: TypedMultipleParam<any>;
@@ -85,9 +88,12 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 		return (this._ui_data = this._ui_data || new UIData(this.scene, this));
 	}
 
-	// constructor() {
-	// 	super();
-
+	constructor(scene: PolyScene) {
+		super(scene, 'BaseParam');
+		this.initialize_param();
+	}
+	initialize_value() {}
+	initialize_param() {}
 	// 	// this.add_post_dirty_hook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {
@@ -121,23 +127,27 @@ export abstract class TypedParam<T> extends CoreGraphNode {
 	}
 
 	// TODO: typescript
-	get value(): T {
+	get value() {
 		return this._value;
 	}
-	convert(raw_val: any): T {
+	convert(raw_val: any): ParamValuesTypeMap[T] {
 		return this._default_value;
 	}
-	set(new_value: T): void {}
+	set(new_value: ParamValuesTypeMap[T]): void {}
 	get default_value() {
 		return this._default_value;
 	}
-	is_raw_input_default(value: T): boolean {
+	is_raw_input_default(value: any): boolean {
 		return true;
 	}
-	set_default_value(default_value: T) {
+	set_default_value(default_value: ParamValuesTypeMap[T]) {
 		this._default_value = default_value;
 	}
-	eval_p(): Promise<T> {
+	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
+		this._default_value = this.convert(init_value);
+		this._value = this.convert(init_value);
+	}
+	eval_p(): Promise<ParamValuesTypeMap[T]> {
 		return new Promise((resolve, reject) => {
 			resolve();
 		});

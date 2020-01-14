@@ -33,6 +33,7 @@ import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 import {RampValue} from 'src/engine/params/ramp/RampValue';
 import {Vector4} from 'three';
+import {NodeParamsConfig} from './ParamsConfig';
 // type ParamConstructorMap = {[key in ParamType]: any};
 
 // enum ParamType {
@@ -132,13 +133,33 @@ export class ParamsController {
 		// this.reset_params()
 		this._param_create_mode = true;
 
-		// this._init_spare_params();
+		this.init_from_params_config();
 		this.node.create_params();
 		this._update_caches();
 		this._create_params_ui_data_dependencies();
+		this.init_param_accessors();
 		this._param_create_mode = false;
 
 		// this.post_create_params(); // TODO: typescript
+	}
+
+	private init_from_params_config() {
+		const params_config = this.node.params_config as NodeParamsConfig;
+		if (params_config) {
+			for (let name of Object.keys(params_config)) {
+				const config = params_config[name];
+				this.add_param(config.type, name, config.init_value, config.options);
+			}
+		}
+	}
+	private init_param_accessors() {
+		for (let param of this.all) {
+			Object.defineProperty(this.node.pv, param.name, {
+				get: () => {
+					return param.value;
+				},
+			});
+		}
 	}
 
 	get params_node() {
@@ -281,7 +302,12 @@ export class ParamsController {
 		}
 	}
 
-	add_param(type: ParamType, name: string, default_value: any, options: ParamOptions = {}): BaseParam | null {
+	add_param<T extends ParamType>(
+		type: T,
+		name: string,
+		init_value: ParamInitValuesTypeMap[T],
+		options: ParamOptions = {}
+	): BaseParam | null {
 		const is_spare = options['spare'] || false;
 		if (this._param_create_mode === false && !is_spare) {
 			console.warn(
@@ -310,12 +336,12 @@ export class ParamsController {
 					return null;
 				}
 			}
-			const param: BaseParam = new constructor(this.node.scene, name);
-			param.set_default_value(default_value);
+			const param: BaseParam = new constructor(this.node.scene);
 			param.options.set(options);
 
 			// param.set_scene(this.node.scene);
 			param.set_name(name);
+			param.set_init_value(init_value);
 			// param.initialize();
 			param.ui_data.set_folder_name(this.current_param_folder_name());
 

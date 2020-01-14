@@ -23,8 +23,7 @@ export class SpotLightObj extends BaseLightTransformedObjNode {
 	static type() {
 		return 'spot_light';
 	}
-	constructor(scene: PolyScene) {
-		super(scene, 'SpotLightObjNode');
+	initialize_node() {
 		this.io.inputs.set_count_to_one_max();
 	}
 

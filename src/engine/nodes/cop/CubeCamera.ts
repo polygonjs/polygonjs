@@ -17,10 +17,6 @@
 
 // 	// private _texture_loader: CoreTextureLoader
 
-// 	constructor() {
-// 		super();
-// 	}
-
 // 	create_params() {
 // 		this.add_param(ParamType.OPERATOR_PATH, 'cube_camera', '/cube_camera1', {
 // 			node_selection: {

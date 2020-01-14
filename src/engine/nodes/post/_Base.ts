@@ -13,8 +13,7 @@ export abstract class BasePostProcessNode extends BaseNode {
 		return NodeContext.POST;
 	}
 
-	constructor(scene: PolyScene) {
-		super(scene, 'BasePostProcessNode');
+	initialize_node() {
 		this.container_controller.init(PostProcessContainer);
 
 		// this.io.inputs.set_count_to_zero();

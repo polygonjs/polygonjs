@@ -7,8 +7,8 @@ import {ObjectContainer} from 'src/engine/containers/Object';
 import {LookAtController} from './utils/LookAtController';
 import {TransformController} from './utils/TransformController';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-import {NodeParamsConfig} from '../utils/ParamsConfig';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {TypedContainerController} from '../utils/ContainerController';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
@@ -17,10 +17,14 @@ interface Object3DWithNode extends Object3D {
 	node: BaseNode;
 }
 interface BaseObjNodeVisitor extends BaseNodeVisitor {
-	node_obj: (node: BaseObjNode) => void;
+	visit_node_obj: (node: BaseObjNode) => void;
 }
 
 export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectContainer, K> {
+	container_controller: TypedContainerController<ObjectContainer> = new TypedContainerController<ObjectContainer>(
+		this,
+		ObjectContainer
+	);
 	static node_context(): NodeContext {
 		return NodeContext.OBJ;
 	}
@@ -40,8 +44,7 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectCo
 		return (this._transform_controller = this._transform_controller || new TransformController(this));
 	}
 
-	constructor(scene: PolyScene, name: string) {
-		super(scene, 'BaseObjNode');
+	initialize_node() {
 		// this.container_controller.init(ObjectContainer);
 		this._object = this._create_object_with_attributes();
 		// this._init_container_owner('Object');
@@ -149,8 +152,8 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectCo
 	// 	this.param('display').eval (val)->
 	// 		callback(val)
 
-	visit(visitor: BaseObjNodeVisitor) {
-		return visitor.node_obj(this);
+	accepts_visitor(visitor: BaseObjNodeVisitor) {
+		visitor.visit_node_obj(this);
 	}
 
 	// replaces Dirtyable (TODO: try and replace this method name)

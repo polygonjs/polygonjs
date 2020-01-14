@@ -29,10 +29,6 @@ export class UnrealBloom extends BasePostProcessNode {
 		return UnrealBloomPass;
 	}
 
-	constructor() {
-		super();
-	}
-
 	create_params() {
 		this.add_param(ParamType.FLOAT, 'strength', 1.5, {range: [0, 3]});
 		this.add_param(ParamType.FLOAT, 'radius', 0);

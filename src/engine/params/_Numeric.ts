@@ -1,24 +1,12 @@
 import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
-
-// import {AsCodeNumeric} from './concerns/visitors/Numeric';
-
-// class BaseModules extends AsCodeNumeric(Single) {
-// 	constructor() {
-// 		super();
-// 	}
-// }
-// window.include_instance_methods(BaseModules, AsCodeNumeric.instance_methods);
+import {ParamType} from '../poly/ParamType';
 
 interface NumericParamVisitor extends TypedParamVisitor {
 	visit_numeric_param: (param: TypedNumericParam<any>) => any;
 }
 
-export class TypedNumericParam<T> extends Single<T> {
-	// constructor() {
-	// 	super();
-	// }
-
+export class TypedNumericParam<T extends ParamType> extends Single<T> {
 	get is_numeric() {
 		return true;
 	}

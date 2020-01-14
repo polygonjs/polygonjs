@@ -54,8 +54,7 @@
 // 		THREE.FloatType
 // 	)
 
-// 	constructor(){
-// 		super()
+// 	initialize_node(){
 
 // 		this.set_inputs_count_to_zero()
 // 		this._texture.image.data.fill(255)

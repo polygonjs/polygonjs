@@ -53,9 +53,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	private _loaded_geo_node_by_id: Dictionary<boolean> = {};
 	private _process_queue_start: number;
 
-	constructor(scene: PolyScene) {
-		super(scene, 'ObjectsManagerNode');
-
+	initialize_node() {
 		this.children_controller.init(NodeContext.OBJ);
 
 		this.flags.add_display();
