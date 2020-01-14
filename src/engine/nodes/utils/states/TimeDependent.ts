@@ -1,9 +1,9 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 // import lodash_includes from 'lodash/includes';
 // import lodash_values from 'lodash/values';
 
 export class TimeDependentState {
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	get active() {
 		return this.are_params_time_dependent() || this.are_inputs_time_dependent();

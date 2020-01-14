@@ -1,9 +1,9 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 
 export class BaseFlag {
 	// protected _available_states: [boolean, boolean] = [];
 	protected _state: boolean;
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	// set_available_states(states: T[]) {}
 	on_update() {}

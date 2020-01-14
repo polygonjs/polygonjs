@@ -1,21 +1,25 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
-import {BaseNode} from '../_Base';
+import {TypedNode} from '../_Base';
 
 import {PostProcessContainer} from 'src/engine/containers/PostProcess';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {BaseCameraObjNode} from '../obj/_BaseCamera';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+// import {PolyScene} from 'src/engine/scene/PolyScene';
+import {TypedContainerController} from '../utils/ContainerController';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export abstract class BasePostProcessNode extends BaseNode {
+export class TypedPostProcessNode<K extends NodeParamsConfig> extends TypedNode<PostProcessContainer, K> {
+	container_controller: TypedContainerController<PostProcessContainer> = new TypedContainerController<
+		PostProcessContainer
+	>(this, PostProcessContainer);
+
 	static node_context(): NodeContext {
 		return NodeContext.POST;
 	}
 
 	initialize_node() {
-		this.container_controller.init(PostProcessContainer);
-
 		// this.io.inputs.set_count_to_zero();
 		// this._init_outputs({has_outputs: false});
 	}
@@ -24,10 +28,13 @@ export abstract class BasePostProcessNode extends BaseNode {
 		this.set_container(render_pass);
 	}
 
-	abstract apply_to_composer(
+	apply_to_composer(
 		composer: EffectComposer,
 		camera: Camera,
 		resolution: Vector2,
-		camera_node: BaseCameraObjNode
-	): void;
+		camera_node: BaseCameraObjNodeType
+	): void {}
 }
+
+export type BasePostProcessNodeType = TypedPostProcessNode<NodeParamsConfig>;
+export class BasePostProcessNodeClass extends TypedPostProcessNode<NodeParamsConfig> {}

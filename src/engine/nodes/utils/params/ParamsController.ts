@@ -6,7 +6,7 @@
 // import lodash_each from 'lodash/each';
 // import lodash_values from 'lodash/values';
 
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParam} from 'src/engine/params/_Base';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
@@ -54,6 +54,20 @@ import {NodeParamsConfig} from './ParamsConfig';
 // declare global {
 // 	const ParamType: typeof ParamType;
 // }
+export type ParamConstructorMap = {
+	[ParamType.BOOLEAN]: BooleanParam;
+	[ParamType.BUTTON]: ButtonParam;
+	[ParamType.COLOR]: ColorParam;
+	[ParamType.FLOAT]: FloatParam;
+	[ParamType.INTEGER]: IntegerParam;
+	[ParamType.OPERATOR_PATH]: OperatorPathParam;
+	[ParamType.RAMP]: RampParam;
+	[ParamType.SEPARATOR]: SeparatorParam;
+	[ParamType.STRING]: StringParam;
+	[ParamType.VECTOR2]: Vector2Param;
+	[ParamType.VECTOR3]: Vector3Param;
+	[ParamType.VECTOR4]: Vector4Param;
+};
 
 const ParamConstructorMap = {
 	[ParamType.BOOLEAN]: BooleanParam,
@@ -69,6 +83,7 @@ const ParamConstructorMap = {
 	[ParamType.VECTOR3]: Vector3Param,
 	[ParamType.VECTOR4]: Vector4Param,
 };
+
 type StringOrNumber = string | number;
 export type ParamInitValuesTypeMap = {
 	[ParamType.BOOLEAN]: BooleanAsNumber;
@@ -117,7 +132,7 @@ export class ParamsController {
 	private _params_added_since_last_params_eval: boolean = false;
 	private _current_param_folder_name: string | null = null;
 
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	private init_dependency_node() {
 		if (!this._params_node) {
@@ -157,6 +172,11 @@ export class ParamsController {
 			Object.defineProperty(this.node.pv, param.name, {
 				get: () => {
 					return param.value;
+				},
+			});
+			Object.defineProperty(this.node.p, param.name, {
+				get: () => {
+					return param;
 				},
 			});
 		}

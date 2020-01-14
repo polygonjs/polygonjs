@@ -1,4 +1,4 @@
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 import {_Math} from 'three/src/math/Math';
 
 export enum ConnectionType {
@@ -23,8 +23,8 @@ export class NodeConnection {
 	private _uuid: string;
 
 	constructor(
-		private _node_src: BaseNode,
-		private _node_dest: BaseNode,
+		private _node_src: BaseNodeType,
+		private _node_dest: BaseNodeType,
 		private _output_index: number = 0,
 		private _input_index: number = 0
 	) {

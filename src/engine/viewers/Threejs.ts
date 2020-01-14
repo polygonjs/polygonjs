@@ -4,7 +4,7 @@ import {Vector2} from 'three/src/math/Vector2';
 // import {Color} from 'three/src/math/Color'
 
 import {BaseViewer} from './_Base';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
 import 'src/engine/Poly';
 
@@ -23,7 +23,7 @@ export class ThreejsViewer extends BaseViewer {
 
 	private _animate_method: () => void;
 
-	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNode) {
+	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNodeType) {
 		super(_container, _scene, camera_node);
 
 		this._canvas = document.createElement('canvas');

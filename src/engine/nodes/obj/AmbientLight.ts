@@ -1,27 +1,27 @@
-import {AmbientLight} from 'three/src/lights/AmbientLight';
-import {BaseLightObjNode} from './_BaseLight';
-import {Color} from 'three/src/math/Color';
-import {ParamType} from 'src/engine/poly/ParamType';
+// import {AmbientLight} from 'three/src/lights/AmbientLight';
+// import {BaseLightObjNode} from './_BaseLight';
+// import {Color} from 'three/src/math/Color';
+// import {ParamType} from 'src/engine/poly/ParamType';
 
-export class AmbientLightObj extends BaseLightObjNode {
-	@ParamC('color') _param_color: Color;
-	@ParamC('intensity') _param_intensity: number;
+// export class AmbientLightObj extends BaseLightObjNode {
+// 	@ParamC('color') _param_color: Color;
+// 	@ParamC('intensity') _param_intensity: number;
 
-	static type() {
-		return 'ambient_light';
-	}
+// 	static type() {
+// 		return 'ambient_light';
+// 	}
 
-	create_object() {
-		return new AmbientLight();
-	}
+// 	create_object() {
+// 		return new AmbientLight();
+// 	}
 
-	create_light_params() {
-		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
-		this.add_param(ParamType.FLOAT, 'intensity', 1, {range: [0, 10]});
-	}
+// 	create_light_params() {
+// 		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
+// 		this.add_param(ParamType.FLOAT, 'intensity', 1, {range: [0, 10]});
+// 	}
 
-	update_light_params() {
-		this.object.color = this._param_color;
-		this.object.intensity = this._param_intensity;
-	}
-}
+// 	update_light_params() {
+// 		this.object.color = this._param_color;
+// 		this.object.intensity = this._param_intensity;
+// 	}
+// }

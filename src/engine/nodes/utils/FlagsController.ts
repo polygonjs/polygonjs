@@ -1,4 +1,4 @@
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 
 import {BypassFlag} from './flags/Bypass';
 import {DisplayFlag} from './flags/Display';
@@ -6,7 +6,7 @@ import {DisplayFlag} from './flags/Display';
 export class FlagsController {
 	private _bypass: BypassFlag;
 	private _display: DisplayFlag;
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	// bypass
 	add_bypass() {

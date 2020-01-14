@@ -1,14 +1,19 @@
-import {BaseNode} from '../_Base';
+import {TypedNode} from '../_Base';
 import {EventContainer} from 'src/engine/containers/Event';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {TypedContainerController} from '../utils/ContainerController';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export class BaseEventNode extends BaseNode {
+export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<EventContainer, K> {
+	container_controller: TypedContainerController<EventContainer> = new TypedContainerController<EventContainer>(
+		this,
+		EventContainer
+	);
 	static node_context(): NodeContext {
 		return NodeContext.EVENT;
 	}
 
-	initialize_node() {
-		this.container_controller.init(EventContainer);
+	initialize_base_node() {
 		// this._init_display_flag({
 		// 	has_display_flag: false
 		// });

@@ -7,8 +7,8 @@ import lodash_range from 'lodash/range';
 // import {BaseParam} from 'src/engine/params/_Base';
 import {BooleanParam} from 'src/engine/params/Boolean';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {BasePostProcessNode} from 'src/engine/nodes/post/_Base';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BasePostProcessNodeType} from 'src/engine/nodes/post/_Base';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
 import {Pass} from 'modules/three/examples/jsm/postprocessing/Pass';
@@ -28,12 +28,12 @@ export class PostProcessController {
 	private _composers_set_in_progress_by_canvas_id: Dictionary<boolean> = {};
 	private _fetch_post_process_nodes_in_progress: boolean;
 	// private _render_passes: any[] = []
-	private _post_process_nodes: BasePostProcessNode[] = [];
+	private _post_process_nodes: BasePostProcessNodeType[] = [];
 
 	private _post_process_use_node_path_params: BooleanParam[] = [];
 	private _post_process_node_path_params: OperatorPathParam[] = [];
 
-	constructor(private node: BaseCameraObjNode) {}
+	constructor(private node: BaseCameraObjNodeType) {}
 
 	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
 		const renderer = this.renderer(canvas);
@@ -157,7 +157,7 @@ export class PostProcessController {
 					const use_node = toggle_param.value;
 					if (use_node) {
 						const param = this._post_process_node_path_params[i];
-						const post_process_node = param.found_node() as BasePostProcessNode;
+						const post_process_node = param.found_node() as BasePostProcessNodeType;
 						if (post_process_node) {
 							await post_process_node.request_container();
 							// const render_pass = container.render_pass()

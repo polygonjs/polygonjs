@@ -1,9 +1,8 @@
-import {BaseNode} from '../_Base';
+// import {BaseNode} from '../_Base';
 import {TypedObjNode} from './_Base';
 import {FogExp2} from 'three/src/scenes/FogExp2';
 import {Fog} from 'three/src/scenes/Fog';
 import {Color} from 'three/src/math/Color';
-import {ParamType} from 'src/engine/poly/ParamType';
 
 const DEFAULT = {
 	color: new Color(1, 1, 1),
@@ -17,19 +16,15 @@ const DEFAULT = {
 // 	Fog = class Fog extends BaseModules {
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class FogObjParamConfig extends NodeParamsConfig {
-	color = new ParamConfig<ParamType.COLOR>(DEFAULT.color.toArray() as [number, number, number]);
-	exponential = new ParamConfig<ParamType.BOOLEAN>(0);
-	density = new ParamConfig<ParamType.FLOAT>(1);
-	near = new ParamConfig<ParamType.FLOAT>(0, {range: [0, 100]});
-	far = new ParamConfig<ParamType.FLOAT>(100, {range: [0, 100]});
+	color = ParamConfig.COLOR(DEFAULT.color.toArray() as [number, number, number]);
+	exponential = ParamConfig.BOOLEAN(0);
+	density = ParamConfig.FLOAT(1);
+	near = ParamConfig.FLOAT(0, {range: [0, 100]});
+	far = ParamConfig.FLOAT(100, {range: [0, 100]});
 }
-
+const ParamsConfig = new FogObjParamConfig();
 export class FogObjNode extends TypedObjNode<FogObjParamConfig> {
-	// @BaseNode.ParamColor('color') _param_color: Color;
-	// @BaseNode.ParamBoolean('exponential') _param_exponential: boolean;
-	// @BaseNode.ParamFloat('density') _param_density: number;
-	// @BaseNode.ParamFloat('near') _param_near: number;
-	// @BaseNode.ParamFloat('far') _param_far: number;
+	params_config = ParamsConfig;
 
 	protected _linear_fog: Fog;
 	protected _linear_fogexp2: FogExp2;

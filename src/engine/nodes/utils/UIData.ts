@@ -1,7 +1,7 @@
 import CoreUIData from 'src/core/UIData';
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 export class UIData extends CoreUIData {
@@ -13,7 +13,7 @@ export class UIData extends CoreUIData {
 	private _layout_vertical: boolean = true;
 	private _comment: string;
 
-	constructor(private node: BaseNode, x: number = 0, y: number = 0) {
+	constructor(private node: BaseNodeType, x: number = 0, y: number = 0) {
 		super();
 		this._position = new Vector2(x || 0, y || 0);
 	}

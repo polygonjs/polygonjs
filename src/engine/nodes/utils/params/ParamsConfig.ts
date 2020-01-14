@@ -1,7 +1,7 @@
 // import {BaseNode} from 'src/engine/nodes/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from './ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap, ParamConstructorMap} from './ParamsController';
 
 // function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
 // 	const key_s = key as string;
@@ -86,6 +86,7 @@ export const _ParamFloat = function ParamF(default_value: number, options?: Para
 // }
 export class ParamTemplate<T extends ParamType> {
 	readonly value_type: ParamValuesTypeMap[T];
+	readonly param_class: ParamConstructorMap[T];
 	// readonly options?: ParamOptions;
 
 	constructor(public type: T, public init_value: ParamInitValuesTypeMap[T], public options?: ParamOptions) {}
@@ -100,11 +101,29 @@ export class ParamTemplate<T extends ParamType> {
 // type test3 = Test1['b'];
 // type test2 = keyof BoxSopParamConfig;
 export class ParamConfig {
+	// static _GENERIC<T extends ParamType> (type: T, init_value: ParamInitValuesTypeMap[T], options?: ParamOptions) {
+	// 	return new ParamTemplate<T>(type, init_value, options);
+	// }
+	// static BUTTON(init_value: ParamInitValuesTypeMap[ParamType.BUTTON], options?: ParamOptions) {
+	// 	return this._GENERIC<ParamType.BUTTON>(ParamType.BUTTON, init_value, options)
+	// }
+	static BUTTON(init_value: ParamInitValuesTypeMap[ParamType.BUTTON], options?: ParamOptions) {
+		return new ParamTemplate<ParamType.BUTTON>(ParamType.BUTTON, init_value, options);
+	}
+	static BOOLEAN(init_value: ParamInitValuesTypeMap[ParamType.BOOLEAN], options?: ParamOptions) {
+		return new ParamTemplate<ParamType.BOOLEAN>(ParamType.BOOLEAN, init_value, options);
+	}
+	static COLOR(init_value: ParamInitValuesTypeMap[ParamType.COLOR], options?: ParamOptions) {
+		return new ParamTemplate<ParamType.COLOR>(ParamType.COLOR, init_value, options);
+	}
 	static FLOAT(init_value: ParamInitValuesTypeMap[ParamType.FLOAT], options?: ParamOptions) {
 		return new ParamTemplate<ParamType.FLOAT>(ParamType.FLOAT, init_value, options);
 	}
 	static INTEGER(init_value: ParamInitValuesTypeMap[ParamType.INTEGER], options?: ParamOptions) {
 		return new ParamTemplate<ParamType.INTEGER>(ParamType.INTEGER, init_value, options);
+	}
+	static OPERATOR_PATH(init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH], options?: ParamOptions) {
+		return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
 	}
 	static STRING(init_value: ParamInitValuesTypeMap[ParamType.STRING], options?: ParamOptions) {
 		return new ParamTemplate<ParamType.STRING>(ParamType.STRING, init_value, options);

@@ -1,6 +1,6 @@
 import {CoreString} from 'src/core/String';
 import {CoreWalker} from 'src/core/Walker';
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 import lodash_includes from 'lodash/includes';
@@ -20,14 +20,14 @@ const NODE_SIMPLE_NAME = 'children';
 export class HierarchyChildrenController {
 	private _context: NodeContext;
 	private _children_allowed: boolean = false;
-	private _children: Dictionary<BaseNode>;
+	private _children: Dictionary<BaseNodeType>;
 	private _children_by_type: Dictionary<string[]> = {};
 	private _children_and_grandchildren_by_context: Dictionary<string[]> = {};
 
 	private _is_dependent_on_children: boolean = false;
 	private _children_node: CoreGraphNode;
 
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	init(context: NodeContext, dependent: boolean = false) {
 		// const context = this.node.children_context();
@@ -55,7 +55,7 @@ export class HierarchyChildrenController {
 	}
 
 	// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
-	set_child_name(node: BaseNode, new_name: string): void {
+	set_child_name(node: BaseNodeType, new_name: string): void {
 		//return if node.name() == new_name
 		let current_child_with_name;
 		new_name = new_name.replace(/[^A-Za-z0-9]/g, '_');
@@ -103,7 +103,7 @@ export class HierarchyChildrenController {
 		return available_classes && Object.keys(available_classes).length > 0;
 	}
 
-	create_node(node_type: string): BaseNode {
+	create_node(node_type: string): BaseNodeType {
 		if (this.available_children_classes() == null) {
 			throw `no children available for ${this.node.full_path()}.`;
 		} else {
@@ -124,7 +124,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	private add_node(child_node: BaseNode) {
+	private add_node(child_node: BaseNodeType) {
 		if (!this._children_allowed) {
 			throw `node ${this.node.full_path()} cannot have children`;
 		}
@@ -156,7 +156,7 @@ export class HierarchyChildrenController {
 	// post_add_node(node: BaseNode) {}
 	// post_remove_node(node: BaseNode) {}
 
-	remove_node(child_node: BaseNode) {
+	remove_node(child_node: BaseNodeType) {
 		if (child_node.parent != this.node) {
 			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
 		} else {
@@ -207,7 +207,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	find_node(path: string): BaseNode | null {
+	find_node(path: string): BaseNodeType | null {
 		if (!this._children_allowed) {
 			return null;
 		}
@@ -235,7 +235,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	_add_to_nodes_by_type(node: BaseNode) {
+	_add_to_nodes_by_type(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.type();
 		this._children_by_type[type] = this._children_by_type[type] || [];
@@ -244,7 +244,7 @@ export class HierarchyChildrenController {
 		}
 		this.add_to_children_and_grandchildren_by_context(node);
 	}
-	_remove_from_nodes_by_type(node: BaseNode) {
+	_remove_from_nodes_by_type(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.type();
 		if (this._children_by_type[type]) {
@@ -258,7 +258,7 @@ export class HierarchyChildrenController {
 		}
 		this.remove_from_children_and_grandchildren_by_context(node);
 	}
-	add_to_children_and_grandchildren_by_context(node: BaseNode) {
+	add_to_children_and_grandchildren_by_context(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.node_context();
 		this._children_and_grandchildren_by_context[type] = this._children_and_grandchildren_by_context[type] || [];
@@ -269,7 +269,7 @@ export class HierarchyChildrenController {
 			this.node.parent.children_controller.add_to_children_and_grandchildren_by_context(node);
 		}
 	}
-	remove_from_children_and_grandchildren_by_context(node: BaseNode) {
+	remove_from_children_and_grandchildren_by_context(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.node_context();
 		if (this._children_and_grandchildren_by_context[type]) {
@@ -286,7 +286,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	nodes_by_type(type: string): BaseNode[] {
+	nodes_by_type(type: string): BaseNodeType[] {
 		const node_ids = this._children_by_type[type] || [];
 		const graph = this.node.scene.graph;
 		return node_ids.map((node_id) => graph.node_from_id(node_id));
@@ -302,7 +302,7 @@ export class HierarchyChildrenController {
 	//lodash_filter this.children(), (child)=>
 	//	child.type() == type
 
-	children(): BaseNode[] {
+	children(): BaseNodeType[] {
 		return lodash_values(this._children);
 	}
 	children_names() {
@@ -311,7 +311,7 @@ export class HierarchyChildrenController {
 	// children_map: ->
 	// 	@_children
 
-	traverse_children(callback: (arg0: BaseNode) => void) {
+	traverse_children(callback: (arg0: BaseNodeType) => void) {
 		for (let child of this.children()) {
 			callback(child);
 

@@ -2,13 +2,13 @@ import {Group} from 'three/src/objects/Group';
 import lodash_isEqual from 'lodash/isEqual';
 import lodash_map from 'lodash/map';
 
-import {BaseNodeManager} from './_Base';
+import {TypedNodeManager} from './_Base';
 import {CoreObject} from 'src/core/Object';
-import {BaseNode} from '../_Base';
-import {BaseObjNode} from '../obj/_Base';
+// import {BaseNode} from '../_Base';
+import {BaseObjNodeType} from '../obj/_Base';
 
-import {BaseManager} from 'src/engine/nodes/obj/_BaseManager';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseManagerObjNode} from 'src/engine/nodes/obj/_BaseManager';
+import {BaseCameraObjNodeClass} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseLightObjNode} from 'src/engine/nodes/obj/_BaseLight';
 
 // obj nodes
@@ -23,7 +23,7 @@ import {CopObjNode} from 'src/engine/nodes/obj/Cop';
 
 import 'src/engine/Poly';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+// import {PolyScene} from 'src/engine/scene/PolyScene';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
 
@@ -38,7 +38,12 @@ interface ObjNodeTypeMap {
 	orthographic_camera: OrthographicCameraObjNode;
 }
 
-export class ObjectsManagerNode extends BaseNodeManager {
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class ObjectsManagerParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ObjectsManagerParamsConfig();
+
+export class ObjectsManagerNode extends TypedNodeManager<ObjectsManagerParamsConfig> {
+	params_config = ParamsConfig;
 	static type() {
 		return 'obj';
 	}
@@ -47,8 +52,8 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// }
 
 	private _object: Group = new Group();
-	private _queued_nodes_by_id: Dictionary<BaseObjNode> = {};
-	private _queued_nodes_by_path: Dictionary<BaseObjNode> = {};
+	private _queued_nodes_by_id: Dictionary<BaseObjNodeType> = {};
+	private _queued_nodes_by_path: Dictionary<BaseObjNodeType> = {};
 	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
 	private _loaded_geo_node_by_id: Dictionary<boolean> = {};
 	private _process_queue_start: number;
@@ -77,16 +82,21 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	object() {
 		return this._object;
 	}
-	create_node<K extends keyof ObjNodeTypeMap>(type: K): ObjNodeTypeMap[K];
-	create_node(type: string): BaseObjNode {
-		return super.create_node(type) as BaseObjNode;
+	create_node<K extends keyof ObjNodeTypeMap>(type: K): ObjNodeTypeMap[K] {
+		return super.create_node(type) as ObjNodeTypeMap[K];
+	}
+	children() {
+		return super.children() as BaseObjNodeType[];
+	}
+	nodes_by_type<K extends keyof ObjNodeTypeMap>(type: K): ObjNodeTypeMap[K][] {
+		return super.nodes_by_type(type) as ObjNodeTypeMap[K][];
 	}
 
 	multiple_display_flags_allowed() {
 		return true;
 	}
 
-	add_to_queue(node: BaseObjNode) {
+	add_to_queue(node: BaseObjNodeType) {
 		const id = node.graph_node_id;
 		if (this._queued_nodes_by_id[id] == null) {
 			return (this._queued_nodes_by_id[id] = node);
@@ -136,7 +146,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		});
 	}
 
-	update_object(node: BaseObjNode) {
+	update_object(node: BaseObjNodeType) {
 		return new Promise((resolve, reject) => {
 			if (!this.scene.loading_controller.auto_updating) {
 				this.add_to_queue(node);
@@ -154,22 +164,22 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		});
 	}
 
-	_is_node_manager(node: BaseNode) {
-		return CoreObject.is_a(node, BaseManager);
+	_is_node_manager(node: BaseObjNodeType) {
+		return CoreObject.is_a(node, BaseManagerObjNode);
 	}
-	_is_node_fog(node: BaseNode) {
+	_is_node_fog(node: BaseObjNodeType) {
 		return CoreObject.is_a(node, FogObjNode);
 	}
-	_is_node_camera(node: BaseNode) {
-		return CoreObject.is_a(node, BaseCameraObjNode);
+	_is_node_camera(node: BaseObjNodeType) {
+		return CoreObject.is_a(node, BaseCameraObjNodeClass);
 	}
-	_is_node_light(node: BaseNode) {
+	_is_node_light(node: BaseObjNodeType) {
 		return CoreObject.is_a(node, BaseLightObjNode);
 	}
-	_is_node_event(node: BaseNode) {
+	_is_node_event(node: BaseObjNodeType) {
 		return CoreObject.is_a(node, EventsObjNode);
 	}
-	_is_node_mat(node: BaseNode) {
+	_is_node_mat(node: BaseObjNodeType) {
 		return CoreObject.is_a(node, MaterialsObjNode);
 	}
 
@@ -183,14 +193,14 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// a OBJ node should be able to submit its group for transform
 	// apart from the geometry. This would allow parenting to function
 	// regardless if the underlying geo is valid or not
-	get_parent_for_node(node: BaseNode) {
+	get_parent_for_node(node: BaseObjNodeType) {
 		if (this._is_node_event(node) || this._is_node_mat(node)) {
 			return null;
 		} else {
 			if (this._is_node_camera(node)) {
 				return this.scene.display_scene;
 			} else {
-				const node_input = node.io.inputs.input(0) as BaseObjNode;
+				const node_input = node.io.inputs.input(0) as BaseObjNodeType;
 				if (node_input != null) {
 					//node_input.request_container (container)=>
 					//	callback(container.object() || @_object)
@@ -202,7 +212,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		}
 	}
 
-	add_to_scene(node: BaseObjNode) {
+	add_to_scene(node: BaseObjNodeType) {
 		if (this._is_node_fog(node)) {
 			// console.log("fog")
 			// # TODO: ensure fog is removed if we set display or bypass flag
@@ -234,7 +244,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		}
 	}
 
-	remove_from_scene(node: BaseObjNode) {
+	remove_from_scene(node: BaseObjNodeType) {
 		if (!this._is_node_fog(node)) {
 			const object = node.object;
 			if (object != null) {
@@ -246,7 +256,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 		}
 	}
 	are_children_cooking(): boolean {
-		const children = this.children() as BaseObjNode[];
+		const children = this.children();
 		for (let child of children) {
 			if (child.is_display_node_cooking()) {
 				return true;
@@ -256,7 +266,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	}
 
 	async expected_loading_geo_nodes_by_id() {
-		const geo_nodes = this.nodes_by_type('geo') as GeoObjNode[];
+		const geo_nodes = this.nodes_by_type('geo');
 		const node_by_id: Dictionary<GeoObjNode> = {};
 		for (let geo_node of geo_nodes) {
 			const is_displayed = await geo_node.is_displayed();
@@ -284,10 +294,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 
 	update_on_all_objects_loaded() {
 		this.scene.loading_controller.on_all_objects_loaded();
-		this.scene.cube_cameras_controller.on_all_objects_loaded();
+		// this.scene.cube_cameras_controller.on_all_objects_loaded(); // TODO: typescript
 	}
 
-	add_to_parent_transform(node: BaseObjNode) {
+	add_to_parent_transform(node: BaseObjNodeType) {
 		this.update_object(node);
 	}
 	// return if !this.scene().loaded()
@@ -299,7 +309,7 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// 		parent = parent_input_container.object()
 	// 		parent.add(object)
 
-	remove_from_parent_transform(node: BaseObjNode) {
+	remove_from_parent_transform(node: BaseObjNodeType) {
 		this.update_object(node);
 	}
 	// return if !this.scene().loaded()
@@ -310,10 +320,10 @@ export class ObjectsManagerNode extends BaseNodeManager {
 	// 	this.get_parent_for_node transformed_node, (parent_object)=>
 	// 		parent_object.add(object)
 
-	on_child_add(node: BaseObjNode) {
+	on_child_add(node: BaseObjNodeType) {
 		this.update_object(node);
 	}
-	on_child_remove(node: BaseObjNode) {
+	on_child_remove(node: BaseObjNodeType) {
 		this.remove_from_scene(node);
 	}
 }

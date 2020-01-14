@@ -24,7 +24,7 @@
 // import {Store} from './concerns/Store'; // TODO: typescript
 // import {Uniforms} from './concerns/Uniforms'; // TODO: typescript
 
-import {CubeCamerasController} from './utils/CubeCamerasController';
+// import {CubeCamerasController} from './utils/CubeCamerasController';
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
 import {CoreGraph} from 'src/core/graph/CoreGraph';
@@ -71,10 +71,10 @@ export class PolyScene {
 		return this._cooker;
 	}
 
-	private _cube_cameras_controller: CubeCamerasController;
-	get cube_cameras_controller() {
-		return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
-	}
+	// private _cube_cameras_controller: CubeCamerasController;
+	// get cube_cameras_controller() {
+	// 	return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
+	// }
 
 	private _events_controller: EventsController;
 	get events_controller() {

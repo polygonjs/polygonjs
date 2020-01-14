@@ -1,4 +1,4 @@
-import {BaseSopNode} from './_Base';
+import {TypedSopNode} from './_Base';
 import {CoreTransform} from 'src/core/Transform';
 import {CoreGroup} from 'src/core/geometry/Group';
 
@@ -19,7 +19,7 @@ class BoxSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new BoxSopParamsConfig();
 
-export class BoxSopNode extends BaseSopNode<BoxSopParamsConfig> {
+export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'box';

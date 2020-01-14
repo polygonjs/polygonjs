@@ -1,4 +1,4 @@
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 
 import {ConnectionsController} from './connections/ConnectionsController';
 import {InputsController, InputsControllerOptions} from './connections/InputsController';
@@ -9,7 +9,7 @@ export class IOController {
 	protected _inputs: InputsController;
 	protected _outputs: OutputsController;
 
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	get connections() {
 		return this._connections;

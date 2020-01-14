@@ -14,7 +14,7 @@ import {ObjectType} from 'src/core/geometry/Constant';
 
 import {GeometryContainer} from 'src/engine/containers/Geometry';
 import {TypedContainerController} from '../utils/ContainerController';
-import {BaseMatNode} from '../mat/_Base';
+import {BaseMatNodeType} from '../mat/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -44,7 +44,7 @@ const MESSAGE = {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryContainer, K> {
+export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryContainer, K> {
 	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
 		this,
 		GeometryContainer
@@ -61,8 +61,7 @@ export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryC
 	// _master_group: Group
 	// _objects: Object3D[] = []
 
-	initialize_node() {
-		this.container_controller.init(GeometryContainer);
+	initialize_base_node() {
 		this.flags.add_display();
 		this.flags.add_bypass();
 		// this.container_controller.init(CONTAINER_CLASS);
@@ -216,6 +215,7 @@ export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryC
 		// }
 
 		// if (geometry != null) {
+		console.log(CoreMaterial, CoreConstant.MATERIALS, type);
 		const object_constructor = CoreConstant.CONSTRUCTORS_BY_NAME[type]; //THREE[type];
 		const material = CoreConstant.MATERIALS[type].clone();
 		const object = new object_constructor(geometry, material);
@@ -255,7 +255,7 @@ export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryC
 				console.log('no scene');
 				throw 'no scene';
 			}
-			const material_node = CoreMaterial.node(this.scene, material) as BaseMatNode;
+			const material_node = CoreMaterial.node(this.scene, material) as BaseMatNodeType;
 			if (material_node) {
 				material_node.add_render_hook(object);
 			}
@@ -300,3 +300,5 @@ export class BaseSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryC
 		geometry.setIndex(indices);
 	}
 }
+
+export type BaseSopNodeType = TypedSopNode<NodeParamsConfig>;

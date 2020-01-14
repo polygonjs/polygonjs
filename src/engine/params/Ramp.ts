@@ -11,7 +11,6 @@ import {RampValue, RampPoint} from './ramp/RampValue';
 
 // import {AsCodeRamp} from './concerns/visitors/Ramp';
 import {ParamType} from '../poly/ParamType';
-import {PolyScene} from '../scene/PolyScene';
 
 interface RampParamVisitor extends TypedParamVisitor {
 	visit_ramp_param: (param: RampParam) => any;

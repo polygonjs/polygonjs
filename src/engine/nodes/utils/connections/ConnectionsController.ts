@@ -1,4 +1,4 @@
-import {BaseNode} from '../../_Base';
+import {BaseNodeType} from '../../_Base';
 import lodash_compact from 'lodash/compact';
 import {NodeConnection} from '../NodeConnection';
 
@@ -13,7 +13,7 @@ export class ConnectionsController {
 	private _input_connections: Array<NodeConnection | null> = [];
 	private _output_connections: Dictionary<Dictionary<NodeConnection>> = {};
 
-	constructor(protected _node: BaseNode) {}
+	constructor(protected _node: BaseNodeType) {}
 
 	add_input_connection(connection: NodeConnection) {
 		this._input_connections[connection.input_index] = connection;

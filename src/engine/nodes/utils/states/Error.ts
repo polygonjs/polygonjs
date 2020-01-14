@@ -1,11 +1,11 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 // import lodash_includes from 'lodash/includes';
 // import lodash_values from 'lodash/values';
 
 export class ErrorState {
 	private _message: string | null;
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	set(message: string | null) {
 		if (this._message != message) {

@@ -1,5 +1,5 @@
-import {BaseSopNode} from './_Base';
-import {GroupParamController} from './utils/GroupParamController';
+import {TypedSopNode} from './_Base';
+// import {GroupParamController} from './utils/GroupParamController';
 
 import {CoreGroup} from 'src/core/geometry/Group';
 import {CoreTransform} from 'src/core/Transform';
@@ -17,7 +17,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new TransformSopParamConfig();
 
-export class TransformSopNode extends BaseSopNode<TransformSopParamConfig> {
+export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'transform';
@@ -38,7 +38,7 @@ export class TransformSopNode extends BaseSopNode<TransformSopParamConfig> {
 	}
 
 	create_params() {
-		GroupParamController.add_param(this);
+		// GroupParamController.add_param(this); // TODO: typescript
 		CoreTransform.create_params(this);
 		this.add_param(ParamType.VECTOR3, 'pivot', DEFAULT_PARAMS.PIVOT);
 	}

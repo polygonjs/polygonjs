@@ -1,10 +1,10 @@
-import {BaseObjNode} from 'src/engine/nodes/obj/_Base';
+import {BaseObjNodeType} from 'src/engine/nodes/obj/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
 
 const PARAM_NAME = 'layer';
 
 export class LayersController {
-	constructor(private node: BaseObjNode) {}
+	constructor(private node: BaseObjNodeType) {}
 
 	add_params() {
 		this.node.add_param(ParamType.INTEGER, PARAM_NAME, 0, {

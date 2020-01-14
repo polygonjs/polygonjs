@@ -1,5 +1,5 @@
 import {PolyScene} from 'src/engine/scene/PolyScene';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
 export class CamerasController {
 	constructor(private scene: PolyScene) {}
@@ -12,8 +12,8 @@ export class CamerasController {
 	master_camera_node_path() {
 		return this._master_camera_node_path;
 	}
-	get master_camera_node(): BaseCameraObjNode {
-		const camera_node = this.scene.node(this.master_camera_node_path()) as BaseCameraObjNode;
+	get master_camera_node(): BaseCameraObjNodeType {
+		const camera_node = this.scene.node(this.master_camera_node_path()) as BaseCameraObjNodeType;
 		if (camera_node) {
 			return camera_node;
 		} else {
@@ -22,9 +22,8 @@ export class CamerasController {
 		}
 	}
 
-	private _find_any_camera(): BaseCameraObjNode {
+	private _find_any_camera(): BaseCameraObjNodeType {
 		const root = this.scene.root;
-		return (root.nodes_by_type('perspective_camera')[0] ||
-			root.nodes_by_type('orthographic_camera')[0]) as BaseCameraObjNode;
+		return root.nodes_by_type('perspective_camera')[0] || root.nodes_by_type('orthographic_camera')[0];
 	}
 }

@@ -1,5 +1,5 @@
 import lodash_groupBy from 'lodash/groupBy';
-import {BaseNode} from '../_Base';
+import {BaseNodeType, BaseNodeClass} from '../_Base';
 
 import {BaseParam} from 'src/engine/params/_Base';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
@@ -9,10 +9,19 @@ enum METHODS {
 	PREDECESSORS = 'graph_predecessors',
 }
 
+// finally, guard ALL the types!
+function typeGuard<T extends PrimitiveOrConstructor>(o: any, className: T): o is GuardedType<T> {
+	const localPrimitiveOrConstructor: PrimitiveOrConstructor = className;
+	if (typeof localPrimitiveOrConstructor === 'string') {
+		return typeof o === localPrimitiveOrConstructor;
+	}
+	return o instanceof localPrimitiveOrConstructor;
+}
+
 export class DependenciesController {
 	private _params_referrees_by_graph_node_id: Dictionary<BaseParam>;
 
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	// debug_dependencies() {
 	// 	const nodes = this.scene_successors();
@@ -33,7 +42,7 @@ export class DependenciesController {
 		const params: CoreGraphNode[] = this.node.params.all;
 		params.push(this.node);
 		const start_nodes = params;
-		let base_nodes: BaseNode[] = [];
+		let base_nodes: BaseNodeType[] = [];
 		for (let start_node of start_nodes) {
 			this._find_base_nodes_from_node(start_node, method, base_nodes);
 		}
@@ -56,13 +65,14 @@ export class DependenciesController {
 		return uniq_base_nodes;
 	}
 
-	private _find_base_nodes_from_node(node: CoreGraphNode, method: METHODS, base_nodes: BaseNode[]) {
+	private _find_base_nodes_from_node(node: CoreGraphNode, method: METHODS, base_nodes: BaseNodeType[]) {
 		const next_nodes = node[method]();
 		for (let next_node of next_nodes) {
 			if (next_node instanceof BaseParam) {
 				base_nodes.push(next_node.node);
 			} else {
-				if (next_node instanceof BaseNode) {
+				if (typeGuard(next_node, BaseNodeClass)) {
+					// TODO: typescript
 					base_nodes.push(next_node);
 				} else {
 					this._find_base_nodes_from_node(next_node, method, base_nodes);
@@ -95,8 +105,8 @@ export class DependenciesController {
 		}
 		return list;
 	}
-	param_nodes_referree(): BaseNode[] {
-		const node_by_graph_node_id: Dictionary<BaseNode> = {};
+	param_nodes_referree(): BaseNodeType[] {
+		const node_by_graph_node_id: Dictionary<BaseNodeType> = {};
 		let node;
 		for (let param of this.params_referree()) {
 			node = param.node;

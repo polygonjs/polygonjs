@@ -6,8 +6,8 @@ import lodash_flatten from 'lodash/flatten';
 import lodash_compact from 'lodash/compact';
 import {ObjectsManagerNode} from 'src/engine/nodes/manager/ObjectsManager';
 import {CoreString} from 'src/core/String';
-import {BaseNode} from 'src/engine/nodes/_Base';
-import {BaseObjNode} from 'src/engine/nodes/obj/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseObjNodeType} from 'src/engine/nodes/obj/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
 export class NodesController {
@@ -15,7 +15,7 @@ export class NodesController {
 
 	_root: ObjectsManagerNode;
 	_node_context_signatures: Dictionary<boolean> = {};
-	_instanciated_nodes_by_context_and_type: Dictionary<Dictionary<Dictionary<BaseNode>>> = {};
+	_instanciated_nodes_by_context_and_type: Dictionary<Dictionary<Dictionary<BaseNodeType>>> = {};
 
 	init() {
 		this._root = new ObjectsManagerNode(this.scene);
@@ -29,7 +29,7 @@ export class NodesController {
 	objects_from_mask(mask: string): Object3D[] {
 		const masks = mask.split(' ');
 		// let geos = this.root().nodes_by_type('geo') as BaseNodeObj[];
-		let nodes = this.root.children() as BaseObjNode[];
+		let nodes = this.root.children() as BaseObjNodeType[];
 		nodes = nodes.filter((node) => CoreString.matches_one_mask(node.name, masks));
 		const objects = nodes.map((geo) => geo.object);
 		return lodash_compact(objects);
@@ -52,8 +52,8 @@ export class NodesController {
 		}
 	}
 	all_nodes() {
-		let nodes: BaseNode[] = [this.root];
-		let current_parents: BaseNode[] = [this.root];
+		let nodes: BaseNodeType[] = [this.root];
+		let current_parents: BaseNodeType[] = [this.root];
 		let cmptr = 0;
 		while (current_parents.length > 0 && cmptr < 10) {
 			const children = lodash_flatten(
@@ -75,7 +75,7 @@ export class NodesController {
 	reset_node_context_signatures() {
 		this._node_context_signatures = {};
 	}
-	register_node_context_signature(node: BaseNode) {
+	register_node_context_signature(node: BaseNodeType) {
 		this._node_context_signatures[node.children_controller.node_context_signature()] = true;
 	}
 	node_context_signatures() {
@@ -84,7 +84,7 @@ export class NodesController {
 			.map((s) => s.toLowerCase());
 	}
 
-	add_to_instanciated_node(node: BaseNode) {
+	add_to_instanciated_node(node: BaseNodeType) {
 		const context = node.node_context();
 		const node_type = node.type();
 		this._instanciated_nodes_by_context_and_type[context] =
@@ -94,7 +94,7 @@ export class NodesController {
 		this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id] = node;
 	}
 
-	remove_from_instanciated_node(node: BaseNode) {
+	remove_from_instanciated_node(node: BaseNodeType) {
 		const context = node.node_context();
 		const node_type = node.type();
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];

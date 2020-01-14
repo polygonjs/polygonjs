@@ -1,4 +1,4 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {NamedConnection} from '../NamedConnection';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_uniq from 'lodash/uniq';
@@ -14,7 +14,7 @@ export class OutputsController {
 	private _named_outputs: NamedConnection[] = [];
 	private _has_named_outputs: boolean = false;
 
-	constructor(private node: BaseNode) {}
+	constructor(private node: BaseNodeType) {}
 
 	init(options?: OutputsOptions) {
 		if (options == null) {

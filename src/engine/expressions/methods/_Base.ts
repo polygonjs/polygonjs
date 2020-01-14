@@ -2,7 +2,7 @@ import {CoreWalker} from 'src/core/Walker';
 import {DecomposedPath} from 'src/core/DecomposedPath';
 // import {NodeSimple} from 'src/core/graph/NodeSimple'
 import {BaseParam} from 'src/engine/params/_Base';
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
@@ -12,7 +12,7 @@ import {BaseContainer} from 'src/engine/containers/_Base';
 // type NodeOrParam = BaseNode | BaseParam;
 
 export abstract class BaseMethod {
-	public node: BaseNode;
+	public node: BaseNodeType;
 
 	constructor(public param: BaseParam) {
 		// this._init_update_dependencies_mode();
@@ -102,7 +102,7 @@ export abstract class BaseMethod {
 			return this.get_referenced_node(path, decomposed_path);
 		}
 	}
-	get_referenced_node(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNode | null {
+	get_referenced_node(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNodeType | null {
 		// if ((index_or_path != null) && (index_or_path.is_a != null) && index_or_path.is_a(BaseNode)) {
 		// 	index_or_path = index_or_path.full_path();
 		// }

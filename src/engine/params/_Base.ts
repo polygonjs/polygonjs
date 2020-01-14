@@ -5,7 +5,7 @@ import {CoreWalker} from 'src/core/Walker';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 // import {NodeScene} from 'src/core/graph/NodeScene';
 // import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 
 // import {CallbackOption} from './concerns/options/Callback'
 // import {ColorOption} from './concerns/options/Color'
@@ -59,7 +59,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _default_value: ParamValuesTypeMap[T];
 	protected _value: ParamValuesTypeMap[T];
 	// protected _expression: string;
-	protected _node: BaseNode;
+	protected _node: BaseNodeType;
 	protected _parent_param: TypedMultipleParam<any>;
 	protected _components: FloatParam[] = [];
 
@@ -154,7 +154,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	// node
-	set_node(node: BaseNode | null) {
+	set_node(node: BaseNodeType | null) {
 		if (!node) {
 			if (this._node) {
 				this._node.params.params_node.remove_graph_input(this);
@@ -194,7 +194,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	full_path(): string {
 		return this.node.full_path() + '/' + this.name;
 	}
-	path_relative_to(node: BaseNode | BaseParam): string {
+	path_relative_to(node: BaseNodeType | BaseParam): string {
 		return CoreWalker.relative_path(node, this);
 	}
 

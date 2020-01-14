@@ -1,7 +1,7 @@
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 
 export class NodeSerializer {
-	constructor(private node: BaseNode) {}
+	constructor(private node: BaseNodeType) {}
 
 	serialize() {
 		return this.to_json();
@@ -13,9 +13,9 @@ export class NodeSerializer {
 		// 	const param = this.node.spare_param(param_name);
 		// 	spare_params_json_by_name[param_name] = param.graph_node_id;
 		// });
-		const children_indices = this.node.children().map((node) => (node != null ? node.graph_node_id : undefined));
+		const children_indices: string[] = this.node.children().map((node) => node.graph_node_id);
 
-		const input_indices = this.node.io.inputs
+		const input_indices: Array<string | undefined> = this.node.io.inputs
 			.inputs()
 			.map((node) => (node != null ? node.graph_node_id : undefined));
 		const connection_output_indices = this.node.io.connections

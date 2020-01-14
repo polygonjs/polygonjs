@@ -1,4 +1,4 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseContainer} from 'src/engine/containers/_Base';
 // import lodash_includes from 'lodash/includes'
 // import lodash_filter from 'lodash/filter'
@@ -26,7 +26,7 @@ export interface InputsControllerOptions {
 
 export class InputsController {
 	_graph_node_inputs: CoreGraphNode[] = [];
-	_inputs: Array<BaseNode | null> = [];
+	_inputs: Array<BaseNodeType | null> = [];
 	_has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
 	_named_inputs: NamedConnection[] = [];
@@ -39,7 +39,7 @@ export class InputsController {
 	private _inputs_clonable_states: InputCloneMode[];
 	private _override_clonable_state: boolean = false;
 
-	constructor(protected node: BaseNode, options: InputsControllerOptions = {}) {
+	constructor(protected node: BaseNodeType, options: InputsControllerOptions = {}) {
 		this.set_options(options);
 	}
 
@@ -270,7 +270,11 @@ export class InputsController {
 		}
 	}
 
-	set_input(input_index_or_name: number | string, node: BaseNode | null, output_index_or_name: number | string = 0) {
+	set_input(
+		input_index_or_name: number | string,
+		node: BaseNodeType | null,
+		output_index_or_name: number | string = 0
+	) {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
 		let output_index = 0;
 		if (node) {
@@ -349,7 +353,7 @@ export class InputsController {
 	post_set_input() {}
 	//
 
-	remove_input(node: BaseNode) {
+	remove_input(node: BaseNodeType) {
 		lodash_each(this.inputs(), (input, index) => {
 			if (input != null && node != null) {
 				if (input.graph_node_id === node.graph_node_id) {
@@ -359,11 +363,11 @@ export class InputsController {
 		});
 	}
 
-	input(input_index: number): BaseNode | null {
+	input(input_index: number): BaseNodeType | null {
 		return this._inputs[input_index];
 	}
 	// TODO: the named_input and named_output API really needs to change
-	named_input(input_name: string): BaseNode | null {
+	named_input(input_name: string): BaseNodeType | null {
 		if (this.has_named_inputs()) {
 			const input_index = this.get_input_index(input_name);
 			return this._inputs[input_index];

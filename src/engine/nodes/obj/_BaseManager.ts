@@ -1,7 +1,9 @@
-import {BaseObjNode} from './_Base';
+import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 
-export class BaseManagerObjNode extends BaseObjNode {
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class BaseManagerObjParamsConfig extends NodeParamsConfig {}
+export class BaseManagerObjNode extends TypedObjNode<BaseManagerObjParamsConfig> {
 	// _init_manager(options = {}) {
 	// 	// this._init_hierarchy_children_owner(options['children'] || {});
 	// 	// this.flags.add_display({

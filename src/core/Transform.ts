@@ -5,8 +5,7 @@ import {Matrix4} from 'three/src/math/Matrix4';
 import {Euler} from 'three/src/math/Euler';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
-import {TypedNode} from 'src/engine/nodes/_Base';
-type BaseNode = TypedNode<any, any>;
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
 
 const ROTATION_ORDER = 'XYZ';
@@ -16,7 +15,7 @@ export interface SetParamsFromMatrixOptions {
 }
 
 export class CoreTransform {
-	static create_params(node: BaseNode) {
+	static create_params(node: BaseNodeType) {
 		node.add_param(ParamType.VECTOR3, 't', [0, 0, 0]);
 		node.add_param(ParamType.VECTOR3, 'r', [0, 0, 0]);
 		node.add_param(ParamType.VECTOR3, 's', [1, 1, 1]);
@@ -25,7 +24,7 @@ export class CoreTransform {
 		node.add_param(ParamType.VECTOR3, 'up', [0, 1, 0]);
 	}
 
-	static matrix_from_node_with_transform_params(node: BaseNode): Matrix4 {
+	static matrix_from_node_with_transform_params(node: BaseNodeType): Matrix4 {
 		const t = node.params.vector3('t');
 		const r = node.params
 			.vector3('r')
@@ -44,7 +43,7 @@ export class CoreTransform {
 	// 	scale = node.param('scale').eval()
 	// 	this.matrix(t, r, s, scale)
 
-	static set_params_from_matrix(matrix: Matrix4, node: BaseNode, options: SetParamsFromMatrixOptions = {}) {
+	static set_params_from_matrix(matrix: Matrix4, node: BaseNodeType, options: SetParamsFromMatrixOptions = {}) {
 		let update_scale = options['scale'];
 		if (update_scale == null) {
 			update_scale = true;
@@ -90,7 +89,7 @@ export class CoreTransform {
 	// this.object().quaternion.copy(quaternion)
 	// this.object().scale.copy(scale)
 
-	static set_params_from_object(object: Object3D, node: BaseNode) {
+	static set_params_from_object(object: Object3D, node: BaseNodeType) {
 		const position = object.position.toArray();
 		const rotation = object.rotation.toArray().map((c) => c * (180 / Math.PI));
 

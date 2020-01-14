@@ -8,9 +8,9 @@ import {CoreScriptLoader} from 'src/core/loader/Script';
 // import {CoreGeometry} from 'src/core/geometry/Geometry';
 import {CoreWalker} from 'src/core/Walker';
 
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParam} from 'src/engine/params/_Base';
-import {BaseCopNode} from 'src/engine/nodes/cop/_Base';
+import {BaseCopNodeClass} from 'src/engine/nodes/cop/_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
@@ -65,7 +65,7 @@ export class CoreTextureLoader {
 	// 	console.log(error)
 	// 	this.set_error_message()
 
-	constructor(private _node: BaseNode, private _param: BaseParam) {}
+	constructor(private _node: BaseNodeType, private _param: BaseParam) {}
 
 	async load_texture_from_url_or_op(url: string): Promise<Texture | VideoTexture | null> {
 		let texture: Texture | null = null;
@@ -75,7 +75,8 @@ export class CoreTextureLoader {
 			const node_path = url.substring(3);
 			found_node = CoreWalker.find_node(this._node, node_path);
 			if (found_node) {
-				if (found_node instanceof BaseCopNode) {
+				if (found_node instanceof BaseCopNodeClass) {
+					// TODO: typescript: check that this instanceof is appropriate
 					const container = (await found_node.request_container()) as TextureContainer;
 					texture = container.texture();
 				} else {

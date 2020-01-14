@@ -67,16 +67,17 @@ import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 
 import {TypedContainer} from 'src/engine/containers/_Base';
+import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
 
 export interface BaseNodeVisitor {
-	visit_node: (node: BaseNode) => void;
+	visit_node: (node: BaseNodeType) => void;
 }
 
 interface NodeDeletedEmitData {
-	parent: BaseNode;
+	parent: BaseNodeType;
 }
 interface NodeCreatedEmitData {
-	child_node: BaseNode;
+	child_node: BaseNodeType;
 }
 interface NodeUIUpdatedData {
 	x: number;
@@ -100,6 +101,7 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 	private _params_controller: ParamsController;
 	readonly params_config: K;
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>(this)) as ParamsValueAccessorType<K>;
+	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>(this)) as ParamsAccessorType<K>;
 
 	private _processing_context: ProcessingContext;
 	private _name_controller: NameController;
@@ -152,9 +154,13 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 
 	constructor(scene: PolyScene, name: string = 'BaseNode') {
 		super(scene, name);
-		this.initialize_node();
+
+		this.initialize_base_node(); // for base classes of Sop, Obj...
+		this.initialize_node(); // for Derivated node clases, like BoxSop, TransformSop...
 	}
-	initialize_node() {}
+
+	protected initialize_base_node() {}
+	protected initialize_node() {}
 	// constructor() {
 	// 	super('base_node');
 
@@ -178,14 +184,14 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 		throw 'type to be overriden';
 	}
 	type() {
-		const c = this.constructor as typeof BaseNode;
+		const c = this.constructor as typeof BaseNodeClass;
 		return c.type();
 	}
 	static node_context(): NodeContext {
 		throw 'requires override';
 	}
 	node_context(): NodeContext {
-		const c = this.constructor as typeof BaseNode;
+		const c = this.constructor as typeof BaseNodeClass;
 		return c.node_context();
 	}
 
@@ -204,14 +210,14 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 		}
 	}
 	required_imports() {
-		const c = this.constructor as typeof BaseNode;
+		const c = this.constructor as typeof BaseNodeClass;
 		return c.required_imports();
 	}
 	static require_webgl2(): boolean {
 		return false;
 	}
 	require_webgl2(): boolean {
-		const c = this.constructor as typeof BaseNode;
+		const c = this.constructor as typeof BaseNodeClass;
 		return c.require_webgl2();
 	}
 
@@ -223,7 +229,7 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 	accepts_visitor(visitor: BaseNodeVisitor): any {
 		return visitor.visit_node(this);
 	}
-	set_parent(parent: BaseNode | null) {
+	set_parent(parent: BaseNodeType | null) {
 		this.parent_controller.set_parent(parent);
 	}
 	get parent() {
@@ -421,4 +427,5 @@ export class TypedNode<T extends TypedContainer<any>, K extends NodeParamsConfig
 	// }
 }
 
-export class BaseNode extends TypedNode<any, any> {}
+export type BaseNodeType = TypedNode<any, any>;
+export class BaseNodeClass extends TypedNode<any, any> {}

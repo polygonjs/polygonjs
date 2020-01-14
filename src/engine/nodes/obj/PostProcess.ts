@@ -1,6 +1,5 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class PostProcessObjNode extends BaseManagerObjNode {
 	static type() {

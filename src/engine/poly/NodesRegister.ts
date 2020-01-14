@@ -1,4 +1,4 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeClass} from 'src/engine/nodes/_Base';
 import {NodeContext} from './NodeContext';
 
 export interface RegisterOptions {
@@ -9,7 +9,7 @@ export interface RegisterOptions {
 // 	new (): BaseNode;
 // }
 
-export type BaseNodeConstructor = typeof BaseNode;
+export type BaseNodeConstructor = typeof BaseNodeClass;
 type NodeConstructorByType = Dictionary<BaseNodeConstructor>;
 type NodeConstructorByTypeByContext = Dictionary<NodeConstructorByType>;
 type TabMenuByTypeByContext = Dictionary<Dictionary<string>>;

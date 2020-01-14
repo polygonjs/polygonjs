@@ -4,7 +4,7 @@ import {Group} from 'three/src/objects/Group';
 
 import {CoreTransform} from 'src/core/Transform';
 
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
@@ -12,11 +12,11 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {Transformed} from './Concerns/Transformed';
 
 // sop map
-// import {BaseSopNode} from '../sop/_Base';
+import {BaseSopNodeType} from '../sop/_Base';
 import {BoxSopNode} from '../sop/Box';
 import {TransformSopNode} from '../sop/Transform';
 import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+// import {PolyScene} from 'src/engine/scene/PolyScene';
 
 interface SopNodeTypeMap {
 	box: BoxSopNode;
@@ -99,7 +99,7 @@ export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 	post_display_flag_node_set_dirty() {
 		this.request_display_node();
 	}
-	post_add_node(node: BaseNode) {
+	post_add_node(node: BaseNodeType) {
 		// we test if the scene is loaded
 		// otherwise a display flag will be set for the first node
 		// that is added when the scene is being loaded,
@@ -114,6 +114,12 @@ export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 	}
 	create_node<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K] {
 		return super.create_node(type) as SopNodeTypeMap[K];
+	}
+	children() {
+		return super.children() as BaseSopNodeType[];
+	}
+	nodes_by_type<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K][] {
+		return super.nodes_by_type(type) as SopNodeTypeMap[K][];
 	}
 	// create_node(type: string): BaseSopNode<any> {
 	// 	return super.create_node(type) as  BaseSopNode<any>;

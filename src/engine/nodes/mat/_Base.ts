@@ -1,4 +1,4 @@
-import {BaseNode} from '../_Base';
+import {TypedNode} from '../_Base';
 
 import {Material} from 'three/src/materials/Material';
 
@@ -7,10 +7,15 @@ import {Material} from 'three/src/materials/Material';
 import {MaterialContainer} from 'src/engine/containers/Material';
 import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from 'src/engine/poly/NodeContext';
-
+import {TypedContainerController} from '../utils/ContainerController';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // type RenderHook = (object: Object3D) => void;
 
-export class BaseMatNode extends BaseNode {
+export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<MaterialContainer, K> {
+	container_controller: TypedContainerController<MaterialContainer> = new TypedContainerController<MaterialContainer>(
+		this,
+		MaterialContainer
+	);
 	static node_context(): NodeContext {
 		return NodeContext.MAT;
 	}
@@ -31,7 +36,7 @@ export class BaseMatNode extends BaseNode {
 		// this.set_inputs_count_to_zero();
 		// this._init_outputs({has_outputs: false});
 
-		this.container_controller.init(MaterialContainer);
+		// this.container_controller.init(MaterialContainer);
 
 		this.name_controller.add_post_set_full_path_hook(this.set_material_name.bind(this));
 
@@ -69,3 +74,6 @@ export class BaseMatNode extends BaseNode {
 	add_render_hook(object: Object3D) {}
 }
 //delete object.onBeforeRender
+
+export type BaseMatNodeType = TypedMatNode<any>;
+export class BaseMatNodeClass extends TypedMatNode<any> {}

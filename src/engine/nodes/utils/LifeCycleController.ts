@@ -1,26 +1,26 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 
-type Callback = (node: BaseNode) => void;
-type CallbackWithChildNode = (node: BaseNode, child_node: BaseNode) => void;
+type Callback = (node: BaseNodeType) => void;
+type CallbackWithChildNode = (node: BaseNodeType, child_node: BaseNodeType) => void;
 
 export class LifeCycleController {
 	protected _on_child_add_hooks: CallbackWithChildNode[] = [];
 	private _on_child_remove_hooks: CallbackWithChildNode[] = [];
 	private _on_create_hooks: Callback[] = [];
 	private _on_delete_hooks: Callback[] = [];
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	add_on_child_add_hook(callback: CallbackWithChildNode) {
 		this._on_child_add_hooks.push(callback);
 	}
-	on_child_add(node: BaseNode) {
+	on_child_add(node: BaseNodeType) {
 		this.execute_hooks_with_child_node(this._on_child_add_hooks, node);
 	}
 
 	add_on_child_remove_hook(callback: CallbackWithChildNode) {
 		this._on_child_remove_hooks.push(callback);
 	}
-	on_child_remove(node: BaseNode) {
+	on_child_remove(node: BaseNodeType) {
 		this.execute_hooks_with_child_node(this._on_child_add_hooks, node);
 	}
 
@@ -43,7 +43,7 @@ export class LifeCycleController {
 			hook(this.node);
 		}
 	}
-	protected execute_hooks_with_child_node(hooks: CallbackWithChildNode[], child_node: BaseNode) {
+	protected execute_hooks_with_child_node(hooks: CallbackWithChildNode[], child_node: BaseNodeType) {
 		for (let hook of hooks) {
 			hook(this.node, child_node);
 		}

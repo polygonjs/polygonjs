@@ -1,6 +1,6 @@
 import {CoreObject} from 'src/core/Object';
 
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 
 // interface ContentOption {
 // 	clone?: boolean
@@ -11,16 +11,16 @@ export abstract class TypedContainer<T> extends CoreObject {
 	// protected _eval_key: number
 	protected _content: T;
 
-	constructor(protected _node: BaseNode) {
+	constructor(protected _node: BaseNodeType) {
 		super();
 		// this.update_eval_key();
 		// this.set_content(this._default_content());
 	}
 
-	set_node(node: BaseNode) {
+	set_node(node: BaseNodeType) {
 		this._node = node;
 	}
-	node(): BaseNode {
+	node(): BaseNodeType {
 		return this._node;
 	}
 

@@ -1,4 +1,4 @@
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 
 export class CookController {
 	_cooking: boolean = false;
@@ -13,7 +13,7 @@ export class CookController {
 	_cook_time_params: number;
 	_last_eval_key: string;
 
-	constructor(private node: BaseNode) {}
+	constructor(private node: BaseNodeType) {}
 
 	get is_cooking(): boolean {
 		return this._cooking === true;

@@ -1,4 +1,4 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParam} from 'src/engine/params/_Base';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import jsep from 'jsep';
@@ -13,7 +13,7 @@ export class MissingExpressionReference {
 		console.log(this.jsep_node, this.param); // TODO: typescript, to not have the missing ref
 	}
 
-	resolve_with_node(node: BaseNode) {
+	resolve_with_node(node: BaseNodeType) {
 		console.warn('this should not work! REFACTOR asap');
 		// this.param.parse_expression_and_update_dependencies()
 	}

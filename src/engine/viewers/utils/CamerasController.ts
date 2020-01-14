@@ -1,11 +1,11 @@
 // import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseViewer} from '../_Base';
 
 export class CamerasController {
 	// private _is_active: boolean = false;
-	private _camera_node: BaseCameraObjNode;
+	private _camera_node: BaseCameraObjNodeType;
 	// private _camera: Camera;
 
 	private _size: Vector2 = new Vector2(100, 100);
@@ -17,7 +17,7 @@ export class CamerasController {
 	// activate() {
 	// 	this._is_active = true;
 	// }
-	set_camera_node(camera_node: BaseCameraObjNode) {
+	set_camera_node(camera_node: BaseCameraObjNodeType) {
 		if (!this._camera_node || camera_node.graph_node_id != this._camera_node.graph_node_id) {
 			this._camera_node = camera_node;
 			// this._camera = camera_node.object;

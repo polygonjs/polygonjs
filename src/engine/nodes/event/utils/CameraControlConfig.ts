@@ -1,9 +1,9 @@
-import {BaseCameraControlsEventNode, CameraControls} from '../_BaseCameraControls';
+import {BaseCameraControlsEventNodeType, CameraControls} from '../_BaseCameraControls';
 
 export class CameraControlsConfig {
 	constructor(
 		private _camera_node_id: string,
-		private _controls_node: BaseCameraControlsEventNode,
+		private _controls_node: BaseCameraControlsEventNodeType,
 		private _controls: CameraControls
 	) {}
 

@@ -1,5 +1,5 @@
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseCameraControlsEventNode, CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraControlsEventNodeType, CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
 import {CameraControlsConfig} from 'src/engine/nodes/event/utils/CameraControlConfig';
 import {BaseParam} from 'src/engine/params/_Base';
 
@@ -7,11 +7,11 @@ const CONTROLS_PARAM_NAME = 'controls';
 
 export class ControlsController {
 	_applied_controls_by_element_id: Dictionary<Dictionary<boolean>> = {};
-	private _controls_node: BaseCameraControlsEventNode | null;
+	private _controls_node: BaseCameraControlsEventNodeType | null;
 	private controls_start_listener: () => void;
 	private controls_end_listener: () => void;
 
-	constructor(private node: BaseCameraObjNode) {}
+	constructor(private node: BaseCameraObjNodeType) {}
 
 	controls_param(): BaseParam | null {
 		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
@@ -20,11 +20,11 @@ export class ControlsController {
 		return null;
 	}
 
-	controls_node(): BaseCameraControlsEventNode | null {
-		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
-			return this.node.params.get_operator_path(CONTROLS_PARAM_NAME).found_node() as BaseCameraControlsEventNode;
-		}
-		return null;
+	controls_node(): BaseCameraControlsEventNodeType | null {
+		// if (this.node.params.has(CONTROLS_PARAM_NAME)) { // TODO: typescript
+		return this.node.p.controls.found_node() as BaseCameraControlsEventNodeType;
+		// }
+		// return null;
 	}
 
 	update_controls() {

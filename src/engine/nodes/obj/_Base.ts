@@ -1,6 +1,6 @@
 import {Object3D} from 'three/src/core/Object3D';
 
-import {TypedNode, BaseNode, BaseNodeVisitor} from '../_Base';
+import {TypedNode, BaseNodeType, BaseNodeVisitor} from '../_Base';
 // import {BaseSopNode} from '../sop/_Base';
 // import {LookAt} from './Concerns/LookAt';
 import {ObjectContainer} from 'src/engine/containers/Object';
@@ -14,10 +14,10 @@ const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
 
 interface Object3DWithNode extends Object3D {
-	node: BaseNode;
+	node: BaseNodeType;
 }
 interface BaseObjNodeVisitor extends BaseNodeVisitor {
-	visit_node_obj: (node: BaseObjNode) => void;
+	visit_node_obj: (node: BaseObjNodeType) => void;
 }
 
 export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectContainer, K> {
@@ -169,5 +169,5 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectCo
 	}
 }
 
-class BoxObjParamConfig extends NodeParamsConfig {}
-export class BaseObjNode extends TypedObjNode<BoxObjParamConfig> {}
+export type BaseObjNodeType = TypedObjNode<any>;
+export class BaseObjNodeclass extends TypedObjNode<any> {}

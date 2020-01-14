@@ -1,4 +1,4 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_isNaN from 'lodash/isNaN';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
@@ -10,7 +10,7 @@ export class NameController {
 	private _on_set_name_hooks: Callback[];
 	private _on_set_full_path_hooks: Callback[];
 
-	constructor(protected node: BaseNode) {
+	constructor(protected node: BaseNodeType) {
 		this._graph_node = new CoreGraphNode(node.scene, 'node_name_controller');
 		// this._graph_node.set_scene(this.node.scene);
 	}
@@ -18,7 +18,7 @@ export class NameController {
 		return this._graph_node;
 	}
 
-	static base_name(node: BaseNode) {
+	static base_name(node: BaseNodeType) {
 		let base = node.type(); //CoreString.class_name_to_type(this.self.type())
 		const last_char = base[base.length - 1];
 		if (!lodash_isNaN(parseInt(last_char))) {

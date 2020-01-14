@@ -1,5 +1,5 @@
 import {BaseParam} from '../_Base';
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isEqual from 'lodash/isEqual';
@@ -108,7 +108,7 @@ export class OptionsController {
 	get param() {
 		return this._param;
 	}
-	get node(): BaseNode {
+	get node(): BaseNodeType {
 		return this._param.node;
 	}
 	get default() {

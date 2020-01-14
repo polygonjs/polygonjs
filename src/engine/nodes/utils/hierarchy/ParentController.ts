@@ -1,20 +1,20 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {NameController} from '../NameController';
 
 type Callback = () => void;
 import {CoreWalker} from 'src/core/Walker';
 
 export class HierarchyParentController {
-	private _parent: BaseNode | null;
+	private _parent: BaseNodeType | null;
 	private _on_set_parent_hooks: Callback[];
 
-	constructor(protected node: BaseNode) {}
+	constructor(protected node: BaseNodeType) {}
 
 	get parent() {
 		return this._parent;
 	}
 
-	set_parent(parent: BaseNode | null) {
+	set_parent(parent: BaseNodeType | null) {
 		if (parent != this.node.parent_controller.parent) {
 			this._parent = parent;
 			if (this._parent) {

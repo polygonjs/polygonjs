@@ -10,8 +10,8 @@ import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 // import lodash_sum from 'lodash/sum'
 // import {BaseParam} from 'src/Engine/Param/_Base'
 // import {BaseNodePostProcess} from 'src/Engine/Node/PostProcess/_Base'
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseMatNode} from 'src/engine/nodes/mat/_Base';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseMatNodeType} from 'src/engine/nodes/mat/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {ParamType} from 'src/engine/poly/ParamType';
 // import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer'
@@ -33,7 +33,7 @@ export class BaseBackgroundController {
 
 	protected _bg_raycaster = new Raycaster();
 
-	constructor(protected node: BaseCameraObjNode) {}
+	constructor(protected node: BaseCameraObjNodeType) {}
 
 	get screen_quad() {
 		return (this._screen_quad = this._screen_quad || this._create_screen_quad()); // new ScreenQuad()
@@ -146,7 +146,7 @@ export class BaseBackgroundController {
 	}
 
 	private async update_background_material() {
-		const bg_node = this.node.params.get_operator_path('background_material').found_node() as BaseMatNode;
+		const bg_node = this.node.p.background_material.found_node() as BaseMatNodeType;
 		if (bg_node) {
 			await bg_node.request_container();
 			const material = bg_node.material;

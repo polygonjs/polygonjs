@@ -1,48 +1,41 @@
-import {Vector2} from 'three/src/math/Vector2';
 import {Camera} from 'three/src/cameras/Camera';
 
-import {BaseCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {CoreScriptLoader} from 'src/core/loader/Script';
 
 import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
-import {ParamType} from 'src/engine/poly/ParamType';
 
-export class CameraOrbitControlsEventNode extends BaseCameraControlsEventNode {
-	@ParamB('allow_pan') _param_allow_pan: boolean;
-	@ParamB('allow_rotate') _param_allow_rotate: boolean;
-	@ParamB('allow_zoom') _param_allow_zoom: boolean;
-	@ParamB('tdamping') _param_tdamping: boolean;
-	@ParamF('damping') _param_damping: number;
-	@ParamF('rotate_speed') _param_rotate_speed: number;
-	@ParamB('screen_space_panning') _param_screen_space_panning: boolean;
-	@ParamF('min_distance') _param_min_distance: number;
-	@ParamF('max_distance') _param_max_distance: number;
-	@ParamV2('polar_angle_range') _param_polar_angle_range: Vector2;
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class CameraOrbitEventParamsConfig extends NodeParamsConfig {
+	allow_pan = ParamConfig.BOOLEAN(1);
+	allow_rotate = ParamConfig.BOOLEAN(1);
+	allow_zoom = ParamConfig.BOOLEAN(1);
+	tdamping = ParamConfig.BOOLEAN(0);
+	damping = ParamConfig.FLOAT(0.1, {
+		visible_if: {tdamping: true},
+	});
+	screen_space_panning = ParamConfig.BOOLEAN(1);
+	rotate_speed = ParamConfig.FLOAT(0.5);
+	min_distance = ParamConfig.FLOAT(1, {
+		range: [0, 100],
+		range_locked: [true, false],
+	});
+	max_distance = ParamConfig.FLOAT(50, {
+		range: [0, 100],
+		range_locked: [true, false],
+	});
+	polar_angle_range = ParamConfig.VECTOR2([0, '$PI']);
+}
+const ParamsConfig = new CameraOrbitEventParamsConfig();
+
+export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<CameraOrbitEventParamsConfig> {
+	params_config = ParamsConfig;
 	static type() {
 		return 'camera_orbit_controls';
 	}
 	static required_three_imports() {
 		return ['controls/OrbitControls'];
-	}
-
-	create_params() {
-		this.add_param(ParamType.BOOLEAN, 'allow_pan', 1);
-		this.add_param(ParamType.BOOLEAN, 'allow_rotate', 1);
-		this.add_param(ParamType.BOOLEAN, 'allow_zoom', 1);
-
-		this.add_param(ParamType.BOOLEAN, 'tdamping', 0);
-		this.add_param(ParamType.FLOAT, 'damping', 0.1, {
-			visible_if: {tdamping: true},
-		});
-
-		this.add_param(ParamType.BOOLEAN, 'screen_space_panning', 1);
-		this.add_param(ParamType.FLOAT, 'rotate_speed', 0.5);
-
-		this.add_param(ParamType.FLOAT, 'min_distance', 1, {range: [0, 100], range_locked: [true, false]});
-		this.add_param(ParamType.FLOAT, 'max_distance', 50, {range: [0, 100], range_locked: [true, false]});
-
-		this.add_param(ParamType.VECTOR2, 'polar_angle_range', [0, '$PI']);
 	}
 
 	async create_controls_instance(camera: Camera, element: HTMLElement) {
@@ -54,28 +47,28 @@ export class CameraOrbitControlsEventNode extends BaseCameraControlsEventNode {
 	}
 
 	setup_controls(controls: OrbitControls) {
-		controls.enablePan = this._param_allow_pan;
-		controls.enableRotate = this._param_allow_rotate;
-		controls.enableZoom = this._param_allow_zoom;
+		controls.enablePan = this.pv.allow_pan;
+		controls.enableRotate = this.pv.allow_rotate;
+		controls.enableZoom = this.pv.allow_zoom;
 
-		controls.enableDamping = this._param_tdamping;
-		controls.dampingFactor = this._param_damping;
+		controls.enableDamping = this.pv.tdamping;
+		controls.dampingFactor = this.pv.damping;
 
-		controls.rotateSpeed = this._param_rotate_speed;
+		controls.rotateSpeed = this.pv.rotate_speed;
 
-		controls.screenSpacePanning = this._param_screen_space_panning;
+		controls.screenSpacePanning = this.pv.screen_space_panning;
 
-		controls.minDistance = this._param_min_distance;
-		controls.maxDistance = this._param_max_distance;
+		controls.minDistance = this.pv.min_distance;
+		controls.maxDistance = this.pv.max_distance;
 
-		controls.minPolarAngle = this._param_polar_angle_range.x;
-		controls.maxPolarAngle = this._param_polar_angle_range.y;
+		controls.minPolarAngle = this.pv.polar_angle_range.x;
+		controls.maxPolarAngle = this.pv.polar_angle_range.y;
 
 		// to prevent moving the camera when using the arrows to change frame
 		controls.enableKeys = false;
 	}
 
-	set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNode): void {
+	set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void {
 		const target = camera_node.params.vector3('target');
 		controls.target.copy(target);
 	}

@@ -4,10 +4,10 @@ import {Vector3} from 'three/src/math/Vector3';
 
 import {CoreMath} from 'src/core/math/_Module';
 import {CoreTransform, SetParamsFromMatrixOptions} from 'src/core/Transform';
-import {BaseObjNode} from '../_Base';
+import {BaseObjNodeType} from '../_Base';
 
 export class TransformController {
-	constructor(private node: BaseObjNode) {}
+	constructor(private node: BaseObjNodeType) {}
 
 	post_set_input() {
 		if (this.node.io.inputs.input(0) != null) {

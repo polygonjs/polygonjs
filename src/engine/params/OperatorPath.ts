@@ -3,7 +3,7 @@ import {Single} from './_Single';
 import {CoreWalker} from 'src/core/Walker';
 
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {ParamType} from '../poly/ParamType';
 
 interface OperatorPathParamVisitor extends TypedParamVisitor {
@@ -12,7 +12,7 @@ interface OperatorPathParamVisitor extends TypedParamVisitor {
 
 export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	_path: string;
-	_found_node: BaseNode | null;
+	_found_node: BaseNodeType | null;
 
 	static type() {
 		return ParamType.OPERATOR_PATH;

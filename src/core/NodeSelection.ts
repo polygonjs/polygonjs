@@ -1,5 +1,5 @@
 import UIData from './UIData';
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_difference from 'lodash/difference';
 import lodash_union from 'lodash/union';
 // import lodash_isArray from 'lodash/isArray'
@@ -8,7 +8,7 @@ import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 export default class NodeSelection extends UIData {
 	_node_ids: string[] = [];
-	constructor(private _node: BaseNode) {
+	constructor(private _node: BaseNodeType) {
 		// {
 		//   // Hack: trick Babel/TypeScript into allowing this before super.
 		//   if (false) { super(); }
@@ -28,24 +28,24 @@ export default class NodeSelection extends UIData {
 		this._node_ids = [];
 	}
 
-	nodes(): BaseNode[] {
-		return this._node.scene.graph.nodes_from_ids(this._node_ids);
+	nodes(): BaseNodeType[] {
+		return this._node.scene.graph.nodes_from_ids(this._node_ids) as BaseNodeType[];
 	}
 
-	contains(node: BaseNode): boolean {
+	contains(node: BaseNodeType): boolean {
 		return this._node_ids.includes(node.graph_node_id);
 	}
-	equals(nodes: BaseNode[]): boolean {
+	equals(nodes: BaseNodeType[]): boolean {
 		const node_ids = nodes.map((node) => node.graph_node_id).sort();
 		return lodash_isEqual(node_ids, this._node_ids);
 	}
 
-	set(nodes: BaseNode[]) {
+	set(nodes: BaseNodeType[]) {
 		this.remove(this.nodes());
 		return this.add(nodes);
 	}
 
-	add(nodes_to_add: BaseNode[]) {
+	add(nodes_to_add: BaseNodeType[]) {
 		// if (!lodash_isArray(nodes_to_add)) { nodes_to_add = [nodes_to_add]; }
 
 		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id);
@@ -54,7 +54,7 @@ export default class NodeSelection extends UIData {
 		return this.update_nodes_ui_data(nodes_to_add);
 	}
 
-	remove(nodes_to_remove: BaseNode[]) {
+	remove(nodes_to_remove: BaseNodeType[]) {
 		// if (!lodash_isArray(nodes_to_remove)) { nodes_to_remove = [nodes_to_remove]; }
 
 		const node_ids_to_remove = nodes_to_remove.map((node) => node.graph_node_id);
@@ -63,7 +63,7 @@ export default class NodeSelection extends UIData {
 		this.update_nodes_ui_data(nodes_to_remove);
 	}
 
-	private update_nodes_ui_data(nodes: BaseNode[]) {
+	private update_nodes_ui_data(nodes: BaseNodeType[]) {
 		this.node().emit(NodeEvent.SELECTION_UPDATED);
 	}
 

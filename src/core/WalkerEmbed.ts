@@ -1,4 +1,4 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 // import {BaseParam} from 'src/engine/params/_Base'
 import {DecomposedPath} from './DecomposedPath';
 
@@ -11,7 +11,7 @@ export class CoreWalkerEmbed {
 		return SEPARATOR;
 	}
 
-	static find_node(node_src: BaseNode, path: string, decomposed_path?: DecomposedPath): BaseNode | null {
+	static find_node(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseNodeType | null {
 		if (!node_src) {
 			return null;
 		}
@@ -19,7 +19,7 @@ export class CoreWalkerEmbed {
 		const elements: string[] = path.split(SEPARATOR).filter((e) => e.length > 0);
 		const first_element = elements[0];
 
-		let next_node: BaseNode | null = null;
+		let next_node: BaseNodeType | null = null;
 		if (path[0] === '/') {
 			const path_from_root = path.substr(1);
 			next_node = this.find_node(node_src.root, path_from_root, decomposed_path);

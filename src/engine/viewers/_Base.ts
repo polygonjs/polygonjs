@@ -1,6 +1,6 @@
 import {Scene} from 'three/src/scenes/Scene';
 import {PolyScene} from 'src/engine/scene/PolyScene';
-import {BaseCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
 // import {CameraMixin} from './concerns/Camera';
 // import {Capturer} from './concerns/Capturer';
@@ -49,7 +49,7 @@ export abstract class BaseViewer {
 		return (this._webgl_controller = this._webgl_controller || new WebGLController(this));
 	}
 
-	constructor(protected _container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNode) {
+	constructor(protected _container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNodeType) {
 		this._display_scene = this._scene.display_scene;
 		this._init_from_scene(camera_node).then(() => {
 			this._build();
@@ -65,7 +65,7 @@ export abstract class BaseViewer {
 		return this._canvas;
 	}
 
-	private async _init_from_scene(camera_node: BaseCameraObjNode) {
+	private async _init_from_scene(camera_node: BaseCameraObjNodeType) {
 		this.cameras_controller.set_camera_node(camera_node || this._scene.cameras_controller.master_camera_node);
 		// await this.update_picker_nodes(); // TODO: typescript
 	}

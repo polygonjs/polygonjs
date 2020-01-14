@@ -3,20 +3,20 @@ import lodash_clamp from 'lodash/clamp';
 import {Vector2} from 'three/src/math/Vector2';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 const THREE = {PerspectiveCamera, Vector2};
-import {BaseCameraObjNode, BASE_CAMERA_DEFAULT} from './_BaseCamera';
+import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, BaseCameraObjParamsConfig} from './_BaseCamera';
 import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
 import {ParamType} from 'src/engine/poly/ParamType';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+// import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT = {
 	fov: 50,
 };
 
 // const EVENT_CHANGE = { type: 'change' };
-class PerspectiveCameraObjParamConfig extends NodeParamsConfig {}
+class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {}
 const ParamsConfig = new PerspectiveCameraObjParamConfig();
 
-export class PerspectiveCameraObjNode extends BaseCameraObjNode<PerspectiveCameraObjParamConfig> {
+export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCameraObjParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'perspective_camera';
@@ -60,7 +60,7 @@ export class PerspectiveCameraObjNode extends BaseCameraObjNode<PerspectiveCamer
 
 	protected _update_for_aspect_ratio() {
 		if (this._aspect) {
-			let lock_width = this._param_lock_width;
+			let lock_width = this.pv.lock_width;
 			if (lock_width == null) {
 				lock_width = true;
 			}

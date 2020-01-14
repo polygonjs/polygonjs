@@ -3,7 +3,7 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 // import {Group} from 'three/src/objects/Group';
 // import {CameraHelper} from 'three/src/helpers/CameraHelper';
 import lodash_clamp from 'lodash/clamp';
-import {BaseCameraObjNode, BASE_CAMERA_DEFAULT} from './_BaseCamera';
+import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, BaseCameraObjParamsConfig} from './_BaseCamera';
 
 import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
 import {ParamType} from 'src/engine/poly/ParamType';
@@ -15,7 +15,12 @@ const DEFAULT = {
 	bottom: -0.5,
 };
 
-export class OrthographicCameraObjNode extends BaseCameraObjNode {
+// import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {}
+const ParamsConfig = new PerspectiveCameraObjParamConfig();
+
+export class OrthographicCameraObjNode extends TypedCameraObjNode<PerspectiveCameraObjParamConfig> {
+	params_config = ParamsConfig;
 	protected _object: OrthographicCamera;
 	_param_size: number;
 	_param_vertical_size_range: Vector2;
@@ -70,7 +75,7 @@ export class OrthographicCameraObjNode extends BaseCameraObjNode {
 	protected _update_for_aspect_ratio() {
 		if (this._aspect) {
 			const size = this._param_size || 1;
-			let lock_width = this._param_lock_width;
+			let lock_width = this.pv.lock_width;
 			if (lock_width == null) {
 				lock_width = true;
 			}

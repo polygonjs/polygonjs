@@ -1,6 +1,6 @@
 import {BaseContainer, TypedContainer} from '../../containers/_Base';
 // import {ContainerModule} from '../../containers/_Module';
-import {BaseNode} from '../_Base';
+import {BaseNodeType} from '../_Base';
 
 // TODO: add enum
 // const REMOVE_DIRTY_STATE_MESSAGE_PROCESS_CONTAINER_REQUEST = 'process_container_request';
@@ -14,7 +14,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 	protected _container: T;
 	// protected _container_class: typeof T;
 
-	constructor(protected node: BaseNode, container_class: typeof BaseContainer) {
+	constructor(protected node: BaseNodeType, container_class: typeof BaseContainer) {
 		this._container = new container_class(this.node) as T;
 	}
 

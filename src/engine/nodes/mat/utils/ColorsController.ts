@@ -5,7 +5,6 @@ import {NoColors} from 'three/src/constants';
 import {Material} from 'three/src/materials/Material';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {Color} from 'three/src/math/Color';
-import {ParamType} from 'src/engine/poly/ParamType';
 
 interface AddParamsOptions {
 	flat_shading?: boolean;
@@ -22,21 +21,18 @@ interface MaterialWithUniforms extends Material {
 
 export class ColorsController extends BaseController {
 	add_params(options: AddParamsOptions = {}) {
-		this.node.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
-		this.node.add_param(ParamType.BOOLEAN, 'use_vertex_colors', 0);
-
-		if (options['flat_shading'] != false) {
-			// for points
-			this.node.add_param(ParamType.BOOLEAN, 'flat_shading', 0);
-		}
-
-		this.node.add_param(ParamType.BOOLEAN, 'transparent', 0);
-		this.node.add_param(ParamType.FLOAT, 'opacity', 1);
-		this.node.add_param(ParamType.FLOAT, 'alpha_test', 0);
-
-		if (this.__fog_used_in_uniforms()) {
-			this.node.add_param(ParamType.BOOLEAN, 'use_fog', 1);
-		}
+		// this.node.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
+		// this.node.add_param(ParamType.BOOLEAN, 'use_vertex_colors', 0);
+		// if (options['flat_shading'] != false) {
+		// 	// for points
+		// 	this.node.add_param(ParamType.BOOLEAN, 'flat_shading', 0);
+		// }
+		// this.node.add_param(ParamType.BOOLEAN, 'transparent', 0);
+		// this.node.add_param(ParamType.FLOAT, 'opacity', 1);
+		// this.node.add_param(ParamType.FLOAT, 'alpha_test', 0);
+		// if (this.__fog_used_in_uniforms()) {
+		// 	this.node.add_param(ParamType.BOOLEAN, 'use_fog', 1);
+		// }
 	}
 
 	update() {

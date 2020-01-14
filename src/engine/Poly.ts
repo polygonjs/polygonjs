@@ -1,4 +1,4 @@
-import {BaseNode} from './nodes/_Base';
+import {BaseNodeClass} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from 'src/renderers/RenderersController';
 import {NodesRegister, RegisterOptions, BaseNodeConstructor} from 'src/engine/poly/NodesRegister';
@@ -16,7 +16,7 @@ export class Poly {
 	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		this.nodes_register.register_node(node, tab_menu_category, options);
 	}
-	registered_nodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNode> {
+	registered_nodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNodeClass> {
 		return this.nodes_register.registered_nodes(parent_context, type);
 	}
 	in_worker_thread() {

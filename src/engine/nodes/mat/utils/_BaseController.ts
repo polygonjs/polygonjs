@@ -1,7 +1,7 @@
-import {BaseMatNode} from '../_Base';
+import {BaseMatNodeType} from '../_Base';
 
 export class BaseController {
-	constructor(protected node: BaseMatNode) {}
+	constructor(protected node: BaseMatNodeType) {}
 	add_params() {}
 
 	update() {}

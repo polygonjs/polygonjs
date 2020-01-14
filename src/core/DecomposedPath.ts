@@ -1,10 +1,10 @@
-import {BaseNode} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParam} from 'src/engine/params/_Base';
 import {CoreWalker} from 'src/core/Walker';
 // import {NodeSimple} from 'src/core/Graph/NodeSimple'
 
 // import {NamedGraphNodeClass} from './graph/NamedGraphNode'
-type NodeOrParam = BaseNode | BaseParam;
+type NodeOrParam = BaseNodeType | BaseParam;
 
 const SEPARATOR = CoreWalker.SEPARATOR;
 export class DecomposedPath {

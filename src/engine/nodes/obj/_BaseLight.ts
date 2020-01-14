@@ -1,14 +1,16 @@
-import {BaseObjNode} from './_Base';
+import {TypedObjNode} from './_Base';
 import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export abstract class BaseLightObjNode extends BaseObjNode {
+export abstract class BaseLightObjNode<K extends NodeParamsConfig> extends TypedObjNode<K> {
 	protected _object: Light;
 	protected _color_with_intensity = new Color(0x00000);
 	get object() {
 		return this._object;
 	}
-	initialize_node() {
+	initialize_base_node() {
+		super.initialize_base_node();
 		this.flags.add_display();
 		this._init_dirtyable_hook();
 	}
