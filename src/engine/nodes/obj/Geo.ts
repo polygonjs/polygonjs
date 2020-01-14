@@ -15,7 +15,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 import {BaseSopNodeType} from '../sop/_Base';
 import {BoxSopNode} from '../sop/Box';
 import {TransformSopNode} from '../sop/Transform';
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 // import {PolyScene} from 'src/engine/scene/PolyScene';
 
 interface SopNodeTypeMap {
@@ -23,9 +23,19 @@ interface SopNodeTypeMap {
 	transform: TransformSopNode;
 }
 
-class GeoObjParamConfig extends NodeParamsConfig {}
+class GeoObjParamConfig extends NodeParamsConfig {
+	t = ParamConfig.VECTOR3([0, 0, 0]);
+	r = ParamConfig.VECTOR3([0, 0, 0]);
+	s = ParamConfig.VECTOR3([0, 0, 0]);
+	scale = ParamConfig.FLOAT(1);
+	look_at = ParamConfig.OPERATOR_PATH('');
+	up = ParamConfig.VECTOR3([0, 1, 0]);
+	pivot = ParamConfig.VECTOR3([0, 0, 0]);
+}
+const ParamsConfig = new GeoObjParamConfig();
 
 export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
+	params_config = ParamsConfig;
 	private _display_node_controller = new DisplayNodeController(this);
 	static type() {
 		return 'geo';
@@ -129,7 +139,7 @@ export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 	}
 	cook() {
 		// TODO: why does it cook twice when changing a param like layers
-		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
+		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
 		this.group.visible = this.flags.display.active;

@@ -3,16 +3,24 @@ import {TypedSopNode} from './_Base';
 
 import {CoreGroup} from 'src/core/geometry/Group';
 import {CoreTransform} from 'src/core/Transform';
-import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from 'src/engine/poly/ParamType';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 
-const DEFAULT_PARAMS = {
-	PIVOT: [0, 0, 0] as [number, number, number],
-};
+// const DEFAULT_PARAMS = {
+// 	PIVOT: [0, 0, 0] as [number, number, number],
+// };
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class TransformSopParamConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');
+
+	// transform
+	t = ParamConfig.VECTOR3([0, 0, 0]);
+	r = ParamConfig.VECTOR3([0, 0, 0]);
+	s = ParamConfig.VECTOR3([1, 1, 1]);
+	scale = ParamConfig.FLOAT(1);
+	look_at = ParamConfig.OPERATOR_PATH('');
+	up = ParamConfig.VECTOR3([0, 1, 0]);
 	pivot = ParamConfig.VECTOR3([0, 0, 0]);
 }
 const ParamsConfig = new TransformSopParamConfig();
@@ -39,13 +47,13 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 
 	create_params() {
 		// GroupParamController.add_param(this); // TODO: typescript
-		CoreTransform.create_params(this);
-		this.add_param(ParamType.VECTOR3, 'pivot', DEFAULT_PARAMS.PIVOT);
+		// CoreTransform.create_params(this);
+		// this.add_param(ParamType.VECTOR3, 'pivot', DEFAULT_PARAMS.PIVOT);
 	}
 
 	cook(input_contents: CoreGroup[]) {
 		const objects = input_contents[0].objects();
-		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
+		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 
 		if (this.pv.group === '') {
 			for (let object of objects) {

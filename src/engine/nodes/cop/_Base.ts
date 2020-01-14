@@ -1,12 +1,12 @@
-import {Texture} from 'three/src/textures/Texture';
 import {TypedNode} from '../_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
+import {Texture} from 'three/src/textures/Texture';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
-export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<TextureContainer, K> {
+export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE', K> {
 	container_controller: TypedContainerController<TextureContainer> = new TypedContainerController<TextureContainer>(
 		this,
 		TextureContainer

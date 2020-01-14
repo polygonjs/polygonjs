@@ -24,16 +24,16 @@ export class CoreTransform {
 		node.add_param(ParamType.VECTOR3, 'up', [0, 1, 0]);
 	}
 
-	static matrix_from_node_with_transform_params(node: BaseNodeType): Matrix4 {
-		const t = node.params.vector3('t');
-		const r = node.params
-			.vector3('r')
-			.clone()
-			.multiplyScalar(Math.PI / 180);
-		const s = node.params.vector3('s');
-		const scale = node.params.float('scale');
-		return this.matrix(t, r, s, scale);
-	}
+	// static matrix_from_node_with_transform_params(node: BaseNodeType): Matrix4 {
+	// 	const t = node.params.vector3('t');
+	// 	const r = node.params
+	// 		.vector3('r')
+	// 		.clone()
+	// 		.multiplyScalar(Math.PI / 180);
+	// 	const s = node.params.vector3('s');
+	// 	const scale = node.params.float('scale');
+	// 	return this.matrix(t, r, s, scale);
+	// }
 
 	// if this is done, make sure to use eval with a  callback
 	// @matrix_from_params: (node) ->

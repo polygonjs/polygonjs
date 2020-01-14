@@ -135,7 +135,7 @@ export class CookController {
 			this._record_cook_time();
 			//console.log("END COOK: #{this.full_path()} #{this.cook_time()} (with inputs:#{this.cook_time_with_inputs()}) (cook count: #{@_cooks_count}): #{message}")
 			//this.notify_requesters()
-			setTimeout(this.node.container_controller.notify_requesters.bind(this), 0);
+			setTimeout(this.node.container_controller.notify_requesters.bind(this.node.container_controller), 0);
 		}
 	}
 	private _increase_cooks_count() {

@@ -51,6 +51,12 @@ interface MaterialsByString {
 // 	color: 0xffffff,
 // 	linewidth: 1
 // })
+export enum ObjectType {
+	MESH = 'MESH',
+	POINTS = 'POINTS',
+	LINE_SEGMENTS = 'LINE_SEGMENTS',
+}
+
 const materials: MaterialsByString = {
 	MeshStandard: new MeshStandardMaterial({
 		color: 0xffffff,
@@ -59,7 +65,7 @@ const materials: MaterialsByString = {
 		metalness: 0.5,
 		roughness: 0.9,
 	}),
-	[Mesh.name]: new MeshLambertMaterial({
+	[ObjectType.MESH]: new MeshLambertMaterial({
 		// MeshStandardMaterial
 		color: new Color(0.5, 0.5, 1),
 		side: FrontSide,
@@ -67,24 +73,19 @@ const materials: MaterialsByString = {
 		transparent: true,
 		depthTest: true,
 	}),
-	[Points.name]: new PointsMaterial({
+	[ObjectType.POINTS]: new PointsMaterial({
 		color: 0xffffff,
 		size: 0.1,
 		//blending: AdditiveBlending
 		depthTest: true,
 	}),
-	[LineSegments.name]: new LineBasicMaterial({
+	[ObjectType.LINE_SEGMENTS]: new LineBasicMaterial({
 		color: 0xffffff,
 		linewidth: 1,
 	}),
 };
 
 // TODO: typescript: check that this works after using uglifier
-export enum ObjectType {
-	MESH = 'MESH',
-	POINTS = 'POINTS',
-	LINE_SEGMENTS = 'LINE_SEGMENTS',
-}
 
 export enum AttribClass {
 	VERTEX = 0,
@@ -108,7 +109,7 @@ export const CoreConstant = {
 		POINTS: ObjectType.POINTS,
 		LINE_SEGMENTS: ObjectType.LINE_SEGMENTS,
 	},
-	OBJECT_TYPES: [Mesh.name, Points.name, LineSegments.name],
+	OBJECT_TYPES: [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS],
 	CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME: {
 		[Scene.name]: 'Scene',
 		[Group.name]: 'Group',
@@ -120,20 +121,20 @@ export const CoreConstant = {
 		[SkinnedMesh.name]: 'SkinnedMesh',
 	},
 	CONSTRUCTORS_BY_NAME: {
-		[Mesh.name]: Mesh,
-		[Points.name]: Points,
-		[LineSegments.name]: LineSegments,
+		[ObjectType.MESH]: Mesh,
+		[ObjectType.POINTS]: Points,
+		[ObjectType.LINE_SEGMENTS]: LineSegments,
 	},
-	CONSTRUCTORS_BY_TYPE: {
-		['MESH']: Mesh,
-		['POINTS']: Points,
-		['LINE_SEGMENTS']: LineSegments,
-	},
-	OBJECT_TYPE_BY_CONSTRUCTOR_NAME: {
-		[Mesh.name]: 'MESH',
-		[Points.name]: 'POINTS',
-		[LineSegments.name]: 'LINE_SEGMENTS',
-	},
+	// CONSTRUCTORS_BY_TYPE: {
+	// 	['MESH']: Mesh,
+	// 	['POINTS']: Points,
+	// 	['LINE_SEGMENTS']: LineSegments,
+	// },
+	// OBJECT_TYPE_BY_CONSTRUCTOR_NAME: {
+	// 	[Mesh.name]: 'MESH',
+	// 	[Points.name]: 'POINTS',
+	// 	[LineSegments.name]: 'LINE_SEGMENTS',
+	// },
 	MATERIALS: materials,
 };
 

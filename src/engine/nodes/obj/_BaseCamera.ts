@@ -50,10 +50,20 @@ export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 
 	// add layer params
 	// add background params
+	use_background = ParamConfig.BOOLEAN(0);
+	use_material = ParamConfig.BOOLEAN(0, {
+		visible_if: {use_background: true},
+	});
+	background_color = ParamConfig.COLOR([0, 0, 0], {
+		visible_if: {use_background: true, use_material: false},
+	});
 	background_material = ParamConfig.OPERATOR_PATH('', {
 		visible_if: {use_background: true, use_material: true},
 		node_selection: {context: NodeContext.MAT},
 		dependent_on_found_node: false,
+	});
+	background_ratio = ParamConfig.FLOAT(1, {
+		visible_if: {use_background: true, use_material: true},
 	});
 	// add post params
 }

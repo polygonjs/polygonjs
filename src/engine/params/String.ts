@@ -1,5 +1,5 @@
 // import lodash_each from 'lodash/each'
-// import lodash_isString from 'lodash/isString'
+import lodash_isString from 'lodash/isString';
 // import lodash_isNumber from 'lodash/isNumber'
 import {Single} from './_Single';
 import {TypedParamVisitor} from './_Base';
@@ -21,6 +21,13 @@ export class StringParam extends Single<ParamType.STRING> {
 	}
 	accepts_visitor(visitor: StringParamVisitor) {
 		return visitor.visit_string_param(this);
+	}
+
+	convert(raw_val: any): string {
+		if (lodash_isString(raw_val)) {
+			return raw_val;
+		}
+		return `${raw_val}`;
 	}
 
 	// convert_value(v): string {

@@ -7,7 +7,9 @@ import {TypedContainer} from './_Base';
 import {CoreGroup} from 'src/core/geometry/Group';
 // import {CoreObject} from 'src/core/geometry/Object'
 import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {BufferGeometry} from 'three';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Object3D} from 'three/src/core/Object3D';
+import {ContainableMap} from './utils/ContainableMap';
 // import {CoreConstant} from 'src/core/geometry/Constant'
 
 // const CoreGeometryGroup = CoreGroup
@@ -20,44 +22,53 @@ import {BufferGeometry} from 'three';
 // interface BooleanByString {
 // 	[propName: string]: boolean
 // }
-export class GeometryContainer extends TypedContainer<CoreGroup> {
+export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']> {
 	// protected _group: Group = new Group()
 	// private _objects_by_uuid: BooleanByString = {}
 	// protected _content: Object3D[] = []
-	protected _core_group: CoreGroup | null;
+	// protected _core_group: CoreGroup | null;
 
-	_points_count: number | null;
-	_bounding_box: Box3 | null;
+	// _points_count: number | null;
+	// _bounding_box: Box3 | null;
 
 	// constructor() {
 	// 	super();
 	// 	// this._materials = [];
 	// }
 
-	// _post_set_content(){
-	// 	this._core_group = this._core_group || new CoreGroup()
-	// 	this._core_group.touch()
-	// 	this._core_group.set_objects(this._content)
+	// _post_set_content() {
+	// 	this._core_group = this._core_group || new CoreGroup();
+	// 	this._core_group.touch();
+	// 	this._core_group.set_objects(this._content);
 	// }
+	set_objects(objects: Object3D[]) {}
 
 	// clone_content(){
 	// 	return this._content.map(object=>CoreObject.clone(object))
 	// }
-	core_content(): CoreGroup | null {
-		return this._core_group;
-	}
+	// core_content(): CoreGroup | null {
+	// 	return this._core_group; //= this._core_group || this._create_core_group()
+	// }
 	core_content_cloned(): CoreGroup | null {
-		if (this._core_group) {
-			return this._core_group.clone();
+		if (this._content) {
+			return this._content.clone();
 		} else {
 			return null;
 		}
 	}
-	reset_caches() {
-		this._core_group = null;
-		this._points_count = null;
-		this._bounding_box = null;
-	}
+	// private _create_core_group(){
+	// 	if(this._content){
+	// 		const core_group = new CoreGroup()
+	// 		core_group.set_objects(this._content)
+	// 		return core_group
+	// 	}
+	// }
+	// reset_caches() {
+	// 	console.log('reset cache');
+	// 	// this._content = null;
+	// 	// this._points_count = null;
+	// 	// this._bounding_box = null;
+	// }
 	// _default_content() {
 	// 	return new CoreGroup();
 	// }
@@ -91,10 +102,12 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	// 	// if (options == null) { options = {}; }
 	// 	// return new CoreGroup(this.group(options));
 	// }
-	core_group() {
-		return this._core_group; //this.group_wrapper(options)
+	// core_group() {
+	// 	return this._core_group; //this.group_wrapper(options)
+	// }
+	set_content(content: ContainableMap['GEOMETRY']) {
+		super.set_content(content);
 	}
-
 	// object(options){
 	// 	if (options == null) { options = {}; }
 	// 	return this.group(options);
@@ -205,7 +218,7 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	}
 	objects_count_by_type() {
 		const count_by_type: Dictionary<number> = {};
-		const core_group = this.core_group();
+		const core_group = this._content;
 		if (this._content && core_group) {
 			for (let core_object of core_group.core_objects()) {
 				const human_type = core_object.human_type();
@@ -219,7 +232,7 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	}
 	objects_names_by_type() {
 		const names_by_type: Dictionary<string[]> = {};
-		const core_group = this.core_group();
+		const core_group = this._content;
 		if (this._content && core_group) {
 			for (let core_object of core_group.core_objects()) {
 				const human_type = core_object.human_type();
@@ -270,23 +283,24 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	}
 
 	points_count() {
-		return this._points_count != null ? this._points_count : (this._points_count = this._compute_points_count());
+		return this._content.points_count();
+		// return this._points_count != null ? this._points_count : (this._points_count = this._compute_points_count());
 	}
 
-	_compute_points_count() {
-		let points_count = 0;
-		if (this._content) {
-			for (let object of this._content.objects()) {
-				object.traverse((object) => {
-					const geometry = (object as Mesh).geometry as BufferGeometry;
-					if (geometry) {
-						points_count += CoreGeometry.points_count(geometry);
-					}
-				});
-			}
-		}
-		return points_count;
-	}
+	// _compute_points_count() {
+	// 	let points_count = 0;
+	// 	if (this._content) {
+	// 		for (let object of this._content.objects()) {
+	// 			object.traverse((object) => {
+	// 				const geometry = (object as Mesh).geometry as BufferGeometry;
+	// 				if (geometry) {
+	// 					points_count += CoreGeometry.points_count(geometry);
+	// 				}
+	// 			});
+	// 		}
+	// 	}
+	// 	return points_count;
+	// }
 	//@_content.userData['points_count']
 	//Core.Geometry.Geometry.points_count(@_content)
 	// count = 0
@@ -308,28 +322,31 @@ export class GeometryContainer extends TypedContainer<CoreGroup> {
 	//
 	//
 	bounding_box(): Box3 {
-		return this._bounding_box != null ? this._bounding_box : (this._bounding_box = this._compute_bounding_box());
+		return this._content.bounding_box();
+		// return this._bounding_box != null ? this._bounding_box : (this._bounding_box = this._compute_bounding_box());
 	}
 	center(): Vector3 {
-		const center = new Vector3();
-		this.bounding_box().getCenter(center);
-		return center;
+		return this._content.center();
+		// const center = new Vector3();
+		// this.bounding_box().getCenter(center);
+		// return center;
 	}
 	size(): Vector3 {
-		const size = new Vector3();
-		this.bounding_box().getSize(size);
-		return size;
+		return this._content.size();
+		// const size = new Vector3();
+		// this.bounding_box().getSize(size);
+		// return size;
 	}
 
-	private _compute_bounding_box() {
-		const bbox = new Box3();
-		if (this._content) {
-			for (let object of this._content.objects()) {
-				// const box = new Box3()
-				// bbox.setFromObject(object);
-				bbox.expandByObject(object);
-			}
-		}
-		return bbox;
-	}
+	// private _compute_bounding_box() {
+	// 	const bbox = new Box3();
+	// 	if (this._content) {
+	// 		for (let object of this._content.objects()) {
+	// 			// const box = new Box3()
+	// 			// bbox.setFromObject(object);
+	// 			bbox.expandByObject(object);
+	// 		}
+	// 	}
+	// 	return bbox;
+	// }
 }

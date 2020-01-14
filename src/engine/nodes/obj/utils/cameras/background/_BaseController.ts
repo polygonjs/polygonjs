@@ -12,8 +12,8 @@ import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 // import {BaseNodePostProcess} from 'src/Engine/Node/PostProcess/_Base'
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseMatNodeType} from 'src/engine/nodes/mat/_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {ParamType} from 'src/engine/poly/ParamType';
+// import {NodeContext} from 'src/engine/poly/NodeContext';
+// import {ParamType} from 'src/engine/poly/ParamType';
 // import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer'
 // import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass'
 
@@ -52,24 +52,21 @@ export class BaseBackgroundController {
 
 	add_params() {
 		this.node.within_param_folder('background', () => {
-			this.node.add_param(ParamType.BOOLEAN, 'use_background', 0);
-			this.node.add_param(ParamType.BOOLEAN, 'use_material', 0, {
-				visible_if: {use_background: true},
-			});
-
-			this.node.add_param(ParamType.COLOR, 'background_color', [0, 0, 0], {
-				visible_if: {use_background: true, use_material: false},
-			});
-
-			this.node.add_param(ParamType.OPERATOR_PATH, 'background_material', '', {
-				visible_if: {use_background: true, use_material: true},
-				node_selection: {context: NodeContext.MAT},
-				dependent_on_found_node: false,
-			});
-
-			this.node.add_param(ParamType.FLOAT, 'background_ratio', 1, {
-				visible_if: {use_background: true, use_material: true},
-			});
+			// this.node.add_param(ParamType.BOOLEAN, 'use_background', 0);
+			// this.node.add_param(ParamType.BOOLEAN, 'use_material', 0, {
+			// 	visible_if: {use_background: true},
+			// });
+			// this.node.add_param(ParamType.COLOR, 'background_color', [0, 0, 0], {
+			// 	visible_if: {use_background: true, use_material: false},
+			// });
+			// this.node.add_param(ParamType.OPERATOR_PATH, 'background_material', '', {
+			// 	visible_if: {use_background: true, use_material: true},
+			// 	node_selection: {context: NodeContext.MAT},
+			// 	dependent_on_found_node: false,
+			// });
+			// this.node.add_param(ParamType.FLOAT, 'background_ratio', 1, {
+			// 	visible_if: {use_background: true, use_material: true},
+			// });
 		});
 
 		// this.self.add_param( ParamType.TOGGLE, 'use_background_color', 1 )

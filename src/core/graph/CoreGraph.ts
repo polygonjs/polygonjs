@@ -82,7 +82,7 @@ export class CoreGraph {
 		const dest_id = dest.graph_node_id;
 
 		if (this._graph.hasNode(src_id) && this._graph.hasNode(dest_id)) {
-			this._graph.setEdge(src.graph_node_id, dest.graph_node_id);
+			this._graph.setEdge(src_id, dest_id);
 
 			// const scene_auto_updating = this.scene().auto_updating();
 			const scene_loading = this.scene().loading_controller.is_loading;
@@ -93,7 +93,7 @@ export class CoreGraph {
 			}
 
 			if (graph_has_cycle) {
-				this._graph.removeEdge(src.graph_node_id, dest.graph_node_id);
+				this._graph.removeEdge(src_id, dest_id);
 				return false;
 			} else {
 				src.dirty_controller.clear_successors_cache_with_predecessors();
@@ -190,7 +190,7 @@ export class CoreGraph {
 		return this.all_next_ids(node, 'successor_ids');
 	}
 	all_predecessors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.all_successor_ids(node);
+		const ids = this.all_predecessor_ids(node);
 		return this.nodes_from_ids(ids);
 	}
 	all_successors(node: CoreGraphNode): CoreGraphNode[] {

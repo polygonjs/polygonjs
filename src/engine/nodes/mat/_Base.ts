@@ -11,7 +11,7 @@ import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // type RenderHook = (object: Object3D) => void;
 
-export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<MaterialContainer, K> {
+export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<'MATERIAL', K> {
 	container_controller: TypedContainerController<MaterialContainer> = new TypedContainerController<MaterialContainer>(
 		this,
 		MaterialContainer

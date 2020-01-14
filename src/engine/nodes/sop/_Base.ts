@@ -32,19 +32,19 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // import {RequestContainerGeometryCallback} from 'src/Engine/Container/Geometry'
 // const CONTAINER_CLASS = 'Geometry';
 
-const MESSAGE = {
-	FROM_SET_CORE_GROUP: 'from set_core_group',
-	FROM_SET_GROUP: 'from set_group',
-	FROM_SET_OBJECTS: 'from set_objects',
-	FROM_SET_OBJECT: 'from set_object',
-	FROM_SET_GEOMETRIES: 'from set_geometries',
-	FROM_SET_GEOMETRY: 'from set_geometry',
-};
+enum MESSAGE {
+	FROM_SET_CORE_GROUP = 'from set_core_group',
+	FROM_SET_GROUP = 'from set_group',
+	FROM_SET_OBJECTS = 'from set_objects',
+	FROM_SET_OBJECT = 'from set_object',
+	FROM_SET_GEOMETRIES = 'from set_geometries',
+	FROM_SET_GEOMETRY = 'from set_geometry',
+}
 
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<GeometryContainer, K> {
+export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETRY', K> {
 	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
 		this,
 		GeometryContainer
@@ -106,7 +106,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<Geometry
 		for (let object of objects) {
 			this._set_object_attributes(object);
 		}
-		this.set_container(objects, MESSAGE.FROM_SET_CORE_GROUP);
+		this.set_container(core_group, MESSAGE.FROM_SET_CORE_GROUP);
 	}
 
 	set_object(object: Object3D) {
@@ -114,7 +114,9 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<Geometry
 		// this.add_object(object);
 		// this.set_container(this.group(), MESSAGE.FROM_SET_OBJECT);
 		this._set_object_attributes(object);
-		this.set_container([object], MESSAGE.FROM_SET_OBJECT);
+		// const core_group = new CoreGroup();
+		// core_group.set_objects([object]);
+		this.set_container_objects([object], MESSAGE.FROM_SET_OBJECT);
 	}
 	set_objects(objects: Object3D[]) {
 		// this._clear_objects();
@@ -126,7 +128,9 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<Geometry
 		for (let object of objects) {
 			this._set_object_attributes(object);
 		}
-		this.set_container(objects, MESSAGE.FROM_SET_OBJECTS);
+		// const core_group = new CoreGroup();
+		// core_group.set_objects(objects);
+		this.set_container_objects(objects, MESSAGE.FROM_SET_OBJECTS);
 	}
 
 	// add_object(object: Object3D) {
@@ -154,7 +158,9 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<Geometry
 		// this.add_geometry(geometry, type);
 		// this.set_container(this.group(), MESSAGE.FROM_SET_GEOMETRY);
 		const object = this.create_object(geometry, type);
-		this.set_container([object], MESSAGE.FROM_SET_GEOMETRY);
+		// const core_group = new CoreGroup();
+		// core_group.set_objects([object]);
+		this.set_container_objects([object], MESSAGE.FROM_SET_GEOMETRY);
 	}
 	//this.end_cook()
 
@@ -167,8 +173,16 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<Geometry
 			this._set_object_attributes(object);
 			objects.push(object);
 		});
+		// const core_group = new CoreGroup();
+		// core_group.set_objects(objects);
+		this.set_container_objects(objects, MESSAGE.FROM_SET_GEOMETRIES);
+	}
 
-		this.set_container(objects, MESSAGE.FROM_SET_GEOMETRIES);
+	set_container_objects(objects: Object3D[], message: MESSAGE) {
+		const core_group = this.container_controller.container.core_content() || new CoreGroup();
+		core_group.set_objects(objects);
+		core_group.touch();
+		this.set_container(core_group);
 	}
 
 	// do_clone_inputs() {
@@ -215,7 +229,6 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<Geometry
 		// }
 
 		// if (geometry != null) {
-		console.log(CoreMaterial, CoreConstant.MATERIALS, type);
 		const object_constructor = CoreConstant.CONSTRUCTORS_BY_NAME[type]; //THREE[type];
 		const material = CoreConstant.MATERIALS[type].clone();
 		const object = new object_constructor(geometry, material);

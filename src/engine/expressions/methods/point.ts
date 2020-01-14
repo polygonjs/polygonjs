@@ -39,7 +39,7 @@ export class Point extends BaseMethod {
 	}
 
 	_get_value_from_container(container: GeometryContainer, attrib_name: string, point_index: number) {
-		const core_group = container.core_group();
+		const core_group = container.core_content();
 		// TODO: optimise and store the group_wrapper in the json_node
 		if (core_group) {
 			const point = core_group.points()[point_index];

@@ -12,7 +12,7 @@ export class DirtyController {
 	_dirty_count: number = 0;
 	_dirty: boolean = true;
 	_dirty_timestamp: number | null = null;
-	_cached_successors: CoreGraphNode[];
+	_cached_successors: CoreGraphNode[] | null;
 	_post_dirty_hooks: PostDirtyHook[] = [];
 
 	constructor(private node: CoreGraphNode) {}
@@ -134,7 +134,7 @@ export class DirtyController {
 	// }
 
 	clear_successors_cache() {
-		this._cached_successors = [];
+		this._cached_successors = null;
 	}
 	clear_successors_cache_with_predecessors() {
 		this.clear_successors_cache();

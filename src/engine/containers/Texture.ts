@@ -1,12 +1,12 @@
 import {Texture} from 'three/src/textures/Texture';
 import {TypedContainer} from './_Base';
+import {ContainableMap} from './utils/ContainableMap';
 
-export class TextureContainer extends TypedContainer<Texture> {
-	_content: Texture;
-
-	// constructor() {
-	// 	super();
-	// }
+export class TextureContainer extends TypedContainer<ContainableMap['TEXTURE']> {
+	// _content: Texture;
+	set_content(content: ContainableMap['TEXTURE']) {
+		super.set_content(content);
+	}
 
 	// set_texture(texture: Texture){
 	// 	if (this._content != null) {

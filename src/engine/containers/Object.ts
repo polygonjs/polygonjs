@@ -1,11 +1,11 @@
 import {Object3D} from 'three/src/core/Object3D';
 import {TypedContainer} from './_Base';
+import {ContainableMap} from './utils/ContainableMap';
 
-export class ObjectContainer extends TypedContainer<Object3D> {
-	// constructor() {
-	// 	super();
-	// }
-
+export class ObjectContainer extends TypedContainer<ContainableMap['OBJECT']> {
+	set_content(content: ContainableMap['OBJECT']) {
+		super.set_content(content);
+	}
 	set_object(object: Object3D) {
 		return this.set_content(object);
 	}

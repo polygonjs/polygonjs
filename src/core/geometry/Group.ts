@@ -3,6 +3,7 @@ import lodash_compact from 'lodash/compact';
 import lodash_isNaN from 'lodash/isNaN';
 import lodash_trim from 'lodash/trim';
 import lodash_flatten from 'lodash/flatten';
+import lodash_sum from 'lodash/sum';
 import {Vector3} from 'three/src/math/Vector3';
 import {Points} from 'three/src/objects/Points';
 import {Object3D} from 'three/src/core/Object3D';
@@ -32,12 +33,12 @@ export class CoreGroup {
 	_timestamp: number;
 	// _core_objects:
 	_objects: Object3D[];
-	_core_objects: CoreObject[];
+	_core_objects: CoreObject[] | null;
 
-	_geometries: BufferGeometry[];
-	_core_geometries: CoreGeometry[];
+	// _geometries: BufferGeometry[];
+	_core_geometries: CoreGeometry[] | null;
 
-	_bounding_box: Box3;
+	_bounding_box: Box3 | null;
 
 	constructor() {
 		//_group: Group){
@@ -55,6 +56,12 @@ export class CoreGroup {
 	}
 	touch() {
 		this._timestamp = performance.now();
+		this.reset();
+	}
+	reset() {
+		this._bounding_box = null;
+		this._core_geometries = null;
+		this._core_objects = null;
 	}
 
 	//
@@ -78,6 +85,7 @@ export class CoreGroup {
 	//
 	set_objects(objects: Object3D[]) {
 		this._objects = objects;
+		this.touch();
 	}
 	objects() {
 		return this._objects as Object3DWithGeometry[];
@@ -104,22 +112,26 @@ export class CoreGroup {
 	// 	return this._group.uuid;
 	// }
 
-	geometries() {
-		this._geometries = [];
-		for (let object of this._objects) {
-			object.traverse((object) => this.__geometry_from_object.bind(this)(this._geometries, object));
-			// 	const geometry = this.geometry_from_object(object)
-			// 	if (geometry != null) {
-			// 		return list.push(new CoreGeometry(geometry));
-			// 	}
-			// });
-		}
-		return this._geometries;
+	geometries(): BufferGeometry[] {
+		// this._geometries = [];
+		// for (let object of this._objects) {
+		// 	object.traverse((object) => this.__geometry_from_object.bind(this)(this._geometries, object));
+		// 	// 	const geometry = this.geometry_from_object(object)
+		// 	// 	if (geometry != null) {
+		// 	// 		return list.push(new CoreGeometry(geometry));
+		// 	// 	}
+		// 	// });
+		// }
+		// return this._geometries;
+		return this.core_objects().map((core_object) => (core_object.object() as Mesh).geometry as BufferGeometry);
 	}
 	core_geometries(): CoreGeometry[] {
-		this._core_geometries = [];
+		return (this._core_geometries = this._core_geometries || this.create_core_geometries());
+	}
+	private create_core_geometries() {
+		const list: CoreGeometry[] = [];
 		for (let geometry of this.geometries()) {
-			this._core_geometries.push(new CoreGeometry(geometry));
+			list.push(new CoreGeometry(geometry));
 			// object.traverse(object=> this.__core_geometry_from_object.bind(this)(this._core_geometries, object))
 			// 	const geometry = this.geometry_from_object(object)
 			// 	if (geometry != null) {
@@ -127,7 +139,7 @@ export class CoreGroup {
 			// 	}
 			// });
 		}
-		return this._core_geometries;
+		return list;
 	}
 	__geometry_from_object(list: BufferGeometry[], object: Mesh) {
 		if (object.geometry) {
@@ -151,6 +163,9 @@ export class CoreGroup {
 	}
 	points() {
 		return lodash_flatten(this.core_geometries().map((g) => g.points()));
+	}
+	points_count() {
+		return lodash_sum(this.core_geometries().map((g) => g.points_count()));
 	}
 	points_from_group(group: GroupString) {
 		if (group) {

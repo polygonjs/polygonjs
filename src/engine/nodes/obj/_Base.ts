@@ -20,7 +20,7 @@ interface BaseObjNodeVisitor extends BaseNodeVisitor {
 	visit_node_obj: (node: BaseObjNodeType) => void;
 }
 
-export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<ObjectContainer, K> {
+export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT', K> {
 	container_controller: TypedContainerController<ObjectContainer> = new TypedContainerController<ObjectContainer>(
 		this,
 		ObjectContainer

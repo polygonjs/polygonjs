@@ -6,7 +6,11 @@ import {BaseNodeType} from 'src/engine/nodes/_Base';
 // 	clone?: boolean
 // }
 
-export abstract class TypedContainer<T> extends CoreObject {
+import {ContainableMap} from './utils/ContainableMap';
+type K = keyof ContainableMap;
+type Containable = ContainableMap[K];
+
+export abstract class TypedContainer<T extends Containable> extends CoreObject {
 	// protected _node: BaseNode;
 	// protected _eval_key: number
 	protected _content: T;

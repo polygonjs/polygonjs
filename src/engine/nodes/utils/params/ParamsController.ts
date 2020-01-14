@@ -32,7 +32,7 @@ import {Color} from 'three/src/math/Color';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 import {RampValue} from 'src/engine/params/ramp/RampValue';
-import {Vector4} from 'three';
+import {Vector4} from 'three/src/math/Vector4';
 import {NodeParamsConfig} from './ParamsConfig';
 // type ParamConstructorMap = {[key in ParamType]: any};
 
@@ -327,7 +327,7 @@ export class ParamsController {
 		name: string,
 		init_value: ParamInitValuesTypeMap[T],
 		options: ParamOptions = {}
-	): BaseParam | null {
+	): ParamConstructorMap[T] | null {
 		const is_spare = options['spare'] || false;
 		if (this._param_create_mode === false && !is_spare) {
 			console.warn(
@@ -356,12 +356,12 @@ export class ParamsController {
 					return null;
 				}
 			}
-			const param: BaseParam = new constructor(this.node.scene);
+			const param: ParamConstructorMap[T] = new constructor(this.node.scene) as ParamConstructorMap[T];
 			param.options.set(options);
 
 			// param.set_scene(this.node.scene);
 			param.set_name(name);
-			param.set_init_value(init_value);
+			param.set_init_value(init_value as never); // TODO: typescript: not sure why I need to force never
 			// param.initialize();
 			param.ui_data.set_folder_name(this.current_param_folder_name());
 

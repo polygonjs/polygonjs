@@ -1,11 +1,11 @@
-import {TypedContainer} from './_Base';
+// import {TypedContainer} from './_Base';
 
-export class GlContainer extends TypedContainer<null> {
-	// constructor() {
-	// 	super();
-	// }
+// export class GlContainer extends TypedContainer<null> {
+// 	// constructor() {
+// 	// 	super();
+// 	// }
 
-	object() {
-		return this._content;
-	}
-}
+// 	object() {
+// 		return this._content;
+// 	}
+// }
