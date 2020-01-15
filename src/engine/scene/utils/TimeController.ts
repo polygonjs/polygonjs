@@ -69,6 +69,7 @@ export class TimeController {
 			this._frame = frame;
 			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
 			this.scene.uniforms_controller.update_frame_dependent_uniform_owners();
+			this.graph_node.set_successors_dirty();
 		}
 	}
 	increment_frame() {

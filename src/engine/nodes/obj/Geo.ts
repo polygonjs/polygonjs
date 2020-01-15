@@ -13,13 +13,15 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 
 // sop map
 import {BaseSopNodeType} from '../sop/_Base';
-import {BoxSopNode} from '../sop/Box';
-import {TransformSopNode} from '../sop/Transform';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 // import {PolyScene} from 'src/engine/scene/PolyScene';
 
+import {BoxSopNode} from '../sop/Box';
+import {TextSopNode} from '../sop/Text';
+import {TransformSopNode} from '../sop/Transform';
 interface SopNodeTypeMap {
 	box: BoxSopNode;
+	text: TextSopNode;
 	transform: TransformSopNode;
 }
 

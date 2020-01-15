@@ -152,6 +152,7 @@ export class FunctionGenerator extends BaseTraverser {
 				console.warn(e);
 			}
 
+			console.log(this.function_body(), this.function_main_string);
 			if (this.function_main_string) {
 				try {
 					this.function = new AsyncFunction(
@@ -161,7 +162,7 @@ export class FunctionGenerator extends BaseTraverser {
 					try {
 						${this.function_body()}
 					} catch(e) {
-						param.set_error(e.message || e)
+						param.states.error.set(e.message || e)
 						return null
 					}`
 					);
@@ -380,15 +381,15 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	protected traverse_Identifier_F(): string {
 		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
-		return `param.scene().frame()`;
+		return `param.scene.time_controller.frame`;
 	}
 	protected traverse_Identifier_FPS(): string {
 		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
-		return `param.scene().fps()`;
+		return `param.scene.time_controller.fps`;
 	}
 	protected traverse_Identifier_T(): string {
 		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
-		return `param.scene().time()`;
+		return `param.scene.time_controller.time`;
 	}
 	protected traverse_Identifier_CH(): string {
 		return `${QUOTE}${this.param.name}${QUOTE}`;

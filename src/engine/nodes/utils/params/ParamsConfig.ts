@@ -141,11 +141,6 @@ export class ParamConfig {
 
 export class NodeParamsConfig implements Dictionary<ParamTemplate<ParamType>> {
 	[name: string]: ParamTemplate<ParamType>;
-	// static configs: Dictionary<ParamConfig<ParamType>> = {};
-
-	// add_config(name: string, config: ParamConfig<ParamType>) {
-	// 	this.__configs[name] = config;
-	// }
 }
 
 // interface ParamConfig {

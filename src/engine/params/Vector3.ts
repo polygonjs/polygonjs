@@ -24,15 +24,10 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		this.z = this.components[2];
 	}
 
-	async compute() {
-		await this.compute_components();
-		// if (target) {
-		// 	target.fromArray(cs);
-		// } else {
+	protected set_value_from_components() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;
 		this._value.z = this.z.value;
-		// }
 	}
 	// convert(input: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
 	// 	if (lodash_isArray(input)) {

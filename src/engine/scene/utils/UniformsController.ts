@@ -16,7 +16,7 @@ export class UniformsController {
 	constructor(private scene: PolyScene) {}
 
 	private _frame_dependent_uniform_owners: Dictionary<IUniformsDictionaryWithFrame> = {}; //new Map()
-	private _frame_dependent_uniform_owners_ids: string[];
+	private _frame_dependent_uniform_owners_ids: string[] | null = null;
 
 	private _resolution: Vector2;
 	private _resolution_dependent_uniform_owners: Dictionary<IUniformsDictionaryWithResolution> = {};
@@ -36,9 +36,11 @@ export class UniformsController {
 	}
 	public update_frame_dependent_uniform_owners() {
 		const frame = this.scene.frame;
-		for (let id of this._frame_dependent_uniform_owners_ids) {
-			const uniforms = this._frame_dependent_uniform_owners[id];
-			uniforms.frame.value = frame;
+		if (this._frame_dependent_uniform_owners_ids) {
+			for (let id of this._frame_dependent_uniform_owners_ids) {
+				const uniforms = this._frame_dependent_uniform_owners[id];
+				uniforms.frame.value = frame;
+			}
 		}
 	}
 

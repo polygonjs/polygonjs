@@ -76,12 +76,12 @@ export class Single<T extends ParamType> extends TypedParam<T> {
 	// 	return this._result
 	// }
 
-	async compute() {
-		// if !callback?
-		// 	throw "#{this.full_path()} use eval without a callback"
-		// else
-		// return await this.eval_raw();
-	}
+	// async compute() {
+	// 	// if !callback?
+	// 	// 	throw "#{this.full_path()} use eval without a callback"
+	// 	// else
+	// 	// return await this.eval_raw();
+	// }
 
 	// TODO
 	// the goal if this should be"

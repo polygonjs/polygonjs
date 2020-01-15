@@ -34,7 +34,7 @@ export class MethodDependency extends CoreGraphNode {
 				literal.value = `${literal.value}`.replace(`${this.path_argument}`, new_path);
 				literal.raw = literal.raw.replace(`${this.path_argument}`, new_path);
 			}
-			this.param.expression_controller.update_expression_from_method_dependency_name_change();
+			this.param.expression_controller.update_from_method_dependency_name_change();
 		}
 	}
 	reset() {

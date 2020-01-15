@@ -9,13 +9,13 @@ import {ExpressionStringGenerator} from './traversers/ExpressionStringGenerator'
 import {DependenciesController} from './DependenciesController';
 import {ParamType} from '../poly/ParamType';
 
-export class ExpressionController {
+export class ExpressionManager {
 	public parse_completed: boolean = false;
 	private parse_started: boolean = false;
 	private function_generator: FunctionGenerator;
 	private expression_string_generator: ExpressionStringGenerator;
 	public dependencies_controller: DependenciesController;
-	public error_message: string | null;
+	private _error_message: string | null;
 	private parsed_tree: ParsedTree = new ParsedTree();
 
 	constructor(
@@ -53,29 +53,10 @@ export class ExpressionController {
 			this.set_error(this.function_generator.error_message);
 		}
 	}
+	compute_function(): Promise<any> {
+		// this.parse_and_update_dependencies_if_not_done(expression);
 
-	reset() {
-		this.parse_completed = false;
-		this.parse_started = false;
-		this.error_message = null;
-		// if(force){ // || this.element_index <= 1){
-		this.dependencies_controller.reset();
-		// }
-		this.function_generator.reset();
-	}
-
-	protected set_error(message: string) {
-		this.error_message = this.error_message || message;
-	}
-
-	eval_allowed(): boolean {
-		return this.error_message == null && this.function_generator.eval_allowed();
-	}
-
-	eval_function(expression: string): Promise<any> {
-		this.parse_and_update_dependencies_if_not_done(expression);
-
-		if (this.eval_allowed()) {
+		if (this.compute_allowed()) {
 			return this.function_generator.eval_function();
 		} else {
 			return new Promise((resolve, reject) => {
@@ -84,21 +65,45 @@ export class ExpressionController {
 		}
 	}
 
-	parse_and_update_dependencies(expression: string) {
-		if (this.param.has_expression()) {
-			this.parse_expression(expression);
+	reset() {
+		this.parse_completed = false;
+		this.parse_started = false;
+		this._error_message = null;
+		// if(force){ // || this.element_index <= 1){
+		this.dependencies_controller.reset();
+		// }
+		this.function_generator.reset();
+	}
 
-			if (this.error_message != null) {
-				this.param.states.error.set(`expression error: "${expression}" (${this.error_message})`);
-			}
-			// this.parse_completed = true
-		}
+	protected set_error(message: string) {
+		this._error_message = this._error_message || message;
 	}
-	private parse_and_update_dependencies_if_not_done(expression: string) {
-		if (!this.parse_completed) {
-			this.parse_and_update_dependencies(expression);
-		}
+	get is_errored() {
+		return this._error_message != null;
 	}
+	get error_message() {
+		return this._error_message;
+	}
+
+	private compute_allowed(): boolean {
+		return this._error_message == null && this.function_generator.eval_allowed();
+	}
+
+	// private parse_and_update_dependencies(expression: string) {
+	// 	if (this.param.has_expression()) {
+	// 		this.parse_expression(expression);
+
+	// 		if (this.error_message != null) {
+	// 			this.param.states.error.set(`expression error: "${expression}" (${this.error_message})`);
+	// 		}
+	// 		// this.parse_completed = true
+	// 	}
+	// }
+	// private parse_and_update_dependencies_if_not_done(expression: string) {
+	// 	if (!this.parse_completed) {
+	// 		this.parse_and_update_dependencies(expression);
+	// 	}
+	// }
 
 	update_from_method_dependency_name_change() {
 		this.expression_string_generator =

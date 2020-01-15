@@ -9,4 +9,5 @@ import './core/geometry/Attribute';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Box';
+import './engine/nodes/sop/Text';
 import './engine/nodes/sop/Transform';

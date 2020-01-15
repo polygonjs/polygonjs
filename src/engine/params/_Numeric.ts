@@ -1,6 +1,6 @@
 import lodash_isString from 'lodash/isString';
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_isBoolean from 'lodash/isBoolean';
+// import lodash_isNumber from 'lodash/isNumber';
+// import lodash_isBoolean from 'lodash/isBoolean';
 import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
@@ -28,9 +28,9 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
 		// this._raw_input = raw_input;
 		// this.process_raw_input()
+		this.states.error.clear();
 
 		const converted = this.convert(raw_input);
-		console.log('converted', raw_input, converted);
 		if (converted != null) {
 			if (converted != this._value) {
 				this._value = converted;
@@ -49,6 +49,20 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 			}
 		}
 	}
+	async compute(): Promise<void> {
+		if (this.expression_controller.active) {
+			const expression_result = await this.expression_controller.compute_expression();
+			if (this.expression_controller.is_errored) {
+				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
+			} else {
+				const converted = this.convert(expression_result);
+				if (converted) {
+					this._value = converted;
+				} else {
+					this.states.error.set(`expression returns an invalid type (${expression_result})`);
+				}
+				this.remove_dirty_state();
+			}
+		}
+	}
 }
-//else
-//	@_value = @_default_value
