@@ -3,6 +3,7 @@ import 'qunit';
 QUnit.module('core');
 import './core/Object';
 import './core/String';
+import './core/Walker';
 QUnit.module('core/geometry');
 import './core/geometry/Attribute';
 

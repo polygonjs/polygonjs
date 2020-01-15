@@ -4,6 +4,7 @@ import lodash_isNumber from 'lodash/isNumber';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {CoreString} from 'src/core/String';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
@@ -32,9 +33,11 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		if (lodash_isNumber(raw_val)) {
 			return Math.round(raw_val);
 		} else {
-			const parsed = parseInt(raw_val);
-			if (lodash_isNumber(parsed)) {
-				return parsed;
+			if (CoreString.is_number(raw_val)) {
+				const parsed = parseInt(raw_val);
+				if (lodash_isNumber(parsed)) {
+					return parsed;
+				}
 			}
 			return null;
 		}

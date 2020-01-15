@@ -45,3 +45,20 @@ QUnit.test('box with input', async (assert) => {
 	assert.equal(geometry.getAttribute('position').array.length, 72);
 	assert.equal(container.bounding_box().min.y, -1.5);
 });
+
+QUnit.test('box with expression', async (assert) => {
+	const geo1 = window.geo1;
+
+	let container;
+	const box1 = geo1.create_node('box');
+
+	container = await box1.request_container();
+	assert.equal(container.bounding_box().min.y, -0.5);
+
+	box1.p.size.set('1+1');
+	assert.ok(box1.p.size.is_dirty, 'size is dirty');
+	await box1.p.size.compute();
+	assert.equal(box1.pv.size, 2);
+	container = await box1.request_container();
+	assert.equal(container.bounding_box().min.y, -1);
+});

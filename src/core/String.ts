@@ -1,24 +1,27 @@
-import lodash_range from 'lodash/range'
-import lodash_uniq from 'lodash/uniq'
-import lodash_trim from 'lodash/trim'
-import lodash_compact from 'lodash/compact'
-import lodash_flatten from 'lodash/flatten'
-import lodash_padEnd from 'lodash/padEnd'
-import lodash_capitalize from 'lodash/capitalize'
-import lodash_snakeCase from 'lodash/snakeCase'
-import lodash_upperFirst from 'lodash/upperFirst'
-import lodash_camelCase from 'lodash/camelCase'
+import lodash_range from 'lodash/range';
+import lodash_uniq from 'lodash/uniq';
+import lodash_trim from 'lodash/trim';
+import lodash_compact from 'lodash/compact';
+import lodash_flatten from 'lodash/flatten';
+import lodash_padEnd from 'lodash/padEnd';
+import lodash_capitalize from 'lodash/capitalize';
+import lodash_snakeCase from 'lodash/snakeCase';
+import lodash_upperFirst from 'lodash/upperFirst';
+import lodash_camelCase from 'lodash/camelCase';
 
-const ATTRIB_NAMES_SEPARATOR = /[, ]/ //[',', ' ']
+const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
 // const LETTERS = 'abcdefghijklmnopqrstuvwxyz'
 // const LETTERS_UPPERCASE = LETTERS.toUpperCase()
 // const NUMBERS = '0123645789'
 // const ALL = LETTERS + LETTERS_UPPERCASE + NUMBERS
 
-const TAIL_DIGIT_MATCH_REGEXP = /\d+$/
+const TAIL_DIGIT_MATCH_REGEXP = /\d+$/;
 // const DIGIT_PREDEDED_BY_UNDERSCOPE = /_\d$/
-const INDICES_LIST_SEPARATOR = /,| /
+const INDICES_LIST_SEPARATOR = /,| /;
+
+// https://stackoverflow.com/questions/41856126/regexp-optional-dot-in-a-decimal-number
+const NUM_REGEXP = /^\d+\.?\d*$/;
 
 export class CoreString {
 	// static has_tail_digits(word: string): boolean {
@@ -26,50 +29,54 @@ export class CoreString {
 	// 	return (match != null)
 	// }
 
+	static is_number(word: string): boolean {
+		return NUM_REGEXP.test(word);
+	}
+
 	static tail_digits(word: string): number {
-		const match = word.match(TAIL_DIGIT_MATCH_REGEXP)
+		const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
 		if (match) {
-			return parseInt(match[0])
+			return parseInt(match[0]);
 		} else {
-			return 0
+			return 0;
 		}
 	}
 
 	static increment(word: string): string {
-		let match
+		let match;
 		if ((match = word.match(TAIL_DIGIT_MATCH_REGEXP))) {
-			const digits = parseInt(match[0])
-			const prefix = word.substring(0, word.length - match[0].length)
-			return `${prefix}${digits + 1}`
+			const digits = parseInt(match[0]);
+			const prefix = word.substring(0, word.length - match[0].length);
+			return `${prefix}${digits + 1}`;
 		} else {
-			return `${word}1`
+			return `${word}1`;
 		}
 	}
 
 	static pluralize(word: string): string {
-		const last_char = word[word.length - 1]
+		const last_char = word[word.length - 1];
 		if (last_char !== 's') {
-			return `${word}s`
+			return `${word}s`;
 		} else {
-			return word
+			return word;
 		}
 	}
 
 	static camel_case(word: string): string {
-		return lodash_camelCase(word)
+		return lodash_camelCase(word);
 	}
 	static upper_first(word: string): string {
-		return lodash_upperFirst(word)
+		return lodash_upperFirst(word);
 	}
 	static snake_case(word: string): string {
-		return lodash_snakeCase(word)
+		return lodash_snakeCase(word);
 	}
 	static titleize(word: string): string {
-		return lodash_capitalize(word.replace(/_/g, ' '))
+		return lodash_capitalize(word.replace(/_/g, ' '));
 	}
 
 	static type_to_class_name(word: string): string {
-		return this.upper_first(lodash_camelCase(word))
+		return this.upper_first(lodash_camelCase(word));
 	}
 	// static class_name_to_type(word): string {
 	// 	// if(this.has_tail_digits(word)){
@@ -92,12 +99,12 @@ export class CoreString {
 	// }
 
 	static timestamp_to_seconds(word: string): number {
-		return Date.parse(word) / 1000
+		return Date.parse(word) / 1000;
 	}
 	static seconds_to_timestamp(seconds: number): string {
-		const d = new Date()
-		d.setTime(seconds * 1000)
-		return d.toISOString().substr(11, 8)
+		const d = new Date();
+		d.setTime(seconds * 1000);
+		return d.toISOString().substr(11, 8);
 	}
 
 	static precision(val: number, decimals: number = 2): string {
@@ -136,25 +143,25 @@ export class CoreString {
 		// }
 
 		// return number_s;
-		decimals = Math.max(decimals, 0)
-		const elements = `${val}`.split('.')
+		decimals = Math.max(decimals, 0);
+		const elements = `${val}`.split('.');
 
 		if (decimals <= 0) {
-			return elements[0]
+			return elements[0];
 		}
 
-		let frac = elements[1]
+		let frac = elements[1];
 		if (frac !== undefined) {
 			if (frac.length > decimals) {
-				frac = frac.substring(0, decimals)
+				frac = frac.substring(0, decimals);
 			}
 
-			frac = lodash_padEnd(frac, decimals, '0')
-			return `${elements[0]}.${frac}`
+			frac = lodash_padEnd(frac, decimals, '0');
+			return `${elements[0]}.${frac}`;
 		} else {
-			const string_to_pad = `${val}.`
-			const pad = string_to_pad.length + decimals
-			return lodash_padEnd(string_to_pad, pad, '0')
+			const string_to_pad = `${val}.`;
+			const pad = string_to_pad.length + decimals;
+			return lodash_padEnd(string_to_pad, pad, '0');
 		}
 	}
 
@@ -162,54 +169,54 @@ export class CoreString {
 		// const integer = Math.floor(num)
 		// const delta = num - integer
 		// if(delta)
-		const num_as_string = `${num}`
-		const dot_pos = num_as_string.indexOf('.')
+		const num_as_string = `${num}`;
+		const dot_pos = num_as_string.indexOf('.');
 		if (dot_pos >= 0) {
-			return num_as_string
+			return num_as_string;
 		} else {
-			return `${num_as_string}.0`
+			return `${num_as_string}.0`;
 		}
 	}
 
 	// https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
 	static match_mask(word: string, rule: string) {
 		if (rule === '*') {
-			return true
+			return true;
 		}
 		// "."  => Find a single character, except newline or line terminator
 		// ".*" => Matches any string that contains zero or more characters
-		rule = rule.split('*').join('.*')
+		rule = rule.split('*').join('.*');
 
 		// "^"  => Matches any string with the following at the beginning of it
 		// "$"  => Matches any string with that in front at the end of it
-		rule = `^${rule}$`
+		rule = `^${rule}$`;
 
 		// Create a regular expression object for matching string
-		const regex = new RegExp(rule)
+		const regex = new RegExp(rule);
 
 		// Returns true if it finds a match, otherwise it returns false
-		return regex.test(word)
+		return regex.test(word);
 	}
 	static matches_one_mask(word: string, masks: string[]): boolean {
-		let matches_one_mask = false
+		let matches_one_mask = false;
 		for (let mask of masks) {
 			if (CoreString.match_mask(word, mask)) {
-				matches_one_mask = true
+				matches_one_mask = true;
 			}
 		}
-		return matches_one_mask
+		return matches_one_mask;
 	}
 
 	static attrib_names(word: string): string[] {
 		// let elements = [word];
 		// lodash_each(ATTRIB_NAMES_SEPARATORS, separator => elements = lodash_flatten(lodash_map(elements, element => element.split(separator))));
-		const elements = word.split(ATTRIB_NAMES_SEPARATOR)
+		const elements = word.split(ATTRIB_NAMES_SEPARATOR);
 		const trimed_elements = lodash_compact(
 			elements.map((e) => {
-				return lodash_trim(e)
+				return lodash_trim(e);
 			})
-		)
-		const uniq = lodash_uniq(trimed_elements)
+		);
+		const uniq = lodash_uniq(trimed_elements);
 
 		// const names: string[] = []
 		// ATTRIB_NAMES_SEPARATORS.forEach(separator=>{
@@ -222,54 +229,49 @@ export class CoreString {
 		// return lodash_uniq(names)
 
 		// return lodash_map(elements, attr_name => lodash_trim(attr_name));
-		return uniq
+		return uniq;
 	}
 	static to_id(val: string): number {
 		if (val == null) {
-			return 0
+			return 0;
 		}
 
-		const elements = val.split('').reverse()
-		let id = 0
-		let exp = 0
+		const elements = val.split('').reverse();
+		let id = 0;
+		let exp = 0;
 		elements.forEach((element, i) => {
-			let index = element.charCodeAt(0)
+			let index = element.charCodeAt(0);
 
 			if (index >= 0) {
-				exp = i % 10
-				id += index * 10 ** exp
-				id = id % Number.MAX_SAFE_INTEGER
+				exp = i % 10;
+				id += index * 10 ** exp;
+				id = id % Number.MAX_SAFE_INTEGER;
 			}
-		})
-		return id
+		});
+		return id;
 	}
 
 	static indices(indices_string: string): number[] {
-		const elements = indices_string.split(INDICES_LIST_SEPARATOR)
+		const elements = indices_string.split(INDICES_LIST_SEPARATOR);
 		if (elements.length > 1) {
-			return lodash_uniq(
-				lodash_flatten(elements.map((element) => this.indices(element)))
-			).sort((a, b) => a - b)
+			return lodash_uniq(lodash_flatten(elements.map((element) => this.indices(element)))).sort((a, b) => a - b);
 		} else {
-			const element = elements[0]
+			const element = elements[0];
 			if (element) {
-				const range_separator = '-'
+				const range_separator = '-';
 				if (element.indexOf(range_separator) > 0) {
-					const range_elements = element.split(range_separator)
-					return lodash_range(
-						parseInt(range_elements[0]),
-						parseInt(range_elements[1]) + 1
-					)
+					const range_elements = element.split(range_separator);
+					return lodash_range(parseInt(range_elements[0]), parseInt(range_elements[1]) + 1);
 				} else {
-					return [parseInt(element)]
+					return [parseInt(element)];
 				}
 			} else {
-				return []
+				return [];
 			}
 		}
 	}
 
 	static escape_line_breaks(word: string): string {
-		return word.replace(/(\r\n|\n|\r)/gm, '\\n')
+		return word.replace(/(\r\n|\n|\r)/gm, '\\n');
 	}
 }

@@ -5,6 +5,7 @@ import lodash_isString from 'lodash/isString';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {CoreString} from 'src/core/String';
 
 export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static type() {
@@ -18,8 +19,10 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 				return raw_val >= 1;
 			} else {
 				if (lodash_isString(raw_val)) {
-					const parsed = parseFloat(raw_val);
-					return parsed >= 1;
+					if (CoreString.is_number(raw_val)) {
+						const parsed = parseFloat(raw_val);
+						return parsed >= 1;
+					}
 				}
 			}
 			return null;

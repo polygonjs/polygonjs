@@ -1,4 +1,6 @@
 import lodash_isString from 'lodash/isString';
+import lodash_isNumber from 'lodash/isNumber';
+import lodash_isBoolean from 'lodash/isBoolean';
 import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
@@ -26,7 +28,9 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
 		// this._raw_input = raw_input;
 		// this.process_raw_input()
+
 		const converted = this.convert(raw_input);
+		console.log('converted', raw_input, converted);
 		if (converted != null) {
 			if (converted != this._value) {
 				this._value = converted;
@@ -36,6 +40,7 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 		} else {
 			if (lodash_isString(raw_input)) {
 				if (raw_input != this.expression_controller.expression) {
+					console.log('set expr', raw_input);
 					this.expression_controller.set_expression(raw_input);
 					this.set_dirty();
 				}
