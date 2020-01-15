@@ -48,6 +48,7 @@ QUnit.test('text with a non existing font', async (assert) => {
 	text1.p.font.set('/fonts/doesnotexist.ttf');
 
 	let container = await text1.request_container();
+	assert.ok(container, 'container exists');
 	assert.equal(text1.states.error.message, 'count not load font (/fonts/doesnotexist.ttf)');
 	assert.equal(container.points_count(), 0);
 });

@@ -176,7 +176,7 @@ export class CookController {
 		}
 
 		if (this.node.scene.performance.recording_started()) {
-			return this.node.scene.performance.record_node_cook_data(this);
+			this.node.scene.performance.record_node_cook_data(this);
 		}
 	}
 

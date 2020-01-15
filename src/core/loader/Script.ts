@@ -11,6 +11,13 @@ interface LoadCallbackArrayByString {
 	[propName: string]: LoadCallback[];
 }
 
+//
+//
+// Using this loader with dynamic import paths
+// makes typescript load the whole modules folder, which is very slow
+// and for now generates errors
+//
+//
 export class CoreScriptLoader {
 	private static _loaded_state_by_url: BooleanByString = {};
 	private static _load_callbacks_by_url: LoadCallbackArrayByString = {};

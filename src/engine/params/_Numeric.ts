@@ -40,7 +40,6 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 		} else {
 			if (lodash_isString(raw_input)) {
 				if (raw_input != this.expression_controller.expression) {
-					console.log('set expr', raw_input);
 					this.expression_controller.set_expression(raw_input);
 					this.set_dirty();
 				}

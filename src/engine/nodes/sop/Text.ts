@@ -3,7 +3,7 @@ import lodash_range from 'lodash/range';
 // import {CoreFont} from 'src/Core/Font'
 import {TypedSopNode} from './_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreScriptLoader} from 'src/core/loader/Script';
+// import {CoreScriptLoader} from 'src/core/loader/Script';
 
 import {TextBufferGeometry} from 'three/src/geometries/TextGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -71,7 +71,7 @@ class TextSopParamsConfig extends NodeParamsConfig {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.MESH),
 		},
 	});
-	segments = ParamConfig.INTEGER(0.1, {
+	segments = ParamConfig.INTEGER(1, {
 		range: [1, 20],
 		range_locked: [true, false],
 		visible_if: {
@@ -92,13 +92,13 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	static type() {
 		return 'text';
 	}
-	static required_three_imports() {
-		return ['loaders/TTFLoader', 'loaders/SVGLoader'];
-	}
+	// static required_three_imports() {
+	// 	return ['loaders/TTFLoader', 'loaders/SVGLoader'];
+	// }
 
 	private _font_loader: FontLoader = new FontLoader();
 	private _ttf_loader: TTFLoader;
-	private _svg_loader: SVGLoader;
+	private _svg_loader: typeof SVGLoader;
 	private _loaded_fonts: FontByUrl = {};
 
 	initialize_node() {}
@@ -121,6 +121,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 					return this._create_geometry_from_type_line(font);
 				case TEXT_TYPE.STROKE:
 					return this._create_geometry_from_type_stroke(font);
+				default:
+					console.warn('type is not valid');
 			}
 		}
 	}
@@ -188,7 +190,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			// const color = new Color( 0xffffff );
 			this._svg_loader = this._svg_loader || (await this._load_svg_loader());
 			// TODO: typescript: correct definition for last 3 optional args
-			var style = SVGLoader.getStrokeStyle(this.pv.stroke_width, 'white', 'miter', 'butt', 4);
+			var style = this._svg_loader.getStrokeStyle(this.pv.stroke_width, 'white', 'miter', 'butt', 4);
 			const geometries = [];
 
 			// const positions = [];
@@ -201,7 +203,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				// TODO: typescript: correct definition for points, arcDivisions, and minDistance
 				const arcDivisions = 12;
 				const minDistance = 0.001;
-				const geometry = SVGLoader.pointsToStroke(
+				const geometry = this._svg_loader.pointsToStroke(
 					(<unknown>points) as Vector3[],
 					style,
 					arcDivisions,
@@ -287,7 +289,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			window.opentype = opentype;
 			this._ttf_loader.load(
 				url,
-				(fnt) => {
+				(fnt: object) => {
 					const parsed = this._font_loader.parse(fnt);
 					// make sure not to delete opentype from window, as it may be required by other nodes
 					// delete window.opentype;
@@ -326,14 +328,13 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 
 	// 	return default_options;
 	// }
-	private async _load_svg_loader(): Promise<SVGLoader> {
-		const c = (<unknown>this.constructor) as TextSopNode;
-		const {SVGLoader} = await CoreScriptLoader.module(c.required_imports()[1]);
-		return SVGLoader;
-	}
 	private async _load_ttf_loader(): Promise<TTFLoader> {
-		const c = (<unknown>this.constructor) as TextSopNode;
-		const {TTFLoader} = await CoreScriptLoader.module(c.required_imports()[0]);
-		return TTFLoader;
+		const {TTFLoader} = await import(`modules/three/examples/jsm/loaders/TTFLoader`);
+		const loader_constructor = (<unknown>TTFLoader) as typeof TTFLoader;
+		return new loader_constructor();
+	}
+	private async _load_svg_loader(): Promise<SVGLoader> {
+		const {SVGLoader} = await import(`modules/three/examples/jsm/loaders/SVGLoader`);
+		return (<unknown>SVGLoader) as SVGLoader;
 	}
 }

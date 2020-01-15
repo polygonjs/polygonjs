@@ -86,7 +86,7 @@ export class ParsedTree {
 
 	static string_value_elements(v: string): string[] {
 		if (v != null) {
-			return `${v}`.split(STRING_EXPRESSION_SEPARATOR);
+			return v.split(STRING_EXPRESSION_SEPARATOR);
 		} else {
 			return [];
 		}

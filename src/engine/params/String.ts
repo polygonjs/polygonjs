@@ -7,6 +7,7 @@ import {TypedParamVisitor} from './_Base';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 interface StringParamVisitor extends TypedParamVisitor {
@@ -14,7 +15,7 @@ interface StringParamVisitor extends TypedParamVisitor {
 }
 
 export class StringParam extends Single<ParamType.STRING> {
-	private _raw_input: string;
+	// private _raw_input: string;
 	// private _expression_controllers: ExpressionController[] = []
 
 	static type() {
@@ -29,6 +30,42 @@ export class StringParam extends Single<ParamType.STRING> {
 			return raw_val;
 		}
 		return `${raw_val}`;
+	}
+
+	set(raw_input: ParamInitValuesTypeMap[ParamType.STRING]): void {
+		// this._raw_input = raw_input;
+		// this.process_raw_input()
+		this.states.error.clear();
+
+		if (this._value_elements(raw_input).length >= 3) {
+			if (raw_input != this.expression_controller.expression) {
+				console.log('set expr', raw_input);
+				this.expression_controller.set_expression(raw_input);
+				this.set_dirty();
+			}
+		} else {
+			if (raw_input != this._value) {
+				this._value = raw_input;
+				this.remove_dirty_state();
+				this.set_successors_dirty();
+			}
+		}
+	}
+	async compute(): Promise<void> {
+		if (this.expression_controller.active) {
+			const expression_result = await this.expression_controller.compute_expression();
+			if (this.expression_controller.is_errored) {
+				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
+			} else {
+				const converted = this.convert(expression_result);
+				if (converted) {
+					this._value = converted;
+				} else {
+					this.states.error.set(`expression returns an invalid type (${expression_result})`);
+				}
+				this.remove_dirty_state();
+			}
+		}
 	}
 
 	// convert_value(v): string {
@@ -73,9 +110,9 @@ export class StringParam extends Single<ParamType.STRING> {
 	// 	return this._input_string
 	// }
 
-	has_expression(): boolean {
-		return this._value_elements(this._raw_input).length > 1;
-	}
+	// private has_expression(): boolean {
+	// 	return this._value_elements(this._raw_input).length > 1;
+	// }
 
 	// private _value_contains_expression(v:string): boolean{
 	// 	return ParamString.value_contains_expression(v)
@@ -109,9 +146,9 @@ export class StringParam extends Single<ParamType.STRING> {
 	// 		return this.eval_raw_expression_element(element, i, is_expression)
 	// 	})
 	// }
-	parse_expression_and_update_dependencies() {
-		// do nothing for string params
-	}
+	// parse_expression_and_update_dependencies() {
+	// 	// do nothing for string params
+	// }
 
 	// private async eval_raw_expression_element(element: string, element_index: number, is_expression: boolean): Promise<string>{
 	// 	if(is_expression){

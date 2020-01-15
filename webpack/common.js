@@ -1,4 +1,4 @@
-const TYPESCRIPT_TRANSPILE_ONLY = true;
+const TYPESCRIPT_TRANSPILE_ONLY = false;
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -40,7 +40,7 @@ module.exports = {
 	},
 	resolve: {
 		// modules: [path.resolve(__dirname, '../node_modules')],
-		extensions: ['.ts', '.js'],
+		extensions: ['.ts', '.js' /*, '.glsl'*/],
 		alias: alias,
 	},
 	module: {
@@ -60,9 +60,18 @@ module.exports = {
 			},
 			// this loader is not required, as is replaced by custom_typings/glsl.d.ts
 			// (from: https://stackoverflow.com/questions/48741570/how-can-i-import-glsl-as-string-in-typescript)
+			// Although that may not work from .js files, only from .ts
 			// {
 			// 	test: /\.glsl$/,
 			// 	use: [{loader: 'ts-shader-loader'}],
+			// },
+			// {
+			// 	test: /\.glsl$/,
+			// 	use: [
+			// 		{
+			// 			loader: 'webpack-glsl-loader',
+			// 		},
+			// 	],
 			// },
 		],
 	},

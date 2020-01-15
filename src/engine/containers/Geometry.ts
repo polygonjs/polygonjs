@@ -282,8 +282,13 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 		return names;
 	}
 
-	points_count() {
-		return this._content.points_count();
+	points_count(): number {
+		if (this._content) {
+			return this._content.points_count();
+		} else {
+			return 0;
+		}
+
 		// return this._points_count != null ? this._points_count : (this._points_count = this._compute_points_count());
 	}
 

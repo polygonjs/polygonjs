@@ -152,7 +152,6 @@ export class FunctionGenerator extends BaseTraverser {
 				console.warn(e);
 			}
 
-			console.log(this.function_body(), this.function_main_string);
 			if (this.function_main_string) {
 				try {
 					this.function = new AsyncFunction(

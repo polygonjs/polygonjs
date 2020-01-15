@@ -146,7 +146,7 @@ export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
 		return true;
 	}
 	async compute(): Promise<void> {
-		console.warn('param.compute not overriden');
+		console.warn('param.compute not overriden', this);
 	}
 	// set_default_value(default_value: ParamValuesTypeMap[T]) {
 	// 	this._default_value = default_value;
