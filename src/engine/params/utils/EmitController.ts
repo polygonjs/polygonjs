@@ -1,10 +1,10 @@
-import {BaseParam} from '../_Base';
+import {BaseParamType} from '../_Base';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 
 export class EmitController {
 	_blocked_emit: boolean = true;
 	_blocked_parent_emit: boolean = true;
-	constructor(protected param: BaseParam) {}
+	constructor(protected param: BaseParamType) {}
 
 	get emit_allowed(): boolean {
 		if (this._blocked_emit === true) {
@@ -25,14 +25,14 @@ export class EmitController {
 	block_emit() {
 		this._blocked_emit = true;
 		if (this.param.is_multiple) {
-			this.param.components.forEach((c: BaseParam) => c.emit_controller.block_emit());
+			this.param.components.forEach((c) => c.emit_controller.block_emit());
 		}
 		return true;
 	}
 	unblock_emit() {
 		this._blocked_emit = false;
 		if (this.param.is_multiple) {
-			this.param.components.forEach((c: BaseParam) => c.emit_controller.unblock_emit());
+			this.param.components.forEach((c) => c.emit_controller.unblock_emit());
 		}
 		return true;
 	}

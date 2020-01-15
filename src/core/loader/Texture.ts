@@ -9,7 +9,7 @@ import {CoreScriptLoader} from 'src/core/loader/Script';
 import {CoreWalker} from 'src/core/Walker';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseCopNodeClass} from 'src/engine/nodes/cop/_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -65,7 +65,7 @@ export class CoreTextureLoader {
 	// 	console.log(error)
 	// 	this.set_error_message()
 
-	constructor(private _node: BaseNodeType, private _param: BaseParam) {}
+	constructor(private _node: BaseNodeType, private _param: BaseParamType) {}
 
 	async load_texture_from_url_or_op(url: string): Promise<Texture | VideoTexture | null> {
 		let texture: Texture | null = null;

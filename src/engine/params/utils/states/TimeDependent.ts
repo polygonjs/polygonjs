@@ -1,7 +1,7 @@
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 
 export class TimeDependentState {
-	constructor(protected param: BaseParam) {}
+	constructor(protected param: BaseParamType) {}
 
 	get active(): boolean {
 		const frame_graph_node_id = this.param.scene.time_controller.graph_node.graph_node_id;

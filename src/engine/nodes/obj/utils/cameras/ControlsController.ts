@@ -1,7 +1,7 @@
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseCameraControlsEventNodeType, CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
 import {CameraControlsConfig} from 'src/engine/nodes/event/utils/CameraControlConfig';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
@@ -13,7 +13,7 @@ export class ControlsController {
 
 	constructor(private node: BaseCameraObjNodeType) {}
 
-	controls_param(): BaseParam | null {
+	controls_param(): BaseParamType | null {
 		if (this.node.params.has(CONTROLS_PARAM_NAME)) {
 			return this.node.params.get(CONTROLS_PARAM_NAME);
 		}

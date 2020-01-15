@@ -1,4 +1,4 @@
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {ParsedTree} from './traversers/ParsedTree';
 // import {MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'
@@ -19,7 +19,7 @@ export class ExpressionController {
 	private parsed_tree: ParsedTree = new ParsedTree();
 
 	constructor(
-		public param: BaseParam // public element_index: number=0
+		public param: BaseParamType // public element_index: number=0
 	) {
 		this.function_generator = new FunctionGenerator(this.param);
 		this.dependencies_controller = new DependenciesController(this.param);

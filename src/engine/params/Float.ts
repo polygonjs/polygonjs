@@ -1,16 +1,25 @@
 // import lodash_isArray from 'lodash/isArray'
 // import lodash_isString from 'lodash/isString'
 // import lodash_isBoolean from 'lodash/isBoolean'
-// import lodash_isNumber from 'lodash/isNumber'
+import lodash_isNumber from 'lodash/isNumber';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	static type() {
 		return ParamType.FLOAT;
 	}
-	convert(raw_val: any): number {
-		return parseFloat(raw_val);
+	convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
+		if (lodash_isNumber(raw_val)) {
+			return raw_val;
+		} else {
+			const parsed = parseFloat(raw_val);
+			if (lodash_isNumber(parsed)) {
+				return parsed;
+			}
+			return null;
+		}
 	}
 	// convert_value(v) {
 	// 	// if(lodash_isNumber(v)){

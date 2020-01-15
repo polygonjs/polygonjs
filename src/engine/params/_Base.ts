@@ -51,12 +51,14 @@ import {PolyScene} from '../scene/PolyScene';
 import {ParamInitValuesTypeMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 
 export interface TypedParamVisitor {
-	visit_typed_param: (param: BaseParam) => any;
+	visit_typed_param: (param: BaseParamType) => any;
 }
 
-export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
-	protected _raw_input: string;
-	protected _default_value: ParamValuesTypeMap[T];
+type ParamTypeElem = ParamType;
+
+export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
+	// protected _raw_input: ParamInitValuesTypeMap[T];
+	protected _default_value: ParamInitValuesTypeMap[T];
 	protected _value: ParamValuesTypeMap[T];
 	// protected _expression: string;
 	protected _node: BaseNodeType;
@@ -113,7 +115,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return ParamType.FLOAT; // adding a type here, but just to not have a compile error
 	}
 	get type(): ParamType {
-		return (this.constructor as typeof BaseParam).type();
+		return (this.constructor as typeof BaseParamClass).type();
 	}
 	get is_numeric(): boolean {
 		return false;
@@ -127,31 +129,36 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	// TODO: typescript
-	get value() {
+	get value(): ParamValuesTypeMap[T] {
 		return this._value;
 	}
-	convert(raw_val: any): ParamValuesTypeMap[T] {
-		return this._default_value;
+	convert(raw_val: any): ParamValuesTypeMap[T] | null {
+		return null;
 	}
-	set(new_value: ParamValuesTypeMap[T]): void {}
+	set(raw_input: ParamInitValuesTypeMap[T]): void {
+		// this._raw_input = raw_input;
+		// this.process_raw_input()
+	}
 	get default_value() {
 		return this._default_value;
 	}
-	is_raw_input_default(value: any): boolean {
+	get is_default(): boolean {
 		return true;
 	}
-	set_default_value(default_value: ParamValuesTypeMap[T]) {
-		this._default_value = default_value;
-	}
+	async compute(): Promise<void> {}
+	// set_default_value(default_value: ParamValuesTypeMap[T]) {
+	// 	this._default_value = default_value;
+	// }
 	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
-		this._default_value = this.convert(init_value);
-		this._value = this.convert(init_value);
+		this._default_value = init_value; //this.convert(init_value);
+		// this._value = this.convert(init_value);
+		this.set(init_value);
 	}
-	eval_p(): Promise<ParamValuesTypeMap[T]> {
-		return new Promise((resolve, reject) => {
-			resolve();
-		});
-	}
+	// eval_p(): Promise<ParamValuesTypeMap[T]> {
+	// 	return new Promise((resolve, reject) => {
+	// 		resolve();
+	// 	});
+	// }
 
 	// node
 	set_node(node: BaseNodeType | null) {
@@ -161,7 +168,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 			}
 		} else {
 			this._node = node;
-			if (this.options.makes_node_dirty_when_dirty()) {
+			if (this.options.makes_node_dirty_when_dirty() && !this.parent_param) {
 				node.params.params_node.add_graph_input(this);
 			}
 		}
@@ -194,7 +201,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	full_path(): string {
 		return this.node.full_path() + '/' + this.name;
 	}
-	path_relative_to(node: BaseNodeType | BaseParam): string {
+	path_relative_to(node: BaseNodeType | BaseParamType): string {
 		return CoreWalker.relative_path(node, this);
 	}
 
@@ -237,4 +244,5 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this.serializer.to_json();
 	}
 }
-export abstract class BaseParam extends TypedParam<any> {}
+export type BaseParamType = TypedParam<ParamType>;
+export class BaseParamClass extends TypedParam<ParamType> {}

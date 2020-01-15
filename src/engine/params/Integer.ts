@@ -1,8 +1,9 @@
-// import lodash_isNumber from 'lodash/isNumber'
+import lodash_isNumber from 'lodash/isNumber';
 // import lodash_isBoolean from 'lodash/isBoolean'
 
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
@@ -27,14 +28,22 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	// 	// but that means that doing param.set(2.9) would set it to 2
 	// 	return `${v}` !== `${Math.round(parseFloat(v))}`
 	// }
-	convert(raw_val: any): number {
-		return parseInt(raw_val);
+	convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
+		if (lodash_isNumber(raw_val)) {
+			return Math.round(raw_val);
+		} else {
+			const parsed = parseInt(raw_val);
+			if (lodash_isNumber(parsed)) {
+				return parsed;
+			}
+			return null;
+		}
 	}
 
-	async eval() {
-		const val = await this.eval_raw(); //val=> {
-		const converted: number = this.convert(val);
-		return converted;
-		//});//
-	}
+	// async compute() {
+	// 	const val = await this.eval_raw(); //val=> {
+	// 	const converted: number = this.convert(val);
+	// 	return converted;
+	// 	//});//
+	// }
 }

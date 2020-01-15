@@ -2,11 +2,11 @@ import lodash_isNumber from 'lodash/isNumber';
 // import BaseNode from 'src/engine/nodes/_Base'
 import {DecomposedPath} from 'src/core/DecomposedPath';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseNodeType, BaseNodeClass} from 'src/engine/nodes/_Base';
 import jsep from 'jsep';
 
-type NodeOrParam = BaseNodeType | BaseParam;
+type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression;
@@ -14,7 +14,7 @@ export class MethodDependency extends CoreGraphNode {
 	public unresolved_path: string;
 
 	constructor(
-		public param: BaseParam,
+		public param: BaseParamType,
 		public path_argument: number | string,
 		public decomposed_path: DecomposedPath
 	) {
@@ -61,7 +61,12 @@ export class MethodDependency extends CoreGraphNode {
 		this.unresolved_path = path;
 	}
 
-	static create(param: BaseParam, index_or_path: number | string, node: NodeOrParam, nodes_in_path: NodeOrParam[]) {
+	static create(
+		param: BaseParamType,
+		index_or_path: number | string,
+		node: NodeOrParam,
+		nodes_in_path: NodeOrParam[]
+	) {
 		const is_index = lodash_isNumber(index_or_path);
 
 		const decomposed_path = new DecomposedPath();

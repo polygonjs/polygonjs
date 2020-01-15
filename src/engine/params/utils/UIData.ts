@@ -1,12 +1,12 @@
 // import CoreUIData from 'src/core/UIData'
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {BaseParam} from '../_Base';
+import {BaseParamType} from '../_Base';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class UIData extends CoreGraphNode {
 	private _folder_name: string | null;
 
-	constructor(scene: PolyScene, private param: BaseParam) {
+	constructor(scene: PolyScene, private param: BaseParamType) {
 		super(scene, 'param ui data');
 		// this.set_scene(this.param.scene);
 

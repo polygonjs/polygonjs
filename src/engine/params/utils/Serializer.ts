@@ -1,12 +1,12 @@
-import {BaseParam} from '../_Base';
+import {BaseParamType} from '../_Base';
 export class ParamSerializer {
-	constructor(protected param: BaseParam) {}
+	constructor(protected param: BaseParamType) {}
 
 	to_json() {
 		const data = {
 			name: this.param.name,
 			type: this.param.type,
-			value: this.param.value(),
+			value: this.param.value,
 			// expression: this.self.expression(), // TODO: typescript
 			// result: this.self.result(),// TODO: typescript
 			graph_node_id: this.param.graph_node_id,

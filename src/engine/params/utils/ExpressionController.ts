@@ -1,11 +1,14 @@
-import {BaseParam} from '../_Base';
+import {BaseParamType} from '../_Base';
 
 export class ExpressionController {
-	_expression: string | null;
-	constructor(protected param: BaseParam) {}
+	protected _expression: string | null;
+	constructor(protected param: BaseParamType) {}
 
 	get active() {
 		return this._expression != null;
+	}
+	get expression() {
+		return this._expression;
 	}
 	set_expression(expression: string | null) {
 		// TODO: typescript: what if param is a multiple?
@@ -17,7 +20,7 @@ export class ExpressionController {
 	}
 	update_expression_from_method_dependency_name_change() {}
 
-	async eval() {
+	async compute_expression() {
 		// TODO: typescript
 	}
 }

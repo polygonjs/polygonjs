@@ -7,13 +7,14 @@ import {TypedParamVisitor} from './_Base';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
+// import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 interface StringParamVisitor extends TypedParamVisitor {
 	visit_string_param: (param: StringParam) => any;
 }
 
 export class StringParam extends Single<ParamType.STRING> {
-	// private _input_string: string
+	private _raw_input: string;
 	// private _expression_controllers: ExpressionController[] = []
 
 	static type() {
@@ -44,22 +45,22 @@ export class StringParam extends Single<ParamType.STRING> {
 	// post_set_default_value() {
 	// 	this.set_input_string(this._value)
 	// }
-	set(value: string) {
-		// we need to avoid setting twice with the same value,
-		// as this would reset the dependencies via reset_expression_controllers()
-		// but not the expression controllers caches
-		if (this._raw_input != value) {
-			// this.reset_expression_controllers()
-			this.expression_controller.reset();
-			this._raw_input = value;
-			// if (this.is_value_expression(new_value)) {
-			// 	this.set_expression(new_value)
-			// } else {
-			// 	this.set_value(new_value)
-			// }
-			// this.set_input_string(new_value)
-		}
-	}
+	// set<ParamType.STRING>(new_value: ParamInitValuesTypeMap[ParamType.STRING]) {
+	// 	// we need to avoid setting twice with the same value,
+	// 	// as this would reset the dependencies via reset_expression_controllers()
+	// 	// but not the expression controllers caches
+	// 	if (this._raw_input != new_value) {
+	// 		// this.reset_expression_controllers()
+	// 		this.expression_controller.reset();
+	// 		this._raw_input = new_value;
+	// 		// if (this.is_value_expression(new_value)) {
+	// 		// 	this.set_expression(new_value)
+	// 		// } else {
+	// 		// 	this.set_value(new_value)
+	// 		// }
+	// 		// this.set_input_string(new_value)
+	// 	}
+	// }
 	// is_raw_input_default(): boolean {
 	// 	return this.input_string() == this.default_value()
 	// }

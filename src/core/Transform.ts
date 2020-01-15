@@ -77,11 +77,11 @@ export class CoreTransform {
 		// 		scale[c] = rounded
 
 		node.scene.batch_update(() => {
-			node.params.get('r')?.set(rotation.toArray());
-			node.params.get('t')?.set(position.toArray());
-			node.params.get('s')?.set(scale.toArray());
+			node.params.set_vector3('r', rotation.toArray() as Number3);
+			node.params.set_vector3('t', position.toArray() as Number3);
+			node.params.set_vector3('s', scale.toArray() as Number3);
 			if (update_scale) {
-				node.params.get('scale')?.set(1);
+				node.params.set_float('scale', 1);
 			}
 		});
 	}
@@ -90,12 +90,12 @@ export class CoreTransform {
 	// this.object().scale.copy(scale)
 
 	static set_params_from_object(object: Object3D, node: BaseNodeType) {
-		const position = object.position.toArray();
-		const rotation = object.rotation.toArray().map((c) => c * (180 / Math.PI));
+		const position = object.position.toArray() as Number3;
+		const rotation = object.rotation.toArray().map((c) => c * (180 / Math.PI)) as Number3;
 
 		node.scene.batch_update(() => {
-			node.params.get('t')?.set(position);
-			node.params.get('r')?.set(rotation);
+			node.params.set_vector3('t', position);
+			node.params.set_vector3('r', rotation);
 		});
 	}
 

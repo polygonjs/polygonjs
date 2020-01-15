@@ -11,7 +11,8 @@ interface OperatorPathParamVisitor extends TypedParamVisitor {
 }
 
 export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
-	_path: string;
+	private _raw_input: string;
+	// _path: string;
 	_found_node: BaseNodeType | null;
 
 	static type() {
@@ -26,15 +27,18 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	// is_value_expression(v) {
 	// 	return false
 	// }
-	set_path(path: string) {
-		this._path = path;
-	}
-	path() {
-		return this._path;
-	}
+	// set_path(path: string) {
+	// 	this._path = path;
+	// }
+	// path() {
+	// 	return this._path;
+	// }
+	// set(raw_input: string) {
+	// 	this._raw_input = raw_input;
+	// }
 
-	async eval(): Promise<string> {
-		const path = await this.eval_raw(); //path=> {
+	async compute() {
+		const path = this._raw_input; //await this.eval_raw(); //path=> {
 		let node = null;
 
 		if (path != null && path !== '') {
@@ -69,7 +73,7 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 			}
 		}
 
-		return path;
+		// return path;
 		//});
 	}
 

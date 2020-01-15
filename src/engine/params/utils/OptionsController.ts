@@ -1,4 +1,4 @@
-import {BaseParam} from '../_Base';
+import {BaseParamType} from '../_Base';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
@@ -44,7 +44,7 @@ export interface ParamOptions {
 	// asset refererences
 	always_reference_asset?: boolean;
 	// callback
-	callback?: (param: BaseParam) => any;
+	callback?: (param: BaseParamType) => any;
 	callback_string?: string;
 	// color
 	color?: [number, number, number] | string;
@@ -90,7 +90,7 @@ export class OptionsController {
 	private _programatic_visible_state: boolean = true;
 	private _options: ParamOptions;
 	private _default_options: ParamOptions;
-	constructor(private _param: BaseParam) {
+	constructor(private _param: BaseParamType) {
 		this._options = lodash_cloneDeep(this._default_options);
 	}
 
@@ -373,12 +373,12 @@ export class OptionsController {
 		const options = this._options[VISIBLE_IF_OPTION];
 		if (options) {
 			const params = this.visibility_predecessors();
-			const promises = params.map((p) => p.eval_p());
+			const promises = params.map((p) => p.compute());
 			this._programatic_visible_state = true;
 			await Promise.all(promises);
 			for (let param of params) {
 				const expected_val = options[param.name];
-				const val = param.value();
+				const val = param.value;
 				if (expected_val != val) {
 					this._programatic_visible_state = false;
 				}

@@ -1,5 +1,5 @@
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {MissingExpressionReference, MissingExpressionReferenceByIdByFullPath} from './MissingReference';
 import jsep from 'jsep';
 
@@ -8,7 +8,7 @@ export class MissingReferencesController {
 	private next_id: number = 0;
 	private next_id_s: string = '0';
 
-	register(param: BaseParam, jsep_node: jsep.Expression, full_path: string): MissingExpressionReference {
+	register(param: BaseParamType, jsep_node: jsep.Expression, full_path: string): MissingExpressionReference {
 		const id = this.next_id_s;
 		const missing_expression_reference = new MissingExpressionReference(param, jsep_node, full_path, id);
 		this.references[full_path] = this.references[full_path] || {};

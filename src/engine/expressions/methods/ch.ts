@@ -1,7 +1,9 @@
+import lodash_isNumber from 'lodash/isNumber';
+
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from 'src/core/DecomposedPath';
 import {MethodDependency} from '../MethodDependency';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamClass} from 'src/engine/params/_Base';
 // import Walker from 'src/core/Walker';
 
 export class Ch extends BaseMethod {
@@ -38,12 +40,18 @@ export class Ch extends BaseMethod {
 	// }
 
 	async process_arguments(args: any[]): Promise<number> {
-		let val: number = 0;
+		let val: number | null = 0;
 		if (args.length == 1) {
 			const path = args[0];
 			const ref = this.get_referenced_param(path);
-			if (ref && ref instanceof BaseParam) {
-				val = await ref.eval_p();
+			if (ref && ref instanceof BaseParamClass) {
+				await ref.compute();
+				const result = ref.value;
+				if (result != null) {
+					if (lodash_isNumber(result)) {
+						val = result;
+					}
+				}
 			}
 		}
 		return val;

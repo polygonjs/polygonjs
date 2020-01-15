@@ -1,4 +1,4 @@
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
@@ -128,7 +128,7 @@ export class FunctionGenerator extends BaseTraverser {
 
 	// private string_generator: ExpressionStringGenerator = new ExpressionStringGenerator()
 
-	constructor(public param: BaseParam) {
+	constructor(public param: BaseParamType) {
 		super(param);
 	}
 

@@ -2,6 +2,7 @@ import {CameraController} from 'src/core/CameraController';
 import {BaseObjNodeType, BaseObjNodeclass} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class LookAtController {
 	private _camera_controller = new CameraController(this._update_from_look_at_target.bind(this));
@@ -59,7 +60,7 @@ export class LookAtController {
 			// const target_matrix = look_at_target;
 
 			object.matrixAutoUpdate = true;
-			object.up.copy(this.node.params.value('up'));
+			object.up.copy(this.node.params.value_with_type('up', ParamType.VECTOR3));
 			object.lookAt(look_at_target.position);
 		} else {
 			console.log('no object yet', this.node.full_path());

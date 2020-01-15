@@ -1,11 +1,11 @@
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
 // import {NodeSimple} from 'src/core/graph/NodeSimple'
 
 import {CoreWalkerEmbed} from './WalkerEmbed';
 
-type NodeOrParam = BaseNodeType | BaseParam;
+type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class CoreWalker extends CoreWalkerEmbed {
 	public static SEPARATOR = '/';
@@ -14,7 +14,7 @@ export class CoreWalker extends CoreWalkerEmbed {
 	public static CURRENT_WITH_SLASH = `${CoreWalker.CURRENT}/`;
 	public static PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
 
-	static find_param(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParam | null {
+	static find_param(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		if (!node_src) {
 			return null;
 		}

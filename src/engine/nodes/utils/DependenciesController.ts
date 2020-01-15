@@ -1,7 +1,7 @@
 import lodash_groupBy from 'lodash/groupBy';
 import {BaseNodeType, BaseNodeClass} from '../_Base';
 
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType, BaseParamClass} from 'src/engine/params/_Base';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 enum METHODS {
@@ -19,7 +19,7 @@ function typeGuard<T extends PrimitiveOrConstructor>(o: any, className: T): o is
 }
 
 export class DependenciesController {
-	private _params_referrees_by_graph_node_id: Dictionary<BaseParam>;
+	private _params_referrees_by_graph_node_id: Dictionary<BaseParamType>;
 
 	constructor(protected node: BaseNodeType) {}
 
@@ -68,7 +68,7 @@ export class DependenciesController {
 	private _find_base_nodes_from_node(node: CoreGraphNode, method: METHODS, base_nodes: BaseNodeType[]) {
 		const next_nodes = node[method]();
 		for (let next_node of next_nodes) {
-			if (next_node instanceof BaseParam) {
+			if (next_node instanceof BaseParamClass) {
 				base_nodes.push(next_node.node);
 			} else {
 				if (typeGuard(next_node, BaseNodeClass)) {
@@ -89,14 +89,14 @@ export class DependenciesController {
 	// which is used for operator path referring nodes without creating a graph edge
 	//
 	//
-	add_param_referree(param: BaseParam) {
+	add_param_referree(param: BaseParamType) {
 		this._params_referrees_by_graph_node_id = this._params_referrees_by_graph_node_id || {};
 		this._params_referrees_by_graph_node_id[param.graph_node_id] = param;
 	}
-	remove_param_referree(param: BaseParam) {
+	remove_param_referree(param: BaseParamType) {
 		delete this._params_referrees_by_graph_node_id[param.graph_node_id];
 	}
-	params_referree(): BaseParam[] {
+	params_referree(): BaseParamType[] {
 		const list = [];
 		if (this._params_referrees_by_graph_node_id) {
 			for (let graph_node_id of Object.keys(this._params_referrees_by_graph_node_id)) {

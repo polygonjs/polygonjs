@@ -1,4 +1,4 @@
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 // import {ParsedTree} from './ParsedTree'
 // import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
@@ -11,7 +11,7 @@ export abstract class BaseTraverser {
 	// private _parsed_tree: ParsedTree
 	public error_message: string | null;
 
-	constructor(public param: BaseParam) {}
+	constructor(public param: BaseParamType) {}
 
 	protected set_error(message: string) {
 		this.error_message = this.error_message || message;

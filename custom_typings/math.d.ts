@@ -44,4 +44,11 @@ interface ColorLike {
 	g: number;
 	b: number;
 }
-type BooleanAsNumber = 0 | 1;
+// type BooleanAsNumber = 0 | 1;
+type StringOrNumber = string | number;
+type Number2 = [number, number];
+type Number3 = [number, number, number];
+type Number4 = [number, number, number, number];
+type StringOrNumber2 = [StringOrNumber, StringOrNumber];
+type StringOrNumber3 = [StringOrNumber, StringOrNumber, StringOrNumber];
+type StringOrNumber4 = [StringOrNumber, StringOrNumber, StringOrNumber, StringOrNumber];

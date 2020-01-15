@@ -1,6 +1,9 @@
+import lodash_isString from 'lodash/isString';
 import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+// import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 interface NumericParamVisitor extends TypedParamVisitor {
 	visit_numeric_param: (param: TypedNumericParam<any>) => any;
@@ -19,6 +22,28 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 	// 		return this.set_expression(this._default_value)
 	// 	}
 	// }
+
+	set(raw_input: ParamInitValuesTypeMap[T]): void {
+		// this._raw_input = raw_input;
+		// this.process_raw_input()
+		const converted = this.convert(raw_input);
+		if (converted != null) {
+			if (converted != this._value) {
+				this._value = converted;
+				this.remove_dirty_state();
+				this.set_successors_dirty();
+			}
+		} else {
+			if (lodash_isString(raw_input)) {
+				if (raw_input != this.expression_controller.expression) {
+					this.expression_controller.set_expression(raw_input);
+					this.set_dirty();
+				}
+			} else {
+				this.states.error.set(`param input is invalid (${this.full_path()})`);
+			}
+		}
+	}
 }
 //else
 //	@_value = @_default_value

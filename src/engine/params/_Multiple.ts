@@ -2,15 +2,16 @@
 // import lodash_compact from 'lodash/compact'
 // import lodash_each from 'lodash/each'
 // import lodash_forEach from 'lodash/forEach'
-// import lodash_isArray from 'lodash/isArray'
+import lodash_isArray from 'lodash/isArray';
 // import lodash_isNumber from 'lodash/isNumber'
 // import lodash_isString from 'lodash/isString'
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_map from 'lodash/map'
 import {TypedParam, TypedParamVisitor} from './_Base';
 import {FloatParam} from './Float';
-import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+// import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {ParamType} from '../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 // import {AsCodeMultiple} from './concerns/visitors/Multiple';
 // import {Vector} from 'three/src/math/Vector2'
 
@@ -54,18 +55,28 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	}
 
 	init_components() {
+		let index = 0;
 		for (let component_name of this.component_names) {
 			const component = new this._components_contructor(this.scene); //, `${this.name}${name}`);
-			component.set_default_value((this._default_value as any)[component_name]);
+			let default_val;
+			if (lodash_isArray(this._default_value)) {
+				default_val = this._default_value[index];
+			} else {
+				default_val = (this._default_value as any)[component_name];
+			}
+			component.set_init_value(default_val);
 			component.options.copy(this.options);
 
 			// component.set_scene(this.scene);
 			component.set_name(`${this.name}${component_name}`);
 			component.set_parent_param(this);
 
+			this.add_graph_input(component);
 			// component.initialize();
 			this._components.push(component);
+			index++;
 		}
+		this.compute();
 	}
 
 	get is_numeric() {
@@ -128,16 +139,16 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// }
 	}
 
-	is_raw_input_default() {
+	get is_default() {
 		for (let c of this.components) {
-			if (!c.is_raw_input_default()) {
+			if (!c.is_default) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	async eval_components() {
+	async compute_components() {
 		const components = this.components;
 		// const component_evaluation_states = lodash_map(components, ()=> false);
 		// const expected_values_count = components.length;
@@ -146,7 +157,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// return lodash_each(this.components(), (component, index)=> {
 		const promises = [];
 		for (let c of components) {
-			promises.push(c.eval_p()); //component_value=> {
+			promises.push(c.compute()); //component_value=> {
 		}
 		const component_values = await Promise.all(promises);
 		// component_values[index] = component_value;
@@ -176,7 +187,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	// 	else
 	// 		throw "trying to evaluate component with index #{index} which does not exist"
 
-	set(value: ParamValuesTypeMap[T]) {
+	set(value: ParamInitValuesTypeMap[T]) {
 		const cooker = this.scene.cooker;
 		cooker.block();
 		const components = this.components;

@@ -7,7 +7,7 @@
 // import lodash_values from 'lodash/values';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
@@ -69,7 +69,7 @@ export type ParamConstructorMap = {
 	[ParamType.VECTOR4]: Vector4Param;
 };
 
-const ParamConstructorMap = {
+const ParamConstructorByType = {
 	[ParamType.BOOLEAN]: BooleanParam,
 	[ParamType.BUTTON]: ButtonParam,
 	[ParamType.COLOR]: ColorParam,
@@ -84,20 +84,19 @@ const ParamConstructorMap = {
 	[ParamType.VECTOR4]: Vector4Param,
 };
 
-type StringOrNumber = string | number;
 export type ParamInitValuesTypeMap = {
-	[ParamType.BOOLEAN]: BooleanAsNumber;
-	[ParamType.BUTTON]: null;
-	[ParamType.COLOR]: [StringOrNumber, StringOrNumber, StringOrNumber];
+	[ParamType.BOOLEAN]: StringOrNumber | boolean;
+	[ParamType.BUTTON]: any;
+	[ParamType.COLOR]: StringOrNumber3 | Color;
 	[ParamType.FLOAT]: StringOrNumber;
 	[ParamType.INTEGER]: StringOrNumber;
 	[ParamType.OPERATOR_PATH]: string;
 	[ParamType.RAMP]: RampValue;
-	[ParamType.SEPARATOR]: number;
+	[ParamType.SEPARATOR]: any;
 	[ParamType.STRING]: string;
-	[ParamType.VECTOR2]: [StringOrNumber, StringOrNumber];
-	[ParamType.VECTOR3]: [StringOrNumber, StringOrNumber, StringOrNumber];
-	[ParamType.VECTOR4]: [StringOrNumber, StringOrNumber, StringOrNumber, StringOrNumber];
+	[ParamType.VECTOR2]: StringOrNumber2 | Vector2;
+	[ParamType.VECTOR3]: StringOrNumber3 | Vector3;
+	[ParamType.VECTOR4]: StringOrNumber4 | Vector4;
 };
 export type ParamValuesTypeMap = {
 	[ParamType.BOOLEAN]: boolean;
@@ -118,12 +117,12 @@ const NODE_SIMPLE_NAME = 'params';
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
-	private _params_by_name: Dictionary<BaseParam> = {};
+	private _params_by_name: Dictionary<BaseParamType> = {};
 	// caches
-	private _params_list: BaseParam[] = [];
+	private _params_list: BaseParamType[] = [];
 	private _param_names: string[] = [];
-	private _non_spare_params: BaseParam[] = [];
-	private _spare_params: BaseParam[] = [];
+	private _non_spare_params: BaseParamType[] = [];
+	private _spare_params: BaseParamType[] = [];
 	private _non_spare_param_names: string[] = [];
 	private _spare_param_names: string[] = [];
 
@@ -211,18 +210,20 @@ export class ParamsController {
 	// 	return lodash_values(this._params);
 	// }
 
-	private set_with_type(name: string, value: any, type: ParamType) {
+	private set_with_type<T extends ParamType>(name: string, value: ParamInitValuesTypeMap[T], type: T) {
 		const param = this.param_with_type(name, type);
 		if (param) {
-			param.set(value);
+			// This seems to compile fine sometimes, sometimes not
+			// so using "as never" for now...
+			param.set(value as never);
 		} else {
 			console.warn(`param ${name} not found with type ${type}`);
 		}
 	}
-	set_float(name: string, value: number) {
+	set_float(name: string, value: ParamInitValuesTypeMap[ParamType.FLOAT]) {
 		this.set_with_type(name, value, ParamType.FLOAT);
 	}
-	set_vector3(name: string, value: [number, number, number]) {
+	set_vector3(name: string, value: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
 		this.set_with_type(name, value, ParamType.VECTOR3);
 	}
 
@@ -235,45 +236,46 @@ export class ParamsController {
 	get(name: string) {
 		return this.param(name);
 	}
-	param_with_type(name: string, type: ParamType) {
+	param_with_type<T extends ParamType>(name: string, type: T): ParamConstructorMap[T] | null {
 		const param = this.param(name);
 		if (param && param.type == type) {
-			return param;
+			return param as ParamConstructorMap[T];
 		}
+		return null;
 	}
 	get_operator_path(name: string): OperatorPathParam {
 		return this.param_with_type(name, ParamType.OPERATOR_PATH) as OperatorPathParam;
 	}
 	value(name: string) {
-		return this.param(name)?.value();
+		return this.param(name)?.value;
 	}
-	value_with_type(name: string, type: ParamType) {
-		return this.param_with_type(name, type)?.value();
+	value_with_type<T extends ParamType>(name: string, type: T): ParamValuesTypeMap[T] {
+		return this.param_with_type(name, type)?.value as ParamValuesTypeMap[T];
 		// const param = this.param(name);
 		// if (param && param.type() == type) {
 		// 	return param.value();
 		// }
 	}
 	boolean(name: string) {
-		return this.value_with_type(name, ParamType.FLOAT) as boolean;
+		return this.value_with_type(name, ParamType.BOOLEAN);
 	}
 	float(name: string) {
-		return this.value_with_type(name, ParamType.FLOAT) as number;
+		return this.value_with_type(name, ParamType.FLOAT);
 	}
 	integer(name: string) {
-		return this.value_with_type(name, ParamType.INTEGER) as number;
+		return this.value_with_type(name, ParamType.INTEGER);
 	}
 	string(name: string) {
-		return this.value_with_type(name, ParamType.STRING) as string;
+		return this.value_with_type(name, ParamType.STRING);
 	}
 	vector2(name: string) {
-		return this.value_with_type(name, ParamType.VECTOR2) as Vector2;
+		return this.value_with_type(name, ParamType.VECTOR2);
 	}
 	vector3(name: string) {
-		return this.value_with_type(name, ParamType.VECTOR3) as Vector3;
+		return this.value_with_type(name, ParamType.VECTOR3);
 	}
 	color(name: string) {
-		return this.value_with_type(name, ParamType.COLOR) as Color;
+		return this.value_with_type(name, ParamType.COLOR);
 	}
 
 	param(name: string) {
@@ -340,7 +342,7 @@ export class ParamsController {
 			return null;
 		}
 
-		const constructor = ParamConstructorMap[type];
+		const constructor = ParamConstructorByType[type];
 		if (constructor != null) {
 			const existing_param = this._params_by_name[name];
 			if (existing_param) {
@@ -414,24 +416,24 @@ export class ParamsController {
 		// }
 	}
 
-	async _eval_param(param: BaseParam) {
+	async _eval_param(param: BaseParamType) {
 		// return new Promise((resolve, reject)=> {
 		// const param_cache_name = this.param_cache_name(param.name());
 		// const cached_value = this[param_cache_name] || null;
 		if (/*cached_value == null ||*/ param.is_dirty /* || param.is_errored()*/) {
-			const param_value = await param.eval_p(); //.then(param_value=>{
+			/*const param_value =*/ await param.compute(); //.then(param_value=>{
 			// this[param_cache_name] = param_value;
 			if (param.states.error.active) {
 				this.node.states.error.set(`param '${param.name}' error: ${param.states.error.message}`);
 			}
-			return param_value;
+			// return param_value;
 		} else {
-			return param.value();
+			// return param.value;
 		}
 		// });
 	}
 
-	async eval_params(params: BaseParam[]) {
+	async eval_params(params: BaseParamType[]) {
 		// let param: BaseParam;
 		const promises = [];
 		for (let i = 0; i < params.length; i++) {

@@ -1,7 +1,7 @@
 import {CoreWalker} from 'src/core/Walker';
 import {DecomposedPath} from 'src/core/DecomposedPath';
 // import {NodeSimple} from 'src/core/graph/NodeSimple'
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
@@ -14,7 +14,7 @@ import {BaseContainer} from 'src/engine/containers/_Base';
 export abstract class BaseMethod {
 	public node: BaseNodeType;
 
-	constructor(public param: BaseParam) {
+	constructor(public param: BaseParamType) {
 		// this._init_update_dependencies_mode();
 		this.node = this.param.node;
 	}
@@ -69,7 +69,7 @@ export abstract class BaseMethod {
 		}
 	}
 
-	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParam | null {
+	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		const referenced_param = CoreWalker.find_param(this.node, path, decomposed_path);
 
 		// if (referenced_param != null) {

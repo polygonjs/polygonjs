@@ -32,7 +32,7 @@ export class RampParam extends Single<ParamType.RAMP> {
 	accepts_visitor(visitor: RampParamVisitor) {
 		return visitor.visit_ramp_param(this);
 	}
-	is_raw_input_default(): boolean {
+	get is_default(): boolean {
 		return this.value.is_equal(this.default_value);
 	}
 
@@ -117,7 +117,7 @@ export class RampParam extends Single<ParamType.RAMP> {
 		let i = 0;
 		for (let sorted_point of sorted_points) {
 			positions[i] = sorted_point.position();
-			values[i] = sorted_point.value();
+			values[i] = sorted_point.value;
 			i++;
 		}
 

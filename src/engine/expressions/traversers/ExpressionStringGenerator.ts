@@ -1,4 +1,4 @@
-import {BaseParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {ParsedTree} from './ParsedTree';
 // import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
@@ -22,7 +22,7 @@ const ARGUMENTS_SEPARATOR = ', ';
 import {BaseTraverser} from './_Base';
 
 export class ExpressionStringGenerator extends BaseTraverser {
-	constructor(public param: BaseParam) {
+	constructor(public param: BaseParamType) {
 		super(param);
 	}
 
