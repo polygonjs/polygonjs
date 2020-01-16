@@ -1,7 +1,7 @@
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
-QUnit.test('sets the node to recook if set value', async (assert) => {
+QUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.create_node('box');
 	assert.ok(box1.is_dirty);
@@ -11,11 +11,8 @@ QUnit.test('sets the node to recook if set value', async (assert) => {
 	assert.ok(!box1.states.error.active);
 
 	box1.p.size.set(2);
-	assert.ok(box1.is_dirty);
-
-	let val;
-	val = await box1.p.size.compute();
-	assert.equal(val, 2);
+	assert.equal(box1.p.size.value, 2);
+	assert.notOk(!box1.is_dirty);
 	assert.ok(box1.is_dirty);
 
 	await box1.request_container();
@@ -32,26 +29,25 @@ QUnit.test('sets the node to recook if set expression', async (assert) => {
 	const box1 = geo1.create_node('box');
 	assert.ok(box1.is_dirty);
 
-	let val;
 	await box1.request_container();
 	assert.ok(!box1.is_dirty);
 	assert.ok(!box1.states.error.active);
 
-	box1.p.size.set_expression('1+1');
+	box1.p.size.set('1+1');
 	assert.ok(box1.is_dirty);
-	val = await box1.p.size.compute();
-	assert.equal(val, 2);
+	await box1.p.size.compute();
+	assert.equal(box1.p.size.value, 2);
 	assert.ok(box1.is_dirty);
 
 	await box1.request_container();
 	assert.ok(!box1.is_dirty);
 	assert.ok(!box1.states.error.active);
 
-	box1.p.size.set_expression('1+1'); // set to same expression
+	box1.p.size.set('1+1'); // set to same expression
 	assert.ok(!box1.is_dirty);
 
 	box1.p.size.set(2); // set to value with same result
-	assert.ok(box1.is_dirty);
+	assert.ok(!box1.is_dirty);
 });
 
 class EventsListener {

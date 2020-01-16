@@ -25,7 +25,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		this.b = this.components[2];
 	}
 
-	protected set_value_from_components() {
+	set_value_from_components() {
 		this._value.r = this.r.value;
 		this._value.g = this.g.value;
 		this._value.b = this.b.value;

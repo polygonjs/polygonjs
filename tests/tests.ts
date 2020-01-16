@@ -9,11 +9,11 @@ import './core/geometry/Attribute';
 
 QUnit.module('params');
 import './engine/params/_Base';
+import './engine/params/Boolean';
 import './engine/params/Color';
 import './engine/params/Float';
 import './engine/params/Integer';
 import './engine/params/String';
-import './engine/params/Toggle';
 import './engine/params/Vector';
 import './engine/params/utils/DefaultValues';
 import './engine/params/utils/Dirty';

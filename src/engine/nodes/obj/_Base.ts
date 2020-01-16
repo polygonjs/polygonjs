@@ -44,7 +44,7 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 		return (this._transform_controller = this._transform_controller || new TransformController(this));
 	}
 
-	initialize_node() {
+	initialize_base_node() {
 		// this.container_controller.init(ObjectContainer);
 		this._object = this._create_object_with_attributes();
 		// this._init_container_owner('Object');

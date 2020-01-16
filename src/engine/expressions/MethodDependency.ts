@@ -3,7 +3,8 @@ import lodash_isNumber from 'lodash/isNumber';
 import {DecomposedPath} from 'src/core/DecomposedPath';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {BaseParamType} from 'src/engine/params/_Base';
-import {BaseNodeType, BaseNodeClass} from 'src/engine/nodes/_Base';
+import {CoreObject} from 'src/core/Object';
+import {BaseNodeType, BaseNodeClass, TypedNode} from 'src/engine/nodes/_Base';
 import jsep from 'jsep';
 
 type NodeOrParam = BaseNodeType | BaseParamType;
@@ -16,7 +17,7 @@ export class MethodDependency extends CoreGraphNode {
 	constructor(
 		public param: BaseParamType,
 		public path_argument: number | string,
-		public decomposed_path: DecomposedPath
+		public decomposed_path?: DecomposedPath
 	) {
 		super(param.scene, 'MethodDependency');
 
@@ -25,8 +26,9 @@ export class MethodDependency extends CoreGraphNode {
 		this.add_post_dirty_hook(this._update_from_name_change.bind(this));
 	}
 	_update_from_name_change(trigger: CoreGraphNode) {
-		if (trigger instanceof BaseNodeClass) {
-			this.decomposed_path.update_from_name_change(trigger);
+		if (CoreObject.is_a(trigger, TypedNode) && this.decomposed_path) {
+			const node = trigger as BaseNodeType;
+			this.decomposed_path.update_from_name_change(node);
 			const new_path = this.decomposed_path.to_path();
 
 			const literal = this.jsep_node as jsep.Literal;
@@ -65,13 +67,16 @@ export class MethodDependency extends CoreGraphNode {
 		param: BaseParamType,
 		index_or_path: number | string,
 		node: NodeOrParam,
-		nodes_in_path: NodeOrParam[]
+		nodes_in_path?: NodeOrParam[]
 	) {
 		const is_index = lodash_isNumber(index_or_path);
 
-		const decomposed_path = new DecomposedPath();
-		for (let node_in_path of nodes_in_path) {
-			decomposed_path.add_node(node_in_path.name, node_in_path);
+		let decomposed_path: DecomposedPath | undefined = undefined;
+		if (nodes_in_path) {
+			decomposed_path = new DecomposedPath();
+			for (let node_in_path of nodes_in_path) {
+				decomposed_path.add_node(node_in_path.name, node_in_path);
+			}
 		}
 
 		const instance = new MethodDependency(param, index_or_path, decomposed_path);

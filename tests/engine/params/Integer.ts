@@ -8,11 +8,11 @@ QUnit.test('int eval correctly when set to different values', async (assert) => 
 	await param.compute();
 	assert.equal(param.value, 2);
 
-	param.set_expression('2+1');
+	param.set('2+1');
 	await param.compute();
 	assert.equal(param.value, 3);
 
-	param.set_expression('(2+1) * 0.5');
+	param.set('(2+1) * 0.5');
 	await param.compute();
-	assert.equal(param.value, 2);
+	assert.equal(param.value, 1.5);
 });

@@ -1,8 +1,13 @@
 import {BaseParamType} from '../_Base';
 import {ExpressionManager} from 'src/engine/expressions/ExpressionManager';
+import {CorePoint} from 'src/core/geometry/Point';
+
+type EntityCallback = (entity: CorePoint, value: number) => void;
 
 export class ExpressionController {
 	protected _expression: string | null;
+	protected _entities: CorePoint[] | null = null;
+	protected _entity_callback: EntityCallback | null = null;
 	protected _manager: ExpressionManager | null;
 	constructor(protected param: BaseParamType) {}
 
@@ -47,5 +52,25 @@ export class ExpressionController {
 		if (this._manager && this.active) {
 			return this._manager.compute_function();
 		}
+	}
+	async compute_expression_for_entities(entities: CorePoint[], callback: EntityCallback) {
+		this.set_entities(entities, callback);
+		await this.compute_expression();
+
+		this.reset_entities();
+	}
+	get entities() {
+		return this._entities;
+	}
+	get entity_callback() {
+		return this._entity_callback;
+	}
+	set_entities(entities: CorePoint[], callback: EntityCallback) {
+		this._entities = entities;
+		this._entity_callback = callback;
+	}
+	reset_entities() {
+		this._entities = null;
+		this._entity_callback = null;
 	}
 }

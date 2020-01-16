@@ -24,7 +24,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		this.z = this.components[2];
 	}
 
-	protected set_value_from_components() {
+	set_value_from_components() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;
 		this._value.z = this.z.value;

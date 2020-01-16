@@ -12,6 +12,7 @@ import {FloatParam} from './Float';
 // import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+// import {ParamEvent} from '../poly/ParamEvent';
 // import {AsCodeMultiple} from './concerns/visitors/Multiple';
 // import {Vector} from 'three/src/math/Vector2'
 
@@ -83,7 +84,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		await this.compute_components();
 		this.set_value_from_components();
 	}
-	protected set_value_from_components() {}
+	set_value_from_components() {}
 
 	get is_numeric() {
 		return true;
@@ -217,6 +218,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		for (let i = 0; i < components.length; i++) {
 			components[i].emit_controller.unblock_parent_emit();
 		}
+		// this.emit(ParamEvent.UPDATED);
 
 		this.emit_controller.emit_param_updated();
 	}

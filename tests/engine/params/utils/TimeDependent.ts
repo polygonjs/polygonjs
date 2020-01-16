@@ -59,7 +59,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	scene.time_controller.increment_frame();
 	assert.ok(!box1.is_dirty);
 
-	size.set_expression('$F+1');
+	size.set('$F+1');
 	assert.ok(size.is_dirty);
 	assert.ok(box1.states.time_dependent.active);
 

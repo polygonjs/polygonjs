@@ -1,13 +1,14 @@
 import {CoreWalker} from 'src/core/Walker';
 import {DecomposedPath} from 'src/core/DecomposedPath';
 // import {NodeSimple} from 'src/core/graph/NodeSimple'
-import {BaseParamType} from 'src/engine/params/_Base';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseParamType, TypedParam} from 'src/engine/params/_Base';
+import {BaseNodeType, TypedNode} from 'src/engine/nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {BaseContainer} from 'src/engine/containers/_Base';
+import {CoreObject} from 'src/core/Object';
 
 // type NodeOrParam = BaseNode | BaseParam;
 
@@ -151,14 +152,11 @@ export abstract class BaseMethod {
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
 	): MethodDependency | null {
+		if (CoreObject.is_a(node, TypedNode) || CoreObject.is_a(node, TypedParam)) {
+			const node_or_param = node as BaseNodeType;
+			return MethodDependency.create(this.param, index_or_path, node_or_param, decomposed_path?.named_nodes);
+		}
 		return null;
-		// TODO: typescript
-		// return MethodDependency.create(
-		// 	this.param,
-		// 	index_or_path,
-		// 	(<unknown>node) as NodeOrParam, // TODO: typescript
-		// 	decomposed_path?.named_nodes
-		// );
 	}
 
 	//

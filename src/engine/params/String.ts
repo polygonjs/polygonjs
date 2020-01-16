@@ -39,7 +39,6 @@ export class StringParam extends Single<ParamType.STRING> {
 
 		if (this._value_elements(raw_input).length >= 3) {
 			if (raw_input != this.expression_controller.expression) {
-				console.log('set expr', raw_input);
 				this.expression_controller.set_expression(raw_input);
 				this.set_dirty();
 			}
@@ -55,6 +54,7 @@ export class StringParam extends Single<ParamType.STRING> {
 		if (this.expression_controller.active) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
+				console.log('ERR', this.expression_controller.error_message);
 				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
 			} else {
 				const converted = this.convert(expression_result);

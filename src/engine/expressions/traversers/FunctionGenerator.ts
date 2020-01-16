@@ -159,13 +159,16 @@ export class FunctionGenerator extends BaseTraverser {
 						'methods',
 						`
 					try {
-						${this.function_body()}
+						return new Promise( async (resolve, reject)=>{
+							resolve(${this.function_body()})
+						})
 					} catch(e) {
-						param.states.error.set(e.message || e)
-						return null
+						param.states.error.set(e.message || e);
+						return null;
 					}`
 					);
 				} catch (e) {
+					console.warn(e);
 					this.set_error('cannot generate function');
 				}
 			} else {
@@ -190,10 +193,10 @@ export class FunctionGenerator extends BaseTraverser {
 		if (this.param.options.expression_for_entities()) {
 			return `
 			let result;
-			const entities = this.param.entities()
+			const entities = this.param.entities;
 			if(entities){
 				let entity;
-				const entity_callback = this.param.entity_callback()
+				const entity_callback = this.param.entity_callback;
 				${this.function_pre_entities_loop_lines.join(';\n')}
 				for(let index=0; index < entities.length; index++){
 					entity = entities[index];
@@ -204,8 +207,7 @@ export class FunctionGenerator extends BaseTraverser {
 			return result`;
 		} else {
 			return `
-				const result = ${this.function_main_string};
-				return result;
+				${this.function_main_string}
 			`;
 		}
 	}

@@ -24,7 +24,7 @@ function ensure_default_value<T extends ParamType>(
 	}
 }
 
-QUnit.test('params convert their default values to one they can handle', (assert) => {
+QUnit.skip('params convert their default values to one they can handle', (assert) => {
 	ensure_default_value(assert, ParamType.BOOLEAN, 0, false);
 	ensure_default_value(assert, ParamType.BOOLEAN, 1, true);
 	ensure_default_value(assert, ParamType.BOOLEAN, [1, 2, 3, 4], true);

@@ -1,0 +1,15 @@
+// export enum InputCloneMode {
+// 	ALWAYS = 'always',
+// 	NEVER = 'never',
+// 	FROM_NODE = 'from_node',
+// }
+// export enum NodeContext {
+// 	MANAGER = 'managers',
+// 	OBJ = 'objects',
+// 	SOP = 'sop',
+// 	MAT = 'mat',
+// 	COP = 'cop',
+// 	POST = 'post',
+// 	GL = 'gl',
+// 	EVENT = 'event',
+// }

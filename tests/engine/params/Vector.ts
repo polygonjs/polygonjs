@@ -18,7 +18,7 @@ QUnit.test('vector eval correctly when set to different values', async (assert) 
 	await t.compute();
 	assert.deepEqual(t.value.toArray(), [1, 0.7, 0.5]);
 
-	tx.set_expression('2*0.5*0.5*0.5');
+	tx.set('2*0.5*0.5*0.5');
 	await t.compute();
 	assert.deepEqual(t.value.toArray(), [0.25, 0.7, 0.5]);
 });

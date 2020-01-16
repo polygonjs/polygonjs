@@ -16,14 +16,7 @@ import {BaseSopNodeType} from '../sop/_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 // import {PolyScene} from 'src/engine/scene/PolyScene';
 
-import {BoxSopNode} from '../sop/Box';
-import {TextSopNode} from '../sop/Text';
-import {TransformSopNode} from '../sop/Transform';
-interface SopNodeTypeMap {
-	box: BoxSopNode;
-	text: TextSopNode;
-	transform: TransformSopNode;
-}
+import {GeoNodeChildrenMap} from 'src/engine/poly/registers/Sop';
 
 class GeoObjParamConfig extends NodeParamsConfig {
 	t = ParamConfig.VECTOR3([0, 0, 0]);
@@ -33,6 +26,8 @@ class GeoObjParamConfig extends NodeParamsConfig {
 	look_at = ParamConfig.OPERATOR_PATH('');
 	up = ParamConfig.VECTOR3([0, 1, 0]);
 	pivot = ParamConfig.VECTOR3([0, 0, 0]);
+
+	display = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new GeoObjParamConfig();
 
@@ -124,14 +119,14 @@ export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 			}
 		}
 	}
-	create_node<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K] {
-		return super.create_node(type) as SopNodeTypeMap[K];
+	create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
+		return super.create_node(type) as GeoNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodes_by_type<K extends keyof SopNodeTypeMap>(type: K): SopNodeTypeMap[K][] {
-		return super.nodes_by_type(type) as SopNodeTypeMap[K][];
+	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
 	}
 	// create_node(type: string): BaseSopNode<any> {
 	// 	return super.create_node(type) as  BaseSopNode<any>;

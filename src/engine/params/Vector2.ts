@@ -23,7 +23,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		this.y = this.components[1];
 	}
 
-	protected set_value_from_components() {
+	set_value_from_components() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;
 	}

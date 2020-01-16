@@ -208,13 +208,10 @@ export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
 	}
 
 	// emit
-	emit(event_name: ParamEvent.VISIBLE_UPDATED): void;
-	emit(event_name: ParamEvent.UPDATED): void;
-	emit(event_name: ParamEvent.DELETED): void;
-	emit(event_name: ParamEvent, data: object | null = null): void {
+	emit(event_name: ParamEvent): void {
 		if (this.emit_controller.emit_allowed) {
 			this.emit_controller.increment_count(event_name);
-			this.scene.events_controller.dispatch(this, event_name, data);
+			this.scene.events_controller.dispatch(this, event_name);
 		}
 	}
 
@@ -235,9 +232,9 @@ export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
 	init_components() {}
 
 	// expression
-	set_expression(expression: string | null) {
-		this.expression_controller.set_expression(expression);
-	}
+	// set_expression(expression: string | null) {
+	// 	this.expression_controller.set_expression(expression);
+	// }
 	has_expression() {
 		return this.expression_controller.active;
 	}

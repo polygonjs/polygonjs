@@ -55,7 +55,6 @@ export class ExpressionManager {
 	}
 	compute_function(): Promise<any> {
 		// this.parse_and_update_dependencies_if_not_done(expression);
-
 		if (this.compute_allowed()) {
 			return this.function_generator.eval_function();
 		} else {
@@ -110,7 +109,7 @@ export class ExpressionManager {
 			this.expression_string_generator || new ExpressionStringGenerator(this.param);
 
 		const new_expression_string = this.expression_string_generator.parse_tree(this.parsed_tree);
-		this.param.set_expression(new_expression_string);
+		this.param.expression_controller.set_expression(new_expression_string);
 
 		// this.reset()
 		if (new_expression_string) {

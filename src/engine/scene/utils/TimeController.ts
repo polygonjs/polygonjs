@@ -8,7 +8,7 @@ type FrameRange = [number, number];
 
 export class TimeController {
 	protected self: PolyScene = (<unknown>this) as PolyScene;
-	private _frame: number;
+	private _frame: number = 1;
 	private _graph_node: CoreGraphNode;
 	private _frame_range: FrameRange = [1, 600];
 	private _frame_range_locked: [boolean, boolean] = [true, true];

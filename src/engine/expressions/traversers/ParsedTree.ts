@@ -1,3 +1,5 @@
+import lodash_isString from 'lodash/isString';
+
 import jsep from 'jsep';
 jsep.addUnaryOp('@');
 // self.jsep = jsep
@@ -75,18 +77,19 @@ export class ParsedTree {
 					name: 'str_concat',
 				},
 			}) as jsep.Compound;
-
-			// console.log("** parsed:", string, this.node)
 		} catch (e) {
 			const message = `could not parse the expression '${string}' (error: ${e})`;
-			// console.warn(message, e)
 			this.error_message = message;
 		}
 	}
 
 	static string_value_elements(v: string): string[] {
 		if (v != null) {
-			return v.split(STRING_EXPRESSION_SEPARATOR);
+			if (lodash_isString(v)) {
+				return v.split(STRING_EXPRESSION_SEPARATOR);
+			} else {
+				return [];
+			}
 		} else {
 			return [];
 		}

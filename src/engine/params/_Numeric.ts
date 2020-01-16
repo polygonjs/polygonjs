@@ -5,6 +5,7 @@ import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+// import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 interface NumericParamVisitor extends TypedParamVisitor {
@@ -34,6 +35,7 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 		if (converted != null) {
 			if (converted != this._value) {
 				this._value = converted;
+				this.emit_controller.emit_param_updated();
 				this.remove_dirty_state();
 				this.set_successors_dirty();
 			}
@@ -42,20 +44,27 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 				if (raw_input != this.expression_controller.expression) {
 					this.expression_controller.set_expression(raw_input);
 					this.set_dirty();
+					this.emit_controller.emit_param_updated();
 				}
 			} else {
 				this.states.error.set(`param input is invalid (${this.full_path()})`);
+				this.emit_controller.emit_param_updated();
 			}
+		}
+		if (this.parent_param) {
+			this.parent_param.set_value_from_components();
 		}
 	}
 	async compute(): Promise<void> {
 		if (this.expression_controller.active) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
-				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
+				this.states.error.set(
+					`expression error: "${this.expression_controller.expression}" (${this.expression_controller.error_message})`
+				);
 			} else {
 				const converted = this.convert(expression_result);
-				if (converted) {
+				if (converted != null) {
 					this._value = converted;
 				} else {
 					this.states.error.set(`expression returns an invalid type (${expression_result})`);
