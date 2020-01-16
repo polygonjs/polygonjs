@@ -4,6 +4,7 @@ import {ParamEvent} from 'src/engine/poly/ParamEvent';
 export class EmitController {
 	_blocked_emit: boolean = true;
 	_blocked_parent_emit: boolean = true;
+	_count_by_event_name: Dictionary<number> = {};
 	constructor(protected param: BaseParamType) {}
 
 	get emit_allowed(): boolean {
@@ -43,6 +44,14 @@ export class EmitController {
 	unblock_parent_emit() {
 		this._blocked_parent_emit = false;
 		return true;
+	}
+
+	increment_count(event_name: ParamEvent) {
+		this._count_by_event_name[event_name] = this._count_by_event_name[event_name] || 0;
+		this._count_by_event_name[event_name] += 1;
+	}
+	events_count(event_name: ParamEvent): number {
+		return this._count_by_event_name[event_name] || 0;
 	}
 
 	emit_param_updated() {

@@ -213,6 +213,7 @@ export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
 	emit(event_name: ParamEvent.DELETED): void;
 	emit(event_name: ParamEvent, data: object | null = null): void {
 		if (this.emit_controller.emit_allowed) {
+			this.emit_controller.increment_count(event_name);
 			this.scene.events_controller.dispatch(this, event_name, data);
 		}
 	}

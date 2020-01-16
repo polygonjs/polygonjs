@@ -13,7 +13,7 @@ export class EventsController {
 
 	_events_listener: EventsListener;
 
-	set_store(events_listener: EventsListener) {
+	set_listener(events_listener: EventsListener) {
 		this._events_listener = events_listener;
 		// this._store.scene = this;
 	}
