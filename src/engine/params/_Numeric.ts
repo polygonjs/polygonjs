@@ -56,7 +56,7 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 		}
 	}
 	async compute(): Promise<void> {
-		if (this.expression_controller.active) {
+		if (this.expression_controller.active && !this.expression_controller.requires_entities) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
 				this.states.error.set(
@@ -67,7 +67,9 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 				if (converted != null) {
 					this._value = converted;
 				} else {
-					this.states.error.set(`expression returns an invalid type (${expression_result})`);
+					this.states.error.set(
+						`expression returns an invalid type (${expression_result}) (${this.expression_controller.expression})`
+					);
 				}
 				this.remove_dirty_state();
 			}

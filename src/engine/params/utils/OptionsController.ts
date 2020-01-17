@@ -44,7 +44,7 @@ export interface ParamOptions {
 	// asset refererences
 	always_reference_asset?: boolean;
 	// callback
-	callback?: (param: BaseParamType) => any;
+	callback?: (node: BaseNodeType, param: BaseParamType) => any;
 	callback_string?: string;
 	// color
 	color?: [number, number, number] | string;
@@ -204,10 +204,10 @@ export class OptionsController {
 	}
 
 	// expression
-	displays_expression_only() {
+	get displays_expression_only() {
 		return this._options[EXPRESSION_ONLY_OPTION] === true;
 	}
-	expression_for_entities(): boolean {
+	get is_expression_for_entities(): boolean {
 		const expr_option = this._options[EXPRESSION];
 		if (expr_option) {
 			return expr_option[FOR_ENTITIES] || false;

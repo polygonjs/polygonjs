@@ -73,8 +73,8 @@ export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
 	get emit_controller(): EmitController {
 		return (this._emit_controller = this._emit_controller || new EmitController(this));
 	}
-	private _expression_controller: ExpressionController;
-	get expression_controller(): ExpressionController {
+	private _expression_controller: ExpressionController<T>;
+	get expression_controller(): ExpressionController<T> {
 		return (this._expression_controller = this._expression_controller || new ExpressionController(this));
 	}
 	private _serializer: ParamSerializer;

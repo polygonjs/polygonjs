@@ -22,6 +22,7 @@ import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isString from 'lodash/isString';
 import lodash_isArray from 'lodash/isArray';
 import lodash_isNumber from 'lodash/isNumber';
+import {CoreEntity} from './Entity';
 const PTNUM = 'ptnum';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
@@ -36,21 +37,17 @@ interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
 	readonly isSkinnedMesh: boolean;
 }
 
-export class CoreObject {
-	_index: number;
-
-	constructor(private _object: Object3D) {
+export class CoreObject extends CoreEntity {
+	constructor(private _object: Object3D, index: number) {
+		super(index);
 		if (this._object.userData[ATTRIBUTES] == null) {
 			this._object.userData[ATTRIBUTES] = {};
 		}
 	}
 
-	set_index(i: number) {
-		this._index = i;
-	}
-	index() {
-		return this._index;
-	}
+	// set_index(i: number) {
+	// 	this._index = i;
+	// }
 
 	object() {
 		return this._object;
@@ -96,6 +93,7 @@ export class CoreObject {
 		} else {
 			data = value;
 		}
+		console.log(this._object.userData[ATTRIBUTES][name]);
 		this._object.userData[ATTRIBUTES][name] = data;
 	}
 	add_numeric_attrib(name: string, value: NumericAttribValue) {
@@ -135,7 +133,7 @@ export class CoreObject {
 
 	attrib_value(name: string) {
 		if (name === PTNUM) {
-			return this.index();
+			return this.index;
 		} else {
 			let val = this._object.userData[ATTRIBUTES][name];
 			if (val == null) {

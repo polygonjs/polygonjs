@@ -51,10 +51,9 @@ export class StringParam extends Single<ParamType.STRING> {
 		}
 	}
 	async compute(): Promise<void> {
-		if (this.expression_controller.active) {
+		if (this.expression_controller.active && !this.expression_controller.requires_entities) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
-				console.log('ERR', this.expression_controller.error_message);
 				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
 			} else {
 				const converted = this.convert(expression_result);

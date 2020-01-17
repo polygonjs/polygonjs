@@ -243,6 +243,9 @@ export class ParamsController {
 		}
 		return null;
 	}
+	get_float(name: string): FloatParam {
+		return this.param_with_type(name, ParamType.FLOAT) as FloatParam;
+	}
 	get_operator_path(name: string): OperatorPathParam {
 		return this.param_with_type(name, ParamType.OPERATOR_PATH) as OperatorPathParam;
 	}

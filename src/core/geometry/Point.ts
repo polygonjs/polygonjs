@@ -5,6 +5,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 // const THREE = {BufferGeometry, Vector2, Vector3, Vector4}
 import {CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
+import {CoreEntity} from './Entity';
 // import Geometry from './Geometry';
 
 const ATTRIB_NAMES = {
@@ -34,12 +35,13 @@ const COMPONENT_INDICES = {
 const PTNUM = 'ptnum';
 const DOT = '.';
 
-export class CorePoint {
+export class CorePoint extends CoreEntity {
 	_geometry: BufferGeometry;
 	_position: Vector3;
 	_normal: Vector3;
 
-	constructor(private _core_geometry: CoreGeometry, private _index: number) {
+	constructor(private _core_geometry: CoreGeometry, index: number) {
+		super(index);
 		this._geometry = this._core_geometry.geometry();
 	}
 
@@ -48,10 +50,6 @@ export class CorePoint {
 	}
 	geometry() {
 		return (this._geometry = this._geometry || this._core_geometry.geometry());
-	}
-
-	index(): number {
-		return this._index;
 	}
 
 	// add_attribute: (name, size, value)->
@@ -72,7 +70,7 @@ export class CorePoint {
 		//, target){ // target could be used, but not entirely sure I am ready now
 
 		if (name === PTNUM) {
-			return this.index();
+			return this.index;
 		} else {
 			let component_name = null;
 			let component_index = null;
@@ -169,7 +167,7 @@ export class CorePoint {
 		return this.set_attrib_value_vector3(ATTRIB_NAMES.NORMAL, new_normal);
 	}
 
-	set_attrib_value(name: string, value: NumericAttribValue) {
+	set_attrib_value(name: string, value: NumericAttribValue | string) {
 		// TODO: this fails if the value is null
 		if (value == null) {
 			return;

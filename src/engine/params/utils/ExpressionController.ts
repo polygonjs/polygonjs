@@ -1,13 +1,17 @@
 import {BaseParamType} from '../_Base';
 import {ExpressionManager} from 'src/engine/expressions/ExpressionManager';
 import {CorePoint} from 'src/core/geometry/Point';
+import {CoreEntity} from 'src/core/geometry/Entity';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 
-type EntityCallback = (entity: CorePoint, value: number) => void;
+type EntityCallback<T extends ParamTypeElem> = (entity: CorePoint, value: ParamValuesTypeMap[T]) => void;
 
-export class ExpressionController {
+type ParamTypeElem = ParamType;
+export class ExpressionController<T extends ParamTypeElem> {
 	protected _expression: string | null;
-	protected _entities: CorePoint[] | null = null;
-	protected _entity_callback: EntityCallback | null = null;
+	protected _entities: CoreEntity[] | null = null;
+	protected _entity_callback: EntityCallback<T> | null = null;
 	protected _manager: ExpressionManager | null;
 	constructor(protected param: BaseParamType) {}
 
@@ -28,6 +32,9 @@ export class ExpressionController {
 			return this._manager.error_message;
 		}
 		return null;
+	}
+	get requires_entities() {
+		return this.param.options.is_expression_for_entities;
 	}
 	set_expression(expression: string | null) {
 		if (this._expression != expression) {
@@ -53,7 +60,7 @@ export class ExpressionController {
 			return this._manager.compute_function();
 		}
 	}
-	async compute_expression_for_entities(entities: CorePoint[], callback: EntityCallback) {
+	async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
 		await this.compute_expression();
 
@@ -65,7 +72,7 @@ export class ExpressionController {
 	get entity_callback() {
 		return this._entity_callback;
 	}
-	set_entities(entities: CorePoint[], callback: EntityCallback) {
+	set_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this._entities = entities;
 		this._entity_callback = callback;
 	}

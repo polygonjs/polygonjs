@@ -2,20 +2,13 @@ import lodash_uniq from 'lodash/uniq';
 import lodash_clone from 'lodash/clone';
 import lodash_sortBy from 'lodash/sortBy';
 import {PerformanceNode} from './PerformanceNode';
-
-interface NodesCookData {
-	[propName: string]: PerformanceNode;
-}
-
-interface StringArrayByString {
-	[propName: string]: string[];
-}
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 
 export class CorePerformance {
 	private _started: boolean = false;
 	_start_time: number | null = 0;
 	_previous_timestamp: number = 0;
-	_nodes_cook_data: NodesCookData = {};
+	_nodes_cook_data: Dictionary<PerformanceNode> = {};
 	_durations_by_name: Dictionary<number>;
 	_durations_count_by_name: Dictionary<number>;
 	_performance_id: number;
@@ -25,7 +18,7 @@ export class CorePerformance {
 	// 	this._performance_id = Math.random()
 	// }
 
-	profile(name: string, method: any) {
+	profile(name: string, method: (args?: any) => any) {
 		const start_time = performance.now();
 		method();
 		const total_time = performance.now() - start_time;
@@ -58,7 +51,7 @@ export class CorePerformance {
 		return this._started;
 	}
 
-	record_node_cook_data(node: any) {
+	record_node_cook_data(node: BaseNodeType) {
 		const id = node.graph_node_id;
 		if (this._nodes_cook_data[id] == null) {
 			this._nodes_cook_data[id] = new PerformanceNode(node);
@@ -92,7 +85,7 @@ export class CorePerformance {
 
 	print_node_cook_data() {
 		let performance_nodes = Object.values(this._nodes_cook_data);
-		performance_nodes = lodash_sortBy(performance_nodes, (performance_node) => -performance_node.cook_time_total());
+		performance_nodes = lodash_sortBy(performance_nodes, (performance_node) => -performance_node.cook_time_total);
 
 		const print_objects = performance_nodes.map((performance_node) => performance_node.print_object());
 
@@ -117,7 +110,7 @@ export class CorePerformance {
 
 		const durations = [];
 		//durations_by_name = {}
-		const names_by_duration: StringArrayByString = {};
+		const names_by_duration: Dictionary<string[]> = {};
 
 		for (let name of Object.keys(durations_by_name)) {
 			const duration = durations_by_name[name];

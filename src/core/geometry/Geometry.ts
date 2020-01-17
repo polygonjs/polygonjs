@@ -218,7 +218,7 @@ export class CoreGeometry {
 		}
 	}
 
-	init_position_attribute(points_count: number, default_value: Vector3) {
+	init_position_attribute(points_count: number, default_value?: Vector3) {
 		const values = [];
 		if (default_value == null) {
 			default_value = new Vector3();
@@ -364,7 +364,7 @@ export class CoreGeometry {
 
 			// index
 			const new_index_by_old_index: Dictionary<number> = {};
-			lodash_each(points, (point, i) => (new_index_by_old_index[point.index()] = i));
+			lodash_each(points, (point, i) => (new_index_by_old_index[point.index] = i));
 
 			const indices = this._indices_from_points(new_index_by_old_index, old_geometry, object_type);
 			if (indices != null && indices.length !== 0) {

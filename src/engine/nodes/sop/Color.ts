@@ -186,7 +186,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				let target = new Color();
 				let index;
 				for (let point of points) {
-					index = point.index() * 3;
+					index = point.index * 3;
 					current.fromArray(array, index);
 					CoreColor.set_hsv(current.r, current.g, current.b, target);
 					target.toArray(array, index);
@@ -245,11 +245,11 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length);
 			await param.expression_controller.compute_expression_for_entities(points, (point, value) => {
 				// array[point.index()*3+2] = value
-				tmp_array[point.index()] = value;
+				tmp_array[point.index] = value;
 			});
 		} else {
 			for (let point of points) {
-				array[point.index() * 3 + offset] = param_value;
+				array[point.index * 3 + offset] = param_value;
 			}
 		}
 		return tmp_array;

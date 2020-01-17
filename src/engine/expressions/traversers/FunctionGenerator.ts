@@ -159,9 +159,7 @@ export class FunctionGenerator extends BaseTraverser {
 						'methods',
 						`
 					try {
-						return new Promise( async (resolve, reject)=>{
-							resolve(${this.function_body()})
-						})
+						${this.function_body()}
 					} catch(e) {
 						param.states.error.set(e.message || e);
 						return null;
@@ -190,24 +188,28 @@ export class FunctionGenerator extends BaseTraverser {
 	}
 
 	function_body() {
-		if (this.param.options.expression_for_entities()) {
+		if (this.param.options.is_expression_for_entities) {
 			return `
-			let result;
-			const entities = this.param.entities;
+			const entities = param.expression_controller.entities;
 			if(entities){
-				let entity;
-				const entity_callback = this.param.entity_callback;
-				${this.function_pre_entities_loop_lines.join(';\n')}
-				for(let index=0; index < entities.length; index++){
-					entity = entities[index];
-					result = ${this.function_main_string};
-					entity_callback(entity, result)
-				}
+				return new Promise( async (resolve, reject)=>{
+					let entity;
+					const entity_callback = param.expression_controller.entity_callback;
+					${this.function_pre_entities_loop_lines.join(';\n')}
+					for(let index=0; index < entities.length; index++){
+						entity = entities[index];
+						result = ${this.function_main_string};
+						entity_callback(entity, result);
+					}
+					resolve()
+				})
 			}
-			return result`;
+			return []`;
 		} else {
 			return `
-				${this.function_main_string}
+			return new Promise( async (resolve, reject)=>{
+				resolve(${this.function_main_string})
+			})
 			`;
 		}
 	}
@@ -319,7 +321,7 @@ export class FunctionGenerator extends BaseTraverser {
 			if (attribute_name) {
 				attribute_name = CoreAttribute.remap_name(attribute_name);
 				if (attribute_name == 'ptnum') {
-					return 'entity.index()';
+					return '((entity != null) ? entity.index : 0)';
 				} else {
 					const var_attribute = `attrib_${attribute_name}`;
 					const var_attribute_size = `attrib_size_${attribute_name}`;
@@ -333,9 +335,9 @@ export class FunctionGenerator extends BaseTraverser {
 					this.function_pre_entities_loop_lines.push(`const ${var_array} = ${var_attribute}.array`);
 					if (property) {
 						const property_offset = PROPERTY_OFFSETS[property];
-						return `${var_array}[entity.index()*${var_attribute_size}+${property_offset}]`;
+						return `${var_array}[entity.index*${var_attribute_size}+${property_offset}]`;
 					} else {
-						return `${var_array}[entity.index()*${var_attribute_size}]`;
+						return `${var_array}[entity.index*${var_attribute_size}]`;
 					}
 				}
 			} else {

@@ -24,7 +24,7 @@ import {CoreConstant, AttribClass} from './Constant';
 
 export type GroupString = string;
 
-interface Object3DWithGeometry extends Object3D {
+export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
 }
 
@@ -98,8 +98,7 @@ export class CoreGroup {
 		let object, core_object;
 		for (let i = 0; i < this._objects.length; i++) {
 			object = this._objects[i];
-			core_object = new CoreObject(object);
-			core_object.set_index(i);
+			core_object = new CoreObject(object, i);
 			list.push(core_object);
 		}
 		return list;
@@ -293,7 +292,7 @@ export class CoreGroup {
 				if (this.has_attrib(old_name)) {
 					for (let object of this._objects) {
 						object.traverse((child) => {
-							const core_object = new CoreObject(child);
+							const core_object = new CoreObject(child, 0);
 							core_object.rename_attribute(old_name, new_name);
 						});
 					}

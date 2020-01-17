@@ -197,7 +197,7 @@ export class InputsController {
 			} else {
 				if (existing_input_indices.length > 0) {
 					const promises = existing_input_indices.map((input_index) => {
-						return this.node.io.inputs.eval_required_input_p(input_index);
+						return this.node.io.inputs.eval_required_input(input_index);
 					});
 					containers = await Promise.all(promises);
 				}
@@ -220,7 +220,7 @@ export class InputsController {
 	// 		}
 	// 	});
 	// }
-	async eval_required_input_p(input_index: number) {
+	async eval_required_input(input_index: number) {
 		const container = await this.node.container_controller.request_input_container_p(input_index);
 		// we do not clone here, as we just check if a group is present
 		if (container && container.core_content()) {

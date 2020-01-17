@@ -1,4 +1,4 @@
-QUnit.test('toggle evals correctly when set to different values', async (assert) => {
+QUnit.test('boolean evals correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 

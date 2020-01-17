@@ -176,7 +176,7 @@ export class CookController {
 		}
 
 		if (this.node.scene.performance.recording_started()) {
-			this.node.scene.performance.record_node_cook_data(this);
+			this.node.scene.performance.record_node_cook_data(this.node);
 		}
 	}
 
@@ -205,11 +205,11 @@ export class CookController {
 	}
 
 	//this._time_with_precision(@_cook_time)
-	cook_time_with_inputs() {
+	get cook_time_with_inputs() {
 		return this._cook_time_with_inputs;
 	}
 	//this._time_with_precision(@_cook_time_with_inputs)
-	cook_time_params() {
+	get cook_time_params() {
 		return this._cook_time_params;
 	}
 	_time_with_precision(time: number) {

@@ -6,6 +6,7 @@ import './core/String';
 import './core/Walker';
 QUnit.module('core/geometry');
 import './core/geometry/Attribute';
+import './core/geometry/Group';
 
 QUnit.module('params');
 import './engine/params/_Base';
@@ -22,6 +23,9 @@ import './engine/params/utils/ReferencedAssets';
 import './engine/params/utils/TimeDependent';
 
 QUnit.module('sop');
+import './engine/nodes/sop/AttribCreate';
+import './engine/nodes/sop/BboxScatter';
 import './engine/nodes/sop/Box';
+import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/Text';
 import './engine/nodes/sop/Transform';
