@@ -49,12 +49,19 @@ export class ObjectsManagerNode extends TypedNodeManager<ObjectsManagerParamsCon
 		this.children_controller.init(NodeContext.OBJ);
 
 		this.flags.add_display();
+
+		this.lifecycle.add_on_child_add_hook(this._add_obj_node_to_scene.bind(this));
 		// this.flags.add_bypass({has_bypass_flag: false});
 
 		// this.set_min_inputs_count(0);
 		// this.set_max_inputs_count(0);
 	}
 	//@_object_uuid_by_node_graph_id = {}
+
+	private _add_obj_node_to_scene(node: BaseObjNodeType) {
+		console.log('_add_obj_node_to_scene', node, node.name);
+		this.update_object(node);
+	}
 
 	init_display_scene() {
 		this._object.name = '_WORLD_';

@@ -9,6 +9,7 @@ import lodash_sortBy from 'lodash/sortBy';
 import lodash_values from 'lodash/values';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NameController} from '../NameController';
 // import {NameController} from '../NameController';
 
 // interface HierarchyOptions {
@@ -137,10 +138,11 @@ export class HierarchyChildrenController {
 			child.name_controller.post_set_full_path();
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node: child_node});
-		this.node.lifecycle.on_child_add(child_node);
 		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
 			child_node.lifecycle.on_create();
 		}
+		this.set_child_name(child_node, NameController.base_name(child_node));
+		this.node.lifecycle.on_child_add(child_node);
 		// this.post_add_node(child_node);
 
 		if (this._is_dependent_on_children) {

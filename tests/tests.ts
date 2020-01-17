@@ -22,6 +22,9 @@ import './engine/params/utils/Expression';
 import './engine/params/utils/ReferencedAssets';
 import './engine/params/utils/TimeDependent';
 
+QUnit.module('obj');
+import './engine/nodes/obj/AmbientLight';
+
 QUnit.module('sop');
 import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AnimationCopy';

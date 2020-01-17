@@ -1,7 +1,7 @@
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 
-type Callback = (node: BaseNodeType) => void;
-type CallbackWithChildNode = (node: BaseNodeType, child_node: BaseNodeType) => void;
+type Callback = () => void;
+type CallbackWithChildNode = (child_node: BaseNodeType) => void;
 
 export class LifeCycleController {
 	protected _on_child_add_hooks: CallbackWithChildNode[] = [];
@@ -40,12 +40,12 @@ export class LifeCycleController {
 
 	protected execute_hooks(hooks: Callback[]) {
 		for (let hook of hooks) {
-			hook(this.node);
+			hook();
 		}
 	}
 	protected execute_hooks_with_child_node(hooks: CallbackWithChildNode[], child_node: BaseNodeType) {
 		for (let hook of hooks) {
-			hook(this.node, child_node);
+			hook(child_node);
 		}
 	}
 }

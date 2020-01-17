@@ -112,7 +112,7 @@ export class TypedCameraObjNode<K extends BaseCameraObjParamsConfig> extends Typ
 			// 		context: NodeContext.EVENT,
 			// 	},
 			// });
-			CoreTransform.create_params(this);
+			// CoreTransform.create_params(this); // removed since they are now added Persp Camera
 			// this.add_param( ParamType.TOGGLE, 'is_updating', 0, {cook: false, hidden: true}); //, hidden: true} )
 			// this.add_param(ParamType.VECTOR3, 'target', [0, 0, 0], {cook: false}); //, hidden: true} )
 		});
