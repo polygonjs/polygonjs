@@ -20,7 +20,7 @@ QUnit.test('file simple', async (assert) => {
 	let container;
 	container = await merge1.request_container();
 	assert.ok(!file1.is_dirty);
-	let core_group = container.core_content()!;
+	// let core_group = container.core_content()!;
 	// let {geometry} = core_group.objects()[0];
 	assert.equal(container.points_count(), 15012);
 
@@ -43,7 +43,7 @@ QUnit.test('file simple', async (assert) => {
 	// this only works if I have a path catch all in routes.db
 	// get '*path' => 'errors#route_not_found'
 	// assert.equal(file1.error_message(), "could not load geometry from /tests/fixtures/files/geometries/doesnotexist.obj (Error: THREE.OBJLoader: Unexpected line: \"<!DOCTYPE html>\")");
-	core_group = container.core_content()!;
+	let core_group = container.core_content()!;
 	assert.notOk(core_group, 'file sop core group is empty');
 	// assert.equal(core_group.objects().length, 0, 'content has 0 points');
 

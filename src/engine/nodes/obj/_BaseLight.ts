@@ -3,7 +3,7 @@ import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export abstract class BaseLightObjNode<K extends NodeParamsConfig> extends TypedObjNode<K> {
+export abstract class TypedLightObjNode<K extends NodeParamsConfig> extends TypedObjNode<K> {
 	protected _object: Light;
 	protected _color_with_intensity = new Color(0x00000);
 	get object() {
@@ -26,10 +26,10 @@ export abstract class BaseLightObjNode<K extends NodeParamsConfig> extends Typed
 		}
 	}
 
-	abstract create_light_params(): void;
-	abstract update_light_params(): void;
+	protected create_light_params(): void {}
+	protected update_light_params(): void {}
 
-	create_shadow_params() {
+	protected create_shadow_params() {
 		return;
 		// this.add_param('toggle', 'cast_shadows', 1);
 		// shadow_options = {visible_if: {cast_shadows: 1}}
@@ -75,3 +75,6 @@ export abstract class BaseLightObjNode<K extends NodeParamsConfig> extends Typed
 		return this.flags.display.active;
 	}
 }
+
+export type BaseLightObjNodeType = TypedLightObjNode<NodeParamsConfig>;
+export class BaseLightObjNodeClass extends TypedLightObjNode<NodeParamsConfig> {}
