@@ -21,7 +21,6 @@ QUnit.test('file simple', async (assert) => {
 	container = await merge1.request_container();
 	assert.ok(!file1.is_dirty);
 	let core_group = container.core_content()!;
-	console.log(core_group.objects());
 	// let {geometry} = core_group.objects()[0];
 	assert.equal(container.points_count(), 15012);
 

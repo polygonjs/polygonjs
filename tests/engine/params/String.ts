@@ -70,8 +70,6 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	scene.time_controller.increment_frame();
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 81 end');
-	console.log(text2_param.graph_predecessors());
-	console.log(text2_param.graph_all_predecessors());
 	assert.equal(text2_param.graph_predecessors().length, 2);
 
 	// test updating the string param

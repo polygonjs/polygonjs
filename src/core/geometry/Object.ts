@@ -93,7 +93,6 @@ export class CoreObject extends CoreEntity {
 		} else {
 			data = value;
 		}
-		console.log(this._object.userData[ATTRIBUTES][name]);
 		this._object.userData[ATTRIBUTES][name] = data;
 	}
 	add_numeric_attrib(name: string, value: NumericAttribValue) {
@@ -118,7 +117,6 @@ export class CoreObject extends CoreEntity {
 	}
 
 	has_attrib(name: string): boolean {
-		console.log(this.attribute_names(), name);
 		return this.attribute_names().includes(name);
 	}
 

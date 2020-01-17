@@ -37,7 +37,6 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 			do_convert: this.pv.convert,
 			convert_to_numeric: this.pv.convert_to_numeric,
 		});
-		console.log('loader', loader);
 		loader.load(this.pv.url, this._on_load.bind(this), undefined, this._on_error.bind(this));
 	}
 

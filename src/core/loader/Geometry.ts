@@ -98,7 +98,6 @@ export class CoreLoaderGeometry {
 					);
 				} else {
 					const error_message = `format not supported (${this.ext})`;
-					console.warn(error_message);
 					reject(error_message);
 				}
 				// CoreLoaderGeometry.loader_for_ext().then((loader) => {
@@ -130,7 +129,6 @@ export class CoreLoaderGeometry {
 		// if(object.animations){
 		// 	await CoreScriptLoader.load('/three/js/utils/SkeletonUtils')
 		// }
-		console.log('on_load_success', object);
 		switch (this.ext) {
 			case 'gltf':
 				return this.on_load_succes_gltf(object);

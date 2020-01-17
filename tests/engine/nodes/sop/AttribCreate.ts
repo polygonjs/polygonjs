@@ -38,7 +38,6 @@ QUnit.test('attrib create expression float vertex', async (assert) => {
 	attrib_create1.set_input(0, box1);
 
 	const container = await attrib_create1.request_container();
-	console.log(attrib_create1.states.error.message);
 	const core_group = container.core_content()!;
 	const geometry = core_group.objects()[0].geometry;
 	assert.ok(core_group);

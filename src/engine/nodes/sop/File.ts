@@ -34,14 +34,11 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	// TODO: no error when trying to load a non existing zip file??
 	cook() {
 		const loader = new CoreLoaderGeometry(this.pv.url);
-		console.log('loader', loader);
 		loader.load(this._on_load.bind(this), this._on_error.bind(this));
 	}
 
 	_on_load(objects: Object3D[]) {
-		console.log('_on_load', objects);
 		objects = lodash_flatten(objects);
-		console.log('flatten', objects);
 		this.set_objects(objects);
 	}
 	_on_error(message: string) {
