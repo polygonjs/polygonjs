@@ -2,9 +2,9 @@ async function with_data(data_json?: object) {
 	const geo1 = window.geo1;
 	const data1 = geo1.create_node('data');
 	if (data_json) {
-		data1.param('data').set(JSON.stringify(data_json));
+		data1.p.data.set(JSON.stringify(data_json));
 	}
-	const container = await data1.request_container_p();
+	const container = await data1.request_container();
 	return container;
 }
 
@@ -13,7 +13,7 @@ QUnit.test('data default', async (assert) => {
 	assert.equal(container.points_count(), 13);
 	assert.equal(
 		container
-			.core_group()
+			.core_content()!
 			.points()[0]
 			.attrib_value('value'),
 		-40
@@ -27,7 +27,7 @@ QUnit.test('data with position', async (assert) => {
 	];
 	const container = await with_data(data);
 	assert.equal(container.points_count(), 2);
-	const points = container.core_group().points();
+	const points = container.core_content()!.points();
 	assert.equal(points[0].attrib_value('value'), 1);
 	assert.equal(points[1].attrib_value('value'), 2);
 	assert.deepEqual(points[0].position().toArray(), [-1, 0, 1]);

@@ -41,11 +41,6 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		return 'color';
 	}
 
-	_param_color: Color;
-	_param_as_hsv: boolean;
-	_param_from_attribute: boolean;
-	_param_attrib_name: string;
-
 	private _r_arrays_by_geometry_uuid: ValueArrayByName = {};
 	private _g_arrays_by_geometry_uuid: ValueArrayByName = {};
 	private _b_arrays_by_geometry_uuid: ValueArrayByName = {};
@@ -64,11 +59,11 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const core_group = input_contents[0];
 		const core_objects = core_group.core_objects();
 
-		const has_expression = this.p.color.has_expression();
 		for (let core_object of core_objects) {
-			if (this._param_from_attribute) {
+			if (this.pv.from_attribute) {
 				this._set_from_attribute(core_object);
 			} else {
+				const has_expression = this.p.color.has_expression();
 				if (has_expression) {
 					await this._eval_expressions(core_object);
 				} else {
@@ -93,9 +88,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 		const points = core_geometry.points();
 
-		const src_attrib_size = core_geometry.attrib_size(this._param_attrib_name);
+		const src_attrib_size = core_geometry.attrib_size(this.pv.attrib_name);
 		const geometry = core_geometry.geometry();
-		const src_array = geometry.getAttribute(this._param_attrib_name).array;
+		const src_array = geometry.getAttribute(this.pv.attrib_name).array;
 		const dest_array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
 
 		switch (src_attrib_size) {
@@ -147,12 +142,12 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const core_geometry = core_object.core_geometry();
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 
-		let new_color;
-		if (this._param_as_hsv) {
+		let new_color: Color;
+		if (this.pv.as_hsv) {
 			new_color = new Color();
-			CoreColor.set_hsv(this._param_color.r, this._param_color.g, this._param_color.b, new_color);
+			CoreColor.set_hsv(this.pv.color.r, this.pv.color.g, this.pv.color.b, new_color);
 		} else {
-			new_color = this._param_color.clone();
+			new_color = this.pv.color; //.clone();
 		}
 		core_geometry.add_numeric_attrib(COLOR_ATTRIB_NAME, 3, new_color);
 	}
@@ -181,7 +176,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			}
 
 			// to hsv
-			if (this._param_as_hsv) {
+			if (this.pv.as_hsv) {
 				let current = new Color();
 				let target = new Color();
 				let index;
@@ -205,7 +200,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// 	})
 		// } else {
 		// 	for(let point of points){
-		// 		array[point.index()*3+0] = this._param_color.r
+		// 		array[point.index()*3+0] = this.pv.color.r
 		// 	}
 		// }
 		// g
@@ -215,7 +210,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// 	})
 		// } else {
 		// 	for(let point of points){
-		// 		array[point.index()*3+1] = this._param_color.g
+		// 		array[point.index()*3+1] = this.pv.color.g
 		// 	}
 		// }
 		// b
@@ -225,7 +220,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// 	})
 		// } else {
 		// 	for(let point of points){
-		// 		array[point.index()*3+2] = this._param_color.b
+		// 		array[point.index()*3+2] = this.pv.color.b
 		// 	}
 		// }
 	}
@@ -233,7 +228,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	private async _update_from_param(geometry: BufferGeometry, array: number[], points: CorePoint[], offset: number) {
 		const param_name = ['colorr', 'colorg', 'colorb'][offset];
 		const param = this.params.get(param_name) as FloatParam;
-		const param_value = [this._param_color.r, this._param_color.g, this._param_color.b][offset];
+		const param_value = [this.pv.color.r, this.pv.color.g, this.pv.color.b][offset];
 		const arrays_by_geometry_uuid = [
 			this._r_arrays_by_geometry_uuid,
 			this._g_arrays_by_geometry_uuid,

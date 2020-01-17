@@ -23,9 +23,18 @@ import './engine/params/utils/ReferencedAssets';
 import './engine/params/utils/TimeDependent';
 
 QUnit.module('sop');
+import './engine/nodes/sop/Add';
+import './engine/nodes/sop/AnimationCopy';
+import './engine/nodes/sop/AnimationMixer';
+import './engine/nodes/sop/AttribAddMult';
 import './engine/nodes/sop/AttribCreate';
 import './engine/nodes/sop/BboxScatter';
 import './engine/nodes/sop/Box';
+import './engine/nodes/sop/Color';
+import './engine/nodes/sop/Data';
+import './engine/nodes/sop/DataUrl';
+import './engine/nodes/sop/File';
+import './engine/nodes/sop/Hierarchy';
 import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/Text';
 import './engine/nodes/sop/Transform';

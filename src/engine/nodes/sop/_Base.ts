@@ -8,7 +8,7 @@ import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
 import {CoreMaterial} from 'src/core/geometry/Material';
 import {ObjectType} from 'src/core/geometry/Constant';
 
@@ -210,7 +210,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	// 	return group;
 	// }
 
-	create_object(geometry: BufferGeometry, type?: ObjectType) {
+	create_object(geometry: BufferGeometry, type?: ObjectType): Object3DWithGeometry {
 		// ensure it has an index
 		if (!geometry.index) {
 			const position_array = geometry.getAttribute('position').array;
@@ -231,7 +231,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		// if (geometry != null) {
 		const object_constructor = CoreConstant.CONSTRUCTORS_BY_NAME[type]; //THREE[type];
 		const material = CoreConstant.MATERIALS[type].clone();
-		const object = new object_constructor(geometry, material);
+		const object = new object_constructor(geometry, material) as Object3DWithGeometry;
 		object.castShadow = true;
 		object.receiveShadow = true;
 		object.frustumCulled = false;

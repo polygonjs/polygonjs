@@ -10,15 +10,17 @@ import {ParamType} from 'src/engine/poly/ParamType';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
 import {Mesh} from 'three/src/objects/Mesh';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {Material} from 'three/src/materials/Materials';
 import {MaterialWithSkinning} from 'src/core/geometry/Material';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 	time = ParamConfig.FLOAT('$T', {range: [0, 10]});
 	prepare = ParamConfig.BUTTON(null, {
-		callback: AnimationMixerSopNode.PARAM_CALLBACK_prepare,
+		callback: (node: AnimationMixerSopNode, param: BaseParamType) => {
+			AnimationMixerSopNode.PARAM_CALLBACK_prepare(node, param);
+		},
 	});
 }
 const ParamsConfig = new AnimationMixerSopParamsConfig();

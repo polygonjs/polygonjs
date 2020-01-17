@@ -40,12 +40,7 @@ export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 		}
 
 		if (json) {
-			const loader = new JsonDataLoader({
-				data_keys_prefix: '',
-				skip_entries: '',
-				do_convert: false,
-				convert_to_numeric: '',
-			});
+			const loader = new JsonDataLoader();
 			loader.set_json(json);
 			const object = loader.create_object();
 			this.set_object(object);

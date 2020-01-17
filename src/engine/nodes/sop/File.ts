@@ -4,7 +4,7 @@ import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
 import {Object3D} from 'three/src/core/Object3D';
 
-import {CoreLoaderGeometry, LOADER_TYPES} from 'src/core/loader/Geometry';
+import {CoreLoaderGeometry} from 'src/core/loader/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {BaseParamType} from 'src/engine/params/_Base';
@@ -14,7 +14,9 @@ class FileSopParamsConfig extends NodeParamsConfig {
 		always_reference_asset: true,
 	});
 	reload = ParamConfig.BUTTON(null, {
-		callback: FileSopNode.PARAM_CALLBACK_reload,
+		callback: (node: FileSopNode, param: BaseParamType) => {
+			FileSopNode.PARAM_CALLBACK_reload(node, param);
+		},
 	});
 }
 const ParamsConfig = new FileSopParamsConfig();
@@ -32,12 +34,14 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	// TODO: no error when trying to load a non existing zip file??
 	cook() {
 		const loader = new CoreLoaderGeometry(this.pv.url);
-
+		console.log('loader', loader);
 		loader.load(this._on_load.bind(this), this._on_error.bind(this));
 	}
 
 	_on_load(objects: Object3D[]) {
+		console.log('_on_load', objects);
 		objects = lodash_flatten(objects);
+		console.log('flatten', objects);
 		this.set_objects(objects);
 	}
 	_on_error(message: string) {

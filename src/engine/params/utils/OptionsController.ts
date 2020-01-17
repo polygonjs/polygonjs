@@ -147,7 +147,7 @@ export class OptionsController {
 		const callback = this.get_callback();
 		if (callback != null) {
 			if (this.node && !this.node.cook_controller.is_cooking) {
-				callback(this.param);
+				callback(this.node, this.param);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 import {Object3D} from 'three/src/core/Object3D';
-import lodash_flatten from 'lodash/flatten';
+// import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
 
 // import {CoreLoaderGeometry, LoaderType, LOADER_TYPES} from 'src/Core/Loader/Geometry';
@@ -16,7 +16,9 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 		visible_if: {convert: 1},
 	});
 	reload = ParamConfig.BUTTON(null, {
-		callback: DataUrlSopNode.PARAM_CALLBACK_reload,
+		callback: (node: DataUrlSopNode, param: BaseParamType) => {
+			DataUrlSopNode.PARAM_CALLBACK_reload(node, param);
+		},
 	});
 }
 const ParamsConfig = new DataUrlSopParamsConfig();
@@ -35,16 +37,17 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 			do_convert: this.pv.convert,
 			convert_to_numeric: this.pv.convert_to_numeric,
 		});
-
+		console.log('loader', loader);
 		loader.load(this.pv.url, this._on_load.bind(this), undefined, this._on_error.bind(this));
 	}
 
-	_on_load(objects: Object3D[]) {
-		objects = lodash_flatten(objects);
-		this.set_objects(objects);
+	_on_load(objects: Object3D) {
+		// objects = lodash_flatten(objects);
+		this.set_objects([objects]);
 	}
-	_on_error(message: string) {
-		this.states.error.set(`could not load geometry from ${this.pv.url} (${message})`);
+	_on_error(error: ErrorEvent) {
+		this.states.error.set(`could not load geometry from ${this.pv.url} (${error})`);
+		this.cook_controller.end_cook();
 	}
 
 	// async _on_open_url(){

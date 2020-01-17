@@ -6,7 +6,7 @@ QUnit.test('animation_mixer simple', async (assert) => {
 
 	animation_mixer1.set_input(0, file1);
 
-	file1.param('url').set('/examples/models/soldier.glb');
+	file1.p.url.set('/examples/models/soldier.glb');
 
 	let container;
 

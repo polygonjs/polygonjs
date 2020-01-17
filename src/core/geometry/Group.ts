@@ -95,11 +95,11 @@ export class CoreGroup {
 	}
 	private _create_core_objects(): CoreObject[] {
 		const list: CoreObject[] = [];
-		let object, core_object;
 		for (let i = 0; i < this._objects.length; i++) {
-			object = this._objects[i];
-			core_object = new CoreObject(object, i);
-			list.push(core_object);
+			this._objects[i].traverse((object) => {
+				const core_object = new CoreObject(object, i);
+				list.push(core_object);
+			});
 		}
 		return list;
 	}
@@ -122,7 +122,14 @@ export class CoreGroup {
 		// 	// });
 		// }
 		// return this._geometries;
-		return this.core_objects().map((core_object) => (core_object.object() as Mesh).geometry as BufferGeometry);
+		const list: BufferGeometry[] = [];
+		for (let core_object of this.core_objects()) {
+			const geometry = (core_object.object() as Mesh).geometry as BufferGeometry;
+			if (geometry) {
+				list.push(geometry);
+			}
+		}
+		return list;
 	}
 	core_geometries(): CoreGeometry[] {
 		return (this._core_geometries = this._core_geometries || this.create_core_geometries());

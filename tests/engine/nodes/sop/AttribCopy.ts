@@ -1,37 +1,33 @@
-import {CoreConstant} from 'src/Core/Geometry/Constant';
-import {GeometryContainer} from 'src/Engine/Container/Geometry';
-import {CoreGroup} from 'src/Core/Geometry/Group';
-
 QUnit.test('attribcopy latitude to position', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.create_node('plane');
 
 	const attrib_create1 = geo1.create_node('attrib_create');
-	attrib_create1.param('name').set('latitude');
-	attrib_create1.param('size').set(1);
-	attrib_create1.param('valuex').set_expression('@ptnum');
+	attrib_create1.p.name.set('latitude');
+	attrib_create1.p.size.set(1);
+	attrib_create1.p.value1.set('@ptnum');
 	attrib_create1.set_input(0, plane1);
 
 	const attrib_create2 = geo1.create_node('attrib_create');
-	attrib_create2.param('name').set('longitude');
-	attrib_create2.param('size').set(1);
-	attrib_create2.param('valuex').set_expression('2*@ptnum+1');
+	attrib_create2.p.name.set('longitude');
+	attrib_create2.p.size.set(1);
+	attrib_create2.p.value1.set('2*@ptnum+1');
 	attrib_create2.set_input(0, attrib_create1);
 
 	const attrib_copy1 = geo1.create_node('attrib_copy');
 	attrib_copy1.set_input(0, attrib_create2);
 	attrib_copy1.set_input(1, attrib_create2);
 
-	attrib_copy1.param('name').set('latitude');
-	attrib_copy1.param('on_new_name').set(1);
-	attrib_copy1.param('new_name').set('position');
-	attrib_copy1.param('to_all_components').set(0);
-	attrib_copy1.param('src_component').set(0);
-	attrib_copy1.param('dest_component').set(0);
+	attrib_copy1.p.name.set('latitude');
+	attrib_copy1.p.tnew_name.set(1);
+	attrib_copy1.p.new_name.set('position');
+	// attrib_copy1.param('to_all_components').set(0);
+	// attrib_copy1.param('src_component').set(0);
+	// attrib_copy1.param('dest_component').set(0);
 
-	let container = (await attrib_copy1.request_container_p()) as GeometryContainer;
-	assert.notOk(attrib_copy1.error_message());
-	let core_group = container.core_content();
+	let container = await attrib_copy1.request_container();
+	assert.notOk(attrib_copy1.states.error.message);
+	let core_group = container.core_content()!;
 	let geometry = core_group.objects()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
@@ -49,16 +45,16 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	attrib_copy2.set_input(0, attrib_copy1);
 	attrib_copy2.set_input(1, attrib_copy1);
 
-	attrib_copy2.param('name').set('longitude');
-	attrib_copy2.param('on_new_name').set(1);
-	attrib_copy2.param('new_name').set('position');
-	attrib_copy2.param('to_all_components').set(0);
-	attrib_copy2.param('src_component').set(0);
-	attrib_copy2.param('dest_component').set(2);
+	attrib_copy2.p.name.set('longitude');
+	attrib_copy2.p.tnew_name.set(1);
+	attrib_copy2.p.new_name.set('position');
+	// attrib_copy2.param('to_all_components').set(0);
+	// attrib_copy2.param('src_component').set(0);
+	// attrib_copy2.param('dest_component').set(2);
 
-	container = (await attrib_copy2.request_container_p()) as GeometryContainer;
-	assert.notOk(attrib_copy2.error_message());
-	core_group = container.core_content();
+	container = await attrib_copy2.request_container();
+	assert.notOk(attrib_copy2.states.error.message);
+	core_group = container.core_content()!;
 	geometry = core_group.objects()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);

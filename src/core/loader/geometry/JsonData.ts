@@ -15,55 +15,58 @@ import {CoreGeometry} from 'src/core/geometry/Geometry';
 import {CoreConstant} from 'src/core/geometry/Constant';
 import {CoreAttributeData} from 'src/core/geometry/AttributeData';
 import {CoreAttribute} from 'src/core/geometry/Attribute';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+// import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {Object3D} from 'three';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 
 export interface JsonDataLoaderOptions {
-	data_keys_prefix: string;
-	skip_entries: string;
-	do_convert: boolean;
-	convert_to_numeric: string;
+	data_keys_prefix?: string;
+	skip_entries?: string;
+	do_convert?: boolean;
+	convert_to_numeric?: string;
 }
 
 export class JsonDataLoader {
 	_json: any[];
 	_attribute_datas_by_name: Dictionary<CoreAttributeData>;
-	private data_keys_prefix: string;
-	private skip_entries: string;
-	private do_convert: boolean;
-	private convert_to_numeric: string;
+	private _options: JsonDataLoaderOptions = {};
 
-	constructor(options: JsonDataLoaderOptions) {
-		this.data_keys_prefix = options.data_keys_prefix;
-		this.skip_entries = options.skip_entries;
-		this.do_convert = options.do_convert;
-		this.convert_to_numeric = options.convert_to_numeric;
+	constructor(options: JsonDataLoaderOptions = {}) {
+		this._options.data_keys_prefix = options.data_keys_prefix;
+		this._options.skip_entries = options.skip_entries;
+		this._options.do_convert = options.do_convert || false;
+		this._options.convert_to_numeric = options.convert_to_numeric;
 	}
 	//
 
 	load(
 		url: string,
-		success_callback: (objects: Object3D) => void,
+		success_callback: (object: Object3D) => void,
 		progress_callback: (() => void) | undefined,
-		error_callback: (error: string) => void | undefined
+		error_callback: (error: ErrorEvent) => void | undefined
 	) {
 		// const url_loader = new UrlLoader();
 		// const start_time = performance.now();
 		// const config = {
 		// 	crossdomain: true
 		// }
-		axios.get(url).then((response) => {
-			// const end_time = performance.now();
+		axios
+			.get(url)
+			.then((response) => {
+				// const end_time = performance.now();
 
-			this._json = response.data;
-			if (this.data_keys_prefix != null && this.data_keys_prefix != '') {
-				this._json = this.get_prefixed_json(this._json, this.data_keys_prefix.split('.'));
-			}
-			const object = this.create_object();
-			success_callback(object);
-		});
+				this._json = response.data;
+				if (this._options.data_keys_prefix != null && this._options.data_keys_prefix != '') {
+					this._json = this.get_prefixed_json(this._json, this._options.data_keys_prefix.split('.'));
+				}
+				const object = this.create_object();
+				success_callback(object);
+			})
+			.catch((error: ErrorEvent) => {
+				console.log('error', error);
+				error_callback(error);
+			});
 	}
 
 	get_prefixed_json(json: any, prefixes: string[]): any[] {
@@ -96,7 +99,7 @@ export class JsonDataLoader {
 			// 	return core_geo.add_attribute(attrib_name, attrib_data);
 			// }
 
-			const convert_to_numeric_masks = CoreString.attrib_names(this.convert_to_numeric);
+			const convert_to_numeric_masks = CoreString.attrib_names(this._options.convert_to_numeric || '');
 
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
@@ -110,7 +113,10 @@ export class JsonDataLoader {
 					// 	attrib_values as string[]
 					// )
 
-					if (this.do_convert && CoreString.matches_one_mask(attrib_name, convert_to_numeric_masks)) {
+					if (
+						this._options.do_convert &&
+						CoreString.matches_one_mask(attrib_name, convert_to_numeric_masks)
+					) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
 							if (lodash_isString(v)) {
 								return parseFloat(v) || 0;
@@ -139,7 +145,7 @@ export class JsonDataLoader {
 		let first_pt;
 		this._attribute_datas_by_name = {};
 
-		const masks = CoreString.attrib_names(this.skip_entries);
+		const masks = CoreString.attrib_names(this._options.skip_entries || '');
 
 		if ((first_pt = this._json[0]) != null) {
 			for (let attrib_name of Object.keys(first_pt)) {
