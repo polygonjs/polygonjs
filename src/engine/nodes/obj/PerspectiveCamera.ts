@@ -13,7 +13,12 @@ const DEFAULT = {
 };
 
 // const EVENT_CHANGE = { type: 'change' };
-class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {}
+import {ParamConfig} from '../utils/params/ParamsConfig';
+class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {
+	fov = ParamConfig.FLOAT(DEFAULT.fov);
+	vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 1}});
+	horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 0}});
+}
 const ParamsConfig = new PerspectiveCameraObjParamConfig();
 
 export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCameraObjParamConfig> {
@@ -51,8 +56,8 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 	}
 
 	update_camera() {
-		if (this._object.fov != this._param_fov) {
-			this._object.fov = this._param_fov;
+		if (this._object.fov != this.pv.fov) {
+			this._object.fov = this.pv.fov;
 			this._object.updateProjectionMatrix();
 		}
 		this._update_for_aspect_ratio();
@@ -67,8 +72,8 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 
 			this._object.aspect = this._aspect;
 			if (lock_width) {
-				const other_fov = this._param_fov / this._aspect;
-				this._object.zoom = this.get_zoom(this._aspect, other_fov, this._param_vertical_fov_range);
+				const other_fov = this.pv.fov / this._aspect;
+				this._object.zoom = this.get_zoom(this._aspect, other_fov, this.pv.vertical_fov_range);
 			} else {
 				this._object.zoom = 1;
 			}

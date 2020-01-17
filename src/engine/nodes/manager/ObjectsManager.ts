@@ -9,17 +9,13 @@ import {BaseObjNodeType} from '../obj/_Base';
 
 import {BaseManagerObjNode} from 'src/engine/nodes/obj/_BaseManager';
 import {BaseCameraObjNodeClass} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseLightObjNode} from 'src/engine/nodes/obj/_BaseLight';
+import {BaseLightObjNodeClass} from 'src/engine/nodes/obj/_BaseLight';
 
 // obj nodes
 import {EventsObjNode} from 'src/engine/nodes/obj/Events';
 import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
 import {FogObjNode} from 'src/engine/nodes/obj/Fog';
-import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
-import {OrthographicCameraObjNode} from 'src/engine/nodes/obj/OrthographicCamera';
 import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
-import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
-import {CopObjNode} from 'src/engine/nodes/obj/Cop';
 
 import 'src/engine/Poly';
 import {NodeContext} from 'src/engine/poly/NodeContext';
@@ -27,16 +23,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
 
-interface ObjNodeTypeMap {
-	cop: CopObjNode;
-	events: EventsObjNode;
-	fog: FogObjNode;
-	geo: GeoObjNode;
-	materials: MaterialsObjNode;
-	perspective_camera: PerspectiveCameraObjNode;
-	post_process: PostProcessObjNode;
-	orthographic_camera: OrthographicCameraObjNode;
-}
+import {ObjNodeTypeMap} from 'src/engine/poly/registers/Obj';
 
 import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
@@ -174,7 +161,7 @@ export class ObjectsManagerNode extends TypedNodeManager<ObjectsManagerParamsCon
 		return CoreObject.is_a(node, BaseCameraObjNodeClass);
 	}
 	_is_node_light(node: BaseObjNodeType) {
-		return CoreObject.is_a(node, BaseLightObjNode);
+		return CoreObject.is_a(node, BaseLightObjNodeClass);
 	}
 	_is_node_event(node: BaseObjNodeType) {
 		return CoreObject.is_a(node, EventsObjNode);

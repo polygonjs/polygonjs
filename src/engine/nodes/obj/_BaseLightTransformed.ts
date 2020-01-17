@@ -1,11 +1,11 @@
-import {BaseLightObjNode} from './_BaseLight';
+import {TypedLightObjNode} from './_BaseLight';
 
 import {CoreTransform} from 'src/core/Transform';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 // import {Transformed} from './Concerns/Transformed';
 
-export abstract class BaseLightTransformedObjNode<K extends NodeParamsConfig> extends BaseLightObjNode<K> {
+export abstract class BaseLightTransformedObjNode<K extends NodeParamsConfig> extends TypedLightObjNode<K> {
 	create_params() {
 		this.within_param_folder('transform', () => {
 			CoreTransform.create_params(this);

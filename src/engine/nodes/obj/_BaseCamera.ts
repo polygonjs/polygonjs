@@ -42,6 +42,10 @@ export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 		},
 	});
 	// add transform params
+	t = ParamConfig.VECTOR3([0, 0, 0]);
+	r = ParamConfig.VECTOR3([0, 0, 0]);
+	s = ParamConfig.VECTOR3([1, 1, 1]);
+	scale = ParamConfig.FLOAT(1);
 	target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 	near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
 	far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
