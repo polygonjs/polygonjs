@@ -18,6 +18,7 @@ import {BaseMatNodeType} from '../mat/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {GeoObjNode} from '../obj/Geo';
 // import * as Container from '../../Container/Geometry';
 
 // import {AttribTypeParam} from './concerns/AttribTypeParam';
@@ -62,8 +63,18 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	// _objects: Object3D[] = []
 
 	initialize_base_node() {
-		this.flags.add_display();
 		this.flags.add_bypass();
+
+		this.flags.add_display();
+		this.flags.display.set(false);
+		this.flags.display.add_hook(() => {
+			if (this.flags.display.active) {
+				const parent = this.parent as GeoObjNode;
+				if (parent) {
+					parent.display_node_controller.set_display_node(this);
+				}
+			}
+		});
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
 

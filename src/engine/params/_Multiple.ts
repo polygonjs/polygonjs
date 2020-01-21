@@ -65,8 +65,8 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			} else {
 				default_val = (this._default_value as any)[component_name];
 			}
-			component.set_init_value(default_val);
 			component.options.copy(this.options);
+			component.set_init_value(default_val);
 
 			// component.set_scene(this.scene);
 			component.set_name(`${this.name}${component_name}`);

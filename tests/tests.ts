@@ -24,6 +24,7 @@ import './engine/params/utils/TimeDependent';
 
 QUnit.module('obj');
 import './engine/nodes/obj/AmbientLight';
+import './engine/nodes/obj/Geo';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Add';

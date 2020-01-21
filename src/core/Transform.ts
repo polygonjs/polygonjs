@@ -14,6 +14,9 @@ export interface SetParamsFromMatrixOptions {
 	scale?: boolean;
 }
 
+// TODO: remove the "new" in this whole file
+// const euler = new Euler(0, 0, 0, ROTATION_ORDER)
+
 export class CoreTransform {
 	static create_params(node: BaseNodeType) {
 		node.add_param(ParamType.VECTOR3, 't', [0, 0, 0]);

@@ -16,9 +16,10 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 		this.flags.display.add_hook(() => {
 			this.set_used_in_scene(this.flags.display.active);
 		});
-		// this._init_dirtyable_hook();
 		this.dirty_controller.add_post_dirty_hook(async () => {
-			await this.cook_controller.cook_main_without_inputs();
+			if (this.used_in_scene) {
+				await this.cook_controller.cook_main_without_inputs();
+			}
 		});
 	}
 

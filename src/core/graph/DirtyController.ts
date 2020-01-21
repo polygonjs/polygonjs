@@ -46,15 +46,6 @@ export class DirtyController {
 	//@_clean_for_frame = this.context().frame()
 	//this.post_remove_dirty_state(message)
 	set_dirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
-		// if(!this.scene().is_loading()){
-		// 	if(this.full_path){
-		// 		console.log("set dirty", this.full_path(), original_trigger_graph_node)
-		// 	}
-		// }
-
-		// if(this.scene().is_loading()){return}
-		// if !original_trigger_graph_node?
-		// 	console.log("START", this)
 		if (propagate == null) {
 			propagate = true;
 		}

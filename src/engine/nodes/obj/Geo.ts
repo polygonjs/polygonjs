@@ -21,7 +21,7 @@ import {GeoNodeChildrenMap} from 'src/engine/poly/registers/Sop';
 class GeoObjParamConfig extends NodeParamsConfig {
 	t = ParamConfig.VECTOR3([0, 0, 0]);
 	r = ParamConfig.VECTOR3([0, 0, 0]);
-	s = ParamConfig.VECTOR3([0, 0, 0]);
+	s = ParamConfig.VECTOR3([1, 1, 1]);
 	scale = ParamConfig.FLOAT(1);
 	look_at = ParamConfig.OPERATOR_PATH('');
 	up = ParamConfig.VECTOR3([0, 1, 0]);
@@ -34,6 +34,9 @@ const ParamsConfig = new GeoObjParamConfig();
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	params_config = ParamsConfig;
 	private _display_node_controller = new DisplayNodeController(this);
+	get display_node_controller() {
+		return this._display_node_controller;
+	}
 	static type() {
 		return 'geo';
 	}
@@ -54,6 +57,11 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// 	affects_hierarchy: true,
 		// });
 		// this._init_dirtyable_hook();
+		this.dirty_controller.add_post_dirty_hook(async () => {
+			if (this.used_in_scene) {
+				await this.cook_controller.cook_main_without_inputs();
+			}
+		});
 
 		this.io.inputs.set_count_to_one_max();
 	}
@@ -64,9 +72,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 	//base_layers_included: -> false
 
-	create_params() {
-		// CoreTransform.create_params(this);
-	}
+	// create_params() {
+	// 	// CoreTransform.create_params(this);
+	// }
 	//this.create_layers_params()
 
 	request_display_node() {
@@ -139,7 +147,6 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// this.create_node('text')
 	}
 	cook() {
-		// TODO: why does it cook twice when changing a param like layers
 		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 

@@ -81,6 +81,7 @@ QUnit.test('ambient light display flag off does not cook', async (assert) => {
 	assert.equal(ambient_light1.name, 'ambient_light1');
 	assert.equal(main_group.children.length, 3);
 
+	console.log('set display false');
 	ambient_light1.flags.display.set(false);
 	assert.equal(main_group.children.length, 2);
 
@@ -88,9 +89,9 @@ QUnit.test('ambient light display flag off does not cook', async (assert) => {
 
 	assert.equal(ambient_light1.cook_controller.cooks_count, 0);
 	ambient_light1.p.intensity.set(2);
-	// window.sleep(100);
-	assert.equal(ambient_light1.object.intensity, 1);
-	assert.equal(ambient_light1.cook_controller.cooks_count, 0);
+	await window.sleep(100);
+	assert.equal(ambient_light1.object.intensity, 1, 'intensity should be 1');
+	assert.equal(ambient_light1.cook_controller.cooks_count, 0, 'should not have cooked');
 
 	window.scene.performance.stop();
 });
