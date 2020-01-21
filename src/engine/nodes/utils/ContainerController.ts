@@ -32,8 +32,8 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 		if (this.node.flags.bypass?.active) {
 			const input_index = 0;
 			this.request_input_container_p(input_index).then((container) => {
+				this.node.remove_dirty_state();
 				if (container) {
-					this.node.remove_dirty_state();
 					this.notify_requesters(container);
 				} else {
 					this.node.states.error.set('input invalid');

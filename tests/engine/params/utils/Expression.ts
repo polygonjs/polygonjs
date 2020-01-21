@@ -10,6 +10,8 @@ QUnit.test('a param can be set to errored with a bad expression then back to non
 	assert.ok(param.states.error.active);
 	assert.equal(param.states.error.message, 'expression error: "1+" (cannot parse expression)');
 
+	await window.sleep(10); // wait for node to try and cook
+
 	param.set('1+1');
 	await param.compute();
 	assert.equal(param.value, 2);

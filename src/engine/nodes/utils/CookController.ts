@@ -116,7 +116,7 @@ export class CookController {
 			this.node.remove_dirty_state();
 			this._terminate_cook_process();
 		} else {
-			console.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp);
+			POLY.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp);
 			this._cooking = false;
 			this.cook_main();
 		}

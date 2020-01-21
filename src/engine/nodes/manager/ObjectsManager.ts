@@ -1,5 +1,5 @@
 import {Group} from 'three/src/objects/Group';
-import lodash_isEqual from 'lodash/isEqual';
+// import lodash_isEqual from 'lodash/isEqual';
 // import lodash_map from 'lodash/map';
 
 import {TypedBaseManagerNode} from './_Base';
@@ -42,7 +42,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	private _queued_nodes_by_id: Dictionary<BaseObjNodeType> = {};
 	private _queued_nodes_by_path: Dictionary<BaseObjNodeType> = {};
 	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
-	private _loaded_geo_node_by_id: Dictionary<boolean> = {};
+	// private _loaded_geo_node_by_id: Dictionary<boolean> = {};
 	private _process_queue_start: number;
 
 	initialize_node() {
@@ -132,9 +132,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 			// do the update here if there are no objects to load
 			// otherwise an empty scene will have a loader that never gets removed
-			if (Object.keys(this._expected_geo_nodes).length == 0) {
-				this.update_on_all_objects_loaded();
-			}
+			// if (Object.keys(this._expected_geo_nodes).length == 0) {
+			// 	this.update_on_all_objects_loaded();
+			// }
 		});
 	}
 
@@ -214,6 +214,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 				if (node.used_in_scene) {
 					parent_object.add(node.object);
+					node.cook_controller.cook_main_without_inputs();
 				} else {
 					parent_object.remove(node.object);
 				}
@@ -266,25 +267,25 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return node_by_id;
 	}
 
-	async notify_geo_loaded(geo_node: GeoObjNode) {
-		this._loaded_geo_node_by_id = this._loaded_geo_node_by_id || {};
-		this._loaded_geo_node_by_id[geo_node.graph_node_id] = true;
+	// async notify_geo_loaded(geo_node: GeoObjNode) {
+	// 	this._loaded_geo_node_by_id = this._loaded_geo_node_by_id || {};
+	// 	this._loaded_geo_node_by_id[geo_node.graph_node_id] = true;
 
-		this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
+	// 	this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
 
-		if (this.scene) {
-			this.scene.loading_controller.on_first_object_loaded();
+	// 	if (this.scene) {
+	// 		this.scene.loading_controller.on_first_object_loaded();
 
-			if (lodash_isEqual(Object.keys(this._loaded_geo_node_by_id), Object.keys(this._expected_geo_nodes))) {
-				this.update_on_all_objects_loaded();
-			}
-		}
-	}
+	// 		if (lodash_isEqual(Object.keys(this._loaded_geo_node_by_id), Object.keys(this._expected_geo_nodes))) {
+	// 			this.update_on_all_objects_loaded();
+	// 		}
+	// 	}
+	// }
 
-	update_on_all_objects_loaded() {
-		this.scene.loading_controller.on_all_objects_loaded();
-		// this.scene.cube_cameras_controller.on_all_objects_loaded(); // TODO: typescript
-	}
+	// update_on_all_objects_loaded() {
+	// 	this.scene.loading_controller.on_all_objects_loaded();
+	// 	// this.scene.cube_cameras_controller.on_all_objects_loaded(); // TODO: typescript
+	// }
 
 	add_to_parent_transform(node: BaseObjNodeType) {
 		this.update_object(node);

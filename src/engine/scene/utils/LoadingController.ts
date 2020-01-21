@@ -65,7 +65,7 @@ export class LoadingController {
 		}
 	}
 
-	on_all_objects_loaded() {
-		// POLY.viewer_loaders_manager().dipose_loaders()
-	}
+	// on_all_objects_loaded() {
+	// 	// POLY.viewer_loaders_manager().dipose_loaders()
+	// }
 }

@@ -64,6 +64,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 
 	const geo1 = window.geo1;
 
+	await window.sleep(10);
 	geo1.flags.display.set(false);
 	assert.equal(main_group.children.length, 1);
 
@@ -178,7 +179,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	assert.equal(positions[1], 2.5);
 });
 
-QUnit.test('only the top group from a file sop with hierarchy is added to the geo object', async (assert) => {
+QUnit.test('geo obj: only the top group from a file sop with hierarchy is added to the geo object', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
@@ -192,7 +193,35 @@ QUnit.test('only the top group from a file sop with hierarchy is added to the ge
 	file1.p.url.set('/examples/models/wolf.obj');
 
 	file1.flags.display.set(true);
-	await window.sleep(1000);
+	await window.sleep(200);
 	assert.equal(obj.children.length, 1);
 	assert.equal(obj.children[0].children.length, 4);
+});
+
+QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
+	window.scene.performance.start();
+	await window.sleep(10);
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	console.log('check');
+	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
+	scene.set_frame(1);
+	scene.set_frame(3);
+	assert.equal(geo1.cook_controller.cooks_count, 0);
+	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
+	geo1.p.r.y.set('$F+10');
+
+	assert.ok(geo1.is_dirty);
+	await window.sleep(20);
+	assert.equal(geo1.cook_controller.cooks_count, 1);
+	assert.notOk(geo1.is_dirty);
+	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
+
+	scene.set_frame(37);
+	await window.sleep(20);
+	assert.equal(geo1.cook_controller.cooks_count, 2);
+	assert.notOk(geo1.is_dirty);
+	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);
+
+	window.scene.performance.stop();
 });

@@ -29,8 +29,8 @@ export class Poly {
 		return false;
 	}
 
-	log(message: string) {
-		console.log(message);
+	log(...args: any[]) {
+		console.log(...args);
 	}
 	set_env(env: string) {
 		this._env = env;
