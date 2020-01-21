@@ -4,7 +4,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT', K> {
+export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT', BaseEventNodeType, K> {
 	container_controller: TypedContainerController<EventContainer> = new TypedContainerController<EventContainer>(
 		this,
 		EventContainer
@@ -26,3 +26,6 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 		this.params.eval_all();
 	}
 }
+
+export type BaseEventNodeType = TypedEventNode<any>;
+export class BaseEventNodeClass extends TypedEventNode<any> {}

@@ -2,7 +2,7 @@ import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
 
 import {CoreTransform} from 'src/core/Transform';
-import {TypedObjNode} from './_Base';
+import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
 import {ControlsController} from './utils/cameras/ControlsController';
 import {LayersController} from './utils/LayersController';
 import {PostProcessController} from './utils/cameras/PostProcessController';
@@ -51,6 +51,7 @@ export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 	far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
 	aspect = ParamConfig.FLOAT(1);
 	lock_width = ParamConfig.BOOLEAN(1);
+	look_at = ParamConfig.OPERATOR_PATH('');
 
 	// add layer params
 	// add background params
@@ -72,8 +73,12 @@ export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 	// add post params
 }
 
-export class TypedCameraObjNode<K extends BaseCameraObjParamsConfig> extends TypedObjNode<K> {
-	protected _object: OrthoOrPerspCamera;
+export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
+	O,
+	K
+> {
+	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
+	protected _object: O;
 	protected _aspect: number;
 	get object() {
 		return this._object;
@@ -100,9 +105,15 @@ export class TypedCameraObjNode<K extends BaseCameraObjParamsConfig> extends Typ
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
 
+	protected _used_in_scene: boolean = true;
 	initialize_node() {
 		this.io.inputs.set_count_to_one_max();
-		this._init_dirtyable_hook();
+		// this._init_dirtyable_hook();
+
+		this.flags.add_display();
+		this.flags.display.add_hook(() => {
+			this.set_used_in_scene(this.flags.display.active);
+		});
 	}
 
 	create_common_params() {
@@ -206,5 +217,5 @@ export class TypedCameraObjNode<K extends BaseCameraObjParamsConfig> extends Typ
 // 	if @_param_controls? && @_param_controls != ''
 // 		Core.Walker.find_node(this, @_param_controls)
 
-export type BaseCameraObjNodeType = TypedCameraObjNode<BaseCameraObjParamsConfig>;
-export class BaseCameraObjNodeClass extends TypedCameraObjNode<BaseCameraObjParamsConfig> {}
+export type BaseCameraObjNodeType = TypedCameraObjNode<OrthoOrPerspCamera, BaseCameraObjParamsConfig>;
+export class BaseCameraObjNodeClass extends TypedCameraObjNode<OrthoOrPerspCamera, BaseCameraObjParamsConfig> {}

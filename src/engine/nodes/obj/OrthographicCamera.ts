@@ -19,9 +19,8 @@ const DEFAULT = {
 class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {}
 const ParamsConfig = new PerspectiveCameraObjParamConfig();
 
-export class OrthographicCameraObjNode extends TypedCameraObjNode<PerspectiveCameraObjParamConfig> {
+export class OrthographicCameraObjNode extends TypedCameraObjNode<OrthographicCamera, PerspectiveCameraObjParamConfig> {
 	params_config = ParamsConfig;
-	protected _object: OrthographicCamera;
 	_param_size: number;
 	_param_vertical_size_range: Vector2;
 	_param_horizontal_size_range: Vector2;

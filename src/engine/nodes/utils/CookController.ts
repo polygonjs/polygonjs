@@ -35,10 +35,11 @@ export class CookController {
 	// 	#
 	private _init_cooking_state() {
 		this._cooking = true;
+		this._cooking_dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
 	}
 	private _init_cooking_start_time(perf_active?: boolean) {
 		if (perf_active == null) {
-			perf_active = this.node.scene.performance.recording_started();
+			perf_active = this.node.scene.performance.started;
 		}
 		if (perf_active) {
 			this._cook_time_start = performance.now();
@@ -65,8 +66,7 @@ export class CookController {
 			return;
 		}
 		this._init_cooking_state();
-		this._cooking_dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
-		const perf_active = this.node.scene.performance.recording_started();
+		const perf_active = this.node.scene.performance.started;
 		if (perf_active) {
 			this._cook_time_with_inputs_start = performance.now();
 		}
@@ -75,7 +75,6 @@ export class CookController {
 		//this._block_params_dirty_propagation()
 		const input_containers = await this.evaluate_inputs_and_params();
 
-		//console.log("#{this.full_path()} cook start")
 		this._init_cooking_start_time(perf_active);
 
 		const input_contents = [];
@@ -100,26 +99,24 @@ export class CookController {
 			return;
 		}
 		this._init_cooking_state();
-		const perf_active = this.node.scene.performance.recording_started();
-		this._init_cooking_start_time(perf_active);
+		this._init_cooking_start_time();
 		this.node.states.error.clear();
 
 		await this.node.params.eval_all();
 		await this._start_cook_if_no_errors([]);
 	}
 	// catch e
-	// 	console.error(this.full_path())
-	// 	console.error(e)
 	// 	this.set_error("failed to cook: #{e}")
 
 	end_cook(message?: string | null) {
-		this._increase_cooks_count();
+		this._increment_cooks_count();
 
 		const dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
 		if (dirty_timestamp == null || dirty_timestamp === this._cooking_dirty_timestamp) {
 			this.node.remove_dirty_state();
 			this._terminate_cook_process();
 		} else {
+			console.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp);
 			this._cooking = false;
 			this.cook_main();
 		}
@@ -138,7 +135,7 @@ export class CookController {
 			setTimeout(this.node.container_controller.notify_requesters.bind(this.node.container_controller), 0);
 		}
 	}
-	private _increase_cooks_count() {
+	private _increment_cooks_count() {
 		if (this.is_cooking) {
 			if (this._cook_time_start != null) {
 				this._cooks_count += 1;
@@ -155,7 +152,7 @@ export class CookController {
 	// }
 
 	_record_cook_time() {
-		if (this.node.scene.performance.recording_started()) {
+		if (this.node.scene.performance.started) {
 			const cook_time_end = performance.now();
 
 			if (this._cook_time_with_inputs_start != null) {
@@ -175,7 +172,7 @@ export class CookController {
 			this._max_cook_time = Math.max(this._max_cook_time, this._cook_time);
 		}
 
-		if (this.node.scene.performance.recording_started()) {
+		if (this.node.scene.performance.started) {
 			this.node.scene.performance.record_node_cook_data(this.node);
 		}
 	}
@@ -190,7 +187,7 @@ export class CookController {
 		const input_containers = await this.node.io.inputs.eval_required_inputs_p();
 		// const inputs_eval_key = input_containers.map( c => c.eval_key()).join('-');
 
-		if (this.node.scene.performance.recording_started()) {
+		if (this.node.scene.performance.started) {
 			this._cook_time_params_start = performance.now();
 		}
 

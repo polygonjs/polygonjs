@@ -23,7 +23,7 @@ export class Poly {
 		return false;
 	}
 	desktop_controller(): any {}
-	notify_scene_loaded(scene: PolyScene) {}
+	// notify_scene_loaded(scene: PolyScene) {}
 
 	player_mode(): boolean {
 		return false;

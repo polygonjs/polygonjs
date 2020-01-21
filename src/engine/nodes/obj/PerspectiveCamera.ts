@@ -2,7 +2,6 @@ import lodash_clamp from 'lodash/clamp';
 
 import {Vector2} from 'three/src/math/Vector2';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-const THREE = {PerspectiveCamera, Vector2};
 import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, BaseCameraObjParamsConfig} from './_BaseCamera';
 import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -20,23 +19,22 @@ class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {
 }
 const ParamsConfig = new PerspectiveCameraObjParamConfig();
 
-export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCameraObjParamConfig> {
+export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, PerspectiveCameraObjParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'perspective_camera';
 	}
 
-	_object: THREE.PerspectiveCamera;
 	_param_fov: number;
-	_param_vertical_fov_range: THREE.Vector2;
-	_param_horizontal_fov_range: THREE.Vector2;
+	_param_vertical_fov_range: Vector2;
+	_param_horizontal_fov_range: Vector2;
 
 	protected get background_controller_constructor() {
 		return PerspectiveCameraBackgroundController;
 	}
 
 	create_object() {
-		return new THREE.PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
+		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}
 
 	create_params() {
@@ -80,7 +78,7 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 			this._object.updateProjectionMatrix();
 		}
 	}
-	private get_zoom(start_zoom: number, other_fov: number, range: THREE.Vector2) {
+	private get_zoom(start_zoom: number, other_fov: number, range: Vector2) {
 		let zoom = start_zoom;
 		if (range) {
 			if (other_fov < range.x || other_fov > range.y) {

@@ -44,7 +44,7 @@ import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/params/ParamsValueAccessor';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {ProcessingContext} from './utils/ProcessingContext';
-import {IOController} from './utils/IOController';
+import {IOController} from './utils/connections/IOController';
 
 import CoreSelection from 'src/core/NodeSelection';
 // import {BaseContainer} from '../containers/_Base';
@@ -90,7 +90,7 @@ import {ContainableMap} from 'src/engine/containers/utils/ContainableMap';
 type KT = keyof ContainerMap;
 // type Container = ContainerMap[KT];
 
-export class TypedNode<T extends KT, K extends NodeParamsConfig> extends CoreGraphNode {
+export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodeParamsConfig> extends CoreGraphNode {
 	container_controller: TypedContainerController<ContainerMap[T]>;
 
 	private _parent_controller: HierarchyParentController | null;
@@ -111,7 +111,7 @@ export class TypedNode<T extends KT, K extends NodeParamsConfig> extends CoreGra
 
 	private _processing_context: ProcessingContext;
 	private _name_controller: NameController;
-	private _io: IOController;
+	private _io: IOController<NT>;
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
@@ -145,8 +145,8 @@ export class TypedNode<T extends KT, K extends NodeParamsConfig> extends CoreGra
 	get cook_controller(): CookController {
 		return (this._cook_controller = this._cook_controller || new CookController(this));
 	}
-	get io(): IOController {
-		return (this._io = this._io || new IOController(this));
+	get io(): IOController<NT> {
+		return (this._io = this._io || new IOController<NT>((<unknown>this) as NT));
 	}
 	get name_controller(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
@@ -291,6 +291,9 @@ export class TypedNode<T extends KT, K extends NodeParamsConfig> extends CoreGra
 	create_node(type: string) {
 		return this.children_controller.create_node(type);
 	}
+	remove_node(node: BaseNodeType) {
+		return this.children_controller.remove_node(node);
+	}
 	children() {
 		return this.children_controller.children();
 	}
@@ -302,7 +305,7 @@ export class TypedNode<T extends KT, K extends NodeParamsConfig> extends CoreGra
 	}
 
 	// inputs
-	set_input(index: number, node: BaseNodeType) {
+	set_input(index: number, node: NT) {
 		this.io.inputs.set_input(index, node);
 	}
 
@@ -332,5 +335,5 @@ export class TypedNode<T extends KT, K extends NodeParamsConfig> extends CoreGra
 	}
 }
 
-export type BaseNodeType = TypedNode<any, any>;
-export class BaseNodeClass extends TypedNode<any, any> {}
+export type BaseNodeType = TypedNode<any, BaseNodeType, any>;
+export class BaseNodeClass extends TypedNode<any, BaseNodeType, any> {}

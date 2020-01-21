@@ -47,7 +47,7 @@ export class CorePerformance {
 		this._nodes_cook_data = {};
 	}
 
-	recording_started(): boolean {
+	get started(): boolean {
 		return this._started;
 	}
 
@@ -60,7 +60,7 @@ export class CorePerformance {
 	}
 
 	record(name: string) {
-		if (!this.recording_started()) {
+		if (!this.started) {
 			this.start();
 		}
 

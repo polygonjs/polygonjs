@@ -10,16 +10,16 @@ export class LoadingController {
 	mark_as_loading() {
 		this._set_loading_state(true);
 	}
-	mark_as_loaded() {
-		this._set_loading_state(false);
-		POLY.notify_scene_loaded(this.scene);
+	async mark_as_loaded() {
+		await this._set_loading_state(false);
+		// POLY.notify_scene_loaded(this.scene);
 		// this.cooker().block()
 		// this.root().set_children_dirty_without_propagation()
 		// this.cooker().unblock()
 	}
-	_set_loading_state(state: boolean) {
+	private async _set_loading_state(state: boolean) {
 		this._loading_state = state;
-		this.set_auto_update(!this._loading_state);
+		await this.set_auto_update(!this._loading_state);
 	}
 	get is_loading() {
 		return this._loading_state;
@@ -31,7 +31,7 @@ export class LoadingController {
 		return this._auto_updating;
 	} // _init_auto_update: ->
 	// 	this.set_auto_update(true)
-	set_auto_update(new_state: boolean) {
+	async set_auto_update(new_state: boolean) {
 		if (this._auto_updating !== new_state) {
 			this._auto_updating = new_state;
 			if (this._auto_updating) {
@@ -40,10 +40,11 @@ export class LoadingController {
 
 				const root = this.scene.root;
 				if (root) {
-					const c = async () => {
-						await root.process_queue();
-					};
-					setTimeout(c, 50);
+					await root.process_queue();
+					// const c = async () => {
+					// 	await root.process_queue();
+					// };
+					// setTimeout(c, 50);
 				}
 			} else {
 				// if (callback != null) { callback(); }

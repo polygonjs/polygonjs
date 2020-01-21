@@ -1,23 +1,30 @@
-import {TypedObjNode} from './_Base';
+import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
 import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export abstract class TypedLightObjNode<K extends NodeParamsConfig> extends TypedObjNode<K> {
-	protected _object: Light;
+export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsConfig> extends TypedObjNode<O, K> {
+	public readonly render_order: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
 	get object() {
 		return this._object;
 	}
+	protected _used_in_scene: boolean = true;
 	initialize_base_node() {
 		super.initialize_base_node();
 		this.flags.add_display();
-		this._init_dirtyable_hook();
+		this.flags.display.add_hook(() => {
+			this.set_used_in_scene(this.flags.display.active);
+		});
+		// this._init_dirtyable_hook();
+		this.dirty_controller.add_post_dirty_hook(async () => {
+			await this.cook_controller.cook_main_without_inputs();
+		});
 	}
 
 	create_params() {
-		this.create_light_params();
-		return this.create_shadow_params_main();
+		// this.create_light_params();
+		// this.create_shadow_params_main();
 	}
 
 	create_shadow_params_main() {
@@ -76,5 +83,5 @@ export abstract class TypedLightObjNode<K extends NodeParamsConfig> extends Type
 	}
 }
 
-export type BaseLightObjNodeType = TypedLightObjNode<NodeParamsConfig>;
-export class BaseLightObjNodeClass extends TypedLightObjNode<NodeParamsConfig> {}
+export type BaseLightObjNodeType = TypedLightObjNode<Light, NodeParamsConfig>;
+export class BaseLightObjNodeClass extends TypedLightObjNode<Light, NodeParamsConfig> {}

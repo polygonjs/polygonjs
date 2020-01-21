@@ -5,7 +5,7 @@
 import {CoreGraphNode} from './CoreGraphNode';
 
 // not sure how I can have caller: DirtyableMixin if DirtyableMixin is not yet defined
-export type PostDirtyHook = (caller: CoreGraphNode) => void;
+export type PostDirtyHook = (caller?: CoreGraphNode) => void;
 
 // type Constructor<T = {}> = new (...args: any[]) => T;
 export class DirtyController {
@@ -90,10 +90,15 @@ export class DirtyController {
 		}
 	}
 
-	private run_post_dirty_hooks(original_trigger_graph_node: CoreGraphNode) {
-		if (this._post_dirty_hooks) {
-			for (let hook of this._post_dirty_hooks) {
-				hook(original_trigger_graph_node);
+	run_post_dirty_hooks(original_trigger_graph_node?: CoreGraphNode) {
+		const cooker = this.node.scene.cooker;
+		if (cooker.blocked) {
+			cooker.enqueue(this.node);
+		} else {
+			if (this._post_dirty_hooks) {
+				for (let hook of this._post_dirty_hooks) {
+					hook(original_trigger_graph_node);
+				}
 			}
 		}
 	}
@@ -102,17 +107,18 @@ export class DirtyController {
 	// 	throw 'Dirtyable.cooker requires implementation';
 	// }
 	set_successors_dirty(original_trigger_graph_node?: CoreGraphNode): void {
-		const cooker = this.node.scene.cooker;
-		cooker.block();
+		// const cooker = this.node.scene.cooker;
+		// cooker.block();
 
 		const propagate = false;
 		this._cached_successors = this._cached_successors || this.node.graph_all_successors(); //this._dirtyable_all_successors(original_trigger_graph_node);
 		// successors = successors.filter(n=>!n.is_dirty())
 		for (let successor of this._cached_successors) {
 			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);
+			// console.log(successor);
 		}
 
-		cooker.unblock();
+		// cooker.unblock();
 	}
 
 	// _dirtyable_all_successors(original_trigger_graph_node: CoreGraphNode): CoreGraphNode[] {

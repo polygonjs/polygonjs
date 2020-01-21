@@ -1,7 +1,9 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {ObjNodeRenderOrder} from './_Base';
 
 export class MaterialsObjNode extends BaseManagerObjNode {
+	public readonly render_order: number = ObjNodeRenderOrder.MAT;
 	static type() {
 		return 'materials';
 	}

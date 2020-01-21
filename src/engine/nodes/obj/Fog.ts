@@ -1,5 +1,5 @@
 // import {BaseNode} from '../_Base';
-import {TypedObjNode} from './_Base';
+import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
 import {FogExp2} from 'three/src/scenes/FogExp2';
 import {Fog} from 'three/src/scenes/Fog';
 import {Color} from 'three/src/math/Color';
@@ -15,6 +15,7 @@ const DEFAULT = {
 // 	let DEFAULT = undefined;
 // 	Fog = class Fog extends BaseModules {
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {Object3D} from 'three/src/core/Object3D';
 class FogObjParamConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR(DEFAULT.color.toArray() as [number, number, number]);
 	exponential = ParamConfig.BOOLEAN(0);
@@ -23,8 +24,10 @@ class FogObjParamConfig extends NodeParamsConfig {
 	far = ParamConfig.FLOAT(100, {range: [0, 100]});
 }
 const ParamsConfig = new FogObjParamConfig();
-export class FogObjNode extends TypedObjNode<FogObjParamConfig> {
+export class FogObjNode extends TypedObjNode<Object3D, FogObjParamConfig> {
 	params_config = ParamsConfig;
+	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	public readonly add_to_hierarchy: boolean = false;
 
 	protected _linear_fog: Fog;
 	protected _linear_fogexp2: FogExp2;
@@ -36,7 +39,7 @@ export class FogObjNode extends TypedObjNode<FogObjParamConfig> {
 		// });
 
 		// this.set_inputs_count_to_zero();
-		this._init_dirtyable_hook();
+		// this._init_dirtyable_hook();
 
 		this._linear_fog = new Fog(DEFAULT.color.getHex(), DEFAULT.near, DEFAULT.far);
 		this._linear_fogexp2 = new FogExp2(DEFAULT.color.getHex(), DEFAULT.density);

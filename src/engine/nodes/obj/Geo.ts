@@ -31,7 +31,7 @@ class GeoObjParamConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new GeoObjParamConfig();
 
-export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
+export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	params_config = ParamsConfig;
 	private _display_node_controller = new DisplayNodeController(this);
 	static type() {
@@ -41,15 +41,19 @@ export class GeoObjNode extends TypedObjNode<GeoObjParamConfig> {
 	// 	return NodeContext.SOP;
 	// }
 
+	protected _used_in_scene: boolean = true;
 	initialize_node() {
 		this.children_controller.init(NodeContext.SOP);
 
 		this.flags.add_display();
+		this.flags.display.add_hook(() => {
+			this.set_used_in_scene(this.flags.display.active);
+		});
 		// this._init_display_flag({
 		// 	multiple_display_flags_allowed: false,
 		// 	affects_hierarchy: true,
 		// });
-		this._init_dirtyable_hook();
+		// this._init_dirtyable_hook();
 
 		this.io.inputs.set_count_to_one_max();
 	}

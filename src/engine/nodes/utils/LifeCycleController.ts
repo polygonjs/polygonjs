@@ -21,7 +21,7 @@ export class LifeCycleController {
 		this._on_child_remove_hooks.push(callback);
 	}
 	on_child_remove(node: BaseNodeType) {
-		this.execute_hooks_with_child_node(this._on_child_add_hooks, node);
+		this.execute_hooks_with_child_node(this._on_child_remove_hooks, node);
 	}
 
 	add_create_hook(callback: Callback) {

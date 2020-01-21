@@ -19,12 +19,12 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 		return new Promise((resolve, reject) => {
 			this._callbacks.push(resolve);
 
-			const cooker = this.node.scene.cooker;
-			if (cooker.blocked()) {
-				cooker.enqueue(this.node);
-			} else {
-				setTimeout(this.process_container_request.bind(this), 0);
-			}
+			// const cooker = this.node.scene.cooker;
+			// if (cooker.blocked()) {
+			// 	cooker.enqueue(this.node);
+			// } else {
+			setTimeout(this.process_container_request.bind(this), 0);
+			// }
 		});
 	}
 

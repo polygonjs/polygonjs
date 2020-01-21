@@ -6,7 +6,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
-export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE', K> {
+export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE', BaseCopNodeType, K> {
 	container_controller: TypedContainerController<TextureContainer> = new TypedContainerController<TextureContainer>(
 		this,
 		TextureContainer

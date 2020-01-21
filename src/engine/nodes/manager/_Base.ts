@@ -4,7 +4,7 @@ import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ManagerContainer} from 'src/engine/containers/Manager';
 
-export class TypedNodeManager<K extends NodeParamsConfig> extends TypedNode<'MANAGER', K> {
+export class TypedBaseManagerNode<K extends NodeParamsConfig> extends TypedNode<'MANAGER', BaseManagerNodeType, K> {
 	container_controller: TypedContainerController<ManagerContainer> = new TypedContainerController<ManagerContainer>(
 		this,
 		ManagerContainer
@@ -14,3 +14,6 @@ export class TypedNodeManager<K extends NodeParamsConfig> extends TypedNode<'MAN
 		return NodeContext.MANAGER;
 	}
 }
+
+export type BaseManagerNodeType = TypedBaseManagerNode<any>;
+export class BaseManagerNodeClass extends TypedBaseManagerNode<any> {}

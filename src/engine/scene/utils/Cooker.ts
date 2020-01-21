@@ -1,13 +1,13 @@
 // import {CoreGraphNode} from './CoreGraphNode';
 // import { CoreGraphNodeScene } from './CoreGraphNodeScene';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 // interface CookerQueue {
 // 	[propName: string]: CoreGraphNodeSceneNamed;
 // }
 
 export class Cooker {
-	_queue: Dictionary<BaseNodeType> = {};
+	_queue: Dictionary<CoreGraphNode> = {};
 	_block_level: number = 0;
 
 	constructor() {
@@ -25,25 +25,24 @@ export class Cooker {
 	}
 	// unblock_later: ->
 	// 	setTimeout( this.unblock.bind(this), 0 )
-	blocked() {
+	get blocked() {
 		return this._block_level > 0;
 	}
 
-	enqueue(node: BaseNodeType) {
+	enqueue(node: CoreGraphNode) {
 		this._queue[node.graph_node_id] = node;
 	}
 
 	process_queue() {
-		if (this.blocked()) {
+		if (this.blocked) {
 			return;
 		}
-
-		let node: BaseNodeType;
+		let node: CoreGraphNode;
 		for (let id of Object.keys(this._queue)) {
 			node = this._queue[id];
 			if (node) {
 				delete this._queue[id];
-				node.container_controller.process_container_request();
+				node.dirty_controller.run_post_dirty_hooks();
 			}
 		}
 	}

@@ -24,9 +24,9 @@ export interface InputsControllerOptions {
 	depends_on_inputs?: boolean;
 }
 
-export class InputsController {
+export class InputsController<T extends BaseNodeType> {
 	_graph_node_inputs: CoreGraphNode[] = [];
-	_inputs: Array<BaseNodeType | null> = [];
+	_inputs: Array<T | null> = [];
 	_has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
 	_named_inputs: NamedConnection[] = [];
@@ -39,7 +39,7 @@ export class InputsController {
 	private _inputs_clonable_states: InputCloneMode[];
 	private _override_clonable_state: boolean = false;
 
-	constructor(protected node: BaseNodeType, options: InputsControllerOptions = {}) {
+	constructor(protected node: T, options: InputsControllerOptions = {}) {
 		this.set_options(options);
 	}
 
@@ -270,11 +270,7 @@ export class InputsController {
 		}
 	}
 
-	set_input(
-		input_index_or_name: number | string,
-		node: BaseNodeType | null,
-		output_index_or_name: number | string = 0
-	) {
+	set_input(input_index_or_name: number | string, node: T | null, output_index_or_name: number | string = 0) {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
 		let output_index = 0;
 		if (node) {
@@ -350,10 +346,10 @@ export class InputsController {
 		}
 	}
 	// TODO: make hooks like post set dirty hooks
-	post_set_input() {}
+	post_set_input() {} // TODO: typescript: handle hook
 	//
 
-	remove_input(node: BaseNodeType) {
+	remove_input(node: T) {
 		lodash_each(this.inputs(), (input, index) => {
 			if (input != null && node != null) {
 				if (input.graph_node_id === node.graph_node_id) {
@@ -363,11 +359,11 @@ export class InputsController {
 		});
 	}
 
-	input(input_index: number): BaseNodeType | null {
+	input(input_index: number): T | null {
 		return this._inputs[input_index];
 	}
 	// TODO: the named_input and named_output API really needs to change
-	named_input(input_name: string): BaseNodeType | null {
+	named_input(input_name: string): T | null {
 		if (this.has_named_inputs()) {
 			const input_index = this.get_input_index(input_name);
 			return this._inputs[input_index];

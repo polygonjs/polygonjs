@@ -158,12 +158,12 @@ export class HierarchyChildrenController {
 	// post_add_node(node: BaseNode) {}
 	// post_remove_node(node: BaseNode) {}
 
-	remove_node(child_node: BaseNodeType) {
+	remove_node(child_node: BaseNodeType): void {
 		if (child_node.parent != this.node) {
 			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
 		} else {
 			// set other dependencies dirty
-			child_node.set_dirty(this.node);
+			child_node.set_successors_dirty(this.node);
 
 			if (this._is_dependent_on_children) {
 				this._children_node.remove_graph_input(child_node);
@@ -205,7 +205,6 @@ export class HierarchyChildrenController {
 			child_node.lifecycle.on_delete();
 			// this.post_remove_node(node);
 			child_node.emit(NodeEvent.DELETED, {parent: this.node});
-			return child_node;
 		}
 	}
 

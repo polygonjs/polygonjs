@@ -9,12 +9,12 @@ interface OutputsOptions {
 	has_outputs?: boolean;
 }
 
-export class OutputsController {
+export class OutputsController<T extends BaseNodeType> {
 	private _has_outputs: boolean = false;
 	private _named_outputs: NamedConnection[] = [];
 	private _has_named_outputs: boolean = false;
 
-	constructor(private node: BaseNodeType) {}
+	constructor(private node: T) {}
 
 	init(options?: OutputsOptions) {
 		if (options == null) {

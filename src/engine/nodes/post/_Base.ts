@@ -10,7 +10,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export class TypedPostProcessNode<K extends NodeParamsConfig> extends TypedNode<'POST', K> {
+export class TypedPostProcessNode<K extends NodeParamsConfig> extends TypedNode<'POST', BasePostProcessNodeType, K> {
 	container_controller: TypedContainerController<PostProcessContainer> = new TypedContainerController<
 		PostProcessContainer
 	>(this, PostProcessContainer);

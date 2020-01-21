@@ -44,7 +44,7 @@ enum MESSAGE {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETRY', K> {
+export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETRY', BaseSopNodeType, K> {
 	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
 		this,
 		GeometryContainer

@@ -9,6 +9,7 @@ import {TransformController} from './utils/TransformController';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypedContainerController} from '../utils/ContainerController';
+import {ObjectsManagerNode} from '../manager/ObjectsManager';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
@@ -20,11 +21,26 @@ interface BaseObjNodeVisitor extends BaseNodeVisitor {
 	visit_node_obj: (node: BaseObjNodeType) => void;
 }
 
-export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT', K> {
+export enum ObjNodeRenderOrder {
+	MANAGER = 0,
+	FOG = 1,
+	CAMERA = 2,
+	LIGHT = 3,
+	EVENT = 4,
+	MAT = 5,
+}
+
+export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<
+	'OBJECT',
+	BaseObjNodeType,
+	K
+> {
 	container_controller: TypedContainerController<ObjectContainer> = new TypedContainerController<ObjectContainer>(
 		this,
 		ObjectContainer
 	);
+	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	public readonly add_to_hierarchy: boolean = true;
 	static node_context(): NodeContext {
 		return NodeContext.OBJ;
 	}
@@ -32,8 +48,8 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	protected _object: Object3D;
-	_sop_loaded: boolean = false;
+	protected _object: O;
+	// _sop_loaded: boolean = false;
 
 	protected _look_at_controller: LookAtController;
 	get look_at_controller(): LookAtController {
@@ -42,6 +58,20 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 	protected _transform_controller: TransformController;
 	get transform_controller(): TransformController {
 		return (this._transform_controller = this._transform_controller || new TransformController(this));
+	}
+
+	protected _used_in_scene: boolean = false;
+	get used_in_scene() {
+		return this._used_in_scene;
+	}
+	set_used_in_scene(state: boolean) {
+		this._used_in_scene = state;
+		if (!this.scene.loading_controller.is_loading) {
+			const root = this.parent as ObjectsManagerNode;
+			if (root) {
+				root.update_object(this);
+			}
+		}
 	}
 
 	initialize_base_node() {
@@ -55,7 +85,7 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 		// 	has_bypass_flag: false,
 		// });
 
-		this._sop_loaded = false; // TODO: typescript, this should be moved to GeoObjNode
+		// this._sop_loaded = false; // TODO: typescript, this should be moved to GeoObjNode
 	}
 
 	// this.add_param 'toggle', 'display', 1,
@@ -87,13 +117,13 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 		return this.object;
 	}
 
-	_create_object_with_attributes() {
+	_create_object_with_attributes(): O {
 		const object = this.create_object();
 		if (object != null) {
 			object.name = this.name;
 			(object as Object3DWithNode).node = this;
 		}
-		return object;
+		return object as O;
 	}
 	private set_group_name() {
 		// ensures the material has a full path set
@@ -122,19 +152,19 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 		return false;
 	}
 
-	post_state_display_flag() {
-		const object = this.object;
-		if (object != null) {
-			const displayed = this.is_displayed();
-			if (displayed) {
-				object.visible = displayed;
+	// post_state_display_flag() {
+	// 	const object = this.object;
+	// 	if (object != null) {
+	// 		const displayed = this.is_displayed();
+	// 		if (displayed) {
+	// 			object.visible = displayed;
 
-				if (!this._sop_loaded) {
-					this.request_display_node();
-				}
-			}
-		}
-	}
+	// 			if (!this._sop_loaded) {
+	// 				this.request_display_node();
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	is_displayed(): boolean {
 		return this.flags.display.active;
@@ -157,17 +187,17 @@ export class TypedObjNode<K extends NodeParamsConfig> extends TypedNode<'OBJECT'
 	}
 
 	// replaces Dirtyable (TODO: try and replace this method name)
-	protected _init_dirtyable_hook() {
-		this.add_post_dirty_hook(this._cook_main_without_inputs_later.bind(this));
-	}
-	private _cook_main_without_inputs_later() {
-		const c = () => {
-			this.cook_controller.cook_main_without_inputs();
-		};
-		setTimeout(c, 0);
-		// this.eval_all_params().then( ()=>{ this.cook() } )
-	}
+	// protected _init_dirtyable_hook() {
+	// this.add_post_dirty_hook(this._cook_main_without_inputs_later.bind(this));
+	// }
+	// private _cook_main_without_inputs_later() {
+	// 	const c = () => {
+	// 		this.cook_controller.cook_main_without_inputs();
+	// 	};
+	// 	setTimeout(c, 0);
+	// 	// this.eval_all_params().then( ()=>{ this.cook() } )
+	// }
 }
 
-export type BaseObjNodeType = TypedObjNode<any>;
-export class BaseObjNodeclass extends TypedObjNode<any> {}
+export type BaseObjNodeType = TypedObjNode<Object3D, any>;
+export class BaseObjNodeclass extends TypedObjNode<Object3D, any> {}

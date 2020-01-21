@@ -20,7 +20,7 @@ window.create_renderer_if_none = () => {
 declare global {
 	interface Window {
 		create_renderer_if_none: () => void;
-		sleep: (time: number) => void;
+		sleep: (time: number) => Promise<void>;
 		scene: PolyScene;
 		root: ObjectsManagerNode;
 		perpective_camera1: PerspectiveCameraObjNode;
@@ -30,7 +30,7 @@ declare global {
 		COP: CopObjNode;
 	}
 }
-QUnit.testStart(() => {
+QUnit.testStart(async () => {
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
 	window.scene.set_name('test scene');
@@ -49,7 +49,7 @@ QUnit.testStart(() => {
 	window.COP.set_name('COP');
 
 	window.scene.loading_controller.set_auto_update(true);
-	window.scene.loading_controller.mark_as_loaded();
+	await window.scene.loading_controller.mark_as_loaded();
 
 	// resolve();
 	// });
