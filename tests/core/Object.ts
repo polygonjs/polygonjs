@@ -54,7 +54,7 @@ QUnit.test('is_a finds ancestors', (assert) => {
 	assert.ok(CoreObject.is_a(camera, TypedObjNode));
 	assert.ok(CoreObject.is_a(camera, TypedCameraObjNode));
 	assert.ok(CoreObject.is_a(camera, PerspectiveCameraObjNode));
-	const param = geo1.p.tx;
+	const param = geo1.p.t.x;
 	assert.ok(CoreObject.is_a(param, FloatParam));
 	assert.ok(CoreObject.is_a(param, TypedParam));
 	assert.ok(CoreObject.is_a(new Vector3(), Vector3));

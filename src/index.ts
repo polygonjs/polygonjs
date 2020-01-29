@@ -17,7 +17,7 @@ box1.flags.display.set(true);
 geo1.p.r.y.set('$F+20');
 
 const stylesheet = document.createElement('style');
-stylesheet.innerText = 'html, body, canvas, .canvas_container {height: 100%; margin: 0px}';
+stylesheet.innerText = 'html, body, canvas, .canvas_container {height: 100%; margin: 0px;} canvas {display: block;}';
 document.body.appendChild(stylesheet);
 const container = document.createElement('div');
 container.classList.add('canvas_container');

@@ -107,7 +107,9 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	private _params_controller: ParamsController;
 	readonly params_config: K;
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>(this)) as ParamsValueAccessorType<K>;
+	// readonly pv: ParamsValueAccessor<K> = new ParamsValueAccessor<K>(this);
 	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>(this)) as ParamsAccessorType<K>;
+	// readonly p: ParamsAccessor<K> = new ParamsAccessor<K>(this);
 
 	private _processing_context: ProcessingContext;
 	private _name_controller: NameController;

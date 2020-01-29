@@ -29,18 +29,18 @@ import {ParamInitValuesTypeMap, ParamValuesTypeMap, ParamConstructorMap} from '.
 // 		});
 // 	};
 // };
-export const _ParamFloat = function ParamF(default_value: number, options?: ParamOptions) {
-	return <T extends NodeParamsConfig>(target: T, key: string) => {
-		// _ParamCheckNameConsistency(name, target, key, ParamType.FLOAT);
-		// const config = new ParamConfig(ParamType.FLOAT, default_value, options);
-		// target.add_config(key, config);
-		// target.set_default_value(key, default_value);
-		// target.set_options(key, options);
-		// Object.defineProperty(target.options, key, {
-		// 	get: () => target.params.float(name),
-		// });
-	};
-};
+// export const _ParamFloat = function ParamF(default_value: number, options?: ParamOptions) {
+// 	return <T extends NodeParamsConfig>(target: T, key: string) => {
+// 		// _ParamCheckNameConsistency(name, target, key, ParamType.FLOAT);
+// 		// const config = new ParamConfig(ParamType.FLOAT, default_value, options);
+// 		// target.add_config(key, config);
+// 		// target.set_default_value(key, default_value);
+// 		// target.set_options(key, options);
+// 		// Object.defineProperty(target.options, key, {
+// 		// 	get: () => target.params.float(name),
+// 		// });
+// 	};
+// };
 // export const _ParamString = function ParamF(name: string) {
 // 	return <T extends BaseNode>(target: T, key: keyof T) => {
 // 		_ParamCheckNameConsistency(name, target, key, ParamType.STRING);
@@ -142,6 +142,7 @@ export class ParamConfig {
 export class NodeParamsConfig implements Dictionary<ParamTemplate<ParamType>> {
 	[name: string]: ParamTemplate<ParamType>;
 }
+// export class NodeParamsConfig {}
 
 // interface ParamConfig {
 // 	type: ParamType;

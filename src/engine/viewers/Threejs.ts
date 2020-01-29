@@ -38,7 +38,6 @@ export class ThreejsViewer extends BaseViewer {
 	public _build() {
 		this._init_display();
 		this.activate();
-		console.log('built');
 	}
 
 	dispose() {
