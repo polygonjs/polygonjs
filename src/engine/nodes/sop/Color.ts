@@ -224,7 +224,12 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// }
 	}
 
-	private async _update_from_param(geometry: BufferGeometry, array: number[], points: CorePoint[], offset: number) {
+	private async _update_from_param(
+		geometry: BufferGeometry,
+		array: number[],
+		points: CorePoint[],
+		offset: number
+	): Promise<number[] | undefined> {
 		// const component_name = ['r', 'g', 'b'][offset];
 		const param = this.p.color.components[offset];
 		const param_value = [this.pv.color.r, this.pv.color.g, this.pv.color.b][offset];
@@ -234,12 +239,12 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			this._b_arrays_by_geometry_uuid,
 		][offset];
 
-		let tmp_array;
+		let tmp_array: number[] | undefined;
 		if (param.has_expression()) {
 			tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length);
-			await param.expression_controller.compute_expression_for_entities(points, (point, value) => {
+			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
 				// array[point.index()*3+2] = value
-				tmp_array[point.index] = value;
+				(tmp_array as number[])[point.index] = value;
 			});
 		} else {
 			for (let point of points) {

@@ -56,6 +56,12 @@ export enum ObjectType {
 	POINTS = 'POINTS',
 	LINE_SEGMENTS = 'LINE_SEGMENTS',
 }
+export const ObjectTypes = [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS];
+export const ObjectTypeMenuEntries = [
+	{name: 'Mesh', value: ObjectTypes.indexOf(ObjectType.MESH)},
+	{name: 'Points', value: ObjectTypes.indexOf(ObjectType.POINTS)},
+	{name: 'LineSegments', value: ObjectTypes.indexOf(ObjectType.LINE_SEGMENTS)},
+];
 
 const materials: MaterialsByString = {
 	MeshStandard: new MeshStandardMaterial({
@@ -123,7 +129,7 @@ export const CoreConstant = {
 		POINTS: ObjectType.POINTS,
 		LINE_SEGMENTS: ObjectType.LINE_SEGMENTS,
 	},
-	OBJECT_TYPES: [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS],
+	OBJECT_TYPES: ObjectTypes,
 	CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME: {
 		[Scene.name]: 'Scene',
 		[Group.name]: 'Group',

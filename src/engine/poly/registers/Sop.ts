@@ -21,6 +21,8 @@ import {ColorSopNode} from 'src/engine/nodes/sop/Color';
 import {CopySopNode} from 'src/engine/nodes/sop/Copy';
 import {DataSopNode} from 'src/engine/nodes/sop/Data';
 import {DataUrlSopNode} from 'src/engine/nodes/sop/DataUrl';
+import {DelaySopNode} from 'src/engine/nodes/sop/Delay';
+import {DeleteSopNode} from 'src/engine/nodes/sop/Delete';
 import {FileSopNode} from 'src/engine/nodes/sop/File';
 import {HierarchySopNode} from 'src/engine/nodes/sop/Hierarchy';
 import {LineSopNode} from 'src/engine/nodes/sop/Line';
@@ -54,6 +56,8 @@ export interface GeoNodeChildrenMap {
 	copy: CopySopNode;
 	data: DataSopNode;
 	data_url: DataUrlSopNode;
+	delay: DelaySopNode;
+	delete: DeleteSopNode;
 	file: FileSopNode;
 	hierarchy: HierarchySopNode;
 	line: LineSopNode;
@@ -90,6 +94,8 @@ export class SopRegister {
 		poly.register_node(CopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(DataUrlSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(DelaySopNode, CATEGORY_SOP.MISC);
+		poly.register_node(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.register_node(LineSopNode, CATEGORY_SOP.INPUT);

@@ -1,0 +1,244 @@
+QUnit.test('attrib normalize simple float', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane1 = geo1.create_node('plane');
+	const plane2 = geo1.create_node('plane');
+	const plane3 = geo1.create_node('plane');
+
+	const attrib_create1 = geo1.create_node('attrib_create');
+	const attrib_create2 = geo1.create_node('attrib_create');
+	const attrib_create3 = geo1.create_node('attrib_create');
+	attrib_create1.set_input(0, plane1);
+	attrib_create2.set_input(0, plane2);
+	attrib_create3.set_input(0, plane3);
+
+	attrib_create1.p.name.set('blend');
+	attrib_create2.p.name.set('blend');
+	attrib_create3.p.name.set('blend');
+
+	attrib_create1.p.value1.set(1);
+	attrib_create2.p.value1.set(2);
+	attrib_create3.p.value1.set(3);
+
+	const merge1 = geo1.create_node('merge');
+	const merge2 = geo1.create_node('merge');
+
+	merge1.set_input(0, attrib_create1);
+	merge1.set_input(1, attrib_create2);
+
+	merge2.set_input(0, merge1);
+	merge2.set_input(1, attrib_create3);
+
+	let container = await merge2.request_container();
+	let core_group = container.core_content()!;
+	let geometry = core_group.objects()[0].geometry;
+	assert.ok(geometry);
+
+	let array = geometry.getAttribute('blend').array as number[];
+	assert.equal(array.length, 12);
+	assert.equal(array.join(','), [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3].join(','));
+
+	const attrib_normalize1 = geo1.create_node('attrib_normalize');
+	attrib_normalize1.set_input(0, merge2);
+	attrib_normalize1.p.name.set('blend');
+
+	container = await attrib_normalize1.request_container();
+	core_group = container.core_content()!;
+	geometry = core_group.objects()[0].geometry;
+	assert.ok(geometry);
+
+	array = geometry.getAttribute('blend').array as number[];
+	assert.equal(array.length, 12);
+	assert.equal(array.join(','), [0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1].join(','));
+});
+
+QUnit.skip('attrib normalize simple float when all points have same value', (assert) => {});
+
+QUnit.test('attrib normalize simple vector', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane1 = geo1.create_node('plane');
+	const plane2 = geo1.create_node('plane');
+	const plane3 = geo1.create_node('plane');
+
+	const attrib_create1 = geo1.create_node('attrib_create');
+	const attrib_create2 = geo1.create_node('attrib_create');
+	const attrib_create3 = geo1.create_node('attrib_create');
+	attrib_create1.set_input(0, plane1);
+	attrib_create2.set_input(0, plane2);
+	attrib_create3.set_input(0, plane3);
+
+	attrib_create1.p.name.set('blend');
+	attrib_create2.p.name.set('blend');
+	attrib_create3.p.name.set('blend');
+	attrib_create1.p.size.set(3);
+	attrib_create2.p.size.set(3);
+	attrib_create3.p.size.set(3);
+	attrib_create1.p.value3.set([1, 2, 3]);
+	attrib_create2.p.value3.set([2, 3, 4]);
+	attrib_create3.p.value3.set([3, 4, 5]);
+
+	const merge1 = geo1.create_node('merge');
+	const merge2 = geo1.create_node('merge');
+
+	merge1.set_input(0, attrib_create1);
+	merge1.set_input(1, attrib_create2);
+
+	merge2.set_input(0, merge1);
+	merge2.set_input(1, attrib_create3);
+
+	let container = await merge2.request_container();
+	let core_group = container.core_content()!;
+	let geometry = core_group.objects()[0].geometry;
+	assert.ok(geometry);
+
+	let array = geometry.getAttribute('blend').array as number[];
+	assert.equal(array.length, 36);
+	assert.equal(
+		array.join(','),
+		[
+			1,
+			2,
+			3,
+			1,
+			2,
+			3,
+			1,
+			2,
+			3,
+			1,
+			2,
+			3,
+			2,
+			3,
+			4,
+			2,
+			3,
+			4,
+			2,
+			3,
+			4,
+			2,
+			3,
+			4,
+			3,
+			4,
+			5,
+			3,
+			4,
+			5,
+			3,
+			4,
+			5,
+			3,
+			4,
+			5,
+		].join(',')
+	);
+
+	const attrib_normalize1 = geo1.create_node('attrib_normalize');
+	attrib_normalize1.set_input(0, merge2);
+	attrib_normalize1.p.name.set('blend');
+
+	container = await attrib_normalize1.request_container();
+	core_group = container.core_content()!;
+	geometry = core_group.objects()[0].geometry;
+	assert.ok(geometry);
+
+	array = geometry.getAttribute('blend').array as number[];
+	assert.equal(array.length, 36);
+	assert.equal(
+		array.join(','),
+		[
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+		].join(',')
+	);
+
+	attrib_create1.p.value3.set([1, 2, 3]);
+	attrib_create2.p.value3.set([4, 2, 6]);
+	attrib_create3.p.value3.set([9, 6, 3]);
+
+	container = await attrib_normalize1.request_container();
+	core_group = container.core_content()!;
+	geometry = core_group.objects()[0].geometry;
+	assert.ok(geometry);
+
+	array = geometry.getAttribute('blend').array as number[];
+	assert.equal(array.length, 36);
+	assert.equal(
+		array.join(','),
+		[
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0.375,
+			0,
+			1,
+			0.375,
+			0,
+			1,
+			0.375,
+			0,
+			1,
+			0.375,
+			0,
+			1,
+			1,
+			1,
+			0,
+			1,
+			1,
+			0,
+			1,
+			1,
+			0,
+			1,
+			1,
+			0,
+		].join(',')
+	);
+});

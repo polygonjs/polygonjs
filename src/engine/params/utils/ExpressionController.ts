@@ -4,11 +4,20 @@ import {CorePoint} from 'src/core/geometry/Point';
 import {CoreEntity} from 'src/core/geometry/Entity';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {CoreObject} from 'src/core/geometry/Object';
 
 // type ParamTypeElem = ParamType;
 type EntityCallback<T extends ParamType> = (
+	entity: CoreEntity,
+	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
+) => void;
+type PointEntityCallback<T extends ParamType> = (
 	entity: CorePoint,
-	value: ParamValuesTypeMap[T] | any /*any is used here mostly to compile*/
+	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
+) => void;
+type ObjectEntityCallback<T extends ParamType> = (
+	entity: CoreObject,
+	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
 ) => void;
 
 export class ExpressionController<T extends ParamType> {
@@ -63,11 +72,17 @@ export class ExpressionController<T extends ParamType> {
 			return this._manager.compute_function();
 		}
 	}
-	async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
+	private async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
 		await this.compute_expression();
 
 		this.reset_entities();
+	}
+	async compute_expression_for_points(entities: CorePoint[], callback: PointEntityCallback<T>) {
+		this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
+	}
+	async compute_expression_for_objects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
+		this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
 	}
 	get entities() {
 		return this._entities;
