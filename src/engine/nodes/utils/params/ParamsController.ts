@@ -213,9 +213,7 @@ export class ParamsController {
 	private set_with_type<T extends ParamType>(name: string, value: ParamInitValuesTypeMap[T], type: T) {
 		const param = this.param_with_type(name, type);
 		if (param) {
-			// This seems to compile fine sometimes, sometimes not
-			// so using "as never" for now...
-			param.set(value as never);
+			param.set(value);
 		} else {
 			console.warn(`param ${name} not found with type ${type}`);
 		}
@@ -364,7 +362,7 @@ export class ParamsController {
 
 			// param.set_scene(this.node.scene);
 			param.set_name(name);
-			param.set_init_value(init_value as never); // TODO: typescript: not sure why I need to force never
+			param.set_init_value(init_value);
 			// param.initialize();
 			param.ui_data.set_folder_name(this.current_param_folder_name());
 

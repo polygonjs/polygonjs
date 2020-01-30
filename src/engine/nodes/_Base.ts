@@ -101,12 +101,13 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	private _children_controller: HierarchyChildrenController | undefined;
 	private _selection: CoreSelection | undefined;
 	private _ui_data: UIData | undefined;
-	private _flags: FlagsController | undefined;
+
 	private _dependencies_controller: DependenciesController | undefined;
 	private _states: StatesController | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
 	private _cook_controller: CookController | undefined;
+	public readonly flags: FlagsController | undefined;
 
 	private _params_controller: ParamsController | undefined;
 	readonly params_config: K | undefined;
@@ -129,9 +130,6 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 	get ui_data(): UIData {
 		return (this._ui_data = this._ui_data || new UIData(this));
-	}
-	get flags(): FlagsController {
-		return (this._flags = this._flags || new FlagsController(this));
 	}
 	get dependencies_controller(): DependenciesController {
 		return (this._dependencies_controller = this._dependencies_controller || new DependenciesController(this));

@@ -35,6 +35,8 @@ export const BASE_CAMERA_DEFAULT = {
 };
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {FlagsControllerD} from '../utils/FlagsController';
+import {BaseNodeType} from '../_Base';
 export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 	controls = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {
@@ -77,6 +79,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	O,
 	K
 > {
+	public readonly flags: FlagsControllerD = new FlagsControllerD((<unknown>this) as BaseNodeType);
 	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
 	protected _object!: O;
 	protected _aspect: number = -1;
@@ -110,9 +113,8 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		this.io.inputs.set_count_to_one_max();
 		// this._init_dirtyable_hook();
 
-		this.flags.add_display();
-		this.flags.display?.add_hook(() => {
-			this.set_used_in_scene(this.flags.display?.active || false);
+		this.flags.display.add_hook(() => {
+			this.set_used_in_scene(this.flags.display.active || false);
 		});
 	}
 

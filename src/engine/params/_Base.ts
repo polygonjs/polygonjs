@@ -54,9 +54,9 @@ export interface TypedParamVisitor {
 	visit_typed_param: (param: BaseParamType) => any;
 }
 
-type ParamTypeElem = ParamType;
+// type ParamTypeElem = ParamType;
 
-export class TypedParam<T extends ParamTypeElem> extends CoreGraphNode {
+export class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// protected _raw_input: ParamInitValuesTypeMap[T];
 	protected _default_value!: ParamInitValuesTypeMap[T];
 	protected _value!: ParamValuesTypeMap[T];

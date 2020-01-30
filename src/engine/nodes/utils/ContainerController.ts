@@ -29,7 +29,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 	}
 
 	process_container_request() {
-		if (this.node.flags.bypass?.active) {
+		if (this.node.flags?.bypass?.active) {
 			const input_index = 0;
 			this.request_input_container_p(input_index).then((container) => {
 				this.node.remove_dirty_state();

@@ -23,7 +23,7 @@ export class DisplayNodeController {
 		if (this._display_node != new_display_node) {
 			const old_display_node = this._display_node;
 			if (old_display_node) {
-				old_display_node.flags.display?.set(false);
+				old_display_node.flags.display.set(false);
 				this._graph_node.remove_graph_input(old_display_node);
 				this.remove_children();
 			}

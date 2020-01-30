@@ -6,7 +6,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 // import lodash_includes from 'lodash/includes';
 import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
-import {TypedNode} from '../_Base';
+import {TypedNode, BaseNodeType} from '../_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
 import {CoreMaterial} from 'src/core/geometry/Material';
@@ -19,6 +19,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GeoObjNode} from '../obj/Geo';
+import {FlagsControllerDB} from '../utils/FlagsController';
 // import * as Container from '../../Container/Geometry';
 
 // import {AttribTypeParam} from './concerns/AttribTypeParam';
@@ -47,9 +48,10 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETRY', BaseSopNodeType, K> {
 	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
-		this,
+		(<unknown>this) as BaseNodeType,
 		GeometryContainer
 	);
+	public readonly flags: FlagsControllerDB = new FlagsControllerDB((<unknown>this) as BaseNodeType);
 
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
@@ -63,16 +65,16 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	// _objects: Object3D[] = []
 
 	initialize_base_node() {
-		this.flags.add_bypass();
+		// this.flags.add_bypass();
 
-		this.flags.add_display();
+		// this.flags.add_display();
 		if (this.flags.display) {
 			this.flags.display.set(false);
 			this.flags.display.add_hook(() => {
-				if (this.flags.display?.active) {
-					const parent = this.parent as GeoObjNode;
+				if (this.flags.display.active) {
+					const parent = this.parent;
 					if (parent) {
-						parent.display_node_controller.set_display_node(this);
+						((<unknown>parent) as GeoObjNode).display_node_controller.set_display_node(this);
 					}
 				}
 			});

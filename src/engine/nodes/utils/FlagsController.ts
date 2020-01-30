@@ -4,37 +4,36 @@ import {BypassFlag} from './flags/Bypass';
 import {DisplayFlag} from './flags/Display';
 
 export class FlagsController {
-	private _bypass: BypassFlag | undefined;
-	private _display: DisplayFlag | undefined;
+	public readonly bypass: DisplayFlag | undefined;
+	public readonly display: BypassFlag | undefined;
 	constructor(protected node: BaseNodeType) {}
-
-	// bypass
-	add_bypass() {
-		if (!this._bypass) {
-			this._bypass = new BypassFlag(this.node);
-		} else {
-			console.warn('bypass flag already created', this.node);
-		}
-	}
-	get bypass() {
-		return this._bypass;
+	has_display(): boolean {
+		return false;
 	}
 	has_bypass(): boolean {
-		return this._bypass != null;
-	}
-
-	// display
-	add_display() {
-		if (!this._display) {
-			this._display = new DisplayFlag(this.node);
-		} else {
-			console.warn('display flag already created', this.node);
-		}
-	}
-	get display() {
-		return this._display;
-	}
-	has_display(): boolean {
-		return this._display != null;
+		return false;
 	}
 }
+
+function Display<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		protected node!: BaseNodeType;
+		public display: DisplayFlag = new DisplayFlag(this.node);
+		has_display(): boolean {
+			return true;
+		}
+	};
+}
+function Bypass<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		protected node!: BaseNodeType;
+		public readonly bypass: BypassFlag = new BypassFlag(this.node);
+		has_bypass(): boolean {
+			return true;
+		}
+	};
+}
+
+export class FlagsControllerD extends Display(FlagsController) {}
+export class FlagsControllerB extends Bypass(FlagsController) {}
+export class FlagsControllerDB extends Bypass(Display(FlagsController)) {}

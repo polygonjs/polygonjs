@@ -2,8 +2,11 @@ import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
 import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {FlagsControllerD} from '../utils/FlagsController';
+import {BaseNodeType} from '../_Base';
 
 export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsConfig> extends TypedObjNode<O, K> {
+	public readonly flags: FlagsControllerD = new FlagsControllerD((<unknown>this) as BaseNodeType);
 	public readonly render_order: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
 	get object() {
@@ -12,9 +15,8 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 	protected _used_in_scene: boolean = true;
 	initialize_base_node() {
 		super.initialize_base_node();
-		this.flags.add_display();
-		this.flags.display?.add_hook(() => {
-			this.set_used_in_scene(this.flags.display?.active || false);
+		this.flags.display.add_hook(() => {
+			this.set_used_in_scene(this.flags.display.active || false);
 		});
 		this.dirty_controller.add_post_dirty_hook(async () => {
 			if (this.used_in_scene) {
@@ -80,7 +82,7 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 		return this._color_with_intensity;
 	}
 	get active(): boolean {
-		return this.flags.display?.active || false;
+		return this.flags.display.active;
 	}
 }
 

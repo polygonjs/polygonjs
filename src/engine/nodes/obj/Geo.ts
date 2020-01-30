@@ -17,6 +17,7 @@ import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/Param
 // import {PolyScene} from 'src/engine/scene/PolyScene';
 
 import {GeoNodeChildrenMap} from 'src/engine/poly/registers/Sop';
+import {FlagsControllerD} from '../utils/FlagsController';
 
 class GeoObjParamConfig extends NodeParamsConfig {
 	t = ParamConfig.VECTOR3([0, 0, 0]);
@@ -34,6 +35,7 @@ const ParamsConfig = new GeoObjParamConfig();
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	params_config = ParamsConfig;
 	private _display_node_controller = new DisplayNodeController(this);
+	public readonly flags: FlagsControllerD = new FlagsControllerD((<unknown>this) as BaseNodeType);
 	get display_node_controller() {
 		return this._display_node_controller;
 	}
@@ -48,9 +50,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	initialize_node() {
 		this.children_controller.init(NodeContext.SOP);
 
-		this.flags.add_display();
-		this.flags.display?.add_hook(() => {
-			this.set_used_in_scene(this.flags.display?.active || false);
+		this.flags.display.add_hook(() => {
+			this.set_used_in_scene(this.flags.display.active);
 		});
 		// this._init_display_flag({
 		// 	multiple_display_flags_allowed: false,
@@ -107,7 +108,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	}
 
 	is_display_node_cooking(): boolean {
-		if (this.flags.display?.active) {
+		if (this.flags.display.active) {
 			const display_node = this._display_node_controller.display_node;
 			return display_node ? display_node.is_dirty : false;
 		} else {
@@ -127,7 +128,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// only to be replaced by the proper one when it is ready.
 		if (this.scene.loading_controller.loaded) {
 			if (this.children().length == 1) {
-				node.flags.display?.set(true);
+				node.flags?.display?.set(true);
 			}
 		}
 	}
@@ -150,7 +151,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
-		this.group.visible = this.flags.display?.active || false;
+		this.group.visible = this.flags.display.active;
 		this.transform_controller.update(matrix);
 		//this.update_layers()
 

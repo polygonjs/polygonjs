@@ -5,13 +5,16 @@ import {CoreEntity} from 'src/core/geometry/Entity';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 
-type EntityCallback<T extends ParamTypeElem> = (entity: CorePoint, value: ParamValuesTypeMap[T]) => void;
+// type ParamTypeElem = ParamType;
+type EntityCallback<T extends ParamType> = (
+	entity: CorePoint,
+	value: ParamValuesTypeMap[T] | any /*any is used here mostly to compile*/
+) => void;
 
-type ParamTypeElem = ParamType;
-export class ExpressionController<T extends ParamTypeElem> {
+export class ExpressionController<T extends ParamType> {
 	protected _expression: string | undefined;
-	protected _entities: CoreEntity[] | null = null;
-	protected _entity_callback: EntityCallback<T> | null = null;
+	protected _entities: CoreEntity[] | undefined;
+	protected _entity_callback: EntityCallback<T> | undefined;
 	protected _manager: ExpressionManager | undefined;
 	constructor(protected param: BaseParamType) {}
 
@@ -77,7 +80,7 @@ export class ExpressionController<T extends ParamTypeElem> {
 		this._entity_callback = callback;
 	}
 	reset_entities() {
-		this._entities = null;
-		this._entity_callback = null;
+		this._entities = undefined;
+		this._entity_callback = undefined;
 	}
 }

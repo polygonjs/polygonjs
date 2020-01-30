@@ -1,4 +1,5 @@
 export enum ParamType {
+	BOOLEAN = 'boolean',
 	BUTTON = 'button',
 	COLOR = 'color',
 	FLOAT = 'float',
@@ -6,7 +7,6 @@ export enum ParamType {
 	OPERATOR_PATH = 'operator_path',
 	SEPARATOR = 'separator',
 	STRING = 'string',
-	BOOLEAN = 'boolean',
 	VECTOR2 = 'vector2',
 	VECTOR3 = 'vector3',
 	VECTOR4 = 'vector4',
