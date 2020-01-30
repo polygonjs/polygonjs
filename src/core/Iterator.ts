@@ -1,6 +1,6 @@
 type IterateeMethod = (element: any, index?: number) => void;
 type IterateeMethodArray = IterateeMethod; // TODO: check this, as the element may be an array
-type IterateeMethodCount = (index: number) => {};
+type IterateeMethodCount = (index: number) => void;
 
 interface CoreIteratorOptions {
 	max_time_per_chunk?: number;

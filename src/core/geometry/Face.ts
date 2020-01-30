@@ -31,7 +31,7 @@ export class CoreFace {
 	constructor(private _core_geometry: CoreGeometry, private _index: number) {
 		this._geometry = this._core_geometry.geometry();
 	}
-	index() {
+	get index() {
 		return this._index;
 	}
 	get points() {
