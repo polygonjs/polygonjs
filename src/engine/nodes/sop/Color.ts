@@ -19,7 +19,6 @@ import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/Param
 import {CoreGroup} from 'src/core/geometry/Group';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 import {Mesh, BufferGeometry} from 'three';
-import {FloatParam} from 'src/engine/params/Float';
 class ColorSopParamsConfig extends NodeParamsConfig {
 	from_attribute = ParamConfig.BOOLEAN(0);
 	attrib_name = ParamConfig.STRING('', {
@@ -226,8 +225,8 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	}
 
 	private async _update_from_param(geometry: BufferGeometry, array: number[], points: CorePoint[], offset: number) {
-		const param_name = ['colorr', 'colorg', 'colorb'][offset];
-		const param = this.params.get(param_name) as FloatParam;
+		// const component_name = ['r', 'g', 'b'][offset];
+		const param = this.p.color.components[offset];
 		const param_value = [this.pv.color.r, this.pv.color.g, this.pv.color.b][offset];
 		const arrays_by_geometry_uuid = [
 			this._r_arrays_by_geometry_uuid,

@@ -5,11 +5,12 @@ QUnit.test('merge simple', async (assert) => {
 	const box1 = geo1.create_node('box');
 	const merge1 = geo1.create_node('merge');
 	merge1.set_input(0, box1);
-	merge1.set_input(1, tube1);
 
 	let container = await merge1.request_container();
-	// const core_group = container.core_content();
+	assert.equal(container.points_count(), 24);
 
+	merge1.set_input(1, tube1);
+	container = await merge1.request_container();
 	assert.equal(container.points_count(), 100);
 });
 

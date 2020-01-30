@@ -19,7 +19,7 @@ import {NameController} from '../NameController';
 const NODE_SIMPLE_NAME = 'children';
 
 export class HierarchyChildrenController {
-	private _context!: NodeContext;
+	private _context: NodeContext | undefined;
 	private _children_allowed: boolean = false;
 	private _children: Dictionary<BaseNodeType> = {};
 	private _children_by_type: Dictionary<string[]> = {};
@@ -95,7 +95,12 @@ export class HierarchyChildrenController {
 	}
 
 	available_children_classes() {
-		return POLY.registered_nodes(this._context, this.node.type());
+		if (this._context) {
+			return POLY.registered_nodes(this._context, this.node.type());
+		} else {
+			console.warn('children controller not initialized for node', this.node.type(), this.node);
+			return {};
+		}
 	}
 	children_allowed(): boolean {
 		// return (this.self.available_children_classes != null) &&
@@ -118,6 +123,7 @@ export class HierarchyChildrenController {
 				throw message;
 			} else {
 				const child_node = new node_class(this.node.scene, `child_node_${node_type}`);
+				child_node.initialize_base_and_node();
 				// child_node.set_scene(this.node.scene);
 				this.add_node(child_node);
 				return child_node;

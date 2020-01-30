@@ -6,7 +6,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 // import lodash_includes from 'lodash/includes';
 import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
-import {TypedNode, BaseNodeType} from '../_Base';
+import {TypedNode} from '../_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
 import {CoreMaterial} from 'src/core/geometry/Material';
@@ -48,10 +48,10 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETRY', BaseSopNodeType, K> {
 	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
-		(<unknown>this) as BaseNodeType,
+		this,
 		GeometryContainer
 	);
-	public readonly flags: FlagsControllerDB = new FlagsControllerDB((<unknown>this) as BaseNodeType);
+	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
 	static node_context(): NodeContext {
 		return NodeContext.SOP;

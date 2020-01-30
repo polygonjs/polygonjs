@@ -7,11 +7,10 @@ QUnit.test('geo obj simple', async (assert) => {
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
-	assert.equal(main_group.children[1].name, '/perspective_camera1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const geo1 = window.geo1;
-	const obj = main_group.children[0];
+	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	assert.equal(geo1.object.uuid, obj.uuid);
 
 	window.scene.performance.start();
@@ -59,8 +58,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
-	assert.equal(main_group.children[1].name, '/perspective_camera1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const geo1 = window.geo1;
 
@@ -110,15 +108,14 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
-	assert.equal(main_group.children[1].name, '/perspective_camera1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
 
 	assert.equal(geo1.cook_controller.cooks_count, 0);
-	const obj = main_group.children[0];
+	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	scene.batch_update(() => {
 		geo1.p.t.x.set(2);
 		geo1.p.s.y.set(4);
@@ -143,10 +140,10 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const geo1 = window.geo1;
-	const obj = main_group.children[0];
+	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	assert.equal(obj.uuid, geo1.object.uuid);
 	const box1 = geo1.create_node('box');
 	const plane1 = geo1.create_node('plane');
@@ -184,10 +181,10 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const geo1 = window.geo1;
-	const obj = main_group.children[0];
+	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	assert.equal(obj.uuid, geo1.object.uuid);
 	const file1 = geo1.create_node('file');
 	file1.p.url.set('/examples/models/wolf.obj');

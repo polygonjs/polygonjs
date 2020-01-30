@@ -17,7 +17,6 @@ const DEFAULT = {
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {Object3D} from 'three/src/core/Object3D';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {BaseNodeType} from '../_Base';
 class FogObjParamConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR(DEFAULT.color.toArray() as [number, number, number]);
 	exponential = ParamConfig.BOOLEAN(0);
@@ -28,7 +27,7 @@ class FogObjParamConfig extends NodeParamsConfig {
 const ParamsConfig = new FogObjParamConfig();
 export class FogObjNode extends TypedObjNode<Object3D, FogObjParamConfig> {
 	params_config = ParamsConfig;
-	public readonly flags: FlagsControllerD = new FlagsControllerD((<unknown>this) as BaseNodeType);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 	public readonly add_to_hierarchy: boolean = false;
 

@@ -14,11 +14,11 @@ QUnit.test('file simple', async (assert) => {
 	file1.p.url.set('/examples/models/male03.obj');
 	assert.ok(file1.is_dirty);
 
-	const merge1 = geo1.create_node('merge');
-	merge1.set_input(0, file1);
+	// const merge1 = geo1.create_node('merge');
+	// merge1.set_input(0, file1);
 
 	let container;
-	container = await merge1.request_container();
+	container = await file1.request_container();
 	assert.ok(!file1.is_dirty);
 	// let core_group = container.core_content()!;
 	// let {geometry} = core_group.objects()[0];
@@ -27,7 +27,7 @@ QUnit.test('file simple', async (assert) => {
 	file1.p.url.set('/examples/models/box.obj');
 	assert.ok(file1.is_dirty);
 
-	container = await merge1.request_container();
+	container = await file1.request_container();
 	assert.ok(!file1.is_dirty);
 	// core_group = container.core_content();
 	// ({geometry} = core_group.objects()[0]);
@@ -36,7 +36,7 @@ QUnit.test('file simple', async (assert) => {
 	// set error state
 	file1.p.url.set('/file_sop_doesnotexist.obj');
 	assert.ok(file1.is_dirty);
-	container = await merge1.request_container();
+	container = await file1.request_container();
 	assert.ok(!file1.is_dirty);
 	assert.ok(file1.states.error.active, 'file sop is errored');
 
@@ -50,7 +50,7 @@ QUnit.test('file simple', async (assert) => {
 	// clear error state
 	file1.p.url.set('/examples/models/box.obj');
 	assert.ok(file1.is_dirty);
-	container = await merge1.request_container();
+	container = await file1.request_container();
 	assert.ok(!file1.is_dirty);
 	assert.ok(!file1.states.error.active);
 	core_group = container.core_content()!;

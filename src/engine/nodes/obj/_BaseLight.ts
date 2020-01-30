@@ -3,10 +3,9 @@ import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {BaseNodeType} from '../_Base';
 
 export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsConfig> extends TypedObjNode<O, K> {
-	public readonly flags: FlagsControllerD = new FlagsControllerD((<unknown>this) as BaseNodeType);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public readonly render_order: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
 	get object() {

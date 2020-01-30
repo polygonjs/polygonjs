@@ -36,7 +36,6 @@ export const BASE_CAMERA_DEFAULT = {
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {BaseNodeType} from '../_Base';
 export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 	controls = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {
@@ -79,7 +78,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	O,
 	K
 > {
-	public readonly flags: FlagsControllerD = new FlagsControllerD((<unknown>this) as BaseNodeType);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
 	protected _object!: O;
 	protected _aspect: number = -1;
@@ -209,7 +208,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
 		CoreTransform.set_params_from_object(this._object, this);
 	}
-	viewer(element: HTMLElement) {
+	viewer(element: HTMLElement): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this);
 	}
 }

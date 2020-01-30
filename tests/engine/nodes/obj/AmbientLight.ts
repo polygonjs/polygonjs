@@ -5,8 +5,7 @@ QUnit.test('ambient light simple', async (assert) => {
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
-	assert.equal(main_group.children[1].name, '/perspective_camera1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const ambient_light1 = scene.root.create_node('ambient_light');
 	assert.equal(ambient_light1.name, 'ambient_light1');
@@ -74,8 +73,7 @@ QUnit.test('ambient light display flag off does not cook', async (assert) => {
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
-	assert.equal(main_group.children[1].name, '/perspective_camera1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const ambient_light1 = scene.root.create_node('ambient_light');
 	assert.equal(ambient_light1.name, 'ambient_light1');
@@ -136,8 +134,7 @@ QUnit.test('ambient light cooks only once when multiple params are updated', asy
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.equal(main_group.children[0].name, '/geo1');
-	assert.equal(main_group.children[1].name, '/perspective_camera1');
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const ambient_light1 = scene.root.create_node('ambient_light');
 	assert.equal(ambient_light1.name, 'ambient_light1');
