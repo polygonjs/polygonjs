@@ -309,7 +309,7 @@ export class ParamsController {
 			}
 			param.set_node(null);
 			delete this._params_by_name[param_name];
-			if (param.is_multiple) {
+			if (param.is_multiple && param.components) {
 				for (let component of param.components) {
 					const child_name = component.name;
 					delete this._params_by_name[child_name];

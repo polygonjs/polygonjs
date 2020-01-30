@@ -50,6 +50,10 @@ interface MultipleParamVisitor extends TypedParamVisitor {
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
+	protected _components!: FloatParam[];
+	get components() {
+		return this._components;
+	}
 
 	accepts_visitor(visitor: MultipleParamVisitor): any {
 		return visitor.visit_typed_multiple_param(this);
@@ -57,6 +61,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 	init_components() {
 		let index = 0;
+		this._components = new Array(this.component_names.length);
 		for (let component_name of this.component_names) {
 			const component = new this._components_contructor(this.scene); //, `${this.name}${name}`);
 			let default_val;
@@ -74,7 +79,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 			this.add_graph_input(component);
 			// component.initialize();
-			this._components.push(component);
+			this._components[index] = component;
 			index++;
 		}
 		this.compute();

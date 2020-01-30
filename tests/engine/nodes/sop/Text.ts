@@ -99,7 +99,6 @@ QUnit.test('text as different types', async (assert) => {
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.STROKE));
 	assert.ok(text1.is_dirty);
-	await window.sleep(1000); // this should not be needed, but was on last test
 	container = await text1.request_container();
 	assert.notOk(text1.is_dirty);
 	assert.equal(container.points_count(), 22746);

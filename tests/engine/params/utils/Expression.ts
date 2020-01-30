@@ -5,6 +5,7 @@ QUnit.test('a param can be set to errored with a bad expression then back to non
 
 	assert.notOk(param.states.error.active);
 	param.set('1+');
+	console.log('****************');
 	await param.compute();
 	assert.notOk(param.value);
 	assert.ok(param.states.error.active);
@@ -13,6 +14,7 @@ QUnit.test('a param can be set to errored with a bad expression then back to non
 	await window.sleep(10); // wait for node to try and cook
 
 	param.set('1+1');
+	console.log('ask');
 	await param.compute();
 	assert.equal(param.value, 2);
 	assert.notOk(param.states.error.active);

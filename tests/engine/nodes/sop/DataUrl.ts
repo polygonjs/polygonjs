@@ -11,14 +11,12 @@ QUnit.test('data_url simple', async (assert) => {
 	await window.scene.root.process_queue();
 
 	data_url1.p.url.set('/examples/sop/data_url/default.json');
-	window.sleep(500); // necessary to import the loader (maybe?)
 	container = await data_url1.request_container();
 
 	assert.ok(!data_url1.is_dirty);
 	assert.equal(container.points_count(), 8);
 
 	data_url1.p.url.set('/examples/sop/data_url/basic.json');
-	window.sleep(500); // necessary to import the loader (maybe?)
 	container = await data_url1.request_container();
 
 	assert.ok(!data_url1.is_dirty);
@@ -26,7 +24,6 @@ QUnit.test('data_url simple', async (assert) => {
 
 	// and a non existing
 	data_url1.p.url.set('/dataurl_doesnotexist.json');
-	window.sleep(500); // necessary to import the loader (maybe?)
 	container = await data_url1.request_container();
 
 	assert.ok(!data_url1.is_dirty);
@@ -38,7 +35,6 @@ QUnit.test('data_url simple', async (assert) => {
 
 	// restore it with a good url
 	data_url1.p.url.set('/examples/sop/data_url/default.json');
-	window.sleep(500); // necessary to import the loader (maybe?)
 	container = await data_url1.request_container();
 	assert.equal(container.points_count(), 8);
 });

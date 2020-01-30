@@ -62,8 +62,8 @@ export class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _value!: ParamValuesTypeMap[T];
 	// protected _expression: string;
 	protected _node!: BaseNodeType;
-	protected _parent_param!: TypedMultipleParam<any>;
-	protected _components: FloatParam[] = [];
+	protected _parent_param: TypedMultipleParam<any> | undefined;
+	protected _components: FloatParam[] | undefined;
 
 	private _options: OptionsController = new OptionsController((<unknown>this) as BaseParamType);
 	get options(): OptionsController {
@@ -155,7 +155,9 @@ export class TypedParam<T extends ParamType> extends CoreGraphNode {
 	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
 		this._default_value = init_value; //this.convert(init_value);
 		// this._value = this.convert(init_value);
-		this.set(init_value);
+		if (!this.is_multiple) {
+			this.set(init_value);
+		}
 	}
 	// eval_p(): Promise<ParamValuesTypeMap[T]> {
 	// 	return new Promise((resolve, reject) => {
@@ -178,8 +180,10 @@ export class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 		if (this.is_multiple) {
 			this.init_components();
-			for (let c of this.components) {
-				c.set_node(node);
+			if (this.components) {
+				for (let c of this.components) {
+					c.set_node(node);
+				}
 			}
 		}
 	}
@@ -195,14 +199,14 @@ export class TypedParam<T extends ParamType> extends CoreGraphNode {
 		param.add_graph_input(this);
 		this._parent_param = param;
 	}
-	get parent_param(): TypedMultipleParam<any> {
+	get parent_param(): TypedMultipleParam<any> | undefined {
 		return this._parent_param;
 	}
 	has_parent_param(): boolean {
 		return this._parent_param != null;
 	}
 	full_path(): string {
-		return this.node.full_path() + '/' + this.name;
+		return this.node?.full_path() + '/' + this.name;
 	}
 	path_relative_to(node: BaseNodeType | BaseParamType): string {
 		return CoreWalker.relative_path(node, (<unknown>this) as BaseParamType);

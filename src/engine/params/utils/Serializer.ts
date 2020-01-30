@@ -17,7 +17,7 @@ export class ParamSerializer {
 			components: null as string[] | null,
 		};
 
-		if (this.param.is_multiple) {
+		if (this.param.is_multiple && this.param.components) {
 			data['components'] = this.param.components.map((component) => component.graph_node_id);
 		}
 

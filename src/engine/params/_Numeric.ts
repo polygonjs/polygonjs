@@ -54,7 +54,10 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 			this.parent_param.set_value_from_components();
 		}
 	}
+	private _test = 0;
 	async compute(): Promise<void> {
+		this._test += 1;
+		console.warn('START', this._test, this.full_path());
 		if (this.expression_controller.active && !this.expression_controller.requires_entities) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
@@ -74,5 +77,7 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 				this.remove_dirty_state();
 			}
 		}
+		console.warn('END', this._test, this.full_path());
+		this._test += -1;
 	}
 }

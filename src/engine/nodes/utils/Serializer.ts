@@ -62,7 +62,7 @@ export class NodeSerializer {
 			if (param) {
 				params_json_by_name[param_name] = param.graph_node_id;
 
-				if (include_components && param.is_multiple) {
+				if (include_components && param.is_multiple && param.components) {
 					for (let component of param.components) {
 						params_json_by_name[component.name] = component.graph_node_id;
 					}
