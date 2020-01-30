@@ -156,7 +156,7 @@ export abstract class BaseMethod {
 			const node_or_param = node as BaseNodeType;
 			return MethodDependency.create(this.param, index_or_path, node_or_param, decomposed_path?.named_nodes);
 		}
-		return null;
+		return MethodDependency.create(this.param, index_or_path, node, decomposed_path?.named_nodes);
 	}
 
 	//

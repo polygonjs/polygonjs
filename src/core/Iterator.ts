@@ -3,8 +3,8 @@ type IterateeMethodArray = IterateeMethod; // TODO: check this, as the element m
 type IterateeMethodCount = (index: number) => {};
 
 interface CoreIteratorOptions {
-	max_time_per_chunk: number;
-	check_every_interations: number;
+	max_time_per_chunk?: number;
+	check_every_interations?: number;
 }
 
 export class CoreIterator {
@@ -26,7 +26,7 @@ export class CoreIterator {
 
 	private _resolve: null | (() => void) = null;
 
-	constructor(options: CoreIteratorOptions) {
+	constructor(options: CoreIteratorOptions = {}) {
 		this._max_time_per_chunk = options.max_time_per_chunk || 10;
 		this._check_every_interations = options.check_every_interations || 100;
 	}

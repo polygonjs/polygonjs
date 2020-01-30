@@ -221,7 +221,7 @@ export class InputsController<T extends BaseNodeType> {
 	// 	});
 	// }
 	async eval_required_input(input_index: number) {
-		const container = await this.node.container_controller.request_input_container_p(input_index);
+		const container = await this.node.container_controller.request_input_container(input_index);
 		// we do not clone here, as we just check if a group is present
 		if (container && container.core_content()) {
 			// return container;

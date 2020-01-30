@@ -1,4 +1,5 @@
 import {BaseNodeType} from '../_Base';
+import {BaseContainer} from 'src/engine/containers/_Base';
 
 export class CookController {
 	_cooking: boolean = false;
@@ -13,7 +14,13 @@ export class CookController {
 	_cook_time_params: number = 0;
 	_last_eval_key: string | undefined;
 
+	_inputs_evaluation_required: boolean = true; //currently only for switch SOP
+
 	constructor(private node: BaseNodeType) {}
+
+	disallow_inputs_evaluation() {
+		this._inputs_evaluation_required = false;
+	}
 
 	get is_cooking(): boolean {
 		return this._cooking === true;
@@ -187,7 +194,10 @@ export class CookController {
 	async evaluate_inputs_and_params() {
 		//t0 = performance.now()
 
-		const input_containers = await this.node.io.inputs.eval_required_inputs_p();
+		let input_containers: (BaseContainer | null)[] = [];
+		if (this._inputs_evaluation_required) {
+			input_containers = await this.node.io.inputs.eval_required_inputs_p();
+		}
 		// const inputs_eval_key = input_containers.map( c => c.eval_key()).join('-');
 
 		if (this.node.scene.performance.started) {

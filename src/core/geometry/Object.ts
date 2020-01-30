@@ -129,7 +129,7 @@ export class CoreObject extends CoreEntity {
 		delete this._object.userData[ATTRIBUTES][name];
 	}
 
-	attrib_value(name: string) {
+	attrib_value(name: string): AttribValue {
 		if (name === PTNUM) {
 			return this.index;
 		} else {
@@ -143,7 +143,7 @@ export class CoreObject extends CoreEntity {
 		}
 	}
 	name(): string {
-		return this.attrib_value(NAME_ATTR);
+		return this.attrib_value(NAME_ATTR) as string;
 	}
 	human_type(): string {
 		return CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[this._object.constructor.name];

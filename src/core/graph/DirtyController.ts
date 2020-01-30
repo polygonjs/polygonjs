@@ -14,6 +14,7 @@ export class DirtyController {
 	_dirty_timestamp: number | undefined;
 	_cached_successors: CoreGraphNode[] | undefined;
 	_post_dirty_hooks: PostDirtyHook[] = [];
+	_forbidden_trigger_nodes: string[] | undefined;
 
 	constructor(private node: CoreGraphNode) {}
 
@@ -43,12 +44,25 @@ export class DirtyController {
 	remove_dirty_state(): void {
 		this._dirty = false;
 	}
+	set_forbidden_trigger_nodes(nodes: CoreGraphNode[]) {
+		this._forbidden_trigger_nodes = nodes.map((n) => n.graph_node_id);
+	}
 	//@_clean_for_frame = this.context().frame()
 	//this.post_remove_dirty_state(message)
+
 	set_dirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
 		if (propagate == null) {
 			propagate = true;
 		}
+
+		if (
+			original_trigger_graph_node &&
+			this._forbidden_trigger_nodes &&
+			this._forbidden_trigger_nodes.includes(original_trigger_graph_node.graph_node_id)
+		) {
+			return;
+		}
+
 		if (original_trigger_graph_node == null) {
 			original_trigger_graph_node = this.node;
 		}

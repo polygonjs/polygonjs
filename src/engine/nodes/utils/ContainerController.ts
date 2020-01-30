@@ -32,7 +32,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 	process_container_request() {
 		if (this.node.flags?.bypass?.active) {
 			const input_index = 0;
-			this.request_input_container_p(input_index).then((container) => {
+			this.request_input_container(input_index).then((container) => {
 				this.node.remove_dirty_state();
 				if (container) {
 					this.notify_requesters(container);
@@ -50,7 +50,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 		}
 	}
 
-	async request_input_container_p(input_index: number) {
+	async request_input_container(input_index: number) {
 		const input_node = this.node.io.inputs.input(input_index);
 		if (input_node) {
 			input_node.processing_context.copy(this.node.processing_context);

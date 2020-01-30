@@ -66,7 +66,6 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 				if (converted != null) {
 					this._value = converted;
 				} else {
-					console.log('set err');
 					this.states.error.set(
 						`expression returns an invalid type (${expression_result}) (${this.expression_controller.expression})`
 					);

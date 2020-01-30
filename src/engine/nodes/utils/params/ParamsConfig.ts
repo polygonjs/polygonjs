@@ -2,6 +2,7 @@
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {ParamInitValuesTypeMap, ParamValuesTypeMap, ParamConstructorMap} from './ParamsController';
+import {RampParam} from 'src/engine/params/Ramp';
 
 // function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
 // 	const key_s = key as string;
@@ -125,7 +126,10 @@ export class ParamConfig {
 	static OPERATOR_PATH(init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH], options?: ParamOptions) {
 		return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
 	}
-	static STRING(init_value: ParamInitValuesTypeMap[ParamType.STRING], options?: ParamOptions) {
+	static RAMP(init_value: ParamInitValuesTypeMap[ParamType.RAMP] = RampParam.DEFAULT_VALUE, options?: ParamOptions) {
+		return new ParamTemplate<ParamType.RAMP>(ParamType.RAMP, init_value, options);
+	}
+	static STRING(init_value: ParamInitValuesTypeMap[ParamType.STRING] = '', options?: ParamOptions) {
 		return new ParamTemplate<ParamType.STRING>(ParamType.STRING, init_value, options);
 	}
 	static VECTOR2(init_value: ParamInitValuesTypeMap[ParamType.VECTOR2], options?: ParamOptions) {

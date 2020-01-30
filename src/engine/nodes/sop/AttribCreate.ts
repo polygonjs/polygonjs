@@ -1,7 +1,13 @@
 import lodash_trim from 'lodash/trim';
 
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from 'src/core/geometry/Constant';
+import {
+	CoreConstant,
+	AttribClassMenuEntries,
+	AttribTypeMenuEntries,
+	AttribClass,
+	AttribType,
+} from 'src/core/geometry/Constant';
 import {CoreAttribute} from 'src/core/geometry/Attribute';
 // import {CoreGeometry} from 'src/core/geometry/Geometry'
 import {CoreObject} from 'src/core/geometry/Object';
@@ -30,22 +36,14 @@ type ValueArrayByName = Dictionary<number[]>;
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');
-	class = ParamConfig.INTEGER(CoreConstant.ATTRIB_CLASS.VERTEX, {
+	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {
-			entries: Object.keys(CoreConstant.ATTRIB_CLASS).map((type, i) => {
-				return {
-					name: type,
-					value: CoreConstant.ATTRIB_CLASS[name],
-				};
-			}),
+			entries: AttribClassMenuEntries,
 		},
 	});
-	type = ParamConfig.INTEGER(CoreConstant.ATTRIB_TYPE.NUMERIC, {
+	type = ParamConfig.INTEGER(AttribType.NUMERIC, {
 		menu: {
-			entries: [
-				{name: 'numeric', value: CoreConstant.ATTRIB_TYPE.NUMERIC},
-				{name: 'string', value: CoreConstant.ATTRIB_TYPE.STRING},
-			],
+			entries: AttribTypeMenuEntries,
 		},
 	});
 	name = ParamConfig.STRING('new_attrib');
@@ -97,9 +95,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 		if (this.pv.name && lodash_trim(this.pv.name) != '') {
 			switch (this.pv.class) {
-				case CoreConstant.ATTRIB_CLASS.VERTEX:
+				case AttribClass.VERTEX:
 					this.add_point_attribute(core_group);
-				case CoreConstant.ATTRIB_CLASS.OBJECT:
+				case AttribClass.OBJECT:
 					this.add_object_attribute(core_group);
 			}
 		} else {

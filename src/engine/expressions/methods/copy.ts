@@ -1,7 +1,8 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-// import {CoreGroup} from 'src/core/Geometry/Group';
 import {CoreWalker} from 'src/core/Walker';
+import {CopySopNode} from 'src/engine/nodes/sop/Copy';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
 
 export class Copy extends BaseMethod {
 	static required_arguments() {
@@ -15,11 +16,11 @@ export class Copy extends BaseMethod {
 	}
 
 	find_dependency(index_or_path: number | string): MethodDependency | null {
-		const node = this.find_referenced_graph_node(index_or_path);
-		// TODO: add a check to see if the node is a copy SOP
-		// TODO: typescript
-		const stamp_node = node; //.stamp_node()
-		if (stamp_node) {
+		const node = this.find_referenced_graph_node(index_or_path) as BaseNodeType;
+		// I'd prefer testing with if(node instanceof CopySopNode)
+		// but tslib generates an error when doing so
+		if (node && node.type() == 'copy') {
+			const stamp_node = (node as CopySopNode).stamp_node;
 			return this.create_dependency(stamp_node, index_or_path);
 		}
 		return null;
@@ -35,15 +36,17 @@ export class Copy extends BaseMethod {
 			if (args.length == 2 || args.length == 3) {
 				const path = args[0];
 				const default_value = args[1];
-				// const attribute_name = args[2]
+				const attribute_name = args[2];
 
-				const copy_sop = CoreWalker.find_node(this.node, path);
+				const node = CoreWalker.find_node(this.node, path);
 
 				let value;
-				if (copy_sop) {
-					// TODO: typescript
-					// value = copy_sop.stamp_value(attribute_name)
+				if (node && node.type() == 'copy') {
+					value = (node as CopySopNode).stamp_value(attribute_name);
 				}
+				// if (node && node instanceof CopySopNode) {
+				// 	value = node.stamp_value(attribute_name);
+				// }
 
 				if (value == null) {
 					value = default_value;

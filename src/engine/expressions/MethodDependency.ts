@@ -11,7 +11,7 @@ type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
-	public resolved_graph_node: NodeOrParam | undefined;
+	public resolved_graph_node: CoreGraphNode | undefined;
 	public unresolved_path: string | undefined;
 
 	constructor(
@@ -56,7 +56,7 @@ export class MethodDependency extends CoreGraphNode {
 	set_jsep_node(jsep_node: jsep.Expression) {
 		this.jsep_node = jsep_node;
 	}
-	set_resolved_graph_node(node: NodeOrParam) {
+	set_resolved_graph_node(node: CoreGraphNode) {
 		this.resolved_graph_node = node;
 	}
 	set_unresolved_path(path: string) {
@@ -66,7 +66,7 @@ export class MethodDependency extends CoreGraphNode {
 	static create(
 		param: BaseParamType,
 		index_or_path: number | string,
-		node: NodeOrParam,
+		node: CoreGraphNode,
 		nodes_in_path?: NodeOrParam[]
 	) {
 		const is_index = lodash_isNumber(index_or_path);

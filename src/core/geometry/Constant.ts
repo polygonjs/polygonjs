@@ -92,6 +92,20 @@ export enum AttribClass {
 	OBJECT = 1,
 }
 
+export const AttribClassMenuEntries = [
+	{name: 'vertex', value: AttribClass.VERTEX},
+	{name: 'object', value: AttribClass.OBJECT},
+];
+
+export enum AttribType {
+	NUMERIC = 0,
+	STRING = 1,
+}
+export const AttribTypeMenuEntries = [
+	{name: 'numeric', value: AttribType.NUMERIC},
+	{name: 'string', value: AttribType.STRING},
+];
+
 export const CoreConstant = {
 	ATTRIB_CLASS: {
 		VERTEX: AttribClass.VERTEX,

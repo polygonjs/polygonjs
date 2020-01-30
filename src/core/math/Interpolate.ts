@@ -1,10 +1,9 @@
 import lodash_max from 'lodash/max';
 // import lodash_last from 'lodash/last'
 import lodash_sum from 'lodash/sum';
-import lodash_map from 'lodash/map';
 
 import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
+// import {Vector2} from 'three/src/math/Vector2';
 import {_Math} from 'three/src/math/Math';
 // const THREE = {Math: _Math, Vector2, Vector3}
 import {CorePoint} from 'src/core/geometry/Point';
@@ -16,10 +15,10 @@ export class CoreInterpolate {
 		attrib_name: string,
 		distance_threshold: number,
 		blend_with: number
-	) {
+	): number {
 		switch (points_src.length) {
 			case 0:
-				return null;
+				return 0;
 			case 1:
 				return this._interpolate_with_1_point(
 					point_dest,
@@ -51,7 +50,7 @@ export class CoreInterpolate {
 		attrib_name: string,
 		distance_threshold: number,
 		blend_with: number
-	) {
+	): number {
 		const position_dest = point_dest.position();
 		const position_src = point_src.position();
 		const distance = position_dest.distanceTo(position_src);
@@ -73,37 +72,38 @@ export class CoreInterpolate {
 
 	static _weighted_value_from_distance(
 		point_dest: CorePoint,
-		value_src: NumericAttribValue,
+		value_src: number,
 		attrib_name: string,
 		distance: number,
 		distance_threshold: number,
 		blend_with: number
-	) {
+	): number {
 		if (distance <= distance_threshold) {
 			return value_src;
 		} else {
 			const value_dest = point_dest.attrib_value(attrib_name);
 			const blend = this._weight_from_distance(distance, distance_threshold, blend_with);
-			switch (point_dest.attrib_size(attrib_name)) {
-				case 1:
-					const value_src_as_number = value_src as number;
-					return blend * value_dest + (1 - blend) * value_src_as_number;
-				case 2:
-					const value_src_as_vec2 = value_src as Vector2Like;
-					return new Vector2(
-						blend * value_dest.x + (1 - blend) * value_src_as_vec2.x,
-						blend * value_dest.y + (1 - blend) * value_src_as_vec2.y
-					);
-				case 3:
-					const value_src_as_vec3 = value_src as Vector3Like;
-					return new Vector3(
-						blend * value_dest.x + (1 - blend) * value_src_as_vec3.x,
-						blend * value_dest.y + (1 - blend) * value_src_as_vec3.y,
-						blend * value_dest.z + (1 - blend) * value_src_as_vec3.z
-					);
-				default:
-					return null;
-			}
+			return blend * value_dest + (1 - blend) * value_src;
+			// switch (point_dest.attrib_size(attrib_name)) {
+			// 	case 1:
+			// 		// const value_src_as_number = value_src as number;
+			// 		return blend * value_dest + (1 - blend) * value_src;
+			// 	case 2:
+			// 		const value_src_as_vec2 = value_src as Vector2Like;
+			// 		return new Vector2(
+			// 			blend * value_dest.x + (1 - blend) * value_src_as_vec2.x,
+			// 			blend * value_dest.y + (1 - blend) * value_src_as_vec2.y
+			// 		);
+			// 	case 3:
+			// 		const value_src_as_vec3 = value_src as Vector3Like;
+			// 		return new Vector3(
+			// 			blend * value_dest.x + (1 - blend) * value_src_as_vec3.x,
+			// 			blend * value_dest.y + (1 - blend) * value_src_as_vec3.y,
+			// 			blend * value_dest.z + (1 - blend) * value_src_as_vec3.z
+			// 		);
+			// 	default:
+			// 		return 0;
+			// }
 		}
 	}
 
@@ -126,7 +126,7 @@ export class CoreInterpolate {
 		attrib_name: string,
 		distance_threshold: number,
 		blend_with: number
-	) {
+	): number {
 		// let new_value
 		// const positions_src = lodash_map(points_src, (point) =>
 		// 	point.position()
@@ -135,7 +135,7 @@ export class CoreInterpolate {
 		// 	point.attrib_value(attrib_name)
 		// )
 		// const position_dest = point_dest.position()
-		const attrib_size = point_dest.attrib_size(attrib_name);
+		// const attrib_size = point_dest.attrib_size(attrib_name);
 
 		// const distances = lodash_map(positions_src, (src_position) =>
 		// 	src_position.distanceTo(position_dest)
@@ -161,26 +161,27 @@ export class CoreInterpolate {
 		// 		when 1 then src_value * weights[i]
 		// 		else
 		// 			src_value.clone().multiplyScalar(weights[i])
-		const weighted_values_src = lodash_map(points_src, (point_src) => {
+		const weighted_values_src = points_src.map((point_src) => {
 			return this._interpolate_with_1_point(point_dest, point_src, attrib_name, distance_threshold, blend_with);
 		});
+		return lodash_max(weighted_values_src) || 0;
 
-		// TODO: we could have 2 modes of interpolation?
-		// return (new_value = (() => {
-		switch (attrib_size) {
-			// when 1 then lodash_sum(weighted_values_src) / values_src.length # mode 1
-			case 1:
-				return lodash_max(weighted_values_src); // mode 2
-			default:
-				throw 'interpolation with multiple vectors not implemented yet';
-			// var new_vector = weighted_values_src[0].clone();
-			// new_vector.x = lodash_sum(lodash_map(weighted_values, 'x')) / total_weight;
-			// new_vector.y = lodash_sum(lodash_map(weighted_values, 'y')) / total_weight;
-			// if (new_vector.z != null) {
-			// 	new_vector.z = lodash_sum(lodash_map(weighted_values, 'z')) / total_weight;
-			// }
-			// return new_vector;
-		}
+		// // TODO: we could have 2 modes of interpolation?
+		// // return (new_value = (() => {
+		// switch (attrib_size) {
+		// 	// when 1 then lodash_sum(weighted_values_src) / values_src.length # mode 1
+		// 	case 1:
+		// 		return lodash_max(weighted_values_src); // mode 2
+		// 	default:
+		// 		throw 'interpolation with multiple vectors not implemented yet';
+		// 	// var new_vector = weighted_values_src[0].clone();
+		// 	// new_vector.x = lodash_sum(lodash_map(weighted_values, 'x')) / total_weight;
+		// 	// new_vector.y = lodash_sum(lodash_map(weighted_values, 'y')) / total_weight;
+		// 	// if (new_vector.z != null) {
+		// 	// 	new_vector.z = lodash_sum(lodash_map(weighted_values, 'z')) / total_weight;
+		// 	// }
+		// 	// return new_vector;
+		// }
 		// })())
 	}
 
@@ -198,9 +199,7 @@ export class CoreInterpolate {
 	}
 
 	static _weights_from_2(current_position: Vector3, other_positions: Vector3[]) {
-		const dist_to_positions = lodash_map(other_positions, (other_position) =>
-			current_position.distanceTo(other_position)
-		);
+		const dist_to_positions = other_positions.map((other_position) => current_position.distanceTo(other_position));
 
 		const distance_total = lodash_sum(dist_to_positions);
 
@@ -208,9 +207,7 @@ export class CoreInterpolate {
 	}
 
 	static _weights_from_3(current_position: Vector3, other_positions: Vector3[]) {
-		const dist_to_positions = lodash_map(other_positions, (other_position) =>
-			current_position.distanceTo(other_position)
-		);
+		const dist_to_positions = other_positions.map((other_position) => current_position.distanceTo(other_position));
 
 		const distance_total = lodash_sum([
 			dist_to_positions[0] * dist_to_positions[1],
