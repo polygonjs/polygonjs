@@ -18,6 +18,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 	request_container(): Promise<T> {
 		return new Promise((resolve, reject) => {
 			this._callbacks.push(resolve);
+			this.node.scene.cook_controller.add_node(this.node);
 
 			// const cooker = this.node.scene.cooker;
 			// if (cooker.blocked()) {
@@ -80,6 +81,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 		while ((callback = callbacks.pop())) {
 			callback(container);
 		}
+		this.node.scene.cook_controller.remove_node(this.node);
 	}
 }
 

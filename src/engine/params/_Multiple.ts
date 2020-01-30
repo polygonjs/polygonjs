@@ -85,7 +85,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		this.compute();
 	}
 
-	async compute(): Promise<void> {
+	protected async process_computation(): Promise<void> {
 		await this.compute_components();
 		this.set_value_from_components();
 	}
@@ -160,7 +160,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		return true;
 	}
 
-	async compute_components() {
+	private async compute_components() {
 		const components = this.components;
 		// const component_evaluation_states = lodash_map(components, ()=> false);
 		// const expected_values_count = components.length;
@@ -171,14 +171,14 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		for (let c of components) {
 			promises.push(c.compute()); //component_value=> {
 		}
-		const component_values = await Promise.all(promises);
+		await Promise.all(promises);
 		// component_values[index] = component_value;
 		// component_evaluation_states[index] = true;
 		// const evaluated_values_count = lodash_compact(component_evaluation_states).length;
 		// check if all components have been evaluated succesfully
 		// if (evaluated_values_count === expected_values_count) {
 		this.remove_dirty_state();
-		return component_values;
+		// return component_values;
 		// }
 		// });
 		// }

@@ -5,5 +5,4 @@ export class ButtonParam extends Single<ParamType.BUTTON> {
 	static type() {
 		return ParamType.BUTTON;
 	}
-	async compute(): Promise<void> {}
 }

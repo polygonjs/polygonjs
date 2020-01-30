@@ -1,4 +1,4 @@
-QUnit.test('vector eval correctly when set to different values', async (assert) => {
+QUnit.test('vector3 eval correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 
 	const t = geo1.p.t;

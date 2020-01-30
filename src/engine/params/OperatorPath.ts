@@ -37,7 +37,7 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	// 	this._raw_input = raw_input;
 	// }
 
-	async compute() {
+	protected async process_computation() {
 		const path = this._raw_input; //await this.eval_raw(); //path=> {
 		let node = null;
 

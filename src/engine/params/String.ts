@@ -50,7 +50,7 @@ export class StringParam extends Single<ParamType.STRING> {
 			}
 		}
 	}
-	async compute(): Promise<void> {
+	protected async process_computation(): Promise<void> {
 		if (this.expression_controller.active && !this.expression_controller.requires_entities) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {

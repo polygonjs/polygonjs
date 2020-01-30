@@ -28,6 +28,7 @@
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
 import {CoreGraph} from 'src/core/graph/CoreGraph';
+import {CookController} from './utils/CookController';
 import {EventsController} from './utils/EventsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
@@ -75,6 +76,10 @@ export class PolyScene {
 	// get cube_cameras_controller() {
 	// 	return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
 	// }
+	public readonly cook_controller = new CookController();
+	async wait_for_cooks_completed() {
+		return this.cook_controller.wait_for_cooks_completed();
+	}
 
 	private _events_controller: EventsController | undefined;
 	get events_controller() {

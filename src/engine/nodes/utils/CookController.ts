@@ -95,7 +95,10 @@ export class CookController {
 		await this._start_cook_if_no_errors(input_contents);
 	}
 	async cook_main_without_inputs() {
+		this.node.scene.cook_controller.add_node(this.node);
 		if (this.is_cooking) {
+			console.warn('cook_main_without_inputs already cooking', this.node.full_path());
+			// TODO: should I also queue a promise resolve from here?
 			return;
 		}
 		this._init_cooking_state();
@@ -116,7 +119,7 @@ export class CookController {
 			this.node.remove_dirty_state();
 			this._terminate_cook_process();
 		} else {
-			POLY.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp);
+			POLY.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.full_path());
 			this._cooking = false;
 			this.cook_main();
 		}

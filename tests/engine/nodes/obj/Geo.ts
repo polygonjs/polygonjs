@@ -17,7 +17,7 @@ QUnit.test('geo obj simple', async (assert) => {
 	assert.equal(geo1.cook_controller.cooks_count, 0, 'should not have counted cooks yet');
 
 	geo1.p.t.x.set(12);
-	await window.sleep(100);
+	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.cook_controller.cooks_count, 1, 'should have cooked only once');
 	assert.deepEqual(
 		obj.matrix.toArray(),
@@ -62,7 +62,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 
 	const geo1 = window.geo1;
 
-	await window.sleep(10);
+	await scene.wait_for_cooks_completed();
 	geo1.flags.display.set(false);
 	assert.equal(main_group.children.length, 1);
 
@@ -70,7 +70,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 
 	assert.equal(geo1.cook_controller.cooks_count, 0);
 	geo1.p.t.x.set(2);
-	await window.sleep(100);
+	await scene.wait_for_cooks_completed();
 	assert.deepEqual(geo1.object.matrix.toArray(), new Matrix4().toArray(), 'matrix should be identity');
 	assert.equal(geo1.cook_controller.cooks_count, 0, 'should not have cooked');
 
@@ -120,7 +120,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 		geo1.p.t.x.set(2);
 		geo1.p.s.y.set(4);
 	});
-	await window.sleep(100);
+	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.object.uuid, obj.uuid);
 	assert.deepEqual(
 		obj.matrix.toArray(),
@@ -150,7 +150,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 
 	// display the box
 	box1.flags.display.set(true);
-	await window.sleep(100);
+	await scene.wait_for_cooks_completed();
 	assert.equal(obj.children.length, 1);
 	let geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
 	assert.equal(geometry.getAttribute('position').array.length, 24 * 3);
@@ -158,7 +158,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// display the plane
 	plane1.flags.display.set(true);
 	assert.notOk(box1.flags.display.active);
-	await window.sleep(100);
+	await scene.wait_for_cooks_completed();
 	assert.equal(obj.children.length, 1);
 	geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
 	let positions = geometry.getAttribute('position').array;
@@ -168,7 +168,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 
 	// update the plane
 	plane1.p.size.set([2, 5]);
-	await window.sleep(200);
+	await scene.wait_for_cooks_completed();
 	assert.equal(obj.children.length, 1);
 	geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
 	positions = geometry.getAttribute('position').array;
@@ -190,16 +190,16 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	file1.p.url.set('/examples/models/wolf.obj');
 
 	file1.flags.display.set(true);
-	await window.sleep(200);
+	await scene.wait_for_cooks_completed();
 	assert.equal(obj.children.length, 1);
 	assert.equal(obj.children[0].children.length, 4);
 });
 
 QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
-	window.scene.performance.start();
-	await window.sleep(10);
-	const geo1 = window.geo1;
 	const scene = window.scene;
+	scene.performance.start();
+	await scene.wait_for_cooks_completed();
+	const geo1 = window.geo1;
 	console.log('check');
 	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
 	scene.set_frame(1);
@@ -209,13 +209,13 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	geo1.p.r.y.set('$F+10');
 
 	assert.ok(geo1.is_dirty);
-	await window.sleep(20);
+	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.cook_controller.cooks_count, 1);
 	assert.notOk(geo1.is_dirty);
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
 
 	scene.set_frame(37);
-	await window.sleep(20);
+	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.cook_controller.cooks_count, 2);
 	assert.notOk(geo1.is_dirty);
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);

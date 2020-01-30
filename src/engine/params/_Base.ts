@@ -55,8 +55,9 @@ export interface TypedParamVisitor {
 }
 
 // type ParamTypeElem = ParamType;
+type ComputeCallback = (value: void) => void;
 
-export class TypedParam<T extends ParamType> extends CoreGraphNode {
+export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// protected _raw_input: ParamInitValuesTypeMap[T];
 	protected _default_value!: ParamInitValuesTypeMap[T];
 	protected _value!: ParamValuesTypeMap[T];
@@ -64,6 +65,7 @@ export class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _node!: BaseNodeType;
 	protected _parent_param: TypedMultipleParam<any> | undefined;
 	protected _components: FloatParam[] | undefined;
+	protected _compute_resolves: ComputeCallback[] | undefined;
 
 	private _options: OptionsController = new OptionsController((<unknown>this) as BaseParamType);
 	get options(): OptionsController {
@@ -146,9 +148,30 @@ export class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get is_default(): boolean {
 		return true;
 	}
+
+	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
-		console.warn('param.compute not overriden', this);
+		if (this.is_dirty) {
+			if (!this._is_computing) {
+				this._is_computing = true;
+				await this.process_computation();
+				this._is_computing = false;
+
+				if (this._compute_resolves) {
+					let callback: ComputeCallback | undefined;
+					while ((callback = this._compute_resolves.pop())) {
+						callback();
+					}
+				}
+			} else {
+				return new Promise((resolve, reject) => {
+					this._compute_resolves = this._compute_resolves || [];
+					this._compute_resolves.push(resolve);
+				});
+			}
+		}
 	}
+	protected async process_computation(): Promise<void> {}
 	// set_default_value(default_value: ParamValuesTypeMap[T]) {
 	// 	this._default_value = default_value;
 	// }

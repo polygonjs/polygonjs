@@ -42,11 +42,4 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 			return null;
 		}
 	}
-
-	// async compute() {
-	// 	const val = await this.eval_raw(); //val=> {
-	// 	const converted: number = this.convert(val);
-	// 	return converted;
-	// 	//});//
-	// }
 }

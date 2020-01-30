@@ -15,7 +15,7 @@ import './engine/params/Color';
 import './engine/params/Float';
 import './engine/params/Integer';
 import './engine/params/String';
-import './engine/params/Vector';
+import './engine/params/Vector3';
 import './engine/params/utils/DefaultValues';
 import './engine/params/utils/Dirty';
 import './engine/params/utils/Expression';
