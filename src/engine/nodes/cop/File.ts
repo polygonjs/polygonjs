@@ -264,16 +264,16 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	params_config = ParamsConfig;
 	// @ParamF('video_time') _param_video_time: number;
 	// @ParamS('url') _param_url: string;
-	private _previous_param_url: string | null;
-	private _video: HTMLVideoElement;
+	private _previous_param_url: string | undefined;
+	private _video: HTMLVideoElement | undefined;
 
 	static type() {
 		return 'file';
 	}
 
 	// _param_video_time_param: BaseParam
-	private _texture_loader: CoreTextureLoader;
-	private _texture: Texture;
+	private _texture_loader: CoreTextureLoader | undefined;
+	private _texture: Texture | undefined;
 
 	static VIDEO_TIME_PARAM_NAME = 'video_time';
 	static DEFAULT_NODE_PATH = {
@@ -367,18 +367,24 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 				this._texture = texture;
 			}
 
-			this._add_video_spare_params_if_required(this._texture);
+			if (this._texture) {
+				this._add_video_spare_params_if_required(this._texture);
+			}
 			this._previous_param_url = this.pv.url;
 
 			this._set_video_current_time();
 			this._update_texture_params();
 
-			this.set_texture(this._texture);
+			if (this._texture) {
+				this.set_texture(this._texture);
+			} else {
+				this.cook_controller.end_cook();
+			}
 		} else {
 			this._set_video_current_time();
 			this._update_texture_params();
 
-			if (this._texture.needsUpdate) {
+			if (this._texture?.needsUpdate) {
 				this.set_texture(this._texture);
 			} else {
 				this.cook_controller.end_cook();
@@ -397,7 +403,7 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 			const param_value = this.params.float(param_name);
 			// const texture_attrib = ATTRIB_MAPPING[attrib];
 
-			if (param_value != null) {
+			if (param_value != null && this._texture) {
 				if (this._texture[texture_attrib] != param_value) {
 					this._texture[texture_attrib] = param_value;
 					this._texture.needsUpdate = true;
@@ -427,17 +433,19 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 			const is_video = texture.constructor == VideoTexture;
 			if (is_video) {
 				this._video = texture.image;
-				if (!this.params.has_param(FileCopNode.VIDEO_TIME_PARAM_NAME)) {
-					const duration = this._video.duration;
+				if (this._video) {
+					if (!this.params.has_param(FileCopNode.VIDEO_TIME_PARAM_NAME)) {
+						const duration = this._video.duration;
 
-					this.add_param(ParamType.FLOAT, FileCopNode.VIDEO_TIME_PARAM_NAME, '$T', {
-						spare: true,
-						cook: true,
-						range: [0, duration],
-						range_locked: [true, true],
-					});
+						this.add_param(ParamType.FLOAT, FileCopNode.VIDEO_TIME_PARAM_NAME, '$T', {
+							spare: true,
+							cook: true,
+							range: [0, duration],
+							range_locked: [true, true],
+						});
 
-					this.emit(NodeEvent.PARAMS_UPDATED);
+						this.emit(NodeEvent.PARAMS_UPDATED);
+					}
 				}
 			} else {
 				this._remove_spare_params();

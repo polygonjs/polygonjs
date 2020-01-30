@@ -13,8 +13,8 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 	initialize_base_node() {
 		super.initialize_base_node();
 		this.flags.add_display();
-		this.flags.display.add_hook(() => {
-			this.set_used_in_scene(this.flags.display.active);
+		this.flags.display?.add_hook(() => {
+			this.set_used_in_scene(this.flags.display?.active || false);
 		});
 		this.dirty_controller.add_post_dirty_hook(async () => {
 			if (this.used_in_scene) {
@@ -80,7 +80,7 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 		return this._color_with_intensity;
 	}
 	get active(): boolean {
-		return this.flags.display.active;
+		return this.flags.display?.active || false;
 	}
 }
 

@@ -66,15 +66,17 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		this.flags.add_bypass();
 
 		this.flags.add_display();
-		this.flags.display.set(false);
-		this.flags.display.add_hook(() => {
-			if (this.flags.display.active) {
-				const parent = this.parent as GeoObjNode;
-				if (parent) {
-					parent.display_node_controller.set_display_node(this);
+		if (this.flags.display) {
+			this.flags.display.set(false);
+			this.flags.display.add_hook(() => {
+				if (this.flags.display?.active) {
+					const parent = this.parent as GeoObjNode;
+					if (parent) {
+						parent.display_node_controller.set_display_node(this);
+					}
 				}
-			}
-		});
+			});
+		}
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
 

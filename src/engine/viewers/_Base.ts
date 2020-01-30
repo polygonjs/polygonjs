@@ -19,7 +19,7 @@ const HOVERED_CLASS_NAME = 'hovered';
 
 export abstract class BaseViewer {
 	protected _display_scene: Scene;
-	protected _canvas: HTMLCanvasElement;
+	protected _canvas!: HTMLCanvasElement;
 	protected _active: boolean = false;
 
 	get active() {
@@ -32,19 +32,19 @@ export abstract class BaseViewer {
 		this._active = false;
 	}
 
-	protected _cameras_controller: CamerasController;
+	protected _cameras_controller: CamerasController | undefined;
 	get cameras_controller() {
 		return (this._cameras_controller = this._cameras_controller || new CamerasController(this));
 	}
-	protected _controls_controller: ControlsController;
+	protected _controls_controller: ControlsController | undefined;
 	get controls_controller() {
 		return (this._controls_controller = this._controls_controller || new ControlsController(this));
 	}
-	protected _events_controller: EventsController;
+	protected _events_controller: EventsController | undefined;
 	get events_controller() {
 		return (this._events_controller = this._events_controller || new EventsController(this));
 	}
-	protected _webgl_controller: WebGLController;
+	protected _webgl_controller: WebGLController | undefined;
 	get webgl_controller() {
 		return (this._webgl_controller = this._webgl_controller || new WebGLController(this));
 	}

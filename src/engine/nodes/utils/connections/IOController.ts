@@ -6,8 +6,8 @@ import {OutputsController} from './OutputsController';
 
 export class IOController<T extends BaseNodeType> {
 	protected _connections = new ConnectionsController(this.node);
-	protected _inputs: InputsController<T>;
-	protected _outputs: OutputsController<T>;
+	protected _inputs: InputsController<T> | undefined;
+	protected _outputs: OutputsController<T> | undefined;
 
 	constructor(protected node: T) {}
 

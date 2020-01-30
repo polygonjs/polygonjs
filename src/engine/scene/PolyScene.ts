@@ -46,14 +46,14 @@ export class PolyScene {
 	get display_scene() {
 		return this._display_scene;
 	}
-	_uuid: string;
+	_uuid!: string;
 	set_uuid(uuid: string) {
 		return (this._uuid = uuid);
 	}
 	get uuid() {
 		return this._uuid;
 	}
-	_name: string;
+	_name: string | undefined;
 	set_name(name: string) {
 		return (this._name = name);
 	}
@@ -76,7 +76,7 @@ export class PolyScene {
 	// 	return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
 	// }
 
-	private _events_controller: EventsController;
+	private _events_controller: EventsController | undefined;
 	get events_controller() {
 		return (this._events_controller = this._events_controller || new EventsController(this));
 	}
@@ -86,11 +86,11 @@ export class PolyScene {
 		return this._graph;
 	}
 
-	private _lifecycle_controller: LifeCycleController;
+	private _lifecycle_controller: LifeCycleController | undefined;
 	get lifecycle_controller() {
 		return (this._lifecycle_controller = this._lifecycle_controller || new LifeCycleController(this));
 	}
-	private _loading_controller: LoadingController;
+	private _loading_controller: LoadingController | undefined;
 	get loading_controller() {
 		return (this._loading_controller = this._loading_controller || new LoadingController(this));
 	}
@@ -105,7 +105,7 @@ export class PolyScene {
 		return this._nodes_controller;
 	}
 
-	protected _performance: CorePerformance;
+	protected _performance: CorePerformance | undefined;
 	get performance() {
 		return (this._performance = this._performance || new CorePerformance());
 	}
@@ -130,7 +130,7 @@ export class PolyScene {
 		this.time_controller.pause();
 	}
 
-	private _serializer: Serializer;
+	private _serializer: Serializer | undefined;
 	get serializer() {
 		return (this._serializer = this._serializer || new Serializer(this));
 	}
@@ -138,12 +138,12 @@ export class PolyScene {
 		return this.serializer.to_json();
 	}
 
-	private _uniforms_controller: UniformsController;
+	private _uniforms_controller: UniformsController | undefined;
 	get uniforms_controller() {
 		return (this._uniforms_controller = this._uniforms_controller || new UniformsController(this));
 	}
 
-	private _webgl_controller: WebGLController;
+	private _webgl_controller: WebGLController | undefined;
 	get webgl_controller() {
 		return (this._webgl_controller = this._webgl_controller || new WebGLController());
 	}

@@ -24,12 +24,12 @@ import {BaseMatNodeType} from 'src/engine/nodes/mat/_Base';
 export class BaseBackgroundController {
 	// private _param_use_background: boolean;
 	// private _param_use_material: boolean;
-	private _param_background_color: Color;
+	// private _param_background_color: Color;
 	// private _param_background_material: string;
 	// private _param_background_ratio: number;
 
-	private _screen_quad: Mesh;
-	private _screen_quad_flat_material: MeshBasicMaterial;
+	private _screen_quad: Mesh | undefined;
+	private _screen_quad_flat_material: MeshBasicMaterial | undefined;
 
 	protected _bg_raycaster = new Raycaster();
 
@@ -51,24 +51,23 @@ export class BaseBackgroundController {
 	}
 
 	add_params() {
-		this.node.within_param_folder('background', () => {
-			// this.node.add_param(ParamType.BOOLEAN, 'use_background', 0);
-			// this.node.add_param(ParamType.BOOLEAN, 'use_material', 0, {
-			// 	visible_if: {use_background: true},
-			// });
-			// this.node.add_param(ParamType.COLOR, 'background_color', [0, 0, 0], {
-			// 	visible_if: {use_background: true, use_material: false},
-			// });
-			// this.node.add_param(ParamType.OPERATOR_PATH, 'background_material', '', {
-			// 	visible_if: {use_background: true, use_material: true},
-			// 	node_selection: {context: NodeContext.MAT},
-			// 	dependent_on_found_node: false,
-			// });
-			// this.node.add_param(ParamType.FLOAT, 'background_ratio', 1, {
-			// 	visible_if: {use_background: true, use_material: true},
-			// });
-		});
-
+		// this.node.within_param_folder('background', () => {
+		// this.node.add_param(ParamType.BOOLEAN, 'use_background', 0);
+		// this.node.add_param(ParamType.BOOLEAN, 'use_material', 0, {
+		// 	visible_if: {use_background: true},
+		// });
+		// this.node.add_param(ParamType.COLOR, 'background_color', [0, 0, 0], {
+		// 	visible_if: {use_background: true, use_material: false},
+		// });
+		// this.node.add_param(ParamType.OPERATOR_PATH, 'background_material', '', {
+		// 	visible_if: {use_background: true, use_material: true},
+		// 	node_selection: {context: NodeContext.MAT},
+		// 	dependent_on_found_node: false,
+		// });
+		// this.node.add_param(ParamType.FLOAT, 'background_ratio', 1, {
+		// 	visible_if: {use_background: true, use_material: true},
+		// });
+		// });
 		// this.self.add_param( ParamType.TOGGLE, 'use_background_color', 1 )
 		// this.self.add_param( ParamType.COLOR, 'background_color', [0,0,0], {
 		// 	visible_if: {use_background_color: 1}
@@ -138,7 +137,7 @@ export class BaseBackgroundController {
 	}
 	private async update_background_color() {
 		const material = this.screen_quad_flat_material();
-		material.color = this._param_background_color;
+		material.color = this.node.pv.background_color;
 		this.screen_quad.material = material;
 	}
 

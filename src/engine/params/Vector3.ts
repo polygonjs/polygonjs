@@ -8,9 +8,9 @@ import {ParamType} from '../poly/ParamType';
 const COMPONENT_NAMES_VECTOR3 = ['x', 'y', 'z'];
 export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	protected _value = new Vector3();
-	x: FloatParam;
-	y: FloatParam;
-	z: FloatParam;
+	x!: FloatParam;
+	y!: FloatParam;
+	z!: FloatParam;
 	static type() {
 		return ParamType.VECTOR3;
 	}

@@ -36,7 +36,6 @@ export class ExpressionStringGenerator extends BaseTraverser {
 		} else {
 			this.set_error('cannot parse tree');
 		}
-		return null;
 	}
 
 	protected traverse_CallExpression(node: jsep.CallExpression): string {

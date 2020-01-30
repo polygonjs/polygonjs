@@ -21,8 +21,8 @@ export class RampParam extends Single<ParamType.RAMP> {
 		return ParamType.RAMP;
 	}
 
-	private _ramp_interpolant: CubicInterpolant | null;
-	private _ramp_texture: DataTexture | null;
+	private _ramp_interpolant: CubicInterpolant | undefined;
+	private _ramp_texture: DataTexture | undefined;
 
 	static DEFAULT_VALUE = new RampValue('linear', [new RampPoint(0, 0), new RampPoint(1, 1)]);
 
@@ -66,8 +66,8 @@ export class RampParam extends Single<ParamType.RAMP> {
 	}
 
 	_reset_ramp_interpolant_and_texture() {
-		this._ramp_interpolant = null;
-		this._ramp_texture = null;
+		this._ramp_interpolant = undefined;
+		this._ramp_texture = undefined;
 	}
 	ramp_texture() {
 		return (this._ramp_texture = this._ramp_texture || this._create_ramp_texture());

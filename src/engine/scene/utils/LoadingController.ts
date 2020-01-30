@@ -3,8 +3,8 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 export class LoadingController {
 	constructor(private scene: PolyScene) {}
 
-	_loading_state: boolean;
-	_auto_updating: boolean;
+	_loading_state: boolean = true;
+	_auto_updating: boolean = true;
 	_first_object_loaded: boolean = false;
 
 	mark_as_loading() {

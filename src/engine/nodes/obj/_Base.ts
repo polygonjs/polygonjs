@@ -48,14 +48,14 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	protected _object: O;
+	protected _object!: O;
 	// _sop_loaded: boolean = false;
 
-	protected _look_at_controller: LookAtController;
+	protected _look_at_controller: LookAtController | undefined;
 	get look_at_controller(): LookAtController {
 		return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
 	}
-	protected _transform_controller: TransformController;
+	protected _transform_controller: TransformController | undefined;
 	get transform_controller(): TransformController {
 		return (this._transform_controller = this._transform_controller || new TransformController(this));
 	}
@@ -167,7 +167,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// }
 
 	is_displayed(): boolean {
-		return this.flags.display.active;
+		return this.flags?.display?.active || false;
 		// if (callback == null) {
 		// 	throw 'no callback given to is_displayed';
 		// }

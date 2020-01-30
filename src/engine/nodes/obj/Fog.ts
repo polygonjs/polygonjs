@@ -29,8 +29,8 @@ export class FogObjNode extends TypedObjNode<Object3D, FogObjParamConfig> {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 	public readonly add_to_hierarchy: boolean = false;
 
-	protected _linear_fog: Fog;
-	protected _linear_fogexp2: FogExp2;
+	protected _linear_fog!: Fog;
+	protected _linear_fogexp2!: FogExp2;
 
 	initialize_node() {
 		this.flags.add_display();

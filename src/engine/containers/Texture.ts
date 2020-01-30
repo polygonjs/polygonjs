@@ -20,8 +20,8 @@ export class TextureContainer extends TypedContainer<ContainableMap['TEXTURE']> 
 	core_content(): Texture {
 		return this._content;
 	}
-	core_content_cloned(): Texture | null {
-		return this._content?.clone() || null;
+	core_content_cloned(): Texture | undefined {
+		return this._content?.clone();
 	}
 
 	object() {

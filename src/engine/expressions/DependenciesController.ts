@@ -16,7 +16,7 @@ export interface JsepsByString {
 }
 
 export class DependenciesController {
-	error_message: string;
+	error_message: string | undefined;
 	// private references_controller: MissingReferencesController
 	// private missing_expression_references_by_id: MissingExpressionReferenceByString = {}
 	private cyclic_graph_detected: boolean = false;

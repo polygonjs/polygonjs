@@ -12,7 +12,7 @@ import {TypedSopNode} from './_Base';
 // import {CoreGroup} from 'src/Core/Geometry/Group';
 import {CoreGeometry} from 'src/core/geometry/Geometry';
 import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
-// import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three/src/core/Object3D';
 // import {CoreConstant} from 'src/Core/Geometry/Constant';
 import {ObjectType} from 'src/core/geometry/Constant';
 import {Mesh} from 'three/src/objects/Mesh';
@@ -73,7 +73,8 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 		const merged_objects: Object3DWithGeometry[] = [];
 
 		for (let object of all_objects) {
-			object.traverse((child: Object3DWithGeometry) => {
+			object.traverse((object3d: Object3D) => {
+				const object = object3d as Object3DWithGeometry;
 				if (object.geometry) {
 					// const type = child.constructor.name;
 					if ((object as Mesh).isMesh) {

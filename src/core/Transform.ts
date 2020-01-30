@@ -6,7 +6,6 @@ import {Euler} from 'three/src/math/Euler';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {ParamType} from 'src/engine/poly/ParamType';
 
 const ROTATION_ORDER = 'XYZ';
 
@@ -18,14 +17,14 @@ export interface SetParamsFromMatrixOptions {
 // const euler = new Euler(0, 0, 0, ROTATION_ORDER)
 
 export class CoreTransform {
-	static create_params(node: BaseNodeType) {
-		node.add_param(ParamType.VECTOR3, 't', [0, 0, 0]);
-		node.add_param(ParamType.VECTOR3, 'r', [0, 0, 0]);
-		node.add_param(ParamType.VECTOR3, 's', [1, 1, 1]);
-		node.add_param(ParamType.FLOAT, 'scale', 1, {range: [0, 10]});
-		node.add_param(ParamType.OPERATOR_PATH, 'look_at', '');
-		node.add_param(ParamType.VECTOR3, 'up', [0, 1, 0]);
-	}
+	// static create_params(node: BaseNodeType) {
+	// 	node.add_param(ParamType.VECTOR3, 't', [0, 0, 0]);
+	// 	node.add_param(ParamType.VECTOR3, 'r', [0, 0, 0]);
+	// 	node.add_param(ParamType.VECTOR3, 's', [1, 1, 1]);
+	// 	node.add_param(ParamType.FLOAT, 'scale', 1, {range: [0, 10]});
+	// 	node.add_param(ParamType.OPERATOR_PATH, 'look_at', '');
+	// 	node.add_param(ParamType.VECTOR3, 'up', [0, 1, 0]);
+	// }
 
 	// static matrix_from_node_with_transform_params(node: BaseNodeType): Matrix4 {
 	// 	const t = node.params.vector3('t');

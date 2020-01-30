@@ -18,10 +18,10 @@ declare global {
 }
 
 export class ThreejsViewer extends BaseViewer {
-	private _request_animation_frame_id: number;
+	private _request_animation_frame_id: number | undefined;
 	private do_render: boolean = true;
 
-	private _animate_method: () => void;
+	private _animate_method: () => void = this.animate.bind(this);
 
 	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNodeType) {
 		super(_container, _scene, camera_node);
@@ -62,7 +62,7 @@ export class ThreejsViewer extends BaseViewer {
 		this.cameras_controller.compute_size_and_aspect();
 		const size: Vector2 = this.cameras_controller.size;
 
-		this.cameras_controller.camera_node.post_process_controller.create_renderer(this._canvas, size);
+		this.cameras_controller.camera_node?.post_process_controller.create_renderer(this._canvas, size);
 		// this.canvas_context = canvas.getContext('2d')
 
 		// init renderer
@@ -105,7 +105,6 @@ export class ThreejsViewer extends BaseViewer {
 		this.cameras_controller.prepare_current_camera();
 		// this._add_helpers_to_scene()
 
-		this._animate_method = this.animate.bind(this);
 		this.animate();
 	}
 
@@ -124,8 +123,10 @@ export class ThreejsViewer extends BaseViewer {
 
 	private _cancel_animate() {
 		this.do_render = false;
-		cancelAnimationFrame(this._request_animation_frame_id);
-		this.cameras_controller.camera_node.post_process_controller.delete_renderer(this._canvas);
+		if (this._request_animation_frame_id) {
+			cancelAnimationFrame(this._request_animation_frame_id);
+		}
+		this.cameras_controller.camera_node?.post_process_controller.delete_renderer(this._canvas);
 		// POLY.renderers_controller.deregister_renderer(@renderer)
 		// this.dispose_camera()
 	}

@@ -25,10 +25,6 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 		return 'perspective_camera';
 	}
 
-	_param_fov: number;
-	_param_vertical_fov_range: Vector2;
-	_param_horizontal_fov_range: Vector2;
-
 	protected get background_controller_constructor() {
 		return PerspectiveCameraBackgroundController;
 	}
@@ -40,16 +36,16 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 	create_params() {
 		this.create_common_params();
 
-		this.within_param_folder('render', () => {
-			// this.add_param(ParamType.FLOAT, 'fov', DEFAULT.fov, {
-			// 	range: [0, 180],
-			// 	range_locked: [true, true],
-			// });
-			// this.add_param(ParamType.VECTOR2, 'vertical_fov_range', [0, 100], {visible_if: {lock_width: 1}});
-			// this.add_param(ParamType.VECTOR2, 'horizontal_fov_range', [0, 100], {visible_if: {lock_width: 0}});
+		// this.within_param_folder('render', () => {
+		// this.add_param(ParamType.FLOAT, 'fov', DEFAULT.fov, {
+		// 	range: [0, 180],
+		// 	range_locked: [true, true],
+		// });
+		// this.add_param(ParamType.VECTOR2, 'vertical_fov_range', [0, 100], {visible_if: {lock_width: 1}});
+		// this.add_param(ParamType.VECTOR2, 'horizontal_fov_range', [0, 100], {visible_if: {lock_width: 0}});
 
-			this.create_player_camera_params();
-		});
+		this.create_player_camera_params();
+		// });
 	}
 
 	update_camera() {

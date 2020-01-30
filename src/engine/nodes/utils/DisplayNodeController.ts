@@ -5,7 +5,7 @@ import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 export class DisplayNodeController {
 	_graph_node: CoreGraphNode;
-	_display_node: BaseSopNodeType | null;
+	_display_node: BaseSopNodeType | undefined;
 	_children_uuids_dict: Dictionary<boolean> = {};
 	_children_length: number = 0;
 	constructor(protected node: BaseObjNodeType) {
@@ -23,7 +23,7 @@ export class DisplayNodeController {
 		if (this._display_node != new_display_node) {
 			const old_display_node = this._display_node;
 			if (old_display_node) {
-				old_display_node.flags.display.set(false);
+				old_display_node.flags.display?.set(false);
 				this._graph_node.remove_graph_input(old_display_node);
 				this.remove_children();
 			}

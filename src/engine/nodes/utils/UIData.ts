@@ -11,7 +11,7 @@ export class UIData extends CoreUIData {
 	private _color: Color = new Color(0.75, 0.75, 0.75);
 	private _icon: string | null = null;
 	private _layout_vertical: boolean = true;
-	private _comment: string;
+	private _comment: string | undefined;
 
 	constructor(private node: BaseNodeType, x: number = 0, y: number = 0) {
 		super();
@@ -34,7 +34,7 @@ export class UIData extends CoreUIData {
 		this._comment = comment;
 		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
 	}
-	comment(): string {
+	comment(): string | undefined {
 		return this._comment;
 	}
 	set_color(color: Color) {

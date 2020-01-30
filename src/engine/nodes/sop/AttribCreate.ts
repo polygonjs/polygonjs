@@ -9,7 +9,6 @@ import {CoreGroup} from 'src/core/geometry/Group';
 
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Vector2} from 'three/src/math/Vector2';
-import {Group} from 'three/src/objects/Group';
 
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -82,8 +81,6 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	static type() {
 		return 'attrib_create';
 	}
-
-	_group: Group;
 
 	private _x_arrays_by_geometry_uuid: ValueArrayByName = {};
 	private _y_arrays_by_geometry_uuid: ValueArrayByName = {};

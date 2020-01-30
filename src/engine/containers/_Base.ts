@@ -13,7 +13,7 @@ type Containable = ContainableMap[K];
 export abstract class TypedContainer<T extends Containable> extends CoreObject {
 	// protected _node: BaseNode;
 	// protected _eval_key: number
-	protected _content: T;
+	protected _content!: T;
 
 	constructor(protected _node: BaseNodeType) {
 		super();
@@ -62,10 +62,10 @@ export abstract class TypedContainer<T extends Containable> extends CoreObject {
 		return this._content;
 	}
 	protected _post_set_content() {}
-	public core_content(): T | null {
+	public core_content(): T | undefined {
 		return this._content;
 	}
-	public core_content_cloned(): T | null {
+	public core_content_cloned(): T | undefined {
 		return this._content;
 	}
 	// abstract clone_content(): T

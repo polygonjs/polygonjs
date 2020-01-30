@@ -11,9 +11,9 @@ interface OperatorPathParamVisitor extends TypedParamVisitor {
 }
 
 export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
-	private _raw_input: string;
+	private _raw_input: string = '';
 	// _path: string;
-	_found_node: BaseNodeType | null;
+	private _found_node: BaseNodeType | null = null;
 
 	static type() {
 		return ParamType.OPERATOR_PATH;

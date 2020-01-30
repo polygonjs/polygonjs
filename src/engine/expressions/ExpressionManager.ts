@@ -13,9 +13,9 @@ export class ExpressionManager {
 	public parse_completed: boolean = false;
 	private parse_started: boolean = false;
 	private function_generator: FunctionGenerator;
-	private expression_string_generator: ExpressionStringGenerator;
+	private expression_string_generator: ExpressionStringGenerator | undefined;
 	public dependencies_controller: DependenciesController;
-	private _error_message: string | null;
+	private _error_message: string | undefined;
 	private parsed_tree: ParsedTree = new ParsedTree();
 
 	constructor(
@@ -67,7 +67,7 @@ export class ExpressionManager {
 	reset() {
 		this.parse_completed = false;
 		this.parse_started = false;
-		this._error_message = null;
+		this._error_message = undefined;
 		// if(force){ // || this.element_index <= 1){
 		this.dependencies_controller.reset();
 		// }

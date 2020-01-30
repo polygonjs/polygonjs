@@ -85,8 +85,8 @@ import {ParamInitValuesTypeMap, ParamValuesTypeMap, ParamConstructorMap} from '.
 // 	constructor(readonly type: T, readonly default_value: ParamValuesTypeMap[T], readonly options: ParamOptions = {}) {}
 // }
 export class ParamTemplate<T extends ParamType> {
-	readonly value_type: ParamValuesTypeMap[T];
-	readonly param_class: ParamConstructorMap[T];
+	readonly value_type!: ParamValuesTypeMap[T];
+	readonly param_class!: ParamConstructorMap[T];
 	// readonly options?: ParamOptions;
 
 	constructor(public type: T, public init_value: ParamInitValuesTypeMap[T], public options?: ParamOptions) {}

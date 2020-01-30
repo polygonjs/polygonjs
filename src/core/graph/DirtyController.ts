@@ -11,8 +11,8 @@ export type PostDirtyHook = (caller?: CoreGraphNode) => void;
 export class DirtyController {
 	_dirty_count: number = 0;
 	_dirty: boolean = true;
-	_dirty_timestamp: number | null = null;
-	_cached_successors: CoreGraphNode[] | null;
+	_dirty_timestamp: number | undefined;
+	_cached_successors: CoreGraphNode[] | undefined;
 	_post_dirty_hooks: PostDirtyHook[] = [];
 
 	constructor(private node: CoreGraphNode) {}
@@ -131,7 +131,7 @@ export class DirtyController {
 	// }
 
 	clear_successors_cache() {
-		this._cached_successors = null;
+		this._cached_successors = undefined;
 	}
 	clear_successors_cache_with_predecessors() {
 		this.clear_successors_cache();

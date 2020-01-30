@@ -10,9 +10,9 @@ import jsep from 'jsep';
 type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class MethodDependency extends CoreGraphNode {
-	public jsep_node: jsep.Expression;
-	public resolved_graph_node: NodeOrParam;
-	public unresolved_path: string;
+	public jsep_node: jsep.Expression | undefined;
+	public resolved_graph_node: NodeOrParam | undefined;
+	public unresolved_path: string | undefined;
 
 	constructor(
 		public param: BaseParamType,
@@ -25,7 +25,7 @@ export class MethodDependency extends CoreGraphNode {
 
 		this.add_post_dirty_hook(this._update_from_name_change.bind(this));
 	}
-	_update_from_name_change(trigger: CoreGraphNode) {
+	_update_from_name_change(trigger?: CoreGraphNode) {
 		if (CoreObject.is_a(trigger, TypedNode) && this.decomposed_path) {
 			const node = trigger as BaseNodeType;
 			this.decomposed_path.update_from_name_change(node);

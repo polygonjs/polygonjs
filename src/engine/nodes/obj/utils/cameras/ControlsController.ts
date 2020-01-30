@@ -7,9 +7,9 @@ const CONTROLS_PARAM_NAME = 'controls';
 
 export class ControlsController {
 	_applied_controls_by_element_id: Dictionary<Dictionary<boolean>> = {};
-	private _controls_node: BaseCameraControlsEventNodeType | null;
-	private controls_start_listener: () => void;
-	private controls_end_listener: () => void;
+	private _controls_node: BaseCameraControlsEventNodeType | null = null;
+	private controls_start_listener: (() => void) | undefined;
+	private controls_end_listener: (() => void) | undefined;
 
 	constructor(private node: BaseCameraObjNodeType) {}
 

@@ -7,6 +7,7 @@ import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, BaseCameraObjParamsConfig} from
 
 import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
 import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT = {
 	left: -0.5,
@@ -16,14 +17,18 @@ const DEFAULT = {
 };
 
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {}
-const ParamsConfig = new PerspectiveCameraObjParamConfig();
+class OrthographicCameraObjParamConfig extends BaseCameraObjParamsConfig {
+	size = ParamConfig.FLOAT(1);
+	vertical_size_range = ParamConfig.VECTOR2([-1, -1]);
+	horizontal_size_range = ParamConfig.VECTOR2([-1, -1]);
+}
+const ParamsConfig = new OrthographicCameraObjParamConfig();
 
-export class OrthographicCameraObjNode extends TypedCameraObjNode<OrthographicCamera, PerspectiveCameraObjParamConfig> {
+export class OrthographicCameraObjNode extends TypedCameraObjNode<
+	OrthographicCamera,
+	OrthographicCameraObjParamConfig
+> {
 	params_config = ParamsConfig;
-	_param_size: number;
-	_param_vertical_size_range: Vector2;
-	_param_horizontal_size_range: Vector2;
 
 	protected get background_controller_constructor() {
 		return OrthographicCameraBackgroundController;
@@ -57,14 +62,14 @@ export class OrthographicCameraObjNode extends TypedCameraObjNode<OrthographicCa
 		// this.add_param('float', 'top', DEFAULT.top)
 		// this.add_param('float', 'bottom', DEFAULT.bottom)
 
-		this.within_param_folder('render', () => {
-			this.add_param(ParamType.FLOAT, 'size', 2, {range: [0, 10]});
-			// left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number
-			this.add_param(ParamType.VECTOR2, 'vertical_size_range', [0, 10], {visible_if: {lock_width: 1}});
-			this.add_param(ParamType.VECTOR2, 'horizontal_size_range', [0, 10], {visible_if: {lock_width: 0}});
+		// this.within_param_folder('render', () => {
+		this.add_param(ParamType.FLOAT, 'size', 2, {range: [0, 10]});
+		// left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number
+		this.add_param(ParamType.VECTOR2, 'vertical_size_range', [0, 10], {visible_if: {lock_width: 1}});
+		this.add_param(ParamType.VECTOR2, 'horizontal_size_range', [0, 10], {visible_if: {lock_width: 0}});
 
-			this.create_player_camera_params();
-		});
+		this.create_player_camera_params();
+		// });
 	}
 
 	update_camera() {
@@ -73,7 +78,7 @@ export class OrthographicCameraObjNode extends TypedCameraObjNode<OrthographicCa
 
 	protected _update_for_aspect_ratio() {
 		if (this._aspect) {
-			const size = this._param_size || 1;
+			const size = this.pv.size || 1;
 			let lock_width = this.pv.lock_width;
 			if (lock_width == null) {
 				lock_width = true;
@@ -81,14 +86,14 @@ export class OrthographicCameraObjNode extends TypedCameraObjNode<OrthographicCa
 
 			if (lock_width) {
 				const vertical_size = size / this._aspect;
-				const zoom = this.get_zoom(vertical_size, this._param_vertical_size_range);
+				const zoom = this.get_zoom(vertical_size, this.pv.vertical_size_range);
 				this._object.left = DEFAULT.left * size * zoom;
 				this._object.right = DEFAULT.right * size * zoom;
 				this._object.top = DEFAULT.top * vertical_size * zoom;
 				this._object.bottom = DEFAULT.bottom * vertical_size * zoom;
 			} else {
 				const horizontal_size = size * this._aspect;
-				const zoom = this.get_zoom(horizontal_size, this._param_horizontal_size_range);
+				const zoom = this.get_zoom(horizontal_size, this.pv.horizontal_size_range);
 				this._object.left = DEFAULT.left * horizontal_size * zoom;
 				this._object.right = DEFAULT.right * horizontal_size * zoom;
 				this._object.top = DEFAULT.top * size * zoom;

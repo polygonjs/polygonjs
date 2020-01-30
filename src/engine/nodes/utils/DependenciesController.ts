@@ -19,7 +19,7 @@ function typeGuard<T extends PrimitiveOrConstructor>(o: any, className: T): o is
 }
 
 export class DependenciesController {
-	private _params_referrees_by_graph_node_id: Dictionary<BaseParamType>;
+	private _params_referrees_by_graph_node_id: Dictionary<BaseParamType> | undefined;
 
 	constructor(protected node: BaseNodeType) {}
 
@@ -94,7 +94,9 @@ export class DependenciesController {
 		this._params_referrees_by_graph_node_id[param.graph_node_id] = param;
 	}
 	remove_param_referree(param: BaseParamType) {
-		delete this._params_referrees_by_graph_node_id[param.graph_node_id];
+		if (this._params_referrees_by_graph_node_id) {
+			delete this._params_referrees_by_graph_node_id[param.graph_node_id];
+		}
 	}
 	params_referree(): BaseParamType[] {
 		const list = [];

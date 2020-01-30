@@ -8,10 +8,10 @@ import {FloatParam} from './Float';
 const COMPONENT_NAMES_VECTOR4 = ['x', 'y', 'z', 'w'];
 export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	protected _value = new Vector4();
-	x: FloatParam;
-	y: FloatParam;
-	z: FloatParam;
-	w: FloatParam;
+	x!: FloatParam;
+	y!: FloatParam;
+	z!: FloatParam;
+	w!: FloatParam;
 	static type() {
 		return ParamType.VECTOR4;
 	}

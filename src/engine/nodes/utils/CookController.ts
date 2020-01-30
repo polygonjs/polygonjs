@@ -4,14 +4,14 @@ export class CookController {
 	_cooking: boolean = false;
 	_cooks_count: number = 0;
 	_max_cook_time: number = -1;
-	_cooking_dirty_timestamp: number | null;
-	_cook_time_with_inputs: number;
-	_cook_time_with_inputs_start: number | null;
-	_cook_time_start: number | null;
-	_cook_time: number;
-	_cook_time_params_start: number;
-	_cook_time_params: number;
-	_last_eval_key: string;
+	_cooking_dirty_timestamp: number | undefined;
+	_cook_time_with_inputs: number = 0;
+	_cook_time_with_inputs_start: number | undefined;
+	_cook_time_start: number | undefined;
+	_cook_time: number = 0;
+	_cook_time_params_start: number | undefined;
+	_cook_time_params: number = 0;
+	_last_eval_key: string | undefined;
 
 	constructor(private node: BaseNodeType) {}
 
@@ -157,7 +157,7 @@ export class CookController {
 
 			if (this._cook_time_with_inputs_start != null) {
 				this._cook_time_with_inputs = cook_time_end - this._cook_time_with_inputs_start;
-				this._cook_time_with_inputs_start = null;
+				this._cook_time_with_inputs_start = undefined;
 			}
 
 			if (this._cook_time_params_start != null && this._cook_time_start != null) {
@@ -166,7 +166,7 @@ export class CookController {
 
 			if (this._cook_time_start != null) {
 				this._cook_time = cook_time_end - this._cook_time_start;
-				this._cook_time_start = null;
+				this._cook_time_start = undefined;
 			}
 
 			this._max_cook_time = Math.max(this._max_cook_time, this._cook_time);

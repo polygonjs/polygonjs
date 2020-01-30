@@ -49,11 +49,9 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 	// core_content(): CoreGroup | null {
 	// 	return this._core_group; //= this._core_group || this._create_core_group()
 	// }
-	core_content_cloned(): CoreGroup | null {
+	core_content_cloned(): CoreGroup | undefined {
 		if (this._content) {
 			return this._content.clone();
-		} else {
-			return null;
 		}
 	}
 	// private _create_core_group(){

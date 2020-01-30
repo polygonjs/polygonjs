@@ -9,9 +9,9 @@ export class CorePerformance {
 	_start_time: number | null = 0;
 	_previous_timestamp: number = 0;
 	_nodes_cook_data: Dictionary<PerformanceNode> = {};
-	_durations_by_name: Dictionary<number>;
-	_durations_count_by_name: Dictionary<number>;
-	_performance_id: number;
+	_durations_by_name: Dictionary<number> = {};
+	_durations_count_by_name: Dictionary<number> = {};
+	// _performance_id: number;
 
 	// constructor(){
 	// 	console.log("creating perf")

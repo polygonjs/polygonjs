@@ -11,6 +11,9 @@ import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
 import {FontLoader} from 'three/src/loaders/FontLoader';
 import {Font} from 'three/src/extras/core/Font';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Vector3} from 'three/src/math/Vector3';
+import {Path} from 'three/src/extras/core/Path';
+import {Shape} from 'three/src/extras/core/Shape';
 
 import {BufferGeometryUtils} from 'modules/three/examples/jsm/utils/BufferGeometryUtils';
 
@@ -48,7 +51,6 @@ interface FontByUrl {
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {Vector3} from 'three';
 class TextSopParamsConfig extends NodeParamsConfig {
 	font = ParamConfig.STRING('');
 	text = ParamConfig.STRING('polygonjs', {multiline: true});
@@ -97,8 +99,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	// }
 
 	private _font_loader: FontLoader = new FontLoader();
-	private _ttf_loader: TTFLoader;
-	private _svg_loader: typeof SVGLoader;
+	private _ttf_loader: TTFLoader | undefined;
+	private _svg_loader: typeof SVGLoader | undefined;
 	private _loaded_fonts: FontByUrl = {};
 
 	initialize_node() {}
@@ -219,7 +221,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private shapes_from_font(font: Font) {
 		const shapes = this._get_shapes(font);
 		if (shapes) {
-			const holeShapes = [];
+			const holeShapes: Path[] = [];
 			for (let i = 0; i < shapes.length; i++) {
 				const shape = shapes[i];
 				if (shape.holes && shape.holes.length > 0) {
@@ -229,7 +231,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 					}
 				}
 			}
-			shapes.push.apply(shapes, holeShapes);
+			shapes.push.apply(shapes, holeShapes as Shape[]);
 			return shapes;
 		}
 	}
@@ -333,8 +335,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		const loader_constructor = (<unknown>TTFLoader) as typeof TTFLoader;
 		return new loader_constructor();
 	}
-	private async _load_svg_loader(): Promise<SVGLoader> {
+	private async _load_svg_loader(): Promise<typeof SVGLoader> {
 		const {SVGLoader} = await import(`modules/three/examples/jsm/loaders/SVGLoader`);
-		return (<unknown>SVGLoader) as SVGLoader;
+		return (<unknown>SVGLoader) as typeof SVGLoader;
 	}
 }

@@ -5,7 +5,7 @@ import {BaseViewer} from '../_Base';
 
 export class CamerasController {
 	// private _is_active: boolean = false;
-	private _camera_node: BaseCameraObjNodeType;
+	private _camera_node: BaseCameraObjNodeType | null = null;
 	// private _camera: Camera;
 
 	private _size: Vector2 = new Vector2(100, 100);
@@ -35,12 +35,12 @@ export class CamerasController {
 
 	on_resize() {
 		this.compute_size_and_aspect();
-		this._camera_node.post_process_controller.set_renderer_size(this.viewer.canvas, this._size);
+		this._camera_node?.post_process_controller.set_renderer_size(this.viewer.canvas, this._size);
 		this.update_camera_aspect();
 	}
 	compute_size_and_aspect() {
 		this._update_size();
-		this._camera_node.scene.uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
+		this._camera_node?.scene.uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
 		this._aspect = this._get_aspect();
 	}
 
@@ -53,7 +53,7 @@ export class CamerasController {
 	}
 
 	update_camera_aspect() {
-		this._camera_node.setup_for_aspect_ratio(this._aspect);
+		this._camera_node?.setup_for_aspect_ratio(this._aspect);
 	}
 	// dispose_camera: ->
 	// 	this.$emit('before_controls_apply', null)

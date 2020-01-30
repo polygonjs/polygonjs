@@ -78,13 +78,13 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	K
 > {
 	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
-	protected _object: O;
-	protected _aspect: number;
+	protected _object!: O;
+	protected _aspect: number = -1;
 	get object() {
 		return this._object;
 	}
 
-	protected _background_controller: BaseBackgroundController;
+	protected _background_controller: BaseBackgroundController | undefined;
 	get background_controller(): BaseBackgroundController {
 		return (this._background_controller =
 			this._background_controller || new this.background_controller_constructor(this));
@@ -92,15 +92,15 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	protected get background_controller_constructor() {
 		return BaseBackgroundController;
 	}
-	protected _controls_controller: ControlsController;
+	protected _controls_controller: ControlsController | undefined;
 	get controls_controller(): ControlsController {
 		return (this._controls_controller = this._controls_controller || new ControlsController(this));
 	}
-	protected _layers_controller: LayersController;
+	protected _layers_controller: LayersController | undefined;
 	get layers_controller() {
 		return (this._layers_controller = this._layers_controller || new LayersController(this));
 	}
-	protected _post_process_controller: PostProcessController;
+	protected _post_process_controller: PostProcessController | undefined;
 	get post_process_controller(): PostProcessController {
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
@@ -111,30 +111,30 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		// this._init_dirtyable_hook();
 
 		this.flags.add_display();
-		this.flags.display.add_hook(() => {
-			this.set_used_in_scene(this.flags.display.active);
+		this.flags.display?.add_hook(() => {
+			this.set_used_in_scene(this.flags.display?.active || false);
 		});
 	}
 
 	create_common_params() {
-		this.within_param_folder('transform', () => {
-			// this.add_param(ParamType.OPERATOR_PATH, 'controls', '', {
-			// 	node_selection: {
-			// 		context: NodeContext.EVENT,
-			// 	},
-			// });
-			// CoreTransform.create_params(this); // removed since they are now added Persp Camera
-			// this.add_param( ParamType.TOGGLE, 'is_updating', 0, {cook: false, hidden: true}); //, hidden: true} )
-			// this.add_param(ParamType.VECTOR3, 'target', [0, 0, 0], {cook: false}); //, hidden: true} )
-		});
+		// this.within_param_folder('transform', () => {
+		// 	// this.add_param(ParamType.OPERATOR_PATH, 'controls', '', {
+		// 	// 	node_selection: {
+		// 	// 		context: NodeContext.EVENT,
+		// 	// 	},
+		// 	// });
+		// 	// CoreTransform.create_params(this); // removed since they are now added Persp Camera
+		// 	// this.add_param( ParamType.TOGGLE, 'is_updating', 0, {cook: false, hidden: true}); //, hidden: true} )
+		// 	// this.add_param(ParamType.VECTOR3, 'target', [0, 0, 0], {cook: false}); //, hidden: true} )
+		// });
 
-		this.within_param_folder('render', () => {
-			this.layers_controller.add_params();
+		// this.within_param_folder('render', () => {
+		this.layers_controller.add_params();
 
-			// this.add_param(ParamType.FLOAT, 'near', BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
-			// this.add_param(ParamType.FLOAT, 'far', BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
-			// this.add_param(ParamType.BOOLEAN, 'lock_width', 1);
-		});
+		// this.add_param(ParamType.FLOAT, 'near', BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
+		// this.add_param(ParamType.FLOAT, 'far', BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
+		// this.add_param(ParamType.BOOLEAN, 'lock_width', 1);
+		// });
 
 		// this.background_controller.add_params();
 		this.post_process_controller.add_params();

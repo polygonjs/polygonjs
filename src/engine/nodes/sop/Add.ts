@@ -31,7 +31,7 @@ export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
 	static type() {
 		return 'add';
 	}
-	_objects: Object3D[];
+	_objects: Object3D[] | undefined;
 
 	static displayed_input_names(): string[] {
 		return ['geometry to create polygons from (optional)'];
@@ -61,7 +61,9 @@ export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
 			geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 			const object = this.create_object(geometry, CoreConstant.OBJECT_TYPE.POINTS);
 
-			this._objects.push(object);
+			if (this._objects) {
+				this._objects.push(object);
+			}
 		}
 	}
 

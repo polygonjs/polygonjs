@@ -11,7 +11,7 @@ interface EventsListener {
 export class EventsController {
 	constructor(private scene: PolyScene) {}
 
-	_events_listener: EventsListener;
+	_events_listener: EventsListener | undefined;
 
 	set_listener(events_listener: EventsListener) {
 		this._events_listener = events_listener;
@@ -25,10 +25,10 @@ export class EventsController {
 		this._events_listener?.process_events(emitter, event_name, data);
 		// }
 	}
-	get emit_allowed() {
+	get emit_allowed(): boolean {
 		return (
 			this.scene.loading_controller.loaded &&
-			this._events_listener &&
+			this._events_listener != null &&
 			this.scene.loading_controller.auto_updating &&
 			!POLY.player_mode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
 		);

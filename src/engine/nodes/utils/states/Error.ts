@@ -4,10 +4,10 @@ import {NodeEvent} from 'src/engine/poly/NodeEvent';
 // import lodash_values from 'lodash/values';
 
 export class ErrorState {
-	private _message: string | null;
+	private _message: string | undefined;
 	constructor(protected node: BaseNodeType) {}
 
-	set(message: string | null) {
+	set(message: string | undefined) {
 		if (this._message != message) {
 			this._message = message;
 			this.on_update();
@@ -17,7 +17,7 @@ export class ErrorState {
 		return this._message;
 	}
 	clear() {
-		this.set(null);
+		this.set(undefined);
 	}
 	get active(): boolean {
 		return this._message != null;

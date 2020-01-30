@@ -18,7 +18,7 @@ export class UniformsController {
 	private _frame_dependent_uniform_owners: Dictionary<IUniformsDictionaryWithFrame> = {}; //new Map()
 	private _frame_dependent_uniform_owners_ids: string[] | null = null;
 
-	private _resolution: Vector2;
+	private _resolution: Vector2 = new Vector2(1, 1);
 	private _resolution_dependent_uniform_owners: Dictionary<IUniformsDictionaryWithResolution> = {};
 	private _resolution_dependent_uniform_owners_ids: string[] = [];
 
@@ -60,7 +60,6 @@ export class UniformsController {
 		this._resolution_dependent_uniform_owners_ids = Object.keys(this._resolution_dependent_uniform_owners);
 	}
 	update_resolution_dependent_uniform_owners(resolution: Vector2) {
-		this._resolution = this._resolution || new Vector2();
 		this._resolution.copy(resolution);
 		for (let id of this._resolution_dependent_uniform_owners_ids) {
 			const uniforms = this._resolution_dependent_uniform_owners[id];

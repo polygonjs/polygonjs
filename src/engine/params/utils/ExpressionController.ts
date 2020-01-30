@@ -9,10 +9,10 @@ type EntityCallback<T extends ParamTypeElem> = (entity: CorePoint, value: ParamV
 
 type ParamTypeElem = ParamType;
 export class ExpressionController<T extends ParamTypeElem> {
-	protected _expression: string | null;
+	protected _expression: string | undefined;
 	protected _entities: CoreEntity[] | null = null;
 	protected _entity_callback: EntityCallback<T> | null = null;
-	protected _manager: ExpressionManager | null;
+	protected _manager: ExpressionManager | undefined;
 	constructor(protected param: BaseParamType) {}
 
 	get active() {
@@ -36,7 +36,7 @@ export class ExpressionController<T extends ParamTypeElem> {
 	get requires_entities() {
 		return this.param.options.is_expression_for_entities;
 	}
-	set_expression(expression: string | null) {
+	set_expression(expression: string | undefined) {
 		if (this._expression != expression) {
 			this._expression = expression;
 

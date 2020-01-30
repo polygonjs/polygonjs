@@ -9,8 +9,8 @@ export class Poly {
 	renderers_controller: RenderersController = new RenderersController();
 	nodes_register: NodesRegister = new NodesRegister();
 
-	scenes_by_uuid: Dictionary<PolyScene>;
-	_env: string;
+	scenes_by_uuid: Dictionary<PolyScene> = {};
+	_env: string | undefined;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {

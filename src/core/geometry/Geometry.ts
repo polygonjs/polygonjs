@@ -33,8 +33,8 @@ import {BufferGeometryUtils} from 'modules/three/examples/jsm/utils/BufferGeomet
 import {CoreAttributeData} from './AttributeData';
 
 export class CoreGeometry {
-	_bounding_box: Box3;
-	private _points: CorePoint[] | null;
+	_bounding_box: Box3 | undefined;
+	private _points: CorePoint[] | undefined;
 
 	// @INDEX_MODE_POINTS = 'INDEX_MODE_POINTS'
 	// @INDEX_MODE_FACES = 'INDEX_MODE_FACES'
@@ -312,7 +312,7 @@ export class CoreGeometry {
 		return (this._points = this._points || this.points_from_geometry());
 	}
 	reset_points() {
-		this._points = null;
+		this._points = undefined;
 	}
 	points_from_geometry(): CorePoint[] {
 		const points = [];

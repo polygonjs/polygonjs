@@ -7,6 +7,7 @@ import {CoreGeometry} from './Geometry';
 
 import {ObjectWithCustomMaterials} from './Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Object3D} from 'three/src/core/Object3D';
 
 interface Uniforms {
 	[propName: string]: IUniform;
@@ -31,7 +32,8 @@ export class CoreScene {
 		const original_material_by_object_id: MaterialsByString = {};
 		let assigned_material;
 
-		this._scene.traverse((object: ObjectWithCustomMaterials) => {
+		this._scene.traverse((object3d: Object3D) => {
+			const object = object3d as ObjectWithCustomMaterials;
 			if (object.material) {
 				const geometry = object.geometry as BufferGeometry;
 				if (geometry) {
@@ -66,7 +68,8 @@ export class CoreScene {
 
 		callback();
 
-		this._scene.traverse((object: Mesh) => {
+		this._scene.traverse((object3d: Object3D) => {
+			const object = object3d as Mesh;
 			if (object.material) {
 				const geometry = object.geometry;
 				if (geometry) {

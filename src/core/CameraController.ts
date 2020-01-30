@@ -10,17 +10,17 @@ type CameraControllerCallback = (target: Object3D) => void;
 export class CameraController {
 	private _update_always: boolean = true;
 	private _listener: any;
-	private _target: Object3D | null;
-	private _listener_added: boolean;
+	private _target: Object3D | undefined;
+	private _listener_added: boolean = false;
 
 	constructor(private _callback: CameraControllerCallback) {
 		this._listener = this._execute_callback.bind(this);
 	}
 
 	remove_target() {
-		this.set_target(null);
+		this.set_target(undefined);
 	}
-	set_target(target: Object3D | null) {
+	set_target(target: Object3D | undefined) {
 		if (!target) {
 			this._remove_camera_event();
 		}
@@ -57,7 +57,7 @@ export class CameraController {
 	}
 
 	private _add_camera_event() {
-		if (this._listener_added === true) {
+		if (this._listener_added) {
 			return;
 		}
 

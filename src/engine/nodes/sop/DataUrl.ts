@@ -7,6 +7,7 @@ import {JsonDataLoader} from 'src/core/loader/geometry/JsonData';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../_Base';
 class DataUrlSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');
 	json_data_keys_prefix = ParamConfig.STRING('');
@@ -16,8 +17,8 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 		visible_if: {convert: 1},
 	});
 	reload = ParamConfig.BUTTON(null, {
-		callback: (node: DataUrlSopNode, param: BaseParamType) => {
-			DataUrlSopNode.PARAM_CALLBACK_reload(node, param);
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			DataUrlSopNode.PARAM_CALLBACK_reload(node as DataUrlSopNode, param);
 		},
 	});
 }

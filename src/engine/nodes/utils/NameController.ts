@@ -7,8 +7,8 @@ type Callback = () => void;
 
 export class NameController {
 	private _graph_node: CoreGraphNode;
-	private _on_set_name_hooks: Callback[];
-	private _on_set_full_path_hooks: Callback[];
+	private _on_set_name_hooks: Callback[] | undefined;
+	private _on_set_full_path_hooks: Callback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {
 		this._graph_node = new CoreGraphNode(node.scene, 'node_name_controller');

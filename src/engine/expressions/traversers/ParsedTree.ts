@@ -16,8 +16,8 @@ const JSEP_CALL_EXPRESSION = 'CallExpression';
 const STRING_EXPRESSION_SEPARATOR = '`';
 
 export class ParsedTree {
-	public node: jsep.Expression | null;
-	public error_message: string | null = null;
+	public node: jsep.Expression | undefined;
+	public error_message: string | undefined;
 
 	constructor() {}
 
@@ -128,7 +128,7 @@ export class ParsedTree {
 	// }
 
 	private reset() {
-		this.node = null;
-		this.error_message = null;
+		this.node = undefined;
+		this.error_message = undefined;
 	}
 }

@@ -49,8 +49,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.children_controller.init(NodeContext.SOP);
 
 		this.flags.add_display();
-		this.flags.display.add_hook(() => {
-			this.set_used_in_scene(this.flags.display.active);
+		this.flags.display?.add_hook(() => {
+			this.set_used_in_scene(this.flags.display?.active || false);
 		});
 		// this._init_display_flag({
 		// 	multiple_display_flags_allowed: false,
@@ -107,7 +107,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	}
 
 	is_display_node_cooking(): boolean {
-		if (this.flags.display.active) {
+		if (this.flags.display?.active) {
 			const display_node = this._display_node_controller.display_node;
 			return display_node ? display_node.is_dirty : false;
 		} else {
@@ -127,7 +127,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// only to be replaced by the proper one when it is ready.
 		if (this.scene.loading_controller.loaded) {
 			if (this.children().length == 1) {
-				node.flags.display.set(true);
+				node.flags.display?.set(true);
 			}
 		}
 	}
@@ -150,7 +150,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
-		this.group.visible = this.flags.display.active;
+		this.group.visible = this.flags.display?.active || false;
 		this.transform_controller.update(matrix);
 		//this.update_layers()
 

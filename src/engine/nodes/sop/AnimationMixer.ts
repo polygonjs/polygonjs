@@ -15,11 +15,13 @@ import {MaterialWithSkinning} from 'src/core/geometry/Material';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {Object3D} from 'three';
+import {BaseNodeType} from '../_Base';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 	time = ParamConfig.FLOAT('$T', {range: [0, 10]});
 	prepare = ParamConfig.BUTTON(null, {
-		callback: (node: AnimationMixerSopNode, param: BaseParamType) => {
-			AnimationMixerSopNode.PARAM_CALLBACK_prepare(node, param);
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			AnimationMixerSopNode.PARAM_CALLBACK_prepare(node as AnimationMixerSopNode, param);
 		},
 	});
 }
@@ -33,10 +35,10 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 
 	_previous_time: number | null = null;
 	_mixer: AnimationMixer | null = null;
-	_actions_by_name: Dictionary<AnimationAction>;
+	_actions_by_name: Dictionary<AnimationAction> = {};
 	_values_by_param_name: Dictionary<number> = {};
 	// _mixer_used_once: boolean = false
-	_animation_target: Object3DWithAnimation;
+	_animation_target: Object3DWithAnimation | undefined;
 
 	static displayed_input_names(): string[] {
 		return ['geometry to be animated'];
@@ -93,7 +95,8 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 
 		// set material skinning
 		const materials_by_id: Dictionary<Material> = {};
-		this._animation_target.traverse((child: Mesh) => {
+		this._animation_target.traverse((object3d: Object3D) => {
+			const child = object3d as Mesh;
 			if (child.material) {
 				if (!lodash_isArray(child.material)) {
 					materials_by_id[child.material.uuid] = child.material;

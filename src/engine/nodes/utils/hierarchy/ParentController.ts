@@ -5,8 +5,8 @@ type Callback = () => void;
 import {CoreWalker} from 'src/core/Walker';
 
 export class HierarchyParentController {
-	private _parent: BaseNodeType | null;
-	private _on_set_parent_hooks: Callback[];
+	private _parent: BaseNodeType | null = null;
+	private _on_set_parent_hooks: Callback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {}
 

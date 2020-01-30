@@ -4,7 +4,7 @@ import {BaseParamType} from '../_Base';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class UIData extends CoreGraphNode {
-	private _folder_name: string | null;
+	private _folder_name: string | undefined;
 
 	constructor(scene: PolyScene, private param: BaseParamType) {
 		super(scene, 'param ui data');
@@ -22,7 +22,7 @@ export class UIData extends CoreGraphNode {
 		this.param.options.update_visibility();
 	}
 
-	set_folder_name(folder_name: string | null) {
+	set_folder_name(folder_name: string | undefined) {
 		this._folder_name = folder_name;
 	}
 	get folder_name() {

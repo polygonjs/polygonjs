@@ -17,12 +17,16 @@ interface FaceLike {
 	c: number;
 }
 
+type CorePointArray3 = [CorePoint, CorePoint, CorePoint];
+type Vector3Array2 = [Vector3, Vector3];
+type Vector3Array3 = [Vector3, Vector3, Vector3];
+
 export class CoreFace {
 	_geometry: BufferGeometry;
-	_points: [CorePoint, CorePoint, CorePoint];
-	_triangle: Triangle;
-	_positions: Vector3[];
-	_deltas: Vector3[];
+	_points: CorePointArray3 | undefined;
+	_triangle: Triangle | undefined;
+	_positions: Vector3Array3 | undefined;
+	_deltas: Vector3Array2 | undefined;
 
 	constructor(private _core_geometry: CoreGeometry, private _index: number) {
 		this._geometry = this._core_geometry.geometry();
@@ -30,8 +34,10 @@ export class CoreFace {
 	index() {
 		return this._index;
 	}
-
-	points(): [CorePoint, CorePoint, CorePoint] {
+	get points() {
+		return (this._points = this._points || this._get_points());
+	}
+	private _get_points(): CorePointArray3 {
 		const index_array = this._geometry.index?.array || [];
 		const start = this._index * 3;
 		return [
@@ -40,20 +46,32 @@ export class CoreFace {
 			new CorePoint(this._core_geometry, index_array[start + 2]),
 		];
 	}
-	positions(): [Vector3, Vector3, Vector3] {
-		const points = this.points();
+	get positions() {
+		return (this._positions = this._positions || this._get_positions());
+	}
+	private _get_positions(): Vector3Array3 {
+		const points = this.points;
 		return [points[0].position(), points[1].position(), points[2].position()];
 	}
-	triangle(): Triangle {
-		const positions = this.positions();
+	get triangle() {
+		return (this._triangle = this._triangle || this._get_triangle());
+	}
+	private _get_triangle(): Triangle {
+		const positions = this.positions;
 		return new Triangle(positions[0], positions[1], positions[2]);
 	}
+	get deltas() {
+		return (this._deltas = this._deltas || this._get_deltas());
+	}
+	private _get_deltas(): Vector3Array2 {
+		return [this.positions[1].clone().sub(this.positions[0]), this.positions[2].clone().sub(this.positions[0])];
+	}
 
-	area(): number {
-		return this.triangle().getArea();
+	get area(): number {
+		return this.triangle.getArea();
 	}
 	center(target: Vector3) {
-		const positions = this.positions();
+		const positions = this.positions;
 		target.x = (positions[0].x + positions[1].x + positions[2].x) / 3;
 		target.y = (positions[0].y + positions[1].y + positions[2].y) / 3;
 		target.z = (positions[0].z + positions[1].z + positions[2].z) / 3;
@@ -63,21 +81,16 @@ export class CoreFace {
 
 	random_position(seed: number) {
 		let weights = [CoreMath.rand_float(seed), CoreMath.rand_float(seed * 6541)];
-		this._positions = this._positions || this.points().map((p) => p.position());
-		this._deltas = this._deltas || [
-			this._positions[1].clone().sub(this._positions[0]),
-			this._positions[2].clone().sub(this._positions[0]),
-		];
 
 		if (weights[0] + weights[1] > 1) {
 			weights[0] = 1 - weights[0];
 			weights[1] = 1 - weights[1];
 		}
 
-		return this._positions[0]
+		return this.positions[0]
 			.clone()
-			.add(this._deltas[0].clone().multiplyScalar(weights[0]))
-			.add(this._deltas[1].clone().multiplyScalar(weights[1]));
+			.add(this.deltas[0].clone().multiplyScalar(weights[0]))
+			.add(this.deltas[1].clone().multiplyScalar(weights[1]));
 	}
 	// random_position(seed: number){
 	// 	let weights = [
@@ -96,18 +109,14 @@ export class CoreFace {
 	// }
 
 	attrib_value_at_position(attrib_name: string, position: Vector3) {
-		this._points = this._points || this.points();
-		this._positions = this._positions || this._points.map((p) => p.position());
-		this._triangle = this._triangle || new Triangle(this._positions[0], this._positions[1], this._positions[2]);
-
 		// const weights = CoreInterpolate._weights_from_3(position, this._positions)
 		const barycentric_coordinates = new Vector3();
-		this._triangle.getBarycoord(position, barycentric_coordinates);
+		this.triangle.getBarycoord(position, barycentric_coordinates);
 		const weights = barycentric_coordinates.toArray();
 
 		const attrib = this._geometry.attributes[attrib_name];
 		const attrib_size = attrib.itemSize;
-		const point_values = this._points.map((point) => point.attrib_value(attrib_name));
+		const point_values = this.points.map((point) => point.attrib_value(attrib_name));
 
 		let new_attrib_value;
 		let sum;

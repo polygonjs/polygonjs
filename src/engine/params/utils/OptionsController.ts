@@ -88,10 +88,10 @@ export interface ParamOptions {
 
 export class OptionsController {
 	private _programatic_visible_state: boolean = true;
-	private _options: ParamOptions;
-	private _default_options: ParamOptions;
+	private _options!: ParamOptions;
+	private _default_options!: ParamOptions;
 	constructor(private _param: BaseParamType) {
-		this._options = lodash_cloneDeep(this._default_options);
+		// this._options = lodash_cloneDeep(this._default_options);
 	}
 
 	set(options: ParamOptions) {

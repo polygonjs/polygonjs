@@ -20,7 +20,7 @@ export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<'MATERIA
 		return NodeContext.MAT;
 	}
 
-	protected _material: Material;
+	protected _material!: Material;
 	// protected _update_methods: RenderHook[] = [];
 
 	initialize_node() {

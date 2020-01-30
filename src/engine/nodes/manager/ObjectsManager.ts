@@ -26,6 +26,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 import {ObjNodeTypeMap} from 'src/engine/poly/registers/Obj';
 
 import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {BaseNodeType} from '../_Base';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -43,7 +44,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	private _queued_nodes_by_path: Dictionary<BaseObjNodeType> = {};
 	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
 	// private _loaded_geo_node_by_id: Dictionary<boolean> = {};
-	private _process_queue_start: number;
+	private _process_queue_start: number = -1;
 
 	initialize_node() {
 		this.children_controller.init(NodeContext.OBJ);
@@ -310,10 +311,14 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// 	this.get_parent_for_node transformed_node, (parent_object)=>
 	// 		parent_object.add(object)
 
-	private _on_child_add(node: BaseObjNodeType) {
-		this.update_object(node);
+	private _on_child_add(node?: BaseNodeType) {
+		if (node) {
+			this.update_object(node as BaseObjNodeType);
+		}
 	}
-	private _on_child_remove(node: BaseObjNodeType) {
-		this.remove_from_scene(node);
+	private _on_child_remove(node?: BaseNodeType) {
+		if (node) {
+			this.remove_from_scene(node as BaseObjNodeType);
+		}
 	}
 }

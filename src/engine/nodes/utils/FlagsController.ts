@@ -4,8 +4,8 @@ import {BypassFlag} from './flags/Bypass';
 import {DisplayFlag} from './flags/Display';
 
 export class FlagsController {
-	private _bypass: BypassFlag;
-	private _display: DisplayFlag;
+	private _bypass: BypassFlag | undefined;
+	private _display: DisplayFlag | undefined;
 	constructor(protected node: BaseNodeType) {}
 
 	// bypass

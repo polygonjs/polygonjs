@@ -9,9 +9,9 @@ import {FloatParam} from './Float';
 const COMPONENT_NAMES_COLOR = ['r', 'g', 'b'];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	protected _value = new Color();
-	r: FloatParam;
-	g: FloatParam;
-	b: FloatParam;
+	r!: FloatParam;
+	g!: FloatParam;
+	b!: FloatParam;
 	static type() {
 		return ParamType.COLOR;
 	}

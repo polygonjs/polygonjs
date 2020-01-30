@@ -19,14 +19,14 @@ import {NameController} from '../NameController';
 const NODE_SIMPLE_NAME = 'children';
 
 export class HierarchyChildrenController {
-	private _context: NodeContext;
+	private _context!: NodeContext;
 	private _children_allowed: boolean = false;
-	private _children: Dictionary<BaseNodeType>;
+	private _children: Dictionary<BaseNodeType> = {};
 	private _children_by_type: Dictionary<string[]> = {};
 	private _children_and_grandchildren_by_context: Dictionary<string[]> = {};
 
 	private _is_dependent_on_children: boolean = false;
-	private _children_node: CoreGraphNode;
+	private _children_node: CoreGraphNode | undefined;
 
 	constructor(protected node: BaseNodeType) {}
 
@@ -145,7 +145,7 @@ export class HierarchyChildrenController {
 		this.node.lifecycle.on_child_add(child_node);
 		// this.post_add_node(child_node);
 
-		if (this._is_dependent_on_children) {
+		if (this._is_dependent_on_children && this._children_node) {
 			this._children_node.add_graph_input(child_node);
 		}
 		if (child_node.require_webgl2()) {
@@ -165,7 +165,7 @@ export class HierarchyChildrenController {
 			// set other dependencies dirty
 			child_node.set_successors_dirty(this.node);
 
-			if (this._is_dependent_on_children) {
+			if (this._is_dependent_on_children && this._children_node) {
 				this._children_node.remove_graph_input(child_node);
 			}
 

@@ -19,7 +19,7 @@ import {CoreGraphNode} from './CoreGraphNode';
 export class CoreGraph {
 	_graph: Graph;
 	_next_id: number = 0;
-	_scene: PolyScene;
+	_scene: PolyScene | undefined;
 
 	constructor() {
 		this._graph = new Graph({
@@ -85,7 +85,7 @@ export class CoreGraph {
 			this._graph.setEdge(src_id, dest_id);
 
 			// const scene_auto_updating = this.scene().auto_updating();
-			const scene_loading = this.scene().loading_controller.is_loading;
+			const scene_loading = this._scene ? this._scene.loading_controller.is_loading : true;
 			const check_if_graph_has_cycle = !scene_loading;
 			let graph_has_cycle = false;
 			if (check_if_graph_has_cycle) {

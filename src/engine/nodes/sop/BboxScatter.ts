@@ -17,8 +17,6 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 		return 'bbox_scatter';
 	}
 
-	_param_step_size: number;
-
 	static displayed_input_names(): string[] {
 		return ['geometry to create points from'];
 	}

@@ -13,7 +13,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 export class NodesController {
 	constructor(private scene: PolyScene) {}
 
-	_root: ObjectsManagerNode;
+	_root!: ObjectsManagerNode;
 	_node_context_signatures: Dictionary<boolean> = {};
 	_instanciated_nodes_by_context_and_type: Dictionary<Dictionary<Dictionary<BaseNodeType>>> = {};
 

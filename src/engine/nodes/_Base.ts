@@ -42,7 +42,6 @@ import {NodeSerializer} from './utils/Serializer';
 import {ParamsController, ParamInitValuesTypeMap, ParamConstructorMap} from './utils/params/ParamsController';
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/params/ParamsValueAccessor';
-import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/connections/IOController';
 
@@ -62,7 +61,6 @@ import CoreSelection from 'src/core/NodeSelection';
 // import {Vector2Param} from 'src/engine/params/Vector2';
 // import {Vector3Param} from 'src/engine/params/Vector3';
 // import {Vector4Param} from 'src/engine/params/Vector4';
-import {ParamType} from '../poly/ParamType';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 
@@ -82,38 +80,44 @@ interface NodeCreatedEmitData {
 interface NodeUIUpdatedData {
 	x: number;
 	y: number;
-	comment: string;
+	comment: string | undefined;
 }
 
 import {ContainerMap} from 'src/engine/containers/utils/ContainerMap';
 import {ContainableMap} from 'src/engine/containers/utils/ContainableMap';
+import {BaseContainer} from '../containers/_Base';
+import {ParamOptions} from '../params/utils/OptionsController';
+import {ParamType} from '../poly/ParamType';
 type KT = keyof ContainerMap;
 // type Container = ContainerMap[KT];
 
 export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodeParamsConfig> extends CoreGraphNode {
-	container_controller: TypedContainerController<ContainerMap[T]>;
+	container_controller: TypedContainerController<ContainerMap[T]> = new TypedContainerController<ContainerMap[T]>(
+		this,
+		BaseContainer
+	);
 
-	private _parent_controller: HierarchyParentController | null;
-	private _children_controller: HierarchyChildrenController;
-	private _selection: CoreSelection;
-	private _ui_data: UIData;
-	private _flags: FlagsController;
-	private _dependencies_controller: DependenciesController;
-	private _states: StatesController;
-	private _lifecycle: LifeCycleController;
-	private _serializer: NodeSerializer;
-	private _cook_controller: CookController;
+	private _parent_controller: HierarchyParentController | undefined;
+	private _children_controller: HierarchyChildrenController | undefined;
+	private _selection: CoreSelection | undefined;
+	private _ui_data: UIData | undefined;
+	private _flags: FlagsController | undefined;
+	private _dependencies_controller: DependenciesController | undefined;
+	private _states: StatesController | undefined;
+	private _lifecycle: LifeCycleController | undefined;
+	private _serializer: NodeSerializer | undefined;
+	private _cook_controller: CookController | undefined;
 
-	private _params_controller: ParamsController;
-	readonly params_config: K;
+	private _params_controller: ParamsController | undefined;
+	readonly params_config: K | undefined;
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>(this)) as ParamsValueAccessorType<K>;
 	// readonly pv: ParamsValueAccessor<K> = new ParamsValueAccessor<K>(this);
 	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>(this)) as ParamsAccessorType<K>;
 	// readonly p: ParamsAccessor<K> = new ParamsAccessor<K>(this);
 
-	private _processing_context: ProcessingContext;
-	private _name_controller: NameController;
-	private _io: IOController<NT>;
+	private _processing_context: ProcessingContext | undefined;
+	private _name_controller: NameController | undefined;
+	private _io: IOController<NT> | undefined;
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
@@ -257,12 +261,12 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 		name: string,
 		default_value: ParamInitValuesTypeMap[T],
 		options?: ParamOptions
-	): ParamConstructorMap[T] | null {
-		return this._params_controller.add_param(type, name, default_value, options);
+	): ParamConstructorMap[T] | undefined {
+		return this._params_controller?.add_param(type, name, default_value, options);
 	}
-	within_param_folder(folder_name: string, callback: () => void) {
-		this._params_controller.within_param_folder(folder_name, callback);
-	}
+	// within_param_folder(folder_name: string, callback: () => void) {
+	// 	this._params_controller?.within_param_folder(folder_name, callback);
+	// }
 
 	// cook
 	cook(input_contents: any[]): any {

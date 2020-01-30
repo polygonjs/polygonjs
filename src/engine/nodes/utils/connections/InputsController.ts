@@ -30,13 +30,13 @@ export class InputsController<T extends BaseNodeType> {
 	_has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
 	_named_inputs: NamedConnection[] = [];
-	_min_inputs_count: number;
-	_max_inputs_count: number;
+	_min_inputs_count: number = 0;
+	_max_inputs_count: number = 0;
 	_depends_on_inputs: boolean = true;
 
 	// clonable
-	private _user_inputs_clonable_states: InputCloneMode[];
-	private _inputs_clonable_states: InputCloneMode[];
+	private _user_inputs_clonable_states: InputCloneMode[] | undefined;
+	private _inputs_clonable_states: InputCloneMode[] | undefined;
 	private _override_clonable_state: boolean = false;
 
 	constructor(protected node: T, options: InputsControllerOptions = {}) {

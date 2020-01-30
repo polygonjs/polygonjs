@@ -8,14 +8,15 @@ import {CoreLoaderGeometry} from 'src/core/loader/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../_Base';
 class FileSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('', {
 		desktop_browse: {file_type: 'geometry'},
 		always_reference_asset: true,
 	});
 	reload = ParamConfig.BUTTON(null, {
-		callback: (node: FileSopNode, param: BaseParamType) => {
-			FileSopNode.PARAM_CALLBACK_reload(node, param);
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			FileSopNode.PARAM_CALLBACK_reload(node as FileSopNode, param);
 		},
 	});
 }

@@ -5,12 +5,12 @@
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": false,
 		"noUnusedLocals": true,
-		// "strict": true, // --noImplicitAny, --noImplicitThis, --alwaysStrict, --strictBindCallApply, --strictNullChecks, --strictFunctionTypes and --strictPropertyInitialization
-		"noImplicitAny": true,
-		"noImplicitThis": true,
-		"alwaysStrict": true,
-		"strictNullChecks": true,
-		"strictPropertyInitialization": false,
+		"strict": true, // --noImplicitAny, --noImplicitThis, --alwaysStrict, --strictBindCallApply, --strictNullChecks, --strictFunctionTypes and --strictPropertyInitialization
+		// "noImplicitAny": true,
+		// "noImplicitThis": true,
+		// "alwaysStrict": true,
+		// "strictNullChecks": true,
+		// "strictPropertyInitialization": false,
 
 		// decorators
 		"experimentalDecorators": true,

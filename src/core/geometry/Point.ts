@@ -37,8 +37,8 @@ const DOT = '.';
 
 export class CorePoint extends CoreEntity {
 	_geometry: BufferGeometry;
-	_position: Vector3;
-	_normal: Vector3;
+	_position: Vector3 | undefined;
+	_normal: Vector3 | undefined;
 
 	constructor(private _core_geometry: CoreGeometry, index: number) {
 		super(index);

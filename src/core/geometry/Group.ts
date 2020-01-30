@@ -30,15 +30,15 @@ export interface Object3DWithGeometry extends Object3D {
 
 export class CoreGroup {
 	// _group: Group
-	_timestamp: number;
+	_timestamp: number | undefined;
 	// _core_objects:
-	_objects: Object3D[];
-	_core_objects: CoreObject[] | null;
+	_objects: Object3D[] | undefined;
+	_core_objects: CoreObject[] | undefined;
 
 	// _geometries: BufferGeometry[];
-	_core_geometries: CoreGeometry[] | null;
+	_core_geometries: CoreGeometry[] | undefined;
 
-	_bounding_box: Box3 | null;
+	_bounding_box: Box3 | undefined;
 
 	constructor() {
 		//_group: Group){
@@ -59,9 +59,9 @@ export class CoreGroup {
 		this.reset();
 	}
 	reset() {
-		this._bounding_box = null;
-		this._core_geometries = null;
-		this._core_objects = null;
+		this._bounding_box = undefined;
+		this._core_geometries = undefined;
+		this._core_objects = undefined;
 	}
 
 	//
@@ -71,11 +71,13 @@ export class CoreGroup {
 	//
 	clone() {
 		const core_group = new CoreGroup();
-		const objects = [];
-		for (let object of this._objects) {
-			objects.push(CoreObject.clone(object));
+		if (this._objects) {
+			const objects = [];
+			for (let object of this._objects) {
+				objects.push(CoreObject.clone(object));
+			}
+			core_group.set_objects(objects);
 		}
-		core_group.set_objects(objects);
 		return core_group;
 	}
 	//
@@ -95,11 +97,13 @@ export class CoreGroup {
 	}
 	private _create_core_objects(): CoreObject[] {
 		const list: CoreObject[] = [];
-		for (let i = 0; i < this._objects.length; i++) {
-			this._objects[i].traverse((object) => {
-				const core_object = new CoreObject(object, i);
-				list.push(core_object);
-			});
+		if (this._objects) {
+			for (let i = 0; i < this._objects.length; i++) {
+				this._objects[i].traverse((object) => {
+					const core_object = new CoreObject(object, i);
+					list.push(core_object);
+				});
+			}
 		}
 		return list;
 	}
@@ -251,8 +255,10 @@ export class CoreGroup {
 
 	private _compute_bounding_box() {
 		const bbox = new Box3();
-		for (let object of this._objects) {
-			bbox.expandByObject(object);
+		if (this._objects) {
+			for (let object of this._objects) {
+				bbox.expandByObject(object);
+			}
 		}
 		return bbox;
 	}
@@ -283,25 +289,29 @@ export class CoreGroup {
 		switch (attrib_class) {
 			case CoreConstant.ATTRIB_CLASS.VERTEX:
 				if (this.has_attrib(old_name)) {
-					for (let object of this._objects) {
-						object.traverse((child) => {
-							const geometry = CoreGroup.geometry_from_object(child);
-							if (geometry) {
-								const core_geometry = new CoreGeometry(geometry);
-								core_geometry.rename_attribute(old_name, new_name);
-							}
-						});
+					if (this._objects) {
+						for (let object of this._objects) {
+							object.traverse((child) => {
+								const geometry = CoreGroup.geometry_from_object(child);
+								if (geometry) {
+									const core_geometry = new CoreGeometry(geometry);
+									core_geometry.rename_attribute(old_name, new_name);
+								}
+							});
+						}
 					}
 				}
 				break;
 
 			case CoreConstant.ATTRIB_CLASS.OBJECT:
 				if (this.has_attrib(old_name)) {
-					for (let object of this._objects) {
-						object.traverse((child) => {
-							const core_object = new CoreObject(child, 0);
-							core_object.rename_attribute(old_name, new_name);
-						});
+					if (this._objects) {
+						for (let object of this._objects) {
+							object.traverse((child) => {
+								const core_object = new CoreObject(child, 0);
+								core_object.rename_attribute(old_name, new_name);
+							});
+						}
 					}
 				}
 				break;

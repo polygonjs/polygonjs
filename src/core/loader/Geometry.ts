@@ -55,7 +55,7 @@ export class CoreLoaderGeometry {
 		// }
 	}
 
-	load(on_success: (objects: Object3D) => void, on_error: (error: string) => void) {
+	load(on_success: (objects: Object3D[]) => void, on_error: (error: string) => void) {
 		this.load_auto()
 			.then((object) => {
 				on_success(object);

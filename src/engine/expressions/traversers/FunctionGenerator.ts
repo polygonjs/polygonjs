@@ -113,11 +113,11 @@ import {MethodDependency} from '../MethodDependency';
 const AsyncFunction = Object.getPrototypeOf(async function() {}).constructor;
 
 export class FunctionGenerator extends BaseTraverser {
-	private function: Function | null;
-	private function_pre_entities_loop_lines: string[];
+	private function: Function | undefined;
+	private function_pre_entities_loop_lines: string[] = [];
 	// private function_pre_body:string
-	private function_main_string: string | null;
-	error_message: string | null;
+	private function_main_string: string | undefined;
+	error_message: string | undefined;
 	private methods: BaseMethod[] = [];
 	private method_index: number = 0;
 
@@ -178,11 +178,11 @@ export class FunctionGenerator extends BaseTraverser {
 	}
 
 	reset() {
-		this.error_message = null;
-		this.function_main_string = null;
+		this.error_message = undefined;
+		this.function_main_string = undefined;
 		this.methods = [];
 		this.method_index = 0;
-		this.function = null;
+		this.function = undefined;
 		this.method_dependencies = [];
 		this.immutable_dependencies = [];
 	}

@@ -26,7 +26,7 @@ export class PostProcessController {
 	private _composers_by_canvas_id: Dictionary<EffectComposer> = {};
 	private _resolution_by_canvas_id: Dictionary<Vector2> = {};
 	private _composers_set_in_progress_by_canvas_id: Dictionary<boolean> = {};
-	private _fetch_post_process_nodes_in_progress: boolean;
+	private _fetch_post_process_nodes_in_progress: boolean = false;
 	// private _render_passes: any[] = []
 	private _post_process_nodes: BasePostProcessNodeType[] = [];
 
@@ -238,35 +238,35 @@ export class PostProcessController {
 	}
 
 	add_params() {
-		this.node.within_param_folder('post_process', () => {
-			this.node.add_param(ParamType.BOOLEAN, 'do_post_process', 0);
+		// this.node.within_param_folder('post_process', () => {
+		this.node.add_param(ParamType.BOOLEAN, 'do_post_process', 0);
 
-			lodash_range(4).forEach((i) => {
-				const toggle_param = this.node.add_param(ParamType.BOOLEAN, `use_post_process_node${i + 1}`, 0, {
-					visible_if: {do_post_process: 1},
-				});
-
-				if (toggle_param) {
-					const visible_options = {
-						do_post_process: 1,
-						[toggle_param.name]: 1,
-					};
-					const node_path_options = {
-						node_selection: {context: NodeContext.POST},
-						visible_if: visible_options,
-					};
-					const param = this.node.add_param(
-						ParamType.OPERATOR_PATH,
-						`post_process_node${i + 1}`,
-						'',
-						node_path_options
-					);
-					if (param) {
-						this._post_process_use_node_path_params.push(toggle_param);
-						this._post_process_node_path_params.push(param);
-					}
-				}
+		lodash_range(4).forEach((i) => {
+			const toggle_param = this.node.add_param(ParamType.BOOLEAN, `use_post_process_node${i + 1}`, 0, {
+				visible_if: {do_post_process: 1},
 			});
+
+			if (toggle_param) {
+				const visible_options = {
+					do_post_process: 1,
+					[toggle_param.name]: 1,
+				};
+				const node_path_options = {
+					node_selection: {context: NodeContext.POST},
+					visible_if: visible_options,
+				};
+				const param = this.node.add_param(
+					ParamType.OPERATOR_PATH,
+					`post_process_node${i + 1}`,
+					'',
+					node_path_options
+				);
+				if (param) {
+					this._post_process_use_node_path_params.push(toggle_param);
+					this._post_process_node_path_params.push(param);
+				}
+			}
 		});
+		// });
 	}
 }

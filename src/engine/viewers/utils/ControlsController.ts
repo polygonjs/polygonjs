@@ -3,9 +3,9 @@ import {CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
 
 export class ControlsController {
 	protected _active: boolean = false;
-	protected _controls: CameraControls | null;
-	_bound_on_controls_start: () => void;
-	_bound_on_controls_end: () => void;
+	protected _controls: CameraControls | null = null;
+	_bound_on_controls_start: () => void = this._on_controls_start.bind(this);
+	_bound_on_controls_end: () => void = this._on_controls_end.bind(this);
 	constructor(private viewer: BaseViewer) {}
 
 	get active() {
@@ -18,7 +18,7 @@ export class ControlsController {
 	async create_controls() {
 		this.dispose_controls();
 
-		const config = await this.camera_node.controls_controller.apply_controls(this.viewer.canvas);
+		const config = await this.camera_node?.controls_controller.apply_controls(this.viewer.canvas);
 		if (config) {
 			// this.current_camera_controls_node_graph_id = config.camera_controls_node_id()
 			this._controls = config.controls;
@@ -26,8 +26,6 @@ export class ControlsController {
 
 			if (this._controls) {
 				if (this.viewer.active) {
-					this._bound_on_controls_start = this._on_controls_start.bind(this);
-					this._bound_on_controls_end = this._on_controls_end.bind(this);
 					this._controls.addEventListener('start', this._bound_on_controls_start);
 					this._controls.addEventListener('end', this._bound_on_controls_end);
 				} else {
@@ -53,7 +51,7 @@ export class ControlsController {
 
 	dispose_controls() {
 		if (this._controls) {
-			this.camera_node.controls_controller.dispose_controls(this.viewer.canvas);
+			this.camera_node?.controls_controller.dispose_controls(this.viewer.canvas);
 
 			if (this._bound_on_controls_start) {
 				this._controls.removeEventListener('start', this._bound_on_controls_start);
