@@ -3,7 +3,8 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from 'src/core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {BufferGeometry, BufferAttribute} from 'three';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 class AttribAddMultSopParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');

@@ -1,5 +1,5 @@
 import {BaseViewer} from '../_Base';
-import {Vector2} from 'three';
+import {Vector2} from 'three/src/math/Vector2';
 
 const DIST_UNINITIALIZED = -1;
 type MouseOrTouchEvent = MouseEvent | TouchEvent;

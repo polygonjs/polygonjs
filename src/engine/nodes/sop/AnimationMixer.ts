@@ -15,7 +15,7 @@ import {MaterialWithSkinning} from 'src/core/geometry/Material';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
 import {BaseNodeType} from '../_Base';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 	time = ParamConfig.FLOAT('$T', {range: [0, 10]});

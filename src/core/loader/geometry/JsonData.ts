@@ -16,7 +16,7 @@ import {CoreConstant} from 'src/core/geometry/Constant';
 import {CoreAttributeData} from 'src/core/geometry/AttributeData';
 import {CoreAttribute} from 'src/core/geometry/Attribute';
 // import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 

@@ -1,4 +1,4 @@
-const TYPESCRIPT_TRANSPILE_ONLY = true;
+const TYPESCRIPT_TRANSPILE_ONLY = false;
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');

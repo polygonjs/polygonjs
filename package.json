@@ -27,6 +27,7 @@
 		"@dagrejs/graphlib": "dagrejs/graphlib",
 		"geo-ambient-occlusion": "^3.0.4",
 		"lodash": "^4.17.15",
+		"opentype.js": "^1.1.0",
 		"three": "^0.112.1"
 	},
 	"devDependencies": {

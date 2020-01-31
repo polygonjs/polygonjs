@@ -10,15 +10,17 @@ import {CoreObject} from 'src/core/geometry/Object';
 import {CoreGeometry} from 'src/core/geometry/Geometry';
 import {CorePoint} from 'src/core/geometry/Point';
 
+import {CoreGroup} from 'src/core/geometry/Group';
+import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Mesh} from 'three/src/objects/Mesh';
+
 const DEFAULT_COLOR = new Color(1, 1, 1);
 const COLOR_ATTRIB_NAME = 'color';
 
 type ValueArrayByName = Dictionary<number[]>;
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {Mesh, BufferGeometry} from 'three';
 class ColorSopParamsConfig extends NodeParamsConfig {
 	from_attribute = ParamConfig.BOOLEAN(0);
 	attrib_name = ParamConfig.STRING('', {

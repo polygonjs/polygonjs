@@ -8,15 +8,17 @@ import {CoreObject} from 'src/core/geometry/Object';
 import {CorePoint} from 'src/core/geometry/Point';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Mesh} from 'three/src/objects/Mesh';
+import {BooleanParam} from 'src/engine/params/Boolean';
+import {FloatParam} from 'src/engine/params/Float';
+
 const POSITION_ATTRIB_NAME = 'position';
 
 type ValueArrayByName = Map<string, number[]>;
 type ComponentOffset = 0 | 1 | 2;
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {BufferAttribute, Mesh} from 'three';
-import {BooleanParam} from 'src/engine/params/Boolean';
-import {FloatParam} from 'src/engine/params/Float';
 class PointSopParamsConfig extends NodeParamsConfig {
 	update_x = ParamConfig.BOOLEAN(0);
 	x = ParamConfig.FLOAT('@P.x', {
