@@ -2,6 +2,7 @@ import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseCameraControlsEventNodeType, CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
 import {CameraControlsConfig} from 'src/engine/nodes/event/utils/CameraControlConfig';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {CameraOrbitControlsEventNode} from 'src/engine/nodes/event/CameraOrbitControls';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
@@ -22,7 +23,17 @@ export class ControlsController {
 
 	controls_node(): BaseCameraControlsEventNodeType | null {
 		// if (this.node.params.has(CONTROLS_PARAM_NAME)) { // TODO: typescript
-		return this.node.p.controls.found_node() as BaseCameraControlsEventNodeType;
+		const node = this.node.p.controls.found_node();
+		if (node) {
+			if (node instanceof CameraOrbitControlsEventNode) {
+				return node;
+			} else {
+				this.node.states.error.set('found node is not of a camera control type');
+			}
+		} else {
+			this.node.states.error.set('no node has been found');
+		}
+		return null;
 		// }
 		// return null;
 	}

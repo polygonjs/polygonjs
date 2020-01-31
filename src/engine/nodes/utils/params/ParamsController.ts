@@ -92,7 +92,7 @@ export type ParamInitValuesTypeMap = {
 	[ParamType.INTEGER]: StringOrNumber;
 	[ParamType.OPERATOR_PATH]: string;
 	[ParamType.RAMP]: RampValue;
-	[ParamType.SEPARATOR]: any;
+	[ParamType.SEPARATOR]: null;
 	[ParamType.STRING]: string;
 	[ParamType.VECTOR2]: StringOrNumber2 | Vector2;
 	[ParamType.VECTOR3]: StringOrNumber3 | Vector3;

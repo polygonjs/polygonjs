@@ -76,8 +76,7 @@ export class CoreTextureLoader {
 			found_node = CoreWalker.find_node(this._node, node_path);
 			if (found_node) {
 				if (found_node instanceof BaseCopNodeClass) {
-					// TODO: typescript: check that this instanceof is appropriate
-					const container = (await found_node.request_container()) as TextureContainer;
+					const container: TextureContainer = await found_node.request_container();
 					texture = container.texture();
 				} else {
 					this._node.states.error.set(`found node is not a texture node`);

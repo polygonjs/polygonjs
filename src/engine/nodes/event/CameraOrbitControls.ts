@@ -2,7 +2,7 @@ import {Camera} from 'three/src/cameras/Camera';
 
 import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
-import {CoreScriptLoader} from 'src/core/loader/Script';
+// import {CoreScriptLoader} from 'src/core/loader/Script';
 
 import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
 
@@ -34,16 +34,16 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	static type() {
 		return 'camera_orbit_controls';
 	}
-	static required_three_imports() {
-		return ['controls/OrbitControls'];
-	}
+	// static required_three_imports() {
+	// 	return ['controls/OrbitControls'];
+	// }
 
 	async create_controls_instance(camera: Camera, element: HTMLElement) {
-		const c = this.constructor as typeof CameraOrbitControlsEventNode;
-		const {OrbitControls} = await CoreScriptLoader.module(c.required_imports()[0]);
+		// const c = this.constructor as typeof CameraOrbitControlsEventNode;
+		// const {OrbitControls} = await CoreScriptLoader.module(c.required_imports()[0]);
 
 		const controls = new OrbitControls(camera, element);
-		return controls as CameraControls;
+		return controls;
 	}
 
 	setup_controls(controls: OrbitControls) {

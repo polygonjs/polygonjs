@@ -7,6 +7,8 @@ import {CoreGroup} from 'src/core/geometry/Group';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 
 const DEFAULT_UP = new Vector3(0, 0, 1);
+const ROTATE_START = new Vector3(0, 0, 1);
+const ROTATE_END = new Vector3(0, 1, 0);
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class PlaneSopParamsConfig extends NodeParamsConfig {
@@ -14,7 +16,7 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 	use_segments_count = ParamConfig.BOOLEAN(0);
 	step_size = ParamConfig.FLOAT(1, {visible_if: {use_segments_count: 0}});
 	segments = ParamConfig.VECTOR2([1, 1], {visible_if: {use_segments_count: 1}});
-	direction = ParamConfig.VECTOR3(DEFAULT_UP.toArray() as Number3);
+	direction = ParamConfig.VECTOR3([0, 1, 0]);
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 }
 const ParamsConfig = new PlaneSopParamsConfig();
@@ -24,6 +26,8 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 	static type() {
 		return 'plane';
 	}
+
+	private _core_transform = new CoreTransform();
 
 	static displayed_input_names(): string[] {
 		return ['geometry to create plane from (optional)'];
@@ -48,9 +52,9 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 		// convert to buffer geo, as some render problems can occur otherwise
 		// geometry = BufferGeometryUtils.mergeBufferGeometries([geometry])
 		// console.log(geometry, geometry.isBufferGeometry)
-		CoreTransform.rotate_geometry_by_vector_difference(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
-		const matrix = CoreTransform.translation_matrix(this.pv.center.x, this.pv.center.y, this.pv.center.z);
+		const matrix = this._core_transform.translation_matrix(this.pv.center);
 		geometry.applyMatrix(matrix);
 
 		this.set_geometry(geometry);
@@ -66,9 +70,9 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 		const size2d = new Vector2(size.x, size.z);
 		const geometry = this._create_plane(size2d);
 
-		CoreTransform.rotate_geometry_by_vector_difference(geometry, new Vector3(0, 0, 1), new Vector3(0, 1, 0));
+		this._core_transform.rotate_geometry(geometry, ROTATE_START, ROTATE_END);
 
-		const matrix = CoreTransform.translation_matrix(center.x, center.y, center.z);
+		const matrix = this._core_transform.translation_matrix(center);
 		geometry.applyMatrix(matrix);
 
 		// const buffer_geometry = CoreGeometry.clone(geometry);

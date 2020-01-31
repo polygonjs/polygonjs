@@ -147,8 +147,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	on_create() {
 		// this.create_node('text')
 	}
+	private _core_transform = new CoreTransform();
 	cook() {
-		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
+		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
 		this.group.visible = this.flags.display.active;

@@ -164,7 +164,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	let positions = geometry.getAttribute('position').array;
 	assert.equal(positions.length, 4 * 3);
 	assert.equal(positions[0], -0.5);
-	assert.equal(positions[1], 0.5);
+	assert.equal(positions[2], -0.5, 'y position');
 
 	// update the plane
 	plane1.p.size.set([2, 5]);
@@ -173,7 +173,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
 	positions = geometry.getAttribute('position').array;
 	assert.equal(positions[0], -1);
-	assert.equal(positions[1], 2.5);
+	assert.equal(positions[2], -2.5, 'y position');
 });
 
 QUnit.test('geo obj: only the top group from a file sop with hierarchy is added to the geo object', async (assert) => {

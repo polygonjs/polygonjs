@@ -11,6 +11,7 @@ import {NodeConnection} from '../NodeConnection';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {TypeAssert} from 'src/engine/poly/Assert';
 
 // export class InputGraphNode extends NodeSimple {
 // 	constructor(name: string) {
@@ -426,16 +427,18 @@ export class InputsController<T extends BaseNodeType> {
 		const states = this.inputs_clonable_state();
 		// for (let i = 0; i < states.length; i++) {
 		// TODO: typescript: not sure if this loop was justified
-		switch (states[index]) {
+		const state = states[index];
+		switch (state) {
 			case InputCloneMode.ALWAYS:
 				return true;
 			case InputCloneMode.NEVER:
 				return false;
 			case InputCloneMode.FROM_NODE:
 				return !this._override_clonable_state;
-			default:
-				return false;
+			// default:
+			// 	throw new Error('unsupported type');
 		}
+		return TypeAssert.unreachable(state);
 		// }
 	}
 

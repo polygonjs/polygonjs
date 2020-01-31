@@ -179,7 +179,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	}
 	//this.end_cook()
 
-	set_geometries(geometries: BufferGeometry[], type: ObjectType) {
+	set_geometries(geometries: BufferGeometry[], type?: ObjectType) {
 		// this._clear_objects();
 		const objects: Object3D[] = [];
 		let object;
@@ -330,3 +330,4 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 }
 
 export type BaseSopNodeType = TypedSopNode<NodeParamsConfig>;
+export class BaseSopNodeClass extends TypedSopNode<NodeParamsConfig> {}

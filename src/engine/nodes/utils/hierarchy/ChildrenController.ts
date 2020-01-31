@@ -322,9 +322,7 @@ export class HierarchyChildrenController {
 		for (let child of this.children()) {
 			callback(child);
 
-			// if (child.traverse_children != null) { // TODO: typescript
 			child.children_controller?.traverse_children(callback);
-			// }
 		}
 	}
 }

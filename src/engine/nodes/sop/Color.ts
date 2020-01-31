@@ -240,7 +240,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		][offset];
 
 		let tmp_array: number[] | undefined;
-		if (param.has_expression()) {
+		if (param.has_expression() && param.expression_controller) {
 			tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length);
 			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
 				// array[point.index()*3+2] = value

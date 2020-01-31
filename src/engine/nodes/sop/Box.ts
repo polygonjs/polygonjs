@@ -29,6 +29,7 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 		return ['geometry to create bounding box from (optional)'];
 	}
 
+	private _core_transform = new CoreTransform();
 	// constructor(scene: PolyScene) {
 	// 	super(scene);
 	// }
@@ -82,7 +83,7 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 			.multiplyScalar(0.5);
 
 		const geometry = new BoxBufferGeometry(size.x, size.y, size.z, divisions, divisions, divisions);
-		const matrix = CoreTransform.translation_matrix(center.x, center.y, center.z);
+		const matrix = this._core_transform.translation_matrix(center);
 		geometry.applyMatrix(matrix);
 
 		// const buffer_geometry = CoreGeometry.clone(geometry);

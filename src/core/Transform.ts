@@ -101,14 +101,22 @@ export class CoreTransform {
 		});
 	}
 
-	static translation_matrix(x: number, y: number, z: number): Matrix4 {
-		const t = new Vector3(x, y, z);
-		const quaternion = new Quaternion();
-		const s = new Vector3(1, 1, 1);
+	// static translation_matrix(x: number, y: number, z: number): Matrix4 {
+	// 	const t = new Vector3(x, y, z);
+	// 	const quaternion = new Quaternion();
+	// 	const s = new Vector3(1, 1, 1);
 
-		const matrix = new Matrix4();
-		matrix.compose(t, quaternion, s);
-		return matrix;
+	// 	const matrix = new Matrix4();
+	// 	matrix.compose(t, quaternion, s);
+	// 	return matrix;
+	// }
+
+	private _translation_matrix: Matrix4 = new Matrix4();
+	private _translation_matrix_q = new Quaternion();
+	private _translation_matrix_s = new Vector3(1, 1, 1);
+	translation_matrix(t: Vector3): Matrix4 {
+		this._translation_matrix.compose(t, this._translation_matrix_q, this._translation_matrix_s);
+		return this._translation_matrix;
 	}
 
 	static matrix_quaternion(matrix: Matrix4): Quaternion {
@@ -119,24 +127,49 @@ export class CoreTransform {
 		return quat;
 	}
 
-	static matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
-		// if I don't clone here, it created issues in the transform SOP
-		s = s.clone().multiplyScalar(scale);
+	// static matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
+	// 	// if I don't clone here, it created issues in the transform SOP
+	// 	s = s.clone().multiplyScalar(scale);
 
-		const quaternion = new Quaternion();
-		const euler = new Euler(r.x, r.y, r.z, ROTATION_ORDER);
-		quaternion.setFromEuler(euler);
+	// 	const quaternion = new Quaternion();
+	// 	const euler = new Euler(r.x, r.y, r.z, ROTATION_ORDER);
+	// 	quaternion.setFromEuler(euler);
 
-		const matrix = new Matrix4();
-		matrix.compose(t, quaternion, s);
-		return matrix;
+	// 	const matrix = new Matrix4();
+	// 	matrix.compose(t, quaternion, s);
+	// 	return matrix;
+	// }
+	private _matrix = new Matrix4().identity();
+	private _matrix_q = new Quaternion();
+	private _matrix_e = new Euler();
+	private _matrix_s = new Vector3();
+	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
+		this._matrix_e.set(r.x, r.y, r.z, ROTATION_ORDER);
+		this._matrix_q.setFromEuler(this._matrix_e);
+
+		this._matrix_s.copy(s).multiplyScalar(scale);
+
+		this._matrix.compose(t, this._matrix_q, this._matrix_s);
+		return this._matrix;
 	}
 
-	static rotate_geometry_by_vector_difference(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
-		const quaternion = new Quaternion();
-		quaternion.setFromUnitVectors(vec_origin, vec_dest.clone().normalize());
-		const matrix = new Matrix4();
-		matrix.makeRotationFromQuaternion(quaternion);
-		geometry.applyMatrix(matrix);
+	// static rotate_geometry(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
+	// 	const quaternion = new Quaternion();
+	// 	quaternion.setFromUnitVectors(vec_origin, vec_dest.clone().normalize());
+	// 	const matrix = new Matrix4();
+	// 	matrix.makeRotationFromQuaternion(quaternion);
+	// 	geometry.applyMatrix(matrix);
+	// }
+
+	private _rotate_geometry_m = new Matrix4();
+	private _rotate_geometry_q = new Quaternion();
+	private _rotate_geometry_vec_dest = new Vector3();
+	rotate_geometry(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
+		this._rotate_geometry_vec_dest.copy(vec_dest);
+		this._rotate_geometry_vec_dest.normalize();
+		this._rotate_geometry_q.setFromUnitVectors(vec_origin, this._rotate_geometry_vec_dest);
+		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
+		this._rotate_geometry_m.makeRotationFromQuaternion(this._rotate_geometry_q);
+		geometry.applyMatrix(this._rotate_geometry_m);
 	}
 }

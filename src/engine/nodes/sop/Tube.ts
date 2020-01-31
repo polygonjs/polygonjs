@@ -21,8 +21,10 @@ const ParamsConfig = new TubeSopParamsConfig();
 export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'cylinder';
+		return 'tube';
 	}
+
+	private _core_transform = new CoreTransform();
 
 	cook() {
 		const geometry = new CylinderBufferGeometry(
@@ -34,7 +36,7 @@ export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 			!this.pv.cap
 		);
 
-		CoreTransform.rotate_geometry_by_vector_difference(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
 		this.set_geometry(geometry);

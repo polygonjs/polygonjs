@@ -7,7 +7,7 @@ import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 export interface CameraControls extends OrbitControls {
-	name: string;
+	name?: string;
 	// this_is_a_control: any;
 	// name: string;
 }

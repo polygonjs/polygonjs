@@ -24,6 +24,8 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 		return 'hexagons';
 	}
 
+	private _core_transform = new CoreTransform();
+
 	initialize_node() {}
 
 	cook() {
@@ -31,7 +33,7 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 		const geometry = operation.process();
 		console.log(geometry, geometry.attributes.position);
 
-		CoreTransform.rotate_geometry_by_vector_difference(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
 		if (this.pv.points_only) {
 			this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.POINTS);

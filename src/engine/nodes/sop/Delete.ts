@@ -311,7 +311,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 
 		// await(Promise.all(promises));
 		const param = this.p.expression;
-		if (this.p.expression.has_expression()) {
+		if (this.p.expression.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
 				let keep_point = !value;
 				if (this.pv.invert) {
@@ -340,12 +340,18 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	private async _eval_expressions_for_objects(core_objects: CoreObject[]) {
 		const param = this.p.expression;
 
-		await param.expression_controller.compute_expression_for_objects(core_objects, (core_object, value) => {
-			const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);
-			if (!is_marked_for_deletion) {
-				this._marked_for_deletion_per_object_index.set(core_object.index, value);
+		if (param.has_expression() && param.expression_controller) {
+			await param.expression_controller.compute_expression_for_objects(core_objects, (core_object, value) => {
+				const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);
+				if (!is_marked_for_deletion) {
+					this._marked_for_deletion_per_object_index.set(core_object.index, value);
+				}
+			});
+		} else {
+			for (let core_object of core_objects) {
+				this._marked_for_deletion_per_object_index.set(core_object.index, param.value);
 			}
-		});
+		}
 
 		// for (let core_object of core_objects) {
 		// 	const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);

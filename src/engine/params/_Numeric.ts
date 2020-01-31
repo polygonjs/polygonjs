@@ -5,6 +5,7 @@ import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ExpressionController} from './utils/ExpressionController';
 // import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
@@ -33,6 +34,7 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 
 		const converted = this.convert(raw_input);
 		if (converted != null) {
+			this._expression_controller?.set_expression(undefined, false);
 			if (converted != this._value) {
 				this._value = converted;
 				this.emit_controller.emit_param_updated();
@@ -41,8 +43,9 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 			}
 		} else {
 			if (lodash_isString(raw_input)) {
-				if (raw_input != this.expression_controller.expression) {
-					this.expression_controller.set_expression(raw_input);
+				this._expression_controller = this._expression_controller || new ExpressionController(this);
+				if (raw_input != this._expression_controller.expression) {
+					this._expression_controller.set_expression(raw_input);
 					this.emit_controller.emit_param_updated();
 				}
 			} else {
@@ -55,7 +58,7 @@ export class TypedNumericParam<T extends ParamType> extends Single<T> {
 		}
 	}
 	protected async process_computation(): Promise<void> {
-		if (this.expression_controller.active && !this.expression_controller.requires_entities) {
+		if (this.expression_controller?.active && !this.expression_controller.requires_entities) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
 				this.states.error.set(

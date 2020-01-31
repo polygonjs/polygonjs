@@ -147,9 +147,11 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			const geometry = core_geometry.geometry();
 			const array = geometry.getAttribute(this.pv.name).array as number[];
 			if (this.pv.size == 1) {
-				await this.p.value1.expression_controller.compute_expression_for_points(points, (point, value) => {
-					array[point.index * this.pv.size + 0] = value;
-				});
+				if (this.p.value1.expression_controller) {
+					await this.p.value1.expression_controller.compute_expression_for_points(points, (point, value) => {
+						array[point.index * this.pv.size + 0] = value;
+					});
+				}
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
 				let params = vparam.components;
@@ -165,7 +167,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 				for (let i = 0; i < params.length; i++) {
 					component_param = params[i];
-					if (component_param.has_expression()) {
+					if (component_param.has_expression() && component_param.expression_controller) {
 						tmp_arrays[i] = this._init_array_if_required(
 							geometry,
 							arrays_by_geometry_uuid[i],
@@ -205,12 +207,14 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
 		if (param.has_expression()) {
 			if (this.pv.size == 1) {
-				await this.p.value1.expression_controller.compute_expression_for_objects(
-					core_objects,
-					(core_object, value) => {
-						core_object.set_attrib_value(this.pv.name, value);
-					}
-				);
+				if (this.p.value1.expression_controller) {
+					await this.p.value1.expression_controller.compute_expression_for_objects(
+						core_objects,
+						(core_object, value) => {
+							core_object.set_attrib_value(this.pv.name, value);
+						}
+					);
+				}
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
 				let params = vparam.components;
@@ -223,7 +227,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				}
 				for (let component_index = 0; component_index < params.length; component_index++) {
 					const component_param = params[component_index];
-					if (component_param.has_expression()) {
+					if (component_param.has_expression() && component_param.expression_controller) {
 						await component_param.expression_controller.compute_expression_for_objects(
 							core_objects,
 							(core_object, value) => {
@@ -281,7 +285,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const param = this.p.string;
 
 		const string_values: string[] = [];
-		if (param.has_expression()) {
+		if (param.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
 				string_values[point.index] = value;
 			});
@@ -295,7 +299,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 	async add_string_attribute_to_object(core_objects: CoreObject[]) {
 		const param = this.p.string;
-		if (param.has_expression()) {
+		if (param.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_objects(core_objects, (core_object, value) => {
 				core_object.set_attrib_value(this.pv.name, value);
 			});

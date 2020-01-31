@@ -7,27 +7,24 @@ QUnit.test('cache static', async (assert) => {
 
 	cache1.set_input(0, sphere1);
 	container = await cache1.request_container();
-	let json = container
-		.core_content()!
-		.objects()
-		.map((o) => o.toJSON());
-	assert.equal(JSON.stringify(json).length, 8109);
+	let core_group = container.core_content()!;
+	assert.equal(core_group.points_count(), 63);
+	// let json = core_group.objects().map((o) => o.toJSON());
+	// assert.equal(JSON.stringify(json).length, 8109);
 
 	cache1.set_input(0, plane1);
 	container = await cache1.request_container();
-	json = container
-		.core_content()!
-		.objects()
-		.map((o) => o.toJSON());
-	assert.equal(JSON.stringify(json).length, 8109); // still same length
+	core_group = container.core_content()!;
+	assert.equal(core_group.points_count(), 63); // still same points_count
+	// json = core_group.objects().map((o) => o.toJSON());
+	// assert.equal(JSON.stringify(json).length, 8109); // still same length
 
 	cache1.p.reset.press_button();
 	container = await cache1.request_container();
-	json = container
-		.core_content()!
-		.objects()
-		.map((o) => o.toJSON());
-	assert.equal(JSON.stringify(json).length, 1179); // not same length anymore
+	core_group = container.core_content()!;
+	assert.equal(core_group.points_count(), 4); // not same points_count anymore
+	// json = core_group.objects().map((o) => o.toJSON());
+	// assert.equal(JSON.stringify(json).length, 1345); // not same length anymore
 });
 
 // box1 = geo1.create_node('box')

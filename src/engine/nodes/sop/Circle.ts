@@ -2,7 +2,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
 import {TypedSopNode} from './_Base';
 import {CoreGeometryUtilCircle} from 'src/core/geometry/util/Circle';
-import {CoreConstant} from 'src/core/geometry/Constant';
+import {ObjectType} from 'src/core/geometry/Constant';
 import {CoreTransform} from 'src/core/Transform';
 
 const DEFAULT_UP = new Vector3(0, 0, 1);
@@ -14,7 +14,7 @@ class CircleSopParamsConfig extends NodeParamsConfig {
 		range: [1, 50],
 		range_locked: [true, false],
 	});
-	open = ParamConfig.BUTTON(1);
+	open = ParamConfig.BOOLEAN(1);
 	arc_angle = ParamConfig.FLOAT(360, {
 		range: [0, 360],
 		range_locked: [false, false],
@@ -29,6 +29,8 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 	static type() {
 		return 'circle';
 	}
+
+	private _core_transform = new CoreTransform();
 
 	initialize_node() {
 		// this.io.inputs.set_count(0);
@@ -46,15 +48,15 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 	_create_circle() {
 		const geometry = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segments, this.pv.arc_angle);
 
-		CoreTransform.rotate_geometry_by_vector_difference(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
-		this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
+		this.set_geometry(geometry, ObjectType.LINE_SEGMENTS);
 	}
 
 	_create_disk() {
 		const geometry = new CircleBufferGeometry(this.pv.radius, this.pv.segments);
 
-		CoreTransform.rotate_geometry_by_vector_difference(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
 		this.set_geometry(geometry);
 	}

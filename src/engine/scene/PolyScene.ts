@@ -21,8 +21,8 @@
 // import {PickerNodes} from './concerns/PickerNodes';
 // import {PerformanceMixin} from './concerns/Performance';
 // import {Renderer} from './concerns/Renderer';
-// import {Store} from './concerns/Store'; // TODO: typescript
-// import {Uniforms} from './concerns/Uniforms'; // TODO: typescript
+// import {Store} from './concerns/Store';
+// import {Uniforms} from './concerns/Uniforms';
 
 // import {CubeCamerasController} from './utils/CubeCamerasController';
 import {CamerasController} from './utils/CamerasController';

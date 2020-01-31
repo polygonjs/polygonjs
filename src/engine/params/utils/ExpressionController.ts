@@ -48,7 +48,7 @@ export class ExpressionController<T extends ParamType> {
 	get requires_entities() {
 		return this.param.options.is_expression_for_entities;
 	}
-	set_expression(expression: string | undefined) {
+	set_expression(expression: string | undefined, set_dirty: boolean = true) {
 		if (this._expression != expression) {
 			this._expression = expression;
 
@@ -61,7 +61,9 @@ export class ExpressionController<T extends ParamType> {
 				}
 			}
 
-			this.param.set_dirty();
+			if (set_dirty) {
+				this.param.set_dirty();
+			}
 		}
 	}
 

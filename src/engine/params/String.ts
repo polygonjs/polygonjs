@@ -8,6 +8,7 @@ import {TypedParamVisitor} from './_Base';
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ExpressionController} from './utils/ExpressionController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 interface StringParamVisitor extends TypedParamVisitor {
@@ -38,8 +39,9 @@ export class StringParam extends Single<ParamType.STRING> {
 		this.states.error.clear();
 
 		if (this._value_elements(raw_input).length >= 3) {
-			if (raw_input != this.expression_controller.expression) {
-				this.expression_controller.set_expression(raw_input);
+			this._expression_controller = this._expression_controller || new ExpressionController(this);
+			if (raw_input != this._expression_controller.expression) {
+				this._expression_controller.set_expression(raw_input);
 				this.set_dirty();
 			}
 		} else {
@@ -51,7 +53,7 @@ export class StringParam extends Single<ParamType.STRING> {
 		}
 	}
 	protected async process_computation(): Promise<void> {
-		if (this.expression_controller.active && !this.expression_controller.requires_entities) {
+		if (this.expression_controller?.active && !this.expression_controller.requires_entities) {
 			const expression_result = await this.expression_controller.compute_expression();
 			if (this.expression_controller.is_errored) {
 				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);

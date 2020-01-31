@@ -129,6 +129,9 @@ export class ParamConfig {
 	static RAMP(init_value: ParamInitValuesTypeMap[ParamType.RAMP] = RampParam.DEFAULT_VALUE, options?: ParamOptions) {
 		return new ParamTemplate<ParamType.RAMP>(ParamType.RAMP, init_value, options);
 	}
+	static SEPARATOR(init_value: ParamInitValuesTypeMap[ParamType.SEPARATOR] = null, options?: ParamOptions) {
+		return new ParamTemplate<ParamType.SEPARATOR>(ParamType.SEPARATOR, init_value, options);
+	}
 	static STRING(init_value: ParamInitValuesTypeMap[ParamType.STRING] = '', options?: ParamOptions) {
 		return new ParamTemplate<ParamType.STRING>(ParamType.STRING, init_value, options);
 	}

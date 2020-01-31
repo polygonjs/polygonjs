@@ -109,7 +109,7 @@ export class ExpressionManager {
 			this.expression_string_generator || new ExpressionStringGenerator(this.param);
 
 		const new_expression_string = this.expression_string_generator.parse_tree(this.parsed_tree);
-		this.param.expression_controller.set_expression(new_expression_string);
+		this.param.expression_controller?.set_expression(new_expression_string);
 
 		// this.reset()
 		if (new_expression_string) {

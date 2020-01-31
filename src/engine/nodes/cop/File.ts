@@ -194,13 +194,17 @@ const ATTRIB_MAPPING: AttribMapping = {
 };
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {BaseNodeType} from '../_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 class FileCopParamsConfig extends NodeParamsConfig {
 	video_time = ParamConfig.FLOAT(1);
 	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
 		desktop_browse: {file_type: 'texture'},
 	});
 	reload = ParamConfig.BUTTON(null, {
-		// callback: this._reload.bind(this) // TODO: typescript
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			FileCopNode.PARAM_CALLBACK_reload(node as FileCopNode, param);
+		},
 	});
 	mapping = ParamConfig.INTEGER(UVMapping, {
 		menu: {
@@ -411,14 +415,16 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 			}
 		}
 	}
+	static PARAM_CALLBACK_reload(node: FileCopNode, param: BaseParamType) {
+		node.param_callback_reload();
+	}
+	private param_callback_reload() {
+		this._previous_param_url = undefined;
 
-	// private _reload() {
-	// 	this._previous_param_url = null;
-
-	// 	// set the param dirty is preferable, in case this is used to refresh a local asset
-	// 	this.params.get('url')?.set_dirty();
-	// 	// this.set_dirty()
-	// }
+		// set the param dirty is preferable, in case this is used to refresh a local asset
+		this.p.url.set_successors_dirty();
+		// this.set_dirty()
+	}
 
 	private _set_video_current_time() {
 		if (this._video) {

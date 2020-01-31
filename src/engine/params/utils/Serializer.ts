@@ -7,8 +7,7 @@ export class ParamSerializer {
 			name: this.param.name,
 			type: this.param.type,
 			value: this.param.value,
-			// expression: this.self.expression(), // TODO: typescript
-			// result: this.self.result(),// TODO: typescript
+			expression: this.param.has_expression() ? this.param.expression_controller?.expression : null,
 			graph_node_id: this.param.graph_node_id,
 			is_dirty: this.param.is_dirty,
 			error_message: this.param.states.error.message,

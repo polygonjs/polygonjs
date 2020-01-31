@@ -45,15 +45,10 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}
 
-	create_params() {
-		// GroupParamController.add_param(this); // TODO: typescript
-		// CoreTransform.create_params(this);
-		// this.add_param(ParamType.VECTOR3, 'pivot', DEFAULT_PARAMS.PIVOT);
-	}
-
+	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[]) {
 		const objects = input_contents[0].objects();
-		const matrix = CoreTransform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
+		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 
 		if (this.pv.group === '') {
 			for (let object of objects) {

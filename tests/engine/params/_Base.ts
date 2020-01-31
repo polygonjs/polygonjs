@@ -4,14 +4,15 @@ import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 QUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.create_node('box');
+	const param = box1.p.size;
 	assert.ok(box1.is_dirty);
 
 	await box1.request_container();
 	assert.ok(!box1.is_dirty);
 	assert.ok(!box1.states.error.active);
 
-	box1.p.size.set(2);
-	assert.equal(box1.p.size.value, 2);
+	param.set(2);
+	assert.equal(param.value, 2);
 	assert.notOk(!box1.is_dirty);
 	assert.ok(box1.is_dirty);
 
@@ -19,7 +20,7 @@ QUnit.test('sets the node to update if set value', async (assert) => {
 	assert.ok(!box1.is_dirty);
 	assert.ok(!box1.states.error.active);
 
-	box1.p.size.set(2); // set to same value
+	param.set(2); // set to same value
 	assert.ok(!box1.is_dirty);
 });
 
@@ -27,26 +28,42 @@ QUnit.test('sets the node to recook if set expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.create_node('box');
+	const param = box1.p.size;
 	assert.ok(box1.is_dirty);
 
 	await box1.request_container();
 	assert.ok(!box1.is_dirty);
 	assert.ok(!box1.states.error.active);
 
-	box1.p.size.set('1+1');
+	param.set('1+1');
 	assert.ok(box1.is_dirty);
-	await box1.p.size.compute();
-	assert.equal(box1.p.size.value, 2);
+	await param.compute();
+	assert.equal(param.value, 2);
 	assert.ok(box1.is_dirty);
 
 	await box1.request_container();
 	assert.ok(!box1.is_dirty);
 	assert.ok(!box1.states.error.active);
 
-	box1.p.size.set('1+1'); // set to same expression
+	param.set('1+1'); // set to same expression
+	assert.ok(param.has_expression());
 	assert.ok(!box1.is_dirty);
 
-	box1.p.size.set(2); // set to value with same result
+	param.set(3); // set to value with different
+	assert.ok(!param.has_expression());
+	assert.ok(box1.is_dirty);
+
+	param.set('1+1'); // reset expression
+	assert.ok(param.has_expression());
+	assert.ok(box1.is_dirty);
+	await box1.request_container();
+	assert.ok(!param.is_dirty);
+	assert.ok(!box1.is_dirty);
+	assert.equal(param.value, 2);
+
+	param.set(2); // set to value with same result
+	assert.ok(!param.has_expression(), 'param has no expression');
+	assert.ok(!param.is_dirty);
 	assert.ok(!box1.is_dirty);
 });
 

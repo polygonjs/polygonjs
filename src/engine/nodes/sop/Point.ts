@@ -1,0 +1,215 @@
+// import lodash_map from 'lodash/map'
+
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+
+import {TypedSopNode} from './_Base';
+import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreObject} from 'src/core/geometry/Object';
+import {CorePoint} from 'src/core/geometry/Point';
+import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+
+const POSITION_ATTRIB_NAME = 'position';
+
+type ValueArrayByName = Map<string, number[]>;
+type ComponentOffset = 0 | 1 | 2;
+
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {BufferAttribute, Mesh} from 'three';
+import {BooleanParam} from 'src/engine/params/Boolean';
+import {FloatParam} from 'src/engine/params/Float';
+class PointSopParamsConfig extends NodeParamsConfig {
+	update_x = ParamConfig.BOOLEAN(0);
+	x = ParamConfig.FLOAT('@P.x', {
+		visible_if: {update_x: 1},
+		expression: {for_entities: true},
+	});
+	update_y = ParamConfig.BOOLEAN(0);
+	y = ParamConfig.FLOAT('@P.y', {
+		visible_if: {update_y: 1},
+		expression: {for_entities: true},
+	});
+	update_z = ParamConfig.BOOLEAN(0);
+	z = ParamConfig.FLOAT('@P.z', {
+		visible_if: {update_z: 1},
+		expression: {for_entities: true},
+	});
+	update_normals = ParamConfig.BOOLEAN(1);
+}
+const ParamsConfig = new PointSopParamsConfig();
+
+export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'point';
+	}
+
+	private _x_arrays_by_geometry_uuid: ValueArrayByName = new Map();
+	private _y_arrays_by_geometry_uuid: ValueArrayByName = new Map();
+	private _z_arrays_by_geometry_uuid: ValueArrayByName = new Map();
+
+	static displayed_input_names(): string[] {
+		return ['points to move'];
+	}
+
+	initialize_node() {
+		this.io.inputs.set_count(1);
+		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.ui_data.set_icon('dot-circle');
+	}
+
+	async cook(input_contents: CoreGroup[]) {
+		const core_group = input_contents[0];
+		await this._eval_expressions_for_core_group(core_group);
+	}
+
+	// group.traverse (object)=>
+	// 	if (geometry = object.geometry)?
+	// 		this._eval_expressions(geometry)
+	// 		geometry.computeVertexNormals()
+
+	async _eval_expressions_for_core_group(core_group: CoreGroup) {
+		const core_objects = core_group.core_objects();
+		// this._allocate_arrays(core_objects)
+
+		for (let i = 0; i < core_objects.length; i++) {
+			await this._eval_expressions_for_core_object(core_objects[i]);
+		}
+
+		if (this.pv.update_normals) {
+			core_group.compute_vertex_normals();
+		}
+
+		const geometries = core_group.geometries();
+		for (let geometry of geometries) {
+			geometry.computeBoundingBox();
+		}
+
+		// needs update required for when no cloning
+		if (!this.io.inputs.input_cloned(0)) {
+			const geometries = core_group.geometries();
+			for (let geometry of geometries) {
+				const attrib = geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute;
+				attrib.needsUpdate = true;
+			}
+		}
+
+		this.set_core_group(core_group);
+	}
+	async _eval_expressions_for_core_object(core_object: CoreObject) {
+		const object = core_object.object();
+		const geometry = (object as Mesh).geometry as BufferGeometry;
+		const points = core_object.points();
+
+		const array = geometry.getAttribute(POSITION_ATTRIB_NAME).array as number[];
+
+		const tmp_array_x = await this._update_from_param(
+			geometry,
+			array,
+			points,
+			this.p.update_x,
+			this.p.x,
+			this.pv.x,
+			this._x_arrays_by_geometry_uuid,
+			0
+		);
+		const tmp_array_y = await this._update_from_param(
+			geometry,
+			array,
+			points,
+			this.p.update_y,
+			this.p.y,
+			this.pv.y,
+			this._y_arrays_by_geometry_uuid,
+			1
+		);
+		const tmp_array_z = await this._update_from_param(
+			geometry,
+			array,
+			points,
+			this.p.update_z,
+			this.p.z,
+			this.pv.z,
+			this._z_arrays_by_geometry_uuid,
+			2
+		);
+
+		if (tmp_array_x) {
+			this._commit_tmp_values(tmp_array_x, array, 0);
+		}
+		if (tmp_array_y) {
+			this._commit_tmp_values(tmp_array_y, array, 1);
+		}
+		if (tmp_array_z) {
+			this._commit_tmp_values(tmp_array_z, array, 2);
+		}
+	}
+
+	private async _update_from_param(
+		geometry: BufferGeometry,
+		array: number[],
+		points: CorePoint[],
+		do_update_param: BooleanParam,
+		value_param: FloatParam,
+		param_value: number,
+		arrays_by_geometry_uuid: ValueArrayByName,
+		offset: ComponentOffset
+	) {
+		const do_update = do_update_param;
+		const param = value_param;
+
+		let tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length, offset);
+		if (do_update.value) {
+			if (param.has_expression() && param.expression_controller) {
+				await param.expression_controller.compute_expression_for_points(points, (point, value) => {
+					tmp_array[point.index] = value;
+				});
+			} else {
+				let point;
+				for (let i = 0; i < points.length; i++) {
+					point = points[i];
+					tmp_array[point.index] = param_value;
+				}
+			}
+		}
+		return tmp_array;
+	}
+
+	private _init_array_if_required(
+		geometry: BufferGeometry,
+		arrays_by_geometry_uuid: ValueArrayByName,
+		points_count: number,
+		offset: ComponentOffset
+	) {
+		const uuid = geometry.uuid;
+		const current_array = arrays_by_geometry_uuid.get(uuid);
+		if (current_array) {
+			// only create new array if we need more point, or as soon as the length is different?
+			if (current_array.length < points_count) {
+				const new_array = this._array_for_component(geometry, points_count, offset);
+				arrays_by_geometry_uuid.set(uuid, new_array);
+				return new_array;
+			} else {
+				return current_array;
+			}
+		} else {
+			const new_array = this._array_for_component(geometry, points_count, offset);
+			arrays_by_geometry_uuid.set(uuid, new_array);
+			return new_array;
+		}
+	}
+
+	private _array_for_component(geometry: BufferGeometry, points_count: number, offset: ComponentOffset) {
+		const new_array = new Array<number>(points_count);
+		const src_array = geometry.getAttribute(POSITION_ATTRIB_NAME).array;
+		for (let i = 0; i < new_array.length; i++) {
+			new_array[i] = src_array[i * 3 + offset];
+		}
+		return new_array;
+	}
+
+	private _commit_tmp_values(tmp_array: number[], target_array: number[], offset: number) {
+		for (let i = 0; i < tmp_array.length; i++) {
+			target_array[i * 3 + offset] = tmp_array[i];
+		}
+	}
+}

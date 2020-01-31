@@ -16,3 +16,19 @@ QUnit.test('int eval correctly when set to different values', async (assert) => 
 	await param.compute();
 	assert.equal(param.value, 1.5);
 });
+
+QUnit.test('int has_expression() returns false when removing the expression', async (assert) => {
+	const geo1 = window.geo1;
+
+	const box1 = geo1.create_node('box');
+	const param = box1.p.divisions;
+
+	param.set(2);
+	assert.notOk(param.has_expression());
+
+	param.set('2+2');
+	assert.ok(param.has_expression());
+
+	param.set(2);
+	assert.notOk(param.has_expression());
+});

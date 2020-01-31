@@ -58,7 +58,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	static PARAM_CALLBACK_reload(node: FileSopNode, param: BaseParamType) {
 		node.param_callback_reload();
 	}
-	param_callback_reload() {
+	private param_callback_reload() {
 		// this._previous_param_url = null
 
 		// set the param dirty is preferable, in case this is used to refresh a local asset

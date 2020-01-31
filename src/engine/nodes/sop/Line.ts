@@ -43,8 +43,8 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 			point.toArray(positions, i * 3);
 
 			if (i > 0) {
-				indices.push(i - 1);
-				indices.push(i);
+				indices[(i - 1) * 2] = i - 1;
+				indices[(i - 1) * 2 + 1] = i;
 			}
 		});
 		const geometry = new BufferGeometry();

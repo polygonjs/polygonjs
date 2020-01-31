@@ -72,7 +72,6 @@ export class DependenciesController {
 				base_nodes.push(next_node.node);
 			} else {
 				if (typeGuard(next_node, BaseNodeClass)) {
-					// TODO: typescript
 					base_nodes.push(next_node);
 				} else {
 					this._find_base_nodes_from_node(next_node, method, base_nodes);

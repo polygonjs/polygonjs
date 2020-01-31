@@ -67,30 +67,30 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _components: FloatParam[] | undefined;
 	protected _compute_resolves: ComputeCallback[] | undefined;
 
-	private _options: OptionsController = new OptionsController((<unknown>this) as BaseParamType);
+	private _options: OptionsController = new OptionsController(this);
 	get options(): OptionsController {
-		return (this._options = this._options || new OptionsController((<unknown>this) as BaseParamType));
+		return (this._options = this._options || new OptionsController(this));
 	}
-	private _emit_controller: EmitController = new EmitController((<unknown>this) as BaseParamType);
+	private _emit_controller: EmitController = new EmitController(this);
 	get emit_controller(): EmitController {
-		return (this._emit_controller = this._emit_controller || new EmitController((<unknown>this) as BaseParamType));
+		return (this._emit_controller = this._emit_controller || new EmitController(this));
 	}
-	private _expression_controller: ExpressionController<T> | undefined;
-	get expression_controller(): ExpressionController<T> {
-		return (this._expression_controller =
-			this._expression_controller || new ExpressionController((<unknown>this) as BaseParamType));
+	protected _expression_controller: ExpressionController<T> | undefined;
+	get expression_controller(): ExpressionController<T> | undefined {
+		return this._expression_controller; // =
+		//this._expression_controller || new ExpressionController(this);
 	}
 	private _serializer: ParamSerializer | undefined;
 	get serializer(): ParamSerializer {
-		return (this._serializer = this._serializer || new ParamSerializer((<unknown>this) as BaseParamType));
+		return (this._serializer = this._serializer || new ParamSerializer(this));
 	}
 	private _states: StatesController | undefined;
 	get states(): StatesController {
-		return (this._states = this._states || new StatesController((<unknown>this) as BaseParamType));
+		return (this._states = this._states || new StatesController(this));
 	}
 	private _ui_data: UIData | undefined;
 	get ui_data(): UIData {
-		return (this._ui_data = this._ui_data || new UIData(this.scene, (<unknown>this) as BaseParamType));
+		return (this._ui_data = this._ui_data || new UIData(this.scene, this));
 	}
 
 	constructor(scene: PolyScene) {
@@ -107,7 +107,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	// this._init_ui_data()
 	// }
 	accepts_visitor(visitor: TypedParamVisitor): any {
-		return visitor.visit_typed_param((<unknown>this) as BaseParamType);
+		return visitor.visit_typed_param(this);
 	}
 
 	//
@@ -131,7 +131,6 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		// this.self.name_graph_node().remove_dirty_state();
 	}
 
-	// TODO: typescript
 	get value(): ParamValuesTypeMap[T] {
 		return this._value;
 	}
@@ -232,7 +231,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this.node?.full_path() + '/' + this.name;
 	}
 	path_relative_to(node: BaseNodeType | BaseParamType): string {
-		return CoreWalker.relative_path(node, (<unknown>this) as BaseParamType);
+		return CoreWalker.relative_path(node, this);
 	}
 
 	// emit
@@ -263,8 +262,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// set_expression(expression: string | null) {
 	// 	this.expression_controller.set_expression(expression);
 	// }
-	has_expression() {
-		return this.expression_controller.active;
+	has_expression(): boolean {
+		return this.expression_controller != null && this.expression_controller.active; // use this._expression_controller to avoid creating it
 	}
 
 	// serialize

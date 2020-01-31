@@ -29,17 +29,34 @@ import {FuseSopNode} from 'src/engine/nodes/sop/Fuse';
 import {HexagonsSopNode} from 'src/engine/nodes/sop/Hexagons';
 import {HierarchySopNode} from 'src/engine/nodes/sop/Hierarchy';
 // TODO: heightmap
+// TODO: particles
+// TODO: material
 import {JitterSopNode} from 'src/engine/nodes/sop/Jitter';
 import {LayerSopNode} from 'src/engine/nodes/sop/Layer';
 import {LineSopNode} from 'src/engine/nodes/sop/Line';
 import {MergeSopNode} from 'src/engine/nodes/sop/Merge';
+import {NoiseSopNode} from 'src/engine/nodes/sop/Noise';
+import {NormalsSopNode} from 'src/engine/nodes/sop/Normals';
+import {NullSopNode} from 'src/engine/nodes/sop/Null';
+import {ObjectMergeSopNode} from 'src/engine/nodes/sop/ObjectMerge';
+import {OcclusionSopNode} from 'src/engine/nodes/sop/Occlusion';
+import {PeakSopNode} from 'src/engine/nodes/sop/Peak';
 import {PlaneSopNode} from 'src/engine/nodes/sop/Plane';
+import {PointSopNode} from 'src/engine/nodes/sop/Point';
+import {PolywireSopNode} from 'src/engine/nodes/sop/Polywire';
+import {RaySopNode} from 'src/engine/nodes/sop/Ray';
+import {ResampleSopNode} from 'src/engine/nodes/sop/Resample';
 import {ScatterSopNode} from 'src/engine/nodes/sop/Scatter';
+import {ShadowsSopNode} from 'src/engine/nodes/sop/Shadows';
+import {SkinSopNode} from 'src/engine/nodes/sop/Skin';
 import {SphereSopNode} from 'src/engine/nodes/sop/Sphere';
 import {SwitchSopNode} from 'src/engine/nodes/sop/Switch';
 import {TextSopNode} from 'src/engine/nodes/sop/Text';
+import {TorusSopNode} from 'src/engine/nodes/sop/Torus';
+import {TorusKnotSopNode} from 'src/engine/nodes/sop/TorusKnot';
 import {TransformSopNode} from 'src/engine/nodes/sop/Transform';
 import {TubeSopNode} from 'src/engine/nodes/sop/Tube';
+import {UvProjectSopNode} from 'src/engine/nodes/sop/UvProject';
 
 export interface GeoNodeChildrenMap {
 	add: AddSopNode;
@@ -74,13 +91,28 @@ export interface GeoNodeChildrenMap {
 	layer: LayerSopNode;
 	line: LineSopNode;
 	merge: MergeSopNode;
+	noise: NoiseSopNode;
+	normals: NormalsSopNode;
+	null: NullSopNode;
+	object_merge: ObjectMergeSopNode;
+	occlusion: OcclusionSopNode;
+	peak: PeakSopNode;
 	plane: PlaneSopNode;
+	point: PointSopNode;
+	polywire: PolywireSopNode;
+	ray: RaySopNode;
+	resample: ResampleSopNode;
 	scatter: ScatterSopNode;
+	shadows: ShadowsSopNode;
+	skin: SkinSopNode;
 	sphere: SphereSopNode;
 	switch: SwitchSopNode;
 	text: TextSopNode;
+	torus: TorusSopNode;
+	torus_knot: TorusKnotSopNode;
 	transform: TransformSopNode;
 	tube: TubeSopNode;
+	uv_project: UvProjectSopNode;
 }
 
 import {Poly} from 'src/engine/Poly';
@@ -118,12 +150,27 @@ export class SopRegister {
 		poly.register_node(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(LineSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(MergeSopNode, CATEGORY_SOP.MISC);
+		poly.register_node(NoiseSopNode, CATEGORY_SOP.MISC);
+		poly.register_node(NormalsSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(NullSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(OcclusionSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PlaneSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(PointSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(PolywireSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(RaySopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(ResampleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(ScatterSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(SkinSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(ShadowsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SphereSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(TorusSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(TransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TubeSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
 	}
 }

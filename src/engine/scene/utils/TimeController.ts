@@ -60,7 +60,7 @@ export class TimeController {
 	set_fps(fps: number) {
 		this._fps = Math.floor(fps);
 		this._frame_interval = 1000 / this._fps;
-		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED); // TODO: typescript: replace with a more generic name dispatch_event
+		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 
 	set_frame(frame: number) {

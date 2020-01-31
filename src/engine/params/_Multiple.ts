@@ -130,7 +130,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 	has_expression() {
 		for (let c of this.components) {
-			if (c.expression_controller.active) {
+			if (c.expression_controller?.active) {
 				return true;
 			}
 		}
@@ -141,15 +141,15 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	// 		.map((c) => c.expression())
 	// 		.join(';')
 	// }
-	set_expression(expression: string) {
-		// if (lodash_isArray(expressions)) {
-		for (let c of this.components) {
-			c.expression_controller.set_expression(expression);
-		}
-		// } else {
-		// 	this.components()[0].set_expression(expressions)
-		// }
-	}
+	// set_expression(expression: string) {
+	// 	// if (lodash_isArray(expressions)) {
+	// 	for (let c of this.components) {
+	// 		c.expression_controller.set_expression(expression);
+	// 	}
+	// 	// } else {
+	// 	// 	this.components()[0].set_expression(expressions)
+	// 	// }
+	// }
 
 	get is_default() {
 		for (let c of this.components) {

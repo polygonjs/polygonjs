@@ -138,15 +138,8 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	create_object(): Object3D {
 		return new Object3D();
 	}
-	//
-
-	// TODO: typescript: there may be a better way to overload this
-	// create_node(type: string): BaseSopNode {
-	// 	return super.create_node(type) as BaseSopNode;
-	// }
 
 	request_display_node() {}
-	//
 
 	is_display_node_cooking(): boolean {
 		return false;
