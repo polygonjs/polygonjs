@@ -5,6 +5,7 @@ import {ObjectContainer} from '../Object';
 import {EventContainer} from '../Event';
 import {ManagerContainer} from '../Manager';
 import {PostProcessContainer} from '../PostProcess';
+import {GlContainer} from '../Gl';
 
 export interface ContainerMap {
 	GEOMETRY: GeometryContainer;
@@ -14,6 +15,7 @@ export interface ContainerMap {
 	EVENT: EventContainer;
 	MANAGER: ManagerContainer;
 	POST: PostProcessContainer;
+	GL: GlContainer;
 }
 // type K = keyof ContainerMap;
 // type Container = ContainerMap[K];

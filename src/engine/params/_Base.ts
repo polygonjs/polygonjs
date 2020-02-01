@@ -117,8 +117,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	static type(): ParamType {
 		return ParamType.FLOAT; // adding a type here, but just to not have a compile error
 	}
-	get type(): ParamType {
-		return (this.constructor as typeof BaseParamClass).type();
+	get type(): T {
+		return (this.constructor as typeof BaseParamClass).type() as T;
 	}
 	get is_numeric(): boolean {
 		return false;

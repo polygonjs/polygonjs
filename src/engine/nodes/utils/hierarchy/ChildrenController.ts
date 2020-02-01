@@ -296,7 +296,14 @@ export class HierarchyChildrenController {
 	nodes_by_type(type: string): BaseNodeType[] {
 		const node_ids = this._children_by_type[type] || [];
 		const graph = this.node.scene.graph;
-		return node_ids.map((node_id) => graph.node_from_id(node_id));
+		const nodes: BaseNodeType[] = [];
+		node_ids.forEach((node_id) => {
+			const node = graph.node_from_id(node_id) as BaseNodeType;
+			if (node) {
+				nodes.push(node);
+			}
+		});
+		return nodes;
 	}
 	// children_and_grandchildren_by_context(context: NodeContext): BaseNode[]{
 	// 	const node_ids = this._children_and_grandchildren_by_context[context] || []

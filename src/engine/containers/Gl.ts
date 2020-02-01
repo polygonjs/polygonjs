@@ -1,11 +1,12 @@
-// import {TypedContainer} from './_Base';
+import {TypedContainer} from './_Base';
+import {ContainableMap} from './utils/ContainableMap';
 
-// export class GlContainer extends TypedContainer<null> {
-// 	// constructor() {
-// 	// 	super();
-// 	// }
+export class GlContainer extends TypedContainer<ContainableMap['GL']> {
+	// constructor() {
+	// 	super();
+	// }
 
-// 	object() {
-// 		return this._content;
-// 	}
-// }
+	object() {
+		return this._content;
+	}
+}

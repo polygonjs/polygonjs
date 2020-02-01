@@ -73,7 +73,8 @@ export class CoreGraph {
 		// 	return [];
 		// }
 	}
-	node_from_id(id: string) {
+	// TODO: typescript: this should return CoreGraphNodeId|null
+	node_from_id(id: string): CoreGraphNode {
 		return this._graph.node(id);
 	}
 

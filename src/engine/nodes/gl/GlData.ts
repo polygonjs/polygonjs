@@ -1,0 +1,177 @@
+import {NamedConnection} from '../utils/NamedConnection';
+import {ConnectionType} from '../utils/NodeConnection';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamInitValue} from 'src/engine/nodes/utils/params/ParamsController';
+
+export class TypedConnection<T extends ConnectionType> extends NamedConnection {
+	private _default_value: any;
+
+	constructor(name: string, private _type: T) {
+		super(name);
+	}
+	type() {
+		return this._type;
+	}
+	// set_default_value(default_value) {
+	// 	this._default_value = default_value;
+	// }
+	// default_value() {
+	// 	return this._default_value;
+	// }
+
+	to_json() {
+		return {
+			name: this.name,
+			type: this._type,
+		};
+	}
+}
+
+// export class TypedConnectionInt extends TypedConnection{
+// 	constructor(name: string) { super(name, ConnectionType.INT ) }
+// 	static gl_type(): string {return 'int'}
+// 	gl_type(): string {return TypedConnectionInt.gl_type()}
+// }
+export class TypedConnectionFloat extends TypedConnection<ConnectionType.FLOAT> {
+	constructor(name: string) {
+		super(name, ConnectionType.FLOAT);
+	}
+	static gl_type(): string {
+		return ConnectionType.FLOAT;
+	}
+	// gl_type(): string {return TypedConnectionFloat.gl_type()}
+}
+export class TypedConnectionVec2 extends TypedConnection<ConnectionType.VEC2> {
+	constructor(name: string) {
+		super(name, ConnectionType.VEC2);
+	}
+	static gl_type(): string {
+		return ConnectionType.VEC2;
+	}
+	// gl_type(): string {return TypedConnectionVec2.gl_type()}
+}
+export class TypedConnectionVec3 extends TypedConnection<ConnectionType.VEC3> {
+	constructor(name: string) {
+		super(name, ConnectionType.VEC3);
+	}
+	static gl_type(): string {
+		return ConnectionType.VEC3;
+	}
+	// gl_type(): string {return TypedConnectionVec3.gl_type()}
+}
+export class TypedConnectionVec4 extends TypedConnection<ConnectionType.VEC4> {
+	constructor(name: string) {
+		super(name, ConnectionType.VEC4);
+	}
+	static gl_type(): string {
+		return ConnectionType.VEC4;
+	}
+	// gl_type(): string {return TypedConnectionVec4.gl_type()}
+}
+export class TypedConnectionMat3 extends TypedConnection<ConnectionType.MAT3> {
+	constructor(name: string) {
+		super(name, ConnectionType.MAT3);
+	}
+	static gl_type(): string {
+		return ConnectionType.MAT3;
+	}
+	// gl_type(): string {return TypedConnectionMat3.gl_type()}
+}
+export class TypedConnectionBool extends TypedConnection<ConnectionType.BOOL> {
+	constructor(name: string) {
+		super(name, ConnectionType.BOOL);
+	}
+	static gl_type(): string {
+		return ConnectionType.BOOL;
+	}
+	// gl_type(): string {return TypedConnectionBool.gl_type()}
+}
+export class TypedConnectionRGB extends TypedConnection<ConnectionType.RGB> {
+	constructor(name: string) {
+		super(name, ConnectionType.RGB);
+	}
+	static gl_type(): string {
+		return ConnectionType.RGB;
+	}
+	// gl_type(): string {return TypedConnectionRGB.gl_type()}
+}
+export class TypedConnectionRGBA extends TypedConnection<ConnectionType.RGBA> {
+	constructor(name: string) {
+		super(name, ConnectionType.RGBA);
+	}
+	static gl_type(): string {
+		return ConnectionType.RGBA;
+	}
+	// gl_type(): string {return TypedConnectionRGBA.gl_type()}
+}
+export type BaseConnectionType = TypedConnection<ConnectionType>;
+
+export const Connection = {
+	Bool: TypedConnectionBool,
+	// Int: TypedConnectionInt,
+	Float: TypedConnectionFloat,
+	Vec2: TypedConnectionVec2,
+	Vec3: TypedConnectionVec3,
+	Vec4: TypedConnectionVec4,
+	Mat3: TypedConnectionMat3,
+};
+
+export const VAR_TYPES = [
+	// 'int',
+	'float',
+	'vec2',
+	'vec3',
+	'vec4',
+];
+export const COMPONENTS_COUNT_BY_TYPE = {
+	// int: 1,
+	bool: 1,
+	float: 1,
+	vec2: 2,
+	vec3: 3,
+	vec4: 4,
+};
+
+export const TYPED_CONNECTION_BY_VAR_TYPE = {
+	// 'int': TypedConnectionInt,
+	float: TypedConnectionFloat,
+	vec2: TypedConnectionVec2,
+	vec3: TypedConnectionVec3,
+	vec4: TypedConnectionVec4,
+	color: TypedConnectionVec3,
+	rgba: TypedConnectionRGBA,
+};
+
+export const GlTypedConnection = {
+	// 'integer': TypedConnectionInt,
+	[ParamType.BOOLEAN]: TypedConnectionFloat,
+	[ParamType.BUTTON]: null,
+	[ParamType.COLOR]: TypedConnectionVec3,
+	[ParamType.FLOAT]: TypedConnectionFloat,
+	[ParamType.INTEGER]: TypedConnectionFloat,
+	[ParamType.OPERATOR_PATH]: null,
+	[ParamType.RAMP]: null,
+	[ParamType.SEPARATOR]: null,
+	[ParamType.STRING]: null,
+	[ParamType.VECTOR2]: TypedConnectionVec2,
+	[ParamType.VECTOR3]: TypedConnectionVec3,
+	[ParamType.VECTOR4]: TypedConnectionVec4,
+	rgba: TypedConnectionRGBA, // TODO: typescript: what is this?
+};
+type ParamTypeByConnectionType = {[key in ConnectionType]: ParamType};
+export const ParamTypeFromConnection: ParamTypeByConnectionType = {
+	[ConnectionType.BOOL]: ParamType.BOOLEAN,
+	// int: ParamType.INTEGER,
+	[ConnectionType.FLOAT]: ParamType.FLOAT,
+	[ConnectionType.VEC2]: ParamType.VECTOR2,
+	[ConnectionType.VEC3]: ParamType.VECTOR3,
+	[ConnectionType.VEC4]: ParamType.VECTOR4,
+};
+type ParamDefaultValueByConnectionType = {[key in ConnectionType]: ParamInitValue};
+export const ParamDefaultValueFromConnection: ParamDefaultValueByConnectionType = {
+	// int: 0,
+	[ConnectionType.FLOAT]: 0,
+	[ConnectionType.VEC2]: [0, 0],
+	[ConnectionType.VEC3]: [0, 0, 0],
+	[ConnectionType.VEC4]: [0, 0, 0, 0],
+};

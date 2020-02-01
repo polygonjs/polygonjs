@@ -74,7 +74,7 @@ export class InputsController<T extends BaseNodeType> {
 	// }
 	set_max_inputs_count(max_inputs_count: number) {
 		this._max_inputs_count = max_inputs_count;
-		this._init_graph_node_inputs();
+		this.init_graph_node_inputs();
 	}
 	set_named_inputs(named_inputs: NamedConnection[]) {
 		this._has_named_inputs = true;
@@ -89,7 +89,7 @@ export class InputsController<T extends BaseNodeType> {
 	named_inputs(): NamedConnection[] {
 		return this._named_inputs;
 	}
-	protected _init_graph_node_inputs() {
+	init_graph_node_inputs() {
 		for (let i = 0; i < this._max_inputs_count; i++) {
 			this._graph_node_inputs[i] = this._graph_node_inputs[i] || this._create_graph_node_input(i);
 		}
@@ -239,7 +239,7 @@ export class InputsController<T extends BaseNodeType> {
 		const named_inputs = this.named_inputs();
 		let index = -1;
 		named_inputs.forEach((input, i) => {
-			if (input.name() == name) {
+			if (input.name == name) {
 				index = i;
 			}
 		});
@@ -249,7 +249,7 @@ export class InputsController<T extends BaseNodeType> {
 		const index = this._get_named_input_index_without_error(name);
 		if (index == null) {
 			const named_inputs = this.named_inputs();
-			const available_names = named_inputs.map((o) => o.name()).join(', ');
+			const available_names = named_inputs.map((o) => o.name).join(', ');
 			console.log('named_inputs', named_inputs);
 			throw new Error(
 				`${this.node.full_path()}: no inputs named '${name}'. available names are '${available_names}' (${

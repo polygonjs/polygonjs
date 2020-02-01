@@ -1,6 +1,41 @@
 import {BaseNodeType} from '../_Base';
 import {_Math} from 'three/src/math/Math';
 
+// TODO: simplify GLDataType into one enum
+// http://learnwebgl.brown37.net/12_shader_language/glsl_data_types.html
+export enum GLDataType {
+	BOOL = 'bool',
+	BVEC2 = 'bvec2',
+	BVEC3 = 'bvec3',
+	BVEC4 = 'bvec4',
+	INT = 'int',
+	IVEC2 = 'ivec2',
+	IVEC3 = 'ivec3',
+	IVEC4 = 'ivec4',
+	FLOAT = 'float',
+	VEC2 = 'vec2',
+	VEC3 = 'vec3',
+	VEC4 = 'vec4',
+	// matrices to be used later
+	// MAT2 = 'mat2',
+	// MAT3 = 'mat3',
+	// MAT4 = 'mat4',
+}
+export const GLDataTypes: Array<GLDataType> = [
+	GLDataType.BOOL,
+	GLDataType.BVEC2,
+	GLDataType.BVEC3,
+	GLDataType.BVEC4,
+	GLDataType.INT,
+	GLDataType.IVEC2,
+	GLDataType.IVEC3,
+	GLDataType.IVEC4,
+	GLDataType.FLOAT,
+	GLDataType.VEC2,
+	GLDataType.VEC3,
+	GLDataType.VEC4,
+];
+
 export enum ConnectionType {
 	GEOMETRY = 'geometry',
 	MATRIX = 'matrix',

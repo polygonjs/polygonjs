@@ -12,3 +12,6 @@ export enum ParamType {
 	VECTOR3 = 'vector3',
 	VECTOR4 = 'vector4',
 }
+// export type ParamTypeKey = ParamType
+// export type ParamTypeKeysArray = Array<ParamTypeKey>
+// const ParamTypeKeysArray: ParamTypeKeysArray = [ParamType.BOOLEAN]

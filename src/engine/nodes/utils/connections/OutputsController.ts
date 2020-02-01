@@ -45,7 +45,7 @@ export class OutputsController<T extends BaseNodeType> {
 		const named_outputs = this.named_outputs();
 		let index = -1;
 		named_outputs.forEach((output, i) => {
-			if (output.name() == name) {
+			if (output.name == name) {
 				index = i;
 			}
 		});
@@ -55,7 +55,7 @@ export class OutputsController<T extends BaseNodeType> {
 		const index = this._get_named_output_index_without_error(name);
 		if (index == null) {
 			const named_outputs = this.named_outputs();
-			const available_names = named_outputs.map((o) => o.name()).join(', ');
+			const available_names = named_outputs.map((o) => o.name).join(', ');
 			throw new Error(`no outputs named '${name}'. available names are ${available_names}`);
 		}
 		return index;
@@ -77,7 +77,7 @@ export class OutputsController<T extends BaseNodeType> {
 	}
 
 	named_output_by_name(name: string): NamedConnection {
-		return this._named_outputs.filter((named_output) => named_output.name() == name)[0];
+		return this._named_outputs.filter((named_output) => named_output.name == name)[0];
 	}
 
 	set_named_outputs(named_outputs: NamedConnection[]) {
@@ -101,7 +101,7 @@ export class OutputsController<T extends BaseNodeType> {
 			}
 		});
 		const used_output_names: string[] = used_output_indices.map((index) => {
-			return this.named_outputs()[index].name();
+			return this.named_outputs()[index].name;
 		});
 		return used_output_names;
 	}

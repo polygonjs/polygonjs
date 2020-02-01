@@ -11,4 +11,5 @@ export interface ContainableMap {
 	EVENT: string;
 	MANAGER: boolean;
 	POST: number;
+	GL: string;
 }

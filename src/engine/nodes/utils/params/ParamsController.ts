@@ -7,7 +7,7 @@
 // import lodash_values from 'lodash/values';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType, TypedParam} from 'src/engine/params/_Base';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
@@ -54,7 +54,8 @@ import {NodeParamsConfig} from './ParamsConfig';
 // declare global {
 // 	const ParamType: typeof ParamType;
 // }
-export type ParamConstructorMap = {
+type ParamConstructorMapType = {[key in ParamType]: TypedParam<ParamType>};
+export interface ParamConstructorMap extends ParamConstructorMapType {
 	[ParamType.BOOLEAN]: BooleanParam;
 	[ParamType.BUTTON]: ButtonParam;
 	[ParamType.COLOR]: ColorParam;
@@ -67,9 +68,10 @@ export type ParamConstructorMap = {
 	[ParamType.VECTOR2]: Vector2Param;
 	[ParamType.VECTOR3]: Vector3Param;
 	[ParamType.VECTOR4]: Vector4Param;
-};
+}
 
-const ParamConstructorByType = {
+type ParamClassMapType = {[key in ParamType]: any};
+const ParamConstructorByType: ParamClassMapType = {
 	[ParamType.BOOLEAN]: BooleanParam,
 	[ParamType.BUTTON]: ButtonParam,
 	[ParamType.COLOR]: ColorParam,
@@ -84,9 +86,23 @@ const ParamConstructorByType = {
 	[ParamType.VECTOR4]: Vector4Param,
 };
 
-export type ParamInitValuesTypeMap = {
+export type ParamInitValue =
+	| StringOrNumber
+	| StringOrNumber2
+	| StringOrNumber3
+	| StringOrNumber4
+	| boolean
+	| string
+	| null
+	| Color
+	| Vector2
+	| Vector3
+	| Vector4
+	| RampValue;
+type ParamInitValuesTypeMapGeneric = {[key in ParamType]: ParamInitValue};
+export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
 	[ParamType.BOOLEAN]: StringOrNumber | boolean;
-	[ParamType.BUTTON]: any;
+	[ParamType.BUTTON]: null;
 	[ParamType.COLOR]: StringOrNumber3 | Color;
 	[ParamType.FLOAT]: StringOrNumber;
 	[ParamType.INTEGER]: StringOrNumber;
@@ -97,8 +113,10 @@ export type ParamInitValuesTypeMap = {
 	[ParamType.VECTOR2]: StringOrNumber2 | Vector2;
 	[ParamType.VECTOR3]: StringOrNumber3 | Vector3;
 	[ParamType.VECTOR4]: StringOrNumber4 | Vector4;
-};
-export type ParamValuesTypeMap = {
+}
+export type ParamValue = boolean | Color | number | string | RampValue | Vector2 | Vector3 | Vector4 | null;
+type ParamValuesTypeMapGeneric = {[key in ParamType]: ParamValue};
+export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
 	[ParamType.BOOLEAN]: boolean;
 	[ParamType.BUTTON]: null;
 	[ParamType.COLOR]: Color;
@@ -111,7 +129,7 @@ export type ParamValuesTypeMap = {
 	[ParamType.VECTOR2]: Vector2;
 	[ParamType.VECTOR3]: Vector3;
 	[ParamType.VECTOR4]: Vector4;
-};
+}
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -213,7 +231,7 @@ export class ParamsController {
 	private set_with_type<T extends ParamType>(name: string, value: ParamInitValuesTypeMap[T], type: T) {
 		const param = this.param_with_type(name, type);
 		if (param) {
-			param.set(value);
+			param.set(value as never);
 		} else {
 			console.warn(`param ${name} not found with type ${type}`);
 		}
@@ -362,7 +380,7 @@ export class ParamsController {
 
 			// param.set_scene(this.node.scene);
 			param.set_name(name);
-			param.set_init_value(init_value);
+			param.set_init_value(init_value as never);
 			// param.initialize();
 			param.ui_data.set_folder_name(this.current_param_folder_name());
 
