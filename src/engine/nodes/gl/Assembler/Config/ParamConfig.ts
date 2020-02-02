@@ -8,20 +8,22 @@ import lodash_isNumber from 'lodash/isNumber';
 import lodash_isString from 'lodash/isString';
 
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParamType, TypedParam} from 'src/engine/params/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {TypeAssert} from 'src/engine/poly/Assert';
-import {IUniform} from 'three';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 // import { RampValue } from 'src/engine/params/ramp/RampValue';
 import {RampParam} from 'src/engine/params/Ramp';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+import {ParamValueComparer} from 'src/engine/nodes/utils/params/ParamValueComparer';
+import {ParamValueCloner} from 'src/engine/nodes/utils/params/ParamValueCloner';
 // import {CoreTextureLoader} from 'src/Core/Loader/Texture'
 
 export class ParamConfig<T extends ParamType> {
-	_uniform: any;
-	_cached_param_value = null;
+	private _uniform: IUniform | undefined;
+	private _cached_param_value: ParamValuesTypeMap[T] | undefined;
 	// private _texture_loader: CoreTextureLoader
 
 	constructor(
@@ -32,7 +34,7 @@ export class ParamConfig<T extends ParamType> {
 	) {}
 
 	static from_param<K extends ParamType>(param: TypedParam<K>, uniform_name: string): ParamConfig<K> {
-		return new ParamConfig<K>(param.type, param.name, param.default_value(), uniform_name);
+		return new ParamConfig<K>(param.type, param.name, param.default_value, uniform_name);
 	}
 
 	type() {
@@ -100,22 +102,22 @@ export class ParamConfig<T extends ParamType> {
 		// return new Promise( async (resolve, reject)=>{
 		const uniform = this.uniform();
 		// the cache cannot be trusted...
-		const param = node.params.get(this._name);
+		const param = node.params.get(this._name) as TypedParam<T>;
 		if (param) {
 			await param.compute(); //node[node.param_cache_name(this._name)]
 			const value = param.value;
 
 			if ((value != null && this.has_value_changed(value)) || this.is_video_texture()) {
-				this._update_cached_value(value);
+				// this._update_cached_value(value);
 				// console.log(this._name, value)
 
 				switch (this._type) {
 					case ParamType.OPERATOR_PATH: {
-						await this.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
+						await this.set_uniform_value_from_texture((<unknown>param) as OperatorPathParam, uniform);
 						break;
 					}
 					case ParamType.RAMP: {
-						this.set_uniform_value_from_ramp(param as RampParam, uniform);
+						this.set_uniform_value_from_ramp((<unknown>param) as RampParam, uniform);
 						break;
 					}
 					default: {
@@ -151,46 +153,57 @@ export class ParamConfig<T extends ParamType> {
 		uniform.value = param.ramp_texture();
 	}
 
-	has_value_changed(new_value): boolean {
-		let has_changed = false;
-		if (this._type == ParamType.RAMP) {
-			has_changed = new_value.uuid() != this._cached_param_value;
-			// if(has_changed){ this._cached_param_value = new_value.uuid() }
-		} else {
-			if (this._cached_param_value != null) {
-				if (lodash_isString(new_value) || lodash_isNumber(new_value)) {
-					// console.log("new f", new_value, this._cached_param_value)
-					has_changed = this._cached_param_value != new_value;
-				} else {
-					if (new_value != null) {
-						// console.log("new v", new_value, this._cached_param_value)
-						has_changed = new_value.toArray().join('.') != this._cached_param_value.toArray().join('.');
-					} else {
-						has_changed = this._cached_param_value != new_value;
-					}
-				}
-			} else {
-				has_changed = true;
+	has_value_changed(new_value: ParamValuesTypeMap[T]): boolean {
+		if (this._cached_param_value) {
+			const has_changed = !ParamValueComparer.is_equal(this._type, new_value, this._cached_param_value);
+			if (has_changed) {
+				this._cached_param_value = ParamValueCloner.clone(this._type, new_value);
 			}
-			// this._cached_param_value = new_value
-		}
-		return has_changed;
-	}
-	private _update_cached_value(new_value) {
-		// console.log("_update_cached_value", this._name, new_value)
-		if (this._type == 'ramp') {
-			this._cached_param_value = new_value.uuid();
+			return has_changed;
 		} else {
-			if (lodash_isString(new_value) || lodash_isNumber(new_value)) {
-				this._cached_param_value = new_value;
-			} else {
-				// make sure to copy the value, not assign to it
-				// otherwise we won't detect changes (since the objects would be the same)
-				this._cached_param_value = this._cached_param_value || new_value.clone();
-				this._cached_param_value.copy(new_value);
-			}
+			this._cached_param_value = ParamValueCloner.clone(this._type, new_value);
+			return false;
 		}
+
+		// let has_changed = false;
+		// if (this._type == ParamType.RAMP) {
+		// 	has_changed = new_value.uuid() != this._cached_param_value;
+		// 	// if(has_changed){ this._cached_param_value = new_value.uuid() }
+		// } else {
+		// 	if (this._cached_param_value != null) {
+		// 		if (lodash_isString(new_value) || lodash_isNumber(new_value)) {
+		// 			// console.log("new f", new_value, this._cached_param_value)
+		// 			has_changed = this._cached_param_value != new_value;
+		// 		} else {
+		// 			if (new_value != null) {
+		// 				// console.log("new v", new_value, this._cached_param_value)
+		// 				has_changed = new_value.toArray().join('.') != this._cached_param_value.toArray().join('.');
+		// 			} else {
+		// 				has_changed = this._cached_param_value != new_value;
+		// 			}
+		// 		}
+		// 	} else {
+		// 		has_changed = true;
+		// 	}
+		// 	// this._cached_param_value = new_value
+		// }
+		// return has_changed;
 	}
+	// private _update_cached_value(new_value) {
+	// 	// console.log("_update_cached_value", this._name, new_value)
+	// 	if (this._type == 'ramp') {
+	// 		this._cached_param_value = new_value.uuid();
+	// 	} else {
+	// 		if (lodash_isString(new_value) || lodash_isNumber(new_value)) {
+	// 			this._cached_param_value = new_value;
+	// 		} else {
+	// 			// make sure to copy the value, not assign to it
+	// 			// otherwise we won't detect changes (since the objects would be the same)
+	// 			this._cached_param_value = this._cached_param_value || new_value.clone();
+	// 			this._cached_param_value.copy(new_value);
+	// 		}
+	// 	}
+	// }
 
 	is_video_texture(): boolean {
 		let result = false;

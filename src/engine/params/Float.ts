@@ -11,7 +11,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	static type() {
 		return ParamType.FLOAT;
 	}
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
+	static convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
 		if (lodash_isNumber(raw_val)) {
 			return raw_val;
 		} else {
@@ -23,6 +23,9 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 			}
 			return null;
 		}
+	}
+	convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
+		return FloatParam.convert(raw_val);
 	}
 	// convert_value(v) {
 	// 	// if(lodash_isNumber(v)){

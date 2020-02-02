@@ -1,15 +1,15 @@
 import lodash_includes from 'lodash/includes';
 import {TypedNode, BaseNodeType} from '../_Base';
 // import {BaseNodeMat} from '../Mat/_Base';
-import {
-	GlTypedConnection,
-	TypedConnectionFloat,
-	TypedConnectionVec2,
-	TypedConnectionVec3,
-	TypedConnectionVec4,
-	BaseConnectionType,
-} from './GlData';
-import {ParamTypeFromConnection, ParamDefaultValueFromConnection} from './GlData';
+// import {
+// 	GlTypedConnection,
+// 	TypedConnectionFloat,
+// 	TypedConnectionVec2,
+// 	TypedConnectionVec3,
+// 	TypedConnectionVec4,
+// 	BaseConnectionType,
+// } from './utils/GlData';
+// import {ParamTypeFromConnection, ParamDefaultValueFromConnection} from './utils/GlData';
 import {LineType} from './Assembler/Util/CodeBuilder';
 import {ParamConfig} from './Assembler/Config/ParamConfig';
 // import {ParamDefaultValue} from 'src/Engine/Param/_Base';
@@ -33,9 +33,9 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamInitValuesTypeMap, ParamValue} from '../utils/params/ParamsController';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
-import {NamedConnection} from '../utils/NamedConnection';
-import {ConnectionType} from '../utils/NodeConnection';
-import {ParamsValueToDefaultConverter} from '../utils/params/ParamsUtils';
+import {BaseNamedConnectionPointType, TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ParamTypeToConnectionPointTypeMap} from '../utils/connections/ConnectionPointType';
+import {ParamValueToDefaultConverter} from '../utils/params/ParamValueToDefaultConverter';
 
 // const CONTAINER_CLASS = 'Gl';
 
@@ -64,7 +64,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		this.ui_data.set_layout_horizontal();
 		// this._init_container_owner(CONTAINER_CLASS);
 
-		this.io.outputs.set_named_outputs([]);
+		this.io.outputs.set_named_output_connection_points([]);
 
 		this.add_post_dirty_hook(this._set_mat_to_recompile.bind(this));
 	}
@@ -78,9 +78,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		this.create_inputs_from_params();
 	}
 	create_inputs_from_params() {
-		const inputs: Array<
-			TypedConnectionFloat | TypedConnectionVec2 | TypedConnectionVec3 | TypedConnectionVec4
-		> = [];
+		const connections: BaseNamedConnectionPointType[] = [];
 		const inputless_params_names = this.inputless_params_names();
 		this.params.names.forEach((param_name) => {
 			let add_input = true;
@@ -90,17 +88,15 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 			if (add_input) {
 				const param = this.params.get(param_name);
 				if (param) {
-					const type = param.type;
-					const gl_data_class = GlTypedConnection[type];
-					if (gl_data_class) {
-						const input = new gl_data_class(param.name);
-						inputs.push(input);
+					const connection_type = ParamTypeToConnectionPointTypeMap[param.type];
+					if (connection_type) {
+						const connection = new TypedNamedConnectionPoint(param.name, connection_type);
+						connections.push(connection);
 					}
 				}
 			}
 		});
-		this.io.inputs.set_named_inputs(inputs);
-		this.io.inputs.init_graph_node_inputs();
+		this.io.inputs.set_named_input_connection_points(connections);
 	}
 	inputless_params_names(): string[] {
 		return [];
@@ -115,7 +111,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		const connection = this.io.connections.input_connection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
-			const output_name = input_node.io.outputs.named_outputs()[connection.output_index].name;
+			const output_name = input_node.io.outputs.named_output_connection_points[connection.output_index].name;
 			return input_node.gl_var_name(output_name);
 		} else {
 			// return ThreeToGl.any(this[this.param_cache_name(name)]); // TODO: typescript
@@ -284,26 +280,27 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		});
 
 		// TODO: typescript: fix this confusion between named_inputs and NamedConnection
-		this.io.inputs.named_inputs().forEach((named_input: NamedConnection) => {
-			const param_name = named_input.name;
-			const gl_connection = named_input as BaseConnectionType;
-			const gl_type: ConnectionType = gl_connection.type();
+		this.io.inputs.named_input_connection_points.forEach((connection_point) => {
+			const param_name = connection_point.name;
 
 			const last_param_value = values_by_param_name.get(param_name);
 			if (last_param_value != null) {
-				const param_type: ParamType = ParamTypeFromConnection[gl_type];
-				let default_value = ParamsValueToDefaultConverter.convert(param_type, last_param_value);
-				if (default_value == null) {
-					default_value = this.gl_input_default_value(param_name);
+				const param_type: ParamType = connection_point.param_type;
+				let init_value = ParamValueToDefaultConverter.from_value(param_type, last_param_value);
+				if (init_value == null) {
+					const default_value_from_name = this.gl_input_default_value(param_name);
+					if (default_value_from_name != null) {
+						init_value = default_value_from_name;
+					}
 				}
 				// if (default_value == null) {
 				// 	default_value = gl_connection.default_value();
 				// }
-				if (default_value == null) {
-					default_value = ParamDefaultValueFromConnection[gl_type];
+				if (init_value == null && connection_point.init_value) {
+					init_value = connection_point.init_value;
 				}
 
-				this.add_param(param_type, param_name, default_value, {
+				this.add_param(param_type, param_name, init_value, {
 					spare: true,
 					cook: true,
 				});

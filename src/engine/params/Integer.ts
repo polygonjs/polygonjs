@@ -29,7 +29,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	// 	// but that means that doing param.set(2.9) would set it to 2
 	// 	return `${v}` !== `${Math.round(parseFloat(v))}`
 	// }
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
+	static convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
 		if (lodash_isNumber(raw_val)) {
 			return Math.round(raw_val);
 		} else {
@@ -41,5 +41,8 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 			}
 			return null;
 		}
+	}
+	convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
+		return IntegerParam.convert(raw_val);
 	}
 }

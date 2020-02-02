@@ -46,6 +46,9 @@ interface ColorLike {
 }
 // type BooleanAsNumber = 0 | 1;
 type StringOrNumber = string | number;
+type Boolean2 = [boolean, boolean];
+type Boolean3 = [boolean, boolean, boolean];
+type Boolean4 = [boolean, boolean, boolean, boolean];
 type Number2 = [number, number];
 type Number3 = [number, number, number];
 type Number4 = [number, number, number, number];

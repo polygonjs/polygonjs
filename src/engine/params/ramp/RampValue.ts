@@ -54,6 +54,9 @@ export class RampValue {
 			points: this._points.map((p) => p.to_json()),
 		};
 	}
+	clone(): RampValue {
+		return RampValue.from_json(this.to_json());
+	}
 
 	interpolation() {
 		return this._interpolation;

@@ -101,7 +101,7 @@ export type ParamInitValue =
 	| RampValue;
 type ParamInitValuesTypeMapGeneric = {[key in ParamType]: ParamInitValue};
 export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
-	[ParamType.BOOLEAN]: StringOrNumber | boolean;
+	[ParamType.BOOLEAN]: 0 | 1 | boolean;
 	[ParamType.BUTTON]: null;
 	[ParamType.COLOR]: StringOrNumber3 | Color;
 	[ParamType.FLOAT]: StringOrNumber;

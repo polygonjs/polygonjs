@@ -1,18 +1,34 @@
-import {BaseNodeGl} from './_Base';
-import {ParamType} from 'src/Engine/Param/_Module';
-import {ThreeToGl} from 'src/Core/ThreeToGl';
+import {TypedGlNode} from './_Base';
+// import {ThreeToGl} from 'src/Core/ThreeToGl';
 // import {CodeBuilder} from './Util/CodeBuilder'
-import {Definition} from './Definition/_Module';
-import {ShaderName, LineType, LINE_TYPES} from './Assembler/Util/CodeBuilder';
+// import {Definition} from './Definition/_Module';
+// import {ShaderName, LineType, LINE_TYPES} from './Assembler/Util/CodeBuilder';
 
-export class Output extends BaseNodeGl {
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class OutputGlSopParamsConfig extends NodeParamsConfig {
+	// type = ParamConfig.INTEGER(0, {
+	// 	menu: {
+	// 		entries: ConnectionPointTypes.map((name, i) => {
+	// 			return {name: name, value: i};
+	// 		}),
+	// 	},
+	// });
+	// value_float = ParamConfig.FLOAT(0, ConstantGlSopNode.typed_visible_options(ConnectionPointType.FLOAT));
+	// value_vec2 = ParamConfig.VECTOR2([0, 0], ConstantGlSopNode.typed_visible_options(ConnectionPointType.VEC2));
+	// value_vec3 = ParamConfig.VECTOR3([0, 0, 0], ConstantGlSopNode.typed_visible_options(ConnectionPointType.VEC3));
+	// value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], ConstantGlSopNode.typed_visible_options(ConnectionPointType.VEC4));
+}
+const ParamsConfig = new OutputGlSopParamsConfig();
+
+export class OutputGlSopNode extends TypedGlNode<OutputGlSopParamsConfig> {
+	params_config = ParamsConfig;
 	static type() {
 		return 'output';
 	}
 
-	constructor() {
-		super();
-	}
+	// constructor() {
+	// 	super();
+	// }
 
 	create_params() {
 		this.material_node?.add_output_params(this);

@@ -88,9 +88,9 @@ import {ContainableMap} from 'src/engine/containers/utils/ContainableMap';
 import {BaseContainer} from '../containers/_Base';
 import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';
-type KT = keyof ContainerMap;
-// type Container = ContainerMap[KT];
 
+// type Container = ContainerMap[KT];
+type KT = keyof ContainerMap;
 export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodeParamsConfig> extends CoreGraphNode {
 	container_controller: TypedContainerController<ContainerMap[T]> = new TypedContainerController<ContainerMap[T]>(
 		this,

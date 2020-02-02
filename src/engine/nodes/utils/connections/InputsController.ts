@@ -5,8 +5,8 @@ import {BaseContainer} from 'src/engine/containers/_Base';
 import lodash_each from 'lodash/each';
 import lodash_isString from 'lodash/isString';
 // import lodash_compact from 'lodash/compact'
-import {NamedConnection} from '../NamedConnection';
-import {NodeConnection} from '../NodeConnection';
+import {BaseNamedConnectionPointType} from './NamedConnectionPoint';
+import {NodeConnection} from './NodeConnection';
 
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
@@ -19,18 +19,19 @@ import {TypeAssert} from 'src/engine/poly/Assert';
 // 	}
 // }
 
-export interface InputsControllerOptions {
-	min_inputs?: number;
-	max_inputs?: number;
-	depends_on_inputs?: boolean;
-}
+// export interface InputsControllerOptions {
+// 	min_inputs?: number;
+// 	max_inputs?: number;
+// 	depends_on_inputs?: boolean;
+// }
 
+// TODO: remove the "throw" statements, which seem less necessary now with typescript
 export class InputsController<T extends BaseNodeType> {
 	_graph_node_inputs: CoreGraphNode[] = [];
 	_inputs: Array<T | null> = [];
 	_has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
-	_named_inputs: NamedConnection[] = [];
+	_named_input_connection_points: BaseNamedConnectionPointType[] | undefined;
 	_min_inputs_count: number = 0;
 	_max_inputs_count: number = 0;
 	_depends_on_inputs: boolean = true;
@@ -40,21 +41,22 @@ export class InputsController<T extends BaseNodeType> {
 	private _inputs_clonable_states: InputCloneMode[] | undefined;
 	private _override_clonable_state: boolean = false;
 
-	constructor(protected node: T, options: InputsControllerOptions = {}) {
-		this.set_options(options);
+	constructor(protected node: T) {
+		//, options: InputsControllerOptions = {}) {
+		// this.set_options(options);
 	}
 
-	set_options(options: InputsControllerOptions) {
-		if (options['min_inputs']) {
-			this.set_min_inputs_count(options['min_inputs']);
-		}
-		if (options['max_inputs']) {
-			this.set_max_inputs_count(options['max_inputs']);
-		}
-		if (options['depends_on_inputs']) {
-			this.set_depends_on_inputs(options['depends_on_inputs']);
-		}
-	}
+	// set_options(options: InputsControllerOptions) {
+	// 	if (options['min_inputs']) {
+	// 		this.set_min_inputs_count(options['min_inputs']);
+	// 	}
+	// 	if (options['max_inputs']) {
+	// 		this.set_max_inputs_count(options['max_inputs']);
+	// 	}
+	// 	if (options['depends_on_inputs']) {
+	// 		this.set_depends_on_inputs(options['depends_on_inputs']);
+	// 	}
+	// }
 
 	static displayed_input_names(): string[] {
 		return [];
@@ -66,30 +68,31 @@ export class InputsController<T extends BaseNodeType> {
 	set_depends_on_inputs(depends_on_inputs: boolean) {
 		this._depends_on_inputs = depends_on_inputs;
 	}
-	set_min_inputs_count(min_inputs_count: number) {
+	private set_min_inputs_count(min_inputs_count: number) {
 		this._min_inputs_count = min_inputs_count;
 	}
 	// min_inputs_count() {
 	// 	return this._min_inputs_count || 0;
 	// }
-	set_max_inputs_count(max_inputs_count: number) {
+	private set_max_inputs_count(max_inputs_count: number) {
 		this._max_inputs_count = max_inputs_count;
 		this.init_graph_node_inputs();
 	}
-	set_named_inputs(named_inputs: NamedConnection[]) {
+	set_named_input_connection_points(connection_points: BaseNamedConnectionPointType[]) {
 		this._has_named_inputs = true;
-		this._named_inputs = named_inputs;
+		this._named_input_connection_points = connection_points;
 		this.set_min_inputs_count(0);
-		this.set_max_inputs_count(named_inputs.length);
+		this.set_max_inputs_count(connection_points.length);
+		this.init_graph_node_inputs();
 		this.node.emit(NodeEvent.NAMED_INPUTS_UPDATED);
 	}
-	has_named_inputs() {
+	get has_named_inputs() {
 		return this._has_named_inputs;
 	}
-	named_inputs(): NamedConnection[] {
-		return this._named_inputs;
+	get named_input_connection_points(): BaseNamedConnectionPointType[] {
+		return this._named_input_connection_points || [];
 	}
-	init_graph_node_inputs() {
+	private init_graph_node_inputs() {
 		for (let i = 0; i < this._max_inputs_count; i++) {
 			this._graph_node_inputs[i] = this._graph_node_inputs[i] || this._create_graph_node_input(i);
 		}
@@ -101,25 +104,25 @@ export class InputsController<T extends BaseNodeType> {
 		return graph_input_node;
 	}
 
-	max_inputs_count(): number {
+	get max_inputs_count(): number {
 		return this._max_inputs_count || 0;
 	}
 	input_graph_node(input_index: number): CoreGraphNode {
 		return this._graph_node_inputs[input_index];
 	}
 
-	set_count_to_zero() {
-		this.set_min_inputs_count(0);
-		this.set_max_inputs_count(0);
+	// set_count_to_zero() {
+	// 	this.set_min_inputs_count(0);
+	// 	this.set_max_inputs_count(0);
 
-		this.init_inputs_clonable_state();
-	}
-	set_count_to_one_max() {
-		this.set_min_inputs_count(0);
-		this.set_max_inputs_count(1);
+	// 	this.init_inputs_clonable_state();
+	// }
+	// set_count_to_one_max() {
+	// 	this.set_min_inputs_count(0);
+	// 	this.set_max_inputs_count(1);
 
-		this.init_inputs_clonable_state();
-	}
+	// 	this.init_inputs_clonable_state();
+	// }
 	set_count(min: number, max?: number) {
 		if (max == null) {
 			max = min;
@@ -128,6 +131,10 @@ export class InputsController<T extends BaseNodeType> {
 		this.set_max_inputs_count(max);
 
 		this.init_inputs_clonable_state();
+		this.init_connections_controller_inputs();
+	}
+	private init_connections_controller_inputs() {
+		this.node.io.connections.init_inputs();
 	}
 	// requires_two_inputs: ->
 	// 	this.set_min_inputs_count(2)
@@ -235,33 +242,42 @@ export class InputsController<T extends BaseNodeType> {
 		}
 		return container;
 	}
-	protected _get_named_input_index_without_error(name: string): number {
-		const named_inputs = this.named_inputs();
-		let index = -1;
-		named_inputs.forEach((input, i) => {
-			if (input.name == name) {
-				index = i;
-			}
-		});
-		return index;
-	}
+	// protected _get_named_input_index_without_error(name: string): number {
+	// 	const connections = this.named_input_connections;
+	// 	let index = -1;
+	// 	for (let i = 0; i < connections.length; i++) {
+	// 		const connection = connections[i];
+	// 		if (connection.name == name) {
+	// 			return i;
+	// 		}
+	// 	}
+	// 	return index;
+	// }
 	get_named_input_index(name: string): number {
-		const index = this._get_named_input_index_without_error(name);
-		if (index == null) {
-			const named_inputs = this.named_inputs();
-			const available_names = named_inputs.map((o) => o.name).join(', ');
-			console.log('named_inputs', named_inputs);
-			throw new Error(
-				`${this.node.full_path()}: no inputs named '${name}'. available names are '${available_names}' (${
-					named_inputs.length
-				} inputs)`
-			);
+		if (this._named_input_connection_points) {
+			for (let i = 0; i < this._named_input_connection_points.length; i++) {
+				if (this._named_input_connection_points[i].name == name) {
+					return i;
+				}
+			}
 		}
-		return index;
+		return -1;
+		// const index = this._get_named_input_index_without_error(name);
+		// if (index == null) {
+		// 	const connections = this.named_input_connections;
+		// 	const available_names = connections.map((o) => o.name).join(', ');
+		// 	console.log('named_input_connections', connections);
+		// 	throw new Error(
+		// 		`${this.node.full_path()}: no inputs named '${name}'. available names are '${available_names}' (${
+		// 			connections.length
+		// 		} inputs)`
+		// 	);
+		// }
+		// return index;
 	}
 	get_input_index(input_index_or_name: number | string): number {
 		if (lodash_isString(input_index_or_name)) {
-			if (this.has_named_inputs()) {
+			if (this.has_named_inputs) {
 				return this.get_named_input_index(input_index_or_name);
 			} else {
 				throw new Error(`node ${this.node.full_path()} has no named inputs`);
@@ -275,7 +291,7 @@ export class InputsController<T extends BaseNodeType> {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
 		let output_index = 0;
 		if (node) {
-			if (node.io.outputs.has_named_outputs()) {
+			if (node.io.outputs.has_named_outputs) {
 				// if(node.has_named_output(output_index_or_name)){
 				output_index = node.io.outputs.get_output_index(output_index_or_name) || 0;
 				// this seems to prevent connecting output 1 from a vec to float to something else
@@ -302,13 +318,17 @@ export class InputsController<T extends BaseNodeType> {
 		// }
 
 		const old_input_node = this._inputs[input_index];
-		let old_output_index = null;
-		const old_connection = this.node.io.connections.input_connection(input_index);
+		let old_output_index: number | null = null;
+		let old_connection: NodeConnection | undefined = undefined;
+		if (this.node.io.connections) {
+			old_connection = this.node.io.connections.input_connection(input_index);
+		}
 		if (old_connection) {
 			old_output_index = old_connection.output_index;
 		}
 
 		if (node !== old_input_node || output_index != old_output_index) {
+			// TODO: test: add test to make sure this is necessary
 			if (old_input_node != null) {
 				if (this._depends_on_inputs) {
 					graph_input_node.remove_graph_input(old_input_node);
@@ -365,23 +385,21 @@ export class InputsController<T extends BaseNodeType> {
 	}
 	// TODO: the named_input and named_output API really needs to change
 	named_input(input_name: string): T | null {
-		if (this.has_named_inputs()) {
+		if (this.has_named_inputs) {
 			const input_index = this.get_input_index(input_name);
 			return this._inputs[input_index];
 		} else {
-			throw new Error(`${this.node.full_path()} has no named inputs`);
+			return null;
 		}
 	}
-	named_connection(input_name: string): NamedConnection {
-		if (this.has_named_inputs()) {
+	named_input_connection_point(input_name: string): BaseNamedConnectionPointType | undefined {
+		if (this.has_named_inputs && this._named_input_connection_points) {
 			const input_index = this.get_input_index(input_name);
-			return this._named_inputs[input_index];
-		} else {
-			throw new Error(`${this.node.full_path()} has no named inputs`);
+			return this._named_input_connection_points[input_index];
 		}
 	}
 	has_named_input(name: string): boolean {
-		return this._get_named_input_index_without_error(name) != null;
+		return this.get_named_input_index(name) >= 0;
 	}
 	has_input(input_index: number): boolean {
 		return this._inputs[input_index] != null;
@@ -442,7 +460,7 @@ export class InputsController<T extends BaseNodeType> {
 		// }
 	}
 
-	init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
+	private init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
 		if (values) {
 			this._user_inputs_clonable_states = values;
 		}
@@ -450,7 +468,7 @@ export class InputsController<T extends BaseNodeType> {
 
 		return this._inputs_clonable_states;
 	}
-	_default_inputs_clonale_state_values() {
+	private _default_inputs_clonale_state_values() {
 		const list = [];
 		for (let i = 0; i < this._max_inputs_count; i++) {
 			// lodash_times(this.self._max_inputs_count, (i)=>{
