@@ -2,7 +2,7 @@ interface VariableConfigOptions {
 	// asset refererences
 	default_from_attribute?: boolean;
 	default?: string;
-	if?: boolean;
+	if?: string;
 	prefix?: string;
 	suffix?: string;
 }

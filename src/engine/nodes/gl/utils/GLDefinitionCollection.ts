@@ -1,30 +1,30 @@
-import {BaseDefinition} from './_Base';
+import {TypedGLDefinition, GLDefinitionType} from './GLDefinition';
 
-export class BaseCollection {
+export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 	_errored: boolean = false;
 	_error_message: string | undefined;
 
-	constructor(private _definitions: BaseDefinition[] = []) {}
+	constructor(private _definitions: TypedGLDefinition<T>[] = []) {}
 
 	get errored() {
 		return this._errored;
 	}
-	error_message() {
+	get error_message() {
 		return this._error_message;
 	}
 
-	uniq(): BaseDefinition[] {
-		const definitions_by_name: Map<string, BaseDefinition> = new Map();
+	uniq(): TypedGLDefinition<T>[] {
+		const definitions_by_name: Map<string, TypedGLDefinition<T>> = new Map();
 		const names: string[] = [];
 
 		for (let definition of this._definitions) {
 			if (!this._errored) {
-				const name = definition.name();
+				const name = definition.name;
 				const existing = definitions_by_name.get(name);
 				if (existing) {
-					if (existing.id() != definition.id()) {
+					if (existing.id != definition.id {
 						this._errored = true;
-						this._error_message = `attempt to create ${definition.name()} with types ${definition.id()} and ${existing.id()}`;
+						this._error_message = `attempt to create ${definition.name} with types ${definition.id} and ${existing.id}`;
 						console.warn('emitting error message', this._error_message);
 					}
 				} else {
@@ -34,7 +34,7 @@ export class BaseCollection {
 			}
 		}
 
-		const uniq_definitions: BaseDefinition[] = [];
+		const uniq_definitions: TypedGLDefinition<T>[] = [];
 		for (let name of names) {
 			const definition = definitions_by_name.get(name);
 			if (definition) {

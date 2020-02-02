@@ -286,7 +286,7 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	};
 
 	initialize_node() {
-		this.io.inputs.set_count_to_zero();
+		// this.io.inputs.set_count_to_zero();
 	}
 
 	create_params() {

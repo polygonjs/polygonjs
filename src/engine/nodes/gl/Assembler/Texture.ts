@@ -1,159 +1,133 @@
-
-import {ShaderAssemblerRender} from './_BaseRender'
-import {ParamType} from 'src/Engine/Param/_Module'
-import {Connection} from 'src/Engine/Node/Gl/GlData'
-import {Definition} from '../Definition/_Module'
+import {ShaderAssemblerRender} from './_BaseRender';
+import {ParamType} from 'src/Engine/Param/_Module';
+import {Connection} from 'src/Engine/Node/Gl/GlData';
+import {Definition} from '../Definition/_Module';
 // import {GlobalsTextureHandler} from 'src/Engine/Node/Gl/Assembler/Globals/Texture'
 
+import TemplateDefault from './Template/Texture/Default.frag.glsl';
 
-
-import TemplateDefault from './Template/Texture/Default.frag.glsl'
-
-import {ShaderConfig} from './Config/ShaderConfig'
-import {VariableConfig} from './Config/VariableConfig'
-import {ShaderName, LineType} from 'src/Engine/Node/Gl/Assembler/Util/CodeBuilder'
-import { ThreeToGl } from "src/Core/ThreeToGl";
-import { BaseNodeGl } from "../_Base";
-import { Globals } from "../Globals";
-import {NodeTraverser} from './Util/NodeTraverser'
+import {ShaderConfig} from './Config/ShaderConfig';
+import {VariableConfig} from './Config/VariableConfig';
+import {ShaderName, LineType} from 'src/Engine/Node/Gl/Assembler/Util/CodeBuilder';
+import {ThreeToGl} from 'src/Core/ThreeToGl';
+import {BaseNodeGl} from '../_Base';
+import {Globals} from '../Globals';
+import {NodeTraverser} from '../../utils/shaders/NodeTraverser';
 
 export class ShaderAssemblerTexture extends ShaderAssemblerRender {
-
-
-	_template_shader(){
+	_template_shader() {
 		return {
-			fragmentShader: TemplateDefault
-		}
+			fragmentShader: TemplateDefault,
+		};
 	}
 
-	fragment_shader(){
-		return this._shaders_by_name['fragment']
+	fragment_shader() {
+		return this._shaders_by_name['fragment'];
 	}
 	// async get_shaders(){
 	// 	await this.update_shaders()
 	// 	return this._shaders_by_name
 	// }
 
-	uniforms(){
-		return this._uniforms
+	uniforms() {
+		return this._uniforms;
 	}
-	_create_material(){
-		console.warn("ShaderAssemblerTexture should not create a material")
-		return null
+	_create_material() {
+		console.warn('ShaderAssemblerTexture should not create a material');
+		return null;
 	}
-	
-	async update_fragment_shader(){
-		this._lines = {}
-		this._shaders_by_name = {}
-		for(let shader_name of this.shader_names()){
-			const template = this._template_shader()[`${shader_name}Shader`]
-			this._lines[shader_name] = template.split('\n')
+
+	async update_fragment_shader() {
+		this._lines = {};
+		this._shaders_by_name = {};
+		for (let shader_name of this.shader_names()) {
+			const template = this._template_shader()[`${shader_name}Shader`];
+			this._lines[shader_name] = template.split('\n');
 		}
-		if(this._root_nodes.length > 0){
+		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
-			await this.build_code_from_nodes(this._root_nodes)
+			await this.build_code_from_nodes(this._root_nodes);
 
-			this._build_lines()
+			this._build_lines();
 		}
 
-		const new_uniforms = this.build_uniforms(null)
-		this._uniforms = this._uniforms || {}
-		for(let uniform_name of Object.keys(new_uniforms)){
-			this._uniforms[uniform_name] = new_uniforms[uniform_name]
+		const new_uniforms = this.build_uniforms(null);
+		this._uniforms = this._uniforms || {};
+		for (let uniform_name of Object.keys(new_uniforms)) {
+			this._uniforms[uniform_name] = new_uniforms[uniform_name];
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		for(let shader_name of this.shader_names()){
-			this._shaders_by_name[shader_name] = this._lines[shader_name].join('\n')
+		for (let shader_name of this.shader_names()) {
+			this._shaders_by_name[shader_name] = this._lines[shader_name].join('\n');
 		}
 
 		// That's actually useless, since this doesn't make the texture recook
-		const scene = this._gl_parent_node.scene()
-		const id = this._gl_parent_node.graph_node_id()
-		if(this.frame_dependent()){
-			scene.add_frame_dependent_uniform_owner(id, this._uniforms)
+		const scene = this._gl_parent_node.scene();
+		const id = this._gl_parent_node.graph_node_id();
+		if (this.frame_dependent()) {
+			scene.add_frame_dependent_uniform_owner(id, this._uniforms);
 		} else {
-			scene.remove_frame_dependent_uniform_owner(id)
+			scene.remove_frame_dependent_uniform_owner(id);
 		}
 	}
-
 
 	//
 	//
 	// CHILDREN NODES PARAMS
 	//
 	//
-	add_output_params(output_child){
-		output_child.add_param( ParamType.COLOR, 'color', [1,1,1], {hidden: true} )
-		output_child.add_param( ParamType.FLOAT, 'alpha', 1, {hidden: true} )
+	add_output_params(output_child) {
+		output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+		output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 	}
-	add_globals_params(globals_node){
+	add_globals_params(globals_node) {
 		globals_node.set_named_outputs([
 			new Connection.Vec2('gl_FragCoord'),
 			// new Connection.Vec2('resolution'),
-			new Connection.Float('frame')
-		])
+			new Connection.Float('frame'),
+		]);
 	}
-
-
 
 	//
 	//
 	// CONFIGS
 	//
 	//
-	create_shader_configs(){
-		return [
-			new ShaderConfig('fragment', ['color', 'alpha'], []),
-		]
+	create_shader_configs() {
+		return [new ShaderConfig('fragment', ['color', 'alpha'], [])];
 	}
-	create_variable_configs(){
+	create_variable_configs() {
 		return [
 			new VariableConfig('color', {
-				prefix: 'diffuseColor.xyz = '
+				prefix: 'diffuseColor.xyz = ',
 			}),
 			new VariableConfig('alpha', {
 				prefix: 'diffuseColor.a = ',
-				default: '1.0'
+				default: '1.0',
 			}),
-		]
+		];
 	}
-
-
-
-
-
-
-
 
 	//
 	//
 	// TEMPLATE HOOKS
 	//
 	//
-	protected insert_define_after(shader_name){
-		return '// INSERT DEFINE'
+	protected insert_define_after(shader_name) {
+		return '// INSERT DEFINE';
 	}
-	protected insert_body_after(shader_name){
-		return '// INSERT BODY'
+	protected insert_body_after(shader_name) {
+		return '// INSERT BODY';
 	}
-	protected lines_to_remove(shader_name){
-		return ['// INSERT DEFINE', '// INSERT BODY']
+	protected lines_to_remove(shader_name) {
+		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
-
-
-
-
-
-	handle_gl_FragCoord(body_lines, shader_name, var_name){
-		if( shader_name == 'fragment' ){
-			body_lines.push(`vec2 ${var_name} = vec2(gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`)
+	handle_gl_FragCoord(body_lines, shader_name, var_name) {
+		if (shader_name == 'fragment') {
+			body_lines.push(`vec2 ${var_name} = vec2(gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`);
 		}
 	}
-
-
-
-
 
 	//
 	//
@@ -162,7 +136,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	//
 	// add_export_body_line(
 	// 	export_node: BaseNodeGl,
-	// 	shader_name: string,
+	// 	shader_name: ShaderName,
 	// 	input_name: string,
 	// 	input: BaseNodeGl,
 	// 	variable_name: string
@@ -196,7 +170,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// 			// if we are in the texture this variable is allocated to, we write it back
 	// 			if(texture_variable.allocation().shader_name() == shader_name){
 	// 				const component = texture_variable.component()
-		
+
 	// 				const line = `gl_FragColor.${component} = ${new_var}`
 	// 				export_node.add_body_lines([line], shader_name)
 	// 			}
@@ -205,7 +179,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// }
 	// add_import_body_line(
 	// 	import_node: BaseNodeGl,
-	// 	shader_name: string,
+	// 	shader_name: ShaderName,
 	// 	output_name: string,
 	// 	variable_name: string
 	// 	){
@@ -238,7 +212,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// 	import_node.add_body_lines(lines, shader_name)
 	// }
 
-	// set_node_lines_output(output_node: BaseNodeGl, shader_name: string){
+	// set_node_lines_output(output_node: BaseNodeGl, shader_name: ShaderName){
 	// 	const input_names = this.input_names_for_shader_name(output_node, shader_name)
 	// 	output_node.set_body_lines([], shader_name)
 	// 	if(input_names){
@@ -263,12 +237,10 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// 				// }
 	// 			}
 
-
 	// 		}
 	// 	}
 	// }
-	// set_node_lines_attribute(attribute_node: Attribute, shader_name: string){
-
+	// set_node_lines_attribute(attribute_node: Attribute, shader_name: ShaderName){
 
 	// 	if(attribute_node.is_importing()){
 	// 		const gl_type = attribute_node.gl_type()
@@ -293,7 +265,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// 				`gl_FragColor.${component} = ${var_name}`
 	// 			])
 	// 		}
-	
+
 	// 		// this.add_import_body_line(
 	// 		// 	attribute_node,
 	// 		// 	shader_name,
@@ -314,7 +286,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// 			)
 	// 	}
 	// }
-	// set_node_lines_globals(globals_node: Globals, shader_name: string){
+	// set_node_lines_globals(globals_node: Globals, shader_name: ShaderName){
 	// 	const vertex_definitions = []
 	// 	const fragment_definitions = []
 	// 	const definitions = []
@@ -370,8 +342,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// 				)
 	// 				body_line = `${gl_type} ${var_name} = ${attrib_read}`
 	// 				body_lines.push(body_line)
-	// 				// 
-					
+	// 				//
 
 	// 				// const map_name = `texture_${output_name}`
 	// 				// definition = new Definition.Uniform(globals_node, 'sampler2D', map_name)
@@ -398,5 +369,4 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 
 	// 	globals_node.add_body_lines(body_lines)
 	// }
-
 }

@@ -1,14 +1,16 @@
 import lodash_compact from 'lodash/compact';
 import lodash_uniq from 'lodash/uniq';
-import {BaseNodeGl} from '../../_Base';
-import {Output} from '../../Output';
+// import {BaseGlNodeType} from '../../gl/_Base';
+// import {OutputGlNode} from '../gl/Output';
 import {CoreGraph} from 'src/core/graph/CoreGraph';
-import {BaseNodeType} from '../../../_Base';
-import {BaseShaderAssembler} from '../_Base';
+import {BaseNodeType, TypedNode} from '../../_Base';
+import {TypedAssembler} from './BaseAssembler';
+import {MapUtils} from 'src/core/MapUtils';
+import {ShaderName} from './ShaderName';
 
 type NumberByString = Map<string, number>;
 type BooleanByString = Map<string, boolean>;
-type BooleanByStringByString = Map<string, BooleanByString>;
+type BooleanByStringByShaderName = Map<ShaderName, BooleanByString>;
 type StringArrayByString = Map<string, string[]>;
 
 // interface BaseNodeGlArrayByString {
@@ -30,16 +32,16 @@ type StringArrayByString = Map<string, string[]>;
 // 	'alpha'
 // ]
 
-export class NodeTraverser {
-	private _leaves_graph_id: BooleanByStringByString = new Map();
-	private _graph_ids_by_shader_name: BooleanByStringByString = new Map();
+export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
+	private _leaves_graph_id: BooleanByStringByShaderName = new Map();
+	private _graph_ids_by_shader_name: BooleanByStringByShaderName = new Map();
 	private _outputs_by_graph_id: StringArrayByString = new Map();
 	private _depth_by_graph_id: NumberByString = new Map();
 	private _graph_id_by_depth: Map<number, string[]> = new Map();
 	private _graph: CoreGraph;
-	private _shader_name!: string;
+	private _shader_name!: ShaderName;
 
-	constructor(private _assembler: BaseShaderAssembler, private _gl_parent_node: BaseNodeType) {
+	constructor(private _assembler: TypedAssembler<T>, private _gl_parent_node: BaseNodeType) {
 		this._graph = this._gl_parent_node.scene.graph;
 	}
 
@@ -57,11 +59,11 @@ export class NodeTraverser {
 	shader_names() {
 		return this._assembler.shader_names();
 	}
-	input_names_for_shader_name(root_node: BaseNodeGl, shader_name: string) {
+	input_names_for_shader_name(root_node: T, shader_name: ShaderName) {
 		return this._assembler.input_names_for_shader_name(root_node, shader_name);
 	}
 
-	traverse(root_nodes: BaseNodeGl[]) {
+	traverse(root_nodes: T[]) {
 		this.reset();
 
 		for (let shader_name of this.shader_names()) {
@@ -86,8 +88,8 @@ export class NodeTraverser {
 		});
 	}
 
-	leaves_from_nodes(nodes: BaseNodeGl[]) {
-		this._shader_name = 'leaves_from_nodes_shader';
+	leaves_from_nodes(nodes: T[]) {
+		this._shader_name = ShaderName.LEAVES_FROM_NODES_SHADER;
 		this._graph_ids_by_shader_name.set(this._shader_name, new Map());
 		this._leaves_graph_id.set(this._shader_name, new Map());
 		for (let node of nodes) {
@@ -101,24 +103,22 @@ export class NodeTraverser {
 		return this._graph.nodes_from_ids(node_ids);
 	}
 
-	nodes_for_shader_name(shader_name: string) {
+	nodes_for_shader_name(shader_name: ShaderName) {
 		const depths: number[] = [];
 		this._graph_id_by_depth.forEach((value: string[], key: number) => {
 			depths.push(key);
 		});
-		depths.sort();
+		depths.sort((a, b) => a - b);
 		console.log('sorted depth:', depths);
-		const nodes: BaseGlNodeType[] = [];
+		const nodes: T[] = [];
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
 				graph_ids_for_depth.forEach((graph_id: string) => {
 					const is_present = this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id);
 					if (is_present) {
-						const node = this._graph.node_from_id(graph_id);
-						if (node instanceof BaseNodeType) {
-							nodes.push(node);
-						}
+						const node = this._graph.node_from_id(graph_id) as T;
+						nodes.push(node);
 					}
 				});
 			}
@@ -131,8 +131,8 @@ export class NodeTraverser {
 		this._graph_id_by_depth.forEach((value: string[], key: number) => {
 			depths.push(key);
 		});
-		depths.sort();
-		const nodes: BaseNodeType[] = [];
+		depths.sort((a, b) => a - b);
+		const nodes: T[] = [];
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
@@ -147,24 +147,25 @@ export class NodeTraverser {
 
 		return nodes;
 	}
-	find_leaves_from_root_node(root_node: BaseNodeGl) {
+	find_leaves_from_root_node(root_node: T) {
 		// if(this._shader_name == ShaderName.VERTEX){
 		// this._leaves_graph_id[this._shader_name] = {}
 		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
 		if (input_names) {
 			for (let input_name of input_names) {
-				if (root_node.type == 'output') {
-					const input = root_node.io.inputs.named_input(input_name);
-					if (input) {
-						this.find_leaves(input);
-					}
-				} else {
-					// if attribute
-					const input = root_node.io.inputs.connected_named_input();
-					if (input) {
-						this.find_leaves(input);
-					}
+				// if (root_node.type == 'output') {
+				const input = root_node.io.inputs.named_input(input_name);
+				if (input) {
+					this.find_leaves(input);
 				}
+				// TODO: typescript - GL - check that I dont need to consider the Attrib as a special case
+				// } else {
+				// 	// if attribute
+				// 	const input = root_node.io.inputs.connected_named_input();
+				// 	if (input) {
+				// 		this.find_leaves(input);
+				// 	}
+				// }
 			}
 		}
 		// const position_input = this._output.named_input('position')
@@ -196,47 +197,51 @@ export class NodeTraverser {
 		// console.log(this._leaves_graph_id)
 	}
 
-	find_leaves(node: BaseNodeGl) {
+	find_leaves(node: T) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graph_node_id, true);
 
-		const inputs = lodash_compact(node.inputs());
+		const inputs = lodash_compact(node.io.inputs.inputs());
 		const input_graph_ids = lodash_uniq(inputs.map((n) => n.graph_node_id()));
-		const unique_inputs = input_graph_ids.map((graph_id) => this._graph.node_from_id(graph_id));
+		const unique_inputs = input_graph_ids.map((graph_id) => this._graph.node_from_id(graph_id)) as T[];
 		// console.log(node.name(), unique_inputs.map(n=>n.name()).join(','))
-		const graph_id = node.graph_node_id();
+		const graph_id = node.graph_node_id;
 		if (unique_inputs.length > 0) {
 			// const promises = unique_inputs.forEach((input)=>{
 			for (let input of unique_inputs) {
-				const key = input.graph_node_id();
-				this._outputs_by_graph_id[key] = this._outputs_by_graph_id[key] || [];
-				this._outputs_by_graph_id[key].push(graph_id);
+				const key = input.graph_node_id;
+				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, key, graph_id);
 
 				this.find_leaves(input);
 			}
 		} else {
-			this._leaves_graph_id[this._shader_name][node.graph_node_id()] = true;
+			this._leaves_graph_id.get(this._shader_name)!.set(node.graph_node_id, true);
 		}
 	}
 
 	set_nodes_depth() {
-		const leave_ids = Object.keys(this._leaves_graph_id[this._shader_name]);
-		leave_ids.forEach((graph_id) => {
-			this.set_node_depth(graph_id);
+		this._leaves_graph_id.forEach((booleans_by_graph_id, shader_name) => {
+			booleans_by_graph_id.forEach((boolean, graph_id) => {
+				this.set_node_depth(graph_id);
+			});
 		});
+		// const leave_ids = Object.keys(this._leaves_graph_id[this._shader_name]);
+		// leave_ids.forEach((graph_id) => {
+		// 	this.set_node_depth(graph_id);
+		// });
 	}
 
 	set_node_depth(graph_id: string, depth: number = 0) {
-		const current_depth = this._depth_by_graph_id[graph_id];
-		if (current_depth) {
-			this._depth_by_graph_id[graph_id] = Math.max(current_depth, depth);
+		const current_depth = this._depth_by_graph_id.get(graph_id);
+		if (current_depth != null) {
+			this._depth_by_graph_id.set(graph_id, Math.max(current_depth, depth));
 		} else {
-			this._depth_by_graph_id[graph_id] = depth;
+			this._depth_by_graph_id.set(graph_id, depth);
 		}
 
-		const node = this._graph.node_from_id(graph_id);
+		// const node = this._graph.node_from_id(graph_id);
 		// console.log("set depth", node.name(), depth)
 
-		const output_ids = this._outputs_by_graph_id[graph_id];
+		const output_ids = this._outputs_by_graph_id.get(graph_id);
 		if (output_ids) {
 			output_ids.forEach((output_id) => {
 				this.set_node_depth(output_id, depth + 1);

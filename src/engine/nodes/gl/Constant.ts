@@ -16,7 +16,7 @@ import {ConnectionPointType, ConnectionPointTypes} from '../utils/connections/Co
 const OUTPUT_NAME = 'value';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-class ConstantGlSopParamsConfig extends NodeParamsConfig {
+class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: ConnectionPointTypes.map((name, i) => {
@@ -24,14 +24,14 @@ class ConstantGlSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	value_float = ParamConfig.FLOAT(0, ConstantGlSopNode.typed_visible_options(ConnectionPointType.FLOAT));
-	value_vec2 = ParamConfig.VECTOR2([0, 0], ConstantGlSopNode.typed_visible_options(ConnectionPointType.VEC2));
-	value_vec3 = ParamConfig.VECTOR3([0, 0, 0], ConstantGlSopNode.typed_visible_options(ConnectionPointType.VEC3));
-	value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], ConstantGlSopNode.typed_visible_options(ConnectionPointType.VEC4));
+	value_float = ParamConfig.FLOAT(0, ConstantGlNode.typed_visible_options(ConnectionPointType.FLOAT));
+	value_vec2 = ParamConfig.VECTOR2([0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC2));
+	value_vec3 = ParamConfig.VECTOR3([0, 0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC3));
+	value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC4));
 }
-const ParamsConfig = new ConstantGlSopParamsConfig();
+const ParamsConfig = new ConstantGlParamsConfig();
 
-export class ConstantGlSopNode extends TypedGlNode<ConstantGlSopParamsConfig> {
+export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'constant';

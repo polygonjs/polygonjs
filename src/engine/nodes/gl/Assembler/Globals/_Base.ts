@@ -1,14 +1,11 @@
-import {_Math} from 'three/src/math/Math'
-const THREE = {Math:_Math}
-
 export class GlobalsBaseController {
+	private static __next_id: number = 0;
+	private _id: number;
 
-	private _id: string
-
-	constructor(){
-		this._id = THREE.Math.generateUUID()
+	constructor() {
+		this._id = GlobalsBaseController.__next_id++;
 	}
-	id(){
-		return this._id
+	id() {
+		return this._id;
 	}
 }

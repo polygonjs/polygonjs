@@ -29,7 +29,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 
 	initialize_node() {
-		this.io.inputs.set_count_to_zero();
+		// this.io.inputs.set_count_to_zero();
 	}
 
 	// TODO: no error when trying to load a non existing zip file??

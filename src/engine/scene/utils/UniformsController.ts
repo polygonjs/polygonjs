@@ -3,10 +3,10 @@ import {Vector2} from 'three/src/math/Vector2';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
 type IUniformsDictionary = Dictionary<IUniform>;
-interface IUniformsDictionaryWithFrame extends IUniformsDictionary {
+export interface IUniformsDictionaryWithFrame extends IUniformsDictionary {
 	frame: IUniform;
 }
-interface IUniformsDictionaryWithResolution extends IUniformsDictionary {
+export interface IUniformsDictionaryWithResolution extends IUniformsDictionary {
 	resolution: {
 		value: Vector2Like;
 	};

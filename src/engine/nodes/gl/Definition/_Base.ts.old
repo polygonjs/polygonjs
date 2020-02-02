@@ -1,0 +1,32 @@
+// import {BaseGlNodeType} from '../_Base';
+
+// enum DefinitionType {
+// 	ATTRIBUTE = 'attribute',
+// 	FUNCTION = 'function',
+// 	UNIFORM = 'uniform',
+// 	VARYING = 'varying',
+// }
+
+// export abstract class BaseDefinition {
+// 	// constructor(protected _node: BaseGlNodeType, protected _name: string) {}
+// 	constructor(protected _node: BaseGlNodeType, protected _type: DefinitionType, protected _name: string) {
+// 		// super(_node, _name);
+// 	}
+
+// 	get node() {
+// 		return this._node;
+// 	}
+// 	get name() {
+// 		return this._name;
+// 	}
+// 	get id() {
+// 		return this._type;
+// 	}
+
+// 	get type() {
+// 		return this._type;
+// 	}
+
+// 	abstract line();
+// 	abstract collection_constructor();
+// }

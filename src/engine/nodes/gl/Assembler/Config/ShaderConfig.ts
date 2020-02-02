@@ -1,20 +1,15 @@
+import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+
 export class ShaderConfig {
+	constructor(private _name: ShaderName, private _input_names: string[], private _dependencies: ShaderName[]) {}
 
-	constructor(
-		private _name: string,
-		private _input_names: string[],
-		private _dependencies: string[]
-		){
+	name() {
+		return this._name;
 	}
-
-	name(){
-		return this._name
+	input_names() {
+		return this._input_names;
 	}
-	input_names(){
-		return this._input_names
+	dependencies() {
+		return this._dependencies;
 	}
-	dependencies(){
-		return this._dependencies
-	}
-
 }

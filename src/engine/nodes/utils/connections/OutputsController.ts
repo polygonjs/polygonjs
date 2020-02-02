@@ -88,7 +88,7 @@ export class OutputsController<T extends BaseNodeType> {
 		return -1;
 	}
 
-	named_output_by_name(name: string): BaseNamedConnectionPointType | undefined {
+	named_output_connection_points_by_name(name: string): BaseNamedConnectionPointType | undefined {
 		if (this._named_output_connection_points) {
 			return this._named_output_connection_points.filter((connection_point) => connection_point.name == name)[0];
 		}

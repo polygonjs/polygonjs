@@ -1,20 +1,23 @@
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-const THREE = {ShaderLib};
 import lodash_uniq from 'lodash/uniq';
 import lodash_includes from 'lodash/includes';
-import {BaseNodeGl} from '../../_Base';
+import {BaseGlNodeType} from '../../_Base';
 // import {Output} from '../../Output'
-import {NodeTraverser} from './NodeTraverser';
+import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {ParamConfig} from '../Config/ParamConfig';
 // import {DefinitionVarying} from '../Definition/Varying'
 // import {DefinitionAttribute} from '../Definition/Attribute'
 // import {DefinitionVaryingCollection} from '../Definition/VaryingCollection'
 // import {DefinitionAttributeCollection} from '../Definition/AttributeCollection'
-import {Definition} from '../../Definition/_Module';
+// import {Definition} from '../../Definition/_Module';
 // import {BaseShaderAssembler} from './Assembler/_Base'
 import {BaseNodeType} from '../../../_Base';
-import {BaseShaderAssembler} from '../_Base';
+import {BaseGlShaderAssembler} from '../_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
+import {MapUtils} from 'src/core/MapUtils';
+import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {GLDefinitionType, BaseGLDefinition, TypedGLDefinition} from '../../utils/GLDefinition';
+import {TypedGLDefinitionCollection} from '../../utils/GLDefinitionCollection';
 
 // interface NumberByString {
 // 	[propName: string]: number
@@ -23,9 +26,7 @@ import {ParamType} from 'src/engine/poly/ParamType';
 // 	[propName: string]: number
 // }
 type BooleanByString = Map<string, boolean>;
-type BooleanByStringByString = Map<string, BooleanByString>;
-type StringArrayByString = Map<string, string[]>;
-type StringArrayByStringByString = Map<string, StringArrayByString>;
+// type StringArrayByString = Map<string, string[]>;
 // interface StringArrayByStringByString {
 // 	[propName: string]: StringArrayByString
 // }
@@ -44,10 +45,7 @@ export enum ShaderType {
 	POINTS = 'points',
 	LINE = 'line',
 }
-export enum ShaderName {
-	VERTEX = 'vertex',
-	FRAGMENT = 'fragment',
-}
+
 export enum LineType {
 	FUNCTION_DECLARATION = 'function_declaration',
 	DEFINE = 'define',
@@ -86,20 +84,20 @@ const LINE_PREFIXES = {
 
 export class CodeBuilder {
 	_param_configs: ParamConfig<ParamType>[] = [];
-	_lines: StringArrayByStringByString = new Map();
-	_function_declared: BooleanByStringByString = new Map();
+	_lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
+	_function_declared: Map<ShaderName, BooleanByString> = new Map();
 	_param_configs_set_allowed: boolean = true;
 
-	constructor(private _assembler: BaseShaderAssembler, private _gl_parent_node: BaseNodeType) {}
+	constructor(private _assembler: BaseGlShaderAssembler, private _gl_parent_node: BaseNodeType) {}
 
-	async build_from_nodes(root_nodes: BaseNodeGl[]) {
+	async build_from_nodes(root_nodes: BaseGlNodeType[]) {
 		this.reset();
-		const node_traverser = new NodeTraverser(this._assembler, this._gl_parent_node);
+		const node_traverser = new TypedNodeTraverser<BaseGlNodeType>(this._assembler, this._gl_parent_node);
 		node_traverser.traverse(root_nodes);
 
-		const nodes_by_shader_name: Map<string, BaseNodeType[]> = new Map();
+		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
 		for (let shader_name of this.shader_names()) {
-			nodes_by_shader_name[shader_name] = node_traverser.nodes_for_shader_name(shader_name);
+			nodes_by_shader_name.set(shader_name, node_traverser.nodes_for_shader_name(shader_name));
 			// nodes.push(this._output)
 			// POLY.log(shader_name, nodes_by_shader_name[shader_name].map(n=>n.name()).sort())
 			// console.log("nodes_by_shader_name", shader_name, nodes_by_shader_name[shader_name].map(n=>n.name()))
@@ -129,16 +127,20 @@ export class CodeBuilder {
 			// }
 
 			// ensure nodes are unique
-			const node_ids = {};
-			for (let node of nodes_by_shader_name[shader_name]) {
-				node_ids[node.graph_node_id()] = true;
-			}
+			const node_ids: Map<string, boolean> = new Map();
+			// for (let node of nodes_by_shader_name[shader_name]) {
+			nodes_by_shader_name.forEach((nodes, shader_name) => {
+				for (let node of nodes) {
+					node_ids.set(node.graph_node_id, true);
+				}
+			});
+			// }
 
 			for (let root_node of root_nodes_for_shader) {
 				// if(!both_leaf_and_root_nodes_by_id[root_node.graph_node_id()]){
-				if (!node_ids[root_node.graph_node_id()]) {
-					nodes_by_shader_name[shader_name].push(root_node);
-					node_ids[root_node.graph_node_id()] = true;
+				if (!node_ids.get(root_node.graph_node_id)) {
+					MapUtils.push_on_array_at_entry(nodes_by_shader_name, shader_name, root_node);
+					node_ids.set(root_node.graph_node_id, true);
 				}
 				// }
 			}
@@ -147,23 +149,23 @@ export class CodeBuilder {
 			// console.log("leaf_nodes_for_shader", shader_name, leaf_nodes_for_shader.map(n=>n.name()))
 			for (let leaf_node of leaf_nodes_for_shader) {
 				// if(!both_leaf_and_root_nodes_by_id[leaf_node.graph_node_id()]){
-				if (!node_ids[leaf_node.graph_node_id()]) {
-					nodes_by_shader_name[shader_name].unshift(leaf_node);
+				if (!node_ids.get(leaf_node.graph_node_id)) {
+					MapUtils.unshift_on_array_at_entry(nodes_by_shader_name, shader_name, leaf_node);
 				}
 				// }
 			}
 		}
 
 		// ensure nodes are not added if already present
-		const sorted_node_ids = {};
+		const sorted_node_ids: Map<string, boolean> = new Map();
 		for (let node of sorted_nodes) {
-			sorted_node_ids[node.graph_node_id()] = true;
+			sorted_node_ids.set(node.graph_node_id, true);
 		}
 
 		for (let root_node of root_nodes) {
-			if (!sorted_node_ids[root_node.graph_node_id()]) {
+			if (!sorted_node_ids.get(root_node.graph_node_id)) {
 				sorted_nodes.push(root_node);
-				sorted_node_ids[root_node.graph_node_id()] = true;
+				sorted_node_ids.set(root_node.graph_node_id, true);
 			}
 		}
 		for (let node of sorted_nodes) {
@@ -171,7 +173,7 @@ export class CodeBuilder {
 			node.reset_code();
 		}
 		for (let node of sorted_nodes) {
-			await node.eval_all_params();
+			await node.params.eval_all();
 		}
 
 		// console.log("HERE")
@@ -188,12 +190,15 @@ export class CodeBuilder {
 		// await Promise.all(param_promises)
 
 		for (let shader_name of this.shader_names()) {
-			for (let node of nodes_by_shader_name[shader_name]) {
-				node.set_shader_name(shader_name);
-				if (this._param_configs_set_allowed) {
-					node.set_param_configs();
+			const nodes = nodes_by_shader_name.get(shader_name);
+			if (nodes) {
+				for (let node of nodes) {
+					node.set_shader_name(shader_name);
+					if (this._param_configs_set_allowed) {
+						node.set_param_configs();
+					}
+					node.set_lines();
 				}
-				node.set_lines();
 			}
 		}
 		// fragment_nodes.forEach(node=>{
@@ -220,11 +225,12 @@ export class CodeBuilder {
 
 	private reset() {
 		for (let shader_name of this.shader_names()) {
-			this._lines[shader_name] = {};
-			this._function_declared[shader_name] = {};
+			const lines_map = new Map();
 			for (let line_type of LINE_TYPES) {
-				this._lines[shader_name][line_type] = [];
+				lines_map.set(line_type, []);
 			}
+			this._lines.set(shader_name, lines_map);
+			this._function_declared.set(shader_name, new Map());
 		}
 	}
 
@@ -232,13 +238,13 @@ export class CodeBuilder {
 		return this._param_configs;
 	}
 	lines(shader_name: ShaderName, line_type: LineType): string[] {
-		return this._lines[shader_name][line_type];
+		return this._lines.get(shader_name)!.get(line_type)!;
 	}
 	all_lines() {
 		return this._lines;
 	}
 
-	set_param_configs(nodes: BaseNodeGl[]) {
+	set_param_configs(nodes: BaseGlNodeType[]) {
 		this._param_configs = [];
 		for (let node of nodes) {
 			for (let param_config of node.param_configs()) {
@@ -247,7 +253,7 @@ export class CodeBuilder {
 		}
 	}
 
-	set_code_lines(nodes: BaseNodeGl[]) {
+	set_code_lines(nodes: BaseGlNodeType[]) {
 		for (let shader_name of this.shader_names()) {
 			// nodes.forEach((node, i)=>{
 			this.add_code_lines(nodes, shader_name);
@@ -255,7 +261,7 @@ export class CodeBuilder {
 		}
 	}
 
-	add_code_lines(nodes: BaseNodeGl[], shader_name: string) {
+	add_code_lines(nodes: BaseGlNodeType[], shader_name: ShaderName) {
 		// this.add_function_declarations(nodes, shader_name)
 		// this.add_code_line_for_nodes_and_line_type(nodes, shader_name, LineType.DEFINE)
 		// const definition_types = [
@@ -264,10 +270,11 @@ export class CodeBuilder {
 		// 	Definition.Varying,
 		// 	Definition.Attribute
 		// ]
-		this.add_definitions(nodes, shader_name, Definition.Function, LineType.FUNCTION_DECLARATION);
-		this.add_definitions(nodes, shader_name, Definition.Uniform, LineType.DEFINE);
-		this.add_definitions(nodes, shader_name, Definition.Varying, LineType.DEFINE);
-		this.add_definitions(nodes, shader_name, Definition.Attribute, LineType.DEFINE);
+
+		this.add_definitions(nodes, shader_name, GLDefinitionType.FUNCTION, LineType.FUNCTION_DECLARATION);
+		this.add_definitions(nodes, shader_name, GLDefinitionType.UNIFORM, LineType.DEFINE);
+		this.add_definitions(nodes, shader_name, GLDefinitionType.VARYING, LineType.DEFINE);
+		this.add_definitions(nodes, shader_name, GLDefinitionType.ATTRIBUTE, LineType.DEFINE);
 
 		this.add_code_line_for_nodes_and_line_type(nodes, shader_name, LineType.BODY);
 	}
@@ -290,48 +297,59 @@ export class CodeBuilder {
 	// 		}
 	// 	})
 	// }
-	add_definitions(nodes: BaseNodeGl[], shader_name: string, definition_constructor, line_type: LineType.DEFINE) {
+	private add_definitions(
+		nodes: BaseGlNodeType[],
+		shader_name: ShaderName,
+		definition_type: GLDefinitionType,
+		line_type: LineType
+	) {
 		const definitions = [];
 		for (let node of nodes) {
 			let node_definitions = node.definitions(shader_name);
-			node_definitions = node_definitions.filter((d) => d.constructor == definition_constructor);
-			for (let definition of node_definitions) {
-				definitions.push(definition);
+			if (node_definitions) {
+				node_definitions = node_definitions.filter((d) => d.definition_type == definition_type);
+				for (let definition of node_definitions) {
+					definitions.push(definition);
+				}
 			}
 		}
+
 		if (definitions.length > 0) {
-			const first_definition = definitions[0];
-			const collection_constructor = first_definition.collection_constructor();
-			const collection = new collection_constructor(definitions);
+			const collection = new TypedGLDefinitionCollection<GLDefinitionType>(definitions);
 			const uniq_definitions = collection.uniq();
-			if (collection.errored()) {
+			if (collection.errored) {
 				// TODO: handle error
-				throw `code builder error: ${collection.error_message()}`;
+				throw `code builder error: ${collection.error_message}`;
 			}
 
-			const definitions_by_node_id = {};
-			const node_ids = [];
+			const definitions_by_node_id: Map<string, BaseGLDefinition[]> = new Map();
+			const node_ids: Map<string, boolean> = new Map();
 			for (let definition of uniq_definitions) {
-				const node_id = definition.node().graph_node_id();
-				if (!lodash_includes(node_ids, node_id)) {
-					node_ids.push(node_id);
+				const node_id = definition.node.graph_node_id;
+				if (!node_ids.has(node_id)) {
+					node_ids.set(node_id, true);
 				}
-				definitions_by_node_id[node_id] = definitions_by_node_id[node_id] || [];
-				definitions_by_node_id[node_id].push(definition);
+				MapUtils.push_on_array_at_entry(definitions_by_node_id, node_id, definition);
 			}
-			for (let node_id of node_ids) {
-				const first_definition = definitions_by_node_id[node_id][0];
+			const lines_for_shader = this._lines.get(shader_name)!;
+			node_ids.forEach((boolean, node_id: string) => {
+				const definitions = definitions_by_node_id.get(node_id);
+				if (definitions) {
+					const first_definition = definitions[0];
 
-				const comment = this.node_comment(first_definition.node(), line_type);
-				this._lines[shader_name][line_type].push(comment);
+					if (first_definition) {
+						const comment = this.node_comment(first_definition.node, line_type);
+						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
 
-				for (let definition of definitions_by_node_id[node_id]) {
-					const line = this.line_wrap(definition.line(), line_type);
-					this._lines[shader_name][line_type].push(line);
+						for (let definition of definitions) {
+							const line = this.line_wrap(definition.line, line_type);
+							MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
+						}
+						const separator = this.post_line_separator(line_type);
+						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, separator);
+					}
 				}
-				const separator = this.post_line_separator(line_type);
-				this._lines[shader_name][line_type].push(separator);
-			}
+			});
 			// uniq_definitions.forEach(definition=>{
 			// 	const line = this.line_wrap(definition.line(), line_type)
 
@@ -345,10 +363,10 @@ export class CodeBuilder {
 			}
 		}
 	}
-	add_code_line_for_nodes_and_line_type(nodes: BaseNodeGl[], shader_name: string, line_type: LineType) {
+	add_code_line_for_nodes_and_line_type(nodes: BaseGlNodeType[], shader_name: ShaderName, line_type: LineType) {
 		nodes = nodes.filter((node) => {
 			const lines = node.lines(shader_name, line_type);
-			return lines.length > 0;
+			return lines && lines.length > 0;
 		});
 
 		var nodes_count = nodes.length;
@@ -358,30 +376,31 @@ export class CodeBuilder {
 		}
 	}
 	add_code_line_for_node_and_line_type(
-		node: BaseNodeGl,
-		shader_name: string,
+		node: BaseGlNodeType,
+		shader_name: ShaderName,
 		line_type: LineType,
 		is_last: boolean
 	): boolean {
 		const lines = node.lines(shader_name, line_type);
+		const lines_for_shader = this._lines.get(shader_name)!;
 
-		if (lines.length > 0) {
+		if (lines && lines.length > 0) {
 			const comment = this.node_comment(node, line_type);
-			this._lines[shader_name][line_type].push(comment);
+			MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
 			lodash_uniq(lines).forEach((line) => {
 				line = this.line_wrap(line, line_type);
-				this._lines[shader_name][line_type].push(line);
+				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
 			});
 			if (!(line_type == LineType.BODY && is_last)) {
 				const separator = this.post_line_separator(line_type);
-				this._lines[shader_name][line_type].push(separator);
+				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, separator);
 			}
 			return true;
 		}
 		return false;
 	}
 
-	private node_comment(node: BaseNodeGl, line_type: LineType): string {
+	private node_comment(node: BaseGlNodeType, line_type: LineType): string {
 		let line = `// ${node.full_path()}`;
 		if (line_type == LineType.BODY) {
 			line = `	${line}`;
@@ -403,10 +422,10 @@ export class CodeBuilder {
 		return line_type == LineType.BODY ? '	' : '';
 	}
 
-	private _is_function_declared(shader_name: ShaderName, node_type: string): boolean {
-		return this._function_declared[shader_name][node_type] || false;
-	}
-	private _set_function_declared(shader_name: ShaderName, node_type: string) {
-		this._function_declared[shader_name][node_type] = true;
-	}
+	// private _is_function_declared(shader_name: ShaderName, node_type: string): boolean {
+	// 	return this._function_declared[shader_name][node_type] || false;
+	// }
+	// private _set_function_declared(shader_name: ShaderName, node_type: string) {
+	// 	this._function_declared[shader_name][node_type] = true;
+	// }
 }

@@ -152,3 +152,26 @@ export const ConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
 	[ConnectionPointType.VEC3]: [0, 0, 0],
 	[ConnectionPointType.VEC4]: [0, 0, 0, 0],
 };
+
+//
+//
+// Map of GL Data type component counts
+//
+//
+export type ConnectionPointComponentsCountMapGeneric = {
+	[key in ConnectionPointType]: number;
+};
+export const ConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
+	[ConnectionPointType.BOOL]: 1,
+	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
+	// [ConnectionPointType.BVEC3]: [ParamType.BOOLEAN, ParamType.BOOLEAN, ParamType.BOOLEAN]
+	// [ConnectionPointType.BVEC4]: [ParamType.BOOLEAN, ParamType.BOOLEAN, ParamType.BOOLEAN, ParamType.BOOLEAN]
+	[ConnectionPointType.INT]: 1,
+	// [ConnectionPointType.IVEC2]: [ParamType.INTEGER, ParamType.INTEGER];
+	// [ConnectionPointType.IVEC3]: [ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER];
+	// [ConnectionPointType.IVEC4]: [ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER];
+	[ConnectionPointType.FLOAT]: 1,
+	[ConnectionPointType.VEC2]: 2,
+	[ConnectionPointType.VEC3]: 3,
+	[ConnectionPointType.VEC4]: 4,
+};

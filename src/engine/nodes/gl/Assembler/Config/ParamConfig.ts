@@ -2,10 +2,6 @@ import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {Vector4} from 'three/src/math/Vector4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
-import {Texture} from 'three/src/textures/Texture';
-const THREE = {Texture, Vector2, Vector3, Vector4, VideoTexture};
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_isString from 'lodash/isString';
 
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamInitValuesTypeMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
@@ -74,26 +70,26 @@ export class ParamConfig<T extends ParamType> {
 			case ParamType.BUTTON:
 				return {value: 0};
 			case ParamType.COLOR:
-				return {value: new THREE.Vector3(0, 0, 0)};
+				return {value: new Vector3(0, 0, 0)};
 			case ParamType.FLOAT:
 				return {value: 0};
 			case ParamType.INTEGER:
 				return {value: 0};
 			case ParamType.OPERATOR_PATH:
 				return {value: 0};
-			// case ParamType.STRING: return {type: 't', value: null} // new THREE.Texture()}
+			// case ParamType.STRING: return {type: 't', value: null} // new Texture()}
 			case ParamType.RAMP:
-				return {value: null}; // new THREE.Texture()}
+				return {value: null}; // new Texture()}
 			case ParamType.SEPARATOR:
 				return {value: 0};
 			case ParamType.STRING:
 				return {value: null};
 			case ParamType.VECTOR2:
-				return {value: new THREE.Vector2(0, 0)};
+				return {value: new Vector2(0, 0)};
 			case ParamType.VECTOR3:
-				return {value: new THREE.Vector3(0, 0, 0)};
+				return {value: new Vector3(0, 0, 0)};
 			case ParamType.VECTOR4:
-				return {value: new THREE.Vector4(0, 0, 0, 0)};
+				return {value: new Vector4(0, 0, 0, 0)};
 		}
 		TypeAssert.unreachable(type);
 	}
@@ -211,7 +207,7 @@ export class ParamConfig<T extends ParamType> {
 		if (uniform) {
 			const value = uniform.value;
 			if (value) {
-				result = value.constructor == THREE.VideoTexture;
+				result = value.constructor == VideoTexture;
 			}
 		}
 

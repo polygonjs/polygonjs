@@ -200,7 +200,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	static type(): string {
 		throw 'type to be overriden';
 	}
-	type() {
+	get type() {
 		const c = this.constructor as typeof BaseNodeClass;
 		return c.type();
 	}
