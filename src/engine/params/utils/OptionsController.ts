@@ -119,10 +119,10 @@ export class OptionsController {
 	}
 
 	// utils
-	has_options_overridden(): boolean {
+	get has_options_overridden(): boolean {
 		return !lodash_isEqual(this._options, this._default_options);
 	}
-	overridden_options(): ParamOptions {
+	get overridden_options(): ParamOptions {
 		const overriden: ParamOptions = {};
 		const option_names = Object.keys(this._options) as Array<keyof ParamOptions>;
 		for (let option_name of option_names) {
@@ -300,12 +300,12 @@ export class OptionsController {
 	}
 
 	// spare
-	is_spare(): boolean {
+	get is_spare(): boolean {
 		return this._options[SPARE_OPTION] || false;
 	}
 
 	// texture
-	texture_options() {
+	get texture_options() {
 		return this._options[TEXTURE_OPTION];
 	}
 	texture_as_env(): boolean {

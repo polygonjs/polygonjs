@@ -10,7 +10,12 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
 		return ParamType.INTEGER;
 	}
-
+	get default_value_serialized() {
+		return this.default_value;
+	}
+	get value_serialized() {
+		return this.value;
+	}
 	// convert_value(v: ParamInputValue): number {
 	// 	const converted_val = lodash_isBoolean(v)
 	// 		? v

@@ -67,8 +67,9 @@ import {NodeContext} from '../poly/NodeContext';
 // import {TypedContainer} from 'src/engine/containers/_Base';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
 
-export interface BaseNodeVisitor {
-	visit_node: (node: BaseNodeType) => void;
+export interface NodeVisitor {
+	visit_node: (node: BaseNodeType) => any;
+	visit_node_obj: (node: BaseNodeType) => any;
 }
 
 interface NodeDeletedEmitData {
@@ -122,9 +123,12 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
+	// TODO: try and not have the children controller always created
 	get children_controller(): HierarchyChildrenController {
 		return (this._children_controller = this._children_controller || new HierarchyChildrenController(this));
 	}
+	// TODO: try and not have the selection always created
+	// TODO: should the selection be under the children_controller?
 	get selection(): CoreSelection {
 		return (this._selection = this._selection || new CoreSelection(this));
 	}
@@ -243,9 +247,9 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	// 	// this.io.inputs._init_graph_node_inputs();
 	// }
 
-	accepts_visitor(visitor: BaseNodeVisitor): any {
-		return visitor.visit_node(this);
-	}
+	// accepts_visitor<T extends NodeVisitor>(visitor: T): ReturnType<T['visit_node']> {
+	// 	return visitor.visit_node(this);
+	// }
 	set_parent(parent: BaseNodeType | null) {
 		this.parent_controller.set_parent(parent);
 	}
@@ -316,8 +320,8 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 
 	// inputs
-	set_input(index: number, node: NT) {
-		this.io.inputs.set_input(index, node);
+	set_input(input_index_or_name: number | string, node: NT | null, output_index_or_name: number | string = 0) {
+		this.io.inputs.set_input(input_index_or_name, node, output_index_or_name);
 	}
 
 	// emit

@@ -1,0 +1,44 @@
+// import {BaseNodeType} from 'src/engine/nodes/_Base';
+// import {BaseParamType} from 'src/engine/params/_Base';
+
+// import {NodeJsonImporter} from './Node';
+// import {BaseNodeObjJsonImporter} from './node/Obj';
+// import {BaseNodeSopSubnetworkJsonImporter} from './node/Subnetwork';
+
+// import {ParamJsonImporter} from './Param';
+// import {ParamMultipleJsonImporter} from './param/Multiple';
+// // import {ParamNumericJsonImporter} from './Param/Numeric'
+// // import {ParamOperatorPathJsonImporter} from './Param/OperatorPath'
+// import {ParamStringJsonImporter} from './param/String';
+// import {ParamRampJsonImporter} from './param/Ramp';
+
+// export class JsonImporterVisitor {
+// 	static node(node: BaseNode): NodeJsonImporter {
+// 		return new NodeJsonImporter(node);
+// 	}
+// 	static node_obj(node: BaseNode) {
+// 		return new BaseNodeObjJsonImporter(node);
+// 	}
+// 	static node_sop_subnetwork(node: BaseNode) {
+// 		return new BaseNodeSopSubnetworkJsonImporter(node);
+// 	}
+
+// 	static visit_param(param: BaseParam) {
+// 		return new ParamJsonImporter(param);
+// 	}
+// 	static param_multiple(param: BaseParam) {
+// 		return new ParamMultipleJsonImporter(param);
+// 	}
+// 	static param_numeric(param: BaseParam) {
+// 		return this.visit_param(param);
+// 	}
+// 	static param_operator_path(param: BaseParam) {
+// 		return this.visit_param(param);
+// 	}
+// 	static param_string(param: BaseParam) {
+// 		return new ParamStringJsonImporter(param);
+// 	}
+// 	static param_ramp(param: BaseParam) {
+// 		return new ParamRampJsonImporter(param);
+// 	}
+// }

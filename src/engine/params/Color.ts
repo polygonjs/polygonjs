@@ -1,5 +1,5 @@
 import {TypedMultipleParam} from './_Multiple';
-// import lodash_isArray from 'lodash/isArray';
+import lodash_isArray from 'lodash/isArray';
 // import lodash_isNumber from 'lodash/isNumber';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
@@ -17,6 +17,16 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	}
 	static get component_names() {
 		return COMPONENT_NAMES_COLOR;
+	}
+	get default_value_serialized() {
+		if (lodash_isArray(this.default_value)) {
+			return this.default_value;
+		} else {
+			return this.default_value.toArray() as Number3;
+		}
+	}
+	get value_serialized() {
+		return this.value.toArray() as Number3;
 	}
 	init_components() {
 		super.init_components();

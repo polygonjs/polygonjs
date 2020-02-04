@@ -48,11 +48,18 @@ import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {PolyScene} from '../scene/PolyScene';
 
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {
+	ParamInitValuesTypeMap,
+	ParamValuesTypeMap,
+	ParamValueSerializedTypeMap,
+} from 'src/engine/nodes/utils/params/ParamsController';
+// import {TypedNumericParam} from './_Numeric';
 
-export interface TypedParamVisitor {
-	visit_typed_param: (param: BaseParamType) => any;
-}
+// export interface ParamVisitor {
+// 	visit_param: (param: BaseParamType) => any;
+// 	visit_multiple_param: (param: TypedMultipleParam<any>) => any;
+// 	visit_numeric_param: (param: TypedNumericParam<any>) => any;
+// }
 
 // type ParamTypeElem = ParamType;
 type ComputeCallback = (value: void) => void;
@@ -106,9 +113,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	// this.init_expression()
 	// 	// this._init_ui_data()
 	// }
-	accepts_visitor(visitor: TypedParamVisitor): any {
-		return visitor.visit_typed_param(this);
-	}
+	// accepts_visitor<T extends ParamVisitor>(visitor: T): ReturnType<T['visit_param']> {
+	// 	return visitor.visit_param(this);
+	// }
 
 	//
 	// init_expression() {}
@@ -134,6 +141,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get value(): ParamValuesTypeMap[T] {
 		return this._value;
 	}
+	abstract get default_value_serialized(): ParamValueSerializedTypeMap[T];
+	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
 	convert(raw_val: any): ParamValuesTypeMap[T] | null {
 		return null;
 	}
@@ -272,4 +281,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 }
 export type BaseParamType = TypedParam<ParamType>;
-export class BaseParamClass extends TypedParam<ParamType> {}
+export class BaseParamClass extends TypedParam<ParamType> {
+	get value_serialized() {
+		return 'BaseParamClass.value_serialized overriden';
+	}
+}

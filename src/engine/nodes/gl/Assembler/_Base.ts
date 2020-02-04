@@ -26,10 +26,7 @@ import {GlobalsGeometryHandler} from './Globals/Geometry';
 import {TypedAssembler} from '../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../utils/shaders/ShaderName';
 import {BaseNodeType} from '../../_Base';
-import {
-	IUniformsDictionaryWithFrame,
-	IUniformsDictionaryWithResolution,
-} from 'src/engine/scene/utils/UniformsController';
+import {IUniformsWithFrame, IUniformsWithResolution} from 'src/engine/scene/utils/UniformsController';
 import {OutputGlNode} from '../Output';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
@@ -40,13 +37,13 @@ import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
-interface IUniforms {
+export interface IUniforms {
 	[uniform: string]: IUniform;
 }
 interface ITemplateShader {
-	vertexShader: string;
-	fragmentShader: string;
-	uniforms: IUniforms;
+	vertexShader?: string;
+	fragmentShader?: string;
+	uniforms?: IUniforms;
 }
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
@@ -63,8 +60,8 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 ]);
 
 export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
-	protected _shaders_by_name = {};
-	private _lines: StringArrayByShaderName = new Map();
+	protected _shaders_by_name: Map<ShaderName, string> = new Map();
+	protected _lines: StringArrayByShaderName = new Map();
 	protected _code_builder: CodeBuilder | undefined;
 	private _param_config_owner: CodeBuilder | undefined;
 	protected _root_nodes: BaseGlNodeType[] = [];
@@ -111,7 +108,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		return undefined;
 	}
 	protected _build_lines() {
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shader_names) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			if (template) {
 				this._replace_template(template, shader_name);
@@ -140,7 +137,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 			return;
 		}
 		this._lines = new Map();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shader_names) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			if (template) {
 				this._lines.set(shader_name, template.split('\n'));
@@ -172,13 +169,13 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		// which are removed and then readded. This seems to mess up somewhere with how
 		// the material updates itself...
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		const new_uniforms = this.build_uniforms(template_shader);
+		const new_uniforms = this.build_uniforms(template_shader.uniforms);
 		this.material.uniforms = this.material.uniforms || {};
 		for (let uniform_name of Object.keys(new_uniforms)) {
 			this.material.uniforms[uniform_name] = new_uniforms[uniform_name];
 		}
 
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shader_names) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				const shader = lines.join('\n');
@@ -205,7 +202,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 			// - and possibly a depth one
 			scene.uniforms_controller.add_frame_dependent_uniform_owner(
 				this._material.uuid,
-				this._material.uniforms as IUniformsDictionaryWithFrame
+				this._material.uniforms as IUniformsWithFrame
 			);
 		} else {
 			scene.uniforms_controller.remove_frame_dependent_uniform_owner(this._material.uuid);
@@ -214,32 +211,32 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		if (this.resolution_dependent()) {
 			scene.uniforms_controller.add_resolution_dependent_uniform_owner(
 				this._material.uuid,
-				this._material.uniforms as IUniformsDictionaryWithResolution
+				this._material.uniforms as IUniformsWithResolution
 			);
 		} else {
 			scene.uniforms_controller.remove_resolution_dependent_uniform_owner(this._material.uuid);
 		}
 	}
 
-	private build_uniforms(template_shader: ITemplateShader) {
-		const uniforms = template_shader ? UniformsUtils.clone(template_shader.uniforms) : {};
+	protected build_uniforms(template_uniforms?: IUniforms) {
+		const new_uniforms = template_uniforms ? UniformsUtils.clone(template_uniforms) : {};
 		for (let param_config of this.param_configs()) {
-			uniforms[param_config.uniform_name()] = param_config.uniform();
+			new_uniforms[param_config.uniform_name] = param_config.uniform;
 		}
 
 		if (this.frame_dependent()) {
-			uniforms['frame'] = {
-				type: '1f',
+			new_uniforms['frame'] = {
+				// type: '1f',
 				value: this._gl_parent_node.scene.frame,
 			};
 		}
 		if (this.resolution_dependent()) {
-			uniforms['resolution'] = {
+			new_uniforms['resolution'] = {
 				value: new Vector2(1000, 1000),
 			};
 		}
 
-		return uniforms;
+		return new_uniforms;
 	}
 
 	//
@@ -385,27 +382,27 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		this._reset_frame_dependency();
 		this._reset_resolution_dependency();
 	}
-	shader_configs() {
+	get shader_configs() {
 		return (this._shader_configs = this._shader_configs || this.create_shader_configs());
 	}
 	set_shader_configs(shader_configs: ShaderConfig[]) {
 		this._shader_configs = shader_configs;
 	}
-	shader_names(): ShaderName[] {
-		return this.shader_configs().map((sc) => sc.name());
+	get shader_names(): ShaderName[] {
+		return this.shader_configs?.map((sc) => sc.name()) || [];
 	}
 	protected _reset_shader_configs() {
 		this._shader_configs = undefined;
-		this.shader_configs();
+		// this.shader_configs; // TODO: typescript - why do I need to re-initialize here?
 	}
-	create_shader_configs() {
+	create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}
-	shader_config(name: string): ShaderConfig {
-		return this.shader_configs().filter((sc) => {
+	shader_config(name: string): ShaderConfig | undefined {
+		return this.shader_configs?.filter((sc) => {
 			return sc.name() == name;
 		})[0];
 	}
@@ -454,7 +451,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		this.variable_configs();
 	}
 	input_names_for_shader_name(root_node: BaseGlNodeType, shader_name: ShaderName) {
-		return this.shader_config(shader_name).input_names();
+		return this.shader_config(shader_name)?.input_names() || [];
 	}
 
 	// frame dependency

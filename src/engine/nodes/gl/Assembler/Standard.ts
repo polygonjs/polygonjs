@@ -2,30 +2,31 @@ import {VertexColors} from 'three/src/constants';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {Material} from 'three/src/materials/Material';
+// import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+// import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+// import {Material} from 'three/src/materials/Material';
 import {FrontSide} from 'three/src/constants';
 
-import {ParamType} from 'src/Engine/Param/_Module';
 import {ShaderAssemblerMesh} from './_BaseMesh';
-import {BaseShaderAssembler} from './_Base';
-import {Connection} from 'src/Engine/Node/Gl/GlData';
+import {BaseGlShaderAssembler} from './_Base';
 import {ShaderConfig} from './Config/ShaderConfig';
 import {VariableConfig} from './Config/VariableConfig';
 
 import metalnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/metalnessmap_fragment.glsl';
 import roughnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
+import {OutputGlNode} from '../Output';
+import {ShaderName} from '../../utils/shaders/ShaderName';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
-	static is_physical() {
+	is_physical() {
 		return false;
 	}
 
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
-	_template_shader() {
-		const template = this.constructor.is_physical() ? ShaderLib.physical : ShaderLib.standard;
+	get _template_shader() {
+		const template = this.is_physical() ? ShaderLib.physical : ShaderLib.standard;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
 			fragmentShader: template.fragmentShader, //TemplateFragment,
@@ -34,7 +35,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	}
 
 	_create_material() {
-		const template_shader = this._template_shader();
+		const template_shader = this._template_shader;
 
 		const options = {
 			vertexColors: VertexColors,
@@ -76,21 +77,21 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		return material;
 	}
 
-	static convert_material_to_gltf_supported(material: ShaderMaterial): Material {
-		const gltf_constructor = this.is_physical() ? MeshPhysicalMaterial : MeshStandardMaterial;
-		const options = {};
-		this._match_uniform('color', options, material, 'diffuse');
-		this._match_uniform('map', options, material);
-		this._match_uniform('envMap', options, material);
-		this._match_uniform('envMapIntensity', options, material);
-		this._match_uniform('metalness', options, material);
-		this._match_uniform('roughness', options, material);
-		const gltf_material = new gltf_constructor(options);
-		return gltf_material;
-	}
+	// static convert_material_to_gltf_supported(material: ShaderMaterial): Material {
+	// 	const gltf_constructor = this.is_physical() ? MeshPhysicalMaterial : MeshStandardMaterial;
+	// 	const options = {};
+	// 	this._match_uniform('color', options, material, 'diffuse');
+	// 	this._match_uniform('map', options, material);
+	// 	this._match_uniform('envMap', options, material);
+	// 	this._match_uniform('envMapIntensity', options, material);
+	// 	this._match_uniform('metalness', options, material);
+	// 	this._match_uniform('roughness', options, material);
+	// 	const gltf_material = new gltf_constructor(options);
+	// 	return gltf_material;
+	// }
 
-	add_output_params(output_child) {
-		BaseShaderAssembler.add_output_params(output_child);
+	add_output_params(output_child: OutputGlNode) {
+		BaseGlShaderAssembler.add_output_params(output_child);
 		output_child.add_param(ParamType.FLOAT, 'metalness', 1);
 		output_child.add_param(ParamType.FLOAT, 'roughness', 1);
 	}
@@ -102,12 +103,12 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	// }
 	create_shader_configs() {
 		return [
-			new ShaderConfig('vertex', ['position', 'normal', 'uv'], []),
-			new ShaderConfig('fragment', ['color', 'alpha', 'metalness', 'roughness'], ['vertex']),
+			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
+			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha', 'metalness', 'roughness'], [ShaderName.VERTEX]),
 		];
 	}
 	create_variable_configs() {
-		return BaseShaderAssembler.create_variable_configs().concat([
+		return BaseGlShaderAssembler.create_variable_configs().concat([
 			new VariableConfig('metalness', {
 				default: '1.0',
 				prefix: 'float POLY_metalness = ',

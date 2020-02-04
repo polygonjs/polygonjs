@@ -18,8 +18,8 @@ export enum CustomMaterialName {
 	DEPTH_DOF = 'customDepthDOFMaterial',
 }
 // export type ShaderAssemblerRenderDerivated = {new (node: BaseNodeType): ShaderAssemblerRender};
-type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;
-export type CustomAssemblerMap = Map<CustomMaterialName, ShaderAssemblerRenderDerivatedClass>;
+// type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;
+export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerRender>;
 
 export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerRender> = new Map();
@@ -47,7 +47,7 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 
 						assembler.set_root_nodes(this._root_nodes);
 						assembler.set_param_configs_owner(this._code_builder);
-						assembler.set_shader_configs(this.shader_configs());
+						assembler.set_shader_configs(this.shader_configs);
 						assembler.set_variable_configs(this.variable_configs());
 
 						const material = await assembler.get_material();
@@ -119,9 +119,9 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 
 	set_node_lines_output(output_node: OutputGlNode, shader_name: ShaderName) {
 		// const body_lines = [];
-		const input_names = this.shader_config(shader_name).input_names();
-		output_node.set_body_lines([], shader_name);
+		const input_names = this.shader_config(shader_name)?.input_names();
 		if (input_names) {
+			output_node.set_body_lines([], shader_name);
 			for (let input_name of input_names) {
 				this.add_output_body_line(output_node, shader_name, input_name);
 			}
@@ -192,6 +192,9 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		const body_lines = [];
 
 		const shader_config = this.shader_config(shader_name);
+		if (!shader_config) {
+			return;
+		}
 		const dependencies = shader_config.dependencies();
 
 		const definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]> = new Map();

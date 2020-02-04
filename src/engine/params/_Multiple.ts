@@ -7,7 +7,7 @@ import lodash_isArray from 'lodash/isArray';
 // import lodash_isString from 'lodash/isString'
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_map from 'lodash/map'
-import {TypedParam, TypedParamVisitor} from './_Base';
+import {TypedParam, ParamVisitor} from './_Base';
 import {FloatParam} from './Float';
 // import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {ParamType} from '../poly/ParamType';
@@ -44,9 +44,9 @@ import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 // export interface MultipleParamValueTypeMap {
 // 	Color: Color
 // }
-interface MultipleParamVisitor extends TypedParamVisitor {
-	visit_typed_multiple_param: (param: TypedMultipleParam<any>) => any;
-}
+// interface MultipleParamVisitor extends TypedParamVisitor {
+// 	visit_typed_multiple_param: (param: TypedMultipleParam<any>) => any;
+// }
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
@@ -55,9 +55,9 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		return this._components;
 	}
 
-	accepts_visitor(visitor: MultipleParamVisitor): any {
-		return visitor.visit_typed_multiple_param(this);
-	}
+	// accepts_visitor<T extends ParamVisitor>(visitor: T): ReturnType<T['visit_multiple_param']> {
+	// 	return visitor.visit_multiple_param(this);
+	// }
 
 	init_components() {
 		let index = 0;

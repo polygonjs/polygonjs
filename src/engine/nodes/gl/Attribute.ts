@@ -71,17 +71,20 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		this.material_node.set_compilation_required_and_dirty();
 	}
 
+	get input_name() {
+		return INPUT_NAME;
+	}
 	get output_name() {
 		return OUTPUT_NAME;
 	}
 
 	private update_input_and_output_types() {
 		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint(INPUT_NAME, ConnectionPointTypes[this.pv.type]),
+			new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypes[this.pv.type]),
 		]);
 		if (this.material_node.allow_attribute_exports) {
 			this.io.outputs.set_named_output_connection_points([
-				new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointTypes[this.pv.type]),
+				new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypes[this.pv.type]),
 			]);
 		}
 	}
@@ -130,14 +133,14 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		return this.io.inputs.named_input_connection_point(INPUT_NAME);
 	}
 	// connected_input(): NamedConnection {
-	// 	const input = this.connected_named_input();
-	// 	if (input) {
-	// 		return this.named_inputs().filter((ni) => ni.name() == Attribute.input_name())[0];
+	// 	const connection_point = this.connected_input_connection_point();
+	// 	if (connection_point) {
+	// 		return this.io.inputs.named_inputs().filter((ni) => ni.name() == Attribute.input_name())[0];
 	// 	}
 	// }
 	output_connection_point(): BaseNamedConnectionPointType | undefined {
 		// if (this.io.inputs.has_named_inputs) {
-		return this.io.outputs.named_output_connection_points_by_name(OUTPUT_NAME);
+		return this.io.outputs.named_output_connection_points_by_name(this.input_name);
 		// }
 	}
 	// connected_output(): NamedConnection {
@@ -146,9 +149,9 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 		return output; //this.named_inputs().filter(ni=>ni.name() == Attribute.input_name())[0]
 	// 	}
 	// }
-	// get is_importing(): boolean {
-	// 	return this.used_output_names().length > 0;
-	// }
+	get is_importing(): boolean {
+		return this.io.outputs.used_output_names().length > 0; // TODO: typescript - ensure that we can check that the connected outputs are part of the nodes retrived by the node traverser
+	}
 	get is_exporting(): boolean {
 		if (this.pv.export_when_connected) {
 			const input_node = this.io.inputs.named_input(INPUT_NAME);

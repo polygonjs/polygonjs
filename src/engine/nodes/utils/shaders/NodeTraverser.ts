@@ -100,7 +100,7 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 		this._leaves_graph_id.get(this._shader_name)?.forEach((value: boolean, key: string) => {
 			node_ids.push(key);
 		});
-		return this._graph.nodes_from_ids(node_ids);
+		return this._graph.nodes_from_ids(node_ids) as T[];
 	}
 
 	nodes_for_shader_name(shader_name: ShaderName) {

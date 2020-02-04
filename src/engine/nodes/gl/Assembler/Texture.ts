@@ -1,28 +1,32 @@
 import {ShaderAssemblerRender} from './_BaseRender';
-import {ParamType} from 'src/Engine/Param/_Module';
-import {Connection} from 'src/Engine/Node/Gl/GlData';
-import {Definition} from '../Definition/_Module';
+import {IUniforms} from './_Base';
 // import {GlobalsTextureHandler} from 'src/Engine/Node/Gl/Assembler/Globals/Texture'
 
 import TemplateDefault from './Template/Texture/Default.frag.glsl';
 
 import {ShaderConfig} from './Config/ShaderConfig';
 import {VariableConfig} from './Config/VariableConfig';
-import {ShaderName, LineType} from 'src/Engine/Node/Gl/Assembler/Util/CodeBuilder';
-import {ThreeToGl} from 'src/Core/ThreeToGl';
-import {BaseNodeGl} from '../_Base';
-import {Globals} from '../Globals';
-import {NodeTraverser} from '../../utils/shaders/NodeTraverser';
+import {ShaderName} from '../../utils/shaders/ShaderName';
+import {IUniformsWithFrame} from 'src/engine/scene/utils/UniformsController';
+import {OutputGlNode} from '../Output';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {GlobalsGlNode} from '../Globals';
+import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
 
 export class ShaderAssemblerTexture extends ShaderAssemblerRender {
-	_template_shader() {
+	private _uniforms: IUniforms | undefined;
+
+	get _template_shader() {
 		return {
 			fragmentShader: TemplateDefault,
+			vertexShader: undefined,
+			uniforms: undefined,
 		};
 	}
 
 	fragment_shader() {
-		return this._shaders_by_name['fragment'];
+		return this._shaders_by_name.get(ShaderName.FRAGMENT);
 	}
 	// async get_shaders(){
 	// 	await this.update_shaders()
@@ -33,16 +37,17 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 		return this._uniforms;
 	}
 	_create_material() {
-		console.warn('ShaderAssemblerTexture should not create a material');
-		return null;
+		return undefined;
 	}
 
 	async update_fragment_shader() {
-		this._lines = {};
-		this._shaders_by_name = {};
-		for (let shader_name of this.shader_names()) {
-			const template = this._template_shader()[`${shader_name}Shader`];
-			this._lines[shader_name] = template.split('\n');
+		this._lines = new Map();
+		this._shaders_by_name = new Map();
+		for (let shader_name of this.shader_names) {
+			if (shader_name == ShaderName.FRAGMENT) {
+				const template = this._template_shader.fragmentShader;
+				this._lines.set(shader_name, template.split('\n'));
+			}
 		}
 		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
@@ -51,23 +56,28 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 			this._build_lines();
 		}
 
-		const new_uniforms = this.build_uniforms(null);
-		this._uniforms = this._uniforms || {};
-		for (let uniform_name of Object.keys(new_uniforms)) {
-			this._uniforms[uniform_name] = new_uniforms[uniform_name];
-		}
+		this._uniforms = this.build_uniforms();
+		// this._uniforms = this._uniforms || {};
+		// for (let uniform_name of Object.keys(new_uniforms)) {
+		// 	this._uniforms[uniform_name] = new_uniforms[uniform_name];
+		// }
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		for (let shader_name of this.shader_names()) {
-			this._shaders_by_name[shader_name] = this._lines[shader_name].join('\n');
+		for (let shader_name of this.shader_names) {
+			const lines = this._lines.get(shader_name);
+			if (lines) {
+				this._shaders_by_name.set(shader_name, lines.join('\n'));
+			}
 		}
 
 		// That's actually useless, since this doesn't make the texture recook
-		const scene = this._gl_parent_node.scene();
-		const id = this._gl_parent_node.graph_node_id();
+		const scene = this._gl_parent_node.scene;
+		const id = this._gl_parent_node.graph_node_id;
 		if (this.frame_dependent()) {
-			scene.add_frame_dependent_uniform_owner(id, this._uniforms);
+			if (this._uniforms) {
+				scene.uniforms_controller.add_frame_dependent_uniform_owner(id, this._uniforms as IUniformsWithFrame);
+			}
 		} else {
-			scene.remove_frame_dependent_uniform_owner(id);
+			scene.uniforms_controller.remove_frame_dependent_uniform_owner(id);
 		}
 	}
 
@@ -76,15 +86,15 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	add_output_params(output_child) {
+	add_output_params(output_child: OutputGlNode) {
 		output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
 		output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 	}
-	add_globals_params(globals_node) {
-		globals_node.set_named_outputs([
-			new Connection.Vec2('gl_FragCoord'),
+	add_globals_params(globals_node: GlobalsGlNode) {
+		globals_node.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint('gl_FragCoord', ConnectionPointType.VEC2),
+			new TypedNamedConnectionPoint('frame', ConnectionPointType.FLOAT),
 			// new Connection.Vec2('resolution'),
-			new Connection.Float('frame'),
 		]);
 	}
 
@@ -94,7 +104,7 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	//
 	//
 	create_shader_configs() {
-		return [new ShaderConfig('fragment', ['color', 'alpha'], [])];
+		return [new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [])];
 	}
 	create_variable_configs() {
 		return [
@@ -113,17 +123,17 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected insert_define_after(shader_name) {
+	protected insert_define_after(shader_name: ShaderName) {
 		return '// INSERT DEFINE';
 	}
-	protected insert_body_after(shader_name) {
+	protected insert_body_after(shader_name: ShaderName) {
 		return '// INSERT BODY';
 	}
-	protected lines_to_remove(shader_name) {
+	protected lines_to_remove(shader_name: ShaderName) {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
-	handle_gl_FragCoord(body_lines, shader_name, var_name) {
+	handle_gl_FragCoord(body_lines: string[], shader_name: ShaderName, var_name: string) {
 		if (shader_name == 'fragment') {
 			body_lines.push(`vec2 ${var_name} = vec2(gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`);
 		}

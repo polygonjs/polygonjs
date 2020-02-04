@@ -1,6 +1,6 @@
 import {Object3D} from 'three/src/core/Object3D';
 
-import {TypedNode, BaseNodeType, BaseNodeVisitor} from '../_Base';
+import {TypedNode, BaseNodeType, NodeVisitor} from '../_Base';
 // import {BaseSopNode} from '../sop/_Base';
 // import {LookAt} from './Concerns/LookAt';
 import {ObjectContainer} from 'src/engine/containers/Object';
@@ -17,9 +17,9 @@ const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_
 interface Object3DWithNode extends Object3D {
 	node: BaseNodeType;
 }
-interface BaseObjNodeVisitor extends BaseNodeVisitor {
-	visit_node_obj: (node: BaseObjNodeType) => void;
-}
+// interface BaseObjNodeVisitor extends BaseNodeVisitor {
+// 	visit_node_obj: (node: BaseObjNodeType) => any;
+// }
 
 export enum ObjNodeRenderOrder {
 	MANAGER = 0,
@@ -175,9 +175,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// 	this.param('display').eval (val)->
 	// 		callback(val)
 
-	accepts_visitor(visitor: BaseObjNodeVisitor) {
-		visitor.visit_node_obj(this);
-	}
+	// accepts_visitor<T extends NodeVisitor>(visitor: T): ReturnType<T['visit_node_obj']> {
+	// 	return visitor.visit_node_obj(this);
+	// }
 
 	// replaces Dirtyable (TODO: try and replace this method name)
 	// protected _init_dirtyable_hook() {

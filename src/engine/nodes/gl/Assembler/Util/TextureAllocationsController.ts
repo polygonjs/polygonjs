@@ -147,12 +147,13 @@ export class TextureAllocationsController {
 		}
 	}
 
-	next_allocation_name() {
+	next_allocation_name(): ShaderName {
+		const name = ParticleShaderNames[this._next_allocation_index];
 		this._next_allocation_index += 1;
-		return `${this._next_allocation_index}`;
+		return name;
 	}
 
-	shader_names() {
+	shader_names(): ShaderName[] {
 		const explicit_shader_names = this._allocations.map((a) => a.shader_name);
 
 		// include dependencies if needed

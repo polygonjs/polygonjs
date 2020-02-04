@@ -5,16 +5,16 @@ import {RGBFormat} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 // import {ClampToEdgeWrapping} from 'three/src/constants'
-import {TypedParamVisitor} from './_Base';
+// import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {RampValue, RampPoint} from './ramp/RampValue';
 
 // import {AsCodeRamp} from './concerns/visitors/Ramp';
 import {ParamType} from '../poly/ParamType';
 
-interface RampParamVisitor extends TypedParamVisitor {
-	visit_ramp_param: (param: RampParam) => any;
-}
+// interface RampParamVisitor extends TypedParamVisitor {
+// 	visit_ramp_param: (param: RampParam) => any;
+// }
 
 export class RampParam extends Single<ParamType.RAMP> {
 	static type() {
@@ -26,12 +26,18 @@ export class RampParam extends Single<ParamType.RAMP> {
 
 	static DEFAULT_VALUE = new RampValue('linear', [new RampPoint(0, 0), new RampPoint(1, 1)]);
 
+	get default_value_serialized() {
+		return this.default_value.to_json();
+	}
+	get value_serialized() {
+		return this.value.to_json();
+	}
 	initialize_param() {
 		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture.bind(this));
 	}
-	accepts_visitor(visitor: RampParamVisitor) {
-		return visitor.visit_ramp_param(this);
-	}
+	// accepts_visitor(visitor: RampParamVisitor) {
+	// 	return visitor.visit_ramp_param(this);
+	// }
 	get is_default(): boolean {
 		return this.value.is_equal(this.default_value);
 	}

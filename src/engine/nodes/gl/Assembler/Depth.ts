@@ -5,11 +5,17 @@ import {RGBADepthPacking} from 'three/src/constants';
 import {BasicDepthPacking} from 'three/src/constants';
 
 import {ShaderAssemblerRender} from './_BaseRender';
+import {ShaderName} from '../../utils/shaders/ShaderName';
+
+const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
+	[ShaderName.VERTEX, '#include <begin_vertex>'],
+	[ShaderName.FRAGMENT, 'vec4 diffuseColor = vec4( 1.0 );'],
+]);
 
 export class ShaderAssemblerDepth extends ShaderAssemblerRender {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
-	_template_shader() {
+	get _template_shader() {
 		const template = ShaderLib.depth;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
@@ -17,15 +23,12 @@ export class ShaderAssemblerDepth extends ShaderAssemblerRender {
 			uniforms: template.uniforms,
 		};
 	}
-	protected insert_body_after(shader_name) {
-		return {
-			vertex: '#include <begin_vertex>',
-			fragment: 'vec4 diffuseColor = vec4( 1.0 );',
-		}[shader_name];
+	protected insert_body_after(shader_name: ShaderName) {
+		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
 
 	_create_material() {
-		const template_shader = this._template_shader();
+		const template_shader = this._template_shader;
 		return new ShaderMaterial({
 			// vertexColors: VertexColors,
 			// side: FrontSide,

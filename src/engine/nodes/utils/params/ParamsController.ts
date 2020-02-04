@@ -31,7 +31,7 @@ import {Color} from 'three/src/math/Color';
 // import {RampValue} from 'src/engine/params/ramp/RampValue';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
-import {RampValue} from 'src/engine/params/ramp/RampValue';
+import {RampValue, RampValueJson} from 'src/engine/params/ramp/RampValue';
 import {Vector4} from 'three/src/math/Vector4';
 import {NodeParamsConfig} from './ParamsConfig';
 // type ParamConstructorMap = {[key in ParamType]: any};
@@ -99,6 +99,16 @@ export type ParamInitValue =
 	| Vector3
 	| Vector4
 	| RampValue;
+
+export type ParamValueSerialized =
+	| StringOrNumber
+	| StringOrNumber2
+	| StringOrNumber3
+	| StringOrNumber4
+	| boolean
+	| string
+	| null
+	| RampValueJson;
 type ParamInitValuesTypeMapGeneric = {[key in ParamType]: ParamInitValue};
 export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
 	[ParamType.BOOLEAN]: 0 | 1 | boolean;
@@ -113,6 +123,21 @@ export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
 	[ParamType.VECTOR2]: StringOrNumber2 | Vector2;
 	[ParamType.VECTOR3]: StringOrNumber3 | Vector3;
 	[ParamType.VECTOR4]: StringOrNumber4 | Vector4;
+}
+type ParamValueSerializedTypeMapGeneric = {[key in ParamType]: ParamValueSerialized};
+export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMapGeneric {
+	[ParamType.BOOLEAN]: boolean;
+	[ParamType.BUTTON]: null;
+	[ParamType.COLOR]: StringOrNumber3;
+	[ParamType.FLOAT]: StringOrNumber;
+	[ParamType.INTEGER]: StringOrNumber;
+	[ParamType.OPERATOR_PATH]: string;
+	[ParamType.RAMP]: RampValueJson;
+	[ParamType.SEPARATOR]: null;
+	[ParamType.STRING]: string;
+	[ParamType.VECTOR2]: StringOrNumber2;
+	[ParamType.VECTOR3]: StringOrNumber3;
+	[ParamType.VECTOR4]: StringOrNumber4;
 }
 export type ParamValue = boolean | Color | number | string | RampValue | Vector2 | Vector3 | Vector4 | null;
 type ParamValuesTypeMapGeneric = {[key in ParamType]: ParamValue};
@@ -353,11 +378,13 @@ export class ParamsController {
 		const is_spare = options['spare'] || false;
 		if (this._param_create_mode === false && !is_spare) {
 			console.warn(
-				`node ${this.node.full_path()} (${this.node.type()}) param '${name}' cannot be created outside of create_params`
+				`node ${this.node.full_path()} (${
+					this.node.type
+				}) param '${name}' cannot be created outside of create_params`
 			);
 		}
 		if (this.node.scene == null) {
-			console.warn(`node ${this.node.full_path()} (${this.node.type()}) has no scene assigned`);
+			console.warn(`node ${this.node.full_path()} (${this.node.type}) has no scene assigned`);
 		}
 
 		const constructor = ParamConstructorByType[type];
@@ -407,16 +434,16 @@ export class ParamsController {
 		// _param_names: string[] = [];
 		this._param_names = Object.keys(this._params_by_name);
 		// _non_spare_params: BaseParam[] = [];
-		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.is_spare());
+		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.is_spare);
 		// _spare_params: BaseParam[] = [];
-		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.is_spare());
+		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.is_spare);
 		// _non_spare_param_names: string[] = [];
 		this._non_spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => !p.options.is_spare())
+			.filter((p) => !p.options.is_spare)
 			.map((p) => p.name);
 		// _spare_param_names: string[] = [];
 		this._spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => p.options.is_spare())
+			.filter((p) => p.options.is_spare)
 			.map((p) => p.name);
 		// delete this._param_names[param_name];
 

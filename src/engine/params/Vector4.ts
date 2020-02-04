@@ -1,6 +1,6 @@
 import {TypedMultipleParam} from './_Multiple';
 
-// import lodash_isArray from 'lodash/isArray';
+import lodash_isArray from 'lodash/isArray';
 import {Vector4} from 'three/src/math/Vector4';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
@@ -17,6 +17,16 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	}
 	static get component_names() {
 		return COMPONENT_NAMES_VECTOR4;
+	}
+	get default_value_serialized() {
+		if (lodash_isArray(this.default_value)) {
+			return this.default_value;
+		} else {
+			return this.default_value.toArray() as Number4;
+		}
+	}
+	get value_serialized() {
+		return this.value.toArray() as Number4;
 	}
 	init_components() {
 		super.init_components();

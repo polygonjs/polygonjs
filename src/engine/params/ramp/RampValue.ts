@@ -4,7 +4,7 @@ interface RampPointJson {
 	position: number;
 	value: number;
 }
-interface RampValueJson {
+export interface RampValueJson {
 	points: RampPointJson[];
 	interpolation: string;
 }

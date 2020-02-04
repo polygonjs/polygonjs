@@ -2,7 +2,7 @@
 import lodash_isString from 'lodash/isString';
 // import lodash_isNumber from 'lodash/isNumber'
 import {Single} from './_Single';
-import {TypedParamVisitor} from './_Base';
+// import {TypedParamVisitor} from './_Base';
 // import {AsCodeString} from './concerns/visitors/String';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
@@ -11,20 +11,23 @@ import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {ExpressionController} from './utils/ExpressionController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
-interface StringParamVisitor extends TypedParamVisitor {
-	visit_string_param: (param: StringParam) => any;
-}
+// interface StringParamVisitor extends TypedParamVisitor {
+// 	visit_string_param: (param: StringParam) => any;
+// }
 
 export class StringParam extends Single<ParamType.STRING> {
-	// private _raw_input: string;
+	private _raw_input!: string;
 	// private _expression_controllers: ExpressionController[] = []
 
 	static type() {
 		return ParamType.STRING;
 	}
-	accepts_visitor(visitor: StringParamVisitor) {
-		return visitor.visit_string_param(this);
+	get value_serialized() {
+		return this.value;
 	}
+	// accepts_visitor(visitor: StringParamVisitor) {
+	// 	return visitor.visit_string_param(this);
+	// }
 
 	convert(raw_val: any): string {
 		if (lodash_isString(raw_val)) {
@@ -33,8 +36,11 @@ export class StringParam extends Single<ParamType.STRING> {
 		return `${raw_val}`;
 	}
 
+	get raw_input() {
+		return this._raw_input;
+	}
 	set(raw_input: ParamInitValuesTypeMap[ParamType.STRING]): void {
-		// this._raw_input = raw_input;
+		this._raw_input = raw_input;
 		// this.process_raw_input()
 		this.states.error.clear();
 

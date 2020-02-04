@@ -2,11 +2,11 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
-type IUniformsDictionary = Dictionary<IUniform>;
-export interface IUniformsDictionaryWithFrame extends IUniformsDictionary {
+type IUniforms = Dictionary<IUniform>;
+export interface IUniformsWithFrame extends IUniforms {
 	frame: IUniform;
 }
-export interface IUniformsDictionaryWithResolution extends IUniformsDictionary {
+export interface IUniformsWithResolution extends IUniforms {
 	resolution: {
 		value: Vector2Like;
 	};
@@ -15,15 +15,15 @@ export interface IUniformsDictionaryWithResolution extends IUniformsDictionary {
 export class UniformsController {
 	constructor(private scene: PolyScene) {}
 
-	private _frame_dependent_uniform_owners: Dictionary<IUniformsDictionaryWithFrame> = {}; //new Map()
+	private _frame_dependent_uniform_owners: Dictionary<IUniformsWithFrame> = {}; //new Map()
 	private _frame_dependent_uniform_owners_ids: string[] | null = null;
 
 	private _resolution: Vector2 = new Vector2(1, 1);
-	private _resolution_dependent_uniform_owners: Dictionary<IUniformsDictionaryWithResolution> = {};
+	private _resolution_dependent_uniform_owners: Dictionary<IUniformsWithResolution> = {};
 	private _resolution_dependent_uniform_owners_ids: string[] = [];
 
 	// frame
-	add_frame_dependent_uniform_owner(id: string, uniforms: IUniformsDictionaryWithFrame) {
+	add_frame_dependent_uniform_owner(id: string, uniforms: IUniformsWithFrame) {
 		this._frame_dependent_uniform_owners[id] = uniforms;
 		this._update_frame_dependent_uniform_owners_ids();
 	}
@@ -45,7 +45,7 @@ export class UniformsController {
 	}
 
 	// resolution
-	add_resolution_dependent_uniform_owner(id: string, uniforms: IUniformsDictionaryWithResolution) {
+	add_resolution_dependent_uniform_owner(id: string, uniforms: IUniformsWithResolution) {
 		this._resolution_dependent_uniform_owners[id] = uniforms;
 		this._update_resolution_dependent_uniform_owners_ids();
 		if (this._resolution) {
@@ -66,7 +66,7 @@ export class UniformsController {
 			this.update_resolution_dependent_uniforms(uniforms);
 		}
 	}
-	update_resolution_dependent_uniforms(uniforms: IUniformsDictionaryWithResolution) {
+	update_resolution_dependent_uniforms(uniforms: IUniformsWithResolution) {
 		uniforms.resolution.value.x = this._resolution.x * window.devicePixelRatio;
 		uniforms.resolution.value.y = this._resolution.y * window.devicePixelRatio;
 	}

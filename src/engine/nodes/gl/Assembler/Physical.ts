@@ -1,9 +1,7 @@
-
-import {ShaderAssemblerStandard} from './Standard'
-
+import {ShaderAssemblerStandard} from './Standard';
 
 export class ShaderAssemblerPhysical extends ShaderAssemblerStandard {
-
-	static is_physical(){ return true }
-
+	is_physical() {
+		return true;
+	}
 }

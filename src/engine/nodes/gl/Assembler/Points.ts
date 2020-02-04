@@ -2,21 +2,38 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 
-import {ShaderAssemblerRender, CustomAssemblerDictionary} from './_BaseRender';
-import {ParamType} from 'src/Engine/Param/_Module';
-import {Connection} from 'src/Engine/Node/Gl/GlData';
+import {ShaderAssemblerRender, CustomAssemblerMap, CustomMaterialName} from './_BaseRender';
 
 import {ShaderConfig} from './Config/ShaderConfig';
 import {VariableConfig} from './Config/VariableConfig';
 
-import {BaseShaderAssembler} from './_Base';
+import {BaseGlShaderAssembler} from './_Base';
 import {ShaderAssemblerCustomPointsDepth} from './CustomPointsDepth';
 import {ShaderAssemblerCustomPointsDistance} from './CustomPointsDistance';
 import {ShaderAssemblerCustomPointsDepthDOF} from './CustomPointsDepthDOF';
+import {OutputGlNode} from '../Output';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
+import {ShaderName} from '../../utils/shaders/ShaderName';
+
+const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
+	[ShaderName.VERTEX, ['#include <begin_vertex>', 'gl_PointSize = size;']],
+	[ShaderName.FRAGMENT, []],
+]);
+
+const CUSTOM_ASSEMBLER_MAP: CustomAssemblerMap = new Map();
+CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomPointsDistance);
+CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDepth);
+CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomPointsDepthDOF);
 
 export class ShaderAssemblerPoints extends ShaderAssemblerRender {
 	// _color_declaration() { return 'diffuseColor' }
-	_template_shader() {
+	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+		return CUSTOM_ASSEMBLER_MAP;
+	}
+
+	get _template_shader() {
 		const template = ShaderLib.points;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
@@ -25,7 +42,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerRender {
 		};
 	}
 	_create_material() {
-		const template_shader = this._template_shader();
+		const template_shader = this._template_shader;
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
 		// uniforms.size.value = 10
@@ -67,20 +84,14 @@ export class ShaderAssemblerPoints extends ShaderAssemblerRender {
 	// }
 	// those shadow shaders should ideally be overriden
 	// to properly take into account point size
-	custom_assembler_class_by_custom_name(): CustomAssemblerDictionary {
-		return {
-			customDepthMaterial: ShaderAssemblerCustomPointsDepth,
-			customDistanceMaterial: ShaderAssemblerCustomPointsDistance,
-			customDepthDOFMaterial: ShaderAssemblerCustomPointsDepthDOF,
-		};
-	}
-	add_output_params(output_child) {
-		BaseShaderAssembler.add_output_params(output_child);
+
+	add_output_params(output_child: OutputGlNode) {
+		BaseGlShaderAssembler.add_output_params(output_child);
 		output_child.add_param(ParamType.FLOAT, 'gl_PointSize', 1);
 	}
 	create_globals_node_output_connections() {
-		return BaseShaderAssembler.create_globals_node_output_connections().concat([
-			new Connection.Vec2('gl_PointCoord'),
+		return BaseGlShaderAssembler.create_globals_node_output_connections().concat([
+			new TypedNamedConnectionPoint('gl_PointCoord', ConnectionPointType.VEC2),
 		]);
 	}
 
@@ -98,12 +109,12 @@ export class ShaderAssemblerPoints extends ShaderAssemblerRender {
 	// }
 	create_shader_configs() {
 		return [
-			new ShaderConfig('vertex', ['position', 'normal', 'uv', 'gl_PointSize'], []),
-			new ShaderConfig('fragment', ['color', 'alpha'], ['vertex']),
+			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv', 'gl_PointSize'], []),
+			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}
 	create_variable_configs() {
-		return BaseShaderAssembler.create_variable_configs().concat([
+		return BaseGlShaderAssembler.create_variable_configs().concat([
 			new VariableConfig('gl_PointSize', {
 				default: '1.0',
 				prefix: 'gl_PointSize = ',
@@ -137,10 +148,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerRender {
 		// 	}),
 		// ]
 	}
-	protected lines_to_remove(shader_name) {
-		return {
-			vertex: ['#include <begin_vertex>', 'gl_PointSize = size;'],
-			fragment: [],
-		}[shader_name];
+	protected lines_to_remove(shader_name: ShaderName) {
+		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 }

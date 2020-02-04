@@ -1,5 +1,5 @@
 import {TypedMultipleParam} from './_Multiple';
-// import lodash_isArray from 'lodash/isArray';
+import lodash_isArray from 'lodash/isArray';
 import {FloatParam} from './Float';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../poly/ParamType';
@@ -16,6 +16,16 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	}
 	static get component_names() {
 		return COMPONENT_NAMES_VECTOR3;
+	}
+	get default_value_serialized() {
+		if (lodash_isArray(this.default_value)) {
+			return this.default_value;
+		} else {
+			return this.default_value.toArray() as Number3;
+		}
+	}
+	get value_serialized() {
+		return this.value.toArray() as Number3;
 	}
 	init_components() {
 		super.init_components();

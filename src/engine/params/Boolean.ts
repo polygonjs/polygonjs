@@ -11,7 +11,13 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static type() {
 		return ParamType.BOOLEAN;
 	}
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean | null {
+	get default_value_serialized() {
+		return this.convert(this.default_value);
+	}
+	get value_serialized() {
+		return this.value;
+	}
+	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean {
 		if (lodash_isBoolean(raw_val)) {
 			return raw_val;
 		} else {
@@ -25,7 +31,7 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 					}
 				}
 			}
-			return null;
+			return false;
 		}
 	}
 	// convert_value(v: ParamInputValue): boolean {

@@ -27,14 +27,14 @@ import {TypeAssert} from 'src/engine/poly/Assert';
 
 // TODO: remove the "throw" statements, which seem less necessary now with typescript
 export class InputsController<T extends BaseNodeType> {
-	_graph_node_inputs: CoreGraphNode[] = [];
-	_inputs: Array<T | null> = [];
-	_has_named_inputs: boolean = false;
+	private _graph_node_inputs: CoreGraphNode[] = [];
+	private _inputs: Array<T | null> = [];
+	private _has_named_inputs: boolean = false;
 	// _input_connections: NodeConnection[] = []
-	_named_input_connection_points: BaseNamedConnectionPointType[] | undefined;
-	_min_inputs_count: number = 0;
-	_max_inputs_count: number = 0;
-	_depends_on_inputs: boolean = true;
+	private _named_input_connection_points: BaseNamedConnectionPointType[] | undefined;
+	private _min_inputs_count: number = 0;
+	private _max_inputs_count: number = 0;
+	private _depends_on_inputs: boolean = true;
 
 	// clonable
 	private _user_inputs_clonable_states: InputCloneMode[] | undefined;

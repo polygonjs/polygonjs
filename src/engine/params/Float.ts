@@ -11,6 +11,12 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	static type() {
 		return ParamType.FLOAT;
 	}
+	get default_value_serialized() {
+		return this.default_value;
+	}
+	get value_serialized() {
+		return this.value;
+	}
 	static convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
 		if (lodash_isNumber(raw_val)) {
 			return raw_val;

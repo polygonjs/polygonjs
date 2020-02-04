@@ -1,17 +1,32 @@
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
+import {ShaderLib, Shader} from 'three/src/renderers/shaders/ShaderLib';
 
-import {ShaderAssemblerRender, CustomAssemblerDictionary} from './_BaseRender';
+import {ShaderAssemblerRender, CustomAssemblerMap, CustomMaterialName} from './_BaseRender';
 
 import {ShaderConfig} from './Config/ShaderConfig';
 import {VariableConfig} from './Config/VariableConfig';
-import {Connection} from 'src/Engine/Node/Gl/GlData';
 import {GlobalsGeometryHandler} from './Globals/Geometry';
 
 // import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth'
 // import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance'
 import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
+import {ShaderName} from '../../utils/shaders/ShaderName';
+import {OutputGlNode} from '../Output';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
+
+const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
+	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
+	// [CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth],
+	// [CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF],
+]);
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomLineDepthDOF);
+const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
+	[ShaderName.VERTEX, ['#include <begin_vertex>', 'vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );']],
+	[ShaderName.FRAGMENT, []],
+]);
 
 export class ShaderAssemblerLine extends ShaderAssemblerRender {
 	// _color_declaration() { return 'diffuseColor' }
@@ -24,7 +39,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerRender {
 		};
 	}
 	_create_material() {
-		const template_shader = this._template_shader();
+		const template_shader = this._template_shader;
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
 		// uniforms.size.value = 10
@@ -55,40 +70,41 @@ export class ShaderAssemblerLine extends ShaderAssemblerRender {
 		// return material
 	}
 
-	custom_assembler_class_by_custom_name(): CustomAssemblerDictionary {
-		return {
-			// customDepthMaterial: ShaderAssemblerCustomMeshDepth,
-			// customDistanceMaterial: ShaderAssemblerCustomMeshDistance,
-			customDepthDOFMaterial: ShaderAssemblerCustomLineDepthDOF,
-		};
+	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+		return ASSEMBLER_MAP;
+		// return {
+		// 	// customDepthMaterial: ShaderAssemblerCustomMeshDepth,
+		// 	// customDistanceMaterial: ShaderAssemblerCustomMeshDistance,
+		// 	customDepthDOFMaterial: ShaderAssemblerCustomLineDepthDOF,
+		// };
 	}
 	create_shader_configs() {
 		return [
-			new ShaderConfig('vertex', ['position', 'uv'], []),
-			new ShaderConfig('fragment', ['color', 'alpha'], ['vertex']),
+			new ShaderConfig(ShaderName.VERTEX, ['position', 'uv'], []),
+			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}
-	static add_output_params(output_child) {
-		output_child.add_param(ParamType.VECTOR, 'position', [0, 0, 0], {hidden: true});
+	static add_output_params(output_child: OutputGlNode) {
+		output_child.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
 		// output_child.add_param( ParamType.VECTOR, 'normal', [0,0,0], {hidden: true} )
 		output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
 		output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 		output_child.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
-	add_output_params(output_child) {
+	add_output_params(output_child: OutputGlNode) {
 		ShaderAssemblerLine.add_output_params(output_child);
 	}
 	static create_globals_node_output_connections() {
 		return [
-			new Connection.Vec3('position'),
+			new TypedNamedConnectionPoint('position', ConnectionPointType.VEC3),
 			// new Connection.Vec3('normal'),
-			new Connection.Vec3('color'),
-			new Connection.Vec2('uv'),
-			new Connection.Vec4('gl_FragCoord'),
-			new Connection.Vec2('resolution'),
+			new TypedNamedConnectionPoint('color', ConnectionPointType.VEC3),
+			new TypedNamedConnectionPoint('uv', ConnectionPointType.VEC2),
+			new TypedNamedConnectionPoint('gl_FragCoord', ConnectionPointType.VEC4),
+			new TypedNamedConnectionPoint('resolution', ConnectionPointType.VEC2),
 			// new Connection.Vec2('gl_PointCoord'),
 			// new TypedConnectionVec2('uv'),
-			new Connection.Float('frame'),
+			new TypedNamedConnectionPoint('frame', ConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {
@@ -117,10 +133,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerRender {
 			}),
 		];
 	}
-	protected lines_to_remove(shader_name) {
-		return {
-			vertex: ['#include <begin_vertex>', 'vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );'],
-			fragment: [],
-		}[shader_name];
+	protected lines_to_remove(shader_name: ShaderName) {
+		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 }

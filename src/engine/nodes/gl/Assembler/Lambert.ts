@@ -24,7 +24,7 @@ export class ShaderAssemblerLambert extends ShaderAssemblerMesh {
 	_create_material() {
 		// console.log(ShaderLib.lambert)
 
-		const template_shader = this._template_shader();
+		const template_shader = this._template_shader;
 		// console.log(template_shader.uniforms)
 		return new ShaderMaterial({
 			vertexColors: VertexColors,

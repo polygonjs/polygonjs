@@ -33,20 +33,20 @@ export class ParamConfig<T extends ParamType> {
 		return new ParamConfig<K>(param.type, param.name, param.default_value, uniform_name);
 	}
 
-	type() {
+	get type() {
 		return this._type;
 	}
-	name() {
+	get name() {
 		return this._name;
 	}
-	default_value() {
+	get default_value() {
 		return this._default_value;
 	}
-	uniform_name() {
+	get uniform_name() {
 		return this._uniform_name;
 	}
 
-	uniform() {
+	get uniform() {
 		return (this._uniform = this._uniform || this._create_uniform());
 	}
 
@@ -54,15 +54,16 @@ export class ParamConfig<T extends ParamType> {
 		return ParamConfig.uniform_by_type(this._type);
 	}
 
-	param_options() {
+	get param_options() {
 		switch (this._type) {
 			case ParamType.OPERATOR_PATH:
-				return {node_selection: {context: NodeContext.COP}};
+				return {node_selection: {context: NodeContext.COP}}; // TODO: typescript - why is COP here?
 			default:
 				return {};
 		}
 	}
 
+	// TODO: refactor that to use the default values map?
 	static uniform_by_type(type: ParamType): IUniform {
 		switch (type) {
 			case ParamType.BOOLEAN:
@@ -96,7 +97,7 @@ export class ParamConfig<T extends ParamType> {
 
 	async set_uniform_value(node: BaseNodeType) {
 		// return new Promise( async (resolve, reject)=>{
-		const uniform = this.uniform();
+		const uniform = this.uniform;
 		// the cache cannot be trusted...
 		const param = node.params.get(this._name) as TypedParam<T>;
 		if (param) {

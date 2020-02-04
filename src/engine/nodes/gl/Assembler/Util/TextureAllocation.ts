@@ -1,14 +1,13 @@
-import lodash_includes from 'lodash/includes';
-
 import {TextureVariable} from './TextureVariable';
 import {BaseGlNodeType} from 'src/engine/nodes/gl/_Base';
 import {PolyScene} from 'src/engine/scene/PolyScene';
+import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
 
 export class TextureAllocation {
 	private _variables: TextureVariable[] | undefined;
 	private _size: number = 0;
 
-	constructor(private _name: string) {}
+	constructor(private _shader_name: ShaderName) {}
 
 	add_variable(variable: TextureVariable) {
 		this._variables = this._variables || [];
@@ -21,11 +20,11 @@ export class TextureAllocation {
 	has_space_for_variable(variable: TextureVariable): boolean {
 		return this._size + variable.size <= 4;
 	}
-	get shader_name(): string {
-		return this._name; //this._variables[0].name()
+	get shader_name() {
+		return this._shader_name; //this._variables[0].name()
 	}
 	get texture_name(): string {
-		return `texture_${this.shader_name}`;
+		return `texture_${this._shader_name}`;
 	}
 
 	get variables(): TextureVariable[] | undefined {
