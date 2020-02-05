@@ -64,7 +64,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 			}
 		});
 
-		this.io.inputs.set_count_to_one_max();
+		this.io.inputs.set_count(0, 1);
 	}
 
 	create_object() {

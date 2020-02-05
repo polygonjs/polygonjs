@@ -30,17 +30,17 @@ export class TimeDependentState {
 		return false;
 	}
 
-	// protected _force_time_dependent() {
-	// 	const predecessor_ids = this.graph_predecessors().map((n) => n.graph_node_id);
-	// 	const scene_context = this.scene().context();
-	// 	if (!lodash_includes(predecessor_ids, scene_context.graph_node_id)) {
-	// 		this.self.add_graph_input(scene_context);
-	// 	}
-	// }
-	// protected _unforce_time_dependent() {
-	// 	const scene_context = this.scene().context();
-	// 	this.self.remove_graph_input(scene_context);
-	// }
+	force_time_dependent() {
+		const predecessor_ids = this.node.graph_predecessors().map((n) => n.graph_node_id);
+		const frame_node = this.node.scene.time_controller.graph_node; // context();
+		if (!predecessor_ids.includes(frame_node.graph_node_id)) {
+			this.node.add_graph_input(frame_node);
+		}
+	}
+	unforce_time_dependent() {
+		const frame_node = this.node.scene.time_controller.graph_node;
+		this.node.remove_graph_input(frame_node);
+	}
 }
 
 // import {BaseNode} from '../_Base';

@@ -12,8 +12,7 @@ import {
 	AttributeGLDefinition,
 	VaryingGLDefinition,
 } from '../../utils/GLDefinition';
-import {ConnectionPointType, ConnectionPointTypes} from 'src/engine/nodes/utils/connections/ConnectionPointType';
-import {AttributeGlNode} from '../../Attribute';
+import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
 
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig'
 // import {UniformConfig} from '../Config/UniformConfig'
@@ -165,7 +164,11 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				// const definitions_by_shader_name = {}
 				// definitions_by_shader_name[shader_name] = []
 				const var_name_texture = allocation.texture_name;
-				const texture_definition = new UniformGLDefinition(node, 'sampler2D', var_name_texture);
+				const texture_definition = new UniformGLDefinition(
+					node,
+					ConnectionPointType.SAMPLER_2D,
+					var_name_texture
+				);
 				// definitions_by_shader_name[shader_name].push(texture_definition)
 
 				node.add_definitions([texture_definition]);
@@ -176,12 +179,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				return body_line;
 			}
 		} else {
-			return GlobalsGeometryHandler.handle_attribute_node(
-				node as AttributeGlNode,
-				gl_type,
-				attrib_name,
-				shader_name
-			);
+			return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shader_name);
 		}
 	}
 

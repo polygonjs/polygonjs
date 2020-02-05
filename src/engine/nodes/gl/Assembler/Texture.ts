@@ -25,6 +25,10 @@ export class ShaderAssemblerTexture extends ShaderAssemblerRender {
 		};
 	}
 
+	async compile() {
+		await this.update_fragment_shader();
+	}
+
 	fragment_shader() {
 		return this._shaders_by_name.get(ShaderName.FRAGMENT);
 	}

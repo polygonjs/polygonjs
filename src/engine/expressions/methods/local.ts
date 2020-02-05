@@ -1,4 +1,5 @@
 import {BaseMethod} from './_Base';
+import {POLY} from 'src/engine/Poly';
 
 export class Local extends BaseMethod {
 	// constructor() {

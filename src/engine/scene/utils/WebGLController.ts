@@ -1,3 +1,5 @@
+import {POLY} from 'src/engine/Poly';
+
 // import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class WebGLController {

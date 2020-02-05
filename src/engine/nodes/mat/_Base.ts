@@ -11,7 +11,11 @@ import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // type RenderHook = (object: Object3D) => void;
 
-export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<'MATERIAL', BaseMatNodeType, K> {
+export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfig> extends TypedNode<
+	'MATERIAL',
+	BaseMatNodeType,
+	K
+> {
 	container_controller: TypedContainerController<MaterialContainer> = new TypedContainerController<MaterialContainer>(
 		this,
 		MaterialContainer
@@ -20,7 +24,7 @@ export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<'MATERIA
 		return NodeContext.MAT;
 	}
 
-	protected _material!: Material;
+	protected _material!: M;
 	// protected _update_methods: RenderHook[] = [];
 
 	initialize_node() {
@@ -55,7 +59,7 @@ export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<'MATERIA
 		}
 	}
 
-	create_material() {}
+	abstract create_material(): M;
 	get material() {
 		return this._material;
 	}
@@ -75,5 +79,9 @@ export class TypedMatNode<K extends NodeParamsConfig> extends TypedNode<'MATERIA
 }
 //delete object.onBeforeRender
 
-export type BaseMatNodeType = TypedMatNode<any>;
-export class BaseMatNodeClass extends TypedMatNode<any> {}
+export type BaseMatNodeType = TypedMatNode<Material, any>;
+export class BaseMatNodeClass extends TypedMatNode<Material, any> {
+	create_material() {
+		return new Material();
+	}
+}

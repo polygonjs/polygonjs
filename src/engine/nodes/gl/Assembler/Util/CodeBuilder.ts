@@ -1,6 +1,5 @@
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import lodash_uniq from 'lodash/uniq';
-import lodash_includes from 'lodash/includes';
 import {BaseGlNodeType} from '../../_Base';
 // import {Output} from '../../Output'
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
@@ -16,7 +15,7 @@ import {BaseGlShaderAssembler} from '../_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {MapUtils} from 'src/core/MapUtils';
 import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
-import {GLDefinitionType, BaseGLDefinition, TypedGLDefinition} from '../../utils/GLDefinition';
+import {GLDefinitionType, BaseGLDefinition} from '../../utils/GLDefinition';
 import {TypedGLDefinitionCollection} from '../../utils/GLDefinitionCollection';
 
 // interface NumberByString {
@@ -220,7 +219,7 @@ export class CodeBuilder {
 	}
 
 	shader_names() {
-		return this._assembler.shader_names();
+		return this._assembler.shader_names;
 	}
 
 	private reset() {

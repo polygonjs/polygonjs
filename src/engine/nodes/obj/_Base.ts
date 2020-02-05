@@ -1,6 +1,6 @@
 import {Object3D} from 'three/src/core/Object3D';
 
-import {TypedNode, BaseNodeType, NodeVisitor} from '../_Base';
+import {TypedNode, BaseNodeType} from '../_Base';
 // import {BaseSopNode} from '../sop/_Base';
 // import {LookAt} from './Concerns/LookAt';
 import {ObjectContainer} from 'src/engine/containers/Object';

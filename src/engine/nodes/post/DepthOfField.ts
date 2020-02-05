@@ -4,7 +4,6 @@
 // import {BasePostProcessNode} from './_Base';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
 // import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-// import {CoreScriptLoader} from 'src/core/loader/Script';
 // import {PerspectiveCamera} from 'three';
 // import {ParamType} from 'src/engine/poly/ParamType';
 

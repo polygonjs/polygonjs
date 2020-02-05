@@ -1,49 +1,49 @@
-import {Scene} from 'src/Engine/Scene'
-import lodash_includes from 'lodash/includes'
-import {CodeExporterVisitor} from './Visitor'
-import {CoreString} from 'src/Core/String'
+import {PolyScene} from 'src/engine/scene/PolyScene';
+import {CodeExporterDispatcher} from './Dispatcher';
+import {CoreString} from 'src/core/String';
 
 export class SceneCodeExporter {
-	constructor(private _scene: Scene){}
+	constructor(private _scene: PolyScene) {}
 
-	process (): string {
-		const lines: string[] = []
+	process(): string {
+		const lines: string[] = [];
 
-		this._scene.reset_node_context_signatures()
+		this._scene.nodes_controller.reset_node_context_signatures();
 
-		this._scene.root().visit(CodeExporterVisitor).create().forEach(root_line=>{
-			lines.push(root_line)
-		})
+		CodeExporterDispatcher.dispatch_node(this._scene.root)
+			.create()
+			.forEach((root_line) => {
+				lines.push(root_line);
+			});
 
-		lines.push(`${this.var_name()}.set_frame(${this._scene.frame() || 1})`);
-		lines.push(`${this.var_name()}.set_frame_range(${this._scene.frame_range().join(',')})`);
-		lines.push(`${this.var_name()}.set_fps(${this._scene.fps()})`);
+		lines.push(`${this.var_name()}.set_frame(${this._scene.frame || 1})`);
+		lines.push(`${this.var_name()}.set_frame_range(${this._scene.frame_range.join(',')})`);
+		lines.push(`${this.var_name()}.time_controller.set_fps(${this._scene.time_controller.fps})`);
 
-		const camera_path: string = this._scene.master_camera_node_path();
-		if (camera_path != null) {
-			lines.push(`${this.var_name()}.set_master_camera_node_path('${camera_path}')`);
+		const camera_path = this._scene.cameras_controller.master_camera_node_path;
+		if (camera_path) {
+			lines.push(`${this.var_name()}.cameras_controller.set_master_camera_node_path('${camera_path}')`);
 		}
-		this.add_semi_colons(lines)
-		return lines.join("\n");
+		this.add_semi_colons(lines);
+		return lines.join('\n');
 	}
-	add_semi_colons(lines: string[]){
-		const characters_without_semi_colon = '{}'
-		lines.forEach((line, i)=>{
-			const last_char = line[line.length-1]
-			if (!lodash_includes(characters_without_semi_colon, last_char)){
-				lines[i] = `${line};`
+	private add_semi_colons(lines: string[]) {
+		const characters_without_semi_colon = '{}';
+		lines.forEach((line, i) => {
+			const last_char = line[line.length - 1];
+			if (!characters_without_semi_colon.includes(last_char)) {
+				lines[i] = `${line};`;
 			}
-		})
+		});
 	}
 
 	var_name() {
 		//"window.scenes_by_uuid['#{this.name()}']"
-		return "scene";
+		return 'scene';
 	}
-	static sanitize_string(word: string):string{
+	static sanitize_string(word: string): string {
 		word = word.replace(/'/g, "\\'"); // escapes ' (uses 2 \, as opposed to the json exporter which uses only 1)
 		word = CoreString.escape_line_breaks(word); // escapes line breaks (for shader code for instance)
-		return word
+		return word;
 	}
 }
-

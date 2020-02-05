@@ -80,7 +80,7 @@ QUnit.skip('copy without template and stamp', async (assert) => {
 
 	assert.equal(container.points_count(), 12);
 
-	copy1.p.stamp.set(1);
+	copy1.p.use_copy_expr.set(1);
 	container = await copy1.request_container();
 	// core_group = container.core_content();
 	// ({geometry} = core_group.objects()[0]);

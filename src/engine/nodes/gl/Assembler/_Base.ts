@@ -1,6 +1,6 @@
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
+// import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 // import {Shader} from 'three/src/renderers/shaders/ShaderLib'
 // import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 // import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
@@ -25,15 +25,16 @@ import {BaseGlNodeType} from '../_Base';
 import {GlobalsGeometryHandler} from './Globals/Geometry';
 import {TypedAssembler} from '../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../utils/shaders/ShaderName';
-import {BaseNodeType} from '../../_Base';
 import {IUniformsWithFrame, IUniformsWithResolution} from 'src/engine/scene/utils/UniformsController';
 import {OutputGlNode} from '../Output';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
 import {GlobalsGlNode} from '../Globals';
-import {AttributeGlNode} from '../Attribute';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {AttributeGlNode} from '../Attribute';
+import {AssemblerControllerNode} from './Controller';
+import {GlobalsBaseController} from './Globals/_Base';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -74,9 +75,11 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	private _frame_dependent: boolean = false;
 	private _resolution_dependent: boolean = false;
 
-	constructor(protected _gl_parent_node: BaseNodeType) {
+	constructor(protected _gl_parent_node: AssemblerControllerNode) {
 		super();
 	}
+
+	async compile() {}
 
 	private get material() {
 		return (this._material = this._material || this._create_material());
@@ -87,7 +90,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		await this._update_material(/*master_assembler*/);
 		return this._material;
 	}
-	private _template_shader_for_shader_name(shader_name: ShaderName): string | undefined {
+	protected _template_shader_for_shader_name(shader_name: ShaderName): string | undefined {
 		switch (shader_name) {
 			case ShaderName.VERTEX:
 				return this._template_shader?.vertexShader;
@@ -96,8 +99,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		}
 	}
 
-	globals_handler() {
-		return this._gl_parent_node.globals_handler();
+	get globals_handler(): GlobalsBaseController | undefined {
+		return this._gl_parent_node.assembler_controller.globals_handler;
 	}
 
 	shaders_by_name() {
@@ -255,15 +258,15 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 				}
 				case 'attribute': {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
-					const attrib_name = (node as AttributeGlNode).attribute_name;
-					const variable = this._texture_allocations_controller.variable(attrib_name);
-					if (variable) {
-						const allocation_shader_name = variable.allocation().shader_name();
-						if (allocation_shader_name == shader_name) {
-							list.push(node);
-						}
-					}
-					break;
+					// const attrib_name = (node as AttributeGlNode).attribute_name;
+					// const variable = this._texture_allocations_controller.variable(attrib_name);
+					// if (variable) {
+					// 	const allocation_shader_name = variable.allocation().shader_name();
+					// 	if (allocation_shader_name == shader_name) {
+					// 		list.push(node);
+					// 	}
+					// }
+					// break;
 				}
 			}
 		}
@@ -279,20 +282,23 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 				}
 				case 'attribute': {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler? AND especially since there is no way to assign it?
-					const attrib_name: string = (node as AttributeGlNode).attribute_name;
-					const variable = this._texture_allocations_controller.variable(attrib_name);
-					if (variable) {
-						const allocation_shader_name = variable.allocation().shader_name();
-						if (allocation_shader_name == shader_name) {
-							list.push(node);
-						}
-					}
-					break;
+					// const attrib_name: string = (node as AttributeGlNode).attribute_name;
+					// const variable = this._texture_allocations_controller.variable(attrib_name);
+					// if (variable) {
+					// 	const allocation_shader_name = variable.allocation().shader_name();
+					// 	if (allocation_shader_name == shader_name) {
+					// 		list.push(node);
+					// 	}
+					// }
+					// break;
 				}
 			}
 		}
 		return list;
 	}
+	set_node_lines_globals(globals_node: GlobalsGlNode, shader_name: ShaderName) {}
+	set_node_lines_output(output_node: OutputGlNode, shader_name: ShaderName) {}
+	set_node_lines_attribute(attribute_node: AttributeGlNode, shader_name: ShaderName) {}
 
 	//
 	//
@@ -581,23 +587,23 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		}
 	}
 
-	protected expand_shader(shader_string: string) {
-		function parseIncludes(string: string) {
-			var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
-			function replace(match: string, include: string) {
-				var replace = ShaderChunk[include];
+	// protected expand_shader(shader_string: string) {
+	// 	function parseIncludes(string: string) {
+	// 		var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
+	// 		function replace(match: string, include: string) {
+	// 			var replace = ShaderChunk[include];
 
-				if (replace === undefined) {
-					throw new Error('Can not resolve #include <' + include + '>');
-				}
+	// 			if (replace === undefined) {
+	// 				throw new Error('Can not resolve #include <' + include + '>');
+	// 			}
 
-				return parseIncludes(replace);
-			}
+	// 			return parseIncludes(replace);
+	// 		}
 
-			return string.replace(pattern, replace);
-		}
-		return parseIncludes(shader_string);
-	}
+	// 		return string.replace(pattern, replace);
+	// 	}
+	// 	return parseIncludes(shader_string);
+	// }
 
 	//
 	//

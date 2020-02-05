@@ -14,6 +14,7 @@ import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
 import {Pass} from 'modules/three/examples/jsm/postprocessing/Pass';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {ParamType} from 'src/engine/poly/ParamType';
+import {POLY} from 'src/engine/Poly';
 
 interface DisposablePass extends Pass {
 	dispose: () => void;

@@ -282,6 +282,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 }
 export type BaseParamType = TypedParam<ParamType>;
 export class BaseParamClass extends TypedParam<ParamType> {
+	get default_value_serialized() {
+		return 'BaseParamClass.value_serialized overriden';
+	}
 	get value_serialized() {
 		return 'BaseParamClass.value_serialized overriden';
 	}

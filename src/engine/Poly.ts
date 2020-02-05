@@ -6,12 +6,18 @@ import {NodeContext} from './poly/NodeContext';
 // import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
 
 export class Poly {
+	static _instance: Poly | undefined;
 	renderers_controller: RenderersController = new RenderersController();
 	nodes_register: NodesRegister = new NodesRegister();
 
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
+
+	static instance() {
+		return (this._instance = this._instance || new Poly());
+	}
+	private constructor() {}
 
 	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		this.nodes_register.register_node(node, tab_menu_category, options);
@@ -40,14 +46,14 @@ export class Poly {
 	}
 }
 
-declare global {
-	const POLY: Poly;
-}
+// declare global {
+// 	const POLY: Poly;
+// }
 
-declare global {
-	interface Window {
-		POLY: Poly;
-	}
-}
+// declare global {
+// 	interface Window {
+// 		POLY: Poly;
+// 	}
+// }
 // make sure not to have library: 'POLY' in webpack for this to work
-window.POLY = window.POLY || new Poly();
+export const POLY = Poly.instance();

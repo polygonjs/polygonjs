@@ -7,7 +7,7 @@ import {Single} from './_Single';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {ExpressionController} from './utils/ExpressionController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
@@ -22,8 +22,14 @@ export class StringParam extends Single<ParamType.STRING> {
 	static type() {
 		return ParamType.STRING;
 	}
+	get default_value_serialized() {
+		return this.default_value;
+	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.STRING], val2: ParamValuesTypeMap[ParamType.STRING]) {
+		return val1 == val2;
 	}
 	// accepts_visitor(visitor: StringParamVisitor) {
 	// 	return visitor.visit_string_param(this);

@@ -16,7 +16,7 @@ class FileSopParamsConfig extends NodeParamsConfig {
 	});
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			FileSopNode.PARAM_CALLBACK_reload(node as FileSopNode, param);
+			FileSopNode.PARAM_CALLBACK_reload(node as FileSopNode);
 		},
 	});
 }
@@ -55,7 +55,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	// 	a.click();
 	// }
 
-	static PARAM_CALLBACK_reload(node: FileSopNode, param: BaseParamType) {
+	static PARAM_CALLBACK_reload(node: FileSopNode) {
 		node.param_callback_reload();
 	}
 	private param_callback_reload() {

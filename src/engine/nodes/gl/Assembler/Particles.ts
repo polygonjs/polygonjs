@@ -20,9 +20,9 @@ import {OutputGlNode} from '../Output';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
-import {Shader} from 'three';
 import {BaseGLDefinition, UniformGLDefinition} from '../utils/GLDefinition';
 import {MapUtils} from 'src/core/MapUtils';
+import {GlobalsTextureHandler} from './Globals/Texture';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;
@@ -30,13 +30,68 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	get _template_shader() {
 		return undefined;
 	}
-	_template_shader_for_shader_name(shader_name: ShaderName) {
+	protected _template_shader_for_shader_name(shader_name: ShaderName) {
 		return TemplateDefault;
 	}
 	// async get_shaders(){
 	// 	await this.update_shaders()
 	// 	return this._shaders_by_name
 	// }
+
+	async compile() {
+		await this.setup_shader_names_and_variables();
+		await this.update_shaders();
+	}
+
+	root_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
+		// return this._root_nodes
+		const list = [];
+		for (let node of this._root_nodes) {
+			switch (node.type) {
+				case 'output': {
+					list.push(node);
+					break;
+				}
+				case 'attribute': {
+					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
+					const attrib_name = (node as AttributeGlNode).attribute_name;
+					const variable = this._texture_allocations_controller?.variable(attrib_name);
+					if (variable && variable.allocation) {
+						const allocation_shader_name = variable.allocation.shader_name;
+						if (allocation_shader_name == shader_name) {
+							list.push(node);
+						}
+					}
+					break;
+				}
+			}
+		}
+		return list;
+	}
+	leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
+		const list = [];
+		for (let node of this._leaf_nodes) {
+			switch (node.type) {
+				case 'globals': {
+					list.push(node);
+					break;
+				}
+				case 'attribute': {
+					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler? AND especially since there is no way to assign it?
+					const attrib_name: string = (node as AttributeGlNode).attribute_name;
+					const variable = this._texture_allocations_controller?.variable(attrib_name);
+					if (variable && variable.allocation) {
+						const allocation_shader_name = variable.allocation.shader_name;
+						if (allocation_shader_name == shader_name) {
+							list.push(node);
+						}
+					}
+					break;
+				}
+			}
+		}
+		return list;
+	}
 	async setup_shader_names_and_variables() {
 		const node_traverser = new TypedNodeTraverser<BaseGlNodeType>(this, this._gl_parent_node);
 		this._leaf_nodes = node_traverser.leaves_from_nodes(this._root_nodes);
@@ -54,7 +109,9 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 
 		// const globals_handler = new GlobalsTextureHandler()
 		// this.set_assembler_globals_handler(globals_handler)
-		this.globals_handler().set_texture_allocations_controller(this._texture_allocations_controller);
+		(this.globals_handler as GlobalsTextureHandler)?.set_texture_allocations_controller(
+			this._texture_allocations_controller
+		);
 
 		// console.log("this._texture_allocations_controller", this._texture_allocations_controller)
 		this._reset_shader_configs();
@@ -103,8 +160,9 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		return true;
 	}
 
-	texture_allocations_controller() {
-		return this._texture_allocations_controller;
+	get texture_allocations_controller() {
+		return (this._texture_allocations_controller =
+			this._texture_allocations_controller || new TextureAllocationsController());
 	}
 
 	//
@@ -128,10 +186,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		];
 	}
 	get shader_names(): ShaderName[] {
-		return this._texture_allocations_controller?.shader_names() || [];
+		return this.texture_allocations_controller.shader_names() || [];
 	}
 	input_names_for_shader_name(root_node: BaseGlNodeType, shader_name: ShaderName) {
-		return this._texture_allocations_controller?.input_names_for_shader_name(root_node, shader_name) || [];
+		return this.texture_allocations_controller.input_names_for_shader_name(root_node, shader_name) || [];
 		// return this.shader_config(shader_name).input_names()
 	}
 
@@ -184,7 +242,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				// 	shader_name,
 				// 	variable_name
 				// )
-				const texture_variable = this._texture_allocations_controller?.variable(variable_name);
+				const texture_variable = this.texture_allocations_controller.variable(variable_name);
 				if (!texture_variable) {
 					console.log(export_node.full_path(), shader_name, variable_name, input);
 				}
@@ -234,10 +292,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// }
 
 	set_node_lines_output(output_node: BaseGlNodeType, shader_name: ShaderName) {
-		if (!this._texture_allocations_controller) {
-			return;
-		}
-		const input_names = this._texture_allocations_controller.input_names_for_shader_name(output_node, shader_name);
+		const input_names = this.texture_allocations_controller.input_names_for_shader_name(output_node, shader_name);
 		output_node.set_body_lines([], shader_name);
 		if (input_names) {
 			for (let input_name of input_names) {
@@ -260,7 +315,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		if (attribute_node.is_importing) {
 			const gl_type = attribute_node.gl_type();
 			const attribute_name = attribute_node.attribute_name;
-			const new_value = this.globals_handler().read_attribute(
+			const new_value = this.globals_handler?.read_attribute(
 				attribute_node,
 				gl_type,
 				attribute_name,
@@ -271,14 +326,12 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			attribute_node.add_body_lines([body_line]);
 
 			// re-export to ensure it is available on next frame
-			if (this._texture_allocations_controller) {
-				const texture_variable = this._texture_allocations_controller.variable(attribute_name);
-				if (texture_variable && texture_variable.allocation?.shader_name == shader_name) {
-					const variable = this._texture_allocations_controller.variable(attribute_name);
-					if (variable) {
-						const component = variable.component;
-						attribute_node.add_body_lines([`gl_FragColor.${component} = ${var_name}`]);
-					}
+			const texture_variable = this.texture_allocations_controller.variable(attribute_name);
+			if (texture_variable && texture_variable.allocation?.shader_name == shader_name) {
+				const variable = this.texture_allocations_controller.variable(attribute_name);
+				if (variable) {
+					const component = variable.component;
+					attribute_node.add_body_lines([`gl_FragColor.${component} = ${var_name}`]);
 				}
 			}
 
@@ -351,7 +404,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 					if (output_connection_point) {
 						const gl_type = output_connection_point.type;
 
-						const attrib_read = this.globals_handler().read_attribute(
+						const attrib_read = this.globals_handler?.read_attribute(
 							globals_node,
 							gl_type,
 							output_name,

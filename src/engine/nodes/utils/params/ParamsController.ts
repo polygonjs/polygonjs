@@ -71,7 +71,7 @@ export interface ParamConstructorMap extends ParamConstructorMapType {
 }
 
 type ParamClassMapType = {[key in ParamType]: any};
-const ParamConstructorByType: ParamClassMapType = {
+export const ParamConstructorByType: ParamClassMapType = {
 	[ParamType.BOOLEAN]: BooleanParam,
 	[ParamType.BUTTON]: ButtonParam,
 	[ParamType.COLOR]: ColorParam,
@@ -98,7 +98,8 @@ export type ParamInitValue =
 	| Vector2
 	| Vector3
 	| Vector4
-	| RampValue;
+	| RampValue
+	| RampValueJson;
 
 export type ParamValueSerialized =
 	| StringOrNumber
@@ -111,13 +112,13 @@ export type ParamValueSerialized =
 	| RampValueJson;
 type ParamInitValuesTypeMapGeneric = {[key in ParamType]: ParamInitValue};
 export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
-	[ParamType.BOOLEAN]: 0 | 1 | boolean;
+	[ParamType.BOOLEAN]: number | boolean | string;
 	[ParamType.BUTTON]: null;
 	[ParamType.COLOR]: StringOrNumber3 | Color;
 	[ParamType.FLOAT]: StringOrNumber;
 	[ParamType.INTEGER]: StringOrNumber;
 	[ParamType.OPERATOR_PATH]: string;
-	[ParamType.RAMP]: RampValue;
+	[ParamType.RAMP]: RampValue | RampValueJson;
 	[ParamType.SEPARATOR]: null;
 	[ParamType.STRING]: string;
 	[ParamType.VECTOR2]: StringOrNumber2 | Vector2;

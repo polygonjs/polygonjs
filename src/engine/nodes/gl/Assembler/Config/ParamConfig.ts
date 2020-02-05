@@ -4,17 +4,21 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {
+	ParamInitValuesTypeMap,
+	ParamValuesTypeMap,
+	ParamConstructorByType,
+} from 'src/engine/nodes/utils/params/ParamsController';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType, TypedParam} from 'src/engine/params/_Base';
+import {TypedParam} from 'src/engine/params/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {TypeAssert} from 'src/engine/poly/Assert';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 // import { RampValue } from 'src/engine/params/ramp/RampValue';
 import {RampParam} from 'src/engine/params/Ramp';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {ParamValueComparer} from 'src/engine/nodes/utils/params/ParamValueComparer';
-import {ParamValueCloner} from 'src/engine/nodes/utils/params/ParamValueCloner';
+// import {ParamValueComparer} from 'src/engine/nodes/utils/params/ParamValueComparer';
+// import {ParamValueCloner} from 'src/engine/nodes/utils/params/ParamValueCloner';
 // import {CoreTextureLoader} from 'src/Core/Loader/Texture'
 
 export class ParamConfig<T extends ParamType> {
@@ -151,14 +155,15 @@ export class ParamConfig<T extends ParamType> {
 	}
 
 	has_value_changed(new_value: ParamValuesTypeMap[T]): boolean {
+		const param_constructor = ParamConstructorByType[this._type];
 		if (this._cached_param_value) {
-			const has_changed = !ParamValueComparer.is_equal(this._type, new_value, this._cached_param_value);
+			const has_changed = !param_constructor.are_values_equal(new_value, this._cached_param_value);
 			if (has_changed) {
-				this._cached_param_value = ParamValueCloner.clone(this._type, new_value);
+				this._cached_param_value = param_constructor.clone_value(new_value);
 			}
 			return has_changed;
 		} else {
-			this._cached_param_value = ParamValueCloner.clone(this._type, new_value);
+			this._cached_param_value = param_constructor.clone_value(new_value);
 			return false;
 		}
 
@@ -204,7 +209,7 @@ export class ParamConfig<T extends ParamType> {
 
 	is_video_texture(): boolean {
 		let result = false;
-		const uniform = this.uniform();
+		const uniform = this.uniform;
 		if (uniform) {
 			const value = uniform.value;
 			if (value) {

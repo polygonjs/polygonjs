@@ -5,7 +5,7 @@ import {CoreWalker} from 'src/core/Walker';
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 // interface OperatorPathParamVisitor extends TypedParamVisitor {
 // 	visit_operator_path_param: (param: OperatorPathParam) => any;
@@ -24,6 +24,12 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_values_equal(
+		val1: ParamValuesTypeMap[ParamType.OPERATOR_PATH],
+		val2: ParamValuesTypeMap[ParamType.OPERATOR_PATH]
+	) {
+		return val1 == val2;
 	}
 	// accepts_visitor(visitor: OperatorPathParamVisitor) {
 	// 	return visitor.visit_operator_path_param(this);

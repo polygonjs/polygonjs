@@ -4,7 +4,7 @@ import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isString from 'lodash/isString';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {CoreString} from 'src/core/String';
 
 export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
@@ -16,6 +16,9 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.BOOLEAN], val2: ParamValuesTypeMap[ParamType.BOOLEAN]) {
+		return val1 == val2;
 	}
 	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean {
 		if (lodash_isBoolean(raw_val)) {

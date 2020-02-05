@@ -3,12 +3,13 @@ import {GlobalsGlNode} from '../../Globals';
 import {AttributeGlNode} from '../../Attribute';
 // import {Definition} from '../../Definition/_Module';
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig';
-import {BaseGlNodeType} from '../../_Base';
+// import {BaseGlNodeType} from '../../_Base';
 import {VaryingGLDefinition, BaseGLDefinition, AttributeGLDefinition} from '../../utils/GLDefinition';
 import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
-import {TypeAssert} from 'src/engine/poly/Assert';
+// import {TypeAssert} from 'src/engine/poly/Assert';
 import {MapUtils} from 'src/core/MapUtils';
 import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {BaseGlNodeType} from '../../_Base';
 
 const VARIABLE_CONFIG_DEFAULT_BY_NAME: Dictionary<string> = {
 	position: 'vec3( position )',
@@ -72,8 +73,8 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 	// variable_config_required_definitions(variable_name:string):DefinitionBaseConfig[]{
 	// 	return null
 	// }
-	static handle_attribute_node(
-		node: AttributeGlNode,
+	static read_attribute(
+		node: BaseGlNodeType,
 		gl_type: ConnectionPointType,
 		attrib_name: string,
 		shader_name: ShaderName
@@ -98,6 +99,11 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 			}
 			case ShaderName.FRAGMENT: {
 				// let's assume it is an attribute only
+
+				if (!(node instanceof AttributeGlNode)) {
+					return;
+				}
+
 				const var_name = 'varying_' + node.gl_var_name(node.output_name);
 				const varying_definition = new VaryingGLDefinition(node, gl_type, var_name);
 
@@ -173,6 +179,6 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		attrib_name: string,
 		shader_name: ShaderName
 	) {
-		return GlobalsGeometryHandler.handle_attribute_node(node, gl_type, attrib_name, shader_name);
+		return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shader_name);
 	}
 }

@@ -193,9 +193,9 @@ const ATTRIB_MAPPING: AttribMapping = {
 	// format: 'format',
 };
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class FileCopParamsConfig extends NodeParamsConfig {
 	video_time = ParamConfig.FLOAT(1);
 	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
@@ -277,7 +277,6 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 
 	// _param_video_time_param: BaseParam
 	private _texture_loader: CoreTextureLoader | undefined;
-	private _texture: Texture | undefined;
 
 	static VIDEO_TIME_PARAM_NAME = 'video_time';
 	static DEFAULT_NODE_PATH = {

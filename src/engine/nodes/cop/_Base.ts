@@ -11,6 +11,8 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 		this,
 		TextureContainer
 	);
+	protected _texture: Texture | undefined;
+
 	static node_context(): NodeContext {
 		return NodeContext.COP;
 	}

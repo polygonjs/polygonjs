@@ -1,6 +1,5 @@
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_isString from 'lodash/isString';
-import {JsonImporterVisitor} from './Visitor';
 
 import {NodeJsonExporterData, NodeJsonExporterUIData, InputData} from '../export/Node';
 import {ParamJsonExporterData} from '../export/Param';
@@ -91,9 +90,16 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 	}
 
 	set_flags(data: NodeJsonExporterData) {
-		const bypass = data['bypass'];
-		if (bypass != null) {
-			this._node.flags?.bypass?.set(bypass);
+		const flags = data['flags'];
+		if (flags) {
+			const bypass = flags['bypass'];
+			if (bypass != null) {
+				this._node.flags?.bypass?.set(bypass);
+			}
+			const display = flags['display'];
+			if (display != null) {
+				this._node.flags?.display?.set(display);
+			}
 		}
 	}
 
@@ -176,7 +182,9 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 							this._node.params.delete_param(param_name);
 						}
 						param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
-						param.visit(JsonImporterVisitor).process_data(param_data);
+						if (param) {
+							JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+						}
 					}
 				}
 			}

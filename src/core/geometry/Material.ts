@@ -44,7 +44,7 @@ export class CoreMaterial {
 
 	static clone_single(src_material: Material) {
 		const material = src_material.clone();
-			// linewidth doesn't seem cloned correctly for ShaderMaterial
+		// linewidth doesn't seem cloned correctly for ShaderMaterial
 		(material as LineBasicMaterial).linewidth = (src_material as LineBasicMaterial).linewidth;
 
 		return material;
@@ -64,11 +64,8 @@ export class CoreMaterial {
 			// object.material = material.custom_materials.customDistanceMaterial
 		}
 	}
-	static assign_custom_uniforms(
-		material: ShaderMaterialWithCustomMaterials,
-		uniform_name: string,
-		uniform_value: any
-	) {
+	static assign_custom_uniforms(mat: Material, uniform_name: string, uniform_value: any) {
+		const material = mat as ShaderMaterialWithCustomMaterials;
 		if (material.custom_materials) {
 			for (let name of Object.keys(material.custom_materials)) {
 				const mat_name = name as CustomMaterialName;
@@ -77,11 +74,8 @@ export class CoreMaterial {
 			}
 		}
 	}
-	static init_custom_material_uniforms(
-		material: ShaderMaterialWithCustomMaterials,
-		uniform_name: string,
-		uniform_value: any
-	) {
+	static init_custom_material_uniforms(mat: Material, uniform_name: string, uniform_value: any) {
+		const material = mat as ShaderMaterialWithCustomMaterials;
 		if (material.custom_materials) {
 			for (let name of Object.keys(material.custom_materials)) {
 				const mat_name = name as CustomMaterialName;

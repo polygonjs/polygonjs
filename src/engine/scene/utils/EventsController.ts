@@ -2,6 +2,7 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import 'src/engine/Poly';
+import {POLY} from 'src/engine/Poly';
 
 // type Callback = (emitter: CoreGraphNodeScene) => void; // TODO: typescript: maybe arg should be an event instead of the emitter
 interface EventsListener {

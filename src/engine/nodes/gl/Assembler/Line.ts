@@ -1,6 +1,6 @@
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {ShaderLib, Shader} from 'three/src/renderers/shaders/ShaderLib';
+import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 
 import {ShaderAssemblerRender, CustomAssemblerMap, CustomMaterialName} from './_BaseRender';
 

@@ -87,7 +87,7 @@ export class NodesController {
 
 	add_to_instanciated_node(node: BaseNodeType) {
 		const context = node.node_context();
-		const node_type = node.type();
+		const node_type = node.type;
 		this._instanciated_nodes_by_context_and_type[context] =
 			this._instanciated_nodes_by_context_and_type[context] || {};
 		this._instanciated_nodes_by_context_and_type[context][node_type] =
@@ -97,7 +97,7 @@ export class NodesController {
 
 	remove_from_instanciated_node(node: BaseNodeType) {
 		const context = node.node_context();
-		const node_type = node.type();
+		const node_type = node.type;
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];
 	}
 

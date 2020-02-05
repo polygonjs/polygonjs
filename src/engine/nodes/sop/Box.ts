@@ -34,7 +34,7 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 	// 	super(scene);
 	// }
 	initialize_node() {
-		this.io.inputs.set_count_to_one_max();
+		this.io.inputs.set_count(0, 1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
 	}
 	// create_params() {

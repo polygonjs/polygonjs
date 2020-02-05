@@ -1,20 +1,20 @@
-import lodash_isString from 'lodash/isString'
-import {ParamCodeExporter} from '../Param'
-import {SceneCodeExporter} from '../Scene'
+import lodash_isString from 'lodash/isString';
+import {ParamCodeExporter} from '../Param';
+import {SceneCodeExporter} from '../Scene';
+import {StringParam} from 'src/engine/params/String';
 
-export class ParamStringCodeExporter extends ParamCodeExporter {
-
+export class ParamStringCodeExporter extends ParamCodeExporter<StringParam> {
 	as_code_default_value_string() {
-		return `'${this._param.default_value()}'`;
+		return `'${this._param.default_value}'`;
 	}
 
 	add_main() {
 		// if this.has_expression()
 		// 	this.as_code_prefix() + ".set_expression('#{this.expression()}')"
 		// else
-		let val = this._param.input_string();
-		if (lodash_isString(val)){
-			val = SceneCodeExporter.sanitize_string(val)
+		let val = this._param.raw_input;
+		if (lodash_isString(val)) {
+			val = SceneCodeExporter.sanitize_string(val);
 		}
 		// if (this._param.has_expression()){
 		// 	val = this.expression()
@@ -24,8 +24,6 @@ export class ParamStringCodeExporter extends ParamCodeExporter {
 		// 	val = val.replace(/(\r\n|\n|\r)/gm, "\\n"); // escapes line breaks (for shader code for instance)
 		// }
 		const line = this.prefix() + `.set('${val}')`;
-		this._lines.push(line)
+		this._lines.push(line);
 	}
-
-
 }

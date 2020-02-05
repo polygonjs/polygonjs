@@ -3,6 +3,7 @@ import lodash_isArray from 'lodash/isArray';
 import {FloatParam} from './Float';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../poly/ParamType';
+import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 const COMPONENT_NAMES_VECTOR3 = ['x', 'y', 'z'];
@@ -26,6 +27,9 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	}
 	get value_serialized() {
 		return this.value.toArray() as Number3;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR3], val2: ParamValuesTypeMap[ParamType.VECTOR3]) {
+		return val1.equals(val2);
 	}
 	init_components() {
 		super.init_components();

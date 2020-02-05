@@ -1,5 +1,6 @@
-import {ParamInitValue, ParamInitValuesTypeMap} from '../params/ParamsController';
+import {ParamInitValuesTypeMap} from '../params/ParamsController';
 import {ParamType} from 'src/engine/poly/ParamType';
+import {RampParam} from 'src/engine/params/Ramp';
 
 // TODO: simplify GLDataType into one enum
 // http://learnwebgl.brown37.net/12_shader_language/glsl_data_types.html
@@ -26,6 +27,7 @@ export enum ConnectionPointType {
 	// MAT2 = 'mat2',
 	// MAT3 = 'mat3',
 	// MAT4 = 'mat4',
+	SAMPLER_2D = 'sampler2D',
 }
 
 //
@@ -81,6 +83,8 @@ export const ConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTypeM
 	[ConnectionPointType.VEC2]: ParamType.VECTOR2,
 	[ConnectionPointType.VEC3]: ParamType.VECTOR3,
 	[ConnectionPointType.VEC4]: ParamType.VECTOR4,
+
+	[ConnectionPointType.SAMPLER_2D]: ParamType.RAMP,
 };
 
 //
@@ -151,6 +155,8 @@ export const ConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
 	[ConnectionPointType.VEC2]: [0, 0],
 	[ConnectionPointType.VEC3]: [0, 0, 0],
 	[ConnectionPointType.VEC4]: [0, 0, 0, 0],
+
+	[ConnectionPointType.SAMPLER_2D]: RampParam.DEFAULT_VALUE_JSON,
 };
 
 //
@@ -174,4 +180,5 @@ export const ConnectionPointComponentsCountMap: ConnectionPointComponentsCountMa
 	[ConnectionPointType.VEC2]: 2,
 	[ConnectionPointType.VEC3]: 3,
 	[ConnectionPointType.VEC4]: 4,
+	[ConnectionPointType.SAMPLER_2D]: 1,
 };

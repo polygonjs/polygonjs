@@ -13,6 +13,11 @@ interface NamedInputData {
 type IndexedInputData = string | null;
 export type InputData = NamedInputData | IndexedInputData;
 
+interface FlagsData {
+	bypass?: boolean;
+	display?: boolean;
+}
+
 export interface NodeJsonExporterData {
 	type: string;
 	nodes: Dictionary<NodeJsonExporterData>;
@@ -20,8 +25,7 @@ export interface NodeJsonExporterData {
 	params?: Dictionary<ParamJsonExporterData>;
 	inputs?: InputData[];
 	selection?: string[];
-	bypass?: boolean;
-	display_flag?: boolean;
+	flags?: FlagsData;
 	override_clonable_state: boolean;
 }
 
@@ -67,13 +71,14 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 
 		// TODO: does that create flags automatically? it should not
 		if (this._node.flags) {
+			this._data['flags'] = {};
 			if (this._node.flags.has_bypass()) {
 				if (this._node.flags.bypass?.active) {
-					this._data['bypass'] = this._node.flags.bypass.active;
+					this._data['flags']['bypass'] = this._node.flags.bypass.active;
 				}
 			}
 			if (this._node.flags.has_display()) {
-				this._data['display_flag'] = this._node.flags.display?.active;
+				this._data['flags']['display'] = this._node.flags.display?.active;
 			}
 		}
 
@@ -175,10 +180,10 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 	}
 
 	protected nodes_data() {
-		const data = {};
+		const data: Dictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
-			const node_exporter = child.visit(JsonExporterVisitor); //.json_exporter()
-			data[child.name()] = node_exporter.data();
+			const node_exporter = JsonExportDispatcher.dispatch_node(child); //.json_exporter()
+			data[child.name] = node_exporter.data();
 		}
 		return data;
 	}

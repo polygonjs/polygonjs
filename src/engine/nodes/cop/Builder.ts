@@ -1,246 +1,246 @@
-// import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
-// import { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
-// import { Vector2 } from "three/src/math/Vector2";
-// import { ShaderMaterial } from "three/src/materials/ShaderMaterial";
-// import { Scene } from "three/src/scenes/Scene";
-// import { RGBAFormat } from "three/src/constants";
-// import { PlaneBufferGeometry } from "three/src/geometries/PlaneGeometry";
-// import { NearestFilter } from "three/src/constants";
-// import { Mesh } from "three/src/objects/Mesh";
-// import { HalfFloatType } from "three/src/constants";
-// import { FloatType } from "three/src/constants";
-// import { DataTexture } from "three/src/textures/DataTexture";
-// import { ClampToEdgeWrapping } from "three/src/constants";
-// import { Camera } from "three/src/cameras/Camera";
-// const THREE = {
-// 	Camera,
-// 	ClampToEdgeWrapping,
-// 	DataTexture,
-// 	FloatType,
-// 	HalfFloatType,
-// 	Mesh,
-// 	NearestFilter,
-// 	PlaneBufferGeometry,
-// 	RGBAFormat,
-// 	Scene,
-// 	ShaderMaterial,
-// 	Vector2,
-// 	WebGLRenderTarget,
-// 	WebGLRenderer
-// };
-// // import NodeBase from '../_Base'
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Scene} from 'three/src/scenes/Scene';
+import {RGBAFormat} from 'three/src/constants';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
+import {NearestFilter} from 'three/src/constants';
+import {Mesh} from 'three/src/objects/Mesh';
+import {HalfFloatType} from 'three/src/constants';
+import {FloatType} from 'three/src/constants';
+import {DataTexture} from 'three/src/textures/DataTexture';
+import {ClampToEdgeWrapping} from 'three/src/constants';
+import {Camera} from 'three/src/cameras/Camera';
 
-// // import Container from '../../Container/Texture'
-// import { ParamType } from "src/Engine/Param/_Module";
-// // import {CoreImage} from 'src/Core/Image'
-// import { ThreeToGl } from "src/Core/ThreeToGl";
+// import NodeBase from '../_Base'
 
-// import { BaseNodeCop } from "./_Base";
+// import Container from '../../Container/Texture'
+// import {CoreImage} from 'src/Core/Image'
 
-// import { AssemblerOwner } from "src/Engine/Node/Gl/Assembler/Owner";
-// import { ShaderAssemblerTexture } from "src/Engine/Node/Gl/Assembler/Texture";
+import {TypedCopNode} from './_Base';
+
 // import { GlobalsGeometryHandler } from "src/Engine/Node/Gl/Assembler/Globals/Geometry";
+import {GlAssemblerController} from '../gl/Assembler/Controller';
+import {ShaderAssemblerTexture} from '../gl/Assembler/Texture';
 
-// const PASS_THROUGH_SHADER = `
-// void main()	{
-// 	gl_Position = vec4( position, 1.0 );
-// }
-// `;
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+export interface IUniforms {
+	[uniform: string]: IUniform;
+}
 
-// export class Builder extends AssemblerOwner(BaseNodeCop) {
-// 	static type() {
-// 		return "builder";
-// 	}
+const PASS_THROUGH_SHADER = `
+void main()	{
+	gl_Position = vec4( position, 1.0 );
+}
+`;
 
-// 	private _param_resolution: THREE.Vector2;
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {GlobalsGeometryHandler} from '../gl/Assembler/Globals/Geometry';
+import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
+import {BaseGlNodeType} from '../gl/_Base';
+class BuilderCopParamsConfig extends NodeParamsConfig {
+	resolution = ParamConfig.VECTOR2([256, 256]);
+}
 
-// 	private _texture_scene: THREE.Scene;
-// 	private _texture_camera: THREE.Camera;
-// 	private _fragment_shader: string;
-// 	private _assembler: ShaderAssemblerTexture;
+const ParamsConfig = new BuilderCopParamsConfig();
 
-// 	initialize_node() {
+export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'builder';
+	}
+	protected _assembler_controller: GlAssemblerController<ShaderAssemblerTexture> = new GlAssemblerController<
+		ShaderAssemblerTexture
+	>(this, ShaderAssemblerTexture);
+	get assembler_controller() {
+		return this._assembler_controller;
+	}
 
-// 		this._init_common_shader_builder(ShaderAssemblerTexture, {
-// 			has_display_flag: true
-// 		});
-// 		this.set_inputs_count_to_zero();
-// 	}
+	private _texture_mesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
+	private _fragment_shader: string = '';
+	private _uniforms: IUniforms = {};
+	private _texture_material: ShaderMaterial = new ShaderMaterial({
+		uniforms: {},
+		vertexShader: PASS_THROUGH_SHADER,
+		fragmentShader: '',
+	});
+	private _texture_scene: Scene = new Scene();
+	private _texture_camera: Camera = new Camera();
+	private _render_target: WebGLRenderTarget = this._create_render_target();
+	private _renderer: WebGLRenderer = this._create_renderer(this._render_target);
+	private _pixelBuffer: Float32Array = new Float32Array();
+	// private _assembler: ShaderAssemblerTexture;
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR2, "resolution", [256, 256]);
-// 	}
+	initialize_node() {
+		this._texture_mesh.material = this._texture_material;
+		this._texture_scene.add(this._texture_mesh);
+		this._texture_camera.position.z = 1;
 
-// 	async cook() {
-// 		await this.compile_if_required();
+		// this._init_common_shader_builder(ShaderAssemblerTexture, {
+		// 	has_display_flag: true
+		// });
+		// this.set_inputs_count_to_zero();
 
-// 		this.render_on_target();
-// 	}
+		this.dirty_controller.add_post_dirty_hook(this._reset_if_resolution_changed.bind(this));
+	}
 
-// 	shaders_by_name() {
-// 		return {
-// 			fragment: this._fragment_shader
-// 		};
-// 	}
+	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
+		return super.create_node(type) as GlNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseGlNodeType[];
+	}
+	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	}
 
-// 	async compile_if_required() {
-// 		if (this.compile_required()) {
-// 			// && !this._param_locked){
-// 			this._texture_material = null;
-// 			await this.run_assembler();
-// 			const fragment_shader = this._assembler.fragment_shader();
-// 			const uniforms = this._assembler.uniforms();
-// 			if (fragment_shader) {
-// 				await this.eval_params(this._new_params);
-// 				this._fragment_shader = fragment_shader;
-// 				this._uniforms = uniforms;
-// 			} else {
-// 				console.warn("no fragment_shader from assembler");
-// 			}
-// 		}
-// 		await this.assign_uniform_values();
-// 	}
-// 	private async run_assembler() {
-// 		const output_node = this._find_output_node();
-// 		if (output_node) {
-// 			const globals_handler = new GlobalsGeometryHandler();
-// 			this.set_assembler_globals_handler(globals_handler);
-// 			this._assembler.set_root_nodes([output_node]);
+	private _reset_if_resolution_changed(trigger?: CoreGraphNode) {
+		if (trigger && trigger.graph_node_id == this.p.resolution.graph_node_id) {
+			this._reset();
+		}
+	}
+	private _reset() {
+		this._render_target = this._create_render_target();
+		this._renderer = this._create_renderer(this._render_target);
+		const width = this.pv.resolution.x;
+		const height = this.pv.resolution.y;
+		this._pixelBuffer = new Float32Array(width * height * 4);
+	}
 
-// 			await this._assembler.update_fragment_shader();
-// 			this.create_spare_parameters();
+	async cook() {
+		this.compile_if_required();
+		// await this.assembler_controller.assign_uniform_values();
 
-// 			if (this._assembler.frame_dependent()) {
-// 				this._force_time_dependent();
-// 			} else {
-// 				this._unforce_time_dependent();
-// 			}
-// 		}
+		this.render_on_target();
+	}
 
-// 		this._compile_required = false;
-// 	}
+	shaders_by_name() {
+		return {
+			fragment: this._fragment_shader,
+		};
+	}
 
-// 	private create_renderer(render_target) {
-// 		const renderer = new THREE.WebGLRenderer({ antialias: true });
-// 		renderer.setPixelRatio(window.devicePixelRatio);
-// 		// document.body.appendChild( renderer.domElement )
-// 		renderer.autoClear = false;
+	async compile_if_required() {
+		if (this.assembler_controller.compile_required()) {
+			// && !this.pv.locked){
+			// this._texture_material = undefined;
+			await this.run_assembler();
+			const fragment_shader = this.assembler_controller.assembler.fragment_shader();
+			const uniforms = this.assembler_controller.assembler.uniforms();
+			if (fragment_shader && uniforms) {
+				// await this.eval_params(this._new_params);
+				this._fragment_shader = fragment_shader;
+				this._uniforms = uniforms;
+			} else {
+				console.warn('no fragment_shader from assembler');
+			}
+		}
+	}
+	private async run_assembler() {
+		const output_node = this.assembler_controller.find_output_node();
+		if (output_node) {
+			const globals_handler = new GlobalsGeometryHandler();
+			this.assembler_controller.set_assembler_globals_handler(globals_handler);
+			this.assembler_controller.set_root_nodes([output_node]);
 
-// 		renderer.setRenderTarget(render_target);
+			await this.assembler_controller.compile();
 
-// 		return renderer;
-// 	}
+			if (this.assembler_controller.assembler.frame_dependent()) {
+				this.states.time_dependent.force_time_dependent();
+			} else {
+				this.states.time_dependent.unforce_time_dependent();
+			}
+		}
 
-// 	render_on_target() {
-// 		const width = this._param_resolution.x;
-// 		const height = this._param_resolution.y;
+		this._texture_material.fragmentShader = this._fragment_shader;
+		this._texture_material.uniforms = this._uniforms;
+		this._texture_material.needsUpdate = true;
+		this._texture_material.uniforms.resolution = {
+			value: this.pv.resolution,
+		};
 
-// 		this._texture_scene = this._texture_scene || new THREE.Scene();
-// 		this._texture_camera = this._texture_camera || new THREE.Camera();
-// 		this._texture_camera.position.z = 1;
-// 		var passThruUniforms = {
-// 			passThruTexture: { value: null }
-// 		};
-// 		this._texture_material =
-// 			this._texture_material ||
-// 			this.create_material(this._fragment_shader, this._uniforms);
-// 		this._texture_material.uniforms.resolution = {
-// 			value: this._param_resolution
-// 		};
-// 		this._texture_mesh =
-// 			this._texture_mesh ||
-// 			new THREE.Mesh(
-// 				new THREE.PlaneBufferGeometry(2, 2),
-// 				this._texture_material
-// 			);
-// 		this._texture_mesh.material = this._texture_material;
-// 		this._texture_scene.add(this._texture_mesh);
+		// this._compile_required = false;
+	}
 
-// 		this._render_target =
-// 			this._render_target || this.create_render_target();
-// 		this._renderer =
-// 			this._renderer || this.create_renderer(this._render_target); //POLY.renderers_controller.first_renderer()
-// 		// if(!renderer){
-// 		// 	console.warn(`${this.full_path()} found no renderer`)
-// 		// }
+	private _create_renderer(render_target: WebGLRenderTarget) {
+		const renderer = new WebGLRenderer({antialias: true});
+		renderer.setPixelRatio(window.devicePixelRatio);
+		// document.body.appendChild( renderer.domElement )
+		renderer.autoClear = false;
 
-// 		this._renderer.clear();
-// 		this._renderer.render(this._texture_scene, this._texture_camera);
-// 		// renderer.setClearColor( 0x000000 ) // cancels the bg color
+		renderer.setRenderTarget(render_target);
 
-// 		this._pixelBuffer =
-// 			this._pixelBuffer || new Float32Array(width * height * 4);
-// 		//read the pixel
-// 		this._renderer.readRenderTargetPixels(
-// 			this._render_target,
-// 			0,
-// 			0,
-// 			width,
-// 			height,
-// 			this._pixelBuffer
-// 		);
+		return renderer;
+	}
 
-// 		// renderer.setRenderTarget( null );
+	render_on_target() {
+		const width = this.pv.resolution.x;
+		const height = this.pv.resolution.y;
 
-// 		// var pixelBuffer2 = new Uint8Array( width * height * 4 );
-// 		// var pixelBuffer2 = Uint8Array.from(pixelBuffer)
+		// var passThruUniforms = {
+		// 	passThruTexture: { value: null }
+		// };
 
-// 		// be careful about the type THREE.FloatType
-// 		// as this may require webgl extensions
-// 		// see https://threejs.org/docs/#api/en/textures/DataTexture
-// 		this._texture =
-// 			this._texture ||
-// 			new THREE.DataTexture(
-// 				this._pixelBuffer,
-// 				width,
-// 				height,
-// 				THREE.RGBAFormat,
-// 				THREE.FloatType
-// 			);
-// 		// // texture.wrapS = THREE.ClampToEdgeWrapping
-// 		// // texture.wrapT = THREE.ClampToEdgeWrapping
-// 		// // texture.wrapS = THREE.ClampToEdgeWrapping
-// 		// // texture.wrapT = THREE.ClampToEdgeWrapping
-// 		this._texture.needsUpdate = true;
+		// if(!renderer){
+		// 	console.warn(`${this.full_path()} found no renderer`)
+		// }
 
-// 		this.set_texture(this._texture);
-// 	}
+		this._renderer.clear();
+		this._renderer.render(this._texture_scene, this._texture_camera);
+		// renderer.setClearColor( 0x000000 ) // cancels the bg color
 
-// 	create_render_target() {
-// 		const wrapS = THREE.ClampToEdgeWrapping;
-// 		const wrapT = THREE.ClampToEdgeWrapping;
+		//read the pixel
+		this._renderer.readRenderTargetPixels(this._render_target, 0, 0, width, height, this._pixelBuffer);
 
-// 		const minFilter = THREE.NearestFilter;
-// 		const magFilter = THREE.NearestFilter;
+		// renderer.setRenderTarget( null );
 
-// 		var renderTarget = new THREE.WebGLRenderTarget(
-// 			this._param_resolution.x,
-// 			this._param_resolution.y,
-// 			{
-// 				wrapS: wrapS,
-// 				wrapT: wrapT,
-// 				minFilter: minFilter,
-// 				magFilter: magFilter,
-// 				format: THREE.RGBAFormat,
-// 				type: /(iPad|iPhone|iPod)/g.test(navigator.userAgent)
-// 					? THREE.HalfFloatType
-// 					: THREE.FloatType,
-// 				stencilBuffer: false,
-// 				depthBuffer: false
-// 			}
-// 		);
-// 		return renderTarget;
-// 	}
+		// var pixelBuffer2 = new Uint8Array( width * height * 4 );
+		// var pixelBuffer2 = Uint8Array.from(pixelBuffer)
 
-// 	create_material(fragment_shader, uniforms) {
-// 		var material = new THREE.ShaderMaterial({
-// 			uniforms: uniforms,
-// 			vertexShader: PASS_THROUGH_SHADER,
-// 			fragmentShader: fragment_shader
-// 		});
+		// be careful about the type FloatType
+		// as this may require webgl extensions
+		// see https://threejs.org/docs/#api/en/textures/DataTexture
+		this._texture = this._texture || new DataTexture(this._pixelBuffer, width, height, RGBAFormat, FloatType);
+		// // texture.wrapS = ClampToEdgeWrapping
+		// // texture.wrapT = ClampToEdgeWrapping
+		// // texture.wrapS = ClampToEdgeWrapping
+		// // texture.wrapT = ClampToEdgeWrapping
+		this._texture.needsUpdate = true;
 
-// 		// addResolutionDefine( material );
+		// this.set_texture(this._texture);
+		this.cook_controller.end_cook();
+	}
 
-// 		return material;
-// 	}
-// }
+	private _create_render_target() {
+		const wrapS = ClampToEdgeWrapping;
+		const wrapT = ClampToEdgeWrapping;
+
+		const minFilter = NearestFilter;
+		const magFilter = NearestFilter;
+
+		var renderTarget = new WebGLRenderTarget(this.pv.resolution.x, this.pv.resolution.y, {
+			wrapS: wrapS,
+			wrapT: wrapT,
+			minFilter: minFilter,
+			magFilter: magFilter,
+			format: RGBAFormat,
+			type: /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType,
+			stencilBuffer: false,
+			depthBuffer: false,
+		});
+		return renderTarget;
+	}
+
+	// create_material(fragment_shader:string, uniforms:IUniforms) {
+	// 	var material = new ShaderMaterial({
+	// 		uniforms: uniforms,
+	// 		vertexShader: PASS_THROUGH_SHADER,
+	// 		fragmentShader: fragment_shader
+	// 	});
+
+	// 	// addResolutionDefine( material );
+
+	// 	return material;
+	// }
+}

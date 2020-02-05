@@ -8,22 +8,23 @@ import {Vector2} from 'three/src/math/Vector2';
 // import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 // import {FrontSide} from 'three/src/constants';
 // const THREE = {FrontSide, ShaderLib, ShaderMaterial, UniformsUtils, Vector2, VertexColors};
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType, TypedNode} from 'src/engine/nodes/_Base';
 // import {ParamType} from 'src/Engine/Param/_Module'
 
-import {BaseSopNodeType} from 'src/engine/nodes/sop/_Base';
 import {BaseGlShaderAssembler} from './_Base';
 import {GlobalsBaseController} from './Globals/_Base';
-import {GlobalsGeometryHandler} from './Globals/Geometry';
 
-import {JsonImporterVisitor} from 'src/Engine/IO/Json/Import/Visitor';
-import {JsonExporterVisitor} from 'src/Engine/IO/Json/Export/Visitor';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {JsonImportDispatcher} from 'src/engine/io/json/import/Dispatcher';
+import {JsonExportDispatcher} from 'src/engine/io/json/export/Dispatcher';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {ShaderName} from '../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../Output';
 import {GlobalsGlNode} from '../Globals';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {ParamJsonExporterData} from 'src/engine/io/json/export/Param';
+import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
+import {BaseGlNodeType} from '../_Base';
+import {AttributeGlNode} from '../Attribute';
 
 // interface BaseShaderAssemblerConstructor {
 // 	new (): BaseGlShaderAssembler;
@@ -39,18 +40,33 @@ import {BaseParamType} from 'src/engine/params/_Base';
 // 			return NodeContext.GL;
 // 		}
 
-export class GlAssemblerController {
-	protected _assembler!: BaseGlShaderAssembler;
+export class AssemblerControllerNode extends TypedNode<any, BaseNodeType, any> {
+	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
+		return super.create_node(type) as GlNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseGlNodeType[];
+	}
+	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	}
+
+	assembler_controller!: GlAssemblerController<BaseGlShaderAssembler>;
+}
+
+type BaseGlShaderAssemblerConstructor<A extends BaseGlShaderAssembler> = new (...args: any[]) => A;
+export class GlAssemblerController<A extends BaseGlShaderAssembler> {
+	protected _assembler!: A;
 	private _globals_handler: GlobalsBaseController | undefined; // = new GlobalsGeometryHandler(this);
 	private _compile_required: boolean = true;
 	// private _requester: BaseNodeSop;
 	// private _recompiled: boolean = false;
 	private _shaders_by_name: Map<ShaderName, string> = new Map();
 
-	private _deleted_params_data = {};
+	private _deleted_params_data: Map<string, ParamJsonExporterData> = new Map();
 	private _new_params: BaseParamType[] = [];
 
-	constructor(private node: BaseNodeType, assembler_class: typeof BaseGlShaderAssembler) {
+	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
 		this.node.lifecycle.add_create_hook(this.on_create);
 
 		// if (assembler_class) {
@@ -127,21 +143,21 @@ export class GlAssemblerController {
 		output.ui_data.set_position(new Vector2(200, 0));
 	}
 
-	async compile_if_required() {
-		// this._recompiled = false;
-		if (this.compile_required()) {
-			// && !this._param_locked){
-			const new_material = await this.run_assembler();
-			if (new_material) {
-				await this.node.params.eval_params(this._new_params);
-				this._material = new_material;
-				// this._recompiled = true;
-			} else {
-				console.error(`${this.node.full_path()} failed to generate a material`);
-			}
-		}
-		await this.assign_uniform_values();
-	}
+	// async compile_if_required() {
+	// 	// this._recompiled = false;
+	// 	if (this.compile_required()) {
+	// 		// && !this._param_locked){
+	// 		const new_material = await this.run_assembler();
+	// 		if (new_material) {
+	// 			await this.node.params.eval_params(this._new_params);
+	// 			this._material = new_material;
+	// 			// this._recompiled = true;
+	// 		} else {
+	// 			console.error(`${this.node.full_path()} failed to generate a material`);
+	// 		}
+	// 	}
+	// 	await this.assign_uniform_values();
+	// }
 	set_compilation_required() {
 		this._compile_required = true;
 	}
@@ -149,35 +165,67 @@ export class GlAssemblerController {
 		this.set_compilation_required();
 		this.node.set_dirty();
 	}
-	protected compile_required(): boolean {
+	compile_required(): boolean {
 		return this._compile_required;
 	}
-	private async run_assembler() {
-		let material;
-		const output_node = this._find_output_node();
-		if (output_node) {
-			this._assembler.set_root_nodes([output_node]);
-		}
-		material = await this._assembler.get_material();
-		if (material) {
-			this._shaders_by_name.set(ShaderName.VERTEX, material.vertexShader);
-			this._shaders_by_name.set(ShaderName.FRAGMENT, material.fragmentShader);
-			material.custom_materials = await this._assembler.get_custom_materials();
-			material.needsUpdate = true;
-		}
 
+	set_root_nodes(nodes: BaseGlNodeType[]) {
+		this.assembler.set_root_nodes(nodes);
+	}
+	set_node_lines_globals(globals_node: GlobalsGlNode, shader_name: ShaderName) {
+		this.assembler.set_node_lines_globals(globals_node, shader_name);
+	}
+	set_node_lines_output(output_node: OutputGlNode, shader_name: ShaderName) {
+		this.assembler.set_node_lines_output(output_node, shader_name);
+	}
+	set_node_lines_attribute(attribute_node: AttributeGlNode, shader_name: ShaderName) {
+		this.assembler.set_node_lines_attribute(attribute_node, shader_name);
+	}
+
+	async compile() {
+		if (!this._compile_required) {
+			return;
+		}
+		this.assembler.compile();
 		this.create_spare_parameters();
 
 		this._compile_required = false;
-		return material;
 	}
 
-	protected _find_output_node() {
+	// private async run_assembler() {
+	// 	let material;
+	// 	const output_node = this._find_output_node();
+	// 	if (output_node) {
+	// 		this._assembler.set_root_nodes([output_node]);
+	// 	}
+	// 	material = await this._assembler.get_material();
+	// 	if (material) {
+	// 		this._shaders_by_name.set(ShaderName.VERTEX, material.vertexShader);
+	// 		this._shaders_by_name.set(ShaderName.FRAGMENT, material.fragmentShader);
+	// 		material.custom_materials = await this._assembler.get_custom_materials();
+	// 		material.needsUpdate = true;
+	// 	}
+
+	// 	this.create_spare_parameters();
+
+	// 	this._compile_required = false;
+	// 	return material;
+	// }
+
+	find_output_node() {
 		const nodes = this.node.nodes_by_type('output');
 		if (nodes.length > 1) {
 			this.node.states.error.set('only one output node allowed');
 		}
 		return nodes[0];
+	}
+	find_attribute_export_nodes() {
+		const nodes = this.node.nodes_by_type('attribute');
+		return nodes.filter((node) => {
+			// do not use attributes that are used as an input, as export
+			// return (node.used_output_names().length == 0) &&
+			return node.is_exporting;
+		});
 	}
 	// add_output_body_line(output_node, shader_name: ShaderName, input_name: string){
 	// 	const input = output_node.named_input(input_name)
@@ -255,7 +303,7 @@ export class GlAssemblerController {
 	// 	}
 	// 	// this.cook_main_without_inputs()
 	// }
-	private async assign_uniform_values() {
+	async assign_uniform_values() {
 		if (this._assembler) {
 			for (let param_config of this._assembler.param_configs()) {
 				await param_config.set_uniform_value(this.node);
@@ -330,46 +378,46 @@ export class GlAssemblerController {
 			// this allows expressions to be kept in memory
 			const param = this.node.params.get(param_name);
 			if (param) {
-				const param_exporter = param.visit(JsonExporterVisitor);
-				if (param_exporter.required()) {
+				const param_exporter = JsonExportDispatcher.dispatch_param(param);
+				if (param_exporter.required) {
 					const params_data = param_exporter.data();
-					this._deleted_params_data[param.name()] = params_data;
+					this._deleted_params_data.set(param.name, params_data);
 				}
 			}
 
 			this.node.params.delete_param(param_name);
 		});
 
-		this.within_param_folder('spare_params', () => {
-			for (let param_config of param_configs) {
-				if (spare_param_names_to_add.indexOf(param_config.name) >= 0) {
-					// TODO: shouldn't it be cook: false ??
-					// as there is no need to cook the node if I'm only changing the uniform
-					// unless maybe for textures?
-					// but if cook is false, there is no reason for it to be updated
-					const options = lodash_merge(param_config.param_options, {spare: true, cook: true});
+		// this.within_param_folder('spare_params', () => {
+		for (let param_config of param_configs) {
+			if (spare_param_names_to_add.indexOf(param_config.name) >= 0) {
+				// TODO: shouldn't it be cook: false ??
+				// as there is no need to cook the node if I'm only changing the uniform
+				// unless maybe for textures?
+				// but if cook is false, there is no reason for it to be updated
+				const options = lodash_merge(param_config.param_options, {spare: true, cook: true});
 
-					const param = this.node.add_param(
-						param_config.type,
-						param_config.name,
-						param_config.default_value,
-						options
-					);
-					if (param) {
-						// restore saved state, like expressions
-						const param_data = this._deleted_params_data[param.name()];
-						if (param_data) {
-							param.visit(JsonImporterVisitor).process_data(param_data);
-							// looks like there are still some cases where the expression are not recreated
-							// so commenting this out now
-							// delete this._deleted_params_data[param.name()]
-						}
-
-						this._new_params.push(param);
+				const param = this.node.add_param(
+					param_config.type,
+					param_config.name,
+					param_config.default_value,
+					options
+				);
+				if (param) {
+					// restore saved state, like expressions
+					const param_data = this._deleted_params_data.get(param.name);
+					if (param_data) {
+						JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+						// looks like there are still some cases where the expression are not recreated
+						// so commenting this out now
+						// delete this._deleted_params_data[param.name()]
 					}
+
+					this._new_params.push(param);
 				}
 			}
-		});
+		}
+		// });
 
 		// updating params can be super slow (around 50ms easily - only tested in development environement)
 		// so we only do it if new params where added or removed

@@ -3,7 +3,6 @@ import lodash_range from 'lodash/range';
 // import {CoreFont} from 'src/Core/Font'
 import {TypedSopNode} from './_Base';
 import {CoreConstant} from 'src/core/geometry/Constant';
-// import {CoreScriptLoader} from 'src/core/loader/Script';
 
 import {TextBufferGeometry} from 'three/src/geometries/TextGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';

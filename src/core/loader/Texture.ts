@@ -4,7 +4,7 @@ import {Texture} from 'three/src/textures/Texture';
 // import {RepeatWrapping} from 'three/src/constants';
 // import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 // import lodash_isArray from 'lodash/isArray';
-import {CoreScriptLoader} from 'src/core/loader/Script';
+// import {CoreScriptLoader} from 'src/core/loader/Script';
 // import {CoreGeometry} from 'src/core/geometry/Geometry';
 import {CoreWalker} from 'src/core/Walker';
 
@@ -12,6 +12,7 @@ import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseCopNodeClass} from 'src/engine/nodes/cop/_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
+import {POLY} from 'src/engine/Poly';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -136,7 +137,8 @@ export class CoreTextureLoader {
 		var loader;
 		if (script_name) {
 			// const imported_classes = await CoreScriptLoader.load_module_three_loader(script_name)
-			const imported_classes = await CoreScriptLoader.three_module(`loaders/${script_name}`);
+			// const imported_classes = await CoreScriptLoader.three_module(`loaders/${script_name}`);
+			const imported_classes = await import(`modules/three/examples/jsm/loaders/${script_name}`);
 
 			const loader_class_name = CoreTextureLoader.THREE_LOADER_BY_EXT[ext_lowercase];
 			const loader_class = imported_classes[loader_class_name];

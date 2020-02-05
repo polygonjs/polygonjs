@@ -20,7 +20,7 @@ import {OrthographicCameraObjNode} from 'src/engine/nodes/obj/OrthographicCamera
 import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
 // import {CubeCameraObj} from 'src/engine/nodes/obj/CubeCamera';
 
-export interface ObjNodeTypeMap {
+export interface ObjNodeChildrenMap {
 	ambient_light: AmbientLightObjNode;
 	cop: CopObjNode;
 	events: EventsObjNode;

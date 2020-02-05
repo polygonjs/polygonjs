@@ -1,5 +1,5 @@
 import lodash_includes from 'lodash/includes';
-import {TypedNode, BaseNodeType} from '../_Base';
+import {TypedNode} from '../_Base';
 // import {BaseNodeMat} from '../Mat/_Base';
 // import {
 // 	GlTypedConnection,
@@ -18,6 +18,8 @@ import {ThreeToGl} from 'src/core/ThreeToGl';
 // import {Definition} from './Definition/_Module';
 import {BaseGlShaderAssembler} from './Assembler/_Base';
 import {BaseGLDefinition} from './utils/GLDefinition';
+
+import {AssemblerControllerNode} from './Assembler/Controller';
 
 // interface StringArrayByString {
 // 	[propName: string]: string[];
@@ -151,13 +153,13 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		this.reset_lines();
 	}
 	shader_configs() {
-		return this.assembler?.shader_configs() || [];
+		return this.assembler?.shader_configs || [];
 	}
 	shader_config(name: string) {
 		return this.assembler?.shader_config(name);
 	}
 	shader_names() {
-		return this.assembler?.shader_names() || [];
+		return this.assembler?.shader_names || [];
 	}
 
 	private reset_lines() {
@@ -341,12 +343,12 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	get assembler(): BaseGlShaderAssembler | undefined {
 		return this._assembler;
 	}
-	get material_node(): BaseNodeType | undefined {
+	get material_node(): AssemblerControllerNode | undefined {
 		if (this.parent) {
 			if (this.parent.type == NodeContext.GL) {
 				return (this.parent as BaseGlNodeType)?.material_node;
 			} else {
-				return this.parent;
+				return this.parent as AssemblerControllerNode;
 			}
 		}
 		// if(this.parent?.parent?.children_controller.context != NodeContext.GL){

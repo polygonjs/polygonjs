@@ -53,7 +53,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		this.add_post_dirty_hook(this._update_signature_if_required.bind(this));
 	}
 	create_params() {
-		if (this.material_node.allow_attribute_exports) {
+		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
 			this.add_param(ParamType.BOOLEAN, 'export_when_connected', 0);
 		}
 	}
@@ -68,7 +68,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			this.remove_dirty_state();
 			this.make_output_nodes_dirty();
 		}
-		this.material_node.set_compilation_required_and_dirty();
+		this.material_node?.assembler_controller.set_compilation_required_and_dirty();
 	}
 
 	get input_name() {
@@ -82,7 +82,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		this.io.inputs.set_named_input_connection_points([
 			new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypes[this.pv.type]),
 		]);
-		if (this.material_node.allow_attribute_exports) {
+		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
 			this.io.outputs.set_named_output_connection_points([
 				new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypes[this.pv.type]),
 			]);
@@ -100,7 +100,9 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	set_lines() {
-		this.assembler.set_node_lines_attribute(this, this._shader_name);
+		if (this._shader_name) {
+			this.material_node?.assembler_controller.set_node_lines_attribute(this, this._shader_name);
+		}
 	}
 
 	// update_output_type(constructor) {

@@ -7,6 +7,7 @@ import {BaseViewer} from './_Base';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
 import 'src/engine/Poly';
+import {POLY} from 'src/engine/Poly';
 
 const CSS_CLASS = 'CoreThreejsViewer';
 

@@ -9,6 +9,7 @@ import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
 import {CopObjNode} from 'src/engine/nodes/obj/Cop';
 
 import 'src/engine/poly/registers/All';
+import {POLY} from 'src/engine/Poly';
 
 window.create_renderer_if_none = () => {
 	const first_renderer = POLY.renderers_controller.first_renderer();
@@ -35,7 +36,7 @@ QUnit.testStart(async () => {
 	window.scene = new PolyScene();
 	window.scene.set_name('test scene');
 	window.scene.set_uuid('test');
-	window.POLY.set_env('test');
+	POLY.set_env('test');
 
 	const root = window.scene.root;
 	window.root = root;

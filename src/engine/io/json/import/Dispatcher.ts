@@ -7,14 +7,10 @@ import {NodeJsonImporter} from './Node';
 
 import {ParamJsonImporter} from './Param';
 import {ParamMultipleJsonImporter} from './param/Multiple';
-import {ParamNumericJsonImporter} from './param/Numeric';
-import {ParamOperatorPathJsonImporter} from './param/OperatorPath';
 import {ParamStringJsonImporter} from './param/String';
 import {ParamRampJsonImporter} from './param/Ramp';
 // import {TypedObjNode} from 'src/engine/nodes/obj/_Base';
 import {TypedMultipleParam} from 'src/engine/params/_Multiple';
-import {TypedNumericParam} from 'src/engine/params/_Numeric';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
 import {StringParam} from 'src/engine/params/String';
 import {RampParam} from 'src/engine/params/Ramp';
 
@@ -29,12 +25,6 @@ export class JsonImportDispatcher {
 	static dispatch_param(param: BaseParamType) {
 		if (param instanceof TypedMultipleParam) {
 			return new ParamMultipleJsonImporter(param);
-		}
-		if (param instanceof TypedNumericParam) {
-			return new ParamNumericJsonImporter(param);
-		}
-		if (param instanceof OperatorPathParam) {
-			return new ParamOperatorPathJsonImporter(param);
 		}
 		if (param instanceof StringParam) {
 			return new ParamStringJsonImporter(param);

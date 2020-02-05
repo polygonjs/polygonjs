@@ -7,7 +7,7 @@ import lodash_isArray from 'lodash/isArray';
 // import lodash_isString from 'lodash/isString'
 // import lodash_isBoolean from 'lodash/isBoolean'
 // import lodash_map from 'lodash/map'
-import {TypedParam, ParamVisitor} from './_Base';
+import {TypedParam} from './_Base';
 import {FloatParam} from './Float';
 // import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {ParamType} from '../poly/ParamType';

@@ -20,13 +20,13 @@ export class NodeSerializer {
 			.map((node) => (node != null ? node.graph_node_id : undefined));
 		const connection_output_indices = this.node.io.connections
 			.input_connections()
-			.map((connection) => (connection != null ? connection.output_index : undefined));
-		const named_inputs = this.node.io.inputs.named_inputs().map((i) => i.to_json());
-		const named_outputs = this.node.io.outputs.named_outputs().map((o) => o.to_json());
+			?.map((connection) => (connection != null ? connection.output_index : undefined));
+		const named_inputs = this.node.io.inputs.named_input_connection_points.map((i) => i.to_json());
+		const named_outputs = this.node.io.outputs.named_output_connection_points.map((o) => o.to_json());
 
 		const data = {
 			name: this.node.name,
-			type: this.node.type(),
+			type: this.node.type,
 			graph_node_id: this.node.graph_node_id,
 			is_dirty: this.node.is_dirty,
 			ui_data: this.node.ui_data.to_json(),

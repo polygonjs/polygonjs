@@ -3,7 +3,7 @@ import lodash_isNumber from 'lodash/isNumber';
 
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {CoreString} from 'src/core/String';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
@@ -15,6 +15,9 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.INTEGER], val2: ParamValuesTypeMap[ParamType.INTEGER]) {
+		return val1 == val2;
 	}
 	// convert_value(v: ParamInputValue): number {
 	// 	const converted_val = lodash_isBoolean(v)

@@ -460,7 +460,7 @@ export class InputsController<T extends BaseNodeType> {
 		// }
 	}
 
-	private init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
+	init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
 		if (values) {
 			this._user_inputs_clonable_states = values;
 		}

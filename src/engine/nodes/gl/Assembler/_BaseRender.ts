@@ -6,10 +6,10 @@ import {AttributeGlNode} from '../Attribute';
 import {ShaderName} from '../../utils/shaders/ShaderName';
 import {ShaderMaterial} from 'three';
 import {GlobalsGlNode} from '../Globals';
-import {TypedGLDefinition, BaseGLDefinition, UniformGLDefinition} from '../utils/GLDefinition';
+import {BaseGLDefinition, UniformGLDefinition} from '../utils/GLDefinition';
 import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
 import {MapUtils} from 'src/core/MapUtils';
-import {BaseNodeType} from '../../_Base';
+// import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
 
 export enum CustomMaterialName {
@@ -88,7 +88,7 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 				);
 				if (output_connection_point) {
 					const gl_type = output_connection_point.type;
-					new_var = this.globals_handler().read_attribute(output_node, gl_type, input_name, shader_name);
+					new_var = this.globals_handler?.read_attribute(output_node, gl_type, input_name, shader_name);
 				}
 			} else {
 				new_var = variable_config.default();
@@ -131,7 +131,7 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		// const named_output = attribute_node.connected_output()
 		// const named_connection = attribute_node.connected_input()
 		const gl_type = attribute_node.gl_type();
-		const new_var = this.globals_handler().read_attribute(
+		const new_var = this.globals_handler?.read_attribute(
 			attribute_node,
 			gl_type,
 			attribute_node.attribute_name,
@@ -265,7 +265,7 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 					// )
 					// const body_line = `${var_name} = ${new_var}`
 					// globals_node.add_body_lines([body_line])
-					this.globals_handler().handle(
+					this.globals_handler?.handle_globals_node(
 						globals_node,
 						output_name,
 						definitions_by_shader_name,

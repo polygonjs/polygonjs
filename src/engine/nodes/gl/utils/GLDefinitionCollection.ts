@@ -22,9 +22,9 @@ export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 				const name = definition.name;
 				const existing = definitions_by_name.get(name);
 				if (existing) {
-					if (existing.id != definition.id {
+					if (existing.data_type != definition.data_type) {
 						this._errored = true;
-						this._error_message = `attempt to create ${definition.name} with types ${definition.id} and ${existing.id}`;
+						this._error_message = `attempt to create ${definition.name} with types ${definition.data_type}`;
 						console.warn('emitting error message', this._error_message);
 					}
 				} else {

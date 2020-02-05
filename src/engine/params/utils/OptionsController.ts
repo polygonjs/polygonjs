@@ -132,6 +132,9 @@ export class OptionsController {
 		}
 		return overriden;
 	}
+	get overridden_option_names(): Array<keyof ParamOptions> {
+		return Object.keys(this.overridden_options) as Array<keyof ParamOptions>;
+	}
 
 	// referenced assets
 	always_reference_asset(): boolean {
@@ -309,7 +312,7 @@ export class OptionsController {
 		return this._options[TEXTURE_OPTION];
 	}
 	texture_as_env(): boolean {
-		const texture_options = this.texture_options();
+		const texture_options = this.texture_options;
 		if (texture_options != null) {
 			return texture_options[ENV_OPTION] === true;
 		}
@@ -355,9 +358,7 @@ export class OptionsController {
 					return param;
 				} else {
 					console.error(
-						`param ${name} not found as visibility condition for ${
-							this.param.name
-						} in node ${this.param.node.type()}`
+						`param ${name} not found as visibility condition for ${this.param.name} in node ${this.param.node.type}`
 					);
 				}
 			})

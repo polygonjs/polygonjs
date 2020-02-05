@@ -57,7 +57,7 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 	}
 
 	shader_names() {
-		return this._assembler.shader_names();
+		return this._assembler.shader_names;
 	}
 	input_names_for_shader_name(root_node: T, shader_name: ShaderName) {
 		return this._assembler.input_names_for_shader_name(root_node, shader_name);

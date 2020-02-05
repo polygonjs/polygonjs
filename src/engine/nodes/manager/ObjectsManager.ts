@@ -23,10 +23,11 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
 
-import {ObjNodeTypeMap} from 'src/engine/poly/registers/Obj';
+import {ObjNodeChildrenMap} from 'src/engine/poly/registers/Obj';
 
 import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
+import {POLY} from 'src/engine/Poly';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -73,14 +74,14 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	object() {
 		return this._object;
 	}
-	create_node<K extends keyof ObjNodeTypeMap>(type: K): ObjNodeTypeMap[K] {
-		return super.create_node(type) as ObjNodeTypeMap[K];
+	create_node<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K] {
+		return super.create_node(type) as ObjNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseObjNodeType[];
 	}
-	nodes_by_type<K extends keyof ObjNodeTypeMap>(type: K): ObjNodeTypeMap[K][] {
-		return super.nodes_by_type(type) as ObjNodeTypeMap[K][];
+	nodes_by_type<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as ObjNodeChildrenMap[K][];
 	}
 
 	multiple_display_flags_allowed() {

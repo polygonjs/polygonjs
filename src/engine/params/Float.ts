@@ -4,7 +4,7 @@
 import lodash_isNumber from 'lodash/isNumber';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {CoreString} from 'src/core/String';
 
 export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
@@ -16,6 +16,9 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.FLOAT], val2: ParamValuesTypeMap[ParamType.FLOAT]) {
+		return val1 == val2;
 	}
 	static convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
 		if (lodash_isNumber(raw_val)) {

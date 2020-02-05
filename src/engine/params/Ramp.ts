@@ -7,10 +7,11 @@ import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 // import {ClampToEdgeWrapping} from 'three/src/constants'
 // import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
-import {RampValue, RampPoint} from './ramp/RampValue';
+import {RampValue, RampPoint, RampValueJson, RampInterpolation} from './ramp/RampValue';
 
 // import {AsCodeRamp} from './concerns/visitors/Ramp';
 import {ParamType} from '../poly/ParamType';
+import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 // interface RampParamVisitor extends TypedParamVisitor {
 // 	visit_ramp_param: (param: RampParam) => any;
@@ -24,13 +25,21 @@ export class RampParam extends Single<ParamType.RAMP> {
 	private _ramp_interpolant: CubicInterpolant | undefined;
 	private _ramp_texture: DataTexture | undefined;
 
-	static DEFAULT_VALUE = new RampValue('linear', [new RampPoint(0, 0), new RampPoint(1, 1)]);
+	static DEFAULT_VALUE = new RampValue(RampInterpolation.LINEAR, [new RampPoint(0, 0), new RampPoint(1, 1)]);
+	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.to_json();
 
 	get default_value_serialized() {
-		return this.default_value.to_json();
+		if (this.default_value instanceof RampValue) {
+			return this.default_value.to_json();
+		} else {
+			return this.default_value;
+		}
 	}
 	get value_serialized() {
 		return this.value.to_json();
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
+		return val1.is_equal(val2);
 	}
 	initialize_param() {
 		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture.bind(this));
@@ -39,7 +48,26 @@ export class RampParam extends Single<ParamType.RAMP> {
 	// 	return visitor.visit_ramp_param(this);
 	// }
 	get is_default(): boolean {
-		return this.value.is_equal(this.default_value);
+		if (this.default_value instanceof RampValue) {
+			return this.value.is_equal(this.default_value);
+		} else {
+			return this.value.is_equal_json(this.default_value);
+		}
+	}
+	set(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]): void {
+		if (raw_input instanceof RampValue) {
+			if (!this._value) {
+				this._value = raw_input.clone();
+			} else {
+				this._value.copy(raw_input);
+			}
+		} else {
+			if (!this._value) {
+				this._value = RampValue.from_json(raw_input);
+			} else {
+				this._value.from_json(raw_input);
+			}
+		}
 	}
 
 	// convert_value(v) {
@@ -115,14 +143,14 @@ export class RampParam extends Single<ParamType.RAMP> {
 		return (this._ramp_interpolant = this._ramp_interpolant || this._create_interpolant());
 	}
 	_create_interpolant() {
-		const points = this.value.points();
-		const sorted_points = lodash_sortBy(points, (point) => point.position());
+		const points = this.value.points;
+		const sorted_points = lodash_sortBy(points, (point) => point.position);
 		const positions = new Float32Array(sorted_points.length);
 		const values = new Float32Array(sorted_points.length);
 
 		let i = 0;
 		for (let sorted_point of sorted_points) {
-			positions[i] = sorted_point.position();
+			positions[i] = sorted_point.position;
 			values[i] = sorted_point.value;
 			i++;
 		}

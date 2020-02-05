@@ -31,7 +31,7 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 	// }
 
 	create_params() {
-		this.material_node?.add_output_params(this);
+		this.material_node?.assembler_controller.add_output_params(this);
 		// this.add_param( ParamType.VECTOR, 'position', [0,0,0] )
 		// this.add_param( ParamType.VECTOR, 'normal', [0,0,0] )
 		// this.add_param( ParamType.COLOR, 'color', [1,1,1] )
@@ -41,7 +41,9 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 	}
 
 	set_lines() {
-		this.assembler?.set_node_lines_output(this, this._shader_name);
+		if (this._shader_name) {
+			this.material_node?.assembler_controller.set_node_lines_output(this, this._shader_name);
+		}
 	}
 
 	// set_color_declaration(color_declaration: string){

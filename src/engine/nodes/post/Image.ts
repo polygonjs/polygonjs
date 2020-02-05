@@ -3,7 +3,6 @@
 // // import {CanvasTexture} from 'three/src/textures/CanvasTexture'
 
 // import {BasePostProcessNode} from './_Base';
-// // import {CoreScriptLoader} from 'src/core/loader/Script'
 // import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
 // import {ShaderPass} from 'modules/three/examples/jsm/postprocessing/ShaderPass';

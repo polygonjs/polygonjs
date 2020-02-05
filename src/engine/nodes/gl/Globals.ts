@@ -8,7 +8,7 @@ import {TypedGlNode} from './_Base';
 // https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)
 // gl_PointCoord
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class GlobalsGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsGlParamsConfig();
 
@@ -31,7 +31,7 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 	}
 
 	create_params() {
-		this.material_node.add_globals_params(this);
+		this.material_node?.assembler_controller.add_globals_params(this);
 		// this.set_named_outputs([
 		// 	new Connection.Vec3('position'),
 		// 	new Connection.Vec3('color'),
@@ -47,7 +47,9 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 	// }
 
 	set_lines() {
-		this.assembler.set_node_lines_globals(this, this._shader_name);
+		if (this._shader_name) {
+			this.assembler?.set_node_lines_globals(this, this._shader_name);
+		}
 		// const vertex_definitions = []
 		// const fragment_definitions = []
 		// const definitions = []

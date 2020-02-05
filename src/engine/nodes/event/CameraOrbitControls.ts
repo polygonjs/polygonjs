@@ -2,7 +2,6 @@ import {Camera} from 'three/src/cameras/Camera';
 
 import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
-// import {CoreScriptLoader} from 'src/core/loader/Script';
 
 import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
 

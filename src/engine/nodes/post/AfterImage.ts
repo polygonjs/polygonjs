@@ -2,7 +2,6 @@
 // import {Vector2} from 'three/src/math/Vector2';
 
 // import {BasePostProcessNode} from './_Base';
-// import {CoreScriptLoader} from 'src/core/loader/Script';
 // import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
 // import {ParamType} from 'src/engine/poly/ParamType';

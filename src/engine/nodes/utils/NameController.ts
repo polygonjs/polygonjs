@@ -19,7 +19,7 @@ export class NameController {
 	}
 
 	static base_name(node: BaseNodeType) {
-		let base = node.type(); //CoreString.class_name_to_type(this.self.type())
+		let base = node.type; //CoreString.class_name_to_type(this.self.type())
 		const last_char = base[base.length - 1];
 		if (!lodash_isNaN(parseInt(last_char))) {
 			base += '_';

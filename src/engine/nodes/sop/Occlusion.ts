@@ -10,9 +10,10 @@ import {CoreObject} from 'src/core/geometry/Object';
 // https://github.com/wwwtyro/geo-ambient-occlusion
 import geoao from 'geo-ambient-occlusion';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 import {CoreGroup} from 'src/core/geometry/Group';
+
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class OcclusionSopParamsConfig extends NodeParamsConfig {
 	attrib_name = ParamConfig.STRING('occlusion');
 	samples = ParamConfig.INTEGER(256, {

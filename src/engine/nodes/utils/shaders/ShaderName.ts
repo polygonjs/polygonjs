@@ -13,7 +13,7 @@ export enum ShaderName {
 	PARTICLES_8 = 'particles_8',
 	PARTICLES_9 = 'particles_9',
 }
-const ParticleShaderNames: Array<ShaderName> = [
+export const ParticleShaderNames: Array<ShaderName> = [
 	ShaderName.PARTICLES_0,
 	ShaderName.PARTICLES_1,
 	ShaderName.PARTICLES_2,

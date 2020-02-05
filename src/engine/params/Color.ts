@@ -4,6 +4,7 @@ import lodash_isArray from 'lodash/isArray';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
+import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 const COMPONENT_NAMES_COLOR = ['r', 'g', 'b'];
@@ -27,6 +28,9 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	}
 	get value_serialized() {
 		return this.value.toArray() as Number3;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
+		return val1.equals(val2);
 	}
 	init_components() {
 		super.init_components();

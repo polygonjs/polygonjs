@@ -4,6 +4,7 @@ import lodash_isArray from 'lodash/isArray';
 import {Vector4} from 'three/src/math/Vector4';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
+import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 const COMPONENT_NAMES_VECTOR4 = ['x', 'y', 'z', 'w'];
 export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
@@ -27,6 +28,9 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	}
 	get value_serialized() {
 		return this.value.toArray() as Number4;
+	}
+	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR4], val2: ParamValuesTypeMap[ParamType.VECTOR4]) {
+		return val1.equals(val2);
 	}
 	init_components() {
 		super.init_components();

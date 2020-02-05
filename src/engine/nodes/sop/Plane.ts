@@ -34,7 +34,7 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 	}
 
 	initialize_node() {
-		this.io.inputs.set_count_to_one_max();
+		this.io.inputs.set_count(0, 1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
 	}
 

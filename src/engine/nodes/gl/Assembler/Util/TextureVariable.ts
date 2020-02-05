@@ -1,6 +1,10 @@
-import lodash_includes from 'lodash/includes';
 import {TextureAllocation} from './TextureAllocation';
 import {PolyScene} from 'src/engine/scene/PolyScene';
+
+export interface TextureVariableData {
+	name: string;
+	nodes: string[];
+}
 
 export class TextureVariable {
 	private _allocation: TextureAllocation | undefined;
@@ -47,7 +51,7 @@ export class TextureVariable {
 			.splice(this._position, this._size)
 			.join('');
 	}
-	to_json(scene: PolyScene) {
+	to_json(scene: PolyScene): TextureVariableData {
 		const names: string[] = [];
 		if (this._graph_node_ids) {
 			this._graph_node_ids.forEach((boolean, node_id: string) => {

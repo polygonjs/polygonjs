@@ -10,6 +10,7 @@ import lodash_values from 'lodash/values';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {NameController} from '../NameController';
+import {POLY} from 'src/engine/Poly';
 // import {NameController} from '../NameController';
 
 // interface HierarchyOptions {
@@ -91,14 +92,14 @@ export class HierarchyChildrenController {
 	}
 
 	node_context_signature() {
-		return `${this.node.node_context()}/${this.node.type()}`;
+		return `${this.node.node_context()}/${this.node.type}`;
 	}
 
 	available_children_classes() {
 		if (this._context) {
-			return POLY.registered_nodes(this._context, this.node.type());
+			return POLY.registered_nodes(this._context, this.node.type);
 		} else {
-			console.warn('children controller not initialized for node', this.node.type(), this.node);
+			console.warn('children controller not initialized for node', this.node.type, this.node);
 			return {};
 		}
 	}
@@ -118,7 +119,7 @@ export class HierarchyChildrenController {
 			if (node_class == null) {
 				const message = `node type ${node_type} not found for ${this.node.full_path()} (${Object.keys(
 					this.available_children_classes()
-				).join(', ')}, ${this._context}, ${this.node.type()})`;
+				).join(', ')}, ${this._context}, ${this.node.type})`;
 				console.error(message);
 				throw message;
 			} else {
@@ -180,12 +181,12 @@ export class HierarchyChildrenController {
 			}
 
 			const first_connection = child_node.io.connections.first_input_connection();
-			child_node.io.connections.input_connections().forEach((input_connection) => {
+			child_node.io.connections.input_connections()?.forEach((input_connection) => {
 				if (input_connection) {
 					input_connection.disconnect({set_input: true});
 				}
 			});
-			child_node.io.connections.output_connections().forEach((output_connection) => {
+			child_node.io.connections.output_connections()?.forEach((output_connection) => {
 				if (output_connection) {
 					output_connection.disconnect({set_input: true});
 					if (first_connection) {
@@ -244,7 +245,7 @@ export class HierarchyChildrenController {
 
 	_add_to_nodes_by_type(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
-		const type = node.type();
+		const type = node.type;
 		this._children_by_type[type] = this._children_by_type[type] || [];
 		if (!lodash_includes(this._children_by_type[type], node_id)) {
 			this._children_by_type[type].push(node_id);
@@ -253,7 +254,7 @@ export class HierarchyChildrenController {
 	}
 	_remove_from_nodes_by_type(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
-		const type = node.type();
+		const type = node.type;
 		if (this._children_by_type[type]) {
 			const index = this._children_by_type[type].indexOf(node_id);
 			if (index >= 0) {

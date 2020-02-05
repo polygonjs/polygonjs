@@ -1,4 +1,4 @@
-import {TextureVariable} from './TextureVariable';
+import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {BaseGlNodeType} from 'src/engine/nodes/gl/_Base';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
@@ -52,7 +52,7 @@ export class TextureAllocation {
 		}
 	}
 
-	to_json(scene: PolyScene) {
+	to_json(scene: PolyScene): TextureVariableData[] | undefined {
 		return this._variables?.map((v) => v.to_json(scene));
 		// for(let variable of this._variables){
 		// 	data[variable.name()] = variable.to_json(scene)
