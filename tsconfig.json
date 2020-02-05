@@ -23,9 +23,12 @@
 		"esModuleInterop": true, // for lodash imports (https://github.com/lodash/lodash/issues/3192)
 		"allowJs": true,
 		"sourceMap": true,
+
 		// declaration creates problems with anonymous classes from mixins
-		// "declaration": true,
+		// but trying again to have a module export
+		"declaration": true,
 		// "declarationDir": "./dist/types",
+
 		"importHelpers": true,
 		"baseUrl": "./",
 		"paths": {
