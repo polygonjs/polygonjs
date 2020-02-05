@@ -12,7 +12,7 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 		return ParamType.BOOLEAN;
 	}
 	get default_value_serialized() {
-		return this.convert(this.default_value);
+		return this.convert(this.default_value) || false;
 	}
 	get value_serialized() {
 		return this.value;
@@ -20,7 +20,7 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.BOOLEAN], val2: ParamValuesTypeMap[ParamType.BOOLEAN]) {
 		return val1 == val2;
 	}
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean {
+	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean | null {
 		if (lodash_isBoolean(raw_val)) {
 			return raw_val;
 		} else {
@@ -34,8 +34,8 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 					}
 				}
 			}
-			return false;
 		}
+		return null;
 	}
 	// convert_value(v: ParamInputValue): boolean {
 	// 	return this.value_to_boolean(v)

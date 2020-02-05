@@ -12,7 +12,6 @@ import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseCopNodeClass} from 'src/engine/nodes/cop/_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
-import {POLY} from 'src/engine/Poly';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -122,7 +121,7 @@ export class CoreTextureLoader {
 				return texture;
 			} else {
 				this.loader_for_ext(ext).then((loader) => {
-					loader.load(url, resolve, null, (error: any) => {
+					loader.load(url, resolve, undefined, (error: any) => {
 						console.warn('error', error);
 						reject();
 					});
@@ -138,19 +137,17 @@ export class CoreTextureLoader {
 		if (script_name) {
 			// const imported_classes = await CoreScriptLoader.load_module_three_loader(script_name)
 			// const imported_classes = await CoreScriptLoader.three_module(`loaders/${script_name}`);
-			const imported_classes = await import(`modules/three/examples/jsm/loaders/${script_name}`);
-
-			const loader_class_name = CoreTextureLoader.THREE_LOADER_BY_EXT[ext_lowercase];
-			const loader_class = imported_classes[loader_class_name];
-			if (loader_class) {
-				loader = new loader_class();
-
-				if (ext == 'basis') {
-					loader.setTranscoderPath('/three/js/libs/basis/');
-					const renderer = POLY.renderers_controller.first_renderer();
-					loader.detectSupport(renderer);
-				}
-			}
+			// const imported_classes = await import(`modules/three/examples/jsm/loaders/${script_name}`);
+			// const loader_class_name = CoreTextureLoader.THREE_LOADER_BY_EXT[ext_lowercase];
+			// const loader_class = imported_classes[loader_class_name];
+			// if (loader_class) {
+			// 	loader = new loader_class();
+			// 	if (ext == 'basis') {
+			// 		loader.setTranscoderPath('/three/js/libs/basis/');
+			// 		const renderer = POLY.renderers_controller.first_renderer();
+			// 		loader.detectSupport(renderer);
+			// 	}
+			// }
 		}
 		return loader || new TextureLoader();
 

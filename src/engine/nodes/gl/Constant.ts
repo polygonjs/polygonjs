@@ -3,10 +3,16 @@ import {ThreeToGl} from 'src/core/ThreeToGl';
 
 const OUTPUT_NAME = 'value';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType, ConnectionPointTypes} from '../utils/connections/ConnectionPointType';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+
+function typed_visible_options(type: ConnectionPointType) {
+	const val = ConnectionPointTypes.indexOf(type);
+	return {visible_if: {type: val}};
+}
+
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {
 		menu: {
@@ -15,10 +21,10 @@ class ConstantGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	value_float = ParamConfig.FLOAT(0, ConstantGlNode.typed_visible_options(ConnectionPointType.FLOAT));
-	value_vec2 = ParamConfig.VECTOR2([0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC2));
-	value_vec3 = ParamConfig.VECTOR3([0, 0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC3));
-	value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC4));
+	value_float = ParamConfig.FLOAT(0, typed_visible_options(ConnectionPointType.FLOAT));
+	value_vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(ConnectionPointType.VEC2));
+	value_vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(ConnectionPointType.VEC3));
+	value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typed_visible_options(ConnectionPointType.VEC4));
 }
 const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
@@ -56,11 +62,6 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	// 	// this.add_param( ParamType.VECTOR, 'value_vec3', [0,0,0], this._typed_visible_options('vec3') )
 	// 	// this.add_param( ParamType.VECTOR4, 'value_vec4', [0,0,0,0], this._typed_visible_options('vec4') )
 	// }
-
-	static typed_visible_options(type: ConnectionPointType) {
-		const val = ConnectionPointTypes.indexOf(type);
-		return {visible_if: {type: val}};
-	}
 
 	set_lines() {
 		const body_lines = [];

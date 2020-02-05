@@ -17,8 +17,10 @@ QUnit.test('boolean evals correctly when set to different values', async (assert
 	boolean_param.set(2);
 	boolean_param.compute();
 	assert.equal(boolean_param.value, true);
+	assert.ok(!boolean_param.has_expression());
 
 	boolean_param.set('$F%2');
+	assert.ok(boolean_param.has_expression());
 	scene.set_frame(1);
 	await boolean_param.compute();
 	assert.equal(boolean_param.value, true);

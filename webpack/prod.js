@@ -42,8 +42,8 @@ module.exports = (env) => {
 			splitChunks: {
 				// maxSize: 1000000,
 				// minChunks: 4,
-				maxInitialRequests: 100,
-				maxAsyncRequests: 100,
+				maxInitialRequests: 1000,
+				maxAsyncRequests: 1000,
 				cacheGroups: {
 					// commons: {
 					// 	name: 'commons',
@@ -94,6 +94,19 @@ module.exports = (env) => {
 							return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
 						},
 					},
+					// nodes: {
+					// 	test: /\/src\/engine\/nodes\//,
+					// 	chunks: 'all',
+					// 	priority: 10,
+					// 	name: function(module, chunks, cacheGroupKey) {
+					// 		const moduleFileName = module
+					// 			.identifier()
+					// 			.split('/')
+					// 			.reduceRight((item) => item);
+					// 		const allChunksNames = chunks.map((item) => item.name).join('~');
+					// 		return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+					// 	},
+					// },
 				},
 			},
 		},

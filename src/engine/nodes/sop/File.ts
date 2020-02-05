@@ -38,11 +38,12 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		loader.load(this._on_load.bind(this), this._on_error.bind(this));
 	}
 
-	_on_load(objects: Object3D[]) {
+	private _on_load(objects: Object3D[]) {
+		console.log('objects', objects);
 		objects = lodash_flatten(objects);
 		this.set_objects(objects);
 	}
-	_on_error(message: string) {
+	private _on_error(message: string) {
 		this.states.error.set(`could not load geometry from ${this.pv.url} (${message})`);
 	}
 

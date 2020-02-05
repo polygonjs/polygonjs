@@ -87,3 +87,11 @@ QUnit.test('file glb flamingo', async (assert) => {
 	const container = await with_file('/examples/models/flamingo.glb');
 	assert.equal(container.points_count(), 337);
 });
+QUnit.test('file z3 glb with draco', async (assert) => {
+	const container = await with_file('/examples/models/z3.glb');
+	assert.equal(container.points_count(), 498800);
+});
+QUnit.test('file draco bunny', async (assert) => {
+	const container = await with_file('/examples/models/bunny.drc');
+	assert.equal(container.points_count(), 34834);
+});

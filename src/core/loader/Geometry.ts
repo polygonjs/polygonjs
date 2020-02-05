@@ -8,6 +8,9 @@ import {Object3D} from 'three/src/core/Object3D';
 // import {JsonData} from './Geometry/JsonData'
 // import {CoreScriptLoader} from './Script';
 import axios from 'axios';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Mesh} from 'three/src/objects/Mesh';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 
 // import {DDSLoader} from 'modules/three/examples/jsm/loaders/DDSLoader';
 // import {DRACOLoader} from 'modules/three/examples/jsm/loaders/DRACOLoader';
@@ -28,16 +31,16 @@ import axios from 'axios';
 // const DRACO_EXTENSIONS = ['gltf', 'glb']
 // const DRACO_EXTENSIONS = ['drc'];
 
-export enum LoaderType {
-	AUTO = 'auto',
-	JSON_DATA = 'json_data',
-	// THREEJS_JSON = 'threejs_json',
-}
-export const LOADER_TYPES = [
-	LoaderType.AUTO,
-	LoaderType.JSON_DATA,
-	// LoaderType.THREEJS_JSON,
-];
+// export enum LoaderType {
+// 	AUTO = 'auto',
+// 	JSON_DATA = 'json_data',
+// 	// THREEJS_JSON = 'threejs_json',
+// }
+// export const LOADER_TYPES = [
+// 	LoaderType.AUTO,
+// 	LoaderType.JSON_DATA,
+// 	// LoaderType.THREEJS_JSON,
+// ];
 
 export class CoreLoaderGeometry {
 	private ext: string;
@@ -67,7 +70,7 @@ export class CoreLoaderGeometry {
 
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			const url = this.url.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 
 			if (this.ext == 'json') {
 				axios
@@ -87,6 +90,7 @@ export class CoreLoaderGeometry {
 					loader.load(
 						url,
 						(object: any) => {
+							console.log(object);
 							this.on_load_success(object).then((object2) => {
 								resolve(object2);
 							});
@@ -124,30 +128,60 @@ export class CoreLoaderGeometry {
 		});
 	}
 
-	private async on_load_success(object: Object3D): Promise<Object3D[]> {
+	private async on_load_success(object: Object3D | BufferGeometry | object): Promise<Object3D[]> {
 		// console.log("animation?", object.animations)
 		// if(object.animations){
 		// 	await CoreScriptLoader.load('/three/js/utils/SkeletonUtils')
 		// }
+		if (object instanceof Object3D) {
+			switch (this.ext) {
+				case 'gltf':
+					return this.on_load_succes_gltf(object);
+				case 'glb':
+					return this.on_load_succes_gltf(object);
+				// case 'drc':
+				// 	return this.on_load_succes_drc(object);
+				case 'obj':
+					return [object]; // [object] //.children
+				case 'json':
+					return [object]; // [object] //.children
+				default:
+					return [object];
+			}
+		}
+		if (object instanceof BufferGeometry) {
+			switch (this.ext) {
+				case 'drc':
+					return this.on_load_succes_drc(object);
+				default:
+					return [new Mesh(object)];
+			}
+		}
+
+		// if it's an object, such as returned by glb
 		switch (this.ext) {
 			case 'gltf':
 				return this.on_load_succes_gltf(object);
 			case 'glb':
 				return this.on_load_succes_gltf(object);
-			case 'obj':
-				return [object]; // [object] //.children
-			case 'json':
-				return [object]; // [object] //.children
 			default:
-				return [object];
+				return [];
 		}
+		return [];
 	}
 
 	private on_load_succes_gltf(gltf: any): Object3D[] {
 		const scene = gltf['scene'];
 		scene.animations = gltf.animations;
 
+		console.log('[scene]', [scene]);
 		return [scene]; //.children
+	}
+	private on_load_succes_drc(geometry: BufferGeometry): Object3D[] {
+		const mat = new MeshLambertMaterial();
+		const mesh = new Mesh(geometry, mat);
+
+		return [mesh]; //.children
 	}
 
 	async loader_for_ext() {
@@ -172,20 +206,32 @@ export class CoreLoaderGeometry {
 	}
 	async loader_for_glb() {
 		const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
-		return new GLTFLoader();
+		const {DRACOLoader} = await import(`modules/three/examples/jsm/loaders/DRACOLoader`);
+
+		const loader = new GLTFLoader();
+		const draco_loader = new DRACOLoader();
+		const decoder_path = '/three/js/libs/draco/gltf/';
+		// DRACOLoader.setDecoderPath( decoder_path );
+		draco_loader.setDecoderPath(decoder_path);
+		draco_loader.setDecoderConfig({type: 'js'});
+		loader.setDRACOLoader(draco_loader);
+
+		return loader;
 	}
 	async loader_for_drc() {
 		// const {DDSLoader} = await import(`modules/three/examples/jsm/loaders/DDSLoader`);
 		const {DRACOLoader} = await import(`modules/three/examples/jsm/loaders/DRACOLoader`);
-		const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
+		// const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
 
-		const loader = new GLTFLoader();
+		// const loader = new GLTFLoader();
 		const draco_loader = new DRACOLoader();
-		// const decoder_path = '/three/js/libs/draco/gltf/'
+		const decoder_path = '/three/js/libs/draco/';
 		// DRACOLoader.setDecoderPath( decoder_path );
-		// draco_loader.setDecoderPath( decoder_path );
-		loader.setDRACOLoader(draco_loader);
-		return loader;
+		draco_loader.setDecoderPath(decoder_path);
+		draco_loader.setDecoderConfig({type: 'js'});
+		// loader.setDRACOLoader(draco_loader);
+		// console.log('loader', loader);
+		return draco_loader;
 	}
 	async loader_for_obj() {
 		const {OBJLoader} = await import(`modules/three/examples/jsm/loaders/OBJLoader`);
