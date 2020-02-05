@@ -3,8 +3,11 @@ const common = require('./common.js');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
-	return merge(common, {
+	const common_options = common(env);
+
+	return merge(common_options, {
 		mode: 'production',
+		devtool: 'source-map',
 		optimization: {
 			minimize: true,
 			minimizer: [

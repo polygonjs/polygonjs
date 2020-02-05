@@ -19,6 +19,7 @@
 		"outDir": "./dist/",
 		"module": "commonjs",
 		"target": "es5",
+		"moduleResolution": "node", // https://vuejs.org/v2/guide/typescript.html
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true, // for lodash imports (https://github.com/lodash/lodash/issues/3192)
 		"allowJs": true,

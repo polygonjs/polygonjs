@@ -4,21 +4,40 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const {VueLoaderPlugin} = require('vue-loader');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+// loaders
+const css = require('./loaders/css');
+const glsl = require('./loaders/glsl');
+const pug = require('./loaders/pug');
+const sass = require('./loaders/sass');
+const ts = require('./loaders/ts');
+const vue = require('./loaders/vue');
 
 // make sure to sync those paths in:
 // - tsconfig.js
-// - jest.config.js
 const alias = {
 	src: path.resolve(__dirname, '../src'),
 	modules: path.resolve(__dirname, '../modules/'),
 	tests: path.resolve(__dirname, '../tests/'),
 };
 const plugins = [
+	new VueLoaderPlugin(),
 	new CleanWebpackPlugin(),
+	// new HtmlWebpackPlugin({
+	// 	title: 'Index',
+	// 	// filename: 'index.html',
+	// 	chunks: ['polygonjs-engine'],
+	// }),
 	new HtmlWebpackPlugin({
-		title: 'Index',
-		// filename: 'index.html',
-		chunks: ['polygonjs-engine'],
+		title: 'Editor',
+		filename: 'editor',
+		template: 'src/editor/index.html',
+		chunks: ['polygonjs-editor'],
+	}),
+	new MiniCssExtractPlugin({
+		filename: '[name].css',
 	}),
 ];
 
@@ -26,10 +45,11 @@ if (TYPESCRIPT_TRANSPILE_ONLY) {
 	plugins.push(new ForkTsCheckerWebpackPlugin());
 }
 
-module.exports = {
+module.exports = (env = {}) => ({
 	context: path.resolve(__dirname, '../'), // to automatically find tsconfig.json
 	entry: {
-		'polygonjs-engine': './src/index.ts',
+		// 'polygonjs-engine': './src/index.ts',
+		'polygonjs-editor': './src/editor/index.ts',
 	},
 	plugins: plugins,
 	output: {
@@ -40,39 +60,19 @@ module.exports = {
 	},
 	resolve: {
 		// modules: [path.resolve(__dirname, '../node_modules')],
-		extensions: ['.ts', '.js' /*, '.glsl'*/],
+		extensions: ['.ts', '.js', '.vue'],
 		alias: alias,
 	},
 	module: {
 		rules: [
-			{
-				test: /\.ts?$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'ts-loader',
-						options: {
-							transpileOnly: TYPESCRIPT_TRANSPILE_ONLY,
-							experimentalWatchApi: true,
-						},
-					},
-				],
-			},
-			// this loader is not required, as is replaced by custom_typings/glsl.d.ts
-			// (from: https://stackoverflow.com/questions/48741570/how-can-i-import-glsl-as-string-in-typescript)
-			// Although that may not work from .js files, only from .ts
-			{
-				test: /\.glsl$/,
-				use: [{loader: 'ts-shader-loader'}],
-			},
-			// {
-			// 	test: /\.glsl$/,
-			// 	use: [
-			// 		{
-			// 			loader: 'webpack-glsl-loader',
-			// 		},
-			// 	],
-			// },
+			// engine
+			ts(TYPESCRIPT_TRANSPILE_ONLY),
+			glsl,
+			// editor
+			css(env),
+			pug,
+			sass,
+			vue,
 		],
 	},
-};
+});
