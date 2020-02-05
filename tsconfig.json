@@ -27,7 +27,7 @@
 		// declaration creates problems with anonymous classes from mixins
 		// but trying again to have a module export
 		"declaration": true,
-		// "declarationDir": "./dist/types",
+		"declarationDir": "./dist/types",
 
 		"importHelpers": true,
 		"baseUrl": "./",

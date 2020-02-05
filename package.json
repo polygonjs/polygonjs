@@ -13,11 +13,11 @@
 		"procedural",
 		"node-based"
 	],
-	"author": "Guillaume Fradin",
+	"author": "Guillaume Fradin <gui@polygonjs.com>",
 	"license": "MIT",
 	"private": true,
 	"main": "./dist/polygonjs-engine.js",
-	// "types": "./dist/types",
+	"types": "./dist/types",
 	"scripts": {
 		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config webpack/dev.js",
 		"build": "webpack --env.NODE_ENV=production --env.production --progress --config webpack/prod.js",

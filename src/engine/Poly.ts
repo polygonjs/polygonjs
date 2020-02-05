@@ -1,7 +1,7 @@
 import {BaseNodeClass} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
-import {RenderersController} from 'src/renderers/RenderersController';
-import {NodesRegister, RegisterOptions, BaseNodeConstructor} from 'src/engine/poly/NodesRegister';
+import {RenderersController} from './poly/RenderersController';
+import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/NodesRegister';
 import {NodeContext} from './poly/NodeContext';
 // import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
 
