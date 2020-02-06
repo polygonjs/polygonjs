@@ -1,0 +1,276 @@
+{
+	"properties": {
+		"frame": 1,
+		"frame_range": [1, 600],
+		"frame_range_locked": [true, true],
+		"fps": 60,
+		"master_camera_node_path": "/perspective_camera1"
+	},
+	"root": {
+		"type": "obj",
+		"nodes": {
+			"MAT": {
+				"type": "materials",
+				"nodes": {
+					"mesh_standard1": {
+						"type": "mesh_standard",
+						"nodes": {
+							"globals1": {
+								"type": "globals",
+								"params": {},
+								"inputs": []
+							},
+							"output1": {
+								"type": "output",
+								"params": {},
+								"inputs": []
+							}
+						},
+						"params": {
+							"use_map": {
+								"value": true
+							},
+							"use_env_map": {
+								"value": true
+							},
+							"env_map_intensity": {
+								"value": 0.88
+							},
+							"metalness": {
+								"value": 0.71
+							},
+							"roughness": {
+								"value": 0.15
+							}
+						},
+						"inputs": [],
+						"selection": []
+					}
+				},
+				"params": {},
+				"inputs": [],
+				"selection": ["mesh_standard1"]
+			},
+			"events1": {
+				"type": "events",
+				"nodes": {
+					"camera_orbit_controls1": {
+						"type": "camera_orbit_controls",
+						"params": {
+							"polar_angle_range": {
+								"components": {
+									"x": {},
+									"y": {
+										"expression": "$PI"
+									}
+								}
+							}
+						},
+						"inputs": []
+					}
+				},
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"geo1": {
+				"type": "geo",
+				"nodes": {
+					"material1": {
+						"type": "material",
+						"params": {},
+						"inputs": ["sphere1"]
+					},
+					"sphere1": {
+						"type": "sphere",
+						"params": {
+							"resolution": {
+								"components": {
+									"x": {
+										"value": 30
+									},
+									"y": {
+										"value": 30
+									}
+								}
+							},
+							"angle_range_x": {
+								"components": {
+									"x": {},
+									"y": {
+										"expression": "$PI*2"
+									}
+								}
+							},
+							"angle_range_y": {
+								"components": {
+									"x": {},
+									"y": {
+										"expression": "$PI"
+									}
+								}
+							}
+						},
+						"inputs": []
+					}
+				},
+				"params": {},
+				"inputs": [],
+				"selection": [],
+				"display_node_name": "material1",
+				"display_flag": true
+			},
+			"hemisphere_light1": {
+				"type": "hemisphere_light",
+				"params": {},
+				"inputs": [],
+				"display_flag": true
+			},
+			"perspective_camera1": {
+				"type": "perspective_camera",
+				"params": {
+					"controls": {
+						"value": "/events1/camera_orbit_controls1"
+					},
+					"t": {
+						"components": {
+							"x": {
+								"value": 0.32549316389238786
+							},
+							"y": {
+								"value": 1.2957439559942237
+							},
+							"z": {
+								"value": 6.578889844522953
+							}
+						}
+					},
+					"r": {
+						"components": {
+							"x": {
+								"value": -11.14206838852055
+							},
+							"y": {
+								"value": 2.7791179717609746
+							},
+							"z": {
+								"value": 0.5471293977011683
+							}
+						}
+					}
+				},
+				"inputs": [],
+				"display_flag": true
+			},
+			"spot_light1": {
+				"type": "spot_light",
+				"params": {
+					"t": {
+						"components": {
+							"x": {
+								"value": 1.6
+							},
+							"y": {
+								"value": 1.9
+							},
+							"z": {}
+						}
+					}
+				},
+				"inputs": [],
+				"display_flag": true
+			},
+			"COP": {
+				"type": "cop",
+				"nodes": {
+					"file2": {
+						"type": "file",
+						"params": {
+							"url": {
+								"value": "/examples/textures/piz_compressed.exr"
+							}
+						},
+						"inputs": []
+					},
+					"file_uv": {
+						"type": "file",
+						"params": {},
+						"inputs": []
+					},
+					"env_map": {
+						"type": "env_map",
+						"params": {},
+						"inputs": ["file2"]
+					}
+				},
+				"params": {},
+				"inputs": [],
+				"selection": [],
+				"display_node_name": "file2"
+			}
+		},
+		"selection": []
+	},
+	"ui": {
+		"nodes": {
+			"MAT": {
+				"pos": [-200, 200],
+				"nodes": {
+					"mesh_standard1": {
+						"pos": [-100, 50],
+						"nodes": {
+							"globals1": {
+								"pos": [-200, 0]
+							},
+							"output1": {
+								"pos": [200, 0]
+							}
+						}
+					}
+				}
+			},
+			"events1": {
+				"pos": [-200, 100],
+				"nodes": {
+					"camera_orbit_controls1": {
+						"pos": [-200, 100]
+					}
+				}
+			},
+			"geo1": {
+				"pos": [0, -150],
+				"nodes": {
+					"material1": {
+						"pos": [0, 150]
+					},
+					"sphere1": {
+						"pos": [0, 50]
+					}
+				}
+			},
+			"hemisphere_light1": {
+				"pos": [150, 100]
+			},
+			"perspective_camera1": {
+				"pos": [-200, -50]
+			},
+			"spot_light1": {
+				"pos": [150, 200]
+			},
+			"COP": {
+				"pos": [-200, 300],
+				"nodes": {
+					"file2": {
+						"pos": [50, 100]
+					},
+					"file_uv": {
+						"pos": [-100, 100]
+					},
+					"env_map": {
+						"pos": [50, 200]
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,6 +1,9 @@
 import Vue from 'vue';
+
+// Vue composition api
 import VueCompositionApi from '@vue/composition-api';
 Vue.use(VueCompositionApi);
+
 // from https://github.com/vuejs/composition-api README
 declare module '@vue/composition-api/dist/component/component' {
 	interface SetupContext {
@@ -9,19 +12,19 @@ declare module '@vue/composition-api/dist/component/component' {
 }
 Vue.config.productionTip = false;
 
-import Editor from './Editor.vue';
+// Vuex
+import Vuex from 'vuex';
+Vue.use(Vuex);
+import {store} from './store/Store';
+
+// to ensure that .vue components are loaded, see tips in webpack config
+// the still remaining issue is that when the file path is wrong, there is no warning in the editor
+// and the error message can be confusing
+import Editor from './components/Editor.vue';
 new Vue({
 	el: '#app',
+	store: store,
 	render: (createElement) => {
 		return createElement(Editor);
 	},
 });
-
-// const stylesheet = document.createElement('style');
-// stylesheet.innerText = 'html, body, canvas, .canvas_container {height: 100%; margin: 0px;} canvas {display: block;}';
-// document.body.appendChild(stylesheet);
-// const container = document.createElement('div');
-// container.id = 'app';
-// document.body.appendChild(container);
-
-// createApp(Editor).mount('#app');

@@ -4,6 +4,12 @@ import {Color} from 'three/src/math/Color';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
+export interface NodeUIDataJson {
+	x: number;
+	y: number;
+	comment?: string;
+}
+
 export class UIData extends CoreUIData {
 	private _position: Vector2;
 	private _width: number = 50;
@@ -89,7 +95,7 @@ export class UIData extends CoreUIData {
 	// 		this._position.y = new_position.y;
 	// 	}
 	// }
-	to_json() {
+	to_json(): NodeUIDataJson {
 		return {
 			x: this._position.x,
 			y: this._position.y,

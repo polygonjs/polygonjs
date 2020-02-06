@@ -28,7 +28,7 @@ import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 // import {UIDataOwner} from './concerns/UIDataOwner';
 // import {Visit} from './concerns/Visit';
 
-import {UIData} from './utils/UIData';
+import {UIData, NodeUIDataJson} from './utils/UIData';
 import {FlagsController} from './utils/FlagsController';
 import {StatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
@@ -77,11 +77,6 @@ interface NodeDeletedEmitData {
 }
 interface NodeCreatedEmitData {
 	child_node: BaseNodeType;
-}
-interface NodeUIUpdatedData {
-	x: number;
-	y: number;
-	comment: string | undefined;
 }
 
 import {ContainerMap} from 'src/engine/containers/utils/ContainerMap';
@@ -144,7 +139,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get lifecycle(): LifeCycleController {
 		return (this._lifecycle = this._lifecycle || new LifeCycleController(this));
 	}
-	get serializer(): NodeSerializer {
+	private get serializer(): NodeSerializer {
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
 	// get container_controller(): TypedContainerController<T> {
@@ -334,7 +329,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	emit(event_name: NodeEvent.NAMED_OUTPUTS_UPDATED): void;
 	emit(event_name: NodeEvent.INPUTS_UPDATED): void;
 	emit(event_name: NodeEvent.PARAMS_UPDATED): void;
-	emit(event_name: NodeEvent.UI_DATA_UPDATED, data: NodeUIUpdatedData): void;
+	emit(event_name: NodeEvent.UI_DATA_UPDATED, data: NodeUIDataJson): void;
 	emit(event_name: NodeEvent.ERROR_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_BYPASS_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;

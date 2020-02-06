@@ -6,6 +6,11 @@ import {JsonImportDispatcher} from './Dispatcher';
 export class SceneJsonImporter {
 	constructor(private _data: SceneJsonExporterData) {}
 
+	static load_data(data: SceneJsonExporterData) {
+		const importer = new SceneJsonImporter(data);
+		return importer.scene();
+	}
+
 	scene(): PolyScene {
 		const scene = new PolyScene();
 		scene.loading_controller.mark_as_loading();

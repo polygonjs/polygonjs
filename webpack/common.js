@@ -1,5 +1,14 @@
 const TYPESCRIPT_TRANSPILE_ONLY = false;
 
+// on using vue with typescript:
+// tips here: https://github.com/Microsoft/TypeScript-Vue-Starter
+// to make sure .vue components are loaded
+// - have a shim file (in this case custom_typings/loader_vue.d.ts)
+// - add .vue to file extension
+// - have all the vue loaders and options below
+// the still remaining issue is that when the file path is wrong, there is no warning in the editor
+// and the error message can be confusing
+
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
@@ -42,7 +51,7 @@ const plugins = [
 ];
 
 if (TYPESCRIPT_TRANSPILE_ONLY) {
-	plugins.push(new ForkTsCheckerWebpackPlugin());
+	plugins.push(new ForkTsCheckerWebpackPlugin({vue: true}));
 }
 
 module.exports = (env = {}) => ({

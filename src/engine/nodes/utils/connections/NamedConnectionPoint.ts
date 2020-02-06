@@ -7,7 +7,7 @@ import {
 } from './ConnectionPointType';
 // import {ParamInitValuesTypeMap} from '../params/ParamsController';
 
-interface TypedNamedConnectionPointData {
+export interface TypedNamedConnectionPointData {
 	name: string;
 }
 

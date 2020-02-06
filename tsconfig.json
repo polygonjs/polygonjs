@@ -27,8 +27,8 @@
 
 		// declaration creates problems with anonymous classes from mixins
 		// but trying again to have a module export
-		"declaration": true,
-		"declarationDir": "./dist/types",
+		"declaration": false, // false in dev to avoid having a long list of displayed files
+		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
 		"importHelpers": true,
 		"baseUrl": "./",
@@ -38,5 +38,6 @@
 			"tests": ["tests"]
 		}
 	},
+	// "include": ["./**/*.ts", "./**/*.vue"],
 	"exclude": ["node_modules", "modules", "dist", "public"]
 }

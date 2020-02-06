@@ -1,13 +1,40 @@
 import {BaseNodeType} from '../_Base';
+import {NodeUIDataJson} from './UIData';
+import {TypedNamedConnectionPointData} from './connections/NamedConnectionPoint';
+
+export interface NodeSerializerData {
+	name: string;
+	type: string;
+	graph_node_id: string;
+	is_dirty: boolean;
+	ui_data: NodeUIDataJson;
+	error_message: string | undefined;
+	children: string[];
+	inputs: Array<string | undefined>;
+	input_connection_output_indices: Array<number | undefined> | undefined;
+	named_inputs: TypedNamedConnectionPointData[];
+	named_outputs: TypedNamedConnectionPointData[];
+	params: Dictionary<string>;
+	spare_params: Dictionary<string>;
+	override_clonable_state: boolean;
+	inputs_clonable_state_with_override: boolean[];
+	flags?: {
+		//has_display: this.has_display_flag()
+		display?: boolean;
+		bypass?: boolean;
+	};
+	selection?: string[];
+}
 
 export class NodeSerializer {
 	constructor(private node: BaseNodeType) {}
 
-	serialize() {
-		return this.to_json();
-	}
+	// serialize() {
+	// 	return this.to_json();
+	// }
 
-	to_json(include_param_components: boolean = false) {
+	// TODO: find a way to not re-create a json everytime
+	to_json(include_param_components: boolean = false): NodeSerializerData {
 		// const spare_params_json_by_name = {};
 		// lodash_each(this.node.spare_param_names(), param_name=> {
 		// 	const param = this.node.spare_param(param_name);
@@ -45,7 +72,7 @@ export class NodeSerializer {
 				display: this.node.flags?.display?.active,
 				bypass: this.node.flags?.bypass?.active,
 			},
-			selection: null as string[] | null,
+			selection: undefined as string[] | undefined,
 		};
 
 		if (this.node.children_controller.children_allowed()) {

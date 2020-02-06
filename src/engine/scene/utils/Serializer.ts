@@ -1,6 +1,7 @@
 import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeSerializer} from 'src/engine/nodes/utils/Serializer';
 
-export class Serializer {
+export class PolySceneSerializer {
 	constructor(private scene: PolyScene) {}
 
 	to_json(include_node_param_components: boolean = false) {
@@ -8,7 +9,8 @@ export class Serializer {
 		const params_by_graph_node_id: Dictionary<object> = {};
 
 		for (let node of this.scene.nodes_controller.all_nodes()) {
-			nodes_by_graph_node_id[node.graph_node_id] = node.to_json(include_node_param_components);
+			const node_serializer = new NodeSerializer(node);
+			nodes_by_graph_node_id[node.graph_node_id] = node_serializer.to_json(include_node_param_components);
 
 			const params = node.params.all; //lodash_compact(lodash_concat( lodash_values(node.params()), lodash_values(node.spare_params()) ));
 			for (let param of params) {

@@ -36,7 +36,7 @@ import {MissingReferencesController} from 'src/engine/expressions/MissingReferen
 import {NodesController} from './utils/NodesController';
 import {CorePerformance} from 'src/core/performance/CorePerformance';
 import {TimeController} from './utils/TimeController';
-import {Serializer} from './utils/Serializer';
+import {PolySceneSerializer} from './utils/Serializer';
 import {UniformsController} from './utils/UniformsController';
 import {WebGLController} from './utils/WebGLController';
 
@@ -135,9 +135,9 @@ export class PolyScene {
 		this.time_controller.pause();
 	}
 
-	private _serializer: Serializer | undefined;
-	get serializer() {
-		return (this._serializer = this._serializer || new Serializer(this));
+	private _serializer: PolySceneSerializer | undefined;
+	private get serializer() {
+		return (this._serializer = this._serializer || new PolySceneSerializer(this));
 	}
 	to_json() {
 		return this.serializer.to_json();
