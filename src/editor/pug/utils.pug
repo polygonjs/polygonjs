@@ -1,0 +1,38 @@
+mixin icon(label)
+	i.fa(class = ("fa-"+label))
+	//- span.uikit-icon(v-html = "uk-icon('"+label+"')")
+
+mixin icon-fixed-width(label)
+	i.fa(class = ("fa-fw fa-"+label))
+	//- span.uikit-icon(v-html = "uk-icon('"+label+"')")
+
+mixin icon-stacked(label1, label2)
+	span.fa-stack.fa-fw
+		i(class="fa fa-fw fa-"+label1+" fa-stack-2x")
+		i(class="fa fa-fw fa-"+label2+" fa-stack-1x fa-inverse")
+
+mixin icon-on-square-empty(label)
+	span.fa-stack.fa-fw
+		i(class="fa fa-fw fa-square-o fa-stack-2x")
+		i(class="fa fa-fw fa-"+label+" fa-stack-1x")
+
+mixin icon-on-square-full(label)
+	span.fa-stack.fa-fw
+		i(class="fa fa-fw fa-square fa-stack-2x")
+		i(class="fa fa-fw fa-"+label+" fa-stack-1x fa-inverse")
+
+mixin icon-on-disk(label)
+	span.fa-stack.fa-fw
+		i(class="fa fa-fw fa-circle fa-stack-2x")
+		i(class="fa fa-fw fa-"+label+" fa-stack-1x fa-inverse")
+
+mixin icon-ban(label)
+	span.fa-stack.fa-fw
+		i(class="fa fa-fw fa-"+label+" fa-stack-1x")
+		i(class="fa fa-fw fa-ban fa-stack text-danger")
+
+
+mixin spinner
+	i.fa.fa-refresh.fa-spin
+mixin spinner_fixed_width
+	i.fa-fw.fa-refresh.fa-spin

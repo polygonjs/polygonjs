@@ -16,11 +16,21 @@ Vue.config.productionTip = false;
 import Vuex from 'vuex';
 Vue.use(Vuex);
 import {store} from './store/Store';
+import {StoreController} from './store/StoreController';
+if (store) {
+	StoreController.set_store(store);
+} else {
+	console.warn('store not ready for StoreController');
+}
+
+// icons
+import './components/Icons';
 
 // to ensure that .vue components are loaded, see tips in webpack config
 // the still remaining issue is that when the file path is wrong, there is no warning in the editor
 // and the error message can be confusing
-import Editor from './components/Editor.vue';
+import Editor from './components/editor/Editor.vue';
+
 new Vue({
 	el: '#app',
 	store: store,

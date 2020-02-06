@@ -13,7 +13,7 @@ import {BaseParamType} from 'src/engine/params/_Base';
 
 type EngineNodeData = NodeSerializerData;
 type EngineParamData = ParamSerializerData;
-interface EngineState {
+export interface EngineState {
 	scene_uuid: string | undefined;
 	nodes_by_graph_node_id: Dictionary<EngineNodeData>;
 	params_by_graph_node_id: Dictionary<EngineParamData>;

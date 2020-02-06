@@ -1,0 +1,17 @@
+
+include ./utils.pug
+
+
+mixin checked(option)
+	v-icon(
+		v-if = option
+		name = "regular/check-square"
+		)
+	v-icon(
+		v-else
+		name = "regular/square"
+		)
+	//- .menu_option_state(v-if = option)
+	//- 	+icon('check-square-o')
+	//- .menu_option_state(v-else)
+	//- 	+icon('square-o')

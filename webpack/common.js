@@ -57,7 +57,7 @@ if (TYPESCRIPT_TRANSPILE_ONLY) {
 module.exports = (env = {}) => ({
 	context: path.resolve(__dirname, '../'), // to automatically find tsconfig.json
 	entry: {
-		// 'polygonjs-engine': './src/index.ts',
+		// 'polygonjs-engine': './src/engine/index.ts',
 		'polygonjs-editor': './src/editor/index.ts',
 	},
 	plugins: plugins,

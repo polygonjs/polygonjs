@@ -25,13 +25,18 @@
 	},
 	"dependencies": {
 		"@dagrejs/graphlib": "dagrejs/graphlib",
-		"@vue/composition-api": "^0.3.4",
 		"geo-ambient-occlusion": "^3.0.4",
 		"lodash": "^4.17.15",
 		"opentype.js": "^1.1.0",
 		"three": "^0.112.1",
+		"@vue/composition-api": "^0.3.4",
 		"vue": "^2.6.11",
-		"vuex": "^3.1.2"
+		"vuex": "^3.1.2",
+		"vue-awesome": "^4.0.2",
+		"@ag-grid-community/all-modules": "22.1.1",
+		"@ag-grid-community/core": "^22.1.1",
+		"@ag-grid-community/vue": "22.1.2",
+		"foundation-sites": "^6.6.1"
 	},
 	"devDependencies": {
 		"@types/graphlib": "^2.1.4",

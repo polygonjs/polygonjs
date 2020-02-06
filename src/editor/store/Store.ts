@@ -1,10 +1,16 @@
-import {EngineStoreModule} from './modules/Engine';
 import Vuex from 'vuex';
 
-EngineStoreModule.state;
+import {EngineStoreModule, EngineState} from './modules/Engine';
+import {EditortoreModule, EditorState} from './modules/Editor';
 
-export const store = new Vuex.Store({
+export interface State {
+	engine: EngineState;
+	editor: EditorState;
+}
+
+export const store = new Vuex.Store<State>({
 	modules: {
 		engine: EngineStoreModule,
+		editor: EditortoreModule,
 	},
 });

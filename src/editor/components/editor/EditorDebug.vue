@@ -4,11 +4,10 @@
 		button(@click="inc") Clicked {{ count }} times.
 </template>
 
-<script>
+<script lang="ts">
 import {createComponent, ref} from '@vue/composition-api';
-
 export default createComponent({
-	name: 'activedesign-main',
+	name: 'editor-debug',
 	components: {},
 	props: {},
 	setup() {
