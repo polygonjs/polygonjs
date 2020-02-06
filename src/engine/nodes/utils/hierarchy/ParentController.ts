@@ -24,8 +24,8 @@ export class HierarchyParentController {
 			// this.on_set_parent();
 		}
 	}
-	is_selected() {
-		return this.parent?.selection?.contains(this.node);
+	is_selected(): boolean {
+		return this.parent?.children_controller?.selection?.contains(this.node) || false;
 	}
 	full_path(): string {
 		const separator = CoreWalker.SEPARATOR;

@@ -8,7 +8,7 @@ export interface State {
 	editor: EditorState;
 }
 
-export const store = new Vuex.Store<State>({
+export const EditorStore = new Vuex.Store<State>({
 	modules: {
 		engine: EngineStoreModule,
 		editor: EditortoreModule,

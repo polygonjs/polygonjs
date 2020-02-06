@@ -3,7 +3,7 @@ import lodash_compact from 'lodash/compact';
 import lodash_values from 'lodash/values';
 import Vue from 'vue';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {StoreController} from '../StoreController';
+import {StoreController} from '../controllers/StoreController';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
 // import {SceneJsonExporterData} from 'src/engine/io/json/export/Scene';
@@ -51,6 +51,13 @@ interface EnginePayloadNodeCreated {
 const store_json_node = (state: EngineState, node: BaseNodeType) => state.nodes_by_graph_node_id[node.graph_node_id];
 // window.store_json_param= (state, param)->
 // 	state.params_by_graph_node_id[param.graph_node_id()]
+
+export enum EngineMutation {
+	SCENE = 'scene',
+	SCENE_FRAME_UPDATED = 'scene_frame_updated',
+	SCENE_FRAME_RANGE_UPDATED = 'scene_frame_range_updated',
+	SCENE_PLAY_STATE_UPDATED = 'scene_play_state_updated',
+}
 
 export const EngineStoreModule = {
 	namespaced: true,
@@ -175,7 +182,8 @@ export const EngineStoreModule = {
 			}
 		},
 
-		scene(state: EngineState, scene: PolyScene) {
+		[EngineMutation.SCENE]: function(state: EngineState) {
+			const scene = StoreController.scene;
 			const include_node_param_components = false;
 			const nodes_by_graph_node_id: Dictionary<EngineNodeData> = {};
 			// for (let node of scene.nodes_controller.all_nodes()) {
@@ -193,26 +201,30 @@ export const EngineStoreModule = {
 			state.nodes_by_graph_node_id = nodes_by_graph_node_id;
 			state.params_by_graph_node_id = {}; //json.params_by_graph_node_id;
 			state.frame = scene.frame;
-			state.frame_range = scene.frame_range;
-			state.frame_range_locked = scene.time_controller.frame_range_locked;
+			Vue.set(state.frame_range, 0, scene.frame_range[0]);
+			Vue.set(state.frame_range, 1, scene.frame_range[1]);
+			Vue.set(state.frame_range_locked, 0, scene.time_controller.frame_range_locked[0]);
+			Vue.set(state.frame_range_locked, 1, scene.time_controller.frame_range_locked[1]);
 			state.fps = scene.time_controller.fps;
 			state.scene_uuid = scene.uuid;
 		},
 
-		scene_frame_updated(state: EngineState, payload: number) {
-			state.frame = payload;
+		[EngineMutation.SCENE_FRAME_UPDATED]: function(state: EngineState) {
+			state.frame = StoreController.scene.frame;
 			// const scene_context = payload['emitter'];
 			// return (state.frame = scene_context.frame());
 		},
-		scene_frame_range_updated(state: EngineState, payload: PolyScene) {
-			const scene = payload;
-			state.frame_range = scene.frame_range;
-			state.frame_range_locked = scene.time_controller.frame_range_locked;
+		[EngineMutation.SCENE_FRAME_RANGE_UPDATED]: function(state: EngineState) {
+			const scene = StoreController.scene;
+			Vue.set(state.frame_range, 0, scene.frame_range[0]);
+			Vue.set(state.frame_range, 1, scene.frame_range[1]);
+			Vue.set(state.frame_range_locked, 0, scene.time_controller.frame_range_locked[0]);
+			Vue.set(state.frame_range_locked, 1, scene.time_controller.frame_range_locked[1]);
 			state.fps = scene.time_controller.fps;
 		},
 
-		scene_play_state_updated(state: EngineState, payload: PolyScene) {
-			const scene = payload;
+		[EngineMutation.SCENE_PLAY_STATE_UPDATED]: function(state: EngineState) {
+			const scene = StoreController.scene;
 			// const scene_context = payload['emitter'];
 			state.playing_state = scene.time_controller.playing;
 		},
@@ -229,8 +241,8 @@ export const EngineStoreModule = {
 		selection_update(state: EngineState, payload: EnginePayloadNodeEmitter) {
 			const node = payload['emitter'];
 			const json_node = store_json_node(state, node);
-			if (json_node) {
-				json_node['selection'] = node.selection.to_json();
+			if (json_node && node && node.children_allowed() && node.children_controller) {
+				json_node['selection'] = node.children_controller.selection.to_json();
 			}
 		},
 

@@ -38,7 +38,7 @@ export class NodesController {
 	clear() {
 		const children = this.root.children();
 		for (let child of children) {
-			this.root.children_controller.remove_node(child);
+			this.root.children_controller?.remove_node(child);
 		}
 		// return children.forEach(child=> {
 		// 	return this.root().remove_node(child);
@@ -59,7 +59,7 @@ export class NodesController {
 		while (current_parents.length > 0 && cmptr < 10) {
 			const children = lodash_flatten(
 				current_parents.map((current_parent) => {
-					if (current_parent.children_controller.children_allowed()) {
+					if (current_parent.children_allowed()) {
 						return current_parent.children();
 					} else {
 						return [];
@@ -77,7 +77,9 @@ export class NodesController {
 		this._node_context_signatures = {};
 	}
 	register_node_context_signature(node: BaseNodeType) {
-		this._node_context_signatures[node.children_controller.node_context_signature()] = true;
+		if (node.children_allowed() && node.children_controller) {
+			this._node_context_signatures[node.children_controller.node_context_signature()] = true;
+		}
 	}
 	node_context_signatures() {
 		return Object.keys(this._node_context_signatures)

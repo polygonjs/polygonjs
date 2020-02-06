@@ -74,7 +74,7 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 			this._found_node = node;
 			if (node) {
 				const expected_context = this.options.node_selection_context;
-				const node_context = node.parent?.children_controller.context;
+				const node_context = node.parent?.children_controller?.context;
 				if (expected_context == node_context || expected_context == null) {
 					if (dependent_on_found_node) {
 						this.add_graph_input(node);

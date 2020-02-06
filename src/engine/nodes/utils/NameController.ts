@@ -29,7 +29,7 @@ export class NameController {
 
 	request_name_to_parent(new_name: string) {
 		const parent = this.node.parent;
-		if (parent != null) {
+		if (parent && parent.children_allowed() && parent.children_controller) {
 			parent.children_controller.set_child_name(this.node, new_name);
 		} else {
 			console.warn('request_name_to_parent failed, no parent found');
@@ -44,9 +44,11 @@ export class NameController {
 		this.node.set_name(new_name);
 		this.post_set_name();
 		this.post_set_full_path();
-		this.node.children_controller.children().forEach((child_node) => {
-			child_node.name_controller.post_set_full_path(); // TODO: typescript: replace post_set_full_path with execute_on_update_full_path_hooks or on_update_full_path
-		});
+		if (this.node.children_allowed()) {
+			this.node.children_controller?.children().forEach((child_node) => {
+				child_node.name_controller.post_set_full_path(); // TODO: typescript: replace post_set_full_path with execute_on_update_full_path_hooks or on_update_full_path
+			});
+		}
 		this._graph_node.set_successors_dirty();
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}

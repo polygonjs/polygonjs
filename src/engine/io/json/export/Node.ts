@@ -57,7 +57,7 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 			this._data['nodes'] = nodes_data;
 
 			// required by the Store::Scene::Exporter.rb
-			const context = this._node.children_controller.context;
+			const context = this._node.children_controller?.context;
 			if (context) {
 				this._data['children_context'] = context;
 			}
@@ -82,21 +82,22 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 			}
 		}
 
-		const selection = this._node.selection;
-		if (selection && this._node.children().length > 0) {
-			// only save the nodes that are still present, in case the selection just got deleted
-			const selected_children: BaseNodeType[] = [];
-			const selected_ids: Dictionary<boolean> = {};
-			for (let selected_node of selection.nodes()) {
-				selected_ids[selected_node.graph_node_id] = true;
-			}
-			for (let child of this._node.children()) {
-				if (child.graph_node_id in selected_ids) {
-					selected_children.push(child);
+		if (this._node.children_allowed()) {
+			const selection = this._node.children_controller?.selection;
+			if (selection && this._node.children().length > 0) {
+				// only save the nodes that are still present, in case the selection just got deleted
+				const selected_children: BaseNodeType[] = [];
+				const selected_ids: Dictionary<boolean> = {};
+				for (let selected_node of selection.nodes()) {
+					selected_ids[selected_node.graph_node_id] = true;
 				}
+				for (let child of this._node.children()) {
+					if (child.graph_node_id in selected_ids) {
+						selected_children.push(child);
+					}
+				}
+				this._data['selection'] = selected_children.map((n) => n.name);
 			}
-
-			this._data['selection'] = selected_children.map((n) => n.name);
 		}
 
 		// inputs clone

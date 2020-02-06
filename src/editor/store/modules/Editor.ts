@@ -206,7 +206,7 @@ export const EditortoreModule = {
 		// 	localStorage['network_camera_properties'] = JSON.stringify(state.network_properties.camera_settings_by_ids)
 
 		current_node(state: EditorState, node: BaseNodeType) {
-			if (!node.children_controller.children_allowed()) {
+			if (!node.children_allowed()) {
 				return;
 			}
 			state.current_node_id = node.graph_node_id;

@@ -15,10 +15,10 @@ Vue.config.productionTip = false;
 // Vuex
 import Vuex from 'vuex';
 Vue.use(Vuex);
-import {store} from './store/Store';
-import {StoreController} from './store/StoreController';
-if (store) {
-	StoreController.set_store(store);
+import {EditorStore} from './store/Store';
+import {StoreController} from './store/controllers/StoreController';
+if (EditorStore) {
+	StoreController.set_store(EditorStore);
 } else {
 	console.warn('store not ready for StoreController');
 }
@@ -33,7 +33,7 @@ import Editor from './components/editor/Editor.vue';
 
 new Vue({
 	el: '#app',
-	store: store,
+	store: EditorStore,
 	render: (createElement) => {
 		return createElement(Editor);
 	},

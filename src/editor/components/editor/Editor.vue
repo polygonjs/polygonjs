@@ -25,7 +25,7 @@
 		//- 	:scene_update_allowed = 'scene_update_allowed'
 		//- 	ref = 'multiple_panel'
 		//- 	)
-		//- PlayBar
+		PlayBar
 		//- FooterBar
 		//- NumericSlider
 
@@ -59,7 +59,7 @@ import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 // components
 // import TopBar from './Bar/Top'
 import NavigationBar from './top/Navigation.vue';
-// import PlayBar from './Bar/Play'
+import PlayBar from './widgets/PlayBar.vue';
 // import FooterBar from './Bar/Footer'
 // import MultiplePanel from './Panel/Multiple/Multiple'
 // import ParamNodeSelector from './Widget/ParamNodeSelector'
@@ -90,7 +90,7 @@ export default createComponent({
 		// ParamMenu,
 		// ParamNodeSelector,
 		// PanelNodeSelector,
-		// PlayBar,
+		PlayBar,
 		Retractable,
 		// NumericSlider,
 		// TopBar,
@@ -206,7 +206,7 @@ export default createComponent({
 
 <style lang="sass">
 @import "globals.sass"
-@import "foundation.sass"
+@import "foundation/foundation.sass"
 
 // body
 // 	// this seems necessary to prevent a scrollbar when using the numeric slider component

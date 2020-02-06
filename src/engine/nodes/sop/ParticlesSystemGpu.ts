@@ -253,10 +253,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		MAT.set_name(mat_name);
 
 		const create_points_mat = (MAT: MaterialsObjNode, name: string) => {
-			const points_mat = MAT.create_node('points');
+			const points_mat = MAT.create_node('points')!;
 			points_mat.set_name(name);
 
-			const points_mat_constant_point_size = points_mat.create_node('constant');
+			const points_mat_constant_point_size = points_mat.create_node('constant')!;
 			points_mat_constant_point_size.set_name('constant_point_size');
 			points_mat_constant_point_size.p.value_float.set(4); // to match the default point material
 
@@ -268,7 +268,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			return points_mat;
 		};
 		const points_mat = MAT.node(particles_mat_name) || create_points_mat(MAT, particles_mat_name);
-
-		this.p.material.set(points_mat.full_path());
+		if (points_mat) {
+			this.p.material.set(points_mat.full_path());
+		}
 	}
 }

@@ -60,7 +60,7 @@
 		"ts-loader": "^6.2.1",
 		"ts-shader-loader": "^1.0.6",
 		"tslib": "^1.10.0",
-		"typescript": "^3.8.0-beta",
+		"typescript": "^3.8.0-dev.20200206",
 		"vue-loader": "^15.8.3",
 		"vue-template-compiler": "^2.6.11",
 		"webpack": "^4.41.5",

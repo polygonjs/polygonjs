@@ -45,7 +45,6 @@ import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/uti
 import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/connections/IOController';
 
-import CoreSelection from 'src/core/NodeSelection';
 // import {BaseContainer} from '../containers/_Base';
 
 // import {BaseParam} from 'src/engine/params/_Base';
@@ -94,8 +93,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	);
 
 	private _parent_controller: HierarchyParentController | undefined;
-	private _children_controller: HierarchyChildrenController | undefined;
-	private _selection: CoreSelection | undefined;
+
 	private _ui_data: UIData | undefined;
 
 	private _dependencies_controller: DependenciesController | undefined;
@@ -118,15 +116,24 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
-	// TODO: try and not have the children controller always created
-	get children_controller(): HierarchyChildrenController {
-		return (this._children_controller = this._children_controller || new HierarchyChildrenController(this));
+
+	private _children_controller: HierarchyChildrenController | undefined;
+	protected _children_controller_context: NodeContext | undefined;
+	get children_controller_context() {
+		return this._children_controller_context;
 	}
-	// TODO: try and not have the selection always created
-	// TODO: should the selection be under the children_controller?
-	get selection(): CoreSelection {
-		return (this._selection = this._selection || new CoreSelection(this));
+	private _create_children_controller(): HierarchyChildrenController | undefined {
+		if (this._children_controller_context) {
+			return new HierarchyChildrenController(this, this._children_controller_context);
+		}
 	}
+	get children_controller(): HierarchyChildrenController | undefined {
+		return (this._children_controller = this._children_controller || this._create_children_controller());
+	}
+	children_allowed(): boolean {
+		return this._children_controller_context != null;
+	}
+
 	get ui_data(): UIData {
 		return (this._ui_data = this._ui_data || new UIData(this));
 	}
@@ -299,19 +306,19 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 
 	// hierarchy
 	create_node(type: string) {
-		return this.children_controller.create_node(type);
+		return this.children_controller?.create_node(type);
 	}
 	remove_node(node: BaseNodeType) {
-		return this.children_controller.remove_node(node);
+		this.children_controller?.remove_node(node);
 	}
 	children() {
-		return this.children_controller.children();
+		return this.children_controller?.children() || [];
 	}
 	node(path: string) {
-		return this.children_controller.find_node(path);
+		return this.children_controller?.find_node(path) || null;
 	}
 	nodes_by_type(type: string) {
-		return this.children_controller.nodes_by_type(type);
+		return this.children_controller?.nodes_by_type(type) || [];
 	}
 
 	// inputs

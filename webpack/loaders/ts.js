@@ -1,4 +1,4 @@
-module.exports = (transpile_only) => {
+module.exports = (env, transpile_only) => {
 	return {
 		test: /\.ts?$/,
 		exclude: /node_modules/,
@@ -8,7 +8,7 @@ module.exports = (transpile_only) => {
 				options: {
 					transpileOnly: transpile_only,
 					appendTsSuffixTo: [/\.vue$/],
-					experimentalWatchApi: true,
+					// experimentalWatchApi: true, // This seems to cause crashes when using many files
 				},
 			},
 		],

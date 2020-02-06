@@ -1,4 +1,4 @@
-const CREATE_TEST_INDEX = false;
+const CREATE_TEST_INDEX = true;
 
 const merge = require('webpack-merge');
 const common = require('./common.js');

@@ -11,8 +11,9 @@ export class EventsObjNode extends BaseManagerObjNode {
 	// 	return NodeContext.EVENT;
 	// }
 
+	protected _children_controller_context = NodeContext.EVENT;
 	initialize_node() {
-		this.children_controller.init(NodeContext.EVENT);
+		this.children_controller?.init();
 		// this._init_manager();
 	}
 }

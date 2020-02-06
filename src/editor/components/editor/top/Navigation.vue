@@ -49,7 +49,7 @@
 // import NodeOwner from 'src/Editor/Component/Mixin/NodeOwner';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {StoreController} from 'src/editor/store/StoreController';
+import {StoreController} from 'src/editor/store/controllers/StoreController';
 
 import {createComponent, ref, watch, computed, onMounted} from '@vue/composition-api';
 export default createComponent({

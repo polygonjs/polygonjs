@@ -7,8 +7,9 @@ export class PostProcessObjNode extends BaseManagerObjNode {
 	}
 	// children_context(){ return NodeContext.POST }
 
+	protected _children_controller_context = NodeContext.POST;
 	initialize_node() {
-		this.children_controller.init(NodeContext.POST);
+		this.children_controller?.init();
 		// this._init_manager();
 	}
 }

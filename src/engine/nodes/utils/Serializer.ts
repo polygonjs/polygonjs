@@ -75,8 +75,8 @@ export class NodeSerializer {
 			selection: undefined as string[] | undefined,
 		};
 
-		if (this.node.children_controller.children_allowed()) {
-			data['selection'] = this.node.selection.to_json();
+		if (this.node.children_allowed() && this.node.children_controller) {
+			data['selection'] = this.node.children_controller.selection.to_json();
 		}
 
 		return data;

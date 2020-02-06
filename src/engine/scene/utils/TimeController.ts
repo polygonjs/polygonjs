@@ -50,11 +50,13 @@ export class TimeController {
 		return this._frame_range_locked;
 	}
 	set_frame_range(start_frame: number, end_frame: number) {
-		this._frame_range = [Math.floor(start_frame), Math.floor(end_frame)];
+		this._frame_range[0] = Math.floor(start_frame);
+		this._frame_range[1] = Math.floor(end_frame);
 		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	set_frame_range_locked(start_locked: boolean, end_locked: boolean) {
-		this._frame_range_locked = [start_locked, end_locked];
+		this._frame_range_locked[0] = start_locked;
+		this._frame_range_locked[1] = end_locked;
 		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	set_fps(fps: number) {
@@ -88,10 +90,10 @@ export class TimeController {
 	}
 	_ensure_frame_within_bounds(frame: number): number {
 		if (this._frame_range_locked[0] && frame < this._frame_range[0]) {
-			frame = this._frame_range[1];
+			return this._frame_range[1];
 		}
 		if (this._frame_range_locked[1] && frame > this._frame_range[1]) {
-			frame = this._frame_range[0];
+			return this._frame_range[0];
 		}
 		return frame;
 	}

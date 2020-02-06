@@ -9,8 +9,9 @@ export class MaterialsObjNode extends BaseManagerObjNode {
 	}
 	// children_context(){ return NodeContext.MAT }
 
+	protected _children_controller_context = NodeContext.MAT;
 	initialize_node() {
-		this.children_controller.init(NodeContext.MAT);
+		this.children_controller?.init();
 		// TODO: typescript
 		// this._init_manager({
 		// 	children: {

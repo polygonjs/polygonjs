@@ -12,7 +12,7 @@ interface EventsListener {
 export class EventsController {
 	constructor(private scene: PolyScene) {}
 
-	_events_listener: EventsListener | undefined;
+	private _events_listener: EventsListener | undefined;
 
 	set_listener(events_listener: EventsListener) {
 		this._events_listener = events_listener;

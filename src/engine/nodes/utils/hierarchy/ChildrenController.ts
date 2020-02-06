@@ -10,6 +10,8 @@ import lodash_values from 'lodash/values';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {NameController} from '../NameController';
+import CoreSelection from 'src/core/NodeSelection';
+
 import {POLY} from 'src/engine/Poly';
 // import {NameController} from '../NameController';
 
@@ -20,8 +22,8 @@ import {POLY} from 'src/engine/Poly';
 const NODE_SIMPLE_NAME = 'children';
 
 export class HierarchyChildrenController {
-	private _context: NodeContext | undefined;
-	private _children_allowed: boolean = false;
+	// private _context: NodeContext | undefined;
+	// private _children_allowed: boolean = false;
 	private _children: Dictionary<BaseNodeType> = {};
 	private _children_by_type: Dictionary<string[]> = {};
 	private _children_and_grandchildren_by_context: Dictionary<string[]> = {};
@@ -29,16 +31,19 @@ export class HierarchyChildrenController {
 	private _is_dependent_on_children: boolean = false;
 	private _children_node: CoreGraphNode | undefined;
 
-	constructor(protected node: BaseNodeType) {}
+	private _selection: CoreSelection | undefined;
+	get selection(): CoreSelection {
+		return (this._selection = this._selection || new CoreSelection(this.node));
+	}
+	constructor(protected node: BaseNodeType, private _context: NodeContext) {}
 
-	init(context: NodeContext, dependent: boolean = false) {
+	init(dependent: boolean = false) {
 		// const context = this.node.children_context();
 		// if (context) {
 		// this._available_children_classes = options['children'] || {};
 		// this._available_children_classes = window.POLY.registered_nodes(context, this.self.type())
 
-		this._context = context;
-		this._children_allowed = true;
+		// this._children_allowed = true;
 		this._children = {};
 
 		// const is_dependent = options['dependent'];
@@ -103,12 +108,12 @@ export class HierarchyChildrenController {
 			return {};
 		}
 	}
-	children_allowed(): boolean {
-		// return (this.self.available_children_classes != null) &&
-		// (Object.keys(this.self.available_children_classes()).length > 0);
-		const available_classes = this.available_children_classes();
-		return available_classes && Object.keys(available_classes).length > 0;
-	}
+	// children_allowed(): boolean {
+	// 	// return (this.self.available_children_classes != null) &&
+	// 	// (Object.keys(this.self.available_children_classes()).length > 0);
+	// 	const available_classes = this.available_children_classes();
+	// 	return available_classes && Object.keys(available_classes).length > 0;
+	// }
 
 	create_node(node_type: string): BaseNodeType {
 		if (this.available_children_classes() == null) {
@@ -133,16 +138,18 @@ export class HierarchyChildrenController {
 	}
 
 	private add_node(child_node: BaseNodeType) {
-		if (!this._children_allowed) {
-			throw `node ${this.node.full_path()} cannot have children`;
-		}
+		// if (!this._children_allowed) {
+		// 	throw `node ${this.node.full_path()} cannot have children`;
+		// }
 
 		child_node.set_parent(this.node);
 		child_node.params.init();
 		child_node.parent_controller.on_set_parent();
 		child_node.name_controller.post_set_full_path();
-		for (let child of child_node.children_controller.children()) {
-			child.name_controller.post_set_full_path();
+		if (child_node.children_allowed() && child_node.children_controller) {
+			for (let child of child_node.children_controller.children()) {
+				child.name_controller.post_set_full_path();
+			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node: child_node});
 		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
@@ -176,8 +183,8 @@ export class HierarchyChildrenController {
 				this._children_node.remove_graph_input(child_node);
 			}
 
-			if (this.node.selection.contains(child_node)) {
-				this.node.selection.remove([child_node]);
+			if (this.selection.contains(child_node)) {
+				this.selection.remove([child_node]);
 			}
 
 			const first_connection = child_node.io.connections.first_input_connection();
@@ -216,9 +223,9 @@ export class HierarchyChildrenController {
 	}
 
 	find_node(path: string): BaseNodeType | null {
-		if (!this._children_allowed) {
-			return null;
-		}
+		// if (!this._children_allowed) {
+		// 	return null;
+		// }
 		if (path == null) {
 			return null;
 		}
@@ -273,8 +280,8 @@ export class HierarchyChildrenController {
 		if (!lodash_includes(this._children_and_grandchildren_by_context[type], node_id)) {
 			this._children_and_grandchildren_by_context[type].push(node_id);
 		}
-		if (this.node.parent) {
-			this.node.parent.children_controller.add_to_children_and_grandchildren_by_context(node);
+		if (this.node.parent && this.node.parent.children_allowed()) {
+			this.node.parent.children_controller?.add_to_children_and_grandchildren_by_context(node);
 		}
 	}
 	remove_from_children_and_grandchildren_by_context(node: BaseNodeType) {
@@ -289,8 +296,8 @@ export class HierarchyChildrenController {
 				}
 			}
 		}
-		if (this.node.parent) {
-			this.node.parent.children_controller.remove_from_children_and_grandchildren_by_context(node);
+		if (this.node.parent && this.node.parent.children_allowed()) {
+			this.node.parent.children_controller?.remove_from_children_and_grandchildren_by_context(node);
 		}
 	}
 

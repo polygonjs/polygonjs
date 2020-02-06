@@ -53,13 +53,17 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		}
 
 		const node_names = Object.keys(data);
-		const nodes = [];
+		const nodes: BaseNodeType[] = [];
 		for (let node_name of node_names) {
 			const node_data = data[node_name];
 			const node_type = node_data['type'];
-			const node = this._node.create_node(node_type);
-			node.set_name(node_name);
-			nodes.push(node);
+			if (this._node.children_allowed() && this._node.children_controller) {
+				const node = this._node.create_node(node_type);
+				if (node) {
+					node.set_name(node_name);
+					nodes.push(node);
+				}
+			}
 		}
 		const importers = [];
 		let index = 0;
@@ -77,15 +81,17 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		}
 	}
 	set_selection(data?: string[]) {
-		if (data && data.length > 0) {
-			const selected_nodes: BaseNodeType[] = [];
-			data.forEach((node_name) => {
-				const node = this._node.node(node_name);
-				if (node) {
-					selected_nodes.push(node);
-				}
-			});
-			this._node.selection.set(selected_nodes);
+		if (this._node.children_allowed() && this._node.children_controller) {
+			if (data && data.length > 0) {
+				const selected_nodes: BaseNodeType[] = [];
+				data.forEach((node_name) => {
+					const node = this._node.node(node_name);
+					if (node) {
+						selected_nodes.push(node);
+					}
+				});
+				this._node.children_controller.selection.set(selected_nodes);
+			}
 		}
 	}
 

@@ -198,8 +198,8 @@ export class NodeCodeExporter {
 	protected add_custom() {}
 
 	protected add_selection() {
-		if (this._node.selection != null) {
-			for (let node of this._node.selection.nodes()) {
+		if (this._node.children_controller?.selection != null) {
+			for (let node of this._node.children_controller.selection.nodes()) {
 				const node_exporter = CodeExporterDispatcher.dispatch_node(node);
 				this._lines.push(`${this.var_name()}.selection().add(${node_exporter.var_name()})`);
 			}

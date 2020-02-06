@@ -47,8 +47,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// private _loaded_geo_node_by_id: Dictionary<boolean> = {};
 	private _process_queue_start: number = -1;
 
+	protected _children_controller_context = NodeContext.OBJ;
 	initialize_node() {
-		this.children_controller.init(NodeContext.OBJ);
+		this.children_controller?.init();
 
 		// this.flags.add_display();
 

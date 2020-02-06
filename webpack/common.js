@@ -9,6 +9,9 @@ const TYPESCRIPT_TRANSPILE_ONLY = false;
 // the still remaining issue is that when the file path is wrong, there is no warning in the editor
 // and the error message can be confusing
 
+// IN CASE OF CRASHES WHEN BUILDING
+// - try and deactivate experimentalWatchApi in ts-loader
+
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
@@ -75,7 +78,7 @@ module.exports = (env = {}) => ({
 	module: {
 		rules: [
 			// engine
-			ts(TYPESCRIPT_TRANSPILE_ONLY),
+			ts(env, TYPESCRIPT_TRANSPILE_ONLY),
 			glsl,
 			// editor
 			css(env),

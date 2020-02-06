@@ -7,8 +7,9 @@ export class CopObjNode extends BaseManagerObjNode {
 	}
 	// children_context(){ return NodeContext.COP }
 
+	protected _children_controller_context = NodeContext.COP;
 	initialize_node() {
-		this.children_controller.init(NodeContext.COP);
+		this.children_controller?.init();
 		// this._init_manager();
 	}
 }

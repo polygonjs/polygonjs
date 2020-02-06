@@ -47,8 +47,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	// }
 
 	protected _used_in_scene: boolean = true;
+	protected _children_controller_context = NodeContext.SOP;
 	initialize_node() {
-		this.children_controller.init(NodeContext.SOP);
+		this.children_controller?.init();
 
 		this.flags.display.add_hook(() => {
 			this.set_used_in_scene(this.flags.display.active);
