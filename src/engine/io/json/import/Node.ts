@@ -160,9 +160,6 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 			const param_data = data[param_name];
 			const has_param = this._node.params.has_param(param_name);
 			const param_type = param_data['type'];
-			if (!param_type) {
-				return;
-			}
 
 			let has_param_and_same_type = false;
 			let param;
@@ -181,7 +178,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 				}
 			} else {
 				const options = param_data['options'];
-				if (options) {
+				if (options && param_type) {
 					const is_spare = options['spare'] === true;
 					if (is_spare && param_data['default_value']) {
 						if (has_param) {

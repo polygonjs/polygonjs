@@ -1,12 +1,5 @@
 import {PolyScene} from 'src/engine/scene/PolyScene';
 
-import 'src/engine/poly/registers/All';
-import {SceneJsonExporterData} from 'src/engine/io/json/export/Scene';
-import {SceneJsonImporter} from 'src/engine/io/json/import/Scene';
-import default_scene_data from '../../../../public/examples/scenes/default_simple.json';
-
-const default_scene = SceneJsonImporter.load_data(default_scene_data as SceneJsonExporterData);
-
 import {EditorStoreController, EditorStoreControllerClass} from './EditorStoreController';
 import {EngineStoreController, EngineStoreControllerClass} from './EngineStoreController';
 import {Store} from 'vuex';
@@ -16,18 +9,16 @@ import {SceneEvent} from 'src/engine/poly/SceneEvent';
 
 class StoreControllerClass {
 	private static _instance: StoreControllerClass;
+	private _scene!: PolyScene;
 
 	public readonly editor: EditorStoreControllerClass = EditorStoreController;
 	public readonly engine: EngineStoreControllerClass = EngineStoreController;
 
 	static instance() {
-		return (this._instance = this._instance || new StoreControllerClass(default_scene));
+		return (this._instance = this._instance || new StoreControllerClass());
 	}
 
-	private constructor(private _scene: PolyScene) {
-		(window as any).scene = this._scene;
-		this.set_scene(this._scene);
-	}
+	private constructor() {}
 	set_scene(scene: PolyScene) {
 		this._scene = scene;
 		this._scene.events_controller.set_listener(this);

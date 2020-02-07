@@ -8,6 +8,9 @@ QUnit.module('core/geometry');
 import './core/geometry/Attribute';
 import './core/geometry/Group';
 
+QUnit.module('scene');
+import './engine/scene/Serializer';
+
 QUnit.module('params');
 import './engine/params/_Base';
 import './engine/params/Boolean';
@@ -21,6 +24,9 @@ import './engine/params/utils/Dirty';
 import './engine/params/utils/Expression';
 import './engine/params/utils/ReferencedAssets';
 import './engine/params/utils/TimeDependent';
+
+QUnit.module('manager');
+import './engine/nodes/manager/ObjectsManager';
 
 QUnit.module('obj');
 import './engine/nodes/obj/AmbientLight';

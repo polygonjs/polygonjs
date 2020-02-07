@@ -127,7 +127,7 @@ export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
 }
 type ParamValueSerializedTypeMapGeneric = {[key in ParamType]: ParamValueSerialized};
 export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMapGeneric {
-	[ParamType.BOOLEAN]: boolean;
+	[ParamType.BOOLEAN]: boolean | string;
 	[ParamType.BUTTON]: null;
 	[ParamType.COLOR]: StringOrNumber3;
 	[ParamType.FLOAT]: StringOrNumber;

@@ -208,7 +208,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
 		CoreTransform.set_params_from_object(this._object, this);
 	}
-	viewer(element: HTMLElement): ThreejsViewer {
+	create_viewer(element: HTMLElement): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this);
 	}
 }

@@ -9,7 +9,9 @@ export class ParamMultipleJsonExporter extends ParamJsonExporter<TypedMultiplePa
 		const component_names = this._param.component_names;
 		this._param.components?.forEach((component, i) => {
 			const exporter = JsonExportDispatcher.dispatch_param(component); //.accepts_visitor();
-			components_data[component_names[i]] = exporter.data();
+			if (exporter.required) {
+				components_data[component_names[i]] = exporter.data();
+			}
 		});
 
 		this._data['components'] = components_data;

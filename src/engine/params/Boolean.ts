@@ -11,8 +11,13 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static type() {
 		return ParamType.BOOLEAN;
 	}
+	// TODO: be careful as this does not allow serialization of expressions as default value
 	get default_value_serialized() {
-		return this.convert(this.default_value) || false;
+		if (lodash_isString(this.default_value)) {
+			return this.default_value;
+		} else {
+			return this.convert(this.default_value) || false;
+		}
 	}
 	get value_serialized() {
 		return this.value;

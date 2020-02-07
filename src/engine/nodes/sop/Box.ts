@@ -64,6 +64,7 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
 		geometry.computeVertexNormals();
+		console.log('cook', geometry);
 		// const buffer_geometry = CoreGeometry.clone(geometry);
 		this.set_geometry(geometry);
 	}

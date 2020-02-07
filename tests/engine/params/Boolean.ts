@@ -1,3 +1,5 @@
+import {ParamType} from 'src/engine/poly/ParamType';
+
 QUnit.test('boolean evals correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
@@ -32,4 +34,69 @@ QUnit.test('boolean evals correctly when set to different values', async (assert
 	scene.set_frame(3);
 	await boolean_param.compute();
 	assert.equal(boolean_param.value, true);
+});
+
+QUnit.test('boolean is_default', async (assert) => {
+	const geo1 = window.geo1;
+
+	const boolean_param = geo1.p.display;
+	assert.ok(boolean_param.is_default);
+
+	boolean_param.set(0);
+	assert.ok(!boolean_param.is_default);
+
+	boolean_param.set('1*2*0.5');
+	boolean_param.compute();
+	assert.ok(!boolean_param.is_default);
+
+	boolean_param.set(1);
+	boolean_param.compute();
+	assert.ok(boolean_param.is_default);
+});
+QUnit.test('boolean is_default for spare with expression', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	scene.time_controller.set_frame_range(0, 10);
+
+	console.log('******* create spare');
+	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F')!;
+	console.log('spare_boolean.graph_all_predecessors()', spare_boolean.graph_all_predecessors());
+	assert.deepEqual(
+		spare_boolean.graph_all_predecessors().map((n) => n.graph_node_id),
+		[scene.time_controller.graph_node.graph_node_id]
+	);
+	assert.ok(spare_boolean.has_expression(), 'has expr');
+	assert.ok(spare_boolean.is_default, 'spare is default');
+
+	console.log('set frame to 1');
+	scene.set_frame(1);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.is_default, 'spare is default');
+	console.log('spare_boolean.value');
+	assert.ok(spare_boolean.value === true, 'value is true');
+
+	console.log('set frame to 0');
+	scene.set_frame(0);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.is_default);
+	assert.ok(spare_boolean.value === false, 'value is false');
+
+	spare_boolean.set(1);
+	assert.ok(!spare_boolean.is_default);
+	assert.ok(spare_boolean.value === true, 'value is true');
+	spare_boolean.set(0);
+	assert.ok(!spare_boolean.is_default);
+	assert.ok(spare_boolean.value === false, 'value is false');
+	spare_boolean.set('$F*2');
+	assert.ok(!spare_boolean.is_default);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.value === false, 'value is false');
+	scene.set_frame(1);
+	assert.ok(!spare_boolean.is_default);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.value === true, 'value is true');
+
+	spare_boolean.set('$F');
+	assert.ok(spare_boolean.is_default);
+	assert.equal(spare_boolean.default_value_serialized, '$F');
 });

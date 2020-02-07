@@ -1,0 +1,39 @@
+{
+	"properties": {
+		"frame": 1,
+		"frame_range": [1, 600],
+		"frame_range_locked": [true, true],
+		"fps": 60,
+		"master_camera_node_path": "/perspective_camera1"
+	},
+	"root": {
+		"type": "obj",
+		"nodes": {
+			"ambient_light1": {"type": "ambient_light", "params": {}, "inputs": [], "flags": {"display": true}},
+			"perspective_camera1": {
+				"type": "perspective_camera",
+				"params": {"t": {"components": {"z": {"value": 10}}}},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"geo1": {
+				"type": "geo",
+				"nodes": {"box1": {"type": "box", "params": {}, "inputs": [], "flags": {"display": true}}},
+				"children_context": "sop",
+				"params": {"r": {"components": {"y": {"expression": "$F+20"}}}},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": []
+			}
+		},
+		"children_context": "objects",
+		"selection": []
+	},
+	"ui": {
+		"nodes": {
+			"ambient_light1": {"pos": [0, 0]},
+			"perspective_camera1": {"pos": [0, 0]},
+			"geo1": {"pos": [0, 0], "nodes": {"box1": {"pos": [0, 0]}}}
+		}
+	}
+}

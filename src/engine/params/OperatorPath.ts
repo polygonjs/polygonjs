@@ -31,6 +31,9 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	) {
 		return val1 == val2;
 	}
+	get is_default(): boolean {
+		return this._value == this.default_value;
+	}
 	// accepts_visitor(visitor: OperatorPathParamVisitor) {
 	// 	return visitor.visit_operator_path_param(this);
 	// }

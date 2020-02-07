@@ -42,7 +42,7 @@ export class EngineStoreControllerClass {
 
 	// mutations
 	update_scene() {
-		if (this._store) {
+		if (this._store && this._scene) {
 			this._store.commit(`engine/${EngineMutation.SCENE}`);
 		}
 	}

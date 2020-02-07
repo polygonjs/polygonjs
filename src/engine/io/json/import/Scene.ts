@@ -11,7 +11,7 @@ export class SceneJsonImporter {
 		return importer.scene();
 	}
 
-	scene(): PolyScene {
+	async scene(): Promise<PolyScene> {
 		const scene = new PolyScene();
 		scene.loading_controller.mark_as_loading();
 
@@ -39,6 +39,8 @@ export class SceneJsonImporter {
 		if (this._data['ui']) {
 			importer.process_ui_data(this._data['ui']);
 		}
+
+		await scene.loading_controller.mark_as_loaded();
 
 		return scene;
 	}

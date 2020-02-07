@@ -14,8 +14,12 @@ import {ExpressionController} from './utils/ExpressionController';
 // }
 
 export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
+	private _raw_input: ParamInitValuesTypeMap[T] | undefined;
 	get is_numeric() {
 		return true;
+	}
+	get is_default(): boolean {
+		return this._raw_input == this.default_value;
 	}
 
 	// accepts_visitor(visitor: NumericParamVisitor): any {
@@ -28,7 +32,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 	// }
 
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
-		// this._raw_input = raw_input;
+		this._raw_input = raw_input;
 		// this.process_raw_input()
 		this.states.error.clear();
 

@@ -31,6 +31,9 @@ export class StringParam extends Single<ParamType.STRING> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.STRING], val2: ParamValuesTypeMap[ParamType.STRING]) {
 		return val1 == val2;
 	}
+	get is_default(): boolean {
+		return this._raw_input == this.default_value;
+	}
 	// accepts_visitor(visitor: StringParamVisitor) {
 	// 	return visitor.visit_string_param(this);
 	// }
