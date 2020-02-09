@@ -83,6 +83,7 @@ import {ContainableMap} from 'src/engine/containers/utils/ContainableMap';
 import {BaseContainer} from '../containers/_Base';
 import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';
+import {DisplayNodeController} from './utils/DisplayNodeController';
 
 // type Container = ContainerMap[KT];
 type KT = keyof ContainerMap;
@@ -102,6 +103,10 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	private _serializer: NodeSerializer | undefined;
 	private _cook_controller: CookController | undefined;
 	public readonly flags: FlagsController | undefined;
+	protected _display_node_controller: DisplayNodeController | undefined;
+	get display_node_controller() {
+		return this._display_node_controller;
+	}
 
 	private _params_controller: ParamsController | undefined;
 	readonly params_config: K | undefined;

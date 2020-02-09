@@ -137,7 +137,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	private add_node(child_node: BaseNodeType) {
+	add_node(child_node: BaseNodeType) {
 		// if (!this._children_allowed) {
 		// 	throw `node ${this.node.full_path()} cannot have children`;
 		// }

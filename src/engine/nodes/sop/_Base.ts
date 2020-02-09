@@ -18,7 +18,6 @@ import {BaseMatNodeType} from '../mat/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {GeoObjNode} from '../obj/Geo';
 import {FlagsControllerDB} from '../utils/FlagsController';
 // import * as Container from '../../Container/Geometry';
 
@@ -73,8 +72,8 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 			this.flags.display.add_hook(() => {
 				if (this.flags.display.active) {
 					const parent = this.parent;
-					if (parent) {
-						((<unknown>parent) as GeoObjNode).display_node_controller.set_display_node(this);
+					if (parent && parent.display_node_controller) {
+						parent.display_node_controller.set_display_node(this);
 					}
 				}
 			});

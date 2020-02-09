@@ -73,12 +73,7 @@ import lodash_sortBy from 'lodash/sortBy';
 // import DropDownMenu from './DropDownMenu'
 import {CoreString} from 'src/core/String';
 
-interface DropDownEntry {
-	label: string;
-	id: string;
-	disabled?: boolean;
-	children?: DropDownEntry[];
-}
+import {DropDownMenuEntry} from 'src/editor/components/types/props';
 
 interface DropDownMenuProps {
 	level: number;
@@ -87,7 +82,7 @@ interface DropDownMenuProps {
 	display_label: boolean;
 	label_padding: Number2;
 	always_visible: boolean;
-	entries: DropDownEntry[];
+	entries: DropDownMenuEntry[];
 	sort_entries: boolean;
 	right_aligned: boolean;
 	event_id_prefix: string;
@@ -213,7 +208,7 @@ export default createComponent({
 		});
 		const sorted_entries = computed(() => {
 			if (props.sort_entries) {
-				const entries_by_name: Dictionary<DropDownEntry> = {};
+				const entries_by_name: Dictionary<DropDownMenuEntry> = {};
 				props.entries.forEach((entry) => {
 					entries_by_name[entry['id']] = entry;
 				});
@@ -381,7 +376,7 @@ export default createComponent({
 			// this.hovered_entry_index = -1
 		}
 
-		function select(entry: DropDownEntry) {
+		function select(entry: DropDownMenuEntry) {
 			const is_disabled = entry['disabled'] || false;
 			if (!is_disabled) {
 				displayed.value = false;
@@ -394,7 +389,7 @@ export default createComponent({
 			}
 		}
 
-		function on_entry_select(entry: DropDownEntry) {
+		function on_entry_select(entry: DropDownMenuEntry) {
 			displayed.value = false;
 			context.emit('select', entry);
 		}

@@ -34,11 +34,8 @@ const ParamsConfig = new GeoObjParamConfig();
 
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	params_config = ParamsConfig;
-	private _display_node_controller = new DisplayNodeController(this);
+	protected _display_node_controller: DisplayNodeController = new DisplayNodeController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	get display_node_controller() {
-		return this._display_node_controller;
-	}
 	static type() {
 		return 'geo';
 	}

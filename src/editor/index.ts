@@ -39,7 +39,6 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 import default_scene_data from 'src/../public/examples/scenes/default_simple2.json';
 async function load_default_scene_if_none() {
 	const default_scene: PolyScene = await SceneJsonImporter.load_data(default_scene_data as SceneJsonExporterData);
-	console.log('default_scene', default_scene);
 	StoreController.set_scene(default_scene);
 	new Vue({
 		el: '#app',

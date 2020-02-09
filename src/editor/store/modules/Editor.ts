@@ -15,7 +15,7 @@ import {BaseNodeType} from 'src/engine/nodes/_Base';
 // import ParamNodeSelector from './editor/ParamNodeSelector';
 // import PanelNodeSelector from './editor/PanelNodeSelector';
 // import Menu from './editor/Menu';
-// import Network from './editor/Network';
+import {EditorNetworkStateModule} from './editor/Network';
 // import NumericSlider from './editor/NumericSlider';
 // import StatusBar from './editor/StatusBar';
 
@@ -64,7 +64,7 @@ export const EditortoreModule = {
 		// dialog_confirm: DialogConfirm,
 		// dialog_prompt: DialogPrompt,
 		// menu: Menu,
-		// network: Network,
+		network: EditorNetworkStateModule,
 		// numeric_slider: NumericSlider,
 		// param_node_selector: ParamNodeSelector,
 		// panel_node_selector: PanelNodeSelector,

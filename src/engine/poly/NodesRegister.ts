@@ -66,4 +66,7 @@ export class NodesRegister {
 		}
 		return nodes_by_type;
 	}
+	registered_category(context: NodeContext, type: string) {
+		return this._node_register_categories[context][type];
+	}
 }

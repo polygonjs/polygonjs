@@ -21,3 +21,10 @@ export interface MultiplePanelProps {
 	panel_id: string;
 	scene_update_allowed: boolean;
 }
+
+export interface DropDownMenuEntry {
+	label: string;
+	id: string;
+	disabled?: boolean;
+	children?: DropDownMenuEntry[];
+}

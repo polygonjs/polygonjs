@@ -102,7 +102,7 @@ import {SetupMultiplePanelPanels} from './mixins/Panels';
 import {SetupMultiplePanelSplit} from './mixins/Split';
 
 // components
-import DropDownMenu from 'src/editor/components/editor/widgets/DropDownMenu.vue';
+import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 
 import {MultiplePanelProps, MultiplePanelSplitMode} from 'src/editor/components/types/props';
 

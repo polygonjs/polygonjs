@@ -1,173 +1,283 @@
-<template lang="pug">
+
+<template lang='pug'>
 
 	include /mixins.pug
-
 	doctype html
 
+	.Panel.Network.full_height_container.grid-y
+		.cell.shrink
+			.grid-x.buttons-container-height-0
+				.cell.shrink
+					.button.tiny.above-event-catcher.disable-select(
+						@click = 'toggle_tab_menu'
+						@contextmenu.capture.prevent = 'toggle_tab_menu'
+					) + Add Node
+				.cell.auto
+				.cell.shrink
+					.go-up-button-container.above-event-catcher(
+						v-if = 'display_go_up_button'
+						)
+						.go-up-button(@click = 'go_up')
+							v-icon(name='angle-double-up')
+		.cell.auto
+			.canvas_container(
+				ref = 'canvas_container'
+				)
+				//- @dblclick = 'on_double_click'
+				//- @mouseenter = 'on_mouse_enter'
+				//- @wheel has 'prevent' to ensure that zooming in and out in the doc examples does not scroll the page
+				.canvas(
+					ref = 'canvas'
+					@click = 'on_click'
+					@wheel.prevent = 'on_wheel'
+					:class = 'canvas_class_object'
+					)
+					//- @contextmenu.capture.prevent = 'on_context_menu'
 
-	.Panel.Viewer.full_height_container.grid-y
-		span Network
-		//- .cell.shrink.viewer_top_bar(
-		//- 	v-if = '!player_mode'
-		//- 	)
-		//- 	.grid-x
-		//- 		.cell.shrink
-		//- 			DropDownMenu(
-		//- 				:label = 'camera_menu_label'
-		//- 				:entries = 'camera_menu_entries'
-		//- 				:sort_entries = 'true'
-		//- 				@select = 'on_select_camera_menu_entry_select'
-		//- 			)
-		//- 		.cell.auto
-		//- 		.cell.shrink.text-right(v-if = 'scene_update_allowed')
-		//- 			DropDownMenu(
-		//- 				v-if = '!capture.active'
-		//- 				label = 'capture'
-		//- 				:entries = 'capture_menu_entries'
-		//- 				@select = 'on_capture_menu_entry_select'
-		//- 				:right_aligned = 'true'
-		//- 			)
+					.zoom-container(
+						:style = 'zoom_container_style_object'
+						)
+						.pan-container(
+							:style = 'pan_container_style_object'
+							)
+							.nodes-container(
+								ref = 'nodes_container'
+								:style = 'object_parents_style_object'
+								@mousedown = 'on_mouse_down'
+								@mousemove = 'on_mouse_move'
+								@mouseup = 'on_mouse_up'
+								)
+								.nodes-container-events-catcher
+								.selection-rectangle(:style = 'selection_rectangle_style_object')
+								.node-creation-rectangle(:style = 'node_creation_rectangle_style_object')
+								Node(
+									v-for = 'json_child in json_children'
+									:key = 'json_child.graph_node_id'
+									:json_node = 'json_child'
+									:json_parent = 'json_node'
+									:action_in_progress = 'action_in_progress'
 
-		//- .cell.auto.viewers_container(
-		//- 	ref = 'viewer_container'
-		//- 	)
-		//- 	ThreejsViewer(
-		//- 		:capture = 'capture'
-		//- 		ref = 'viewer'
-		//- 		:key = 'current_camera_name'
-		//- 		:current_camera_node_graph_id = 'current_camera_node_graph_id'
-		//- 		@capture_render_completed = 'on_capture_render_completed'
-		//- 	)
+									@capture_node_for_move = 'on_capture_node_for_move'
+									@capture_node_for_selection = 'on_capture_node_for_selection'
+									@capture_node_src_for_connection = 'on_capture_node_src_for_connection'
+									@capture_node_dest_for_connection = 'on_capture_node_dest_for_connection'
+									@capture_node_final_for_connection = 'on_capture_node_final_for_connection'
+									@set_display_flag = 'on_set_display_flag'
+									@set_bypass_flag = 'on_set_bypass_flag'
+								)
+								InterractiveConnection(
+									v-if = 'connection.active'
+									:mouse_start = 'connection.mouse_start'
+									:mouse_progress = 'connection.mouse_progress'
+								)
 
-
-
+		TabMenu(
+			v-if = 'tab_menu_opened'
+			:style = 'tab_menu_style_object'
+			:json_node = 'json_node'
+			@close = 'close_tab_menu'
+			@select = 'on_tab_menu_select'
+			)
 
 
 </template>
 
-<script lang="ts">
-// import CameraMenu from './Mixin/CameraMenu';
-// import Display from './Mixin/Display';
-// import EventDisplay from './Mixin/EventDisplay';
-// import {JsonMixin} from './Mixin/Json';
-// import NodeOwner from 'src/Editor/Component/Mixin/NodeOwner';
-// import Panel from './Mixin/Panel';
-// import {ViewerCapture} from './Mixin/ViewerCapture';
+<script lang='ts'>
+// mixins
+import {SetupCamera} from './mixins/Camera';
+// import {Clipboard} from './Mixins/Clipboard';
+import {SetupEventKey} from './mixins/EventKey';
+import {SetupEventMouse} from './mixins/EventMouse';
+// import {Json} from './Mixins/Json';
+// import {NodeAnimation} from './Mixins/NodeAnimation';
+// import {NodeConnection} from './Mixins/NodeConnection';
+import {SetupNodeCreation} from './mixins/NodeCreation';
+// import {NodeEvent} from './Mixins/NodeEvent';
+import {SetupNodeNavigation} from './mixins/NodeNavigation';
+// import NodeOwner from '../../Mixin/NodeOwner';
+// import {NodeSelection} from './Mixins/NodeSelection';
+import {SetupTabMenu} from './mixins/TabMenuOwner';
 
-// const AsyncThreejsViewer = () => ({
-// 	component: import('./Component/Threejs'),
-// });
+// components
+import TabMenu from './components/TabMenu.vue';
 
-import {createComponent} from '@vue/composition-api';
+// import Node from './components/Node';
+// import InterractiveConnection from './components/InterractiveConnection';
+
+import {NodeCreationHelper, NodeCreationData} from './helpers/NodeCreation';
+import {CameraData, CameraAnimationHelper} from './helpers/CameraAnimation';
+import {ClipBoardHelper} from './helpers/ClipBoard';
+
+import {createComponent, ref} from '@vue/composition-api';
 export default createComponent({
 	name: 'network-panel',
+	components: {TabMenu},
+
+	setup(props) {
+		const canvas = ref<HTMLCanvasElement>(null);
+		const nodes_container = ref<HTMLElement>(null);
+		const node_creation_data = ref<NodeCreationData>({active: false, position: {x: 0, y: 0}});
+		const camera_data = ref<CameraData>({
+			position: {x: 0, y: 0},
+			zoom: 0.5,
+		});
+
+		const cam_animation_helper: CameraAnimationHelper = new CameraAnimationHelper(camera_data.value);
+		const clipboard_helper = new ClipBoardHelper();
+		const node_creation_helper = new NodeCreationHelper(node_creation_data.value, camera_data.value);
+
+		const tab_menu_options = SetupTabMenu(canvas, node_creation_helper);
+
+		// TODO typescript: ensure all EventHelper are set, or have only 1
+
+		return {
+			canvas,
+			nodes_container,
+			...SetupCamera(canvas, camera_data, cam_animation_helper),
+			...SetupEventKey(clipboard_helper, cam_animation_helper, tab_menu_options),
+			...SetupEventMouse()
+			...SetupNodeCreation(nodes_container, node_creation_helper),
+			...SetupNodeNavigation(),
+			...tab_menu_options,
+		};
+	},
 	// mixins: [
-	// 	CameraMenu,
-	// 	Display,
-	// 	EventDisplay,
-	// 	JsonMixin,
+	// 	Camera,
+	// 	Clipboard,
+	// 	EventKey,
+	// 	EventMouse,
+	// 	Json,
+	// 	NodeAnimation,
+	// 	NodeConnection,
+	// 	NodeCreation,
+	// 	NodeEvent,
+	// 	NodeNavigation,
 	// 	NodeOwner,
-	// 	Panel,
-	// 	ViewerCapture,
+	// 	NodeSelection,
+	// 	TabMenuOwner,
 	// ],
-	// components: {
-	// 	ThreejsViewer: AsyncThreejsViewer,
-	// },
-
-	// props: {
-	// 	panel_id: {
-	// 		type: Array,
-	// 		default: () => {
-	// 			return [];
-	// 		},
-	// 	},
-	// 	scene_update_allowed: {
-	// 		type: Boolean,
-	// 		default: false,
-	// 	},
-	// },
-
-	// mounted() {
-	// 	POLY.register_viewer(this);
-	// },
-	// destroyed() {
-	// 	POLY.deregister_viewer(this);
-	// },
+	// components: {InterractiveConnection, Node},
 
 	// computed: {
-	// 	player_mode() {
-	// 		return POLY.player_mode();
+	// 	action_in_progress(): boolean {
+	// 		return this.selection.active || this.connection.active;
 	// 	},
 	// },
 });
 </script>
 
-<style lang="sass">
-@import "globals.sass"
+<style lang='sass'>
+	@import "globals.sass"
 
-.Panel.Viewer
-
-	canvas, #mapbox_container
-		width: 100%
-		height: 100%
-
-	.viewer_top_bar
-		// background-color: lightblue
-
-		.viewer_top_bar-controls-right
-			padding-right: 10px
-		// .viewer-control
-		// 	cursor: pointer
-		// 	margin-right: 10px
-		// 	padding: 5px 10px // same as dropdown menu
-		// 	&:hover
-		// 		opacity: 0.8
-		input
-			margin-bottom: 0px
-			padding: 0px
-		input[type=color]
-			width: 20px
-			height: 20px
-		.color-bg-input-container
-			margin-top: 4px
-
-	.viewers_container
+	$z_index_above_events_catcher: 10
+	// $panel_background_color: mix($color_bg, orange, 50%)
+	.above-event-catcher
 		position: relative
-		.panel_container
-			position: absolute
-			min-width: 360px
-			// width: 100%
-			top: 0px
-			left: 0px
-			padding: 10px 10px
+		z-index: $z_index_above_events_catcher
 
-			// label
-			// 	color: white
+	.Panel.Network
+		// background-color: darken($color_font, 20%)
+		// color: $color_bg
 
-			opacity: 0.85
-			&:hover
-				opacity: 1
+		position: relative // for tab menu
 
-		// .event_screen_positions
-		// 	position: absolute
-		// 	pointer-events: none
-		// 	top: 0
-		// 	left: 0
-		// 	width: 100%
-		// 	height: 100%
-		// 	.event_screen_position
-		// 		position: absolute
-		// 		width: 5px
-		// 		height: 5px
-		// 		// background-color: red
-		// 		border: 1px solid black
-		// 		border-radius: 5px
+		.buttons-container-height-0
+			height: 0px
+			padding-left: 5px
+			padding-top: 5px
+			.go-up-button-container
+				margin-right: 5px
+				.go-up-button
+					padding: 5px
+					border-radius: 25px
+					width: 25px
+					height: 25px
+					text-align: center
+					background-color: lightgreen
+					cursor: pointer
+					opacity: 0.7
+					&:hover
+						opacity: 1
+					svg
+						display: inline-block
+						margin: auto
+						position: relative
+						top: 50%
+						transform: translateY(-50%)
 
-		// 		.event-screen-position-label
-		// 			position: absolute
-		// 			left: 10px
-		// 			line-height: 1
-		// 			width: auto
-		// 			background-color: white
-		// 			color: black
+		.canvas_container, .canvas, .object_parents
+			width: 100%
+			height: 100%
+
+
+		.canvas_container
+			.canvas
+				// background-color: darken(white, 40%)
+				overflow: hidden
+				position: relative
+				&.pan_in_progress
+					cursor: move
+				&.zoom_in_progress
+					cursor: zoom-in
+
+				.selection-rectangle
+					pointer-events: none
+					position: absolute
+					border: 3px solid green
+					z-index: 10
+					background-color: grey
+					opacity: 0.2
+
+				.node-creation-rectangle
+					pointer-events: none
+					position: absolute
+					border: 3px solid green
+					z-index: 10
+
+				.zoom-container
+					position: absolute
+					top: 50%
+					left: 50%
+					width: 20px
+					height: 20px
+					// background-color: red
+					.pan-container
+						position: absolute
+						width: 10px
+						height: 10px
+						// background-color: green
+
+						$node_container_size: 50000px
+						.nodes-container
+							position: relative
+							width: 0
+							height: 0
+							top: 0
+							left: 0
+							// background-color: lighten(blue,20%)
+							// background-color: pink
+							// overflow: hidden
+							.nodes-container-events-catcher
+								position: absolute
+								width: $node_container_size
+								height: $node_container_size
+								top: -$node_container_size/2
+								left: -$node_container_size/2
+								// background-color: lighten(red,20%)
+
+							svg.connection-line-container
+								position: absolute
+								top: 0px
+								left: 0px
+								width: 100%
+								height: 100%
+								z-index: 10
+								// background-color: pink
+								// opacity: 1
+								pointer-events: none
+								line
+									stroke: grey
+									stroke-width: 2
+
+
 </style>

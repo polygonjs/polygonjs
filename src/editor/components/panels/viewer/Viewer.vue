@@ -55,7 +55,7 @@ import ThreejsViewer from './components/Threejs.vue';
 // const AsyncThreejsViewer = () => ({
 // 	component: import('./components/Threejs.vue'),
 // });
-import DropDownMenu from 'src/editor/components/editor/widgets/DropDownMenu.vue';
+import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
