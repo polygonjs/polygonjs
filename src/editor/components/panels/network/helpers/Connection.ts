@@ -35,21 +35,23 @@ export class ConnectionHelper {
 	// 	return this._mesh;
 	// }
 
-	capture_node_src(node: BaseNodeType, index: number) {
+	capture_node_src(id: string, index: number) {
 		// this.node_src = node;
+		const node = StoreController.engine.node(id)!;
 		this.data.node_src_id = node.graph_node_id;
 		this.data.output_index = index;
 		// if(this.both_end_captured()){ this.create_connection()}
 	}
-	capture_node_dest(node: BaseNodeType, index: number) {
+	capture_node_dest(id: string, index: number) {
 		// this.node_dest = node;
 		// this.input_index = index;
-
+		const node = StoreController.engine.node(id)!;
 		this.data.node_dest_id = node.graph_node_id;
 		this.data.input_index = index;
 		// if(this.both_end_captured()){ this.create_connection()}
 	}
-	capture_node_final(node: BaseNodeType) {
+	capture_node_final(id: string) {
+		const node = StoreController.engine.node(id)!;
 		if (this.data.node_dest_id) {
 			this.data.node_src_id = node.graph_node_id;
 		} else {

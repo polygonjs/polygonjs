@@ -2,7 +2,9 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 import {State} from '../Store';
 import {Store} from 'vuex';
-import {EngineMutation} from '../modules/Engine';
+import {EngineMutation, EngineNodeData, EngineParamData} from '../modules/Engine';
+import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 
 export class EngineStoreControllerClass {
 	private _store!: Store<State>;
@@ -26,7 +28,28 @@ export class EngineStoreControllerClass {
 		this.update_scene();
 	}
 
+	node(id: string): BaseNodeType | null {
+		return this._scene.graph.node_from_id(id) as BaseNodeType;
+	}
+	param(id: string): BaseParamType | null {
+		return this._scene.graph.node_from_id(id) as BaseParamType;
+	}
+
 	// getters
+	json_node(id: string): EngineNodeData | null {
+		return this._store.getters['engine/json_node'](id);
+	}
+	json_param(id: string): EngineParamData | null {
+		return this._store.getters['engine/json_param'](id);
+	}
+	json_children(id: string): EngineNodeData[] {
+		const json_node = this.json_node(id);
+		if (json_node) {
+			return this._store.getters['engine/json_children'](json_node);
+		} else {
+			return [];
+		}
+	}
 	frame(): number {
 		return this._store.getters['engine/frame'];
 	}

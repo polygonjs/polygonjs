@@ -6,17 +6,17 @@
 // import lodash_map from 'lodash/map';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 
-// import Clipboard from './editor/Clipboard';
+import {EditorClipboardStateModule} from './editor/Clipboard';
+import {EditorContextMenuStateModule} from './editor/ContextMenu';
 // import CustomNode from './editor/CustomNode';
 // import DesktopLocalAssetUploadProgress from './editor/DesktopLocalAssetUploadProgress';
-// import DialogAlert from './editor/DialogAlert';
-// import DialogConfirm from './editor/DialogConfirm';
-// import DialogPrompt from './editor/DialogPrompt';
+import {EditorDialogAlertStateModule} from './editor/DialogAlert';
+// import {EditorDialogPromptStateModule} from './editor/DialogConfirm';
+import {EditorDialogPromptStateModule} from './editor/DialogPrompt';
 // import ParamNodeSelector from './editor/ParamNodeSelector';
-// import PanelNodeSelector from './editor/PanelNodeSelector';
-// import Menu from './editor/Menu';
+import {EditorPanelNodeSelectorStateModule} from './editor/PanelNodeSelector';
 import {EditorNetworkStateModule} from './editor/Network';
-// import NumericSlider from './editor/NumericSlider';
+import {EditorNumericSliderStateModule} from './editor/NumericSlider';
 // import StatusBar from './editor/StatusBar';
 
 // const root_json_children = function(rootState, rootGetters, condition_method) {
@@ -52,22 +52,26 @@ export interface EditorState {
 	// forced_resize_count: 0
 	// uploads_reload_required: boolean;
 	display_loader: boolean;
+
+	// modules
+	// dialog_alert: EditorDialogAlertState;
+	// dialog_prompt: EditorDialogPromptState;
 }
 
 export const EditortoreModule = {
 	namespaced: true,
 	modules: {
-		// clipboard: Clipboard,
+		clipboard: EditorClipboardStateModule,
+		context_menu: EditorContextMenuStateModule,
 		// custom_node: CustomNode,
 		// desktop_local_asset_upload_progress: DesktopLocalAssetUploadProgress,
-		// dialog_alert: DialogAlert,
+		dialog_alert: EditorDialogAlertStateModule,
 		// dialog_confirm: DialogConfirm,
-		// dialog_prompt: DialogPrompt,
-		// menu: Menu,
+		dialog_prompt: EditorDialogPromptStateModule,
 		network: EditorNetworkStateModule,
-		// numeric_slider: NumericSlider,
+		numeric_slider: EditorNumericSliderStateModule,
 		// param_node_selector: ParamNodeSelector,
-		// panel_node_selector: PanelNodeSelector,
+		panel_node_selector: EditorPanelNodeSelectorStateModule,
 		// status_bar: StatusBar,
 	},
 	state(): EditorState {

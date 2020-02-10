@@ -24,6 +24,8 @@ class StoreControllerClass {
 		this._scene.events_controller.set_listener(this);
 		this.editor.set_scene(scene);
 		this.engine.set_scene(scene);
+
+		this.editor.set_current_node(scene.root);
 	}
 	get scene() {
 		return this._scene;

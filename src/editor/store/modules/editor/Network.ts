@@ -1,13 +1,7 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-let component;
 import Vue from 'vue';
 
 export interface EditorNetworkState {
-	node_ids_being_moved: string[];
+	node_ids_being_moved: Dictionary<boolean>;
 }
 
 export enum EditorNetworkGetter {
@@ -22,7 +16,9 @@ export enum EditorNetworkMutation {
 export const EditorNetworkStateModule = {
 	namespaced: true,
 	state(): EditorNetworkState {
-		return {node_ids_being_moved: []};
+		return {
+			node_ids_being_moved: {},
+		};
 	},
 
 	getters: {
@@ -33,10 +29,12 @@ export const EditorNetworkStateModule = {
 
 	mutations: {
 		[EditorNetworkMutation.SET_NODE_IDS_BEING_MOVED]: (state: EditorNetworkState, payload: string[]) => {
-			Vue.set(state, 'node_ids_being_moved', payload);
+			for (let id of payload) {
+				state.node_ids_being_moved[id] = true;
+			}
 		},
 		[EditorNetworkMutation.RESET_NODE_IDS_BEING_MOVED]: (state: EditorNetworkState) => {
-			Vue.set(state, 'node_ids_being_moved', []);
+			Vue.set(state, 'node_ids_being_moved', {});
 		},
 	},
 };

@@ -9,19 +9,25 @@ import Vue from 'vue';
 export default component = {
 	namespaced: true,
 	state() {
-		return {node_ids_being_moved: []};
+		return {
+			param_id: null,
+			position: [0,0]
+		};
 	},
 
 	getters: {
-		node_ids_being_moved(state){ return state.node_ids_being_moved; }
+		param_id(state){ return state.param_id; },
+		position(state){ return state.position; }
 	},
 
+
 	mutations: {
-		node_ids_being_moved(state, payload){
-			return Vue.set(state, 'node_ids_being_moved', payload);
+		open(state, payload){
+			state.param_id = payload.param_id;
+			return state.position = payload.position;
 		},
-		reset_node_ids_being_moved(state){
-			return Vue.set(state, 'node_ids_being_moved', []);
+		close(state){
+			return state.param_id = null;
 		}
 	}
 };

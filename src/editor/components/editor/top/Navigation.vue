@@ -39,15 +39,6 @@
 </template>
 
 <script lang="ts">
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-// let component;
-// import NodeOwner from 'src/Editor/Component/Mixin/NodeOwner';
-
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 

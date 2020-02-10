@@ -39,7 +39,7 @@ export class CoreWalker extends CoreWalkerEmbed {
 			}
 		}
 	}
-	static relative_path(src_graph_node: NodeOrParam, dest_graph_node: NodeOrParam): string {
+	static relative_path(src_graph_node: Readonly<NodeOrParam>, dest_graph_node: Readonly<NodeOrParam>): string {
 		const parent = this.closest_common_parent(src_graph_node, dest_graph_node);
 		if (!parent) {
 			return dest_graph_node.full_path();
@@ -77,7 +77,10 @@ export class CoreWalker extends CoreWalkerEmbed {
 		}
 	}
 
-	static closest_common_parent(graph_node1: NodeOrParam, graph_node2: NodeOrParam): BaseNodeType | null {
+	static closest_common_parent(
+		graph_node1: Readonly<NodeOrParam>,
+		graph_node2: Readonly<NodeOrParam>
+	): BaseNodeType | null {
 		const parents1 = this.parents(graph_node1).reverse();
 		const parents2 = this.parents(graph_node2).reverse();
 
@@ -91,7 +94,7 @@ export class CoreWalker extends CoreWalkerEmbed {
 		}
 		return found_parent;
 	}
-	static parents(graph_node: NodeOrParam): BaseNodeType[] {
+	static parents(graph_node: Readonly<NodeOrParam>): BaseNodeType[] {
 		const parents = [];
 		let parent = graph_node.parent;
 		while (parent) {
@@ -100,9 +103,9 @@ export class CoreWalker extends CoreWalkerEmbed {
 		}
 		return parents;
 	}
-	static distance_to_parent(graph_node: NodeOrParam, dest: BaseNodeType): number {
+	static distance_to_parent(graph_node: Readonly<NodeOrParam>, dest: Readonly<BaseNodeType>): number {
 		let distance = 0;
-		let current: NodeOrParam | null = graph_node;
+		let current: Readonly<NodeOrParam | null> = graph_node;
 		const dest_id = dest.graph_node_id;
 		while (current && current.graph_node_id != dest_id) {
 			distance += 1;

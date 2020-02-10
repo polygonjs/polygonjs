@@ -40,9 +40,9 @@
 						.pan-container(
 							:style = 'pan_container_style_object'
 							)
+							//- :style = 'object_parents_style_object'
 							.nodes-container(
 								ref = 'nodes_container'
-								:style = 'object_parents_style_object'
 								@mousedown = 'on_mouse_down'
 								@mousemove = 'on_mouse_move'
 								@mouseup = 'on_mouse_up'
@@ -50,6 +50,7 @@
 								.nodes-container-events-catcher
 								.selection-rectangle(:style = 'selection_rectangle_style_object')
 								.node-creation-rectangle(:style = 'node_creation_rectangle_style_object')
+								//- @capture_node_for_selection = 'on_capture_node_for_selection'
 								Node(
 									v-for = 'json_child in json_children'
 									:key = 'json_child.graph_node_id'
@@ -58,7 +59,6 @@
 									:action_in_progress = 'action_in_progress'
 
 									@capture_node_for_move = 'on_capture_node_for_move'
-									@capture_node_for_selection = 'on_capture_node_for_selection'
 									@capture_node_src_for_connection = 'on_capture_node_src_for_connection'
 									@capture_node_dest_for_connection = 'on_capture_node_dest_for_connection'
 									@capture_node_final_for_connection = 'on_capture_node_final_for_connection'
@@ -66,9 +66,9 @@
 									@set_bypass_flag = 'on_set_bypass_flag'
 								)
 								InterractiveConnection(
-									v-if = 'connection.active'
-									:mouse_start = 'connection.mouse_start'
-									:mouse_progress = 'connection.mouse_progress'
+									v-if = 'connection_data.active'
+									:mouse_start = 'connection_data.mouse_start'
+									:mouse_progress = 'connection_data.mouse_progress'
 								)
 
 		TabMenu(
@@ -88,56 +88,120 @@ import {SetupCamera} from './mixins/Camera';
 // import {Clipboard} from './Mixins/Clipboard';
 import {SetupEventKey} from './mixins/EventKey';
 import {SetupEventMouse} from './mixins/EventMouse';
-// import {Json} from './Mixins/Json';
-// import {NodeAnimation} from './Mixins/NodeAnimation';
-// import {NodeConnection} from './Mixins/NodeConnection';
+import {SetupJson} from './mixins/Json';
+import {SetupNodeAnimation} from './mixins/NodeAnimation';
+import {SetupNodeConnection} from './mixins/NodeConnection';
 import {SetupNodeCreation} from './mixins/NodeCreation';
-// import {NodeEvent} from './Mixins/NodeEvent';
+import {SetupNodeEvent} from './mixins/NodeEvent';
 import {SetupNodeNavigation} from './mixins/NodeNavigation';
 // import NodeOwner from '../../Mixin/NodeOwner';
-// import {NodeSelection} from './Mixins/NodeSelection';
+import {SetupNodeSelection} from './mixins/NodeSelection';
 import {SetupTabMenu} from './mixins/TabMenuOwner';
 
 // components
 import TabMenu from './components/TabMenu.vue';
 
-// import Node from './components/Node';
-// import InterractiveConnection from './components/InterractiveConnection';
+import Node from './components/Node.vue';
+import InterractiveConnection from './components/InterractiveConnection.vue';
 
 import {NodeCreationHelper, NodeCreationData} from './helpers/NodeCreation';
 import {CameraData, CameraAnimationHelper} from './helpers/CameraAnimation';
 import {ClipBoardHelper} from './helpers/ClipBoard';
+import {NodeAnimationHelper} from './helpers/NodeAnimation';
+import {ConnectionHelper, ConnectionData} from './helpers/Connection';
+import {NodeSelectionHelper, NodeSelectionData} from './helpers/NodeSelection';
+import {StoreController} from '../../../store/controllers/StoreController';
 
-import {createComponent, ref} from '@vue/composition-api';
+import {createComponent, Ref, ref, computed} from '@vue/composition-api';
 export default createComponent({
 	name: 'network-panel',
-	components: {TabMenu},
+	components: {TabMenu, Node, InterractiveConnection},
 
 	setup(props) {
 		const canvas = ref<HTMLCanvasElement>(null);
 		const nodes_container = ref<HTMLElement>(null);
+
+		const json_node = computed(() => {
+			return StoreController.editor.current_json_node();
+		});
+		const json_children = computed(() => {
+			const id = StoreController.editor.current_node_graph_id();
+			console.log('id', id);
+			if (id) {
+				console.log('StoreController.engine.json_children(id)', StoreController.engine.json_children(id));
+				return StoreController.engine.json_children(id);
+			} else {
+				return [];
+			}
+		});
+
 		const node_creation_data = ref<NodeCreationData>({active: false, position: {x: 0, y: 0}});
 		const camera_data = ref<CameraData>({
 			position: {x: 0, y: 0},
 			zoom: 0.5,
 		});
+		const camera_history: Dictionary<CameraData> = {};
+		const connection_data = ref<ConnectionData>({
+			node_src_id: null,
+			node_dest_id: null,
+			output_index: 0,
+			input_index: 0,
+			mouse_start: {x: 0, y: 0},
+			mouse_progress: {x: 0, y: 0},
+			active: false,
+		});
+		const node_selection_data = ref<NodeSelectionData>({
+			start: {x: 0, y: 0},
+			end: {x: 0, y: 0},
+			active: false,
+		});
 
 		const cam_animation_helper: CameraAnimationHelper = new CameraAnimationHelper(camera_data.value);
 		const clipboard_helper = new ClipBoardHelper();
 		const node_creation_helper = new NodeCreationHelper(node_creation_data.value, camera_data.value);
+		const node_animation_helper = new NodeAnimationHelper(camera_data.value);
+		const connection_helper = new ConnectionHelper(connection_data.value, camera_data.value);
+		const node_selection_helper = new NodeSelectionHelper(node_selection_data.value, camera_data.value);
+		const helpers = {
+			node_animation_helper,
+			connection_helper,
+			node_selection_helper,
+			cam_animation_helper,
+			node_creation_helper,
+		};
 
+		const camera_options = SetupCamera(canvas, camera_data, camera_history, cam_animation_helper);
 		const tab_menu_options = SetupTabMenu(canvas, node_creation_helper);
+		const event_key_options = SetupEventKey(clipboard_helper, cam_animation_helper, tab_menu_options);
+		const options = {
+			camera_options,
+			tab_menu_options,
+			event_key_options,
+		};
+		const event_mouse_options = SetupEventMouse(helpers, options);
 
+		const action_in_progress: Readonly<Ref<boolean>> = computed(() => {
+			return node_selection_data.value.active || connection_data.value.active;
+		});
 		// TODO typescript: ensure all EventHelper are set, or have only 1
 
 		return {
 			canvas,
 			nodes_container,
-			...SetupCamera(canvas, camera_data, cam_animation_helper),
-			...SetupEventKey(clipboard_helper, cam_animation_helper, tab_menu_options),
-			...SetupEventMouse()
+			connection_data,
+			json_node,
+			json_children,
+			action_in_progress,
+			...camera_options,
+			...event_key_options,
+			...event_mouse_options,
+			...SetupJson(camera_data.value, camera_history),
+			...SetupNodeAnimation(node_animation_helper, nodes_container),
+			...SetupNodeConnection(connection_data.value, connection_helper, nodes_container),
 			...SetupNodeCreation(nodes_container, node_creation_helper),
+			...SetupNodeEvent(helpers),
 			...SetupNodeNavigation(),
+			...SetupNodeSelection(node_selection_data.value, node_selection_helper, nodes_container),
 			...tab_menu_options,
 		};
 	},

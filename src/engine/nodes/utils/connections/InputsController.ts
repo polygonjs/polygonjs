@@ -58,10 +58,6 @@ export class InputsController<T extends BaseNodeType> {
 	// 	}
 	// }
 
-	static displayed_input_names(): string[] {
-		return [];
-	}
-
 	// _init_inputs() {
 	// 	this._inputs = [];
 	// }

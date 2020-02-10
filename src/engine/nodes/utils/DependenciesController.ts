@@ -38,7 +38,7 @@ export class DependenciesController {
 	scene_predecessors() {
 		return this._find_scene_node_scene_nodes(METHODS.PREDECESSORS);
 	}
-	private _find_scene_node_scene_nodes(method: METHODS) {
+	private _find_scene_node_scene_nodes(method: METHODS): BaseNodeType[] {
 		const params: CoreGraphNode[] = this.node.params.all;
 		params.push(this.node);
 		const start_nodes = params;
@@ -58,7 +58,7 @@ export class DependenciesController {
 			return scene_node.graph_node_id != this.node.graph_node_id;
 		});
 		const base_nodes_by_graph_node_id = lodash_groupBy(base_nodes, (n) => n.graph_node_id);
-		const uniq_base_nodes: CoreGraphNode[] = [];
+		const uniq_base_nodes: BaseNodeType[] = [];
 		Object.keys(base_nodes_by_graph_node_id).forEach((graph_node_id) => {
 			uniq_base_nodes.push(base_nodes_by_graph_node_id[graph_node_id][0]);
 		});

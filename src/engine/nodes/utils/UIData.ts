@@ -11,7 +11,7 @@ export interface NodeUIDataJson {
 }
 
 export class UIData extends CoreUIData {
-	private _position: Vector2;
+	private _position: Vector2 = new Vector2();
 	private _width: number = 50;
 	private _border_radius: number = 3;
 	private _color: Color = new Color(0.75, 0.75, 0.75);
@@ -21,7 +21,8 @@ export class UIData extends CoreUIData {
 
 	constructor(private node: BaseNodeType, x: number = 0, y: number = 0) {
 		super();
-		this._position = new Vector2(x || 0, y || 0);
+		this._position.x = x;
+		this._position.y = y;
 	}
 
 	set_border_radius(radius: number) {

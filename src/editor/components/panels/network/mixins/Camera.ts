@@ -1,12 +1,22 @@
 import {CameraAnimationHelper, CameraData} from '../helpers/CameraAnimation';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 
+export interface SetupCameraOptions {
+	zoom_container_style_object: Ref<{
+		transform: string;
+	}>;
+	pan_container_style_object: Ref<{left: string; top: string}>;
+	// object_parents_style_object,
+	save_camera_history_for_json_node: (id: string) => void;
+}
+
 import {watch, onMounted, Ref, computed} from '@vue/composition-api';
 export function SetupCamera(
 	canvas: Ref<HTMLCanvasElement | null>,
 	camera_data: Ref<CameraData>,
+	camera_history: Dictionary<CameraData>,
 	cam_animation_helper: CameraAnimationHelper
-) {
+): SetupCameraOptions {
 	onMounted(() => {
 		if (canvas.value) {
 			cam_animation_helper.set_element(canvas.value);
@@ -25,9 +35,9 @@ export function SetupCamera(
 			top: `${camera_data.value.position.y}px`,
 		};
 	});
-	const object_parents_style_object = computed(() => {
-		return {};
-	});
+	// const object_parents_style_object = computed(() => {
+	// 	return {};
+	// });
 
 	const current_node_graph_id = computed(() => StoreController.editor.current_node_graph_id());
 	watch(current_node_graph_id, (node_graph_id, prev_node_graph_id) => {
@@ -47,9 +57,8 @@ export function SetupCamera(
 		cam_animation_helper.set_parent_node(StoreController.editor.current_node());
 	}
 
-	let camera_history: Dictionary<CameraData> = {};
-	// function set_camera_history(json:Dictionary<CameraData>) {
-	// 	camera_history = json || {}
+	// function set_camera_history(history: Dictionary<CameraData>) {
+	// 	camera_history = json || {};
 	// }
 	// function camera_history() {
 	// 	this._camera_history = this._camera_history || {}
@@ -76,9 +85,9 @@ export function SetupCamera(
 	}
 
 	return {
-		camera_data,
 		zoom_container_style_object,
 		pan_container_style_object,
-		object_parents_style_object,
+		// object_parents_style_object,
+		save_camera_history_for_json_node,
 	};
 }

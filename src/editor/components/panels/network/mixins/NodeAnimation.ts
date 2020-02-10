@@ -1,29 +1,14 @@
-import {NodeAnimationHelper} from '../Helpers/NodeAnimation';
+import {Ref, onMounted} from '@vue/composition-api';
+import {NodeAnimationHelper} from '../helpers/NodeAnimation';
+export function SetupNodeAnimation(
+	node_animation_helper: NodeAnimationHelper,
+	nodes_container: Ref<HTMLElement | null>
+) {
+	onMounted(() => {
+		if (nodes_container.value) {
+			node_animation_helper.set_element(nodes_container.value);
+		}
+	});
 
-export const NodeAnimation = {
-	mounted() {
-		this.node_animation_helper.set_element(this.$refs.nodes_container);
-		// this.set_animation_helper_node()
-	},
-
-	computed: {
-		node_animation_helper(): NodeAnimationHelper {
-			return (this._node_animation_helper =
-				this._node_animation_helper || new NodeAnimationHelper(this, this.camera));
-		},
-	},
-
-	// watch: {
-	// 	json_node(){
-	// 		this.$nextTick(() => {
-	// 			this.set_animation_helper_node()
-	// 		});
-	// 	}
-	// },
-
-	// methods: {
-	// 	// set_animation_helper_node(){
-	// 	// 	this.node_animation_helper.set_parent_node(this.node)
-	// 	// }
-	// }
-};
+	return {};
+}

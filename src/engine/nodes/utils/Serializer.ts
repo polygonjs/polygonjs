@@ -1,6 +1,7 @@
 import {BaseNodeType} from '../_Base';
 import {NodeUIDataJson} from './UIData';
 import {TypedNamedConnectionPointData} from './connections/NamedConnectionPoint';
+import {ConnectionPointType} from './connections/ConnectionPointType';
 
 export interface NodeSerializerData {
 	name: string;
@@ -12,8 +13,8 @@ export interface NodeSerializerData {
 	children: string[];
 	inputs: Array<string | undefined>;
 	input_connection_output_indices: Array<number | undefined> | undefined;
-	named_inputs: TypedNamedConnectionPointData[];
-	named_outputs: TypedNamedConnectionPointData[];
+	named_inputs: TypedNamedConnectionPointData<ConnectionPointType>[];
+	named_outputs: TypedNamedConnectionPointData<ConnectionPointType>[];
 	params: Dictionary<string>;
 	spare_params: Dictionary<string>;
 	override_clonable_state: boolean;

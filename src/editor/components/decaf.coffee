@@ -3,15 +3,19 @@ import Vue from 'vue'
 export default component =
 	namespaced: true
 	state: ->
-		node_ids_being_moved: []
+		param_id: null
+		position: [0,0]
 
 	getters:
-		node_ids_being_moved: (state)-> state.node_ids_being_moved
+		param_id: (state)-> state.param_id
+		position: (state)-> state.position
+
 
 	mutations:
-		node_ids_being_moved: (state, payload)->
-			Vue.set(state, 'node_ids_being_moved', payload)
-		reset_node_ids_being_moved: (state)->
-			Vue.set(state, 'node_ids_being_moved', [])
+		open: (state, payload)->
+			state.param_id = payload.param_id
+			state.position = payload.position
+		close: (state)->
+			state.param_id = null
 
 

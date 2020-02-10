@@ -7,7 +7,7 @@ enum EventName {
 	UP = 'on_key_up',
 }
 
-interface EventProcessor {
+export interface KeyEventProcessor {
 	on_key_press: (event: KeyboardEvent) => boolean;
 	on_key_down: (event: KeyboardEvent) => boolean;
 	on_key_up: (event: KeyboardEvent) => boolean;
@@ -23,7 +23,7 @@ export class KeyEventsDispatcher {
 	private _on_keypress_bound: (event: KeyboardEvent) => void;
 	private _on_keydown_bound: (event: KeyboardEvent) => void;
 	private _on_keyup_bound: (event: KeyboardEvent) => void;
-	private _processor: EventProcessor | undefined;
+	private _processor: KeyEventProcessor | undefined;
 
 	// TODO: typescript - do I need this to have a component?
 	// probably not, as it only seems to be to access the store
@@ -53,10 +53,10 @@ export class KeyEventsDispatcher {
 		}
 	}
 
-	register_processor(processor: EventProcessor) {
+	register_processor(processor: KeyEventProcessor) {
 		this._processor = processor;
 	}
-	deregister_processor(processor: EventProcessor) {
+	deregister_processor(processor: KeyEventProcessor) {
 		if (processor === this._processor) {
 			this._processor = undefined;
 		}
@@ -122,7 +122,7 @@ export class KeyEventsDispatcher {
 			case 's':
 				if (event.ctrlKey) {
 					event.preventDefault();
-					StoreController.editor.save_scene();
+					// StoreController.save_scene();
 					return false;
 				}
 				break;

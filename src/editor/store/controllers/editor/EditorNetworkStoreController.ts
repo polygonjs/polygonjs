@@ -17,7 +17,7 @@ export class EditorNetworkStoreControllerClass {
 	}
 
 	// getters
-	node_ids_being_moved(): string[] {
+	node_ids_being_moved(): Readonly<Dictionary<boolean>> {
 		return this._store.getters[`editor/network/${EditorNetworkGetter.NODE_IDS_BEING_MOVED}`];
 	}
 

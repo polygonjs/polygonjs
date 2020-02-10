@@ -121,6 +121,9 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
+	static displayed_input_names(): string[] {
+		return [];
+	}
 
 	private _children_controller: HierarchyChildrenController | undefined;
 	protected _children_controller_context: NodeContext | undefined;

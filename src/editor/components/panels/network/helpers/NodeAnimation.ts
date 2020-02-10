@@ -24,7 +24,8 @@ export class NodeAnimationHelper {
 		this.event_helper.set_element(element);
 	}
 
-	capture_node(node: BaseNodeType) {
+	capture_node(id: string) {
+		const node = StoreController.engine.node(id) || undefined;
 		this._captured_node = node;
 	}
 	private has_captured_nodes(): boolean {
@@ -32,6 +33,7 @@ export class NodeAnimationHelper {
 	}
 
 	captured_nodes(): BaseNodeType[] {
+		console.log('this._captured_node', this._captured_node);
 		if (this._captured_node) {
 			const parent = this._captured_node.parent;
 			if (parent && parent.children_allowed() && parent.children_controller) {
@@ -58,7 +60,9 @@ export class NodeAnimationHelper {
 		this._move_in_progress = true;
 
 		const nodes = this.captured_nodes();
+		console.log('captured_nodes', nodes);
 		this.node_start_positions = nodes.map((node) => {
+			console.log(node, node.name, node.ui_data, node.ui_data.position);
 			const pos = node.ui_data.position().clone();
 			const precision = 1 * Constants.NODE_UNIT;
 			pos.x = precision * Math.round(pos.x / precision);
@@ -95,7 +99,7 @@ export class NodeAnimationHelper {
 		});
 	}
 
-	move_end(event: MouseEvent) {
+	move_end(/*event: MouseEvent*/) {
 		CoreDom.remove_drag_classes();
 
 		const nodes = this.captured_nodes();

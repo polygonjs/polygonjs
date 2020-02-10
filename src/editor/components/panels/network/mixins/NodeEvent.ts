@@ -1,39 +1,58 @@
-import {BaseNode} from 'src/Engine/Node/_Base';
-import History from 'src/Editor/History/_Module';
+import {Helpers} from './EventMouse';
+import {SetDisplayFlagCommand} from 'src/editor/history/commands/SetDisplayFlag';
+import {SetBypassFlagCommand} from 'src/editor/history/commands/SetBypassFlag';
+import {StoreController} from 'src/editor/store/controllers/StoreController';
 
-export const NodeEvent = {
-	methods: {
-		on_capture_node_for_move(node: BaseNode) {
-			this.node_animation_helper.capture_node(node);
-		},
-		on_capture_node_for_selection(node: BaseNode) {
-			this.debug_node_infos(node);
+export function SetupNodeEvent(helpers: Helpers) {
+	const {node_animation_helper, connection_helper} = helpers;
 
-			this.node_selection_helper.capture_node(node);
-		},
+	function on_capture_node_for_move(id: string) {
+		node_animation_helper.capture_node(id);
+	}
+	// function on_capture_node_for_selection(node: BaseNodeType) {
+	// 	this.debug_node_infos(node);
 
-		on_capture_node_src_for_connection(node: BaseNode, index: number) {
-			this.connection_helper.capture_node_src(node, index);
-		},
-		on_capture_node_dest_for_connection(node: BaseNode, index: number) {
-			this.connection_helper.capture_node_dest(node, index);
-		},
-		on_capture_node_final_for_connection(node: BaseNode) {
-			this.connection_helper.capture_node_final(node);
-		},
-		on_set_display_flag(node: BaseNode) {
-			const selection = this.node.selection();
+	// 	node_selection_helper.capture_node(node);
+	// }
+
+	function on_capture_node_src_for_connection(id: string, index: number) {
+		connection_helper.capture_node_src(id, index);
+	}
+	function on_capture_node_dest_for_connection(id: string, index: number) {
+		connection_helper.capture_node_dest(id, index);
+	}
+	function on_capture_node_final_for_connection(id: string) {
+		connection_helper.capture_node_final(id);
+	}
+	function on_set_display_flag(id: string) {
+		const node = StoreController.engine.node(id)!;
+		const current_node = StoreController.editor.current_node();
+		if (current_node && current_node.children_allowed() && current_node.children_controller) {
+			const selection = current_node.children_controller.selection;
 			const nodes = selection.contains(node) ? selection.nodes() : [node];
 
-			const cmd = new History.Command.SetDisplayFlag(nodes);
-			cmd.push(this);
-		},
-		on_set_bypass_flag(node: BaseNode) {
-			const selection = this.node.selection();
+			const cmd = new SetDisplayFlagCommand(nodes);
+			cmd.push();
+		}
+	}
+	function on_set_bypass_flag(id: string) {
+		const node = StoreController.engine.node(id)!;
+		const current_node = StoreController.editor.current_node();
+		if (current_node && current_node.children_allowed() && current_node.children_controller) {
+			const selection = current_node.children_controller.selection;
 			const nodes = selection.contains(node) ? selection.nodes() : [node];
 
-			const cmd = new History.Command.SetBypassFlag(nodes);
-			cmd.push(this);
-		},
-	},
-};
+			const cmd = new SetBypassFlagCommand(nodes);
+			cmd.push();
+		}
+	}
+
+	return {
+		on_capture_node_for_move,
+		on_capture_node_src_for_connection,
+		on_capture_node_dest_for_connection,
+		on_capture_node_final_for_connection,
+		on_set_display_flag,
+		on_set_bypass_flag,
+	};
+}

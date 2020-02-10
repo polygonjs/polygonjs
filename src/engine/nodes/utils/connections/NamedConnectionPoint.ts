@@ -7,12 +7,13 @@ import {
 } from './ConnectionPointType';
 // import {ParamInitValuesTypeMap} from '../params/ParamsController';
 
-export interface TypedNamedConnectionPointData {
+export interface TypedNamedConnectionPointData<T extends ConnectionPointType> {
 	name: string;
+	type: T;
 }
 
 export class TypedNamedConnectionPoint<T extends ConnectionPointType> {
-	private _json: TypedNamedConnectionPointData | undefined;
+	private _json: TypedNamedConnectionPointData<T> | undefined;
 
 	constructor(
 		protected _name: string,
@@ -36,12 +37,13 @@ export class TypedNamedConnectionPoint<T extends ConnectionPointType> {
 		return this._init_value;
 	}
 
-	to_json(): TypedNamedConnectionPointData {
-		return (this._json = this._json || this._create_json);
+	to_json(): TypedNamedConnectionPointData<T> {
+		return (this._json = this._json || this._create_json());
 	}
-	private _create_json(): TypedNamedConnectionPointData {
+	private _create_json(): TypedNamedConnectionPointData<T> {
 		return {
 			name: this._name,
+			type: this._type,
 		};
 	}
 }

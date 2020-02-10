@@ -7,8 +7,9 @@ import {Constants} from './Constants';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {CameraData} from './CameraAnimation';
 import {NodeSelectCommand, SelectionMethod} from 'src/editor/history/commands/NodeSelect';
+import {StoreController} from 'src/editor/store/controllers/StoreController';
 
-interface NodeSelectionData {
+export interface NodeSelectionData {
 	start: Vector2Like;
 	end: Vector2Like;
 	active: boolean;
@@ -33,8 +34,13 @@ export class NodeSelectionHelper {
 		this.parent_node = parent_node;
 	}
 
-	capture_node(node: BaseNodeType) {
-		this.capture_nodes([node]);
+	capture_node(id: string) {
+		const node = StoreController.engine.node(id);
+		if (node) {
+			this.capture_nodes([node]);
+		} else {
+			this.capture_nodes([]);
+		}
 	}
 	capture_nodes(nodes: BaseNodeType[]) {
 		if (this.parent_node && this.parent_node.children_allowed() && this.parent_node.children_controller) {
@@ -208,10 +214,7 @@ export class NodeSelectionHelper {
 	private node_box(node: BaseNodeType): Box2 {
 		// const pos_mult = Constants.NODE_POS_MULT
 		const size = Constants.NODE_UNIT;
-		const pos = node
-			.ui_data()
-			.position()
-			.clone(); //.multiplyScalar(pos_mult)
+		const pos = node.ui_data.position().clone(); //.multiplyScalar(pos_mult)
 		return new Box2(pos.clone().subScalar(size * 0.5), pos.clone().addScalar(size * 0.5));
 	}
 }

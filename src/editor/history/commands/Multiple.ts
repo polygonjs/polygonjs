@@ -1,6 +1,6 @@
 import {BaseCommand} from './_Base';
 
-export class MultipleCommand extends Base {
+export class MultipleCommand extends BaseCommand {
 	private _commands: BaseCommand[] = [];
 
 	push_command(command: BaseCommand) {

@@ -11,8 +11,8 @@ import {NodeSerializerData} from 'src/engine/nodes/utils/Serializer';
 import {ParamSerializerData} from 'src/engine/params/utils/Serializer';
 import {BaseParamType} from 'src/engine/params/_Base';
 
-type EngineNodeData = NodeSerializerData;
-type EngineParamData = ParamSerializerData;
+export type EngineNodeData = NodeSerializerData;
+export type EngineParamData = ParamSerializerData;
 export interface EngineState {
 	scene_uuid: string | undefined;
 	nodes_by_graph_node_id: Dictionary<EngineNodeData>;

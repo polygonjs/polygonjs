@@ -5,17 +5,36 @@ import {ref, computed} from '@vue/composition-api';
 import {NodeAnimationHelper} from '../helpers/NodeAnimation';
 import {ConnectionHelper} from '../helpers/Connection';
 import {NodeSelectionHelper} from '../helpers/NodeSelection';
-import {TypeAssert} from 'src/engine/poly/Assert';
 import {CameraAnimationHelper} from '../helpers/CameraAnimation';
 import {NodeCreationHelper} from '../helpers/NodeCreation';
-import {KeyEventsDispatcher} from 'src/editor/helpers/KeyEventsDispatcher';
-export function SetupEventMouse(
-	node_animation_helper: NodeAnimationHelper,
-	connection_helper: ConnectionHelper,
-	node_selection_helper: NodeSelectionHelper,
-	cam_animation_helper: CameraAnimationHelper,
-	node_creation_helper: NodeCreationHelper
-) {
+import {TabMenuOptions} from './TabMenuOwner';
+import {KeyEventsDispatcher, KeyEventProcessor} from 'src/editor/helpers/KeyEventsDispatcher';
+import {SetupCameraOptions} from './Camera';
+import {StoreController} from 'src/editor/store/controllers/StoreController';
+
+export interface Helpers {
+	node_animation_helper: NodeAnimationHelper;
+	connection_helper: ConnectionHelper;
+	node_selection_helper: NodeSelectionHelper;
+	cam_animation_helper: CameraAnimationHelper;
+	node_creation_helper: NodeCreationHelper;
+}
+interface Options {
+	event_key_options: KeyEventProcessor;
+	tab_menu_options: TabMenuOptions;
+	camera_options: SetupCameraOptions;
+}
+
+export function SetupEventMouse(helpers: Helpers, options: Options) {
+	const {
+		node_animation_helper,
+		connection_helper,
+		node_selection_helper,
+		cam_animation_helper,
+		node_creation_helper,
+	} = helpers;
+	const {event_key_options, tab_menu_options, camera_options} = options;
+
 	const pan_in_progress = ref(false);
 	const zoom_in_progress = ref(false);
 
@@ -65,9 +84,9 @@ export function SetupEventMouse(
 	}
 
 	function on_mouse_move(event: MouseEvent) {
-		KeyEventsDispatcher.instance().register_processor(this);
+		KeyEventsDispatcher.instance().register_processor(event_key_options);
 
-		update_tab_menu_position(event);
+		tab_menu_options.update_tab_menu_position(event);
 
 		// this._current_mouse_pos = {x: event.pageX, y: event.pageY};
 		// this._current_mouse_pos_on_plane = this.ray_helper.intersect_plane_from_event(event, this.camera);
@@ -103,29 +122,33 @@ export function SetupEventMouse(
 		connection_helper.move_end();
 
 		// tab menu
-		if (!move_in_progress) {
-			if (this._registered_mouse_down) {
-				// in case we come here from a slider slide in another panel
-				toggle_tab_menu();
-			} else {
-				close_tab_menu();
-			}
-		} else {
-			close_tab_menu();
-		}
+		tab_menu_options.close_tab_menu();
+		// if (!move_in_progress) {
+		// 	if (this._registered_mouse_down) {
+		// 		// in case we come here from a slider slide in another panel
+		// 		tab_menu_options.toggle_tab_menu();
+		// 	} else {
+		// 		tab_menu_options.close_tab_menu();
+		// 	}
+		// } else {
+		// 	tab_menu_options.close_tab_menu();
+		// }
 
 		// this._registered_mouse_down = false;
-		save_camera_history_for_json_node(this.json_node);
+		const id = StoreController.editor.current_node_graph_id();
+		if (id) {
+			camera_options.save_camera_history_for_json_node(id);
+		}
 	}
 
-	function on_double_click(event: MouseEvent) {
-		// const intersect = this.ray_helper.intersected_mesh_with_callback(event, 'dbl_click', this.camera);
-		// if (intersect != null) {
-		// 	return intersect.callbacks['dbl_click']();
-		// }
-	}
+	// function on_double_click(event: MouseEvent) {
+	// 	// const intersect = this.ray_helper.intersected_mesh_with_callback(event, 'dbl_click', this.camera);
+	// 	// if (intersect != null) {
+	// 	// 	return intersect.callbacks['dbl_click']();
+	// 	// }
+	// }
 	function on_click(event: MouseEvent) {
-		close_tab_menu();
+		tab_menu_options.close_tab_menu();
 		node_creation_helper.create(event);
 	}
 	function on_context_menu(event: MouseEvent) {
@@ -135,7 +158,10 @@ export function SetupEventMouse(
 	}
 	function on_wheel(event: WheelEvent) {
 		cam_animation_helper.zoom(event);
-		save_camera_history_for_json_node(this.json_node);
+		const id = StoreController.editor.current_node_graph_id();
+		if (id) {
+			camera_options.save_camera_history_for_json_node(id);
+		}
 	}
 
 	return {

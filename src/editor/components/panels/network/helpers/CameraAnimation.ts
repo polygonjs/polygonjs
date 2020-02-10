@@ -120,7 +120,7 @@ export class CameraAnimationHelper {
 		return true;
 	}
 
-	pan_end(event: MouseEvent) {
+	pan_end(/*event: MouseEvent*/) {
 		// const pan_was_in_progress = this.is_pan_in_progress();
 		this._pan_in_progress = false;
 		// this.pan_camera = null;
@@ -168,7 +168,7 @@ export class CameraAnimationHelper {
 		// return true;
 	}
 
-	zoom_end(event: MouseEvent) {
+	zoom_end(/*event: MouseEvent*/) {
 		// const zoom_was_in_progress = this.is_zoom_in_progress();
 		// this.zoom_start_position = null;
 		// this.zoom_camera = null;

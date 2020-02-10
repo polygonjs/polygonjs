@@ -1,54 +1,40 @@
 import {Vector2} from 'three/src/math/Vector2';
-const THREE = {Vector2};
-import {NodeSelectionHelper} from '../Helpers/NodeSelection';
+import {NodeSelectionHelper, NodeSelectionData} from '../helpers/NodeSelection';
+import {StoreController} from 'src/editor/store/controllers/StoreController';
 
-export const NodeSelection = {
-	data() {
+import {Ref, onMounted, computed} from '@vue/composition-api';
+export function SetupNodeSelection(
+	node_selection_data: NodeSelectionData,
+	node_selection_helper: NodeSelectionHelper,
+	nodes_container: Ref<HTMLElement | null>
+) {
+	onMounted(() => {
+		if (nodes_container.value) {
+			node_selection_helper.set_element(nodes_container.value);
+		}
+		set_selection_helper_node();
+	});
+
+	const selection_rectangle_style_object = computed(() => {
+		const box = node_selection_helper.box();
+		const size = new Vector2();
+		box.getSize(size);
+		const display = node_selection_data.active ? 'block' : 'none';
 		return {
-			selection: {
-				start: {x: 0, y: 0},
-				end: {x: 0, y: 0},
-				active: false,
-			},
+			display: `${display}`,
+			left: `${box.min.x}px`,
+			top: `${box.min.y}px`,
+			width: `${size.x}px`,
+			height: `${size.y}px`,
 		};
-	},
+	});
 
-	mounted() {
-		this.node_selection_helper.set_element(this.$refs.nodes_container);
-		this.set_selection_helper_node();
-	},
+	function set_selection_helper_node() {
+		const node = StoreController.editor.current_node();
+		if (node) {
+			node_selection_helper.set_parent_node(node);
+		}
+	}
 
-	computed: {
-		node_selection_helper(): NodeSelectionHelper {
-			return (this._node_selection_helper =
-				this._node_selection_helper || new NodeSelectionHelper(this, this.selection, this.camera));
-		},
-
-		selection_rectangle_style_object(): object {
-			const box = this.node_selection_helper.box();
-			const size = new THREE.Vector2();
-			box.getSize(size);
-			const display = this.selection.active ? 'block' : 'none';
-			return {
-				display: `${display}`,
-				left: `${box.min.x}px`,
-				top: `${box.min.y}px`,
-				width: `${size.x}px`,
-				height: `${size.y}px`,
-			};
-		},
-	},
-
-	watch: {
-		json_node() {
-			this.$nextTick(() => {
-				this.set_selection_helper_node();
-			});
-		},
-	},
-	methods: {
-		set_selection_helper_node() {
-			this.node_selection_helper.set_parent_node(this.node);
-		},
-	},
-};
+	return {selection_rectangle_style_object};
+}

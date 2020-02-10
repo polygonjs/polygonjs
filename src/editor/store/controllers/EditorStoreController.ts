@@ -5,13 +5,28 @@ import {Store} from 'vuex';
 import {BaseNodeType} from 'src/engine/nodes/_Base.js';
 import {StoreController} from './StoreController';
 
+import {EditorClipboardStoreController} from './editor/EditorClipboardStoreController';
+import {EditorContextMenuStoreController} from './editor/EditorContextMenuStoreController';
+import {EditorDialogAlertStoreController} from './editor/EditorDialogAlertStoreController';
+import {EditorDialogConfirmStoreController} from './editor/EditorDialogConfirmStoreController';
+import {EditorDialogPromptStoreController} from './editor/EditorDialogPromptStoreController';
 import {EditorNetworkStoreController} from './editor/EditorNetworkStoreController';
+import {EditorNumericSliderStoreController} from './editor/EditorNumericSliderStoreController';
+// import {EditorPanelNodeSelectorStoreController} from './editor/EditorPanelNodeSelectorController';
+import {EngineNodeData} from '../modules/Engine';
 
 export class EditorStoreControllerClass {
 	private _store!: Store<State>;
 	private _scene!: PolyScene;
 
+	public readonly clipboard = EditorClipboardStoreController;
+	public readonly context_menu = EditorContextMenuStoreController;
+	public readonly dialog_alert = EditorDialogAlertStoreController;
+	public readonly dialog_confirm = EditorDialogConfirmStoreController;
+	public readonly dialog_prompt = EditorDialogPromptStoreController;
 	public readonly network = EditorNetworkStoreController;
+	public readonly numeric_slider = EditorNumericSliderStoreController;
+	// public readonly panel_node_selector = EditorPanelNodeSelectorStoreController;
 
 	private static _instance: EditorStoreControllerClass;
 	static instance() {
@@ -27,16 +42,26 @@ export class EditorStoreControllerClass {
 	}
 	set_store(store: Store<State>) {
 		this._store = store;
-	}
-
-	// non store methods
-	save_scene() {
-		// TODO
+		this.clipboard.set_store(store);
+		this.context_menu.set_store(store);
+		this.dialog_alert.set_store(store);
+		this.dialog_confirm.set_store(store);
+		this.dialog_prompt.set_store(store);
+		this.network.set_store(store);
+		this.numeric_slider.set_store(store);
 	}
 
 	// getters
 	current_node_graph_id(): string | undefined {
 		return this._store.getters['editor/current_node_id'];
+	}
+	current_json_node(): EngineNodeData | null {
+		const id = this.current_node_graph_id();
+		if (id) {
+			return StoreController.engine.json_node(id);
+		} else {
+			return null;
+		}
 	}
 	current_node(): BaseNodeType {
 		const id = this.current_node_graph_id();
@@ -51,6 +76,7 @@ export class EditorStoreControllerClass {
 
 	// mutations
 	set_current_node(node: BaseNodeType) {
+		console.log('set_current_node', node);
 		this._store.commit('editor/current_node', node);
 	}
 	go_up() {

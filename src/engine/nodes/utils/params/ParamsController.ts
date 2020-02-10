@@ -141,6 +141,9 @@ export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMap
 	[ParamType.VECTOR4]: StringOrNumber4;
 }
 export type ParamValue = boolean | Color | number | string | RampValue | Vector2 | Vector3 | Vector4 | null;
+export type MultipleNumericParamValue = Vector2 | Vector3 | Vector4 | Color;
+export type NumericParamValue = MultipleNumericParamValue | number;
+
 type ParamValuesTypeMapGeneric = {[key in ParamType]: ParamValue};
 export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
 	[ParamType.BOOLEAN]: boolean;
