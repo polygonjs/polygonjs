@@ -111,6 +111,8 @@ export default createComponent({
 
 		.buttons
 			padding: 10px
-			margin-bottom: 10px
+			margin-bottom: 0px
+			.button
+				margin-bottom: 0px
 
 </style>

@@ -1,11 +1,11 @@
 import {CATEGORY_OBJ} from './Category';
 
 import {AmbientLightObjNode} from 'src/engine/nodes/obj/AmbientLight';
-// import {AreaLight} from 'src/engine/nodes/obj/AreaLight';
-// import {DirectionalLightObj} from 'src/engine/nodes/obj/DirectionalLight';
-// import {HemisphereLightObj} from 'src/engine/nodes/obj/HemisphereLight';
-// import {PointLightObj} from 'src/engine/nodes/obj/PointLight';
-// import {SpotLightObj} from 'src/engine/nodes/obj/SpotLight';
+import {AreaLightObjNode} from 'src/engine/nodes/obj/AreaLight';
+import {DirectionalLightObjNode} from 'src/engine/nodes/obj/DirectionalLight';
+import {HemisphereLightObjNode} from 'src/engine/nodes/obj/HemisphereLight';
+import {PointLightObjNode} from 'src/engine/nodes/obj/PointLight';
+import {SpotLightObjNode} from 'src/engine/nodes/obj/SpotLight';
 
 import {EventsObjNode} from 'src/engine/nodes/obj/Events';
 import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
@@ -22,6 +22,11 @@ import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
 
 export interface ObjNodeChildrenMap {
 	ambient_light: AmbientLightObjNode;
+	area_light: AreaLightObjNode;
+	directional_light: DirectionalLightObjNode;
+	hemisphere_light: HemisphereLightObjNode;
+	point_light: PointLightObjNode;
+	spot_light: SpotLightObjNode;
 	cop: CopObjNode;
 	events: EventsObjNode;
 	fog: FogObjNode;
@@ -36,11 +41,11 @@ import {Poly} from 'src/engine/Poly';
 export class ObjRegister {
 	static run(poly: Poly) {
 		poly.register_node(AmbientLightObjNode, CATEGORY_OBJ.LIGHT);
-		// poly.register_node(AreaLight, CATEGORY_OBJ.LIGHT)
-		// poly.register_node(DirectionalLightObj, CATEGORY_OBJ.LIGHT)
-		// poly.register_node(HemisphereLightObj, CATEGORY_OBJ.LIGHT)
-		// poly.register_node(PointLightObj, CATEGORY_OBJ.LIGHT)
-		// poly.register_node(SpotLightObj, CATEGORY_OBJ.LIGHT)
+		poly.register_node(AreaLightObjNode, CATEGORY_OBJ.LIGHT);
+		poly.register_node(DirectionalLightObjNode, CATEGORY_OBJ.LIGHT);
+		poly.register_node(HemisphereLightObjNode, CATEGORY_OBJ.LIGHT);
+		poly.register_node(PointLightObjNode, CATEGORY_OBJ.LIGHT);
+		poly.register_node(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 
 		poly.register_node(EventsObjNode, CATEGORY_OBJ.MANAGER);
 		poly.register_node(MaterialsObjNode, CATEGORY_OBJ.MANAGER);

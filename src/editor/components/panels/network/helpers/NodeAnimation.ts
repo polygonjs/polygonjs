@@ -33,7 +33,6 @@ export class NodeAnimationHelper {
 	}
 
 	captured_nodes(): BaseNodeType[] {
-		console.log('this._captured_node', this._captured_node);
 		if (this._captured_node) {
 			const parent = this._captured_node.parent;
 			if (parent && parent.children_allowed() && parent.children_controller) {
@@ -60,10 +59,8 @@ export class NodeAnimationHelper {
 		this._move_in_progress = true;
 
 		const nodes = this.captured_nodes();
-		console.log('captured_nodes', nodes);
 		this.node_start_positions = nodes.map((node) => {
-			console.log(node, node.name, node.ui_data, node.ui_data.position);
-			const pos = node.ui_data.position().clone();
+			const pos = node.ui_data.position.clone();
 			const precision = 1 * Constants.NODE_UNIT;
 			pos.x = precision * Math.round(pos.x / precision);
 			pos.y = precision * Math.round(pos.y / precision);

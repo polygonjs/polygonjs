@@ -70,7 +70,7 @@ export class ClipBoardHelper {
 	}
 
 	offset_nodes(nodes: BaseNodeType[], camera_position: Vector2) {
-		const positions = nodes.map((node) => node.ui_data.position());
+		const positions = nodes.map((node) => node.ui_data.position);
 		const min = new Vector2(lodash_min(lodash_map(positions, 'x')), lodash_min(lodash_map(positions, 'y')));
 		const max = new Vector2(lodash_max(lodash_map(positions, 'x')), lodash_max(lodash_map(positions, 'y')));
 		const center = min.add(max).multiplyScalar(0.5);
@@ -105,7 +105,7 @@ export class ClipBoardHelper {
 	// command.push()
 
 	private create_code_for_nodes(parent_node: BaseNodeType, nodes: BaseNodeType[]): string | undefined {
-		const positions = lodash_map(nodes, (node) => node.ui_data.position());
+		const positions = lodash_map(nodes, (node) => node.ui_data.position);
 		const positions_xs = lodash_map(positions, 'x');
 		const min_x = lodash_min(positions_xs);
 		const max_x = lodash_max(positions_xs);

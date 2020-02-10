@@ -28,7 +28,7 @@ import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 // import {UIDataOwner} from './concerns/UIDataOwner';
 // import {Visit} from './concerns/Visit';
 
-import {UIData, NodeUIDataJson} from './utils/UIData';
+import {UIData} from './utils/UIData';
 import {FlagsController} from './utils/FlagsController';
 import {StatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
@@ -38,7 +38,7 @@ import {TypedContainerController} from './utils/ContainerController';
 import {CookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
-import {NodeSerializer} from './utils/Serializer';
+import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
 import {ParamsController, ParamInitValuesTypeMap, ParamConstructorMap} from './utils/params/ParamsController';
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/params/ParamsValueAccessor';
@@ -72,11 +72,31 @@ export interface NodeVisitor {
 }
 
 interface NodeDeletedEmitData {
-	parent: BaseNodeType;
+	parent_id: string;
 }
 interface NodeCreatedEmitData {
-	child_node: BaseNodeType;
+	child_node_json: NodeSerializerData;
 }
+type EmitDataByNodeEventMapGeneric = {[key in NodeEvent]: any};
+export interface EmitDataByNodeEventMap extends EmitDataByNodeEventMapGeneric {
+	[NodeEvent.CREATED]: NodeCreatedEmitData;
+	[NodeEvent.DELETED]: NodeDeletedEmitData;
+	[NodeEvent.ERROR_UPDATED]: undefined;
+}
+// emit(event_name: NodeEvent.CREATED, data: EmitDataByNodeEventMap[NodeEvent.CREATED]): void;
+// 	emit(event_name: NodeEvent.DELETED, data: NodeDeletedEmitData): void;
+// 	emit(event_name: NodeEvent.NAME_UPDATED): void;
+// 	emit(event_name: NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE): void;
+// 	emit(event_name: NodeEvent.NAMED_INPUTS_UPDATED): void;
+// 	emit(event_name: NodeEvent.NAMED_OUTPUTS_UPDATED): void;
+// 	emit(event_name: NodeEvent.INPUTS_UPDATED): void;
+// 	emit(event_name: NodeEvent.PARAMS_UPDATED): void;
+// 	emit(event_name: NodeEvent.UI_DATA_POSITION_UPDATED): void;
+// 	emit(event_name: NodeEvent.UI_DATA_COMMENT_UPDATED): void;
+// 	emit(event_name: NodeEvent.ERROR_UPDATED): void;
+// 	emit(event_name: NodeEvent.FLAG_BYPASS_UPDATED): void;
+// 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
+// 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 
 import {ContainerMap} from 'src/engine/containers/utils/ContainerMap';
 import {ContainableMap} from 'src/engine/containers/utils/ContainableMap';
@@ -336,7 +356,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 
 	// emit
 
-	emit(event_name: NodeEvent.CREATED, data: NodeCreatedEmitData): void;
+	emit(event_name: NodeEvent.CREATED, data: EmitDataByNodeEventMap[NodeEvent.CREATED]): void;
 	emit(event_name: NodeEvent.DELETED, data: NodeDeletedEmitData): void;
 	emit(event_name: NodeEvent.NAME_UPDATED): void;
 	emit(event_name: NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE): void;
@@ -344,7 +364,8 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	emit(event_name: NodeEvent.NAMED_OUTPUTS_UPDATED): void;
 	emit(event_name: NodeEvent.INPUTS_UPDATED): void;
 	emit(event_name: NodeEvent.PARAMS_UPDATED): void;
-	emit(event_name: NodeEvent.UI_DATA_UPDATED, data: NodeUIDataJson): void;
+	emit(event_name: NodeEvent.UI_DATA_POSITION_UPDATED): void;
+	emit(event_name: NodeEvent.UI_DATA_COMMENT_UPDATED): void;
 	emit(event_name: NodeEvent.ERROR_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_BYPASS_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;

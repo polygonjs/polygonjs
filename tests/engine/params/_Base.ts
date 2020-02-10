@@ -1,5 +1,8 @@
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {PolyScene} from 'src/engine';
+import {SceneEvent} from 'src/engine/poly/SceneEvent';
 
 QUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
@@ -68,7 +71,7 @@ QUnit.test('sets the node to recook if set expression', async (assert) => {
 });
 
 class EventsListener {
-	process_events(emitter: CoreGraphNode, event_name: string, data: object | null) {}
+	process_events(emitter: PolyScene | CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {}
 }
 
 QUnit.test('emit only the minimum times', (assert) => {

@@ -32,6 +32,7 @@ export default createComponent({
 	components: {Modal},
 
 	setup() {
+		console.log('StoreController.editor.dialog_alert', StoreController.editor.dialog_alert);
 		const display = computed(() => StoreController.editor.dialog_alert.display());
 		const message = computed(() => StoreController.editor.dialog_alert.message());
 		const title = computed(() => StoreController.editor.dialog_alert.title());
@@ -40,7 +41,12 @@ export default createComponent({
 			StoreController.editor.dialog_alert.hide();
 		}
 
-		return {display, message, title, close};
+		return {
+			display,
+			message,
+			title,
+			close,
+		};
 	},
 });
 </script>
@@ -56,6 +62,6 @@ export default createComponent({
 
 		.buttons
 			padding: 10px
-			margin-bottom: 10px
+			margin-bottom: 0px
 
 </style>

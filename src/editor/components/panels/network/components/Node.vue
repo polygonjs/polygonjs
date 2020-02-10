@@ -49,7 +49,7 @@
 				@click.stop.prevent = 'on_display_flag_click'
 			)
 
-		.name-container(
+		.name-container.disable-select(
 			:style = 'name_container_style_object'
 			)
 			// @mouseup.stop.prevent = 'on_name_mouseup'
@@ -175,6 +175,7 @@ export default createComponent({
 	setup(props: NodeProps, context: SetupContext) {
 		const node = StoreController.engine.node(props.json_node.graph_node_id);
 
+		const graph_node_id = computed(() => props.json_node.graph_node_id);
 		const layout_vertical = computed(() => {
 			return node?.ui_data.is_layout_vertical() || false;
 		});
@@ -224,6 +225,7 @@ export default createComponent({
 			style_object,
 			class_object,
 			node_body_style_object,
+			graph_node_id,
 			// mixins
 			...bypass_options,
 			...SetupChildrenOwner(props.json_node, body_size, layout_vertical),
@@ -402,14 +404,15 @@ export default createComponent({
 				text-align: center
 				background-color: lightgreen
 				cursor: pointer
+				line-height: 0
 				&:hover
 					background-color: darken(lightgreen, 10%)
 				svg
 					display: inline-block
 					margin: auto
 					position: relative
-					top: 50%
-					transform: translateY(-50%)
+					// top: 50%
+					// transform: translateY(-50%)
 
 		.connection-pixel
 			position: absolute

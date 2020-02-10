@@ -3,10 +3,17 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import 'src/engine/Poly';
 import {POLY} from 'src/engine/Poly';
+import {SceneEvent} from 'src/engine/poly/SceneEvent';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {ParamEvent} from 'src/engine/poly/ParamEvent';
 
 // type Callback = (emitter: CoreGraphNodeScene) => void; // TODO: typescript: maybe arg should be an event instead of the emitter
 interface EventsListener {
-	process_events: (emitter: CoreGraphNode, event_name: string, data: object | null) => void;
+	process_events: (
+		emitter: PolyScene | CoreGraphNode,
+		event_name: SceneEvent | NodeEvent | ParamEvent,
+		data?: any
+	) => void;
 }
 
 export class EventsController {
@@ -21,7 +28,7 @@ export class EventsController {
 	get events_listener() {
 		return this._events_listener;
 	}
-	dispatch(emitter: CoreGraphNode, event_name: string, data: object | null = {}) {
+	dispatch(emitter: PolyScene | CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {
 		// if (this._store && this._store.app) {
 		this._events_listener?.process_events(emitter, event_name, data);
 		// }

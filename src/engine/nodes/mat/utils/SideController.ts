@@ -3,7 +3,7 @@ import {BaseController} from './_BaseController';
 import {FrontSide} from 'three/src/constants';
 import {DoubleSide} from 'three/src/constants';
 import {BackSide} from 'three/src/constants';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
@@ -13,10 +13,14 @@ export function SideParamConfig<TBase extends Constructor>(Base: TBase) {
 		front = ParamConfig.BOOLEAN(1, {visible_if: {double_sided: false}});
 	};
 }
+
+class SidedMaterial extends Material {
+	side!: number;
+}
 class SideParamsConfig extends SideParamConfig(NodeParamsConfig) {}
-class SideMatNode extends TypedMatNode<MeshBasicMaterial, SideParamsConfig> {
+class SideMatNode extends TypedMatNode<SidedMaterial, SideParamsConfig> {
 	create_material() {
-		return new MeshBasicMaterial({});
+		return new SidedMaterial();
 	}
 }
 

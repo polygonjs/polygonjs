@@ -126,9 +126,7 @@ export default createComponent({
 		});
 		const json_children = computed(() => {
 			const id = StoreController.editor.current_node_graph_id();
-			console.log('id', id);
 			if (id) {
-				console.log('StoreController.engine.json_children(id)', StoreController.engine.json_children(id));
 				return StoreController.engine.json_children(id);
 			} else {
 				return [];
@@ -260,14 +258,15 @@ export default createComponent({
 					background-color: lightgreen
 					cursor: pointer
 					opacity: 0.7
+					line-height: 0
 					&:hover
 						opacity: 1
 					svg
 						display: inline-block
 						margin: auto
 						position: relative
-						top: 50%
-						transform: translateY(-50%)
+						// top: 50%
+						// transform: translateY(-50%)
 
 		.canvas_container, .canvas, .object_parents
 			width: 100%

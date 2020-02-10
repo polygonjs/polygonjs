@@ -24,6 +24,43 @@ export interface EngineState {
 	playing_state: boolean;
 }
 
+export enum EngineMutation {
+	// scene
+	SCENE = 'SCENE',
+	SCENE_FRAME_UPDATED = 'SCENE_FRAME_UPDATED',
+	SCENE_FRAME_RANGE_UPDATED = 'SCENE_FRAME_RANGE_UPDATED',
+	SCENE_PLAY_STATE_UPDATED = 'SCENE_PLAY_STATE_UPDATED',
+	// node
+	NODE_ERROR_UPDATED = 'NODE_ERROR_UPDATED',
+	NODE_UI_DATA_POSITION_UPDATED = 'NODE_UI_DATA_POSITION_UPDATED',
+	NODE_UI_DATA_COMMENT_UPDATED = 'NODE_UI_DATA_COMMENT_UPDATED',
+	NODE_SELECTION_UPDATED = 'NODE_SELECTION_UPDATED',
+	NODE_DISPLAY_FLAG_UPDATED = 'NODE_DISPLAY_FLAG_UPDATED',
+	NODE_BYPASS_FLAG_UPDATED = 'NODE_BYPASS_FLAG_UPDATED',
+	NODE_NAME_UPDATED = 'NODE_NAME_UPDATED',
+	NODE_CREATED = 'NODE_CREATED',
+}
+type EnginePayloadByMutationMapGeneric = {[key in EngineMutation]: any};
+export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGeneric {
+	// scene
+	[EngineMutation.SCENE]: undefined;
+	[EngineMutation.SCENE_FRAME_UPDATED]: undefined;
+	[EngineMutation.SCENE_FRAME_RANGE_UPDATED]: undefined;
+	[EngineMutation.SCENE_PLAY_STATE_UPDATED]: undefined;
+	// node
+	[EngineMutation.NODE_ERROR_UPDATED]: string;
+	[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]: string;
+	[EngineMutation.NODE_UI_DATA_COMMENT_UPDATED]: string;
+	[EngineMutation.NODE_SELECTION_UPDATED]: string;
+	[EngineMutation.NODE_DISPLAY_FLAG_UPDATED]: string;
+	[EngineMutation.NODE_BYPASS_FLAG_UPDATED]: string;
+	[EngineMutation.NODE_NAME_UPDATED]: string;
+	[EngineMutation.NODE_CREATED]: {
+		parent_id: string;
+		child_node_json: EngineNodeData;
+	};
+}
+
 // actions payloads
 interface EnginePayloadUpdateChildren {
 	json_node: EngineNodeData;
@@ -41,23 +78,16 @@ interface EnginePayloadNodeDeleted {
 		parent: BaseNodeType;
 	};
 }
-interface EnginePayloadNodeCreated {
-	emitter: BaseNodeType;
-	data: {
-		child_node: BaseNodeType;
-	};
-}
+// interface EnginePayloadNodeCreated {
+// 	emitter: BaseNodeType;
+// 	data: {
+// 		child_node: BaseNodeType;
+// 	};
+// }
 
 const store_json_node = (state: EngineState, node: BaseNodeType) => state.nodes_by_graph_node_id[node.graph_node_id];
 // window.store_json_param= (state, param)->
 // 	state.params_by_graph_node_id[param.graph_node_id()]
-
-export enum EngineMutation {
-	SCENE = 'scene',
-	SCENE_FRAME_UPDATED = 'scene_frame_updated',
-	SCENE_FRAME_RANGE_UPDATED = 'scene_frame_range_updated',
-	SCENE_PLAY_STATE_UPDATED = 'scene_play_state_updated',
-}
 
 export const EngineStoreModule = {
 	namespaced: true,
@@ -182,6 +212,11 @@ export const EngineStoreModule = {
 			}
 		},
 
+		//
+		//
+		// Scene Mutations
+		//
+		//
 		[EngineMutation.SCENE]: function(state: EngineState) {
 			const scene = StoreController.scene;
 			const include_node_param_components = false;
@@ -229,45 +264,86 @@ export const EngineStoreModule = {
 			state.playing_state = scene.time_controller.playing;
 		},
 
-		ui_data_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			// const data = payload['data'];
-			const json_node = store_json_node(state, node);
-			if (json_node) {
-				json_node['ui_data'] = node.ui_data.to_json();
+		//
+		//
+		// Node Mutations
+		//
+		//
+		[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node) {
+				const json_node = store_json_node(state, node);
+				if (json_node) {
+					json_node.ui_data.x = node.ui_data.position.x;
+					json_node.ui_data.y = node.ui_data.position.y;
+				}
+			}
+		},
+		[EngineMutation.NODE_UI_DATA_COMMENT_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_UI_DATA_COMMENT_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node) {
+				const json_node = store_json_node(state, node);
+				if (json_node) {
+					json_node.ui_data.comment = node.ui_data.comment;
+				}
 			}
 		},
 
-		selection_update(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node && node && node.children_allowed() && node.children_controller) {
-				json_node['selection'] = node.children_controller.selection.to_json();
+		[EngineMutation.NODE_SELECTION_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_SELECTION_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node && node.children_allowed() && node.children_controller) {
+				const json_node = store_json_node(state, node);
+				if (json_node) {
+					json_node['selection'] = node.children_controller.selection.to_json();
+				}
 			}
 		},
 
-		node_name_update(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-
-			const json_node = store_json_node(state, node);
-			if (json_node) {
-				json_node.name = node.name;
+		[EngineMutation.NODE_NAME_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_NAME_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node) {
+				const json_node = store_json_node(state, node);
+				if (json_node) {
+					json_node.name = node.name;
+				}
 			}
 		},
 
-		display_flag_update(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node && json_node.flags) {
-				json_node.flags['display'] = node.flags?.display?.active;
+		[EngineMutation.NODE_DISPLAY_FLAG_UPDATED](
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_DISPLAY_FLAG_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node && node.flags?.display) {
+				const json_node = store_json_node(state, node);
+				if (json_node && json_node.flags?.display != null) {
+					json_node.flags.display = node.flags.display.active;
+				}
 			}
 		},
 
-		bypass_flag_update(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node && json_node.flags) {
-				json_node.flags['bypass'] = node.flags?.bypass?.active;
+		[EngineMutation.NODE_BYPASS_FLAG_UPDATED](
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_BYPASS_FLAG_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node && node.flags?.bypass) {
+				const json_node = store_json_node(state, node);
+				if (json_node && json_node.flags?.bypass != null) {
+					json_node.flags.bypass = node.flags.bypass.active;
+				}
 			}
 		},
 
@@ -308,10 +384,13 @@ export const EngineStoreModule = {
 			}
 		},
 
-		node_error_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node) {
+		[EngineMutation.NODE_ERROR_UPDATED]: (
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_ERROR_UPDATED]
+		) => {
+			const node = StoreController.engine.node(node_id);
+			if (node) {
+				const json_node = store_json_node(state, node);
 				json_node['error_message'] = node.states.error.message;
 			}
 		},
@@ -330,12 +409,18 @@ export const EngineStoreModule = {
 			children_ids.splice(index, 1);
 		},
 
-		node_created(state: EngineState, payload: EnginePayloadNodeCreated) {
-			const parent_node = payload['emitter'];
-			const data = payload['data'];
-			const child_node = data['child_node'];
-			Vue.set(state.nodes_by_graph_node_id, parent_node.graph_node_id, parent_node.to_json());
-			Vue.set(state.nodes_by_graph_node_id, child_node.graph_node_id, child_node.to_json());
+		[EngineMutation.NODE_CREATED]: function(
+			state: EngineState,
+			payload: EnginePayloadByMutationMap[EngineMutation.NODE_CREATED]
+		) {
+			const parent_node_id = payload['parent_id'];
+			const parent_node = StoreController.engine.node(parent_node_id);
+			if (parent_node) {
+				const child_node_json = payload['child_node_json'];
+				Vue.set(state.nodes_by_graph_node_id, parent_node.graph_node_id, parent_node.to_json());
+				Vue.set(state.nodes_by_graph_node_id, child_node_json.graph_node_id, child_node_json);
+			}
+			// const data = payload['child_node_json'];
 
 			// child_node.params.all.forEach((param) =>
 			// 	Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json())

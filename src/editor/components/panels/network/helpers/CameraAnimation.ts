@@ -217,7 +217,7 @@ export class CameraAnimationHelper {
 
 		const box = new Box2();
 		nodes.forEach((node) => {
-			box.expandByPoint(node.ui_data.position());
+			box.expandByPoint(node.ui_data.position);
 		});
 		const center = new Vector2();
 		box.getCenter(center);

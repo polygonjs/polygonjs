@@ -27,7 +27,6 @@ import {BaseParamType} from 'src/engine/params/_Base';
 import {CoreWalker} from 'src/core/Walker';
 
 // components
-import DropDownMenu from './DropDownMenu.vue';
 import {StoreController} from '../../store/controllers/StoreController';
 import {ParamType} from '../../../engine/poly/ParamType';
 import {DropDownMenuEntry} from '../types/props';
@@ -36,7 +35,6 @@ import {ParamSetCommand} from '../../history/commands/ParamSet';
 import {createComponent, computed, watch} from '@vue/composition-api';
 export default createComponent({
 	name: 'param-menu',
-	components: {DropDownMenu},
 
 	setup() {
 		const position = computed(() => {

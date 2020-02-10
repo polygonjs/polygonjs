@@ -4,10 +4,10 @@
 
 	doctype html
 
+	//- @mouseenter = 'compute_max_height'
 	.dropdown_menu(
 		:class = 'dropdown_menu_class_object'
 		@click = 'toggle_display'
-		@mouseenter = 'compute_max_height'
 		)
 		div(
 			:class = 'dropdown_menu_label_object'
@@ -46,12 +46,14 @@
 				DropDownMenu.sub_entries_dropdown(
 					v-if = 'hovered_entry_has_children'
 					:style = 'sub_dropdown_style_object'
+					:init_position_top = 'sub_dropdown_init_position_top'
 					:level = 'level+1'
 					:display_label = 'false'
 					:entries = 'hovered_entry_children'
 					:event_id_prefix = 'hovered_entry_id'
 					:always_visible = 'true'
 					:emphasis = 'emphasis'
+					:key = 'hovered_entry_id'
 					@select = 'on_entry_select'
 				)
 				//- DropDownMenu(
@@ -70,7 +72,6 @@
 <script lang="ts">
 import lodash_sortBy from 'lodash/sortBy';
 
-// import DropDownMenu from './DropDownMenu'
 import {CoreString} from 'src/core/String';
 
 import {DropDownMenuEntry} from 'src/editor/components/types/props';
@@ -85,8 +86,9 @@ interface DropDownMenuProps {
 	entries: DropDownMenuEntry[];
 	sort_entries: boolean;
 	right_aligned: boolean;
-	event_id_prefix: string;
+	event_id_prefix: string | undefined;
 	emphasis: string;
+	init_position_top: number;
 }
 
 import {createComponent, ref, onMounted, computed, onBeforeMount, SetupContext} from '@vue/composition-api';
@@ -145,14 +147,19 @@ export default createComponent({
 			type: String,
 			default: '',
 		},
+		init_position_top: {
+			type: Number,
+			default: 0,
+		},
 	},
 
 	setup(props: DropDownMenuProps, context: SetupContext) {
 		const displayed = ref(false);
-		const content_top_position = ref(0);
-		const content_max_height = ref<number | null>(1000);
+		const position_top_offset = ref(0);
+		const content_max_height = ref<number>(1000);
 		const scroll_bars_required = ref(false);
 		const hovered_entry_index = ref(-1);
+		// const hovered_timestamp = ref(-1);
 
 		const dropdown_menu_content = ref<HTMLElement>(null);
 		const entry_element = ref<HTMLElement[]>(null);
@@ -165,6 +172,9 @@ export default createComponent({
 			compute_max_height();
 		});
 
+		const content_top_position = computed(() => {
+			return props.init_position_top + position_top_offset.value;
+		});
 		// TODO: typescript check this
 		// watch(()=>{
 		// 	displayed(new_displayed) {
@@ -184,16 +194,27 @@ export default createComponent({
 		const sub_dropdown_style_object = computed(() => {
 			const entry_parent = dropdown_menu_content.value;
 			if (entry_parent && entry_element.value) {
-				const current_entry_element = entry_element.value[hovered_entry_index.value];
-				const entry_parent_top = current_entry_element.getBoundingClientRect().top;
-				const entry_element_top = current_entry_element.getBoundingClientRect().top;
+				// const current_entry_element = entry_element.value[hovered_entry_index.value];
+				// const entry_parent_top = entry_parent.getBoundingClientRect().top;
+				// const entry_element_top = current_entry_element.getBoundingClientRect().top;
 				const width = entry_parent.offsetWidth;
 				return {
-					top: `${entry_element_top - entry_parent_top}px`,
+					// top: `${entry_element_top - entry_parent_top}px`,
 					left: `${width}px`,
 				};
 			} else {
 				return {};
+			}
+		});
+		const sub_dropdown_init_position_top = computed(() => {
+			const entry_parent = dropdown_menu_content.value;
+			if (entry_parent && entry_element.value) {
+				const current_entry_element = entry_element.value[hovered_entry_index.value];
+				const entry_parent_top = entry_parent.getBoundingClientRect().top;
+				const entry_element_top = current_entry_element.getBoundingClientRect().top;
+				return entry_element_top - entry_parent_top + position_top_offset.value;
+			} else {
+				return 0;
 			}
 		});
 		const hovered_entry_children = computed(() => {
@@ -320,13 +341,13 @@ export default createComponent({
 		const content_style_object = computed(() => {
 			if (scroll_bars_required.value) {
 				return {
-					top: `${-Math.floor(this.content_top_position)}px`,
-					maxHeight: `${Math.floor(this.content_max_height)}px`,
+					top: `${Math.floor(content_top_position.value)}px`,
+					maxHeight: `${Math.floor(content_max_height.value)}px`,
 					overflowY: 'scroll',
 				};
 			} else {
 				return {
-					top: `${0}px`,
+					top: `${Math.floor(content_top_position.value)}px`,
 					maxHeight: null,
 					overflowY: null,
 				};
@@ -343,7 +364,7 @@ export default createComponent({
 
 		// functions
 		function compute_max_height() {
-			content_max_height.value = null;
+			// content_max_height.value = document.body.offsetHeight;
 			scroll_bars_required.value = false;
 
 			// TODO: typescript check this
@@ -351,19 +372,32 @@ export default createComponent({
 			if (!dropdown_menu_content.value) {
 				return;
 			}
-			const top = dropdown_menu_content.value.getBoundingClientRect().top;
+			const rect = dropdown_menu_content.value.getBoundingClientRect();
+			const top = rect.top;
+			const element_height = rect.height;
 			const window_height = window.innerHeight;
-			const available_height = window_height - top;
-			const max_top = window_height - available_height;
-			const element_height = dropdown_menu_content.value.offsetHeight;
-			if (available_height < element_height) {
+			// const available_height = window_height - top;
+			// const max_top = window_height - available_height;
+
+			// if the element is taller than the window
+			if (element_height > window_height) {
 				// 10px margin to be sure its content stops befor the bottom of the window
-				content_top_position.value = Math.min(element_height - available_height, max_top);
+				// content_top_position.value = Math.min(element_height - available_height, max_top);
 				content_max_height.value = window_height; //(window_height - top) - 10
+				position_top_offset.value = -top;
 				scroll_bars_required.value = true;
 			} else {
-				content_top_position.value = 0;
-				content_max_height.value = null;
+				const visible_height = window_height - top;
+				const hidden_height = element_height - visible_height;
+
+				// if the element has part of it under the bottom of the window
+				if (hidden_height > 0) {
+					position_top_offset.value = -hidden_height;
+					// if the element is fully visible, no offset needed
+				} else {
+					position_top_offset.value = 0;
+				}
+				content_max_height.value = element_height;
 				scroll_bars_required.value = false;
 			}
 			// });
@@ -371,6 +405,7 @@ export default createComponent({
 
 		function set_hovered_entry_index(index: number) {
 			hovered_entry_index.value = index;
+			// hovered_timestamp.value = performance.now();
 		}
 		function unset_hovered_entry() {
 			// this.hovered_entry_index = -1
@@ -385,13 +420,13 @@ export default createComponent({
 				if (props.event_id_prefix) {
 					emitted = `${props.event_id_prefix}/${id}`;
 				}
-				context.emit('select', emitted);
+				context.emit('select', emitted); // emits the string of id, optionally prefixed by props.event_id_prefix
 			}
 		}
 
 		function on_entry_select(entry: DropDownMenuEntry) {
 			displayed.value = false;
-			context.emit('select', entry);
+			context.emit('select', entry); // emits the entry object
 		}
 
 		function toggle_display() {
@@ -402,14 +437,16 @@ export default createComponent({
 			displayed,
 			content_top_position,
 			content_max_height,
-			scroll_bars_required,
+			// scroll_bars_required,
 			hovered_entry_index,
 			dropdown_menu_content,
 			entry_element,
 			hovered_entry_has_children,
 			sub_dropdown_style_object,
+			sub_dropdown_init_position_top,
 			hovered_entry_children,
 			hovered_entry_id,
+			// hovered_timestamp,
 			has_emphasis,
 			sorted_entries,
 			entry_ids,
@@ -427,6 +464,7 @@ export default createComponent({
 			content_class_object,
 			content_style_object,
 			dropdown_menu_label_object,
+			position_top_offset,
 
 			// functions
 			set_hovered_entry_index,

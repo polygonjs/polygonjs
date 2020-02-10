@@ -6,6 +6,9 @@ import {Store} from 'vuex';
 import {State} from '../Store';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {SceneEvent} from 'src/engine/poly/SceneEvent';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
+// import {BaseNodeType, EmitDataByNodeEventMap} from 'src/engine/nodes/_Base';
+import {ParamEvent} from 'src/engine/poly/ParamEvent';
 
 class StoreControllerClass {
 	private static _instance: StoreControllerClass;
@@ -36,18 +39,44 @@ class StoreControllerClass {
 		this.engine.set_store(store);
 	}
 
-	process_events(emitter: CoreGraphNode, event_name: string, data: object | null) {
-		switch (event_name) {
-			case SceneEvent.FRAME_UPDATED:
-				this.engine.update_frame();
-				break;
-			case SceneEvent.FRAME_RANGE_UPDATED:
-				this.engine.update_frame_range();
-				break;
-			case SceneEvent.PLAY_STATE_UPDATED:
-				this.engine.update_play_state();
-				break;
+	// process_events<T extends NodeEvent>(emitter: BaseNodeType, event_name: T, data: EmitDataByNodeEventMap[T]): void;
+	// process_events(emitter: PolyScene, event_name: SceneEvent): void;
+	process_events(
+		emitter: PolyScene | CoreGraphNode,
+		event_name: SceneEvent | NodeEvent | ParamEvent,
+		data?: any
+	): void {
+		if (emitter instanceof PolyScene) {
+			switch (event_name) {
+				// scene events
+				case SceneEvent.FRAME_UPDATED:
+					return this.engine.update_frame();
+				case SceneEvent.FRAME_RANGE_UPDATED:
+					return this.engine.update_frame_range();
+				case SceneEvent.PLAY_STATE_UPDATED:
+					return this.engine.update_play_state();
+			}
 		}
+		if (emitter instanceof CoreGraphNode) {
+			switch (event_name) {
+				// node events
+				case NodeEvent.ERROR_UPDATED:
+					return this.engine.update_node_error(emitter.graph_node_id);
+				case NodeEvent.UI_DATA_POSITION_UPDATED:
+					return this.engine.update_node_ui_data_position(emitter.graph_node_id);
+				case NodeEvent.SELECTION_UPDATED:
+					return this.engine.update_node_selection(emitter.graph_node_id);
+				case NodeEvent.FLAG_DISPLAY_UPDATED:
+					return this.engine.update_node_display_flag(emitter.graph_node_id);
+				case NodeEvent.FLAG_BYPASS_UPDATED:
+					return this.engine.update_node_bypass_flag(emitter.graph_node_id);
+				case NodeEvent.NAME_UPDATED:
+					return this.engine.update_node_name(emitter.graph_node_id);
+				case NodeEvent.CREATED:
+					return this.engine.add_node(emitter.graph_node_id, data);
+			}
+		}
+		console.warn('event not processed', emitter, event_name, data);
 	}
 }
 

@@ -1,71 +1,73 @@
-// import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
-// import {PointLight} from 'three/src/lights/PointLight';
-// import {Color} from 'three/src/math/Color';
-// import {Vector2} from 'three/src/math/Vector2';
-// import {ParamType} from 'src/engine/poly/ParamType';
-// import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PointLight} from 'three/src/lights/PointLight';
+import {ParamType} from 'src/engine/poly/ParamType';
 
-// export class PointLightObj extends BaseLightTransformedObjNode {
-// 	@ParamC('color') _param_color: Color;
-// 	@ParamF('intensity') _param_intensity: number;
-// 	@ParamF('decay') _param_decay: number;
-// 	@ParamF('distance') _param_distance: number;
-// 	@ParamB('cast_shadows') _param_cast_shadows: boolean;
-// 	@ParamV2('shadow_res') _param_shadow_res: Vector2;
-// 	@ParamF('shadow_near') _param_shadow_near: number;
-// 	@ParamF('shadow_far') _param_shadow_far: number;
-// 	@ParamF('shadow_bias') _param_shadow_bias: number;
-// 	protected _object: PointLight;
-// 	get object() {
-// 		return this._object;
-// 	}
-// 	static type() {
-// 		return 'point_light';
-// 	}
-// 	initialize_node() {
-// 		this.io.inputs.set_count_to_one_max();
-// 	}
+import {TypedLightObjNode} from './_BaseLight';
 
-// 	create_object() {
-// 		const object = new PointLight();
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class PointLightObjParamsConfig extends NodeParamsConfig {
+	color = ParamConfig.COLOR([1, 1, 1]);
+	intensity = ParamConfig.FLOAT(1);
+	decay = ParamConfig.FLOAT(0.1);
+	distance = ParamConfig.FLOAT(100);
+	// shadows
+	cast_shadows = ParamConfig.BOOLEAN(1);
+	shadow_res = ParamConfig.VECTOR2([1024, 1024]);
+	shadow_bias = ParamConfig.FLOAT(-0.001);
+	shadow_near = ParamConfig.FLOAT(1);
+	shadow_far = ParamConfig.FLOAT(100);
+}
+const ParamsConfig = new PointLightObjParamsConfig();
 
-// 		object.castShadow = true;
-// 		object.shadow.bias = -0.001;
-// 		object.shadow.mapSize.x = 1024;
-// 		object.shadow.mapSize.y = 1024;
-// 		object.shadow.camera.near = 0.1;
-// 		return object;
-// 	}
+export class PointLightObjNode extends TypedLightObjNode<PointLight, PointLightObjParamsConfig> {
+	params_config = ParamsConfig;
 
-// 	create_light_params() {
-// 		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
-// 		this.add_param(ParamType.FLOAT, 'intensity', 1);
-// 		this.add_param(ParamType.FLOAT, 'decay', 0.1);
-// 		this.add_param(ParamType.FLOAT, 'distance', 100);
-// 	}
-// 	create_shadow_params() {
-// 		this.add_param(ParamType.BOOLEAN, 'cast_shadows', 1);
-// 		const shadow_options = {visible_if: {cast_shadows: 1}};
-// 		this.add_param(ParamType.VECTOR2, 'shadow_res', [1024, 1024], shadow_options);
-// 		this.add_param(ParamType.FLOAT, 'shadow_near', 0.1, shadow_options);
-// 		this.add_param(ParamType.FLOAT, 'shadow_far', 100, shadow_options);
-// 		// this.add_param( 'float', 'shadow_far', 500 ) # same as param distance
-// 		this.add_param(ParamType.FLOAT, 'shadow_bias', -0.0001, shadow_options);
-// 		// this.add_param( 'float', 'shadow_blur', 1, shadow_options );
-// 	}
+	static type() {
+		return 'point_light';
+	}
+	initialize_node() {
+		this.io.inputs.set_count(0, 1);
+	}
 
-// 	update_light_params() {
-// 		this.object.color = this._param_color;
-// 		this.object.intensity = this._param_intensity;
-// 		this.object.decay = this._param_decay;
+	create_object() {
+		const object = new PointLight();
 
-// 		this.object.distance = this._param_distance;
-// 	}
-// 	update_shadow_params() {
-// 		this.object.castShadow = this._param_cast_shadows;
-// 		this.object.shadow.mapSize.copy(this._param_shadow_res);
-// 		this.object.shadow.camera.near = this._param_shadow_near;
-// 		this.object.shadow.camera.far = this._param_shadow_far;
-// 		this.object.shadow.bias = this._param_shadow_bias;
-// 	}
-// }
+		object.castShadow = true;
+		object.shadow.bias = -0.001;
+		object.shadow.mapSize.x = 1024;
+		object.shadow.mapSize.y = 1024;
+		object.shadow.camera.near = 0.1;
+		return object;
+	}
+
+	create_light_params() {
+		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
+		this.add_param(ParamType.FLOAT, 'intensity', 1);
+		this.add_param(ParamType.FLOAT, 'decay', 0.1);
+		this.add_param(ParamType.FLOAT, 'distance', 100);
+	}
+	// create_shadow_params() {
+	// 	this.add_param(ParamType.BOOLEAN, 'cast_shadows', 1);
+	// 	const shadow_options = {visible_if: {cast_shadows: 1}};
+	// 	this.add_param(ParamType.VECTOR2, 'shadow_res', [1024, 1024], shadow_options);
+	// 	this.add_param(ParamType.FLOAT, 'shadow_near', 0.1, shadow_options);
+	// 	this.add_param(ParamType.FLOAT, 'shadow_far', 100, shadow_options);
+	// 	// this.add_param( 'float', 'shadow_far', 500 ) # same as param distance
+	// 	this.add_param(ParamType.FLOAT, 'shadow_bias', -0.0001, shadow_options);
+	// 	// this.add_param( 'float', 'shadow_blur', 1, shadow_options );
+	// }
+
+	update_light_params() {
+		this.object.color = this.pv.color;
+		this.object.intensity = this.pv.intensity;
+		this.object.decay = this.pv.decay;
+
+		this.object.distance = this.pv.distance;
+	}
+	update_shadow_params() {
+		this.object.castShadow = this.pv.cast_shadows;
+		this.object.shadow.mapSize.copy(this.pv.shadow_res);
+		this.object.shadow.camera.near = this.pv.shadow_near;
+		this.object.shadow.camera.far = this.pv.shadow_far;
+		this.object.shadow.bias = this.pv.shadow_bias;
+	}
+}

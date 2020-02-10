@@ -36,9 +36,10 @@ import 'src/engine/poly/registers/All';
 import {SceneJsonExporterData} from 'src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from 'src/engine/io/json/import/Scene';
 import {PolyScene} from 'src/engine/scene/PolyScene';
-import default_scene_data from 'src/../public/examples/scenes/default_simple2.json';
+import default_scene_data from 'src/../public/examples/scenes/default_simple.json';
 async function load_default_scene_if_none() {
 	const default_scene: PolyScene = await SceneJsonImporter.load_data(default_scene_data as SceneJsonExporterData);
+	console.log(StoreController.editor.dialog_alert);
 	StoreController.set_scene(default_scene);
 	(window as any).scene = default_scene;
 	new Vue({

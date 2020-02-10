@@ -11,7 +11,7 @@
 		)
 		.arrow-left
 
-		.node_title_container(@click = 'on_name_click') {{node.name()}}
+		.node_title_container(@click = 'on_name_click') {{node_name}}
 		.node_info_container
 			.time_dependency.icon_prefixed(:class = 'time_dependency_class_object')
 				v-icon(name = 'regular/clock')
@@ -20,6 +20,7 @@
 			.error_message.icon_prefixed(v-if = 'error_message')
 				v-icon(name = 'exclamation-triangle')
 				span {{error_message}}
+			.test(v-else) not errored
 
 			.node_info_separator
 
@@ -99,11 +100,15 @@ export default createComponent({
 	},
 
 	setup(props) {
+		const node = StoreController.engine.node(props.graph_node_id);
+
 		const time_dependent = ref(false);
 		const error_message = ref<string | undefined>(undefined);
 		const scene_predecessor_paths = ref<string[]>([]);
 		const scene_successor_paths = ref<string[]>([]);
 		const node_by_path: Map<string, BaseNodeType> = new Map();
+
+		const node_name = computed(() => node?.name);
 
 		onMounted(() => {
 			compute_node();
@@ -131,7 +136,7 @@ export default createComponent({
 		});
 
 		async function compute_node() {
-			const node = StoreController.editor.current_node();
+			console.log('compute_node', node);
 			if (!node) {
 				return;
 			}
@@ -142,6 +147,7 @@ export default createComponent({
 
 			time_dependent.value = node.states.time_dependent.active;
 			error_message.value = node.states.error.message;
+			console.log(node.name, node.states.error.message, error_message.value);
 
 			const scene_predecessors = node.dependencies_controller.scene_predecessors();
 			const scene_successors = node.dependencies_controller.scene_successors();
@@ -190,6 +196,7 @@ export default createComponent({
 		}
 
 		return {
+			node_name,
 			time_dependent,
 			error_message,
 			scene_predecessor_paths,

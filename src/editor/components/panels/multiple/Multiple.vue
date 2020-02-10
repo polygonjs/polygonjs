@@ -101,9 +101,6 @@ import {SetupMultiplePanelJson} from './mixins/Json';
 import {SetupMultiplePanelPanels} from './mixins/Panels';
 import {SetupMultiplePanelSplit} from './mixins/Split';
 
-// components
-import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
-
 import {MultiplePanelProps, MultiplePanelSplitMode} from 'src/editor/components/types/props';
 
 // components
@@ -170,7 +167,6 @@ import {createComponent, SetupContext, ref} from '@vue/composition-api';
 export default createComponent({
 	name: 'MultiplePanel',
 	components: {
-		DropDownMenu,
 		// Asset,
 		Network,
 		// Param,

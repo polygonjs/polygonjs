@@ -134,7 +134,7 @@ export class NodeCodeExporter {
 		if (this._node.parent) {
 			// if not root
 			let x_offset;
-			const pos = this._node.ui_data.position().clone();
+			const pos = this._node.ui_data.position.clone();
 			if ((x_offset = options['position_x_offset']) != null) {
 				pos.x += x_offset;
 			}

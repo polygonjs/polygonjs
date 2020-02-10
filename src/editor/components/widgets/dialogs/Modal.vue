@@ -5,7 +5,7 @@
 	.Polygon-Modal-Container
 		.Polygon-Modal(:style = 'style_object')
 			.grid-y.modal-grid
-				.cell.shrink
+				.cell.shrink.disable-select
 					.Modal-title.text-center(
 						@mousedown = 'on_move_start'
 					) {{title}}
@@ -26,7 +26,7 @@ import {Vector2} from 'three/src/math/Vector2';
 
 interface ModalProps {
 	title: string;
-	init_size: Vector2Like;
+	size: Vector2Like;
 	resizable: boolean;
 }
 
@@ -39,12 +39,12 @@ export default createComponent({
 			type: String,
 			default: 'No title',
 		},
-		init_size: {
+		size: {
 			type: Object,
 			default() {
 				return {
-					x: 300,
-					y: 600,
+					x: 400,
+					y: 200,
 				};
 			},
 		},
@@ -56,14 +56,14 @@ export default createComponent({
 
 	setup(props: ModalProps) {
 		const pos = ref({x: 100, y: 100});
-		const size = ref({x: props.init_size.x, y: props.init_size.y});
+		const resized_size = ref({x: props.size.x, y: props.size.y});
 
 		const style_object = computed(() => {
 			return {
 				top: `${pos.value.y}px`,
 				left: `${pos.value.x}px`,
-				width: `${size.value.x}px`,
-				height: `${size.value.y}px`,
+				width: `${resized_size.value.x}px`,
+				height: `${resized_size.value.y}px`,
 			};
 		});
 
@@ -114,8 +114,8 @@ export default createComponent({
 			start_mouse_pos.x = e.pageX;
 			start_mouse_pos.y = e.pageY;
 
-			start_size.x = size.value.x;
-			start_size.y = size.value.y;
+			start_size.x = resized_size.value.x;
+			start_size.y = resized_size.value.y;
 
 			// this._mouse_move_event_method = this.on_resize_drag.bind(this);
 			// this._mouse_up_event_method = this.on_resize_end.bind(this);
@@ -131,8 +131,8 @@ export default createComponent({
 			delta.x = current_mouse_pos.x - start_mouse_pos.x;
 			delta.y = current_mouse_pos.y - start_mouse_pos.y;
 
-			size.value.x = start_size.x + delta.x;
-			size.value.y = start_size.y + delta.y;
+			resized_size.value.x = start_size.x + delta.x;
+			resized_size.value.y = start_size.y + delta.y;
 		}
 
 		function on_resize_end(e: MouseEvent) {

@@ -3,10 +3,12 @@ import {TypedMatNode} from '../_Base';
 
 import {VertexColors} from 'three/src/constants';
 import {NoColors} from 'three/src/constants';
+import {Material} from 'three/src/materials/Material';
+import {Color} from 'three/src/math/Color';
 // import {Material} from 'three/src/materials/Material';
 // import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 // import {Color} from 'three/src/math/Color';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+// import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
 // interface AddParamsOptions {
 // 	flat_shading?: boolean;
@@ -22,6 +24,7 @@ import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 // }
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		color = ParamConfig.COLOR([1, 1, 1]);
@@ -33,10 +36,18 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
+class ColoredMaterial extends Material {
+	public color!: Color;
+	vertexColors!: number;
+	transparent!: boolean;
+	depthTest!: boolean;
+	alphaTest!: number;
+	fog!: boolean;
+}
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
-class ColoredMatNode extends TypedMatNode<MeshBasicMaterial, ColorParamsConfig> {
+class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
 	create_material() {
-		return new MeshBasicMaterial({});
+		return new ColoredMaterial();
 	}
 }
 

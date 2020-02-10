@@ -12,15 +12,15 @@
 			"MAT": {
 				"type": "materials",
 				"nodes": {
-					"mesh_standard1": {
-						"type": "mesh_basic",
+					"mesh_lambert1": {
+						"type": "mesh_lambert",
 						"inputs": [],
 						"selection": []
 					}
 				},
 				"params": {},
 				"inputs": [],
-				"selection": ["mesh_standard1"]
+				"selection": ["mesh_lambert1"]
 			},
 			"events1": {
 				"type": "events",
@@ -62,7 +62,10 @@
 								}
 							}
 						},
-						"inputs": []
+						"inputs": [],
+						"flags": {
+							"display": true
+						}
 					}
 				},
 				"params": {},

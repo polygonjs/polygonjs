@@ -2,9 +2,10 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 import {State} from '../Store';
 import {Store} from 'vuex';
-import {EngineMutation, EngineNodeData, EngineParamData} from '../modules/Engine';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {EngineMutation, EngineNodeData, EngineParamData, EnginePayloadByMutationMap} from '../modules/Engine';
+import {BaseNodeType, EmitDataByNodeEventMap} from 'src/engine/nodes/_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
+import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
 export class EngineStoreControllerClass {
 	private _store!: Store<State>;
@@ -64,6 +65,7 @@ export class EngineStoreControllerClass {
 	}
 
 	// mutations
+	// scene mutations
 	update_scene() {
 		if (this._store && this._scene) {
 			this._store.commit(`engine/${EngineMutation.SCENE}`);
@@ -77,6 +79,34 @@ export class EngineStoreControllerClass {
 	}
 	update_play_state() {
 		this._store.commit(`engine/${EngineMutation.SCENE_PLAY_STATE_UPDATED}`);
+	}
+
+	// node mutations
+	update_node_error(node_id: string) {
+		// this._store.commit(`engine/${EngineMutation.NODE_ERROR_UPDATED}`, node_id);
+		this._commit(EngineMutation.NODE_ERROR_UPDATED, node_id);
+	}
+	update_node_ui_data_position(node_id: string) {
+		this._commit(EngineMutation.NODE_UI_DATA_POSITION_UPDATED, node_id);
+	}
+	update_node_selection(node_id: string) {
+		this._commit(EngineMutation.NODE_SELECTION_UPDATED, node_id);
+	}
+	update_node_display_flag(node_id: string) {
+		this._commit(EngineMutation.NODE_DISPLAY_FLAG_UPDATED, node_id);
+	}
+	update_node_bypass_flag(node_id: string) {
+		this._commit(EngineMutation.NODE_BYPASS_FLAG_UPDATED, node_id);
+	}
+	update_node_name(node_id: string) {
+		this._commit(EngineMutation.NODE_NAME_UPDATED, node_id);
+	}
+	add_node(node_id: string, data: EmitDataByNodeEventMap[NodeEvent.CREATED]) {
+		this._commit(EngineMutation.NODE_CREATED, {parent_id: node_id, child_node_json: data.child_node_json});
+	}
+
+	private _commit<T extends EngineMutation>(mutation: T, arg: EnginePayloadByMutationMap[T]) {
+		this._store.commit(`engine/${mutation}`, arg);
 	}
 }
 

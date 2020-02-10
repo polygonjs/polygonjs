@@ -214,7 +214,7 @@ export class NodeSelectionHelper {
 	private node_box(node: BaseNodeType): Box2 {
 		// const pos_mult = Constants.NODE_POS_MULT
 		const size = Constants.NODE_UNIT;
-		const pos = node.ui_data.position().clone(); //.multiplyScalar(pos_mult)
+		const pos = node.ui_data.position.clone(); //.multiplyScalar(pos_mult)
 		return new Box2(pos.clone().subScalar(size * 0.5), pos.clone().addScalar(size * 0.5));
 	}
 }

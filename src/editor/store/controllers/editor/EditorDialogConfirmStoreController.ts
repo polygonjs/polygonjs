@@ -24,7 +24,7 @@ export class EditorDialogConfirmStoreControllerClass {
 
 	// getters
 	get local_state(): EditorDialogConfirmState {
-		return (<unknown>(this._store.state.editor as any).confirm) as EditorDialogConfirmState;
+		return (<unknown>(this._store.state.editor as any).dialog_confirm) as EditorDialogConfirmState;
 	}
 	display(): boolean {
 		return this.local_state.display;

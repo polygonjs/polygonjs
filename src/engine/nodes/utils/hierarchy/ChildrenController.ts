@@ -151,7 +151,7 @@ export class HierarchyChildrenController {
 				child.name_controller.post_set_full_path();
 			}
 		}
-		this.node.emit(NodeEvent.CREATED, {child_node: child_node});
+		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.to_json()});
 		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
 			child_node.lifecycle.on_create();
 		}
@@ -218,7 +218,7 @@ export class HierarchyChildrenController {
 			this.node.lifecycle.on_child_remove(child_node);
 			child_node.lifecycle.on_delete();
 			// this.post_remove_node(node);
-			child_node.emit(NodeEvent.DELETED, {parent: this.node});
+			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graph_node_id});
 		}
 	}
 

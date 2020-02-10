@@ -9,9 +9,9 @@
 		)
 		//- ParamNodeSelector
 		//- PanelNodeSelector
-		//- DialogAlert
-		//- DialogConfirm
-		//- DialogPrompt
+		DialogAlert
+		DialogConfirm
+		DialogPrompt
 		//- LocalAssetUploadProgressDisplay
 
 		Retractable
@@ -29,8 +29,8 @@
 		//- FooterBar
 		//- NumericSlider
 
-		//- NodeMenu
-		//- ParamMenu
+		NodeContextMenu
+		ParamContextMenu
 		//- UploadMenu
 
 
@@ -58,39 +58,41 @@ import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 
 // components
 // import TopBar from './Bar/Top'
+import DialogAlert from '../widgets/dialogs/Alert.vue';
+import DialogConfirm from '../widgets/dialogs/Confirm.vue';
+import DialogPrompt from '../widgets/dialogs/Prompt.vue';
+import MultiplePanel from '../panels/multiple/Multiple.vue';
 import NavigationBar from './top/Navigation.vue';
 import PlayBar from './widgets/PlayBar.vue';
 // import FooterBar from './Bar/Footer'
-import MultiplePanel from '../panels/multiple/Multiple.vue';
 // import ParamNodeSelector from './Widget/ParamNodeSelector'
 // import PanelNodeSelector from './Widget/PanelNodeSelector'
 // import NumericSlider from './Widget/NumericSlider'
-// import NodeMenu from './Widget/NodeMenu'
-// import ParamMenu from './Widget/ParamMenu'
+import NodeContextMenu from './widgets/NodeContextMenu.vue';
+import ParamContextMenu from './widgets/ParamContextMenu.vue';
 // import UploadMenu from './Widget/UploadMenu'
 import Retractable from './widgets/Retractable.vue';
-// import DialogAlert from './Widget/DialogAlert'
-// import DialogConfirm from './Widget/DialogConfirm'
-// import DialogPrompt from './Widget/DialogPrompt'
 // import LocalAssetUploadProgressDisplay from './Widget/LocalAssetUploadProgressDisplay'
 
 import Vue from 'vue';
 Vue.component('MultiplePanel', MultiplePanel);
+import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
+Vue.component('DropDownMenu', DropDownMenu);
 
 import {createComponent, ref} from '@vue/composition-api';
 export default createComponent({
 	name: 'editor',
 	// mixins: [EventsDispatcher, HistoryMixin, NodeOwner],
 	components: {
-		// DialogAlert,
-		// DialogConfirm,
-		// DialogPrompt,
+		DialogAlert,
+		DialogConfirm,
+		DialogPrompt,
 		NavigationBar,
 		// FooterBar,
 		// LocalAssetUploadProgressDisplay,
 		MultiplePanel,
-		// NodeMenu,
-		// ParamMenu,
+		NodeContextMenu,
+		ParamContextMenu,
 		// ParamNodeSelector,
 		// PanelNodeSelector,
 		PlayBar,
@@ -252,14 +254,24 @@ export default createComponent({
 .full_page_height
 	height: 100vh
 
-.disable-select
+// to avoid the double dropdown arrow on selects
+select.select
+	background-image: none
+
+//
+// classes for src/core/dom
+//
+.disable-select 
 	user-select: none
 	-webkit-user-select: none
 	-khtml-user-select: none
 	-moz-user-select: none
 	-ms-user-select: none
+.cursor_col_resize
+	cursor: col-resize
+//
+// end of classes for src/core/dom
+//
 
-// to avoid the double dropdown arrow on selects
-select.select
-	background-image: none
 </style>
+

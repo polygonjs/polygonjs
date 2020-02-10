@@ -17,6 +17,7 @@ import {EditorDialogPromptStateModule} from './editor/DialogPrompt';
 import {EditorPanelNodeSelectorStateModule} from './editor/PanelNodeSelector';
 import {EditorNetworkStateModule} from './editor/Network';
 import {EditorNumericSliderStateModule} from './editor/NumericSlider';
+import {EditorDialogConfirmStateModule} from './editor/DialogConfirm';
 // import StatusBar from './editor/StatusBar';
 
 // const root_json_children = function(rootState, rootGetters, condition_method) {
@@ -66,7 +67,7 @@ export const EditortoreModule = {
 		// custom_node: CustomNode,
 		// desktop_local_asset_upload_progress: DesktopLocalAssetUploadProgress,
 		dialog_alert: EditorDialogAlertStateModule,
-		// dialog_confirm: DialogConfirm,
+		dialog_confirm: EditorDialogConfirmStateModule,
 		dialog_prompt: EditorDialogPromptStateModule,
 		network: EditorNetworkStateModule,
 		numeric_slider: EditorNumericSliderStateModule,

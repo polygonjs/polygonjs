@@ -55,7 +55,6 @@ import ThreejsViewer from './components/Threejs.vue';
 // const AsyncThreejsViewer = () => ({
 // 	component: import('./components/Threejs.vue'),
 // });
-import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
@@ -64,7 +63,6 @@ import {createComponent, ref, computed} from '@vue/composition-api';
 export default createComponent({
 	name: 'viewer-panel',
 	components: {
-		DropDownMenu,
 		ThreejsViewer,
 	},
 

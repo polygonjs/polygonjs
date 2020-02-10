@@ -37,11 +37,11 @@ export class UIData extends CoreUIData {
 	width() {
 		return this._width;
 	}
-	set_comment(comment: string) {
+	set_comment(comment: string | undefined) {
 		this._comment = comment;
-		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
+		this.node.emit(NodeEvent.UI_DATA_COMMENT_UPDATED);
 	}
-	comment(): string | undefined {
+	get comment(): string | undefined {
 		return this._comment;
 	}
 	set_color(color: Color) {
@@ -64,17 +64,17 @@ export class UIData extends CoreUIData {
 	}
 
 	copy(ui_data: UIData) {
-		this._position.copy(ui_data.position());
+		this._position.copy(ui_data.position);
 		this._color.copy(ui_data.color());
 	}
 
-	position() {
+	get position() {
 		return this._position;
 	}
 
 	set_position(new_position: Vector2) {
 		this._position.copy(new_position);
-		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
+		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}
 
 	translate(offset: Vector2, snap: boolean = false) {
@@ -85,7 +85,7 @@ export class UIData extends CoreUIData {
 			this._position.y = Math.round(this._position.y);
 		}
 
-		this.node.emit(NodeEvent.UI_DATA_UPDATED, this.to_json());
+		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}
 	// arguments_to_vector(x: number,y: number){
 	// 	if (arguments.length === 2) {

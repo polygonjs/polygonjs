@@ -23,8 +23,8 @@ export interface MultiplePanelProps {
 }
 
 export interface DropDownMenuEntry {
-	label: string;
 	id: string;
+	label?: string;
 	disabled?: boolean;
 	children?: DropDownMenuEntry[];
 }

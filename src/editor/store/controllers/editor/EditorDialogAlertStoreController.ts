@@ -23,7 +23,7 @@ export class EditorDialogAlertStoreControllerClass {
 
 	// getters
 	get local_state(): EditorDialogAlertState {
-		return (<unknown>(this._store.state.editor as any).dialog_Alert) as EditorDialogAlertState;
+		return (<unknown>(this._store.state.editor as any).dialog_alert) as EditorDialogAlertState;
 	}
 	display(): boolean {
 		return this.local_state.display;

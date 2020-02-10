@@ -1,6 +1,5 @@
 import {BaseController} from './_BaseController';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-
+import {Material} from 'three/src/materials/Material';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
 export function SkinningParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -8,10 +7,14 @@ export function SkinningParamConfig<TBase extends Constructor>(Base: TBase) {
 		skinning = ParamConfig.BOOLEAN(0);
 	};
 }
+
+class SkinnedMaterial extends Material {
+	skinning!: boolean;
+}
 class SkinningParamsConfig extends SkinningParamConfig(NodeParamsConfig) {}
-class SkinningMatNode extends TypedMatNode<MeshBasicMaterial, SkinningParamsConfig> {
+class SkinningMatNode extends TypedMatNode<SkinnedMaterial, SkinningParamsConfig> {
 	create_material() {
-		return new MeshBasicMaterial({});
+		return new SkinnedMaterial();
 	}
 }
 

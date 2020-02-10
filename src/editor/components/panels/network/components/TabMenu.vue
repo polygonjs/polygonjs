@@ -33,7 +33,6 @@ import lodash_flatten from 'lodash/flatten';
 // import NodeOwner from 'src/Editor/Component/Mixin/NodeOwner';
 
 // components
-import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 import {DropDownMenuEntry} from 'src/editor/components/types/props';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {POLY} from 'src/engine/Poly';
@@ -44,7 +43,6 @@ import {createComponent, ref, onMounted, onBeforeUnmount, computed, SetupContext
 export default createComponent({
 	name: 'tab-menu',
 	// mixins: [NodeOwner],
-	components: {DropDownMenu},
 
 	setup(props, context: SetupContext) {
 		const filter = ref('');
@@ -136,8 +134,8 @@ export default createComponent({
 			context.emit('close');
 		}
 
-		function on_select(entry: DropDownMenuEntry) {
-			context.emit('select', entry);
+		function on_select(entry_id: string) {
+			context.emit('select', entry_id);
 			close();
 		}
 

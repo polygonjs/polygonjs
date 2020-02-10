@@ -1,5 +1,6 @@
 import {BaseController} from './_BaseController';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {Material} from 'three/src/materials/Material';
+import {Texture} from 'three/src/textures/Texture';
 import {FileCopNode} from 'src/engine/nodes/cop/File';
 import {TypedMatNode} from '../_Base';
 
@@ -10,10 +11,13 @@ export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {visible_if: {use_map: 1}});
 	};
 }
+class TextureMapMaterial extends Material {
+	map!: Texture | null;
+}
 class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
-class TextureMapMatNode extends TypedMatNode<MeshBasicMaterial, TextureMapParamsConfig> {
+class TextureMapMatNode extends TypedMatNode<TextureMapMaterial, TextureMapParamsConfig> {
 	create_material() {
-		return new MeshBasicMaterial({});
+		return new TextureMapMaterial();
 	}
 }
 
