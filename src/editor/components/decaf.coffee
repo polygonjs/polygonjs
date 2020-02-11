@@ -1,21 +1,23 @@
-import Vue from 'vue'
+import {CoreEvent} from 'src/Core/Event'
 
 export default component =
-	namespaced: true
-	state: ->
-		param_id: null
-		position: [0,0]
 
-	getters:
-		param_id: (state)-> state.param_id
-		position: (state)-> state.position
+	methods:
+		open_numeric_slider: (e)->
+			
+			if event.button == CoreEvent.MOUSE_BUTTON_MIDDLE
 
+				this.$store.commit 'editor/numeric_slider/open',
+					param_id: this.json_param?.graph_node_id
+					position: [e.clientX, e.clientY]
 
-	mutations:
-		open: (state, payload)->
-			state.param_id = payload.param_id
-			state.position = payload.position
-		close: (state)->
-			state.param_id = null
+				e.preventDefault() # to prevent paste into field
+
+		on_paste: (e)->
+			# to prevent paste into field
+			param_id = this.$store.getters['editor/numeric_slider/param_id']
+			if param_id?
+				e.preventDefault()
+
 
 

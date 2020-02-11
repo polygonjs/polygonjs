@@ -1,4 +1,4 @@
-const TYPESCRIPT_TRANSPILE_ONLY = true;
+const TYPESCRIPT_TRANSPILE_ONLY = false;
 
 // on using vue with typescript:
 // tips here: https://github.com/Microsoft/TypeScript-Vue-Starter
