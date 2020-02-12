@@ -1,7 +1,7 @@
-import {CoreObject} from './Object'
+// import {CoreObject} from './Object'
 
-export default class UIData extends CoreObject {
-	constructor() {
-		super()
-	}
-}
+// export default class UIData extends CoreObject {
+// 	constructor() {
+// 		super()
+// 	}
+// }

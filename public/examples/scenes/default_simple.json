@@ -134,7 +134,7 @@
 				"display_node_name": "file2"
 			}
 		},
-		"selection": []
+		"selection": ["geo1"]
 	},
 	"ui": {
 		"nodes": {

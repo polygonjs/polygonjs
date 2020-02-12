@@ -1,12 +1,12 @@
 
 <template lang='pug'>
 
-	include /pug/mixins.pug
+	include /mixins.pug
 
 	doctype html
 
 
-	.Panel.Param.full_height_container.grid-y
+	.Panel.Params.full_height_container.grid-y
 		.cell.shrink(v-if = 'display_toolbar')
 			.grid-x
 				.cell.auto
@@ -17,47 +17,47 @@
 					//- )
 					.node_name_container.text-center
 						span.node_name(@click = 'on_name_click') {{selected_node_name}}
-						span.node_type(v-if = 'display_selected_node_type') ({{selected_node_type}})
+						span.node_type(v-if = 'selected_node_type') ({{selected_node_type}})
 				.cell.shrink
-					DropDownMenu(
-						v-if = 'has_presets'
-						:label = '"presets"'
-						:entries = 'preset_entries'
-						@select = 'use_preset'
-						:key = 'presets_key'
-					)
+					//- DropDownMenu(
+					//- 	v-if = 'has_presets'
+					//- 	:label = '"presets"'
+					//- 	:entries = 'preset_entries'
+					//- 	@select = 'use_preset'
+					//- 	:key = 'presets_key'
+					//- )
 
-					a.node_help_button(
-						v-if = 'display_node_doc_help'
-						:href = 'node_doc_url'
-						target = '_blank'
-						) help
+					//- a.node_help_button(
+					//- 	v-if = 'display_node_doc_help'
+					//- 	:href = 'node_doc_url'
+					//- 	target = '_blank'
+					//- 	) help
 		.cell.auto.params_container
 			form
-				.grid-x
-					.cell.auto.params_folder(
-						v-for = 'folder_name, i in selected_node_folder_names'
-						:class = 'folder_class_objects[i]'
-					)
-						.folder_name(
-							v-if = 'folder_name.length > 0'
-							@click = 'set_active_folder(folder_name)'
-						) {{folder_name}}
+				//- .grid-x
+				//- 	.cell.auto.params_folder(
+				//- 		v-for = 'folder_name, i in selected_node_folder_names'
+				//- 		:class = 'folder_class_objects[i]'
+				//- 	)
+				//- 		.folder_name(
+				//- 			v-if = 'folder_name.length > 0'
+				//- 			@click = 'set_active_folder(folder_name)'
+				//- 		) {{folder_name}}
 
+					//- v-if = '!display_spare_params_only'
+					//- :description = 'param_descriptions[json_param.name]'
+					//- :tabindex = "param_tab_indices[i]"
 				ParamFieldContainer(
-					v-if = '!display_spare_params_only'
 					v-for = 'json_param, i in selected_node_json_params_for_current_folder'
 					:json_param = 'json_param'
 					:key = 'json_param.graph_node_id'
-					:description = 'param_descriptions[json_param.name]'
-					:tabindex = "param_tab_indices[i]"
 				)
-				ParamFieldContainer(
-					v-for = 'json_param, i in selected_node_json_spare_params'
-					:json_param = 'json_param'
-					:key = 'json_param.graph_node_id'
-					:tabindex = "spare_param_tab_indices[i]"
-				)
+				//- ParamFieldContainer(
+				//- 	v-for = 'json_param, i in selected_node_json_spare_params'
+				//- 	:json_param = 'json_param'
+				//- 	:key = 'json_param.graph_node_id'
+				//- 	:tabindex = "spare_param_tab_indices[i]"
+				//- )
 
 
 
@@ -78,12 +78,12 @@ import {SetupFolders} from './mixins/Folders';
 import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 
 // components
-import ParamFieldContainer from './Component/Param';
-
-import {createComponent, computed} from '@vue/composition-api';
+import ParamFieldContainer from './components/Param.vue';
 import {NodeSetNameCommand} from '../../../history/commands/NodeSetName';
 import {StoreController} from '../../../store/controllers/StoreController';
 import {SetupSelectedNode} from '../../mixins/SelectedNode';
+
+import {createComponent, computed, watch} from '@vue/composition-api';
 export default createComponent({
 	name: 'param-panel',
 	// mixins: [Folders, Json, NodeOwner, ParamDescription, Presets, Selection],
@@ -94,17 +94,27 @@ export default createComponent({
 			type: Boolean,
 			default: true,
 		},
-		display_spare_params_only: {
-			type: Boolean,
-			default: false,
-		},
+		// display_spare_params_only: {
+		// 	type: Boolean,
+		// 	default: false,
+		// },
 	},
 	// watch:
 	// 	first_selected_node: ->
 	// 		this.emit_node_params()
 
 	setup(props) {
-		const {first_selected_node} = SetupSelectedNode();
+		const selection_options = SetupSelectedNode();
+
+		const first_selected_node_id = computed(() => {
+			return selection_options.first_selected_node_id.value;
+		});
+
+		watch(first_selected_node_id, (new_id: string | null) => {
+			if (new_id) {
+				StoreController.engine.add_node_params_to_store(new_id);
+			}
+		});
 
 		const display_node_doc_help = computed(() => {
 			return false; //first_selected_json_node != null && !this.selected_node.constructor.is_custom_node();
@@ -121,7 +131,7 @@ export default createComponent({
 
 		// functions
 		async function on_name_click() {
-			const node = first_selected_node();
+			const node = selection_options.first_selected_node();
 			if (!node) {
 				return;
 			}
@@ -141,6 +151,7 @@ export default createComponent({
 			display_node_doc_help,
 			node_doc_url,
 			on_name_click,
+			...selection_options,
 			...SetupFolders(),
 		};
 	},
@@ -151,7 +162,7 @@ export default createComponent({
 	@import "globals.sass"
 
 	$color_node_name_hover: darken($color_font, 20%)
-	.Panel.Param
+	.Panel.Params
 		// background-color: $color_bg_panel_param
 
 		.params_container

@@ -35,7 +35,7 @@ const LABEL_OPTION = 'label';
 const FIELD_OPTION = 'field';
 const VISIBLE_IF_OPTION = 'visible_if';
 
-interface ParamOptionsMenuEntry {
+export interface ParamOptionsMenuEntry {
 	name: string;
 	value: number;
 }
@@ -70,8 +70,8 @@ export interface ParamOptions {
 	};
 	dependent_on_found_node?: boolean;
 	// range
-	range?: [number, number];
-	range_locked?: [boolean, boolean];
+	range?: Number2;
+	range_locked?: Boolean2;
 	step?: number;
 	// spare
 	spare?: boolean;
@@ -240,12 +240,12 @@ export class OptionsController {
 		}
 	}
 
-	has_menu_radio() {
+	get has_menu_radio() {
 		return this.has_menu; //&& this.menu_options[TYPE] === RADIO;
 	}
 
 	// multiline
-	is_multiline(): boolean {
+	get is_multiline(): boolean {
 		return this._options[MULTILINE_OPTION] === true;
 	}
 
@@ -268,7 +268,7 @@ export class OptionsController {
 	}
 
 	// range
-	range(): [number, number] {
+	get range(): Number2 {
 		// cannot force range easily, as values are not necessarily from 0 to N
 		// if(this.self.has_menu() && this.self.menu_entries()){
 		// 	return [0, this.self.menu_entries().length-1 ]
@@ -276,11 +276,11 @@ export class OptionsController {
 		return this._options[RANGE_OPTION] || [0, 1];
 		// }
 	}
-	step(): number {
+	get step(): number {
 		return this._options[STEP_OPTION] || 0.01;
 	}
 
-	private range_locked(): [boolean, boolean] {
+	private range_locked(): Boolean2 {
 		// if(this.self.has_menu() && this.self.menu_entries()){
 		// 	return [true, true]
 		// } else {
@@ -289,7 +289,7 @@ export class OptionsController {
 	}
 
 	protected _ensure_in_range(value: number): number {
-		const range = this.range();
+		const range = this.range;
 
 		if (value >= range[0] && value <= range[1]) {
 			return value;
@@ -331,7 +331,7 @@ export class OptionsController {
 		this.param.emit(ParamEvent.VISIBLE_UPDATED);
 	}
 
-	is_label_hidden(): boolean {
+	get is_label_hidden(): boolean {
 		const type = this.param.type;
 		return (
 			this._options[LABEL_OPTION] === false ||

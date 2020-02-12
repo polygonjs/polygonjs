@@ -6,6 +6,7 @@ import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {ExpressionController} from './utils/ExpressionController';
+import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
@@ -41,7 +42,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 			this._expression_controller?.set_expression(undefined, false);
 			if (converted != this._value) {
 				this._value = converted;
-				this.emit_controller.emit_param_updated();
+				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 				this.remove_dirty_state();
 				this.set_successors_dirty();
 			}
@@ -50,11 +51,10 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 				this._expression_controller = this._expression_controller || new ExpressionController(this);
 				if (raw_input != this._expression_controller.expression) {
 					this._expression_controller.set_expression(raw_input);
-					this.emit_controller.emit_param_updated();
+					this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED);
 				}
 			} else {
 				this.states.error.set(`param input is invalid (${this.full_path()})`);
-				this.emit_controller.emit_param_updated();
 			}
 		}
 		if (this.parent_param) {
@@ -72,6 +72,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 				const converted = this.convert(expression_result);
 				if (converted != null) {
 					this._value = converted;
+					this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 				} else {
 					this.states.error.set(
 						`expression returns an invalid type (${expression_result}) (${this.expression_controller.expression})`

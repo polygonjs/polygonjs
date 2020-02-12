@@ -1,4 +1,3 @@
-import CoreUIData from 'src/core/UIData';
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
 import {BaseNodeType} from '../_Base';
@@ -10,7 +9,7 @@ export interface NodeUIDataJson {
 	comment?: string;
 }
 
-export class UIData extends CoreUIData {
+export class UIData {
 	private _position: Vector2 = new Vector2();
 	private _width: number = 50;
 	private _border_radius: number = 3;
@@ -20,7 +19,6 @@ export class UIData extends CoreUIData {
 	private _comment: string | undefined;
 
 	constructor(private node: BaseNodeType, x: number = 0, y: number = 0) {
-		super();
 		this._position.x = x;
 		this._position.y = y;
 	}

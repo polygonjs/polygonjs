@@ -6,8 +6,8 @@ import {Vector2} from 'three/src/math/Vector2';
 import {BaseViewer} from './_Base';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
-import 'src/engine/Poly';
-import {POLY} from 'src/engine/Poly';
+// import 'src/engine/Poly';
+// import {POLY} from 'src/engine/Poly';
 
 const CSS_CLASS = 'CoreThreejsViewer';
 
@@ -29,9 +29,11 @@ export class ThreejsViewer extends BaseViewer {
 
 		this._canvas = document.createElement('canvas');
 		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');
+		this._canvas.style.display = 'block';
 
 		this._container.appendChild(this._canvas);
 		this._container.classList.add(CSS_CLASS);
+		this._container.style.height = '100%';
 
 		this._set_events();
 	}
@@ -51,9 +53,11 @@ export class ThreejsViewer extends BaseViewer {
 		this.events_controller.init();
 		this.webgl_controller.init();
 
-		if (POLY.player_mode()) {
-			window.onresize = this.cameras_controller.on_resize.bind(this);
-		}
+		// if (POLY.player_mode()) {
+		window.onresize = () => {
+			this.cameras_controller.on_resize();
+		};
+		// }
 	}
 	// protected _on_touchmove(event: TouchEvent){
 	// 	console.log("touch", event)

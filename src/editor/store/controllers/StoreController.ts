@@ -41,12 +41,13 @@ class StoreControllerClass {
 
 	// process_events<T extends NodeEvent>(emitter: BaseNodeType, event_name: T, data: EmitDataByNodeEventMap[T]): void;
 	// process_events(emitter: PolyScene, event_name: SceneEvent): void;
-	process_events(
-		emitter: PolyScene | CoreGraphNode,
-		event_name: SceneEvent | NodeEvent | ParamEvent,
-		data?: any
-	): void {
-		if (emitter instanceof PolyScene) {
+	process_events(emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any): void {
+		// if (emitter instanceof PolyScene) {
+		// 	switch (event_name) {
+		// 		// scene events
+		// 	}
+		// }
+		if (emitter instanceof CoreGraphNode) {
 			switch (event_name) {
 				// scene events
 				case SceneEvent.FRAME_UPDATED:
@@ -55,10 +56,7 @@ class StoreControllerClass {
 					return this.engine.update_frame_range();
 				case SceneEvent.PLAY_STATE_UPDATED:
 					return this.engine.update_play_state();
-			}
-		}
-		if (emitter instanceof CoreGraphNode) {
-			switch (event_name) {
+
 				// node events
 				case NodeEvent.ERROR_UPDATED:
 					return this.engine.update_node_error(emitter.graph_node_id);
@@ -74,6 +72,14 @@ class StoreControllerClass {
 					return this.engine.update_node_name(emitter.graph_node_id);
 				case NodeEvent.CREATED:
 					return this.engine.add_node(emitter.graph_node_id, data);
+
+				// param events
+				case ParamEvent.VALUE_UPDATED:
+					return this.engine.update_param_value(emitter.graph_node_id);
+				case ParamEvent.EXPRESSION_UPDATED:
+					return this.engine.update_param_expression(emitter.graph_node_id);
+				case ParamEvent.ERROR_UPDATED:
+					return this.engine.update_param_error(emitter.graph_node_id);
 			}
 		}
 		console.warn('event not processed', emitter, event_name, data);

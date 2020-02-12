@@ -376,6 +376,7 @@ export default createComponent({
 			z-index: $z_index_name
 			.name-element
 				margin-left: 10px
+				cursor: text
 		.comment-container
 			position: absolute
 			// transform: translateY(-50%)

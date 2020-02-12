@@ -1,7 +1,7 @@
 
 <template lang='pug'>
 
-	include /pug/mixins.pug
+	include /mixins.pug
 
 	doctype html
 

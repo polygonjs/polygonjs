@@ -15,8 +15,8 @@ export interface NodeSerializerData {
 	input_connection_output_indices: Array<number | undefined> | undefined;
 	named_inputs: TypedNamedConnectionPointData<ConnectionPointType>[];
 	named_outputs: TypedNamedConnectionPointData<ConnectionPointType>[];
-	params: Dictionary<string>;
-	spare_params: Dictionary<string>;
+	param_ids: string[];
+	// spare_params: Dictionary<string>;
 	override_clonable_state: boolean;
 	inputs_clonable_state_with_override: boolean[];
 	flags?: {
@@ -64,8 +64,8 @@ export class NodeSerializer {
 			input_connection_output_indices: connection_output_indices,
 			named_inputs: named_inputs,
 			named_outputs: named_outputs,
-			params: this.to_json_params(include_param_components),
-			spare_params: this.to_json_spare_params(include_param_components),
+			param_ids: this.to_json_params(include_param_components),
+			// spare_params: this.to_json_spare_params(include_param_components),
 			override_clonable_state: this.node.io.inputs.override_clonable_state(),
 			inputs_clonable_state_with_override: this.node.io.inputs.inputs_clonable_state_with_override(),
 			flags: {
@@ -84,25 +84,28 @@ export class NodeSerializer {
 	}
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {
-		const params_json_by_name: Dictionary<string> = {};
-		for (let param_name of param_names) {
-			const param = this.node.params.get(param_name);
-			if (param) {
-				params_json_by_name[param_name] = param.graph_node_id;
+		return param_names.map((param_name) => {
+			return this.node.params.get(param_name)!.graph_node_id;
+		});
+		// const params_json_by_name: Dictionary<string> = {};
+		// for (let param_name of param_names) {
+		// 	const param = this.node.params.get(param_name);
+		// 	if (param) {
+		// 		params_json_by_name[param_name] = param.graph_node_id;
 
-				if (include_components && param.is_multiple && param.components) {
-					for (let component of param.components) {
-						params_json_by_name[component.name] = component.graph_node_id;
-					}
-				}
-			}
-		}
-		return params_json_by_name;
+		// 		if (include_components && param.is_multiple && param.components) {
+		// 			for (let component of param.components) {
+		// 				params_json_by_name[component.name] = component.graph_node_id;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// return params_json_by_name;
 	}
 	to_json_params(include_components: boolean = false) {
-		return this.to_json_params_from_names(this.node.params.non_spare_names, include_components);
+		return this.to_json_params_from_names(this.node.params.names, include_components);
 	}
-	to_json_spare_params(include_components: boolean = false) {
-		return this.to_json_params_from_names(this.node.params.spare_names, include_components);
-	}
+	// to_json_spare_params(include_components: boolean = false) {
+	// 	return this.to_json_params_from_names(this.node.params.spare_names, include_components);
+	// }
 }

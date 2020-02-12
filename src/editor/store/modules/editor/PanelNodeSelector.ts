@@ -1,8 +1,9 @@
 export interface EditorPanelNodeSelectorState {
-	panel_id: string | null;
+	// panel_id: string | null;
+	param_id: string | null;
 }
 export interface EditorPanelNodeSelectorOptions {
-	panel_id: string;
+	param_id: string;
 }
 export enum EditorPanelNodeSelectorMutation {
 	OPEN = 'OPEN',
@@ -12,7 +13,7 @@ export enum EditorPanelNodeSelectorMutation {
 export const EditorPanelNodeSelectorStateModule = {
 	namespaced: true,
 	state(): EditorPanelNodeSelectorState {
-		return {panel_id: null};
+		return {param_id: null};
 	},
 
 	// getters: {
@@ -26,10 +27,10 @@ export const EditorPanelNodeSelectorStateModule = {
 			state: EditorPanelNodeSelectorState,
 			payload: EditorPanelNodeSelectorOptions
 		) => {
-			state.panel_id = payload.panel_id;
+			state.param_id = payload.param_id;
 		},
 		[EditorPanelNodeSelectorMutation.CLOSE]: (state: EditorPanelNodeSelectorState) => {
-			state.panel_id = null;
+			state.param_id = null;
 		},
 	},
 };

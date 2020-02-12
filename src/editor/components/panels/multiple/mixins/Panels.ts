@@ -1,31 +1,31 @@
 import lodash_camelCase from 'lodash/camelCase';
 import lodash_upperFirst from 'lodash/upperFirst';
-enum PANEL_TYPE {
+export enum PanelType {
 	ASSET = 'asset',
 	CUSTOM_NODE_EDITOR = 'custom_node_editor',
 	NETWORK = 'network',
-	PARAM = 'param',
+	PARAMS = 'params',
 	PARAM_EDIT = 'param_edit',
 	PERFORMANCE = 'performance',
 	SPREADSHEET = 'spreadsheet',
 	VIEWER = 'viewer',
 }
-const PANEL_TYPES: Array<PANEL_TYPE> = [
-	PANEL_TYPE.ASSET,
-	PANEL_TYPE.CUSTOM_NODE_EDITOR,
-	PANEL_TYPE.NETWORK,
-	PANEL_TYPE.PARAM,
-	PANEL_TYPE.PARAM_EDIT,
-	PANEL_TYPE.PERFORMANCE,
-	PANEL_TYPE.SPREADSHEET,
-	PANEL_TYPE.VIEWER,
+const PanelTypeS: Array<PanelType> = [
+	PanelType.ASSET,
+	PanelType.CUSTOM_NODE_EDITOR,
+	PanelType.NETWORK,
+	PanelType.PARAMS,
+	PanelType.PARAM_EDIT,
+	PanelType.PERFORMANCE,
+	PanelType.SPREADSHEET,
+	PanelType.VIEWER,
 ];
-const GUEST_PANEL_TYPES: Array<PANEL_TYPE> = [
-	PANEL_TYPE.NETWORK,
-	PANEL_TYPE.PARAM,
-	PANEL_TYPE.PERFORMANCE,
-	PANEL_TYPE.SPREADSHEET,
-	PANEL_TYPE.VIEWER,
+const GUEST_PanelTypeS: Array<PanelType> = [
+	PanelType.NETWORK,
+	PanelType.PARAMS,
+	PanelType.PERFORMANCE,
+	PanelType.SPREADSHEET,
+	PanelType.VIEWER,
 ];
 
 import {MultiplePanelProps} from 'src/editor/components/types/props';
@@ -33,10 +33,10 @@ import {ref, Ref, computed} from '@vue/composition-api';
 
 export interface ISetupMultiplePanelPanels {
 	set_panel_types_from_split_panel: (index: number) => void;
-	set_panel_types_from_json: (new_panel_types: PANEL_TYPE[]) => void;
+	set_panel_types_from_json: (new_panel_types: PanelType[]) => void;
 	set_current_panel_index: (index: number) => void;
 	remove_tab: (index: number) => void;
-	add_tab: (type: PANEL_TYPE) => void;
+	add_tab: (type: PanelType) => void;
 	tab_class_objects: Readonly<
 		Ref<
 			readonly {
@@ -50,7 +50,7 @@ export interface ISetupMultiplePanelPanels {
 	available_panel_types: Readonly<
 		Ref<
 			readonly {
-				id: PANEL_TYPE;
+				id: PanelType;
 			}[]
 		>
 	>;
@@ -67,9 +67,9 @@ export function SetupMultiplePanelPanels(
 	const panel_types = ref<string[]>(props.init_properties.panel_types || ['viewer', 'param', 'network']);
 
 	const available_panel_types = computed(() => {
-		let list = PANEL_TYPES;
+		let list = PanelTypeS;
 		if (!props.scene_update_allowed) {
-			list = GUEST_PANEL_TYPES;
+			list = GUEST_PanelTypeS;
 		}
 		return list.map((panel_type) => ({id: panel_type}));
 	});
@@ -96,7 +96,7 @@ export function SetupMultiplePanelPanels(
 	});
 
 	// functions
-	function add_tab(type: PANEL_TYPE) {
+	function add_tab(type: PanelType) {
 		panel_types.value.push(type);
 		set_current_panel_index(panel_types.value.length - 1);
 	}
@@ -114,11 +114,11 @@ export function SetupMultiplePanelPanels(
 		current_panel_index.value = i;
 	}
 
-	function set_panel_types_from_json(new_panel_types: PANEL_TYPE[]) {
+	function set_panel_types_from_json(new_panel_types: PanelType[]) {
 		// this is slightly tricky, as I would also ensure that current_panel_index is correctly set
 		// if !this.scene_update_allowed
 		// 	panel_types = panel_types.filter (panel_type)=>
-		// 		lodash_includes(GUEST_PANEL_TYPES, panel_type)
+		// 		lodash_includes(GUEST_PanelTypeS, panel_type)
 
 		// TODO: typescript check this
 		panel_types.value = new_panel_types;

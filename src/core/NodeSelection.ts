@@ -1,4 +1,4 @@
-import UIData from './UIData';
+// import UIData from './UIData';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_difference from 'lodash/difference';
 import lodash_union from 'lodash/union';
@@ -6,17 +6,10 @@ import lodash_union from 'lodash/union';
 import lodash_isEqual from 'lodash/isEqual';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 
-export default class NodeSelection extends UIData {
+export default class NodeSelection {
 	_node_ids: string[] = [];
 	constructor(private _node: BaseNodeType) {
-		// {
-		//   // Hack: trick Babel/TypeScript into allowing this before super.
-		//   if (false) { super(); }
-		//   let thisFn = (() => { return this; }).toString();
-		//   let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
-		//   eval(`${thisName} = this;`);
-		// }
-		super();
+		// super();
 		// this._node_ids = [];
 	}
 
@@ -41,8 +34,9 @@ export default class NodeSelection extends UIData {
 	}
 
 	set(nodes: BaseNodeType[]) {
-		this.remove(this.nodes());
-		return this.add(nodes);
+		// this.remove(this.nodes());
+		this._node_ids = [];
+		this.add(nodes);
 	}
 
 	add(nodes_to_add: BaseNodeType[]) {
@@ -51,7 +45,7 @@ export default class NodeSelection extends UIData {
 		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id);
 		this._node_ids = lodash_union(this._node_ids, node_ids_to_add);
 
-		return this.update_nodes_ui_data(nodes_to_add);
+		this.update_nodes_ui_data(nodes_to_add);
 	}
 
 	remove(nodes_to_remove: BaseNodeType[]) {
@@ -64,7 +58,7 @@ export default class NodeSelection extends UIData {
 	}
 
 	private update_nodes_ui_data(nodes: BaseNodeType[]) {
-		this.node().emit(NodeEvent.SELECTION_UPDATED);
+		this._node.emit(NodeEvent.SELECTION_UPDATED);
 	}
 
 	to_json() {

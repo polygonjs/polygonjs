@@ -12,6 +12,7 @@ import {FloatParam} from './Float';
 // import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamEvent} from '../poly/ParamEvent';
 // import {AsCodeMultiple} from './concerns/visitors/Multiple';
 // import {Vector} from 'three/src/math/Vector2'
@@ -225,7 +226,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 		// this.emit(ParamEvent.UPDATED);
 
-		this.emit_controller.emit_param_updated();
+		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 	}
 
 	// no need to check errors on multiple params, as the components should trigger the node anyway

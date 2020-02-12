@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-	include /pug/mixins.pug
+	include /mixins.pug
 
 	doctype html
 
@@ -36,37 +36,40 @@
 			:tabindex = 'tabindex'
 			)
 		input.expression_result(
-			:value = 'result'
+			:value = 'value'
 			readonly
 			type = 'text'
-			:title = 'result'
+			:title = 'value'
 			:tabindex = 'tabindex'
 			)
 
 
 </template>
 
-<script lang='coffee'>
+<script lang='ts'>
+// mixins
+import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
+import {SetupGlobalSliderOwner} from './mixins/GlobalSliderOwner';
+import {SetupContextMenu} from '../mixins/ContextMenu';
 
-	# third party lib
+import {StoreController} from '../../../../../store/controllers/StoreController';
 
-	# internal lib
-	import History from 'src/Editor/History/_Module'
+import {createComponent} from '@vue/composition-api';
+export default createComponent({
+	name: 'numeric-field',
+	props: SetupFieldCommonProps,
+	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
 
-	# mixins
-	import Field from './Field'
-	import GlobalSliderOwner from './Mixin/GlobalSliderOwner'
-	import {ContextMenu} from '../Mixin/ContextMenu'
-	import {TabIndexMixin} from './Mixin/TabIndex'
+	setup(props: ISetupFieldCommonProps) {
+		const param = StoreController.engine.param(props.json_param.graph_node_id)!;
 
-	export default component =
-		name: 'numeric-field'
-		mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin]
-
-
-
-
-
+		return {
+			...SetupFieldCommon(props.json_param),
+			...SetupGlobalSliderOwner(props.json_param),
+			...SetupContextMenu(props.json_param, param),
+		};
+	},
+});
 </script>
 
 <style lang='sass'>

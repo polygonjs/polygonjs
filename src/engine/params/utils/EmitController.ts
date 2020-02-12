@@ -2,8 +2,8 @@ import {BaseParamType} from '../_Base';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 
 export class EmitController {
-	_blocked_emit: boolean = true;
-	_blocked_parent_emit: boolean = true;
+	_blocked_emit: boolean = false;
+	_blocked_parent_emit: boolean = false;
 	_count_by_event_name: Dictionary<number> = {};
 	constructor(protected param: BaseParamType) {}
 
@@ -54,17 +54,27 @@ export class EmitController {
 		return this._count_by_event_name[event_name] || 0;
 	}
 
-	emit_param_updated() {
+	emit(event: ParamEvent) {
 		if (this.emit_allowed) {
-			this.param.emit(ParamEvent.UPDATED);
+			this.param.emit(event);
 
 			if (this.param.parent_param != null && this._blocked_parent_emit !== true) {
-				this.param.parent_param.emit(ParamEvent.UPDATED);
+				this.param.parent_param.emit(event);
 			}
 		}
-		//else
-		//	this.emit('param_updated')
-
-		// return null
 	}
+	// emit_param_updated() {
+	// 	console.log('emit_param_updated', this.param.name, this.emit_allowed);
+	// 	if (this.emit_allowed) {
+	// 		this.param.emit(ParamEvent.UPDATED);
+
+	// 		if (this.param.parent_param != null && this._blocked_parent_emit !== true) {
+	// 			this.param.parent_param.emit(ParamEvent.UPDATED);
+	// 		}
+	// 	}
+	// 	//else
+	// 	//	this.emit('param_updated')
+
+	// 	// return null
+	// }
 }

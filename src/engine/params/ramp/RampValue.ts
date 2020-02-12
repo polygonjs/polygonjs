@@ -1,6 +1,6 @@
 import {_Math} from 'three/src/math/Math';
 
-interface RampPointJson {
+export interface RampPointJson {
 	position: number;
 	value: number;
 }

@@ -28,7 +28,7 @@ export class HistoryStack {
 		this._index = this._commands.length;
 
 		command.do();
-		// console.log("do", this._index, this._commands)
+		console.log('do', this._index, command);
 	}
 
 	undo() {

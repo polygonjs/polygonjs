@@ -82,6 +82,9 @@ export class EngineStoreControllerClass {
 	}
 
 	// node mutations
+	add_node_params_to_store(node_id: string) {
+		this._commit(EngineMutation.NODE_ADD_PARAMS_TO_STORE, node_id);
+	}
 	update_node_error(node_id: string) {
 		// this._store.commit(`engine/${EngineMutation.NODE_ERROR_UPDATED}`, node_id);
 		this._commit(EngineMutation.NODE_ERROR_UPDATED, node_id);
@@ -103,6 +106,17 @@ export class EngineStoreControllerClass {
 	}
 	add_node(node_id: string, data: EmitDataByNodeEventMap[NodeEvent.CREATED]) {
 		this._commit(EngineMutation.NODE_CREATED, {parent_id: node_id, child_node_json: data.child_node_json});
+	}
+
+	// params
+	update_param_value(param_id: string) {
+		this._commit(EngineMutation.PARAM_VALUE_UPDATED, param_id);
+	}
+	update_param_expression(param_id: string) {
+		this._commit(EngineMutation.PARAM_EXPRESSION_UPDATED, param_id);
+	}
+	update_param_error(param_id: string) {
+		this._commit(EngineMutation.PARAM_ERROR_UPDATED, param_id);
 	}
 
 	private _commit<T extends EngineMutation>(mutation: T, arg: EnginePayloadByMutationMap[T]) {

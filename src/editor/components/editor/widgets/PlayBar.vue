@@ -210,6 +210,9 @@ $color_frame_indicator_hover: lighten($color_frame_indicator, 5%)
 
 .Bar.Play
 	// background-color: $playbar_bg_color
+	input, .button
+		margin-bottom: 0px
+
 	.button
 		padding: 0.5em 1em
 

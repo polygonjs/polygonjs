@@ -88,7 +88,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		//this._expression_controller || new ExpressionController(this);
 	}
 	private _serializer: ParamSerializer | undefined;
-	private get serializer(): ParamSerializer {
+	get serializer(): ParamSerializer {
 		return (this._serializer = this._serializer || new ParamSerializer(this));
 	}
 	private _states: StatesController | undefined;
@@ -145,6 +145,12 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
 	convert(raw_val: any): ParamValuesTypeMap[T] | null {
 		return null;
+	}
+	static are_values_equal(val1: any, val2: any) {
+		return false;
+	}
+	is_value_equal(other_val: ParamValuesTypeMap[T]) {
+		return (this.constructor as any).are_values_equal(this.value, other_val);
 	}
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
 		// this._raw_input = raw_input;

@@ -36,6 +36,7 @@ export class CamerasController {
 	on_resize() {
 		this.compute_size_and_aspect();
 		this._camera_node?.post_process_controller.set_renderer_size(this.viewer.canvas, this._size);
+		console.log('cameras_controller on_resize', this._camera_node, this._size);
 		this.update_camera_aspect();
 	}
 	compute_size_and_aspect() {

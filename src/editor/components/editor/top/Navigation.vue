@@ -8,12 +8,12 @@
 		.grid-x
 			.cell.shrink
 				.button-group
-					.button.tiny.primary(
+					.button.tiny.primary.backward(
 						:class = 'go_backward_class_object'
 						@click = 'go_backward'
 						)
 						v-icon(name = "angle-double-left")
-					.button.tiny.primary(
+					.button.tiny.primary.forward(
 						:class = 'go_forward_class_object'
 						@click = 'go_forward'
 						)
@@ -148,17 +148,25 @@ $color_bg_clickable_path_element_name: darken($color_bg_path_elements, 10%)
 $color_bg_clickable_path_element_name_hover: gray
 .NavigationBar
 	background-color: $color_bg_panel
+	font-size: 0.8rem
 
 	ul.path_elements, .button-group
-		padding: 5px 5px
+		padding: 2px 2px
 
 	.button-group
+		margin: 0px 5px
 		.button
 			margin-top: 4px
-			margin-left: 5px
+			margin-bottom: 0px
+			line-height: 0
+			padding: 4px 4px
+			&.backward
+				margin-left: 0px
+			&.forward
+				margin-left: 2px
 
 	ul.path_elements
-		margin: 5px
+		margin: 2px
 
 			// border: 1px solid $border_color
 		border-radius: 3px

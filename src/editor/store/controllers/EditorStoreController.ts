@@ -12,7 +12,7 @@ import {EditorDialogConfirmStoreController} from './editor/EditorDialogConfirmSt
 import {EditorDialogPromptStoreController} from './editor/EditorDialogPromptStoreController';
 import {EditorNetworkStoreController} from './editor/EditorNetworkStoreController';
 import {EditorNumericSliderStoreController} from './editor/EditorNumericSliderStoreController';
-// import {EditorPanelNodeSelectorStoreController} from './editor/EditorPanelNodeSelectorController';
+import {EditorPanelNodeSelectorStoreController} from './editor/EditorPanelNodeSelectorController';
 import {EngineNodeData} from '../modules/Engine';
 
 export class EditorStoreControllerClass {
@@ -26,7 +26,7 @@ export class EditorStoreControllerClass {
 	public readonly dialog_prompt = EditorDialogPromptStoreController;
 	public readonly network = EditorNetworkStoreController;
 	public readonly numeric_slider = EditorNumericSliderStoreController;
-	// public readonly panel_node_selector = EditorPanelNodeSelectorStoreController;
+	public readonly panel_node_selector = EditorPanelNodeSelectorStoreController;
 
 	private static _instance: EditorStoreControllerClass;
 	static instance() {
@@ -49,6 +49,7 @@ export class EditorStoreControllerClass {
 		this.dialog_prompt.set_store(store);
 		this.network.set_store(store);
 		this.numeric_slider.set_store(store);
+		this.panel_node_selector.set_store(store);
 	}
 
 	// getters
@@ -76,7 +77,6 @@ export class EditorStoreControllerClass {
 
 	// mutations
 	set_current_node(node: BaseNodeType) {
-		console.log('set_current_node', node);
 		this._store.commit('editor/current_node', node);
 	}
 	go_up() {

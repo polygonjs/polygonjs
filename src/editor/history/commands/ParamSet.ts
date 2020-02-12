@@ -25,13 +25,16 @@ export class ParamSetCommand<T extends ParamType> extends BaseCommand {
 
 	do() {
 		this._param.set(this._new_value as never);
+		console.log('do', this._param.name, this._new_value);
 	}
 
 	undo() {
 		if (this._old_expression) {
 			this._param.set(this._old_expression as never);
+			console.log('undo expr', this._param.name, this._old_expression);
 		} else {
 			this._param.set(this._old_value as never);
+			console.log('undo val', this._param.name, this._old_value);
 		}
 	}
 }

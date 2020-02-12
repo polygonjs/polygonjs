@@ -97,6 +97,10 @@ export class NodeAnimationHelper {
 	}
 
 	move_end(/*event: MouseEvent*/) {
+		if (!this.has_captured_nodes()) {
+			return;
+		}
+
 		CoreDom.remove_drag_classes();
 
 		const nodes = this.captured_nodes();

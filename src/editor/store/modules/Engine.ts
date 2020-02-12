@@ -31,6 +31,7 @@ export enum EngineMutation {
 	SCENE_FRAME_RANGE_UPDATED = 'SCENE_FRAME_RANGE_UPDATED',
 	SCENE_PLAY_STATE_UPDATED = 'SCENE_PLAY_STATE_UPDATED',
 	// node
+	NODE_ADD_PARAMS_TO_STORE = 'NODE_ADD_PARAMS_TO_STORE',
 	NODE_ERROR_UPDATED = 'NODE_ERROR_UPDATED',
 	NODE_UI_DATA_POSITION_UPDATED = 'NODE_UI_DATA_POSITION_UPDATED',
 	NODE_UI_DATA_COMMENT_UPDATED = 'NODE_UI_DATA_COMMENT_UPDATED',
@@ -39,6 +40,10 @@ export enum EngineMutation {
 	NODE_BYPASS_FLAG_UPDATED = 'NODE_BYPASS_FLAG_UPDATED',
 	NODE_NAME_UPDATED = 'NODE_NAME_UPDATED',
 	NODE_CREATED = 'NODE_CREATED',
+	// param
+	PARAM_VALUE_UPDATED = 'PARAM_VALUE_UPDATED',
+	PARAM_EXPRESSION_UPDATED = 'PARAM_EXPRESSION_UPDATED',
+	PARAM_ERROR_UPDATED = 'PARAM_ERROR_UPDATED',
 }
 type EnginePayloadByMutationMapGeneric = {[key in EngineMutation]: any};
 export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGeneric {
@@ -48,6 +53,7 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 	[EngineMutation.SCENE_FRAME_RANGE_UPDATED]: undefined;
 	[EngineMutation.SCENE_PLAY_STATE_UPDATED]: undefined;
 	// node
+	[EngineMutation.NODE_ADD_PARAMS_TO_STORE]: string;
 	[EngineMutation.NODE_ERROR_UPDATED]: string;
 	[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]: string;
 	[EngineMutation.NODE_UI_DATA_COMMENT_UPDATED]: string;
@@ -59,6 +65,10 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 		parent_id: string;
 		child_node_json: EngineNodeData;
 	};
+	// param
+	[EngineMutation.PARAM_VALUE_UPDATED]: string;
+	[EngineMutation.PARAM_EXPRESSION_UPDATED]: string;
+	[EngineMutation.PARAM_ERROR_UPDATED]: string;
 }
 
 // actions payloads
@@ -162,7 +172,7 @@ export const EngineStoreModule = {
 		json_params(state: EngineState) {
 			return function(json_node: EngineNodeData) {
 				if (json_node) {
-					const param_ids = json_node.params;
+					const param_ids = json_node.param_ids;
 					const params_data: ParamSerializerData[] = [];
 					for (let param_id of Object.keys(param_ids)) {
 						const param_data = state.params_by_graph_node_id[param_id];
@@ -188,7 +198,7 @@ export const EngineStoreModule = {
 		// 	};
 		// },
 		// json_param_components(state:EngineState){
-		// 	return function(json_param){
+		// 	return function(json_param:){
 		// 		if (json_param != null) {
 		// 			let json_params;
 		// 			const param_ids = json_param.components;
@@ -269,6 +279,25 @@ export const EngineStoreModule = {
 		// Node Mutations
 		//
 		//
+		[EngineMutation.NODE_ADD_PARAMS_TO_STORE]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_ADD_PARAMS_TO_STORE]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node) {
+				for (let param of node.params.all) {
+					if (!state.params_by_graph_node_id[param.graph_node_id]) {
+						Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json());
+						if (param.components) {
+							for (let component of param.components) {
+								Vue.set(state.params_by_graph_node_id, component.graph_node_id, component.to_json());
+							}
+						}
+					}
+				}
+			}
+		},
+
 		[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]: function(
 			state: EngineState,
 			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]
@@ -433,23 +462,51 @@ export const EngineStoreModule = {
 		// 	if node? && state.nodes_by_graph_node_id[node.graph_node_id()]?
 		// 		state.nodes_by_graph_node_id[node.graph_node_id()].is_dirty = node.is_dirty()
 
-		params_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			// const node = payload['emitter'];
-			// console.log("store:param_updated", param.full_path())
-			// node.params.all.forEach((param) =>
-			// 	Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json())
-			// );
-			// const current = state.nodes_by_graph_node_id[node.graph_node_id];
-			// if (current != null) {
-			// 	Vue.set(current, 'params', node.serializer.to_json_params());
-			// 	Vue.set(current, 'spare_params', node.serializer.to_json_spare_params());
-			// }
-		},
+		// [EngineMutation.PARAM_UPDATED](state: EngineState, payload: EnginePayloadNodeEmitter) {
+		// 	// const node = payload['emitter'];
+		// 	// console.log("store:param_updated", param.full_path())
+		// 	// node.params.all.forEach((param) =>
+		// 	// 	Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json())
+		// 	// );
+		// 	// const current = state.nodes_by_graph_node_id[node.graph_node_id];
+		// 	// if (current != null) {
+		// 	// 	Vue.set(current, 'params', node.serializer.to_json_params());
+		// 	// 	Vue.set(current, 'spare_params', node.serializer.to_json_spare_params());
+		// 	// }
+		// },
 
-		param_updated(state: EngineState, payload: EnginePayloadParamEmitter) {
-			const param = payload['emitter'];
-			// console.log("store:param_updated", param.full_path())
-			Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json());
+		[EngineMutation.PARAM_VALUE_UPDATED](
+			state: EngineState,
+			param_id: EnginePayloadByMutationMap[EngineMutation.PARAM_VALUE_UPDATED]
+		) {
+			if (state.params_by_graph_node_id[param_id]) {
+				const param = StoreController.engine.param(param_id);
+				if (param) {
+					Vue.set(state.params_by_graph_node_id[param_id], 'value', param.serializer.value());
+				}
+			}
+		},
+		[EngineMutation.PARAM_EXPRESSION_UPDATED](
+			state: EngineState,
+			param_id: EnginePayloadByMutationMap[EngineMutation.PARAM_EXPRESSION_UPDATED]
+		) {
+			if (state.params_by_graph_node_id[param_id]) {
+				const param = StoreController.engine.param(param_id);
+				if (param) {
+					Vue.set(state.params_by_graph_node_id[param_id], 'expression', param.serializer.expression());
+				}
+			}
+		},
+		[EngineMutation.PARAM_ERROR_UPDATED](
+			state: EngineState,
+			param_id: EnginePayloadByMutationMap[EngineMutation.PARAM_ERROR_UPDATED]
+		) {
+			if (state.params_by_graph_node_id[param_id]) {
+				const param = StoreController.engine.param(param_id);
+				if (param) {
+					Vue.set(state.params_by_graph_node_id[param_id], 'error', param.serializer.error_message());
+				}
+			}
 		},
 		param_deleted(state: EngineState, payload: EnginePayloadParamEmitter) {
 			const param = payload['emitter'];

@@ -4,7 +4,9 @@
 
 	doctype html
 
-	.Panel.Multiple.cell.auto(ref=element)
+	.Panel.Multiple.cell.auto(
+		ref='element'
+		)
 
 		div(
 			v-if = 'is_split'
@@ -106,7 +108,7 @@ import {MultiplePanelProps, MultiplePanelSplitMode} from 'src/editor/components/
 // components
 // import Asset from '../../Asset/Asset';
 import Network from '../network/Network.vue';
-// import Param from '../../Param/Param';
+import Params from '../params/Params.vue';
 // import ParamEdit from '../../ParamEdit/ParamEdit';
 import Viewer from '../viewer/Viewer.vue';
 import {PanelInitProperties} from '../../types/props';
@@ -140,6 +142,9 @@ import {PanelInitProperties} from '../../types/props';
 // 	// timeout: 3000
 // });
 
+import {PanelType} from './mixins/Panels';
+const DEFAULT_PANELS = [PanelType.VIEWER, PanelType.PARAMS, PanelType.NETWORK];
+
 const DEFAULT_LAYOUT: PanelInitProperties = {
 	split_mode: MultiplePanelSplitMode.HORIZONTAL,
 	sub_panels_init_properties: [
@@ -147,18 +152,18 @@ const DEFAULT_LAYOUT: PanelInitProperties = {
 			split_mode: MultiplePanelSplitMode.VERTICAL,
 			sub_panels_init_properties: [
 				{
-					panel_types: ['viewer', 'param', 'network'],
-					current_panel_index: 0,
+					panel_types: DEFAULT_PANELS,
+					current_panel_index: DEFAULT_PANELS.indexOf(PanelType.VIEWER),
 				},
 				{
-					panel_types: ['viewer', 'param', 'network'],
-					current_panel_index: 1,
+					panel_types: DEFAULT_PANELS,
+					current_panel_index: DEFAULT_PANELS.indexOf(PanelType.PARAMS),
 				},
 			],
 		},
 		{
-			panel_types: ['viewer', 'param', 'network'],
-			current_panel_index: 2,
+			panel_types: DEFAULT_PANELS,
+			current_panel_index: DEFAULT_PANELS.indexOf(PanelType.NETWORK),
 		},
 	],
 };
@@ -169,7 +174,7 @@ export default createComponent({
 	components: {
 		// Asset,
 		Network,
-		// Param,
+		Params,
 		// ParamEdit,
 		Viewer,
 		// CustomNodeEditor,
@@ -279,7 +284,7 @@ $split_panel_size: 4px
 	// 	background-color: $color_bg_tab_item_container
 	&.Network
 		background-color: $color_bg_panel_network
-	&.Param
+	&.Params
 		background-color: $color_bg_panel_param
 	&.ParamEdit
 		background-color: $color_bg_panel_param_edit
@@ -356,7 +361,7 @@ $split_panel_size: 4px
 					// font-weight: bold
 				&.network
 					background-color: $color_bg_panel_network
-				&.param
+				&.params
 					background-color: $color_bg_panel_param
 				&.param_edit
 					background-color: $color_bg_panel_param_edit
@@ -394,8 +399,11 @@ $split_panel_size: 4px
 			.split_menu_container
 				background-color: lighten($color_bg_panel, 10%)
 				position: absolute
-				top: -1px
-				right: 0px
+				top: 5px
+				right: 4px
 				border-radius: 20px
 				border: 1px solid $color_split_menu_container
+				line-height: 1
+				.dropdown_menu_label
+					top: -1px
 </style>

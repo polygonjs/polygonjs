@@ -9,11 +9,7 @@ import {ParamEvent} from 'src/engine/poly/ParamEvent';
 
 // type Callback = (emitter: CoreGraphNodeScene) => void; // TODO: typescript: maybe arg should be an event instead of the emitter
 interface EventsListener {
-	process_events: (
-		emitter: PolyScene | CoreGraphNode,
-		event_name: SceneEvent | NodeEvent | ParamEvent,
-		data?: any
-	) => void;
+	process_events: (emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
 }
 
 export class EventsController {
@@ -28,10 +24,9 @@ export class EventsController {
 	get events_listener() {
 		return this._events_listener;
 	}
-	dispatch(emitter: PolyScene | CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {
-		// if (this._store && this._store.app) {
+	dispatch(emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {
+		console.log('dispatch', event_name);
 		this._events_listener?.process_events(emitter, event_name, data);
-		// }
 	}
 	get emit_allowed(): boolean {
 		return (

@@ -8,17 +8,17 @@
 		@contextmenu.capture.prevent = ''
 		)
 		//- ParamNodeSelector
-		//- PanelNodeSelector
+		PanelNodeSelector
 		DialogAlert
 		DialogConfirm
 		DialogPrompt
 		//- LocalAssetUploadProgressDisplay
 
 		Retractable
-			//- TopBar(
-			//- 	:scene_update_allowed = 'scene_update_allowed'
-			//- 	:username = 'username'
-			//- )
+			TopBar(
+				:scene_update_allowed = 'scene_update_allowed'
+				:username = 'username'
+			)
 			NavigationBar
 		//- :init_properties = "init_properties['multiple_panel']"
 		//- :scene_update_allowed = 'scene_update_allowed'
@@ -57,7 +57,7 @@ import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 // import NodeOwner from './Mixin/NodeOwner';
 
 // components
-// import TopBar from './Bar/Top'
+import TopBar from './top/Top.vue';
 import DialogAlert from '../widgets/dialogs/Alert.vue';
 import DialogConfirm from '../widgets/dialogs/Confirm.vue';
 import DialogPrompt from '../widgets/dialogs/Prompt.vue';
@@ -66,7 +66,7 @@ import NavigationBar from './top/Navigation.vue';
 import PlayBar from './widgets/PlayBar.vue';
 // import FooterBar from './Bar/Footer'
 // import ParamNodeSelector from './Widget/ParamNodeSelector'
-// import PanelNodeSelector from './Widget/PanelNodeSelector'
+import PanelNodeSelector from './widgets/PanelNodeSelector.vue';
 // import NumericSlider from './Widget/NumericSlider'
 import NodeContextMenu from './widgets/NodeContextMenu.vue';
 import ParamContextMenu from './widgets/ParamContextMenu.vue';
@@ -94,15 +94,23 @@ export default createComponent({
 		NodeContextMenu,
 		ParamContextMenu,
 		// ParamNodeSelector,
-		// PanelNodeSelector,
+		PanelNodeSelector,
 		PlayBar,
 		Retractable,
 		// NumericSlider,
-		// TopBar,
+		TopBar,
 		// UploadMenu,
 	},
 
 	props: {
+		scene_update_allowed: {
+			type: Boolean,
+			default: false,
+		},
+		username: {
+			type: String,
+			default: null
+		}
 		// init_properties:
 		// 	type: Object
 		// 	default: -> {}

@@ -156,6 +156,8 @@ export function SetupMultiplePanelSplit(
 		document.removeEventListener('mousemove', on_move_drag);
 		document.removeEventListener('mouseup', on_move_end);
 		CoreDom.remove_drag_classes();
+
+		window.dispatchEvent(new Event('resize'));
 	}
 
 	return {
