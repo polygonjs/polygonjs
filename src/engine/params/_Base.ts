@@ -48,11 +48,9 @@ import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {PolyScene} from '../scene/PolyScene';
 
-import {
-	ParamInitValuesTypeMap,
-	ParamValuesTypeMap,
-	ParamValueSerializedTypeMap,
-} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from '../params/types/ParamValuesTypeMap';
+import {ParamValueSerializedTypeMap} from '../params/types/ParamValueSerializedTypeMap';
 // import {TypedNumericParam} from './_Numeric';
 
 // export interface ParamVisitor {

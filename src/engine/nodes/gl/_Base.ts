@@ -34,7 +34,9 @@ import {AssemblerControllerNode} from './Assembler/Controller';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValue} from '../utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from 'src/engine/params/types/ParamInitValuesTypeMap';
+import {ParamValue} from 'src/engine/params/types/ParamValue';
+
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {BaseNamedConnectionPointType, TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ParamTypeToConnectionPointTypeMap} from '../utils/connections/ConnectionPointType';
@@ -58,6 +60,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	private _param_configs: ParamConfig<ParamType>[] = [];
 	protected _shader_name: ShaderName | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
+	private _set_mat_to_recompile_bound = this._set_mat_to_recompile.bind(this);
 
 	initialize_base_node() {
 		this.io.inputs.set_depends_on_inputs(false);
@@ -72,7 +75,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 
 		this.io.outputs.set_named_output_connection_points([]);
 
-		this.add_post_dirty_hook(this._set_mat_to_recompile.bind(this));
+		this.add_post_dirty_hook(this._set_mat_to_recompile_bound);
 	}
 	_set_mat_to_recompile() {
 		// this.material_node.set_compilation_required_and_dirty() // TODO: typescript, check that it still works

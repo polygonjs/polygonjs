@@ -22,13 +22,22 @@ const INDICES_LIST_SEPARATOR = /,| /;
 
 // https://stackoverflow.com/questions/41856126/regexp-optional-dot-in-a-decimal-number
 const NUM_REGEXP = /^\d+\.?\d*$/;
+enum BooleanString {
+	TRUE = 'true',
+	FALSE = 'false',
+}
 
 export class CoreString {
 	// static has_tail_digits(word: string): boolean {
 	// 	const match = word.match(TAIL_DIGIT_MATCH_REGEXP)
 	// 	return (match != null)
 	// }
-
+	static is_boolean(word: string): boolean {
+		return word == BooleanString.TRUE || word == BooleanString.FALSE;
+	}
+	static to_boolean(word: string): boolean {
+		return word == BooleanString.TRUE;
+	}
 	static is_number(word: string): boolean {
 		return NUM_REGEXP.test(word);
 	}

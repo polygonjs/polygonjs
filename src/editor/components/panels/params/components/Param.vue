@@ -135,10 +135,10 @@ export default createComponent({
 		});
 
 		const label_tooltip = computed(() => {
-			if (human_description) {
-				return `${name}  (${type}: ${human_description})`;
+			if (human_description.value) {
+				return `${name.value} (${type.value}: ${human_description.value})`;
 			} else {
-				return `${name}  (${type})`;
+				return `${name.value} (${type.value})`;
 			}
 		});
 

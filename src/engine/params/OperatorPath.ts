@@ -5,7 +5,8 @@ import {CoreWalker} from 'src/core/Walker';
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 
 // interface OperatorPathParamVisitor extends TypedParamVisitor {
 // 	visit_operator_path_param: (param: OperatorPathParam) => any;

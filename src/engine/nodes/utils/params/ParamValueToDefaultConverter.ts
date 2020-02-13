@@ -1,5 +1,7 @@
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValue} from './ParamsController';
+import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
+import {ParamValue} from '../../../params/types/ParamValue';
+
 import lodash_isNumber from 'lodash/isNumber';
 // import lodash_isString from 'lodash/isString';
 import {Vector2} from 'three/src/math/Vector2';

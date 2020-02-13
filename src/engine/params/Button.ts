@@ -1,6 +1,6 @@
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
-import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 
 export class ButtonParam extends Single<ParamType.BUTTON> {
 	static type() {

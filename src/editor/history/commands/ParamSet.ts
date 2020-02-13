@@ -2,7 +2,8 @@ import {BaseCommand} from './_Base';
 // import {BaseNode} from 'src/Engine/Node/_Base'
 // import {BaseParamType} from 'src/engine/params/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamConstructorMap, ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamConstructorMap} from 'src/engine/params/types/ParamConstructorMap';
+import {ParamValuesTypeMap} from 'src/engine/params/types/ParamValuesTypeMap';
 
 export class ParamSetCommand<T extends ParamType> extends BaseCommand {
 	private _old_expression: string | undefined;

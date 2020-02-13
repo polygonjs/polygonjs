@@ -2,7 +2,8 @@
 // import lodash_isString from 'lodash/isString'
 import {BaseParamType} from 'src/engine/params/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamValueSerialized} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamValueSerialized} from 'src/engine/params/types/ParamValueSerialized';
+
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 
 type OverridenOptions = Dictionary<string>;

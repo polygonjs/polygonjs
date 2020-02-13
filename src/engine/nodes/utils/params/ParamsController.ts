@@ -7,158 +7,57 @@
 // import lodash_values from 'lodash/values';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType, TypedParam} from 'src/engine/params/_Base';
+import {BaseParamType} from 'src/engine/params/_Base';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 // import {TypedParam} from 'src/engine/params/_Base';
-import {BooleanParam} from 'src/engine/params/Boolean';
-import {ButtonParam} from 'src/engine/params/Button';
-import {ColorParam} from 'src/engine/params/Color';
 import {FloatParam} from 'src/engine/params/Float';
-import {IntegerParam} from 'src/engine/params/Integer';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {RampParam} from 'src/engine/params/Ramp';
-import {SeparatorParam} from 'src/engine/params/Separator';
-import {StringParam} from 'src/engine/params/String';
-import {Vector2Param} from 'src/engine/params/Vector2';
-import {Vector3Param} from 'src/engine/params/Vector3';
-import {Vector4Param} from 'src/engine/params/Vector4';
 
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Color} from 'three/src/math/Color';
+// import {Vector2} from 'three/src/math/Vector2';
+// import {Vector3} from 'three/src/math/Vector3';
+// import {Color} from 'three/src/math/Color';
 // import {RampValue} from 'src/engine/params/ramp/RampValue';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
-import {RampValue, RampValueJson} from 'src/engine/params/ramp/RampValue';
-import {Vector4} from 'three/src/math/Vector4';
+// import {RampValue} from 'src/engine/params/ramp/RampValue';
+// import {Vector4} from 'three/src/math/Vector4';
 import {NodeParamsConfig} from './ParamsConfig';
-// type ParamConstructorMap = {[key in ParamType]: any};
 
-// enum ParamType {
-// 	BUTTON = 'button',
-// 	COLOR = 'color',
-// 	FLOAT = 'float',
-// 	INTEGER = 'integer',
-// 	OPERATOR_PATH = 'operator_path',
-// 	SEPARATOR = 'separator',
-// 	STRING = 'string',
-// 	BOOLEAN = 'boolean',
-// 	VECTOR2 = 'vector2',
-// 	VECTOR3 = 'vector3',
-// 	VECTOR4 = 'vector4',
-// 	RAMP = 'ramp',
-// }
-// // (window as { ParamType? }).ParamType = ParamType;
-// declare global {
-// 	const ParamType: typeof ParamType;
-// }
-type ParamConstructorMapType = {[key in ParamType]: TypedParam<ParamType>};
-export interface ParamConstructorMap extends ParamConstructorMapType {
-	[ParamType.BOOLEAN]: BooleanParam;
-	[ParamType.BUTTON]: ButtonParam;
-	[ParamType.COLOR]: ColorParam;
-	[ParamType.FLOAT]: FloatParam;
-	[ParamType.INTEGER]: IntegerParam;
-	[ParamType.OPERATOR_PATH]: OperatorPathParam;
-	[ParamType.RAMP]: RampParam;
-	[ParamType.SEPARATOR]: SeparatorParam;
-	[ParamType.STRING]: StringParam;
-	[ParamType.VECTOR2]: Vector2Param;
-	[ParamType.VECTOR3]: Vector3Param;
-	[ParamType.VECTOR4]: Vector4Param;
-}
+import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
+import {ParamConstructorByType} from '../../../params/types/ParamConstructorByType';
+import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 
-type ParamClassMapType = {[key in ParamType]: any};
-export const ParamConstructorByType: ParamClassMapType = {
-	[ParamType.BOOLEAN]: BooleanParam,
-	[ParamType.BUTTON]: ButtonParam,
-	[ParamType.COLOR]: ColorParam,
-	[ParamType.FLOAT]: FloatParam,
-	[ParamType.INTEGER]: IntegerParam,
-	[ParamType.OPERATOR_PATH]: OperatorPathParam,
-	[ParamType.RAMP]: RampParam,
-	[ParamType.SEPARATOR]: SeparatorParam,
-	[ParamType.STRING]: StringParam,
-	[ParamType.VECTOR2]: Vector2Param,
-	[ParamType.VECTOR3]: Vector3Param,
-	[ParamType.VECTOR4]: Vector4Param,
-};
+// export type ParamInitValue =
+// 	| StringOrNumber
+// 	| StringOrNumber2
+// 	| StringOrNumber3
+// 	| StringOrNumber4
+// 	| boolean
+// 	| string
+// 	| null
+// 	| Color
+// 	| Vector2
+// 	| Vector3
+// 	| Vector4
+// 	| RampValue
+// 	| RampValueJson;
 
-export type ParamInitValue =
-	| StringOrNumber
-	| StringOrNumber2
-	| StringOrNumber3
-	| StringOrNumber4
-	| boolean
-	| string
-	| null
-	| Color
-	| Vector2
-	| Vector3
-	| Vector4
-	| RampValue
-	| RampValueJson;
+// export type ParamValueSerialized =
+// 	| StringOrNumber
+// 	| StringOrNumber2
+// 	| StringOrNumber3
+// 	| StringOrNumber4
+// 	| boolean
+// 	| string
+// 	| null
+// 	| RampValueJson;
 
-export type ParamValueSerialized =
-	| StringOrNumber
-	| StringOrNumber2
-	| StringOrNumber3
-	| StringOrNumber4
-	| boolean
-	| string
-	| null
-	| RampValueJson;
-type ParamInitValuesTypeMapGeneric = {[key in ParamType]: ParamInitValue};
-export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
-	[ParamType.BOOLEAN]: number | boolean | string;
-	[ParamType.BUTTON]: null;
-	[ParamType.COLOR]: StringOrNumber3 | Color;
-	[ParamType.FLOAT]: StringOrNumber;
-	[ParamType.INTEGER]: StringOrNumber;
-	[ParamType.OPERATOR_PATH]: string;
-	[ParamType.RAMP]: RampValue | RampValueJson;
-	[ParamType.SEPARATOR]: null;
-	[ParamType.STRING]: string;
-	[ParamType.VECTOR2]: StringOrNumber2 | Vector2;
-	[ParamType.VECTOR3]: StringOrNumber3 | Vector3;
-	[ParamType.VECTOR4]: StringOrNumber4 | Vector4;
-}
-type ParamValueSerializedTypeMapGeneric = {[key in ParamType]: ParamValueSerialized};
-export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMapGeneric {
-	[ParamType.BOOLEAN]: boolean | string;
-	[ParamType.BUTTON]: null;
-	[ParamType.COLOR]: StringOrNumber3;
-	[ParamType.FLOAT]: StringOrNumber;
-	[ParamType.INTEGER]: StringOrNumber;
-	[ParamType.OPERATOR_PATH]: string;
-	[ParamType.RAMP]: RampValueJson;
-	[ParamType.SEPARATOR]: null;
-	[ParamType.STRING]: string;
-	[ParamType.VECTOR2]: StringOrNumber2;
-	[ParamType.VECTOR3]: StringOrNumber3;
-	[ParamType.VECTOR4]: StringOrNumber4;
-}
-export type ParamValue = boolean | Color | number | string | RampValue | Vector2 | Vector3 | Vector4 | null;
-export type MultipleNumericParamValue = Vector2 | Vector3 | Vector4 | Color;
-export type NumericParamValue = MultipleNumericParamValue | number;
-
-type ParamValuesTypeMapGeneric = {[key in ParamType]: ParamValue};
-export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
-	[ParamType.BOOLEAN]: boolean;
-	[ParamType.BUTTON]: null;
-	[ParamType.COLOR]: Color;
-	[ParamType.FLOAT]: number;
-	[ParamType.INTEGER]: number;
-	[ParamType.OPERATOR_PATH]: string;
-	[ParamType.RAMP]: RampValue;
-	[ParamType.SEPARATOR]: null;
-	[ParamType.STRING]: string;
-	[ParamType.VECTOR2]: Vector2;
-	[ParamType.VECTOR3]: Vector3;
-	[ParamType.VECTOR4]: Vector4;
-}
+// export type ParamValue = boolean | Color | number | string | RampValue | Vector2 | Vector3 | Vector4 | null;
+// export type MultipleNumericParamValue = Vector2 | Vector3 | Vector4 | Color;
+// export type NumericParamValue = MultipleNumericParamValue | number;
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -406,7 +305,7 @@ export class ParamsController {
 					console.warn(`a param named ${name} already exists`, this.node);
 				}
 			}
-			const param: ParamConstructorMap[T] = new constructor(this.node.scene) as ParamConstructorMap[T];
+			const param: ParamConstructorMap[T] = new constructor(this.node.scene);
 			param.options.set(options);
 
 			// param.set_scene(this.node.scene);

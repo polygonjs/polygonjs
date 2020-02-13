@@ -85,6 +85,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return ['points to emit particles from'];
 	}
 
+	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	initialize_node() {
 		// this._init_common_shader_builder(ShaderAssemblerParticles, {
 		// 	has_display_flag: true,
@@ -96,7 +97,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		// otherwise the input is cloned on every frame inside cook_main()
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
 
-		this.add_post_dirty_hook(this._reset_material_if_dirty.bind(this));
+		this.add_post_dirty_hook(this._reset_material_if_dirty_bound);
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {

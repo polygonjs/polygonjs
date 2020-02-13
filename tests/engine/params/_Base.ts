@@ -92,15 +92,15 @@ QUnit.test('emit only the minimum times', (assert) => {
 	tx.set(1);
 	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
 	assert.equal(ty.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 0);
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 0);
+	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
 
 	t.set([2, 3, 7]);
 	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
 	assert.equal(ty.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
+	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
 
 	ty.set(2.5);
 	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
 	assert.equal(ty.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
+	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 3);
 });

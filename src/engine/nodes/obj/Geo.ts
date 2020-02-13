@@ -56,13 +56,15 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// 	affects_hierarchy: true,
 		// });
 		// this._init_dirtyable_hook();
-		this.dirty_controller.add_post_dirty_hook(async () => {
-			if (this.used_in_scene) {
-				await this.cook_controller.cook_main_without_inputs();
-			}
-		});
+		this.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
 
 		this.io.inputs.set_count(0, 1);
+	}
+	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
+	private async _cook_main_without_inputs_when_dirty() {
+		if (this.used_in_scene) {
+			await this.cook_controller.cook_main_without_inputs();
+		}
 	}
 
 	create_object() {

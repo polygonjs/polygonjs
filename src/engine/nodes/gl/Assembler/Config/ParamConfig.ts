@@ -4,11 +4,10 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 
 import {ParamType} from 'src/engine/poly/ParamType';
-import {
-	ParamInitValuesTypeMap,
-	ParamValuesTypeMap,
-	ParamConstructorByType,
-} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from 'src/engine/params/types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from 'src/engine/params/types/ParamValuesTypeMap';
+import {ParamConstructorByType} from 'src/engine/params/types/ParamConstructorByType';
+
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {TypedParam} from 'src/engine/params/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';

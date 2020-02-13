@@ -1,8 +1,10 @@
 // import {BaseNode} from 'src/engine/nodes/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap, ParamConstructorMap} from './ParamsController';
 import {RampParam} from 'src/engine/params/Ramp';
+import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
+import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
+import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 
 // function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
 // 	const key_s = key as string;

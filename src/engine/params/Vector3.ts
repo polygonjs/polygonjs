@@ -3,7 +3,7 @@ import lodash_isArray from 'lodash/isArray';
 import {FloatParam} from './Float';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../poly/ParamType';
-import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 const COMPONENT_NAMES_VECTOR3 = ['x', 'y', 'z'];

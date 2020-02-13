@@ -11,7 +11,7 @@ import {TypedParam} from './_Base';
 import {FloatParam} from './Float';
 // import {ParamInitValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamEvent} from '../poly/ParamEvent';
 // import {AsCodeMultiple} from './concerns/visitors/Multiple';

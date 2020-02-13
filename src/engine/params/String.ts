@@ -7,7 +7,8 @@ import {Single} from './_Single';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
 import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 

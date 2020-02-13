@@ -109,8 +109,8 @@ export default createComponent({
 		},
 		username: {
 			type: String,
-			default: null
-		}
+			default: null,
+		},
 		// init_properties:
 		// 	type: Object
 		// 	default: -> {}
@@ -261,6 +261,9 @@ export default createComponent({
 	height: 100%
 .full_page_height
 	height: 100vh
+
+.button
+	margin-bottom: 0px
 
 // to avoid the double dropdown arrow on selects
 select.select

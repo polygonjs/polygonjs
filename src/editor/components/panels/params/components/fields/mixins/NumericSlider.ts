@@ -1,7 +1,7 @@
 import {EngineParamData} from 'src/editor/store/modules/Engine';
 import {ParamSetCommand} from 'src/editor/history/commands/ParamSet';
 import {BaseParamType} from 'src/engine/params/_Base';
-import {ParamValue} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamValue} from 'src/engine/params/types/ParamValue';
 export function SetupNumericSlider(json_param: EngineParamData, param: BaseParamType) {
 	let slider_start_value: ParamValue | undefined = undefined;
 	let slider_start_expression: string | undefined = undefined;

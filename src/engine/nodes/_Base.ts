@@ -39,7 +39,10 @@ import {CookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
-import {ParamsController, ParamInitValuesTypeMap, ParamConstructorMap} from './utils/params/ParamsController';
+import {ParamsController} from './utils/params/ParamsController';
+import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
+import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
+
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/params/ParamsValueAccessor';
 import {ProcessingContext} from './utils/ProcessingContext';

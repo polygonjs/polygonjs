@@ -5,12 +5,12 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 export class UIData extends CoreGraphNode {
 	private _folder_name: string | undefined;
-
+	private _update_visibility_and_remove_dirty_bound = this.update_visibility_and_remove_dirty.bind(this);
 	constructor(scene: PolyScene, private param: BaseParamType) {
 		super(scene, 'param ui data');
 		// this.set_scene(this.param.scene);
 
-		this.add_post_dirty_hook(this.update_visibility_and_remove_dirty.bind(this));
+		this.add_post_dirty_hook(this._update_visibility_and_remove_dirty_bound);
 	}
 
 	update_visibility_and_remove_dirty() {

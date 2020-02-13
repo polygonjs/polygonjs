@@ -4,7 +4,7 @@ import lodash_isArray from 'lodash/isArray';
 import {Vector2} from 'three/src/math/Vector2';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
-import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 
 const COMPONENT_NAMES_VECTOR2 = ['x', 'y'];
 export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {

@@ -15,6 +15,7 @@ export class TimeController {
 	private _playing: boolean = false;
 	private _fps: number = 60;
 	private _frame_interval: number = 1000 / 60;
+	private _next_frame_bound = this.play_next_frame.bind(this);
 
 	constructor(private scene: PolyScene) {
 		this._graph_node = new CoreGraphNode(scene, 'time controller');
@@ -119,7 +120,11 @@ export class TimeController {
 		}
 	}
 
+	// private _prev_t: number = 0;
 	play_next_frame() {
+		// const cur_t = performance.now();
+		// console.log(cur_t - this._prev_t, cur_t, this._frame_interval);
+		// this._prev_t = cur_t;
 		//current_time = performance.now()
 		//if !@_last_time_frame_incremented? || ( (current_time - @_last_time_frame_incremented) > 40 )
 		if (this.playing) {
@@ -128,7 +133,7 @@ export class TimeController {
 				this.increment_frame();
 			}
 
-			setTimeout(this.play_next_frame.bind(this), this._frame_interval);
+			setTimeout(this._next_frame_bound, this._frame_interval);
 		}
 	}
 }

@@ -36,6 +36,7 @@ export class PostProcessController {
 
 	constructor(private node: BaseCameraObjNodeType) {}
 
+	// private _prev_t = 0;
 	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
@@ -47,6 +48,10 @@ export class PostProcessController {
 				}
 			} else {
 				this.node.setup_for_aspect_ratio(aspect);
+				// const cur_t = performance.now();
+				// const delta = cur_t - this._prev_t;
+				// this._prev_t = cur_t;
+				// console.log(cur_t, delta);
 				renderer.render(this.node.scene.display_scene, this.node.object);
 			}
 		}

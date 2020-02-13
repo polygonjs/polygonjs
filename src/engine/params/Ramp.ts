@@ -11,7 +11,8 @@ import {RampValue, RampPoint, RampValueJson, RampInterpolation} from './ramp/Ram
 
 // import {AsCodeRamp} from './concerns/visitors/Ramp';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 
 // interface RampParamVisitor extends TypedParamVisitor {
 // 	visit_ramp_param: (param: RampParam) => any;
@@ -41,8 +42,9 @@ export class RampParam extends Single<ParamType.RAMP> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
 		return val1.is_equal(val2);
 	}
+	private _reset_ramp_interpolant_and_texture_bound = this._reset_ramp_interpolant_and_texture.bind(this);
 	initialize_param() {
-		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture.bind(this));
+		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture_bound);
 	}
 	// accepts_visitor(visitor: RampParamVisitor) {
 	// 	return visitor.visit_ramp_param(this);

@@ -4,8 +4,9 @@ import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isString from 'lodash/isString';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {CoreString} from 'src/core/String';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static type() {
@@ -33,9 +34,13 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 				return raw_val >= 1;
 			} else {
 				if (lodash_isString(raw_val)) {
-					if (CoreString.is_number(raw_val)) {
-						const parsed = parseFloat(raw_val);
-						return parsed >= 1;
+					if (CoreString.is_boolean(raw_val)) {
+						return CoreString.to_boolean(raw_val);
+					} else {
+						if (CoreString.is_number(raw_val)) {
+							const parsed = parseFloat(raw_val);
+							return parsed >= 1;
+						}
 					}
 				}
 			}

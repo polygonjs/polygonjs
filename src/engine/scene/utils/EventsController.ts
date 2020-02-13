@@ -25,7 +25,6 @@ export class EventsController {
 		return this._events_listener;
 	}
 	dispatch(emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {
-		console.log('dispatch', event_name);
 		this._events_listener?.process_events(emitter, event_name, data);
 	}
 	get emit_allowed(): boolean {

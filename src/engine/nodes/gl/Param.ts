@@ -58,6 +58,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		return 'param';
 	}
 
+	private _update_if_type_changed_bound = this._update_if_type_changed.bind(this);
 	initialize_node() {
 		// this.set_inputs([
 		// 	new GlDataIONumeric('in')
@@ -73,7 +74,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		// ])
 		this.update_output_type();
 
-		this.add_post_dirty_hook(this._update_if_type_changed.bind(this));
+		this.add_post_dirty_hook(this._update_if_type_changed_bound);
 	}
 	private _update_if_type_changed(dirty_trigger?: CoreGraphNode) {
 		if (dirty_trigger == this.p.type) {

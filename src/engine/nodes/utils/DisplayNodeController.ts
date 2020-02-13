@@ -8,12 +8,11 @@ export class DisplayNodeController {
 	_display_node: BaseSopNodeType | undefined;
 	_children_uuids_dict: Dictionary<boolean> = {};
 	_children_length: number = 0;
+	private _request_display_node_container_bound = this.request_display_node_container.bind(this);
 	constructor(protected node: BaseObjNodeType) {
 		this._graph_node = new CoreGraphNode(node.scene, 'DisplayNodeController');
 
-		this._graph_node.dirty_controller.add_post_dirty_hook(() => {
-			this.request_display_node_container();
-		});
+		this._graph_node.dirty_controller.add_post_dirty_hook(this._request_display_node_container_bound);
 	}
 
 	get display_node() {

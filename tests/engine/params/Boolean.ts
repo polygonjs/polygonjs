@@ -34,6 +34,27 @@ QUnit.test('boolean evals correctly when set to different values', async (assert
 	scene.set_frame(3);
 	await boolean_param.compute();
 	assert.equal(boolean_param.value, true);
+
+	boolean_param.set('true');
+	assert.ok(!boolean_param.has_expression(), '"true" does not create an expression');
+	assert.equal(boolean_param.value, true);
+
+	boolean_param.set('false');
+	assert.ok(!boolean_param.has_expression(), '"false" does not create an expression');
+	assert.equal(boolean_param.value, false);
+
+	boolean_param.set('1');
+	assert.ok(!boolean_param.has_expression(), '"1" does not create an expression');
+	assert.equal(boolean_param.value, true);
+
+	boolean_param.set('0');
+	assert.ok(!boolean_param.has_expression(), '"0" does not create an expression');
+	assert.equal(boolean_param.value, false);
+
+	boolean_param.set('0+1');
+	assert.ok(boolean_param.has_expression());
+	await boolean_param.compute();
+	assert.equal(boolean_param.value, true);
 });
 
 QUnit.test('boolean is_default', async (assert) => {

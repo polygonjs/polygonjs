@@ -4,7 +4,7 @@ import lodash_isString from 'lodash/isString';
 // import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamEvent} from '../poly/ParamEvent';
@@ -39,7 +39,10 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 
 		const converted = this.convert(raw_input);
 		if (converted != null) {
-			this._expression_controller?.set_expression(undefined, false);
+			if (this._expression_controller) {
+				this._expression_controller.set_expression(undefined, false);
+				this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
+			}
 			if (converted != this._value) {
 				this._value = converted;
 				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);

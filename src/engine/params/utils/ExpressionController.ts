@@ -3,7 +3,7 @@ import {ExpressionManager} from 'src/engine/expressions/ExpressionManager';
 import {CorePoint} from 'src/core/geometry/Point';
 import {CoreEntity} from 'src/core/geometry/Entity';
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamValuesTypeMap} from 'src/engine/nodes/utils/params/ParamsController';
+import {ParamValuesTypeMap} from 'src/engine/params/types/ParamValuesTypeMap';
 import {CoreObject} from 'src/core/geometry/Object';
 
 // type ParamTypeElem = ParamType;

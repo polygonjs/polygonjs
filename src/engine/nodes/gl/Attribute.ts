@@ -43,6 +43,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		return 'attribute';
 	}
 
+	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
 		// this.set_outputs([
 		// 	new GlDataIO('out')
@@ -50,7 +51,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.io.outputs.set_named_output_connection_points([new TypedConnectionFloat(INPUT_NAME)]);
 		this.update_input_and_output_types();
 
-		this.add_post_dirty_hook(this._update_signature_if_required.bind(this));
+		this.add_post_dirty_hook(this._update_signature_if_required_bound);
 	}
 	create_params() {
 		if (this.material_node?.assembler_controller.allow_attribute_exports()) {

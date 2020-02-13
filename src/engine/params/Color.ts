@@ -4,7 +4,8 @@ import lodash_isArray from 'lodash/isArray';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
-import {ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
+
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 const COMPONENT_NAMES_COLOR = ['r', 'g', 'b'];

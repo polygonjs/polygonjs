@@ -3,8 +3,9 @@ import lodash_isNumber from 'lodash/isNumber';
 
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap, ParamValuesTypeMap} from '../nodes/utils/params/ParamsController';
 import {CoreString} from 'src/core/String';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {

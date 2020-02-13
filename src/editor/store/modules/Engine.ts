@@ -504,7 +504,7 @@ export const EngineStoreModule = {
 			if (state.params_by_graph_node_id[param_id]) {
 				const param = StoreController.engine.param(param_id);
 				if (param) {
-					Vue.set(state.params_by_graph_node_id[param_id], 'error', param.serializer.error_message());
+					Vue.set(state.params_by_graph_node_id[param_id], 'error_message', param.serializer.error_message());
 				}
 			}
 		},

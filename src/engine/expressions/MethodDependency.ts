@@ -13,6 +13,7 @@ export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
 	public resolved_graph_node: CoreGraphNode | undefined;
 	public unresolved_path: string | undefined;
+	private _update_from_name_change_bound = this._update_from_name_change.bind(this);
 
 	constructor(
 		public param: BaseParamType,
@@ -23,7 +24,7 @@ export class MethodDependency extends CoreGraphNode {
 
 		// this.set_scene(this.param.scene);
 
-		this.add_post_dirty_hook(this._update_from_name_change.bind(this));
+		this.add_post_dirty_hook(this._update_from_name_change_bound);
 	}
 	_update_from_name_change(trigger?: CoreGraphNode) {
 		if (CoreObject.is_a(trigger, TypedNode) && this.decomposed_path) {

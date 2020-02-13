@@ -1,4 +1,5 @@
-import {ParamInitValuesTypeMap} from '../params/ParamsController';
+import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
+
 import {ParamType} from 'src/engine/poly/ParamType';
 import {RampParam} from 'src/engine/params/Ramp';
 

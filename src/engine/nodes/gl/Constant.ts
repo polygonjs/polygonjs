@@ -33,11 +33,12 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return 'constant';
 	}
 
+	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
 			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
 		]);
-		this.add_post_dirty_hook(this._update_signature_if_required.bind(this));
+		this.add_post_dirty_hook(this._update_signature_if_required_bound);
 	}
 	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 		if (dirty_trigger == this.p.type) {

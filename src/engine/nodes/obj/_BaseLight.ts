@@ -17,11 +17,13 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 		this.flags.display.add_hook(() => {
 			this.set_used_in_scene(this.flags.display.active || false);
 		});
-		this.dirty_controller.add_post_dirty_hook(async () => {
-			if (this.used_in_scene) {
-				await this.cook_controller.cook_main_without_inputs();
-			}
-		});
+		this.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
+	}
+	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
+	private async _cook_main_without_inputs_when_dirty() {
+		if (this.used_in_scene) {
+			await this.cook_controller.cook_main_without_inputs();
+		}
 	}
 
 	create_params() {

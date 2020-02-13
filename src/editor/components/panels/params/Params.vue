@@ -192,6 +192,7 @@ export default createComponent({
 
 		.params_container
 			padding-right: 10px
+			padding-bottom: 10px
 
 			.params_folder
 				.folder_name
