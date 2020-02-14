@@ -51,7 +51,7 @@ import {PolyScene} from '../scene/PolyScene';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from '../params/types/ParamValuesTypeMap';
 import {ParamValueSerializedTypeMap} from '../params/types/ParamValueSerializedTypeMap';
-import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedMap';
+import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 // import {TypedNumericParam} from './_Numeric';
 
 // export interface ParamVisitor {

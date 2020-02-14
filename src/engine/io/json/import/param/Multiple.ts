@@ -6,7 +6,7 @@ import {ParamType} from 'src/engine/poly/ParamType';
 import {FloatParam} from 'src/engine/params/Float';
 
 export class ParamMultipleJsonImporter extends ParamJsonImporter<TypedMultipleParam<ParamType>> {
-	add_main(data: ParamJsonExporterData) {
+	add_main(data: ParamJsonExporterData<ParamType>) {
 		const components = data['components'];
 		if (components) {
 			Object.keys(components).forEach((component_name) => {

@@ -24,7 +24,7 @@ class GeoObjParamConfig extends NodeParamsConfig {
 	r = ParamConfig.VECTOR3([0, 0, 0]);
 	s = ParamConfig.VECTOR3([1, 1, 1]);
 	scale = ParamConfig.FLOAT(1);
-	look_at = ParamConfig.OPERATOR_PATH('');
+	look_at = ParamConfig.OPERATOR_PATH('', {node_selection: {context: NodeContext.OBJ}});
 	up = ParamConfig.VECTOR3([0, 1, 0]);
 	pivot = ParamConfig.VECTOR3([0, 0, 0]);
 

@@ -25,6 +25,7 @@ import {ParamJsonExporterData} from 'src/engine/io/json/export/Param';
 import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
 import {BaseGlNodeType} from '../_Base';
 import {AttributeGlNode} from '../Attribute';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 // interface BaseShaderAssemblerConstructor {
 // 	new (): BaseGlShaderAssembler;
@@ -63,7 +64,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	// private _recompiled: boolean = false;
 	private _shaders_by_name: Map<ShaderName, string> = new Map();
 
-	private _deleted_params_data: Map<string, ParamJsonExporterData> = new Map();
+	private _deleted_params_data: Map<string, ParamJsonExporterData<ParamType>> = new Map();
 	private _new_params: BaseParamType[] = [];
 
 	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {

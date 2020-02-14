@@ -2,6 +2,7 @@ import {BooleanParam} from 'src/engine/params/Boolean';
 import {ButtonParam} from 'src/engine/params/Button';
 import {ColorParam} from 'src/engine/params/Color';
 import {FloatParam} from 'src/engine/params/Float';
+import {FolderParam} from '../Folder';
 import {IntegerParam} from 'src/engine/params/Integer';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
 import {RampParam} from 'src/engine/params/Ramp';
@@ -19,6 +20,7 @@ export const ParamConstructorByType: ParamClassMapType = {
 	[ParamType.BUTTON]: ButtonParam,
 	[ParamType.COLOR]: ColorParam,
 	[ParamType.FLOAT]: FloatParam,
+	[ParamType.FOLDER]: FolderParam,
 	[ParamType.INTEGER]: IntegerParam,
 	[ParamType.OPERATOR_PATH]: OperatorPathParam,
 	[ParamType.RAMP]: RampParam,

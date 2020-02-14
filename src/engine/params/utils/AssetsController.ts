@@ -17,7 +17,7 @@ export class AssetsController {
 	}
 
 	referenced_asset(): string | null {
-		if (this.param.options.always_reference_asset()) {
+		if (this.param.options.always_reference_asset) {
 			const val = this.param.value;
 			if (lodash_isString(val)) {
 				return val;
@@ -29,6 +29,6 @@ export class AssetsController {
 	}
 
 	is_referencing_asset(): boolean {
-		return this.param.options.always_reference_asset() || this._referenced_asset != null;
+		return this.param.options.always_reference_asset || this._referenced_asset != null;
 	}
 }

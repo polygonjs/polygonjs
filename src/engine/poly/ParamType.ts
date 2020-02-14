@@ -3,6 +3,7 @@ export enum ParamType {
 	BUTTON = 'button',
 	COLOR = 'color',
 	FLOAT = 'float',
+	FOLDER = 'folder',
 	INTEGER = 'integer',
 	OPERATOR_PATH = 'operator_path',
 	RAMP = 'ramp',

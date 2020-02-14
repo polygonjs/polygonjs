@@ -1,7 +1,7 @@
 
 
 <template lang='pug'>
-	
+
 	.Polygon-Modal-Container
 		.Polygon-Modal(:style = 'style_object')
 			.grid-y.modal-grid
@@ -209,6 +209,5 @@ export default createComponent({
 					background-color: green
 					cursor: se-resize
 
-		
 
 </style>

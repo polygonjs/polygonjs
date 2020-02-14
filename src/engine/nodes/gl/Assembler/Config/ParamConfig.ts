@@ -77,6 +77,8 @@ export class ParamConfig<T extends ParamType> {
 				return {value: new Vector3(0, 0, 0)};
 			case ParamType.FLOAT:
 				return {value: 0};
+			case ParamType.FOLDER:
+				return {value: 0};
 			case ParamType.INTEGER:
 				return {value: 0};
 			case ParamType.OPERATOR_PATH:

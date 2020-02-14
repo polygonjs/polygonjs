@@ -19,6 +19,7 @@ export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
 	[ParamType.BUTTON]: null;
 	[ParamType.COLOR]: Color;
 	[ParamType.FLOAT]: number;
+	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: number;
 	[ParamType.OPERATOR_PATH]: string;
 	[ParamType.RAMP]: RampValue;

@@ -72,7 +72,11 @@ export class TimeController {
 			this._frame = frame;
 			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
 			this.scene.uniforms_controller.update_frame_dependent_uniform_owners();
+
+			// we block updates here, so that dependent nodes only cook once
+			this.scene.cooker.block();
 			this.graph_node.set_successors_dirty();
+			this.scene.cooker.unblock();
 		}
 	}
 	increment_frame() {

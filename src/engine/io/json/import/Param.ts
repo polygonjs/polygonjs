@@ -1,18 +1,19 @@
 import {BaseParamType} from 'src/engine/params/_Base';
 import {ParamJsonExporterData} from '../export/Param';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 export class ParamJsonImporter<T extends BaseParamType> {
 	constructor(protected _param: T) {}
 
-	process_data(data: ParamJsonExporterData) {
-		const value = data['value'];
-		const expression = data['expression'];
+	process_data(data: ParamJsonExporterData<ParamType>) {
+		const raw_input = data['raw_input'];
+		// const expression = data['expression'];
 		// const components = data['components'];
-		if (expression !== undefined) {
-			this._param.set(expression);
-		}
-		if (value !== undefined) {
-			this._param.set(value);
+		// if (expression !== undefined) {
+		// 	this._param.set(expression);
+		// }
+		if (raw_input !== undefined) {
+			this._param.set(raw_input);
 		}
 
 		// const referenced_asset = data['referenced_asset']
@@ -23,5 +24,5 @@ export class ParamJsonImporter<T extends BaseParamType> {
 		this.add_main(data);
 	}
 
-	add_main(data: ParamJsonExporterData) {}
+	add_main(data: ParamJsonExporterData<ParamType>) {}
 }

@@ -32,7 +32,6 @@ export default createComponent({
 	components: {Modal},
 
 	setup() {
-		console.log('StoreController.editor.dialog_alert', StoreController.editor.dialog_alert);
 		const display = computed(() => StoreController.editor.dialog_alert.display());
 		const message = computed(() => StoreController.editor.dialog_alert.message());
 		const title = computed(() => StoreController.editor.dialog_alert.title());

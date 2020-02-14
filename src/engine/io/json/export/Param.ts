@@ -2,26 +2,26 @@
 // import lodash_isString from 'lodash/isString'
 import {BaseParamType} from 'src/engine/params/_Base';
 import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamValueSerialized} from 'src/engine/params/types/ParamValueSerialized';
+import {ParamInitValueSerializedTypeMap} from 'src/engine/params/types/ParamInitValueSerializedTypeMap';
 
 import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 
 type OverridenOptions = Dictionary<string>;
 
-export type ParamJsonExporterDataByName = Dictionary<ParamJsonExporterData>;
+export type ParamJsonExporterDataByName = Dictionary<ParamJsonExporterData<ParamType>>;
 
-export interface ParamJsonExporterData {
-	type?: ParamType;
-	default_value?: ParamValueSerialized;
+export interface ParamJsonExporterData<T extends ParamType> {
+	type?: T;
+	default_value?: ParamInitValueSerializedTypeMap[T];
+	raw_input?: ParamInitValueSerializedTypeMap[T];
 	options?: ParamOptions;
 	overriden_options?: OverridenOptions;
 	components?: ParamJsonExporterDataByName;
-	expression?: string;
-	value?: ParamValueSerialized;
+	// expression?: string;
 }
 
 export class ParamJsonExporter<T extends BaseParamType> {
-	protected _data: ParamJsonExporterData = {};
+	protected _data: ParamJsonExporterData<ParamType> = {};
 	constructor(protected _param: T) {}
 
 	get required(): boolean {

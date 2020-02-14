@@ -5,17 +5,19 @@ import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isEqual from 'lodash/isEqual';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 
 const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
 const CALLBACK_OPTION = 'callback';
 const CALLBACK_STRING_OPTION = 'callback_string';
-const COLOR_OPTION = 'color';
+// const COLOR_OPTION = 'color';
 const COOK_OPTION = 'cook';
 const DESKTOP_BROWSE_OPTION = 'desktop_browse';
 const FILE_TYPE_OPTION = 'file_type';
-const EXPRESSION_ONLY_OPTION = 'expression_only';
+// const EXPRESSION_ONLY_OPTION = 'expression_only';
 const EXPRESSION = 'expression';
 const FOR_ENTITIES = 'for_entities';
+const LEVEL = 'level';
 const MENU = 'menu';
 const ENTRIES = 'entries';
 // const TYPE = 'type';
@@ -40,50 +42,122 @@ export interface ParamOptionsMenuEntry {
 	value: number;
 }
 
-export interface ParamOptions {
-	// asset refererences
-	always_reference_asset?: boolean;
-	// callback
-	callback?: (node: BaseNodeType, param: BaseParamType) => any;
-	callback_string?: string;
-	// color
-	color?: [number, number, number] | string;
+interface BaseParamOptions {
 	// cook
 	cook?: boolean;
-	// desktop
-	desktop_browse?: Dictionary<string>;
-	// expression
-	expression_only?: boolean;
-	expression?: {
-		for_entities?: boolean;
-	};
-	// menu
-	menu?: {
-		// type: 'radio';
-		entries: ParamOptionsMenuEntry[];
-	};
-	// multiline
-	multiline?: boolean;
-	// node selection
-	node_selection?: {
-		context?: string;
-	};
-	dependent_on_found_node?: boolean;
-	// range
-	range?: Number2;
-	range_locked?: Boolean2;
-	step?: number;
 	// spare
 	spare?: boolean;
-	// texture
-	texture?: {
-		env?: boolean;
-	};
 	// visible
 	hidden?: boolean;
 	label?: boolean;
 	field?: boolean;
 	visible_if?: Dictionary<number | boolean>;
+}
+interface MenuParamOptions {
+	menu?: {
+		// type: 'radio';
+		entries: ParamOptionsMenuEntry[];
+	};
+}
+interface ExpressionParamOptions {
+	expression?: {
+		for_entities?: boolean;
+	};
+}
+
+interface NumberParamOptions extends BaseParamOptions {
+	range?: Number2;
+	range_locked?: Boolean2;
+	step?: number;
+}
+interface AssetParamOptions {
+	always_reference_asset?: boolean;
+}
+interface DesktopParamOptions {
+	desktop_browse?: Dictionary<string>;
+}
+
+// actual param options
+export interface BooleanParamOptions extends BaseParamOptions, MenuParamOptions, ExpressionParamOptions {}
+export interface ButtonParamOptions extends BaseParamOptions {
+	callback?: (node: BaseNodeType, param: BaseParamType) => any;
+	callback_string?: string;
+}
+export interface ColorParamOptions extends BaseParamOptions, ExpressionParamOptions {}
+export interface FloatParamOptions extends NumberParamOptions, MenuParamOptions, ExpressionParamOptions {}
+export interface FolderParamOptions extends BaseParamOptions {
+	level?: number;
+}
+export interface IntegerParamOptions extends NumberParamOptions, MenuParamOptions {}
+export interface OperatorPathParamOptions extends BaseParamOptions, DesktopParamOptions {
+	node_selection?: {
+		context?: NodeContext;
+	};
+	dependent_on_found_node?: boolean;
+}
+export interface RampParamOptions extends BaseParamOptions {}
+export interface SeparatorParamOptions extends BaseParamOptions {}
+export interface StringParamOptions
+	extends BaseParamOptions,
+		AssetParamOptions,
+		DesktopParamOptions,
+		ExpressionParamOptions {
+	multiline?: boolean;
+}
+export interface Vector2ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
+export interface Vector3ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
+export interface Vector4ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
+
+export interface ParamOptions
+	extends NumberParamOptions,
+		FolderParamOptions,
+		ExpressionParamOptions,
+		ButtonParamOptions,
+		DesktopParamOptions,
+		MenuParamOptions,
+		StringParamOptions,
+		OperatorPathParamOptions {
+	// asset refererences
+	// always_reference_asset?: boolean;
+	// callback
+	// callback?: (node: BaseNodeType, param: BaseParamType) => any;
+	// callback_string?: string;
+	// color
+	// color?: [number, number, number] | string;
+	// cook
+	// cook?: boolean;
+	// desktop
+	// desktop_browse?: Dictionary<string>;
+	// expression
+	// expression_only?: boolean;
+	// expression?: {
+	// 	for_entities?: boolean;
+	// };
+	// folder
+	// level?:number
+	// menu
+	// menu?: {
+	// 	// type: 'radio';
+	// 	entries: ParamOptionsMenuEntry[];
+	// };
+	// multiline
+	// multiline?: boolean;
+	// node selection
+	// node_selection?: {
+	// 	context?: NodeContext;
+	// };
+	// dependent_on_found_node?: boolean;
+	// spare
+	// spare?: boolean;
+	// texture
+	texture?: {
+		env?: boolean;
+	};
+	// visible
+	// hidden?: boolean;
+	// label?: boolean;
+	// field?: boolean;
+	// visible_if?: Dictionary<number | boolean>;
 }
 
 export class OptionsController {
@@ -137,7 +211,7 @@ export class OptionsController {
 	}
 
 	// referenced assets
-	always_reference_asset(): boolean {
+	get always_reference_asset(): boolean {
 		return this._options[ALWAYS_REFERENCE_ASSET_OPTION] || false;
 	}
 
@@ -171,9 +245,9 @@ export class OptionsController {
 	}
 
 	// color
-	color() {
-		return this._options[COLOR_OPTION];
-	}
+	// color() {
+	// 	return this._options[COLOR_OPTION];
+	// }
 
 	// cook
 	makes_node_dirty_when_dirty() {
@@ -207,15 +281,20 @@ export class OptionsController {
 	}
 
 	// expression
-	get displays_expression_only() {
-		return this._options[EXPRESSION_ONLY_OPTION] === true;
-	}
+	// get displays_expression_only() {
+	// 	return this._options[EXPRESSION_ONLY_OPTION] === true;
+	// }
 	get is_expression_for_entities(): boolean {
 		const expr_option = this._options[EXPRESSION];
 		if (expr_option) {
 			return expr_option[FOR_ENTITIES] || false;
 		}
 		return false;
+	}
+
+	// folder
+	get level() {
+		return this._options[LEVEL] || 0;
 	}
 
 	// menu

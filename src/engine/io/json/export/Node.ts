@@ -4,6 +4,7 @@ import {SceneJsonExporter} from './Scene';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from './Param';
+import {ParamType} from 'src/engine/poly/ParamType';
 
 interface NamedInputData {
 	name: string;
@@ -22,7 +23,7 @@ export interface NodeJsonExporterData {
 	type: string;
 	nodes: Dictionary<NodeJsonExporterData>;
 	children_context: NodeContext;
-	params?: Dictionary<ParamJsonExporterData>;
+	params?: Dictionary<ParamJsonExporterData<ParamType>>;
 	inputs?: InputData[];
 	selection?: string[];
 	flags?: FlagsData;
@@ -164,7 +165,7 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 	}
 
 	protected params_data() {
-		const data: Dictionary<ParamJsonExporterData> = {};
+		const data: Dictionary<ParamJsonExporterData<ParamType>> = {};
 
 		for (let param_name of this._node.params.names) {
 			const param = this._node.params.get(param_name);

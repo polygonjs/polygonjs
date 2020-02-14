@@ -3,6 +3,6 @@ import {RampParam} from 'src/engine/params/Ramp';
 
 export class ParamRampJsonExporter extends ParamJsonExporter<RampParam> {
 	add_main() {
-		this._data['value'] = this._param.value.to_json();
+		this._data['raw_input'] = this._param.raw_input_serialized;
 	}
 }

@@ -20,10 +20,10 @@
 					)
 					NodeTree(
 						v-for = 'child, i in children'
-						:node = 'child'
-						:node_selection_context = 'node_selection_context'
+						:graph_node_id = 'child.graph_node_id'
+						:node_context = 'node_context'
 						:selected_graph_node_id = 'selected_graph_node_id'
-						:key = 'children_keys[i]'
+						:key = 'child.graph_node_id'
 						@select = 'on_child_select'
 						)
 
@@ -35,8 +35,9 @@ import lodash_sortBy from 'lodash/sortBy';
 
 interface NodeTreeProps {
 	graph_node_id: string;
-	context: NodeContext | null;
+	node_context: NodeContext | null;
 	selected_graph_node_id: string;
+	init_expanded?: boolean;
 }
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {StoreController} from '../../store/controllers/StoreController';
@@ -47,13 +48,11 @@ export default createComponent({
 	name: 'node-tree',
 
 	props: {
-		node: {
-			type: Object,
-			default() {
-				return {};
-			},
+		graph_node_id: {
+			type: String,
+			default: null,
 		},
-		node_selection_context: {
+		node_context: {
 			type: String,
 			default() {
 				return null;
@@ -63,10 +62,14 @@ export default createComponent({
 			type: String,
 			default: null,
 		},
+		init_expanded: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	setup(props: NodeTreeProps, context: SetupContext) {
-		const expanded = ref(false);
+		const expanded = ref(props.init_expanded || false);
 		const node = StoreController.engine.node(props.graph_node_id) as BaseNodeType;
 
 		const selected = computed(() => {
@@ -98,16 +101,20 @@ export default createComponent({
 		const children = computed(() => {
 			let list = lodash_sortBy(node.children(), (child) => child.name);
 			const selectable_children: BaseNodeType[] = [];
-			if (props.context) {
+			if (props.node_context) {
 				for (let child of list) {
-					if (child.children_allowed() && child.children_controller) {
-						if (
-							child.children_controller.has_children_and_grandchildren_with_context(props.context) ||
-							child.node_context() == props.context
-						) {
-							selectable_children.push(child);
-						}
+					const has_children_with_context =
+						child.children_allowed() &&
+						child.children_controller &&
+						child.children_controller.has_children_and_grandchildren_with_context(props.node_context);
+					const is_context = child.node_context() == props.node_context;
+					if (has_children_with_context || is_context) {
+						selectable_children.push(child);
 					}
+				}
+			} else {
+				for (let child of list) {
+					selectable_children.push(child);
 				}
 			}
 
@@ -117,9 +124,6 @@ export default createComponent({
 		const expandable = computed(() => {
 			return node.children_allowed() && node.children().length > 0;
 		});
-		const children_keys = computed(() => {
-			return children.value.map((child) => child.graph_node_id);
-		});
 
 		// functions
 		function toggle_expanded() {
@@ -127,10 +131,10 @@ export default createComponent({
 		}
 
 		function on_click() {
-			context.emit('select', node);
+			context.emit('select', props.graph_node_id);
 		}
-		function on_child_select(node: BaseNodeType) {
-			context.emit('select', node);
+		function on_child_select(node_id: string) {
+			context.emit('select', node_id);
 		}
 
 		return {
@@ -142,7 +146,6 @@ export default createComponent({
 			node_name,
 			children,
 			expandable,
-			children_keys,
 			toggle_expanded,
 			on_click,
 			on_child_select,

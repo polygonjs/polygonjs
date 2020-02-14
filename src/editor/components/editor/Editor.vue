@@ -78,6 +78,8 @@ import Vue from 'vue';
 Vue.component('MultiplePanel', MultiplePanel);
 import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 Vue.component('DropDownMenu', DropDownMenu);
+import NodeTree from 'src/editor/components/widgets/NodeTree.vue';
+Vue.component('NodeTree', NodeTree);
 
 import {createComponent, ref} from '@vue/composition-api';
 export default createComponent({

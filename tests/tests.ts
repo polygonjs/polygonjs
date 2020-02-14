@@ -25,6 +25,9 @@ import './engine/params/utils/Expression';
 import './engine/params/utils/ReferencedAssets';
 import './engine/params/utils/TimeDependent';
 
+QUnit.module('nodes utils');
+import './engine/nodes/utils/ChildrenContext';
+
 QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';
 

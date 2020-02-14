@@ -134,7 +134,7 @@
 				"display_node_name": "file2"
 			}
 		},
-		"selection": ["geo1"]
+		"selection": ["perspective_camera1"]
 	},
 	"ui": {
 		"nodes": {

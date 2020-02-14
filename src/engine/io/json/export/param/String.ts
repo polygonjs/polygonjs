@@ -10,6 +10,6 @@ export class ParamStringJsonExporter extends ParamJsonExporter<StringParam> {
 		// if (lodash_isString(val)){
 		val = SceneJsonExporter.sanitize_string(val);
 		// }
-		this._data['value'] = val;
+		this._data['raw_input'] = val;
 	}
 }

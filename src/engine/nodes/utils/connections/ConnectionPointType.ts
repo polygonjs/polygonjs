@@ -105,6 +105,7 @@ export interface IParamTypeToConnectionPointTypeMap extends ParamTypeToConnectio
 	// [ConnectionPointType.IVEC3]: [ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER];
 	// [ConnectionPointType.IVEC4]: [ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER];
 	[ParamType.FLOAT]: ConnectionPointType.FLOAT;
+	[ParamType.FOLDER]: undefined;
 	[ParamType.VECTOR2]: ConnectionPointType.VEC2;
 	[ParamType.VECTOR3]: ConnectionPointType.VEC3;
 	[ParamType.VECTOR4]: ConnectionPointType.VEC4;
@@ -125,6 +126,7 @@ export const ParamTypeToConnectionPointTypeMap: IParamTypeToConnectionPointTypeM
 	// [ConnectionPointType.IVEC3]: [ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER];
 	// [ConnectionPointType.IVEC4]: [ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER, ParamType.INTEGER];
 	[ParamType.FLOAT]: ConnectionPointType.FLOAT,
+	[ParamType.FOLDER]: undefined,
 	[ParamType.VECTOR2]: ConnectionPointType.VEC2,
 	[ParamType.VECTOR3]: ConnectionPointType.VEC3,
 	[ParamType.VECTOR4]: ConnectionPointType.VEC4,

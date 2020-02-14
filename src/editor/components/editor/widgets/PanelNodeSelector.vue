@@ -8,14 +8,17 @@
 		v-if = 'display'
 		)
 		Modal(
-			title = 'Choose an event node:'
+			title = 'Choose a node:'
+			:size = '{x:400,y:600}'
 			ref = 'modal'
 			)
 			.full_height_container.grid-y
 				.cell.auto
 					NodeTree(
-						:node = 'root'
+						:graph_node_id = 'root_id'
+						:node_context = 'node_context'
 						:selected_graph_node_id = 'selected_graph_node_id'
+						:init_expanded = 'true'
 						@select = 'on_select'
 						)
 				.cell.shrink.text-right
@@ -34,21 +37,33 @@
 import Modal from '../../widgets/dialogs/Modal.vue';
 import NodeTree from '../../widgets/NodeTree.vue';
 
-import {createComponent, ref, watch, computed} from '@vue/composition-api';
 import {StoreController} from '../../../store/controllers/StoreController';
 import {ParamSetCommand} from '../../../history/commands/ParamSet';
+import {NodeContext} from '../../../../engine/poly/NodeContext';
+
+import {createComponent, Ref, ref, watch, computed} from '@vue/composition-api';
+import {OperatorPathParam} from '../../../../engine/params/OperatorPath';
 export default createComponent({
 	name: 'panel-node-selector',
 	components: {Modal, NodeTree},
 
 	setup() {
 		const selected_graph_node_id = ref<string | null>(null);
+		const root_id = StoreController.engine.scene.root.graph_node_id;
 
 		// const panel_id = computed(()=>{
 		// 	return this.$store.getters['editor/panel_node_selector/panel_id'];
 		// })
 		const param_id = computed(() => {
 			return StoreController.editor.panel_node_selector.param_id();
+		});
+		const node_context: Readonly<Ref<NodeContext | undefined>> = computed(() => {
+			if (param_id.value) {
+				const param = StoreController.engine.param(param_id.value);
+				if (param) {
+					return param.options.node_selection_context;
+				}
+			}
 		});
 
 		const display = computed(() => {
@@ -73,9 +88,9 @@ export default createComponent({
 				const selected_node = StoreController.engine.node(selected_graph_node_id.value);
 				const param_id = StoreController.editor.panel_node_selector.param_id();
 				if (param_id) {
-					const param = StoreController.engine.param(param_id);
+					const param = StoreController.engine.param(param_id) as OperatorPathParam;
 					if (selected_node && param) {
-						const cmd = new ParamSetCommand(param as any, selected_node.full_path());
+						const cmd = new ParamSetCommand(param, selected_node.full_path());
 						cmd.push();
 					}
 				}
@@ -97,6 +112,9 @@ export default createComponent({
 		// }
 
 		return {
+			root_id,
+			node_context,
+			selected_graph_node_id,
 			param_id,
 			display,
 			accept_button_class_object,

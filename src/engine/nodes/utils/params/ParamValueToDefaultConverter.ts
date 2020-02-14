@@ -91,6 +91,9 @@ function convert_float(value: ParamValue): ParamInitValuesTypeMap[ParamType.FLOA
 	}
 	return 0;
 }
+function convert_folder(value: ParamValue): ParamInitValuesTypeMap[ParamType.FOLDER] {
+	return null;
+}
 function convert_integer(value: ParamValue): ParamInitValuesTypeMap[ParamType.INTEGER] {
 	if (lodash_isNumber(value)) {
 		return Math.floor(value);
@@ -180,6 +183,7 @@ const ParamValuetoInitValueMap: ParamValuetoInitValueMapGeneric = {
 	[ParamType.BUTTON]: convert_button,
 	[ParamType.COLOR]: convert_color,
 	[ParamType.FLOAT]: convert_float,
+	[ParamType.FOLDER]: convert_folder,
 	[ParamType.INTEGER]: convert_integer,
 	[ParamType.OPERATOR_PATH]: convert_operator_path,
 	[ParamType.RAMP]: convert_ramp,

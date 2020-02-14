@@ -1,16 +1,17 @@
-import {BooleanParam} from 'src/engine/params/Boolean';
-import {ButtonParam} from 'src/engine/params/Button';
-import {ColorParam} from 'src/engine/params/Color';
-import {FloatParam} from 'src/engine/params/Float';
-import {IntegerParam} from 'src/engine/params/Integer';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {RampParam} from 'src/engine/params/Ramp';
-import {SeparatorParam} from 'src/engine/params/Separator';
-import {StringParam} from 'src/engine/params/String';
-import {Vector2Param} from 'src/engine/params/Vector2';
-import {Vector3Param} from 'src/engine/params/Vector3';
-import {Vector4Param} from 'src/engine/params/Vector4';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {BooleanParam} from '../Boolean';
+import {ButtonParam} from '../Button';
+import {ColorParam} from '../Color';
+import {FloatParam} from '../Float';
+import {FolderParam} from '../Folder';
+import {IntegerParam} from '../Integer';
+import {OperatorPathParam} from '../OperatorPath';
+import {RampParam} from '../Ramp';
+import {SeparatorParam} from '../Separator';
+import {StringParam} from '../String';
+import {Vector2Param} from '../Vector2';
+import {Vector3Param} from '../Vector3';
+import {Vector4Param} from '../Vector4';
+import {ParamType} from '../../poly/ParamType';
 import {TypedParam} from '../_Base';
 
 type ParamConstructorMapType = {[key in ParamType]: TypedParam<ParamType>};
@@ -19,6 +20,7 @@ export interface ParamConstructorMap extends ParamConstructorMapType {
 	[ParamType.BUTTON]: ButtonParam;
 	[ParamType.COLOR]: ColorParam;
 	[ParamType.FLOAT]: FloatParam;
+	[ParamType.FOLDER]: FolderParam;
 	[ParamType.INTEGER]: IntegerParam;
 	[ParamType.OPERATOR_PATH]: OperatorPathParam;
 	[ParamType.RAMP]: RampParam;

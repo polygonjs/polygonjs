@@ -37,6 +37,7 @@ export const BASE_CAMERA_DEFAULT = {
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
 export class BaseCameraObjParamsConfig extends NodeParamsConfig {
+	transform = ParamConfig.FOLDER();
 	controls = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {
 			context: NodeContext.EVENT,
@@ -54,6 +55,7 @@ export class BaseCameraObjParamsConfig extends NodeParamsConfig {
 	lock_width = ParamConfig.BOOLEAN(1);
 	look_at = ParamConfig.OPERATOR_PATH('');
 
+	render = ParamConfig.FOLDER();
 	// add layer params
 	// add background params
 	use_background = ParamConfig.BOOLEAN(0);

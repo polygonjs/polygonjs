@@ -5,6 +5,7 @@ import {RampParam} from 'src/engine/params/Ramp';
 import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
+import {ParamOptionsByTypeMap} from '../../../params/types/ParamOptionsByTypeMap';
 
 // function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
 // 	const key_s = key as string;
@@ -110,40 +111,82 @@ export class ParamConfig {
 	// static BUTTON(init_value: ParamInitValuesTypeMap[ParamType.BUTTON], options?: ParamOptions) {
 	// 	return this._GENERIC<ParamType.BUTTON>(ParamType.BUTTON, init_value, options)
 	// }
-	static BUTTON(init_value: ParamInitValuesTypeMap[ParamType.BUTTON], options?: ParamOptions) {
+	static BUTTON(
+		init_value: ParamInitValuesTypeMap[ParamType.BUTTON],
+		options?: ParamOptionsByTypeMap[ParamType.BUTTON]
+	) {
 		return new ParamTemplate<ParamType.BUTTON>(ParamType.BUTTON, init_value, options);
 	}
-	static BOOLEAN(init_value: ParamInitValuesTypeMap[ParamType.BOOLEAN], options?: ParamOptions) {
+	static BOOLEAN(
+		init_value: ParamInitValuesTypeMap[ParamType.BOOLEAN],
+		options?: ParamOptionsByTypeMap[ParamType.BOOLEAN]
+	) {
 		return new ParamTemplate<ParamType.BOOLEAN>(ParamType.BOOLEAN, init_value, options);
 	}
-	static COLOR(init_value: ParamInitValuesTypeMap[ParamType.COLOR], options?: ParamOptions) {
+	static COLOR(
+		init_value: ParamInitValuesTypeMap[ParamType.COLOR],
+		options?: ParamOptionsByTypeMap[ParamType.COLOR]
+	) {
 		return new ParamTemplate<ParamType.COLOR>(ParamType.COLOR, init_value, options);
 	}
-	static FLOAT(init_value: ParamInitValuesTypeMap[ParamType.FLOAT], options?: ParamOptions) {
+	static FLOAT(
+		init_value: ParamInitValuesTypeMap[ParamType.FLOAT],
+		options?: ParamOptionsByTypeMap[ParamType.FLOAT]
+	) {
 		return new ParamTemplate<ParamType.FLOAT>(ParamType.FLOAT, init_value, options);
 	}
-	static INTEGER(init_value: ParamInitValuesTypeMap[ParamType.INTEGER], options?: ParamOptions) {
+	static FOLDER(
+		init_value: ParamInitValuesTypeMap[ParamType.FOLDER] = null,
+		options?: ParamOptionsByTypeMap[ParamType.FOLDER]
+	) {
+		return new ParamTemplate<ParamType.FOLDER>(ParamType.FOLDER, init_value, options);
+	}
+	static INTEGER(
+		init_value: ParamInitValuesTypeMap[ParamType.INTEGER],
+		options?: ParamOptionsByTypeMap[ParamType.INTEGER]
+	) {
 		return new ParamTemplate<ParamType.INTEGER>(ParamType.INTEGER, init_value, options);
 	}
-	static OPERATOR_PATH(init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH], options?: ParamOptions) {
+	static OPERATOR_PATH(
+		init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
+		options?: ParamOptionsByTypeMap[ParamType.OPERATOR_PATH]
+	) {
 		return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
 	}
-	static RAMP(init_value: ParamInitValuesTypeMap[ParamType.RAMP] = RampParam.DEFAULT_VALUE, options?: ParamOptions) {
+	static RAMP(
+		init_value: ParamInitValuesTypeMap[ParamType.RAMP] = RampParam.DEFAULT_VALUE,
+		options?: ParamOptionsByTypeMap[ParamType.RAMP]
+	) {
 		return new ParamTemplate<ParamType.RAMP>(ParamType.RAMP, init_value, options);
 	}
-	static SEPARATOR(init_value: ParamInitValuesTypeMap[ParamType.SEPARATOR] = null, options?: ParamOptions) {
+	static SEPARATOR(
+		init_value: ParamInitValuesTypeMap[ParamType.SEPARATOR] = null,
+		options?: ParamOptionsByTypeMap[ParamType.SEPARATOR]
+	) {
 		return new ParamTemplate<ParamType.SEPARATOR>(ParamType.SEPARATOR, init_value, options);
 	}
-	static STRING(init_value: ParamInitValuesTypeMap[ParamType.STRING] = '', options?: ParamOptions) {
+	static STRING(
+		init_value: ParamInitValuesTypeMap[ParamType.STRING] = '',
+		options?: ParamOptionsByTypeMap[ParamType.STRING]
+	) {
 		return new ParamTemplate<ParamType.STRING>(ParamType.STRING, init_value, options);
 	}
-	static VECTOR2(init_value: ParamInitValuesTypeMap[ParamType.VECTOR2], options?: ParamOptions) {
+	static VECTOR2(
+		init_value: ParamInitValuesTypeMap[ParamType.VECTOR2],
+		options?: ParamOptionsByTypeMap[ParamType.VECTOR2]
+	) {
 		return new ParamTemplate<ParamType.VECTOR2>(ParamType.VECTOR2, init_value, options);
 	}
-	static VECTOR3(init_value: ParamInitValuesTypeMap[ParamType.VECTOR3], options?: ParamOptions) {
+	static VECTOR3(
+		init_value: ParamInitValuesTypeMap[ParamType.VECTOR3],
+		options?: ParamOptionsByTypeMap[ParamType.VECTOR3]
+	) {
 		return new ParamTemplate<ParamType.VECTOR3>(ParamType.VECTOR3, init_value, options);
 	}
-	static VECTOR4(init_value: ParamInitValuesTypeMap[ParamType.VECTOR4], options?: ParamOptions) {
+	static VECTOR4(
+		init_value: ParamInitValuesTypeMap[ParamType.VECTOR4],
+		options?: ParamOptionsByTypeMap[ParamType.VECTOR4]
+	) {
 		return new ParamTemplate<ParamType.VECTOR4>(ParamType.VECTOR4, init_value, options);
 	}
 }

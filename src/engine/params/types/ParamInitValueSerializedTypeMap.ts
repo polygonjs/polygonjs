@@ -20,6 +20,7 @@ export interface ParamInitValueSerializedTypeMap extends ParamInitValueSerialize
 	[ParamType.BUTTON]: ParamInitValuesTypeMap[ParamType.BUTTON];
 	[ParamType.COLOR]: StringOrNumber3;
 	[ParamType.FLOAT]: ParamInitValuesTypeMap[ParamType.FLOAT];
+	[ParamType.FOLDER]: ParamInitValuesTypeMap[ParamType.FOLDER];
 	[ParamType.INTEGER]: ParamInitValuesTypeMap[ParamType.INTEGER];
 	[ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
 	[ParamType.RAMP]: RampValueJson;

@@ -10,13 +10,7 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-// interface OperatorPathParamVisitor extends TypedParamVisitor {
-// 	visit_operator_path_param: (param: OperatorPathParam) => any;
-// }
-
 export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
-	// private _raw_input: string = '';
-	// _path: string;
 	private _found_node: BaseNodeType | null = null;
 
 	static type() {
@@ -46,31 +40,13 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	get is_default(): boolean {
 		return this._value == this.default_value;
 	}
-	// accepts_visitor(visitor: OperatorPathParamVisitor) {
-	// 	return visitor.visit_operator_path_param(this);
-	// }
 	protected process_raw_input() {
 		this._value = this._raw_input;
 		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 	}
-	// convert_value(v) {
-	// 	return v
-	// }
-	// is_value_expression(v) {
-	// 	return false
-	// }
-	// set_path(path: string) {
-	// 	this._path = path;
-	// }
-	// path() {
-	// 	return this._path;
-	// }
-	// set(raw_input: string) {
-	// 	this._raw_input = raw_input;
-	// }
 
 	protected async process_computation() {
-		const path = this._value; //await this.eval_raw(); //path=> {
+		const path = this._value;
 		let node = null;
 
 		if (path != null && path !== '') {
@@ -104,23 +80,7 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 				}
 			}
 		}
-
-		// return path;
-		//});
 	}
-
-	// TODO: remove
-	// find_node(callback){
-	// 	this.eval_raw(path=> {
-	// 		let node = null;
-
-	// 		if ((path != null) && (path !== '')) {
-	// 			node = CoreWalker.find_node(this.node(), path);
-	// 		}
-
-	// 		callback(node);
-	// 	});
-	// }
 
 	found_node() {
 		return this._found_node;

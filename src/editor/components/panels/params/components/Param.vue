@@ -39,6 +39,7 @@ import BooleanField from './fields/Boolean.vue';
 import ButtonField from './fields/Button.vue';
 import ColorField from './fields/Color.vue';
 import FloatField from './fields/Float.vue';
+import FolderField from './fields/Folder.vue';
 import IntegerField from './fields/Integer.vue';
 import NumericField from './fields/Numeric.vue';
 import OperatorPathField from './fields/OperatorPath.vue';
@@ -73,6 +74,7 @@ export default createComponent({
 		ButtonField,
 		ColorField,
 		FloatField,
+		FolderField,
 		IntegerField,
 		NumericField,
 		OperatorPathField,
