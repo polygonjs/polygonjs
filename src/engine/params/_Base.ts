@@ -40,7 +40,7 @@ import {ExpressionController} from './utils/ExpressionController';
 import {EmitController} from './utils/EmitController';
 import {ParamSerializer} from './utils/Serializer';
 import {StatesController} from './utils/StatesController';
-import {UIData} from './utils/UIData';
+// import {UIData} from './utils/UIData';
 
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
@@ -95,10 +95,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get states(): StatesController {
 		return (this._states = this._states || new StatesController(this));
 	}
-	private _ui_data: UIData | undefined;
-	get ui_data(): UIData {
-		return (this._ui_data = this._ui_data || new UIData(this.scene, this));
-	}
+	// private _ui_data: UIData | undefined;
+	// get ui_data(): UIData {
+	// 	return (this._ui_data = this._ui_data || new UIData(this.scene, this));
+	// }
 
 	constructor(scene: PolyScene) {
 		super(scene, 'BaseParam');

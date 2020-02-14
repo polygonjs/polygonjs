@@ -75,7 +75,7 @@ export class ParamsController {
 	private _params_node: CoreGraphNode | undefined;
 	// private _params_eval_key: string;
 	private _params_added_since_last_params_eval: boolean = false;
-	private _current_param_folder_name: string | undefined;
+	// private _current_param_folder_name: string | undefined;
 
 	constructor(protected node: BaseNodeType) {}
 
@@ -96,7 +96,7 @@ export class ParamsController {
 		this.init_from_params_config();
 		this.node.create_params();
 		this._update_caches();
-		this._create_params_ui_data_dependencies();
+		// this._create_params_ui_data_dependencies();
 		this.init_param_accessors();
 		this._param_create_mode = false;
 
@@ -314,7 +314,7 @@ export class ParamsController {
 			param.init_components();
 			param.set_node(this.node);
 			// param.initialize();
-			param.ui_data.set_folder_name(this.current_param_folder_name());
+			// param.ui_data.set_folder_name(this.current_param_folder_name());
 
 			this._params_by_name[param.name] = param as BaseParamType;
 			// this._params_list.push(param);
@@ -444,21 +444,21 @@ export class ParamsController {
 		// return this._params_eval_key
 	}
 
-	_create_params_ui_data_dependencies() {
-		const dependent_params = this._params_list.filter((p) => p.options.ui_data_depends_on_other_params());
+	// private _create_params_ui_data_dependencies() {
+	// 	const dependent_params = this._params_list.filter((p) => p.options.ui_data_depends_on_other_params());
 
-		dependent_params.forEach((p) => {
-			p.options.set_ui_data_dependency();
-		});
-	}
+	// 	dependent_params.forEach((p) => {
+	// 		p.options.set_ui_data_dependency();
+	// 	});
+	// }
 
-	within_param_folder(folder_name: string, callback: () => void) {
-		const previous_folder_name = this._current_param_folder_name;
-		this._current_param_folder_name = folder_name;
-		callback();
-		this._current_param_folder_name = previous_folder_name;
-	}
-	current_param_folder_name(): string | undefined {
-		return this._current_param_folder_name;
-	}
+	// within_param_folder(folder_name: string, callback: () => void) {
+	// 	const previous_folder_name = this._current_param_folder_name;
+	// 	this._current_param_folder_name = folder_name;
+	// 	callback();
+	// 	this._current_param_folder_name = previous_folder_name;
+	// }
+	// current_param_folder_name(): string | undefined {
+	// 	return this._current_param_folder_name;
+	// }
 }

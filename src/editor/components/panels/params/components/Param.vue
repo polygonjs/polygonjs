@@ -102,6 +102,7 @@ export default createComponent({
 		const displays_expression_result = ref(false);
 
 		onMounted(() => {
+			param.options.set_ui_data_dependency();
 			param.options.update_visibility();
 		});
 

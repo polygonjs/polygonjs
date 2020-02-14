@@ -82,6 +82,8 @@ class StoreControllerClass {
 					return this.engine.update_param_expression(emitter.graph_node_id);
 				case ParamEvent.ERROR_UPDATED:
 					return this.engine.update_param_error(emitter.graph_node_id);
+				case ParamEvent.VISIBLE_UPDATED:
+					return this.engine.update_param_visible_state(emitter.graph_node_id);
 			}
 		}
 		console.warn('event not processed', emitter, event_name, data);

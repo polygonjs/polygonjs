@@ -121,6 +121,9 @@ export class EngineStoreControllerClass {
 	update_param_error(param_id: string) {
 		this._commit(EngineMutation.PARAM_ERROR_UPDATED, param_id);
 	}
+	update_param_visible_state(param_id: string) {
+		this._commit(EngineMutation.PARAM_VISIBLE_STATE, param_id);
+	}
 
 	private _commit<T extends EngineMutation>(mutation: T, arg: EnginePayloadByMutationMap[T]) {
 		this._store.commit(`engine/${mutation}`, arg);

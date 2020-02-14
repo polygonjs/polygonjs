@@ -30,8 +30,8 @@ export class ParamSerializer {
 			graph_node_id: this.param.graph_node_id,
 			// is_dirty: this.param.is_dirty,
 			error_message: this.error_message(),
-			is_visible: this.param.options.is_visible(),
-			folder_name: this.param.ui_data.folder_name,
+			is_visible: this.is_visible(),
+			// folder_name: this.param.ui_data.folder_name,
 			components: undefined,
 		};
 
@@ -53,5 +53,8 @@ export class ParamSerializer {
 	}
 	error_message() {
 		return this.param.states.error.message;
+	}
+	is_visible() {
+		return this.param.options.is_visible;
 	}
 }

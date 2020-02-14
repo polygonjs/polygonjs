@@ -20,6 +20,29 @@ import {BaseMatNodeType} from 'src/engine/nodes/mat/_Base';
 // import {File} from 'src/Engine/Node/Cop/File'
 
 // import {ScreenQuad} from '../Camera/ScreenQuad'
+import {NodeContext} from 'src/engine/poly/NodeContext';
+
+import {ParamConfig} from '../../../../utils/params/ParamsConfig';
+export function CameraBackgroundParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		// background = ParamConfig.FOLDER();
+		use_background = ParamConfig.BOOLEAN(0);
+		use_material = ParamConfig.BOOLEAN(0, {
+			visible_if: {use_background: true},
+		});
+		background_color = ParamConfig.COLOR([0, 0, 0], {
+			visible_if: {use_background: true, use_material: false},
+		});
+		background_material = ParamConfig.OPERATOR_PATH('', {
+			visible_if: {use_background: true, use_material: true},
+			node_selection: {context: NodeContext.MAT},
+			dependent_on_found_node: false,
+		});
+		background_ratio = ParamConfig.FLOAT(1, {
+			visible_if: {use_background: true, use_material: true},
+		});
+	};
+}
 
 export class BaseBackgroundController {
 	// private _param_use_background: boolean;

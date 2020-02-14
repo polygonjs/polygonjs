@@ -17,7 +17,6 @@ import {PostProcessController} from './utils/cameras/PostProcessController';
 // import {File} from 'src/Engine/Node/Cop/File'
 import {ThreejsViewer} from 'src/engine/viewers/Threejs';
 import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
-import {ParamType} from 'src/engine/poly/ParamType';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 
 export interface OrthoOrPerspCamera extends Camera {
@@ -34,47 +33,50 @@ export const BASE_CAMERA_DEFAULT = {
 	far: 100.0,
 };
 
-import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
-export class BaseCameraObjParamsConfig extends NodeParamsConfig {
-	transform = ParamConfig.FOLDER();
-	controls = ParamConfig.OPERATOR_PATH('', {
-		node_selection: {
-			context: NodeContext.EVENT,
-		},
-	});
-	// add transform params
-	t = ParamConfig.VECTOR3([0, 0, 0]);
-	r = ParamConfig.VECTOR3([0, 0, 0]);
-	s = ParamConfig.VECTOR3([1, 1, 1]);
-	scale = ParamConfig.FLOAT(1);
-	target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
-	near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
-	far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
-	aspect = ParamConfig.FLOAT(1);
-	lock_width = ParamConfig.BOOLEAN(1);
-	look_at = ParamConfig.OPERATOR_PATH('');
+import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
+import {CameraBackgroundParamConfig} from './utils/cameras/background/_BaseController';
+import {LayerParamConfig} from './utils/LayersController';
 
-	render = ParamConfig.FOLDER();
-	// add layer params
-	// add background params
-	use_background = ParamConfig.BOOLEAN(0);
-	use_material = ParamConfig.BOOLEAN(0, {
-		visible_if: {use_background: true},
-	});
-	background_color = ParamConfig.COLOR([0, 0, 0], {
-		visible_if: {use_background: true, use_material: false},
-	});
-	background_material = ParamConfig.OPERATOR_PATH('', {
-		visible_if: {use_background: true, use_material: true},
-		node_selection: {context: NodeContext.MAT},
-		dependent_on_found_node: false,
-	});
-	background_ratio = ParamConfig.FLOAT(1, {
-		visible_if: {use_background: true, use_material: true},
-	});
-	// add post params
+import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../_Base';
+
+export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		transform = ParamConfig.FOLDER();
+		test = ParamConfig.BOOLEAN(0);
+		controls = ParamConfig.OPERATOR_PATH('', {
+			node_selection: {
+				context: NodeContext.EVENT,
+			},
+			visible_if: {test: 1},
+		});
+		// add transform params
+		t = ParamConfig.VECTOR3([0, 0, 0]);
+		r = ParamConfig.VECTOR3([0, 0, 0]);
+		s = ParamConfig.VECTOR3([1, 1, 1]);
+		scale = ParamConfig.FLOAT(1);
+		target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
+		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
+		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
+		aspect = ParamConfig.FLOAT(1);
+		lock_width = ParamConfig.BOOLEAN(1);
+		look_at = ParamConfig.OPERATOR_PATH('');
+
+		set_master_camera = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType, param: BaseParamType) => {
+				BaseCameraObjNodeClass.PARAM_CALLBACK_set_master_camera(node as BaseCameraObjNodeType);
+			},
+		});
+
+		render = ParamConfig.FOLDER();
+	};
 }
+
+export class BaseCameraObjParamsConfig extends CameraPostProcessParamConfig(
+	CameraBackgroundParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig)))
+) {}
 
 export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
 	O,
@@ -119,33 +121,30 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		});
 	}
 
-	create_common_params() {
-		// this.within_param_folder('transform', () => {
-		// 	// this.add_param(ParamType.OPERATOR_PATH, 'controls', '', {
-		// 	// 	node_selection: {
-		// 	// 		context: NodeContext.EVENT,
-		// 	// 	},
-		// 	// });
-		// 	// CoreTransform.create_params(this); // removed since they are now added Persp Camera
-		// 	// this.add_param( ParamType.TOGGLE, 'is_updating', 0, {cook: false, hidden: true}); //, hidden: true} )
-		// 	// this.add_param(ParamType.VECTOR3, 'target', [0, 0, 0], {cook: false}); //, hidden: true} )
-		// });
+	// create_common_params() {
+	// 	// this.within_param_folder('transform', () => {
+	// 	// 	// this.add_param(ParamType.OPERATOR_PATH, 'controls', '', {
+	// 	// 	// 	node_selection: {
+	// 	// 	// 		context: NodeContext.EVENT,
+	// 	// 	// 	},
+	// 	// 	// });
+	// 	// 	// CoreTransform.create_params(this); // removed since they are now added Persp Camera
+	// 	// 	// this.add_param( ParamType.TOGGLE, 'is_updating', 0, {cook: false, hidden: true}); //, hidden: true} )
+	// 	// 	// this.add_param(ParamType.VECTOR3, 'target', [0, 0, 0], {cook: false}); //, hidden: true} )
+	// 	// });
+	// 	// this.within_param_folder('render', () => {
+	// 	// this.layers_controller.add_params();
+	// 	// this.add_param(ParamType.FLOAT, 'near', BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
+	// 	// this.add_param(ParamType.FLOAT, 'far', BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
+	// 	// this.add_param(ParamType.BOOLEAN, 'lock_width', 1);
+	// 	// });
+	// 	// this.background_controller.add_params();
+	// 	// this.post_process_controller.add_params();
+	// }
 
-		// this.within_param_folder('render', () => {
-		this.layers_controller.add_params();
-
-		// this.add_param(ParamType.FLOAT, 'near', BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
-		// this.add_param(ParamType.FLOAT, 'far', BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
-		// this.add_param(ParamType.BOOLEAN, 'lock_width', 1);
-		// });
-
-		// this.background_controller.add_params();
-		this.post_process_controller.add_params();
-	}
-
-	create_player_camera_params() {
-		this.add_param(ParamType.BUTTON, 'set_master_camera', null, {callback: this.set_as_master_camera.bind(this)});
-	}
+	// create_player_camera_params() {
+	// 	this.add_param(ParamType.BUTTON, 'set_master_camera', null, {callback: this.set_as_master_camera.bind(this)});
+	// }
 	// is_updating():boolean{
 	// 	return this.param('is_updating').value()
 	// }
@@ -190,7 +189,9 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	update_camera() {}
 
 	//
-
+	static PARAM_CALLBACK_set_master_camera(node: BaseCameraObjNodeType) {
+		node.set_as_master_camera();
+	}
 	set_as_master_camera() {
 		this.scene.cameras_controller.set_master_camera_node_path(this.full_path());
 	}

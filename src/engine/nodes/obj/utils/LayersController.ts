@@ -1,17 +1,27 @@
 import {BaseObjNodeType} from 'src/engine/nodes/obj/_Base';
-import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from 'src/engine/poly/ParamType';
 
 const PARAM_NAME = 'layer';
+
+import {ParamConfig} from '../../utils/params/ParamsConfig';
+export function LayerParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		layer = ParamConfig.INTEGER(0, {
+			range: [0, 31],
+			range_locked: [true, true],
+		});
+	};
+}
 
 export class LayersController {
 	constructor(private node: BaseObjNodeType) {}
 
-	add_params() {
-		this.node.add_param(ParamType.INTEGER, PARAM_NAME, 0, {
-			range: [0, 31],
-			range_locked: [true, true],
-		});
-	}
+	// add_params() {
+	// 	this.node.add_param(ParamType.INTEGER, PARAM_NAME, 0, {
+	// 		range: [0, 31],
+	// 		range_locked: [true, true],
+	// 	});
+	// }
 
 	update() {
 		const object = this.node.object;

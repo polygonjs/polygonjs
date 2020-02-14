@@ -45,6 +45,7 @@ export enum EngineMutation {
 	PARAM_VALUE_UPDATED = 'PARAM_VALUE_UPDATED',
 	PARAM_EXPRESSION_UPDATED = 'PARAM_EXPRESSION_UPDATED',
 	PARAM_ERROR_UPDATED = 'PARAM_ERROR_UPDATED',
+	PARAM_VISIBLE_STATE = 'PARAM_VISIBLE_STATE',
 }
 type EnginePayloadByMutationMapGeneric = {[key in EngineMutation]: any};
 export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGeneric {
@@ -71,6 +72,7 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 	[EngineMutation.PARAM_VALUE_UPDATED]: string;
 	[EngineMutation.PARAM_EXPRESSION_UPDATED]: string;
 	[EngineMutation.PARAM_ERROR_UPDATED]: string;
+	[EngineMutation.PARAM_VISIBLE_STATE]: string;
 }
 
 // actions payloads
@@ -520,6 +522,17 @@ export const EngineStoreModule = {
 				}
 			}
 		},
+		[EngineMutation.PARAM_VISIBLE_STATE](
+			state: EngineState,
+			param_id: EnginePayloadByMutationMap[EngineMutation.PARAM_VISIBLE_STATE]
+		) {
+			if (state.params_by_graph_node_id[param_id]) {
+				const param = StoreController.engine.param(param_id);
+				if (param) {
+					state.params_by_graph_node_id[param_id].is_visible = param.serializer.is_visible();
+				}
+			}
+		},
 		param_deleted(state: EngineState, payload: EnginePayloadParamEmitter) {
 			const param = payload['emitter'];
 			Vue.delete(state.params_by_graph_node_id, param.graph_node_id);
@@ -531,12 +544,12 @@ export const EngineStoreModule = {
 		// 	if param? && state.params_by_graph_node_id[param.graph_node_id()]?
 		// 		state.params_by_graph_node_id[param.graph_node_id()].is_dirty = param.is_dirty()
 
-		param_visible_updated(state: EngineState, payload: EnginePayloadParamEmitter) {
-			const param = payload['emitter'];
+		// param_visible_updated(state: EngineState, payload: EnginePayloadParamEmitter) {
+		// 	const param = payload['emitter'];
 
-			if (param && state.params_by_graph_node_id[param.graph_node_id]) {
-				state.params_by_graph_node_id[param.graph_node_id].is_visible = param.options.is_visible();
-			}
-		},
+		// 	if (param && state.params_by_graph_node_id[param.graph_node_id]) {
+		// 		state.params_by_graph_node_id[param.graph_node_id].is_visible = param.options.is_visible();
+		// 	}
+		// },
 	},
 };

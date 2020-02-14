@@ -6,6 +6,7 @@ import lodash_isEqual from 'lodash/isEqual';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
 const CALLBACK_OPTION = 'callback';
@@ -399,11 +400,11 @@ export class OptionsController {
 	}
 
 	// visible
-	is_hidden(): boolean {
+	get is_hidden(): boolean {
 		return this._options[HIDDEN_OPTION] === true || this._programatic_visible_state === false;
 	}
-	is_visible(): boolean {
-		return !this.is_hidden();
+	get is_visible(): boolean {
+		return !this.is_hidden;
 	}
 	set_visible_state(state: boolean) {
 		this._options[HIDDEN_OPTION] = !state;
@@ -443,10 +444,27 @@ export class OptionsController {
 			})
 		);
 	}
+
+	private _update_visibility_and_remove_dirty_bound = this.update_visibility_and_remove_dirty.bind(this);
+	private _visibility_graph_node: CoreGraphNode | undefined;
+	private _ui_data_dependency_set: boolean = false;
 	set_ui_data_dependency() {
-		this.visibility_predecessors().forEach((predecessor) => {
-			this.param.ui_data.add_graph_input(predecessor);
-		});
+		if (this._ui_data_dependency_set) {
+			return;
+		}
+		this._ui_data_dependency_set = true;
+		const predecessors = this.visibility_predecessors();
+		if (predecessors.length > 0) {
+			this._visibility_graph_node = new CoreGraphNode(this.param.scene, 'param_visibility');
+			for (let predecessor of predecessors) {
+				this._visibility_graph_node.add_graph_input(predecessor);
+			}
+			this._visibility_graph_node.add_post_dirty_hook(this._update_visibility_and_remove_dirty_bound);
+		}
+	}
+	private update_visibility_and_remove_dirty() {
+		this.update_visibility();
+		this.param.remove_dirty_state();
 	}
 
 	async update_visibility() {

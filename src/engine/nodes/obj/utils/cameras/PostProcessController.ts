@@ -20,6 +20,40 @@ interface DisposablePass extends Pass {
 	dispose: () => void;
 }
 
+function boolean_param_options(index: number) {
+	return {
+		visible_if: {
+			do_post_process: 1,
+		},
+	};
+}
+function operator_path_param_options(index: number) {
+	return {
+		node_selection: {context: NodeContext.POST},
+		visible_if: {
+			do_post_process: 1,
+			[`use_post_process_node${index}`]: 1,
+		},
+	};
+}
+
+import {ParamConfig} from '../../../utils/params/ParamsConfig';
+export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		post_process = ParamConfig.FOLDER();
+
+		do_post_process = ParamConfig.BOOLEAN(0);
+		use_post_process_node0 = ParamConfig.BOOLEAN(0, boolean_param_options(0));
+		post_process_node0 = ParamConfig.OPERATOR_PATH('', operator_path_param_options(0));
+		use_post_process_node1 = ParamConfig.BOOLEAN(0, boolean_param_options(1));
+		post_process_node1 = ParamConfig.OPERATOR_PATH('', operator_path_param_options(1));
+		use_post_process_node2 = ParamConfig.BOOLEAN(0, boolean_param_options(2));
+		post_process_node2 = ParamConfig.OPERATOR_PATH('', operator_path_param_options(2));
+		use_post_process_node3 = ParamConfig.BOOLEAN(0, boolean_param_options(3));
+		post_process_node3 = ParamConfig.OPERATOR_PATH('', operator_path_param_options(3));
+	};
+}
+
 export class PostProcessController {
 	// private _param_do_post_process: boolean;
 	// private _param_do_sao: boolean;
