@@ -18,7 +18,7 @@ export class EditorClipboardStoreControllerClass {
 
 	// getters
 	get local_state(): EditorClipboardState {
-		return (<unknown>(this._store.state.editor as any).context_menu) as EditorClipboardState;
+		return (<unknown>(this._store.state.editor as any).clipboard) as EditorClipboardState;
 	}
 	param_id(): string | null {
 		return this.local_state.param_id;

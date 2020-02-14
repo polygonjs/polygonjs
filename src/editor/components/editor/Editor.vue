@@ -27,7 +27,7 @@
 			)
 		PlayBar
 		//- FooterBar
-		//- NumericSlider
+		NumericSlider
 
 		NodeContextMenu
 		ParamContextMenu
@@ -67,7 +67,7 @@ import PlayBar from './widgets/PlayBar.vue';
 // import FooterBar from './Bar/Footer'
 // import ParamNodeSelector from './Widget/ParamNodeSelector'
 import PanelNodeSelector from './widgets/PanelNodeSelector.vue';
-// import NumericSlider from './Widget/NumericSlider'
+import NumericSlider from '../../components/widgets/NumericSlider.vue';
 import NodeContextMenu from './widgets/NodeContextMenu.vue';
 import ParamContextMenu from './widgets/ParamContextMenu.vue';
 // import UploadMenu from './Widget/UploadMenu'
@@ -97,7 +97,7 @@ export default createComponent({
 		PanelNodeSelector,
 		PlayBar,
 		Retractable,
-		// NumericSlider,
+		NumericSlider,
 		TopBar,
 		// UploadMenu,
 	},

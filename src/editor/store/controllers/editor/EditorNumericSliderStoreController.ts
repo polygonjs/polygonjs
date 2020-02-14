@@ -22,7 +22,7 @@ export class EditorNumericSliderStoreControllerClass {
 
 	// getters
 	get local_state(): EditorNumericSliderState {
-		return (<unknown>(this._store.state.editor as any).dialog_prompt) as EditorNumericSliderState;
+		return (<unknown>(this._store.state.editor as any).numeric_slider) as EditorNumericSliderState;
 	}
 	param_id(): string | null {
 		return this.local_state.param_id;

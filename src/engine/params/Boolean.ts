@@ -20,8 +20,17 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 			return this.convert(this.default_value) || false;
 		}
 	}
+	get raw_input_serialized() {
+		return this._raw_input;
+	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.BOOLEAN],
+		raw_input2: ParamInitValuesTypeMap[ParamType.BOOLEAN]
+	) {
+		return raw_input1 == raw_input2;
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.BOOLEAN], val2: ParamValuesTypeMap[ParamType.BOOLEAN]) {
 		return val1 == val2;

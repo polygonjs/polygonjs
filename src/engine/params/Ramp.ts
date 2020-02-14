@@ -13,6 +13,7 @@ import {RampValue, RampPoint, RampValueJson, RampInterpolation} from './ramp/Ram
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
+import {ParamEvent} from '../poly/ParamEvent';
 
 // interface RampParamVisitor extends TypedParamVisitor {
 // 	visit_ramp_param: (param: RampParam) => any;
@@ -36,8 +37,40 @@ export class RampParam extends Single<ParamType.RAMP> {
 			return this.default_value;
 		}
 	}
+	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
+		if (raw_input instanceof RampValue) {
+			return raw_input.clone();
+		} else {
+			return RampValue.from_json(raw_input).to_json();
+		}
+	}
+	get raw_input_serialized() {
+		if (this._raw_input instanceof RampValue) {
+			return this._raw_input.to_json();
+		} else {
+			return RampValue.from_json(this._raw_input).to_json();
+		}
+	}
 	get value_serialized() {
 		return this.value.to_json();
+	}
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.RAMP],
+		raw_input2: ParamInitValuesTypeMap[ParamType.RAMP]
+	) {
+		if (raw_input1 instanceof RampValue) {
+			if (raw_input2 instanceof RampValue) {
+				return raw_input1.is_equal(raw_input2);
+			} else {
+				return raw_input1.is_equal_json(raw_input2);
+			}
+		} else {
+			if (raw_input2 instanceof RampValue) {
+				return raw_input2.is_equal_json(raw_input1);
+			} else {
+				return RampValue.are_json_equal(raw_input1, raw_input2);
+			}
+		}
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
 		return val1.is_equal(val2);
@@ -56,20 +89,22 @@ export class RampParam extends Single<ParamType.RAMP> {
 			return this.value.is_equal_json(this.default_value);
 		}
 	}
-	set(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]): void {
-		if (raw_input instanceof RampValue) {
+	protected process_raw_input() {
+		if (this._raw_input instanceof RampValue) {
 			if (!this._value) {
-				this._value = raw_input.clone();
+				this._value = this._raw_input;
 			} else {
-				this._value.copy(raw_input);
+				this._value.copy(this._raw_input);
 			}
 		} else {
 			if (!this._value) {
-				this._value = RampValue.from_json(raw_input);
+				this._value = RampValue.from_json(this._raw_input);
 			} else {
-				this._value.from_json(raw_input);
+				this._value.from_json(this._raw_input);
 			}
 		}
+
+		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 	}
 
 	// convert_value(v) {

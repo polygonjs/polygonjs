@@ -5,8 +5,10 @@ import {CoreWalker} from 'src/core/Walker';
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+// import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
+import {ParamEvent} from '../poly/ParamEvent';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 // interface OperatorPathParamVisitor extends TypedParamVisitor {
 // 	visit_operator_path_param: (param: OperatorPathParam) => any;
@@ -23,8 +25,17 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	get default_value_serialized() {
 		return this.default_value;
 	}
+	get raw_input_serialized() {
+		return `${this._raw_input}`;
+	}
 	get value_serialized() {
-		return this.value;
+		return `${this.value}`;
+	}
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
+		raw_input2: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH]
+	) {
+		return raw_input1 == raw_input2;
 	}
 	static are_values_equal(
 		val1: ParamValuesTypeMap[ParamType.OPERATOR_PATH],
@@ -38,8 +49,9 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 	// accepts_visitor(visitor: OperatorPathParamVisitor) {
 	// 	return visitor.visit_operator_path_param(this);
 	// }
-	set(raw_input: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH]): void {
-		this._value = raw_input;
+	protected process_raw_input() {
+		this._value = this._raw_input;
+		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 	}
 	// convert_value(v) {
 	// 	return v

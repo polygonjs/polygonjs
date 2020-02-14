@@ -22,7 +22,7 @@ export class EditorPanelNodeSelectorStoreControllerClass {
 
 	// getters
 	get local_state(): EditorPanelNodeSelectorState {
-		return (<unknown>(this._store.state.editor as any).dialog_prompt) as EditorPanelNodeSelectorState;
+		return (<unknown>(this._store.state.editor as any).panel_node_selector) as EditorPanelNodeSelectorState;
 	}
 	param_id(): string | null {
 		return this.local_state.param_id;

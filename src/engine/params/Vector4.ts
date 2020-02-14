@@ -5,6 +5,7 @@ import {Vector4} from 'three/src/math/Vector4';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 const COMPONENT_NAMES_VECTOR4 = ['x', 'y', 'z', 'w'];
 export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
@@ -26,8 +27,63 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			return this.default_value.toArray() as Number4;
 		}
 	}
+	get raw_input_serialized() {
+		if (this._raw_input instanceof Vector4) {
+			return this._raw_input.toArray() as Number4;
+		} else {
+			const new_array: StringOrNumber4 = [
+				this._raw_input[0],
+				this._raw_input[1],
+				this._raw_input[2],
+				this._raw_input[3],
+			];
+			return new_array;
+		}
+	}
 	get value_serialized() {
 		return this.value.toArray() as Number4;
+	}
+
+	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
+		if (raw_input instanceof Vector4) {
+			return raw_input.clone();
+		} else {
+			const new_array: StringOrNumber4 = [raw_input[0], raw_input[1], raw_input[2], raw_input[3]];
+			return new_array;
+		}
+	}
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR4],
+		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR4]
+	) {
+		if (raw_input1 instanceof Vector4) {
+			if (raw_input2 instanceof Vector4) {
+				return raw_input1.equals(raw_input2);
+			} else {
+				return (
+					raw_input1.x == raw_input2[0] &&
+					raw_input1.y == raw_input2[1] &&
+					raw_input1.z == raw_input2[2] &&
+					raw_input1.w == raw_input2[3]
+				);
+			}
+		} else {
+			if (raw_input2 instanceof Vector4) {
+				return (
+					raw_input1[0] == raw_input2.x &&
+					raw_input1[1] == raw_input2.y &&
+					raw_input1[2] == raw_input2.z &&
+					raw_input1[3] == raw_input2.w
+				);
+			} else {
+				return (
+					raw_input1[0] == raw_input2[0] &&
+					raw_input1[1] == raw_input2[1] &&
+					raw_input1[2] == raw_input2[2] &&
+					raw_input1[3] == raw_input2[3]
+				);
+			}
+		}
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR4], val2: ParamValuesTypeMap[ParamType.VECTOR4]) {
 		return val1.equals(val2);

@@ -60,7 +60,7 @@ export default createComponent({
 	components: {Numeric},
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as BooleanParam;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		// const param_result = ref(false)
 

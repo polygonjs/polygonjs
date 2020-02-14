@@ -68,7 +68,7 @@ export default createComponent({
 
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)!;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		const select = ref<HTMLSelectElement | null>(null);
 

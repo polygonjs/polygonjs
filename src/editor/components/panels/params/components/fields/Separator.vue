@@ -21,7 +21,7 @@ export default createComponent({
 	// mixins: [Field]
 	setup(props: ISetupFieldCommonProps) {
 		// StoreController.engine.param(props.json_param.graph_node_id)! as SeparatorParam;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		return {
 			...setup_field_common,

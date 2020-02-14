@@ -41,6 +41,7 @@ export enum EngineMutation {
 	NODE_NAME_UPDATED = 'NODE_NAME_UPDATED',
 	NODE_CREATED = 'NODE_CREATED',
 	// param
+	PARAM_RAW_INPUT_UPDATED = 'PARAM_RAW_INPUT_UPDATED',
 	PARAM_VALUE_UPDATED = 'PARAM_VALUE_UPDATED',
 	PARAM_EXPRESSION_UPDATED = 'PARAM_EXPRESSION_UPDATED',
 	PARAM_ERROR_UPDATED = 'PARAM_ERROR_UPDATED',
@@ -66,6 +67,7 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 		child_node_json: EngineNodeData;
 	};
 	// param
+	[EngineMutation.PARAM_RAW_INPUT_UPDATED]: string;
 	[EngineMutation.PARAM_VALUE_UPDATED]: string;
 	[EngineMutation.PARAM_EXPRESSION_UPDATED]: string;
 	[EngineMutation.PARAM_ERROR_UPDATED]: string;
@@ -474,7 +476,17 @@ export const EngineStoreModule = {
 		// 	// 	Vue.set(current, 'spare_params', node.serializer.to_json_spare_params());
 		// 	// }
 		// },
-
+		[EngineMutation.PARAM_RAW_INPUT_UPDATED](
+			state: EngineState,
+			param_id: EnginePayloadByMutationMap[EngineMutation.PARAM_RAW_INPUT_UPDATED]
+		) {
+			if (state.params_by_graph_node_id[param_id]) {
+				const param = StoreController.engine.param(param_id);
+				if (param) {
+					Vue.set(state.params_by_graph_node_id[param_id], 'raw_input', param.serializer.raw_input());
+				}
+			}
+		},
 		[EngineMutation.PARAM_VALUE_UPDATED](
 			state: EngineState,
 			param_id: EnginePayloadByMutationMap[EngineMutation.PARAM_VALUE_UPDATED]

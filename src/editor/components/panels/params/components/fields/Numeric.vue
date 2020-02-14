@@ -22,7 +22,7 @@
 
 		input.value(
 			:class = 'input_value_class_object'
-			:value = 'value_or_expression'
+			:value = 'raw_input'
 			@keypress.stop = ''
 			@keyup.stop = ''
 			@keydown.stop = ''
@@ -64,7 +64,7 @@ export default createComponent({
 		const param = StoreController.engine.param(props.json_param.graph_node_id)!;
 
 		return {
-			...SetupFieldCommon(props.json_param),
+			...SetupFieldCommon(props),
 			...SetupGlobalSliderOwner(props.json_param),
 			...SetupContextMenu(props.json_param, param),
 		};

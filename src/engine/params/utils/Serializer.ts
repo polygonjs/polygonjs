@@ -1,9 +1,13 @@
 import {BaseParamType} from '../_Base';
+import {ParamValueSerializedTypeMap} from '../types/ParamValueSerializedTypeMap';
+import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamInitValueSerializedTypeMap} from '../types/ParamInitValueSerializedMap';
 
 export interface ParamSerializerData {
 	name: string;
 	type: string;
-	value: any;
+	raw_input: ParamInitValueSerializedTypeMap[ParamType];
+	value: ParamValueSerializedTypeMap[ParamType];
 	expression?: string;
 	graph_node_id: string;
 	// is_dirty: boolean;
@@ -20,6 +24,7 @@ export class ParamSerializer {
 		const data: ParamSerializerData = {
 			name: this.param.name,
 			type: this.param.type,
+			raw_input: this.raw_input(),
 			value: this.value(),
 			expression: this.expression(),
 			graph_node_id: this.param.graph_node_id,
@@ -37,6 +42,9 @@ export class ParamSerializer {
 		return data;
 	}
 
+	raw_input() {
+		return this.param.raw_input_serialized;
+	}
 	value() {
 		return this.param.value_serialized;
 	}

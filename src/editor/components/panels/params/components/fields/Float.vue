@@ -15,7 +15,7 @@
 				//- @mouseup = 'ensure_no_paste_from_middle_click'
 				input.value(
 					:class = 'input_value_class_object'
-					:value = 'value_or_expression'
+					:value = 'raw_input'
 					@keypress.stop = ''
 					@keyup.stop = ''
 					@keydown.stop = ''
@@ -71,7 +71,7 @@ export default createComponent({
 	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as FloatParam;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		const text_input_focused = ref(false);
 

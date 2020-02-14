@@ -109,6 +109,9 @@ export class EngineStoreControllerClass {
 	}
 
 	// params
+	update_param_raw_input(param_id: string) {
+		this._commit(EngineMutation.PARAM_RAW_INPUT_UPDATED, param_id);
+	}
 	update_param_value(param_id: string) {
 		this._commit(EngineMutation.PARAM_VALUE_UPDATED, param_id);
 	}

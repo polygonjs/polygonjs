@@ -40,7 +40,7 @@ const FLOAT_INCREMENTS = [0.1, 0.01, 0.001, 0.0001];
 const DIVIDER = 20;
 
 import {ParamSetCommand} from '../../history/commands/ParamSet';
-import {NumericParamValue} from '../../../engine/nodes/utils/params/ParamsController';
+import {NumericParamValue} from '../../../engine/params/types/NumericParamValue';
 import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
@@ -68,8 +68,8 @@ export default createComponent({
 		const main_style_object = computed(() => {
 			const position = StoreController.editor.numeric_slider.position();
 			return {
-				top: `${position.x}px`,
-				left: `${position.y}px`,
+				left: `${position.x}px`,
+				top: `${position.y}px`,
 			};
 		});
 
@@ -255,12 +255,14 @@ export default createComponent({
 		}
 
 		return {
+			display,
 			main_style_object,
 			starters_container_class_object,
 			increment_starter_class_objects,
 			current_increment_index,
 			increment_starter_class_actives,
 			displayed_value,
+			increments,
 			// functions
 			set_current_increment_index,
 		};

@@ -38,6 +38,7 @@ export const EditorNumericSliderStateModule = {
 			state.position.x = payload.position.x;
 			state.position.y = payload.position.y;
 		},
+
 		[EditorNumericSliderMutation.CLOSE]: (state: EditorNumericSliderState) => {
 			state.param_id = null;
 		},

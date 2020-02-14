@@ -14,8 +14,18 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	get default_value_serialized() {
 		return this.default_value;
 	}
+	get raw_input_serialized() {
+		return this.value;
+	}
 	get value_serialized() {
 		return this.value;
+	}
+
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.INTEGER],
+		raw_input2: ParamInitValuesTypeMap[ParamType.INTEGER]
+	) {
+		return raw_input1 == raw_input2;
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.INTEGER], val2: ParamValuesTypeMap[ParamType.INTEGER]) {
 		return val1 == val2;

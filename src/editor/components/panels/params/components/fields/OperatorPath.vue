@@ -61,7 +61,7 @@ export default createComponent({
 
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as OperatorPathParam;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		function on_update_value(e: Event) {
 			const target = e.target as HTMLInputElement;

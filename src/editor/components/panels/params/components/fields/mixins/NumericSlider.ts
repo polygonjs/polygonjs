@@ -35,7 +35,7 @@ export function SetupNumericSlider(json_param: EngineParamData, param: BaseParam
 		const target = e.target as HTMLInputElement;
 		if (target) {
 			const value = target.value;
-			if (!param.is_value_equal(value as any)) {
+			if (!param.is_raw_input_equal(value)) {
 				param.set(value);
 			}
 		}

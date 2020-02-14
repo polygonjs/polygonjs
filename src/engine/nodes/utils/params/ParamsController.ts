@@ -311,13 +311,14 @@ export class ParamsController {
 			// param.set_scene(this.node.scene);
 			param.set_name(name);
 			param.set_init_value(init_value as never);
+			param.init_components();
+			param.set_node(this.node);
 			// param.initialize();
 			param.ui_data.set_folder_name(this.current_param_folder_name());
 
 			this._params_by_name[param.name] = param as BaseParamType;
 			// this._params_list.push(param);
 			// this._param_names[param.name()] = true; //.push(param.name());
-			param.set_node(this.node);
 
 			// if (param.is_multiple) {
 			// 	for (let component of param.components) {

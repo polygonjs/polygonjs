@@ -1,7 +1,7 @@
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
-import {PolyScene} from 'src/engine';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 import {SceneEvent} from 'src/engine/poly/SceneEvent';
 
 QUnit.test('sets the node to update if set value', async (assert) => {

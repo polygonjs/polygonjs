@@ -16,7 +16,7 @@
 			.grid-x
 				.cell.auto
 					input.value(
-						:value = 'value_or_expression'
+						:value = 'raw_input'
 						@keypress.stop = ''
 						@keyup.stop = ''
 						@keydown.stop = ''
@@ -44,7 +44,7 @@
 				@change.stop = 'on_update_value'
 				@blur.stop = 'on_update_value'
 				:tabindex = 'tabindex'
-				) {{value_or_expression}}
+				) {{raw_input}}
 			textarea.expression_result(
 				:rows = 'rows'
 				:tabindex = 'tabindex'
@@ -70,7 +70,7 @@ export default createComponent({
 
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as StringParam;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		const is_multiline = computed(() => {
 			return param.options.is_multiline;

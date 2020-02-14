@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine';
+import {PolyScene} from 'src/engine/scene/PolyScene';
 import {SceneJsonExporter} from 'src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from 'src/engine/io/json/import/Scene';
 

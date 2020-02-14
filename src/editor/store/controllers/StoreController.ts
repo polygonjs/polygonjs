@@ -74,6 +74,8 @@ class StoreControllerClass {
 					return this.engine.add_node(emitter.graph_node_id, data);
 
 				// param events
+				case ParamEvent.RAW_INPUT_UPDATED:
+					return this.engine.update_param_raw_input(emitter.graph_node_id);
 				case ParamEvent.VALUE_UPDATED:
 					return this.engine.update_param_value(emitter.graph_node_id);
 				case ParamEvent.EXPRESSION_UPDATED:

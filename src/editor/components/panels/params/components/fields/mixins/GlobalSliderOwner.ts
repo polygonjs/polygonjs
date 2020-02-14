@@ -4,15 +4,21 @@ import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {EngineParamData} from 'src/editor/store/modules/Engine';
 export function SetupGlobalSliderOwner(json_param: EngineParamData) {
 	function open_numeric_slider(e: MouseEvent) {
-		if (e.button === MouseButton.MIDDLE) {
+		if (e.button == MouseButton.MIDDLE) {
 			StoreController.editor.numeric_slider.open({
-				param_id: json_param != null ? json_param.graph_node_id : null,
+				param_id: json_param.graph_node_id,
 				position: {x: e.clientX, y: e.clientY},
 			});
 
+			document.addEventListener('mouseup', close_numeric_slider);
+
 			e.preventDefault();
 		}
-	} // to prevent paste into field
+	}
+	function close_numeric_slider() {
+		document.removeEventListener('mouseup', close_numeric_slider);
+		StoreController.editor.numeric_slider.close();
+	}
 
 	function on_paste(e: Event) {
 		// to prevent paste into field

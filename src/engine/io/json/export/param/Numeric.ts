@@ -8,7 +8,7 @@ export class ParamNumericJsonExporter extends ParamJsonExporter<TypedNumericPara
 			// const escaped_expression = this._param.expression().replace(/'/g, "\\'");
 			this._data['expression'] = this._param.expression_controller?.expression;
 		} else {
-			this._data['value'] = this._param.value_serialized;
+			this._data['value'] = this._param.raw_input_serialized;
 		}
 	}
 }

@@ -15,8 +15,17 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	get default_value_serialized() {
 		return this.default_value;
 	}
+	get raw_input_serialized() {
+		return this._raw_input;
+	}
 	get value_serialized() {
 		return this.value;
+	}
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.FLOAT],
+		raw_input2: ParamInitValuesTypeMap[ParamType.FLOAT]
+	) {
+		return raw_input1 == raw_input2;
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.FLOAT], val2: ParamValuesTypeMap[ParamType.FLOAT]) {
 		return val1 == val2;

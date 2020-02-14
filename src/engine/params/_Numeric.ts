@@ -4,7 +4,7 @@ import lodash_isString from 'lodash/isString';
 // import {TypedParamVisitor} from './_Base';
 import {Single} from './_Single';
 import {ParamType} from '../poly/ParamType';
-import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+// import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamEvent} from '../poly/ParamEvent';
@@ -15,7 +15,7 @@ import {ParamEvent} from '../poly/ParamEvent';
 // }
 
 export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
-	private _raw_input: ParamInitValuesTypeMap[T] | undefined;
+	// private _raw_input: ParamInitValuesTypeMap[T] | undefined;
 	get is_numeric() {
 		return true;
 	}
@@ -32,12 +32,11 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 	// 	}
 	// }
 
-	set(raw_input: ParamInitValuesTypeMap[T]): void {
-		this._raw_input = raw_input;
+	protected process_raw_input() {
 		// this.process_raw_input()
 		this.states.error.clear();
 
-		const converted = this.convert(raw_input);
+		const converted = this.convert(this._raw_input);
 		if (converted != null) {
 			if (this._expression_controller) {
 				this._expression_controller.set_expression(undefined, false);
@@ -50,10 +49,10 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 				this.set_successors_dirty();
 			}
 		} else {
-			if (lodash_isString(raw_input)) {
+			if (lodash_isString(this._raw_input)) {
 				this._expression_controller = this._expression_controller || new ExpressionController(this);
-				if (raw_input != this._expression_controller.expression) {
-					this._expression_controller.set_expression(raw_input);
+				if (this._raw_input != this._expression_controller.expression) {
+					this._expression_controller.set_expression(this._raw_input);
 					this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED);
 				}
 			} else {

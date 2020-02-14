@@ -5,6 +5,7 @@ import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
@@ -27,8 +28,30 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			return this.default_value.toArray() as Number3;
 		}
 	}
+	get raw_input_serialized() {
+		if (this._raw_input instanceof Color) {
+			return this._raw_input.toArray() as Number3;
+		} else {
+			const new_array: StringOrNumber3 = [this._raw_input[0], this._raw_input[1], this._raw_input[2]];
+			return new_array;
+		}
+	}
 	get value_serialized() {
 		return this.value.toArray() as Number3;
+	}
+	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
+		if (raw_input instanceof Color) {
+			return raw_input.clone();
+		} else {
+			const new_array: StringOrNumber3 = [raw_input[0], raw_input[1], raw_input[2]];
+			return new_array;
+		}
+	}
+	static are_raw_input_equal(
+		raw_input1: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
+		raw_input2: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH]
+	) {
+		return raw_input1 == raw_input2;
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
 		return val1.equals(val2);

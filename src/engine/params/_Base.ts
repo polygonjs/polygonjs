@@ -51,6 +51,7 @@ import {PolyScene} from '../scene/PolyScene';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from '../params/types/ParamValuesTypeMap';
 import {ParamValueSerializedTypeMap} from '../params/types/ParamValueSerializedTypeMap';
+import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedMap';
 // import {TypedNumericParam} from './_Numeric';
 
 // export interface ParamVisitor {
@@ -65,6 +66,7 @@ type ComputeCallback = (value: void) => void;
 export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// protected _raw_input: ParamInitValuesTypeMap[T];
 	protected _default_value!: ParamInitValuesTypeMap[T];
+	protected _raw_input!: ParamInitValuesTypeMap[T];
 	protected _value!: ParamValuesTypeMap[T];
 	// protected _expression: string;
 	protected _node!: BaseNodeType;
@@ -139,10 +141,17 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get value(): ParamValuesTypeMap[T] {
 		return this._value;
 	}
-	abstract get default_value_serialized(): ParamValueSerializedTypeMap[T];
+	abstract get default_value_serialized(): ParamInitValueSerializedTypeMap[T];
+	abstract get raw_input_serialized(): ParamInitValueSerializedTypeMap[T];
 	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
 	convert(raw_val: any): ParamValuesTypeMap[T] | null {
 		return null;
+	}
+	static are_raw_input_equal(val1: any, val2: any) {
+		return false;
+	}
+	is_raw_input_equal(other_raw_input: ParamInitValuesTypeMap[T]) {
+		return (this.constructor as any).are_raw_input_equal(this._raw_input, other_raw_input);
 	}
 	static are_values_equal(val1: any, val2: any) {
 		return false;
@@ -150,9 +159,13 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	is_value_equal(other_val: ParamValuesTypeMap[T]) {
 		return (this.constructor as any).are_values_equal(this.value, other_val);
 	}
+	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[T]): ParamInitValuesTypeMap[T] {
+		return raw_input;
+	}
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
-		// this._raw_input = raw_input;
-		// this.process_raw_input()
+		this._raw_input = this._clone_raw_input(raw_input);
+		this.emit_controller.emit(ParamEvent.RAW_INPUT_UPDATED);
+		this.process_raw_input();
 	}
 	get default_value() {
 		return this._default_value;
@@ -160,7 +173,11 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get is_default(): boolean {
 		return true;
 	}
+	get raw_input() {
+		return this._raw_input;
+	}
 
+	protected process_raw_input() {}
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
 		if (this.is_dirty) {
@@ -189,7 +206,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// }
 	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
 		this._default_value = init_value; //this.convert(init_value);
-		// this._value = this.convert(init_value);
+		this._raw_input = this._clone_raw_input(init_value);
 		if (!this.is_multiple) {
 			this.set(init_value);
 		}
@@ -213,12 +230,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 			}
 		}
 
-		if (this.is_multiple) {
-			this.init_components();
-			if (this.components) {
-				for (let c of this.components) {
-					c.set_node(node);
-				}
+		if (this.components) {
+			for (let c of this.components) {
+				c.set_node(node);
 			}
 		}
 	}
@@ -269,6 +283,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get is_multiple(): boolean {
 		return this.component_names.length > 0;
 	}
+	// create_components() {}
 	init_components() {}
 
 	// expression
@@ -287,7 +302,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 export type BaseParamType = TypedParam<ParamType>;
 export class BaseParamClass extends TypedParam<ParamType> {
 	get default_value_serialized() {
-		return 'BaseParamClass.value_serialized overriden';
+		return 'BaseParamClass.default_value_serialized overriden';
+	}
+	get raw_input_serialized() {
+		return 'BaseParamClass.raw_input_serialized overriden';
 	}
 	get value_serialized() {
 		return 'BaseParamClass.value_serialized overriden';

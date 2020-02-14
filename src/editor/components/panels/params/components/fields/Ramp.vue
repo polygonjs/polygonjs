@@ -59,7 +59,7 @@ export default createComponent({
 	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as RampParam;
-		const setup_field_common = SetupFieldCommon(props.json_param);
+		const setup_field_common = SetupFieldCommon(props);
 
 		const ramp_points = ref<RampPointJson[]>([]);
 		const curve_points = ref<Vector2Like[]>([]);

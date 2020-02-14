@@ -9,42 +9,46 @@ export const SetupFieldCommonProps = {
 		},
 	},
 	tabindex: {
-		default: -1,
 		type: Number,
+		default: -1,
+	},
+	displays_expression_result: {
+		type: Boolean,
+		default: false,
 	},
 };
 export interface ISetupFieldCommonProps {
 	json_param: EngineParamData;
 	tabindex: number;
+	displays_expression_result: boolean;
 }
 
-import {computed, ref, watch} from '@vue/composition-api';
+import {computed, watch} from '@vue/composition-api';
 import {ParamSetCommand} from 'src/editor/history/commands/ParamSet';
-export function SetupFieldCommon(json_param: EngineParamData) {
-	const param = StoreController.engine.param(json_param.graph_node_id)!;
-	const displays_expression_result = ref(false);
+export function SetupFieldCommon(props: ISetupFieldCommonProps) {
+	const param = StoreController.engine.param(props.json_param.graph_node_id)!;
 
 	// param() {
 	// 	return $store.scene.graph().node_from_id(json_param != null ? json_param.graph_node_id : undefined);
 	// },
 	const name = computed(() => {
-		return json_param.name;
+		return props.json_param.name;
 	});
 
+	const raw_input = computed(() => {
+		return props.json_param.raw_input;
+	});
 	const value = computed(() => {
-		return json_param.value;
+		return props.json_param.value;
 	});
 	const expression = computed(() => {
-		return json_param.expression;
+		return props.json_param.expression;
 	});
 	const has_expression = computed(() => {
 		return expression.value != null;
 	});
-	const value_or_expression = computed(() => {
-		return has_expression.value ? expression.value : value.value;
-	});
 	const error_message = computed(() => {
-		return json_param.error_message;
+		return props.json_param.error_message;
 	});
 	const is_errored = computed(() => {
 		return error_message.value != null;
@@ -54,7 +58,7 @@ export function SetupFieldCommon(json_param: EngineParamData) {
 	// });
 
 	const field_component_type = computed(() => {
-		return json_param.type;
+		return props.json_param.type;
 	});
 
 	const class_object = computed(() => {
@@ -70,7 +74,7 @@ export function SetupFieldCommon(json_param: EngineParamData) {
 		// 		displays_expression_only: true,
 		// 	});
 		// } else {
-		return {displays_expression_result: displays_expression_result.value};
+		return {displays_expression_result: props.displays_expression_result};
 		// }
 	});
 
@@ -84,8 +88,11 @@ export function SetupFieldCommon(json_param: EngineParamData) {
 	const is_field_visible = computed(() => {
 		return !param.options.is_field_hidden();
 	});
+	const displays_expression_result_computed = computed(() => {
+		return props.displays_expression_result;
+	});
 
-	watch(displays_expression_result, async (new_display, old_display) => {
+	watch(displays_expression_result_computed, async (new_display, old_display) => {
 		if (new_display) {
 			await param.compute();
 		}
@@ -96,7 +103,7 @@ export function SetupFieldCommon(json_param: EngineParamData) {
 		const target = e.currentTarget as HTMLInputElement | null;
 		if (target) {
 			const new_value = target.value;
-			if (!param.is_value_equal(new_value)) {
+			if (!param.is_raw_input_equal(new_value)) {
 				create_set_command(target.value);
 			}
 		}
@@ -134,7 +141,7 @@ export function SetupFieldCommon(json_param: EngineParamData) {
 		name,
 		value,
 		expression,
-		value_or_expression,
+		raw_input,
 		has_expression,
 		error_message,
 		is_errored,
@@ -143,7 +150,6 @@ export function SetupFieldCommon(json_param: EngineParamData) {
 		class_object,
 		input_value_class_object,
 		is_field_visible,
-		displays_expression_result,
 		// functions
 		on_update_value,
 		// on_wheel,
