@@ -50,12 +50,13 @@ export class CoreMaterial {
 		return material;
 	}
 
-	static apply_custom_materials(object: Object3D, material: ShaderMaterialWithCustomMaterials) {
-		if (material.custom_materials) {
-			for (let name of Object.keys(material.custom_materials)) {
+	static apply_custom_materials(object: Object3D, material: Material) {
+		const material_with_custom = material as ShaderMaterialWithCustomMaterials;
+		if (material_with_custom.custom_materials) {
+			for (let name of Object.keys(material_with_custom.custom_materials)) {
 				const mat_name = name as CustomMaterialName;
 				// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
-				const custom_material = material.custom_materials[mat_name];
+				const custom_material = material_with_custom.custom_materials[mat_name];
 				(object as ObjectWithCustomMaterials)[mat_name] = custom_material;
 				custom_material.needsUpdate = true;
 			}

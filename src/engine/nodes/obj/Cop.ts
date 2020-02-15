@@ -1,5 +1,7 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
+import {CopNodeChildrenMap} from 'src/engine/poly/registers/Cop';
+import {BaseCopNodeType} from '../cop/_Base';
 
 export class CopObjNode extends BaseManagerObjNode {
 	static type() {
@@ -11,5 +13,15 @@ export class CopObjNode extends BaseManagerObjNode {
 	initialize_node() {
 		this.children_controller?.init();
 		// this._init_manager();
+	}
+
+	create_node<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K] {
+		return super.create_node(type) as CopNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseCopNodeType[];
+	}
+	nodes_by_type<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as CopNodeChildrenMap[K][];
 	}
 }

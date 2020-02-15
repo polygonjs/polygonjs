@@ -20,7 +20,7 @@ export class SceneJsonExporter {
 	private _data: SceneJsonExporterData = {};
 	constructor(private _scene: PolyScene) {}
 
-	data(): Object {
+	data(): SceneJsonExporterData {
 		this._scene.nodes_controller.reset_node_context_signatures();
 		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root);
 		const nodes_data = root_exporter.data();

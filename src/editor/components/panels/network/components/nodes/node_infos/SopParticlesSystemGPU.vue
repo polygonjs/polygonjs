@@ -51,8 +51,7 @@ export default createComponent({
 			});
 		}
 		function copy_shader(shader_name: string) {
-			const clipboard_helper = new ClipboardHelper();
-			clipboard_helper.copy(shaders_by_name.value[shader_name]);
+			ClipboardHelper.copy(shaders_by_name.value[shader_name]);
 			// this.$store.commit('editor/status_bar/notice', `Copied ${shader_name} shader to clipboard`);
 		}
 

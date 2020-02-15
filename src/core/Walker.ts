@@ -8,11 +8,11 @@ import {CoreWalkerEmbed} from './WalkerEmbed';
 type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class CoreWalker extends CoreWalkerEmbed {
-	public static SEPARATOR = '/';
-	public static CURRENT = '.';
-	public static PARENT = '..';
-	public static CURRENT_WITH_SLASH = `${CoreWalker.CURRENT}/`;
-	public static PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
+	public static readonly SEPARATOR = '/';
+	public static readonly CURRENT = '.';
+	public static readonly PARENT = '..';
+	public static readonly CURRENT_WITH_SLASH = `${CoreWalker.CURRENT}/`;
+	public static readonly PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
 
 	static find_param(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		if (!node_src) {

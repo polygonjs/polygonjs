@@ -68,11 +68,13 @@ import PlayBar from './widgets/PlayBar.vue';
 // import ParamNodeSelector from './Widget/ParamNodeSelector'
 import PanelNodeSelector from './widgets/PanelNodeSelector.vue';
 import NumericSlider from '../../components/widgets/NumericSlider.vue';
-import NodeContextMenu from './widgets/NodeContextMenu.vue';
-import ParamContextMenu from './widgets/ParamContextMenu.vue';
+import NodeContextMenu from '../../components/widgets/context_menus/NodeContextMenu.vue';
+import ParamContextMenu from '../../components/widgets/context_menus/ParamContextMenu.vue';
 // import UploadMenu from './Widget/UploadMenu'
 import Retractable from './widgets/Retractable.vue';
 // import LocalAssetUploadProgressDisplay from './Widget/LocalAssetUploadProgressDisplay'
+
+import {KeyEventsDispatcher} from 'src/editor/helpers/KeyEventsDispatcher';
 
 import Vue from 'vue';
 Vue.component('MultiplePanel', MultiplePanel);
@@ -126,6 +128,8 @@ export default createComponent({
 
 	setup() {
 		const multiple_panel = ref<HTMLElement>(null);
+
+		KeyEventsDispatcher.activate();
 
 		return {
 			multiple_panel,

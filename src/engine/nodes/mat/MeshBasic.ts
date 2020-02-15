@@ -25,7 +25,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 			vertexColors: NoColors,
 			side: FrontSide,
 			color: 0xffffff,
-			opacity: 0.5,
+			opacity: 1,
 		});
 	}
 

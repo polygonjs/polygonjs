@@ -28,7 +28,7 @@ export const CATEGORY_GL = {
 export const CATEGORY_MAT = {
 	ADVANCED: 'advanced',
 	MESH: 'meshes',
-	POINT: 'points',
+	POINTS: 'points',
 	LINE: 'lines',
 	VOLUME: 'volumes',
 	INSTANCE: 'instances',

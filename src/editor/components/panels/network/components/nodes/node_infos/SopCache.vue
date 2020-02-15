@@ -30,8 +30,7 @@ export default createComponent({
 
 		function copy_cache() {
 			const value: string = node.pv.cache;
-			const clipboard_helper = new ClipboardHelper();
-			clipboard_helper.copy(value);
+			ClipboardHelper.copy(value);
 			// this.$store.commit('editor/status_bar/notice', `Copied cache to clipboard`)
 		}
 

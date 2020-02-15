@@ -7,6 +7,7 @@
 
 
 	.Panel.Params.full_height_container.grid-y
+		.text-center(v-if = "!first_selected_json_node") no node selected.
 		.cell.shrink(v-if = 'display_toolbar')
 			.grid-x
 				.cell.auto

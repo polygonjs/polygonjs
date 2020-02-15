@@ -10,14 +10,8 @@ export function SetupGlobalSliderOwner(json_param: EngineParamData) {
 				position: {x: e.clientX, y: e.clientY},
 			});
 
-			document.addEventListener('mouseup', close_numeric_slider);
-
 			e.preventDefault();
 		}
-	}
-	function close_numeric_slider() {
-		document.removeEventListener('mouseup', close_numeric_slider);
-		StoreController.editor.numeric_slider.close();
 	}
 
 	function on_paste(e: Event) {

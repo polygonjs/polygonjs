@@ -320,11 +320,12 @@ export class ParamsController {
 			// this._params_list.push(param);
 			// this._param_names[param.name()] = true; //.push(param.name());
 
-			// if (param.is_multiple) {
-			// 	for (let component of param.components) {
-			// 		this._params_by_name[component.name] = component as BaseParamType;
-			// 	}
-			// }
+			// we add the components, so that we can access them with expressions like ch('ty')
+			if (param.is_multiple && param.components) {
+				for (let component of param.components) {
+					this._params_by_name[component.name] = component as BaseParamType;
+				}
+			}
 
 			this._params_added_since_last_params_eval = true;
 

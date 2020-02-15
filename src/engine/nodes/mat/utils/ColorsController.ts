@@ -73,6 +73,7 @@ export class ColorsController extends BaseController {
 		material.color.copy(pv.color);
 		material.vertexColors = pv.use_vertex_colors ? VertexColors : NoColors;
 
+		material.opacity = pv.opacity;
 		material.transparent = pv.transparent || pv.opacity < 1;
 		if (material.transparent) {
 			material.depthTest = true;

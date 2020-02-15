@@ -1,6 +1,8 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
+import {MatNodeChildrenMap} from 'src/engine/poly/registers/Mat';
+import {BaseMatNodeType} from '../mat/_Base';
 
 export class MaterialsObjNode extends BaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MAT;
@@ -22,5 +24,15 @@ export class MaterialsObjNode extends BaseManagerObjNode {
 		// attempt to have the parent /MAT depend on children like /MAT/material1
 		// but how would this method know which node has triggered?
 		// this.add_post_dirty_hook(this._eval_all_params_on_dirty.bind(this))
+	}
+
+	create_node<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K] {
+		return super.create_node(type) as MatNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseMatNodeType[];
+	}
+	nodes_by_type<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as MatNodeChildrenMap[K][];
 	}
 }

@@ -148,7 +148,7 @@ export default createComponent({
 		height: 100%
 
 	.viewer_top_bar
-		// background-color: lightblue
+		background-color: lighten($color_bg_panel_viewer,5%)
 
 		.viewer_top_bar-controls-right
 			padding-right: 10px

@@ -32,6 +32,12 @@ import {NodeSetOverrideClonableStateCommand} from 'src/editor/history/commands/N
 import {StoreController} from '../../../store/controllers/StoreController';
 import {DropDownMenuEntry} from '../../types/props';
 
+enum NodeContextMenuEntryId {
+	EDIT_COMMENT = 'edit_comment',
+	COPY_FULL_PATH = 'copy_full_path',
+	TOGGLE_CLONE_INPUTS = 'toggle_clone_inputs',
+}
+
 import {createComponent, computed, Ref, watch} from '@vue/composition-api';
 export default createComponent({
 	name: 'node-context-menu',
@@ -53,16 +59,16 @@ export default createComponent({
 		});
 		const menu_entries: Readonly<Ref<readonly DropDownMenuEntry[]>> = computed(() => {
 			const entries: DropDownMenuEntry[] = [
-				{id: 'edit_comment'},
-				{id: 'copy_full_path'},
+				{id: NodeContextMenuEntryId.EDIT_COMMENT},
+				{id: NodeContextMenuEntryId.COPY_FULL_PATH},
 				// {id: 'enter'},
 				// {id: 'delete'},
 				// {id: 'select_inputs'},
 			];
 
-			if (node.io.inputs.override_clonable_state_allowed()) {
+			if (node && node.io.inputs.override_clonable_state_allowed()) {
 				const label = json_node.value.override_clonable_state ? 'set clone inputs ON' : 'set clone inputs OFF';
-				entries.push({id: 'toggle_clone_inputs', label: label});
+				entries.push({id: NodeContextMenuEntryId.TOGGLE_CLONE_INPUTS, label: label});
 			}
 			return entries;
 		});
@@ -77,17 +83,17 @@ export default createComponent({
 		function on_select(entry: string) {
 			switch (entry) {
 				// case 'copy': copy(); break;
-				case 'edit_comment':
+				case NodeContextMenuEntryId.EDIT_COMMENT:
 					edit_comment();
 					break;
-				case 'copy_full_path':
+				case NodeContextMenuEntryId.COPY_FULL_PATH:
 					copy_full_path();
 					break;
-				case 'toggle_clone_inputs':
+				case NodeContextMenuEntryId.TOGGLE_CLONE_INPUTS:
 					toggle_clone_inputs();
 					break;
 			}
-			close();
+			_close();
 		}
 		async function edit_comment() {
 			// we need to keep a reference to the node,
@@ -104,12 +110,11 @@ export default createComponent({
 			// window.POLY_prompt(this, 'Edit Comment:', node_tmp.ui_data.comment, {
 			// 	confirm_label: 'Update Comment',
 			// });
-			const cmd = new NodeSetCommentCommand(node, new_comment);
+			const cmd = new NodeSetCommentCommand(node_tmp, new_comment);
 			cmd.push();
 		}
 		function copy_full_path() {
 			const path = node.full_path();
-			console.log(node);
 			ClipboardHelper.copy(path);
 			// $store.commit('editor/status_bar/notice', `Copied ${path} to clipboard`);
 		}
@@ -119,8 +124,10 @@ export default createComponent({
 			const cmd = new NodeSetOverrideClonableStateCommand(node, new_state);
 			cmd.push();
 		}
-		function close() {
-			StoreController.editor.context_menu.set_node_id(null);
+		function _close() {
+			setTimeout(() => {
+				StoreController.editor.context_menu.set_node_id(null);
+			}, 10);
 		}
 
 		return {

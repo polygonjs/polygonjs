@@ -74,6 +74,9 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 				const converted = this.convert(expression_result);
 				if (converted != null) {
 					this._value = converted;
+					if (this.parent_param) {
+						this.parent_param.set_value_from_components();
+					}
 					this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 				} else {
 					this.states.error.set(

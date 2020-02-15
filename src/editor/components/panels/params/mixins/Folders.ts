@@ -104,13 +104,23 @@ export function SetupFolders(selected_node_options: SetupSelectedNodeOptions) {
 			}
 
 			// get the list
+			let json_params: (EngineParamData | null)[] | undefined = undefined;
 			if (active_folder_param_id.value) {
 				const ids = param_ids_by_top_folder_ids.value[active_folder_param_id.value];
 				if (ids) {
-					return ids.map((id) => StoreController.engine.json_param(id));
+					json_params = ids.map((id) => StoreController.engine.json_param(id));
 				}
 			}
-			return json_node.value.param_ids.map((id) => StoreController.engine.json_param(id));
+			if (!json_params) {
+				json_params = json_node.value.param_ids.map((id) => StoreController.engine.json_param(id));
+			}
+
+			return json_params.filter((json_param) => {
+				if (json_param) {
+					const param = StoreController.engine.param(json_param.graph_node_id);
+					return param && param.parent_param == null;
+				}
+			});
 		} else {
 			return [];
 		}

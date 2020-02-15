@@ -180,7 +180,6 @@ export default createComponent({
 			} else {
 				displays_expression_result.value = false;
 			}
-			console.log('displays_expression_result', displays_expression_result.value);
 		}
 
 		const slider_options = SetupGlobalSliderOwner(props.json_param);

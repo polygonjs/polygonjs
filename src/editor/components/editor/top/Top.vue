@@ -31,6 +31,7 @@
 <script lang='ts'>
 import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 import {DropDownMenuEntry} from '../../types/props';
+// import {SceneJsonExporter} from 'src/engine/io/json/export/Scene';
 
 enum FileEntryId {
 	// NEW = 'new',
@@ -50,6 +51,7 @@ enum DesktopEntryId {
 
 import {createComponent, computed} from '@vue/composition-api';
 import {HistoryStack} from '../../../history/Stack';
+import {StoreController} from '../../../store/controllers/StoreController';
 export default createComponent({
 	name: 'top_menu',
 	components: {DropDownMenu},
@@ -104,7 +106,7 @@ export default createComponent({
 				// case FileEntryId.NEW:
 				// 	return redirect_to_new_scene();
 				case FileEntryId.SAVE:
-					return save();
+					return _save();
 				// case FileEntryId.SETTINGS:
 				// 	return redirect_to_settings();
 				// case 'embed':
@@ -134,9 +136,10 @@ export default createComponent({
 			}
 		}
 
-		function save() {
-			// StoreController.engine.
-			// return $store.app.save_scene();
+		async function _save() {
+			// importing SceneJsonExporter dynamically, otherwise it seems that classes
+			// are not loaded in the right order, creating an exception when opening the editor
+			StoreController.save_scene();
 		}
 		function undo() {
 			return HistoryStack.instance().undo();

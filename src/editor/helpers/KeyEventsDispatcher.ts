@@ -36,16 +36,24 @@ export class KeyEventsDispatcher {
 		this.activate();
 	}
 
+	static activate() {
+		this.instance().activate();
+	}
 	activate() {
 		if (!this._active) {
+			console.log('activate');
 			this._active = true;
 			document.addEventListener('keypress', this._on_keypress_bound);
 			document.addEventListener('keydown', this._on_keydown_bound);
 			document.addEventListener('keyup', this._on_keyup_bound);
 		}
 	}
+	static deactivate() {
+		this.instance().deactivate();
+	}
 	deactivate() {
 		if (this._active) {
+			console.log('de-activate');
 			this._active = false;
 			document.removeEventListener('keypress', this._on_keypress_bound);
 			document.removeEventListener('keydown', this._on_keydown_bound);
@@ -122,7 +130,7 @@ export class KeyEventsDispatcher {
 			case 's':
 				if (event.ctrlKey) {
 					event.preventDefault();
-					// StoreController.save_scene();
+					StoreController.save_scene();
 					return false;
 				}
 				break;
@@ -144,6 +152,10 @@ export class KeyEventsDispatcher {
 	}
 
 	on_key_up(event: KeyboardEvent) {
+		if (event.key == 'Escape') {
+			StoreController.close_all_popups();
+		}
+
 		return false;
 	}
 }

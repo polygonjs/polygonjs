@@ -35,6 +35,10 @@ QUnit.module('obj');
 import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';
 
+QUnit.module('cop');
+import './engine/nodes/cop/File';
+import './engine/nodes/cop/EnvMap';
+
 QUnit.module('sop');
 import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AnimationCopy';
@@ -66,6 +70,8 @@ import './engine/nodes/sop/Hierarchy';
 import './engine/nodes/sop/Jitter';
 import './engine/nodes/sop/Layer';
 import './engine/nodes/sop/Line';
+import './engine/nodes/sop/Material';
+import './engine/nodes/sop/Merge';
 import './engine/nodes/sop/Noise';
 import './engine/nodes/sop/Normals';
 import './engine/nodes/sop/Null';

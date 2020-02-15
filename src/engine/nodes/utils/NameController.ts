@@ -41,7 +41,7 @@ export class NameController {
 		}
 	}
 	update_name_from_parent(new_name: string) {
-		this.node.set_name(new_name);
+		this.node._set_core_name(new_name);
 		this.post_set_name();
 		this.post_set_full_path();
 		if (this.node.children_allowed()) {

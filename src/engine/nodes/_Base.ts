@@ -192,6 +192,12 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get name_controller(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
 	}
+	set_name(name: string) {
+		this.name_controller.set_name(name);
+	}
+	_set_core_name(name: string) {
+		this._name = name;
+	}
 	get params(): ParamsController {
 		return (this._params_controller = this._params_controller || new ParamsController(this));
 	}

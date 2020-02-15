@@ -12,6 +12,7 @@ import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseCopNodeClass} from 'src/engine/nodes/cop/_Base';
 import {TextureContainer} from 'src/engine/containers/Texture';
+import {POLY} from 'src/engine/Poly';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -26,6 +27,11 @@ interface ImageScriptUrlByExt {
 interface ThreeLoaderByExt {
 	exr: string;
 	basis: string;
+}
+
+enum Extension {
+	EXR = 'exr',
+	BASIS = 'basis',
 }
 
 export class CoreTextureLoader {
@@ -121,6 +127,7 @@ export class CoreTextureLoader {
 				return texture;
 			} else {
 				this.loader_for_ext(ext).then((loader) => {
+					console.log('loader', loader);
 					loader.load(url, resolve, undefined, (error: any) => {
 						console.warn('error', error);
 						reject();
@@ -132,24 +139,44 @@ export class CoreTextureLoader {
 
 	async loader_for_ext(ext: string) {
 		const ext_lowercase = ext.toLowerCase() as keyof ThreeLoaderByExt;
-		const script_name = CoreTextureLoader.SCRIPT_URL_BY_EXT[ext_lowercase];
-		var loader;
-		if (script_name) {
-			// const imported_classes = await CoreScriptLoader.load_module_three_loader(script_name)
-			// const imported_classes = await CoreScriptLoader.three_module(`loaders/${script_name}`);
-			// const imported_classes = await import(`modules/three/examples/jsm/loaders/${script_name}`);
-			// const loader_class_name = CoreTextureLoader.THREE_LOADER_BY_EXT[ext_lowercase];
-			// const loader_class = imported_classes[loader_class_name];
-			// if (loader_class) {
-			// 	loader = new loader_class();
-			// 	if (ext == 'basis') {
-			// 		loader.setTranscoderPath('/three/js/libs/basis/');
-			// 		const renderer = POLY.renderers_controller.first_renderer();
-			// 		loader.detectSupport(renderer);
-			// 	}
-			// }
+		// const script_name = CoreTextureLoader.SCRIPT_URL_BY_EXT[ext_lowercase];
+		// var loader;
+
+		switch (ext_lowercase) {
+			case Extension.EXR: {
+				const {EXRLoader} = await import('modules/three/examples/jsm/loaders/EXRLoader');
+				return new EXRLoader();
+			}
+			case Extension.BASIS: {
+				const {BasisTextureLoader} = await import('modules/three/examples/jsm/loaders/BasisTextureLoader');
+				const loader = new BasisTextureLoader();
+				loader.setTranscoderPath('/three/js/libs/basis/');
+				const renderer = POLY.renderers_controller.first_renderer();
+				if (renderer) {
+					loader.detectSupport(renderer);
+				} else {
+					console.warn('texture loader found no renderer for basis texture loader');
+				}
+				return loader;
+			}
 		}
-		return loader || new TextureLoader();
+
+		// if (script_name) {
+		// const imported_classes = await CoreScriptLoader.load_module_three_loader(script_name)
+		// const imported_classes = await CoreScriptLoader.three_module(`loaders/${script_name}`);
+		// const imported_classes = await import(`modules/three/examples/jsm/loaders/${script_name}`);
+		// const loader_class_name = CoreTextureLoader.THREE_LOADER_BY_EXT[ext_lowercase];
+		// const loader_class = imported_classes[loader_class_name];
+		// if (loader_class) {
+		// 	loader = new loader_class();
+		// 	if (ext == 'basis') {
+		// 		loader.setTranscoderPath('/three/js/libs/basis/');
+		// 		const renderer = POLY.renderers_controller.first_renderer();
+		// 		loader.detectSupport(renderer);
+		// 	}
+		// }
+		// }
+		return new TextureLoader();
 
 		// const constructor = (() => { switch (ext) {
 		// 	case 'exr': return EXRLoader;

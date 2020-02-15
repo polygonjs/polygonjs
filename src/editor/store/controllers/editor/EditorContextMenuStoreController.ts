@@ -29,9 +29,9 @@ export class EditorContextMenuStoreControllerClass {
 	param_id(): string | null {
 		return this.local_state.param_id;
 	}
-	upload_name(): string | null {
-		return this.local_state.upload_name;
-	}
+	// upload_name(): string | null {
+	// 	return this.local_state.upload_name;
+	// }
 
 	// mutations
 	set_position(position: Vector2Like): void {
@@ -43,9 +43,9 @@ export class EditorContextMenuStoreControllerClass {
 	set_param_id(param_id: string | null): void {
 		this._store.commit(`editor/context_menu/${EditorContextMenuMutation.PARAM_ID}`, param_id);
 	}
-	set_upload_name(name: string): void {
-		this._store.commit(`editor/context_menu/${EditorContextMenuMutation.UPLOAD_NAME}`, name);
-	}
+	// set_upload_name(name: string): void {
+	// 	this._store.commit(`editor/context_menu/${EditorContextMenuMutation.UPLOAD_NAME}`, name);
+	// }
 }
 
 export const EditorContextMenuStoreController = EditorContextMenuStoreControllerClass.instance();

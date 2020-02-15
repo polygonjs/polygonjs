@@ -10,10 +10,10 @@ export class NodeSetNameCommand extends BaseCommand {
 	}
 
 	do() {
-		this._node.name_controller.request_name_to_parent(this._new_name);
+		this._node.set_name(this._new_name);
 	}
 
 	undo() {
-		this._node.name_controller.request_name_to_parent(this._old_name);
+		this._node.set_name(this._old_name);
 	}
 }

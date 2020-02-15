@@ -51,6 +51,15 @@ export class EditorStoreControllerClass {
 		this.numeric_slider.set_store(store);
 		this.panel_node_selector.set_store(store);
 	}
+	close_all_popups() {
+		this.context_menu.set_node_id(null);
+		this.context_menu.set_param_id(null);
+		// this.dialog_alert.hide()
+		// this.dialog_confirm.hide()
+		// this.dialog_prompt.hide()
+		this.numeric_slider.close();
+		this.panel_node_selector.close();
+	}
 
 	// getters
 	current_node_graph_id(): string | undefined {

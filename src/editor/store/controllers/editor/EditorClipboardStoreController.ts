@@ -20,20 +20,26 @@ export class EditorClipboardStoreControllerClass {
 	get local_state(): EditorClipboardState {
 		return (<unknown>(this._store.state.editor as any).clipboard) as EditorClipboardState;
 	}
+	node_id(): string | null {
+		return this.local_state.node_id;
+	}
 	param_id(): string | null {
 		return this.local_state.param_id;
 	}
-	upload_name(): string | null {
-		return this.local_state.upload_name;
-	}
+	// upload_name(): string | null {
+	// 	return this.local_state.upload_name;
+	// }
 
 	// mutations
+	set_node_id(node_id: string): void {
+		this._store.commit(`editor/clipboard/${EditorClipboardMutation.NODE_ID}`, node_id);
+	}
 	set_param_id(param_id: string): void {
-		this._store.commit(`editor/context_menu/${EditorClipboardMutation.PARAM_ID}`, param_id);
+		this._store.commit(`editor/clipboard/${EditorClipboardMutation.PARAM_ID}`, param_id);
 	}
-	set_upload_name(name: string): void {
-		this._store.commit(`editor/context_menu/${EditorClipboardMutation.UPLOAD_NAME}`, name);
-	}
+	// set_upload_name(name: string): void {
+	// 	this._store.commit(`editor/context_menu/${EditorClipboardMutation.UPLOAD_NAME}`, name);
+	// }
 }
 
 export const EditorClipboardStoreController = EditorClipboardStoreControllerClass.instance();

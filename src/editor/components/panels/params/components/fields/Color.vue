@@ -50,7 +50,8 @@ export default createComponent({
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as ColorParam;
 		const setup_field_common = SetupFieldCommon(props);
-		const input_color = ref('#ff0000');
+		const init_color_style = param.value.getStyle();
+		const input_color = ref(init_color_style);
 
 		onMounted(() => {
 			update_input_color_from_param();
@@ -65,7 +66,9 @@ export default createComponent({
 			if (!param.has_expression()) {
 				input_color_c.setStyle(new_color);
 				// const color = new Color(new_color);
-				return param.set(input_color_c);
+				if (!param.is_raw_input_equal(input_color_c)) {
+					param.set(input_color_c);
+				}
 			}
 		});
 

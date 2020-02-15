@@ -11,7 +11,7 @@ export abstract class BaseLightTransformedObjNode<
 > extends TypedLightObjNode<O, K> {
 	initialize_node() {
 		super.initialize_node();
-		this.io.outputs.set_has_output();
+		this.io.outputs.set_has_one_output();
 	}
 	// create_params() {
 	// 	// this.within_param_folder('transform', () => {

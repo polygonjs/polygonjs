@@ -33,7 +33,6 @@ export class CoreWalkerEmbed {
 					break;
 				default:
 					// TODO: What does .node means?? in which case is this not a node? (it is for nodes which cannot have children - but I'd like to unify the api)
-					// console.log(first_element)
 					// console.error("rethink this method Walker.find_node")
 					// if (node_src.node != null) {
 					next_node = node_src.node(first_element);

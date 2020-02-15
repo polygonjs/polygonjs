@@ -92,6 +92,9 @@ export class EngineStoreControllerClass {
 	update_node_ui_data_position(node_id: string) {
 		this._commit(EngineMutation.NODE_UI_DATA_POSITION_UPDATED, node_id);
 	}
+	update_node_ui_data_comment(node_id: string) {
+		this._commit(EngineMutation.NODE_UI_DATA_COMMENT_UPDATED, node_id);
+	}
 	update_node_selection(node_id: string) {
 		this._commit(EngineMutation.NODE_SELECTION_UPDATED, node_id);
 	}

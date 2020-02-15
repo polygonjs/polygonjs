@@ -25,7 +25,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 			vertexColors: NoColors,
 			side: FrontSide,
 			color: 0xffffff,
-			opacity: 0.5,
+			opacity: 1,
 		});
 	}
 

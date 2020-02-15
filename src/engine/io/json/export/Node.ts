@@ -169,7 +169,7 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 
 		for (let param_name of this._node.params.names) {
 			const param = this._node.params.get(param_name);
-			if (param) {
+			if (param && !param.parent_param) {
 				const param_exporter = JsonExportDispatcher.dispatch_param(param); //.visit(JsonExporterVisitor); //.json_exporter()
 				if (param_exporter.required) {
 					const params_data = param_exporter.data();

@@ -1,27 +1,34 @@
 import {NoColors} from 'three/src/constants';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {SideController, SideParamConfig} from './utils/SideController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMap';
-class MeshLambertMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
-) {}
-const ParamsConfig = new MeshLambertMatParamsConfig();
 
-export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLambertMatParamsConfig> {
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		size = ParamConfig.FLOAT(1);
+		size_attenuation = ParamConfig.BOOLEAN(1);
+	};
+}
+
+class PointsMatParamsConfig extends TextureAlphaMapParamConfig(
+	TextureMapParamConfig(SideParamConfig(ColorParamConfig(PointsParamConfig(NodeParamsConfig))))
+) {}
+const ParamsConfig = new PointsMatParamsConfig();
+
+export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_lambert';
+		return 'points';
 	}
 
 	create_material() {
-		return new MeshLambertMaterial({
+		return new PointsMaterial({
 			vertexColors: NoColors,
 			side: FrontSide,
 			color: 0xffffff,
@@ -32,9 +39,11 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 	async cook() {
 		ColorsController.update(this);
 		SideController.update(this);
-		SkinningController.update(this);
 		await TextureMapController.update(this);
 		await TextureAlphaMapController.update(this);
+
+		this._material.size = this.pv.size;
+		this._material.sizeAttenuation = this.pv.size_attenuation;
 
 		this.set_material(this._material);
 	}

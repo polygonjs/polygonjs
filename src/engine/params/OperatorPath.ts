@@ -53,12 +53,13 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 
 		if (path_non_empty) {
 			node = CoreWalker.find_node(this.node, path);
-			if (!node) {
-				this.states.error.set('node not found');
-			}
+			// not sure I want the param to be errored,
+			// as it may block the node, even if the param is not necessary
+			// if (!node) {
+			// 	this.states.error.set('node not found');
+			// }
 		}
 
-		console.log('process_computation', this.full_path());
 		if (this._found_node !== node) {
 			const dependent_on_found_node = this.options.dependent_on_found_node();
 
@@ -70,7 +71,6 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 				}
 			}
 			this._found_node = node;
-			console.log('this._found_node', this._found_node);
 			if (node) {
 				const expected_context = this.options.node_selection_context;
 				const node_context = node.parent?.children_controller?.context;
@@ -85,11 +85,11 @@ export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
 						`node context is ${expected_context} but the params expects a ${node_context}`
 					);
 				}
-			} else {
-				if (path_non_empty) {
-					this.states.error.set('node not found');
-				}
-			}
+			} // else {
+			// 	if (path_non_empty) {
+			// 		this.states.error.set('node not found');
+			// 	}
+			// }
 		}
 		this.remove_dirty_state();
 	}

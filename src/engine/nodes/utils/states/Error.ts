@@ -9,6 +9,7 @@ export class ErrorState {
 
 	set(message: string | undefined) {
 		if (this._message != message) {
+			console.log('message', message);
 			this._message = message;
 			this.on_update();
 		}

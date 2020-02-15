@@ -30,10 +30,10 @@ import {HexagonsSopNode} from 'src/engine/nodes/sop/Hexagons';
 import {HierarchySopNode} from 'src/engine/nodes/sop/Hierarchy';
 // TODO: heightmap
 // TODO: particles
-// TODO: material
 import {JitterSopNode} from 'src/engine/nodes/sop/Jitter';
 import {LayerSopNode} from 'src/engine/nodes/sop/Layer';
 import {LineSopNode} from 'src/engine/nodes/sop/Line';
+import {MaterialSopNode} from 'src/engine/nodes/sop/Material';
 import {MergeSopNode} from 'src/engine/nodes/sop/Merge';
 import {NoiseSopNode} from 'src/engine/nodes/sop/Noise';
 import {NormalsSopNode} from 'src/engine/nodes/sop/Normals';
@@ -90,6 +90,7 @@ export interface GeoNodeChildrenMap {
 	jitter: JitterSopNode;
 	layer: LayerSopNode;
 	line: LineSopNode;
+	material: MaterialSopNode;
 	merge: MergeSopNode;
 	noise: NoiseSopNode;
 	normals: NormalsSopNode;
@@ -149,6 +150,7 @@ export class SopRegister {
 		poly.register_node(JitterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(LineSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(MergeSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(NormalsSopNode, CATEGORY_SOP.MODIFIER);

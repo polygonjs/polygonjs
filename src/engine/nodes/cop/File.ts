@@ -185,7 +185,7 @@ const ATTRIB_MAPPING_KEYS: Array<keyof AttribMapping> = ['mapping', 'wrapS', 'wr
 const ATTRIB_MAPPING: AttribMapping = {
 	mapping: 'mapping',
 	wrapS: 'wrap_s',
-	wrapT: 'wrap_T',
+	wrapT: 'wrap_t',
 	minFilter: 'min_filter',
 	magFilter: 'mag_filter',
 	// type: 'type',
@@ -197,7 +197,7 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class FileCopParamsConfig extends NodeParamsConfig {
-	video_time = ParamConfig.FLOAT(1);
+	// video_time = ParamConfig.FLOAT(1);
 	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
 		desktop_browse: {file_type: 'texture'},
 	});
@@ -284,84 +284,84 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		ENV_MAP: '/COP/env_map',
 	};
 
-	initialize_node() {
-		// this.io.inputs.set_count_to_zero();
-	}
+	// initialize_node() {
+	// 	// this.io.inputs.set_count_to_zero();
+	// }
 
-	create_params() {
-		// this.add_param(ParamType.STRING, 'url', CoreTextureLoader.PARAM_DEFAULT, {
-		// 	desktop_browse: {file_type: 'texture'},
-		// });
-		// this.add_param(ParamType.BUTTON, 'reload', null, {
-		// 	callback: this._reload.bind(this),
-		// });
-		// this.add_param(ParamType.FLOAT, 'video_time', 0, {range: [0, 10]})
-		// this.add_param(ParamType.INTEGER, 'mapping', UVMapping as number, {
-		// 	menu: {
-		// 		entries: MAPPINGS.map((m) => {
-		// 			return {
-		// 				name: Object.keys(m)[0],
-		// 				value: Object.values(m)[0] as number,
-		// 			};
-		// 		}),
-		// 	},
-		// });
-		// for (let wrap_name of ['wrap_s', 'wrap_t']) {
-		// 	const wrap = Object.values(WRAPPINGS[0])[0] as number;
-		// 	this.add_param(ParamType.INTEGER, wrap_name, wrap, {
-		// 		menu: {
-		// 			// type: 'radio',
-		// 			entries: WRAPPINGS.map((m) => {
-		// 				return {
-		// 					name: Object.keys(m)[0],
-		// 					value: Object.values(m)[0] as number,
-		// 				};
-		// 			}),
-		// 		},
-		// 	});
-		// }
-		// const mag_filter = Object.values(MAG_FILTERS[0])[0] as number;
-		// this.add_param(ParamType.INTEGER, 'mag_filter', mag_filter, {
-		// 	menu: {
-		// 		// type: 'radio',
-		// 		entries: MAG_FILTERS.map((m) => {
-		// 			return {
-		// 				name: Object.keys(m)[0],
-		// 				value: Object.values(m)[0] as number,
-		// 			};
-		// 		}),
-		// 	},
-		// });
-		// const min_filter: number = Object.values(MIN_FILTERS[0])[0] as number;
-		// this.add_param(ParamType.INTEGER, 'min_filter', min_filter, {
-		// 	menu: {
-		// 		// type: 'radio',
-		// 		entries: MIN_FILTERS.map((m) => {
-		// 			return {
-		// 				name: Object.keys(m)[0],
-		// 				value: Object.values(m)[0] as number,
-		// 			};
-		// 		}),
-		// 	},
-		// });
-		// TODO: to be added when I have some level of control
-		// for now, the type attribute overrides what piz_compressed.exr creates
-		// which in turns fucks up with the env_map
-		// advanced
-		// this.add_param(ParamType.TOGGLE, 'advanced', 0)
-		// this.add_param(ParamType.INTEGER, 'type', THREE[TYPES[0]], {
-		// 	menu: { type: 'radio', entries: TYPES.map(m=>{ return { name: m, value: THREE[m] } })},
-		// 	visible_if: {advanced: 1}
-		// })
-		// this.add_param(ParamType.INTEGER, 'format', THREE[FORMATS[0]], {
-		// 	menu: { type: 'radio', entries: FORMATS.map(m=>{ return { name: m, value: THREE[m] } })},
-		// 	visible_if: {advanced: 1}
-		// })
-		// this.add_param(ParamType.INTEGER, 'encoding', THREE[ENCODINGS[0]], {
-		// 	menu: { type: 'radio', entries: ENCODINGS.map(m=>{ return { name: m, value: THREE[m] } })},
-		// 	visible_if: {advanced: 1}
-		// })
-	}
+	// create_params() {
+	// 	// this.add_param(ParamType.STRING, 'url', CoreTextureLoader.PARAM_DEFAULT, {
+	// 	// 	desktop_browse: {file_type: 'texture'},
+	// 	// });
+	// 	// this.add_param(ParamType.BUTTON, 'reload', null, {
+	// 	// 	callback: this._reload.bind(this),
+	// 	// });
+	// 	// this.add_param(ParamType.FLOAT, 'video_time', 0, {range: [0, 10]})
+	// 	// this.add_param(ParamType.INTEGER, 'mapping', UVMapping as number, {
+	// 	// 	menu: {
+	// 	// 		entries: MAPPINGS.map((m) => {
+	// 	// 			return {
+	// 	// 				name: Object.keys(m)[0],
+	// 	// 				value: Object.values(m)[0] as number,
+	// 	// 			};
+	// 	// 		}),
+	// 	// 	},
+	// 	// });
+	// 	// for (let wrap_name of ['wrap_s', 'wrap_t']) {
+	// 	// 	const wrap = Object.values(WRAPPINGS[0])[0] as number;
+	// 	// 	this.add_param(ParamType.INTEGER, wrap_name, wrap, {
+	// 	// 		menu: {
+	// 	// 			// type: 'radio',
+	// 	// 			entries: WRAPPINGS.map((m) => {
+	// 	// 				return {
+	// 	// 					name: Object.keys(m)[0],
+	// 	// 					value: Object.values(m)[0] as number,
+	// 	// 				};
+	// 	// 			}),
+	// 	// 		},
+	// 	// 	});
+	// 	// }
+	// 	// const mag_filter = Object.values(MAG_FILTERS[0])[0] as number;
+	// 	// this.add_param(ParamType.INTEGER, 'mag_filter', mag_filter, {
+	// 	// 	menu: {
+	// 	// 		// type: 'radio',
+	// 	// 		entries: MAG_FILTERS.map((m) => {
+	// 	// 			return {
+	// 	// 				name: Object.keys(m)[0],
+	// 	// 				value: Object.values(m)[0] as number,
+	// 	// 			};
+	// 	// 		}),
+	// 	// 	},
+	// 	// });
+	// 	// const min_filter: number = Object.values(MIN_FILTERS[0])[0] as number;
+	// 	// this.add_param(ParamType.INTEGER, 'min_filter', min_filter, {
+	// 	// 	menu: {
+	// 	// 		// type: 'radio',
+	// 	// 		entries: MIN_FILTERS.map((m) => {
+	// 	// 			return {
+	// 	// 				name: Object.keys(m)[0],
+	// 	// 				value: Object.values(m)[0] as number,
+	// 	// 			};
+	// 	// 		}),
+	// 	// 	},
+	// 	// });
+	// 	// TODO: to be added when I have some level of control
+	// 	// for now, the type attribute overrides what piz_compressed.exr creates
+	// 	// which in turns fucks up with the env_map
+	// 	// advanced
+	// 	// this.add_param(ParamType.TOGGLE, 'advanced', 0)
+	// 	// this.add_param(ParamType.INTEGER, 'type', THREE[TYPES[0]], {
+	// 	// 	menu: { type: 'radio', entries: TYPES.map(m=>{ return { name: m, value: THREE[m] } })},
+	// 	// 	visible_if: {advanced: 1}
+	// 	// })
+	// 	// this.add_param(ParamType.INTEGER, 'format', THREE[FORMATS[0]], {
+	// 	// 	menu: { type: 'radio', entries: FORMATS.map(m=>{ return { name: m, value: THREE[m] } })},
+	// 	// 	visible_if: {advanced: 1}
+	// 	// })
+	// 	// this.add_param(ParamType.INTEGER, 'encoding', THREE[ENCODINGS[0]], {
+	// 	// 	menu: { type: 'radio', entries: ENCODINGS.map(m=>{ return { name: m, value: THREE[m] } })},
+	// 	// 	visible_if: {advanced: 1}
+	// 	// })
+	// }
 
 	async cook() {
 		if (this._param_url_changed()) {
@@ -427,8 +427,8 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 
 	private _set_video_current_time() {
 		if (this._video) {
-			if (this.pv.video_time) {
-				this._video.currentTime = this.pv.video_time;
+			if (this.params.has('video_time')) {
+				this._video.currentTime = this.params.float('video_time');
 			}
 		}
 	}
@@ -472,17 +472,21 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	}
 
 	private async _load_texture(url: string) {
-		let texture;
+		let texture: Texture | VideoTexture | null = null;
 		const param = this.params.get('url');
 		if (url && param) {
 			this._texture_loader = this._texture_loader || new CoreTextureLoader(this, param);
 			// const ext = lodash_last(url.split('.')).toLowerCase()
-			texture = await this._texture_loader.load_texture_from_url_or_op(url);
+			try {
+				texture = await this._texture_loader.load_texture_from_url_or_op(url);
+			} catch (e) {
+				//console.log('FAIL');
+			}
 			// if(texture){
 			// 	callback(texture)
 			// } else {
 			if (!texture) {
-				this.states.error.set(`could not load texture ${url}`);
+				this.states.error.set(`could not load texture '${url}'`);
 			}
 			// }).catch(error=>{
 			// 	this.self.set_error(`could not load texture ${url} (${error})`);

@@ -17,3 +17,28 @@ QUnit.test('a param can be set to errored with a bad expression then back to non
 	assert.equal(param.states.error.message, null);
 	assert.notOk(param.is_dirty);
 });
+
+QUnit.test('a param can access another with its component full path', async (assert) => {
+	const geo1 = window.geo1;
+
+	const t = geo1.p.t;
+	const ty = geo1.p.t.y;
+	const tz = geo1.p.t.z;
+
+	ty.set(1);
+	tz.set('ch("ty")');
+	await tz.compute();
+	assert.equal(tz.value, 1);
+	assert.deepEqual(t.value.toArray(), [0, 1, 1]);
+
+	ty.set(2.5);
+	tz.set('ch("ty")*2');
+	await tz.compute();
+	assert.equal(tz.value, 5);
+	assert.deepEqual(t.value.toArray(), [0, 2.5, 5]);
+
+	ty.set(-1);
+	await tz.compute();
+	assert.equal(tz.value, -2);
+	assert.deepEqual(t.value.toArray(), [0, -1, -2]);
+});

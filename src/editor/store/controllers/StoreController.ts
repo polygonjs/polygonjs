@@ -9,6 +9,7 @@ import {SceneEvent} from 'src/engine/poly/SceneEvent';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 // import {BaseNodeType, EmitDataByNodeEventMap} from 'src/engine/nodes/_Base';
 import {ParamEvent} from 'src/engine/poly/ParamEvent';
+import {Editor} from 'src/editor/Editor';
 
 class StoreControllerClass {
 	private static _instance: StoreControllerClass;
@@ -33,10 +34,23 @@ class StoreControllerClass {
 	get scene() {
 		return this._scene;
 	}
+	async save_scene() {
+		const {SceneJsonExporter} = await import('src/engine/io/json/export/Scene');
+		const exporter = new SceneJsonExporter(StoreController.scene);
+		const data = exporter.data();
+		const callback = Editor.instance().on_save_callback;
+		if (callback) {
+			callback(data);
+		}
+	}
 
 	set_store(store: Store<State>) {
 		this.editor.set_store(store);
 		this.engine.set_store(store);
+	}
+
+	close_all_popups() {
+		this.editor.close_all_popups();
 	}
 
 	// process_events<T extends NodeEvent>(emitter: BaseNodeType, event_name: T, data: EmitDataByNodeEventMap[T]): void;
@@ -62,6 +76,8 @@ class StoreControllerClass {
 					return this.engine.update_node_error(emitter.graph_node_id);
 				case NodeEvent.UI_DATA_POSITION_UPDATED:
 					return this.engine.update_node_ui_data_position(emitter.graph_node_id);
+				case NodeEvent.UI_DATA_COMMENT_UPDATED:
+					return this.engine.update_node_ui_data_comment(emitter.graph_node_id);
 				case NodeEvent.SELECTION_UPDATED:
 					return this.engine.update_node_selection(emitter.graph_node_id);
 				case NodeEvent.FLAG_DISPLAY_UPDATED:

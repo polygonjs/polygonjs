@@ -46,7 +46,6 @@ export default createComponent({
 			const container = await node.request_container();
 
 			const texture: Texture = container.core_content();
-			console.log('texture', texture);
 
 			const res = container.resolution();
 			resolution.value[0] = res[0];

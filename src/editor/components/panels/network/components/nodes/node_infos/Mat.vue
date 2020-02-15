@@ -52,8 +52,6 @@ export default createComponent({
 			}
 		}
 		function copy_shader(shader_name: string, escaped = false) {
-			const clipboard_helper = new ClipboardHelper();
-
 			let text = shaders_by_name.value[shader_name];
 			if (escaped) {
 				text = text.replace(/(\t)/gm, ' ');
@@ -61,7 +59,7 @@ export default createComponent({
 				text = text.replace(/"/gm, '');
 			}
 
-			clipboard_helper.copy(text);
+			ClipboardHelper.copy(text);
 			// this.$store.commit('editor/status_bar/notice', `Copied ${shader_name} shader to clipboard`)
 		}
 
