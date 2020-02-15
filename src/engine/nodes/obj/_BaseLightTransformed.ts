@@ -9,17 +9,21 @@ export abstract class BaseLightTransformedObjNode<
 	O extends Light,
 	K extends NodeParamsConfig
 > extends TypedLightObjNode<O, K> {
-	create_params() {
-		// this.within_param_folder('transform', () => {
-		// 	CoreTransform.create_params(this);
-		// });
-		// this.within_param_folder('light', () => {
-		// 	this.create_light_params();
-		// });
-		// this.within_param_folder('shadows', () => {
-		// 	this.create_shadow_params_main();
-		// });
+	initialize_node() {
+		super.initialize_node();
+		this.io.outputs.set_has_output();
 	}
+	// create_params() {
+	// 	// this.within_param_folder('transform', () => {
+	// 	// 	CoreTransform.create_params(this);
+	// 	// });
+	// 	// this.within_param_folder('light', () => {
+	// 	// 	this.create_light_params();
+	// 	// });
+	// 	// this.within_param_folder('shadows', () => {
+	// 	// 	this.create_shadow_params_main();
+	// 	// });
+	// }
 
 	cook() {
 		this.transform_controller.update();

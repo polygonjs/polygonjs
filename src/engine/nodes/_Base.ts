@@ -177,7 +177,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get lifecycle(): LifeCycleController {
 		return (this._lifecycle = this._lifecycle || new LifeCycleController(this));
 	}
-	private get serializer(): NodeSerializer {
+	get serializer(): NodeSerializer {
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
 	// get container_controller(): TypedContainerController<T> {

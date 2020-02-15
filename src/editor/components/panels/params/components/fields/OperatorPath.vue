@@ -12,13 +12,15 @@
 			.cell.auto
 
 				input.value(
-					:value = 'value'
+					:class = 'input_value_class_object'
+					:value = 'raw_input'
 					@keypress.stop = ''
 					@keyup.stop = ''
 					@keydown.stop = ''
 					@change.stop = 'on_update_value'
 					@blue.stop = 'on_update_value'
 					type = 'text'
+					:title = 'error_message'
 					:tabindex = 'tabindex'
 					)
 				input.expression_result(
@@ -54,6 +56,7 @@ import {StoreController} from '../../../../../store/controllers/StoreController'
 import {ParamSetCommand} from '../../../../../history/commands/ParamSet';
 
 import {createComponent} from '@vue/composition-api';
+import {CoreWalker} from '../../../../../../core/Walker';
 export default createComponent({
 	name: 'operator-path-field',
 	props: SetupFieldCommonProps,
@@ -74,12 +77,33 @@ export default createComponent({
 		function go_to_node() {
 			param.compute();
 			const node = param.found_node();
-			if (node?.parent) {
-				StoreController.editor.set_current_node(node.parent);
+			if (node) {
+				if (node.parent) {
+					StoreController.editor.set_current_node(node.parent);
 
-				if (node.parent.children_allowed() && node.parent.children_controller) {
-					node.parent.children_controller.selection.set([node]);
+					if (node.parent.children_allowed() && node.parent.children_controller) {
+						node.parent.children_controller.selection.set([node]);
+					}
 				}
+			} else {
+				__attempt_finding_parent();
+			}
+		}
+		function __attempt_finding_parent(level = 1) {
+			const path = param.value;
+			const elements = path.split('/');
+			if (elements.length == 1) {
+				return;
+			}
+			for (let i = 0; i < level; i++) {
+				elements.pop();
+			}
+			const parent_path = elements.join('/');
+			const parent_node = CoreWalker.find_node(param.node, parent_path);
+			if (parent_node) {
+				StoreController.editor.set_current_node(parent_node);
+			} else {
+				__attempt_finding_parent(level + 1);
 			}
 		}
 

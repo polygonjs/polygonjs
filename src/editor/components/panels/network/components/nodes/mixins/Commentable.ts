@@ -13,7 +13,7 @@ export function SetupCommentable(
 	layout_vertical: Readonly<Ref<boolean>>
 ) {
 	const comment = computed(() => {
-		return json_node.ui_data.comment;
+		return json_node.ui_data_json.comment;
 	});
 	const display_comment = computed(() => {
 		return comment.value != null && comment.value != '';

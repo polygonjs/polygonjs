@@ -24,7 +24,7 @@
 			:class = 'input_value_class_object'
 			:value = 'raw_input'
 			@keypress.stop = ''
-			@keyup.stop = ''
+			@keyup.stop = 'on_keyup'
 			@keydown.stop = ''
 			@change.stop = 'on_update_value'
 			@blur.stop = 'on_update_value'

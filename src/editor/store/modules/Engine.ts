@@ -39,6 +39,7 @@ export enum EngineMutation {
 	NODE_DISPLAY_FLAG_UPDATED = 'NODE_DISPLAY_FLAG_UPDATED',
 	NODE_BYPASS_FLAG_UPDATED = 'NODE_BYPASS_FLAG_UPDATED',
 	NODE_NAME_UPDATED = 'NODE_NAME_UPDATED',
+	NODE_INPUTS_UPDATED = 'NODE_INPUTS_UPDATED',
 	NODE_CREATED = 'NODE_CREATED',
 	// param
 	PARAM_RAW_INPUT_UPDATED = 'PARAM_RAW_INPUT_UPDATED',
@@ -63,6 +64,7 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 	[EngineMutation.NODE_DISPLAY_FLAG_UPDATED]: string;
 	[EngineMutation.NODE_BYPASS_FLAG_UPDATED]: string;
 	[EngineMutation.NODE_NAME_UPDATED]: string;
+	[EngineMutation.NODE_INPUTS_UPDATED]: string;
 	[EngineMutation.NODE_CREATED]: {
 		parent_id: string;
 		child_node_json: EngineNodeData;
@@ -310,8 +312,8 @@ export const EngineStoreModule = {
 			if (node) {
 				const json_node = store_json_node(state, node);
 				if (json_node) {
-					json_node.ui_data.x = node.ui_data.position.x;
-					json_node.ui_data.y = node.ui_data.position.y;
+					json_node.ui_data_json.x = node.ui_data.position.x;
+					json_node.ui_data_json.y = node.ui_data.position.y;
 				}
 			}
 		},
@@ -323,7 +325,7 @@ export const EngineStoreModule = {
 			if (node) {
 				const json_node = store_json_node(state, node);
 				if (json_node) {
-					json_node.ui_data.comment = node.ui_data.comment;
+					json_node.ui_data_json.comment = node.ui_data.comment;
 				}
 			}
 		},
@@ -336,7 +338,7 @@ export const EngineStoreModule = {
 			if (node && node.children_allowed() && node.children_controller) {
 				const json_node = store_json_node(state, node);
 				if (json_node) {
-					json_node['selection'] = node.children_controller.selection.to_json();
+					Vue.set(json_node, 'selection', node.children_controller.selection.to_json());
 				}
 			}
 		},
@@ -350,6 +352,18 @@ export const EngineStoreModule = {
 				const json_node = store_json_node(state, node);
 				if (json_node) {
 					json_node.name = node.name;
+				}
+			}
+		},
+		[EngineMutation.NODE_INPUTS_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_INPUTS_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node) {
+				const json_node = store_json_node(state, node);
+				if (json_node) {
+					Vue.set(json_node, 'inputs', node.serializer.input_ids());
 				}
 			}
 		},

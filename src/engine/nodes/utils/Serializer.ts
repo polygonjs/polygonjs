@@ -8,7 +8,7 @@ export interface NodeSerializerData {
 	type: string;
 	graph_node_id: string;
 	is_dirty: boolean;
-	ui_data: NodeUIDataJson;
+	ui_data_json: NodeUIDataJson;
 	error_message: string | undefined;
 	children: string[];
 	inputs: Array<string | undefined>;
@@ -43,9 +43,6 @@ export class NodeSerializer {
 		// });
 		const children_indices: string[] = this.node.children().map((node) => node.graph_node_id);
 
-		const input_indices: Array<string | undefined> = this.node.io.inputs
-			.inputs()
-			.map((node) => (node != null ? node.graph_node_id : undefined));
 		const connection_output_indices = this.node.io.connections
 			.input_connections()
 			?.map((connection) => (connection != null ? connection.output_index : undefined));
@@ -57,10 +54,10 @@ export class NodeSerializer {
 			type: this.node.type,
 			graph_node_id: this.node.graph_node_id,
 			is_dirty: this.node.is_dirty,
-			ui_data: this.node.ui_data.to_json(),
+			ui_data_json: this.node.ui_data.to_json(),
 			error_message: this.node.states.error.message,
 			children: children_indices,
-			inputs: input_indices,
+			inputs: this.input_ids(),
 			input_connection_output_indices: connection_output_indices,
 			named_inputs: named_inputs,
 			named_outputs: named_outputs,
@@ -81,6 +78,10 @@ export class NodeSerializer {
 		}
 
 		return data;
+	}
+
+	input_ids(): (string | undefined)[] {
+		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graph_node_id : undefined));
 	}
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {

@@ -66,7 +66,6 @@ export function SetupTabMenu(
 	function on_tab_menu_select(entry: string) {
 		const elements = entry.split('/');
 		const last_element = elements[elements.length - 1];
-		console.log('on_tab_menu_select', entry, last_element);
 		node_creation_helper.activate(last_element);
 	}
 

@@ -38,10 +38,10 @@
 							"resolution": {
 								"components": {
 									"x": {
-										"value": 30
+										"raw_input": 30
 									},
 									"y": {
-										"value": 30
+										"raw_input": 30
 									}
 								}
 							},
@@ -49,7 +49,7 @@
 								"components": {
 									"x": {},
 									"y": {
-										"expression": "$PI*2"
+										"raw_input": "$PI*2"
 									}
 								}
 							},
@@ -57,7 +57,7 @@
 								"components": {
 									"x": {},
 									"y": {
-										"expression": "$PI"
+										"raw_input": "$PI"
 									}
 								}
 							}
@@ -74,35 +74,42 @@
 				"display_node_name": "sphere1",
 				"display_flag": true
 			},
+			"geo2": {
+				"type": "geo",
+				"inputs": ["geo1"]
+			},
+			"hemisphere_light1": {
+				"type": "hemisphere_light"
+			},
 			"perspective_camera1": {
 				"type": "perspective_camera",
 				"params": {
 					"controls": {
-						"value": "/events1/camera_orbit_controls1"
+						"raw_input": ""
 					},
 					"t": {
 						"components": {
 							"x": {
-								"value": 0.32549316389238786
+								"raw_input": 0.32549316389238786
 							},
 							"y": {
-								"value": 1.2957439559942237
+								"raw_input": 1.2957439559942237
 							},
 							"z": {
-								"value": 6.578889844522953
+								"raw_input": 6.578889844522953
 							}
 						}
 					},
 					"r": {
 						"components": {
 							"x": {
-								"value": -11.14206838852055
+								"raw_input": -11.14206838852055
 							},
 							"y": {
-								"value": 2.7791179717609746
+								"raw_input": 2.7791179717609746
 							},
 							"z": {
-								"value": 0.5471293977011683
+								"raw_input": 0.5471293977011683
 							}
 						}
 					}
@@ -117,7 +124,7 @@
 						"type": "file",
 						"params": {
 							"url": {
-								"value": "/examples/textures/piz_compressed.exr"
+								"raw_input": "/examples/textures/piz_compressed.exr"
 							}
 						},
 						"inputs": []
@@ -172,6 +179,9 @@
 						"pos": [0, 50]
 					}
 				}
+			},
+			"geo2": {
+				"pos": [0, -550]
 			},
 			"hemisphere_light1": {
 				"pos": [150, 100]

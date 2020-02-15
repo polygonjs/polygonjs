@@ -48,6 +48,7 @@
 					v-for = 'json_param, i in selected_node_json_params_for_current_folder'
 					:json_param = 'json_param'
 					:key = 'json_param.graph_node_id'
+					:tabindex = '(i+1)*100'
 				)
 
 

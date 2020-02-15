@@ -2,16 +2,21 @@ import {Vector2} from 'three/src/math/Vector2';
 import {NodeSelectionHelper, NodeSelectionData} from '../helpers/NodeSelection';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 
-import {Ref, onMounted, computed} from '@vue/composition-api';
+import {Ref, onMounted, computed, watch} from '@vue/composition-api';
 export function SetupNodeSelection(
 	node_selection_data: NodeSelectionData,
 	node_selection_helper: NodeSelectionHelper,
 	nodes_container: Ref<HTMLElement | null>
 ) {
+	const current_node_graph_id = computed(() => StoreController.editor.current_node_graph_id());
+
 	onMounted(() => {
 		if (nodes_container.value) {
 			node_selection_helper.set_element(nodes_container.value);
 		}
+		set_selection_helper_node();
+	});
+	watch(current_node_graph_id, (new_val, old_val) => {
 		set_selection_helper_node();
 	});
 

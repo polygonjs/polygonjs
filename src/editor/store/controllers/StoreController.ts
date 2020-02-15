@@ -70,6 +70,8 @@ class StoreControllerClass {
 					return this.engine.update_node_bypass_flag(emitter.graph_node_id);
 				case NodeEvent.NAME_UPDATED:
 					return this.engine.update_node_name(emitter.graph_node_id);
+				case NodeEvent.INPUTS_UPDATED:
+					return this.engine.update_node_inputs(emitter.graph_node_id);
 				case NodeEvent.CREATED:
 					return this.engine.add_node(emitter.graph_node_id, data);
 

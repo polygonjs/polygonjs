@@ -25,6 +25,8 @@ export interface ISetupFieldCommonProps {
 
 import {computed, watch} from '@vue/composition-api';
 import {ParamSetCommand} from 'src/editor/history/commands/ParamSet';
+import {FloatParam} from 'src/engine/params/Float';
+import {IntegerParam} from 'src/engine/params/Integer';
 export function SetupFieldCommon(props: ISetupFieldCommonProps) {
 	const param = StoreController.engine.param(props.json_param.graph_node_id)!;
 
@@ -108,6 +110,34 @@ export function SetupFieldCommon(props: ISetupFieldCommonProps) {
 			}
 		}
 	}
+	function on_keyup(e: KeyboardEvent) {
+		let offset: number | undefined = undefined;
+
+		switch (e.key) {
+			case 'ArrowUp':
+				offset = 1;
+				break;
+			case 'ArrowDown':
+				offset = -1;
+				break;
+		}
+		if (offset) {
+			if (e.ctrlKey) {
+				offset *= 0.1;
+			} else {
+				if (e.shiftKey) {
+					offset *= 10;
+				}
+			}
+			if (param instanceof FloatParam || param instanceof IntegerParam) {
+				const value = param.value;
+				const cmd = new ParamSetCommand(param, value + offset);
+				cmd.push();
+			}
+		}
+
+		e.preventDefault();
+	}
 
 	// NOT USED, since it is annoying when trying to scroll
 	// function on_wheel(e: WheelEvent) {
@@ -152,6 +182,7 @@ export function SetupFieldCommon(props: ISetupFieldCommonProps) {
 		is_field_visible,
 		// functions
 		on_update_value,
+		on_keyup,
 		// on_wheel,
 		reset_to_default,
 	};

@@ -48,7 +48,7 @@ export function SetupInputs(
 	const input_json_nodes = computed(() => {
 		return json_node.inputs.map((graph_node_id) => {
 			if (graph_node_id) {
-				return StoreController.engine.node(graph_node_id);
+				return StoreController.engine.json_node(graph_node_id);
 			}
 		});
 	});

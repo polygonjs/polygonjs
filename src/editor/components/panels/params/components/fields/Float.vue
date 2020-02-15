@@ -17,7 +17,7 @@
 					:class = 'input_value_class_object'
 					:value = 'raw_input'
 					@keypress.stop = ''
-					@keyup.stop = ''
+					@keyup.stop = 'on_keyup'
 					@keydown.stop = ''
 					@change.stop = 'on_update_value'
 					@focus.stop = 'on_focus'
@@ -48,7 +48,6 @@
 					@mouseup = 'on_slider_mouseup'
 					@change = 'on_slider_change'
 					@input = 'on_slider_drag'
-					:tabindex = 'tabindex'
 					)
 
 

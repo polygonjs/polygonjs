@@ -78,6 +78,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 				}
 			});
 		}
+		this.io.outputs.set_has_one_output();
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
 

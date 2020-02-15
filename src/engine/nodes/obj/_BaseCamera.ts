@@ -45,12 +45,10 @@ import {BaseNodeType} from '../_Base';
 export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
-		test = ParamConfig.BOOLEAN(0);
 		controls = ParamConfig.OPERATOR_PATH('', {
 			node_selection: {
 				context: NodeContext.EVENT,
 			},
-			visible_if: {test: 1},
 		});
 		// add transform params
 		t = ParamConfig.VECTOR3([0, 0, 0]);
@@ -114,6 +112,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	protected _used_in_scene: boolean = true;
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
+		this.io.outputs.set_has_one_output();
 		// this._init_dirtyable_hook();
 
 		this.flags.display.add_hook(() => {

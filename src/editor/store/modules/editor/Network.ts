@@ -32,7 +32,6 @@ export const EditorNetworkStateModule = {
 			for (let id of payload) {
 				Vue.set(state.node_ids_being_moved, id, true);
 			}
-			console.log(state.node_ids_being_moved);
 		},
 		[EditorNetworkMutation.RESET_NODE_IDS_BEING_MOVED]: (state: EditorNetworkState) => {
 			Vue.set(state, 'node_ids_being_moved', {});

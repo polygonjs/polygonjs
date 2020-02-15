@@ -59,6 +59,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
 
 		this.io.inputs.set_count(0, 1);
+		this.io.outputs.set_has_one_output();
 	}
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {

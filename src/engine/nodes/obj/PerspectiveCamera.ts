@@ -13,7 +13,7 @@ const DEFAULT = {
 // const EVENT_CHANGE = { type: 'change' };
 import {ParamConfig} from '../utils/params/ParamsConfig';
 class PerspectiveCameraObjParamConfig extends BaseCameraObjParamsConfig {
-	fov = ParamConfig.FLOAT(DEFAULT.fov);
+	fov = ParamConfig.FLOAT(DEFAULT.fov, {range: [0, 100]});
 	vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 1}});
 	horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 0}});
 }
@@ -33,18 +33,18 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}
 
-	create_params() {
-		// this.create_common_params();
-		// this.within_param_folder('render', () => {
-		// this.add_param(ParamType.FLOAT, 'fov', DEFAULT.fov, {
-		// 	range: [0, 180],
-		// 	range_locked: [true, true],
-		// });
-		// this.add_param(ParamType.VECTOR2, 'vertical_fov_range', [0, 100], {visible_if: {lock_width: 1}});
-		// this.add_param(ParamType.VECTOR2, 'horizontal_fov_range', [0, 100], {visible_if: {lock_width: 0}});
-		// this.create_player_camera_params();
-		// });
-	}
+	// create_params() {
+	// 	// this.create_common_params();
+	// 	// this.within_param_folder('render', () => {
+	// 	// this.add_param(ParamType.FLOAT, 'fov', DEFAULT.fov, {
+	// 	// 	range: [0, 180],
+	// 	// 	range_locked: [true, true],
+	// 	// });
+	// 	// this.add_param(ParamType.VECTOR2, 'vertical_fov_range', [0, 100], {visible_if: {lock_width: 1}});
+	// 	// this.add_param(ParamType.VECTOR2, 'horizontal_fov_range', [0, 100], {visible_if: {lock_width: 0}});
+	// 	// this.create_player_camera_params();
+	// 	// });
+	// }
 
 	update_camera() {
 		if (this._object.fov != this.pv.fov) {

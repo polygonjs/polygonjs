@@ -25,6 +25,12 @@ export class OutputsController<T extends BaseNodeType> {
 	// 	}
 	// 	this._has_outputs = options['has_outputs'];
 	// }
+	set_has_one_output() {
+		this._has_outputs = true;
+	}
+	set_has_no_output() {
+		this._has_outputs = false;
+	}
 
 	get has_outputs() {
 		return this._has_outputs;

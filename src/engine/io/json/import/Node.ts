@@ -154,7 +154,6 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		if (!data) {
 			return;
 		}
-
 		const param_names = Object.keys(data);
 
 		param_names.forEach((param_name) => {

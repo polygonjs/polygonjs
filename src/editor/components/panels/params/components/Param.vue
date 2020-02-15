@@ -213,7 +213,7 @@ export default createComponent({
 
 	$color_bg_hover: darken($color_bg_panel_param, 20%)
 	$color_bg_expression: lighten(mix($color_bg, lightgreen, 50%), 20%)
-	$color_bg_error: $alert-color
+	$color_bg_error: lighten($alert-color,5%)
 
 	.ParamContainer
 		padding: 1px 0px

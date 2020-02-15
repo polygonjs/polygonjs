@@ -59,13 +59,11 @@ export default createComponent({
 		const src_node_pos_v = new Vector2();
 		const dest_node_pos_v = new Vector2();
 		const src_node_pos = computed(() => {
-			src_node_pos_v.x = props.src_json_node.ui_data.x;
-			src_node_pos_v.y = props.src_json_node.ui_data.y;
+			src_node_pos_v.set(props.src_json_node.ui_data_json.x, props.src_json_node.ui_data_json.y);
 			return src_node_pos_v;
 		});
 		const dest_node_pos = computed(() => {
-			dest_node_pos_v.x = props.dest_json_node.ui_data.x;
-			dest_node_pos_v.y = props.dest_json_node.ui_data.y;
+			dest_node_pos_v.set(props.dest_json_node.ui_data_json.x, props.dest_json_node.ui_data_json.y);
 			return dest_node_pos_v;
 		});
 		// const src_node_box_in_place = computed(() => node_box_in_place(src_node));
@@ -78,10 +76,20 @@ export default createComponent({
 		const dest_node_box = computed(() => node_box(props.dest_json_node));
 		const dest_node_inputs_count = computed(() => dest_node.io.inputs.max_inputs_count);
 		const dest_node_width = computed(() => dest_node.ui_data.width());
-		const svg_bounds = computed(() => src_node_box.value.clone().union(dest_node_box.value));
+
+		const src_node_box_clone = new Box2();
+		const svg_bounds = computed(() => {
+			src_node_box_clone.copy(src_node_box.value);
+			src_node_box_clone.union(dest_node_box.value);
+			return src_node_box_clone;
+		});
+
+		const src_node_pos_clone = new Vector2();
+		const src_node_delta = new Vector2();
 		const src_position = computed(() => {
 			if (props.src_json_node) {
-				const node_delta = src_node_pos.value.clone().sub(svg_bounds.value.min);
+				src_node_pos_clone.copy(src_node_pos.value).sub(svg_bounds.value.min);
+				src_node_delta.copy(src_node_pos_clone);
 
 				if (layout_vertical) {
 					const connection_pos = new Vector2(
@@ -90,7 +98,7 @@ export default createComponent({
 							Constants.CONNECTION_VERTICAL_MARGIN -
 							2 * Constants.CONNECTION_VERTICAL_MARGIN
 					);
-					return node_delta.add(connection_pos);
+					return src_node_delta.add(connection_pos);
 				} else {
 					const connection_pos = new Vector2(
 						0.5 * dest_node_width.value + Constants.CONNECTION_VERTICAL_MARGIN,
@@ -98,13 +106,16 @@ export default createComponent({
 							Constants.CONNECTION_VERTICAL_START +
 							props.output_index * Constants.CONNECTION_VERTICAL_SPACING
 					);
-					return node_delta.add(connection_pos);
+					return src_node_delta.add(connection_pos);
 				}
 			}
 		});
+		const dest_node_pos_clone = new Vector2();
+		const dest_node_delta = new Vector2();
 		const dest_position = computed(() => {
 			if (props.dest_json_node) {
-				const node_delta = dest_node_pos.value.clone().sub(svg_bounds.value.min);
+				dest_node_pos_clone.copy(dest_node_pos.value).sub(svg_bounds.value.min);
+				dest_node_delta.copy(dest_node_pos_clone);
 				if (layout_vertical) {
 					let connection_x = 0;
 					if (dest_node_inputs_count.value > 0) {
@@ -115,7 +126,7 @@ export default createComponent({
 						connection_x,
 						-0.5 * dest_node_height.value + Constants.CONNECTION_VERTICAL_MARGIN
 					);
-					return node_delta.add(connection_pos);
+					return dest_node_delta.add(connection_pos);
 				} else {
 					const connection_pos = new Vector2(
 						-0.5 * dest_node_width.value - Constants.CONNECTION_VERTICAL_MARGIN,
@@ -123,7 +134,7 @@ export default createComponent({
 							Constants.CONNECTION_VERTICAL_START +
 							props.input_index * Constants.CONNECTION_VERTICAL_SPACING
 					);
-					return node_delta.add(connection_pos);
+					return dest_node_delta.add(connection_pos);
 				}
 			}
 		});
@@ -151,15 +162,16 @@ export default createComponent({
 		// 		y: PADDING+(delta.y < 0 ? 0 : size.y),
 		// 	}
 		// },
+		const svg_bound_min = new Vector2();
 		const svg_style_object = computed(() => {
 			const size = new Vector2();
 			svg_bounds.value.getSize(size);
-			const min = svg_bounds.value.min.clone();
-			min.x -= props.dest_json_node.ui_data.x;
-			min.y -= props.dest_json_node.ui_data.y;
+			svg_bound_min.copy(svg_bounds.value.min);
+			svg_bound_min.x -= props.dest_json_node.ui_data_json.x;
+			svg_bound_min.y -= props.dest_json_node.ui_data_json.y;
 			return {
-				left: `${min.x}px`,
-				top: `${min.y}px`,
+				left: `${svg_bound_min.x}px`,
+				top: `${svg_bound_min.y}px`,
 				width: `${size.x}px`,
 				height: `${size.y}px`,
 			};
@@ -221,8 +233,8 @@ export default createComponent({
 		const node_box_v = new Vector2();
 		function node_box(json_node: EngineNodeData): Box2 {
 			const node = node_from_json(json_node);
-			node_box_v.x = json_node.ui_data.x;
-			node_box_v.y = json_node.ui_data.y;
+			node_box_v.x = json_node.ui_data_json.x;
+			node_box_v.y = json_node.ui_data_json.y;
 			return node_box_in_place(node).translate(node_box_v);
 		}
 

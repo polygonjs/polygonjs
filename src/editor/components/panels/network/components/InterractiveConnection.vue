@@ -65,11 +65,13 @@ export default createComponent({
 			return dest_pos_vec;
 		});
 		const src_box = computed(() => {
+			src_box_box.copy(DEFAULT_POINT_BOX);
 			src_box_box.translate(src_pos.value);
 			return src_box_box;
 		});
 		const dest_box = computed(() => {
-			dest_box_box.translate(src_pos.value);
+			dest_box_box.copy(DEFAULT_POINT_BOX);
+			dest_box_box.translate(dest_pos.value);
 			return dest_box_box;
 		});
 		const svg_bounds = computed(() => {

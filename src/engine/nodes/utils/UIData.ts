@@ -17,6 +17,10 @@ export class UIData {
 	private _icon: string | null = null;
 	private _layout_vertical: boolean = true;
 	private _comment: string | undefined;
+	private _json: NodeUIDataJson = {
+		x: 0,
+		y: 0,
+	};
 
 	constructor(private node: BaseNodeType, x: number = 0, y: number = 0) {
 		this._position.x = x;
@@ -95,10 +99,9 @@ export class UIData {
 	// 	}
 	// }
 	to_json(): NodeUIDataJson {
-		return {
-			x: this._position.x,
-			y: this._position.y,
-			comment: this._comment,
-		};
+		this._json.x = this._position.x;
+		this._json.y = this._position.y;
+		this._json.comment = this._comment;
+		return this._json;
 	}
 }

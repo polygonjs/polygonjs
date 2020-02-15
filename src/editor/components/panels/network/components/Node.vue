@@ -182,8 +182,8 @@ export default createComponent({
 		const style_object = computed(() => {
 			// const pointer_events = this.selection_in_progress ? 'none' : 'auto';
 			return {
-				left: `${props.json_node.ui_data.x}px`,
-				top: `${props.json_node.ui_data.y}px`,
+				left: `${props.json_node.ui_data_json.x}px`,
+				top: `${props.json_node.ui_data_json.y}px`,
 				// pointerEvents: pointer_events,
 			};
 		});
