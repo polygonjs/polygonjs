@@ -30,6 +30,7 @@ export class ThreejsViewer extends BaseViewer {
 		this._canvas = document.createElement('canvas');
 		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');
 		this._canvas.style.display = 'block';
+		this._canvas.style.outline = 'none';
 
 		this._container.appendChild(this._canvas);
 		this._container.classList.add(CSS_CLASS);
@@ -143,9 +144,7 @@ export class ThreejsViewer extends BaseViewer {
 			this.cameras_controller.camera_node.post_process_controller.render(this._canvas, size, aspect);
 
 			// TODO: typescript
-			// if (this._controls && this._controls.update) {
-			// 	this._controls.update();
-			// }
+			this._controls_controller?.update();
 
 			// TODO: typescript
 			// if (this._capturer) {

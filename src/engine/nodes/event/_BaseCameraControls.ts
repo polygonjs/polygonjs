@@ -24,13 +24,17 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		//this.dispose_controls()
 
 		const controls = await this.create_controls_instance(camera, html_element);
-		controls.name = `${this.full_path()}:${camera.name}`;
+		const id = performance.now();
+		controls.name = `${this.full_path()}:${camera.name}:${id}`;
 		// console.log(this._controls)
 		await this.params.eval_all();
 		this.setup_controls(controls);
 		return controls;
 		// })
 		// });
+	}
+	controls_id() {
+		return JSON.stringify(this.params.all.map((p) => p.value_serialized));
 	}
 	//this.cook()
 

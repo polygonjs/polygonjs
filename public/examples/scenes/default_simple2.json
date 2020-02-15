@@ -33,7 +33,30 @@
 				"inputs": [],
 				"selection": ["mesh_lambert1"]
 			},
-			"events1": {"type": "events", "params": {}, "inputs": []},
+			"events1": {
+				"type": "events",
+				"nodes": {
+					"camera_orbit_controls1": {
+						"type": "camera_orbit_controls",
+						"params": {"polar_angle_range": {}},
+						"inputs": []
+					},
+					"camera_orbit_controls2": {
+						"type": "camera_orbit_controls",
+						"params": {
+							"allow_pan": {"raw_input": false},
+							"allow_zoom": {"raw_input": false},
+							"tdamping": {"raw_input": true},
+							"polar_angle_range": {}
+						},
+						"inputs": []
+					}
+				},
+				"children_context": "event",
+				"params": {},
+				"inputs": [],
+				"selection": ["camera_orbit_controls2"]
+			},
 			"geo1": {
 				"type": "geo",
 				"nodes": {
@@ -86,18 +109,19 @@
 			"perspective_camera1": {
 				"type": "perspective_camera",
 				"params": {
+					"controls": {"raw_input": "/events1/camera_orbit_controls1"},
 					"t": {
 						"components": {
-							"x": {"raw_input": 0.32549316389238786},
-							"y": {"raw_input": 1.2957439559942237},
-							"z": {"raw_input": 6.578889844522953}
+							"x": {"raw_input": 3.647860054465187},
+							"y": {"raw_input": 1.822786514407279},
+							"z": {"raw_input": 5.332659386416477}
 						}
 					},
 					"r": {
 						"components": {
-							"x": {"raw_input": -11.14206838852055},
-							"y": {"raw_input": 2.7791179717609746},
-							"z": {"raw_input": 0.5471293977011683}
+							"x": {"raw_input": -18.871231784723705},
+							"y": {"raw_input": 32.91459912875607},
+							"z": {"raw_input": 10.5221341248673}
 						}
 					}
 				},
@@ -110,9 +134,10 @@
 					"file2": {
 						"type": "file",
 						"params": {"url": {"raw_input": "/examples/textures/piz_compressed.exr"}},
-						"inputs": []
+						"inputs": [],
+						"flags": {}
 					},
-					"file_uv": {"type": "file", "params": {}, "inputs": []}
+					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}}
 				},
 				"children_context": "cop",
 				"params": {},
@@ -126,7 +151,10 @@
 	"ui": {
 		"nodes": {
 			"MAT": {"pos": [-200, 200], "nodes": {"mesh_lambert1": {"pos": [0, 0]}}},
-			"events1": {"pos": [-200, 100]},
+			"events1": {
+				"pos": [-200, 100],
+				"nodes": {"camera_orbit_controls1": {"pos": [-50, 150]}, "camera_orbit_controls2": {"pos": [-50, 300]}}
+			},
 			"geo1": {
 				"pos": [50, -250],
 				"nodes": {

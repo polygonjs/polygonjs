@@ -41,7 +41,6 @@ export class KeyEventsDispatcher {
 	}
 	activate() {
 		if (!this._active) {
-			console.log('activate');
 			this._active = true;
 			document.addEventListener('keypress', this._on_keypress_bound);
 			document.addEventListener('keydown', this._on_keydown_bound);
@@ -53,7 +52,6 @@ export class KeyEventsDispatcher {
 	}
 	deactivate() {
 		if (this._active) {
-			console.log('de-activate');
 			this._active = false;
 			document.removeEventListener('keypress', this._on_keypress_bound);
 			document.removeEventListener('keydown', this._on_keydown_bound);

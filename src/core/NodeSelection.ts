@@ -17,10 +17,6 @@ export default class NodeSelection {
 		return this._node;
 	}
 
-	clear() {
-		this._node_ids = [];
-	}
-
 	nodes(): BaseNodeType[] {
 		return this._node.scene.graph.nodes_from_ids(this._node_ids) as BaseNodeType[];
 	}
@@ -33,6 +29,10 @@ export default class NodeSelection {
 		return lodash_isEqual(node_ids, this._node_ids);
 	}
 
+	clear() {
+		this._node_ids = [];
+		this.send_update_event();
+	}
 	set(nodes: BaseNodeType[]) {
 		// this.remove(this.nodes());
 		this._node_ids = [];
@@ -45,7 +45,7 @@ export default class NodeSelection {
 		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id);
 		this._node_ids = lodash_union(this._node_ids, node_ids_to_add);
 
-		this.update_nodes_ui_data(nodes_to_add);
+		this.send_update_event();
 	}
 
 	remove(nodes_to_remove: BaseNodeType[]) {
@@ -54,14 +54,17 @@ export default class NodeSelection {
 		const node_ids_to_remove = nodes_to_remove.map((node) => node.graph_node_id);
 		this._node_ids = lodash_difference(this._node_ids, node_ids_to_remove);
 
-		this.update_nodes_ui_data(nodes_to_remove);
+		this.send_update_event();
 	}
 
-	private update_nodes_ui_data(nodes: BaseNodeType[]) {
+	private send_update_event() {
 		this._node.emit(NodeEvent.SELECTION_UPDATED);
 	}
 
+	private _json: string[] = [];
 	to_json() {
-		return this._node_ids;
+		this._json = this._json || [];
+		this._json = this._node_ids.map((id) => id);
+		return this._json;
 	}
 }

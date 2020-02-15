@@ -2,8 +2,8 @@ import {Vector2} from 'three/src/math/Vector2';
 import lodash_max from 'lodash/max';
 import lodash_map from 'lodash/map';
 import lodash_min from 'lodash/min';
-import lodash_includes from 'lodash/includes';
-import lodash_filter from 'lodash/filter';
+// import lodash_includes from 'lodash/includes';
+// import lodash_filter from 'lodash/filter';
 
 // import History from 'src/Editor/History/_Module';
 import {NodesCodeExporter} from 'src/engine/io/code/export/Nodes';
@@ -35,34 +35,40 @@ export class ClipBoardHelper {
 		//return if !@_cache?
 
 		parent_node.scene.lifecycle_controller.on_create_prevent(() => {
-			const camera_position = cam_animation_helper.position();
-
 			if (parent_node.children_controller) {
 				const code = this.read_cache(parent_node.children_controller.context);
 				if (code) {
-					const current_nodes = parent_node.children();
+					const current_node_ids: string[] = parent_node.children().map((c) => c.graph_node_id);
 
-					// TODO: this prevents the UI from updating. Hold off until there is a queue
-					//this.$store.scene.set_auto_update(false)
+					parent_node.scene.cooker.block();
 
 					//code = lodash_flatten(code_lines).join(";\n")
 					const code_wrapped_timestamp = Math.floor(performance.now() * 10000);
 					const code_wrapped_function_name = `paste_clipboard_${code_wrapped_timestamp}`;
-					const code_wrapped = `const ${code_wrapped_function_name} = function(parent){ const context={}; ${code}}; ${code_wrapped_function_name}(parent_node.scene().node('${parent_node.full_path()}'))`;
+					const code_wrapped = `const ${code_wrapped_function_name} = function(parent){ const context={}; ${code}}; ${code_wrapped_function_name}(parent_node.scene.node('${parent_node.full_path()}'))`;
 					// console.log(code_wrapped)
 					eval(code_wrapped);
 
-					// select the newly created nodes
-					const new_nodes = lodash_filter(
-						parent_node.children(),
-						(child) => !lodash_includes(current_nodes, child)
-					);
+					parent_node.scene.cooker.unblock();
 
+					// select the newly created nodes
+					const new_node_ids = parent_node
+						.children()
+						.map((c) => c.graph_node_id)
+						.filter((id) => {
+							return !current_node_ids.includes(id);
+						});
+					const new_nodes = new_node_ids.map((id) =>
+						parent_node.scene.graph.node_from_id(id)
+					) as BaseNodeType[];
+
+					const camera_position = cam_animation_helper.position();
 					this.offset_nodes(new_nodes, camera_position.multiplyScalar(-1));
 					new_nodes.forEach((node) => {
 						node.emit(NodeEvent.PARAMS_UPDATED);
 					});
 
+					// console.log('new_nodes', new_nodes, new_nodes.length);
 					parent_node.children_controller.selection.set(new_nodes);
 				}
 			}

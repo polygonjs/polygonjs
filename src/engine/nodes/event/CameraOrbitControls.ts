@@ -10,7 +10,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	allow_pan = ParamConfig.BOOLEAN(1);
 	allow_rotate = ParamConfig.BOOLEAN(1);
 	allow_zoom = ParamConfig.BOOLEAN(1);
-	tdamping = ParamConfig.BOOLEAN(0);
+	tdamping = ParamConfig.BOOLEAN(1);
 	damping = ParamConfig.FLOAT(0.1, {
 		visible_if: {tdamping: true},
 	});

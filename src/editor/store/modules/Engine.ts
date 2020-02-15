@@ -338,7 +338,14 @@ export const EngineStoreModule = {
 			if (node && node.children_allowed() && node.children_controller) {
 				const json_node = store_json_node(state, node);
 				if (json_node) {
-					Vue.set(json_node, 'selection', node.children_controller.selection.to_json());
+					if (json_node.selection) {
+						while (json_node.selection.pop()) {}
+						const new_ids = node.children_controller.selection.to_json();
+						for (let id of new_ids) {
+							json_node.selection.push(id);
+						}
+					}
+					// Vue.set(json_node, 'selection', node.children_controller.selection.to_json());
 				}
 			}
 		},
@@ -464,8 +471,10 @@ export const EngineStoreModule = {
 			const parent_node = StoreController.engine.node(parent_node_id);
 			if (parent_node) {
 				const child_node_json = payload['child_node_json'];
-				Vue.set(state.nodes_by_graph_node_id, parent_node.graph_node_id, parent_node.to_json());
+
 				Vue.set(state.nodes_by_graph_node_id, child_node_json.graph_node_id, child_node_json);
+				const parent_data = state.nodes_by_graph_node_id[parent_node.graph_node_id];
+				parent_data.children.push(child_node_json.graph_node_id);
 			}
 			// const data = payload['child_node_json'];
 

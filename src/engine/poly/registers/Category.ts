@@ -33,9 +33,6 @@ export const CATEGORY_MAT = {
 	VOLUME: 'volumes',
 	INSTANCE: 'instances',
 };
-export const CATEGORY_POST = {
-	PASS: 'passes',
-};
 export const CATEGORY_SOP = {
 	ANIMATION: 'animation',
 	ATTRIBUTE: 'attributes',
@@ -44,4 +41,7 @@ export const CATEGORY_SOP = {
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
 	RENDER: 'render',
+};
+export const CATEGORY_POST = {
+	PASS: 'passes',
 };

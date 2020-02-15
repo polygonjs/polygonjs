@@ -74,8 +74,13 @@ export class UIData {
 		return this._position;
 	}
 
-	set_position(new_position: Vector2) {
-		this._position.copy(new_position);
+	set_position(new_position: Vector2 | number, y: number = 0) {
+		if (new_position instanceof Vector2) {
+			this._position.copy(new_position);
+		} else {
+			const x = new_position;
+			this._position.set(x, y);
+		}
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}
 

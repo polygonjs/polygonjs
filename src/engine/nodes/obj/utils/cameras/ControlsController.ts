@@ -21,25 +21,29 @@ export class ControlsController {
 		return null;
 	}
 
-	controls_node(): BaseCameraControlsEventNodeType | null {
-		// if (this.node.params.has(CONTROLS_PARAM_NAME)) { // TODO: typescript
-		const node = this.node.p.controls.found_node();
-		if (node) {
-			if (node instanceof CameraOrbitControlsEventNode) {
-				return node;
-			} else {
-				this.node.states.error.set('found node is not of a camera control type');
+	async controls_node(): Promise<BaseCameraControlsEventNodeType | null> {
+		const controls_param = this.node.p.controls;
+		const raw_input = controls_param.raw_input;
+		if (raw_input && raw_input != '') {
+			if (controls_param.is_dirty) {
+				await controls_param.compute();
 			}
-		} else {
-			this.node.states.error.set('no node has been found');
+			const node = controls_param.found_node();
+			if (node) {
+				if (node instanceof CameraOrbitControlsEventNode) {
+					return node;
+				} else {
+					this.node.states.error.set('found node is not of a camera control type');
+				}
+			} else {
+				this.node.states.error.set('no node has been found');
+			}
 		}
 		return null;
-		// }
-		// return null;
 	}
 
-	update_controls() {
-		const controls_node = this.controls_node();
+	async update_controls() {
+		const controls_node = await this.controls_node();
 		if (controls_node) {
 			if (this._controls_node != controls_node) {
 				this.dispose_control_refs();
@@ -50,13 +54,13 @@ export class ControlsController {
 	}
 
 	async apply_controls(html_element: HTMLElement) {
-		const controls_node = this.controls_node();
+		const controls_node = await this.controls_node();
 		if (controls_node) {
 			// keep last_control_node_id to ensure we don't apply the controls more than once
 			// OR it allow the viewer to remain in control of this
 			//if !@_last_control_node_id? || (@_last_control_node_id != controls_node.graph_node_id)
 			// but for now, the controls are still applied again after mouse up
-			const controls_id = controls_node.graph_node_id;
+			const controls_id = controls_node.controls_id();
 			let controls_aleady_applied = false;
 			if (
 				this._applied_controls_by_element_id[html_element.id] &&
@@ -65,7 +69,7 @@ export class ControlsController {
 				controls_aleady_applied = true;
 			}
 			if (!controls_aleady_applied) {
-				// this._last_control_node_id = controls_id
+				// this._last_control_node_id = controls_id;
 				this._applied_controls_by_element_id[html_element.id] =
 					this._applied_controls_by_element_id[html_element.id] || {};
 				this._applied_controls_by_element_id[html_element.id][controls_id] = true;
@@ -87,14 +91,15 @@ export class ControlsController {
 	// calling dispose controls
 	// ensure that we can set the camera menu to camera1, then camera2 and back to camera1
 	// and controls will be cleared each time
-	dispose_controls(html_element: HTMLElement) {
-		if (this._applied_controls_by_element_id[html_element.id]) {
-			const controls_node = this.controls_node();
-			if (controls_node) {
-				const controls_id = controls_node.graph_node_id;
-				delete this._applied_controls_by_element_id[html_element.id][controls_id];
-			}
-		}
+	async dispose_controls(html_element: HTMLElement) {
+		delete this._applied_controls_by_element_id[html_element.id];
+		// if (this._applied_controls_by_element_id[html_element.id]) {
+		// 	const controls_node = await this.controls_node();
+		// 	if (controls_node) {
+		// 		const controls_id = controls_node.controls_id();
+		// 		delete this._applied_controls_by_element_id[html_element.id][controls_id];
+		// 	}
+		// }
 		// @_controls_node?.dispose_controls()
 		// if(this._applied_controls_by_element_id[html_element.id]){
 		// 	delete this._applied_controls_by_element_id[html_element.id][controls_id]

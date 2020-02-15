@@ -49,7 +49,7 @@ export class ParamCodeExporter<T extends BaseParamType> {
 		return CodeExporterDispatcher.dispatch_node(this._param.node).var_name();
 	}
 	prefix() {
-		return `${this.node_var_name()}.param('${this._param.name}')`;
+		return `${this.node_var_name()}.params.get('${this._param.name}')`;
 	}
 
 	protected add_main() {

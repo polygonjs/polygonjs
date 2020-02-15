@@ -48,6 +48,11 @@ export class ControlsController {
 			// this.$emit('before_controls_apply', controls)
 		}
 	}
+	update() {
+		if (this._controls) {
+			this._controls.update();
+		}
+	}
 
 	dispose_controls() {
 		if (this._controls) {

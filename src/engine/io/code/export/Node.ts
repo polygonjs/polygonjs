@@ -138,7 +138,7 @@ export class NodeCodeExporter {
 			if ((x_offset = options['position_x_offset']) != null) {
 				pos.x += x_offset;
 			}
-			this._lines.push(`${this.var_name()}.set_position(${pos.x}, ${pos.y})`);
+			this._lines.push(`${this.var_name()}.ui_data.set_position(${pos.x}, ${pos.y})`);
 		}
 	}
 
@@ -146,6 +146,7 @@ export class NodeCodeExporter {
 		this._node.params.all.forEach((param) => {
 			const param_exporter = CodeExporterDispatcher.dispatch_param(param);
 			const param_lines: string[] = param_exporter.process();
+			console.log(param.name, param_exporter, param_lines);
 			param_lines.forEach((param_line) => {
 				this._lines.push(param_line);
 			});
@@ -156,7 +157,7 @@ export class NodeCodeExporter {
 		if (this._node.io.inputs.override_clonable_state_allowed()) {
 			const override = this._node.io.inputs.override_clonable_state();
 			if (override) {
-				this._lines.push(`${this.var_name()}.set_override_clonable_state(true)`);
+				this._lines.push(`${this.var_name()}.io.inputs.set_override_clonable_state(true)`);
 			}
 		}
 	}
@@ -201,7 +202,7 @@ export class NodeCodeExporter {
 		if (this._node.children_controller?.selection != null) {
 			for (let node of this._node.children_controller.selection.nodes()) {
 				const node_exporter = CodeExporterDispatcher.dispatch_node(node);
-				this._lines.push(`${this.var_name()}.selection().add(${node_exporter.var_name()})`);
+				this._lines.push(`${this.var_name()}.children_controller.selection.add(${node_exporter.var_name()})`);
 			}
 		}
 	}

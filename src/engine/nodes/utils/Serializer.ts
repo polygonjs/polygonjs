@@ -41,7 +41,6 @@ export class NodeSerializer {
 		// 	const param = this.node.spare_param(param_name);
 		// 	spare_params_json_by_name[param_name] = param.graph_node_id;
 		// });
-		const children_indices: string[] = this.node.children().map((node) => node.graph_node_id);
 
 		const connection_output_indices = this.node.io.connections
 			.input_connections()
@@ -56,7 +55,7 @@ export class NodeSerializer {
 			is_dirty: this.node.is_dirty,
 			ui_data_json: this.node.ui_data.to_json(),
 			error_message: this.node.states.error.message,
-			children: children_indices,
+			children: this.children_ids(),
 			inputs: this.input_ids(),
 			input_connection_output_indices: connection_output_indices,
 			named_inputs: named_inputs,
@@ -78,6 +77,10 @@ export class NodeSerializer {
 		}
 
 		return data;
+	}
+
+	children_ids(): string[] {
+		return this.node.children().map((node) => node.graph_node_id);
 	}
 
 	input_ids(): (string | undefined)[] {

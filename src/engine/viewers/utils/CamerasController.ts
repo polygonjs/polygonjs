@@ -2,6 +2,7 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {BaseViewer} from '../_Base';
+import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 
 export class CamerasController {
 	// private _is_active: boolean = false;
@@ -21,8 +22,36 @@ export class CamerasController {
 		if (!this._camera_node || camera_node.graph_node_id != this._camera_node.graph_node_id) {
 			this._camera_node = camera_node;
 			// this._camera = camera_node.object;
+			this._update_graph_node();
 		}
 	}
+	private _graph_node: CoreGraphNode | undefined;
+	private _update_graph_node() {
+		if (!this._camera_node) {
+			return;
+		}
+		const controls_param = this._camera_node.params.get_operator_path('controls');
+		if (!controls_param) {
+			return;
+		}
+		this._graph_node = this._graph_node || this._create_graph_node();
+		if (!this._graph_node) {
+			return;
+		}
+		this._graph_node.graph_disconnect_predecessors();
+		this._graph_node.add_graph_input(controls_param);
+	}
+	private _create_graph_node() {
+		if (!this._camera_node) {
+			return undefined;
+		}
+		const node = new CoreGraphNode(this._camera_node.scene, 'viewer-controls');
+		node.add_post_dirty_hook(async () => {
+			await this.viewer.controls_controller.create_controls();
+		});
+		return node;
+	}
+
 	get camera_node() {
 		return this._camera_node;
 	}
@@ -36,7 +65,6 @@ export class CamerasController {
 	on_resize() {
 		this.compute_size_and_aspect();
 		this._camera_node?.post_process_controller.set_renderer_size(this.viewer.canvas, this._size);
-		console.log('cameras_controller on_resize', this._camera_node, this._size);
 		this.update_camera_aspect();
 	}
 	compute_size_and_aspect() {
