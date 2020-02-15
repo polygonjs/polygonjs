@@ -125,7 +125,7 @@ export default createComponent({
 		});
 		const vertex_human_labels_by_name = computed(() => {
 			const h: Dictionary<string> = {};
-			for (let name of Object.keys(vertex_attribute_sizes_by_name)) {
+			for (let name of Object.keys(vertex_attribute_sizes_by_name.value)) {
 				const type = vertex_attribute_types_by_name.value[name];
 				const is_string = type == CoreConstant.ATTRIB_TYPE.STRING;
 				let label = is_string ? 'string' : `${vertex_attribute_sizes_by_name.value[name]}f`;
@@ -199,8 +199,12 @@ export default createComponent({
 		return {
 			table_props,
 			table_prop_names,
+			points_count,
+			objects_count,
 			objects_count_visible_class_object,
 			object_types,
+			objects_count_by_type,
+			objects_visible_count,
 			vertex_attribute_names,
 			vertex_class_objects_by_name,
 			vertex_human_labels_by_name,

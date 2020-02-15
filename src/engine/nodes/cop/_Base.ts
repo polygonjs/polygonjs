@@ -14,6 +14,9 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 	);
 	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
 	protected _texture: Texture | undefined;
+	get texture() {
+		return this._texture;
+	}
 
 	static node_context(): NodeContext {
 		return NodeContext.COP;

@@ -17,6 +17,7 @@
 </template>
 
 <script lang='ts'>
+import Vue from 'vue';
 import {BaseCopNodeType} from 'src/engine/nodes/cop/_Base';
 import {StoreController} from '../../../../../../store/controllers/StoreController';
 import {Texture} from 'three/src/textures/Texture';
@@ -46,10 +47,11 @@ export default createComponent({
 			const container = await node.request_container();
 
 			const texture: Texture = container.core_content();
+			console.log('texture', texture, container.resolution());
 
 			const res = container.resolution();
-			resolution.value[0] = res[0];
-			resolution.value[1] = res[1];
+			Vue.set(resolution.value, 0, res[0]);
+			Vue.set(resolution.value, 1, res[1]);
 		}
 
 		return {resolution};

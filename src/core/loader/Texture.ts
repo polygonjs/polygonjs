@@ -127,7 +127,6 @@ export class CoreTextureLoader {
 				return texture;
 			} else {
 				this.loader_for_ext(ext).then((loader) => {
-					console.log('loader', loader);
 					loader.load(url, resolve, undefined, (error: any) => {
 						console.warn('error', error);
 						reject();

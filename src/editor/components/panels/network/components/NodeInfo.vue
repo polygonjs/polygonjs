@@ -121,7 +121,6 @@ export default createComponent({
 			return {time_dependent: time_dependent.value};
 		});
 		const current_node_info_type = computed(() => {
-			const node = StoreController.editor.current_node();
 			if (node) {
 				let component;
 				let components_for_context = COMPONENTS_BY_NODE_CONTEXT_AND_TYPE.get(node.node_context());
@@ -136,7 +135,6 @@ export default createComponent({
 		});
 
 		async function compute_node() {
-			console.log('compute_node', node);
 			if (!node) {
 				return;
 			}
@@ -147,7 +145,6 @@ export default createComponent({
 
 			time_dependent.value = node.states.time_dependent.active;
 			error_message.value = node.states.error.message;
-			console.log(node.name, node.states.error.message, error_message.value);
 
 			const scene_predecessors = node.dependencies_controller.scene_predecessors();
 			const scene_successors = node.dependencies_controller.scene_successors();
@@ -179,7 +176,6 @@ export default createComponent({
 			}
 		}
 		async function on_name_click() {
-			console.log('A');
 			const current_node = StoreController.engine.node(props.graph_node_id) as BaseNodeType;
 			if (!current_node) {
 				return;

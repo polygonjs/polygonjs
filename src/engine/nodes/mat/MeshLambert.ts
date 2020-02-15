@@ -36,6 +36,6 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 		await TextureMapController.update(this);
 		await TextureAlphaMapController.update(this);
 
-		this.set_material(this._material);
+		this.set_material(this.material);
 	}
 }

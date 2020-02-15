@@ -180,6 +180,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected process_raw_input() {}
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
+		if (this.scene.loading_controller.is_loading) {
+			console.warn(`param attempt to compute ${this.full_path()}`);
+		}
+
 		if (this.is_dirty) {
 			if (!this._is_computing) {
 				this._is_computing = true;

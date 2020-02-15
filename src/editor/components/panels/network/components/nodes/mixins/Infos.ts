@@ -12,9 +12,7 @@ export function SetupInfos(/*json_node: EngineNodeData*/): SetupInfosOptions {
 	const display_node_info = ref(false);
 
 	function display_info() {
-		// if(this.node.is_a(BaseNodeSop)){
 		display_node_info.value = true;
-		// }
 	}
 	function hide_info() {
 		display_node_info.value = false;

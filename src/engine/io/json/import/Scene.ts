@@ -32,6 +32,11 @@ export class SceneJsonImporter {
 			}
 		}
 
+		// we block to ensure that nodes will not run their dirty_hooks
+		// which would trigger operator_path params to search for nodes that
+		// may not exist yet
+		scene.cooker.block();
+
 		const importer = JsonImportDispatcher.dispatch_node(scene.root);
 		if (this._data['root']) {
 			importer.process_data(this._data['root']);
@@ -41,6 +46,7 @@ export class SceneJsonImporter {
 		}
 
 		await scene.loading_controller.mark_as_loaded();
+		scene.cooker.unblock();
 
 		return scene;
 	}
