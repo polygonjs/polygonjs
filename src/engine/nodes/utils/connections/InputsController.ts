@@ -24,6 +24,7 @@ import {TypeAssert} from 'src/engine/poly/Assert';
 // 	max_inputs?: number;
 // 	depends_on_inputs?: boolean;
 // }
+type OnUpdateHook = () => void;
 
 // TODO: remove the "throw" statements, which seem less necessary now with typescript
 export class InputsController<T extends BaseNodeType> {
@@ -35,6 +36,9 @@ export class InputsController<T extends BaseNodeType> {
 	private _min_inputs_count: number = 0;
 	private _max_inputs_count: number = 0;
 	private _depends_on_inputs: boolean = true;
+
+	// hooks
+	private _on_update_hooks: OnUpdateHook[] | undefined;
 
 	// clonable
 	private _user_inputs_clonable_states: InputCloneMode[] | undefined;
@@ -233,7 +237,9 @@ export class InputsController<T extends BaseNodeType> {
 			const input_node = this.input(input_index);
 			if (input_node) {
 				const input_error_message = input_node.states.error.message;
-				this.node.states.error.set(`input ${input_index} is invalid (error: ${input_error_message})`);
+				if (input_error_message) {
+					this.node.states.error.set(`input ${input_index} is invalid (error: ${input_error_message})`);
+				}
 			}
 		}
 		return container;
@@ -357,14 +363,25 @@ export class InputsController<T extends BaseNodeType> {
 				// this._input_connections[input_index] = null;
 			}
 
-			this.post_set_input();
+			this.run_hooks();
 			this.node.set_dirty(node);
 			this.node.emit(NodeEvent.INPUTS_UPDATED);
 		}
 	}
 	// TODO: make hooks like post set dirty hooks
-	post_set_input() {} // TODO: typescript: handle hook
+	// post_set_input() {} // TODO: typescript: handle hook
 	//
+	add_hook(hook: OnUpdateHook) {
+		this._on_update_hooks = this._on_update_hooks || [];
+		this._on_update_hooks.push(hook);
+	}
+	run_hooks() {
+		if (this._on_update_hooks) {
+			for (let hook of this._on_update_hooks) {
+				hook();
+			}
+		}
+	}
 
 	remove_input(node: T) {
 		lodash_each(this.inputs(), (input, index) => {

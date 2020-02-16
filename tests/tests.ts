@@ -93,3 +93,6 @@ import './engine/nodes/sop/TorusKnot';
 import './engine/nodes/sop/Transform';
 import './engine/nodes/sop/Tube';
 import './engine/nodes/sop/UvProject';
+
+QUnit.module('viewer');
+import './engine/viewers/Controls';

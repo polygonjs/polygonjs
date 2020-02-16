@@ -10,6 +10,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypedContainerController} from '../utils/ContainerController';
 import {ObjectsManagerNode} from '../manager/ObjectsManager';
+import {Group} from 'three/src/objects/Group';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
@@ -48,6 +49,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return DEFAULT_INPUT_NAMES;
 	}
 
+	protected _children_group = new Group();
 	protected _object!: O;
 	// _sop_loaded: boolean = false;
 
@@ -79,8 +81,11 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		this._object = this._create_object_with_attributes();
 		// this._init_container_owner('Object');
 		// this.flags.add_display();
-		this.name_controller.add_post_set_full_path_hook(this.set_group_name.bind(this));
+		this.name_controller.add_post_set_full_path_hook(this.set_object_name.bind(this));
 
+		this.io.inputs.add_hook(() => {
+			this.transform_controller.on_input_updated();
+		});
 		// this._init_bypass_flag({
 		// 	has_bypass_flag: false,
 		// });
@@ -113,27 +118,34 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	get object() {
 		return this._object; //= this._object || this._create_object_with_attributes()
 	}
-	get group() {
-		return this.object;
+	get children_group() {
+		return this._children_group;
 	}
 
 	_create_object_with_attributes(): O {
 		const object = this.create_object();
 		if (object != null) {
-			object.name = this.name;
+			object.name = this.full_path();
 			(object as Object3DWithNode).node = this;
 		}
+		this._children_group.name = 'parented_outputs';
+		object.add(this._children_group);
 		return object as O;
 	}
-	private set_group_name() {
-		// ensures the material has a full path set
-		// allowing the render hook to be set
-		//this.set_material(@_material)
-		const group = this.group;
-		if (group) {
-			group.name = this.full_path();
+	private set_object_name() {
+		if (this.object) {
+			this.object.name = this.full_path();
 		}
 	}
+	// private set_group_name() {
+	// 	// ensures the material has a full path set
+	// 	// allowing the render hook to be set
+	// 	//this.set_material(@_material)
+	// 	const group = this.group;
+	// 	if (group) {
+	// 		group.name = this.full_path();
+	// 	}
+	// }
 
 	create_object(): Object3D {
 		return new Object3D();

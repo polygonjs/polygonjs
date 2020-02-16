@@ -14,9 +14,16 @@ export class ControlsController {
 	get camera_node() {
 		return this.viewer.cameras_controller.camera_node;
 	}
+	get controls() {
+		return this._controls;
+	}
 
 	async create_controls() {
 		this.dispose_controls();
+
+		if (!this.viewer.canvas) {
+			return;
+		}
 
 		const config = await this.camera_node?.controls_controller.apply_controls(this.viewer.canvas);
 		if (config) {
@@ -56,7 +63,9 @@ export class ControlsController {
 
 	dispose_controls() {
 		if (this._controls) {
-			this.camera_node?.controls_controller.dispose_controls(this.viewer.canvas);
+			if (this.viewer.canvas) {
+				this.camera_node?.controls_controller.dispose_controls(this.viewer.canvas);
+			}
 
 			if (this._bound_on_controls_start) {
 				this._controls.removeEventListener('start', this._bound_on_controls_start);

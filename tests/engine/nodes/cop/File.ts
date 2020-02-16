@@ -52,7 +52,7 @@ QUnit.test('COP file simple basis', async (assert) => {
 	const canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	const size = new Vector2(canvas.width, canvas.height);
-	window.perpective_camera1.post_process_controller.create_renderer(canvas, size);
+	window.perspective_camera1.post_process_controller.create_renderer(canvas, size);
 	assert.ok(POLY.renderers_controller.first_renderer());
 
 	const file1 = COP.create_node('file');
@@ -65,6 +65,8 @@ QUnit.test('COP file simple basis', async (assert) => {
 	texture = container.texture();
 	assert.equal(texture.image.width, 2048);
 	assert.equal(texture.image.height, 2048);
+
+	document.body.removeChild(canvas);
 });
 
 QUnit.skip('COP refers a path in another node', async (assert) => {

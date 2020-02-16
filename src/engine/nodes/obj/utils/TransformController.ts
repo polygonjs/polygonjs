@@ -9,7 +9,7 @@ import {BaseObjNodeType} from '../_Base';
 export class TransformController {
 	constructor(private node: BaseObjNodeType) {}
 
-	post_set_input() {
+	on_input_updated() {
 		if (this.node.io.inputs.input(0) != null) {
 			this.node.root.add_to_parent_transform(this.node);
 		} else {

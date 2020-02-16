@@ -18,11 +18,12 @@ export class CamerasController {
 	// activate() {
 	// 	this._is_active = true;
 	// }
-	set_camera_node(camera_node: BaseCameraObjNodeType) {
+	async set_camera_node(camera_node: BaseCameraObjNodeType) {
 		if (!this._camera_node || camera_node.graph_node_id != this._camera_node.graph_node_id) {
 			this._camera_node = camera_node;
 			// this._camera = camera_node.object;
 			this._update_graph_node();
+			await this.viewer.controls_controller.create_controls();
 		}
 	}
 	private _graph_node: CoreGraphNode | undefined;
@@ -63,6 +64,9 @@ export class CamerasController {
 	}
 
 	on_resize() {
+		if (!this.viewer.canvas) {
+			return;
+		}
 		this.compute_size_and_aspect();
 		this._camera_node?.post_process_controller.set_renderer_size(this.viewer.canvas, this._size);
 		this.update_camera_aspect();

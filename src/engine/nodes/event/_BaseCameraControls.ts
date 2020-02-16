@@ -24,8 +24,8 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		//this.dispose_controls()
 
 		const controls = await this.create_controls_instance(camera, html_element);
-		const id = performance.now();
-		controls.name = `${this.full_path()}:${camera.name}:${id}`;
+		const timestamp = performance.now();
+		controls.name = `${this.full_path()}:${camera.name}:${timestamp}:${this.controls_id()}`;
 		// console.log(this._controls)
 		await this.params.eval_all();
 		this.setup_controls(controls);

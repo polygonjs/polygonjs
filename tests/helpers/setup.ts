@@ -24,7 +24,7 @@ declare global {
 		sleep: (time: number) => Promise<void>;
 		scene: PolyScene;
 		root: ObjectsManagerNode;
-		perpective_camera1: PerspectiveCameraObjNode;
+		perspective_camera1: PerspectiveCameraObjNode;
 		geo1: GeoObjNode;
 		MAT: MaterialsObjNode;
 		POST: PostProcessObjNode;
@@ -38,9 +38,11 @@ QUnit.testStart(async () => {
 	window.scene.set_uuid('test');
 	POLY.set_env('test');
 
+	window.scene.loading_controller.mark_as_loading();
+	window.scene.cooker.block();
 	const root = window.scene.root;
 	window.root = root;
-	window.perpective_camera1 = root.create_node('perspective_camera');
+	window.perspective_camera1 = root.create_node('perspective_camera');
 	window.geo1 = root.create_node('geo');
 	window.MAT = root.create_node('materials');
 	window.MAT.set_name('MAT');
@@ -51,6 +53,7 @@ QUnit.testStart(async () => {
 
 	window.scene.loading_controller.set_auto_update(true);
 	await window.scene.loading_controller.mark_as_loaded();
+	window.scene.cooker.unblock();
 
 	// resolve();
 	// });

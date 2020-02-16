@@ -7,8 +7,10 @@ export class WebGLController {
 
 	init() {
 		const canvas = this.viewer.canvas;
-		canvas.onwebglcontextlost = this._on_webglcontextlost.bind(this);
-		canvas.onwebglcontextrestored = this._on_webglcontextrestored.bind(this);
+		if (canvas) {
+			canvas.onwebglcontextlost = this._on_webglcontextlost.bind(this);
+			canvas.onwebglcontextrestored = this._on_webglcontextrestored.bind(this);
+		}
 	}
 
 	protected _on_webglcontextlost() {

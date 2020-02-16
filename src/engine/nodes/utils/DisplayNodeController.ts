@@ -18,6 +18,14 @@ export class DisplayNodeController {
 	get display_node() {
 		return this._display_node;
 	}
+	private _parent_object: Object3D | undefined;
+	set_parent_object(object: Object3D) {
+		this._parent_object = object;
+	}
+	get parent_object() {
+		return this._parent_object || this.node.object;
+	}
+
 	async set_display_node(new_display_node: BaseSopNodeType) {
 		if (this._display_node != new_display_node) {
 			const old_display_node = this._display_node;
@@ -36,8 +44,8 @@ export class DisplayNodeController {
 
 	remove_children() {
 		let child: Object3D | undefined;
-		while ((child = this.node.object.children.pop())) {
-			this.node.object.remove(child);
+		while ((child = this.parent_object.children.pop())) {
+			this.parent_object.remove(child);
 		}
 	}
 
@@ -62,7 +70,7 @@ export class DisplayNodeController {
 						this.remove_children();
 						this._children_uuids_dict = {};
 						for (let object of new_objects) {
-							this.node.object.add(object);
+							this.parent_object.add(object);
 							this._children_uuids_dict[object.uuid] = true;
 						}
 						this._children_length = new_objects.length;

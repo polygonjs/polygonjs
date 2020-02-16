@@ -1,4 +1,5 @@
 import {SpotLight} from 'three/src/lights/SpotLight';
+import {SpotLightHelper} from 'three/src/helpers/SpotLightHelper';
 import {TypedLightObjNode} from './_BaseLight';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
@@ -15,6 +16,9 @@ class SpotLightObjParamsConfig extends NodeParamsConfig {
 	cast_shadows = ParamConfig.BOOLEAN(1);
 	shadow_res = ParamConfig.VECTOR2([1024, 1024]);
 	shadow_bias = ParamConfig.FLOAT(-0.001);
+
+	// helper
+	show_helper = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 
@@ -28,15 +32,18 @@ export class SpotLightObjNode extends TypedLightObjNode<SpotLight, SpotLightObjP
 	}
 
 	create_object() {
-		const object = new SpotLight();
+		const light = new SpotLight();
 
-		object.castShadow = true;
-		object.shadow.bias = -0.001;
-		object.shadow.mapSize.x = 1024;
-		object.shadow.mapSize.y = 1024;
-		object.shadow.camera.near = 0.1;
+		light.castShadow = true;
+		light.shadow.bias = -0.001;
+		light.shadow.mapSize.x = 1024;
+		light.shadow.mapSize.y = 1024;
+		light.shadow.camera.near = 0.1;
 
-		return object;
+		const helper = new SpotLightHelper(light, 1);
+		light.add(helper);
+
+		return light;
 	}
 
 	// create_light_params() {
@@ -65,6 +72,8 @@ export class SpotLightObjNode extends TypedLightObjNode<SpotLight, SpotLightObjP
 		this.object.penumbra = this.pv.penumbra;
 		this.object.decay = this.pv.decay;
 		this.object.distance = this.pv.distance;
+
+		this.object.children[0].visible = this.pv.show_helper;
 	}
 	update_shadow_params() {
 		this.object.castShadow = this.pv.cast_shadows;

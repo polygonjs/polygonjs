@@ -65,6 +65,9 @@ export class ThreejsViewer extends BaseViewer {
 	// }
 
 	private _init_display() {
+		if (!this._canvas) {
+			return;
+		}
 		this.cameras_controller.compute_size_and_aspect();
 		const size: Vector2 = this.cameras_controller.size;
 
@@ -132,13 +135,15 @@ export class ThreejsViewer extends BaseViewer {
 		if (this._request_animation_frame_id) {
 			cancelAnimationFrame(this._request_animation_frame_id);
 		}
-		this.cameras_controller.camera_node?.post_process_controller.delete_renderer(this._canvas);
+		if (this._canvas) {
+			this.cameras_controller.camera_node?.post_process_controller.delete_renderer(this._canvas);
+		}
 		// POLY.renderers_controller.deregister_renderer(@renderer)
 		// this.dispose_camera()
 	}
 
 	render() {
-		if (this.cameras_controller.camera_node) {
+		if (this.cameras_controller.camera_node && this._canvas) {
 			const size = this.cameras_controller.size;
 			const aspect = this.cameras_controller.aspect;
 			this.cameras_controller.camera_node.post_process_controller.render(this._canvas, size, aspect);

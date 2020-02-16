@@ -1,4 +1,5 @@
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
+import {DirectionalLightHelper} from 'three/src/helpers/DirectionalLightHelper';
 
 import {TypedLightObjNode} from './_BaseLight';
 
@@ -12,6 +13,9 @@ class DirectionalLightObjParamsConfig extends NodeParamsConfig {
 	cast_shadows = ParamConfig.BOOLEAN(1);
 	shadow_res = ParamConfig.VECTOR2([1024, 1024]);
 	shadow_bias = ParamConfig.FLOAT(-0.001);
+
+	// helper
+	show_helper = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new DirectionalLightObjParamsConfig();
 
@@ -22,14 +26,18 @@ export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight,
 	}
 
 	create_object() {
-		const object = new DirectionalLight();
+		const light = new DirectionalLight();
 
-		object.castShadow = true;
-		object.shadow.bias = -0.001;
-		object.shadow.mapSize.x = 1024;
-		object.shadow.mapSize.y = 1024;
-		object.shadow.camera.near = 0.1;
-		return object;
+		light.castShadow = true;
+		light.shadow.bias = -0.001;
+		light.shadow.mapSize.x = 1024;
+		light.shadow.mapSize.y = 1024;
+		light.shadow.camera.near = 0.1;
+
+		const helper = new DirectionalLightHelper(light, 1);
+		light.add(helper);
+
+		return light;
 	}
 
 	// create_light_params() {
@@ -68,6 +76,8 @@ export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight,
 		// updating the camera matrix is not necessary for point light
 		// so probably should not for this
 		this.object.shadow.camera.updateProjectionMatrix();
+
+		this.object.children[0].visible = this.pv.show_helper;
 	}
 	// get direction() {
 	// 	return this._direction;

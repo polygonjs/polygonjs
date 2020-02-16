@@ -1,4 +1,5 @@
 import {PointLight} from 'three/src/lights/PointLight';
+import {PointLightHelper} from 'three/src/helpers/PointLightHelper';
 import {ParamType} from 'src/engine/poly/ParamType';
 
 import {TypedLightObjNode} from './_BaseLight';
@@ -15,6 +16,9 @@ class PointLightObjParamsConfig extends NodeParamsConfig {
 	shadow_bias = ParamConfig.FLOAT(-0.001);
 	shadow_near = ParamConfig.FLOAT(1);
 	shadow_far = ParamConfig.FLOAT(100);
+
+	// helper
+	show_helper = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new PointLightObjParamsConfig();
 
@@ -29,14 +33,18 @@ export class PointLightObjNode extends TypedLightObjNode<PointLight, PointLightO
 	}
 
 	create_object() {
-		const object = new PointLight();
+		const light = new PointLight();
 
-		object.castShadow = true;
-		object.shadow.bias = -0.001;
-		object.shadow.mapSize.x = 1024;
-		object.shadow.mapSize.y = 1024;
-		object.shadow.camera.near = 0.1;
-		return object;
+		light.castShadow = true;
+		light.shadow.bias = -0.001;
+		light.shadow.mapSize.x = 1024;
+		light.shadow.mapSize.y = 1024;
+		light.shadow.camera.near = 0.1;
+
+		const helper = new PointLightHelper(light, 1);
+		light.add(helper);
+
+		return light;
 	}
 
 	create_light_params() {
@@ -62,6 +70,8 @@ export class PointLightObjNode extends TypedLightObjNode<PointLight, PointLightO
 		this.object.decay = this.pv.decay;
 
 		this.object.distance = this.pv.distance;
+
+		this.object.children[0].visible = this.pv.show_helper;
 	}
 	update_shadow_params() {
 		this.object.castShadow = this.pv.cast_shadows;

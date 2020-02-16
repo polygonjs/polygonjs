@@ -1,4 +1,5 @@
 import {HemisphereLight} from 'three/src/lights/HemisphereLight';
+import {HemisphereLightHelper} from 'three/src/helpers/HemisphereLightHelper';
 import {TypedLightObjNode} from './_BaseLight';
 // import {Color} from 'three/src/math/Color';
 // import {Vector3} from 'three/src/math/Vector3';
@@ -10,6 +11,7 @@ class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 	ground_color = ParamConfig.COLOR([0.1, 0.1, 0.25]);
 	intensity = ParamConfig.FLOAT(1);
 	position = ParamConfig.VECTOR3([0, 1, 0]);
+	show_helper = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new HemisphereLightObjParamsConfig();
 
@@ -24,7 +26,12 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 	}
 
 	create_object() {
-		return new HemisphereLight();
+		const light = new HemisphereLight();
+
+		const helper = new HemisphereLightHelper(light, 1);
+		light.add(helper);
+
+		return light;
 	}
 
 	// create_light_params() {
@@ -39,5 +46,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		this.object.groundColor = this.pv.ground_color;
 		this.object.position.copy(this.pv.position);
 		this.object.intensity = this.pv.intensity;
+
+		this.object.children[0].visible = this.pv.show_helper;
 	}
 }

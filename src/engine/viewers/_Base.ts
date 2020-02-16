@@ -19,7 +19,7 @@ const HOVERED_CLASS_NAME = 'hovered';
 
 export abstract class BaseViewer {
 	protected _display_scene: Scene;
-	protected _canvas!: HTMLCanvasElement;
+	protected _canvas: HTMLCanvasElement | undefined;
 	protected _active: boolean = false;
 
 	get active() {
@@ -66,7 +66,7 @@ export abstract class BaseViewer {
 	}
 
 	private async _init_from_scene(camera_node: BaseCameraObjNodeType) {
-		this.cameras_controller.set_camera_node(camera_node || this._scene.cameras_controller.master_camera_node);
+		await this.cameras_controller.set_camera_node(camera_node || this._scene.cameras_controller.master_camera_node);
 		// await this.update_picker_nodes(); // TODO: typescript
 	}
 	protected abstract _build(): void;

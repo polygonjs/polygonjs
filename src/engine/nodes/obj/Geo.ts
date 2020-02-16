@@ -39,6 +39,17 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	static type() {
 		return 'geo';
 	}
+
+	private _sop_group = this._create_sop_group();
+	private _create_sop_group() {
+		const group = new Group();
+		group.name = 'sop_group';
+		return group;
+	}
+	get sop_group() {
+		return this._sop_group;
+	}
+
 	// children_context() {
 	// 	return NodeContext.SOP;
 	// }
@@ -51,6 +62,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.flags.display.add_hook(() => {
 			this.set_used_in_scene(this.flags.display.active);
 		});
+		this._display_node_controller.set_parent_object(this.sop_group);
+		this.object.add(this.sop_group);
 		// this._init_display_flag({
 		// 	multiple_display_flags_allowed: false,
 		// 	affects_hierarchy: true,
@@ -153,7 +166,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
-		this.group.visible = this.flags.display.active;
+		this.object.visible = this.flags.display.active;
 		this.transform_controller.update(matrix);
 		//this.update_layers()
 

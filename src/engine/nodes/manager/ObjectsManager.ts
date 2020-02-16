@@ -189,7 +189,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 			if (node_input) {
 				//node_input.request_container (container)=>
 				//	callback(container.object() || @_object)
-				return node_input.object;
+				return node_input.children_group;
 			} else {
 				return this._object;
 			}

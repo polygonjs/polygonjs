@@ -23,6 +23,9 @@ export class EventsController {
 	}
 
 	init() {
+		if (!this.canvas) {
+			return;
+		}
 		if (this._bound_on_mousedown) {
 			this.canvas.removeEventListener('mousedown', this._bound_on_mousedown);
 		}
