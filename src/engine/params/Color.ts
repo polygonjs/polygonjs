@@ -28,14 +28,14 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			return this.default_value.toArray() as Number3;
 		}
 	}
-	get raw_input_serialized() {
-		if (this._raw_input instanceof Color) {
-			return this._raw_input.toArray() as Number3;
-		} else {
-			const new_array: StringOrNumber3 = [this._raw_input[0], this._raw_input[1], this._raw_input[2]];
-			return new_array;
-		}
-	}
+	// get raw_input_serialized() {
+	// 	if (this._raw_input instanceof Color) {
+	// 		return this._raw_input.toArray() as Number3;
+	// 	} else {
+	// 		const new_array: StringOrNumber3 = [this._raw_input[0], this._raw_input[1], this._raw_input[2]];
+	// 		return new_array;
+	// 	}
+	// }
 	get value_serialized() {
 		return this.value.toArray() as Number3;
 	}
@@ -62,7 +62,25 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		this.g = this.components[1];
 		this.b = this.components[2];
 	}
-
+	// set_raw_input_from_components() {
+	// 	if (this._raw_input instanceof Color) {
+	// 		if (
+	// 			lodash_isNumber(this.r.raw_input) &&
+	// 			lodash_isNumber(this.g.raw_input) &&
+	// 			lodash_isNumber(this.b.raw_input)
+	// 		) {
+	// 			this._raw_input.r = this.r.raw_input;
+	// 			this._raw_input.g = this.g.raw_input;
+	// 			this._raw_input.b = this.b.raw_input;
+	// 		} else {
+	// 			this._raw_input = [this.r.raw_input, this.g.raw_input, this.b.raw_input];
+	// 		}
+	// 	} else {
+	// 		this._raw_input[0] = this.r.raw_input;
+	// 		this._raw_input[1] = this.g.raw_input;
+	// 		this._raw_input[2] = this.b.raw_input;
+	// 	}
+	// }
 	set_value_from_components() {
 		this._value.r = this.r.value;
 		this._value.g = this.g.value;

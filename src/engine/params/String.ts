@@ -1,7 +1,7 @@
 // import lodash_each from 'lodash/each'
 import lodash_isString from 'lodash/isString';
 // import lodash_isNumber from 'lodash/isNumber'
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 // import {TypedParamVisitor} from './_Base';
 // import {AsCodeString} from './concerns/visitors/String';
 // import {ExpressionController} from 'src/engine/expressions/ExpressionController'
@@ -12,7 +12,7 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
 
-export class StringParam extends Single<ParamType.STRING> {
+export class StringParam extends TypedParam<ParamType.STRING> {
 	static type() {
 		return ParamType.STRING;
 	}

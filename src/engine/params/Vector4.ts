@@ -27,19 +27,19 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			return this.default_value.toArray() as Number4;
 		}
 	}
-	get raw_input_serialized() {
-		if (this._raw_input instanceof Vector4) {
-			return this._raw_input.toArray() as Number4;
-		} else {
-			const new_array: StringOrNumber4 = [
-				this._raw_input[0],
-				this._raw_input[1],
-				this._raw_input[2],
-				this._raw_input[3],
-			];
-			return new_array;
-		}
-	}
+	// get raw_input_serialized() {
+	// 	if (this._raw_input instanceof Vector4) {
+	// 		return this._raw_input.toArray() as Number4;
+	// 	} else {
+	// 		const new_array: StringOrNumber4 = [
+	// 			this._raw_input[0],
+	// 			this._raw_input[1],
+	// 			this._raw_input[2],
+	// 			this._raw_input[3],
+	// 		];
+	// 		return new_array;
+	// 	}
+	// }
 	get value_serialized() {
 		return this.value.toArray() as Number4;
 	}

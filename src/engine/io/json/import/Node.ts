@@ -1,8 +1,12 @@
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import lodash_isString from 'lodash/isString';
+import lodash_isBoolean from 'lodash/isBoolean';
+import lodash_isObject from 'lodash/isObject';
+import lodash_isNumber from 'lodash/isNumber';
+import lodash_isArray from 'lodash/isArray';
 
 import {NodeJsonExporterData, NodeJsonExporterUIData, InputData} from '../export/Node';
-import {ParamJsonExporterData} from '../export/Param';
+import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from 'src/engine/poly/ParamType';
@@ -156,42 +160,74 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		}
 		const param_names = Object.keys(data);
 
-		param_names.forEach((param_name) => {
+		for (let param_name of param_names) {
 			const param_data = data[param_name];
-			const has_param = this._node.params.has_param(param_name);
-			const param_type = param_data['type'];
-
-			let has_param_and_same_type = false;
-			let param;
-			if (has_param) {
-				param = this._node.params.get(param_name);
-				// we can safely consider same type if param_type is not mentioned
-				if ((param && param.type == param_type) || param_type == null) {
-					has_param_and_same_type = true;
-				}
-			}
-			if (has_param_and_same_type) {
-				param = this._node.params.get(param_name);
-				if (param) {
-					JsonImportDispatcher.dispatch_param(param).process_data(param_data);
-					// param.visit(JsonImporterVisitor).process_data(param_data);
-				}
+			if (this._is_param_data_complex(param_data)) {
+				this._process_param_data_complex(param_name, param_data as ComplexParamJsonExporterData<ParamType>);
 			} else {
-				const options = param_data['options'];
-				if (options && param_type) {
-					const is_spare = options['spare'] === true;
-					if (is_spare && param_data['default_value']) {
-						if (has_param) {
-							this._node.params.delete_param(param_name);
-						}
-						param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
-						if (param) {
-							JsonImportDispatcher.dispatch_param(param).process_data(param_data);
-						}
+				this._process_param_data_simple(param_name, param_data as SimpleParamJsonExporterData<ParamType>);
+			}
+		}
+	}
+
+	private _process_param_data_simple(param_name: string, param_data: SimpleParamJsonExporterData<ParamType>) {
+		this._node.params.get(param_name)?.set(param_data);
+	}
+
+	private _process_param_data_complex(param_name: string, param_data: ComplexParamJsonExporterData<ParamType>) {
+		const has_param = this._node.params.has_param(param_name);
+		const param_type = param_data['type']!;
+
+		let has_param_and_same_type = false;
+		let param;
+		if (has_param) {
+			param = this._node.params.get(param_name);
+			// we can safely consider same type if param_type is not mentioned
+			if ((param && param.type == param_type) || param_type == null) {
+				has_param_and_same_type = true;
+			}
+		}
+		if (has_param_and_same_type) {
+			param = this._node.params.get(param_name);
+			if (param) {
+				JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+				// param.visit(JsonImporterVisitor).process_data(param_data);
+			}
+		} else {
+			const options = param_data['options'];
+			if (options && param_type) {
+				const is_spare = options['spare'] === true;
+				if (is_spare && param_data['default_value']) {
+					if (has_param) {
+						this._node.params.delete_param(param_name);
+					}
+					param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
+					if (param) {
+						JsonImportDispatcher.dispatch_param(param).process_data(param_data);
 					}
 				}
 			}
-		});
+		}
+	}
+
+	private _is_param_data_complex(param_data: ParamJsonExporterData<ParamType>): boolean {
+		// we can test here most param value serialized, except for ramp
+		if (
+			lodash_isString(param_data) ||
+			lodash_isNumber(param_data) ||
+			lodash_isArray(param_data) ||
+			lodash_isBoolean(param_data)
+		) {
+			return false;
+		}
+
+		if (lodash_isObject(param_data)) {
+			if (Object.keys(param_data).includes('type')) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	from_data_custom(data: NodeJsonExporterData) {}

@@ -151,16 +151,17 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// display the box
 	box1.flags.display.set(true);
 	await scene.wait_for_cooks_completed();
-	assert.equal(obj.children.length, 1);
-	let geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
+	assert.equal(obj.children.length, 2, 'obj has 2 children');
+	assert.deepEqual(obj.children.map((c) => c.name).sort(), ['parented_outputs', 'sop_group']);
+	let geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	assert.equal(geometry.getAttribute('position').array.length, 24 * 3);
 
 	// display the plane
 	plane1.flags.display.set(true);
 	assert.notOk(box1.flags.display.active);
 	await scene.wait_for_cooks_completed();
-	assert.equal(obj.children.length, 1);
-	geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
+	assert.equal(obj.children.length, 2);
+	geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	let positions = geometry.getAttribute('position').array;
 	assert.equal(positions.length, 4 * 3);
 	assert.equal(positions[0], -0.5);
@@ -169,8 +170,8 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// update the plane
 	plane1.p.size.set([2, 5]);
 	await scene.wait_for_cooks_completed();
-	assert.equal(obj.children.length, 1);
-	geometry = (obj.children[0] as Mesh).geometry as BufferGeometry;
+	assert.equal(obj.children.length, 2);
+	geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	positions = geometry.getAttribute('position').array;
 	assert.equal(positions[0], -1);
 	assert.equal(positions[2], -2.5, 'y position');
@@ -191,8 +192,8 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 
 	file1.flags.display.set(true);
 	await scene.wait_for_cooks_completed();
-	assert.equal(obj.children.length, 1);
-	assert.equal(obj.children[0].children.length, 4);
+	assert.equal(obj.children.length, 2);
+	assert.equal(obj.children[1].children[0].children.length, 4);
 });
 
 QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {

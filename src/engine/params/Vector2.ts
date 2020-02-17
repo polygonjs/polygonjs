@@ -26,14 +26,14 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			return this.default_value.toArray() as Number2;
 		}
 	}
-	get raw_input_serialized() {
-		if (this._raw_input instanceof Vector2) {
-			return this._raw_input.toArray() as Number2;
-		} else {
-			const new_array: StringOrNumber2 = [this._raw_input[0], this._raw_input[1]];
-			return new_array;
-		}
-	}
+	// get raw_input_serialized() {
+	// 	if (this._raw_input instanceof Vector2) {
+	// 		return this._raw_input.toArray() as Number2;
+	// 	} else {
+	// 		const new_array: StringOrNumber2 = [this._raw_input[0], this._raw_input[1]];
+	// 		return new_array;
+	// 	}
+	// }
 	get value_serialized() {
 		return this.value.toArray() as Number2;
 	}

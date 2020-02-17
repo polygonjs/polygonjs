@@ -14,6 +14,6 @@ export class ParamMultipleJsonExporter extends ParamJsonExporter<TypedMultiplePa
 			}
 		});
 
-		this._data['components'] = components_data;
+		return components_data;
 	}
 }

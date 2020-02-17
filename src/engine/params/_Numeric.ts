@@ -2,7 +2,7 @@ import lodash_isString from 'lodash/isString';
 // import lodash_isNumber from 'lodash/isNumber';
 // import lodash_isBoolean from 'lodash/isBoolean';
 // import {TypedParamVisitor} from './_Base';
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 import {ParamType} from '../poly/ParamType';
 // import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
@@ -14,7 +14,7 @@ import {ParamEvent} from '../poly/ParamEvent';
 // 	visit_numeric_param: (param: TypedNumericParam<any>) => any;
 // }
 
-export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
+export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<T> {
 	// private _raw_input: ParamInitValuesTypeMap[T] | undefined;
 	get is_numeric() {
 		return true;
@@ -34,6 +34,10 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 
 	protected process_raw_input() {
 		// this.process_raw_input()
+		// if (this.parent_param) {
+		// 	this.parent_param.set_raw_input_from_components();
+		// }
+
 		this.states.error.clear();
 
 		const converted = this.convert(this._raw_input);
@@ -44,6 +48,9 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 			}
 			if (converted != this._value) {
 				this._value = converted;
+				if (this.parent_param) {
+					this.parent_param.set_value_from_components();
+				}
 				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 				this.remove_dirty_state();
 				this.set_successors_dirty();
@@ -58,9 +65,6 @@ export abstract class TypedNumericParam<T extends ParamType> extends Single<T> {
 			} else {
 				this.states.error.set(`param input is invalid (${this.full_path()})`);
 			}
-		}
-		if (this.parent_param) {
-			this.parent_param.set_value_from_components();
 		}
 	}
 	protected async process_computation(): Promise<void> {

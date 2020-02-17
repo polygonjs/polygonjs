@@ -1,9 +1,9 @@
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-export class SeparatorParam extends Single<ParamType.SEPARATOR> {
+export class SeparatorParam extends TypedParam<ParamType.SEPARATOR> {
 	static type() {
 		return ParamType.SEPARATOR;
 	}

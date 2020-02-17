@@ -1,9 +1,9 @@
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-export class FolderParam extends Single<ParamType.FOLDER> {
+export class FolderParam extends TypedParam<ParamType.FOLDER> {
 	static type() {
 		return ParamType.FOLDER;
 	}

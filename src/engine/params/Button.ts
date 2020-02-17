@@ -1,9 +1,9 @@
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-export class ButtonParam extends Single<ParamType.BUTTON> {
+export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 	static type() {
 		return ParamType.BUTTON;
 	}

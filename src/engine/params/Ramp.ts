@@ -6,7 +6,7 @@ import {DataTexture} from 'three/src/textures/DataTexture';
 import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 // import {ClampToEdgeWrapping} from 'three/src/constants'
 // import {TypedParamVisitor} from './_Base';
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 import {RampValue, RampPoint, RampValueJson, RampInterpolation} from './ramp/RampValue';
 
 // import {AsCodeRamp} from './concerns/visitors/Ramp';
@@ -19,7 +19,7 @@ import {ParamEvent} from '../poly/ParamEvent';
 // 	visit_ramp_param: (param: RampParam) => any;
 // }
 
-export class RampParam extends Single<ParamType.RAMP> {
+export class RampParam extends TypedParam<ParamType.RAMP> {
 	static type() {
 		return ParamType.RAMP;
 	}

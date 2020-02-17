@@ -1,5 +1,6 @@
 import {TypedMultipleParam} from './_Multiple';
 import lodash_isArray from 'lodash/isArray';
+// import lodash_isNumber from 'lodash/isNumber';
 import {FloatParam} from './Float';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../poly/ParamType';
@@ -26,14 +27,14 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 			return this.default_value.toArray() as Number3;
 		}
 	}
-	get raw_input_serialized() {
-		if (this._raw_input instanceof Vector3) {
-			return this._raw_input.toArray() as Number3;
-		} else {
-			const new_array: StringOrNumber3 = [this._raw_input[0], this._raw_input[1], this._raw_input[2]];
-			return new_array;
-		}
-	}
+	// get raw_input_serialized() {
+	// 	if (this._raw_input instanceof Vector3) {
+	// 		return this._raw_input.toArray() as Number3;
+	// 	} else {
+	// 		const new_array: StringOrNumber3 = [this._raw_input[0], this._raw_input[1], this._raw_input[2]];
+	// 		return new_array;
+	// 	}
+	// }
 	get value_serialized() {
 		return this.value.toArray() as Number3;
 	}
@@ -76,6 +77,25 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		this.z = this.components[2];
 	}
 
+	// set_raw_input_from_components() {
+	// 	if (this._raw_input instanceof Vector3) {
+	// 		if (
+	// 			lodash_isNumber(this.x.raw_input) &&
+	// 			lodash_isNumber(this.y.raw_input) &&
+	// 			lodash_isNumber(this.z.raw_input)
+	// 		) {
+	// 			this._raw_input.x = this.x.raw_input;
+	// 			this._raw_input.y = this.y.raw_input;
+	// 			this._raw_input.z = this.z.raw_input;
+	// 		} else {
+	// 			this._raw_input = [this.x.raw_input, this.y.raw_input, this.z.raw_input];
+	// 		}
+	// 	} else {
+	// 		this._raw_input[0] = this.x.raw_input;
+	// 		this._raw_input[1] = this.y.raw_input;
+	// 		this._raw_input[2] = this.z.raw_input;
+	// 	}
+	// }
 	set_value_from_components() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;

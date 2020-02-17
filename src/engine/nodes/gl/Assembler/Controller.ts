@@ -14,7 +14,7 @@ import {BaseNodeType, TypedNode} from 'src/engine/nodes/_Base';
 import {BaseGlShaderAssembler} from './_Base';
 import {GlobalsBaseController} from './Globals/_Base';
 
-import {JsonImportDispatcher} from 'src/engine/io/json/import/Dispatcher';
+// import {JsonImportDispatcher} from 'src/engine/io/json/import/Dispatcher';
 import {JsonExportDispatcher} from 'src/engine/io/json/export/Dispatcher';
 import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {ShaderName} from '../../utils/shaders/ShaderName';
@@ -408,7 +408,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 					// restore saved state, like expressions
 					const param_data = this._deleted_params_data.get(param.name);
 					if (param_data) {
-						JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+						// TODO: typescript
+						// JsonImportDispatcher.dispatch_param(param).process_data(param_data);
 						// looks like there are still some cases where the expression are not recreated
 						// so commenting this out now
 						// delete this._deleted_params_data[param.name()]

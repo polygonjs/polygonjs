@@ -1,11 +1,11 @@
 import {BaseParamType} from 'src/engine/params/_Base';
-import {ParamJsonExporterData} from '../export/Param';
+import {ComplexParamJsonExporterData} from '../export/Param';
 import {ParamType} from 'src/engine/poly/ParamType';
 
 export class ParamJsonImporter<T extends BaseParamType> {
 	constructor(protected _param: T) {}
 
-	process_data(data: ParamJsonExporterData<ParamType>) {
+	process_data(data: ComplexParamJsonExporterData<ParamType>) {
 		const raw_input = data['raw_input'];
 		// const expression = data['expression'];
 		// const components = data['components'];
@@ -24,5 +24,5 @@ export class ParamJsonImporter<T extends BaseParamType> {
 		this.add_main(data);
 	}
 
-	add_main(data: ParamJsonExporterData<ParamType>) {}
+	add_main(data: ComplexParamJsonExporterData<ParamType>) {}
 }

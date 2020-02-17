@@ -1,5 +1,5 @@
 // import {TypedParamVisitor} from './_Base';
-import {Single} from './_Single';
+import {TypedParam} from './_Base';
 import {CoreWalker} from 'src/core/Walker';
 
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
@@ -10,7 +10,7 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-export class OperatorPathParam extends Single<ParamType.OPERATOR_PATH> {
+export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;
 
 	static type() {

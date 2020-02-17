@@ -8,20 +8,25 @@ import {ParamOptions} from 'src/engine/params/utils/OptionsController';
 
 type OverridenOptions = Dictionary<string>;
 
-export type ParamJsonExporterDataByName = Dictionary<ParamJsonExporterData<ParamType>>;
+export type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerializedTypeMap[T];
 
-export interface ParamJsonExporterData<T extends ParamType> {
+export interface ComplexParamJsonExporterData<T extends ParamType> {
 	type?: T;
 	default_value?: ParamInitValueSerializedTypeMap[T];
 	raw_input?: ParamInitValueSerializedTypeMap[T];
 	options?: ParamOptions;
 	overriden_options?: OverridenOptions;
-	components?: ParamJsonExporterDataByName;
+	// components?: ParamJsonExporterDataByName;
 	// expression?: string;
 }
+export type ParamJsonExporterData<T extends ParamType> =
+	| SimpleParamJsonExporterData<T>
+	| ComplexParamJsonExporterData<T>;
+export type ParamJsonExporterDataByName = Dictionary<ParamJsonExporterData<ParamType>>;
 
 export class ParamJsonExporter<T extends BaseParamType> {
-	protected _data: ParamJsonExporterData<ParamType> = {};
+	// protected _simple_data: SimpleParamJsonExporterData<ParamType>=0;
+	protected _complex_data: ComplexParamJsonExporterData<ParamType> = {};
 	constructor(protected _param: T) {}
 
 	get required(): boolean {
@@ -32,12 +37,28 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	}
 
 	data() {
-		this._data = {};
+		if (this._param.parent_param) {
+			throw 'no component should be saved';
+		}
+
+		if (this._require_data_complex()) {
+			return this._data_complex();
+		} else {
+			return this._data_simple();
+		}
+	}
+
+	private _data_simple() {
+		return this._param.raw_input_serialized;
+	}
+
+	private _data_complex() {
+		this._complex_data = {};
 
 		if (this._param.options.is_spare && !this._param.parent_param) {
-			this._data['type'] = this._param.type;
-			this._data['default_value'] = this._param.default_value_serialized;
-			this._data['options'] = this._param.options.current;
+			this._complex_data['type'] = this._param.type;
+			this._complex_data['default_value'] = this._param.default_value_serialized;
+			this._complex_data['options'] = this._param.options.current;
 		}
 
 		if (!this._param.is_default) {
@@ -56,10 +77,19 @@ export class ParamJsonExporter<T extends BaseParamType> {
 				const option_value = options_overridden[option_name as keyof ParamOptions];
 				overridden_options[option_name] = JSON.stringify(option_value);
 			}
-			this._data['overriden_options'] = overridden_options;
+			this._complex_data['overriden_options'] = overridden_options;
 		}
+		return this._complex_data;
+	}
 
-		return this._data;
+	protected _require_data_complex() {
+		if (this._param.options.is_spare) {
+			return true;
+		}
+		if (this._param.options.has_options_overridden) {
+			return true;
+		}
+		return false;
 	}
 
 	// default_value(): ParamValueSerialized {

@@ -3,12 +3,30 @@ import {TypedParam} from './_Base';
 import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
+import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
 	protected _components!: FloatParam[];
 	get components() {
 		return this._components;
+	}
+	get is_numeric() {
+		return true;
+	}
+	get is_default() {
+		for (let c of this.components) {
+			if (!c.is_default) {
+				return false;
+			}
+		}
+		return true;
+	}
+	get raw_input() {
+		return this._components.map((c) => c.raw_input) as ParamInitValueSerializedTypeMap[T];
+	}
+	get raw_input_serialized() {
+		return this.raw_input;
 	}
 
 	init_components() {
@@ -45,10 +63,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		this.set_value_from_components();
 	}
 	set_value_from_components() {}
-
-	get is_numeric() {
-		return true;
-	}
+	// set_raw_input_from_components() {}
 
 	has_expression() {
 		for (let c of this.components) {
@@ -57,15 +72,6 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			}
 		}
 		return false;
-	}
-
-	get is_default() {
-		for (let c of this.components) {
-			if (!c.is_default) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private async compute_components() {
@@ -77,7 +83,9 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// return lodash_each(this.components(), (component, index)=> {
 		const promises = [];
 		for (let c of components) {
-			promises.push(c.compute()); //component_value=> {
+			if (c.is_dirty) {
+				promises.push(c.compute()); //component_value=> {
+			}
 		}
 		await Promise.all(promises);
 		// component_values[index] = component_value;
