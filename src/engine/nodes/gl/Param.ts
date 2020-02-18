@@ -74,7 +74,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		// ])
 		this.update_output_type();
 
-		this.add_post_dirty_hook(this._update_if_type_changed_bound);
+		this.add_post_dirty_hook('_update_if_type_changed', this._update_if_type_changed_bound);
 	}
 	private _update_if_type_changed(dirty_trigger?: CoreGraphNode) {
 		if (dirty_trigger == this.p.type) {

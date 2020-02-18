@@ -10,7 +10,7 @@ export class UIData extends CoreGraphNode {
 		super(scene, 'param ui data');
 		// this.set_scene(this.param.scene);
 
-		this.add_post_dirty_hook(this._update_visibility_and_remove_dirty_bound);
+		this.add_post_dirty_hook('_update_visibility_and_remove_dirty', this._update_visibility_and_remove_dirty_bound);
 	}
 
 	update_visibility_and_remove_dirty() {

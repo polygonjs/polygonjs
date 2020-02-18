@@ -44,7 +44,10 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 		this.name_controller.add_post_set_full_path_hook(this.set_material_name.bind(this));
 
-		this.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
+		this.add_post_dirty_hook(
+			'_cook_main_without_inputs_when_dirty',
+			this._cook_main_without_inputs_when_dirty_bound
+		);
 
 		// it's probably good not to have to create any material in the constructor
 		// but only on request

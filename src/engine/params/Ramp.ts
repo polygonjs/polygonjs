@@ -77,7 +77,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	}
 	private _reset_ramp_interpolant_and_texture_bound = this._reset_ramp_interpolant_and_texture.bind(this);
 	initialize_param() {
-		this.add_post_dirty_hook(this._reset_ramp_interpolant_and_texture_bound);
+		this.add_post_dirty_hook('_reset_ramp_interpolant_and_texture', this._reset_ramp_interpolant_and_texture_bound);
 	}
 	// accepts_visitor(visitor: RampParamVisitor) {
 	// 	return visitor.visit_ramp_param(this);

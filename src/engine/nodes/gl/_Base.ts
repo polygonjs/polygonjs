@@ -75,7 +75,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 
 		this.io.outputs.set_named_output_connection_points([]);
 
-		this.add_post_dirty_hook(this._set_mat_to_recompile_bound);
+		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_bound);
 	}
 	_set_mat_to_recompile() {
 		// this.material_node.set_compilation_required_and_dirty() // TODO: typescript, check that it still works

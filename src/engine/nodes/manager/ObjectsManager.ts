@@ -141,7 +141,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		});
 	}
 
-	async update_object(node: BaseObjNodeType) {
+	update_object(node: BaseObjNodeType) {
 		if (!this.scene.loading_controller.auto_updating) {
 			this.add_to_queue(node);
 		} else {
@@ -218,7 +218,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 				if (node.used_in_scene) {
 					// parent_object.add(node.object);
 					node.add_object_to_parent(parent_object);
-					node.cook_controller.cook_main_without_inputs();
+					// await node.cook_controller.cook_main_without_inputs();
 				} else {
 					node.remove_object_from_parent();
 					// parent_object.remove(node.object);

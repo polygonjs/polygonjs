@@ -82,7 +82,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		// });
 		// this.set_inputs_count_to_zero();
 
-		this.dirty_controller.add_post_dirty_hook(this._reset_if_resolution_changed.bind(this));
+		this.dirty_controller.add_post_dirty_hook(
+			'_reset_if_resolution_changed',
+			this._reset_if_resolution_changed.bind(this)
+		);
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {

@@ -13,7 +13,8 @@ export class DirtyController {
 	_dirty: boolean = true;
 	_dirty_timestamp: number | undefined;
 	_cached_successors: CoreGraphNode[] | undefined;
-	_post_dirty_hooks: PostDirtyHook[] = [];
+	_post_dirty_hooks: PostDirtyHook[] | undefined;
+	_post_dirty_hook_names: string[] | undefined;
 	_forbidden_trigger_nodes: string[] | undefined;
 
 	constructor(private node: CoreGraphNode) {}
@@ -31,9 +32,22 @@ export class DirtyController {
 	get dirty_count(): number {
 		return this._dirty_count;
 	}
-	add_post_dirty_hook(method: PostDirtyHook) {
+	add_post_dirty_hook(name: string, method: PostDirtyHook) {
+		this._post_dirty_hook_names = this._post_dirty_hook_names || [];
 		this._post_dirty_hooks = this._post_dirty_hooks || [];
-		this._post_dirty_hooks.push(method);
+
+		if (!this._post_dirty_hook_names.includes(name)) {
+			this._post_dirty_hook_names.push(name);
+			this._post_dirty_hooks.push(method);
+		} else {
+			console.warn(`hook with name ${name} already exists`, this._post_dirty_hook_names);
+		}
+	}
+	has_hook(name: string): boolean {
+		if (this._post_dirty_hook_names) {
+			return this._post_dirty_hook_names.includes(name);
+		}
+		return false;
 	}
 	// using a dirty block doesn't quite work, as I would need to be able
 	// to fetch the graph for all successors that haven't been blocked
@@ -96,11 +110,11 @@ export class DirtyController {
 	}
 
 	run_post_dirty_hooks(original_trigger_graph_node?: CoreGraphNode) {
-		const cooker = this.node.scene.cooker;
-		if (cooker.blocked) {
-			cooker.enqueue(this.node);
-		} else {
-			if (this._post_dirty_hooks) {
+		if (this._post_dirty_hooks) {
+			const cooker = this.node.scene.cooker;
+			if (cooker.blocked) {
+				cooker.enqueue(this.node);
+			} else {
 				for (let hook of this._post_dirty_hooks) {
 					hook(original_trigger_graph_node);
 				}

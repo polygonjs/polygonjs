@@ -12,7 +12,10 @@ export class DisplayNodeController {
 	constructor(protected node: GeoObjNode) {
 		this._graph_node = new CoreGraphNode(node.scene, 'DisplayNodeController');
 
-		this._graph_node.dirty_controller.add_post_dirty_hook(this._request_display_node_container_bound);
+		this._graph_node.dirty_controller.add_post_dirty_hook(
+			'_request_display_node_container',
+			this._request_display_node_container_bound
+		);
 	}
 
 	get display_node() {

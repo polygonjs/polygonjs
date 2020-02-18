@@ -142,7 +142,7 @@ export default createComponent({
 		});
 
 		const graph_node = new CoreGraphNode(StoreController.scene, 'Spreadsheet_Panel');
-		graph_node.add_post_dirty_hook(() => {
+		graph_node.add_post_dirty_hook('load_geometry', () => {
 			load_geometry();
 		});
 		onMounted(() => {

@@ -68,8 +68,8 @@ export class CoreGraphNode {
 	get is_dirty() {
 		return this._dirty_controller.is_dirty;
 	}
-	add_post_dirty_hook(callback: PostDirtyHook) {
-		this._dirty_controller.add_post_dirty_hook(callback);
+	add_post_dirty_hook(name: string, callback: PostDirtyHook) {
+		this._dirty_controller.add_post_dirty_hook(name, callback);
 	}
 
 	//

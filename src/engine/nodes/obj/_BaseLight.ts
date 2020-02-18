@@ -23,7 +23,10 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 		this.flags.display.add_hook(() => {
 			this.update_light_attachment();
 		});
-		this.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
+		this.dirty_controller.add_post_dirty_hook(
+			'_cook_main_without_inputs_when_dirty',
+			this._cook_main_without_inputs_when_dirty_bound
+		);
 	}
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {

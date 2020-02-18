@@ -19,7 +19,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 		// 	has_display_flag: false
 		// });
 
-		this.add_post_dirty_hook(this._eval_all_params_on_dirty_bound);
+		this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 	}
 
 	// ensures that event nodes are cooked when scene is loaded

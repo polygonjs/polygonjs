@@ -47,7 +47,7 @@ export class CamerasController {
 			return undefined;
 		}
 		const node = new CoreGraphNode(this._camera_node.scene, 'viewer-controls');
-		node.add_post_dirty_hook(async () => {
+		node.add_post_dirty_hook('this.viewer.controls_controller', async () => {
 			await this.viewer.controls_controller.create_controls();
 		});
 		return node;

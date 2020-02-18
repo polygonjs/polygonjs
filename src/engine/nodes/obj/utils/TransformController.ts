@@ -57,7 +57,11 @@ export class TransformController {
 		this.node.io.inputs.add_hook(() => {
 			this.on_input_updated();
 		});
-		this.node.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
+
+		const hook_name = '_cook_main_without_inputs_when_dirty';
+		if (!this.node.dirty_controller.has_hook(hook_name)) {
+			this.node.dirty_controller.add_post_dirty_hook(hook_name, this._cook_main_without_inputs_when_dirty_bound);
+		}
 	}
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);

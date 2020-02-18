@@ -114,15 +114,16 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	}
 
 	// protected _used_in_scene: boolean = true;
-	// initialize_node() {
-	// 	// this.io.inputs.set_count(0, 1);
-	// 	// this.io.outputs.set_has_one_output();
-	// 	// this._init_dirtyable_hook();
+	initialize_base_node() {
+		super.initialize_base_node();
+		// this.io.inputs.set_count(0, 1);
+		this.io.outputs.set_has_one_output();
+		// this._init_dirtyable_hook();
 
-	// 	// this.flags.display.add_hook(() => {
-	// 	// 	this.set_used_in_scene(this.flags.display.active || false);
-	// 	// });
-	// }
+		// this.flags.display.add_hook(() => {
+		// 	this.set_used_in_scene(this.flags.display.active || false);
+		// });
+	}
 
 	// create_common_params() {
 	// 	// this.within_param_folder('transform', () => {

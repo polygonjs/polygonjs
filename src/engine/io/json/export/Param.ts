@@ -31,7 +31,10 @@ export class ParamJsonExporter<T extends BaseParamType> {
 
 	get required(): boolean {
 		const is_spare_and_not_component = this._param.options.is_spare && !this._param.parent_param;
-		const value_changed = !this._param.is_default || this._param.has_expression();
+
+		// we should not need to check if it has an expression anymore,
+		// as it could have an expression AND be of default value
+		const value_changed = !this._param.is_default; //|| this._param.has_expression();
 		// const referencing_asset = this._param.is_referencing_asset()
 		return is_spare_and_not_component || value_changed; // || referencing_asset
 	}

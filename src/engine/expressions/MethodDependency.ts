@@ -24,7 +24,7 @@ export class MethodDependency extends CoreGraphNode {
 
 		// this.set_scene(this.param.scene);
 
-		this.add_post_dirty_hook(this._update_from_name_change_bound);
+		this.add_post_dirty_hook('_update_from_name_change', this._update_from_name_change_bound);
 	}
 	_update_from_name_change(trigger?: CoreGraphNode) {
 		if (CoreObject.is_a(trigger, TypedNode) && this.decomposed_path) {

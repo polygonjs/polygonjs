@@ -105,8 +105,11 @@ export class CookController {
 	async cook_main_without_inputs() {
 		this.node.scene.cook_controller.add_node(this.node);
 		if (this.is_cooking) {
+			// TODO:
+			// this seems to happen because when we flush the cooker queue,
+			// some graph nodes will trigger more updates, which will then make dependent nodes
+			// dirty again
 			console.warn('cook_main_without_inputs already cooking', this.node.full_path());
-			// TODO: should I also queue a promise resolve from here?
 			return;
 		}
 		this._init_cooking_state();

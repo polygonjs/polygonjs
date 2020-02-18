@@ -459,7 +459,10 @@ export class OptionsController {
 			for (let predecessor of predecessors) {
 				this._visibility_graph_node.add_graph_input(predecessor);
 			}
-			this._visibility_graph_node.add_post_dirty_hook(this._update_visibility_and_remove_dirty_bound);
+			this._visibility_graph_node.add_post_dirty_hook(
+				'_update_visibility_and_remove_dirty',
+				this._update_visibility_and_remove_dirty_bound
+			);
 		}
 	}
 	private update_visibility_and_remove_dirty() {
