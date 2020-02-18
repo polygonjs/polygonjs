@@ -46,7 +46,7 @@ import {TypedObjNode} from './_Base';
 
 export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		// transform = ParamConfig.FOLDER();
+		camera = ParamConfig.FOLDER();
 		controls = ParamConfig.OPERATOR_PATH('', {
 			node_selection: {
 				context: NodeContext.EVENT,
@@ -60,22 +60,20 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 		target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
 		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
-		aspect = ParamConfig.FLOAT(1);
-		lock_width = ParamConfig.BOOLEAN(1);
-		look_at = ParamConfig.OPERATOR_PATH('');
+		// aspect = ParamConfig.FLOAT(1);
+		// lock_width = ParamConfig.BOOLEAN(1);
+		// look_at = ParamConfig.OPERATOR_PATH('');
 
 		set_master_camera = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				BaseCameraObjNodeClass.PARAM_CALLBACK_set_master_camera(node as BaseCameraObjNodeType);
 			},
 		});
-
-		render = ParamConfig.FOLDER();
 	};
 }
 
 export class BaseCameraObjParamsConfig extends CameraPostProcessParamConfig(
-	CameraBackgroundParamConfig(LayerParamConfig(TransformedParamConfig(CameraTransformParamConfig(NodeParamsConfig))))
+	CameraBackgroundParamConfig(TransformedParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig))))
 ) {}
 
 export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
@@ -123,6 +121,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		// this.flags.display.add_hook(() => {
 		// 	this.set_used_in_scene(this.flags.display.active || false);
 		// });
+		this.transform_controller.initialize_node();
 	}
 
 	// create_common_params() {

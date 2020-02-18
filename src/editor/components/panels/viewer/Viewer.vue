@@ -60,6 +60,8 @@ import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
 import {createComponent, ref, computed} from '@vue/composition-api';
+import {EngineNodeData} from '../../../store/modules/Engine';
+import {DropDownMenuEntry} from '../../types/props';
 export default createComponent({
 	name: 'viewer-panel',
 	components: {
@@ -82,10 +84,25 @@ export default createComponent({
 			return current_camera_node.value?.name || 'no camera';
 		});
 		const camera_menu_entries = computed(() => {
-			return [];
+			const root_json_children: EngineNodeData[] = StoreController.scene.root
+				.children()
+				.map((c) => StoreController.engine.json_node(c.graph_node_id)!)
+				.filter((data) => data != null);
+			const camera_types = ['perspective_camera', 'orthographic_camera'];
+			const camera_json_nodes = root_json_children.filter((data) => data && camera_types.includes(data.type));
+			const entries: DropDownMenuEntry[] = camera_json_nodes.map((data) => {
+				const entry: DropDownMenuEntry = {
+					id: data.graph_node_id,
+					label: data.name,
+				};
+				return entry;
+			});
+			return entries;
 		});
 
-		function on_select_camera_menu_entry_select() {}
+		function on_select_camera_menu_entry_select(entry_id: string) {
+			current_camera_node_graph_id.value = entry_id;
+		}
 		function on_capture_render_completed() {}
 
 		return {

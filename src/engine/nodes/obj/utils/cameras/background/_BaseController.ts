@@ -25,7 +25,7 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 import {ParamConfig} from '../../../../utils/params/ParamsConfig';
 export function CameraBackgroundParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		// background = ParamConfig.FOLDER();
+		background = ParamConfig.FOLDER();
 		use_background = ParamConfig.BOOLEAN(0);
 		use_material = ParamConfig.BOOLEAN(0, {
 			visible_if: {use_background: true},

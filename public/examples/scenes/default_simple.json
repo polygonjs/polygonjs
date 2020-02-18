@@ -46,9 +46,10 @@
 				"type": "perspective_camera",
 				"params": {
 					"controls": "/events1/camera_orbit_controls1",
-					"target": [-0.10263688422014265, 1.3106419357615533, 0.5436570245559184],
-					"t": [10.611371434693677, 10.364783375547585, 11.41259705590605],
-					"r": [-39.79527634721792, 37.139706018567814, 26.700110438080664]
+					"target": [-0.19270959690483352, 0.46472978740145304, 0.16834310483188666],
+					"fov": 55.29,
+					"t": [-0.5383303486090615, 4.848472372763924, -10.752270947055587],
+					"r": [-158.12853351172097, -1.6823206369025154, -179.32481272424025]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -170,10 +171,16 @@
 				"params": {},
 				"inputs": [],
 				"flags": {"display": true}
+			},
+			"perspective_camera2": {
+				"type": "perspective_camera",
+				"params": {"background_color": [1, 1, 1]},
+				"inputs": ["null4"],
+				"flags": {"display": true}
 			}
 		},
 		"children_context": "objects",
-		"selection": []
+		"selection": ["perspective_camera2"]
 	},
 	"ui": {
 		"nodes": {
@@ -206,7 +213,8 @@
 			"null4": {"pos": [200, -100]},
 			"directional_light1": {"pos": [0, 50]},
 			"ambient_light1": {"pos": [300, 250]},
-			"orthographic_camera1": {"pos": [-200, -150]}
+			"orthographic_camera1": {"pos": [-200, -150]},
+			"perspective_camera2": {"pos": [-400, 0]}
 		}
 	}
 }

@@ -1,13 +1,12 @@
-import {Vector2} from 'three/src/math/Vector2';
+// import {Vector2} from 'three/src/math/Vector2';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 // import {Group} from 'three/src/objects/Group';
 // import {CameraHelper} from 'three/src/helpers/CameraHelper';
-import lodash_clamp from 'lodash/clamp';
-import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, BaseCameraObjParamsConfig} from './_BaseCamera';
+// import lodash_clamp from 'lodash/clamp';
+import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, CameraTransformParamConfig} from './_BaseCamera';
 
 import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
 // import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT = {
 	left: -0.5,
@@ -16,12 +15,26 @@ const DEFAULT = {
 	bottom: -0.5,
 };
 
-// import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class OrthographicCameraObjParamConfig extends BaseCameraObjParamsConfig {
-	size = ParamConfig.FLOAT(1);
-	vertical_size_range = ParamConfig.VECTOR2([-1, -1]);
-	horizontal_size_range = ParamConfig.VECTOR2([-1, -1]);
+import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
+import {CameraBackgroundParamConfig} from './utils/cameras/background/_BaseController';
+import {LayerParamConfig} from './utils/LayersController';
+import {TransformedParamConfig} from './utils/TransformController';
+export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		size = ParamConfig.FLOAT(1);
+		// vertical_size_range = ParamConfig.VECTOR2([-1, -1]);
+		// horizontal_size_range = ParamConfig.VECTOR2([-1, -1]);
+	};
 }
+
+class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
+	CameraBackgroundParamConfig(
+		TransformedParamConfig(
+			LayerParamConfig(OrthographicCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+		)
+	)
+) {}
 const ParamsConfig = new OrthographicCameraObjParamConfig();
 
 export class OrthographicCameraObjNode extends TypedCameraObjNode<
@@ -79,39 +92,37 @@ export class OrthographicCameraObjNode extends TypedCameraObjNode<
 	protected _update_for_aspect_ratio() {
 		if (this._aspect) {
 			const size = this.pv.size || 1;
-			let lock_width = this.pv.lock_width;
-			if (lock_width == null) {
-				lock_width = true;
-			}
-
-			if (lock_width) {
-				const vertical_size = size / this._aspect;
-				const zoom = this.get_zoom(vertical_size, this.pv.vertical_size_range);
-				this._object.left = DEFAULT.left * size * zoom;
-				this._object.right = DEFAULT.right * size * zoom;
-				this._object.top = DEFAULT.top * vertical_size * zoom;
-				this._object.bottom = DEFAULT.bottom * vertical_size * zoom;
-			} else {
-				const horizontal_size = size * this._aspect;
-				const zoom = this.get_zoom(horizontal_size, this.pv.horizontal_size_range);
-				this._object.left = DEFAULT.left * horizontal_size * zoom;
-				this._object.right = DEFAULT.right * horizontal_size * zoom;
-				this._object.top = DEFAULT.top * size * zoom;
-				this._object.bottom = DEFAULT.bottom * size * zoom;
-			}
-
+			// let lock_width = this.pv.lock_width;
+			// if (lock_width == null) {
+			// 	lock_width = true;
+			// }
+			// if (lock_width) {
+			// 	const vertical_size = size / this._aspect;
+			// 	const zoom = 1 //this.get_zoom(vertical_size, this.pv.vertical_size_range);
+			// 	this._object.left = DEFAULT.left * size * zoom;
+			// 	this._object.right = DEFAULT.right * size * zoom;
+			// 	this._object.top = DEFAULT.top * vertical_size * zoom;
+			// 	this._object.bottom = DEFAULT.bottom * vertical_size * zoom;
+			// } else {
+			const horizontal_size = size * this._aspect;
+			const zoom = 1; //this.get_zoom(horizontal_size, this.pv.horizontal_size_range);
+			this._object.left = DEFAULT.left * horizontal_size * zoom;
+			this._object.right = DEFAULT.right * horizontal_size * zoom;
+			this._object.top = DEFAULT.top * size * zoom;
+			this._object.bottom = DEFAULT.bottom * size * zoom;
+			// }
 			this._object.updateProjectionMatrix();
 		}
 	}
 
-	private get_zoom(size: number, range: Vector2) {
-		let zoom = 1;
-		if (range) {
-			if (size < range.x || size > range.y) {
-				const new_size = lodash_clamp(size, range.x, range.y);
-				zoom = new_size / size;
-			}
-		}
-		return zoom;
-	}
+	// private get_zoom(size: number, range: Vector2) {
+	// 	let zoom = 1;
+	// 	if (range) {
+	// 		if (size < range.x || size > range.y) {
+	// 			const new_size = lodash_clamp(size, range.x, range.y);
+	// 			zoom = new_size / size;
+	// 		}
+	// 	}
+	// 	return zoom;
+	// }
 }
