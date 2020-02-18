@@ -1,32 +1,35 @@
-// import {BaseObjNode} from './_Base';
-// import {Group} from 'three/src/objects/Group';
+import {TypedObjNode} from './_Base';
+import {Group} from 'three/src/objects/Group';
+import {TransformedParamConfig, TransformController} from './utils/TransformController';
+import {CoreTransform} from 'src/core/Transform';
+import {FlagsControllerD} from '../utils/FlagsController';
+import {AxesHelper} from 'three/src/helpers/AxesHelper';
 
-// import {CoreTransform} from 'src/core/Transform';
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class NullObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
+const ParamsConfig = new NullObjParamConfig();
 
-// export class NullObjNode extends BaseObjNode {
-// 	initialize_node() {
-// 		//this._init_manager()
-// 		this.flags.add_display();
-// 		this._init_dirtyable_hook();
+export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'null';
+	}
+	readonly transform_controller: TransformController = new TransformController(this);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
-// 		this.io.inputs.set_count_to_one_max();
-// 	}
-// 	static type() {
-// 		return 'null';
-// 	}
+	create_object() {
+		return new Group();
+	}
+	initialize_node() {
+		this.transform_controller.initialize_node();
 
-// 	//@_group = new THREE.Group()
-// 	create_object() {
-// 		return new Group();
-// 	}
-
-// 	create_params() {
-// 		//this.create_common_params()
-// 		CoreTransform.create_params(this);
-// 	}
-
-// 	cook() {
-// 		this.transform_controller.update();
-// 		this.cook_controller.end_cook();
-// 	}
-// }
+		const helper = new AxesHelper(1);
+		this.object.add(helper);
+	}
+	private _core_transform = new CoreTransform();
+	cook() {
+		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
+		this.transform_controller.update(matrix);
+		this.cook_controller.end_cook();
+	}
+}

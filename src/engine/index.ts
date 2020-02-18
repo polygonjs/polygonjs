@@ -2,7 +2,7 @@ import {PolyScene} from './scene/PolyScene';
 import 'src/engine/poly/registers/All';
 
 import {SceneJsonExporter, SceneJsonExporterData} from './io/json/export/Scene';
-import default_scene_data from 'src/../public/examples/scenes/default_simple2.json';
+import default_scene_data from 'src/../public/examples/scenes/default_simple.json';
 import {SceneJsonImporter} from './io/json/import/Scene';
 
 export class Tester {

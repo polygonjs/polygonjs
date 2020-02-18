@@ -1,10 +1,11 @@
 import {RectAreaLight} from 'three/src/lights/RectAreaLight';
 import {RectAreaLightUniformsLib} from 'modules/three/examples/jsm/lights/RectAreaLightUniformsLib';
 
-import {TypedLightObjNode} from './_BaseLight';
+import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
+import {TransformedParamConfig} from './utils/TransformController';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-class AreaLightObjParamsConfig extends NodeParamsConfig {
+class AreaLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	color = ParamConfig.COLOR([1, 1, 1]);
 	intensity = ParamConfig.FLOAT(1, {range: [0, 10]});
 	width = ParamConfig.FLOAT(1, {range: [0, 10]});
@@ -12,7 +13,7 @@ class AreaLightObjParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AreaLightObjParamsConfig();
 
-export class AreaLightObjNode extends TypedLightObjNode<RectAreaLight, AreaLightObjParamsConfig> {
+export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight, AreaLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'area_light';

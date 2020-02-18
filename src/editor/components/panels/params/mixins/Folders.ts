@@ -28,7 +28,8 @@ export function SetupFolders(selected_node_options: SetupSelectedNodeOptions) {
 		});
 	});
 	const display_top_folders = computed(() => {
-		return top_folder_json_params.value.length > 0;
+		// no need to display folders if there is only 1
+		return top_folder_json_params.value.length > 1;
 	});
 
 	// const top_folder_names = computed(() => {

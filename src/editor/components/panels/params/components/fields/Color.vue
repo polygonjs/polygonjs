@@ -72,11 +72,12 @@ export default createComponent({
 			}
 		});
 
-		function update_input_color_from_param() {
-			param.compute().then(() => {
-				const value = param.value;
-				input_color.value = `#${value.getHexString()}`;
-			});
+		async function update_input_color_from_param() {
+			if (param.is_dirty) {
+				param.compute();
+			}
+			const value = param.value;
+			input_color.value = `#${value.getHexString()}`;
 		}
 
 		return {

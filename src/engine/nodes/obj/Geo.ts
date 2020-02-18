@@ -13,32 +13,26 @@ import {NodeContext} from 'src/engine/poly/NodeContext';
 
 // sop map
 import {BaseSopNodeType} from '../sop/_Base';
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 // import {PolyScene} from 'src/engine/scene/PolyScene';
+import {TransformedParamConfig, TransformController} from './utils/TransformController';
 
 import {GeoNodeChildrenMap} from 'src/engine/poly/registers/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 
-class GeoObjParamConfig extends NodeParamsConfig {
-	t = ParamConfig.VECTOR3([0, 0, 0]);
-	r = ParamConfig.VECTOR3([0, 0, 0]);
-	s = ParamConfig.VECTOR3([1, 1, 1]);
-	scale = ParamConfig.FLOAT(1);
-	look_at = ParamConfig.OPERATOR_PATH('', {node_selection: {context: NodeContext.OBJ}});
-	up = ParamConfig.VECTOR3([0, 1, 0]);
-	pivot = ParamConfig.VECTOR3([0, 0, 0]);
-
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new GeoObjParamConfig();
 
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	params_config = ParamsConfig;
-	protected _display_node_controller: DisplayNodeController = new DisplayNodeController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	static type() {
 		return 'geo';
 	}
+	readonly transform_controller: TransformController = new TransformController(this);
+	protected _display_node_controller: DisplayNodeController = new DisplayNodeController(this);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	private _sop_group = this._create_sop_group();
 	private _create_sop_group() {
@@ -54,14 +48,14 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	// 	return NodeContext.SOP;
 	// }
 
-	protected _used_in_scene: boolean = true;
 	protected _children_controller_context = NodeContext.SOP;
 	initialize_node() {
 		this.children_controller?.init();
 
-		this.flags.display.add_hook(() => {
-			this.set_used_in_scene(this.flags.display.active);
-		});
+		this.transform_controller.initialize_node();
+		// this.flags.display.add_hook(() => {
+		// 	this.set_used_in_scene(this.flags.display.active);
+		// });
 		this._display_node_controller.set_parent_object(this.sop_group);
 		this.object.add(this.sop_group);
 		// this._init_display_flag({
@@ -69,16 +63,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// 	affects_hierarchy: true,
 		// });
 		// this._init_dirtyable_hook();
-		this.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
 
-		this.io.inputs.set_count(0, 1);
-		this.io.outputs.set_has_one_output();
-	}
-	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
-	private async _cook_main_without_inputs_when_dirty() {
-		if (this.used_in_scene) {
-			await this.cook_controller.cook_main_without_inputs();
-		}
+		// this.io.inputs.set_count(0, 1);
+		// this.io.outputs.set_has_one_output();
 	}
 
 	create_object() {
@@ -166,7 +153,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
-		this.object.visible = this.flags.display.active;
+		this._sop_group.visible = this.flags.display.active && this.pv.display;
 		this.transform_controller.update(matrix);
 		//this.update_layers()
 

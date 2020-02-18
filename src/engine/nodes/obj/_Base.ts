@@ -4,8 +4,6 @@ import {TypedNode, BaseNodeType} from '../_Base';
 // import {BaseSopNode} from '../sop/_Base';
 // import {LookAt} from './Concerns/LookAt';
 import {ObjectContainer} from 'src/engine/containers/Object';
-import {LookAtController} from './utils/LookAtController';
-import {TransformController} from './utils/TransformController';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypedContainerController} from '../utils/ContainerController';
@@ -53,14 +51,14 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	protected _object!: O;
 	// _sop_loaded: boolean = false;
 
-	protected _look_at_controller: LookAtController | undefined;
-	get look_at_controller(): LookAtController {
-		return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
-	}
-	protected _transform_controller: TransformController | undefined;
-	get transform_controller(): TransformController {
-		return (this._transform_controller = this._transform_controller || new TransformController(this));
-	}
+	// protected _look_at_controller: LookAtController | undefined;
+	// get look_at_controller(): LookAtController {
+	// 	return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
+	// }
+	// protected _transform_controller: TransformController | undefined;
+	// get transform_controller(): TransformController {
+	// 	return (this._transform_controller = this._transform_controller || new TransformController(this));
+	// }
 
 	protected _used_in_scene: boolean = false;
 	get used_in_scene() {
@@ -83,9 +81,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		// this.flags.add_display();
 		this.name_controller.add_post_set_full_path_hook(this.set_object_name.bind(this));
 
-		this.io.inputs.add_hook(() => {
-			this.transform_controller.on_input_updated();
-		});
+		// this.io.inputs.add_hook(() => {
+		// 	this.transform_controller.on_input_updated();
+		// });
 		// this._init_bypass_flag({
 		// 	has_bypass_flag: false,
 		// });
@@ -151,7 +149,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return new Object3D();
 	}
 
-	request_display_node() {}
+	// request_display_node() {}
 
 	is_display_node_cooking(): boolean {
 		return false;
@@ -205,4 +203,4 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 }
 
 export type BaseObjNodeType = TypedObjNode<Object3D, any>;
-export class BaseObjNodeclass extends TypedObjNode<Object3D, any> {}
+export class BaseObjNodeClass extends TypedObjNode<Object3D, any> {}

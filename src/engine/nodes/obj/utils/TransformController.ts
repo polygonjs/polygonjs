@@ -2,12 +2,66 @@ import {Euler} from 'three/src/math/Euler';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Vector3} from 'three/src/math/Vector3';
 
+// import {Object3D} from 'three/src/core/Object3D';
+// import {BaseTransformedObjNodeType} from '../_BaseTransformed';
 import {CoreMath} from 'src/core/math/_Module';
 import {CoreTransform, SetParamsFromMatrixOptions} from 'src/core/Transform';
-import {BaseObjNodeType} from '../_Base';
+// import {BaseObjNodeType} from '../_Base';
+
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeContext} from 'src/engine/poly/NodeContext';
+import {TypedObjNode} from '../_Base';
+import {Object3D} from 'three';
+import {LookAtController} from './LookAtController';
+export function TransformedParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		transform = ParamConfig.FOLDER();
+		t = ParamConfig.VECTOR3([0, 0, 0]);
+		r = ParamConfig.VECTOR3([0, 0, 0]);
+		s = ParamConfig.VECTOR3([1, 1, 1]);
+		scale = ParamConfig.FLOAT(1);
+		look_at = ParamConfig.OPERATOR_PATH('', {node_selection: {context: NodeContext.OBJ}});
+		up = ParamConfig.VECTOR3([0, 1, 0]);
+		pivot = ParamConfig.VECTOR3([0, 0, 0]);
+	};
+}
+class TransformedParamsConfig extends TransformedParamConfig(NodeParamsConfig) {}
+export class TransformedObjNode extends TypedObjNode<Object3D, TransformedParamsConfig> {
+	readonly transform_controller: TransformController = new TransformController(this);
+	// get transform_controller(): TransformController {
+	// 	return this._transform_controller; // = this._transform_controller || new TransformController(this));
+	// }
+}
 
 export class TransformController {
-	constructor(private node: BaseObjNodeType) {}
+	constructor(private node: TransformedObjNode) {}
+
+	protected _look_at_controller = new LookAtController(this.node);
+	// get look_at_controller(): LookAtController {
+	// 	return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
+	// }
+
+	initialize_node() {
+		// not sure we should change if it is used in the scene, as parented children may still be
+		// this.node.flags.display.add_hook(() => {
+		// 	this.node.set_used_in_scene(this.node.flags.display.active || false);
+		// });
+		this.node.set_used_in_scene(true);
+
+		this.node.io.inputs.set_count(0, 1);
+		this.node.io.outputs.set_has_one_output();
+		this.node.io.inputs.add_hook(() => {
+			this.on_input_updated();
+		});
+		this.node.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
+	}
+	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
+	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
+	private async _cook_main_without_inputs_when_dirty() {
+		if (this.node.used_in_scene) {
+			await this.node.cook_controller.cook_main_without_inputs();
+		}
+	}
 
 	on_input_updated() {
 		if (this.node.io.inputs.input(0) != null) {
@@ -28,8 +82,8 @@ export class TransformController {
 			// 	object.matrix = matrix
 			// else
 
-			if (this.node.look_at_controller.active == true) {
-				return this.node.look_at_controller.compute(); //this._use_look_at_param();
+			if (this._look_at_controller.active == true) {
+				return this._look_at_controller.compute(); //this._use_look_at_param();
 			} else {
 				return this.update_transform_with_matrix(matrix);
 			}
@@ -61,16 +115,18 @@ export class TransformController {
 		}
 	}
 
+	private _update_transform_from_params_scale = new Vector3();
 	update_transform_from_params() {
 		const object = this.node.object;
 		if (object) {
-			const position: Vector3 = this.node.params.vector3('t');
+			const position: Vector3 = this.node.pv.t;
 			//quaternion = new Quaternion()
-			const rotation: Vector3 = this.node.params.vector3('r');
-			const scale: Vector3 = this.node.params
-				.vector3('s')
-				.clone()
-				.multiplyScalar(this.node.params.float('scale'));
+			const rotation: Vector3 = this.node.pv.r;
+
+			this._update_transform_from_params_scale.copy(this.node.pv.s).multiplyScalar(this.node.pv.scale);
+			// const scale: Vector3 = this.node.pv.s
+			// 	.clone()
+			// 	.multiplyScalar(this.node.pv.scale);
 			//matrix.decompose( position, quaternion, scale )
 
 			object.matrixAutoUpdate = false;
@@ -88,7 +144,7 @@ export class TransformController {
 				//'XYZ'
 			);
 			object.rotation.copy(euler);
-			object.scale.copy(scale);
+			object.scale.copy(this._update_transform_from_params_scale);
 			object.matrixAutoUpdate = true;
 			object.updateMatrix();
 

@@ -6,6 +6,7 @@ import {TypedLightObjNode} from './_BaseLight';
 // import {ParamType} from 'src/engine/poly/ParamType';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {HelperController} from './utils/HelperController';
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 	sky_color = ParamConfig.COLOR([0.2, 0.7, 1]);
 	ground_color = ParamConfig.COLOR([0.1, 0.1, 0.25]);
@@ -17,21 +18,21 @@ const ParamsConfig = new HemisphereLightObjParamsConfig();
 
 export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, HemisphereLightObjParamsConfig> {
 	params_config = ParamsConfig;
-	// protected _object: HemisphereLight;
-	// get object() {
-	// 	return this._object;
-	// }
 	static type() {
 		return 'hemisphere_light';
 	}
+	private _helper_controller = new HelperController<HemisphereLightHelper, HemisphereLight>(
+		this,
+		HemisphereLightHelper
+	);
 
 	create_object() {
 		const light = new HemisphereLight();
 
-		const helper = new HemisphereLightHelper(light, 1);
-		light.add(helper);
-
 		return light;
+	}
+	initialize_node() {
+		this._helper_controller.initialize_node();
 	}
 
 	// create_light_params() {
@@ -48,5 +49,6 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		this.object.intensity = this.pv.intensity;
 
 		this.object.children[0].visible = this.pv.show_helper;
+		this._helper_controller.update();
 	}
 }

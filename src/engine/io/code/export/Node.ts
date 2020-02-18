@@ -146,7 +146,6 @@ export class NodeCodeExporter {
 		this._node.params.all.forEach((param) => {
 			const param_exporter = CodeExporterDispatcher.dispatch_param(param);
 			const param_lines: string[] = param_exporter.process();
-			console.log(param.name, param_exporter, param_lines);
 			param_lines.forEach((param_line) => {
 				this._lines.push(param_line);
 			});

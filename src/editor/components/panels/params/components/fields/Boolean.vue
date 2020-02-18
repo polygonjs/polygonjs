@@ -65,7 +65,9 @@ export default createComponent({
 		// const param_result = ref(false)
 
 		onMounted(() => {
-			param.compute();
+			if (param.is_dirty) {
+				param.compute();
+			}
 		});
 
 		const checkbox_id = computed(() => {

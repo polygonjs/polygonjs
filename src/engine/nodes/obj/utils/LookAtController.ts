@@ -1,18 +1,20 @@
 import {CameraController} from 'src/core/CameraController';
-import {BaseObjNodeType, BaseObjNodeclass} from '../_Base';
+import {TransformedObjNode} from './TransformController';
 import {Object3D} from 'three/src/core/Object3D';
 import {OperatorPathParam} from 'src/engine/params/OperatorPath';
 import {ParamType} from 'src/engine/poly/ParamType';
+// import {BaseTransformedObjNodeType} from '../_BaseTransformed';
+import {BaseObjNodeClass} from '../_Base';
 
 export class LookAtController {
 	private _camera_controller = new CameraController(this._update_from_look_at_target.bind(this));
-	constructor(private node: BaseObjNodeType) {}
+	constructor(private node: TransformedObjNode) {}
 
 	get active(): boolean {
 		return this.param.value != '';
 	}
 	get param(): OperatorPathParam {
-		return this.node.params.get_operator_path('look_at');
+		return this.node.p.look_at;
 	}
 
 	compute() {
@@ -20,7 +22,7 @@ export class LookAtController {
 		//@_look_at_target_object = null
 
 		if (look_at_node) {
-			if (look_at_node instanceof BaseObjNodeclass) {
+			if (look_at_node instanceof BaseObjNodeClass) {
 				// TODO: typescript
 				this._camera_controller.set_target(look_at_node.object);
 			} else {

@@ -4,25 +4,40 @@ import {DirectionalLightHelper} from 'three/src/helpers/DirectionalLightHelper';
 import {TypedLightObjNode} from './_BaseLight';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-class DirectionalLightObjParamsConfig extends NodeParamsConfig {
-	color = ParamConfig.COLOR([1, 1, 1]);
-	intensity = ParamConfig.FLOAT(1);
-	distance = ParamConfig.FLOAT(100);
+import {HelperController, HelperParamConfig} from './utils/HelperController';
 
-	// shadows
-	cast_shadows = ParamConfig.BOOLEAN(1);
-	shadow_res = ParamConfig.VECTOR2([1024, 1024]);
-	shadow_bias = ParamConfig.FLOAT(-0.001);
+export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		transform = ParamConfig.FOLDER();
+		// directional
+		position = ParamConfig.VECTOR3([0, 1, 0]);
+		lookat = ParamConfig.OPERATOR_PATH('');
 
-	// helper
-	show_helper = ParamConfig.BOOLEAN(1);
+		light = ParamConfig.FOLDER();
+		color = ParamConfig.COLOR([1, 1, 1]);
+		intensity = ParamConfig.FLOAT(1);
+		distance = ParamConfig.FLOAT(100);
+		// shadows
+		cast_shadows = ParamConfig.BOOLEAN(1);
+		shadow_res = ParamConfig.VECTOR2([1024, 1024]);
+		shadow_bias = ParamConfig.FLOAT(-0.001);
+	};
 }
+
+class DirectionalLightObjParamsConfig extends HelperParamConfig(DirectionalLightParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new DirectionalLightObjParamsConfig();
 
 export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight, DirectionalLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'directional_light';
+	}
+	private _helper_controller = new HelperController<DirectionalLightHelper, DirectionalLight>(
+		this,
+		DirectionalLightHelper
+	);
+	initialize_node() {
+		this._helper_controller.initialize_node();
 	}
 
 	create_object() {
@@ -33,9 +48,6 @@ export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight,
 		light.shadow.mapSize.x = 1024;
 		light.shadow.mapSize.y = 1024;
 		light.shadow.camera.near = 0.1;
-
-		const helper = new DirectionalLightHelper(light, 1);
-		light.add(helper);
 
 		return light;
 	}
@@ -57,10 +69,13 @@ export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight,
 	// }
 
 	update_light_params() {
+		this.object.position.copy(this.pv.position);
+		console.log('this.object', this.object.target);
 		this.object.color = this.pv.color;
 		this.object.intensity = this.pv.intensity;
 		this.object.shadow.camera.far = this.pv.distance;
 
+		this._helper_controller.update();
 		// this._direction = this.pv.t
 		// 	.clone()
 		// 	.sub(this.object.target.position)
@@ -76,8 +91,6 @@ export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight,
 		// updating the camera matrix is not necessary for point light
 		// so probably should not for this
 		this.object.shadow.camera.updateProjectionMatrix();
-
-		this.object.children[0].visible = this.pv.show_helper;
 	}
 	// get direction() {
 	// 	return this._direction;

@@ -13,7 +13,7 @@ import {CopObjNode} from 'src/engine/nodes/obj/Cop';
 import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
 
 import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
-// import {NullObjNode} from 'src/engine/nodes/obj/Null';
+import {NullObjNode} from 'src/engine/nodes/obj/Null';
 import {FogObjNode} from 'src/engine/nodes/obj/Fog';
 
 import {OrthographicCameraObjNode} from 'src/engine/nodes/obj/OrthographicCamera';
@@ -32,6 +32,7 @@ export interface ObjNodeChildrenMap {
 	fog: FogObjNode;
 	geo: GeoObjNode;
 	materials: MaterialsObjNode;
+	null: NullObjNode;
 	perspective_camera: PerspectiveCameraObjNode;
 	post_process: PostProcessObjNode;
 	orthographic_camera: OrthographicCameraObjNode;
@@ -53,7 +54,7 @@ export class ObjRegister {
 		poly.register_node(PostProcessObjNode, CATEGORY_OBJ.MANAGER);
 
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
-		// poly.register_node(NullObjNode, CATEGORY_OBJ.GEOMETRY);
+		poly.register_node(NullObjNode, CATEGORY_OBJ.GEOMETRY);
 
 		poly.register_node(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.register_node(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);

@@ -1,9 +1,12 @@
 import {SpotLight} from 'three/src/lights/SpotLight';
 import {SpotLightHelper} from 'three/src/helpers/SpotLightHelper';
-import {TypedLightObjNode} from './_BaseLight';
+import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
+import {TransformedParamConfig} from './utils/TransformController';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-class SpotLightObjParamsConfig extends NodeParamsConfig {
+import {HelperController} from './utils/HelperController';
+class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
+	light = ParamConfig.FOLDER();
 	color = ParamConfig.COLOR([1, 1, 1]);
 	intensity = ParamConfig.FLOAT(1);
 	angle = ParamConfig.FLOAT(45, {range: [0, 180]});
@@ -22,13 +25,15 @@ class SpotLightObjParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 
-export class SpotLightObjNode extends TypedLightObjNode<SpotLight, SpotLightObjParamsConfig> {
+export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, SpotLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'spot_light';
 	}
+	private _helper_controller = new HelperController<SpotLightHelper, SpotLight>(this, SpotLightHelper);
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
+		this._helper_controller.initialize_node();
 	}
 
 	create_object() {
@@ -40,8 +45,8 @@ export class SpotLightObjNode extends TypedLightObjNode<SpotLight, SpotLightObjP
 		light.shadow.mapSize.y = 1024;
 		light.shadow.camera.near = 0.1;
 
-		const helper = new SpotLightHelper(light, 1);
-		light.add(helper);
+		// const helper = new SpotLightHelper(light, 1);
+		// light.add(helper);
 
 		return light;
 	}
@@ -73,7 +78,7 @@ export class SpotLightObjNode extends TypedLightObjNode<SpotLight, SpotLightObjP
 		this.object.decay = this.pv.decay;
 		this.object.distance = this.pv.distance;
 
-		this.object.children[0].visible = this.pv.show_helper;
+		this._helper_controller.update();
 	}
 	update_shadow_params() {
 		this.object.castShadow = this.pv.cast_shadows;
@@ -82,4 +87,18 @@ export class SpotLightObjNode extends TypedLightObjNode<SpotLight, SpotLightObjP
 		// object.shadow.camera.far = this.pv.shadow_far
 		this.object.shadow.bias = this.pv.shadow_bias;
 	}
+
+	// private _update_helper() {
+	// 	if (this.scene) {
+	// 		// the helper needs to be re-created every frame to be updated when light params change
+	// 		if (this._helper) {
+	// 			this.scene.display_scene.remove(this._helper);
+	// 			this._helper.dispose();
+	// 		}
+	// 		if (this.pv.show_helper) {
+	// 			this._helper = new SpotLightHelper(this.object, 1);
+	// 			this.scene.display_scene.add(this._helper);
+	// 		}
+	// 	}
+	// }
 }

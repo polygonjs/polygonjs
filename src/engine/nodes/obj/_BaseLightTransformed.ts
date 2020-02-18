@@ -2,16 +2,22 @@ import {TypedLightObjNode} from './_BaseLight';
 import {Light} from 'three/src/lights/Light';
 // import {CoreTransform} from 'src/core/Transform';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {TransformController, TransformedParamConfig} from './utils/TransformController';
+import {FlagsControllerD} from '../utils/FlagsController';
 
 // import {Transformed} from './Concerns/Transformed';
+class TransformedObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 
 export abstract class BaseLightTransformedObjNode<
 	O extends Light,
-	K extends NodeParamsConfig
+	K extends TransformedObjParamConfig
 > extends TypedLightObjNode<O, K> {
-	initialize_node() {
-		super.initialize_node();
-		this.io.outputs.set_has_one_output();
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	readonly transform_controller: TransformController = new TransformController(this);
+
+	initialize_base_node() {
+		super.initialize_base_node();
+		this.transform_controller.initialize_node();
 	}
 	// create_params() {
 	// 	// this.within_param_folder('transform', () => {

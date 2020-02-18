@@ -1,11 +1,13 @@
 import {PointLight} from 'three/src/lights/PointLight';
 import {PointLightHelper} from 'three/src/helpers/PointLightHelper';
-import {ParamType} from 'src/engine/poly/ParamType';
 
-import {TypedLightObjNode} from './_BaseLight';
+import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
+import {TransformedParamConfig} from './utils/TransformController';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-class PointLightObjParamsConfig extends NodeParamsConfig {
+import {HelperController} from './utils/HelperController';
+class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
+	light = ParamConfig.FOLDER();
 	color = ParamConfig.COLOR([1, 1, 1]);
 	intensity = ParamConfig.FLOAT(1);
 	decay = ParamConfig.FLOAT(0.1);
@@ -22,14 +24,15 @@ class PointLightObjParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new PointLightObjParamsConfig();
 
-export class PointLightObjNode extends TypedLightObjNode<PointLight, PointLightObjParamsConfig> {
+export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, PointLightObjParamsConfig> {
 	params_config = ParamsConfig;
-
 	static type() {
 		return 'point_light';
 	}
+	private _helper_controller = new HelperController<PointLightHelper, PointLight>(this, PointLightHelper);
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
+		this._helper_controller.initialize_node();
 	}
 
 	create_object() {
@@ -41,18 +44,15 @@ export class PointLightObjNode extends TypedLightObjNode<PointLight, PointLightO
 		light.shadow.mapSize.y = 1024;
 		light.shadow.camera.near = 0.1;
 
-		const helper = new PointLightHelper(light, 1);
-		light.add(helper);
-
 		return light;
 	}
 
-	create_light_params() {
-		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
-		this.add_param(ParamType.FLOAT, 'intensity', 1);
-		this.add_param(ParamType.FLOAT, 'decay', 0.1);
-		this.add_param(ParamType.FLOAT, 'distance', 100);
-	}
+	// create_light_params() {
+	// 	this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
+	// 	this.add_param(ParamType.FLOAT, 'intensity', 1);
+	// 	this.add_param(ParamType.FLOAT, 'decay', 0.1);
+	// 	this.add_param(ParamType.FLOAT, 'distance', 100);
+	// }
 	// create_shadow_params() {
 	// 	this.add_param(ParamType.BOOLEAN, 'cast_shadows', 1);
 	// 	const shadow_options = {visible_if: {cast_shadows: 1}};
@@ -71,7 +71,7 @@ export class PointLightObjNode extends TypedLightObjNode<PointLight, PointLightO
 
 		this.object.distance = this.pv.distance;
 
-		this.object.children[0].visible = this.pv.show_helper;
+		this._helper_controller.update();
 	}
 	update_shadow_params() {
 		this.object.castShadow = this.pv.cast_shadows;

@@ -2,7 +2,7 @@ import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
 
 import {CoreTransform} from 'src/core/Transform';
-import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
+import {ObjNodeRenderOrder} from './_Base';
 import {ControlsController} from './utils/cameras/ControlsController';
 import {LayersController} from './utils/LayersController';
 import {PostProcessController} from './utils/cameras/PostProcessController';
@@ -41,20 +41,22 @@ import {LayerParamConfig} from './utils/LayersController';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {BaseNodeType} from '../_Base';
+import {TransformedParamConfig, TransformController} from './utils/TransformController';
+import {TypedObjNode} from './_Base';
 
 export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		transform = ParamConfig.FOLDER();
+		// transform = ParamConfig.FOLDER();
 		controls = ParamConfig.OPERATOR_PATH('', {
 			node_selection: {
 				context: NodeContext.EVENT,
 			},
 		});
 		// add transform params
-		t = ParamConfig.VECTOR3([0, 0, 0]);
-		r = ParamConfig.VECTOR3([0, 0, 0]);
-		s = ParamConfig.VECTOR3([1, 1, 1]);
-		scale = ParamConfig.FLOAT(1);
+		// t = ParamConfig.VECTOR3([0, 0, 0]);
+		// r = ParamConfig.VECTOR3([0, 0, 0]);
+		// s = ParamConfig.VECTOR3([1, 1, 1]);
+		// scale = ParamConfig.FLOAT(1);
 		target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
 		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
@@ -73,20 +75,22 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 }
 
 export class BaseCameraObjParamsConfig extends CameraPostProcessParamConfig(
-	CameraBackgroundParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig)))
+	CameraBackgroundParamConfig(LayerParamConfig(TransformedParamConfig(CameraTransformParamConfig(NodeParamsConfig))))
 ) {}
 
 export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
 	O,
 	K
 > {
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	// public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
 	protected _object!: O;
 	protected _aspect: number = -1;
 	get object() {
 		return this._object;
 	}
+	readonly transform_controller: TransformController = new TransformController(this);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	protected _background_controller: BaseBackgroundController | undefined;
 	get background_controller(): BaseBackgroundController {
@@ -110,15 +114,15 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	}
 
 	protected _used_in_scene: boolean = true;
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
-		this.io.outputs.set_has_one_output();
-		// this._init_dirtyable_hook();
+	// initialize_node() {
+	// 	// this.io.inputs.set_count(0, 1);
+	// 	// this.io.outputs.set_has_one_output();
+	// 	// this._init_dirtyable_hook();
 
-		this.flags.display.add_hook(() => {
-			this.set_used_in_scene(this.flags.display.active || false);
-		});
-	}
+	// 	// this.flags.display.add_hook(() => {
+	// 	// 	this.set_used_in_scene(this.flags.display.active || false);
+	// 	// });
+	// }
 
 	// create_common_params() {
 	// 	// this.within_param_folder('transform', () => {

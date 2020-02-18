@@ -96,7 +96,9 @@ export function SetupFieldCommon(props: ISetupFieldCommonProps) {
 
 	watch(displays_expression_result_computed, async (new_display, old_display) => {
 		if (new_display) {
-			await param.compute();
+			if (param.is_dirty) {
+				await param.compute();
+			}
 		}
 	});
 

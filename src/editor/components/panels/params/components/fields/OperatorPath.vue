@@ -75,7 +75,9 @@ export default createComponent({
 		}
 
 		function go_to_node() {
-			param.compute();
+			if (param.is_dirty) {
+				param.compute();
+			}
 			const node = param.found_node();
 			if (node) {
 				if (node.parent) {
