@@ -15,12 +15,12 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 		return 'ambient_light';
 	}
 
-	create_object() {
+	create_light() {
 		return new AmbientLight();
 	}
 
 	update_light_params() {
-		this.object.color = this.pv.color;
-		this.object.intensity = this.pv.intensity;
+		this.light.color = this.pv.color;
+		this.light.intensity = this.pv.intensity;
 	}
 }

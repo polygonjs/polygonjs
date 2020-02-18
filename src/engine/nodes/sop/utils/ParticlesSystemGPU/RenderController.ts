@@ -13,7 +13,7 @@ import {GlobalsTextureHandler} from 'src/engine/nodes/gl/Assembler/Globals/Textu
 import {ParticlesSystemGpuSopNode} from 'src/engine/nodes/sop/ParticlesSystemGpu';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from 'src/core/geometry/Material';
 import {CoreGroup} from 'src/core/geometry/Group';
-import {Mesh} from 'three';
+import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from 'src/engine/nodes/gl/Assembler/Util/TextureAllocationsController';
 

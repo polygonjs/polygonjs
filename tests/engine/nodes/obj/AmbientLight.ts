@@ -1,5 +1,3 @@
-import {AmbientLight} from 'three/src/lights/AmbientLight';
-
 QUnit.test('ambient light simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.display_scene.children[0];
@@ -23,11 +21,12 @@ QUnit.test('ambient light simple', async (assert) => {
 	window.scene.performance.start();
 
 	assert.equal(ambient_light1.cook_controller.cooks_count, 0);
-	const light_object1 = main_group.children[2] as AmbientLight;
+	const light_object1 = main_group.children[2];
+	const light_from_light_object1 = light_object1.children[1];
 	ambient_light1.p.intensity.set(2);
 	await scene.wait_for_cooks_completed();
-	assert.equal(ambient_light1.object.uuid, light_object1.uuid);
-	assert.equal(light_object1.intensity, 2, 'intensity should be 2');
+	assert.equal(light_from_light_object1.uuid, ambient_light1.light.uuid);
+	assert.equal(ambient_light1.light.intensity, 2, 'intensity should be 2');
 	assert.equal(ambient_light1.cook_controller.cooks_count, 1, 'cooks count should be 1');
 
 	window.scene.performance.stop();
@@ -49,6 +48,8 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 	const ambient_light1 = scene.root.create_node('ambient_light');
 	assert.equal(ambient_light1.name, 'ambient_light1');
 	assert.equal(main_group.children.length, 3);
+	const ambient_light_object = main_group.children[2];
+	assert.equal(ambient_light_object.uuid, ambient_light1.object.uuid);
 	assert.equal(
 		main_group.children
 			.map((c) => c.name)
@@ -56,19 +57,24 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 			.join(':'),
 		'/ambient_light1:/geo1:/perspective_camera1'
 	);
+	assert.equal(ambient_light_object.children.length, 2);
 
 	ambient_light1.flags.display.set(false);
-	assert.equal(main_group.children.length, 2);
+	assert.equal(main_group.children.length, 3);
 	assert.equal(
 		main_group.children
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/ambient_light1:/geo1:/perspective_camera1'
 	);
+	assert.equal(ambient_light_object.children.length, 1);
+
+	ambient_light1.flags.display.set(true);
+	assert.equal(ambient_light_object.children.length, 2);
 });
 
-QUnit.test('ambient light display flag off does not cook', async (assert) => {
+QUnit.test('ambient light display flag off still cooks', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.display_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
@@ -81,15 +87,15 @@ QUnit.test('ambient light display flag off does not cook', async (assert) => {
 
 	await scene.wait_for_cooks_completed();
 	ambient_light1.flags.display.set(false);
-	assert.equal(main_group.children.length, 2);
+	assert.equal(main_group.children.length, 3);
 
 	window.scene.performance.start();
 
 	assert.equal(ambient_light1.cook_controller.cooks_count, 0);
 	ambient_light1.p.intensity.set(2);
 	await scene.wait_for_cooks_completed();
-	assert.equal(ambient_light1.object.intensity, 1, 'intensity should be 1');
-	assert.equal(ambient_light1.cook_controller.cooks_count, 0, 'should not have cooked');
+	assert.equal(ambient_light1.light.intensity, 2, 'intensity is updated');
+	assert.equal(ambient_light1.cook_controller.cooks_count, 1, 'has cooked');
 
 	window.scene.performance.stop();
 });
@@ -143,15 +149,16 @@ QUnit.test('ambient light cooks only once when multiple params are updated', asy
 	window.scene.performance.start();
 
 	assert.equal(ambient_light1.cook_controller.cooks_count, 0);
-	const light_object1 = main_group.children[2] as AmbientLight;
+	const ambient_light_group = main_group.children[2];
+	const light_object = ambient_light1.light;
 	scene.batch_update(() => {
 		ambient_light1.p.intensity.set(2);
 		ambient_light1.p.color.set([2, 1, 3]);
 	});
 	await scene.wait_for_cooks_completed();
-	assert.equal(ambient_light1.object.uuid, light_object1.uuid);
-	assert.equal(light_object1.intensity, 2, 'intensity should be 2');
-	assert.deepEqual(light_object1.color.toArray(), [2, 1, 3], 'color should be 2,1,3');
+	assert.equal(light_object.uuid, ambient_light_group.children[1].uuid);
+	assert.equal(light_object.intensity, 2, 'intensity should be 2');
+	assert.deepEqual(light_object.color.toArray(), [2, 1, 3], 'color should be 2,1,3');
 	assert.equal(ambient_light1.cook_controller.cooks_count, 1, 'cooks count should be 1');
 
 	window.scene.performance.stop();

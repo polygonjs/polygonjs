@@ -39,6 +39,7 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 	}
 
 	cook(input_contents: CoreGroup[]) {
+		console.log('plane cook', this.full_path());
 		const core_group = input_contents[0];
 		if (core_group) {
 			this._cook_with_input(core_group);

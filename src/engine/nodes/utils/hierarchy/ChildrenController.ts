@@ -217,7 +217,6 @@ export class HierarchyChildrenController {
 
 			this.node.lifecycle.on_child_remove(child_node);
 			child_node.lifecycle.on_delete();
-			// this.post_remove_node(node);
 			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graph_node_id});
 		}
 	}

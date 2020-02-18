@@ -32,6 +32,7 @@ QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';
 
 QUnit.module('obj');
+import './engine/nodes/obj/utils/DisplayNodeController';
 import './engine/nodes/obj/_BaseTransformed';
 import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';

@@ -1,7 +1,7 @@
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
-import {CoreTransform} from 'src/core/Transform';
+// import {CoreTransform} from 'src/core/Transform';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
 
@@ -16,20 +16,20 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	}
 	readonly transform_controller: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	private _helper = new AxesHelper(1);
 
 	create_object() {
 		return new Group();
 	}
 	initialize_node() {
 		this.transform_controller.initialize_node();
-
-		const helper = new AxesHelper(1);
-		this.object.add(helper);
+		this.object.add(this._helper);
+		this.flags.display.add_hook(() => {
+			this._helper.visible = this.flags.display.active;
+		});
 	}
-	private _core_transform = new CoreTransform();
 	cook() {
-		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
-		this.transform_controller.update(matrix);
+		this.transform_controller.update();
 		this.cook_controller.end_cook();
 	}
 }

@@ -1,46 +1,62 @@
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
-import {DirectionalLightHelper} from 'three/src/helpers/DirectionalLightHelper';
-
-import {TypedLightObjNode} from './_BaseLight';
+import {DirectionalLightHelper} from './utils/helpers/DirectionalLightHelper';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {HelperController, HelperParamConfig} from './utils/HelperController';
+// import {NodeContext} from 'src/engine/poly/NodeContext';
+// import {BaseObjNodeType} from './_Base';
+import {Object3D} from 'three/src/core/Object3D';
+import {HelperController, HelperConstructor} from './utils/HelperController';
+import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
+import {TransformedParamConfig} from './utils/TransformController';
 
 export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		transform = ParamConfig.FOLDER();
+		// transform = ParamConfig.FOLDER();
 		// directional
-		position = ParamConfig.VECTOR3([0, 1, 0]);
-		lookat = ParamConfig.OPERATOR_PATH('');
+		// position = ParamConfig.VECTOR3([0, 1, 0]);
+		// target = ParamConfig.VECTOR3([0, 0, 0]);
+		// lookat = ParamConfig.OPERATOR_PATH('', {dependent_on_found_node: false});
 
 		light = ParamConfig.FOLDER();
 		color = ParamConfig.COLOR([1, 1, 1]);
 		intensity = ParamConfig.FLOAT(1);
-		distance = ParamConfig.FLOAT(100);
+		distance = ParamConfig.FLOAT(100, {range: [0, 100]});
 		// shadows
 		cast_shadows = ParamConfig.BOOLEAN(1);
 		shadow_res = ParamConfig.VECTOR2([1024, 1024]);
-		shadow_bias = ParamConfig.FLOAT(-0.001);
+		shadow_bias = ParamConfig.FLOAT(0.001);
+
+		// helper
+		show_helper = ParamConfig.BOOLEAN(1);
+		helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 	};
 }
 
-class DirectionalLightObjParamsConfig extends HelperParamConfig(DirectionalLightParamConfig(NodeParamsConfig)) {}
+class DirectionalLightObjParamsConfig extends DirectionalLightParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new DirectionalLightObjParamsConfig();
 
-export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight, DirectionalLightObjParamsConfig> {
+export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
+	DirectionalLight,
+	DirectionalLightObjParamsConfig
+> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'directional_light';
 	}
-	private _helper_controller = new HelperController<DirectionalLightHelper, DirectionalLight>(
+	private _target_target!: Object3D;
+	private _helper_controller = new HelperController<DirectionalLight>(
 		this,
-		DirectionalLightHelper
+		(<unknown>DirectionalLightHelper) as HelperConstructor<DirectionalLight>,
+		'DirectionalLightHelper'
 	);
 	initialize_node() {
+		// this.io.inputs.set_count(0, 1);
+		// this.io.inputs.set_depends_on_inputs(false);
+
 		this._helper_controller.initialize_node();
 	}
 
-	create_object() {
+	create_light() {
 		const light = new DirectionalLight();
 
 		light.castShadow = true;
@@ -49,50 +65,41 @@ export class DirectionalLightObjNode extends TypedLightObjNode<DirectionalLight,
 		light.shadow.mapSize.y = 1024;
 		light.shadow.camera.near = 0.1;
 
+		this._target_target = light.target;
+		this._target_target.name = 'DirectionalLight Default Target';
+		this.object.add(this._target_target);
+
 		return light;
 	}
-
-	// create_light_params() {
-	// 	this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
-	// 	this.add_param(ParamType.FLOAT, 'intensity', 1);
-	// 	this.add_param(ParamType.FLOAT, 'distance', 100);
+	// add_object_to_parent(parent: Object3D) {
+	// 	super.add_object_to_parent(parent);
+	// 	parent.add(this._target_target);
 	// }
-	// create_shadow_params() {
-	// 	this.add_param(ParamType.BOOLEAN, 'cast_shadows', 1);
-	// 	const shadow_options = {visible_if: {cast_shadows: 1}};
-	// 	this.add_param(ParamType.VECTOR2, 'shadow_res', [1024, 1024], shadow_options);
-	// 	// this.add_param( ParamType.FLOAT, 'shadow_near', 0.1, shadow_options );
-	// 	// this.add_param( ParamType.FLOAT, 'shadow_far', 100, shadow_options );
-	// 	// this.add_param( 'float', 'shadow_far', 500 ) # same as param distance
-	// 	this.add_param(ParamType.FLOAT, 'shadow_bias', -0.0001, shadow_options);
-	// 	// this.add_param( 'float', 'shadow_blur', 1, shadow_options );
+	// remove_object_from_parent() {
+	// 	super.remove_object_from_parent();
+	// 	const parent = this._target_target.parent;
+	// 	if (parent) {
+	// 		parent.remove(this._target_target);
+	// 	}
 	// }
 
 	update_light_params() {
-		this.object.position.copy(this.pv.position);
-		console.log('this.object', this.object.target);
-		this.object.color = this.pv.color;
-		this.object.intensity = this.pv.intensity;
-		this.object.shadow.camera.far = this.pv.distance;
+		// this.light.position.copy(this.pv.t);
+		this.light.color = this.pv.color;
+		this.light.intensity = this.pv.intensity;
+		this.light.shadow.camera.far = this.pv.distance;
 
 		this._helper_controller.update();
-		// this._direction = this.pv.t
-		// 	.clone()
-		// 	.sub(this.object.target.position)
-		// 	.normalize();
 	}
 	update_shadow_params() {
-		this.object.castShadow = this.pv.cast_shadows;
-		this.object.shadow.mapSize.copy(this.pv.shadow_res);
+		this.light.castShadow = this.pv.cast_shadows;
+		this.light.shadow.mapSize.copy(this.pv.shadow_res);
 		// object.shadow.camera.near = this.pv.shadow_near
 		// object.shadow.camera.far = this.pv.shadow_far
-		this.object.shadow.bias = this.pv.shadow_bias;
+		this.light.shadow.bias = this.pv.shadow_bias;
 
 		// updating the camera matrix is not necessary for point light
 		// so probably should not for this
-		this.object.shadow.camera.updateProjectionMatrix();
+		this.light.shadow.camera.updateProjectionMatrix();
 	}
-	// get direction() {
-	// 	return this._direction;
-	// }
 }

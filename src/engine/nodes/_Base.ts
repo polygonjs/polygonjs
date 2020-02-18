@@ -366,7 +366,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	// emit
 
 	emit(event_name: NodeEvent.CREATED, data: EmitDataByNodeEventMap[NodeEvent.CREATED]): void;
-	emit(event_name: NodeEvent.DELETED, data: NodeDeletedEmitData): void;
+	emit(event_name: NodeEvent.DELETED, data: EmitDataByNodeEventMap[NodeEvent.DELETED]): void;
 	emit(event_name: NodeEvent.NAME_UPDATED): void;
 	emit(event_name: NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE): void;
 	emit(event_name: NodeEvent.NAMED_INPUTS_UPDATED): void;

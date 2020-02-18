@@ -39,7 +39,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		ObjectContainer
 	);
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
-	public readonly add_to_hierarchy: boolean = true;
+	// public readonly add_to_hierarchy: boolean = true;
 	static node_context(): NodeContext {
 		return NodeContext.OBJ;
 	}
@@ -47,6 +47,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return DEFAULT_INPUT_NAMES;
 	}
 
+	// protected _main_group = new Group();
 	protected _children_group = new Group();
 	protected _object!: O;
 	// _sop_loaded: boolean = false;
@@ -60,10 +61,15 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// 	return (this._transform_controller = this._transform_controller || new TransformController(this));
 	// }
 
-	protected _used_in_scene: boolean = false;
+	protected _attachable_to_hierarchy: boolean = true;
+	get attachable_to_hierarchy() {
+		return this._attachable_to_hierarchy;
+	}
+	protected _used_in_scene: boolean = true;
 	get used_in_scene() {
 		return this._used_in_scene;
 	}
+	// TODO call set_used_in_scene(false) when node is deleted
 	set_used_in_scene(state: boolean) {
 		this._used_in_scene = state;
 		if (!this.scene.loading_controller.is_loading) {
@@ -73,6 +79,27 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 			}
 		}
 	}
+	add_object_to_parent(parent: Object3D) {
+		if (this.attachable_to_hierarchy) {
+			parent.add(this.object);
+		}
+	}
+	remove_object_from_parent() {
+		if (this.attachable_to_hierarchy) {
+			const parent = this.object.parent;
+			if (parent) {
+				parent.remove(this.object);
+			}
+		}
+	}
+
+	// protected _displayed_in_scene: boolean = true;
+	// get displayed_in_scene() {
+	// 	return this._displayed_in_scene;
+	// }
+	// set_displayed_in_scene(state:boolean){
+	// 	this._displayed_in_scene = state;
+	// }
 
 	initialize_base_node() {
 		// this.container_controller.init(ObjectContainer);
@@ -80,6 +107,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		// this._init_container_owner('Object');
 		// this.flags.add_display();
 		this.name_controller.add_post_set_full_path_hook(this.set_object_name.bind(this));
+		this.set_object_name();
 
 		// this.io.inputs.add_hook(() => {
 		// 	this.transform_controller.on_input_updated();
@@ -113,26 +141,31 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// 	if object?
 	// 		object.name = this.name()
 	// 		this.set_container(object)
-	get object() {
-		return this._object; //= this._object || this._create_object_with_attributes()
-	}
+	// get main_group() {
+	// 	return this._main_group;
+	// }
 	get children_group() {
 		return this._children_group;
+	}
+	get object() {
+		return this._object; //= this._object || this._create_object_with_attributes()
 	}
 
 	_create_object_with_attributes(): O {
 		const object = this.create_object();
-		if (object != null) {
-			object.name = this.full_path();
-			(object as Object3DWithNode).node = this;
-		}
-		this._children_group.name = 'parented_outputs';
+		// object.name = 'content';
+		// if (object != null) {
+		// 	object.name = this.full_path();
+		(object as Object3DWithNode).node = this;
+		// }
+		// this._main_group.add(this._children_group);
 		object.add(this._children_group);
 		return object as O;
 	}
 	private set_object_name() {
-		if (this.object) {
-			this.object.name = this.full_path();
+		if (this._object) {
+			this._object.name = this.full_path();
+			this._children_group.name = `${this.full_path()}:parented_outputs`;
 		}
 	}
 	// private set_group_name() {

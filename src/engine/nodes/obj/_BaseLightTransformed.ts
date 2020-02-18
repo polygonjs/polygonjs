@@ -9,9 +9,9 @@ import {FlagsControllerD} from '../utils/FlagsController';
 class TransformedObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 
 export abstract class BaseLightTransformedObjNode<
-	O extends Light,
+	L extends Light,
 	K extends TransformedObjParamConfig
-> extends TypedLightObjNode<O, K> {
+> extends TypedLightObjNode<L, K> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	readonly transform_controller: TransformController = new TransformController(this);
 
@@ -19,17 +19,6 @@ export abstract class BaseLightTransformedObjNode<
 		super.initialize_base_node();
 		this.transform_controller.initialize_node();
 	}
-	// create_params() {
-	// 	// this.within_param_folder('transform', () => {
-	// 	// 	CoreTransform.create_params(this);
-	// 	// });
-	// 	// this.within_param_folder('light', () => {
-	// 	// 	this.create_light_params();
-	// 	// });
-	// 	// this.within_param_folder('shadows', () => {
-	// 	// 	this.create_shadow_params_main();
-	// 	// });
-	// }
 
 	cook() {
 		this.transform_controller.update();

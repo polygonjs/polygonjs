@@ -1,4 +1,4 @@
-import {BaseObjNodeType} from '../obj/_Base';
+import {GeoObjNode} from '../obj/Geo';
 import {BaseSopNodeType} from '../sop/_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
@@ -9,7 +9,7 @@ export class DisplayNodeController {
 	_children_uuids_dict: Dictionary<boolean> = {};
 	_children_length: number = 0;
 	private _request_display_node_container_bound = this.request_display_node_container.bind(this);
-	constructor(protected node: BaseObjNodeType) {
+	constructor(protected node: GeoObjNode) {
 		this._graph_node = new CoreGraphNode(node.scene, 'DisplayNodeController');
 
 		this._graph_node.dirty_controller.add_post_dirty_hook(this._request_display_node_container_bound);
@@ -24,6 +24,22 @@ export class DisplayNodeController {
 	}
 	get parent_object() {
 		return this._parent_object || this.node.object;
+	}
+
+	initialize_node() {
+		this.set_parent_object(this.node.sop_group);
+		this.node.flags.display.add_hook(() => {
+			this.node.sop_group.visible = this.used_in_scene;
+			if (this.node.flags.display.active) {
+				this.request_display_node_container();
+			}
+		});
+
+		this.node.lifecycle.add_on_child_add_hook((child_node) => {
+			if (!this._display_node) {
+				child_node.flags?.display?.set(true);
+			}
+		});
 	}
 
 	async set_display_node(new_display_node: BaseSopNodeType) {
@@ -49,8 +65,15 @@ export class DisplayNodeController {
 		}
 	}
 
+	get used_in_scene() {
+		return this.node.used_in_scene && this.node.flags.display.active && this.node.pv.display == true;
+	}
+
 	private async request_display_node_container() {
-		if (this.node.used_in_scene) {
+		if (!this.node.scene.loading_controller.loaded) {
+			return;
+		}
+		if (this.used_in_scene) {
 			if (this._display_node) {
 				const container = await this._display_node.request_container();
 				const core_group = container.core_content();

@@ -1,4 +1,3 @@
-import lodash_indexOf from 'lodash/indexOf';
 import lodash_compact from 'lodash/compact';
 import lodash_values from 'lodash/values';
 import Vue from 'vue';
@@ -41,6 +40,7 @@ export enum EngineMutation {
 	NODE_NAME_UPDATED = 'NODE_NAME_UPDATED',
 	NODE_INPUTS_UPDATED = 'NODE_INPUTS_UPDATED',
 	NODE_CREATED = 'NODE_CREATED',
+	NODE_DELETED = 'NODE_DELETED',
 	// param
 	PARAM_RAW_INPUT_UPDATED = 'PARAM_RAW_INPUT_UPDATED',
 	PARAM_VALUE_UPDATED = 'PARAM_VALUE_UPDATED',
@@ -69,6 +69,10 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 		parent_id: string;
 		child_node_json: EngineNodeData;
 	};
+	[EngineMutation.NODE_DELETED]: {
+		parent_id: string;
+		child_id: string;
+	};
 	// param
 	[EngineMutation.PARAM_RAW_INPUT_UPDATED]: string;
 	[EngineMutation.PARAM_VALUE_UPDATED]: string;
@@ -78,22 +82,22 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 }
 
 // actions payloads
-interface EnginePayloadUpdateChildren {
-	json_node: EngineNodeData;
-	children_ids: string[];
-}
+// interface EnginePayloadUpdateChildren {
+// 	json_node: EngineNodeData;
+// 	children_ids: string[];
+// }
 interface EnginePayloadNodeEmitter {
 	emitter: BaseNodeType;
 }
 interface EnginePayloadParamEmitter {
 	emitter: BaseParamType;
 }
-interface EnginePayloadNodeDeleted {
-	emitter: BaseNodeType;
-	data: {
-		parent: BaseNodeType;
-	};
-}
+// interface EnginePayloadNodeDeleted {
+// 	emitter: BaseNodeType;
+// 	data: {
+// 		parent: BaseNodeType;
+// 	};
+// }
 // interface EnginePayloadNodeCreated {
 // 	emitter: BaseNodeType;
 // 	data: {
@@ -220,13 +224,13 @@ export const EngineStoreModule = {
 	// on_node_create
 	// on_param_create (for spare param?)
 	mutations: {
-		json_children_ids(state: EngineState, payload: EnginePayloadUpdateChildren) {
-			const json_node = payload['json_node'];
-			const children_ids = payload['children_ids'];
-			if (json_node) {
-				json_node['children'] = children_ids;
-			}
-		},
+		// json_children_ids(state: EngineState, payload: EnginePayloadUpdateChildren) {
+		// 	const json_node = payload['json_node'];
+		// 	const children_ids = payload['children_ids'];
+		// 	if (json_node) {
+		// 		json_node['children'] = children_ids;
+		// 	}
+		// },
 
 		//
 		//
@@ -410,15 +414,15 @@ export const EngineStoreModule = {
 			}
 		},
 
-		node_inputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node) {
-				const json = node.to_json();
-				json_node['inputs'] = json['inputs'];
-				json_node['input_connection_output_indices'] = json['input_connection_output_indices'];
-			}
-		},
+		// node_inputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
+		// 	const node = payload['emitter'];
+		// 	const json_node = store_json_node(state, node);
+		// 	if (json_node) {
+		// 		const json = node.to_json();
+		// 		json_node['inputs'] = json['inputs'];
+		// 		json_node['input_connection_output_indices'] = json['input_connection_output_indices'];
+		// 	}
+		// },
 
 		node_named_inputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
 			const node = payload['emitter'];
@@ -449,18 +453,20 @@ export const EngineStoreModule = {
 			}
 		},
 
-		node_deleted(state: EngineState, payload: EnginePayloadNodeDeleted) {
-			const node = payload['emitter'];
-			const parent = payload['data']['parent'];
-			Vue.delete(state.nodes_by_graph_node_id, node.graph_node_id);
+		[EngineMutation.NODE_DELETED]: function(
+			state: EngineState,
+			payload: EnginePayloadByMutationMap[EngineMutation.NODE_DELETED]
+		) {
+			const parent_node_id = payload['parent_id'];
+			const parent_data = state.nodes_by_graph_node_id[parent_node_id];
+			if (parent_data) {
+				const child_id = payload['child_id'];
 
-			// remove params
-			// lodash_each(node.params.all, (param) => Vue.delete(state.params_by_graph_node_id, param.graph_node_id));
+				const index = parent_data.children.indexOf(child_id);
+				parent_data.children.splice(index, 1);
 
-			// reset children of parent
-			const children_ids = state.nodes_by_graph_node_id[parent.graph_node_id]['children'];
-			const index = lodash_indexOf(children_ids, node.graph_node_id);
-			children_ids.splice(index, 1);
+				Vue.delete(state.nodes_by_graph_node_id, child_id);
+			}
 		},
 
 		[EngineMutation.NODE_CREATED]: function(
@@ -476,11 +482,6 @@ export const EngineStoreModule = {
 				const parent_data = state.nodes_by_graph_node_id[parent_node.graph_node_id];
 				parent_data.children.push(child_node_json.graph_node_id);
 			}
-			// const data = payload['child_node_json'];
-
-			// child_node.params.all.forEach((param) =>
-			// 	Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json())
-			// );
 		},
 
 		// node_dirty_updated: (state, payload)->

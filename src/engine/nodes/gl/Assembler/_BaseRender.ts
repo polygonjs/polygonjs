@@ -4,7 +4,7 @@ import {ThreeToGl} from 'src/core/ThreeToGl';
 import {OutputGlNode} from '../Output';
 import {AttributeGlNode} from '../Attribute';
 import {ShaderName} from '../../utils/shaders/ShaderName';
-import {ShaderMaterial} from 'three';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {GlobalsGlNode} from '../Globals';
 import {BaseGLDefinition, UniformGLDefinition} from '../utils/GLDefinition';
 import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';

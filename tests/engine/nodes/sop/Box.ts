@@ -2,6 +2,7 @@
 
 QUnit.test('box simple', async (assert) => {
 	const geo1 = window.geo1;
+	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
 	const box1 = geo1.create_node('box');
 
@@ -13,13 +14,15 @@ QUnit.test('box simple', async (assert) => {
 	assert.notOk(box1.is_dirty, 'box is dirty');
 
 	box1.p.size.set(2);
-	assert.ok(box1.is_dirty, 'box is not dirty but should');
+	assert.ok(box1.is_dirty, 'box is dirty');
 	container = await box1.request_container();
+	assert.ok(!box1.is_dirty, 'box is not dirty anymore');
 	assert.equal(container.bounding_box().min.y, -1.0);
 });
 
 QUnit.test('box with input', async (assert) => {
 	const geo1 = window.geo1;
+	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
 	const box1 = geo1.create_node('box');
 	const transform1 = geo1.create_node('transform');
@@ -49,6 +52,7 @@ QUnit.test('box with input', async (assert) => {
 QUnit.test('box with expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
+	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
 	let container;
 	const box1 = geo1.create_node('box');

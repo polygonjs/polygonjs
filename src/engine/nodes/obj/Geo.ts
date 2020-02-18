@@ -2,7 +2,7 @@ import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 // const THREE = {Group};
 
-import {CoreTransform} from 'src/core/Transform';
+// import {CoreTransform} from 'src/core/Transform';
 
 import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
@@ -32,16 +32,20 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	}
 	readonly transform_controller: TransformController = new TransformController(this);
 	protected _display_node_controller: DisplayNodeController = new DisplayNodeController(this);
+	get display_node_controller() {
+		return this._display_node_controller;
+	}
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	private _sop_group = this._create_sop_group();
 	private _create_sop_group() {
-		const group = new Group();
-		group.name = 'sop_group';
-		return group;
+		return new Group();
 	}
 	get sop_group() {
 		return this._sop_group;
+	}
+	set_sop_group_name() {
+		this._sop_group.name = `${this.full_path()}:sop_group`;
 	}
 
 	// children_context() {
@@ -52,12 +56,16 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	initialize_node() {
 		this.children_controller?.init();
 
+		this.display_node_controller.initialize_node();
 		this.transform_controller.initialize_node();
 		// this.flags.display.add_hook(() => {
 		// 	this.set_used_in_scene(this.flags.display.active);
 		// });
-		this._display_node_controller.set_parent_object(this.sop_group);
+
 		this.object.add(this.sop_group);
+
+		this.name_controller.add_post_set_full_path_hook(this.set_sop_group_name.bind(this));
+		this._create_sop_group();
 		// this._init_display_flag({
 		// 	multiple_display_flags_allowed: false,
 		// 	affects_hierarchy: true,
@@ -148,13 +156,13 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	on_create() {
 		// this.create_node('text')
 	}
-	private _core_transform = new CoreTransform();
+	// private _core_transform = new CoreTransform();
 	cook() {
-		const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
+		// const matrix = this._core_transform.matrix(this.pv.t, this.pv.r, this.pv.s, this.pv.scale);
 		//this._update_object_params(group, matrix)
 
-		this._sop_group.visible = this.flags.display.active && this.pv.display;
-		this.transform_controller.update(matrix);
+		// this.object.visible = this.flags.display.active && this.pv.display;
+		this.transform_controller.update();
 		//this.update_layers()
 
 		this.cook_controller.end_cook();

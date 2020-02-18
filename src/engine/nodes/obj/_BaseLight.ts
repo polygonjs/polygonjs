@@ -3,36 +3,50 @@ import {Light} from 'three/src/lights/Light';
 import {Color} from 'three/src/math/Color';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
+import {Group} from 'three/src/objects/Group';
 
-export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsConfig> extends TypedObjNode<O, K> {
+export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public readonly render_order: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
-	get object() {
-		return this._object;
+	protected _light!: L;
+	get light() {
+		return this._light;
 	}
+	protected abstract create_light(): L;
 	protected _used_in_scene: boolean = true;
 	initialize_base_node() {
 		super.initialize_base_node();
+
+		this._light = this.create_light();
+		this.object.add(this._light);
 		this.flags.display.add_hook(() => {
-			this.set_used_in_scene(this.flags.display.active || false);
+			this.update_light_attachment();
 		});
 		this.dirty_controller.add_post_dirty_hook(this._cook_main_without_inputs_when_dirty_bound);
 	}
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		if (this.used_in_scene) {
-			await this.cook_controller.cook_main_without_inputs();
+		// if (this.used_in_scene) {
+		await this.cook_controller.cook_main_without_inputs();
+		// }
+	}
+	private update_light_attachment() {
+		if (this.flags.display.active) {
+			this.object.add(this.light);
+			this._cook_main_without_inputs_when_dirty();
+		} else {
+			this.object.remove(this.light);
 		}
 	}
 
-	create_params() {
-		// this.create_light_params();
-		// this.create_shadow_params_main();
-	}
+	// create_params() {
+	// 	// this.create_light_params();
+	// 	// this.create_shadow_params_main();
+	// }
 
 	create_shadow_params_main() {
-		if (this.object.shadow != null) {
+		if (this._light.shadow != null) {
 			return this.create_shadow_params();
 		}
 	}
@@ -88,4 +102,4 @@ export abstract class TypedLightObjNode<O extends Light, K extends NodeParamsCon
 }
 
 export type BaseLightObjNodeType = TypedLightObjNode<Light, NodeParamsConfig>;
-export class BaseLightObjNodeClass extends TypedLightObjNode<Light, NodeParamsConfig> {}
+// export class BaseLightObjNodeClass extends TypedLightObjNode<Light, NodeParamsConfig> {}

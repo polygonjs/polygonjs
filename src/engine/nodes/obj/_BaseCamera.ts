@@ -113,7 +113,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
 
-	protected _used_in_scene: boolean = true;
+	// protected _used_in_scene: boolean = true;
 	// initialize_node() {
 	// 	// this.io.inputs.set_count(0, 1);
 	// 	// this.io.outputs.set_has_one_output();

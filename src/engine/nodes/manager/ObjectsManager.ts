@@ -181,7 +181,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	get_parent_for_node(node: BaseObjNodeType) {
 		// if (this._is_node_event(node) || this._is_node_mat(node)) {
 		// 	return null;
-		if (node.add_to_hierarchy) {
+		if (node.attachable_to_hierarchy) {
 			// if (this._is_node_camera(node)) {
 			// 	return this.scene.display_scene;
 			// } else {
@@ -208,7 +208,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		// node.get_fog (fog)=>
 		// 	@_scene.display_scene().fog = fog
 		// #console.log("added fog", node.object())
-		if (node.add_to_hierarchy) {
+		if (node.attachable_to_hierarchy) {
 			const parent_object = this.get_parent_for_node(node);
 			if (parent_object) {
 				// await node.params.eval_all().then((params_eval_key) => {
@@ -216,10 +216,12 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 				// });
 
 				if (node.used_in_scene) {
-					parent_object.add(node.object);
+					// parent_object.add(node.object);
+					node.add_object_to_parent(parent_object);
 					node.cook_controller.cook_main_without_inputs();
 				} else {
-					parent_object.remove(node.object);
+					node.remove_object_from_parent();
+					// parent_object.remove(node.object);
 				}
 
 				// node.request_display_node();
@@ -238,15 +240,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	remove_from_scene(node: BaseObjNodeType) {
-		if (node.add_to_hierarchy) {
-			const object = node.object;
-			if (object != null) {
-				const parent_object = object.parent;
-				if (parent_object != null) {
-					parent_object.remove(object);
-				}
-			}
-		}
+		node.remove_object_from_parent();
 	}
 	are_children_cooking(): boolean {
 		const children = this.children();

@@ -113,6 +113,9 @@ export class EngineStoreControllerClass {
 	add_node(node_id: string, data: EmitDataByNodeEventMap[NodeEvent.CREATED]) {
 		this._commit(EngineMutation.NODE_CREATED, {parent_id: node_id, child_node_json: data.child_node_json});
 	}
+	delete_node(node_id: string, data: EmitDataByNodeEventMap[NodeEvent.DELETED]) {
+		this._commit(EngineMutation.NODE_DELETED, {parent_id: data.parent_id, child_id: node_id});
+	}
 
 	// params
 	update_param_raw_input(param_id: string) {

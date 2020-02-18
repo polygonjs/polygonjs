@@ -1,6 +1,6 @@
 {
 	"properties": {
-		"frame": 272,
+		"frame": 99,
 		"frame_range": [1, 600],
 		"frame_range_locked": [true, true],
 		"fps": 60,
@@ -106,17 +106,18 @@
 				"type": "hemisphere_light",
 				"params": {
 					"sky_color": [0.2, 0.6980392156862745, 1],
-					"ground_color": [0.09803921568627451, 0.09803921568627451, 0.24705882352941178]
+					"ground_color": [0.09803921568627451, 0.09803921568627451, 0.24705882352941178],
+					"intensity": 0.15
 				},
-				"inputs": [],
+				"inputs": ["null1"],
 				"flags": {"display": false}
 			},
 			"perspective_camera1": {
 				"type": "perspective_camera",
 				"params": {
 					"controls": "/events1/camera_orbit_controls1",
-					"t": [8.525016356032793, 3.812026723215031, -8.146289807002972],
-					"r": [-154.9229268337871, 43.46628564598648, 162.15594585874385]
+					"t": [7.00635329001235, 6.675374610080362, 7.740793022645743],
+					"r": [-40.77327311462061, 34.42860386881633, 25.992098533608218]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -142,35 +143,38 @@
 				"params": {
 					"t": [-0.4, 1.1, 0],
 					"r": [-14, -13, -28],
-					"look_at": "/null2",
-					"angle": 58.97,
+					"angle": 17.01,
 					"penumbra": 0.63,
 					"decay": 0.14,
 					"distance": 45.01
 				},
-				"inputs": [],
-				"flags": {"display": true}
+				"inputs": ["null1"],
+				"flags": {"display": false}
 			},
 			"directional_light1": {
 				"type": "directional_light",
-				"params": {},
-				"inputs": [],
-				"flags": {"display": false}
-			},
-			"ambient_light1": {
-				"type": "ambient_light",
-				"params": {"intensity": 0.1},
-				"inputs": [],
+				"params": {"position": [0, "0", 0], "target": [0, 0, 3], "intensity": 0.12},
+				"inputs": ["null1"],
 				"flags": {"display": true}
 			},
-			"point_light1": {"type": "point_light", "params": {}, "inputs": [], "flags": {"display": false}},
+			"point_light1": {
+				"type": "point_light",
+				"params": {"intensity": 0.13, "distance": 0.07},
+				"inputs": ["null1"],
+				"flags": {"display": false}
+			},
 			"null1": {
 				"type": "null",
 				"params": {"t": [0, 0.8, 1.2], "r": [0, "-$F*5", 0]},
 				"inputs": [],
 				"flags": {"display": true}
 			},
-			"null2": {"type": "null", "params": {}, "inputs": [], "flags": {"display": true}}
+			"ambient_light1": {
+				"type": "ambient_light",
+				"params": {"intensity": 0.01},
+				"inputs": [],
+				"flags": {"display": false}
+			}
 		},
 		"children_context": "objects",
 		"selection": []
@@ -195,15 +199,14 @@
 				}
 			},
 			"geo2": {"pos": [50, -150], "nodes": {"box1": {"pos": [0, 50]}}},
-			"hemisphere_light1": {"pos": [150, 50]},
+			"hemisphere_light1": {"pos": [400, 0]},
 			"perspective_camera1": {"pos": [-200, -50]},
 			"COP": {"pos": [-200, 300], "nodes": {"file2": {"pos": [50, 100]}, "file_uv": {"pos": [-100, 100]}}},
-			"spot_light1": {"pos": [400, -200]},
-			"directional_light1": {"pos": [150, 150]},
-			"ambient_light1": {"pos": [150, 350]},
-			"point_light1": {"pos": [150, 450]},
-			"null1": {"pos": [200, -250]},
-			"null2": {"pos": [300, -100]}
+			"spot_light1": {"pos": [250, -100]},
+			"directional_light1": {"pos": [250, 100]},
+			"point_light1": {"pos": [100, 0]},
+			"null1": {"pos": [200, -300]},
+			"ambient_light1": {"pos": [350, 300]}
 		}
 	}
 }

@@ -15,6 +15,9 @@ export class BaseFlag {
 	}
 	protected on_update() {}
 	set(new_state: boolean) {
+		if (this.node.full_path() == '/geo1') {
+			console.log('set', this, new_state);
+		}
 		if (this._state != new_state) {
 			this._state = new_state;
 			this.on_update();
