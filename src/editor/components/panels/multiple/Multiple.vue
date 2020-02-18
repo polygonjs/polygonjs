@@ -20,7 +20,7 @@
 						:level = 'level+1'
 						:init_properties = "split_panel_init_properties[0]"
 						:scene_update_allowed = 'scene_update_allowed'
-						:panel_id = 'panel_id + ":0"'
+						:panel_id = 'cell_panel_ids[0]'
 						ref = 'split_panel0'
 						@delete = 'delete_split_panel(0)'
 					)
@@ -35,11 +35,12 @@
 						:level = 'level+1'
 						:init_properties = "split_panel_init_properties[1]"
 						:scene_update_allowed = 'scene_update_allowed'
-						:panel_id = 'panel_id + ":1"'
+						:panel_id = 'cell_panel_ids[1]'
 						ref = 'split_panel1'
 						@delete = 'delete_split_panel(1)'
 					)
 			.split_panel_separator(
+				v-if = '!full_screen_activated'
 				:style = 'split_panel_separator_style_object'
 				@mousedown = 'on_move_start'
 				)

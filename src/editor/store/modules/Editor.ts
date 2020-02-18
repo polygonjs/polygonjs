@@ -14,6 +14,7 @@ import {EditorDialogAlertStateModule} from './editor/DialogAlert';
 // import {EditorDialogPromptStateModule} from './editor/DialogConfirm';
 import {EditorDialogPromptStateModule} from './editor/DialogPrompt';
 // import ParamNodeSelector from './editor/ParamNodeSelector';
+import {EditorPanelStateModule} from './editor/Panel';
 import {EditorPanelNodeSelectorStateModule} from './editor/PanelNodeSelector';
 import {EditorNetworkStateModule} from './editor/Network';
 import {EditorNumericSliderStateModule} from './editor/NumericSlider';
@@ -72,6 +73,7 @@ export const EditortoreModule = {
 		network: EditorNetworkStateModule,
 		numeric_slider: EditorNumericSliderStateModule,
 		// param_node_selector: ParamNodeSelector,
+		panel: EditorPanelStateModule,
 		panel_node_selector: EditorPanelNodeSelectorStateModule,
 		// status_bar: StatusBar,
 	},

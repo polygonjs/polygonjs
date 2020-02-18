@@ -12,6 +12,7 @@ import {EditorDialogConfirmStoreController} from './editor/EditorDialogConfirmSt
 import {EditorDialogPromptStoreController} from './editor/EditorDialogPromptStoreController';
 import {EditorNetworkStoreController} from './editor/EditorNetworkStoreController';
 import {EditorNumericSliderStoreController} from './editor/EditorNumericSliderStoreController';
+import {EditorPanelStoreController} from './editor/EditorPanelStoreController';
 import {EditorPanelNodeSelectorStoreController} from './editor/EditorPanelNodeSelectorController';
 import {EngineNodeData} from '../modules/Engine';
 
@@ -26,6 +27,7 @@ export class EditorStoreControllerClass {
 	public readonly dialog_prompt = EditorDialogPromptStoreController;
 	public readonly network = EditorNetworkStoreController;
 	public readonly numeric_slider = EditorNumericSliderStoreController;
+	public readonly panel = EditorPanelStoreController;
 	public readonly panel_node_selector = EditorPanelNodeSelectorStoreController;
 
 	private static _instance: EditorStoreControllerClass;
@@ -49,6 +51,7 @@ export class EditorStoreControllerClass {
 		this.dialog_prompt.set_store(store);
 		this.network.set_store(store);
 		this.numeric_slider.set_store(store);
+		this.panel.set_store(store);
 		this.panel_node_selector.set_store(store);
 	}
 	close_all_popups() {

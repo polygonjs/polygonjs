@@ -13,6 +13,7 @@ enum MultiplePanelSplitAction {
 }
 
 import {ISetupMultiplePanelPanels} from './Panels';
+import {StoreController} from 'src/editor/store/controllers/StoreController';
 
 const left_column_init_properties: PanelInitProperties = {
 	split_mode: MultiplePanelSplitMode.VERTICAL,
@@ -47,6 +48,18 @@ export function SetupMultiplePanelSplit(
 		props.init_properties.sub_panels_init_properties || [left_column_init_properties, network_init_properties]
 	);
 	const split_ratio = ref(0.5);
+	const overriden_split_ratio = computed(() => {
+		const fullscreen_panel_id = StoreController.editor.panel.fullscreen_panel_id();
+		if (fullscreen_panel_id) {
+			if (!fullscreen_panel_id.includes(cell_panel_ids.value[0])) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			return split_ratio.value;
+		}
+	});
 
 	onBeforeMount(() => {});
 
@@ -77,12 +90,19 @@ export function SetupMultiplePanelSplit(
 		};
 	});
 
+	const full_screen_activated = computed(() => {
+		const fullscreen_panel_id = StoreController.editor.panel.fullscreen_panel_id();
+		return fullscreen_panel_id != null;
+	});
+	const cell_panel_ids = computed(() => {
+		return [props.panel_id + ':0', props.panel_id + ':1'];
+	});
 	const cell_style_objects = computed(() => {
 		const style_keys = is_split_horizontally.value ? 'width' : 'height';
 		const style0: Dictionary<string> = {};
 		const style1: Dictionary<string> = {};
-		style0[style_keys] = `${100 * split_ratio.value}%`;
-		style1[style_keys] = `${100 * (1 - split_ratio.value)}%`;
+		style0[style_keys] = `${100 * overriden_split_ratio.value}%`;
+		style1[style_keys] = `${100 * (1 - overriden_split_ratio.value)}%`;
 
 		return [style0, style1];
 	});
@@ -166,7 +186,9 @@ export function SetupMultiplePanelSplit(
 		delete_split_panel,
 		set_split_mode,
 		split_mode,
+		full_screen_activated,
 		split_panel_separator_style_object,
+		cell_panel_ids,
 		cell_style_objects,
 		split_container_class_object,
 		split_types,

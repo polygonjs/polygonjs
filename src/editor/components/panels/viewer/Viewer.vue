@@ -16,6 +16,9 @@
 						@select = 'on_select_camera_menu_entry_select'
 					)
 				.cell.auto
+				.cell.shrink.text-right
+					.full-screen-button(@click = 'toggle_fullscreen')
+						v-icon(name = 'regular/square')
 				//- .cell.shrink.text-right(v-if = 'scene_update_allowed')
 				//- 	DropDownMenu(
 				//- 		v-if = '!capture.active'
@@ -67,8 +70,14 @@ export default createComponent({
 	components: {
 		ThreejsViewer,
 	},
+	props: {
+		panel_id: {
+			type: String,
+			default: null,
+		},
+	},
 
-	setup() {
+	setup(props) {
 		const current_camera_node_graph_id = ref<string | null>(
 			StoreController.scene.cameras_controller.master_camera_node?.graph_node_id
 		);
@@ -105,12 +114,21 @@ export default createComponent({
 		}
 		function on_capture_render_completed() {}
 
+		function toggle_fullscreen() {
+			if (StoreController.editor.panel.fullscreen_panel_id()) {
+				StoreController.editor.panel.set_fullscreen_panel_id(null);
+			} else {
+				StoreController.editor.panel.set_fullscreen_panel_id(props.panel_id);
+			}
+		}
+
 		return {
 			camera_menu_label,
 			camera_menu_entries,
 			on_select_camera_menu_entry_select,
 			current_camera_node_graph_id,
 			on_capture_render_completed,
+			toggle_fullscreen,
 		};
 	},
 
@@ -223,4 +241,17 @@ export default createComponent({
 		// 			width: auto
 		// 			background-color: white
 		// 			color: black
+
+	.full-screen-button
+		margin-right: 10px
+		height: 100%
+		position: relative
+		cursor: pointer
+		line-height: 0
+		svg
+			position: relative
+			top: 50%
+			transform: translateY(-50%)
+		&:hover
+			opacity: 0.7
 </style>
