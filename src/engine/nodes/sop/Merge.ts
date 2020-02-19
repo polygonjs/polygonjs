@@ -43,7 +43,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 		this.io.inputs.set_count(1, 4);
 
 		this.ui_data.set_width(100);
-		this.ui_data.set_icon('compress-arrows-alt');
+		// this.ui_data.set_icon('compress-arrows-alt');
 	}
 
 	cook(input_contents: CoreGroup[]) {

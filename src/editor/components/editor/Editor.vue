@@ -14,7 +14,7 @@
 		DialogPrompt
 		//- LocalAssetUploadProgressDisplay
 
-		Retractable
+		Retractable(v-if = '!full_screen_activated')
 			TopBar(
 				:scene_update_allowed = 'scene_update_allowed'
 				:username = 'username'
@@ -74,6 +74,7 @@ import ParamContextMenu from '../../components/widgets/context_menus/ParamContex
 import Retractable from './widgets/Retractable.vue';
 // import LocalAssetUploadProgressDisplay from './Widget/LocalAssetUploadProgressDisplay'
 
+import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {KeyEventsDispatcher} from 'src/editor/helpers/KeyEventsDispatcher';
 
 import Vue from 'vue';
@@ -83,7 +84,7 @@ Vue.component('DropDownMenu', DropDownMenu);
 import NodeTree from 'src/editor/components/widgets/NodeTree.vue';
 Vue.component('NodeTree', NodeTree);
 
-import {createComponent, ref} from '@vue/composition-api';
+import {createComponent, ref, computed} from '@vue/composition-api';
 export default createComponent({
 	name: 'editor',
 	// mixins: [EventsDispatcher, HistoryMixin, NodeOwner],
@@ -131,8 +132,14 @@ export default createComponent({
 
 		KeyEventsDispatcher.activate();
 
+		const full_screen_activated = computed(() => {
+			const fullscreen_panel_id = StoreController.editor.panel.fullscreen_panel_id();
+			return fullscreen_panel_id != null;
+		});
+
 		return {
 			multiple_panel,
+			full_screen_activated,
 		};
 	},
 

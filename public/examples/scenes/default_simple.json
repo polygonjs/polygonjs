@@ -1,6 +1,6 @@
 {
 	"properties": {
-		"frame": 189,
+		"frame": 188,
 		"frame_range": [1, 600],
 		"frame_range_locked": [true, true],
 		"fps": 60,
@@ -16,12 +16,17 @@
 						"type": "mesh_lambert",
 						"params": {"double_sided": true, "use_map": true},
 						"inputs": []
+					},
+					"mesh_standard1": {
+						"type": "mesh_standard",
+						"params": {"use_map": true, "use_env_map": true},
+						"inputs": []
 					}
 				},
 				"children_context": "mat",
 				"params": {},
 				"inputs": [],
-				"selection": []
+				"selection": ["mesh_standard1"]
 			},
 			"events1": {
 				"type": "events",
@@ -46,10 +51,10 @@
 				"type": "perspective_camera",
 				"params": {
 					"controls": "/events1/camera_orbit_controls1",
-					"target": [-0.19270959690483352, 0.46472978740145304, 0.16834310483188666],
+					"target": [-0.18865554555985817, 0.09813746289770262, 0.2614009640191927],
 					"fov": 55.29,
-					"t": [-0.5383303486090615, 4.848472372763924, -10.752270947055587],
-					"r": [-158.12853351172097, -1.6823206369025154, -179.32481272424025]
+					"t": [0.24444265647386673, 0.7769098329909169, 3.2574360304153234],
+					"r": [-12.765259737895827, 8.024908021661561, 1.8115557872626704]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -63,7 +68,8 @@
 						"inputs": [],
 						"flags": {}
 					},
-					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}}
+					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}},
+					"env_map": {"type": "env_map", "params": {}, "inputs": ["file2"], "flags": {}}
 				},
 				"children_context": "cop",
 				"params": {},
@@ -96,7 +102,7 @@
 						"type": "merge",
 						"params": {},
 						"inputs": ["transform1", "transform2", "transform3"],
-						"flags": {"display": true}
+						"flags": {"display": false}
 					},
 					"transform1": {
 						"type": "transform",
@@ -121,7 +127,8 @@
 						"params": {"material": "/MAT/mesh_lambert1"},
 						"inputs": ["merge1"],
 						"flags": {"display": false}
-					}
+					},
+					"material2": {"type": "material", "params": {}, "inputs": ["sphere1"], "flags": {"display": true}}
 				},
 				"children_context": "sop",
 				"params": {},
@@ -180,17 +187,23 @@
 			}
 		},
 		"children_context": "objects",
-		"selection": ["perspective_camera2"]
+		"selection": ["geo1"]
 	},
 	"ui": {
 		"nodes": {
-			"MAT": {"pos": [-200, 200], "nodes": {"mesh_lambert1": {"pos": [0, 0]}}},
+			"MAT": {
+				"pos": [-200, 200],
+				"nodes": {"mesh_lambert1": {"pos": [0, 0]}, "mesh_standard1": {"pos": [0, 150]}}
+			},
 			"events1": {
 				"pos": [-200, 100],
 				"nodes": {"camera_orbit_controls1": {"pos": [-50, 150]}, "camera_orbit_controls2": {"pos": [-50, 300]}}
 			},
 			"perspective_camera1": {"pos": [-200, -50]},
-			"COP": {"pos": [-200, 300], "nodes": {"file2": {"pos": [50, 100]}, "file_uv": {"pos": [-100, 100]}}},
+			"COP": {
+				"pos": [-200, 300],
+				"nodes": {"file2": {"pos": [50, 100]}, "file_uv": {"pos": [-100, 100]}, "env_map": {"pos": [50, 200]}}
+			},
 			"null1": {"pos": [200, -300]},
 			"geo1": {
 				"pos": [0, -300],
@@ -202,7 +215,8 @@
 					"transform1": {"pos": [-250, 0]},
 					"transform2": {"pos": [-50, -50]},
 					"transform3": {"pos": [150, -50]},
-					"material1": {"pos": [-150, 300]}
+					"material1": {"pos": [-200, 350]},
+					"material2": {"pos": [100, 300]}
 				}
 			},
 			"point_light1": {"pos": [450, -150]},

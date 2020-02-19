@@ -3,7 +3,7 @@ import {ColorParamConfig} from './utils/ColorsController';
 import {SideParamConfig} from './utils/SideController';
 import {SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapParamConfig} from './utils/TextureAlphaMap';
+import {TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/Assembler/Basic';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {GlAssemblerController} from '../gl/Assembler/Controller';

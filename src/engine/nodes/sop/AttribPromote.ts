@@ -55,7 +55,7 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
-		this.ui_data.set_icon('sort-amount-up');
+		// this.ui_data.set_icon('sort-amount-up');
 	}
 
 	create_params() {}

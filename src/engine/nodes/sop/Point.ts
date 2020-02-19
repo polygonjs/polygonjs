@@ -56,7 +56,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
-		this.ui_data.set_icon('dot-circle');
+		// this.ui_data.set_icon('dot-circle');
 	}
 
 	async cook(input_contents: CoreGroup[]) {

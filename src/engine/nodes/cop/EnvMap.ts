@@ -1,6 +1,6 @@
 import {Texture} from 'three/src/textures/Texture';
-import {NearestFilter} from 'three/src/constants';
-import {LinearEncoding} from 'three/src/constants';
+// import {NearestFilter} from 'three/src/constants';
+// import {LinearEncoding} from 'three/src/constants';
 // import {HalfFloatType} from 'three/src/constants';
 // import {WebGLRenderTargetCube} from 'three/src/renderers/WebGLRenderTargetCube';
 import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
@@ -9,15 +9,15 @@ import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
 
 import {TypedCopNode} from './_Base';
 // import {BaseParam} from 'src/Engine/Param/_Base'
-import {CoreTextureLoader} from 'src/core/loader/Texture';
+// import {CoreTextureLoader} from 'src/core/loader/Texture';
 // import { CoreScriptLoader } from "src/Core/Loader/Script";
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 import {POLY} from 'src/engine/Poly';
 class EnvMapCopParamsConfig extends NodeParamsConfig {
-	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
-		desktop_browse: {file_type: 'texture'},
-	});
+	// url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
+	// 	desktop_browse: {file_type: 'texture'},
+	// });
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
@@ -57,18 +57,22 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	}
 
 	private convert_texture_to_env_map(texture: Texture): Texture | undefined {
-		texture.minFilter = NearestFilter;
-		texture.encoding = LinearEncoding;
+		// texture.minFilter = NearestFilter;
+		// texture.encoding = LinearEncoding;
 
 		const renderer = POLY.renderers_controller.first_renderer();
 		if (renderer) {
 			const pmremGenerator = new PMREMGenerator(renderer);
+			// console.log('env inout', texture);
 			const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
 
-			pmremGenerator.dispose();
-			texture.dispose();
-
-			return exrCubeRenderTarget.texture;
+			// pmremGenerator.dispose();
+			// texture.dispose();
+			// console.log('exrCubeRenderTarget.texture', exrCubeRenderTarget.texture);
+			const env_map_texture = exrCubeRenderTarget.texture;
+			// (window.scene as any).background = env_map_texture;
+			// (window.scene as any).environment = env_map_texture;
+			return env_map_texture;
 		} else {
 			this.states.error.set('no renderer found to convert the texture to an env map');
 		}

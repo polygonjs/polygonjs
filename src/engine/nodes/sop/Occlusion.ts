@@ -35,7 +35,7 @@ export class OcclusionSopNode extends TypedSopNode<OcclusionSopParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
-		this.ui_data.set_icon('palette');
+		// this.ui_data.set_icon('palette');
 	}
 
 	async cook(input_contents: CoreGroup[]) {

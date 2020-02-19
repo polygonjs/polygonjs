@@ -38,7 +38,23 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 	}
 
 	set_texture(texture: Texture) {
+		this._copy_texture(texture);
 		this.set_container(texture);
+	}
+
+	private _copy_texture(texture: Texture) {
+		if (!this._texture || this._texture.uuid != texture.uuid) {
+			if (!this._texture) {
+				this._texture = texture;
+			} else {
+				const keys = Object.keys(texture) as Array<keyof Texture>;
+				for (let key of keys) {
+					if (key != 'uuid') {
+						this._texture[key] = texture[key] as never; // but why is 'never' needed?!
+					}
+				}
+			}
+		}
 	}
 }
 

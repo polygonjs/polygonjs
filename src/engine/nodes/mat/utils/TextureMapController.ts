@@ -8,10 +8,14 @@ import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/Param
 // import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {BaseCopNodeType} from '../../cop/_Base';
 import {BaseTextureMapController} from './_BaseTextureController';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		use_map = ParamConfig.BOOLEAN(0);
-		map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {visible_if: {use_map: 1}});
+		map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
+			visible_if: {use_map: 1},
+			node_selection: {context: NodeContext.COP},
+		});
 	};
 }
 class TextureMapMaterial extends Material {

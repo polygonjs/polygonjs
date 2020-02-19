@@ -50,6 +50,7 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 			geometry = this._create_default_isocahedron();
 		}
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
+		geometry.computeVertexNormals();
 		this.set_geometry(geometry);
 	}
 	_create_default_sphere() {

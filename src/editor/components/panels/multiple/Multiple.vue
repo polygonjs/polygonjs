@@ -50,7 +50,7 @@
 		.full_height_container.grid-y(
 			v-else
 			)
-			.cell.shrink.panel_tabs
+			.cell.shrink.panel_tabs(v-if = '!full_screen_activated')
 				.grid-x
 					.cell.auto
 						ul.no-bullet.tab_list

@@ -8,10 +8,14 @@ import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/Param
 // import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {BaseCopNodeType} from '../../cop/_Base';
 import {BaseTextureMapController} from './_BaseTextureController';
+import {NodeContext} from 'src/engine/poly/NodeContext';
 export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		use_alpha_map = ParamConfig.BOOLEAN(0);
-		alpha_map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {visible_if: {use_alpha_map: 1}});
+		alpha_map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
+			visible_if: {use_alpha_map: 1},
+			node_selection: {context: NodeContext.COP},
+		});
 	};
 }
 class TextureAlphaMaterial extends Material {
@@ -25,10 +29,6 @@ class TextureAlphaMapMatNode extends TypedMatNode<TextureAlphaMaterial, TextureA
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {
-	// add_params() {
-	// 	this.node.add_param(ParamType.BOOLEAN, 'skinning', 0);
-	// }
-
 	static async update(node: TextureAlphaMapMatNode) {
 		this._update(node, node.material, 'alphaMap', node.pv.use_alpha_map, node.p.alpha_map);
 	}

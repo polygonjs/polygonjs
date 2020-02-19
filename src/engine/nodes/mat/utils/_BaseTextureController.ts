@@ -77,6 +77,8 @@ export class BaseTextureMapController extends BaseController {
 							material.needsUpdate = true;
 						}
 						return;
+					} else {
+						node.states.error.set(`found node has no texture`);
 					}
 				} else {
 					node.states.error.set(`found map node is not a COP node`);

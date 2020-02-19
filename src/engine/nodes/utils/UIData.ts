@@ -14,7 +14,7 @@ export class UIData {
 	private _width: number = 50;
 	private _border_radius: number = 3;
 	private _color: Color = new Color(0.75, 0.75, 0.75);
-	private _icon: string | null = null;
+	// private _icon: string | null = null;
 	private _layout_vertical: boolean = true;
 	private _comment: string | undefined;
 	private _json: NodeUIDataJson = {
@@ -52,12 +52,12 @@ export class UIData {
 	color() {
 		return this._color;
 	}
-	set_icon(icon: string) {
-		this._icon = icon;
-	}
-	icon() {
-		return this._icon;
-	}
+	// set_icon(icon: string) {
+	// 	this._icon = icon;
+	// }
+	// icon() {
+	// 	return this._icon;
+	// }
 	set_layout_horizontal() {
 		this._layout_vertical = false;
 	}
