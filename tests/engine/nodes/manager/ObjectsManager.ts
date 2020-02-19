@@ -1,6 +1,7 @@
 import {PolyScene} from 'src/engine/scene/PolyScene';
 import {SceneJsonExporter} from 'src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from 'src/engine/io/json/import/Scene';
+import {CoreSleep} from 'src/core/Sleep';
 
 function create_scene() {
 	const scene = new PolyScene();
@@ -45,7 +46,7 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 	assert.ok(scene2.loading_controller.auto_updating, 'scene is auto updating');
 	scene2.set_name('from_load');
 
-	await window.sleep(2000);
+	await CoreSleep.sleep(2000);
 	assert.equal(scene2.display_scene.children[0].children.length, 3);
 	assert.deepEqual(scene2.display_scene.children[0].children.map((n) => n.name).sort(), [
 		'/ambient_light1',

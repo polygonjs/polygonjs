@@ -77,20 +77,29 @@ interface AssetParamOptions {
 interface DesktopParamOptions {
 	desktop_browse?: Dictionary<string>;
 }
-
-// actual param options
-export interface BooleanParamOptions extends BaseParamOptions, MenuParamOptions, ExpressionParamOptions {}
-export interface ButtonParamOptions extends BaseParamOptions {
+interface CallbackParamOptions {
 	callback?: (node: BaseNodeType, param: BaseParamType) => any;
 	callback_string?: string;
 }
+
+// actual param options
+export interface BooleanParamOptions
+	extends BaseParamOptions,
+		MenuParamOptions,
+		ExpressionParamOptions,
+		CallbackParamOptions {}
+export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions {}
 export interface ColorParamOptions extends BaseParamOptions, ExpressionParamOptions {}
-export interface FloatParamOptions extends NumberParamOptions, MenuParamOptions, ExpressionParamOptions {}
+export interface FloatParamOptions
+	extends NumberParamOptions,
+		MenuParamOptions,
+		ExpressionParamOptions,
+		CallbackParamOptions {}
 export interface FolderParamOptions extends BaseParamOptions {
 	level?: number;
 }
-export interface IntegerParamOptions extends NumberParamOptions, MenuParamOptions {}
-export interface OperatorPathParamOptions extends BaseParamOptions, DesktopParamOptions {
+export interface IntegerParamOptions extends NumberParamOptions, MenuParamOptions, CallbackParamOptions {}
+export interface OperatorPathParamOptions extends BaseParamOptions, DesktopParamOptions, CallbackParamOptions {
 	node_selection?: {
 		context?: NodeContext;
 	};
@@ -222,6 +231,12 @@ export class OptionsController {
 	}
 
 	execute_callback() {
+		// we only allow execution when scene is loaded
+		// to avoid errors such as an operator_path param
+		// executing its callback before the node it points to is created
+		if (!(this.node && this.node.scene.loading_controller.loaded)) {
+			return;
+		}
 		const callback = this.get_callback();
 		if (callback != null) {
 			if (this.node && !this.node.cook_controller.is_cooking) {
@@ -368,7 +383,7 @@ export class OptionsController {
 		// }
 	}
 
-	protected _ensure_in_range(value: number): number {
+	ensure_in_range(value: number): number {
 		const range = this.range;
 
 		if (value >= range[0] && value <= range[1]) {

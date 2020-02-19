@@ -11,8 +11,6 @@ QUnit.test('scene save simple', async (assert) => {
 	const perspective_camera1 = scene.root.create_node('perspective_camera');
 	scene.cameras_controller.set_master_camera_node_path(perspective_camera1.full_path());
 	perspective_camera1.p.t.z.set(10);
-	console.log(perspective_camera1.p.t.value);
-	console.log(perspective_camera1.p.t.raw_input_serialized);
 
 	const geo1 = scene.root.create_node('geo');
 	geo1.flags.display.set(true);
@@ -21,12 +19,15 @@ QUnit.test('scene save simple', async (assert) => {
 	geo1.p.r.y.set('$F+20');
 
 	const data = new SceneJsonExporter(scene).data();
-	console.log('data', data);
 	const scene2 = await SceneJsonImporter.load_data(data);
+	await scene.wait_for_cooks_completed();
 	assert.deepEqual(scene2.cameras_controller.master_camera_node?.pv.t.toArray(), [0, 0, 10]);
+	assert.ok(scene2.loading_controller.loaded);
 
 	const new_geo1 = scene2.node('/geo1')!;
 	assert.ok(new_geo1.p.r.y.has_expression());
+	assert.equal(new_geo1.p.r.y.raw_input, '$F+20');
+	assert.equal(new_geo1.p.r.y.expression_controller?.expression, '$F+20');
 	scene2.set_frame(12);
 	await new_geo1.p.r.y.compute();
 	assert.equal(new_geo1.p.r.y.value, 32);

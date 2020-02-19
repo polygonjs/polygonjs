@@ -1,6 +1,6 @@
 {
 	"properties": {
-		"frame": 188,
+		"frame": 209,
 		"frame_range": [1, 600],
 		"frame_range_locked": [true, true],
 		"fps": 60,
@@ -12,30 +12,26 @@
 			"MAT": {
 				"type": "materials",
 				"nodes": {
-					"mesh_lambert1": {
-						"type": "mesh_lambert",
-						"params": {"double_sided": true, "use_map": true},
-						"inputs": []
-					},
 					"mesh_standard1": {
 						"type": "mesh_standard",
-						"params": {"use_map": true, "use_env_map": true},
+						"params": {
+							"use_map": true,
+							"map": "/COP/OUT_diffuse",
+							"use_env_map": true,
+							"env_map": "/COP/OUT_env"
+						},
 						"inputs": []
 					}
 				},
 				"children_context": "mat",
 				"params": {},
 				"inputs": [],
-				"selection": ["mesh_standard1"]
+				"selection": []
 			},
 			"events1": {
 				"type": "events",
 				"nodes": {
-					"camera_orbit_controls1": {
-						"type": "camera_orbit_controls",
-						"params": {"polar_angle_range": [null, null]},
-						"inputs": []
-					},
+					"camera_orbit_controls1": {"type": "camera_orbit_controls", "params": {}, "inputs": []},
 					"camera_orbit_controls2": {
 						"type": "camera_orbit_controls",
 						"params": {"allow_pan": false, "allow_zoom": false},
@@ -45,16 +41,16 @@
 				"children_context": "event",
 				"params": {},
 				"inputs": [],
-				"selection": ["camera_orbit_controls2"]
+				"selection": []
 			},
 			"perspective_camera1": {
 				"type": "perspective_camera",
 				"params": {
 					"controls": "/events1/camera_orbit_controls1",
-					"target": [-0.18865554555985817, 0.09813746289770262, 0.2614009640191927],
+					"target": [-0.20245615108325646, 0.23490834764784138, 0.03313803246902097],
 					"fov": 55.29,
-					"t": [0.24444265647386673, 0.7769098329909169, 3.2574360304153234],
-					"r": [-12.765259737895827, 8.024908021661561, 1.8115557872626704]
+					"t": [0.5314213431508195, 1.001625100195749, -2.5577712278661378],
+					"r": [-163.51515814913466, 15.195404901927894, 175.56469772379407]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -69,7 +65,39 @@
 						"flags": {}
 					},
 					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}},
-					"env_map": {"type": "env_map", "params": {}, "inputs": ["file2"], "flags": {}}
+					"env_map": {"type": "env_map", "params": {}, "inputs": ["switch2"], "flags": {}},
+					"file_uv1": {
+						"type": "file",
+						"params": {"url": "/examples/textures/hardwood2_diffuse.jpg"},
+						"inputs": [],
+						"flags": {}
+					},
+					"file3": {
+						"type": "file",
+						"params": {"url": "/examples/textures/equirectangular.png"},
+						"inputs": [],
+						"flags": {}
+					},
+					"OUT_diffuse": {"type": "null", "params": {}, "inputs": ["switch1"], "flags": {}},
+					"OUT_env": {"type": "null", "params": {}, "inputs": ["env_map"], "flags": {}},
+					"file4": {
+						"type": "file",
+						"params": {"url": "/examples/textures/equirectangular/quarry_01_1k.hdr"},
+						"inputs": [],
+						"flags": {}
+					},
+					"switch1": {
+						"type": "switch",
+						"params": {"input": "$F%2"},
+						"inputs": ["file_uv", "file_uv1"],
+						"flags": {}
+					},
+					"switch2": {
+						"type": "switch",
+						"params": {"input": "($F-1)%2"},
+						"inputs": ["file2", "file4"],
+						"flags": {}
+					}
 				},
 				"children_context": "cop",
 				"params": {},
@@ -128,7 +156,19 @@
 						"inputs": ["merge1"],
 						"flags": {"display": false}
 					},
-					"material2": {"type": "material", "params": {}, "inputs": ["sphere1"], "flags": {"display": true}}
+					"material2": {"type": "material", "params": {}, "inputs": ["sphere1"], "flags": {"display": false}},
+					"transform4": {
+						"type": "transform",
+						"params": {"t": [0, 0.5, 0]},
+						"inputs": ["material2"],
+						"flags": {"display": false}
+					},
+					"switch1": {
+						"type": "switch",
+						"params": {"input": "round($F*0.5)%2"},
+						"inputs": ["material2", "transform4"],
+						"flags": {"display": true}
+					}
 				},
 				"children_context": "sop",
 				"params": {},
@@ -187,14 +227,11 @@
 			}
 		},
 		"children_context": "objects",
-		"selection": ["geo1"]
+		"selection": ["MAT"]
 	},
 	"ui": {
 		"nodes": {
-			"MAT": {
-				"pos": [-200, 200],
-				"nodes": {"mesh_lambert1": {"pos": [0, 0]}, "mesh_standard1": {"pos": [0, 150]}}
-			},
+			"MAT": {"pos": [-200, 200], "nodes": {"mesh_standard1": {"pos": [0, 150]}}},
 			"events1": {
 				"pos": [-200, 100],
 				"nodes": {"camera_orbit_controls1": {"pos": [-50, 150]}, "camera_orbit_controls2": {"pos": [-50, 300]}}
@@ -202,21 +239,34 @@
 			"perspective_camera1": {"pos": [-200, -50]},
 			"COP": {
 				"pos": [-200, 300],
-				"nodes": {"file2": {"pos": [50, 100]}, "file_uv": {"pos": [-100, 100]}, "env_map": {"pos": [50, 200]}}
+				"nodes": {
+					"file2": {"pos": [50, 50]},
+					"file_uv": {"pos": [-300, 50]},
+					"env_map": {"pos": [150, 300]},
+					"file_uv1": {"pos": [-150, 50]},
+					"file3": {"pos": [200, 50]},
+					"OUT_diffuse": {"pos": [-250, 350]},
+					"OUT_env": {"pos": [150, 400]},
+					"file4": {"pos": [350, 50]},
+					"switch1": {"pos": [-250, 200]},
+					"switch2": {"pos": [150, 200]}
+				}
 			},
 			"null1": {"pos": [200, -300]},
 			"geo1": {
 				"pos": [0, -300],
 				"nodes": {
-					"box1": {"pos": [150, -150]},
+					"box1": {"pos": [400, -150]},
 					"plane1": {"pos": [-250, -150]},
-					"sphere1": {"pos": [-50, -150]},
+					"sphere1": {"pos": [50, -200]},
 					"merge1": {"pos": [-150, 150]},
 					"transform1": {"pos": [-250, 0]},
 					"transform2": {"pos": [-50, -50]},
-					"transform3": {"pos": [150, -50]},
+					"transform3": {"pos": [400, -50]},
 					"material1": {"pos": [-200, 350]},
-					"material2": {"pos": [100, 300]}
+					"material2": {"pos": [100, 150]},
+					"transform4": {"pos": [300, 200]},
+					"switch1": {"pos": [100, 350]}
 				}
 			},
 			"point_light1": {"pos": [450, -150]},

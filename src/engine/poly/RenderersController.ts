@@ -20,12 +20,15 @@ const CONTEXT_OPTIONS = {
 	antialias: true,
 };
 
+type Callback = (value: WebGLRenderer) => void;
+
 export class RenderersController {
 	_next_renderer_id: number = 0;
 	_next_env_map_id: number = 0;
 	_renderers: RendererByString = {};
 	_env_maps: TextureByString = {};
 	private _require_webgl2: boolean = false;
+	private _resolves: Callback[] = [];
 
 	constructor() {}
 
@@ -89,12 +92,16 @@ export class RenderersController {
 		// }
 
 		this._renderers[(renderer as POLYWebGLRenderer)._polygon_id] = renderer;
+
+		if (Object.keys(this._renderers).length == 1) {
+			this.flush_callbacks_with_renderer(renderer);
+		}
 	}
 	deregister_renderer(renderer: WebGLRenderer) {
 		delete this._renderers[(renderer as POLYWebGLRenderer)._polygon_id];
 		renderer.dispose();
 	}
-	first_renderer(): WebGLRenderer | null {
+	private first_renderer(): WebGLRenderer | null {
 		const first_id = Object.keys(this._renderers)[0];
 		if (first_id) {
 			return this._renderers[first_id];
@@ -103,6 +110,24 @@ export class RenderersController {
 	}
 	renderers(): WebGLRenderer[] {
 		return Object.values(this._renderers);
+	}
+
+	private flush_callbacks_with_renderer(renderer: WebGLRenderer) {
+		let callback: Callback | undefined;
+		while ((callback = this._resolves.pop())) {
+			callback(renderer);
+		}
+	}
+
+	async wait_for_renderer(): Promise<WebGLRenderer> {
+		const renderer = this.first_renderer();
+		if (renderer) {
+			return renderer;
+		} else {
+			return new Promise((resolve, reject) => {
+				this._resolves.push(resolve);
+			});
+		}
 	}
 
 	// async register_env_map(env_map: Texture){

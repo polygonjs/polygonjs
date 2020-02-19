@@ -38,8 +38,9 @@ import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';
 
 QUnit.module('cop');
-import './engine/nodes/cop/File';
 import './engine/nodes/cop/EnvMap';
+import './engine/nodes/cop/File';
+import './engine/nodes/cop/Switch';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Add';

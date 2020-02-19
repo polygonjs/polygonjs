@@ -8,6 +8,7 @@ export const CATEGORY_OBJ = {
 export const CATEGORY_COP = {
 	INPUT: 'inputs',
 	ADVANCED: 'advanced',
+	MISC: 'misc',
 };
 export const CATEGORY_EVENT = {
 	CAMERA: 'cameras',

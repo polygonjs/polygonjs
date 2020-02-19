@@ -100,7 +100,19 @@ export class ParamsController {
 		this.init_param_accessors();
 		this._param_create_mode = false;
 
-		// this.post_create_params(); // TODO: typescript
+		this.node.post_create_params(); // TODO: typescript
+
+		// This was to debug a weird bug where I was adding nodes to the list
+		// of params, from the DependenciesController
+		// this._params_list.push = (...items: BaseParamType[]) => {
+		// 	if (items[0] && !items[0].compute) {
+		// 		console.warn('adding params', items);
+		// 	}
+		// 	for (let i of items) {
+		// 		this._params_list[this._params_list.length] = i;
+		// 	}
+		// 	return 0;
+		// };
 	}
 
 	private init_from_params_config() {
@@ -385,7 +397,9 @@ export class ParamsController {
 		// let param: BaseParam;
 		const promises = [];
 		for (let i = 0; i < params.length; i++) {
-			promises.push(this._eval_param(params[i]));
+			if (params[i].is_dirty) {
+				promises.push(this._eval_param(params[i]));
+			}
 		}
 		/*const param_values =*/ await Promise.all(promises);
 

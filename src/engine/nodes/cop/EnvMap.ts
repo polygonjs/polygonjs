@@ -48,7 +48,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 
 	async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
-		const env_map = this.convert_texture_to_env_map(texture);
+		const env_map = await this.convert_texture_to_env_map(texture);
 		if (env_map) {
 			this.set_texture(env_map);
 		} else {
@@ -56,11 +56,18 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		}
 	}
 
-	private convert_texture_to_env_map(texture: Texture): Texture | undefined {
+	private async convert_texture_to_env_map(texture: Texture): Promise<Texture | undefined> {
 		// texture.minFilter = NearestFilter;
 		// texture.encoding = LinearEncoding;
 
-		const renderer = POLY.renderers_controller.first_renderer();
+		const renderer = await POLY.renderers_controller.wait_for_renderer();
+		// if (!renderer) {
+		// 	await CoreSleep.sleep(1000);
+		// 	console.log('waited 1s');
+		// 	renderer = POLY.renderers_controller.first_renderer();
+		// 	console.log('renderer', renderer, texture);
+		// }
+
 		if (renderer) {
 			const pmremGenerator = new PMREMGenerator(renderer);
 			// console.log('env inout', texture);

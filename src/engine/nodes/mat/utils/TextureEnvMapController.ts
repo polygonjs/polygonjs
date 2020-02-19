@@ -7,24 +7,23 @@ import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 // import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {BaseCopNodeType} from '../../cop/_Base';
-import {BaseTextureMapController} from './_BaseTextureController';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
 export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		use_env_map = ParamConfig.BOOLEAN(0);
-		env_map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.ENV_MAP, {
-			visible_if: {use_env_map: 1},
-			node_selection: {context: NodeContext.COP},
-		});
-		env_map_intensity = ParamConfig.FLOAT(1, {visible_if: {use_env_map: 1}});
+		use_env_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
+		env_map = ParamConfig.OPERATOR_PATH(
+			FileCopNode.DEFAULT_NODE_PATH.ENV_MAP,
+			OperatorPathOptions(TextureEnvMapController, 'use_env_map')
+		);
+		env_map_intensity = ParamConfig.FLOAT(1);
 	};
 }
 class TextureEnvMaterial extends Material {
 	envMap!: Texture | null;
-	envMapIntensity!: number;
 }
 class TextureEnvMapParamsConfig extends TextureEnvMapParamConfig(NodeParamsConfig) {}
 class TextureEnvMapMatNode extends TypedMatNode<TextureEnvMaterial, TextureEnvMapParamsConfig> {
+	texture_env_map_controller!: TextureEnvMapController;
 	create_material() {
 		return new TextureEnvMaterial();
 	}
@@ -35,29 +34,38 @@ class TextureEnvMapMatNode extends TypedMatNode<TextureEnvMaterial, TextureEnvMa
 // import {POLY} from 'src/engine/Poly';
 // import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
 export class TextureEnvMapController extends BaseTextureMapController {
-	static async update(node: TextureEnvMapMatNode) {
-		this._update(node, node.material, 'envMap', node.pv.use_env_map, node.p.env_map);
-
-		node.material.envMapIntensity = node.pv.env_map_intensity;
-		// const renderer = POLY.renderers_controller.first_renderer();
-		// if (renderer) {
-		// 	const pmremGenerator = new PMREMGenerator(renderer);
-		// 	console.log(pmremGenerator);
-
-		// 	new EXRLoader().setDataType(FloatType).load('/examples/textures/piz_compressed.exr', function(texture) {
-		// 		console.log(texture);
-		// 		const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
-		// 		const exrBackground = exrCubeRenderTarget.texture;
-		// 		node.scene.display_scene.background = exrBackground;
-		// 		node.material.envMap = exrBackground;
-		// 		node.material.envMapIntensity = 1;
-		// 		node.material.needsUpdate = true;
-
-		// 		texture.dispose();
-		// 	});
-		// 	pmremGenerator.compileEquirectangularShader();
-		// }
+	constructor(protected node: TextureEnvMapMatNode) {
+		super(node);
 	}
+	initialize_node() {
+		this.add_hooks(this.node.p.use_env_map, this.node.p.env_map);
+	}
+	async update() {
+		this._update_texture(this.node.material, 'envMap', this.node.p.use_env_map, this.node.p.env_map);
+	}
+	static async update(node: TextureEnvMapMatNode) {
+		node.texture_env_map_controller.update();
+	}
+
+	// const renderer = POLY.renderers_controller.first_renderer();
+	// if (renderer) {
+	// 	const pmremGenerator = new PMREMGenerator(renderer);
+	// 	console.log(pmremGenerator);
+
+	// 	new EXRLoader().setDataType(FloatType).load('/examples/textures/piz_compressed.exr', function(texture) {
+	// 		console.log(texture);
+	// 		const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
+	// 		const exrBackground = exrCubeRenderTarget.texture;
+	// 		node.scene.display_scene.background = exrBackground;
+	// 		node.material.envMap = exrBackground;
+	// 		node.material.envMapIntensity = 1;
+	// 		node.material.needsUpdate = true;
+
+	// 		texture.dispose();
+	// 	});
+	// 	pmremGenerator.compileEquirectangularShader();
+	// }
+	// }
 
 	// static async update(node: TextureEnvMapMatNode) {
 	// 	const material = node.material;

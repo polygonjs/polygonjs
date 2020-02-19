@@ -5,17 +5,14 @@ import {FileCopNode} from 'src/engine/nodes/cop/File';
 import {TypedMatNode} from '../_Base';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-// import {NodeContext} from 'src/engine/poly/NodeContext';
-// import {BaseCopNodeType} from '../../cop/_Base';
-import {BaseTextureMapController} from './_BaseTextureController';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		use_map = ParamConfig.BOOLEAN(0);
-		map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
-			visible_if: {use_map: 1},
-			node_selection: {context: NodeContext.COP},
-		});
+		use_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
+		map = ParamConfig.OPERATOR_PATH(
+			FileCopNode.DEFAULT_NODE_PATH.UV,
+			OperatorPathOptions(TextureMapController, 'use_map')
+		);
 	};
 }
 class TextureMapMaterial extends Material {
@@ -23,18 +20,24 @@ class TextureMapMaterial extends Material {
 }
 class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
 class TextureMapMatNode extends TypedMatNode<TextureMapMaterial, TextureMapParamsConfig> {
+	texture_map_controller!: TextureMapController;
 	create_material() {
 		return new TextureMapMaterial();
 	}
 }
 
 export class TextureMapController extends BaseTextureMapController {
-	// add_params() {
-	// 	this.node.add_param(ParamType.BOOLEAN, 'skinning', 0);
-	// }
-
+	constructor(protected node: TextureMapMatNode) {
+		super(node);
+	}
+	initialize_node() {
+		this.add_hooks(this.node.p.use_map, this.node.p.map);
+	}
+	async update() {
+		this._update_texture(this.node.material, 'map', this.node.p.use_map, this.node.p.map);
+	}
 	static async update(node: TextureMapMatNode) {
-		this._update(node, node.material, 'map', node.pv.use_map, node.p.map);
+		node.texture_map_controller.update();
 	}
 
 	// static async update(node: TextureMapMatNode) {

@@ -5,8 +5,8 @@ import {TypedMatNode} from './_Base';
 
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {SideController, SideParamConfig} from './utils/SideController';
-import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
+// import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
+// import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -16,9 +16,7 @@ export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class PointsMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SideParamConfig(ColorParamConfig(PointsParamConfig(NodeParamsConfig))))
-) {}
+class PointsMatParamsConfig extends SideParamConfig(ColorParamConfig(PointsParamConfig(NodeParamsConfig))) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsConfig> {
@@ -39,8 +37,8 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 	async cook() {
 		ColorsController.update(this);
 		SideController.update(this);
-		await TextureMapController.update(this);
-		await TextureAlphaMapController.update(this);
+		// await TextureMapController.update(this);
+		// await TextureAlphaMapController.update(this);
 
 		this._material.size = this.pv.size;
 		this._material.sizeAttenuation = this.pv.size_attenuation;

@@ -240,12 +240,12 @@ export default createComponent({
 		.Field
 			position: relative
 			z-index: 2
-			input.value
+			input.raw_input
 				display: block
 			input.expression_result
 				display: none
 			&.displays_expression_result
-				input.value
+				input.raw_input
 					display: none
 				input.expression_result
 					display: block

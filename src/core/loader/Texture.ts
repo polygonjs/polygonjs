@@ -6,6 +6,7 @@ import {Texture} from 'three/src/textures/Texture';
 // import lodash_isArray from 'lodash/isArray';
 // import {CoreScriptLoader} from 'src/core/loader/Script';
 // import {CoreGeometry} from 'src/core/geometry/Geometry';
+import {UnsignedByteType} from 'three/src/constants';
 import {CoreWalker} from 'src/core/Walker';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
@@ -20,18 +21,20 @@ interface VideoSourceTypeByExt {
 	ogv: string;
 	mp4: string;
 }
-interface ImageScriptUrlByExt {
-	exr: string;
-	basis: string;
-}
+// interface ImageScriptUrlByExt {
+// 	exr: string;
+// 	basis: string;
+// }
 interface ThreeLoaderByExt {
 	exr: string;
 	basis: string;
+	hdr: string;
 }
 
 enum Extension {
 	EXR = 'exr',
 	BASIS = 'basis',
+	HDR = 'hdr',
 }
 
 export class CoreTextureLoader {
@@ -44,14 +47,14 @@ export class CoreTextureLoader {
 		ogv: 'video/ogg; codecs="theora, vorbis"',
 		mp4: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 	};
-	static SCRIPT_URL_BY_EXT: ImageScriptUrlByExt = {
-		exr: 'EXRLoader',
-		basis: 'BasisTextureLoader',
-	};
-	static THREE_LOADER_BY_EXT: ThreeLoaderByExt = {
-		exr: 'EXRLoader',
-		basis: 'BasisTextureLoader',
-	};
+	// static SCRIPT_URL_BY_EXT: ImageScriptUrlByExt = {
+	// 	exr: 'EXRLoader',
+	// 	basis: 'BasisTextureLoader',
+	// };
+	// static THREE_LOADER_BY_EXT: ThreeLoaderByExt = {
+	// 	exr: 'EXRLoader',
+	// 	basis: 'BasisTextureLoader',
+	// };
 	// @load_texture: (url, callback)->
 	// 	if url
 	// 		loader = this._texture_loader(url)
@@ -146,11 +149,18 @@ export class CoreTextureLoader {
 				const {EXRLoader} = await import('modules/three/examples/jsm/loaders/EXRLoader');
 				return new EXRLoader();
 			}
+			case Extension.HDR: {
+				const {RGBELoader} = await import('modules/three/examples/jsm/loaders/RGBELoader');
+				const loader = new RGBELoader();
+				loader.setDataType(UnsignedByteType); // FloatType,HalfFloatType
+				// loader.setPath('/examples/textures/equirectangular/');
+				return loader;
+			}
 			case Extension.BASIS: {
 				const {BasisTextureLoader} = await import('modules/three/examples/jsm/loaders/BasisTextureLoader');
 				const loader = new BasisTextureLoader();
 				loader.setTranscoderPath('/three/js/libs/basis/');
-				const renderer = POLY.renderers_controller.first_renderer();
+				const renderer = await POLY.renderers_controller.wait_for_renderer();
 				if (renderer) {
 					loader.detectSupport(renderer);
 				} else {

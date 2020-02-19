@@ -44,7 +44,12 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 		}
 	}
 	convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
-		return FloatParam.convert(raw_val);
+		const result = FloatParam.convert(raw_val);
+		if (result) {
+			return this.options.ensure_in_range(result);
+		} else {
+			return result;
+		}
 	}
 	// convert_value(v) {
 	// 	// if(lodash_isNumber(v)){

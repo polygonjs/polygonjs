@@ -1,4 +1,3 @@
-import {Texture} from 'three/src/textures/Texture';
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 
@@ -14,14 +13,19 @@ export class TextureContainer extends TypedContainer<ContainableMap['TEXTURE']> 
 	// 	}
 	// 	this.set_content(texture);
 	// }
-	texture(): Texture {
+	texture(): ContainableMap['TEXTURE'] {
 		return this._content;
 	}
-	core_content(): Texture {
+	core_content(): ContainableMap['TEXTURE'] {
 		return this._content;
 	}
-	core_content_cloned(): Texture | undefined {
-		return this._content?.clone();
+	core_content_cloned(): ContainableMap['TEXTURE'] | undefined {
+		console.log('clone', this._content);
+		const texture = this._content?.clone();
+		if (texture) {
+			texture.needsUpdate = true;
+		}
+		return texture;
 	}
 
 	object() {

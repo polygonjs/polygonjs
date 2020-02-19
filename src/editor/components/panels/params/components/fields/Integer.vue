@@ -13,7 +13,7 @@
 				//- @wheel.stop.prevent = 'on_wheel'
 				//- @paste = 'on_paste'
 				//- @mouseup = 'ensure_no_paste_from_middle_click'
-				input.value(
+				input.raw_input(
 					:class = 'input_value_class_object'
 					:value = 'raw_input'
 					@keypress.stop = ''
@@ -44,6 +44,8 @@
 					:max = 'param_range[1]'
 					:step = 'slider_step'
 					:value = 'value'
+					@mousedown = 'on_slider_mousedown'
+					@mouseup = 'on_slider_mouseup'
 					@change = 'on_slider_change'
 					@input = 'on_slider_drag'
 					)
@@ -64,9 +66,7 @@ import {StoreController} from '../../../../../store/controllers/StoreController'
 import {createComponent, computed, ref} from '@vue/composition-api';
 export default createComponent({
 	name: 'integer-field',
-	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
 	props: SetupFieldCommonProps,
-
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as IntegerParam;
 		const setup_field_common = SetupFieldCommon(props);

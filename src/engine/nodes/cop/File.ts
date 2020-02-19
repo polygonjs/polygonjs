@@ -364,34 +364,56 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	// }
 
 	async cook() {
+		if (this._is_static_image_url(this.pv.url)) {
+			await this.cook_for_image();
+		} else {
+			await this.cook_for_video();
+		}
+	}
+
+	private _is_static_image_url(url: string) {
+		return true;
+	}
+
+	private async cook_for_image() {
+		const texture = await this._load_texture(this.pv.url);
+
+		if (texture) {
+			this._update_texture_params(texture);
+			this.set_texture(texture);
+		} else {
+			this.clear_texture();
+		}
+	}
+
+	private async cook_for_video() {
 		if (this._param_url_changed()) {
 			const texture = await this._load_texture(this.pv.url);
-			if (texture) {
-				this._texture = texture;
-			}
+			// if (texture) {
+			// 	this._texture = texture;
+			// }
 
-			if (this._texture) {
-				this._add_video_spare_params_if_required(this._texture);
+			if (texture) {
+				this._add_video_spare_params_if_required(texture);
 			}
 			this._previous_param_url = this.pv.url;
 
 			this._set_video_current_time();
-			this._update_texture_params();
 
-			if (this._texture) {
-				this.set_texture(this._texture);
+			if (texture) {
+				this._update_texture_params(texture);
+				this.set_texture(texture);
 			} else {
 				this.cook_controller.end_cook();
 			}
 		} else {
-			this._set_video_current_time();
-			this._update_texture_params();
-
-			if (this._texture?.needsUpdate) {
-				this.set_texture(this._texture);
-			} else {
-				this.cook_controller.end_cook();
-			}
+			// this._set_video_current_time();
+			// this._update_texture_params();
+			// if (texture?.needsUpdate) {
+			// 	this.set_texture(texture);
+			// } else {
+			// 	this.cook_controller.end_cook();
+			// }
 		}
 	}
 
@@ -399,17 +421,17 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		return this.pv.url;
 	}
 
-	private _update_texture_params() {
+	private _update_texture_params(texture: Texture) {
 		// const keys = Object.keys(ATTRIB_MAPPING) as keyof AttribMapping
 		for (let texture_attrib of ATTRIB_MAPPING_KEYS) {
 			const param_name = ATTRIB_MAPPING[texture_attrib];
 			const param_value = this.params.float(param_name);
 			// const texture_attrib = ATTRIB_MAPPING[attrib];
 
-			if (param_value != null && this._texture) {
-				if (this._texture[texture_attrib] != param_value) {
-					this._texture[texture_attrib] = param_value;
-					this._texture.needsUpdate = true;
+			if (param_value != null && texture) {
+				if (texture[texture_attrib] != param_value) {
+					texture[texture_attrib] = param_value;
+					texture.needsUpdate = true;
 				}
 			}
 		}

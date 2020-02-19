@@ -221,6 +221,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 	protected initialize_base_node() {}
 	protected initialize_node() {}
+	post_create_params() {}
 	// constructor() {
 	// 	super('base_node');
 

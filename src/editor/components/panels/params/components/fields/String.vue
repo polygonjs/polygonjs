@@ -15,7 +15,7 @@
 		.single_line_inputs_container(v-if='is_single_line')
 			.grid-x
 				.cell.auto
-					input.value(
+					input.raw_input(
 						:value = 'raw_input'
 						@keypress.stop = ''
 						@keyup.stop = ''
@@ -133,14 +133,14 @@ export default createComponent({
 
 	.Field.String
 		input, textarea
-			&.value
+			&.raw_input
 				display: block
 		input, textarea
 			&.expression_result
 				display: none
 		&.displays_expression_result
 			input, textarea
-				&.value
+				&.raw_input
 					display: none
 			input, textarea
 				&.expression_result

@@ -47,6 +47,10 @@ export class SceneJsonImporter {
 
 		await scene.loading_controller.mark_as_loaded();
 		scene.cooker.unblock();
+		// DO NOT wait for cooks here,
+		// as a viewer will only be created once everything has cooked
+		// which would be a problem for env_map or other nodes relying on the renderer being created
+		// await scene.wait_for_cooks_completed();
 
 		return scene;
 	}

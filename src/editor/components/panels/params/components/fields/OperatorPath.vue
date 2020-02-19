@@ -11,7 +11,7 @@
 		.grid-x
 			.cell.auto
 
-				input.value(
+				input.raw_input(
 					:class = 'input_value_class_object'
 					:value = 'raw_input'
 					@keypress.stop = ''

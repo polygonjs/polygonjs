@@ -7,15 +7,14 @@ import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 // import {NodeContext} from 'src/engine/poly/NodeContext';
 // import {BaseCopNodeType} from '../../cop/_Base';
-import {BaseTextureMapController} from './_BaseTextureController';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
 export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		use_alpha_map = ParamConfig.BOOLEAN(0);
-		alpha_map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
-			visible_if: {use_alpha_map: 1},
-			node_selection: {context: NodeContext.COP},
-		});
+		use_alpha_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAlphaMapController));
+		alpha_map = ParamConfig.OPERATOR_PATH(
+			FileCopNode.DEFAULT_NODE_PATH.UV,
+			OperatorPathOptions(TextureAlphaMapController, 'use_alpha_map')
+		);
 	};
 }
 class TextureAlphaMaterial extends Material {
@@ -23,14 +22,24 @@ class TextureAlphaMaterial extends Material {
 }
 class TextureAlphaMapParamsConfig extends TextureAlphaMapParamConfig(NodeParamsConfig) {}
 class TextureAlphaMapMatNode extends TypedMatNode<TextureAlphaMaterial, TextureAlphaMapParamsConfig> {
+	texture_alpha_map_controller!: TextureAlphaMapController;
 	create_material() {
 		return new TextureAlphaMaterial();
 	}
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {
+	constructor(protected node: TextureAlphaMapMatNode) {
+		super(node);
+	}
+	initialize_node() {
+		this.add_hooks(this.node.p.use_alpha_map, this.node.p.alpha_map);
+	}
+	async update() {
+		this._update_texture(this.node.material, 'alphaMap', this.node.p.use_alpha_map, this.node.p.alpha_map);
+	}
 	static async update(node: TextureAlphaMapMatNode) {
-		this._update(node, node.material, 'alphaMap', node.pv.use_alpha_map, node.p.alpha_map);
+		node.texture_alpha_map_controller.update();
 	}
 
 	// static async update(node: TextureAlphaMapMatNode) {

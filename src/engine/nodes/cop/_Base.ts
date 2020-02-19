@@ -6,6 +6,18 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {PolyScene} from 'src/engine/scene/PolyScene';
 import {FlagsControllerB} from '../utils/FlagsController';
+import {DataTexture} from 'three/src/textures/DataTexture';
+import {LuminanceFormat, HalfFloatType} from 'three/src/constants';
+
+const INPUT_COP_NAME = 'input texture';
+const DEFAULT_INPUT_NAMES = [INPUT_COP_NAME, INPUT_COP_NAME, INPUT_COP_NAME, INPUT_COP_NAME];
+
+var size = 32;
+var data = new Uint16Array(size);
+for (var i = 0; i < size; i++) {
+	data[i] = 0x70e2; // Half float 10000
+}
+const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfFloatType);
 
 export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE', BaseCopNodeType, K> {
 	container_controller: TypedContainerController<TextureContainer> = new TypedContainerController<TextureContainer>(
@@ -13,13 +25,17 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 		TextureContainer
 	);
 	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
-	protected _texture: Texture | undefined;
-	get texture() {
-		return this._texture;
-	}
+	// private _typed_array = new Uint8ClampedArray(512 * 512 * 4);
+	// protected _texture: Texture = new DataTexture(this._typed_array, 512, 512, RGBFormat);
+	// get texture() {
+	// 	return this._data_texture;
+	// }
 
 	static node_context(): NodeContext {
 		return NodeContext.COP;
+	}
+	static displayed_input_names(): string[] {
+		return DEFAULT_INPUT_NAMES;
 	}
 
 	constructor(scene: PolyScene) {
@@ -38,24 +54,57 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 	}
 
 	set_texture(texture: Texture) {
-		this._copy_texture(texture);
+		// this._copy_texture(texture);
+		texture.name = this.full_path();
 		this.set_container(texture);
 	}
-
-	private _copy_texture(texture: Texture) {
-		if (!this._texture || this._texture.uuid != texture.uuid) {
-			if (!this._texture) {
-				this._texture = texture;
-			} else {
-				const keys = Object.keys(texture) as Array<keyof Texture>;
-				for (let key of keys) {
-					if (key != 'uuid') {
-						this._texture[key] = texture[key] as never; // but why is 'never' needed?!
-					}
-				}
-			}
-		}
+	clear_texture() {
+		this.set_container(EMPTY_DATA_TEXTURE);
 	}
+
+	// private _copy_texture(texture: Texture) {
+	// 	console.log('_copy_texture', texture);
+	// 	if (texture instanceof DataTexture) {
+	// 		this._data_texture.image = texture.image;
+	// 	} else {
+	// 		const canvas = document.createElement('canvas');
+	// 		// document.body.appendChild(canvas);
+	// 		const width = texture.image.width;
+	// 		const height = texture.image.height;
+	// 		canvas.width = width;
+	// 		canvas.height = height;
+	// 		const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+	// 		context.drawImage(texture.image, 0, 0);
+	// 		const image_data = context.getImageData(0, 0, width, height);
+	// 		console.log(this._typed_array.length, image_data.data.length, image_data);
+	// 		this._data_texture.image = image_data;
+	// 	}
+	// 	this._data_texture.format = texture.format;
+	// 	// this._data_texture.mapping = texture.mapping;
+	// 	// this._data_texture.wrapS = texture.wrapS;
+	// 	// this._data_texture.wrapT = texture.wrapT;
+	// 	// this._data_texture.minFilter = texture.minFilter;
+	// 	// this._data_texture.magFilter = texture.magFilter;
+	// 	this._data_texture.needsUpdate = true;
+	// 	console.log('updated data tex', this._data_texture);
+
+	// 	// if (!this._texture || this._texture.uuid != texture.uuid) {
+	// 	// 	if (!this._texture) {
+	// 	// 		console.log('assign');
+	// 	// 		this._texture = texture.clone();
+	// 	// 		// this._texture.name = this.full_path();
+	// 	// 	} else {
+	// 	// 		console.log('copy');
+	// 	// 		const keys = Object.keys(texture) as Array<keyof Texture>;
+	// 	// 		const protected_keys = ['uuid', 'name', 'node'];
+	// 	// 		for (let key of keys) {
+	// 	// 			if (!protected_keys.includes(key)) {
+	// 	// 				this._texture[key] = texture[key] as never; // but why is 'never' needed?!
+	// 	// 			}
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// }
 }
 
 export type BaseCopNodeType = TypedCopNode<any>;

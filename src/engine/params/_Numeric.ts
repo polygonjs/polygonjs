@@ -7,6 +7,7 @@ import {ParamType} from '../poly/ParamType';
 // import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
+import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 // import {ParamEvent} from '../poly/ParamEvent';
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
@@ -47,12 +48,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 				this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
 			}
 			if (converted != this._value) {
-				this._value = converted;
-				if (this.parent_param) {
-					this.parent_param.set_value_from_components();
-				}
-				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
-				this.remove_dirty_state();
+				this._update_value(converted);
 				this.set_successors_dirty();
 			}
 		} else {
@@ -77,18 +73,22 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 			} else {
 				const converted = this.convert(expression_result);
 				if (converted != null) {
-					this._value = converted;
-					if (this.parent_param) {
-						this.parent_param.set_value_from_components();
-					}
-					this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+					this._update_value(converted);
 				} else {
 					this.states.error.set(
 						`expression returns an invalid type (${expression_result}) (${this.expression_controller.expression})`
 					);
 				}
-				this.remove_dirty_state();
 			}
 		}
+	}
+	private _update_value(new_value: ParamValuesTypeMap[T]) {
+		this._value = new_value;
+		if (this.parent_param) {
+			this.parent_param.set_value_from_components();
+		}
+		this.options.execute_callback();
+		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+		this.remove_dirty_state();
 	}
 }

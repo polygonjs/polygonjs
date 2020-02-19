@@ -47,14 +47,24 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		});
 	}
 
+	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
+	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
+	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this);
+	post_create_params() {
+		this.texture_map_controller.initialize_node();
+		this.texture_alpha_map_controller.initialize_node();
+		this.texture_env_map_controller.initialize_node();
+	}
+
 	async cook() {
 		ColorsController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
-		await TextureMapController.update(this);
-		await TextureAlphaMapController.update(this);
-		await TextureEnvMapController.update(this);
+		this.texture_map_controller.update();
+		this.texture_alpha_map_controller.update();
+		this.texture_env_map_controller.update();
 
+		this._material.envMapIntensity = this.pv.env_map_intensity;
 		this._material.roughness = this.pv.roughness;
 		this._material.metalness = this.pv.metalness;
 

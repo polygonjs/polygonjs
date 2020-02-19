@@ -13,7 +13,7 @@
 				//- @wheel.stop.prevent = 'on_wheel'
 				//- @paste = 'on_paste'
 				//- @mouseup = 'ensure_no_paste_from_middle_click'
-				input.value(
+				input.raw_input(
 					:class = 'input_value_class_object'
 					:value = 'raw_input'
 					@keypress.stop = ''
@@ -60,14 +60,13 @@ import {SetupGlobalSliderOwner} from './mixins/GlobalSliderOwner';
 import {SetupContextMenu} from '../mixins/ContextMenu';
 import {SetupNumericSlider} from './mixins/NumericSlider';
 
-import {StoreController} from '../../../../../store/controllers/StoreController';
 import {FloatParam} from '../../../../../../engine/params/Float';
+import {StoreController} from '../../../../../store/controllers/StoreController';
 
 import {createComponent, computed, ref} from '@vue/composition-api';
 export default createComponent({
 	name: 'float-field',
 	props: SetupFieldCommonProps,
-	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
 	setup(props: ISetupFieldCommonProps) {
 		const param = StoreController.engine.param(props.json_param.graph_node_id)! as FloatParam;
 		const setup_field_common = SetupFieldCommon(props);
@@ -92,6 +91,7 @@ export default createComponent({
 			}
 		}
 		function on_blur(e: Event) {
+			console.log('float on_blur');
 			text_input_focused.value = false;
 			setup_field_common.on_update_value(e);
 		}

@@ -90,6 +90,7 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			// 		this.states.error.set('node not found');
 			// 	}
 			// }
+			this.options.execute_callback();
 		}
 		this.remove_dirty_state();
 	}

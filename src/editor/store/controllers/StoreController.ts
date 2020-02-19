@@ -53,14 +53,8 @@ class StoreControllerClass {
 		this.editor.close_all_popups();
 	}
 
-	// process_events<T extends NodeEvent>(emitter: BaseNodeType, event_name: T, data: EmitDataByNodeEventMap[T]): void;
-	// process_events(emitter: PolyScene, event_name: SceneEvent): void;
 	process_events(emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any): void {
-		// if (emitter instanceof PolyScene) {
-		// 	switch (event_name) {
-		// 		// scene events
-		// 	}
-		// }
+		// console.log('process_events', emitter, event_name);
 		if (emitter instanceof CoreGraphNode) {
 			switch (event_name) {
 				// scene events

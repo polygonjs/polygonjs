@@ -179,7 +179,7 @@ export class ParticlesSystemGpuComputeController {
 		this.node.render_controller.reset_render_material();
 		// await this.node.render_controller.init_render_material();
 
-		const renderer = POLY.renderers_controller.first_renderer(); //new WebGLRenderer();
+		const renderer = await POLY.renderers_controller.wait_for_renderer(); //new WebGLRenderer();
 		if (renderer) {
 			this._renderer = renderer;
 		} else {

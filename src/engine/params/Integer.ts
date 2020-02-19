@@ -15,7 +15,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		return this.default_value;
 	}
 	get raw_input_serialized() {
-		return this.value;
+		return this.raw_input;
 	}
 	get value_serialized() {
 		return this.value;
@@ -62,6 +62,11 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		}
 	}
 	convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
-		return IntegerParam.convert(raw_val);
+		const result = IntegerParam.convert(raw_val);
+		if (result) {
+			return this.options.ensure_in_range(result);
+		} else {
+			return result;
+		}
 	}
 }

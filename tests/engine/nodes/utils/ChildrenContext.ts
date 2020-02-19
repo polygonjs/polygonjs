@@ -7,7 +7,6 @@ QUnit.test('children_context grand_parent types are updated as nodes get added a
 	if (!root.children_controller) {
 		return;
 	}
-	console.log(geo1.children());
 
 	assert.ok(root.children_controller.has_children_and_grandchildren_with_context(NodeContext.OBJ));
 	assert.ok(!root.children_controller.has_children_and_grandchildren_with_context(NodeContext.SOP));

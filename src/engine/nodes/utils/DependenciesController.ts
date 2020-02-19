@@ -39,9 +39,13 @@ export class DependenciesController {
 		return this._find_scene_node_scene_nodes(METHODS.PREDECESSORS);
 	}
 	private _find_scene_node_scene_nodes(method: METHODS): BaseNodeType[] {
-		const params: CoreGraphNode[] = this.node.params.all;
-		params.push(this.node);
-		const start_nodes = params;
+		const params = this.node.params.all;
+		const graph_nodes: CoreGraphNode[] = [];
+		for (let param of params) {
+			graph_nodes.push(param);
+		}
+		graph_nodes.push(this.node);
+		const start_nodes = graph_nodes;
 		let base_nodes: BaseNodeType[] = [];
 		for (let start_node of start_nodes) {
 			this._find_base_nodes_from_node(start_node, method, base_nodes);

@@ -1,3 +1,5 @@
+import {CoreSleep} from 'src/core/Sleep';
+
 QUnit.test('viewer controls are updated as expected', async (assert) => {
 	const scene = window.scene;
 	await scene.wait_for_cooks_completed();
@@ -17,19 +19,19 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	await viewer.cameras_controller.set_camera_node(perspective_camera1);
 
 	// no controls initially
-	window.sleep(100);
+	CoreSleep.sleep(100);
 	assert.ok(!viewer.controls_controller.controls);
 
 	// set controls to the first camera_orbit_controls
 	perspective_camera1.p.controls.set(camera_orbit_controls1.full_path());
-	await window.sleep(100);
+	await CoreSleep.sleep(100);
 	assert.ok(viewer.controls_controller.controls);
 	const id1 = viewer.controls_controller.controls?.name;
 	assert.ok(id1);
 
 	// change control node
 	perspective_camera1.p.controls.set(camera_orbit_controls2.full_path());
-	await window.sleep(100);
+	await CoreSleep.sleep(100);
 	assert.ok(viewer.controls_controller.controls);
 	const id2 = viewer.controls_controller.controls?.name;
 	assert.ok(id2);
@@ -37,7 +39,7 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 
 	// update the currently use control node
 	camera_orbit_controls2.p.tdamping.set(1);
-	await window.sleep(100);
+	await CoreSleep.sleep(100);
 	assert.ok(viewer.controls_controller.controls);
 	const id3 = viewer.controls_controller.controls?.name;
 	assert.ok(id3);
@@ -46,7 +48,7 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 
 	// remove controls path
 	perspective_camera1.p.controls.set('');
-	await window.sleep(100);
+	await CoreSleep.sleep(100);
 	assert.ok(!viewer.controls_controller.controls);
 
 	viewer.dispose();

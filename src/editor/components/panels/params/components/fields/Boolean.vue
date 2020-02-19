@@ -142,12 +142,12 @@ export default createComponent({
 	@import "globals.sass"
 
 	.Field.Toggle
-		input.value
+		input.raw_input
 			display: block
 		input.expression_result
 			display: none
 		&.displays_expression_result
-			input.value
+			input.raw_input
 				display: none
 			input.expression_result
 				display: block

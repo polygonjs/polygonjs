@@ -28,13 +28,18 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 			opacity: 1,
 		});
 	}
-
+	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
+	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
+	post_create_params() {
+		this.texture_map_controller.initialize_node();
+		this.texture_alpha_map_controller.initialize_node();
+	}
 	async cook() {
 		ColorsController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
-		await TextureMapController.update(this);
-		await TextureAlphaMapController.update(this);
+		this.texture_map_controller.update();
+		this.texture_alpha_map_controller.update();
 
 		this.set_material(this._material);
 	}
