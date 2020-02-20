@@ -60,7 +60,19 @@ export default createComponent({
 		const color_input_name = computed(() => {
 			return `color_input_${param.full_path()}`;
 		});
+		const color_value = computed(() => {
+			return props.json_param.value as Number3;
+		});
 
+		// update color html input element element from color
+		const input_color_w = new Color();
+		watch(color_value, async (new_color, old_color) => {
+			input_color_w.fromArray(new_color);
+			const new_style = input_color_w.getHexString();
+			input_color.value = `#${new_style}`;
+		});
+
+		// update color from color html input element
 		const input_color_c = new Color();
 		watch(input_color, (new_color) => {
 			if (!param.has_expression()) {
