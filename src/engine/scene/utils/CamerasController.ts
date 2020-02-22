@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../PolyScene';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
 export class CamerasController {

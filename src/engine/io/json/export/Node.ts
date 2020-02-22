@@ -144,6 +144,7 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 	protected inputs_data() {
 		const data: InputData[] = [];
 		// Object.keys(this._node.io.inputs.inputs()).forEach((input_index) => {
+		console.log(this._node);
 		this._node.io.inputs.inputs().forEach((input, input_index) => {
 			// const input = this._node.io.inputs.input(input_index);
 			if (input) {
@@ -153,10 +154,10 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 					const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
 					// const output_index = input_connections[input_index].output_index();
 					const output_index = connection.output_index;
-					const output_name = input.io.inputs.named_input_connection_points[output_index].name;
+					const output_name = input.io.outputs.named_output_connection_points[output_index].name;
 					data.push({name: input_name, node: input.name, output: output_name});
 				} else {
-					data.push(input ? input.name : null);
+					data.push(input.name);
 				}
 			}
 		});

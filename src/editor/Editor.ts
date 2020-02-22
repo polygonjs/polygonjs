@@ -76,6 +76,12 @@ export class Editor {
 		StoreController.set_scene(scene);
 		(window as any).scene = scene;
 
+		// temporary
+		const node = scene.node('/MAT/mesh_basic_builder1');
+		if (node) {
+			StoreController.editor.set_current_node(node);
+		}
+
 		new Vue({
 			el: element_or_id,
 			store: EditorStore,

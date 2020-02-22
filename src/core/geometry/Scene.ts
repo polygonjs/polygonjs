@@ -4,6 +4,7 @@ import {Material} from 'three/src/materials/Material';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
 import {CoreGeometry} from './Geometry';
+import {MaterialWithUniforms} from './Material';
 
 import {ObjectWithCustomMaterials} from './Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -30,7 +31,7 @@ export class CoreScene {
 		callback: () => void
 	) {
 		const original_material_by_object_id: MaterialsByString = {};
-		let assigned_material;
+		let assigned_material: MaterialWithUniforms;
 
 		this._scene.traverse((object3d: Object3D) => {
 			const object = object3d as ObjectWithCustomMaterials;
@@ -40,15 +41,17 @@ export class CoreScene {
 					// console.log(object, object.custom_materials)
 					const custom_dof_material = object.customDepthDOFMaterial;
 					if (custom_dof_material) {
-						assigned_material = custom_dof_material;
-						for (let k of Object.keys(uniforms)) {
-							assigned_material.uniforms[k].value = uniforms[k].value;
+						assigned_material = custom_dof_material as MaterialWithUniforms;
+						if (assigned_material.uniforms) {
+							for (let k of Object.keys(uniforms)) {
+								assigned_material.uniforms[k].value = uniforms[k].value;
+							}
 						}
 					} else {
 						if (CoreGeometry.marked_as_instance(geometry)) {
-							assigned_material = instance_material;
+							assigned_material = instance_material as MaterialWithUniforms;
 						} else {
-							assigned_material = base_material;
+							assigned_material = base_material as MaterialWithUniforms;
 						}
 					}
 

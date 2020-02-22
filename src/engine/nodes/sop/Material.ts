@@ -2,7 +2,7 @@ import {TypedSopNode} from './_Base';
 // import {BaseNodeMat} from '../Mat/_Base'
 
 import {CoreMaterial} from 'src/core/geometry/Material';
-import {GlobalsGeometryHandler} from 'src/engine/nodes/gl/Assembler/Globals/Geometry';
+import {GlobalsGeometryHandler} from 'src/engine/nodes/gl/code/globals/Geometry';
 
 import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
 import {NodeContext} from 'src/engine/poly/NodeContext';

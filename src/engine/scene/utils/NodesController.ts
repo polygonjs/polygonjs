@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../PolyScene';
 
 import {Object3D} from 'three/src/core/Object3D';
 import lodash_concat from 'lodash/concat';

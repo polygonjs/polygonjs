@@ -16,7 +16,7 @@ import {CoreMath} from 'src/core/math/_Module';
 // import computeShaderVelocity from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.v.glsl'
 // import particleVertexShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.vert.glsl'
 // import particleFragmentShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.frag.glsl'
-import {GlobalsTextureHandler} from 'src/engine/nodes/gl/Assembler/Globals/Texture';
+import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
 import {GPUComputationRenderer} from './GPUComputationRenderer';
 import {ParticlesSystemGpuSopNode} from 'src/engine/nodes/sop/ParticlesSystemGpu';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';

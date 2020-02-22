@@ -48,13 +48,25 @@ export function SetupMultiplePanelSplit(
 		props.init_properties.sub_panels_init_properties || [left_column_init_properties, network_init_properties]
 	);
 	const split_ratio = ref(0.5);
+	const cells_visible_state = computed(() => {
+		const fullscreen_panel_id = StoreController.editor.panel.fullscreen_panel_id();
+		if (fullscreen_panel_id) {
+			if (fullscreen_panel_id.includes(cell_panel_ids.value[0])) {
+				return [true, false];
+			} else {
+				return [false, true];
+			}
+		} else {
+			return [true, true];
+		}
+	});
 	const overriden_split_ratio = computed(() => {
 		const fullscreen_panel_id = StoreController.editor.panel.fullscreen_panel_id();
 		if (fullscreen_panel_id) {
-			if (!fullscreen_panel_id.includes(cell_panel_ids.value[0])) {
-				return 0;
-			} else {
+			if (fullscreen_panel_id.includes(cell_panel_ids.value[0])) {
 				return 1;
+			} else {
+				return 0;
 			}
 		} else {
 			return split_ratio.value;
@@ -103,6 +115,13 @@ export function SetupMultiplePanelSplit(
 		const style1: Dictionary<string> = {};
 		style0[style_keys] = `${100 * overriden_split_ratio.value}%`;
 		style1[style_keys] = `${100 * (1 - overriden_split_ratio.value)}%`;
+
+		if (!cells_visible_state.value[0]) {
+			style0['display'] = 'none';
+		}
+		if (!cells_visible_state.value[1]) {
+			style1['display'] = 'none';
+		}
 
 		return [style0, style1];
 	});

@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../PolyScene';
 import {NodeSerializer} from 'src/engine/nodes/utils/Serializer';
 
 export class PolySceneSerializer {

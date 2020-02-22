@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../PolyScene';
 
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import 'src/engine/Poly';

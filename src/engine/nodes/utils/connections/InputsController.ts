@@ -78,6 +78,16 @@ export class InputsController<T extends BaseNodeType> {
 		this._max_inputs_count = max_inputs_count;
 		this.init_graph_node_inputs();
 	}
+
+	named_input_connection_points_by_name(name: string): BaseNamedConnectionPointType | undefined {
+		if (this._named_input_connection_points) {
+			for (let connection_point of this._named_input_connection_points) {
+				if (connection_point.name == name) {
+					return connection_point;
+				}
+			}
+		}
+	}
 	set_named_input_connection_points(connection_points: BaseNamedConnectionPointType[]) {
 		this._has_named_inputs = true;
 		this._named_input_connection_points = connection_points;

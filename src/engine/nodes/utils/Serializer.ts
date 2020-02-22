@@ -13,8 +13,8 @@ export interface NodeSerializerData {
 	children: string[];
 	inputs: Array<string | undefined>;
 	input_connection_output_indices: Array<number | undefined> | undefined;
-	named_inputs: TypedNamedConnectionPointData<ConnectionPointType>[];
-	named_outputs: TypedNamedConnectionPointData<ConnectionPointType>[];
+	named_input_connections: TypedNamedConnectionPointData<ConnectionPointType>[];
+	named_output_connections: TypedNamedConnectionPointData<ConnectionPointType>[];
 	param_ids: string[];
 	// spare_params: Dictionary<string>;
 	override_clonable_state: boolean;
@@ -42,12 +42,6 @@ export class NodeSerializer {
 		// 	spare_params_json_by_name[param_name] = param.graph_node_id;
 		// });
 
-		const connection_output_indices = this.node.io.connections
-			.input_connections()
-			?.map((connection) => (connection != null ? connection.output_index : undefined));
-		const named_inputs = this.node.io.inputs.named_input_connection_points.map((i) => i.to_json());
-		const named_outputs = this.node.io.outputs.named_output_connection_points.map((o) => o.to_json());
-
 		const data = {
 			name: this.node.name,
 			type: this.node.type,
@@ -57,9 +51,9 @@ export class NodeSerializer {
 			error_message: this.node.states.error.message,
 			children: this.children_ids(),
 			inputs: this.input_ids(),
-			input_connection_output_indices: connection_output_indices,
-			named_inputs: named_inputs,
-			named_outputs: named_outputs,
+			input_connection_output_indices: this.connection_input_indices(),
+			named_input_connections: this.named_input_connections(),
+			named_output_connections: this.named_output_connections(),
 			param_ids: this.to_json_params(include_param_components),
 			// spare_params: this.to_json_spare_params(include_param_components),
 			override_clonable_state: this.node.io.inputs.override_clonable_state(),
@@ -85,6 +79,18 @@ export class NodeSerializer {
 
 	input_ids(): (string | undefined)[] {
 		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graph_node_id : undefined));
+	}
+
+	connection_input_indices() {
+		return this.node.io.connections
+			.input_connections()
+			?.map((connection) => (connection != null ? connection.output_index : undefined));
+	}
+	named_input_connections() {
+		return this.node.io.inputs.named_input_connection_points.map((i) => i.to_json());
+	}
+	named_output_connections() {
+		return this.node.io.outputs.named_output_connection_points.map((o) => o.to_json());
 	}
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {

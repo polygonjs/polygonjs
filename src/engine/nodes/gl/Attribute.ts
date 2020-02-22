@@ -102,7 +102,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 
 	set_lines() {
 		if (this._shader_name) {
-			this.material_node?.assembler_controller.set_node_lines_attribute(this, this._shader_name);
+			this.material_node?.assembler_controller.assembler.set_node_lines_attribute(this, this._shader_name);
 		}
 	}
 

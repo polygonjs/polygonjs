@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../PolyScene';
 
 export class LifeCycleController {
 	constructor(private scene: PolyScene) {}

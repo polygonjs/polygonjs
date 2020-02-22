@@ -22,7 +22,7 @@ import {StoreController} from '../../../../../../store/controllers/StoreControll
 
 import {ClipboardHelper} from 'src/editor/helpers/Clipboard';
 
-import {AssemblerControllerNode} from '../../../../../../../engine/nodes/gl/Assembler/Controller';
+import {AssemblerControllerNode} from '../../../../../../../engine/nodes/gl/code/Controller';
 import {ShaderName} from '../../../../../../../engine/nodes/utils/shaders/ShaderName';
 import {createComponent, ref, Ref, onMounted, computed} from '@vue/composition-api';
 export default createComponent({

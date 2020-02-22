@@ -37,6 +37,7 @@ const OUTPUT_NAME = 'param_val';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {UniformGLDefinition} from './utils/GLDefinition';
+import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -97,15 +98,29 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		const gl_type = ConnectionPointTypes[this.pv.type];
 		const default_value = ConnectionPointInitValueMap[gl_type];
 		let param_type = ConnectionPointTypeToParamTypeMap[gl_type];
+
+		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
+		this._param_configs_controller.reset();
+
 		if (
 			param_type == ParamType.VECTOR3 &&
 			this.p.as_color.value &&
 			lodash_isArray(default_value) &&
 			default_value.length == 3
 		) {
-			this.add_param_config(ParamType.COLOR, this.pv.name, default_value, this.uniform_name());
+			this._param_configs_controller.create_and_push(
+				ParamType.COLOR,
+				this.pv.name,
+				default_value,
+				this.uniform_name()
+			);
 		} else {
-			this.add_param_config(param_type, this.pv.name, default_value, this.uniform_name());
+			this._param_configs_controller.create_and_push(
+				param_type,
+				this.pv.name,
+				default_value,
+				this.uniform_name()
+			);
 		}
 	}
 	uniform_name() {

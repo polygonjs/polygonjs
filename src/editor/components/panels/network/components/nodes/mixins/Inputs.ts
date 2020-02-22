@@ -25,7 +25,7 @@ export function SetupInputs(
 	const input_names = computed(() => {
 		if (node) {
 			if (node.io.inputs.has_named_inputs) {
-				return json_node.named_inputs.map((i) => i.name);
+				return json_node.named_input_connections.map((i) => i.name);
 			} else {
 				return (node.constructor as typeof BaseNodeClass).displayed_input_names();
 			}
@@ -64,7 +64,7 @@ export function SetupInputs(
 		let count: number = max_inputs_count.value;
 		if (node) {
 			if (node.io.inputs.has_named_inputs) {
-				count = json_node.named_inputs.length;
+				count = json_node.named_input_connections.length;
 			}
 			return lodash_range(count);
 		} else {
@@ -97,7 +97,7 @@ export function SetupInputs(
 	// 	})
 	// },
 	const inputs_pixel_style_objects = computed(() => {
-		if (layout_vertical) {
+		if (layout_vertical.value) {
 			const intervals_count = available_inputs.value.length + 1;
 			return available_inputs.value.map((input, i) => {
 				return {

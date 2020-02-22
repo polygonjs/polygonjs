@@ -8,8 +8,8 @@ import {TypedSopNode} from './_Base';
 // import {RenderMaterial} from './Concerns/ParticlesSystemGPU/RenderMaterial';
 // import {ParticleShaderBuilder} from './Concerns/ParticlesSystemGPU/ParticleShaderBuilder'
 // import {AssemblerOwner} from 'src/Engine/Node/Gl/Assembler/Owner';
-import {ShaderAssemblerParticles} from 'src/engine/nodes/gl/Assembler/Particles';
-import {GlobalsTextureHandler} from 'src/engine/nodes/gl/Assembler/Globals/Texture';
+import {ShaderAssemblerParticles} from 'src/engine/nodes/gl/code/assemblers/Particles';
+import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
 
 // SPECS:
 // - simulation shaders should update the particles at any frame, and resimulate accordingly when at later frames
@@ -25,7 +25,7 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from 'src/engine/params/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {CoreGroup} from 'src/core/geometry/Group';
-import {GlAssemblerController} from '../gl/Assembler/Controller';
+import {GlAssemblerController} from '../gl/code/Controller';
 import {MaterialsObjNode} from '../obj/Materials';
 import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
@@ -34,6 +34,7 @@ import {ParticlesSystemGpuComputeController} from './utils/ParticlesSystemGPU/GP
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
+import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	// gpu compute
 	start_frame = ParamConfig.FLOAT(1, {range: [1, 100]});
@@ -166,7 +167,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		// 	// set_group_required = true
 		// }
 		if (!this.render_controller.initialized) {
-			await this.render_controller.init_core_group(core_group);
+			this.render_controller.init_core_group(core_group);
 			await this.render_controller.init_render_material();
 		}
 
@@ -218,20 +219,29 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (root_nodes.length > 0) {
 			const globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
 			this.assembler_controller.set_assembler_globals_handler(globals_handler);
-			this.assembler_controller.set_root_nodes(root_nodes);
+			this.assembler_controller.assembler.set_root_nodes(root_nodes);
 
-			await this.assembler_controller.compile();
+			this.assembler_controller.assembler.compile();
+			await this.assembler_controller.post_compile();
 		}
 	}
 
 	private _find_root_nodes() {
-		const nodes: BaseGlNodeType[] = this.assembler_controller.find_attribute_export_nodes();
-		const output_node = this.assembler_controller.find_output_node();
+		const nodes: BaseGlNodeType[] = GlNodeFinder.find_attribute_export_nodes(this);
+		const output_nodes = GlNodeFinder.find_output_nodes(this);
+		if (output_nodes.length > 1) {
+			this.states.error.set('only one output node is allowed');
+			return [];
+		}
+		const output_node = output_nodes[0];
 		if (output_node) {
 			nodes.push(output_node);
 		}
 		return nodes;
 	}
+	// set_compilation_required_and_dirty() {
+	// 	this.assembler_controller.set_compilation_required_and_dirty();
+	// }
 
 	on_create() {
 		// to ensure the doc can create a node to display param documentation

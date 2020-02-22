@@ -12,4 +12,5 @@ export interface ContainableMap {
 	MANAGER: boolean;
 	POST: number;
 	GL: string;
+	JS: string;
 }

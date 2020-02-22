@@ -91,7 +91,7 @@ export default createComponent({
 				src_node_pos_clone.copy(src_node_pos.value).sub(svg_bounds.value.min);
 				src_node_delta.copy(src_node_pos_clone);
 
-				if (layout_vertical) {
+				if (layout_vertical.value) {
 					const connection_pos = new Vector2(
 						0,
 						0.5 * src_node_height.value +
@@ -116,7 +116,7 @@ export default createComponent({
 			if (props.dest_json_node) {
 				dest_node_pos_clone.copy(dest_node_pos.value).sub(svg_bounds.value.min);
 				dest_node_delta.copy(dest_node_pos_clone);
-				if (layout_vertical) {
+				if (layout_vertical.value) {
 					let connection_x = 0;
 					if (dest_node_inputs_count.value > 0) {
 						const interval_size = dest_node_width.value / (dest_node_inputs_count.value + 1);
@@ -179,12 +179,12 @@ export default createComponent({
 		const line_class_object = computed(() => {
 			const obj: Dictionary<boolean> = {};
 			if (dest_node.io.inputs.has_named_inputs) {
-				const named_input = props.src_json_node.named_outputs[props.output_index];
-				const named_output = props.dest_json_node.named_inputs[props.input_index];
-				if (named_input.type != named_output.type) {
+				const named_input_connection = props.src_json_node.named_output_connections[props.output_index];
+				const named_output_connection = props.dest_json_node.named_input_connections[props.input_index];
+				if (named_input_connection.type != named_output_connection.type) {
 					return {mismatched_types: true};
 				} else {
-					obj[named_input.type] = true;
+					obj[named_input_connection.type] = true;
 				}
 			}
 

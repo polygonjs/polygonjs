@@ -32,7 +32,7 @@ type StringArrayByString = Map<string, string[]>;
 // 	'alpha'
 // ]
 
-export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
+export class TypedNodeTraverser<T extends TypedNode<any, T, any>> {
 	private _leaves_graph_id: BooleanByStringByShaderName = new Map();
 	private _graph_ids_by_shader_name: BooleanByStringByShaderName = new Map();
 	private _outputs_by_graph_id: StringArrayByString = new Map();
@@ -78,12 +78,12 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 			}
 		}
 
-		const graph_ids = Object.keys(this._depth_by_graph_id);
-		graph_ids.forEach((graph_id) => {
-			const depth = this._depth_by_graph_id.get(graph_id);
-			if (depth) {
-				this._graph_id_by_depth.set(depth, this._graph_id_by_depth.get(depth) || []);
-				this._graph_id_by_depth.get(depth)?.push(graph_id);
+		// graph_ids.forEach((graph_id) => {
+		this._depth_by_graph_id.forEach((depth: number, graph_id: string) => {
+			if (depth != null) {
+				// this._graph_id_by_depth.set(depth, this._graph_id_by_depth.get(depth) || []);
+				// this._graph_id_by_depth.get(depth)?.push(graph_id);
+				MapUtils.push_on_array_at_entry(this._graph_id_by_depth, depth, graph_id);
 			}
 		});
 	}
@@ -109,7 +109,6 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 			depths.push(key);
 		});
 		depths.sort((a, b) => a - b);
-		console.log('sorted depth:', depths);
 		const nodes: T[] = [];
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
@@ -128,26 +127,26 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 	}
 	sorted_nodes() {
 		const depths: number[] = [];
-		this._graph_id_by_depth.forEach((value: string[], key: number) => {
-			depths.push(key);
+		this._graph_id_by_depth.forEach((ids: string[], depth: number) => {
+			depths.push(depth);
 		});
 		depths.sort((a, b) => a - b);
 		const nodes: T[] = [];
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
-				graph_ids_for_depth.forEach((graph_id) => {
-					const node = this._graph.node_from_id(graph_id);
+				for (let graph_id of graph_ids_for_depth) {
+					const node = this._graph.node_from_id(graph_id) as T;
 					if (node) {
-						nodes.push();
+						nodes.push(node);
 					}
-				});
+				}
 			}
 		});
 
 		return nodes;
 	}
-	find_leaves_from_root_node(root_node: T) {
+	private find_leaves_from_root_node(root_node: T) {
 		// if(this._shader_name == ShaderName.VERTEX){
 		// this._leaves_graph_id[this._shader_name] = {}
 		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
@@ -156,6 +155,12 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 				// if (root_node.type == 'output') {
 				const input = root_node.io.inputs.named_input(input_name);
 				if (input) {
+					MapUtils.push_on_array_at_entry(
+						this._outputs_by_graph_id,
+						input.graph_node_id,
+						root_node.graph_node_id
+					);
+					this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graph_node_id, true);
 					this.find_leaves(input);
 				}
 				// TODO: typescript - GL - check that I dont need to consider the Attrib as a special case
@@ -192,24 +197,18 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 		this._outputs_by_graph_id.forEach((outputs: string[], graph_id: string) => {
 			this._outputs_by_graph_id.set(graph_id, lodash_uniq(outputs));
 		});
-		// console.log("this._outputs_by_graph_id", this._outputs_by_graph_id)
-
-		// console.log(this._leaves_graph_id)
 	}
 
-	find_leaves(node: T) {
+	private find_leaves(node: T) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graph_node_id, true);
 
 		const inputs = lodash_compact(node.io.inputs.inputs());
-		const input_graph_ids = lodash_uniq(inputs.map((n) => n.graph_node_id()));
+		const input_graph_ids = lodash_uniq(inputs.map((n) => n.graph_node_id));
 		const unique_inputs = input_graph_ids.map((graph_id) => this._graph.node_from_id(graph_id)) as T[];
-		// console.log(node.name(), unique_inputs.map(n=>n.name()).join(','))
-		const graph_id = node.graph_node_id;
 		if (unique_inputs.length > 0) {
 			// const promises = unique_inputs.forEach((input)=>{
 			for (let input of unique_inputs) {
-				const key = input.graph_node_id;
-				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, key, graph_id);
+				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, input.graph_node_id, node.graph_node_id);
 
 				this.find_leaves(input);
 			}
@@ -218,7 +217,7 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 		}
 	}
 
-	set_nodes_depth() {
+	private set_nodes_depth() {
 		this._leaves_graph_id.forEach((booleans_by_graph_id, shader_name) => {
 			booleans_by_graph_id.forEach((boolean, graph_id) => {
 				this.set_node_depth(graph_id);
@@ -230,7 +229,7 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 		// });
 	}
 
-	set_node_depth(graph_id: string, depth: number = 0) {
+	private set_node_depth(graph_id: string, depth: number = 0) {
 		const current_depth = this._depth_by_graph_id.get(graph_id);
 		if (current_depth != null) {
 			this._depth_by_graph_id.set(graph_id, Math.max(current_depth, depth));
@@ -239,7 +238,6 @@ export class TypedNodeTraverser<T extends TypedNode<any, any, any>> {
 		}
 
 		// const node = this._graph.node_from_id(graph_id);
-		// console.log("set depth", node.name(), depth)
 
 		const output_ids = this._outputs_by_graph_id.get(graph_id);
 		if (output_ids) {

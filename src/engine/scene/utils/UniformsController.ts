@@ -1,4 +1,4 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 

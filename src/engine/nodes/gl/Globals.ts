@@ -18,37 +18,13 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		return 'globals';
 	}
 
-	initialize_node() {
-		// this.set_named_outputs([
-		// 	new Connection.Vec3('position'),
-		// 	new Connection.Vec3('color'),
-		// 	new Connection.Vec3('normal'),
-		// 	new Connection.Vec4('gl_FragCoord'),
-		// 	new Connection.Vec2('gl_PointCoord'),
-		// 	// new TypedConnectionVec2('uv'),
-		// 	new Connection.Float('frame')
-		// ])
-	}
-
 	create_params() {
 		this.material_node?.assembler_controller.add_globals_params(this);
-		// this.set_named_outputs([
-		// 	new Connection.Vec3('position'),
-		// 	new Connection.Vec3('color'),
-		// 	new Connection.Vec3('normal'),
-		// 	new Connection.Vec4('gl_FragCoord'),
-		// 	new Connection.Vec2('gl_PointCoord'),
-		// 	// new TypedConnectionVec2('uv'),
-		// 	new Connection.Float('frame')
-		// ])
 	}
-
-	// create_params() {
-	// }
 
 	set_lines() {
 		if (this._shader_name) {
-			this.assembler?.set_node_lines_globals(this, this._shader_name);
+			this.material_node?.assembler_controller?.assembler.set_node_lines_globals(this, this._shader_name);
 		}
 		// const vertex_definitions = []
 		// const fragment_definitions = []
@@ -68,7 +44,6 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		// body_lines_by_shader_name[this._shader_name] = []
 		// for(let dependency of dependencies){ body_lines_by_shader_name[dependency] = [] }
 
-		// // console.log("this.used_output_names()", this.used_output_names())
 		// let definition
 		// let body_line
 		// for(let output_name of this.used_output_names()){

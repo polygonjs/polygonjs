@@ -375,6 +375,9 @@ export const EngineStoreModule = {
 				const json_node = store_json_node(state, node);
 				if (json_node) {
 					Vue.set(json_node, 'inputs', node.serializer.input_ids());
+					Vue.set(json_node, 'input_connection_output_indices', node.serializer.connection_input_indices());
+					Vue.set(json_node, 'named_input_connections', node.serializer.named_input_connections());
+					Vue.set(json_node, 'named_output_connections', node.serializer.named_output_connections());
 				}
 			}
 		},
@@ -424,23 +427,24 @@ export const EngineStoreModule = {
 		// 	}
 		// },
 
-		node_named_inputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node) {
-				const json = node.to_json();
-				json_node['named_inputs'] = json['named_inputs'];
-			}
-		},
+		// node_named_inputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
+		// 	const node = payload['emitter'];
+		// 	const json_node = store_json_node(state, node);
+		// 	if (json_node) {
+		// 		const json = node.to_json();
+		// 		json_node['named_input_connections'] = json['named_input_connections'];
+		// 		json_node['named_input_connections'] = json['named_input_connections'];
+		// 	}
+		// },
 
-		node_named_outputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
-			const node = payload['emitter'];
-			const json_node = store_json_node(state, node);
-			if (json_node) {
-				const json = node.to_json();
-				json_node['named_outputs'] = json['named_outputs'];
-			}
-		},
+		// node_named_outputs_updated(state: EngineState, payload: EnginePayloadNodeEmitter) {
+		// 	const node = payload['emitter'];
+		// 	const json_node = store_json_node(state, node);
+		// 	if (json_node) {
+		// 		const json = node.to_json();
+		// 		json_node['named_output_connections'] = json['named_output_connections'];
+		// 	}
+		// },
 
 		[EngineMutation.NODE_ERROR_UPDATED]: (
 			state: EngineState,

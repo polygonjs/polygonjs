@@ -27,11 +27,11 @@ export class ConnectionsController {
 	//
 	add_input_connection(connection: NodeConnection) {
 		if (this._input_connections) {
-			if (connection.input_index < this._input_connections.length) {
-				this._input_connections[connection.input_index] = connection;
-			} else {
-				console.warn(`attempt to add an input connection at index ${connection.input_index}`);
-			}
+			// if (connection.input_index < this._input_connections.length) {
+			this._input_connections[connection.input_index] = connection;
+			// } else {
+			// 	console.warn(`attempt to add an input connection at index ${connection.input_index}`);
+			// }
 		} else {
 			console.warn(`input connections array not initialized`);
 		}

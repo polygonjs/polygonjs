@@ -26,23 +26,13 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		return 'output';
 	}
 
-	// constructor() {
-	// 	super();
-	// }
-
 	create_params() {
 		this.material_node?.assembler_controller.add_output_params(this);
-		// this.add_param( ParamType.VECTOR, 'position', [0,0,0] )
-		// this.add_param( ParamType.VECTOR, 'normal', [0,0,0] )
-		// this.add_param( ParamType.COLOR, 'color', [1,1,1] )
-		// this.add_param( ParamType.FLOAT, 'alpha', 1 )
-		// this.add_param( ParamType.FLOAT, 'gl_PointSize', 1 )
-		// this.add_param( ParamType.VECTOR, 'instancePosition', [0,0,0] )
 	}
 
 	set_lines() {
 		if (this._shader_name) {
-			this.material_node?.assembler_controller.set_node_lines_output(this, this._shader_name);
+			this.material_node?.assembler_controller.assembler.set_node_lines_output(this, this._shader_name);
 		}
 	}
 

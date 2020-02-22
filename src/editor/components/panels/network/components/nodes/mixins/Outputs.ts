@@ -21,7 +21,7 @@ export function SetupOutputs(
 	const has_outputs: Readonly<Ref<boolean>> = computed(() => {
 		if (node) {
 			if (node.io.outputs.has_named_outputs) {
-				return json_node.named_outputs.length > 0;
+				return json_node.named_output_connections.length > 0;
 			} else {
 				return node.io.outputs.has_outputs;
 			}
@@ -30,7 +30,7 @@ export function SetupOutputs(
 		}
 	});
 	const output_container_style_object = computed(() => {
-		if (layout_vertical) {
+		if (layout_vertical.value) {
 			return {
 				top: `${0.5 * body_size.value.y}px`,
 				left: `${-0.5 * body_size.value.x}px`,
@@ -71,7 +71,7 @@ export function SetupOutputs(
 	const max_outputs_count = computed(() => {
 		if (node) {
 			if (node.io.outputs.has_named_outputs) {
-				return json_node.named_outputs.length;
+				return json_node.named_output_connections.length;
 			} else {
 				return 1;
 			}
@@ -83,7 +83,7 @@ export function SetupOutputs(
 		return lodash_range(max_outputs_count.value);
 	});
 	const outputs_pixel_style_objects = computed(() => {
-		if (layout_vertical) {
+		if (layout_vertical.value) {
 			// const intervals_count = this.available_outputs.length + 1
 			return available_outputs.value.map((output, i) => {
 				return {

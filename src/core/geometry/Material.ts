@@ -6,6 +6,14 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {PolyScene} from 'src/engine/scene/PolyScene';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+
+interface IUniforms {
+	[uniform: string]: IUniform;
+}
+export interface MaterialWithUniforms extends Material {
+	uniforms: IUniforms;
+}
 
 enum CustomMaterialName {
 	customDistanceMaterial = 'customDistanceMaterial',
@@ -13,13 +21,13 @@ enum CustomMaterialName {
 	customDepthDOFMaterial = 'customDepthDOFMaterial',
 }
 export interface ObjectWithCustomMaterials extends Mesh {
-	customDistanceMaterial: ShaderMaterial;
-	customDepthMaterial: ShaderMaterial;
-	customDepthDOFMaterial: ShaderMaterial;
+	// customDistanceMaterial?: Material;
+	// customDepthMaterial?: Material;
+	customDepthDOFMaterial?: Material;
 }
 export interface ShaderMaterialWithCustomMaterials extends ShaderMaterial {
 	custom_materials: {
-		[key in CustomMaterialName]: ShaderMaterial;
+		[key in CustomMaterialName]?: ShaderMaterial;
 	};
 }
 export interface MaterialWithSkinning extends Material {
@@ -57,8 +65,10 @@ export class CoreMaterial {
 				const mat_name = name as CustomMaterialName;
 				// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
 				const custom_material = material_with_custom.custom_materials[mat_name];
-				(object as ObjectWithCustomMaterials)[mat_name] = custom_material;
-				custom_material.needsUpdate = true;
+				if (custom_material) {
+					(object as ObjectWithCustomMaterials)[mat_name] = custom_material;
+					custom_material.needsUpdate = true;
+				}
 			}
 			// object.material = material.custom_materials.customDepthDOFMaterial
 			// object.material = material.custom_materials.customDepthMaterial
@@ -71,7 +81,9 @@ export class CoreMaterial {
 			for (let name of Object.keys(material.custom_materials)) {
 				const mat_name = name as CustomMaterialName;
 				const custom_material = material.custom_materials[mat_name];
-				custom_material.uniforms[uniform_name].value = uniform_value;
+				if (custom_material) {
+					custom_material.uniforms[uniform_name].value = uniform_value;
+				}
 			}
 		}
 	}
@@ -81,7 +93,9 @@ export class CoreMaterial {
 			for (let name of Object.keys(material.custom_materials)) {
 				const mat_name = name as CustomMaterialName;
 				const custom_material = material.custom_materials[mat_name];
-				custom_material.uniforms[uniform_name] = custom_material.uniforms[uniform_name] || uniform_value;
+				if (custom_material) {
+					custom_material.uniforms[uniform_name] = custom_material.uniforms[uniform_name] || uniform_value;
+				}
 			}
 		}
 	}

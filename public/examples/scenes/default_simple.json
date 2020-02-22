@@ -16,12 +16,24 @@
 						"type": "mesh_standard",
 						"params": {"map": "/COP/OUT_diffuse", "env_map": "/COP/OUT_env", "metalness": 0.01},
 						"inputs": []
+					},
+					"mesh_basic_builder1": {
+						"type": "mesh_basic_builder",
+						"nodes": {
+							"output1": {"type": "output", "params": {}, "inputs": []},
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"constant1": {"type": "constant", "params": {"type": "4"}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {},
+						"inputs": [],
+						"selection": []
 					}
 				},
 				"children_context": "mat",
 				"params": {},
 				"inputs": [],
-				"selection": ["mesh_standard1"]
+				"selection": []
 			},
 			"events1": {
 				"type": "events",
@@ -162,6 +174,12 @@
 						"type": "switch",
 						"params": {"input": "round($F*0.5)%2"},
 						"inputs": ["material2", "transform4"],
+						"flags": {"display": false}
+					},
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_basic_builder1"},
+						"inputs": ["sphere1"],
 						"flags": {"display": true}
 					}
 				},
@@ -169,7 +187,7 @@
 				"params": {},
 				"inputs": [],
 				"flags": {"display": true},
-				"selection": []
+				"selection": ["material3"]
 			},
 			"point_light1": {
 				"type": "point_light",
@@ -230,7 +248,20 @@
 	},
 	"ui": {
 		"nodes": {
-			"MAT": {"pos": [-250, 100], "nodes": {"mesh_standard1": {"pos": [0, 150]}}},
+			"MAT": {
+				"pos": [-250, 100],
+				"nodes": {
+					"mesh_standard1": {"pos": [0, 150]},
+					"mesh_basic_builder1": {
+						"pos": [0, 50],
+						"nodes": {
+							"output1": {"pos": [250, 100]},
+							"globals1": {"pos": [-50, 150]},
+							"constant1": {"pos": [0, 0]}
+						}
+					}
+				}
+			},
 			"events1": {
 				"pos": [-250, 0],
 				"nodes": {"camera_orbit_controls1": {"pos": [-50, 150]}, "camera_orbit_controls2": {"pos": [-50, 300]}}
@@ -265,7 +296,8 @@
 					"material1": {"pos": [-200, 350]},
 					"material2": {"pos": [100, 150]},
 					"transform4": {"pos": [300, 200]},
-					"switch1": {"pos": [100, 350]}
+					"switch1": {"pos": [100, 350]},
+					"material3": {"pos": [300, 100]}
 				}
 			},
 			"point_light1": {"pos": [400, -300]},

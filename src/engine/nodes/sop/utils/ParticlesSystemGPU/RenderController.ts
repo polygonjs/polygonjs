@@ -8,14 +8,14 @@ import {BaseBuilderMatNodeType} from 'src/engine/nodes/mat/_BaseBuilder';
 // import computeShaderVelocity from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.v.glsl'
 // import particleVertexShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.vert.glsl'
 // import particleFragmentShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.frag.glsl'
-import {GlobalsTextureHandler} from 'src/engine/nodes/gl/Assembler/Globals/Texture';
+import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
 
 import {ParticlesSystemGpuSopNode} from 'src/engine/nodes/sop/ParticlesSystemGpu';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from 'src/core/geometry/Material';
 import {CoreGroup} from 'src/core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
-import {TextureAllocationsControllerData} from 'src/engine/nodes/gl/Assembler/Util/TextureAllocationsController';
+import {TextureAllocationsControllerData} from 'src/engine/nodes/gl/code/utils/TextureAllocationsController';
 
 export class ParticlesSystemGpuRenderController {
 	private _render_material: ShaderMaterial | undefined;

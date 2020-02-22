@@ -79,7 +79,7 @@ export class OutputsController<T extends BaseNodeType> {
 		// return index;
 	}
 	get_output_index(output_index_or_name: number | string): number {
-		if (output_index_or_name) {
+		if (output_index_or_name != null) {
 			if (lodash_isString(output_index_or_name)) {
 				if (this.has_named_outputs) {
 					return this.get_named_output_index(output_index_or_name);
@@ -96,7 +96,11 @@ export class OutputsController<T extends BaseNodeType> {
 
 	named_output_connection_points_by_name(name: string): BaseNamedConnectionPointType | undefined {
 		if (this._named_output_connection_points) {
-			return this._named_output_connection_points.filter((connection_point) => connection_point.name == name)[0];
+			for (let connection_point of this._named_output_connection_points) {
+				if (connection_point.name == name) {
+					return connection_point;
+				}
+			}
 		}
 	}
 

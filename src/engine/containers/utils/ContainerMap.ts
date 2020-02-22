@@ -6,6 +6,7 @@ import {EventContainer} from '../Event';
 import {ManagerContainer} from '../Manager';
 import {PostProcessContainer} from '../PostProcess';
 import {GlContainer} from '../Gl';
+import {JsContainer} from '../Js';
 
 export interface ContainerMap {
 	GEOMETRY: GeometryContainer;
@@ -16,6 +17,7 @@ export interface ContainerMap {
 	MANAGER: ManagerContainer;
 	POST: PostProcessContainer;
 	GL: GlContainer;
+	JS: GlContainer;
 }
 // type K = keyof ContainerMap;
 // type Container = ContainerMap[K];
