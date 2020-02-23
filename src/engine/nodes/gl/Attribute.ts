@@ -69,7 +69,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			this.remove_dirty_state();
 			this.make_output_nodes_dirty();
 		}
-		this.material_node?.assembler_controller.set_compilation_required_and_dirty();
+		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
 	}
 
 	get input_name() {

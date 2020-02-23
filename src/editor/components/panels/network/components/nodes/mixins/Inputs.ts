@@ -36,7 +36,7 @@ export function SetupInputs(
 	const input_titles = computed(() => {
 		if (node) {
 			if (node.io.inputs.has_named_inputs) {
-				return node.io.inputs.named_input_connection_points.map((i) => `${i.name} (${i.type})`);
+				return json_node.named_input_connections.map((i) => `${i.name} (${i.type})`);
 			} else {
 				return [];
 			}
@@ -115,9 +115,9 @@ export function SetupInputs(
 	const connection_element_input_class_objects = computed(() => {
 		if (node) {
 			if (node.io.inputs.has_named_inputs) {
-				return node.io.inputs.named_input_connection_points.map((input, i) => {
+				return json_node.named_input_connections.map((connection, i) => {
 					return {
-						[input.type]: true,
+						[connection.type]: true,
 					};
 				});
 			} else {

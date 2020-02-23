@@ -41,6 +41,6 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 
-		this.set_material(this._material);
+		this.set_material(this.material);
 	}
 }

@@ -13,9 +13,11 @@ export class DirtyController {
 	_dirty: boolean = true;
 	_dirty_timestamp: number | undefined;
 	_cached_successors: CoreGraphNode[] | undefined;
+	_forbidden_trigger_nodes: string[] | undefined;
+
+	// hooks
 	_post_dirty_hooks: PostDirtyHook[] | undefined;
 	_post_dirty_hook_names: string[] | undefined;
-	_forbidden_trigger_nodes: string[] | undefined;
 
 	constructor(private node: CoreGraphNode) {}
 
@@ -113,7 +115,7 @@ export class DirtyController {
 		if (this._post_dirty_hooks) {
 			const cooker = this.node.scene.cooker;
 			if (cooker.blocked) {
-				cooker.enqueue(this.node);
+				cooker.enqueue(this.node, original_trigger_graph_node);
 			} else {
 				for (let hook of this._post_dirty_hooks) {
 					hook(original_trigger_graph_node);

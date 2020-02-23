@@ -110,6 +110,12 @@ export class EngineStoreControllerClass {
 	update_node_inputs(node_id: string) {
 		this._commit(EngineMutation.NODE_INPUTS_UPDATED, node_id);
 	}
+	update_node_named_inputs(node_id: string) {
+		this._commit(EngineMutation.NODE_NAMED_INPUTS_UPDATED, node_id);
+	}
+	update_node_named_outputs(node_id: string) {
+		this._commit(EngineMutation.NODE_NAMED_OUTPUTS_UPDATED, node_id);
+	}
 	add_node(node_id: string, data: EmitDataByNodeEventMap[NodeEvent.CREATED]) {
 		this._commit(EngineMutation.NODE_CREATED, {parent_id: node_id, child_node_json: data.child_node_json});
 	}

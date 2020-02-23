@@ -42,16 +42,16 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		// await TextureMapController.update(this);
 		// await TextureAlphaMapController.update(this);
 
-		this.set_material(this._material);
+		this.set_material(this.material);
 	}
 
-	async compile_if_required() {
-		if (this.assembler_controller.compile_required()) {
+	protected async _compile() {
+		if (this._material) {
 			await this.assembler_controller.assembler.compile_material(this._material);
 			await this.assembler_controller.post_compile();
-
-			console.log(this._material.vertexShader);
-			// console.log(this._material.fragmentShader);
 		}
+
+		// console.log(this._material.vertexShader);
+		// console.log(this._material.fragmentShader);
 	}
 }

@@ -64,10 +64,12 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		this.texture_alpha_map_controller.update();
 		this.texture_env_map_controller.update();
 
-		this._material.envMapIntensity = this.pv.env_map_intensity;
-		this._material.roughness = this.pv.roughness;
-		this._material.metalness = this.pv.metalness;
+		if (this._material) {
+			this._material.envMapIntensity = this.pv.env_map_intensity;
+			this._material.roughness = this.pv.roughness;
+			this._material.metalness = this.pv.metalness;
+		}
 
-		this.set_material(this._material);
+		this.set_material(this.material);
 	}
 }

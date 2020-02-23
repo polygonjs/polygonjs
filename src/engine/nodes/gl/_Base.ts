@@ -1,4 +1,3 @@
-import lodash_includes from 'lodash/includes';
 import {TypedNode} from '../_Base';
 
 import {LineType} from './code/utils/CodeBuilder';
@@ -44,10 +43,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_bound);
 	}
 	private _set_mat_to_recompile() {
-		// this.material_node.set_compilation_required_and_dirty() // TODO: typescript, check that it still works
-		// but let's see if I can replace set_compilation_required_and_dirty with set_dirty and detect in the mat node that it is caused by a GL child
-		// this.material_node?.set_dirty(this);
-		this.material_node?.assembler_controller.set_compilation_required_and_dirty();
+		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
 	}
 	get material_node(): AssemblerControllerNode | undefined {
 		if (this.parent) {
@@ -69,8 +65,11 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	}
 
 	variable_for_input(name: string): string {
+		console.log('variable_for_input', this.name, name);
 		const input_index = this.io.inputs.get_input_index(name);
 		const connection = this.io.connections.input_connection(input_index);
+		console.log('input_index', input_index);
+		console.log('connection', connection);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
 			const output_name = input_node.io.outputs.named_output_connection_points[connection.output_index].name;
@@ -164,12 +163,16 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	post_create_params() {
 		this.create_inputs_from_params();
 	}
+	protected _allow_inputs_created_from_params: boolean = true;
 	create_inputs_from_params() {
+		if (!this._allow_inputs_created_from_params) {
+			return;
+		}
 		const connections: BaseNamedConnectionPointType[] = [];
 		const inputless_params_names = this.inputless_params_names();
 		this.params.names.forEach((param_name) => {
 			let add_input = true;
-			if (inputless_params_names.length > 0 && lodash_includes(inputless_params_names, param_name)) {
+			if (inputless_params_names.length > 0 && inputless_params_names.includes(param_name)) {
 				add_input = false;
 			}
 			if (add_input) {

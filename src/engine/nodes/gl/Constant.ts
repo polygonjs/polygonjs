@@ -1,7 +1,7 @@
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from 'src/core/ThreeToGl';
 
-const OUTPUT_NAME = 'value';
+// const OUTPUT_NAME = 'longer_name_to_test';
 
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType, ConnectionPointTypes} from '../utils/connections/ConnectionPointType';
@@ -21,6 +21,8 @@ class ConstantGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	value_bool = ParamConfig.BOOLEAN(0, typed_visible_options(ConnectionPointType.BOOL));
+	value_int = ParamConfig.INTEGER(0, typed_visible_options(ConnectionPointType.INT));
 	value_float = ParamConfig.FLOAT(0, typed_visible_options(ConnectionPointType.FLOAT));
 	value_vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(ConnectionPointType.VEC2));
 	value_vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(ConnectionPointType.VEC3));
@@ -33,64 +35,65 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return 'constant';
 	}
 
+	protected _allow_inputs_created_from_params: boolean = false;
 	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
-		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
-		]);
+		this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (dirty_trigger == this.p.type) {
+		if (this.scene.loading_controller.is_loading || dirty_trigger == this.p.type) {
 			this.update_output_type();
 			this.remove_dirty_state();
 			this.make_output_nodes_dirty();
 		}
 	}
 
-	// create_params() {
-	// 	this.add_param( ParamType.INTEGER, 'type', 0, {
-	// 		menu: {
-	// 			type: 'radio',
-	// 			entries: VAR_TYPES.map((name, i)=>{
-	// 				return {name: name, value: i}
-	// 			})
-	// 		}
-	// 	} )
-
-	// 	// this.add_param( ParamType.FLOAT, 'value_float', 0, this._typed_visible_options('float') )
-	// 	// this.add_param( ParamType.VECTOR2, 'value_vec2', [0,0], this._typed_visible_options('vec2') )
-	// 	// this.add_param( ParamType.VECTOR, 'value_vec3', [0,0,0], this._typed_visible_options('vec3') )
-	// 	// this.add_param( ParamType.VECTOR4, 'value_vec4', [0,0,0,0], this._typed_visible_options('vec4') )
-	// }
-
 	set_lines() {
+		console.log('set_lines', this.name);
 		const body_lines = [];
 
 		// const constant_name = `POLY_CONSTANT_${this._param_name}`
-		const type_name = ConnectionPointTypes[this.pv.type];
-		const param_name = `value_${type_name}`;
+		const connection_type = this._current_connection_type;
+		const param_name = this._current_param_name;
 		const param = this.params.get(param_name);
 		if (param) {
 			const value = ThreeToGl.any(param.value);
-			const var_value = this.gl_var_name(OUTPUT_NAME);
-			body_lines.push(`${type_name} ${var_value} = ${value}`);
+			const var_value = this._current_var_name;
+			body_lines.push(`${connection_type} ${var_value} = ${value}`);
+			console.log('set_body_lines', body_lines);
 			this.set_body_lines(body_lines);
+		} else {
+			console.warn(`no param found for constant node and param name: ${param_name}`);
+			console.trace(this);
+			console.memory(this);
 		}
 	}
 
-	create_inputs_from_params() {}
+	private get _current_connection_type() {
+		if (this.pv.type == null) {
+			console.warn('constant gl node type if not valid');
+		}
+		const connection_type = ConnectionPointTypes[this.pv.type];
+		if (connection_type == null) {
+			console.warn('constant gl node type if not valid');
+		}
+		return connection_type;
+	}
+	private get _current_param_name(): string {
+		return `value_${this._current_connection_type}`;
+	}
+	private get _current_var_name(): string {
+		return this.gl_var_name(this._current_connection_type);
+	}
 
-	update_output_type() {
+	private update_output_type() {
+		const current_connection = this.io.outputs.named_output_connection_points[0];
+		if (current_connection && current_connection.type == this._current_connection_type) {
+			return;
+		}
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointTypes[this.pv.type]),
+			new TypedNamedConnectionPoint(this._current_connection_type, this._current_connection_type),
 		]);
-		// const val = this.param('type').value() // no need to eval_p, as it won't be an expression
-		// const name = VAR_TYPES[val]
-		// const constructor = TYPED_CONNECTION_BY_VAR_TYPE[name]
-		// const named_output = new constructor(OUTPUT_NAME)
-		// this.set_named_outputs([
-		// 	named_output
-		// ])
 	}
 }

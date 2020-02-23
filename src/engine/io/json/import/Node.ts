@@ -168,6 +168,10 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 				this._process_param_data_simple(param_name, param_data as SimpleParamJsonExporterData<ParamType>);
 			}
 		}
+		// those hooks are useful for some gl nodes,
+		// such as the constant, which needs to update its connections
+		// based on another parameter, which will be set just before
+		this._node.params.run_on_scene_load_hooks();
 	}
 
 	private _process_param_data_simple(param_name: string, param_data: SimpleParamJsonExporterData<ParamType>) {

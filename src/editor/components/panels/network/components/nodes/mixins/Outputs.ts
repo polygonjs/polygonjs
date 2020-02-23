@@ -49,7 +49,7 @@ export function SetupOutputs(
 	const output_names: Readonly<Ref<readonly string[]>> = computed(() => {
 		if (node) {
 			if (node.io.outputs.has_named_outputs) {
-				return node.io.outputs.named_output_connection_points.map((o) => o.name);
+				return json_node.named_output_connections.map((o) => o.name);
 			} else {
 				return [];
 			}
@@ -60,7 +60,7 @@ export function SetupOutputs(
 	const output_titles: Readonly<Ref<readonly string[]>> = computed(() => {
 		if (node) {
 			if (node.io.outputs.has_named_outputs) {
-				return node.io.outputs.named_output_connection_points.map((o) => `${o.name} (${o.type})`);
+				return json_node.named_output_connections.map((o) => `${o.name} (${o.type})`);
 			} else {
 				return [];
 			}
@@ -100,9 +100,9 @@ export function SetupOutputs(
 	});
 	const connection_element_output_class_objects = computed(() => {
 		if (node) {
-			return node.io.outputs.named_output_connection_points.map((output, i) => {
+			return json_node.named_output_connections.map((connection, i) => {
 				return {
-					[output.type]: true,
+					[connection.type]: true,
 				};
 			});
 		} else {

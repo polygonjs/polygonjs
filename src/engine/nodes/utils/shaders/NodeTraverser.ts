@@ -149,6 +149,8 @@ export class TypedNodeTraverser<T extends TypedNode<any, T, any>> {
 	private find_leaves_from_root_node(root_node: T) {
 		// if(this._shader_name == ShaderName.VERTEX){
 		// this._leaves_graph_id[this._shader_name] = {}
+		this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graph_node_id, true);
+
 		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
 		if (input_names) {
 			for (let input_name of input_names) {
@@ -160,7 +162,6 @@ export class TypedNodeTraverser<T extends TypedNode<any, T, any>> {
 						input.graph_node_id,
 						root_node.graph_node_id
 					);
-					this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graph_node_id, true);
 					this.find_leaves(input);
 				}
 				// TODO: typescript - GL - check that I dont need to consider the Attrib as a special case

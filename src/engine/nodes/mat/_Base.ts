@@ -24,10 +24,11 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 		return NodeContext.MAT;
 	}
 
-	protected _material!: M;
+	protected _material: M | undefined;
 	// protected _update_methods: RenderHook[] = [];
 
-	initialize_node() {
+	initialize_base_node() {
+		super.initialize_base_node();
 		// this._update_methods = [];
 
 		// this._init_bypass_flag({

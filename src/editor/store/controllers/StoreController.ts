@@ -82,10 +82,15 @@ class StoreControllerClass {
 					return this.engine.update_node_name(emitter.graph_node_id);
 				case NodeEvent.INPUTS_UPDATED:
 					return this.engine.update_node_inputs(emitter.graph_node_id);
+				case NodeEvent.NAMED_INPUTS_UPDATED:
+					return this.engine.update_node_named_inputs(emitter.graph_node_id);
+				case NodeEvent.NAMED_OUTPUTS_UPDATED:
+					return this.engine.update_node_named_outputs(emitter.graph_node_id);
 				case NodeEvent.CREATED:
 					return this.engine.add_node(emitter.graph_node_id, data);
 				case NodeEvent.DELETED:
 					return this.engine.delete_node(emitter.graph_node_id, data);
+				// TODO: override_clonable_input_state
 
 				// param events
 				case ParamEvent.RAW_INPUT_UPDATED:

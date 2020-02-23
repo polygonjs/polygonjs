@@ -8,7 +8,7 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 // import {SceneJsonExporterData} from 'src/engine/io/json/export/Scene';
 import {NodeSerializerData} from 'src/engine/nodes/utils/Serializer';
 import {ParamSerializerData} from 'src/engine/params/utils/Serializer';
-import {BaseParamType} from 'src/engine/params/_Base';
+// import {BaseParamType} from 'src/engine/params/_Base';
 
 export type EngineNodeData = NodeSerializerData;
 export type EngineParamData = ParamSerializerData;
@@ -39,6 +39,8 @@ export enum EngineMutation {
 	NODE_BYPASS_FLAG_UPDATED = 'NODE_BYPASS_FLAG_UPDATED',
 	NODE_NAME_UPDATED = 'NODE_NAME_UPDATED',
 	NODE_INPUTS_UPDATED = 'NODE_INPUTS_UPDATED',
+	NODE_NAMED_INPUTS_UPDATED = 'NODE_NAMED_INPUTS_UPDATED',
+	NODE_NAMED_OUTPUTS_UPDATED = 'NODE_NAMED_OUTPUTS_UPDATED',
 	NODE_CREATED = 'NODE_CREATED',
 	NODE_DELETED = 'NODE_DELETED',
 	// param
@@ -89,9 +91,9 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 interface EnginePayloadNodeEmitter {
 	emitter: BaseNodeType;
 }
-interface EnginePayloadParamEmitter {
-	emitter: BaseParamType;
-}
+// interface EnginePayloadParamEmitter {
+// 	emitter: BaseParamType;
+// }
 // interface EnginePayloadNodeDeleted {
 // 	emitter: BaseNodeType;
 // 	data: {
@@ -108,6 +110,19 @@ interface EnginePayloadParamEmitter {
 const store_json_node = (state: EngineState, node: BaseNodeType) => state.nodes_by_graph_node_id[node.graph_node_id];
 // window.store_json_param= (state, param)->
 // 	state.params_by_graph_node_id[param.graph_node_id()]
+
+function update_node_inputs_and_outputs(state: EngineState, node_id: string) {
+	const node = StoreController.engine.node(node_id);
+	if (node) {
+		const json_node = store_json_node(state, node);
+		if (json_node) {
+			Vue.set(json_node, 'inputs', node.serializer.input_ids());
+			Vue.set(json_node, 'input_connection_output_indices', node.serializer.connection_input_indices());
+			Vue.set(json_node, 'named_input_connections', node.serializer.named_input_connections());
+			Vue.set(json_node, 'named_output_connections', node.serializer.named_output_connections());
+		}
+	}
+}
 
 export const EngineStoreModule = {
 	namespaced: true,
@@ -370,16 +385,19 @@ export const EngineStoreModule = {
 			state: EngineState,
 			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_INPUTS_UPDATED]
 		) {
-			const node = StoreController.engine.node(node_id);
-			if (node) {
-				const json_node = store_json_node(state, node);
-				if (json_node) {
-					Vue.set(json_node, 'inputs', node.serializer.input_ids());
-					Vue.set(json_node, 'input_connection_output_indices', node.serializer.connection_input_indices());
-					Vue.set(json_node, 'named_input_connections', node.serializer.named_input_connections());
-					Vue.set(json_node, 'named_output_connections', node.serializer.named_output_connections());
-				}
-			}
+			update_node_inputs_and_outputs(state, node_id);
+		},
+		[EngineMutation.NODE_NAMED_INPUTS_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_NAMED_INPUTS_UPDATED]
+		) {
+			update_node_inputs_and_outputs(state, node_id);
+		},
+		[EngineMutation.NODE_NAMED_OUTPUTS_UPDATED]: function(
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_NAMED_OUTPUTS_UPDATED]
+		) {
+			update_node_inputs_and_outputs(state, node_id);
 		},
 
 		[EngineMutation.NODE_DISPLAY_FLAG_UPDATED](
@@ -561,10 +579,10 @@ export const EngineStoreModule = {
 				}
 			}
 		},
-		param_deleted(state: EngineState, payload: EnginePayloadParamEmitter) {
-			const param = payload['emitter'];
-			Vue.delete(state.params_by_graph_node_id, param.graph_node_id);
-		},
+		// param_deleted(state: EngineState, payload: EnginePayloadParamEmitter) {
+		// 	const param = payload['emitter'];
+		// 	Vue.delete(state.params_by_graph_node_id, param.graph_node_id);
+		// },
 
 		// param_dirty_updated: (state, payload)->
 		// 	param = payload['emitter']

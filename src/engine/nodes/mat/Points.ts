@@ -40,9 +40,9 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		// await TextureMapController.update(this);
 		// await TextureAlphaMapController.update(this);
 
-		this._material.size = this.pv.size;
-		this._material.sizeAttenuation = this.pv.size_attenuation;
+		this.material.size = this.pv.size;
+		this.material.sizeAttenuation = this.pv.size_attenuation;
 
-		this.set_material(this._material);
+		this.set_material(this.material);
 	}
 }

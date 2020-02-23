@@ -164,9 +164,13 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	set_compilation_required() {
 		this._compile_required = true;
 	}
-	set_compilation_required_and_dirty() {
+	set_compilation_required_and_dirty(trigger_node?: BaseGlNodeType) {
+		// it may be useful to send the trigger node here
+		// but in the end, the material needs to recook fully
+		// in order to properly assign the uniforms
+		// (unless there is a way to re-assign the same value to a uniform that is not meant to be updated)
 		this.set_compilation_required();
-		this.node.set_dirty();
+		this.node.set_dirty(trigger_node);
 	}
 	compile_required(): boolean {
 		return this._compile_required;

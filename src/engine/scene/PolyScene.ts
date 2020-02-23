@@ -67,7 +67,7 @@ export class PolyScene {
 		return this._cameras_controller;
 	}
 
-	private _cooker = new Cooker();
+	private _cooker = new Cooker(this);
 	get cooker() {
 		return this._cooker;
 	}

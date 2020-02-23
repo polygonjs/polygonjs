@@ -49,7 +49,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 			}
 			if (converted != this._value) {
 				this._update_value(converted);
-				this.set_successors_dirty();
+				this.set_successors_dirty(this);
 			}
 		} else {
 			if (lodash_isString(this._raw_input)) {

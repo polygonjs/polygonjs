@@ -65,7 +65,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 			if (this._raw_input != this._value) {
 				this._value = this._raw_input;
 				this.remove_dirty_state();
-				this.set_successors_dirty();
+				this.set_successors_dirty(this);
 				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 				if (this._expression_controller) {
 					this._expression_controller.set_expression(undefined, false);

@@ -17,7 +17,7 @@ export interface ContainerMap {
 	MANAGER: ManagerContainer;
 	POST: PostProcessContainer;
 	GL: GlContainer;
-	JS: GlContainer;
+	JS: JsContainer;
 }
 // type K = keyof ContainerMap;
 // type Container = ContainerMap[K];

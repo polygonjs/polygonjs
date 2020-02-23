@@ -61,6 +61,8 @@ import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 
 const NODE_SIMPLE_NAME = 'params';
 
+export type OnSceneLoadHook = () => void;
+
 export class ParamsController {
 	private _param_create_mode: boolean = false;
 	private _params_by_name: Dictionary<BaseParamType> = {};
@@ -76,6 +78,10 @@ export class ParamsController {
 	// private _params_eval_key: string;
 	private _params_added_since_last_params_eval: boolean = false;
 	// private _current_param_folder_name: string | undefined;
+
+	// hooks
+	private _on_scene_load_hooks: OnSceneLoadHook[] | undefined;
+	private _on_scene_load_hook_names: string[] | undefined;
 
 	constructor(protected node: BaseNodeType) {}
 
@@ -457,6 +463,31 @@ export class ParamsController {
 			}
 		}
 		// return this._params_eval_key
+	}
+
+	//
+	//
+	// HOOKS
+	//
+	//
+	add_on_scene_load_hook(name: string, method: OnSceneLoadHook) {
+		this._on_scene_load_hook_names = this._on_scene_load_hook_names || [];
+		this._on_scene_load_hooks = this._on_scene_load_hooks || [];
+
+		if (!this._on_scene_load_hook_names.includes(name)) {
+			this._on_scene_load_hook_names.push(name);
+			this._on_scene_load_hooks.push(method);
+		} else {
+			console.warn(`hook with name ${name} already exists`, this._on_scene_load_hook_names);
+		}
+	}
+	run_on_scene_load_hooks() {
+		if (this._on_scene_load_hooks) {
+			console.log('run_post_dirty_hooks');
+			for (let hook of this._on_scene_load_hooks) {
+				hook();
+			}
+		}
 	}
 
 	// private _create_params_ui_data_dependencies() {

@@ -20,7 +20,11 @@
 					"mesh_basic_builder1": {
 						"type": "mesh_basic_builder",
 						"nodes": {
-							"output1": {"type": "output", "params": {}, "inputs": []},
+							"output1": {
+								"type": "output",
+								"params": {},
+								"inputs": [{"name": "color", "node": "constant1", "output": "vec3"}]
+							},
 							"globals1": {"type": "globals", "params": {}, "inputs": []},
 							"constant1": {"type": "constant", "params": {"type": "4"}, "inputs": []}
 						},
