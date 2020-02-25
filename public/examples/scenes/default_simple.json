@@ -1,6 +1,6 @@
 {
 	"properties": {
-		"frame": 221,
+		"frame": 600,
 		"frame_range": [1, 600],
 		"frame_range_locked": [true, true],
 		"fps": 60,
@@ -23,10 +23,26 @@
 							"output1": {
 								"type": "output",
 								"params": {},
-								"inputs": [{"name": "color", "node": "constant1", "output": "vec3"}]
+								"inputs": [{"name": "color", "node": "float_to_vec3_1", "output": "vec3"}]
 							},
 							"globals1": {"type": "globals", "params": {}, "inputs": []},
-							"constant1": {"type": "constant", "params": {"type": "4"}, "inputs": []}
+							"constant1": {
+								"type": "constant",
+								"params": {"type": "4", "value_vec3": [0, 0.3, 0]},
+								"inputs": []
+							},
+							"attribute1": {"type": "attribute", "params": {"name": "above"}, "inputs": []},
+							"param1": {"type": "param", "params": {}, "inputs": []},
+							"float_to_vec3_1": {
+								"type": "float_to_vec3",
+								"params": {},
+								"inputs": [{"name": "x", "node": "constant2", "output": "float"}]
+							},
+							"constant2": {
+								"type": "constant",
+								"params": {"type": "2", "value_vec3": [0, 0.3, 0]},
+								"inputs": []
+							}
 						},
 						"children_context": "gl",
 						"params": {},
@@ -60,8 +76,8 @@
 					"controls": "/events1/camera_orbit_controls1",
 					"target": [-0.18931128979003603, 0.42336979919346196, 0.07064319279199466],
 					"fov": 55.29,
-					"t": [-2.97116311949576, 2.180466751605114, -3.5905020000868872],
-					"r": [-154.3622089117926, -34.412066318975235, -164.82483726568017]
+					"t": [-2.1446212215677316, 1.8869106002908271, 4.3443868467992415],
+					"r": [-18.90373542502567, -23.404909270919685, -7.746396585617899]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -183,8 +199,20 @@
 					"material3": {
 						"type": "material",
 						"params": {"material": "/MAT/mesh_basic_builder1"},
-						"inputs": ["sphere1"],
+						"inputs": ["noise1"],
 						"flags": {"display": true}
+					},
+					"noise1": {
+						"type": "noise",
+						"params": {"amount": 0.13, "use_normals": true},
+						"inputs": ["attrib_create1"],
+						"flags": {"display": false}
+					},
+					"attrib_create1": {
+						"type": "attrib_create",
+						"params": {"name": "above", "value1": "@P.y > 0"},
+						"inputs": ["sphere1"],
+						"flags": {"display": false}
 					}
 				},
 				"children_context": "sop",
@@ -248,7 +276,7 @@
 			}
 		},
 		"children_context": "objects",
-		"selection": []
+		"selection": ["geo1"]
 	},
 	"ui": {
 		"nodes": {
@@ -260,8 +288,12 @@
 						"pos": [0, 50],
 						"nodes": {
 							"output1": {"pos": [250, 100]},
-							"globals1": {"pos": [-50, 150]},
-							"constant1": {"pos": [0, 0]}
+							"globals1": {"pos": [-100, 150]},
+							"constant1": {"pos": [-250, 0]},
+							"attribute1": {"pos": [-100, -100]},
+							"param1": {"pos": [-100, 350]},
+							"float_to_vec3_1": {"pos": [150, -100]},
+							"constant2": {"pos": [-100, 0]}
 						}
 					}
 				}
@@ -290,18 +322,20 @@
 			"geo1": {
 				"pos": [0, -500],
 				"nodes": {
-					"box1": {"pos": [400, -150]},
-					"plane1": {"pos": [-250, -150]},
+					"box1": {"pos": [-500, 50]},
+					"plane1": {"pos": [-900, -50]},
 					"sphere1": {"pos": [50, -200]},
-					"merge1": {"pos": [-150, 150]},
-					"transform1": {"pos": [-250, 0]},
-					"transform2": {"pos": [-50, -50]},
-					"transform3": {"pos": [400, -50]},
-					"material1": {"pos": [-200, 350]},
-					"material2": {"pos": [100, 150]},
-					"transform4": {"pos": [300, 200]},
-					"switch1": {"pos": [100, 350]},
-					"material3": {"pos": [300, 100]}
+					"merge1": {"pos": [-800, 250]},
+					"transform1": {"pos": [-900, 100]},
+					"transform2": {"pos": [-700, 50]},
+					"transform3": {"pos": [-500, 150]},
+					"material1": {"pos": [-850, 450]},
+					"material2": {"pos": [0, 300]},
+					"transform4": {"pos": [200, 350]},
+					"switch1": {"pos": [0, 500]},
+					"material3": {"pos": [450, 200]},
+					"noise1": {"pos": [450, 50]},
+					"attrib_create1": {"pos": [450, -50]}
 				}
 			},
 			"point_light1": {"pos": [400, -300]},

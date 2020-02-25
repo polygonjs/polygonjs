@@ -56,7 +56,13 @@ export class ExpressionManager {
 	compute_function(): Promise<any> {
 		// this.parse_and_update_dependencies_if_not_done(expression);
 		if (this.compute_allowed()) {
-			return this.function_generator.eval_function();
+			try {
+				return this.function_generator.eval_function();
+			} catch (e) {
+				console.warn('compute_function');
+				console.warn(e);
+				return new Promise((resolve, reject) => resolve());
+			}
 		} else {
 			return new Promise((resolve, reject) => {
 				resolve(null);

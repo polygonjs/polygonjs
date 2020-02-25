@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -57,7 +56,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // import lodash_values from 'lodash/values';
 
 // mixins
@@ -76,8 +75,8 @@ import {NodeSetNameCommand} from '../../../history/commands/NodeSetName';
 import {StoreController} from '../../../store/controllers/StoreController';
 import {SetupSelectedNode} from '../../mixins/SelectedNode';
 
-import {createComponent, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'param-panel',
 	// mixins: [Folders, Json, NodeOwner, ParamDescription, Presets, Selection],
 	components: {ParamFieldContainer, DropDownMenu},
@@ -151,61 +150,60 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	$color_node_name_hover: darken($color_font, 20%)
-	.Panel.Params
-		// background-color: $color_bg_panel_param
+$color_node_name_hover: darken($color_font, 20%)
+.Panel.Params
+	// background-color: $color_bg_panel_param
 
-		.params_container
-			overflow-y: auto
+	.params_container
+		overflow-y: auto
 
-		.node_name_container, .node_help_button
-			margin: 10px 5px
-		.node_name_container
-			.node_name
-				cursor: pointer
-				&:hover
-					color: $color_node_name_hover
-			.node_type
-				margin-left: 10px
-				opacity: 0.75
-				font-style: italic
-		.node_help_button
-			color: $color_font
-			display: inline-block
+	.node_name_container, .node_help_button
+		margin: 10px 5px
+	.node_name_container
+		.node_name
 			cursor: pointer
-			margin-right: 10px
-			padding: 0px 10px
-			border-bottom: 2px solid transparent
 			&:hover
-				color: $primary-color
-				border-bottom: 2px solid $primary-color
+				color: $color_node_name_hover
+		.node_type
+			margin-left: 10px
+			opacity: 0.75
+			font-style: italic
+	.node_help_button
+		color: $color_font
+		display: inline-block
+		cursor: pointer
+		margin-right: 10px
+		padding: 0px 10px
+		border-bottom: 2px solid transparent
+		&:hover
+			color: $primary-color
+			border-bottom: 2px solid $primary-color
 
-		.params_container
-			padding-right: 10px
-			padding-bottom: 10px
+	.params_container
+		padding-right: 10px
+		padding-bottom: 10px
 
-			.params_folder
+		.params_folder
+			.folder_name
+				padding: 2px 5px
+				font-size: 0.8rem
+				margin-bottom: 5px
+				cursor: pointer
+				text-align: center
+				// border-bottom: 2px solid transparent
+				// background-color: mix($color_bg_panel_param, $primary-color, 70%)
+				background-color: lighten($color_bg_panel_param, 5%)
+				border-bottom: 2px solid darken($color_bg_panel_param, 30%)
+				&:hover
+					opacity: 0.8
+					background-color: darken($color_bg_panel_param, 30%)
+			// &.label_hidden
+			// 	.folder_name
+			// 		display: none
+			&.active
 				.folder_name
-					padding: 2px 5px
-					font-size: 0.8rem
-					margin-bottom: 5px
-					cursor: pointer
-					text-align: center
-					// border-bottom: 2px solid transparent
-					// background-color: mix($color_bg_panel_param, $primary-color, 70%)
-					background-color: lighten($color_bg_panel_param, 5%)
-					border-bottom: 2px solid darken($color_bg_panel_param, 30%)
-					&:hover
-						opacity: 0.8
-						background-color: darken($color_bg_panel_param, 30%)
-				// &.label_hidden
-				// 	.folder_name
-				// 		display: none
-				&.active
-					.folder_name
-						background-color: darken($color_bg_panel_param, 30%)
-
+					background-color: darken($color_bg_panel_param, 30%)
 </style>

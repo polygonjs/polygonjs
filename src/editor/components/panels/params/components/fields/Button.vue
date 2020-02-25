@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -14,14 +14,14 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 // import {TabIndexMixin} from './mixin/TabIndex';
 import {StoreController} from '../../../../../store/controllers/StoreController';
 import {ButtonParam} from '../../../../../../engine/params/Button';
 
-import {createComponent} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent} from '@vue/composition-api';
+export default defineComponent({
 	name: 'button-field',
 	// mixins: [Field, TabIndexMixin],
 	props: SetupFieldCommonProps,
@@ -51,9 +51,8 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	// @import "globals.sass"
+<style lang="sass">
+// @import "globals.sass"
 
-	// .Field.Button
-
+// .Field.Button
 </style>

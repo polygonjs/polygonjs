@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -32,12 +32,12 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Modal from './Modal.vue';
 import {StoreController} from '../../../store/controllers/StoreController';
 
-import {createComponent, ref, computed, watch} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, computed, watch} from '@vue/composition-api';
+export default defineComponent({
 	name: 'dialog-prompt',
 	components: {Modal},
 
@@ -98,21 +98,20 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.DialogPrompt
-		background-color: white
+.DialogPrompt
+	background-color: white
 
-		form
-			padding: 10px
-			input
-				margin: 0
+	form
+		padding: 10px
+		input
+			margin: 0
 
-		.buttons
-			padding: 10px
+	.buttons
+		padding: 10px
+		margin-bottom: 0px
+		.button
 			margin-bottom: 0px
-			.button
-				margin-bottom: 0px
-
 </style>

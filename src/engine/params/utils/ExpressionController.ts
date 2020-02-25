@@ -76,15 +76,21 @@ export class ExpressionController<T extends ParamType> {
 	}
 	private async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
-		await this.compute_expression();
+		try {
+			await this.compute_expression();
+		} catch (e) {
+			console.warn('expression evalution error');
+			console.warn(e);
+			this.param.node.states.error.set(`expression evalution error: ${e}`);
+		}
 
 		this.reset_entities();
 	}
-	async compute_expression_for_points(entities: CorePoint[], callback: PointEntityCallback<T>) {
-		this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
+	compute_expression_for_points(entities: CorePoint[], callback: PointEntityCallback<T>) {
+		return this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
 	}
-	async compute_expression_for_objects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
-		this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
+	compute_expression_for_objects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
+		return this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
 	}
 	get entities() {
 		return this._entities;

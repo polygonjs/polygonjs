@@ -97,8 +97,10 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			switch (this.pv.class) {
 				case AttribClass.VERTEX:
 					this.add_point_attribute(core_group);
+					break;
 				case AttribClass.OBJECT:
 					this.add_object_attribute(core_group);
+					break;
 			}
 		} else {
 			this.states.error.set('attribute name is not valid');

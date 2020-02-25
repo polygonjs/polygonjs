@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -18,7 +18,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 //# third party lib
 import {Vector2} from 'three/src/math/Vector2';
 import {Box2} from 'three/src/math/Box2';
@@ -35,8 +35,8 @@ interface ConnectionProps {
 
 import {StoreController} from '../../../../store/controllers/StoreController';
 import {EngineNodeData} from '../../../../store/modules/Engine';
-import {createComponent, computed, Ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, Ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network_node_connection',
 
 	props: {
@@ -248,60 +248,56 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
-	$color_connection: $primary-color
-	$color_connection_hover: lighten($color_connection, 5%)
-	$connection_size: 2px
-	$connection_size_hover: 4px
+@import "globals.sass"
+$color_connection: $primary-color
+$color_connection_hover: lighten($color_connection, 5%)
+$connection_size: 2px
+$connection_size_hover: 4px
 
-	$color_connection_no_clone: purple //mix($p	rimary-color, $success-color, 75%)
-	$connection_size_no_clone: 3*$connection_size
-	$color_connection_hover_no_clone: lighten($color_connection_no_clone, 5%)
+$color_connection_no_clone: purple //mix($p	rimary-color, $success-color, 75%)
+$connection_size_no_clone: 3*$connection_size
+$color_connection_hover_no_clone: lighten($color_connection_no_clone, 5%)
 
-	.NetworkNodeConnection
+.NetworkNodeConnection
+	position: absolute
+	width: 0
+	height: 0
+	svg
 		position: absolute
-		width: 0
-		height: 0
-		svg
-			position: absolute
-			pointer-events: none
-			// background-color: lighten(green, 25%)
-			// opacity: 0.4
-			// border: 1px solid black
-			line
-				pointer-events: auto
-				// cursor: pointer
-				stroke: $color_connection
-				stroke-width: $connection_size
-				&.is_src_not_cloned
-					stroke: $color_connection_no_clone
-					stroke-width: $connection_size_no_clone
-					&:hover
-						stroke: $color_connection_hover_no_clone
+		pointer-events: none
+		// background-color: lighten(green, 25%)
+		// opacity: 0.4
+		// border: 1px solid black
+		line
+			pointer-events: auto
+			// cursor: pointer
+			stroke: $color_connection
+			stroke-width: $connection_size
+			&.is_src_not_cloned
+				stroke: $color_connection_no_clone
+				stroke-width: $connection_size_no_clone
 				&:hover
-					stroke: $color_connection_hover
-					// stroke-width: $connection_size_hover
-				&.mismatched_types
-					stroke: $alert-color
-					stroke-width: 3*$connection_size
-				&.bool
-					stroke: $color_connection_bool
-				&.int
-					stroke: $color_connection_int
-				&.float
-					stroke: $color_connection_float
-				&.vec2
-					stroke: $color_connection_vec2
-				&.vec3
-					stroke: $color_connection_vec3
-				&.vec4
-					stroke: $color_connection_vec4
-				&.mat3
-					stroke: $color_connection_mat3
-
-
-
-
+					stroke: $color_connection_hover_no_clone
+			&:hover
+				stroke: $color_connection_hover
+				// stroke-width: $connection_size_hover
+			&.mismatched_types
+				stroke: $alert-color
+				stroke-width: 3*$connection_size
+			&.bool
+				stroke: $color_connection_bool
+			&.int
+				stroke: $color_connection_int
+			&.float
+				stroke: $color_connection_float
+			&.vec2
+				stroke: $color_connection_vec2
+			&.vec3
+				stroke: $color_connection_vec3
+			&.vec4
+				stroke: $color_connection_vec4
+			&.mat3
+				stroke: $color_connection_mat3
 </style>

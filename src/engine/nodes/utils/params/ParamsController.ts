@@ -483,7 +483,6 @@ export class ParamsController {
 	}
 	run_on_scene_load_hooks() {
 		if (this._on_scene_load_hooks) {
-			console.log('run_post_dirty_hooks');
 			for (let hook of this._on_scene_load_hooks) {
 				hook();
 			}

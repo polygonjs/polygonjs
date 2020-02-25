@@ -93,15 +93,12 @@ export class CodeBuilder {
 	async build_from_nodes(root_nodes: BaseGlNodeType[]) {
 		this.reset();
 
-		console.log('build_from_nodes', root_nodes);
-
 		const node_traverser = new TypedNodeTraverser<BaseGlNodeType>(this._assembler, this._gl_parent_node);
 		node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
 		for (let shader_name of this.shader_names()) {
 			nodes_by_shader_name.set(shader_name, node_traverser.nodes_for_shader_name(shader_name));
-			console.log('nodes_by_shader_name', node_traverser.nodes_for_shader_name(shader_name));
 			// nodes.push(this._output)
 			// POLY.log(shader_name, nodes_by_shader_name[shader_name].map(n=>n.name()).sort())
 		}
@@ -109,13 +106,10 @@ export class CodeBuilder {
 		// const vertex_nodes = node_traverser.nodes_for_shader_name(ShaderName.VERTEX)
 		// const fragment_nodes = node_traverser.nodes_for_shader_name(ShaderName.FRAGMENT)
 		const sorted_nodes = node_traverser.sorted_nodes();
-		console.log('sorted_nodes', sorted_nodes);
 		for (let shader_name of this.shader_names()) {
 			const root_nodes_for_shader = this._assembler.root_nodes_by_shader_name(shader_name);
 			const leaf_nodes_for_shader = this._assembler.leaf_nodes_by_shader_name(shader_name);
 
-			console.log('root_nodes_for_shader', shader_name, root_nodes_for_shader);
-			console.log('leaf_nodes_for_shader', shader_name, leaf_nodes_for_shader);
 			// keep track of which nodes are both leaf and root, and do not use their code twice
 			// as this may happen with an attribute node, when used as both import and export
 
@@ -138,7 +132,6 @@ export class CodeBuilder {
 			for (let leaf_node of leaf_nodes_for_shader) {
 				// if(!both_leaf_and_root_nodes_by_id[leaf_node.graph_node_id()]){
 				if (!node_ids.get(leaf_node.graph_node_id)) {
-					console.log('unshift!');
 					MapUtils.unshift_on_array_at_entry(nodes_by_shader_name, shader_name, leaf_node);
 				}
 				// }
@@ -173,7 +166,6 @@ export class CodeBuilder {
 		for (let shader_name of this.shader_names()) {
 			const nodes = nodes_by_shader_name.get(shader_name);
 			if (nodes) {
-				console.log('nodes', shader_name, nodes);
 				for (let node of nodes) {
 					node.set_shader_name(shader_name);
 					if (this._param_configs_set_allowed) {

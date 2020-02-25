@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -53,7 +53,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // import {Object3D} from 'three/src/core/Object3D';
 
 // third party lib
@@ -66,8 +66,8 @@ import {BaseSopNodeType} from 'src/engine/nodes/sop/_Base';
 import {StoreController} from '../../../../../../store/controllers/StoreController';
 import {CoreGroup} from '../../../../../../../core/geometry/Group';
 
-import {createComponent, ref, onMounted, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, onMounted, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network_node_info_sop',
 	props: {
 		graph_node_id: null,
@@ -213,53 +213,52 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	$color_table_border: black
+$color_table_border: black
 
-	.NetworkNodeInfoSop
+.NetworkNodeInfoSop
 
-		.bbox_infos
-			table
-				margin-top: 10px
-				td
-					border: 1px solid $color_table_border
-					text-align: center
-					padding: 0px 5px
-					&.number
-						white-space: nowrap
-				// tr.odd
+	.bbox_infos
+		table
+			margin-top: 10px
+			td
+				border: 1px solid $color_table_border
+				text-align: center
+				padding: 0px 5px
+				&.number
+					white-space: nowrap
+			// tr.odd
 
-		.node_info_sop_section
-			white-space: nowrap
-			&.inline
-				.node_info_sop_section_title
-					display: inline-block
-					margin-right: 5px
-				.node_info_sop_section_content
-					display: inline-block
+	.node_info_sop_section
+		white-space: nowrap
+		&.inline
+			.node_info_sop_section_title
+				display: inline-block
+				margin-right: 5px
+			.node_info_sop_section_content
+				display: inline-block
 
-			&.object_names
-				.node_info_sop_section_title
-					position: relative
-					top: 0px
-				.node_info_sop_section_content
-					max-height: 200px
-					overflow-y: scroll
+		&.object_names
+			.node_info_sop_section_title
+				position: relative
+				top: 0px
+			.node_info_sop_section_content
+				max-height: 200px
+				overflow-y: scroll
 
-		.objects_count_visible
-			margin-left: 10px
-			opacity: 0.7
-			&.highlighted
-				opacity: 1
-				font-weight: bold
+	.objects_count_visible
+		margin-left: 10px
+		opacity: 0.7
+		&.highlighted
+			opacity: 1
+			font-weight: bold
 
-		.attribute_info
-			&.string
-				color: $primary_color
-			&.numeric
-				// color: darken($success_color, 20%)
-
+	.attribute_info
+		&.string
+			color: $primary_color
+		&.numeric
+			// color: darken($success_color, 20%)
 </style>

@@ -65,11 +65,8 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	}
 
 	variable_for_input(name: string): string {
-		console.log('variable_for_input', this.name, name);
 		const input_index = this.io.inputs.get_input_index(name);
 		const connection = this.io.connections.input_connection(input_index);
-		console.log('input_index', input_index);
-		console.log('connection', connection);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
 			const output_name = input_node.io.outputs.named_output_connection_points[connection.output_index].name;
@@ -131,7 +128,6 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 			for (let line of lines) {
 				MapUtils.push_on_array_at_entry(lines_by_line_type, LineType.BODY, line);
 			}
-			console.log('add_body_lines', this, shader_name, lines);
 
 			if (!has_entry) {
 				this._lines.set(shader_name, lines_by_line_type);
@@ -283,6 +279,9 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 			});
 	}
 	// some node will create code differently depending if they are on vertex or fragment
+	// they also need to know which shader they are building the lines for (for the body for ex, is it for fragment or for vertex?)
+	// TODO: try and have the set_lines method accept a controller, which would know those infos
+	// and would know which shader it is running for
 	set_shader_name(shader_name: ShaderName) {
 		this._shader_name = shader_name;
 	}

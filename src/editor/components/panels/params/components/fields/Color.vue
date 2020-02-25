@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -29,7 +29,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {Color} from 'three/src/math/Color';
 
 // mixins
@@ -41,8 +41,8 @@ import Numeric from './Numeric.vue';
 import {ColorParam} from '../../../../../../engine/params/Color';
 import {StoreController} from '../../../../../store/controllers/StoreController';
 
-import {createComponent, computed, onMounted, ref, watch} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, onMounted, ref, watch} from '@vue/composition-api';
+export default defineComponent({
 	name: 'color-field',
 	props: SetupFieldCommonProps,
 	components: {Numeric},
@@ -102,14 +102,13 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	.Field.Color
-		input[type=color]
-			cursor: pointer
-			width: 30px
-			height: 100%
-			padding: 0px
-			margin-right: 5px
-
+.Field.Color
+	input[type=color]
+		cursor: pointer
+		width: 30px
+		height: 100%
+		padding: 0px
+		margin-right: 5px
 </style>

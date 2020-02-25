@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -20,7 +20,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupMultipleParamCommon} from './mixins/MultipleParamCommon';
@@ -32,8 +32,8 @@ import {Vector2Param} from '../../../../../../engine/params/Vector2';
 // components
 import Numeric from './Numeric.vue';
 
-import {createComponent} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent} from '@vue/composition-api';
+export default defineComponent({
 	name: 'vector2-field',
 	// mixins: [Field, TabIndexMixin],
 	props: SetupFieldCommonProps,
@@ -53,8 +53,7 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	// .Field.Vector
-
+// .Field.Vector
 </style>

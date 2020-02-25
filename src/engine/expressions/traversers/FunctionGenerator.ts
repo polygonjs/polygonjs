@@ -108,13 +108,15 @@ const PROPERTY_OFFSETS: AnyDictionary = {
 
 import {BaseTraverser} from './_Base';
 import {MethodDependency} from '../MethodDependency';
+import {AttributeRequirementsController} from '../AttributeRequirementsController';
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction
 const AsyncFunction = Object.getPrototypeOf(async function() {}).constructor;
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
-	private function_pre_entities_loop_lines: string[] = [];
+	// private function_pre_entities_loop_lines: string[] = [];
+	private _attribute_requirements_controller = new AttributeRequirementsController();
 	// private function_pre_body:string
 	private function_main_string: string | undefined;
 	error_message: string | undefined;
@@ -137,7 +139,8 @@ export class FunctionGenerator extends BaseTraverser {
 
 		if (parsed_tree.error_message == null) {
 			try {
-				this.function_pre_entities_loop_lines = [];
+				// this.function_pre_entities_loop_lines = [];
+				this._attribute_requirements_controller.reset();
 				// this.function_pre_body = ''
 				if (parsed_tree.node) {
 					const function_main_string = this.traverse_node(parsed_tree.node);
@@ -195,13 +198,18 @@ export class FunctionGenerator extends BaseTraverser {
 				return new Promise( async (resolve, reject)=>{
 					let entity;
 					const entity_callback = param.expression_controller.entity_callback;
-					${this.function_pre_entities_loop_lines.join(';\n')}
-					for(let index=0; index < entities.length; index++){
-						entity = entities[index];
-						result = ${this.function_main_string};
-						entity_callback(entity, result);
+					${this._attribute_requirements_controller.assign_attributes_lines()}
+					if( ${this._attribute_requirements_controller.attribute_presence_check_line()} ){
+						${this._attribute_requirements_controller.assign_arrays_lines()}
+						for(let index=0; index < entities.length; index++){
+							entity = entities[index];
+							result = ${this.function_main_string};
+							entity_callback(entity, result);
+						}
+						resolve()
+					} else {
+						reject(new Error('attribute not found'))
 					}
-					resolve()
 				})
 			}
 			return []`;
@@ -222,7 +230,8 @@ export class FunctionGenerator extends BaseTraverser {
 		// this.param.entity_attrib_values.position =
 		// 	this.param.entity_attrib_values.position || new THREE.Vector3()
 		if (this.function) {
-			return this.function(this.param, this.methods);
+			const result = this.function(this.param, this.methods);
+			return result;
 		}
 	}
 
@@ -323,16 +332,11 @@ export class FunctionGenerator extends BaseTraverser {
 				if (attribute_name == 'ptnum') {
 					return '((entity != null) ? entity.index : 0)';
 				} else {
-					const var_attribute = `attrib_${attribute_name}`;
-					const var_attribute_size = `attrib_size_${attribute_name}`;
-					const var_array = `array_${attribute_name}`;
-					this.function_pre_entities_loop_lines.push(
-						`const ${var_attribute} = entities[0].geometry().attributes['${attribute_name}']`
+					const var_attribute_size = this._attribute_requirements_controller.var_attribute_size(
+						attribute_name
 					);
-					this.function_pre_entities_loop_lines.push(
-						`const ${var_attribute_size} = ${var_attribute}.itemSize`
-					);
-					this.function_pre_entities_loop_lines.push(`const ${var_array} = ${var_attribute}.array`);
+					const var_array = this._attribute_requirements_controller.var_array(attribute_name);
+					this._attribute_requirements_controller.add(attribute_name);
 					if (property) {
 						const property_offset = PROPERTY_OFFSETS[property];
 						return `${var_array}[entity.index*${var_attribute_size}+${property_offset}]`;

@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -16,14 +16,14 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {ParticlesSystemGpuSopNode} from 'src/engine/nodes/sop/ParticlesSystemGpu';
 import {ClipboardHelper} from 'src/editor/helpers/Clipboard';
 
 import {StoreController} from '../../../../../../store/controllers/StoreController';
-import {createComponent, computed, ref, Ref, onMounted} from '@vue/composition-api';
+import {defineComponent, computed, ref, Ref, onMounted} from '@vue/composition-api';
 import {ShaderName} from '../../../../../../../engine/nodes/utils/shaders/ShaderName';
-export default createComponent({
+export default defineComponent({
 	name: 'network_node_info_sop_particles_system_gpu',
 	props: {
 		graph_node_id: null,
@@ -63,12 +63,11 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	.NetworkNodeInfoSopParticlesSystemGPU
-		.button
-			margin-bottom: 5px
-
+.NetworkNodeInfoSopParticlesSystemGPU
+	.button
+		margin-bottom: 5px
 </style>

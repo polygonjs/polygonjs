@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -16,7 +16,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {BaseGlNodeType} from 'src/engine/nodes/gl/_Base';
 import {StoreController} from '../../../../../../store/controllers/StoreController';
 
@@ -24,8 +24,8 @@ import {ClipboardHelper} from 'src/editor/helpers/Clipboard';
 
 import {AssemblerControllerNode} from '../../../../../../../engine/nodes/gl/code/Controller';
 import {ShaderName} from '../../../../../../../engine/nodes/utils/shaders/ShaderName';
-import {createComponent, ref, Ref, onMounted, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, Ref, onMounted, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network_node_info_sop_particles_system_gpu',
 	props: {
 		graph_node_id: null,
@@ -69,12 +69,11 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	.NetworkNodeInfoGl
-		.button
-			margin-bottom: 5px
-
+.NetworkNodeInfoGl
+	.button
+		margin-bottom: 5px
 </style>

@@ -36,8 +36,8 @@ export abstract class ShaderAssemblerMesh extends ShaderAssemblerRender {
 		const new_fragment_shader = this._shaders_by_name.get(ShaderName.FRAGMENT);
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
-			console.log(material.vertexShader);
 			material.fragmentShader = new_fragment_shader;
+			// console.log(material.fragmentShader);
 			material.uniforms = this.build_uniforms(this._template_shader?.uniforms);
 			material.needsUpdate = true;
 		}

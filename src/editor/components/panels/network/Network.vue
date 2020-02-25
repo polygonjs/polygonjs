@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 	doctype html
@@ -82,7 +81,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupCamera} from './mixins/Camera';
 // import {Clipboard} from './Mixins/Clipboard';
@@ -112,8 +111,8 @@ import {ConnectionHelper, ConnectionData} from './helpers/Connection';
 import {NodeSelectionHelper, NodeSelectionData} from './helpers/NodeSelection';
 import {StoreController} from '../../../store/controllers/StoreController';
 
-import {createComponent, Ref, ref, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, Ref, ref, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network-panel',
 	components: {TabMenu, Node, InterractiveConnection},
 
@@ -228,119 +227,117 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	$z_index_above_events_catcher: 10
-	// $panel_background_color: mix($color_bg, orange, 50%)
-	.above-event-catcher
-		position: relative
-		z-index: $z_index_above_events_catcher
+$z_index_above_events_catcher: 10
+// $panel_background_color: mix($color_bg, orange, 50%)
+.above-event-catcher
+	position: relative
+	z-index: $z_index_above_events_catcher
 
-	.Panel.Network
-		// background-color: darken($color_font, 20%)
-		// color: $color_bg
+.Panel.Network
+	// background-color: darken($color_font, 20%)
+	// color: $color_bg
 
-		position: relative // for tab menu
+	position: relative // for tab menu
 
-		.buttons-container-height-0
-			height: 0px
-			padding-left: 5px
-			padding-top: 5px
-			.go-up-button-container
-				margin-right: 5px
-				.go-up-button
-					padding: 5px
-					border-radius: 25px
-					width: 25px
-					height: 25px
-					text-align: center
-					background-color: lightgreen
-					cursor: pointer
-					opacity: 0.7
-					line-height: 0
-					&:hover
-						opacity: 1
-					svg
-						display: inline-block
-						margin: auto
+	.buttons-container-height-0
+		height: 0px
+		padding-left: 5px
+		padding-top: 5px
+		.go-up-button-container
+			margin-right: 5px
+			.go-up-button
+				padding: 5px
+				border-radius: 25px
+				width: 25px
+				height: 25px
+				text-align: center
+				background-color: lightgreen
+				cursor: pointer
+				opacity: 0.7
+				line-height: 0
+				&:hover
+					opacity: 1
+				svg
+					display: inline-block
+					margin: auto
+					position: relative
+					// top: 50%
+					// transform: translateY(-50%)
+
+	.canvas_container, .canvas, .object_parents
+		width: 100%
+		height: 100%
+
+
+	.canvas_container
+		.canvas
+			// background-color: darken(white, 40%)
+			overflow: hidden
+			position: relative
+			&.pan_in_progress
+				cursor: move
+			&.zoom_in_progress
+				cursor: zoom-in
+
+			.selection-rectangle
+				pointer-events: none
+				position: absolute
+				border: 3px solid green
+				z-index: 10
+				background-color: grey
+				opacity: 0.2
+
+			.node-creation-rectangle
+				pointer-events: none
+				position: absolute
+				border: 3px solid green
+				z-index: 10
+
+			.zoom-container
+				position: absolute
+				top: 50%
+				left: 50%
+				width: 20px
+				height: 20px
+				// background-color: red
+				.pan-container
+					position: absolute
+					width: 10px
+					height: 10px
+					// background-color: green
+
+					$node_container_size: 50000px
+					.nodes-container
 						position: relative
-						// top: 50%
-						// transform: translateY(-50%)
+						width: 0
+						height: 0
+						top: 0
+						left: 0
+						// background-color: lighten(blue,20%)
+						// background-color: pink
+						// overflow: hidden
+						.nodes-container-events-catcher
+							position: absolute
+							width: $node_container_size
+							height: $node_container_size
+							top: -$node_container_size/2
+							left: -$node_container_size/2
+							// background-color: lighten(red,20%)
 
-		.canvas_container, .canvas, .object_parents
-			width: 100%
-			height: 100%
-
-
-		.canvas_container
-			.canvas
-				// background-color: darken(white, 40%)
-				overflow: hidden
-				position: relative
-				&.pan_in_progress
-					cursor: move
-				&.zoom_in_progress
-					cursor: zoom-in
-
-				.selection-rectangle
-					pointer-events: none
-					position: absolute
-					border: 3px solid green
-					z-index: 10
-					background-color: grey
-					opacity: 0.2
-
-				.node-creation-rectangle
-					pointer-events: none
-					position: absolute
-					border: 3px solid green
-					z-index: 10
-
-				.zoom-container
-					position: absolute
-					top: 50%
-					left: 50%
-					width: 20px
-					height: 20px
-					// background-color: red
-					.pan-container
-						position: absolute
-						width: 10px
-						height: 10px
-						// background-color: green
-
-						$node_container_size: 50000px
-						.nodes-container
-							position: relative
-							width: 0
-							height: 0
-							top: 0
-							left: 0
-							// background-color: lighten(blue,20%)
+						svg.connection-line-container
+							position: absolute
+							top: 0px
+							left: 0px
+							width: 100%
+							height: 100%
+							z-index: 10
 							// background-color: pink
-							// overflow: hidden
-							.nodes-container-events-catcher
-								position: absolute
-								width: $node_container_size
-								height: $node_container_size
-								top: -$node_container_size/2
-								left: -$node_container_size/2
-								// background-color: lighten(red,20%)
-
-							svg.connection-line-container
-								position: absolute
-								top: 0px
-								left: 0px
-								width: 100%
-								height: 100%
-								z-index: 10
-								// background-color: pink
-								// opacity: 1
-								pointer-events: none
-								line
-									stroke: grey
-									stroke-width: 2
-
-
+							// opacity: 1
+							pointer-events: none
+							line
+								stroke: grey
+								stroke-width: 2
 </style>

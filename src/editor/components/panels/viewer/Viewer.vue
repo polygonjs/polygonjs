@@ -62,10 +62,10 @@ import ThreejsViewer from './components/Threejs.vue';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 
-import {createComponent, ref, computed} from '@vue/composition-api';
+import {defineComponent, ref, computed} from '@vue/composition-api';
 import {EngineNodeData} from '../../../store/modules/Engine';
 import {DropDownMenuEntry} from '../../types/props';
-export default createComponent({
+export default defineComponent({
 	name: 'viewer-panel',
 	components: {
 		ThreejsViewer,

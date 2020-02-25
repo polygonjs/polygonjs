@@ -12,6 +12,7 @@ function typed_visible_options(type: ConnectionPointType) {
 	return {visible_if: {type: val}};
 }
 
+import {BaseParamType} from 'src/engine/params/_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {
@@ -34,7 +35,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	static type() {
 		return 'constant';
 	}
-
+	private _params_by_type: Map<ConnectionPointType, BaseParamType> | undefined;
 	protected _allow_inputs_created_from_params: boolean = false;
 	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
@@ -42,6 +43,8 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
+		// TODO: this needs not just this.scene.loading_controller.is_loading
+		// but a way to know when the node is being created (so that it also works when doing a copy/paste)
 		if (this.scene.loading_controller.is_loading || dirty_trigger == this.p.type) {
 			this.update_output_type();
 			this.remove_dirty_state();
@@ -50,23 +53,17 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 
 	set_lines() {
-		console.log('set_lines', this.name);
 		const body_lines = [];
 
-		// const constant_name = `POLY_CONSTANT_${this._param_name}`
 		const connection_type = this._current_connection_type;
-		const param_name = this._current_param_name;
-		const param = this.params.get(param_name);
+		const param = this._current_param;
 		if (param) {
 			const value = ThreeToGl.any(param.value);
 			const var_value = this._current_var_name;
 			body_lines.push(`${connection_type} ${var_value} = ${value}`);
-			console.log('set_body_lines', body_lines);
 			this.set_body_lines(body_lines);
 		} else {
-			console.warn(`no param found for constant node and param name: ${param_name}`);
-			console.trace(this);
-			console.memory(this);
+			console.warn(`no param found for constant node for type '${this.pv.type}'`);
 		}
 	}
 
@@ -80,8 +77,20 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		}
 		return connection_type;
 	}
-	private get _current_param_name(): string {
-		return `value_${this._current_connection_type}`;
+
+	private get _current_param(): BaseParamType {
+		this._params_by_type =
+			this._params_by_type ||
+			new Map<ConnectionPointType, BaseParamType>([
+				[ConnectionPointType.BOOL, this.p.value_bool],
+				[ConnectionPointType.INT, this.p.value_int],
+				[ConnectionPointType.FLOAT, this.p.value_float],
+				[ConnectionPointType.VEC2, this.p.value_vec2],
+				[ConnectionPointType.VEC3, this.p.value_vec3],
+				[ConnectionPointType.VEC4, this.p.value_vec4],
+			]);
+		const connection_type = ConnectionPointTypes[this.pv.type];
+		return this._params_by_type.get(connection_type)!;
 	}
 	private get _current_var_name(): string {
 		return this.gl_var_name(this._current_connection_type);

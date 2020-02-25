@@ -18,7 +18,7 @@ import 'vue-awesome/icons/exclamation-triangle'; // node error
 import 'vue-awesome/icons/pause'; // playbar pause
 import 'vue-awesome/icons/play'; // playbar play
 import 'vue-awesome/icons/regular/circle'; // spreadsheet
-// import 'vue-awesome/icons/regular/check-square';
+import 'vue-awesome/icons/regular/check-square'; // spreadsheet
 import 'vue-awesome/icons/regular/clock'; // time dependent node
 import 'vue-awesome/icons/regular/square'; // spreadsheet
 // import 'vue-awesome/icons/sort-amount-up';

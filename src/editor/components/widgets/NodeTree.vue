@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -30,7 +30,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import lodash_sortBy from 'lodash/sortBy';
 
 interface NodeTreeProps {
@@ -43,8 +43,8 @@ import {NodeContext} from '../../../engine/poly/NodeContext';
 import {StoreController} from '../../store/controllers/StoreController';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 
-import {createComponent, ref, computed, SetupContext} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, computed, SetupContext} from '@vue/composition-api';
+export default defineComponent({
 	name: 'node-tree',
 
 	props: {
@@ -154,26 +154,25 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	$color_selected: mix($color_bg_modal, $primary-color, 50%)
-	$color_hover: mix($color_bg_modal, $primary-color, 80%)
-	.NodeTree
-		// background-color: blue
-		margin-bottom: 5px
-		&.selected
-			.node_name
-				background-color: $color_selected
-		.expand_button
-			cursor: pointer
-			padding: 0px 5px
-			&:hover
-				opacity: 0.8
+$color_selected: mix($color_bg_modal, $primary-color, 50%)
+$color_hover: mix($color_bg_modal, $primary-color, 80%)
+.NodeTree
+	// background-color: blue
+	margin-bottom: 5px
+	&.selected
 		.node_name
-			cursor: pointer
-			padding: 0px 5px
-			&:hover
-				background-color: $color_hover
-
+			background-color: $color_selected
+	.expand_button
+		cursor: pointer
+		padding: 0px 5px
+		&:hover
+			opacity: 0.8
+	.node_name
+		cursor: pointer
+		padding: 0px 5px
+		&:hover
+			background-color: $color_hover
 </style>

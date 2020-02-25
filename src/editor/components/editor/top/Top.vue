@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -28,7 +27,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import DropDownMenu from 'src/editor/components/widgets/DropDownMenu.vue';
 import {DropDownMenuEntry} from '../../types/props';
 // import {SceneJsonExporter} from 'src/engine/io/json/export/Scene';
@@ -49,10 +48,10 @@ enum DesktopEntryId {
 	ABOUT = 'about',
 }
 
-import {createComponent, computed} from '@vue/composition-api';
+import {defineComponent, computed} from '@vue/composition-api';
 import {HistoryStack} from '../../../history/Stack';
 import {StoreController} from '../../../store/controllers/StoreController';
-export default createComponent({
+export default defineComponent({
 	name: 'top_menu',
 	components: {DropDownMenu},
 	props: {
@@ -211,10 +210,9 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.TopMenu
-		background-color: $color_bg_panel
-
+.TopMenu
+	background-color: $color_bg_panel
 </style>

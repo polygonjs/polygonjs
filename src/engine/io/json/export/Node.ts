@@ -144,7 +144,6 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 	protected inputs_data() {
 		const data: InputData[] = [];
 		// Object.keys(this._node.io.inputs.inputs()).forEach((input_index) => {
-		console.log(this._node);
 		this._node.io.inputs.inputs().forEach((input, input_index) => {
 			// const input = this._node.io.inputs.input(input_index);
 			if (input) {

@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -21,7 +20,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {BaseParamType} from 'src/engine/params/_Base';
 
 import {CoreWalker} from 'src/core/Walker';
@@ -45,9 +44,9 @@ enum PasteParamContextMenuEntryId {
 	AS_ABSOLUTE = 'as_absolute',
 }
 
-import {createComponent, computed, watch} from '@vue/composition-api';
+import {defineComponent, computed, watch} from '@vue/composition-api';
 import {ClipboardHelper} from '../../../helpers/Clipboard';
-export default createComponent({
+export default defineComponent({
 	name: 'param-context-menu',
 
 	setup() {
@@ -273,12 +272,9 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.ParamMenu
-		position: absolute
-
-
-
+.ParamMenu
+	position: absolute
 </style>

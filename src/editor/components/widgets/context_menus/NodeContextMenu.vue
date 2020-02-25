@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -21,7 +20,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {ClipboardHelper} from 'src/editor/helpers/Clipboard';
 
 // components
@@ -38,8 +37,8 @@ enum NodeContextMenuEntryId {
 	TOGGLE_CLONE_INPUTS = 'toggle_clone_inputs',
 }
 
-import {createComponent, computed, Ref, watch} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, Ref, watch} from '@vue/composition-api';
+export default defineComponent({
 	name: 'node-context-menu',
 	components: {DropDownMenu},
 
@@ -140,12 +139,9 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.ParamMenu
-		position: absolute
-
-
-
+.ParamMenu
+	position: absolute
 </style>

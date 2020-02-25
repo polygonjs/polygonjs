@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -54,7 +54,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupContextMenu} from '../mixins/ContextMenu';
@@ -62,8 +62,8 @@ import {StoreController} from '../../../../../store/controllers/StoreController'
 import {StringParam} from '../../../../../../engine/params/String';
 import {ParamSetCommand} from '../../../../../history/commands/ParamSet';
 
-import {createComponent, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'string-field',
 	props: SetupFieldCommonProps,
 	// mixins: [Field, ContextMenu, TabIndexMixin, TabIndexMixin],
@@ -128,39 +128,38 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.Field.String
+.Field.String
+	input, textarea
+		&.raw_input
+			display: block
+	input, textarea
+		&.expression_result
+			display: none
+	&.displays_expression_result
 		input, textarea
 			&.raw_input
-				display: block
+				display: none
 		input, textarea
 			&.expression_result
-				display: none
-		&.displays_expression_result
-			input, textarea
-				&.raw_input
-					display: none
-			input, textarea
-				&.expression_result
-					display: block
+				display: block
 
+	input, textarea
+		margin: 0px
+		&.has_expression
+			&:not(.is_errored)
+				background-color: mix($color_bg, lightgreen, 50%)
+		&.is_errored
+			background-color: $alert-color
+
+	&.displays_expression_only
 		input, textarea
-			margin: 0px
-			&.has_expression
-				&:not(.is_errored)
-					background-color: mix($color_bg, lightgreen, 50%)
-			&.is_errored
-				background-color: $alert-color
+			border: 0
+			background-color: transparent
+			box-shadow: none
 
-		&.displays_expression_only
-			input, textarea
-				border: 0
-				background-color: transparent
-				box-shadow: none
-
-		.browse_button
-			margin-left: 10px
-
+	.browse_button
+		margin-left: 10px
 </style>

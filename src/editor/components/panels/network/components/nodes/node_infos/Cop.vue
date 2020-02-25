@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -18,7 +18,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Vue from 'vue';
 import {BaseCopNodeType} from 'src/engine/nodes/cop/_Base';
 import {StoreController} from '../../../../../../store/controllers/StoreController';
@@ -29,9 +29,9 @@ interface CopInfoProps {
 	graph_node_id: string;
 }
 
-import {createComponent, ref, onMounted} from '@vue/composition-api';
+import {defineComponent, ref, onMounted} from '@vue/composition-api';
 import {CoreMath} from '../../../../../../../core/math/_Module';
-export default createComponent({
+export default defineComponent({
 	name: 'network_node_info_cop',
 	props: {
 		graph_node_id: {
@@ -106,36 +106,34 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	$color_table_border: black
+$color_table_border: black
 
-	.NetworkNodeInfoCop
+.NetworkNodeInfoCop
 
-		.bbox_infos
-			table
-				margin-top: 10px
-				td
-					border: 1px solid $color_table_border
-					text-align: center
-					padding: 0px 5px
-					&.number
-						white-space: nowrap
-				// tr.odd
+	.bbox_infos
+		table
+			margin-top: 10px
+			td
+				border: 1px solid $color_table_border
+				text-align: center
+				padding: 0px 5px
+				&.number
+					white-space: nowrap
+			// tr.odd
 
-		.node_info_cop_section
-			white-space: nowrap
-			&.inline
-				.node_info_cop_section_title
-					display: inline-block
-					margin-right: 5px
-				.node_info_cop_section_content
-					display: inline-block
-		canvas
-			max-width: 512px
-			border: 1px solid lightgrey
-
-
+	.node_info_cop_section
+		white-space: nowrap
+		&.inline
+			.node_info_cop_section_title
+				display: inline-block
+				margin-right: 5px
+			.node_info_cop_section_content
+				display: inline-block
+	canvas
+		max-width: 512px
+		border: 1px solid lightgrey
 </style>

@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 include /mixins.pug
 
@@ -19,9 +18,9 @@ doctype html
 
 </template>
 
-<script lang='ts'>
-import {createComponent, ref} from '@vue/composition-api';
-export default createComponent({
+<script lang="ts">
+import {defineComponent, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'retractable',
 
 	setup() {
@@ -38,7 +37,7 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 @import "globals.sass"
 
 .Retractable
@@ -54,5 +53,4 @@ export default createComponent({
 		&.vertical
 			width: 5px
 			height: 100%
-
 </style>

@@ -2,34 +2,28 @@ import lodash_trim from 'lodash/trim';
 
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 // import {BaseNodeGlMathFunctionArg1} from './_BaseMathFunctionArg1';
-import {ConnectionPointTypes, ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {BaseNamedConnectionPointType} from '../utils/connections/NamedConnectionPoint';
 import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
 import {ParamType} from 'src/engine/poly/ParamType';
-// import {
-// 	VAR_TYPES,
-// 	TYPED_CONNECTION_BY_VAR_TYPE,
-// 	TypedConnectionFloat,
-// 	TypedConnectionVec2,
-// 	TypedConnectionVec3,
-// 	TypedConnectionVec4,
-// } from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {DefinitionAttribute} from './Definition/Attribute'
-// import {DefinitionVarying} from './Definition/Varying'
-// import {Definition} from './Definition/_Module';
-// import {NamedConnection} from '../Util/NamedConnection';
 
-const INPUT_NAME = 'input_val';
-const OUTPUT_NAME = 'output_val';
+const INPUT_NAME = 'export';
+const OUTPUT_NAME = 'val';
+
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+const ConnectionPointTypesAvailableForAttribute = [
+	ConnectionPointType.FLOAT,
+	ConnectionPointType.VEC2,
+	ConnectionPointType.VEC3,
+	ConnectionPointType.VEC4,
+];
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
 		menu: {
-			entries: ConnectionPointTypes.map((name, i) => {
+			entries: ConnectionPointTypesAvailableForAttribute.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
@@ -45,12 +39,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 
 	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
-		// this.set_outputs([
-		// 	new GlDataIO('out')
-		// ])
-		// this.io.outputs.set_named_output_connection_points([new TypedConnectionFloat(INPUT_NAME)]);
-		this.update_input_and_output_types();
-
+		this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	create_params() {
@@ -58,18 +47,8 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			this.add_param(ParamType.BOOLEAN, 'export_when_connected', 0);
 		}
 	}
-	private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (dirty_trigger == this.p.type) {
-			// const val = this.pv.type
-			// const name = VAR_TYPES[val];
-			// const constructor = TYPED_CONNECTION_BY_VAR_TYPE[name];
-			// this.update_output_type(constructor);
-			// this.update_input_type(constructor);
-			this.update_input_and_output_types();
-			this.remove_dirty_state();
-			this.make_output_nodes_dirty();
-		}
-		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
+	inputless_params_names(): string[] {
+		return ['type'];
 	}
 
 	get input_name() {
@@ -77,17 +56,6 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	}
 	get output_name() {
 		return OUTPUT_NAME;
-	}
-
-	private update_input_and_output_types() {
-		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypes[this.pv.type]),
-		]);
-		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
-			this.io.outputs.set_named_output_connection_points([
-				new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypes[this.pv.type]),
-			]);
-		}
 	}
 
 	// private create_inputs_from_params() {
@@ -161,6 +129,30 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			return input_node != null;
 		} else {
 			return false;
+		}
+	}
+
+	//
+	//
+	// SIGNATURE
+	//
+	//
+	private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
+		if (this.scene.loading_controller.is_loading || dirty_trigger == this.p.type) {
+			this.update_input_and_output_types();
+			this.remove_dirty_state();
+			this.make_output_nodes_dirty();
+		}
+		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
+	}
+	private update_input_and_output_types() {
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),
+		]);
+		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
+			this.io.inputs.set_named_input_connection_points([
+				new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),
+			]);
 		}
 	}
 }

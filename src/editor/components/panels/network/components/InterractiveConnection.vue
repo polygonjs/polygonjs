@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -17,7 +17,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {Vector2} from 'three/src/math/Vector2';
 import {Box2} from 'three/src/math/Box2';
 
@@ -25,8 +25,8 @@ const PADDING = 10;
 const DEFAULT_POINT_BOX_HALF_SIZE = new Vector2(PADDING, PADDING);
 const DEFAULT_POINT_BOX = new Box2(DEFAULT_POINT_BOX_HALF_SIZE.clone().multiplyScalar(-1), DEFAULT_POINT_BOX_HALF_SIZE);
 
-import {createComponent, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network_node_interractive_connection',
 
 	props: {
@@ -117,22 +117,21 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	.NetworkNodeInterractiveConnection
+.NetworkNodeInterractiveConnection
+	position: absolute
+	width: 0
+	height: 0
+	svg
 		position: absolute
-		width: 0
-		height: 0
-		svg
-			position: absolute
-			pointer-events: none
-			// background-color: green
-			// opacity: 0.4
-			// border: 1px solid black
-			line
-				stroke: $success-color
-				stroke-width: 4
-
+		pointer-events: none
+		// background-color: green
+		// opacity: 0.4
+		// border: 1px solid black
+		line
+			stroke: $success-color
+			stroke-width: 4
 </style>

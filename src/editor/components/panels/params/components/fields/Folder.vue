@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -8,9 +8,9 @@
 
 </template>
 
-<script lang='ts'>
-import {createComponent} from '@vue/composition-api';
-export default createComponent({
+<script lang="ts">
+import {defineComponent} from '@vue/composition-api';
+export default defineComponent({
 	name: 'folder-field',
 	setup() {
 		return {};
@@ -18,10 +18,7 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	// .Field.Folder
-
-
-
+// .Field.Folder
 </style>

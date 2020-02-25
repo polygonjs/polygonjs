@@ -41,8 +41,6 @@
 <script lang="ts">
 // third party libs
 // import lodash_trim from 'lodash/trim'
-import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
-import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 
 // internal libs
 // import KeyEventsDispatcher from './Helper/KeyEventsDispatcher'
@@ -84,8 +82,8 @@ Vue.component('DropDownMenu', DropDownMenu);
 import NodeTree from 'src/editor/components/widgets/NodeTree.vue';
 Vue.component('NodeTree', NodeTree);
 
-import {createComponent, ref, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'editor',
 	// mixins: [EventsDispatcher, HistoryMixin, NodeOwner],
 	components: {
@@ -285,7 +283,7 @@ select.select
 //
 // classes for src/core/dom
 //
-.disable-select 
+.disable-select
 	user-select: none
 	-webkit-user-select: none
 	-khtml-user-select: none
@@ -296,6 +294,4 @@ select.select
 //
 // end of classes for src/core/dom
 //
-
 </style>
-

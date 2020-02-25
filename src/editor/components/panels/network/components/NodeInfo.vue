@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -50,7 +50,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // libs
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {BaseNodeType} from 'src/engine/nodes/_Base';
@@ -88,8 +88,8 @@ const COMPONENTS_BY_NODE_CONTEXT_AND_TYPE: Map<NodeContext, Map<string, any>> = 
 import {StoreController} from '../../../../store/controllers/StoreController';
 import {NodeSetNameCommand} from '../../../../history/commands/NodeSetName';
 
-import {createComponent, ref, computed, onMounted} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, computed, onMounted} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network_node_info',
 	components: {NodeInfoSop},
 	props: {
@@ -210,84 +210,82 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	$color_node_info_bg: lighten($color_bg_panel_network, 20%)
-	$color_border: darken($color_bg_panel_network, 20%)
+$color_node_info_bg: lighten($color_bg_panel_network, 20%)
+$color_border: darken($color_bg_panel_network, 20%)
 
-	$color_node_title_bg: $color_border
-	$color_node_title_font: white
-	$color_time_dependent: darken($success-color, 25%)
-	$color_error_message: $alert-color
-	$color_separator: darken($color_node_info_bg, 20%)
-	$color_dependency_item_hover: darken($color_node_info_bg, 5%)
+$color_node_title_bg: $color_border
+$color_node_title_font: white
+$color_time_dependent: darken($success-color, 25%)
+$color_error_message: $alert-color
+$color_separator: darken($color_node_info_bg, 20%)
+$color_dependency_item_hover: darken($color_node_info_bg, 5%)
 
-	$size_border: 4px
-	$size_arrow: 10px
-	$padding: 20px
+$size_border: 4px
+$size_arrow: 10px
+$padding: 20px
 
-	.NetworkNodeInfo
+.NetworkNodeInfo
+	position: absolute
+	// width: 200px
+	// height: 200px
+	z-index: $z_index_node_info
+	transform: translateY(-50%)
+	margin-left: 35px
+
+	background-color: $color_node_info_bg
+	border: $size_border solid $color_border
+
+	.arrow-left
+		width: 0
+		height: 0
+		border-top: $size_arrow solid transparent
+		border-bottom: $size_arrow solid transparent
+		border-right: $size_arrow solid $color_border
 		position: absolute
-		// width: 200px
-		// height: 200px
-		z-index: $z_index_node_info
-		transform: translateY(-50%)
-		margin-left: 35px
+		top: 50%
+		transform: translate(-100%, -50%)
 
-		background-color: $color_node_info_bg
-		border: $size_border solid $color_border
-
-		.arrow-left
-			width: 0
-			height: 0
-			border-top: $size_arrow solid transparent
-			border-bottom: $size_arrow solid transparent
-			border-right: $size_arrow solid $color_border
-			position: absolute
-			top: 50%
-			transform: translate(-100%, -50%)
-
-		.node_title_container
-			background-color: $color_node_title_bg
-			color: $color_node_title_font
-			text-align: center
-			cursor: pointer
+	.node_title_container
+		background-color: $color_node_title_bg
+		color: $color_node_title_font
+		text-align: center
+		cursor: pointer
 
 
-		.node_info_container
-			padding: $padding
+	.node_info_container
+		padding: $padding
 
-			.icon_prefixed
-				svg
-					margin-right: 10px
-					position: relative
-					top: 3px
+		.icon_prefixed
+			svg
+				margin-right: 10px
+				position: relative
+				top: 3px
 
-			.time_dependency
-				white-space: nowrap
-				&.time_dependent
-					color: $color_time_dependent
+		.time_dependency
+			white-space: nowrap
+			&.time_dependent
+				color: $color_time_dependent
 
-			.error_message
-				color: $color_error_message
+		.error_message
+			color: $color_error_message
 
-			.node_info_separator
-				margin: 10px 0px
-				height: 1px
-				background-color: $color_separator
+		.node_info_separator
+			margin: 10px 0px
+			height: 1px
+			background-color: $color_separator
 
-			.dependencies
-				.dependencies_section
-					margin-top: 10px
-					.dependencies_section_title
-						font-weight: bold
-					.dependencies_list
-						.dependendies_item
-							cursor: pointer
-							&:hover
-								background-color: $color_dependency_item_hover
-
-
+		.dependencies
+			.dependencies_section
+				margin-top: 10px
+				.dependencies_section_title
+					font-weight: bold
+				.dependencies_list
+					.dependendies_item
+						cursor: pointer
+						&:hover
+							background-color: $color_dependency_item_hover
 </style>

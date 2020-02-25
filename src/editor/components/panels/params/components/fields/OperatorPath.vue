@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -46,7 +46,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupContextMenu} from '../mixins/ContextMenu';
@@ -55,9 +55,9 @@ import {OperatorPathParam} from '../../../../../../engine/params/OperatorPath';
 import {StoreController} from '../../../../../store/controllers/StoreController';
 import {ParamSetCommand} from '../../../../../history/commands/ParamSet';
 
-import {createComponent} from '@vue/composition-api';
+import {defineComponent} from '@vue/composition-api';
 import {CoreWalker} from '../../../../../../core/Walker';
-export default createComponent({
+export default defineComponent({
 	name: 'operator-path-field',
 	props: SetupFieldCommonProps,
 	// mixins: [Field, ContextMenu, TabIndexMixin],
@@ -128,18 +128,17 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.Field.OperatorPath
-		.button-group
-			position: relative
-			top: 1px
-			margin-right: 5px
-			.button
-				margin-left: 5px
-				margin-bottom: 0px
-				line-height: 0
-				padding: 0.7em 1em
-
+.Field.OperatorPath
+	.button-group
+		position: relative
+		top: 1px
+		margin-right: 5px
+		.button
+			margin-left: 5px
+			margin-bottom: 0px
+			line-height: 0
+			padding: 0.7em 1em
 </style>

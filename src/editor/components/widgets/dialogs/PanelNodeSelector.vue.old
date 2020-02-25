@@ -36,10 +36,10 @@ import lodash_clone from 'lodash/clone';
 import Modal from './Modal.vue';
 import NodeTree from './NodeTree.vue';
 
-import {createComponent, ref, computed, watch} from '@vue/composition-api';
+import {defineComponent, ref, computed, watch} from '@vue/composition-api';
 import { StoreController } from '../../../store/controllers/StoreController';
 import { BaseNodeType } from '../../../../engine/nodes/_Base';
-export default createComponent({
+export default defineComponent({
 
 	name: 'panel-node-selector',
 	components: {Modal, NodeTree},

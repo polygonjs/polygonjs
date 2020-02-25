@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -22,12 +22,12 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Modal from './Modal.vue';
 import {StoreController} from '../../../store/controllers/StoreController';
 
-import {createComponent, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'dialog-alert',
 	components: {Modal},
 
@@ -50,17 +50,16 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.DialogAlert
-		background-color: white
+.DialogAlert
+	background-color: white
 
-		.message-container
-			padding: 20px
+	.message-container
+		padding: 20px
 
-		.buttons
-			padding: 10px
-			margin-bottom: 0px
-
+	.buttons
+		padding: 10px
+		margin-bottom: 0px
 </style>

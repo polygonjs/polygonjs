@@ -1,6 +1,4 @@
-
-
-<template lang='pug'>
+<template lang="pug">
 
 	.Polygon-Modal-Container
 		.Polygon-Modal(:style = 'style_object')
@@ -20,7 +18,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {CoreDom} from 'src/core/Dom';
 import {Vector2} from 'three/src/math/Vector2';
 
@@ -30,8 +28,8 @@ interface ModalProps {
 	resizable: boolean;
 }
 
-import {createComponent, ref, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'modal',
 
 	props: {
@@ -178,36 +176,34 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.Polygon-Modal-Container
-		position: relative
-		width: 0px
-		height: 0px
-		top: 0px
-		left: 0px
-		.Polygon-Modal
-			position: absolute
-			z-index: 100
-			border-radius: 5px
-			border: 2px solid gray
-			box-shadow: 5px 5px 5px lighten(black, 45%)
-			background-color: $color_bg_modal
-			.modal-grid
-				height: 100%
-				.Modal-title
-					font-weight: bold
-					cursor: pointer
-					padding: 5px
-					border-bottom: 1px solid grey
-				.Modal-body
-					max-height: 100%
+.Polygon-Modal-Container
+	position: relative
+	width: 0px
+	height: 0px
+	top: 0px
+	left: 0px
+	.Polygon-Modal
+		position: absolute
+		z-index: 100
+		border-radius: 5px
+		border: 2px solid gray
+		box-shadow: 5px 5px 5px lighten(black, 45%)
+		background-color: $color_bg_modal
+		.modal-grid
+			height: 100%
+			.Modal-title
+				font-weight: bold
+				cursor: pointer
+				padding: 5px
+				border-bottom: 1px solid grey
+			.Modal-body
+				max-height: 100%
 
-				.Modal-size-handle
-					height: 10px
-					background-color: green
-					cursor: se-resize
-
-
+			.Modal-size-handle
+				height: 10px
+				background-color: green
+				cursor: se-resize
 </style>

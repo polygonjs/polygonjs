@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -35,7 +35,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import lodash_sortBy from 'lodash/sortBy';
 import {Vector2} from 'three/src/math/Vector2';
 
@@ -52,8 +52,8 @@ import {StoreController} from '../../../../../store/controllers/StoreController'
 import {CoreMath} from '../../../../../../core/math/_Module';
 import {ParamSetCommand} from '../../../../../history/commands/ParamSet';
 
-import {createComponent, computed, ref, onMounted, watch} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, ref, onMounted, watch} from '@vue/composition-api';
+export default defineComponent({
 	name: 'ramp-field',
 	props: SetupFieldCommonProps,
 	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
@@ -293,31 +293,27 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	.Field.Ramp
-		.points_container
-			background-color: white
-			svg
-				display: block // to remove space under it
-				height: 160px
-				width: 100%
-				circle.control_point
-					r: 5
-					stroke: black
-					stroke-width: 1
-					fill: grey
-					cursor: pointer
-					&:hover, &.dragged
-						stroke-width: 2
-						fill: lightgrey
-				circle.interpolated_curve_point
-					r: 2
-					fill: black
-					&.point_about_to_be_removed
-						fill: red
-
-
-
-
+.Field.Ramp
+	.points_container
+		background-color: white
+		svg
+			display: block // to remove space under it
+			height: 160px
+			width: 100%
+			circle.control_point
+				r: 5
+				stroke: black
+				stroke-width: 1
+				fill: grey
+				cursor: pointer
+				&:hover, &.dragged
+					stroke-width: 2
+					fill: lightgrey
+			circle.interpolated_curve_point
+				r: 2
+				fill: black
+				&.point_about_to_be_removed
+					fill: red
 </style>

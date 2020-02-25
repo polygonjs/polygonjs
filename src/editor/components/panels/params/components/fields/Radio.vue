@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -54,14 +54,14 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupContextMenu} from '../mixins/ContextMenu';
 import {StoreController} from '../../../../../store/controllers/StoreController';
 import {ParamSetCommand} from '../../../../../history/commands/ParamSet';
 
-import {createComponent, computed, ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'radio-field',
 	props: SetupFieldCommonProps,
 	// mixins: [Field, TabIndexMixin],
@@ -105,24 +105,22 @@ export default createComponent({
 // 	(new History.Command.ParamSet(this.param, {value: value})).push(this)
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	.Field.Radio
-		input, label
-			cursor: pointer
+.Field.Radio
+	input, label
+		cursor: pointer
 
-		// .switch
-		// 	padding:
-		// 		top: 3px
-		// 		right: 5px
+	// .switch
+	// 	padding:
+	// 		top: 3px
+	// 		right: 5px
 
-		select.select
-			margin-bottom: 0
+	select.select
+		margin-bottom: 0
 
-		label
-			padding:
-				top: 5px
-				left: 10px
-
-
+	label
+		padding:
+			top: 5px
+			left: 10px
 </style>

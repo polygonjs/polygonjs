@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -9,13 +9,13 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 // import { SeparatorParam } from '../../../../../../engine/params/Separator';
 
-import {createComponent} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent} from '@vue/composition-api';
+export default defineComponent({
 	name: 'separator-field',
 	props: SetupFieldCommonProps,
 	// mixins: [Field]
@@ -30,12 +30,11 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	.Field.Separator
-		.horizontal-border
-			height: 2px
-			background-color: darkgray
-			margin: 10px
-
+.Field.Separator
+	.horizontal-border
+		height: 2px
+		background-color: darkgray
+		margin: 10px
 </style>

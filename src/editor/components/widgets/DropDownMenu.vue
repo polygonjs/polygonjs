@@ -91,8 +91,8 @@ interface DropDownMenuProps {
 	init_position_top: number;
 }
 
-import {createComponent, ref, onMounted, computed, onBeforeMount, SetupContext} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, onMounted, computed, onBeforeMount, SetupContext} from '@vue/composition-api';
+export default defineComponent({
 	name: 'dropdown-menu',
 	props: {
 		level: {

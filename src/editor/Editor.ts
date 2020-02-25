@@ -39,6 +39,13 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 type OnSaveCallback = (json: SceneJsonExporterData) => void;
 
+interface EditorProps {
+	scene_update_allowed?: boolean;
+	current_node?: string;
+	perf?: boolean;
+	play?: boolean;
+}
+
 export class Editor {
 	static _instance: Editor;
 	private _loaded: boolean = false;
@@ -48,8 +55,8 @@ export class Editor {
 		return (this._instance = this._instance || new Editor());
 	}
 
-	static async load_scene(element_or_id: HTMLElement | string, json: SceneJsonExporterData) {
-		return await this.instance().load_scene(element_or_id, json);
+	static async load_scene(element_or_id: HTMLElement | string, json: SceneJsonExporterData, props: EditorProps = {}) {
+		return await this.instance().load_scene(element_or_id, json, props);
 	}
 	static on_save(callback: OnSaveCallback) {
 		this.instance().set_on_save_callback(callback);
@@ -62,11 +69,7 @@ export class Editor {
 		return this._on_save_callback;
 	}
 
-	async load_scene(
-		element_or_id: HTMLElement | string,
-		json: SceneJsonExporterData,
-		scene_update_allowed: boolean = true
-	) {
+	async load_scene(element_or_id: HTMLElement | string, json: SceneJsonExporterData, props: EditorProps) {
 		if (this._loaded) {
 			return;
 		}
@@ -76,10 +79,13 @@ export class Editor {
 		StoreController.set_scene(scene);
 		(window as any).scene = scene;
 
-		// temporary
-		const node = scene.node('/MAT/mesh_basic_builder1');
-		if (node) {
-			StoreController.editor.set_current_node(node);
+		if (props.current_node) {
+			const node = scene.node(props.current_node);
+			if (node) {
+				StoreController.editor.set_current_node(node);
+			} else {
+				console.warn(`node '${props.current_node}' not found`);
+			}
 		}
 
 		new Vue({
@@ -87,9 +93,7 @@ export class Editor {
 			store: EditorStore,
 			render: (createElement, props) => {
 				return createElement(EditorComponent, {
-					props: {
-						scene_update_allowed: scene_update_allowed,
-					},
+					props: props,
 				});
 			},
 		});

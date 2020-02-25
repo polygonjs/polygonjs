@@ -50,6 +50,50 @@ QUnit.test('attrib create expression float vertex', async (assert) => {
 	assert.equal(array[2], 9);
 });
 
+QUnit.test('attrib create expression float vertex from position', async (assert) => {
+	const geo1 = window.geo1;
+
+	const sphere1 = geo1.create_node('sphere');
+	const attrib_create1 = geo1.create_node('attrib_create');
+	attrib_create1.p.name.set('test');
+	attrib_create1.p.size.set(1);
+	attrib_create1.p.value1.set('@P.y > 0');
+	attrib_create1.set_input(0, sphere1);
+
+	const container = await attrib_create1.request_container();
+	const core_group = container.core_content()!;
+	const geometry = core_group.objects()[0].geometry;
+	assert.ok(core_group);
+	assert.ok(geometry);
+
+	const {array} = geometry.getAttribute('test');
+	assert.equal(array.length, container.points_count());
+	assert.equal(array[0], 1);
+	assert.equal(array[1], 1);
+	assert.equal(array[2], 1);
+	assert.equal(array[array.length - 1], 0);
+	assert.equal(array[array.length - 2], 0);
+});
+
+QUnit.test('attrib create expression from a non existing attribute', async (assert) => {
+	const geo1 = window.geo1;
+
+	const sphere1 = geo1.create_node('sphere');
+	const attrib_create1 = geo1.create_node('attrib_create');
+	attrib_create1.p.name.set('test');
+	attrib_create1.p.size.set(1);
+	attrib_create1.p.value1.set('@doesnotexist > 0');
+	attrib_create1.set_input(0, sphere1);
+
+	await attrib_create1.request_container();
+	assert.ok(attrib_create1.states.error.active);
+	assert.equal(attrib_create1.states.error.message, 'expression evalution error: Error: attribute not found');
+
+	attrib_create1.p.value1.set('@P.y > 0');
+	await attrib_create1.request_container();
+	assert.ok(!attrib_create1.states.error.active);
+});
+
 QUnit.test('attrib create simple vector2 vertex', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -315,18 +359,18 @@ QUnit.test('attrib create for string on vertices', async (assert) => {
 	attrib_create1.p.string.set('pt_`@ptnum*2`');
 
 	let container = await attrib_create1.request_container();
-	assert.equal(container.points_count(), 24);
+	assert.equal(container.points_count(), 24, 'has 24 pts');
 	let points = container.core_content()!.points();
-	assert.equal(points[0].attrib_value('ids'), 'pt_0');
-	assert.equal(points[1].attrib_value('ids'), 'pt_2');
-	assert.equal(points[2].attrib_value('ids'), 'pt_4');
+	assert.equal(points[0].attrib_value('ids'), 'pt_0', 'pt 0 has pt_0');
+	assert.equal(points[1].attrib_value('ids'), 'pt_2', 'pt 1 has pt_2');
+	assert.equal(points[2].attrib_value('ids'), 'pt_4', 'pt 2 has pt_4');
 
 	attrib_create1.p.string.set('`@ptnum*2`_pt');
 	container = await attrib_create1.request_container();
 	points = container.core_content()!.points();
-	assert.equal(points[0].attrib_value('ids'), '0_pt');
-	assert.equal(points[1].attrib_value('ids'), '2_pt');
-	assert.equal(points[2].attrib_value('ids'), '4_pt');
+	assert.equal(points[0].attrib_value('ids'), '0_pt', 'pt 0 has 0_pt');
+	assert.equal(points[1].attrib_value('ids'), '2_pt', 'pt 1 has 2_pt');
+	assert.equal(points[2].attrib_value('ids'), '4_pt', 'pt 2 has 4_pt');
 
 	attrib_create1.p.string.set('`@ptnum*2`');
 	container = await attrib_create1.request_container();

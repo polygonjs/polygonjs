@@ -129,9 +129,20 @@ import {PanelInitProperties} from '../../types/props';
 // 	// timeout: 3000
 // });
 
-// const AsyncSpreadsheet = () => ({
+import Spreadsheet from '../spreadsheet/Spreadsheet.vue';
+// import {
+// 	AsyncComponentFactory,
+// 	AsyncComponentPromise,
+// 	Component,
+// 	DefaultData,
+// 	DefaultMethods,
+// } from 'vue/types/options.d';
+// // const Spreadsheet = () => import('../spreadsheet/Spreadsheet.vue');
+// const Spreadsheet: AsyncComponentFactory = () => ({
 // 	// The component to load (should be a Promise)
-// 	component: import('../../Spreadsheet/Spreadsheet'),
+// 	component: (<unknown>import('../spreadsheet/Spreadsheet.vue')) as AsyncComponentPromise<
+// 		Component<DefaultData<never>, DefaultMethods<never>>
+// 	>,
 // 	// A component to use while the async component is loading
 // 	// loading: LoadingComponent,
 // 	// A component to use if the load fails
@@ -169,8 +180,8 @@ const DEFAULT_LAYOUT: PanelInitProperties = {
 	],
 };
 
-import {createComponent, SetupContext, ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, SetupContext, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'MultiplePanel',
 	components: {
 		// Asset,
@@ -178,9 +189,9 @@ export default createComponent({
 		Params,
 		// ParamEdit,
 		Viewer,
+		Spreadsheet,
 		// CustomNodeEditor,
 		// Performance: AsyncPerformance,
-		// Spreadsheet: AsyncSpreadsheet,
 	},
 	props: {
 		init_properties: {

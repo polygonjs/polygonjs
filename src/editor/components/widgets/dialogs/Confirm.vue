@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -26,12 +26,12 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Modal from './Modal.vue';
 import {StoreController} from '../../../store/controllers/StoreController';
 
-import {createComponent, computed, watch, ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, watch, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'dialog-confirm',
 	components: {Modal},
 
@@ -79,15 +79,14 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.DialogConfirm
-		background-color: white
+.DialogConfirm
+	background-color: white
 
 
-		.buttons
-			padding: 10px
-			margin-bottom: 10px
-
+	.buttons
+		padding: 10px
+		margin-bottom: 10px
 </style>

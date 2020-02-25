@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -32,7 +32,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // components
 import Modal from '../../widgets/dialogs/Modal.vue';
 import NodeTree from '../../widgets/NodeTree.vue';
@@ -41,9 +41,9 @@ import {StoreController} from '../../../store/controllers/StoreController';
 import {ParamSetCommand} from '../../../history/commands/ParamSet';
 import {NodeContext} from '../../../../engine/poly/NodeContext';
 
-import {createComponent, Ref, ref, watch, computed} from '@vue/composition-api';
+import {defineComponent, Ref, ref, watch, computed} from '@vue/composition-api';
 import {OperatorPathParam} from '../../../../engine/params/OperatorPath';
-export default createComponent({
+export default defineComponent({
 	name: 'panel-node-selector',
 	components: {Modal, NodeTree},
 
@@ -127,13 +127,12 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.NodeSelector
-		background-color: red
+.NodeSelector
+	background-color: red
 
-		.buttons
-			margin-bottom: 10px
-
+	.buttons
+		margin-bottom: 10px
 </style>

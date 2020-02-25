@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -24,7 +24,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // third party lib
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_concat from 'lodash/concat';
@@ -46,8 +46,8 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 
-import {createComponent, ref, computed, watch} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, computed, watch} from '@vue/composition-api';
+export default defineComponent({
 	name: 'numeric-slider',
 
 	setup() {
@@ -270,43 +270,40 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	$increment_cell_size: 50px
-	$increment_cell_padding: 5px
+$increment_cell_size: 50px
+$increment_cell_padding: 5px
 
-	.NumericSlider
+.NumericSlider
+	position: absolute
+	z-index: $z_index_numeric_slider
+	width: 0px
+	height: 0px
+	.increment_starters_container
 		position: absolute
-		z-index: $z_index_numeric_slider
-		width: 0px
-		height: 0px
-		.increment_starters_container
-			position: absolute
-			top: -3.5 * $increment_cell_size
-			left: -0.5 * $increment_cell_size
-			&.integer
-				top: -2.5 * $increment_cell_size
-			border: 1px solid white
-			.increment_starter
-				background-color: black
-				color: white
-				width: $increment_cell_size
-				height: $increment_cell_size
-				border-bottom: 1px solid white
-				padding: $increment_cell_padding
-				&:hover, &.active
-					background-color: yellow
-					color: black
-				&.inactive
-					.increment_label
-						top: 2 * $increment_cell_padding
-				.increment_label, .value_label
-					position: relative
-					font-size: 0.7rem
-				.value_label
-					top: $increment_cell_padding
-
-		
-
+		top: -3.5 * $increment_cell_size
+		left: -0.5 * $increment_cell_size
+		&.integer
+			top: -2.5 * $increment_cell_size
+		border: 1px solid white
+		.increment_starter
+			background-color: black
+			color: white
+			width: $increment_cell_size
+			height: $increment_cell_size
+			border-bottom: 1px solid white
+			padding: $increment_cell_padding
+			&:hover, &.active
+				background-color: yellow
+				color: black
+			&.inactive
+				.increment_label
+					top: 2 * $increment_cell_padding
+			.increment_label, .value_label
+				position: relative
+				font-size: 0.7rem
+			.value_label
+				top: $increment_cell_padding
 </style>

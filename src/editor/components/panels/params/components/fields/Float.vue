@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -53,7 +53,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupGlobalSliderOwner} from './mixins/GlobalSliderOwner';
@@ -63,8 +63,8 @@ import {SetupNumericSlider} from './mixins/NumericSlider';
 import {FloatParam} from '../../../../../../engine/params/Float';
 import {StoreController} from '../../../../../store/controllers/StoreController';
 
-import {createComponent, computed, ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'float-field',
 	props: SetupFieldCommonProps,
 	setup(props: ISetupFieldCommonProps) {
@@ -113,10 +113,7 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	// .Field.Float
-
-
-
+// .Field.Float
 </style>

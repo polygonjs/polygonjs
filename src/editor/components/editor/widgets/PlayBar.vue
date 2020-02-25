@@ -80,9 +80,9 @@
 <script lang="ts">
 import {CoreDom} from 'src/core/Dom';
 
-import {createComponent, ref, computed} from '@vue/composition-api';
+import {defineComponent, ref, computed} from '@vue/composition-api';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
-export default createComponent({
+export default defineComponent({
 	name: 'play_bar',
 
 	// data: ->

@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -19,7 +18,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import lodash_includes from 'lodash/includes';
 import lodash_values from 'lodash/values';
 import lodash_flatten from 'lodash/flatten';
@@ -39,8 +38,8 @@ import {POLY} from 'src/engine/Poly';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {KeyEventsDispatcher} from 'src/editor/helpers/KeyEventsDispatcher';
 
-import {createComponent, ref, onMounted, onBeforeUnmount, computed, SetupContext} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, onMounted, onBeforeUnmount, computed, SetupContext} from '@vue/composition-api';
+export default defineComponent({
 	name: 'tab-menu',
 	// mixins: [NodeOwner],
 
@@ -187,12 +186,9 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.TabMenu
-		position: absolute
-
-
-
+.TabMenu
+	position: absolute
 </style>

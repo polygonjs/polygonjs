@@ -150,6 +150,9 @@ export class NodeCodeExporter {
 				this._lines.push(param_line);
 			});
 		});
+
+		// to ensure that gl nodes like the constant and attribute have their inputs/outputs updated
+		this._lines.push(`${this.var_name()}.params.run_on_scene_load_hooks()`);
 	}
 
 	protected add_input_clonable_state() {

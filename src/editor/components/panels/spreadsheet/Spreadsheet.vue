@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -78,7 +77,9 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
+import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
+import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 import Vue from 'vue';
 
 // internal libs
@@ -105,7 +106,7 @@ interface HeaderName {
 }
 
 import {
-	createComponent,
+	defineComponent,
 	ref,
 	computed,
 	onBeforeMount,
@@ -114,9 +115,12 @@ import {
 	onMounted,
 	watch,
 } from '@vue/composition-api';
-export default createComponent({
+export default defineComponent({
 	name: 'spreadsheet-panel',
-	components: {AgGridVue},
+	// @ts-ignore
+	components: {
+		AgGridVue: AgGridVue as any,
+	},
 
 	setup(props, context: SetupContext) {
 		const loading = ref(true);
@@ -453,82 +457,81 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
-	
-	.Panel.Spreadsheet
+<style lang="sass">
+@import "globals.sass"
 
-		.ag-theme-balham
-			height: 100%
+.Panel.Spreadsheet
 
-		$dropdown_entry_bg_color: $color_bg
-		.spreadsheet-drop-down-container
-			position: relative
-			cursor: pointer
-			display: inline-block
-			
-			// margin: 2px
-			&:hover
-				.spreadsheet-drop-down-label
-					color: $dropdown_entry_bg_color
-					background-color: $color_font
-				.spreadsheet-drop-down-content
-					display: block
+	.ag-theme-balham
+		height: 100%
+
+	$dropdown_entry_bg_color: $color_bg
+	.spreadsheet-drop-down-container
+		position: relative
+		cursor: pointer
+		display: inline-block
+
+		// margin: 2px
+		&:hover
 			.spreadsheet-drop-down-label
-				padding: 2px 5px
-				margin: 2px
-				display: inline-block
-				background-color: darken($dropdown_entry_bg_color, 5%)
-				border: 1px solid mix($color_bg, $color_font, 50%)
-				border-radius: 3px
-
+				color: $dropdown_entry_bg_color
+				background-color: $color_font
 			.spreadsheet-drop-down-content
-				display: none
-				z-index: 100
-				position: absolute
-				top: 100%
-				left: 10px
-				width: auto
-				background-color: $dropdown_entry_bg_color
-				border: 1px solid mix($color_bg, $color_font, 50%)
+				display: block
+		.spreadsheet-drop-down-label
+			padding: 2px 5px
+			margin: 2px
+			display: inline-block
+			background-color: darken($dropdown_entry_bg_color, 5%)
+			border: 1px solid mix($color_bg, $color_font, 50%)
+			border-radius: 3px
 
-				.spreadsheet-drop-down-separator
-					padding: 10px 0px
-				.spreadsheet-drop-down-entry
-					min-width: 100px
-					padding: 2px 5px
-					&:hover
-						background-color: darken($dropdown_entry_bg_color, 5%)
+		.spreadsheet-drop-down-content
+			display: none
+			z-index: 100
+			position: absolute
+			top: 100%
+			left: 10px
+			width: auto
+			background-color: $dropdown_entry_bg_color
+			border: 1px solid mix($color_bg, $color_font, 50%)
 
-					.attr-selection-icon
-						display: inline-block
-						// padding: 2px 5px
-						position: relative
-						top: 3px
-					.attr-name
-						display: inline-block
-						margin-left: 5px
-
-
-		.attrib-class-selectors
-			margin-left: 20px
-			.attrib-class-selector
-				display: inline-block
-				margin-left: 2px
-				border: 1px solid $color_font
-				border-radius: 5px
-				padding: 2px 10px
-				cursor: pointer
+			.spreadsheet-drop-down-separator
+				padding: 10px 0px
+			.spreadsheet-drop-down-entry
+				min-width: 100px
+				padding: 2px 5px
 				&:hover
-					background-color: darken($color_bg, 10%)
-				&.active
-					background-color: darken($primary-color, 2%)
-					color: $color_bg
-				svg
+					background-color: darken($dropdown_entry_bg_color, 5%)
+
+				.attr-selection-icon
+					display: inline-block
+					// padding: 2px 5px
 					position: relative
-					top: 2px
+					top: 3px
+				.attr-name
+					display: inline-block
+					margin-left: 5px
 
-		.row-odd
-			background-color: darken(white, 10%)
 
+	.attrib-class-selectors
+		margin-left: 20px
+		.attrib-class-selector
+			display: inline-block
+			margin-left: 2px
+			border: 1px solid $color_font
+			border-radius: 5px
+			padding: 2px 10px
+			cursor: pointer
+			&:hover
+				background-color: darken($color_bg, 10%)
+			&.active
+				background-color: darken($primary-color, 2%)
+				color: $color_bg
+			svg
+				position: relative
+				top: 2px
+
+	.row-odd
+		background-color: darken(white, 10%)
 </style>

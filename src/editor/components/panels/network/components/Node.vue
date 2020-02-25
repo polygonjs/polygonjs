@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -124,7 +124,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // internal lib
 import {Constants} from '../helpers/Constants';
 
@@ -156,10 +156,10 @@ interface NodeProps {
 	action_in_progress: boolean;
 }
 
-import {createComponent, computed, SetupContext} from '@vue/composition-api';
+import {defineComponent, computed, SetupContext} from '@vue/composition-api';
 import {EngineNodeData} from '../../../../store/modules/Engine';
 import {StoreController} from '../../../../store/controllers/StoreController';
-export default createComponent({
+export default defineComponent({
 	name: 'network_node',
 	components: {Connection, NodeInfo},
 	props: {
@@ -247,260 +247,262 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	$color_node_body: lighten($color_bg_panel_network, 20%)
-	$color_node_body_bypassed: $color_bg_panel_network
-	$color_node_border_bypassed: darken($color_bg_panel_network, 5%)
-	$color_node_body_hover_border: darken($color_node_body, 50%)
-	$color_node_body_selected: #54ff00 //lighten($success-color, 5%)
-	$color_box_shadow: darken($color_bg_panel_network, 10%)
-	$color_box_shadow_moved: lighten($color_box_shadow, 0%)
-	$color_error_flag: $alert-color
-	$color_bypass_flag_on: yellow
-	$color_bypass_flag_off: white //mix($color_bg_panel_network, $color_bypass_flag_on, 95%)
-	$color_display_flag_on: $primary-color //#00d9ff //#2327d7 //darken(saturate($primary-color, 20%), 20%)
-	$color_display_flag_off: white //mix($color_bg_panel_network, $color_display_flag_on, 95%)
-	$color_bg_input: lighten($primary-color, 0%)
-	$color_border_input: darken($color_bg_input, 40%)
-	$color_bg_output: darken($success-color, 0%)
-	$color_border_output: darken($color_bg_output, 40%)
-
-
-	$connection_size_default: 12px
-	$connection_size_hover: 16px
-
-	$z_index_body: 8 // to be higher than name
-	$z_index_flag_container: 9
-	$z_index_name: 5
-	$z_index_comment: 4
-	$z_index_enter_button: 6
-	$z_index_connection_element: 20
-	$z_index_connection_name: 19
-	$z_index_connection_name_non_named: 21
-
-	.NetworkNode
-		position: absolute
-		width: 0px
-		height: 0px
-		// transform: translate(-50%, -50%)
-		&.selected
-			.node-body
-				border: 3px solid $color_node_body_selected !important
-		&.is_being_moved
-			.node-body
-				box-shadow: 4px 4px 8px $color_box_shadow_moved
-		&.bypassed
-			.node-body
-				// opacity: 0.4
-				background-color: $color_node_body_bypassed
-				border: 3px solid $color_node_border_bypassed
-				.icon-container
-					opacity: 0.2
-			.name-container, .comment-container
-				opacity: 0.4
-		&.layout_horizontal
-			.name-container
-				transform: translateY(-100%)
-				.name-element
-					margin: 0
-			.inputs-container
-				position: absolute
-				.output-pixel
-					// top: 10px
-					left: 100%
-					// .output-element
-			.outputs-container
-				position: absolute
-				.output-pixel
-					top: 10px
-					left: 100%
-					// .output-element
+$color_node_body: lighten($color_bg_panel_network, 20%)
+$color_node_body_bypassed: $color_bg_panel_network
+$color_node_border_bypassed: darken($color_bg_panel_network, 5%)
+$color_node_body_hover_border: darken($color_node_body, 50%)
+$color_node_body_selected: #54ff00 //lighten($success-color, 5%)
+$color_box_shadow: darken($color_bg_panel_network, 10%)
+$color_box_shadow_moved: lighten($color_box_shadow, 0%)
+$color_error_flag: $alert-color
+$color_bypass_flag_on: yellow
+$color_bypass_flag_off: white //mix($color_bg_panel_network, $color_bypass_flag_on, 95%)
+$color_display_flag_on: $primary-color //#00d9ff //#2327d7 //darken(saturate($primary-color, 20%), 20%)
+$color_display_flag_off: white //mix($color_bg_panel_network, $color_display_flag_on, 95%)
+$color_bg_input: lighten($primary-color, 0%)
+$color_border_input: darken($color_bg_input, 40%)
+$color_bg_output: darken($success-color, 0%)
+$color_border_output: darken($color_bg_output, 40%)
 
 
+$connection_size_default: 12px
+$connection_size_hover: 16px
+
+$z_index_body: 8 // to be higher than name
+$z_index_flag_container: 9
+$z_index_name: 5
+$z_index_comment: 4
+$z_index_enter_button: 6
+$z_index_connection_element: 20
+$z_index_connection_name: 19
+$z_index_connection_hover: 999
+$z_index_connection_name_non_named: 21
+
+.NetworkNode
+	position: absolute
+	width: 0px
+	height: 0px
+	// transform: translate(-50%, -50%)
+	&.selected
 		.node-body
-			position: absolute
-			background-color: $color_node_body
-			border-radius: 3px
-			// box-shadow: 1px 1px 2px $color_box_shadow
-			// border: 1px solid transparent
-			cursor: move
-			z-index: $z_index_body
-			&:hover
-				border: 1px solid $color_node_body_hover_border
-
+			border: 3px solid $color_node_body_selected !important
+	&.is_being_moved
+		.node-body
+			box-shadow: 4px 4px 8px $color_box_shadow_moved
+	&.bypassed
+		.node-body
+			// opacity: 0.4
+			background-color: $color_node_body_bypassed
+			border: 3px solid $color_node_border_bypassed
 			.icon-container
-				opacity: 0.5
-				margin: auto
-				text-align: center
-				height: 100%
-				svg
-					position: relative
-					top: 50%
-					transform: translateY(-50%)
-
-		.error-flag-container
-			position: absolute
-			pointer-events: none
-			.error-flag
-				position: absolute
-				left: -80px
-				margin-right: 20px
-				color: $color_error_flag
-
-		.flag-container
-			position: absolute
-			z-index: $z_index_flag_container
-			.node-flag
-				position: absolute
-				width: 10px
-				cursor: pointer
-				&.bypass-flag
-					left: 0px
-					&.on
-						background-color: $color_bypass_flag_on
-					&.off
-						background-color: $color_bypass_flag_off
-				&.display-flag
-					right: 0px
-					&.on
-						background-color: $color_display_flag_on
-					&.off
-						background-color: $color_display_flag_off
-
+				opacity: 0.2
+		.name-container, .comment-container
+			opacity: 0.4
+	&.layout_horizontal
 		.name-container
-			position: absolute
-			transform: translateY(-50%)
-			z-index: $z_index_name
+			transform: translateY(-100%)
 			.name-element
-				margin-left: 10px
-				cursor: text
-		.comment-container
-			position: absolute
-			// transform: translateY(-50%)
-			width: 200px
-			z-index: $z_index_comment
-			.comment-element
-				font-size: 0.8rem
-				margin-left: 10px
-				margin-top: -10px
-				padding: 5px
-				background-color: lightblue
-				$comment_border_radius: 5px
-				border-top-right-radius: $comment_border_radius
-				border-bottom-right-radius: $comment_border_radius
-				border-bottom-left-radius: $comment_border_radius
-		.enter-button-container
-			position: absolute
-			transform: translateY(-50%)
-			z-index: $z_index_enter_button
-			.enter-button
-				margin-right: 10px
-				padding: 5px
-				border-radius: 25px
-				width: 25px
-				height: 25px
-				text-align: center
-				background-color: lightgreen
-				cursor: pointer
-				line-height: 0
-				&:hover
-					background-color: darken(lightgreen, 10%)
-				svg
-					display: inline-block
-					margin: auto
-					position: relative
-					// top: 50%
-					// transform: translateY(-50%)
-
-		.connection-pixel
-			position: absolute
-			&:hover
-				.connection-name-element
-					&.non_named_element
-						display: block
-			.connection-name-element
-				position: absolute
-				pointer-events: none
-				background-color: $color_node_body
-				line-height: 1
-				&.named_element
-					z-index: $z_index_connection_name
-					font-size: 0.5rem
-				&.non_named_element
-					z-index: $z_index_connection_name_non_named
-					font-size: 0.8rem
-					padding: 5px 10px
-					display: none
-					top: -20px
-					left: 0px
-					transform: translate(-50%, -100%)
-
-			.connection-element
-				width: $connection_size_default
-				height: $connection_size_default
-				border-radius: 100px
-				transform: translate(-50%, -50%)
-				position: relative
-				z-index: $z_index_connection_element
-				cursor: pointer
-				&:hover
-					width: $connection_size_hover
-					height: $connection_size_hover
-				&.bool
-					background-color: $color_connection_bool !important
-				&.int
-					background-color: $color_connection_int !important
-				&.float
-					background-color: $color_connection_float !important
-				&.vec2
-					background-color: $color_connection_vec2 !important
-				&.vec3
-					background-color: $color_connection_vec3 !important
-				&.vec4
-					background-color: $color_connection_vec4 !important
-				&.mat3
-					background-color: $color_connection_mat3 !important
-				&.color
-					background-color: $color_connection_color !important
-
+				margin: 0
 		.inputs-container
 			position: absolute
-			.input-pixel
-				top: 0
-				width: 0
-				height: 0
-				.connection-name-element
-					&.named_element
-						padding-left: 10px
-						transform: translate(0%, -50%)
-				.connection-element
-					border: 1px solid $color_border_input
-					background-color: $color_bg_input
-					// top: -1*($connection_size_hover - $connection_size_default)
-					// &:hover
-					// 	top: -1.5*($connection_size_hover - $connection_size_default)
-
+			.output-pixel
+				// top: 10px
+				left: 100%
+				// .output-element
 		.outputs-container
 			position: absolute
 			.output-pixel
-				bottom: 0
-				width: 0
-				height: 0
-				left: 50%
-				.connection-name-element
-					&.named_element
-						padding-right: 10px
-						transform: translate(-100%, -50%)
-				.connection-element
-					// left: 50%
-					border: 1px solid $color_border_output
-					background-color: $color_bg_output
-					//&:hover
-					//	bottom: -1.5*($connection_size_hover - $connection_size_default)
+				top: 10px
+				left: 100%
+				// .output-element
 
 
+	.node-body
+		position: absolute
+		background-color: $color_node_body
+		border-radius: 3px
+		// box-shadow: 1px 1px 2px $color_box_shadow
+		// border: 1px solid transparent
+		cursor: move
+		z-index: $z_index_body
+		&:hover
+			border: 1px solid $color_node_body_hover_border
 
+		.icon-container
+			opacity: 0.5
+			margin: auto
+			text-align: center
+			height: 100%
+			svg
+				position: relative
+				top: 50%
+				transform: translateY(-50%)
+
+	.error-flag-container
+		position: absolute
+		pointer-events: none
+		.error-flag
+			position: absolute
+			left: -80px
+			margin-right: 20px
+			color: $color_error_flag
+
+	.flag-container
+		position: absolute
+		z-index: $z_index_flag_container
+		.node-flag
+			position: absolute
+			width: 10px
+			cursor: pointer
+			&.bypass-flag
+				left: 0px
+				&.on
+					background-color: $color_bypass_flag_on
+				&.off
+					background-color: $color_bypass_flag_off
+			&.display-flag
+				right: 0px
+				&.on
+					background-color: $color_display_flag_on
+				&.off
+					background-color: $color_display_flag_off
+
+	.name-container
+		position: absolute
+		transform: translateY(-50%)
+		z-index: $z_index_name
+		.name-element
+			margin-left: 10px
+			cursor: text
+	.comment-container
+		position: absolute
+		// transform: translateY(-50%)
+		width: 200px
+		z-index: $z_index_comment
+		.comment-element
+			font-size: 0.8rem
+			margin-left: 10px
+			margin-top: -10px
+			padding: 5px
+			background-color: lightblue
+			$comment_border_radius: 5px
+			border-top-right-radius: $comment_border_radius
+			border-bottom-right-radius: $comment_border_radius
+			border-bottom-left-radius: $comment_border_radius
+	.enter-button-container
+		position: absolute
+		transform: translateY(-50%)
+		z-index: $z_index_enter_button
+		.enter-button
+			margin-right: 10px
+			padding: 5px
+			border-radius: 25px
+			width: 25px
+			height: 25px
+			text-align: center
+			background-color: lightgreen
+			cursor: pointer
+			line-height: 0
+			&:hover
+				background-color: darken(lightgreen, 10%)
+			svg
+				display: inline-block
+				margin: auto
+				position: relative
+				// top: 50%
+				// transform: translateY(-50%)
+
+	.connection-pixel
+		position: absolute
+		&:hover
+			z-index: $z_index_connection_hover
+			.connection-name-element
+				&.non_named_element
+					display: block
+		.connection-name-element
+			position: absolute
+			pointer-events: none
+			background-color: $color_node_body
+			line-height: 1
+			padding: 2px 4px
+			border-radius: 2px
+			border: 1px solid $color_bg_panel_network
+			&.named_element
+				z-index: $z_index_connection_name
+				font-size: 0.5rem
+			&.non_named_element
+				z-index: $z_index_connection_name_non_named
+				font-size: 0.8rem
+				padding: 5px 10px
+				display: none
+				top: -20px
+				left: 0px
+				transform: translate(-50%, -100%)
+
+		.connection-element
+			width: $connection_size_default
+			height: $connection_size_default
+			border-radius: 100px
+			transform: translate(-50%, -50%)
+			position: relative
+			z-index: $z_index_connection_element
+			cursor: pointer
+			&:hover
+				width: $connection_size_hover
+				height: $connection_size_hover
+			&.bool
+				background-color: $color_connection_bool !important
+			&.int
+				background-color: $color_connection_int !important
+			&.float
+				background-color: $color_connection_float !important
+			&.vec2
+				background-color: $color_connection_vec2 !important
+			&.vec3
+				background-color: $color_connection_vec3 !important
+			&.vec4
+				background-color: $color_connection_vec4 !important
+			&.mat3
+				background-color: $color_connection_mat3 !important
+			&.color
+				background-color: $color_connection_color !important
+
+	.inputs-container
+		position: absolute
+		.input-pixel
+			top: 0
+			width: 0
+			height: 0
+			.connection-name-element
+				&.named_element
+					padding-left: 10px
+					transform: translate(0%, -50%)
+			.connection-element
+				border: 1px solid $color_border_input
+				background-color: $color_bg_input
+				// top: -1*($connection_size_hover - $connection_size_default)
+				// &:hover
+				// 	top: -1.5*($connection_size_hover - $connection_size_default)
+
+	.outputs-container
+		position: absolute
+		.output-pixel
+			bottom: 0
+			width: 0
+			height: 0
+			left: 50%
+			.connection-name-element
+				&.named_element
+					padding-right: 10px
+					transform: translate(-100%, -50%)
+			.connection-element
+				// left: 50%
+				border: 1px solid $color_border_output
+				background-color: $color_bg_output
+				//&:hover
+				//	bottom: -1.5*($connection_size_hover - $connection_size_default)
 </style>

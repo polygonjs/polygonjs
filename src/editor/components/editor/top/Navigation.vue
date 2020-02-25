@@ -42,8 +42,8 @@
 import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {StoreController} from 'src/editor/store/controllers/StoreController';
 
-import {createComponent, ref, watch, computed, onMounted} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, ref, watch, computed, onMounted} from '@vue/composition-api';
+export default defineComponent({
 	name: 'navigation-bar',
 	// mixins: [NodeOwner],
 

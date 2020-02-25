@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -13,13 +13,13 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {CacheSopNode} from 'src/engine/nodes/sop/Cache';
 import {ClipboardHelper} from 'src/editor/helpers/Clipboard';
 import {StoreController} from '../../../../../../store/controllers/StoreController';
 
-import {createComponent} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent} from '@vue/composition-api';
+export default defineComponent({
 	name: 'network_node_info_sop_cache',
 	props: {
 		graph_node_id: null,
@@ -39,12 +39,11 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	.NetworkNodeInfoMatShaderBuilder
-		.button
-			margin-bottom: 5px
-
+.NetworkNodeInfoMatShaderBuilder
+	.button
+		margin-bottom: 5px
 </style>

@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -26,7 +26,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import lodash_isString from 'lodash/isString';
 
 // mixins
@@ -65,8 +65,8 @@ import {EngineParamData} from '../../../../store/modules/Engine';
 import {StoreController} from '../../../../store/controllers/StoreController';
 import {ParamType} from '../../../../../engine/poly/ParamType';
 
-import {createComponent, computed, onMounted, ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, onMounted, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'param-field-container',
 	// mixins: [Emit, GlobalSliderOwner, ContextMenu],
 	components: {
@@ -206,123 +206,122 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	@import "globals.sass"
+@import "globals.sass"
 
-	$color_bg_hover: darken($color_bg_panel_param, 20%)
-	$color_bg_expression: lighten(mix($color_bg, lightgreen, 50%), 20%)
-	$color_bg_error: lighten($alert-color,5%)
+$color_bg_hover: darken($color_bg_panel_param, 20%)
+$color_bg_expression: lighten(mix($color_bg, lightgreen, 50%), 20%)
+$color_bg_error: lighten($alert-color,5%)
 
-	.ParamContainer
-		padding: 1px 0px
-		overflow: hidden
+.ParamContainer
+	padding: 1px 0px
+	overflow: hidden
 
-		.param_menu_container
-			position: relative
-			height: 1px
-			width: 100%
-			background-color: red
+	.param_menu_container
+		position: relative
+		height: 1px
+		width: 100%
+		background-color: red
 
-		.param_name
-			position: relative
-			z-index: 1
-			label
-				font-size: 0.8rem
-				color: $color_font
-				cursor: pointer
-				margin: 5px
-				padding: 0rem 10px
-				&:hover
-					background-color: $color_bg_hover
+	.param_name
+		position: relative
+		z-index: 1
+		label
+			font-size: 0.8rem
+			color: $color_font
+			cursor: pointer
+			margin: 5px
+			padding: 0rem 10px
+			&:hover
+				background-color: $color_bg_hover
 
 
-		.Field
-			position: relative
-			z-index: 2
+	.Field
+		position: relative
+		z-index: 2
+		input.raw_input
+			display: block
+		input.expression_result
+			display: none
+		&.displays_expression_result
 			input.raw_input
-				display: block
-			input.expression_result
 				display: none
-			&.displays_expression_result
-				input.raw_input
-					display: none
-				input.expression_result
-					display: block
+			input.expression_result
+				display: block
 
-			input, select
-				margin: 0px
-				padding: 0.2rem
-				font-size: 0.8rem
-				height: 2rem
-				&.has_expression
-					&:not(.is_errored)
-						background-color: $color_bg_expression
-				&.is_errored
-					background-color: $color_bg_error
+		input, select
+			margin: 0px
+			padding: 0.2rem
+			font-size: 0.8rem
+			height: 2rem
+			&.has_expression
+				&:not(.is_errored)
+					background-color: $color_bg_expression
+			&.is_errored
+				background-color: $color_bg_error
 
-			.slider_container
-				$handle_width: 16px
-				$handle_height: 16px
-				$handle_border_radius: 16px
-				$handle_bg_color: $primary-color
-				$handle_bg_color_hover: lighten($primary-color, 10%)
-				// $handle_bg_white: url('/images/slider_handle.white.png')
-				// $handle_bg_black: url('/images/slider_handle.black.png')
-				// $handle_bg_size: $handle_height*1
-				padding: 0px 10px
-				input[type=range]
-					width: 100%
-					height: 100%
-					padding: 0
-					margin: 0
-					// from: https://www.w3schools.com/howto/howto_js_rangeslider.asp
-					-webkit-appearance: none  /* Override default CSS styles */
-					appearance: none
-					outline: none
-					background-color: transparent
-					
-					// -webkit-transition: .2s
-					// transition: opacity .2s
-					// background-color: white
-					&:hover
-						&::-webkit-slider-thumb
-							background-color: $handle_bg_color_hover
-						&::-moz-range-thumb
-							background-color: $handle_bg_color_hover
+		.slider_container
+			$handle_width: 16px
+			$handle_height: 16px
+			$handle_border_radius: 16px
+			$handle_bg_color: $primary-color
+			$handle_bg_color_hover: lighten($primary-color, 10%)
+			// $handle_bg_white: url('/images/slider_handle.white.png')
+			// $handle_bg_black: url('/images/slider_handle.black.png')
+			// $handle_bg_size: $handle_height*1
+			padding: 0px 10px
+			input[type=range]
+				width: 100%
+				height: 100%
+				padding: 0
+				margin: 0
+				// from: https://www.w3schools.com/howto/howto_js_rangeslider.asp
+				-webkit-appearance: none  /* Override default CSS styles */
+				appearance: none
+				outline: none
+				background-color: transparent
+
+				// -webkit-transition: .2s
+				// transition: opacity .2s
+				// background-color: white
+				&:hover
 					&::-webkit-slider-thumb
-						-webkit-appearance: none /* Override default look */
-						appearance: none
-						position: relative
-						top: -7px
-						width: $handle_width
-						height: $handle_height
-						border-radius: $handle_border_radius
-						background-color: $handle_bg_color
-						cursor: pointer
+						background-color: $handle_bg_color_hover
 					&::-moz-range-thumb
-						-webkit-appearance: none /* Override default look */
-						appearance: none
-						position: relative
-						top: -7px
-						width: $handle_width
-						height: $handle_height
-						border-radius: $handle_border_radius
-						background-color: $handle_bg_color
-						cursor: pointer
-					&::-webkit-slider-runnable-track
-						width: 100%
-						height: 2px
-						background: white
-					&::-moz-range-track
-						width: 100%
-						height: 2px
-						background: white
+						background-color: $handle_bg_color_hover
+				&::-webkit-slider-thumb
+					-webkit-appearance: none /* Override default look */
+					appearance: none
+					position: relative
+					top: -7px
+					width: $handle_width
+					height: $handle_height
+					border-radius: $handle_border_radius
+					background-color: $handle_bg_color
+					cursor: pointer
+				&::-moz-range-thumb
+					-webkit-appearance: none /* Override default look */
+					appearance: none
+					position: relative
+					top: -7px
+					width: $handle_width
+					height: $handle_height
+					border-radius: $handle_border_radius
+					background-color: $handle_bg_color
+					cursor: pointer
+				&::-webkit-slider-runnable-track
+					width: 100%
+					height: 2px
+					background: white
+				&::-moz-range-track
+					width: 100%
+					height: 2px
+					background: white
 
 
-		.Field.Multiple.grid-x
-			.cell
-				.Field.Numeric:not:first-child
-					padding-left: 2px
-
+	.Field.Multiple.grid-x
+		.cell
+			.Field.Numeric:not:first-child
+				padding-left: 2px
 </style>

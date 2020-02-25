@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -20,7 +19,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // import {CameraCommon} from '../Mixin/CameraCommon';
 // import {Camera} from './Mixin/Camera';
 // import NodeOwner from 'src/Editor/Component/Mixin/NodeOwner';
@@ -32,8 +31,8 @@ import {StoreController} from 'src/editor/store/controllers/StoreController';
 import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
 import {ThreejsViewer} from 'src/engine/viewers/Threejs';
 
-import {createComponent, onMounted, onBeforeUnmount, computed, ref} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, onMounted, onBeforeUnmount, computed, ref} from '@vue/composition-api';
+export default defineComponent({
 	name: 'viewer-threejs',
 	// mixins: [
 	// 	Camera,
@@ -97,10 +96,8 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 
-	.ThreejsViewer
-		height: 100%
-
-
+.ThreejsViewer
+	height: 100%
 </style>

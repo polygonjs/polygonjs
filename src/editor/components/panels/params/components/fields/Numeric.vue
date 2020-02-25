@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -46,7 +46,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupGlobalSliderOwner} from './mixins/GlobalSliderOwner';
@@ -54,8 +54,8 @@ import {SetupContextMenu} from '../mixins/ContextMenu';
 
 import {StoreController} from '../../../../../store/controllers/StoreController';
 
-import {createComponent} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent} from '@vue/composition-api';
+export default defineComponent({
 	name: 'numeric-field',
 	props: SetupFieldCommonProps,
 	// mixins: [Field, GlobalSliderOwner, ContextMenu, TabIndexMixin],
@@ -72,7 +72,4 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	
-
-</style>
+<style lang="sass"></style>

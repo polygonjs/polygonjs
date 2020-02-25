@@ -32,8 +32,8 @@ import {DropDownMenuEntry} from '../../types/props';
 import {ParamSetCommand} from '../../../history/commands/ParamSet';
 import {BaseParamType} from '../../../../engine/params/_Base';
 
-import {createComponent, computed} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed} from '@vue/composition-api';
+export default defineComponent({
 	name: 'param-context-menu',
 	components: {DropDownMenu},
 

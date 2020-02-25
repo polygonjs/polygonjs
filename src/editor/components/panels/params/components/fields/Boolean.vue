@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 	include /mixins.pug
 
@@ -41,7 +41,7 @@
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // mixins
 import {SetupFieldCommon, ISetupFieldCommonProps, SetupFieldCommonProps} from './mixins/FieldCommon';
 import {SetupContextMenu} from '../mixins/ContextMenu';
@@ -52,8 +52,8 @@ import {BooleanParam} from '../../../../../../engine/params/Boolean';
 import Numeric from './Numeric.vue';
 import {ParamSetCommand} from '../../../../../history/commands/ParamSet';
 
-import {createComponent, computed, onMounted} from '@vue/composition-api';
-export default createComponent({
+import {defineComponent, computed, onMounted} from '@vue/composition-api';
+export default defineComponent({
 	name: 'boolean-field',
 	//mixins: [Field, ContextMenu, TabIndexMixin],
 	props: SetupFieldCommonProps,
@@ -138,47 +138,46 @@ export default createComponent({
 });
 </script>
 
-<style lang='sass'>
-	@import "globals.sass"
+<style lang="sass">
+@import "globals.sass"
 
-	.Field.Toggle
+.Field.Toggle
+	input.raw_input
+		display: block
+	input.expression_result
+		display: none
+	&.displays_expression_result
 		input.raw_input
-			display: block
-		input.expression_result
 			display: none
-		&.displays_expression_result
-			input.raw_input
-				display: none
-			input.expression_result
-				display: block
+		input.expression_result
+			display: block
 
-		input
-			margin: 0px
-			&.has_expression
-				background-color: mix($color_bg, lightgreen, 50%)
+	input
+		margin: 0px
+		&.has_expression
+			background-color: mix($color_bg, lightgreen, 50%)
 
-		input[type=checkbox]
-			// margin-top: 13px
-			$checkbox_scale: 1.4
-			cursor: pointer
-			-ms-transform: scale($checkbox_scale) /* IE */
-			-moz-transform: scale($checkbox_scale) /* FF */
-			-webkit-transform: scale($checkbox_scale) /* Safari and Chrome */
-			-o-transform: scale($checkbox_scale) /* Opera */
-			transform: scale($checkbox_scale)
-			// padding: 10px;
-			margin-right: 5px
-			position: relative
-			top: 2px
+	input[type=checkbox]
+		// margin-top: 13px
+		$checkbox_scale: 1.4
+		cursor: pointer
+		-ms-transform: scale($checkbox_scale) /* IE */
+		-moz-transform: scale($checkbox_scale) /* FF */
+		-webkit-transform: scale($checkbox_scale) /* Safari and Chrome */
+		-o-transform: scale($checkbox_scale) /* Opera */
+		transform: scale($checkbox_scale)
+		// padding: 10px;
+		margin-right: 5px
+		position: relative
+		top: 2px
 
-		label
-			padding: 5px
-			cursor: pointer
+	label
+		padding: 5px
+		cursor: pointer
 
-		// .switch
-		// 	margin-bottom: 0px
-		// 	padding:
-		// 		// top: 3px
-		// 		right: 5px
-
+	// .switch
+	// 	margin-bottom: 0px
+	// 	padding:
+	// 		// top: 3px
+	// 		right: 5px
 </style>
