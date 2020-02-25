@@ -28,6 +28,14 @@ import './engine/params/utils/TimeDependent';
 QUnit.module('nodes utils');
 import './engine/nodes/utils/ChildrenContext';
 
+QUnit.module('cop');
+import './engine/nodes/cop/EnvMap';
+import './engine/nodes/cop/File';
+import './engine/nodes/cop/Switch';
+
+QUnit.module('gl');
+import './engine/nodes/gl/Constant';
+
 QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';
 
@@ -36,11 +44,6 @@ import './engine/nodes/obj/utils/DisplayNodeController';
 import './engine/nodes/obj/_BaseTransformed';
 import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';
-
-QUnit.module('cop');
-import './engine/nodes/cop/EnvMap';
-import './engine/nodes/cop/File';
-import './engine/nodes/cop/Switch';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Add';

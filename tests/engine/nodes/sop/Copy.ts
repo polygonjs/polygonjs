@@ -59,7 +59,7 @@ QUnit.test('copy with template and stamp', async (assert) => {
 	// done();
 });
 
-QUnit.skip('copy without template and stamp', async (assert) => {
+QUnit.test('copy without template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.create_node('box');
@@ -72,7 +72,7 @@ QUnit.skip('copy without template and stamp', async (assert) => {
 	copy1.set_input(0, switch1);
 	copy1.p.count.set(3);
 
-	switch1.p.input.set("stamp('../copy1', 0) % 2");
+	switch1.p.input.set(`copy('../${copy1.name}', 0) % 2`);
 
 	let container = await copy1.request_container();
 	// let core_group = container.core_content();

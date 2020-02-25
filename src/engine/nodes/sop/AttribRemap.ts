@@ -57,9 +57,10 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 					max = lodash_max(values);
 					//this._save_min_max(group, min, max)
 					if (lodash_isNumber(min) && lodash_isNumber(max)) {
-						for (let value of values) {
+						for (let i = 0; i < values.length; i++) {
+							const value = values[i];
 							const normalized_value = max > min ? (value - min) / (max - min) : 1;
-							normalized_values.push(normalized_value);
+							normalized_values[i] = normalized_value;
 						}
 					}
 				}
@@ -78,13 +79,14 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 				);
 				//this._save_min_max(group, min, max)
 				if (min instanceof Vector3 && max instanceof Vector3) {
-					for (let value of values) {
+					for (let i = 0; i < values.length; i++) {
+						const value = values[i];
 						const normalized_value = new Vector3(
 							(value.x - min.x) / (max.x - min.x),
 							(value.y - min.y) / (max.y - min.y),
 							(value.z - min.z) / (max.z - min.z)
 						);
-						normalized_values.push(normalized_value);
+						normalized_values[i] = normalized_value;
 					}
 				}
 				break;

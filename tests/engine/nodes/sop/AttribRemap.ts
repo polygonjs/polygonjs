@@ -1,4 +1,4 @@
-QUnit.skip('attrib_remap simple', async (assert) => {
+QUnit.test('attrib_remap simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.create_node('plane');
@@ -20,5 +20,8 @@ QUnit.skip('attrib_remap simple', async (assert) => {
 	container = await attrib_remap1.request_container();
 	core_group = container.core_content()!;
 	values = core_group.points().map((p) => p.attrib_value('test'));
-	assert.deepEqual(values, [0, 1, 2, 3]);
+	assert.equal(values[0], 0);
+	assert.in_delta(values[1], 1 / 3, 0.0001);
+	assert.in_delta(values[2], 2 / 3, 0.0001);
+	assert.equal(values[3], 1);
 });

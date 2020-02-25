@@ -36,11 +36,14 @@
 							"float_to_vec3_1": {
 								"type": "float_to_vec3",
 								"params": {},
-								"inputs": [{"name": "x", "node": "constant2", "output": "float"}]
+								"inputs": [
+									{"name": "x", "node": "constant2", "output": "float"},
+									{"name": "y", "node": "attribute1", "output": "val"}
+								]
 							},
 							"constant2": {
 								"type": "constant",
-								"params": {"type": "2", "value_vec3": [0, 0.3, 0]},
+								"params": {"type": "2", "value_float": 0.22, "value_vec3": [0, 0.3, 0]},
 								"inputs": []
 							}
 						},
