@@ -138,7 +138,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	//
 	//
 	private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (this.scene.loading_controller.is_loading || dirty_trigger == this.p.type) {
+		if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
 			this.update_input_and_output_types();
 			this.remove_dirty_state();
 			this.make_output_nodes_dirty();

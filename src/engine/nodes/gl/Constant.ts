@@ -43,9 +43,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		// TODO: this needs not just this.scene.loading_controller.is_loading
-		// but a way to know when the node is being created (so that it also works when doing a copy/paste)
-		if (this.scene.loading_controller.is_loading || dirty_trigger == this.p.type) {
+		if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
 			this.update_output_type();
 			this.remove_dirty_state();
 			this.make_output_nodes_dirty();

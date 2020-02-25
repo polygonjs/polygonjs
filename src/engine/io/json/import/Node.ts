@@ -30,6 +30,8 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		this.set_params(data['params']);
 
 		this.from_data_custom(data);
+
+		this._node.lifecycle.set_creation_completed();
 	}
 	process_inputs_data(data: NodeJsonExporterData) {
 		this.set_inputs(data['inputs']);
