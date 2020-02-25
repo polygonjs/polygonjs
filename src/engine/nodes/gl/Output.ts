@@ -5,6 +5,7 @@ import {TypedGlNode} from './_Base';
 // import {ShaderName, LineType, LINE_TYPES} from './Assembler/Util/CodeBuilder';
 
 import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class OutputGlParamsConfig extends NodeParamsConfig {
 	// type = ParamConfig.INTEGER(0, {
 	// 	menu: {
@@ -30,10 +31,10 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		this.material_node?.assembler_controller.add_output_params(this);
 	}
 
-	set_lines() {
-		if (this._shader_name) {
-			this.material_node?.assembler_controller.assembler.set_node_lines_output(this, this._shader_name);
-		}
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		// if (shaders_collection_controller.shader_name) {
+		this.material_node?.assembler_controller.assembler.set_node_lines_output(this, shaders_collection_controller);
+		// }
 	}
 
 	// set_color_declaration(color_declaration: string){

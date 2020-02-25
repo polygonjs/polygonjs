@@ -6,13 +6,9 @@ import {BaseGlNodeType} from '../../_Base';
 import {TextureAllocationsController} from '../utils/TextureAllocationsController';
 import {GlobalsGeometryHandler} from './Geometry';
 import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
-import {
-	BaseGLDefinition,
-	UniformGLDefinition,
-	AttributeGLDefinition,
-	VaryingGLDefinition,
-} from '../../utils/GLDefinition';
+import {UniformGLDefinition, AttributeGLDefinition, VaryingGLDefinition} from '../../utils/GLDefinition';
 import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
+import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig'
 // import {UniformConfig} from '../Config/UniformConfig'
@@ -39,11 +35,12 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 	handle_globals_node(
 		globals_node: GlobalsGlNode,
 		output_name: string,
-		definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
-		body_lines_by_shader_name: Map<ShaderName, string[]>,
-		body_lines: string[],
-		dependencies: ShaderName[],
-		shader_name: ShaderName
+		shaders_collection_controller: ShadersCollectionController
+		// definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
+		// body_lines_by_shader_name: Map<ShaderName, string[]>,
+		// body_lines: string[],
+		// dependencies: ShaderName[],
+		// shader_name: ShaderName
 	) {
 		if (!this._texture_allocations_controller) {
 			return;
@@ -56,19 +53,20 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 		if (variable && connection_point) {
 			const gl_type = connection_point.type;
-			const new_value = this.read_attribute(globals_node, gl_type, output_name, shader_name);
+			const new_value = this.read_attribute(globals_node, gl_type, output_name, shaders_collection_controller);
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
-			globals_node.add_body_lines([body_line]);
+			shaders_collection_controller.add_body_lines(globals_node, [body_line]);
 		} else {
 			this.globals_geometry_handler = this.globals_geometry_handler || new GlobalsGeometryHandler();
 			this.globals_geometry_handler.handle_globals_node(
 				globals_node,
 				output_name,
-				definitions_by_shader_name,
-				body_lines_by_shader_name,
-				body_lines,
-				dependencies,
-				shader_name
+				shaders_collection_controller
+				// definitions_by_shader_name,
+				// body_lines_by_shader_name,
+				// body_lines,
+				// dependencies,
+				// shader_name
 			);
 		}
 
@@ -143,7 +141,12 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 	// 	return name
 	// }
 
-	read_attribute(node: BaseGlNodeType, gl_type: ConnectionPointType, attrib_name: string, shader_name: ShaderName) {
+	read_attribute(
+		node: BaseGlNodeType,
+		gl_type: ConnectionPointType,
+		attrib_name: string,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		if (!this._texture_allocations_controller) {
 			return;
 		}
@@ -152,7 +155,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		const texture_variable = this._texture_allocations_controller.variable(attrib_name);
 
 		if (texture_variable) {
-			this.add_particles_sim_uv_attribute(node);
+			this.add_particles_sim_uv_attribute(node, shaders_collection_controller);
 			// const texture_variable = allocation.variable(attrib_name)
 			// if(!texture_variable){
 			// 	console.error(`no tex var found for ${attrib_name}`)
@@ -171,7 +174,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				);
 				// definitions_by_shader_name[shader_name].push(texture_definition)
 
-				node.add_definitions([texture_definition]);
+				shaders_collection_controller.add_definitions(node, [texture_definition]);
 
 				// const particles_sim_uv_definition = new Definition.Attribute(globals_node, 'vec2', 'particles_sim_uv')
 				// definitions_by_shader_name['vertex'].push(particles_sim_uv_definition)
@@ -179,11 +182,11 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				return body_line;
 			}
 		} else {
-			return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shader_name);
+			return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shaders_collection_controller);
 		}
 	}
 
-	add_particles_sim_uv_attribute(node: BaseGlNodeType) {
+	add_particles_sim_uv_attribute(node: BaseGlNodeType, shaders_collection_controller: ShadersCollectionController) {
 		// const shader_names = ['vertex', 'fragment'];
 		// const definitions_by_shader_name:Map<ShaderName, BaseGLDefinition[]> = new Map();
 		// definitions_by_shader_name.set(ShaderName.VERTEX, [])
@@ -203,13 +206,15 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			GlobalsTextureHandler.UV_VARYING
 		);
 
-		node.add_definitions(
+		shaders_collection_controller.add_definitions(
+			node,
 			[particles_sim_uv_attrib_definition, particles_sim_uv_varying_definition],
 			ShaderName.VERTEX
 		);
-		node.add_definitions([particles_sim_uv_varying_definition], ShaderName.FRAGMENT);
+		shaders_collection_controller.add_definitions(node, [particles_sim_uv_varying_definition], ShaderName.FRAGMENT);
 
-		node.add_body_lines(
+		shaders_collection_controller.add_body_lines(
+			node,
 			[`${GlobalsTextureHandler.UV_VARYING} = ${GlobalsTextureHandler.UV_ATTRIB}`],
 			ShaderName.VERTEX
 		);

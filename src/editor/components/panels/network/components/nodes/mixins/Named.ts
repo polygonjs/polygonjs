@@ -31,6 +31,7 @@ export function SetupNamed(
 			};
 		}
 	});
+
 	const connection_name_element_class_objects = computed(() => {
 		if (node) {
 			if (node.io.inputs.has_named_inputs || node.io.outputs.has_named_outputs) {

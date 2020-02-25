@@ -20,9 +20,9 @@ import {OutputGlNode} from '../../Output';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
-import {BaseGLDefinition, UniformGLDefinition} from '../../utils/GLDefinition';
-import {MapUtils} from 'src/core/MapUtils';
+import {UniformGLDefinition} from '../../utils/GLDefinition';
 import {GlobalsTextureHandler} from '../globals/Texture';
+import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;
@@ -108,9 +108,11 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 
 		// const globals_handler = new GlobalsTextureHandler()
 		// this.set_assembler_globals_handler(globals_handler)
-		(this.globals_handler as GlobalsTextureHandler)?.set_texture_allocations_controller(
-			this._texture_allocations_controller
-		);
+		if (this.globals_handler) {
+			((<unknown>this.globals_handler) as GlobalsTextureHandler)?.set_texture_allocations_controller(
+				this._texture_allocations_controller
+			);
+		}
 
 		this._reset_shader_configs();
 	}
@@ -213,86 +215,45 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	//
 	add_export_body_line(
 		export_node: BaseGlNodeType,
-		shader_name: ShaderName,
 		input_name: string,
 		input: BaseGlNodeType,
-		variable_name: string
+		variable_name: string,
+		shaders_collection_controller: ShadersCollectionController
 	) {
-		// let input
-		// let variable_name
-		// if(export_node.type() == 'output'){
-		// 	input = export_node.named_input(input_name)
-		// 	variable_name = input_name
-		// } else {
-		// 	// if attribute
-		// 	input = export_node.connected_named_input()
-		// 	variable_name = export_node.attribute_name()
-		// }
-
 		if (input) {
 			const var_input = export_node.variable_for_input(input_name);
 			const new_var = ThreeToGl.vector3(var_input);
 			if (new_var) {
-				// const texture_variable = this._texture_allocations_controller.find_variable(
-				// 	export_node,
-				// 	shader_name,
-				// 	variable_name
-				// )
 				const texture_variable = this.texture_allocations_controller.variable(variable_name);
 
 				// if we are in the texture this variable is allocated to, we write it back
+				const shader_name = shaders_collection_controller.current_shader_name;
 				if (texture_variable && texture_variable.allocation?.shader_name == shader_name) {
 					const component = texture_variable.component;
 
 					const line = `gl_FragColor.${component} = ${new_var}`;
-					export_node.add_body_lines([line], shader_name);
+					shaders_collection_controller.add_body_lines(export_node, [line], shader_name);
 				}
 			}
 		}
 	}
-	// add_import_body_line(
-	// 	import_node: BaseNodeGl,
-	// 	shader_name: ShaderName,
-	// 	output_name: string,
-	// 	variable_name: string
-	// 	){
-	// 		throw "not sure I want to use this method anymore"
-	// 	const named_output = import_node.named_output_by_name(output_name)
-	// 	const gl_type = named_output.gl_type()
 
-	// 	const map_name = `texture_${shader_name}`
-	// 	const definition = new Definition.Uniform(import_node, 'sampler2D', map_name)
-	// 	// definitions_by_shader_name[import_node._shader_name].push(definition)
-	// 	import_node.add_definitions([definition])
-
-	// 	const var_name = import_node.gl_var_name(output_name)
-
-	// 	const texture_variable = this._texture_allocations_controller.find_variable(
-	// 		import_node,
-	// 		shader_name,
-	// 		variable_name
-	// 	)
-	// 	if(!texture_variable){
-	// 		this._texture_allocations_controller.print(this._gl_parent_node.scene())
-	// 	}
-	// 	const component = texture_variable.component()
-	// 	const lines = [
-	// 		`${gl_type} ${var_name} = texture2D( ${map_name}, particleUV ).${component}`,
-	// 		`gl_FragColor.${component} = ${var_name}`
-	// 	]
-	// 	import_node.add_body_lines(lines, shader_name)
-	// }
-
-	set_node_lines_output(output_node: BaseGlNodeType, shader_name: ShaderName) {
+	set_node_lines_output(output_node: BaseGlNodeType, shaders_collection_controller: ShadersCollectionController) {
+		const shader_name = shaders_collection_controller.current_shader_name;
 		const input_names = this.texture_allocations_controller.input_names_for_shader_name(output_node, shader_name);
-		output_node.set_body_lines([], shader_name);
 		if (input_names) {
 			for (let input_name of input_names) {
 				const input = output_node.io.inputs.named_input(input_name);
-				const variable_name = input_name;
 
 				if (input) {
-					this.add_export_body_line(output_node, shader_name, input_name, input, variable_name);
+					const variable_name = input_name;
+					this.add_export_body_line(
+						output_node,
+						input_name,
+						input,
+						variable_name,
+						shaders_collection_controller
+					);
 				} else {
 					// position reads the default attribute position
 					// or maybe there is no need?
@@ -303,7 +264,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			}
 		}
 	}
-	set_node_lines_attribute(attribute_node: AttributeGlNode, shader_name: ShaderName) {
+	set_node_lines_attribute(
+		attribute_node: AttributeGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		if (attribute_node.is_importing) {
 			const gl_type = attribute_node.gl_type();
 			const attribute_name = attribute_node.attribute_name;
@@ -311,19 +275,21 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				attribute_node,
 				gl_type,
 				attribute_name,
-				shader_name
+				shaders_collection_controller
 			);
 			const var_name = attribute_node.gl_var_name(attribute_node.output_name);
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
-			attribute_node.add_body_lines([body_line]);
+			shaders_collection_controller.add_body_lines(attribute_node, [body_line]);
 
 			// re-export to ensure it is available on next frame
 			const texture_variable = this.texture_allocations_controller.variable(attribute_name);
+			const shader_name = shaders_collection_controller.current_shader_name;
 			if (texture_variable && texture_variable.allocation?.shader_name == shader_name) {
 				const variable = this.texture_allocations_controller.variable(attribute_name);
 				if (variable) {
 					const component = variable.component;
-					attribute_node.add_body_lines([`gl_FragColor.${component} = ${var_name}`]);
+					const body_line = `gl_FragColor.${component} = ${var_name}`;
+					shaders_collection_controller.add_body_lines(attribute_node, [body_line]);
 				}
 			}
 
@@ -339,95 +305,60 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			if (input) {
 				const variable_name = attribute_node.attribute_name;
 
-				this.add_export_body_line(attribute_node, shader_name, attribute_node.input_name, input, variable_name);
+				this.add_export_body_line(
+					attribute_node,
+					attribute_node.input_name,
+					input,
+					variable_name,
+					shaders_collection_controller
+				);
 			}
 		}
 	}
-	set_node_lines_globals(globals_node: GlobalsGlNode, shader_name: ShaderName) {
-		// const vertex_definitions = [];
-		// const fragment_definitions = [];
-		// const definitions = [];
-		// const vertex_body_lines = []
-		// const fragment_body_lines = [];
-		const body_lines: string[] = [];
-
-		// const shader_config = this.shader_config(shader_name)
-		// const dependencies = shader_config.dependencies()
-
-		const definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]> = new Map();
-		definitions_by_shader_name.set(shader_name, []);
-		// for(let dependency of dependencies){ definitions_by_shader_name[dependency] = [] }
-
-		// const body_lines_by_shader_name = {}
-		// body_lines_by_shader_name[shader_name] = []
-		// for(let dependency of dependencies){ body_lines_by_shader_name[dependency] = [] }
-
-		let definition: BaseGLDefinition;
-		let body_line: string;
+	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
-			const var_name = globals_node.gl_var_name(output_name);
-
 			switch (output_name) {
 				case 'frame':
-					definition = new UniformGLDefinition(globals_node, ConnectionPointType.FLOAT, output_name);
-					// vertex_definitions.push(definition)
-					// fragment_definitions.push(definition)
-					MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_node.shader_name, definition);
-					// definitions_by_shader_name[globals_node._shader_name].push(definition);
-
-					body_line = `float ${var_name} = ${output_name}`;
-					// for(let dependency of dependencies){
-					// 	definitions_by_shader_name[dependency].push(definition)
-					// 	body_lines_by_shader_name[dependency].push(body_line)
-					// }
-
-					// vertex_body_lines.push(`float ${var_name} = ${output_name}`)
-					body_lines.push(body_line);
-					this.set_frame_dependent();
+					this._handle_globals_frame(globals_node, output_name, shaders_collection_controller);
 					break;
-
 				default:
-					// this.add_import_body_line(globals_node, shader_name, output_name, output_name)
-					const output_connection_point = globals_node.io.outputs.named_output_connection_points_by_name(
-						output_name
-					);
-					if (output_connection_point) {
-						const gl_type = output_connection_point.type;
-
-						const attrib_read = this.globals_handler?.read_attribute(
-							globals_node,
-							gl_type,
-							output_name,
-							shader_name
-						);
-						body_line = `${gl_type} ${var_name} = ${attrib_read}`;
-						body_lines.push(body_line);
-					}
-				//
-
-				// const map_name = `texture_${output_name}`
-				// definition = new Definition.Uniform(globals_node, 'sampler2D', map_name)
-				// definitions_by_shader_name[globals_node._shader_name].push(definition)
-
-				// body_line = `${gl_type} ${var_name} = texture2D( ${map_name}, particleUV ).xyz`
-
-				// // // if(dependencies.length == 0){
-				// body_lines.push(body_line)
-				// }
+					this._handle_globals_default(globals_node, output_name, shaders_collection_controller);
 			}
 		}
-		// this.set_vertex_definitions(vertex_definitions)
-		// this.set_fragment_definitions(fragment_definitions)
-		definitions_by_shader_name.forEach((definitions, shader_name) => {
-			globals_node.add_definitions(definitions, shader_name);
-		});
-		// for(let shader_name of Object.keys(body_lines_by_shader_name)){
-		// 	globals_node.add_body_lines(body_lines_by_shader_name[shader_name], shader_name)
-		// }
-		// this.add_definitions(definitions)
-		// this.set_vertex_body_lines(vertex_body_lines)
-		// this.set_fragment_body_lines(fragment_body_lines)
+	}
 
-		globals_node.add_body_lines(body_lines);
+	private _handle_globals_frame(
+		globals_node: GlobalsGlNode,
+		output_name: string,
+		shaders_collection_controller: ShadersCollectionController
+	) {
+		const definition = new UniformGLDefinition(globals_node, ConnectionPointType.FLOAT, output_name);
+		shaders_collection_controller.add_definitions(globals_node, [definition]);
+
+		const var_name = globals_node.gl_var_name(output_name);
+		const body_line = `float ${var_name} = ${output_name}`;
+		shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+		this.set_frame_dependent();
+	}
+
+	private _handle_globals_default(
+		globals_node: GlobalsGlNode,
+		output_name: string,
+		shaders_collection_controller: ShadersCollectionController
+	) {
+		const output_connection_point = globals_node.io.outputs.named_output_connection_points_by_name(output_name);
+		if (output_connection_point) {
+			const gl_type = output_connection_point.type;
+
+			const attrib_read = this.globals_handler?.read_attribute(
+				globals_node,
+				gl_type,
+				output_name,
+				shaders_collection_controller
+			);
+			const var_name = globals_node.gl_var_name(output_name);
+			const body_line = `${gl_type} ${var_name} = ${attrib_read}`;
+			shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+		}
 	}
 }

@@ -32,18 +32,19 @@
 								"inputs": []
 							},
 							"attribute1": {"type": "attribute", "params": {"name": "above"}, "inputs": []},
-							"param1": {"type": "param", "params": {}, "inputs": []},
+							"param1": {"type": "param", "params": {"name": "z", "type": "2"}, "inputs": []},
 							"float_to_vec3_1": {
 								"type": "float_to_vec3",
 								"params": {},
 								"inputs": [
 									{"name": "x", "node": "constant2", "output": "float"},
-									{"name": "y", "node": "attribute1", "output": "val"}
+									{"name": "y", "node": "attribute1", "output": "val"},
+									{"name": "z", "node": "param1", "output": "val"}
 								]
 							},
 							"constant2": {
 								"type": "constant",
-								"params": {"type": "2", "value_float": 0.22, "value_vec3": [0, 0.3, 0]},
+								"params": {"type": "2", "value_float": "0.22", "value_vec3": [0, 0.3, 0]},
 								"inputs": []
 							}
 						},
@@ -79,8 +80,8 @@
 					"controls": "/events1/camera_orbit_controls1",
 					"target": [-0.18931128979003603, 0.42336979919346196, 0.07064319279199466],
 					"fov": 55.29,
-					"t": [-2.1446212215677316, 1.8869106002908271, 4.3443868467992415],
-					"r": [-18.90373542502567, -23.404909270919685, -7.746396585617899]
+					"t": [0.3518023580563496, 1.406963405614519, 4.863326477077998],
+					"r": [-11.597671442852416, 6.311205900282012, 1.29240031842344]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -293,10 +294,10 @@
 							"output1": {"pos": [250, 100]},
 							"globals1": {"pos": [-100, 150]},
 							"constant1": {"pos": [-250, 0]},
-							"attribute1": {"pos": [-100, -100]},
+							"attribute1": {"pos": [-100, -50]},
 							"param1": {"pos": [-100, 350]},
 							"float_to_vec3_1": {"pos": [150, -100]},
-							"constant2": {"pos": [-100, 0]}
+							"constant2": {"pos": [-100, -150]}
 						}
 					}
 				}

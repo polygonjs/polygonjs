@@ -50,10 +50,12 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
 	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
 	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this);
-	post_create_params() {
-		this.texture_map_controller.initialize_node();
-		this.texture_alpha_map_controller.initialize_node();
-		this.texture_env_map_controller.initialize_node();
+	initialize_node() {
+		this.params.set_post_create_params_hook(() => {
+			this.texture_map_controller.initialize_node();
+			this.texture_alpha_map_controller.initialize_node();
+			this.texture_env_map_controller.initialize_node();
+		});
 	}
 
 	async cook() {

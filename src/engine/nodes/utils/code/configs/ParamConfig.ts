@@ -9,7 +9,7 @@ import {ParamValuesTypeMap} from 'src/engine/params/types/ParamValuesTypeMap';
 import {ParamConstructorByType} from 'src/engine/params/types/ParamConstructorByType';
 
 import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {TypedParam} from 'src/engine/params/_Base';
+import {TypedParam, BaseParamType} from 'src/engine/params/_Base';
 import {NodeContext} from 'src/engine/poly/NodeContext';
 import {TypeAssert} from 'src/engine/poly/Assert';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
@@ -58,12 +58,18 @@ export class ParamConfig<T extends ParamType> {
 	}
 
 	get param_options() {
+		const callback_bound = this._callback.bind(this);
 		switch (this._type) {
 			case ParamType.OPERATOR_PATH:
-				return {node_selection: {context: NodeContext.COP}}; // TODO: typescript - why is COP here?
+				return {callback: callback_bound, node_selection: {context: NodeContext.COP}}; // TODO: typescript - why is COP here?
 			default:
-				return {};
+				return {callback: callback_bound};
 		}
+	}
+
+	private _callback(node: BaseNodeType, param: BaseParamType) {
+		// console.log('callback', node, param, param.value);
+		this.uniform.value = param.value;
 	}
 
 	// TODO: refactor that to use the default values map?

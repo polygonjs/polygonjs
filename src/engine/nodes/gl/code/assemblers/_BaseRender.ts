@@ -10,6 +10,7 @@ import {BaseGLDefinition, UniformGLDefinition} from '../../utils/GLDefinition';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 import {MapUtils} from 'src/core/MapUtils';
 import {ShaderMaterialWithCustomMaterials} from 'src/core/geometry/Material';
+import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
 
@@ -79,7 +80,11 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		return {};
 	}
 
-	add_output_body_line(output_node: OutputGlNode, shader_name: ShaderName, input_name: string) {
+	add_output_body_line(
+		output_node: OutputGlNode,
+		shaders_collection_controller: ShadersCollectionController,
+		input_name: string
+	) {
 		const input = output_node.io.inputs.named_input(input_name);
 		const var_input = output_node.variable_for_input(input_name);
 		const variable_config = this.variable_config(input_name);
@@ -96,7 +101,7 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 						output_node,
 						gl_type,
 						input_name,
-						shader_name
+						shaders_collection_controller
 					);
 					if (attr_read) {
 						new_var = attr_read;
@@ -121,26 +126,30 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 			const suffix = variable_config.suffix();
 			const if_condition = variable_config.if_condition();
 			if (if_condition) {
-				output_node.add_body_lines([`#if ${if_condition}`], shader_name);
+				shaders_collection_controller.add_body_lines(output_node, [`#if ${if_condition}`]);
 			}
-			output_node.add_body_lines([`${prefix}${new_var}${suffix}`], shader_name);
+			shaders_collection_controller.add_body_lines(output_node, [`${prefix}${new_var}${suffix}`]);
 			if (if_condition) {
-				output_node.add_body_lines([`#endif`], shader_name);
+				shaders_collection_controller.add_body_lines(output_node, [`#endif`]);
 			}
 		}
 	}
 
-	set_node_lines_output(output_node: OutputGlNode, shader_name: ShaderName) {
+	set_node_lines_output(output_node: OutputGlNode, shaders_collection_controller: ShadersCollectionController) {
 		// const body_lines = [];
+		const shader_name = shaders_collection_controller.current_shader_name;
 		const input_names = this.shader_config(shader_name)?.input_names();
 		if (input_names) {
-			output_node.set_body_lines([], shader_name);
+			// shaders_collection_controller.set_body_lines([], shader_name);
 			for (let input_name of input_names) {
-				this.add_output_body_line(output_node, shader_name, input_name);
+				this.add_output_body_line(output_node, shaders_collection_controller, input_name);
 			}
 		}
 	}
-	set_node_lines_attribute(attribute_node: AttributeGlNode, shader_name: ShaderName) {
+	set_node_lines_attribute(
+		attribute_node: AttributeGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		// const named_output = attribute_node.connected_output()
 		// const named_connection = attribute_node.connected_input()
 		const gl_type = attribute_node.gl_type();
@@ -148,10 +157,10 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 			attribute_node,
 			gl_type,
 			attribute_node.attribute_name,
-			shader_name
+			shaders_collection_controller
 		);
 		const var_name = attribute_node.gl_var_name(attribute_node.output_name);
-		attribute_node.add_body_lines([`${gl_type} ${var_name} = ${new_var}`], shader_name);
+		shaders_collection_controller.add_body_lines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
 		// this.add_output_body_line(
 		// 	attribute_node,
 		// 	shader_name,
@@ -196,14 +205,14 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		}
 	}
 
-	set_node_lines_globals(globals_node: GlobalsGlNode, shader_name: ShaderName) {
+	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
 		// const vertex_definitions = [];
 		// const fragment_definitions = [];
 		// const definitions = [];
 		// const vertex_body_lines = []
 		// const fragment_body_lines = [];
 		const body_lines = [];
-
+		const shader_name = shaders_collection_controller.current_shader_name;
 		const shader_config = this.shader_config(shader_name);
 		if (!shader_config) {
 			return;
@@ -226,7 +235,7 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		let body_line;
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
 			const var_name = globals_node.gl_var_name(output_name);
-			const globals_shader_name = globals_node.shader_name;
+			const globals_shader_name = shaders_collection_controller.current_shader_name;
 
 			switch (output_name) {
 				case 'frame':
@@ -280,11 +289,12 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 					this.globals_handler?.handle_globals_node(
 						globals_node,
 						output_name,
-						definitions_by_shader_name,
-						body_lines_by_shader_name,
-						body_lines,
-						dependencies,
-						shader_name
+						shaders_collection_controller
+						// definitions_by_shader_name,
+						// body_lines_by_shader_name,
+						// body_lines,
+						// dependencies,
+						// shader_name
 					);
 				// const named_output = globals_node.named_output_by_name(output_name)
 				// const gl_type = named_output.gl_type()
@@ -305,15 +315,15 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		// this.set_vertex_definitions(vertex_definitions)
 		// this.set_fragment_definitions(fragment_definitions)
 		definitions_by_shader_name.forEach((definitions, shader_name) => {
-			globals_node.add_definitions(definitions, shader_name);
+			shaders_collection_controller.add_definitions(globals_node, definitions, shader_name);
 		});
 		body_lines_by_shader_name.forEach((body_lines, shader_name) => {
-			globals_node.add_body_lines(body_lines, shader_name);
+			shaders_collection_controller.add_body_lines(globals_node, body_lines, shader_name);
 		});
 		// this.add_definitions(definitions)
 		// this.set_vertex_body_lines(vertex_body_lines)
 		// this.set_fragment_body_lines(fragment_body_lines)
 
-		globals_node.add_body_lines(body_lines);
+		shaders_collection_controller.add_body_lines(globals_node, body_lines);
 	}
 }

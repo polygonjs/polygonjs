@@ -30,7 +30,6 @@ export enum EngineMutation {
 	SCENE_FRAME_RANGE_UPDATED = 'SCENE_FRAME_RANGE_UPDATED',
 	SCENE_PLAY_STATE_UPDATED = 'SCENE_PLAY_STATE_UPDATED',
 	// node
-	NODE_ADD_PARAMS_TO_STORE = 'NODE_ADD_PARAMS_TO_STORE',
 	NODE_ERROR_UPDATED = 'NODE_ERROR_UPDATED',
 	NODE_UI_DATA_POSITION_UPDATED = 'NODE_UI_DATA_POSITION_UPDATED',
 	NODE_UI_DATA_COMMENT_UPDATED = 'NODE_UI_DATA_COMMENT_UPDATED',
@@ -41,6 +40,8 @@ export enum EngineMutation {
 	NODE_INPUTS_UPDATED = 'NODE_INPUTS_UPDATED',
 	NODE_NAMED_INPUTS_UPDATED = 'NODE_NAMED_INPUTS_UPDATED',
 	NODE_NAMED_OUTPUTS_UPDATED = 'NODE_NAMED_OUTPUTS_UPDATED',
+	NODE_ADD_PARAMS_TO_STORE = 'NODE_ADD_PARAMS_TO_STORE',
+	NODE_PARAMS_UPDATED = 'NODE_PARAMS_UPDATED',
 	NODE_CREATED = 'NODE_CREATED',
 	NODE_DELETED = 'NODE_DELETED',
 	// param
@@ -58,7 +59,6 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 	[EngineMutation.SCENE_FRAME_RANGE_UPDATED]: undefined;
 	[EngineMutation.SCENE_PLAY_STATE_UPDATED]: undefined;
 	// node
-	[EngineMutation.NODE_ADD_PARAMS_TO_STORE]: string;
 	[EngineMutation.NODE_ERROR_UPDATED]: string;
 	[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]: string;
 	[EngineMutation.NODE_UI_DATA_COMMENT_UPDATED]: string;
@@ -67,6 +67,8 @@ export interface EnginePayloadByMutationMap extends EnginePayloadByMutationMapGe
 	[EngineMutation.NODE_BYPASS_FLAG_UPDATED]: string;
 	[EngineMutation.NODE_NAME_UPDATED]: string;
 	[EngineMutation.NODE_INPUTS_UPDATED]: string;
+	[EngineMutation.NODE_ADD_PARAMS_TO_STORE]: string;
+	[EngineMutation.NODE_PARAMS_UPDATED]: string;
 	[EngineMutation.NODE_CREATED]: {
 		parent_id: string;
 		child_node_json: EngineNodeData;
@@ -304,25 +306,17 @@ export const EngineStoreModule = {
 		// Node Mutations
 		//
 		//
-		[EngineMutation.NODE_ADD_PARAMS_TO_STORE]: function(
+
+		[EngineMutation.NODE_ERROR_UPDATED]: (
 			state: EngineState,
-			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_ADD_PARAMS_TO_STORE]
-		) {
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_ERROR_UPDATED]
+		) => {
 			const node = StoreController.engine.node(node_id);
 			if (node) {
-				for (let param of node.params.all) {
-					if (!state.params_by_graph_node_id[param.graph_node_id]) {
-						Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json());
-						if (param.components) {
-							for (let component of param.components) {
-								Vue.set(state.params_by_graph_node_id, component.graph_node_id, component.to_json());
-							}
-						}
-					}
-				}
+				const json_node = store_json_node(state, node);
+				json_node['error_message'] = node.states.error.message;
 			}
 		},
-
 		[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]: function(
 			state: EngineState,
 			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_UI_DATA_POSITION_UPDATED]
@@ -368,7 +362,31 @@ export const EngineStoreModule = {
 				}
 			}
 		},
+		[EngineMutation.NODE_DISPLAY_FLAG_UPDATED](
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_DISPLAY_FLAG_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node && node.flags?.display) {
+				const json_node = store_json_node(state, node);
+				if (json_node && json_node.flags?.display != null) {
+					json_node.flags.display = node.flags.display.active;
+				}
+			}
+		},
 
+		[EngineMutation.NODE_BYPASS_FLAG_UPDATED](
+			state: EngineState,
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_BYPASS_FLAG_UPDATED]
+		) {
+			const node = StoreController.engine.node(node_id);
+			if (node && node.flags?.bypass) {
+				const json_node = store_json_node(state, node);
+				if (json_node && json_node.flags?.bypass != null) {
+					json_node.flags.bypass = node.flags.bypass.active;
+				}
+			}
+		},
 		[EngineMutation.NODE_NAME_UPDATED]: function(
 			state: EngineState,
 			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_NAME_UPDATED]
@@ -399,33 +417,46 @@ export const EngineStoreModule = {
 		) {
 			update_node_inputs_and_outputs(state, node_id);
 		},
-
-		[EngineMutation.NODE_DISPLAY_FLAG_UPDATED](
+		[EngineMutation.NODE_ADD_PARAMS_TO_STORE]: function(
 			state: EngineState,
-			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_DISPLAY_FLAG_UPDATED]
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_ADD_PARAMS_TO_STORE]
 		) {
 			const node = StoreController.engine.node(node_id);
-			if (node && node.flags?.display) {
-				const json_node = store_json_node(state, node);
-				if (json_node && json_node.flags?.display != null) {
-					json_node.flags.display = node.flags.display.active;
+			if (node) {
+				for (let param of node.params.all) {
+					if (!state.params_by_graph_node_id[param.graph_node_id]) {
+						Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json());
+						if (param.components) {
+							for (let component of param.components) {
+								Vue.set(state.params_by_graph_node_id, component.graph_node_id, component.to_json());
+							}
+						}
+					}
 				}
 			}
 		},
-
-		[EngineMutation.NODE_BYPASS_FLAG_UPDATED](
+		[EngineMutation.NODE_PARAMS_UPDATED]: function(
 			state: EngineState,
-			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_BYPASS_FLAG_UPDATED]
+			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_PARAMS_UPDATED]
 		) {
 			const node = StoreController.engine.node(node_id);
-			if (node && node.flags?.bypass) {
-				const json_node = store_json_node(state, node);
-				if (json_node && json_node.flags?.bypass != null) {
-					json_node.flags.bypass = node.flags.bypass.active;
+			const json_node = StoreController.engine.json_node(node_id);
+			if (node && json_node) {
+				for (let param_id of json_node.param_ids) {
+					Vue.delete(state.params_by_graph_node_id, param_id);
+				}
+				const include_node_param_components = false;
+				Vue.set(json_node, 'param_ids', node.serializer.to_json_params(include_node_param_components));
+				for (let param of node.params.all) {
+					Vue.set(state.params_by_graph_node_id, param.graph_node_id, param.to_json());
+					if (param.components) {
+						for (let component of param.components) {
+							Vue.set(state.params_by_graph_node_id, component.graph_node_id, component.to_json());
+						}
+					}
 				}
 			}
 		},
-
 		override_clonable_state_update(state: EngineState, payload: EnginePayloadNodeEmitter) {
 			const node = payload['emitter'];
 			const json_node = store_json_node(state, node);
@@ -463,17 +494,6 @@ export const EngineStoreModule = {
 		// 		json_node['named_output_connections'] = json['named_output_connections'];
 		// 	}
 		// },
-
-		[EngineMutation.NODE_ERROR_UPDATED]: (
-			state: EngineState,
-			node_id: EnginePayloadByMutationMap[EngineMutation.NODE_ERROR_UPDATED]
-		) => {
-			const node = StoreController.engine.node(node_id);
-			if (node) {
-				const json_node = store_json_node(state, node);
-				json_node['error_message'] = node.states.error.message;
-			}
-		},
 
 		[EngineMutation.NODE_DELETED]: function(
 			state: EngineState,

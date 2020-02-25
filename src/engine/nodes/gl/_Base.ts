@@ -1,9 +1,8 @@
 import {TypedNode} from '../_Base';
 
-import {LineType} from './code/utils/CodeBuilder';
+// import {LineType} from './code/utils/CodeBuilder';
 import {ThreeToGl} from 'src/core/ThreeToGl';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
-import {BaseGLDefinition} from './utils/GLDefinition';
 
 import {AssemblerControllerNode} from './code/Controller';
 
@@ -16,22 +15,15 @@ import {NodeEvent} from 'src/engine/poly/NodeEvent';
 import {BaseNamedConnectionPointType, TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ParamTypeToConnectionPointTypeMap} from '../utils/connections/ConnectionPointType';
 import {ParamValueToDefaultConverter} from '../utils/params/ParamValueToDefaultConverter';
-import {ShaderName} from '../utils/shaders/ShaderName';
-import {MapUtils} from 'src/core/MapUtils';
+// import {ShaderName} from '../utils/shaders/ShaderName';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', BaseGlNodeType, K> {
 	static node_context(): NodeContext {
 		return NodeContext.GL;
 	}
-	// private _function_definitions: Definition.Function[] = []
-	// private _vertex_definitions: Definition.Base[] = []
-	// private _fragment_definitions: Definition.Base[] = []
-	private _definitions: Map<ShaderName, BaseGLDefinition[]> = new Map();
-	private _lines: Map<ShaderName, Map<LineType, string[]>> = new Map(); //StringArrayByStringByString = {};
-	// private _param_configs: ParamConfig<ParamType>[] = [];
 	protected _param_configs_controller: ParamConfigsController | undefined;
-	protected _shader_name: ShaderName | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 	private _set_mat_to_recompile_bound = this._set_mat_to_recompile.bind(this);
 
@@ -41,6 +33,8 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		this.ui_data.set_layout_horizontal();
 		this.io.outputs.set_named_output_connection_points([]);
 		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_bound);
+
+		this.params.set_post_create_params_hook(this.create_inputs_from_params.bind(this));
 	}
 	private _set_mat_to_recompile() {
 		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
@@ -61,7 +55,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	//
 	//
 	gl_var_name(name: string) {
-		return `v_POLYGON_${this.name}_${name}`;
+		return `v_POLY_${this.name}_${name}`;
 	}
 
 	variable_for_input(name: string): string {
@@ -72,7 +66,6 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 			const output_name = input_node.io.outputs.named_output_connection_points[connection.output_index].name;
 			return input_node.gl_var_name(output_name);
 		} else {
-			// return ThreeToGl.any(this[this.param_cache_name(name)]); // TODO: typescript
 			return ThreeToGl.any(this.params.get(name)?.value);
 		}
 	}
@@ -82,73 +75,11 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	// ADDED LINES
 	//
 	//
-	set_lines() {}
+	set_lines(shaders_collection_controller: ShadersCollectionController) {}
 
 	reset_code() {
 		this._param_configs_controller?.reset();
-		this.reset_lines();
-	}
-
-	private reset_lines() {
-		this._definitions = new Map();
-		this._lines = new Map();
-	}
-
-	set_definitions(definitions: BaseGLDefinition[], shader_name?: ShaderName) {
-		shader_name = shader_name || this._shader_name;
-		if (shader_name) {
-			this._definitions.set(shader_name, definitions);
-		}
-	}
-	add_definitions(definitions: BaseGLDefinition[], shader_name?: ShaderName) {
-		shader_name = shader_name || this._shader_name;
-		if (shader_name) {
-			MapUtils.concat_on_array_at_entry(this._definitions, shader_name, definitions);
-		}
-	}
-	set_body_lines(lines: string[], shader_name?: ShaderName) {
-		shader_name = shader_name || this._shader_name;
-		if (shader_name) {
-			let lines_by_line_type: Map<LineType, string[]> | undefined = this._lines.get(shader_name);
-			const has_entry = lines_by_line_type != null;
-			lines_by_line_type = lines_by_line_type || new Map();
-			lines_by_line_type.set(LineType.BODY, lines);
-			if (!has_entry) {
-				this._lines.set(shader_name, lines_by_line_type);
-			}
-		}
-	}
-	add_body_lines(lines: string[], shader_name?: ShaderName) {
-		shader_name = shader_name || this._shader_name;
-		if (shader_name) {
-			let lines_by_line_type: Map<LineType, string[]> | undefined = this._lines.get(shader_name);
-			const has_entry = lines_by_line_type != null;
-			lines_by_line_type = lines_by_line_type || new Map();
-			//lines_by_line_type.set(LineType.BODY, lines);
-			for (let line of lines) {
-				MapUtils.push_on_array_at_entry(lines_by_line_type, LineType.BODY, line);
-			}
-
-			if (!has_entry) {
-				this._lines.set(shader_name, lines_by_line_type);
-			}
-		}
-	}
-
-	lines(shader_name: ShaderName, line_type: LineType) {
-		const lines_for_shader_name = this._lines.get(shader_name);
-		if (lines_for_shader_name) {
-			return lines_for_shader_name.get(line_type);
-		}
-	}
-	all_lines() {
-		return this._lines;
-	}
-	// function_definitions(){return this._function_definitions}
-	// vertex_definitions(){return this._vertex_definitions}
-	// fragment_definitions(){return this._fragment_definitions}
-	definitions(shader_name: ShaderName) {
-		return this._definitions.get(shader_name);
+		// this.reset_lines();
 	}
 
 	//
@@ -156,9 +87,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	// PARAMS
 	//
 	//
-	post_create_params() {
-		this.create_inputs_from_params();
-	}
+
 	protected _allow_inputs_created_from_params: boolean = true;
 	create_inputs_from_params() {
 		if (!this._allow_inputs_created_from_params) {
@@ -190,11 +119,14 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	protected create_spare_parameters() {
 		const values_by_param_name: Map<string, ParamValue> = new Map();
 		const current_param_names: string[] = this.params.spare_names;
+		let has_deleted_a_param = false;
+		let has_created_a_param = false;
 		current_param_names.forEach((param_name) => {
 			const param = this.params.get(param_name);
 			if (param) {
 				values_by_param_name.set(param_name, param.value);
 				this.params.delete_param(param_name);
+				has_deleted_a_param = true;
 			}
 		});
 
@@ -223,11 +155,14 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 					spare: true,
 					cook: true,
 				});
+				has_created_a_param = true;
 			}
 		});
 
-		if (!this.scene.loading_controller.is_loading) {
-			this.emit(NodeEvent.PARAMS_UPDATED);
+		if (has_created_a_param || has_deleted_a_param) {
+			if (!this.scene.loading_controller.is_loading) {
+				this.emit(NodeEvent.PARAMS_UPDATED);
+			}
 		}
 	}
 	//
@@ -278,16 +213,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 				o.set_dirty(this);
 			});
 	}
-	// some node will create code differently depending if they are on vertex or fragment
-	// they also need to know which shader they are building the lines for (for the body for ex, is it for fragment or for vertex?)
-	// TODO: try and have the set_lines method accept a controller, which would know those infos
-	// and would know which shader it is running for
-	set_shader_name(shader_name: ShaderName) {
-		this._shader_name = shader_name;
-	}
-	get shader_name() {
-		return this._shader_name;
-	}
+
 	//
 	//
 	// NEEDED?

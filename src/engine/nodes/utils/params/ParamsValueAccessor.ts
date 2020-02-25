@@ -1,4 +1,3 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
 import {NodeParamsConfig} from './ParamsConfig';
 // import {ParamValuesTypeMap} from './ParamsController';
 // import {ParamType} from 'src/engine/poly/ParamType';
@@ -18,7 +17,7 @@ export type ParamsValueAccessorType<T extends NodeParamsConfig> = {
 };
 
 export class ParamsValueAccessor<T extends NodeParamsConfig> {
-	constructor(protected node: BaseNodeType) {
+	constructor() {
 		// console.log('accessor', this);
 	}
 }

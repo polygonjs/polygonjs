@@ -30,9 +30,11 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 	}
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
 	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
-	post_create_params() {
-		this.texture_map_controller.initialize_node();
-		this.texture_alpha_map_controller.initialize_node();
+	initialize_node() {
+		this.params.set_post_create_params_hook(() => {
+			this.texture_map_controller.initialize_node();
+			this.texture_alpha_map_controller.initialize_node();
+		});
 	}
 	async cook() {
 		ColorsController.update(this);

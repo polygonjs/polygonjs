@@ -112,7 +112,7 @@ export function SetupInputs(
 			});
 		}
 	});
-	const connection_element_input_class_objects = computed(() => {
+	const connection_pixel_input_class_objects = computed(() => {
 		if (node) {
 			if (node.io.inputs.has_named_inputs) {
 				return json_node.named_input_connections.map((connection, i) => {
@@ -139,6 +139,6 @@ export function SetupInputs(
 		available_inputs,
 		inputs_container_style_object,
 		inputs_pixel_style_objects,
-		connection_element_input_class_objects,
+		connection_pixel_input_class_objects,
 	};
 }

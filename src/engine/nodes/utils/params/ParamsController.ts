@@ -62,6 +62,7 @@ import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 const NODE_SIMPLE_NAME = 'params';
 
 export type OnSceneLoadHook = () => void;
+type PostCreateParamsHook = () => void;
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
@@ -80,6 +81,7 @@ export class ParamsController {
 	// private _current_param_folder_name: string | undefined;
 
 	// hooks
+	private _post_create_params_hook: PostCreateParamsHook | undefined;
 	private _on_scene_load_hooks: OnSceneLoadHook[] | undefined;
 	private _on_scene_load_hook_names: string[] | undefined;
 
@@ -101,12 +103,15 @@ export class ParamsController {
 
 		this.init_from_params_config();
 		this.node.create_params();
+		this._post_create_params();
+	}
+	private _post_create_params() {
 		this._update_caches();
 		// this._create_params_ui_data_dependencies();
 		this.init_param_accessors();
 		this._param_create_mode = false;
 
-		this.node.post_create_params(); // TODO: typescript
+		this.run_post_create_params_hook();
 
 		// This was to debug a weird bug where I was adding nodes to the list
 		// of params, from the DependenciesController
@@ -120,6 +125,10 @@ export class ParamsController {
 		// 	return 0;
 		// };
 	}
+	post_create_spare_params() {
+		this._update_caches();
+		this.init_param_accessors();
+	}
 
 	private init_from_params_config() {
 		const params_config = this.node.params_config as NodeParamsConfig;
@@ -131,16 +140,54 @@ export class ParamsController {
 		}
 	}
 	private init_param_accessors() {
+		let current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
+		this._remove_unneeded_accessors(current_names_in_accessor);
+		// update var after having removed accessors
+		current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
+
 		for (let param of this.all) {
-			Object.defineProperty(this.node.pv, param.name, {
+			const is_spare: boolean = param.options.is_spare;
+
+			const param_not_yet_in_accessors = !current_names_in_accessor.includes(param.name);
+
+			if (param_not_yet_in_accessors || is_spare) {
+				Object.defineProperty(this.node.pv, param.name, {
+					get: () => {
+						return param.value;
+					},
+					// only spare parameters can be removed
+					configurable: is_spare,
+				});
+				Object.defineProperty(this.node.p, param.name, {
+					get: () => {
+						return param;
+					},
+					configurable: is_spare,
+				});
+			}
+		}
+	}
+	private _remove_unneeded_accessors(current_names_in_accessor: string[]) {
+		const current_param_names = this._param_names;
+		const names_to_remove = [];
+		for (let current_name_in_accessor of current_names_in_accessor) {
+			if (!current_param_names.includes(current_name_in_accessor)) {
+				names_to_remove.push(current_name_in_accessor);
+			}
+		}
+
+		for (let name_to_remove of names_to_remove) {
+			Object.defineProperty(this.node.pv, name_to_remove, {
 				get: () => {
-					return param.value;
+					return undefined;
 				},
+				configurable: true,
 			});
-			Object.defineProperty(this.node.p, param.name, {
+			Object.defineProperty(this.node.p, name_to_remove, {
 				get: () => {
-					return param;
+					return undefined;
 				},
+				configurable: true,
 			});
 		}
 	}
@@ -470,6 +517,14 @@ export class ParamsController {
 	// HOOKS
 	//
 	//
+	set_post_create_params_hook(hook: PostCreateParamsHook) {
+		this._post_create_params_hook = hook;
+	}
+	run_post_create_params_hook() {
+		if (this._post_create_params_hook) {
+			this._post_create_params_hook();
+		}
+	}
 	add_on_scene_load_hook(name: string, method: OnSceneLoadHook) {
 		this._on_scene_load_hook_names = this._on_scene_load_hook_names || [];
 		this._on_scene_load_hooks = this._on_scene_load_hooks || [];

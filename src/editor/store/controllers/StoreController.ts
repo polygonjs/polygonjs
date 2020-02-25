@@ -86,6 +86,8 @@ class StoreControllerClass {
 					return this.engine.update_node_named_inputs(emitter.graph_node_id);
 				case NodeEvent.NAMED_OUTPUTS_UPDATED:
 					return this.engine.update_node_named_outputs(emitter.graph_node_id);
+				case NodeEvent.PARAMS_UPDATED:
+					return this.engine.update_params(emitter.graph_node_id);
 				case NodeEvent.CREATED:
 					return this.engine.add_node(emitter.graph_node_id, data);
 				case NodeEvent.DELETED:

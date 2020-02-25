@@ -39,9 +39,10 @@ import {PolyScene} from 'src/engine/scene/PolyScene';
 
 type OnSaveCallback = (json: SceneJsonExporterData) => void;
 
-interface EditorProps {
+export interface EditorProps {
 	scene_update_allowed?: boolean;
 	current_node?: string;
+	selected?: string;
 	perf?: boolean;
 	play?: boolean;
 }
@@ -83,8 +84,16 @@ export class Editor {
 			const node = scene.node(props.current_node);
 			if (node) {
 				StoreController.editor.set_current_node(node);
+				if (props.selected) {
+					const child_node = node.node(props.selected);
+					if (child_node) {
+						node.children_controller?.selection.set([child_node]);
+					} else {
+						console.warn(`child node '${props.selected}' not found for selected option`);
+					}
+				}
 			} else {
-				console.warn(`node '${props.current_node}' not found`);
+				console.warn(`node '${props.current_node}' not found for current_node option`);
 			}
 		}
 

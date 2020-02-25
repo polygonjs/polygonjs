@@ -1,8 +1,7 @@
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
-import {BaseGLDefinition} from '../../utils/GLDefinition';
 import {GlobalsGlNode} from '../../Globals';
 import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
 import {BaseGlNodeType} from '../../_Base';
+import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
 export abstract class GlobalsBaseController {
 	private static __next_id: number = 0;
@@ -18,17 +17,18 @@ export abstract class GlobalsBaseController {
 	handle_globals_node(
 		globals_node: GlobalsGlNode,
 		output_name: string,
-		definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
-		body_lines_by_shader_name: Map<ShaderName, string[]>,
-		body_lines: string[],
-		dependencies: ShaderName[],
-		shader_name: ShaderName
+		shaders_collection_controller: ShadersCollectionController
+		// definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
+		// body_lines_by_shader_name: Map<ShaderName, string[]>,
+		// body_lines: string[],
+		// dependencies: ShaderName[],
+		// shader_name: ShaderName
 	): void {}
 
 	abstract read_attribute(
 		node: BaseGlNodeType,
 		gl_type: ConnectionPointType,
 		attrib_name: string,
-		shader_name: ShaderName
+		shaders_collection_controller: ShadersCollectionController
 	): string | undefined;
 }

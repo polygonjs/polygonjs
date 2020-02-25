@@ -25,6 +25,11 @@ export abstract class ShaderAssemblerMesh extends ShaderAssemblerRender {
 	}
 
 	async compile_material(material: ShaderMaterialWithCustomMaterials) {
+		// no need to compile if the globals handler has not been declared
+		if (!this.compile_allowed()) {
+			return;
+		}
+
 		const output_nodes = GlNodeFinder.find_output_nodes(this._gl_parent_node);
 		if (output_nodes.length > 1) {
 			this._gl_parent_node.states.error.set('only one output node allowed');

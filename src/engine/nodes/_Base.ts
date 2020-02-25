@@ -133,9 +133,9 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 
 	private _params_controller: ParamsController | undefined;
 	readonly params_config: K | undefined;
-	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>(this)) as ParamsValueAccessorType<K>;
+	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>()) as ParamsValueAccessorType<K>;
 	// readonly pv: ParamsValueAccessor<K> = new ParamsValueAccessor<K>(this);
-	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>(this)) as ParamsAccessorType<K>;
+	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>()) as ParamsAccessorType<K>;
 	// readonly p: ParamsAccessor<K> = new ParamsAccessor<K>(this);
 
 	private _processing_context: ProcessingContext | undefined;
@@ -221,7 +221,6 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 	protected initialize_base_node() {}
 	protected initialize_node() {}
-	post_create_params() {}
 	// constructor() {
 	// 	super('base_node');
 

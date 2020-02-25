@@ -82,9 +82,6 @@ export class EngineStoreControllerClass {
 	}
 
 	// node mutations
-	add_node_params_to_store(node_id: string) {
-		this._commit(EngineMutation.NODE_ADD_PARAMS_TO_STORE, node_id);
-	}
 	update_node_error(node_id: string) {
 		// this._store.commit(`engine/${EngineMutation.NODE_ERROR_UPDATED}`, node_id);
 		this._commit(EngineMutation.NODE_ERROR_UPDATED, node_id);
@@ -115,6 +112,12 @@ export class EngineStoreControllerClass {
 	}
 	update_node_named_outputs(node_id: string) {
 		this._commit(EngineMutation.NODE_NAMED_OUTPUTS_UPDATED, node_id);
+	}
+	add_node_params_to_store(node_id: string) {
+		this._commit(EngineMutation.NODE_ADD_PARAMS_TO_STORE, node_id);
+	}
+	update_params(node_id: string) {
+		this._commit(EngineMutation.NODE_PARAMS_UPDATED, node_id);
 	}
 	add_node(node_id: string, data: EmitDataByNodeEventMap[NodeEvent.CREATED]) {
 		this._commit(EngineMutation.NODE_CREATED, {parent_id: node_id, child_node_json: data.child_node_json});

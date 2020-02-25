@@ -9,6 +9,7 @@ import {TypedGlNode} from './_Base';
 // gl_PointCoord
 
 import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class GlobalsGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsGlParamsConfig();
 
@@ -22,10 +23,10 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		this.material_node?.assembler_controller.add_globals_params(this);
 	}
 
-	set_lines() {
-		if (this._shader_name) {
-			this.material_node?.assembler_controller?.assembler.set_node_lines_globals(this, this._shader_name);
-		}
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		// if (lines_controller.shader_name) {
+		this.material_node?.assembler_controller?.assembler.set_node_lines_globals(this, shaders_collection_controller);
+		// }
 		// const vertex_definitions = []
 		// const fragment_definitions = []
 		// const definitions = []

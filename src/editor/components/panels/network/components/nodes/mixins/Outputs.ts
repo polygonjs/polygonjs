@@ -98,7 +98,7 @@ export function SetupOutputs(
 			});
 		}
 	});
-	const connection_element_output_class_objects = computed(() => {
+	const connection_pixel_output_class_objects = computed(() => {
 		if (node) {
 			return json_node.named_output_connections.map((connection, i) => {
 				return {
@@ -118,6 +118,6 @@ export function SetupOutputs(
 		max_outputs_count,
 		available_outputs,
 		outputs_pixel_style_objects,
-		connection_element_output_class_objects,
+		connection_pixel_output_class_objects,
 	};
 }

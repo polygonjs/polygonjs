@@ -1,14 +1,6 @@
-// import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import lodash_uniq from 'lodash/uniq';
 import {BaseGlNodeType} from '../../_Base';
-// import {Output} from '../../Output'
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
-// import {DefinitionVarying} from '../Definition/Varying'
-// import {DefinitionAttribute} from '../Definition/Attribute'
-// import {DefinitionVaryingCollection} from '../Definition/VaryingCollection'
-// import {DefinitionAttributeCollection} from '../Definition/AttributeCollection'
-// import {Definition} from '../../Definition/_Module';
-// import {BaseShaderAssembler} from './Assembler/_Base'
 import {BaseNodeType} from '../../../_Base';
 import {BaseGlShaderAssembler} from '../assemblers/_Base';
 import {MapUtils} from 'src/core/MapUtils';
@@ -16,95 +8,29 @@ import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
 import {GLDefinitionType, BaseGLDefinition} from '../../utils/GLDefinition';
 import {TypedGLDefinitionCollection} from '../../utils/GLDefinitionCollection';
 import {ParamConfigsController} from 'src/engine/nodes/utils/code/controllers/ParamConfigsController';
+import {ShadersCollectionController} from './ShadersCollectionController';
+import {CodeFormatter} from './CodeFormatter';
 
-// interface NumberByString {
-// 	[propName: string]: number
-// }
-// interface StringByString {
-// 	[propName: string]: number
-// }
-// type BooleanByString = Map<string, boolean>;
-// type StringArrayByString = Map<string, string[]>;
-// interface StringArrayByStringByString {
-// 	[propName: string]: StringArrayByString
-// }
-
-// interface BaseNodeGlArrayByString {
-// 	[propName: string]: BaseNodeGl[]
-// }
-// interface StringArrayByString {
-// 	[propName: string]: string[]
-// }
-
-// export enum ShaderType {
-// 	BASIC = 'basic',
-// 	LAMBERT = 'lambert',
-// 	STANDARD = 'standard',
-// 	POINTS = 'points',
-// 	LINE = 'line',
-// }
-
-export enum LineType {
-	FUNCTION_DECLARATION = 'function_declaration',
-	DEFINE = 'define',
-	BODY = 'body',
-}
-// export const SHADER_TYPES = [
-// 	ShaderType.BASIC,
-// 	ShaderType.LAMBERT,
-// 	ShaderType.STANDARD,
-// 	ShaderType.POINTS,
-// 	// ShaderType.LINE
-// ];
-// export const MESH_SHADER_TYPES = [ShaderType.BASIC, ShaderType.LAMBERT, ShaderType.STANDARD];
-// export const SHADER_NAMES = [ShaderName.VERTEX, ShaderName.FRAGMENT]
-// export const LINE_TYPES = [LineType.FUNCTION_DECLARATION, LineType.DEFINE, LineType.BODY];
-
-// export const TEMPLATE_SHADERS_BY_SHADER_TYPE = {
-// 	[ShaderType.BASIC]: ShaderLib.basic,
-// 	[ShaderType.LAMBERT]: ShaderLib.lambert,
-// 	[ShaderType.STANDARD]: ShaderLib.standard,
-// 	[ShaderType.POINTS]: ShaderLib.points,
-// 	[ShaderType.LINE]: ShaderLib.dashed,
-// };
-
-const LINE_SUFFIXES = {
-	[LineType.FUNCTION_DECLARATION]: '',
-	[LineType.DEFINE]: ';',
-	[LineType.BODY]: ';',
-};
-
-const LINE_PREFIXES = {
-	[LineType.FUNCTION_DECLARATION]: '',
-	[LineType.DEFINE]: '',
-	[LineType.BODY]: '	',
-};
+import {LineType} from './LineType';
 
 export class CodeBuilder {
-	// _param_configs: ParamConfig<ParamType>[] = [];
 	_param_configs_controller: ParamConfigsController = new ParamConfigsController();
 	_param_configs_set_allowed: boolean = true;
 
+	private _shaders_collection_controller: ShadersCollectionController | undefined;
 	_lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
 	_function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
 
 	constructor(private _assembler: BaseGlShaderAssembler, private _gl_parent_node: BaseNodeType) {}
 
 	async build_from_nodes(root_nodes: BaseGlNodeType[]) {
-		this.reset();
-
 		const node_traverser = new TypedNodeTraverser<BaseGlNodeType>(this._assembler, this._gl_parent_node);
 		node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
 		for (let shader_name of this.shader_names()) {
 			nodes_by_shader_name.set(shader_name, node_traverser.nodes_for_shader_name(shader_name));
-			// nodes.push(this._output)
-			// POLY.log(shader_name, nodes_by_shader_name[shader_name].map(n=>n.name()).sort())
 		}
-		// POLY.log("nodes_by_shader_name", this._assembler.shaders_by_name(), nodes_by_shader_name)
-		// const vertex_nodes = node_traverser.nodes_for_shader_name(ShaderName.VERTEX)
-		// const fragment_nodes = node_traverser.nodes_for_shader_name(ShaderName.FRAGMENT)
 		const sorted_nodes = node_traverser.sorted_nodes();
 		for (let shader_name of this.shader_names()) {
 			const root_nodes_for_shader = this._assembler.root_nodes_by_shader_name(shader_name);
@@ -112,6 +38,7 @@ export class CodeBuilder {
 
 			// keep track of which nodes are both leaf and root, and do not use their code twice
 			// as this may happen with an attribute node, when used as both import and export
+			// TODO: that seems useless, as I surely should be able to filter duplicates if needed
 
 			// ensure nodes are unique
 			const node_ids: Map<string, boolean> = new Map();
@@ -163,15 +90,21 @@ export class CodeBuilder {
 		// })
 		// await Promise.all(param_promises)
 
+		this._shaders_collection_controller = new ShadersCollectionController(
+			this.shader_names(),
+			this.shader_names()[0]
+		);
+		this.reset();
 		for (let shader_name of this.shader_names()) {
 			const nodes = nodes_by_shader_name.get(shader_name);
+			this._shaders_collection_controller.set_current_shader_name(shader_name);
 			if (nodes) {
 				for (let node of nodes) {
-					node.set_shader_name(shader_name);
+					// node.set_shader_name(shader_name);
 					if (this._param_configs_set_allowed) {
 						node.set_param_configs();
 					}
-					node.set_lines();
+					node.set_lines(this._shaders_collection_controller);
 				}
 			}
 		}
@@ -239,15 +172,6 @@ export class CodeBuilder {
 	}
 
 	add_code_lines(nodes: BaseGlNodeType[], shader_name: ShaderName) {
-		// this.add_function_declarations(nodes, shader_name)
-		// this.add_code_line_for_nodes_and_line_type(nodes, shader_name, LineType.DEFINE)
-		// const definition_types = [
-		// 	Definition.Function,
-		// 	Definition.Uniform,
-		// 	Definition.Varying,
-		// 	Definition.Attribute
-		// ]
-
 		this.add_definitions(nodes, shader_name, GLDefinitionType.FUNCTION, LineType.FUNCTION_DECLARATION);
 		this.add_definitions(nodes, shader_name, GLDefinitionType.UNIFORM, LineType.DEFINE);
 		this.add_definitions(nodes, shader_name, GLDefinitionType.VARYING, LineType.DEFINE);
@@ -255,34 +179,19 @@ export class CodeBuilder {
 
 		this.add_code_line_for_nodes_and_line_type(nodes, shader_name, LineType.BODY);
 	}
-	// add_function_declarations(nodes: BaseNodeGl[], shader_name: ShaderNames){
-	// 	const line_type = LineType.FUNCTION_DECLARATION
-	// 	nodes = nodes.filter(node=>{
-	// 		const lines_count = node.lines(shader_name, line_type)
-	// 		return lines_count.length > 0
-	// 	})
 
-	// 	nodes.forEach((node, i)=>{
-	// 		const is_last = (i == (nodes.length-1))
-	// 		const node_type = node.type()
-	// 		let function_declared = this._is_function_declared(shader_name, node_type)
-	// 		if(!function_declared){
-	// 			function_declared = this.add_code_line_for_node_and_line_type(node, shader_name, line_type, is_last)
-	// 			if(function_declared){
-	// 				this._set_function_declared(shader_name, node_type)
-	// 			}
-	// 		}
-	// 	})
-	// }
 	private add_definitions(
 		nodes: BaseGlNodeType[],
 		shader_name: ShaderName,
 		definition_type: GLDefinitionType,
 		line_type: LineType
 	) {
+		if (!this._shaders_collection_controller) {
+			return;
+		}
 		const definitions = [];
 		for (let node of nodes) {
-			let node_definitions = node.definitions(shader_name);
+			let node_definitions = this._shaders_collection_controller.definitions(shader_name, node);
 			if (node_definitions) {
 				node_definitions = node_definitions.filter((d) => d.definition_type == definition_type);
 				for (let definition of node_definitions) {
@@ -309,41 +218,32 @@ export class CodeBuilder {
 				MapUtils.push_on_array_at_entry(definitions_by_node_id, node_id, definition);
 			}
 			const lines_for_shader = this._lines.get(shader_name)!;
-			node_ids.forEach((boolean, node_id: string) => {
+			node_ids.forEach((boolean: boolean, node_id: string) => {
 				const definitions = definitions_by_node_id.get(node_id);
 				if (definitions) {
 					const first_definition = definitions[0];
 
 					if (first_definition) {
-						const comment = this.node_comment(first_definition.node, line_type);
+						const comment = CodeFormatter.node_comment(first_definition.node, line_type);
 						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
 
 						for (let definition of definitions) {
-							const line = this.line_wrap(definition.line, line_type);
+							const line = CodeFormatter.line_wrap(definition.line, line_type);
 							MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
 						}
-						const separator = this.post_line_separator(line_type);
+						const separator = CodeFormatter.post_line_separator(line_type);
 						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, separator);
 					}
 				}
 			});
-			// uniq_definitions.forEach(definition=>{
-			// 	const line = this.line_wrap(definition.line(), line_type)
-
-			// 	const comment = this.node_comment(definition.node(), line_type)
-			// 	this._lines[shader_name][line_type].push(comment)
-			// 	this._lines[shader_name][line_type].push(line)
-			// 	const separator = this.post_line_separator(line_type)
-			// 	this._lines[shader_name][line_type].push(separator)
-			// })
-			if (uniq_definitions.length > 0) {
-			}
 		}
 	}
 	add_code_line_for_nodes_and_line_type(nodes: BaseGlNodeType[], shader_name: ShaderName, line_type: LineType) {
 		nodes = nodes.filter((node) => {
-			const lines = node.lines(shader_name, line_type);
-			return lines && lines.length > 0;
+			if (this._shaders_collection_controller) {
+				const lines = this._shaders_collection_controller.body_lines(shader_name, node);
+				return lines && lines.length > 0;
+			}
 		});
 
 		var nodes_count = nodes.length;
@@ -357,52 +257,24 @@ export class CodeBuilder {
 		shader_name: ShaderName,
 		line_type: LineType,
 		is_last: boolean
-	): boolean {
-		const lines = node.lines(shader_name, line_type);
-		const lines_for_shader = this._lines.get(shader_name)!;
+	): void {
+		if (!this._shaders_collection_controller) {
+			return;
+		}
+		const lines = this._shaders_collection_controller.body_lines(shader_name, node);
 
 		if (lines && lines.length > 0) {
-			const comment = this.node_comment(node, line_type);
+			const lines_for_shader = this._lines.get(shader_name)!;
+			const comment = CodeFormatter.node_comment(node, line_type);
 			MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
 			lodash_uniq(lines).forEach((line) => {
-				line = this.line_wrap(line, line_type);
+				line = CodeFormatter.line_wrap(line, line_type);
 				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
 			});
 			if (!(line_type == LineType.BODY && is_last)) {
-				const separator = this.post_line_separator(line_type);
+				const separator = CodeFormatter.post_line_separator(line_type);
 				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, separator);
 			}
-			return true;
-		}
-		return false;
-	}
-
-	private node_comment(node: BaseGlNodeType, line_type: LineType): string {
-		let line = `// ${node.full_path()}`;
-		if (line_type == LineType.BODY) {
-			line = `	${line}`;
-		}
-		return line;
-	}
-	private line_wrap(line: string, line_type: LineType) {
-		let add_suffix = true;
-		if (line.indexOf('#if') == 0 || line.indexOf('#endif') == 0) {
-			add_suffix = false;
-		}
-		if (add_suffix) {
-			return `${LINE_PREFIXES[line_type]}${line}${LINE_SUFFIXES[line_type]}`;
-		} else {
-			return `${LINE_PREFIXES[line_type]}${line}`;
 		}
 	}
-	private post_line_separator(line_type: LineType) {
-		return line_type == LineType.BODY ? '	' : '';
-	}
-
-	// private _is_function_declared(shader_name: ShaderName, node_type: string): boolean {
-	// 	return this._function_declared[shader_name][node_type] || false;
-	// }
-	// private _set_function_declared(shader_name: ShaderName, node_type: string) {
-	// 	this._function_declared[shader_name][node_type] = true;
-	// }
 }

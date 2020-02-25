@@ -432,11 +432,9 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 				}
 			}
 		}
-		// });
 
-		// updating params can be super slow (around 50ms easily - only tested in development environement)
-		// so we only do it if new params where added or removed
 		if (spare_param_names_to_add.length > 0 || spare_param_names_to_remove.length > 0) {
+			this.node.params.post_create_spare_params();
 			this.node.emit(NodeEvent.PARAMS_UPDATED);
 		}
 	}

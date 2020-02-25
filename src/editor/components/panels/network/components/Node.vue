@@ -78,12 +78,12 @@
 			.connection-pixel.input-pixel(
 				v-for = 'input, i in available_inputs'
 				:style = 'inputs_pixel_style_objects[i]'
+				:class = 'connection_pixel_input_class_objects[i]'
 				)
 				.connection-name-element(
 					:class = 'connection_name_element_class_objects'
 				) {{input_names[i]}}
 				.connection-element(
-					:class = 'connection_element_input_class_objects[i]'
 					:title = 'input_titles[i]'
 					@mousedown = 'on_input_mousedown($event, i)'
 					@mouseup = 'on_input_mouseup($event, i)'
@@ -96,12 +96,12 @@
 			.connection-pixel.output-pixel(
 				v-for = 'output, i in available_outputs'
 				:style = 'outputs_pixel_style_objects[i]'
+				:class = 'connection_pixel_output_class_objects[i]'
 				)
 				.connection-name-element(
 					:class = 'connection_name_element_class_objects'
 				) {{output_names[i]}}
 				.connection-element(
-					:class = 'connection_element_output_class_objects[i]'
 					:title = 'output_titles[i]'
 					@mousedown = 'on_output_mousedown($event, i)'
 					@mouseup = 'on_output_mouseup($event, i)'
@@ -418,6 +418,46 @@ $z_index_connection_name_non_named: 21
 
 	.connection-pixel
 		position: absolute
+		&.bool
+			.connection-name-element
+				background-color: mix($color_connection_bool, $color_node_body, 50%)
+			.connection-element
+				background-color: $color_connection_bool !important
+		&.int
+			.connection-name-element
+				background-color: mix($color_connection_int, $color_node_body, 50%)
+			.connection-element
+				background-color: $color_connection_int !important
+		&.float
+			.connection-name-element
+				background-color: mix($color_connection_float, $color_node_body, 20%)
+			.connection-element
+				background-color: $color_connection_float !important
+		&.vec2
+			.connection-name-element
+				background-color: mix($color_connection_vec2, $color_node_body, 20%)
+			.connection-element
+				background-color: $color_connection_vec2 !important
+		&.vec3
+			.connection-name-element
+				background-color: lighten($color_connection_vec3, 20%)
+			.connection-element
+				background-color: $color_connection_vec3 !important
+		&.vec4
+			.connection-name-element
+				background-color: mix($color_connection_vec4, $color_node_body, 20%)
+			.connection-element
+				background-color: $color_connection_vec4 !important
+		&.mat3
+			.connection-name-element
+				background-color: mix($color_connection_mat3, $color_node_body, 50%)
+			.connection-element
+				background-color: $color_connection_mat3 !important
+		&.color
+			.connection-name-element
+				background-color: mix($color_connection_color, $color_node_body, 50%)
+			.connection-element
+				background-color: $color_connection_color !important
 		&:hover
 			z-index: $z_index_connection_hover
 			.connection-name-element
@@ -454,22 +494,7 @@ $z_index_connection_name_non_named: 21
 			&:hover
 				width: $connection_size_hover
 				height: $connection_size_hover
-			&.bool
-				background-color: $color_connection_bool !important
-			&.int
-				background-color: $color_connection_int !important
-			&.float
-				background-color: $color_connection_float !important
-			&.vec2
-				background-color: $color_connection_vec2 !important
-			&.vec3
-				background-color: $color_connection_vec3 !important
-			&.vec4
-				background-color: $color_connection_vec4 !important
-			&.mat3
-				background-color: $color_connection_mat3 !important
-			&.color
-				background-color: $color_connection_color !important
+
 
 	.inputs-container
 		position: absolute

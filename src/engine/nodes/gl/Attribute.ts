@@ -19,6 +19,7 @@ const ConnectionPointTypesAvailableForAttribute = [
 ];
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -68,10 +69,13 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	}
 	// }
 
-	set_lines() {
-		if (this._shader_name) {
-			this.material_node?.assembler_controller.assembler.set_node_lines_attribute(this, this._shader_name);
-		}
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		// if (lines_controller.shader_name) {
+		this.material_node?.assembler_controller.assembler.set_node_lines_attribute(
+			this,
+			shaders_collection_controller
+		);
+		// }
 	}
 
 	// update_output_type(constructor) {

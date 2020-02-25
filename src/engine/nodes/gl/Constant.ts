@@ -14,6 +14,7 @@ function typed_visible_options(type: ConnectionPointType) {
 
 import {BaseParamType} from 'src/engine/params/_Base';
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {
 		menu: {
@@ -50,16 +51,14 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		}
 	}
 
-	set_lines() {
-		const body_lines = [];
-
-		const connection_type = this._current_connection_type;
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const param = this._current_param;
 		if (param) {
+			const connection_type = this._current_connection_type;
 			const value = ThreeToGl.any(param.value);
 			const var_value = this._current_var_name;
-			body_lines.push(`${connection_type} ${var_value} = ${value}`);
-			this.set_body_lines(body_lines);
+			const body_line = `${connection_type} ${var_value} = ${value}`;
+			shaders_collection_controller.add_body_lines(this, [body_line]);
 		} else {
 			console.warn(`no param found for constant node for type '${this.pv.type}'`);
 		}

@@ -34,6 +34,7 @@ import './engine/nodes/cop/File';
 import './engine/nodes/cop/Switch';
 
 QUnit.module('gl');
+import './engine/nodes/gl/Attribute';
 import './engine/nodes/gl/Constant';
 
 QUnit.module('manager');

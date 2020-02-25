@@ -1,11 +1,12 @@
-import {Editor} from './Editor';
+import {Editor, EditorProps} from './Editor';
 import scene_data from 'src/../public/examples/scenes/default_simple.json';
 import {SceneJsonExporterData} from 'src/engine/io/json/export/Scene';
 import {CoreString} from '../core/String';
 
 var url_params = new URLSearchParams(window.location.search);
-const props = {
+const props: EditorProps = {
 	current_node: url_params.get('current_node') || undefined,
+	selected: url_params.get('selected') || undefined,
 	perf: url_params.has('perf') ? CoreString.to_boolean(url_params.get('perf') || '') : undefined,
 };
 

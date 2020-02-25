@@ -115,6 +115,12 @@ export class NodeSerializer {
 	to_json_params(include_components: boolean = false) {
 		return this.to_json_params_from_names(this.node.params.names, include_components);
 	}
+	// to_json_params_without_components(){
+	// 	return this.to_json_params(false)
+	// }
+	// to_json_params_with_components(){
+	// 	return this.to_json_params(true)
+	// }
 	// to_json_spare_params(include_components: boolean = false) {
 	// 	return this.to_json_params_from_names(this.node.params.spare_names, include_components);
 	// }

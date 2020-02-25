@@ -8,36 +8,14 @@ import {
 	ConnectionPointTypeToParamTypeMap,
 } from '../utils/connections/ConnectionPointType';
 import lodash_isArray from 'lodash/isArray';
-// import {
-// 	VAR_TYPES,
-// 	TYPED_CONNECTION_BY_VAR_TYPE,
-// 	TypedConnectionFloat,
-// 	TypedConnectionVec2,
-// 	TypedConnectionVec3,
-// 	TypedConnectionVec4,
-// } from './utils/GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
 
-// const PARAM_TYPES = {
-// 	float: ParamType.FLOAT,
-// 	vec2: ParamType.VECTOR2,
-// 	vec3: ParamType.VECTOR,
-// 	vec4: ParamType.VECTOR4,
-// };
-// const PARAM_DEFAULT_VALUES = {
-// 	float: 0,
-// 	vec2: [0, 0],
-// 	vec3: [0, 0, 0],
-// 	vec4: [0, 0, 0, 0],
-// };
-
-const OUTPUT_NAME = 'param_val';
+const OUTPUT_NAME = 'val';
 
 import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {ParamType} from 'src/engine/poly/ParamType';
 import {UniformGLDefinition} from './utils/GLDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -58,21 +36,9 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	static type() {
 		return 'param';
 	}
-
+	protected _allow_inputs_created_from_params: boolean = false;
 	private _update_if_type_changed_bound = this._update_if_type_changed.bind(this);
 	initialize_node() {
-		// this.set_inputs([
-		// 	new GlDataIONumeric('in')
-		// ])
-		// this.set_outputs([
-		// 	new GlDataIO('out')
-		// ])
-		// this.set_named_outputs([
-		// 	new TypedConnectionFloat('float'),
-		// 	new TypedConnectionVec2('vec2'),
-		// 	new TypedConnectionVec3('vec3'),
-		// 	new TypedConnectionVec4('vec4')
-		// ])
 		this.update_output_type();
 
 		this.add_post_dirty_hook('_update_if_type_changed', this._update_if_type_changed_bound);
@@ -85,14 +51,14 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		}
 	}
 
-	set_lines() {
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const definitions = [];
 
 		const gl_type = ConnectionPointTypes[this.pv.type];
 		const var_name = this.uniform_name();
 
-		definitions.push(new UniformGLDefinition(this, gl_type, var_name)); //(`uniform ${gl_type} ${var_name}`)
-		this.set_definitions(definitions);
+		definitions.push(new UniformGLDefinition(this, gl_type, var_name));
+		shaders_collection_controller.add_definitions(this, definitions);
 	}
 	set_param_configs() {
 		const gl_type = ConnectionPointTypes[this.pv.type];
@@ -130,11 +96,6 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	}
 
 	update_output_type() {
-		// const val = this.pv.type
-		// const name = VAR_TYPES[val];
-		// const constructor = TYPED_CONNECTION_BY_VAR_TYPE[name];
-		// const named_output = new constructor(OUTPUT_NAME);
-		// this.set_named_outputs([named_output]);
 		this.io.outputs.set_named_output_connection_points([
 			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointTypes[this.pv.type]),
 		]);

@@ -8,7 +8,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Vector2} from 'three/src/math/Vector2';
 
 // import {Connection} from 'src/Engine/Node/Gl/GlData';
-import {LineType} from '../utils/CodeBuilder';
+import {LineType} from '../utils/LineType';
 // import {Output} from 'src/Engine/Node/Gl/Output'
 
 import {ShaderConfig} from '../configs/ShaderConfig';
@@ -33,6 +33,7 @@ import {AttributeGlNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
 import {GlobalsBaseController} from '../globals/_Base';
 import {CustomMaterialName} from './_BaseRender';
+import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -102,7 +103,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	get globals_handler(): GlobalsBaseController | undefined {
 		return this._gl_parent_node.assembler_controller.globals_handler;
 	}
-
+	compile_allowed(): boolean {
+		return this._gl_parent_node.assembler_controller.globals_handler != null;
+	}
 	shaders_by_name() {
 		return this._shaders_by_name;
 	}
@@ -296,9 +299,12 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		}
 		return list;
 	}
-	set_node_lines_globals(globals_node: GlobalsGlNode, shader_name: ShaderName) {}
-	set_node_lines_output(output_node: OutputGlNode, shader_name: ShaderName) {}
-	set_node_lines_attribute(attribute_node: AttributeGlNode, shader_name: ShaderName) {}
+	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {}
+	set_node_lines_output(output_node: OutputGlNode, shaders_collection_controller: ShadersCollectionController) {}
+	set_node_lines_attribute(
+		attribute_node: AttributeGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {}
 
 	//
 	//
