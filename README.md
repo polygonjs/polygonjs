@@ -1,6 +1,6 @@
 # Polygonjs
 
-Polygonjs allows you to create interactive 3D apps for the web. [Try our examples](https://polygonjs.com/).
+Polygonjs is a 3D Webgl engine. It allows you to create interactive 3D apps for the web. [Try our examples](https://polygonjs.com/).
 
 [![NPM package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
@@ -9,9 +9,11 @@ Polygonjs allows you to create interactive 3D apps for the web. [Try our example
 [![Dev Dependencies][dev-dependencies]][dev-dependencies-url]
 [![Known Vulnerabilities][snyk]][snyk-url]
 [![Language Grade][lgtm]][lgtm-url]
-[![Twitter](https://img.shields.io/twitter/follow/polygonjs.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=polygonjs)
+[![Twitter][twitter-img]][twitter-url]
 
 # run for development
+
+Ensure you have `node` and `yarn` installed, then run the following in the root folder of the repository:
 
 -   run `yarn`
 -   run `npm start`
@@ -27,11 +29,6 @@ Polygonjs allows you to create interactive 3D apps for the web. [Try our example
 
 -   run `yarn`
 -   run `npm run build`
-
-# run the test suite
-
--   run `yarn`
--   run `npm test`
 
 ### Change log
 
@@ -51,3 +48,5 @@ Polygonjs allows you to create interactive 3D apps for the web. [Try our example
 [snyk-url]: https://snyk.io/test/github/polygonjs/polygonjs-engine?targetFile=package.json
 [lgtm]: https://img.shields.io/lgtm/grade/javascript/g/polygonjs/polygonjs-engine.svg?label=code%20quality
 [lgtm-url]: https://lgtm.com/projects/g/polygonjs/polygonjs-engine/
+[twitter-img]: https://img.shields.io/twitter/follow/polygonjs.svg?style=social&label=Follow
+[twitter-url]: https://twitter.com/intent/follow?screen_name=polygonjs
