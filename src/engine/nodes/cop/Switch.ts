@@ -1,7 +1,7 @@
 import {TypedCopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class SwitchCopParamsConfig extends NodeParamsConfig {
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],

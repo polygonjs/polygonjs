@@ -3,7 +3,7 @@ import {SpotLight} from 'three/src/lights/SpotLight';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {SpotLightHelper} from './utils/helpers/SpotLightHelper';
 import {Object3D} from 'three/src/core/Object3D';

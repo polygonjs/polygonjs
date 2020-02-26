@@ -1,16 +1,16 @@
 import {TypedSopNode} from './_Base';
 // import {GroupParamController} from './utils/GroupParamController';
 
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreTransform} from 'src/core/Transform';
-// import {ParamType} from 'src/engine/poly/ParamType';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreTransform} from '../../../core/Transform';
+// import {ParamType} from '../../poly/ParamType';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 // const DEFAULT_PARAMS = {
 // 	PIVOT: [0, 0, 0] as [number, number, number],
 // };
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TransformSopParamConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');
 

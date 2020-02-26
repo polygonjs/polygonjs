@@ -1,6 +1,6 @@
 import {BaseNodeType} from '../_Base';
-import {BaseContainer} from 'src/engine/containers/_Base';
-import {POLY} from 'src/engine/Poly';
+import {BaseContainer} from '../../containers/_Base';
+import {POLY} from '../../Poly';
 
 export class CookController {
 	_cooking: boolean = false;

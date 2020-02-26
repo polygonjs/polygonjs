@@ -4,16 +4,16 @@ import {Texture} from 'three/src/textures/Texture';
 // import {RepeatWrapping} from 'three/src/constants';
 // import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 // import lodash_isArray from 'lodash/isArray';
-// import {CoreScriptLoader} from 'src/core/loader/Script';
-// import {CoreGeometry} from 'src/core/geometry/Geometry';
+// import {CoreScriptLoader} from '/Script';
+// import {CoreGeometry} from '../geometry/Geometry';
 import {UnsignedByteType} from 'three/src/constants';
-import {CoreWalker} from 'src/core/Walker';
+import {CoreWalker} from '../Walker';
 
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {BaseCopNodeClass} from 'src/engine/nodes/cop/_Base';
-import {TextureContainer} from 'src/engine/containers/Texture';
-import {POLY} from 'src/engine/Poly';
+import {BaseNodeType} from '../../engine/nodes/_Base';
+import {BaseParamType} from '../../engine/params/_Base';
+import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
+import {TextureContainer} from '../../engine/containers/Texture';
+import {POLY} from '../../engine/Poly';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -146,18 +146,20 @@ export class CoreTextureLoader {
 
 		switch (ext_lowercase) {
 			case Extension.EXR: {
-				const {EXRLoader} = await import('modules/three/examples/jsm/loaders/EXRLoader');
+				const {EXRLoader} = await import('../../../modules/three/examples/jsm/loaders/EXRLoader');
 				return new EXRLoader();
 			}
 			case Extension.HDR: {
-				const {RGBELoader} = await import('modules/three/examples/jsm/loaders/RGBELoader');
+				const {RGBELoader} = await import('../../../modules/three/examples/jsm/loaders/RGBELoader');
 				const loader = new RGBELoader();
 				loader.setDataType(UnsignedByteType); // FloatType,HalfFloatType
 				// loader.setPath('/examples/textures/equirectangular/');
 				return loader;
 			}
 			case Extension.BASIS: {
-				const {BasisTextureLoader} = await import('modules/three/examples/jsm/loaders/BasisTextureLoader');
+				const {BasisTextureLoader} = await import(
+					'../../../modules/three/examples/jsm/loaders/BasisTextureLoader'
+				);
 				const loader = new BasisTextureLoader();
 				loader.setTranscoderPath('/three/js/libs/basis/');
 				const renderer = await POLY.renderers_controller.wait_for_renderer();

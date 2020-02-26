@@ -1,7 +1,7 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../engine/nodes/_Base';
+import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
-// import {NodeSimple} from 'src/core/graph/NodeSimple'
+// import {NodeSimple} from '/graph/NodeSimple'
 
 import {CoreWalkerEmbed} from './WalkerEmbed';
 

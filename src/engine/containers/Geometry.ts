@@ -4,13 +4,13 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Box3} from 'three/src/math/Box3';
 import {TypedContainer} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-// import {CoreObject} from 'src/core/geometry/Object'
-import {CoreGeometry} from 'src/core/geometry/Geometry';
+import {CoreGroup} from '../../core/geometry/Group';
+// import {CoreObject} from '../../core/geometry/Object'
+import {CoreGeometry} from '../../core/geometry/Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {ContainableMap} from './utils/ContainableMap';
-// import {CoreConstant} from 'src/core/geometry/Constant'
+// import {CoreConstant} from '../../core/geometry/Constant'
 
 // const CoreGeometryGroup = CoreGroup
 

@@ -1,19 +1,19 @@
 import {TypedSopNode} from './_Base';
 // import {BaseNodeMat} from '../Mat/_Base'
 
-import {CoreMaterial} from 'src/core/geometry/Material';
-import {GlobalsGeometryHandler} from 'src/engine/nodes/gl/code/globals/Geometry';
+import {CoreMaterial} from '../../../core/geometry/Material';
+import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {NodeContext} from '../../poly/NodeContext';
 import {BaseMatNodeType} from '../mat/_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {Object3D} from 'three/src/core/Object3D';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseBuilderMatNodeType} from '../mat/_BaseBuilder';
 class MaterialSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');

@@ -4,9 +4,9 @@ import {Material} from 'three/src/materials/Material';
 
 // import DisplayFlag from '../Concerns/DisplayFlag';
 
-import {MaterialContainer} from 'src/engine/containers/Material';
+import {MaterialContainer} from '../../containers/Material';
 import {Object3D} from 'three/src/core/Object3D';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // type RenderHook = (object: Object3D) => void;

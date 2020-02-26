@@ -6,12 +6,12 @@ import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
 import lodash_chunk from 'lodash/chunk';
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CorePoint} from 'src/core/geometry/Point';
-import {CoreFace} from 'src/core/geometry/Face';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CorePoint} from '../../../core/geometry/Point';
+import {CoreFace} from '../../../core/geometry/Face';
 class FaceSopParamsConfig extends NodeParamsConfig {
 	make_faces_unique = ParamConfig.BOOLEAN(0);
 	add_face_center_attribute = ParamConfig.BOOLEAN(0, {

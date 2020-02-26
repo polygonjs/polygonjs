@@ -6,12 +6,12 @@ import {Object3D} from 'three/src/core/Object3D';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {TypedSopNode} from './_Base';
-// import {Core} from 'src/Core/_Module';
-import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreGroup} from 'src/core/geometry/Group';
-// import {CoreGeometryUtilShape} from 'src/core/geometry/util/Shape';
+// import {Core} from '../../../Core/_Module';
+import {CoreConstant} from '../../../core/geometry/Constant';
+import {CoreGroup} from '../../../core/geometry/Group';
+// import {CoreGeometryUtilShape} from '../../../core/geometry/util/Shape';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AddSopParamsConfig extends NodeParamsConfig {
 	create_point = ParamConfig.BOOLEAN(1);
 	points_count = ParamConfig.INTEGER(1, {

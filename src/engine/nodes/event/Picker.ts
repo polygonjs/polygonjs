@@ -14,9 +14,9 @@
 // import lodash_map from 'lodash/map'
 
 // import {BaseNodeEvent} from './_Base';
-// import {GeometryModule} from 'src/Core/Geometry/_Module';
-// import {ParamType} from 'src/Engine/Param/_Module'
-// import {RayHelper} from 'src/Core/RayHelper'
+// import {GeometryModule} from '../../../Core/Geometry/_Module';
+// import {ParamType} from '../../../Engine/Param/_Module'
+// import {RayHelper} from '../../../Core/RayHelper'
 
 // import {Callback} from './Picker/Callback'
 // import {PlaneIntersect} from './Picker/PlaneIntersect'

@@ -3,11 +3,11 @@ import {BaseGlNodeType} from '../../_Base';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {BaseNodeType} from '../../../_Base';
 import {BaseGlShaderAssembler} from '../assemblers/_Base';
-import {MapUtils} from 'src/core/MapUtils';
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {MapUtils} from '../../../../../core/MapUtils';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {GLDefinitionType, BaseGLDefinition} from '../../utils/GLDefinition';
 import {TypedGLDefinitionCollection} from '../../utils/GLDefinitionCollection';
-import {ParamConfigsController} from 'src/engine/nodes/utils/code/controllers/ParamConfigsController';
+import {ParamConfigsController} from '../../../../nodes/utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './ShadersCollectionController';
 import {CodeFormatter} from './CodeFormatter';
 

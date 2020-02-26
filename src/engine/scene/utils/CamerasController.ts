@@ -1,5 +1,5 @@
 import {PolyScene} from '../PolyScene';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from '../../nodes/obj/_BaseCamera';
 
 export class CamerasController {
 	constructor(private scene: PolyScene) {}

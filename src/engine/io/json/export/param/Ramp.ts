@@ -1,5 +1,5 @@
 import {ParamJsonExporter} from '../Param';
-import {RampParam} from 'src/engine/params/Ramp';
+import {RampParam} from '../../../../params/Ramp';
 
 export class ParamRampJsonExporter extends ParamJsonExporter<RampParam> {
 	add_main() {

@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
-import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {GeometryContainer} from '../../containers/Geometry';
 
 export class Centroid extends BaseMethod {
 	// bbox(0).min.x

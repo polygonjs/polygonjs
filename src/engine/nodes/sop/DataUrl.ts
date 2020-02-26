@@ -2,11 +2,11 @@ import {Object3D} from 'three/src/core/Object3D';
 // import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
 
-// import {CoreLoaderGeometry, LoaderType, LOADER_TYPES} from 'src/Core/Loader/Geometry';
-import {JsonDataLoader} from 'src/core/loader/geometry/JsonData';
+// import {CoreLoaderGeometry, LoaderType, LOADER_TYPES} from '../../../Core/Loader/Geometry';
+import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 class DataUrlSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');

@@ -2,11 +2,11 @@ import {TypedSopNode} from './_Base';
 
 import {Vector3} from 'three/src/math/Vector3';
 import {CylinderBufferGeometry} from 'three/src/geometries/CylinderGeometry';
-import {CoreTransform} from 'src/core/Transform';
+import {CoreTransform} from '../../../core/Transform';
 
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TubeSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
 	height = ParamConfig.FLOAT(1, {range: [0, 1]});

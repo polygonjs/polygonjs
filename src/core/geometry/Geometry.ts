@@ -29,7 +29,7 @@ import {CoreConstant, ObjectType} from './Constant';
 import {CoreAttribute} from './Attribute';
 import {MonkeyPatcher} from './MonkeyPatcher';
 
-import {BufferGeometryUtils} from 'modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreAttributeData} from './AttributeData';
 
 export class CoreGeometry {

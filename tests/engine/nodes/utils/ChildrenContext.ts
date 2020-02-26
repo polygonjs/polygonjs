@@ -1,4 +1,4 @@
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../../../src/engine/poly/NodeContext';
 
 QUnit.test('children_context grand_parent types are updated as nodes get added and removed', async (assert) => {
 	const scene = window.scene;

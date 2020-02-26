@@ -1,5 +1,5 @@
 import {GlobalsGlNode} from '../../Globals';
-import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
+import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 

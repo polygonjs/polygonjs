@@ -1,7 +1,7 @@
 import {TextureVariable, TextureVariableData} from './TextureVariable';
-import {BaseGlNodeType} from 'src/engine/nodes/gl/_Base';
-import {PolyScene} from 'src/engine/scene/PolyScene';
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {BaseGlNodeType} from '../../_Base';
+import {PolyScene} from '../../../../scene/PolyScene';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 
 export class TextureAllocation {
 	private _variables: TextureVariable[] | undefined;

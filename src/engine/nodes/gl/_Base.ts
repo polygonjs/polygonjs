@@ -1,17 +1,17 @@
 import {TypedNode} from '../_Base';
 
 // import {LineType} from './code/utils/CodeBuilder';
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 
 import {AssemblerControllerNode} from './code/Controller';
 
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamValue} from 'src/engine/params/types/ParamValue';
+import {ParamType} from '../../poly/ParamType';
+import {ParamValue} from '../../params/types/ParamValue';
 
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {NodeEvent} from '../../poly/NodeEvent';
 import {BaseNamedConnectionPointType, TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ParamTypeToConnectionPointTypeMap} from '../utils/connections/ConnectionPointType';
 import {ParamValueToDefaultConverter} from '../utils/params/ParamValueToDefaultConverter';

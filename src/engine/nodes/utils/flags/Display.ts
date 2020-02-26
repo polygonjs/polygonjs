@@ -1,5 +1,5 @@
 import {BaseFlag} from './Base';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {NodeEvent} from '../../../poly/NodeEvent';
 
 export class DisplayFlag extends BaseFlag {
 	on_update() {

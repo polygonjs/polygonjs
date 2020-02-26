@@ -1,8 +1,8 @@
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 class NullSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullSopParamsConfig();
 

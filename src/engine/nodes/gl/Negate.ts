@@ -1,7 +1,7 @@
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunctionArg1';
-// import {ParamType} from 'src/Engine/Param/_Module';
+// import {ParamType} from '../../../Engine/Param/_Module';
 // import {TypedConnectionFloat} from './GlData'
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {

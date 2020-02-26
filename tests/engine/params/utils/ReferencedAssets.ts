@@ -1,6 +1,6 @@
-// import {SceneExporter} from 'src/Engine/IO/Code/Export/Scene'
-// import {SceneJsonExporter} from 'src/Engine/IO/Json/Export/Scene'
-// import {ParamType} from 'src/Engine/Param/_Module'
+// import {SceneExporter} from '../../../../src/Engine/IO/Code/Export/Scene'
+// import {SceneJsonExporter} from '../../../../src/Engine/IO/Json/Export/Scene'
+// import {ParamType} from '../../../../src/Engine/Param/_Module'
 
 // QUnit.test( "param can be marked as referencing an asset", async ( assert ) => {
 

@@ -1,12 +1,12 @@
-import {CoreObject} from 'src/core/Object';
-import 'tests/helpers/assertions';
-import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
-import {TypedObjNode} from 'src/engine/nodes/obj/_Base';
-import {TypedNode} from 'src/engine/nodes/_Base';
-import {TypedCameraObjNode} from 'src/engine/nodes/obj/_BaseCamera';
-import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
-import {FloatParam} from 'src/engine/params/Float';
-import {TypedParam} from 'src/engine/params/_Base';
+import {CoreObject} from '../../src/core/Object';
+import '../../tests/helpers/assertions';
+import {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
+import {TypedObjNode} from '../../src/engine/nodes/obj/_Base';
+import {TypedNode} from '../../src/engine/nodes/_Base';
+import {TypedCameraObjNode} from '../../src/engine/nodes/obj/_BaseCamera';
+import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
+import {FloatParam} from '../../src/engine/params/Float';
+import {TypedParam} from '../../src/engine/params/_Base';
 
 import {Vector3} from 'three/src/math/Vector3';
 import {Object3D} from 'three/src/core/Object3D';

@@ -1,4 +1,4 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 
 export class PerformanceNode {
 	_cooks_count: number = 0;

@@ -23,7 +23,7 @@ import {Color} from 'three/src/math/Color';
 // 	};
 // }
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

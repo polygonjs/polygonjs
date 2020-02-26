@@ -5,12 +5,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": false,
 		"noUnusedLocals": true,
-		"strict": true, // --noImplicitAny, --noImplicitThis, --alwaysStrict, --strictBindCallApply, --strictNullChecks, --strictFunctionTypes and --strictPropertyInitialization
-		// "noImplicitAny": true,
-		// "noImplicitThis": true,
-		// "alwaysStrict": true,
-		// "strictNullChecks": true,
-		// "strictPropertyInitialization": false,
+		"strict": true,
 
 		// decorators
 		"experimentalDecorators": true,
@@ -30,13 +25,7 @@
 		"declaration": false, // false in dev to avoid having a long list of displayed files
 		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
-		"importHelpers": true,
-		"baseUrl": "./",
-		"paths": {
-			"src": ["src"],
-			"modules": ["modules"],
-			"tests": ["tests"]
-		}
+		"importHelpers": true
 	},
 	// "include": ["./**/*.ts", "./**/*.vue"],
 	"exclude": ["node_modules", "modules", "dist", "public"]

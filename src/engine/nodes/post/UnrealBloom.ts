@@ -4,9 +4,9 @@
 // // import Container from '../../Container/Texture'
 
 // import {BasePostProcessNode} from './_Base';
-// import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
+// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../poly/ParamType';
 
 // export class UnrealBloom extends BasePostProcessNode {
 // 	@ParamF('strength') _param_strength: number;

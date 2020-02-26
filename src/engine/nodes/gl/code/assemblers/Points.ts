@@ -12,7 +12,7 @@ import {ShaderAssemblerCustomPointsDepth} from './CustomPointsDepth';
 import {ShaderAssemblerCustomPointsDistance} from './CustomPointsDistance';
 import {ShaderAssemblerCustomPointsDepthDOF} from './CustomPointsDepthDOF';
 import {OutputGlNode} from '../../Output';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../../poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 import {ShaderName} from '../../../utils/shaders/ShaderName';

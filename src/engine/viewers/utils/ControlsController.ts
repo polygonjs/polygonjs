@@ -1,5 +1,5 @@
 import {BaseViewer} from '../_Base';
-import {CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
+import {CameraControls} from '../../nodes/event/_BaseCameraControls';
 
 export class ControlsController {
 	protected _active: boolean = false;

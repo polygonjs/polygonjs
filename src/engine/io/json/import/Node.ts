@@ -1,4 +1,4 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../../nodes/_Base';
 import lodash_isString from 'lodash/isString';
 import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isObject from 'lodash/isObject';
@@ -9,7 +9,7 @@ import {NodeJsonExporterData, NodeJsonExporterUIData, InputData} from '../export
 import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../poly/ParamType';
 
 export class NodeJsonImporter<T extends BaseNodeType> {
 	constructor(protected _node: T) {}

@@ -1,5 +1,5 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../nodes/_Base';
+import {BaseParamType} from '../params/_Base';
 import {MissingExpressionReference, MissingExpressionReferenceByIdByFullPath} from './MissingReference';
 import jsep from 'jsep';
 

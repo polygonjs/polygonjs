@@ -1,6 +1,6 @@
 import {ParamJsonExporter, ParamJsonExporterDataByName} from '../Param';
 // import {JsonExporterVisitor} from '../Visitor';
-import {TypedMultipleParam} from 'src/engine/params/_Multiple';
+import {TypedMultipleParam} from '../../../../params/_Multiple';
 import {JsonExportDispatcher} from '../Dispatcher';
 
 export class ParamMultipleJsonExporter extends ParamJsonExporter<TypedMultipleParam<any>> {

@@ -1,15 +1,15 @@
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreObject} from 'src/core/geometry/Object';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {AttribClassMenuEntries, AttribClass} from 'src/core/geometry/Constant';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreObject} from '../../../core/geometry/Object';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {AttribClassMenuEntries, AttribClass} from '../../../core/geometry/Constant';
 
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {

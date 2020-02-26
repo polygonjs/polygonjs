@@ -1,4 +1,4 @@
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../params/_Base';
 import {ParsedTree} from './traversers/ParsedTree';
 // import {MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'

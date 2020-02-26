@@ -2,10 +2,10 @@ import lodash_compact from 'lodash/compact';
 import lodash_uniq from 'lodash/uniq';
 // import {BaseGlNodeType} from '../../gl/_Base';
 // import {OutputGlNode} from '../gl/Output';
-import {CoreGraph} from 'src/core/graph/CoreGraph';
+import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {BaseNodeType, TypedNode} from '../../_Base';
 import {TypedAssembler} from './BaseAssembler';
-import {MapUtils} from 'src/core/MapUtils';
+import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
 
 type NumberByString = Map<string, number>;

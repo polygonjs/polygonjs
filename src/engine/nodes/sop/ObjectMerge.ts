@@ -1,10 +1,10 @@
 import {TypedSopNode, BaseSopNodeType} from './_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-// import {CoreWalker} from 'src/Core/Walker';
+import {NodeContext} from '../../poly/NodeContext';
+// import {CoreWalker} from '../../../Core/Walker';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {GeometryContainer} from '../../containers/Geometry';
 class ObjectMergeSopParamsConfig extends NodeParamsConfig {
 	geometry = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {

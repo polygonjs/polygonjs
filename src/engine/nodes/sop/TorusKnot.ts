@@ -2,7 +2,7 @@ import {TorusKnotBufferGeometry} from 'three/src/geometries/TorusKnotGeometry';
 const THREE = {TorusKnotBufferGeometry};
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TorusKnotSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1);
 	radius_tube = ParamConfig.FLOAT(1);

@@ -1,11 +1,11 @@
 import {Vector3} from 'three/src/math/Vector3';
 const THREE = {Vector3};
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreMath} from 'src/core/math/_Module';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreMath} from '../../../core/math/_Module';
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class JitterSopParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(1);
 	seed = ParamConfig.INTEGER(1, {range: [0, 100]});

@@ -1,5 +1,5 @@
 // import {NodeJsonExporter} from '../Node';
-// import {BaseObjNodeType} from 'src/engine/nodes/obj/_Base';
+// import {BaseObjNodeType} from '../../../../nodes/obj/_Base';
 
 // export class BaseNodeObjJsonExporter extends NodeJsonExporter<BaseObjNodeType> {
 // 	add_custom() {

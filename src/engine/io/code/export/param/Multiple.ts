@@ -1,7 +1,7 @@
 import {ParamCodeExporter} from '../Param';
 import {CodeExporterDispatcher} from '../Dispatcher';
-import {TypedMultipleParam} from 'src/engine/params/_Multiple';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {TypedMultipleParam} from '../../../../params/_Multiple';
+import {ParamType} from '../../../../poly/ParamType';
 
 export class ParamMultipleCodeExporter extends ParamCodeExporter<TypedMultipleParam<ParamType>> {
 	as_code_default_value_string() {

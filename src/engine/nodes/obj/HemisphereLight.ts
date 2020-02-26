@@ -2,7 +2,7 @@ import {HemisphereLight} from 'three/src/lights/HemisphereLight';
 import {HemisphereLightHelper} from './utils/helpers/HemisphereLightHelper';
 import {TypedLightObjNode} from './_BaseLight';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 	light = ParamConfig.FOLDER();

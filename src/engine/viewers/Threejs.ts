@@ -1,13 +1,13 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../scene/PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 // import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
 // import {Color} from 'three/src/math/Color'
 
 import {BaseViewer} from './_Base';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 
 // import 'src/engine/Poly';
-// import {POLY} from 'src/engine/Poly';
+// import {POLY} from '../Poly';
 
 const CSS_CLASS = 'CoreThreejsViewer';
 

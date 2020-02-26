@@ -1,11 +1,11 @@
 // import {Vector2} from 'three/src/math/Vector2';
-// // import {OrthoOrPerspCamera} from 'src/engine/nodes/obj/_BaseCamera';
+// // import {OrthoOrPerspCamera} from '../obj/_BaseCamera';
 
 // import {BasePostProcessNode} from './_Base';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
+// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 // import {PerspectiveCamera} from 'three';
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../poly/ParamType';
 
 // export class DepthOfField extends BasePostProcessNode {
 // 	@ParamF('strength') _param_focal_depth: number;

@@ -7,14 +7,14 @@
 // import {BufferAttribute} from 'three/src/core/BufferAttribute';
 // const THREE = {BufferAttribute, Group, Object3D};
 import {TypedSopNode} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
+// import {ParamType} from '../../../Engine/Param/_Module';
 
-// import {CoreGroup} from 'src/Core/Geometry/Group';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
+// import {CoreGroup} from '../../../Core/Geometry/Group';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
-// import {CoreConstant} from 'src/Core/Geometry/Constant';
-import {ObjectType} from 'src/core/geometry/Constant';
+// import {CoreConstant} from '../../../Core/Geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Points} from 'three/src/objects/Points';
@@ -23,7 +23,7 @@ type ObjectTypes = Array<ObjectType>;
 
 const INPUT_NAME = 'geometry to merge';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class MergeSopParamsConfig extends NodeParamsConfig {
 	compact = ParamConfig.BOOLEAN(1);
 }

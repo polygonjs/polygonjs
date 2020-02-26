@@ -1,6 +1,6 @@
 import {CoreGraph, CoreGraphNodeId} from './CoreGraph';
 import {DirtyController, PostDirtyHook} from './DirtyController';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../engine/scene/PolyScene';
 // import {SceneNodeDirtyable} from './SceneNodeDirtyable';
 
 // type Constructor<T = {}> = new (...args: any[]) => T;

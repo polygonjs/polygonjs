@@ -1,11 +1,11 @@
 // import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
-import {FileCopNode} from 'src/engine/nodes/cop/File';
+import {FileCopNode} from '../../cop/File';
 import {TypedMatNode} from '../_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-// import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+// import {NodeContext} from '../../../poly/NodeContext';
 // import {BaseCopNodeType} from '../../cop/_Base';
 import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
 export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {

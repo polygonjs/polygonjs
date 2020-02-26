@@ -1,7 +1,7 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {CoreWalker} from 'src/core/Walker';
-// import {NodeSimple} from 'src/core/Graph/NodeSimple'
+import {BaseNodeType} from '../engine/nodes/_Base';
+import {BaseParamType} from '../engine/params/_Base';
+import {CoreWalker} from './Walker';
+// import {NodeSimple} from '/Graph/NodeSimple'
 
 // import {NamedGraphNodeClass} from './graph/NamedGraphNode'
 type NodeOrParam = BaseNodeType | BaseParamType;

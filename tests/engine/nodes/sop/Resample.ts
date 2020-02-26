@@ -1,5 +1,5 @@
-import {METHOD, METHODS, CURVE_TYPE, CURVE_TYPES} from 'src/engine/nodes/sop/Resample';
-import {TEXT_TYPE, TEXT_TYPES} from 'src/engine/nodes/sop/Text';
+import {METHOD, METHODS, CURVE_TYPE, CURVE_TYPES} from '../../../../src/engine/nodes/sop/Resample';
+import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 
 QUnit.test('resample a line', async (assert) => {
 	const geo1 = window.geo1;

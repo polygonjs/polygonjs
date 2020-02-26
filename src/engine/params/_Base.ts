@@ -1,11 +1,11 @@
 // import {Vector3} from 'three/src/math/Vector3'
 // import {Vector2} from 'three/src/math/Vector2'
 
-import {CoreWalker} from 'src/core/Walker';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-// import {NodeScene} from 'src/core/graph/NodeScene';
-// import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {CoreWalker} from '../../core/Walker';
+import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
+// import {NodeScene} from '../../core/graph/NodeScene';
+// import {NamedGraphNode} from '../../core/graph/NamedGraphNode';
+import {BaseNodeType} from '../nodes/_Base';
 
 // import {CallbackOption} from './concerns/options/Callback'
 // import {ColorOption} from './concerns/options/Color'

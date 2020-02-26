@@ -7,24 +7,24 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 
 // import {BaseNodeSop} from '../_Base'
 
-// import {CoreConstant} from 'src/Core/Geometry/Constant'
+// import {CoreConstant} from '../../../../../Core/Geometry/Constant'
 
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreMath} from 'src/core/math/_Module';
+import {CoreGroup} from '../../../../../core/geometry/Group';
+import {CoreMath} from '../../../../../core/math/_Module';
 
 // import computeShaderPosition from 'src/Engine/Node/Gl/Assembler/Template/Particle/Position.glsl'
 // import computeShaderVelocity from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.v.glsl'
 // import particleVertexShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.vert.glsl'
 // import particleFragmentShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.frag.glsl'
-import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
+import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 import {GPUComputationRenderer} from './GPUComputationRenderer';
-import {ParticlesSystemGpuSopNode} from 'src/engine/nodes/sop/ParticlesSystemGpu';
+import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {POLY} from 'src/engine/Poly';
-import {CorePoint} from 'src/core/geometry/Point';
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {POLY} from '../../../../Poly';
+import {CorePoint} from '../../../../../core/geometry/Point';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 
 interface GPUComputationRendererVariable {
 	name: string;

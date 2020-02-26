@@ -1,7 +1,7 @@
 import {BaseManagerObjNode} from './_BaseManager';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
-import {EventNodeChildrenMap} from 'src/engine/poly/registers/Event';
+import {EventNodeChildrenMap} from '../../poly/registers/Event';
 import {BaseEventNodeType} from '../event/_Base';
 
 export class EventsObjNode extends BaseManagerObjNode {

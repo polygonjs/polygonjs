@@ -1,7 +1,7 @@
 import {ParamJsonImporter} from '../Param';
 import {ComplexParamJsonExporterData} from '../../export/Param';
-import {TypedMultipleParam} from 'src/engine/params/_Multiple';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {TypedMultipleParam} from '../../../../params/_Multiple';
+import {ParamType} from '../../../../poly/ParamType';
 
 export class ParamMultipleJsonImporter extends ParamJsonImporter<TypedMultipleParam<ParamType>> {
 	add_main(data: ComplexParamJsonExporterData<ParamType>) {

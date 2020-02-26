@@ -1,6 +1,6 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {BaseNodeType} from '../nodes/_Base';
+import {BaseParamType} from '../params/_Base';
+import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import jsep from 'jsep';
 
 export class MissingExpressionReference {

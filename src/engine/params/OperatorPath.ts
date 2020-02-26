@@ -1,9 +1,9 @@
 // import {TypedParamVisitor} from './_Base';
 import {TypedParam} from './_Base';
-import {CoreWalker} from 'src/core/Walker';
+import {CoreWalker} from '../../core/Walker';
 
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../nodes/_Base';
 import {ParamType} from '../poly/ParamType';
 // import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';

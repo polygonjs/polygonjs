@@ -6,7 +6,7 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, CameraTransformParamConfig} from './_BaseCamera';
 
 import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../poly/ParamType';
 
 const DEFAULT = {
 	left: -0.5,

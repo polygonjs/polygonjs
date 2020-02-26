@@ -1,5 +1,5 @@
-// import {PolyScene} from 'src/engine/scene/PolyScene';
-// import {CubeCameraObjNode} from 'src/engine/nodes/obj/CubeCamera';
+// import {PolyScene} from '../PolyScene';
+// import {CubeCameraObjNode} from '../../nodes/obj/CubeCamera';
 
 // export class CubeCamerasController {
 // 	constructor(private _scene: PolyScene) {}

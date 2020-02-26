@@ -4,7 +4,7 @@ import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isString from 'lodash/isString';
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
-import {CoreString} from 'src/core/String';
+import {CoreString} from '../../core/String';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 

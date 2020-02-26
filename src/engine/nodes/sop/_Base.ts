@@ -7,15 +7,15 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
-import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
-import {CoreMaterial} from 'src/core/geometry/Material';
-import {ObjectType} from 'src/core/geometry/Constant';
+import {CoreConstant} from '../../../core/geometry/Constant';
+import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreMaterial} from '../../../core/geometry/Material';
+import {ObjectType} from '../../../core/geometry/Constant';
 
-import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {GeometryContainer} from '../../containers/Geometry';
 import {TypedContainerController} from '../utils/ContainerController';
 import {BaseMatNodeType} from '../mat/_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDB} from '../utils/FlagsController';
@@ -30,7 +30,7 @@ import {FlagsControllerDB} from '../utils/FlagsController';
 // TODO: do I really need to add attributes in objects?
 // TODO: after setting a node dirty, it should clear its object
 
-// import {RequestContainerGeometryCallback} from 'src/Engine/Container/Geometry'
+// import {RequestContainerGeometryCallback} from '../../../Engine/Container/Geometry'
 // const CONTAINER_CLASS = 'Geometry';
 
 enum MESSAGE {

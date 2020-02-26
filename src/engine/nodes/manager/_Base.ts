@@ -1,8 +1,8 @@
 import {TypedNode} from '../_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ManagerContainer} from 'src/engine/containers/Manager';
+import {ManagerContainer} from '../../containers/Manager';
 
 export class TypedBaseManagerNode<K extends NodeParamsConfig> extends TypedNode<'MANAGER', BaseManagerNodeType, K> {
 	container_controller: TypedContainerController<ManagerContainer> = new TypedContainerController<ManagerContainer>(

@@ -16,7 +16,7 @@ import {CoreAttribute} from './Attribute';
 import {CoreConstant} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
-import {CoreString} from 'src/core/String';
+import {CoreString} from '../String';
 
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isString from 'lodash/isString';

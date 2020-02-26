@@ -1,5 +1,5 @@
-// import {PolyScene} from 'src/engine/scene/PolyScene'
-// import {BaseNode} from 'src/engine/nodes/_Base'
+// import {PolyScene} from '../PolyScene'
+// import {BaseNode} from '../../nodes/_Base'
 // import 'src/engine/Poly'
 
 // export function Store<TBase extends Constructor>(Base: TBase) {

@@ -3,16 +3,16 @@ import lodash_uniq from 'lodash/uniq';
 import lodash_sortBy from 'lodash/sortBy';
 import lodash_includes from 'lodash/includes';
 import {TextureAllocation} from './TextureAllocation';
-import {BaseGlNodeType} from 'src/engine/nodes/gl/_Base';
+import {BaseGlNodeType} from '../../_Base';
 
-// import {TypedConnection, COMPONENTS_COUNT_BY_TYPE} from 'src/Engine/Node/Gl/GlData';
+// import {TypedConnection, COMPONENTS_COUNT_BY_TYPE} from '../../../../../Engine/Node/Gl/GlData';
 import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {ShaderConfig} from '../configs/ShaderConfig';
-import {ShaderName, ParticleShaderNames} from 'src/engine/nodes/utils/shaders/ShaderName';
-import {PolyScene} from 'src/engine/scene/PolyScene';
-import {ConnectionPointComponentsCountMap} from 'src/engine/nodes/utils/connections/ConnectionPointType';
+import {ShaderName, ParticleShaderNames} from '../../../utils/shaders/ShaderName';
+import {PolyScene} from '../../../../scene/PolyScene';
+import {ConnectionPointComponentsCountMap} from '../../../utils/connections/ConnectionPointType';
 import {AttributeGlNode} from '../../Attribute';
-import {BaseNamedConnectionPointType} from 'src/engine/nodes/utils/connections/NamedConnectionPoint';
+import {BaseNamedConnectionPointType} from '../../../utils/connections/NamedConnectionPoint';
 import {GlobalsGlNode} from '../../Globals';
 
 export type TextureAllocationsControllerData = Dictionary<TextureVariableData[] | undefined>[];

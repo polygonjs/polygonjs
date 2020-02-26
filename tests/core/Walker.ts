@@ -1,4 +1,4 @@
-import {CoreWalker} from 'src/core/Walker';
+import {CoreWalker} from '../../src/core/Walker';
 
 QUnit.test('walker from a box', (assert) => {
 	const scene = window.scene;

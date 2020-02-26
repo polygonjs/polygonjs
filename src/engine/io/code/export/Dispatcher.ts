@@ -1,5 +1,5 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../../../nodes/_Base';
+import {BaseParamType} from '../../../params/_Base';
 
 import {NodeCodeExporter} from './Node';
 // import {BaseNodeObjCodeExporter} from './node/Obj';
@@ -11,11 +11,11 @@ import {ParamNumericCodeExporter} from './param/Numeric';
 import {ParamOperatorPathCodeExporter} from './param/OperatorPath';
 import {ParamStringCodeExporter} from './param/String';
 import {ParamRampCodeExporter} from './param/Ramp';
-import {TypedMultipleParam} from 'src/engine/params/_Multiple';
-import {TypedNumericParam} from 'src/engine/params/_Numeric';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {StringParam} from 'src/engine/params/String';
-import {RampParam} from 'src/engine/params/Ramp';
+import {TypedMultipleParam} from '../../../params/_Multiple';
+import {TypedNumericParam} from '../../../params/_Numeric';
+import {OperatorPathParam} from '../../../params/OperatorPath';
+import {StringParam} from '../../../params/String';
+import {RampParam} from '../../../params/Ramp';
 
 export class CodeExporterDispatcher {
 	static dispatch_node(node: BaseNodeType) {

@@ -1,10 +1,10 @@
 import {TypedNode} from '../_Base';
-import {TextureContainer} from 'src/engine/containers/Texture';
+import {TextureContainer} from '../../containers/Texture';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeContext} from '../../poly/NodeContext';
+import {PolyScene} from '../../scene/PolyScene';
 import {FlagsControllerB} from '../utils/FlagsController';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {LuminanceFormat, HalfFloatType} from 'three/src/constants';

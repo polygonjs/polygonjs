@@ -1,15 +1,15 @@
 import {Vector2} from 'three/src/math/Vector2';
 
 import {TypedSopNode} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module'
+// import {ParamType} from '../../../Engine/Param/_Module'
 
 // import {Lifespan} from './Concerns/ParticlesSystemGPU/Lifespan';
 // import {GPUCompute} from './Concerns/ParticlesSystemGPU/GPUCompute';
 // import {RenderMaterial} from './Concerns/ParticlesSystemGPU/RenderMaterial';
 // import {ParticleShaderBuilder} from './Concerns/ParticlesSystemGPU/ParticleShaderBuilder'
-// import {AssemblerOwner} from 'src/Engine/Node/Gl/Assembler/Owner';
-import {ShaderAssemblerParticles} from 'src/engine/nodes/gl/code/assemblers/Particles';
-import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
+// import {AssemblerOwner} from '../../../Engine/Node/Gl/Assembler/Owner';
+import {ShaderAssemblerParticles} from '../gl/code/assemblers/Particles';
+import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 
 // SPECS:
 // - simulation shaders should update the particles at any frame, and resimulate accordingly when at later frames
@@ -20,19 +20,19 @@ import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
 // 	RenderMaterial(
 // 	Lifespan(
 // 	GPUCompute(
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {BaseParamType} from '../../params/_Base';
+import {NodeContext} from '../../poly/NodeContext';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {MaterialsObjNode} from '../obj/Materials';
-import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
+import {GlNodeChildrenMap} from '../../poly/registers/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/RenderController';
 import {ParticlesSystemGpuComputeController} from './utils/ParticlesSystemGPU/GPUComputeController';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {

@@ -18,13 +18,13 @@
 // }
 
 // import {BaseNodeCop} from './_Base'
-// import {ParamType} from 'src/Engine/Param/_Module'
-// // import {CoreTextureLoader} from 'src/Core/Loader/Texture'
+// import {ParamType} from '../../../Engine/Param/_Module'
+// // import {CoreTextureLoader} from '../../../Core/Loader/Texture'
 
-// import {CoreTextureLoader} from 'src/Core/Loader/Texture'
-// import {CoreMapboxUtils} from 'src/Core/Mapbox/Utils'
-// import {CoreImage} from 'src/Core/Image'
-// import {CoreMapboxClient} from 'src/Core/Mapbox/Client'
+// import {CoreTextureLoader} from '../../../Core/Loader/Texture'
+// import {CoreMapboxUtils} from '../../../Core/Mapbox/Utils'
+// import {CoreImage} from '../../../Core/Image'
+// import {CoreMapboxClient} from '../../../Core/Mapbox/Client'
 
 // export enum TileType {
 // 	ELEVATION = 'elevation',

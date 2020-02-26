@@ -1,12 +1,12 @@
 // import UIData from './UIData';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../engine/nodes/_Base';
 import lodash_difference from 'lodash/difference';
 import lodash_union from 'lodash/union';
 // import lodash_isArray from 'lodash/isArray'
 import lodash_isEqual from 'lodash/isEqual';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {NodeEvent} from '../engine/poly/NodeEvent';
 
-export default class NodeSelection {
+export class CoreNodeSelection {
 	_node_ids: string[] = [];
 	constructor(private _node: BaseNodeType) {
 		// super();

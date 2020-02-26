@@ -1,7 +1,7 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
 import {BaseNodeType} from '../_Base';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {NodeEvent} from '../../poly/NodeEvent';
 
 export interface NodeUIDataJson {
 	x: number;

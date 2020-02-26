@@ -1,13 +1,13 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CorePoint} from 'src/core/geometry/Point';
-import {CoreMath} from 'src/core/math/_Module';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {TypeAssert} from 'src/engine/poly/Assert';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CorePoint} from '../../../core/geometry/Point';
+import {CoreMath} from '../../../core/math/_Module';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {TypeAssert} from '../../poly/Assert';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {SimplexNoise} from 'modules/three/examples/jsm/math/SimplexNoise';
+import {SimplexNoise} from '../../../../modules/three/examples/jsm/math/SimplexNoise';
 
 enum Operation {
 	ADD = 'add',
@@ -25,7 +25,7 @@ const Operations: Operations = [Operation.ADD, Operation.SET, Operation.MULT, Op
 // 	new Vector3(765132, 21, 9245),
 // ]
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(1);
 	freq = ParamConfig.VECTOR3([1, 1, 1]);

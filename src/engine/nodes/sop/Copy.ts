@@ -1,18 +1,17 @@
 import lodash_compact from 'lodash/compact';
 import {TypedSopNode} from './_Base';
-import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
-import {CoreObject} from 'src/core/geometry/Object';
-// import {CoreGeometry} from 'src/core/geometry/Geometry'
-import {CoreInstancer} from 'src/core/geometry/Instancer';
-import {CoreString} from 'src/core/String';
-// import {NodeSimple} from 'src/Core/Graph/NodeSimple'
+import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreObject} from '../../../core/geometry/Object';
+// import {CoreGeometry} from '../../../core/geometry/Geometry'
+import {CoreInstancer} from '../../../core/geometry/Instancer';
+import {CoreString} from '../../../core/String';
+// import {NodeSimple} from '../../../Core/Graph/NodeSimple'
 import {CopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three/src/math/Matrix4';
-import {CorePoint} from 'src/core/geometry/Point';
-// import RSVP from 'rsvp'
+import {CorePoint} from '../../../core/geometry/Point';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
 class CopySopParamsConfig extends NodeParamsConfig {
 	count = ParamConfig.INTEGER(1, {

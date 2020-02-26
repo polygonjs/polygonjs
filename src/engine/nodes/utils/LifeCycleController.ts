@@ -1,4 +1,4 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../_Base';
 
 type Callback = () => void;
 type CallbackWithChildNode = (child_node: BaseNodeType) => void;

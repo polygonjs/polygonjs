@@ -1,6 +1,6 @@
 import {BaseParamType} from '../_Base';
 import {ParamValueSerializedTypeMap} from '../types/ParamValueSerializedTypeMap';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../poly/ParamType';
 import {ParamInitValueSerializedTypeMap} from '../types/ParamInitValueSerializedTypeMap';
 
 export interface ParamSerializerData {

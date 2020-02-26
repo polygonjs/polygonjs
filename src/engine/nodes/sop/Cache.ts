@@ -1,10 +1,10 @@
 import {ObjectLoader} from 'three/src/loaders/ObjectLoader';
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {BaseParamType} from '../../params/_Base';
+import {CoreGroup} from '../../../core/geometry/Group';
 class CacheSopParamsConfig extends NodeParamsConfig {
 	cache = ParamConfig.STRING('', {hidden: true});
 	reset = ParamConfig.BUTTON(null, {

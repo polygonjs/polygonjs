@@ -1,6 +1,6 @@
 import {Scene} from 'three/src/scenes/Scene';
-import {PolyScene} from 'src/engine/scene/PolyScene';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {PolyScene} from '../scene/PolyScene';
+import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 
 // import {CameraMixin} from './concerns/Camera';
 // import {Capturer} from './concerns/Capturer';

@@ -1,9 +1,9 @@
 import {BaseMethod} from './_Base';
-import {BaseNodeClass} from 'src/engine/nodes/_Base';
+import {BaseNodeClass} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
-import {CoreString} from 'src/core/String';
-// import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreString} from '../../../core/String';
+// import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 export class Opdigits extends BaseMethod {
 	static required_arguments() {

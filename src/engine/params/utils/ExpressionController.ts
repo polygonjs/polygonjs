@@ -1,10 +1,10 @@
 import {BaseParamType} from '../_Base';
-import {ExpressionManager} from 'src/engine/expressions/ExpressionManager';
-import {CorePoint} from 'src/core/geometry/Point';
-import {CoreEntity} from 'src/core/geometry/Entity';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamValuesTypeMap} from 'src/engine/params/types/ParamValuesTypeMap';
-import {CoreObject} from 'src/core/geometry/Object';
+import {ExpressionManager} from '../../expressions/ExpressionManager';
+import {CorePoint} from '../../../core/geometry/Point';
+import {CoreEntity} from '../../../core/geometry/Entity';
+import {ParamType} from '../../poly/ParamType';
+import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
+import {CoreObject} from '../../../core/geometry/Object';
 
 // type ParamTypeElem = ParamType;
 type EntityCallback<T extends ParamType> = (

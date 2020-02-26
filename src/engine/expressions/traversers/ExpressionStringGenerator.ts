@@ -1,8 +1,8 @@
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../../params/_Base';
 import {ParsedTree} from './ParsedTree';
 // import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
-// import {BaseMethod} from 'src/Engine/Expression/Method/_Base'
+// import {BaseMethod} from '../../../Engine/Expression/Method/_Base'
 // import {ReferenceSearchResult, MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesControler} from './MissingReferencesController'
 

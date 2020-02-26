@@ -6,7 +6,7 @@ import {Vector3} from 'three/src/math/Vector3';
 // import {Vector2} from 'three/src/math/Vector2';
 import {_Math} from 'three/src/math/Math';
 // const THREE = {Math: _Math, Vector2, Vector3}
-import {CorePoint} from 'src/core/geometry/Point';
+import {CorePoint} from '../geometry/Point';
 
 export class CoreInterpolate {
 	static perform(

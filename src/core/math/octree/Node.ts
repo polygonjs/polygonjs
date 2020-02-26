@@ -2,7 +2,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Sphere} from 'three/src/math/Sphere';
 import {Box3} from 'three/src/math/Box3';
 import lodash_flatten from 'lodash/flatten';
-import {CorePoint} from 'src/core/geometry/Point';
+import {CorePoint} from '../../geometry/Point';
 
 export type OctreeNodeTraverseCallback = (node: OctreeNode) => void;
 

@@ -21,20 +21,20 @@ import {
 	SinGlNode,
 	SqrtGlNode,
 	TanGlNode,
-} from 'src/engine/nodes/gl/_Math';
-import {AttributeGlNode} from 'src/engine/nodes/gl/Attribute';
-import {ConstantGlNode} from 'src/engine/nodes/gl/Constant';
-import {ComplementGlNode} from 'src/engine/nodes/gl/Complement';
-import {FloatToVec3GlNode} from 'src/engine/nodes/gl/FloatToVec3';
-import {GlobalsGlNode} from 'src/engine/nodes/gl/Globals';
-import {LengthGlNode} from 'src/engine/nodes/gl/Length';
-import {NegateGlNode} from 'src/engine/nodes/gl/Negate';
-import {NullGlNode} from 'src/engine/nodes/gl/Null';
-import {OutputGlNode} from 'src/engine/nodes/gl/Output';
-import {ParamGlNode} from 'src/engine/nodes/gl/Param';
-import {QuatMultGlNode} from 'src/engine/nodes/gl/QuatMult';
-import {QuatToAngleGlNode} from 'src/engine/nodes/gl/QuatToAngle';
-import {QuatToAxisGlNode} from 'src/engine/nodes/gl/QuatToAxis';
+} from '../../nodes/gl/_Math';
+import {AttributeGlNode} from '../../nodes/gl/Attribute';
+import {ConstantGlNode} from '../../nodes/gl/Constant';
+import {ComplementGlNode} from '../../nodes/gl/Complement';
+import {FloatToVec3GlNode} from '../../nodes/gl/FloatToVec3';
+import {GlobalsGlNode} from '../../nodes/gl/Globals';
+import {LengthGlNode} from '../../nodes/gl/Length';
+import {NegateGlNode} from '../../nodes/gl/Negate';
+import {NullGlNode} from '../../nodes/gl/Null';
+import {OutputGlNode} from '../../nodes/gl/Output';
+import {ParamGlNode} from '../../nodes/gl/Param';
+import {QuatMultGlNode} from '../../nodes/gl/QuatMult';
+import {QuatToAngleGlNode} from '../../nodes/gl/QuatToAngle';
+import {QuatToAxisGlNode} from '../../nodes/gl/QuatToAxis';
 
 export interface GlNodeChildrenMap {
 	abs: AbsGlNode;
@@ -72,7 +72,7 @@ export interface GlNodeChildrenMap {
 	quat_to_axis: QuatToAxisGlNode;
 }
 
-import {Poly} from 'src/engine/Poly';
+import {Poly} from '../../Poly';
 export class GlRegister {
 	static run(poly: Poly) {
 		const math1_nodes = [

@@ -3,7 +3,7 @@ import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {SideController, SideParamConfig} from './utils/SideController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';

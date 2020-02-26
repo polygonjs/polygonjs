@@ -2,9 +2,9 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Group} from 'three/src/objects/Group';
 const THREE = {Group, Object3D};
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-// import {CoreGroup} from 'src/Core/Geometry/Group';
-// import {CoreConstant} from 'src/Core/Geometry/Constant'
+import {CoreGroup} from '../../../core/geometry/Group';
+// import {CoreGroup} from '../../../Core/Geometry/Group';
+// import {CoreConstant} from '../../../Core/Geometry/Constant'
 
 export enum HierarchyMode {
 	ADD_PARENT = 'add_parent',
@@ -12,7 +12,7 @@ export enum HierarchyMode {
 }
 export const HIERARCHY_MODES: Array<HierarchyMode> = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class HierarchySopParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(0, {
 		menu: {

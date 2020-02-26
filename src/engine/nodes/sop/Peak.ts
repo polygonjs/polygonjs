@@ -1,14 +1,14 @@
-import {CoreGeometry} from 'src/core/geometry/Geometry';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {TypedSopNode} from './_Base';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 
 const POSITION = 'position';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PeakSopParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(1, {range: [-1, 1]});
 }

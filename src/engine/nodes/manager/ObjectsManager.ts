@@ -3,31 +3,30 @@ import {Group} from 'three/src/objects/Group';
 // import lodash_map from 'lodash/map';
 
 import {TypedBaseManagerNode} from './_Base';
-// import {CoreObject} from 'src/core/Object';
+// import {CoreObject} from '../../../core/Object';
 // import {BaseNode} from '../_Base';
 import {BaseObjNodeType} from '../obj/_Base';
 
-// import {BaseManagerObjNode} from 'src/engine/nodes/obj/_BaseManager';
-// import {BaseCameraObjNodeClass} from 'src/engine/nodes/obj/_BaseCamera';
-// import {BaseLightObjNodeClass} from 'src/engine/nodes/obj/_BaseLight';
+// import {BaseManagerObjNode} from '../obj/_BaseManager';
+// import {BaseCameraObjNodeClass} from '../obj/_BaseCamera';
+// import {BaseLightObjNodeClass} from '../obj/_BaseLight';
 
 // obj nodes
-// import {EventsObjNode} from 'src/engine/nodes/obj/Events';
-// import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
-// import {FogObjNode} from 'src/engine/nodes/obj/Fog';
-import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
+// import {EventsObjNode} from '../obj/Events';
+// import {MaterialsObjNode} from '../obj/Materials';
+// import {FogObjNode} from '../obj/Fog';
+import {GeoObjNode} from '../obj/Geo';
 
-import 'src/engine/Poly';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-// import {PolyScene} from 'src/engine/scene/PolyScene';
+import {POLY} from '../../Poly';
+import {NodeContext} from '../../poly/NodeContext';
+// import {PolyScene} from '../../scene/PolyScene';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
 
-import {ObjNodeChildrenMap} from 'src/engine/poly/registers/Obj';
+import {ObjNodeChildrenMap} from '../../poly/registers/Obj';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
-import {POLY} from 'src/engine/Poly';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 

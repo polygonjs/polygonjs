@@ -5,9 +5,9 @@ import lodash_uniq from 'lodash/uniq';
 import lodash_isNumber from 'lodash/isNumber';
 import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING();
 	ramp = ParamConfig.RAMP();

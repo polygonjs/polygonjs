@@ -5,7 +5,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../engine/scene/PolyScene';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
 interface IUniforms {

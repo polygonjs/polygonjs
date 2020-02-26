@@ -1,17 +1,17 @@
 import {Color} from 'three/src/math/Color';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {CoreColor} from 'src/core/Color';
+import {CoreColor} from '../../../core/Color';
 // import lodash_times from 'lodash/times'
 // import lodash_each from 'lodash/each'
-// import {CoreGroup} from 'src/core/geometry/Group';
+// import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedSopNode} from './_Base';
 
-import {CoreObject} from 'src/core/geometry/Object';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {CorePoint} from 'src/core/geometry/Point';
+import {CoreObject} from '../../../core/geometry/Object';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {CorePoint} from '../../../core/geometry/Point';
 
-import {CoreGroup} from 'src/core/geometry/Group';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 
@@ -20,7 +20,7 @@ const COLOR_ATTRIB_NAME = 'color';
 
 type ValueArrayByName = Dictionary<number[]>;
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ColorSopParamsConfig extends NodeParamsConfig {
 	from_attribute = ParamConfig.BOOLEAN(0);
 	attrib_name = ParamConfig.STRING('', {

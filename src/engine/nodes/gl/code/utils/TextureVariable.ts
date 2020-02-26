@@ -1,5 +1,5 @@
 import {TextureAllocation} from './TextureAllocation';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../../../scene/PolyScene';
 
 export interface TextureVariableData {
 	name: string;

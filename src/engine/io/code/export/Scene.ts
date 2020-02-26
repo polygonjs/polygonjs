@@ -1,6 +1,6 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../../scene/PolyScene';
 import {CodeExporterDispatcher} from './Dispatcher';
-import {CoreString} from 'src/core/String';
+import {CoreString} from '../../../../core/String';
 
 export class SceneCodeExporter {
 	constructor(private _scene: PolyScene) {}

@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-import {GeometryContainer} from 'src/engine/containers/Geometry';
-// import {CoreGroup} from 'src/core/Geometry/Group';
+import {GeometryContainer} from '../../containers/Geometry';
+// import {CoreGroup} from '../../../core/Geometry/Group';
 
 export class PointsCount extends BaseMethod {
 	// npoints(0)

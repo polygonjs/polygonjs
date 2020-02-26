@@ -14,7 +14,7 @@ const DEFAULT = {
 // export Fog = (function() {
 // 	let DEFAULT = undefined;
 // 	Fog = class Fog extends BaseModules {
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Object3D} from 'three/src/core/Object3D';
 import {FlagsControllerD} from '../utils/FlagsController';
 class FogObjParamConfig extends NodeParamsConfig {

@@ -1,8 +1,8 @@
 // import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from '../../nodes/obj/_BaseCamera';
 import {BaseViewer} from '../_Base';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 export class CamerasController {
 	// private _is_active: boolean = false;

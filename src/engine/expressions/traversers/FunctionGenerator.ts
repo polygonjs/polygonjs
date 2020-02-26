@@ -1,10 +1,10 @@
-import {BaseParamType} from 'src/engine/params/_Base';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {BaseParamType} from '../../params/_Base';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
-import {BaseMethod} from 'src/engine/expressions/methods/_Base';
-import {MethodModule} from 'src/engine/expressions/methods/_Module';
-import {CoreAttribute} from 'src/core/geometry/Attribute';
+import {BaseMethod} from '../methods/_Base';
+import {MethodModule} from '../methods/_Module';
+import {CoreAttribute} from '../../../core/geometry/Attribute';
 // import {JsepsByString} from '../DependenciesController'
 // import {JsepDependency} from '../JsepDependency'
 import jsep from 'jsep';
@@ -38,7 +38,7 @@ const NATIVE_MATH_METHODS_RENAMED: AnyDictionary = {
 	math_random: 'random',
 };
 const CORE_MATH_METHODS = ['fit', 'fit01', 'fract', 'deg2rad', 'rad2deg', 'rand', 'clamp'];
-import {Easing} from 'src/core/math/Easing';
+import {Easing} from '../../../core/math/Easing';
 const EASING_METHODS = Object.keys(Easing);
 
 const CORE_STRING_METHODS = ['precision'];

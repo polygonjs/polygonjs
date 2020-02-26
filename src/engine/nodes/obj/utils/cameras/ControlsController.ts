@@ -1,8 +1,8 @@
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseCameraControlsEventNodeType, CameraControls} from 'src/engine/nodes/event/_BaseCameraControls';
-import {CameraControlsConfig} from 'src/engine/nodes/event/utils/CameraControlConfig';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {CameraOrbitControlsEventNode} from 'src/engine/nodes/event/CameraOrbitControls';
+import {BaseCameraObjNodeType} from '../../_BaseCamera';
+import {BaseCameraControlsEventNodeType, CameraControls} from '../../../event/_BaseCameraControls';
+import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
+import {BaseParamType} from '../../../../params/_Base';
+import {CameraOrbitControlsEventNode} from '../../../event/CameraOrbitControls';
 
 const CONTROLS_PARAM_NAME = 'controls';
 

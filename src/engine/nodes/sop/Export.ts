@@ -18,12 +18,12 @@
 // // }
 
 // import {BaseNodeType} from '../_Base';
-// import {BaseParamType} from 'src/engine/params/_Base';
-// import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-// import {CoreGroup} from 'src/core/geometry/Group';
-// import {GLTFExporter} from 'modules/three/examples/jsm/exporters/GLTFExporter';
+// import {BaseParamType} from '../../params/_Base';
+// import {InputCloneMode} from '../../poly/InputCloneMode';
+// import {CoreGroup} from '../../../core/geometry/Group';
+// import {GLTFExporter} from '../../../../modules/three/examples/jsm/exporters/GLTFExporter';
 
-// import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+// import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // class ExportSopParamsConfig extends NodeParamsConfig {
 // 	export = ParamConfig.BUTTON(null, {
 // 		callback: (node: BaseNodeType, param: BaseParamType) => {

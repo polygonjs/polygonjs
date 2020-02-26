@@ -4,11 +4,11 @@ import {Object3D} from 'three/src/core/Object3D';
 import lodash_concat from 'lodash/concat';
 import lodash_flatten from 'lodash/flatten';
 import lodash_compact from 'lodash/compact';
-import {ObjectsManagerNode} from 'src/engine/nodes/manager/ObjectsManager';
-import {CoreString} from 'src/core/String';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseObjNodeType} from 'src/engine/nodes/obj/_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {ObjectsManagerNode} from '../../nodes/manager/ObjectsManager';
+import {CoreString} from '../../../core/String';
+import {BaseNodeType} from '../../nodes/_Base';
+import {BaseObjNodeType} from '../../nodes/obj/_Base';
+import {NodeContext} from '../../poly/NodeContext';
 
 export class NodesController {
 	constructor(private scene: PolyScene) {}

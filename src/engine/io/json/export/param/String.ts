@@ -1,7 +1,7 @@
 // import lodash_isString from 'lodash/isString'
 import {ParamJsonExporter} from '../Param';
 import {SceneJsonExporter} from '../Scene';
-import {StringParam} from 'src/engine/params/String';
+import {StringParam} from '../../../../params/String';
 
 export class ParamStringJsonExporter extends ParamJsonExporter<StringParam> {
 	add_main() {

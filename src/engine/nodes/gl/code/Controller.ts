@@ -8,23 +8,23 @@ import {Vector2} from 'three/src/math/Vector2';
 // import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 // import {FrontSide} from 'three/src/constants';
 // const THREE = {FrontSide, ShaderLib, ShaderMaterial, UniformsUtils, Vector2, VertexColors};
-import {BaseNodeType, TypedNode} from 'src/engine/nodes/_Base';
-// import {ParamType} from 'src/Engine/Param/_Module'
+import {BaseNodeType, TypedNode} from '../../_Base';
+// import {ParamType} from '../../../../Engine/Param/_Module'
 
 import {BaseGlShaderAssembler} from './assemblers/_Base';
 import {GlobalsBaseController} from './globals/_Base';
 
-// import {JsonImportDispatcher} from 'src/engine/io/json/import/Dispatcher';
-import {JsonExportDispatcher} from 'src/engine/io/json/export/Dispatcher';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+// import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
+import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
+import {NodeEvent} from '../../../poly/NodeEvent';
 import {ShaderName} from '../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../Output';
 import {GlobalsGlNode} from '../Globals';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {ParamJsonExporterData} from 'src/engine/io/json/export/Param';
-import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
+import {BaseParamType} from '../../../params/_Base';
+import {ParamJsonExporterData} from '../../../io/json/export/Param';
+import {GlNodeChildrenMap} from '../../../poly/registers/Gl';
 import {BaseGlNodeType} from '../_Base';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../poly/ParamType';
 
 // interface BaseShaderAssemblerConstructor {
 // 	new (): BaseGlShaderAssembler;

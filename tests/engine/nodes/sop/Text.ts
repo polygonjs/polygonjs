@@ -1,4 +1,4 @@
-import {TEXT_TYPE, TEXT_TYPES} from 'src/engine/nodes/sop/Text';
+import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 
 QUnit.test('text simple', async (assert) => {
 	const geo1 = window.geo1;

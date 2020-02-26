@@ -1,8 +1,8 @@
 // import {BaseViewer} from '../_Base'
-// import {EventHelper} from 'src/core/EventHelper'
-// import {RayHelper} from 'src/core/RayHelper'
+// import {EventHelper} from '../../../core/EventHelper'
+// import {RayHelper} from '../../../core/RayHelper'
 
-// import {Picker} from 'src/engine/nodes/Event/Picker'
+// import {Picker} from '../../nodes/Event/Picker'
 
 // const MOUSE_MOVE_EVENT_NAME = 'mouse_move'
 // const CLICK_EVENT_NAME = 'click'

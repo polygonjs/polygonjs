@@ -4,10 +4,10 @@ import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
 import {Object3D} from 'three/src/core/Object3D';
 
-import {CoreLoaderGeometry} from 'src/core/loader/Geometry';
+import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 class FileSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('', {

@@ -1,7 +1,7 @@
 import lodash_range from 'lodash/range';
 import lodash_compact from 'lodash/compact';
 import {BaseGlNumericGlNode} from './_BaseNumeric';
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';

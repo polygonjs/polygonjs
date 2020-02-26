@@ -1,11 +1,11 @@
 // import {Scene} from 'three/src/scenes/Scene'
-// import {CoreGraph} from 'src/core/graph/CoreGraph'
-// import {CorePerformance} from 'src/core/performance/CorePerformance'
-// import {Cooker} from 'src/core/graph/Cooker'
-// import {EmitPayload} from 'src/core/graph/NodeScene'
+// import {CoreGraph} from '../../core/graph/CoreGraph'
+// import {CorePerformance} from '../../core/performance/CorePerformance'
+// import {Cooker} from '../../core/graph/Cooker'
+// import {EmitPayload} from '../../core/graph/NodeScene'
 // import {BaseNode} from '../nodes/_Base'
 
-// import {CoreObject} from 'src/core/Object';
+// import {CoreObject} from '../../core/Object';
 // import {Debug} from './concerns/Debug';
 // import {Env} from './concerns/Env'
 // import {ExpressionRegister} from './concerns/ExpressionRegister';
@@ -27,14 +27,14 @@
 // import {CubeCamerasController} from './utils/CubeCamerasController';
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
-import {CoreGraph} from 'src/core/graph/CoreGraph';
+import {CoreGraph} from '../../core/graph/CoreGraph';
 import {CookController} from './utils/CookController';
 import {EventsController} from './utils/EventsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
-import {MissingReferencesController} from 'src/engine/expressions/MissingReferencesController';
+import {MissingReferencesController} from '../expressions/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
-import {CorePerformance} from 'src/core/performance/CorePerformance';
+import {CorePerformance} from '../../core/performance/CorePerformance';
 import {TimeController} from './utils/TimeController';
 import {PolySceneSerializer} from './utils/Serializer';
 import {UniformsController} from './utils/UniformsController';

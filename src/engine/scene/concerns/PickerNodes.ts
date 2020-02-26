@@ -1,5 +1,5 @@
 // import lodash_sortBy from 'lodash/sortBy'
-// import {Picker} from 'src/engine/nodes/Event/Picker'
+// import {Picker} from '../../nodes/Event/Picker'
 
 // export function PickerNodes<TBase extends Constructor>(Base: TBase) {
 // 	return class extends Base {

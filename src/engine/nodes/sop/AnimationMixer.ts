@@ -3,18 +3,18 @@ import lodash_isArray from 'lodash/isArray';
 // import {Object3D} from 'three/src/core/Object3D';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 // import {AnimationClip} from 'three/src/animation/AnimationClip';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {Object3DWithAnimation} from 'src/core/geometry/Animation';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {Object3DWithAnimation} from '../../../core/geometry/Animation';
+import {ParamType} from '../../poly/ParamType';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
 import {Mesh} from 'three/src/objects/Mesh';
 
 import {Material} from 'three/src/materials/Materials';
-import {MaterialWithSkinning} from 'src/core/geometry/Material';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {MaterialWithSkinning} from '../../../core/geometry/Material';
+import {NodeEvent} from '../../poly/NodeEvent';
+import {BaseParamType} from '../../params/_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Object3D} from 'three/src/core/Object3D';
 import {BaseNodeType} from '../_Base';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {

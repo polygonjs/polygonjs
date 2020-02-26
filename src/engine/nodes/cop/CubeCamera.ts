@@ -1,10 +1,10 @@
 // // import NodeBase from '../_Base'
 
 // import {BaseNodeCop} from './_Base';
-// import {CubeCameraObj} from 'src/engine/nodes/obj/CubeCamera';
-// // import {BaseParam} from 'src/Engine/Param/_Base'
-// // import {CoreTextureLoader} from 'src/Core/Loader/Texture'
-// // import {CoreScriptLoader} from 'src/Core/Loader/Script'
+// import {CubeCameraObj} from '../obj/CubeCamera';
+// // import {BaseParam} from '../../../Engine/Param/_Base'
+// // import {CoreTextureLoader} from '../../../Core/Loader/Texture'
+// // import {CoreScriptLoader} from '../../../Core/Loader/Script'
 
 // // import {PMREMGenerator} from 'three/src/extras/PMREMGenerator'
 // // const THREE = {PMREMGenerator}

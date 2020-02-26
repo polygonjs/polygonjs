@@ -1,8 +1,9 @@
 import {PolyScene} from './scene/PolyScene';
-import 'src/engine/poly/registers/All';
+import {AllRegister} from './poly/registers/All';
+AllRegister.run();
 
 import {SceneJsonExporter, SceneJsonExporterData} from './io/json/export/Scene';
-import default_scene_data from 'src/../public/examples/scenes/default_simple.json';
+import default_scene_data from '../../public/examples/scenes/default_simple.json';
 import {SceneJsonImporter} from './io/json/import/Scene';
 
 export class Tester {

@@ -1,13 +1,13 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
 import {TypedSopNode} from './_Base';
-import {CoreGeometryUtilCircle} from 'src/core/geometry/util/Circle';
-import {ObjectType} from 'src/core/geometry/Constant';
-import {CoreTransform} from 'src/core/Transform';
+import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
+import {ObjectType} from '../../../core/geometry/Constant';
+import {CoreTransform} from '../../../core/Transform';
 
 const DEFAULT_UP = new Vector3(0, 0, 1);
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CircleSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1);
 	segments = ParamConfig.INTEGER(12, {

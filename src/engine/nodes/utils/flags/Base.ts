@@ -1,4 +1,4 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../_Base';
 
 type FlagHookCallback = () => void;
 

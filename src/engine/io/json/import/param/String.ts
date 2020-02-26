@@ -1,8 +1,8 @@
 // import lodash_isString from 'lodash/isString';
 import {ParamJsonImporter} from '../Param';
 import {ComplexParamJsonExporterData} from '../../export/Param';
-import {StringParam} from 'src/engine/params/String';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {StringParam} from '../../../../params/String';
+import {ParamType} from '../../../../poly/ParamType';
 
 const LINE_BREAK_REGEXP = /\\n+/g;
 

@@ -1,8 +1,8 @@
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 class LayerSopParamsConfig extends NodeParamsConfig {
 	layer = ParamConfig.INTEGER(0, {
 		range: [0, 31],

@@ -6,7 +6,7 @@ import {BackSide} from 'three/src/constants';
 import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function SideParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		double_sided = ParamConfig.BOOLEAN(0);

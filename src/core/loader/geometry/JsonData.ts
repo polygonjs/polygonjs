@@ -1,4 +1,4 @@
-// import {Core} from 'src/core/_Module';
+// import {Core} from '../../_Module';
 import lodash_isArray from 'lodash/isArray';
 import lodash_isObject from 'lodash/isObject';
 import lodash_isString from 'lodash/isString';
@@ -10,12 +10,12 @@ const THREE = {BufferGeometry, Float32BufferAttribute, Points};
 
 // import UrlLoader from '../UrlLoader';
 import axios from 'axios';
-import {CoreString} from 'src/core/String';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreAttributeData} from 'src/core/geometry/AttributeData';
-import {CoreAttribute} from 'src/core/geometry/Attribute';
-// import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {CoreString} from '../../String';
+import {CoreGeometry} from '../../geometry/Geometry';
+import {CoreConstant} from '../../geometry/Constant';
+import {CoreAttributeData} from '../../geometry/AttributeData';
+import {CoreAttribute} from '../../geometry/Attribute';
+// import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {Object3D} from 'three/src/core/Object3D';
 
 const DEEP_ATTRIB_SEPARATOR = ':';

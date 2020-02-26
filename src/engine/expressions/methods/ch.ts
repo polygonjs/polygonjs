@@ -1,7 +1,7 @@
 // import lodash_isNumber from 'lodash/isNumber';
 
 import {BaseMethod} from './_Base';
-import {DecomposedPath} from 'src/core/DecomposedPath';
+import {DecomposedPath} from '../../../core/DecomposedPath';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 

@@ -1,14 +1,14 @@
-import {CoreWalker} from 'src/core/Walker';
-import {DecomposedPath} from 'src/core/DecomposedPath';
-// import {NodeSimple} from 'src/core/graph/NodeSimple'
-import {BaseParamType, TypedParam} from 'src/engine/params/_Base';
-import {BaseNodeType, TypedNode} from 'src/engine/nodes/_Base';
+import {CoreWalker} from '../../../core/Walker';
+import {DecomposedPath} from '../../../core/DecomposedPath';
+// import {NodeSimple} from '../../../core/graph/NodeSimple'
+import {BaseParamType, TypedParam} from '../../params/_Base';
+import {BaseNodeType, TypedNode} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {BaseContainer} from 'src/engine/containers/_Base';
-import {CoreObject} from 'src/core/Object';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {BaseContainer} from '../../containers/_Base';
+import {CoreObject} from '../../../core/Object';
 
 // type NodeOrParam = BaseNode | BaseParam;
 

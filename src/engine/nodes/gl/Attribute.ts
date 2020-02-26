@@ -4,8 +4,8 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 // import {BaseNodeGlMathFunctionArg1} from './_BaseMathFunctionArg1';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {BaseNamedConnectionPointType} from '../utils/connections/NamedConnectionPoint';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {ParamType} from '../../poly/ParamType';
 
 const INPUT_NAME = 'export';
 const OUTPUT_NAME = 'val';
@@ -19,7 +19,7 @@ const ConnectionPointTypesAvailableForAttribute = [
 ];
 
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {

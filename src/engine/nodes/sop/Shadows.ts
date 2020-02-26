@@ -1,8 +1,8 @@
 import {TypedSopNode} from './_Base';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ShadowsSopParamsConfig extends NodeParamsConfig {
 	cast_shadow = ParamConfig.BOOLEAN(1);
 	receive_shadow = ParamConfig.BOOLEAN(1);

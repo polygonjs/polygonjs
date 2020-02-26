@@ -8,7 +8,7 @@ import {SideController, SideParamConfig} from './utils/SideController';
 // import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 // import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1);

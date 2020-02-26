@@ -1,5 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
-import {POLY} from 'src/engine/Poly';
+import {POLY} from '../../../../src/engine/Poly';
 
 QUnit.test('COP file simple default', async (assert) => {
 	const COP = window.COP;

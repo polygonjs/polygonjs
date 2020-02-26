@@ -1,10 +1,10 @@
 // import lodash_isArray from 'lodash/isArray'
 // import lodash_isString from 'lodash/isString'
-import {BaseParamType} from 'src/engine/params/_Base';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValueSerializedTypeMap} from 'src/engine/params/types/ParamInitValueSerializedTypeMap';
+import {BaseParamType} from '../../../params/_Base';
+import {ParamType} from '../../../poly/ParamType';
+import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 
-import {ParamOptions} from 'src/engine/params/utils/OptionsController';
+import {ParamOptions} from '../../../params/utils/OptionsController';
 
 type OverridenOptions = Dictionary<string>;
 

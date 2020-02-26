@@ -1,13 +1,13 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
-import {CoreTransform} from 'src/core/Transform';
-import {CoreConstant} from 'src/core/geometry/Constant';
+import {CoreTransform} from '../../../core/Transform';
+import {CoreConstant} from '../../../core/geometry/Constant';
 
-import {CoreGeometryOperationHexagon} from 'src/core/geometry/operation/Hexagon';
+import {CoreGeometryOperationHexagon} from '../../../core/geometry/operation/Hexagon';
 
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class HexagonsSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.VECTOR2([1, 1]);
 	hexagon_radius = ParamConfig.FLOAT(0.1);

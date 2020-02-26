@@ -2,20 +2,20 @@ import lodash_cloneDeep from 'lodash/cloneDeep';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {BaseNodeSop} from '../_Base'
 import {Object3D} from 'three/src/core/Object3D';
-import {BaseBuilderMatNodeType} from 'src/engine/nodes/mat/_BaseBuilder';
+import {BaseBuilderMatNodeType} from '../../../mat/_BaseBuilder';
 
 // import computeShaderPosition from 'src/Engine/Node/Gl/Assembler/Template/Particle/Position.glsl'
 // import computeShaderVelocity from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.v.glsl'
 // import particleVertexShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.vert.glsl'
 // import particleFragmentShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.frag.glsl'
-import {GlobalsTextureHandler} from 'src/engine/nodes/gl/code/globals/Texture';
+import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 
-import {ParticlesSystemGpuSopNode} from 'src/engine/nodes/sop/ParticlesSystemGpu';
-import {CoreMaterial, ShaderMaterialWithCustomMaterials} from 'src/core/geometry/Material';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
+import {CoreMaterial, ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
+import {CoreGroup} from '../../../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
-import {TextureAllocationsControllerData} from 'src/engine/nodes/gl/code/utils/TextureAllocationsController';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {TextureAllocationsControllerData} from '../../../gl/code/utils/TextureAllocationsController';
 
 export class ParticlesSystemGpuRenderController {
 	private _render_material: ShaderMaterial | undefined;

@@ -1,6 +1,6 @@
 import {ParamConfig} from '../configs/ParamConfig';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValuesTypeMap} from 'src/engine/params/types/ParamInitValuesTypeMap';
+import {ParamType} from '../../../../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 
 export class ParamConfigsController {
 	private _param_configs: ParamConfig<ParamType>[] = [];

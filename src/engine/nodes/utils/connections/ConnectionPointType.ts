@@ -1,7 +1,7 @@
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 
-import {ParamType} from 'src/engine/poly/ParamType';
-import {RampParam} from 'src/engine/params/Ramp';
+import {ParamType} from '../../../poly/ParamType';
+import {RampParam} from '../../../params/Ramp';
 
 // TODO: simplify GLDataType into one enum
 // http://learnwebgl.brown37.net/12_shader_language/glsl_data_types.html

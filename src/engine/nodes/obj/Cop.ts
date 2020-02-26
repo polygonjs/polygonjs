@@ -1,6 +1,6 @@
 import {BaseManagerObjNode} from './_BaseManager';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {CopNodeChildrenMap} from 'src/engine/poly/registers/Cop';
+import {NodeContext} from '../../poly/NodeContext';
+import {CopNodeChildrenMap} from '../../poly/registers/Cop';
 import {BaseCopNodeType} from '../cop/_Base';
 
 export class CopObjNode extends BaseManagerObjNode {

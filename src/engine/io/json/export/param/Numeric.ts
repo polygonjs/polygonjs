@@ -1,6 +1,6 @@
 import {ParamJsonExporter} from '../Param';
-import {TypedNumericParam} from 'src/engine/params/_Numeric';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {TypedNumericParam} from '../../../../params/_Numeric';
+import {ParamType} from '../../../../poly/ParamType';
 
 export class ParamNumericJsonExporter extends ParamJsonExporter<TypedNumericParam<ParamType>> {
 	add_main() {

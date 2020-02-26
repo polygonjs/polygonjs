@@ -13,7 +13,7 @@ const SPHERE_TYPE: SphereTypes = {
 };
 const SPHERE_TYPES: Array<SphereType> = [SphereType.DEFAULT, SphereType.ISOCAHEDRON];
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class SphereSopParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(SPHERE_TYPE.default, {
 		menu: {

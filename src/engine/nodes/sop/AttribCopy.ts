@@ -1,8 +1,8 @@
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 class AttribCopySopParamsConfig extends NodeParamsConfig {

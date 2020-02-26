@@ -2,10 +2,10 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import lodash_range from 'lodash/range';
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from 'src/core/geometry/Constant';
+import {CoreConstant} from '../../../core/geometry/Constant';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../core/geometry/Group';
 class BboxScatterSopParamsConfig extends NodeParamsConfig {
 	step_size = ParamConfig.FLOAT(0.1);
 }

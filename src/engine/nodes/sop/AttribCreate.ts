@@ -7,16 +7,16 @@ import {
 	AttribTypeMenuEntries,
 	AttribClass,
 	AttribType,
-} from 'src/core/geometry/Constant';
-import {CoreAttribute} from 'src/core/geometry/Attribute';
-// import {CoreGeometry} from 'src/core/geometry/Geometry'
-import {CoreObject} from 'src/core/geometry/Object';
-import {CoreGroup} from 'src/core/geometry/Group';
+} from '../../../core/geometry/Constant';
+import {CoreAttribute} from '../../../core/geometry/Attribute';
+// import {CoreGeometry} from '../../../core/geometry/Geometry'
+import {CoreObject} from '../../../core/geometry/Object';
+import {CoreGroup} from '../../../core/geometry/Group';
 
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Vector2} from 'three/src/math/Vector2';
 
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 // const VALUE_PARAM = {
@@ -33,7 +33,7 @@ type COMPONENT_INDEX = keyof Vector4Like;
 const COMPONENT_INDEX: Array<COMPONENT_INDEX> = ['x', 'y', 'z', 'w'];
 type ValueArrayByName = Dictionary<number[]>;
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');
 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {

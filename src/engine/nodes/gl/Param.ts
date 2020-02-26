@@ -1,6 +1,6 @@
 import {TypedGlNode} from './_Base';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {
 	ConnectionPointTypes,
 	ConnectionPointType,
@@ -11,8 +11,8 @@ import lodash_isArray from 'lodash/isArray';
 
 const OUTPUT_NAME = 'val';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ParamType} from '../../poly/ParamType';
 import {UniformGLDefinition} from './utils/GLDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

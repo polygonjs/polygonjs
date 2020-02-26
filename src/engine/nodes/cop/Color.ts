@@ -29,8 +29,8 @@
 // // import NodeBase from '../_Base'
 
 // // import Container from '../../Container/Texture'
-// // import {CoreImage} from 'src/Core/Image'
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
+// // import {CoreImage} from '../../../Core/Image'
+// import {ThreeToGl} from '../../../Core/ThreeToGl';
 
 // import {BaseNodeCop} from './_Base';
 

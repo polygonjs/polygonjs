@@ -1,14 +1,14 @@
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreObject} from 'src/core/geometry/Object';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreObject} from '../../../core/geometry/Object';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Vector3} from 'three/src/math/Vector3';
 import {Mesh} from 'three/src/objects/Mesh';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CorePoint} from 'src/core/geometry/Point';
-import {ObjectType} from 'src/core/geometry/Constant';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CorePoint} from '../../../core/geometry/Point';
+import {ObjectType} from '../../../core/geometry/Constant';
 class FuseSopParamsConfig extends NodeParamsConfig {
 	dist = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],

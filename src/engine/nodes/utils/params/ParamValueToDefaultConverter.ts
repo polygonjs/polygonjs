@@ -1,4 +1,4 @@
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamValue} from '../../../params/types/ParamValue';
 
@@ -9,8 +9,8 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {Color} from 'three/src/math/Color';
 
-// import {TypeAssert} from 'src/engine/poly/Assert';
-import {RampParam} from 'src/engine/params/Ramp';
+// import {TypeAssert} from '../../../poly/Assert';
+import {RampParam} from '../../../params/Ramp';
 // type ConvertMethod<T extends ParamType> = (val: ParamValuesTypeMap[T]) => ParamInitValuesTypeMap[T];
 type ConvertMethod<T extends ParamType> = (val: ParamValue) => ParamInitValuesTypeMap[T];
 type ParamValuetoInitValueMapGeneric = {[key in ParamType]: ConvertMethod<key>};

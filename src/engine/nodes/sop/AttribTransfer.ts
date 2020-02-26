@@ -1,10 +1,10 @@
 import {TypedSopNode} from './_Base';
-import {CorePoint} from 'src/core/geometry/Point';
-import {CoreGroup} from 'src/core/geometry/Group';
-// import {CoreMath} from 'src/core/math/_Module';
-import {CoreInterpolate} from 'src/core/math/Interpolate';
-import {CoreOctree} from 'src/core/math/octree/Octree';
-import {CoreIterator} from 'src/core/Iterator';
+import {CorePoint} from '../../../core/geometry/Point';
+import {CoreGroup} from '../../../core/geometry/Group';
+// import {CoreMath} from '../../../core/math/_Module';
+import {CoreInterpolate} from '../../../core/math/Interpolate';
+import {CoreOctree} from '../../../core/math/octree/Octree';
+import {CoreIterator} from '../../../core/Iterator';
 // import lodash_sum from 'lodash/sum';
 
 // enum TransferMethod {
@@ -18,8 +18,8 @@ import {CoreIterator} from 'src/core/Iterator';
 
 // const LATITUDE = 'Latitude'
 // const LONGITUDE = 'Longitude'
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	src_group = ParamConfig.STRING();
 	dest_group = ParamConfig.STRING();

@@ -1,8 +1,8 @@
 import lodash_isArray from 'lodash/isArray';
 import lodash_isString from 'lodash/isString';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../../../params/_Base';
 import {CodeExporterDispatcher} from './Dispatcher';
-// import {ParamOptions} from 'src/engine/params/utils/OptionsController';
+// import {ParamOptions} from '../../../params/utils/OptionsController';
 
 export class ParamCodeExporter<T extends BaseParamType> {
 	_lines: string[] = [];

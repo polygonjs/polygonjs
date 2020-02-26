@@ -1,11 +1,11 @@
 import {PolyScene} from '../PolyScene';
 
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import 'src/engine/Poly';
-import {POLY} from 'src/engine/Poly';
-import {SceneEvent} from 'src/engine/poly/SceneEvent';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
-import {ParamEvent} from 'src/engine/poly/ParamEvent';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import '../../Poly';
+import {POLY} from '../../Poly';
+import {SceneEvent} from '../../poly/SceneEvent';
+import {NodeEvent} from '../../poly/NodeEvent';
+import {ParamEvent} from '../../poly/ParamEvent';
 
 // type Callback = (emitter: CoreGraphNodeScene) => void; // TODO: typescript: maybe arg should be an event instead of the emitter
 interface EventsListener {

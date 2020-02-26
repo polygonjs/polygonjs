@@ -104,10 +104,10 @@ import {Texture} from 'three/src/textures/Texture';
 // import NodeBase from '../_Base'
 
 import {TypedCopNode} from './_Base';
-// import {BaseParam} from 'src/Engine/Param/_Base'
-import {CoreTextureLoader} from 'src/core/loader/Texture';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+// import {BaseParam} from '../../../Engine/Param/_Base'
+import {CoreTextureLoader} from '../../../core/loader/Texture';
+import {ParamType} from '../../poly/ParamType';
+import {NodeEvent} from '../../poly/NodeEvent';
 
 // this used to be named file_in, but I can't recall the decision of not calling it simply 'file'
 // so renaming it back to file for now
@@ -194,8 +194,8 @@ const ATTRIB_MAPPING: AttribMapping = {
 };
 
 import {BaseNodeType} from '../_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {BaseParamType} from '../../params/_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class FileCopParamsConfig extends NodeParamsConfig {
 	// video_time = ParamConfig.FLOAT(1);
 	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {

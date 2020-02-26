@@ -1,4 +1,4 @@
-import {POLY} from 'src/engine/Poly';
+import {POLY} from '../../../../src/engine/Poly';
 import {Vector2} from 'three/src/math/Vector2';
 
 QUnit.test('COP env_map simple', async (assert) => {

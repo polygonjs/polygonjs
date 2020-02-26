@@ -1,5 +1,5 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../../../nodes/_Base';
+import {BaseParamType} from '../../../params/_Base';
 
 import {NodeJsonImporter} from './Node';
 // import {BaseNodeObjJsonImporter} from './node/Obj';
@@ -9,10 +9,10 @@ import {ParamJsonImporter} from './Param';
 import {ParamMultipleJsonImporter} from './param/Multiple';
 import {ParamStringJsonImporter} from './param/String';
 import {ParamRampJsonImporter} from './param/Ramp';
-// import {TypedObjNode} from 'src/engine/nodes/obj/_Base';
-import {TypedMultipleParam} from 'src/engine/params/_Multiple';
-import {StringParam} from 'src/engine/params/String';
-import {RampParam} from 'src/engine/params/Ramp';
+// import {TypedObjNode} from '../../../nodes/obj/_Base';
+import {TypedMultipleParam} from '../../../params/_Multiple';
+import {StringParam} from '../../../params/String';
+import {RampParam} from '../../../params/Ramp';
 
 export class JsonImportDispatcher {
 	static dispatch_node(node: BaseNodeType) {

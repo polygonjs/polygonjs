@@ -1,19 +1,19 @@
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 
 // const OUTPUT_NAME = 'longer_name_to_test';
 
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType, ConnectionPointTypes} from '../utils/connections/ConnectionPointType';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 function typed_visible_options(type: ConnectionPointType) {
 	const val = ConnectionPointTypes.indexOf(type);
 	return {visible_if: {type: val}};
 }
 
-import {BaseParamType} from 'src/engine/params/_Base';
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {BaseParamType} from '../../params/_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {

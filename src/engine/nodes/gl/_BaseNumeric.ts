@@ -1,9 +1,9 @@
 import {TypedGlNode} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {ThreeToGl} from 'src/Core/ThreeToGl'
+// import {ParamType} from '../../../Engine/Param/_Module';
+// import {ThreeToGl} from '../../../Core/ThreeToGl'
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 

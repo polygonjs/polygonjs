@@ -3,22 +3,22 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreObject} from 'src/core/geometry/Object';
-import {CorePoint} from 'src/core/geometry/Point';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreObject} from '../../../core/geometry/Object';
+import {CorePoint} from '../../../core/geometry/Point';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Mesh} from 'three/src/objects/Mesh';
-import {BooleanParam} from 'src/engine/params/Boolean';
-import {FloatParam} from 'src/engine/params/Float';
+import {BooleanParam} from '../../params/Boolean';
+import {FloatParam} from '../../params/Float';
 
 const POSITION_ATTRIB_NAME = 'position';
 
 type ValueArrayByName = Map<string, number[]>;
 type ComponentOffset = 0 | 1 | 2;
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PointSopParamsConfig extends NodeParamsConfig {
 	update_x = ParamConfig.BOOLEAN(0);
 	x = ParamConfig.FLOAT('@P.x', {

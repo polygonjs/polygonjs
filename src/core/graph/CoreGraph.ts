@@ -1,7 +1,7 @@
 import {Graph, alg} from '@dagrejs/graphlib';
 // import lodash_uniq from 'lodash/uniq';
 // import lodash_flatten from 'lodash/flatten';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../engine/scene/PolyScene';
 // import {NodeSimple} from './NodeSimple'
 // import {GraphNode} from './concerns/GraphNode'
 // import {SceneNodeDirtyable} from './SceneNodeDirtyable';

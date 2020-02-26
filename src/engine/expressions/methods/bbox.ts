@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {Vector3} from 'three/src/math/Vector3';
-import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {GeometryContainer} from '../../containers/Geometry';
 
 // import Walker from 'src/core/Walker';
 

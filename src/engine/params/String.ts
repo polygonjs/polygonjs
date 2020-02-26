@@ -4,8 +4,8 @@ import lodash_isString from 'lodash/isString';
 import {TypedParam} from './_Base';
 // import {TypedParamVisitor} from './_Base';
 // import {AsCodeString} from './concerns/visitors/String';
-// import {ExpressionController} from 'src/engine/expressions/ExpressionController'
-import {ParsedTree} from 'src/engine/expressions/traversers/ParsedTree';
+// import {ExpressionController} from '../expressions/ExpressionController'
+import {ParsedTree} from '../expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';

@@ -1,6 +1,6 @@
-import {CoreObject} from 'src/core/Object';
+import {CoreObject} from '../../core/Object';
 
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../nodes/_Base';
 
 // interface ContentOption {
 // 	clone?: boolean

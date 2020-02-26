@@ -3,7 +3,7 @@ import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
 
-import {ParamConfig, NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {SideController, SideParamConfig} from './utils/SideController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';

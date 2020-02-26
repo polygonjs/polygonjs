@@ -1,7 +1,7 @@
 import {AmbientLight} from 'three/src/lights/AmbientLight';
 import {TypedLightObjNode} from './_BaseLight';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AmbientLightObjParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
 	intensity = ParamConfig.FLOAT(1);

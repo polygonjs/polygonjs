@@ -2,19 +2,19 @@ import {Box3} from 'three/src/math/Box3';
 import lodash_isString from 'lodash/isString';
 import lodash_each from 'lodash/each';
 import {TypedSopNode} from './_Base';
-import {CoreString} from 'src/core/String';
+import {CoreString} from '../../../core/String';
 import {
 	AttribClass,
 	AttribClassMenuEntries,
 	ObjectType,
 	ObjectTypeMenuEntries,
 	ObjectTypes,
-} from 'src/core/geometry/Constant';
-import {CoreGroup, Object3DWithGeometry} from 'src/core/geometry/Group';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CorePoint} from 'src/core/geometry/Point';
-import {CoreObject} from 'src/core/geometry/Object';
+} from '../../../core/geometry/Constant';
+import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CorePoint} from '../../../core/geometry/Point';
+import {CoreObject} from '../../../core/geometry/Object';
 
 enum ComparisonOperator {
 	'==' = 0,
@@ -33,7 +33,7 @@ const ComparisonOperatorMenuEntries = [
 	{name: '!=', value: ComparisonOperator['!=']},
 ];
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {

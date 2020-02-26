@@ -5,7 +5,7 @@ import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {FrontSide} from 'three/src/constants';
 
 import {ShaderAssemblerMesh} from './_BaseMesh';
-// import {ShaderType, ShaderName, LineType, SHADER_NAMES, LINE_TYPES} from 'src/Engine/Node/Gl/Util/CodeBuilder'
+// import {ShaderType, ShaderName, LineType, SHADER_NAMES, LINE_TYPES} from '../../../../../Engine/Node/Gl/Util/CodeBuilder'
 
 // const BEGIN_NORMAL_VERTEX_LINE = '	#include <beginnormal_vertex>'
 // const BEGIN_VERTEX_LINE = '	#include <begin_vertex>'

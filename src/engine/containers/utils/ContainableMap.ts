@@ -1,4 +1,4 @@
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {Material} from 'three/src/materials/Materials';
 import {Texture} from 'three/src/textures/Texture';
 import {Object3D} from 'three/src/core/Object3D';

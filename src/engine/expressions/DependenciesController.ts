@@ -1,7 +1,7 @@
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../params/_Base';
 // import {ParsedTree} from './Traverser/ParsedTree'
 import {FunctionGenerator} from './traversers/FunctionGenerator';
-// import {NodeSimple} from 'src/core/graph/NodeSimple'
+// import {NodeSimple} from '../../core/graph/NodeSimple'
 // import {MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'
 // import {NamesListener} from './NamesListener'

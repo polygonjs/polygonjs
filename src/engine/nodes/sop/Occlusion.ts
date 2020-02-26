@@ -2,18 +2,18 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 const THREE = {Float32BufferAttribute};
 import {TypedSopNode} from './_Base';
 
-// import {CoreGroup} from 'src/Core/Geometry/Group';
-import {CoreObject} from 'src/core/geometry/Object';
-// import {CoreGeometry} from 'src/Core/Geometry/Geometry'
-// import {CorePoint} from 'src/Core/Geometry/Point'
+// import {CoreGroup} from '../../../Core/Geometry/Group';
+import {CoreObject} from '../../../core/geometry/Object';
+// import {CoreGeometry} from '../../../Core/Geometry/Geometry'
+// import {CorePoint} from '../../../Core/Geometry/Point'
 
 // https://github.com/wwwtyro/geo-ambient-occlusion
 import geoao from 'geo-ambient-occlusion';
 
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class OcclusionSopParamsConfig extends NodeParamsConfig {
 	attrib_name = ParamConfig.STRING('occlusion');
 	samples = ParamConfig.INTEGER(256, {

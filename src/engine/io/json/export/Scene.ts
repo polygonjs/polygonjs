@@ -1,6 +1,6 @@
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../../scene/PolyScene';
 // import {JsonExporterVisitor} from './Visitor';
-import {CoreString} from 'src/core/String';
+import {CoreString} from '../../../../core/String';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
 

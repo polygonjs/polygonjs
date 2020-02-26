@@ -1,8 +1,8 @@
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {DirectionalLightHelper} from './utils/helpers/DirectionalLightHelper';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-// import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+// import {NodeContext} from '../../poly/NodeContext';
 // import {BaseObjNodeType} from './_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {HelperController, HelperConstructor} from './utils/HelperController';

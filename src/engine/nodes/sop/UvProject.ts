@@ -3,16 +3,16 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CameraController} from 'src/core/CameraController';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CameraController} from '../../../core/CameraController';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 
 // const MODE = [];
 const UV_NAME = 'uv';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {NodeContext} from '../../poly/NodeContext';
 import {BaseObjNodeType} from '../obj/_Base';
 class UvProjectSopParamsConfig extends NodeParamsConfig {
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {

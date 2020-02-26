@@ -1,4 +1,4 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../_Base';
 // import lodash_includes from 'lodash/includes';
 // import lodash_values from 'lodash/values';
 

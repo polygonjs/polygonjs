@@ -1,10 +1,10 @@
 import lodash_isNumber from 'lodash/isNumber';
 // import BaseNode from 'src/engine/nodes/_Base'
-import {DecomposedPath} from 'src/core/DecomposedPath';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {CoreObject} from 'src/core/Object';
-import {BaseNodeType, BaseNodeClass, TypedNode} from 'src/engine/nodes/_Base';
+import {DecomposedPath} from '../../core/DecomposedPath';
+import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
+import {BaseParamType} from '../params/_Base';
+import {CoreObject} from '../../core/Object';
+import {BaseNodeType, BaseNodeClass, TypedNode} from '../nodes/_Base';
 import jsep from 'jsep';
 
 type NodeOrParam = BaseNodeType | BaseParamType;

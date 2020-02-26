@@ -3,18 +3,18 @@
 // // import {CanvasTexture} from 'three/src/textures/CanvasTexture'
 
 // import {BasePostProcessNode} from './_Base';
-// import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
+// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {ShaderPass} from 'modules/three/examples/jsm/postprocessing/ShaderPass';
+// import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
 // import VertexShader from './Image/vert.glsl';
 // import FragmentShader from './Image/frag.glsl';
 
-// import {FileCopNode} from 'src/engine/nodes/cop/File';
-// import {NodeContext} from 'src/engine/poly/NodeContext';
-// import {ParamType} from 'src/engine/poly/ParamType';
-// // import {FuseActiveDesignPass} from 'src/Engine/Viewer/Fuse/FuseActiveDesignPass'
+// import {FileCopNode} from '../cop/File';
+// import {NodeContext} from '../../poly/NodeContext';
+// import {ParamType} from '../../poly/ParamType';
+// // import {FuseActiveDesignPass} from '../../../Engine/Viewer/Fuse/FuseActiveDesignPass'
 
 // interface ShaderPassWithRequiredUniforms extends ShaderPass {
 // 	uniforms: {

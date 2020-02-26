@@ -1,11 +1,11 @@
 import {TypedSopNode} from './_Base';
-// import {Core} from 'src/Core/_Module';
-import {CoreGroup} from 'src/core/geometry/Group';
+// import {Core} from '../../../Core/_Module';
+import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class AttribAddMultSopParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	pre_add = ParamConfig.FLOAT(0, {range: [0, 1]});

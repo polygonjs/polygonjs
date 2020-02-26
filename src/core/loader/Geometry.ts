@@ -1,7 +1,7 @@
 import {ObjectLoader} from 'three/src/loaders/ObjectLoader';
 import {Object3D} from 'three/src/core/Object3D';
 // import lodash_isArray from 'lodash/isArray';
-// import {CoreString} from 'src/core/String';
+// import {CoreString} from '../String';
 
 // import {GeometryLoaderModule} from './Geometry/_Module';
 // import {DRACOLoader} from './Geometry/DRACOLoader';
@@ -12,10 +12,10 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 
-// import {DDSLoader} from 'modules/three/examples/jsm/loaders/DDSLoader';
-// import {DRACOLoader} from 'modules/three/examples/jsm/loaders/DRACOLoader';
-// import {GLTFLoader} from 'modules/three/examples/jsm/loaders/GLTFLoader';
-// import {OBJLoader} from 'modules/three/examples/jsm/loaders/OBJLoader';
+// import {DDSLoader} from '../../../modules/three/examples/jsm/loaders/DDSLoader';
+// import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
+// import {GLTFLoader} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+// import {OBJLoader} from '../../../modules/three/examples/jsm/loaders/OBJLoader';
 
 // const GLTFLoaders = ['DDSLoader', 'DRACOLoader', 'GLTFLoader'];
 // const SCRIPT_URLS_BY_EXT = {
@@ -201,12 +201,12 @@ export class CoreLoaderGeometry {
 		// 'DDSLoader', 'DRACOLoader', 'GLTFLoader'
 		// const {DDSLoader} = await import(`modules/three/examples/jsm/loaders/DDSLoader`);
 		// const {DRACOLoader} = await import(`modules/three/examples/jsm/loaders/DRACOLoader`);
-		const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
+		const {GLTFLoader} = await import(`../../../modules/three/examples/jsm/loaders/GLTFLoader`);
 		return new GLTFLoader();
 	}
 	async loader_for_glb() {
-		const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
-		const {DRACOLoader} = await import(`modules/three/examples/jsm/loaders/DRACOLoader`);
+		const {GLTFLoader} = await import(`../../../modules/three/examples/jsm/loaders/GLTFLoader`);
+		const {DRACOLoader} = await import(`../../../modules/three/examples/jsm/loaders/DRACOLoader`);
 
 		const loader = new GLTFLoader();
 		const draco_loader = new DRACOLoader();
@@ -220,7 +220,7 @@ export class CoreLoaderGeometry {
 	}
 	async loader_for_drc() {
 		// const {DDSLoader} = await import(`modules/three/examples/jsm/loaders/DDSLoader`);
-		const {DRACOLoader} = await import(`modules/three/examples/jsm/loaders/DRACOLoader`);
+		const {DRACOLoader} = await import(`../../../modules/three/examples/jsm/loaders/DRACOLoader`);
 		// const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
 
 		// const loader = new GLTFLoader();
@@ -234,7 +234,7 @@ export class CoreLoaderGeometry {
 		return draco_loader;
 	}
 	async loader_for_obj() {
-		const {OBJLoader} = await import(`modules/three/examples/jsm/loaders/OBJLoader`);
+		const {OBJLoader} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader`);
 		return new OBJLoader();
 	}
 

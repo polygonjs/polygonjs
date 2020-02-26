@@ -1,6 +1,6 @@
 // import {CoreGraphNode} from './CoreGraphNode';
 // import { CoreGraphNodeScene } from './CoreGraphNodeScene';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {PolyScene} from '../PolyScene';
 
 // interface CookerQueue {

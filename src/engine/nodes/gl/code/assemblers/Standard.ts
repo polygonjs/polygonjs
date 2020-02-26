@@ -16,7 +16,7 @@ import metalnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/metalnessmap_frag
 import roughnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
 import {OutputGlNode} from '../../Output';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../../poly/ParamType';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	is_physical() {

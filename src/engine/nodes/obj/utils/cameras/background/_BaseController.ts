@@ -8,19 +8,19 @@ import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 // const THREE = {Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry, Raycaster, Texture, Vector3}
 // import lodash_isNaN from 'lodash/isNaN'
 // import lodash_sum from 'lodash/sum'
-// import {BaseParam} from 'src/Engine/Param/_Base'
-// import {BaseNodePostProcess} from 'src/Engine/Node/PostProcess/_Base'
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
-import {BaseMatNodeType} from 'src/engine/nodes/mat/_Base';
-// import {NodeContext} from 'src/engine/poly/NodeContext';
-// import {ParamType} from 'src/engine/poly/ParamType';
-// import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer'
-// import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass'
+// import {BaseParam} from '../../../../../../Engine/Param/_Base'
+// import {BaseNodePostProcess} from '../../../../../../Engine/Node/PostProcess/_Base'
+import {BaseCameraObjNodeType} from '../../../_BaseCamera';
+import {BaseMatNodeType} from '../../../../mat/_Base';
+// import {NodeContext} from '../../../../../poly/NodeContext';
+// import {ParamType} from '../../../../../poly/ParamType';
+// import {EffectComposer} from '../../../../../../../modules/three/examples/jsm/postprocessing/EffectComposer'
+// import {RenderPass} from '../../../../../../../modules/three/examples/jsm/postprocessing/RenderPass'
 
-// import {File} from 'src/Engine/Node/Cop/File'
+// import {File} from '../../../../../../Engine/Node/Cop/File'
 
 // import {ScreenQuad} from '../Camera/ScreenQuad'
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../../../../poly/NodeContext';
 
 import {ParamConfig} from '../../../../utils/params/ParamsConfig';
 export function CameraBackgroundParamConfig<TBase extends Constructor>(Base: TBase) {

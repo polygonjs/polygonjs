@@ -6,14 +6,14 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {DoubleSide} from 'three/src/constants';
 
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const MAT_DOUBLE_SIDED = new MeshBasicMaterial({
 	side: DoubleSide,
 });
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RaySopParamsConfig extends NodeParamsConfig {
 	use_normals = ParamConfig.BOOLEAN(1);
 	direction = ParamConfig.VECTOR3([0, -1, 0], {

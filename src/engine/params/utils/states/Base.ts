@@ -1,4 +1,4 @@
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../../_Base';
 
 export class BaseState {
 	constructor(protected param: BaseParamType) {}

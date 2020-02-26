@@ -2,7 +2,7 @@ import lodash_uniq from 'lodash/uniq';
 import lodash_clone from 'lodash/clone';
 import lodash_sortBy from 'lodash/sortBy';
 import {PerformanceNode} from './PerformanceNode';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 
 export class CorePerformance {
 	private _started: boolean = false;

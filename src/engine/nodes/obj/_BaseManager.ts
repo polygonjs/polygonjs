@@ -1,7 +1,7 @@
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class BaseManagerObjParamsConfig extends NodeParamsConfig {}
 export class BaseManagerObjNode extends TypedObjNode<Group, BaseManagerObjParamsConfig> {
 	// public readonly add_to_hierarchy: boolean = false;

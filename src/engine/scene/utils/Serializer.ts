@@ -1,5 +1,5 @@
 import {PolyScene} from '../PolyScene';
-import {NodeSerializer} from 'src/engine/nodes/utils/Serializer';
+import {NodeSerializer} from '../../../engine/nodes/utils/Serializer';
 
 export class PolySceneSerializer {
 	constructor(private scene: PolyScene) {}

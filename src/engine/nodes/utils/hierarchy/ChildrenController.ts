@@ -1,18 +1,18 @@
-import {CoreString} from 'src/core/String';
-import {CoreWalker} from 'src/core/Walker';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreString} from '../../../../core/String';
+import {CoreWalker} from '../../../../core/Walker';
+import {BaseNodeType} from '../../_Base';
+import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 
 import lodash_includes from 'lodash/includes';
 import lodash_keys from 'lodash/keys';
 import lodash_sortBy from 'lodash/sortBy';
 import lodash_values from 'lodash/values';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeEvent} from '../../../poly/NodeEvent';
+import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
-import CoreSelection from 'src/core/NodeSelection';
+import {CoreNodeSelection} from '../../../../core/NodeSelection';
 
-import {POLY} from 'src/engine/Poly';
+import {POLY} from '../../../Poly';
 // import {NameController} from '../NameController';
 
 // interface HierarchyOptions {
@@ -31,9 +31,9 @@ export class HierarchyChildrenController {
 	private _is_dependent_on_children: boolean = false;
 	private _children_node: CoreGraphNode | undefined;
 
-	private _selection: CoreSelection | undefined;
-	get selection(): CoreSelection {
-		return (this._selection = this._selection || new CoreSelection(this.node));
+	private _selection: CoreNodeSelection | undefined;
+	get selection(): CoreNodeSelection {
+		return (this._selection = this._selection || new CoreNodeSelection(this.node));
 	}
 	constructor(protected node: BaseNodeType, private _context: NodeContext) {}
 

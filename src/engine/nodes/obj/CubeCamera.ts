@@ -6,12 +6,12 @@
 // import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
 // import {WebGLRenderTargetCube} from 'three/src/renderers/WebGLRenderTargetCube';
 
-// import {CoreTransform} from 'src/core/Transform';
+// import {CoreTransform} from '../../../core/Transform';
 
 // import {BaseObjNode} from './_Base';
 // import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-// import {ParamType} from 'src/engine/poly/ParamType';
-// import {PolyScene} from 'src/engine/scene/PolyScene';
+// import {ParamType} from '../../poly/ParamType';
+// import {PolyScene} from '../../scene/PolyScene';
 // // import {Transformed} from './Concerns/Transformed';
 
 // const LIGHT_TYPES = ['HemisphereLight', 'SpotLight', 'PointLight'];

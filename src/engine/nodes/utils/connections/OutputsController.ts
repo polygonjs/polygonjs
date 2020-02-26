@@ -1,9 +1,9 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../_Base';
 import {BaseNamedConnectionPointType} from './NamedConnectionPoint';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_uniq from 'lodash/uniq';
 import lodash_isString from 'lodash/isString';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
+import {NodeEvent} from '../../../poly/NodeEvent';
 
 // interface OutputsOptions {
 // 	has_outputs?: boolean;

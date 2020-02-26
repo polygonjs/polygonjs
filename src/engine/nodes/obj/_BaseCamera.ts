@@ -1,7 +1,7 @@
 import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
 
-import {CoreTransform} from 'src/core/Transform';
+import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {ControlsController} from './utils/cameras/ControlsController';
 import {LayersController} from './utils/LayersController';
@@ -12,12 +12,12 @@ import {PostProcessController} from './utils/cameras/PostProcessController';
 // import {PostProcess} from './Concerns/PostProcess';
 // import {Transformed} from './Concerns/Transformed';
 // import {Background} from './Concerns/Background';
-// import {CoreTextureLoader} from 'src/Core/Loader/Texture'
+// import {CoreTextureLoader} from '../../../Core/Loader/Texture'
 // import {CameraControls} from './Concerns/CameraControls';
-// import {File} from 'src/Engine/Node/Cop/File'
-import {ThreejsViewer} from 'src/engine/viewers/Threejs';
+// import {File} from '../../../Engine/Node/Cop/File'
+import {ThreejsViewer} from '../../viewers/Threejs';
 import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
@@ -39,7 +39,7 @@ import {CameraBackgroundParamConfig} from './utils/cameras/background/_BaseContr
 import {LayerParamConfig} from './utils/LayersController';
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {TypedObjNode} from './_Base';

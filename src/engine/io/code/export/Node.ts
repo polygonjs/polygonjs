@@ -1,5 +1,5 @@
 import lodash_sortBy from 'lodash/sortBy';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../../nodes/_Base';
 import {SceneCodeExporter} from './Scene';
 import {NodesCodeExporter} from './Nodes';
 import {CodeExporterDispatcher} from './Dispatcher';

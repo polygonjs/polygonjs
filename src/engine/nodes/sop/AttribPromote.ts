@@ -1,12 +1,12 @@
 import lodash_max from 'lodash/max';
 import lodash_min from 'lodash/min';
 
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypedSopNode} from './_Base';
-import {AttribClass, AttribClassMenuEntries} from 'src/core/geometry/Constant';
-import {CoreObject} from 'src/core/geometry/Object';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreString} from 'src/core/String';
+import {AttribClass, AttribClassMenuEntries} from '../../../core/geometry/Constant';
+import {CoreObject} from '../../../core/geometry/Object';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreString} from '../../../core/String';
 
 export enum AttribPromoteMode {
 	MIN = 0,
@@ -25,7 +25,7 @@ const PromoteModeMenuEntries = [
 	{name: 'first_found', value: AttribPromoteMode.FIRST_FOUND},
 ];
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 	class_from = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {

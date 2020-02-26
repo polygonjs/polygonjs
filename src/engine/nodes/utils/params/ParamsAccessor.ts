@@ -1,6 +1,6 @@
 import {NodeParamsConfig} from './ParamsConfig';
 // import {ParamValuesTypeMap} from './ParamsController';
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../../poly/ParamType';
 
 // function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
 // 	return o[propertyName]; // o[propertyName] is of type T[K]

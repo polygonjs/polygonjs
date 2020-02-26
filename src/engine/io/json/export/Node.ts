@@ -1,10 +1,10 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../../nodes/_Base';
 import {SceneJsonExporter} from './Scene';
 // import {JsonExporterVisitor} from './Visitor';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../../poly/NodeContext';
 import {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from './Param';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../poly/ParamType';
 
 interface NamedInputData {
 	name: string;

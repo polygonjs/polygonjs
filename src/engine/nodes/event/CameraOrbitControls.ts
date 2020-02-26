@@ -1,11 +1,11 @@
 import {Camera} from 'three/src/cameras/Camera';
 
 import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 
-import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
+import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	allow_pan = ParamConfig.BOOLEAN(1);
 	allow_rotate = ParamConfig.BOOLEAN(1);

@@ -1,6 +1,6 @@
-import {CorePoint} from 'src/core/geometry/Point';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {CorePoint} from '../../../../core/geometry/Point';
+import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
+import {PolyScene} from '../../../scene/PolyScene';
 
 export class CopyStamp extends CoreGraphNode {
 	private _global_index: number = 0;

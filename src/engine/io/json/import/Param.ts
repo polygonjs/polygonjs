@@ -1,6 +1,6 @@
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../../../params/_Base';
 import {ComplexParamJsonExporterData} from '../export/Param';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../poly/ParamType';
 
 export class ParamJsonImporter<T extends BaseParamType> {
 	constructor(protected _param: T) {}

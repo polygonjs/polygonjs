@@ -6,22 +6,22 @@
 // import lodash_each from 'lodash/each';
 // import lodash_values from 'lodash/values';
 
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
-import {ParamOptions} from 'src/engine/params/utils/OptionsController';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {BaseNodeType} from '../../_Base';
+import {BaseParamType} from '../../../params/_Base';
+import {ParamOptions} from '../../../params/utils/OptionsController';
+import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 
-// import {TypedParam} from 'src/engine/params/_Base';
-import {FloatParam} from 'src/engine/params/Float';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+// import {TypedParam} from '../../../params/_Base';
+import {FloatParam} from '../../../params/Float';
+import {OperatorPathParam} from '../../../params/OperatorPath';
 
 // import {Vector2} from 'three/src/math/Vector2';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Color} from 'three/src/math/Color';
-// import {RampValue} from 'src/engine/params/ramp/RampValue';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamEvent} from 'src/engine/poly/ParamEvent';
-// import {RampValue} from 'src/engine/params/ramp/RampValue';
+// import {RampValue} from '../../../params/ramp/RampValue';
+import {ParamType} from '../../../poly/ParamType';
+import {ParamEvent} from '../../../poly/ParamEvent';
+// import {RampValue} from '../../../params/ramp/RampValue';
 // import {Vector4} from 'three/src/math/Vector4';
 import {NodeParamsConfig} from './ParamsConfig';
 

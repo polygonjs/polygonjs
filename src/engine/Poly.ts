@@ -3,7 +3,7 @@ import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
 import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/NodesRegister';
 import {NodeContext} from './poly/NodeContext';
-// import {ViewerLoadersManager} from 'src/engine/viewers/LoadersManager';
+// import {ViewerLoadersManager} from '/viewers/LoadersManager';
 
 export class Poly {
 	static _instance: Poly | undefined;

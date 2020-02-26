@@ -1,12 +1,12 @@
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
 const OUTPUT_NAME = 'vec3';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class FloatToVec3GlParamsConfig extends NodeParamsConfig {
 	x = ParamConfig.FLOAT(0);

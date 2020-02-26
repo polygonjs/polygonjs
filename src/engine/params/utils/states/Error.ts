@@ -1,5 +1,5 @@
-import {BaseParamType} from 'src/engine/params/_Base';
-import {ParamEvent} from 'src/engine/poly/ParamEvent';
+import {BaseParamType} from '../../_Base';
+import {ParamEvent} from '../../../poly/ParamEvent';
 // import lodash_includes from 'lodash/includes';
 // import lodash_values from 'lodash/values';
 

@@ -1,16 +1,16 @@
 // import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-// import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreObject} from 'src/core/geometry/Object';
+import {CoreGroup} from '../../../core/geometry/Group';
+// import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreObject} from '../../../core/geometry/Object';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 // const DEFAULT_NORMAL = new Vector3(0, 0, 1);
 const NORMAL_ATTRIB_NAME = 'normal';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	edit = ParamConfig.BOOLEAN(0);
 	update_x = ParamConfig.BOOLEAN(0, {

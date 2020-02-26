@@ -1,9 +1,9 @@
 import {Camera} from 'three/src/cameras/Camera';
 
 import {TypedEventNode} from './_Base';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 
-import {OrbitControls} from 'modules/three/examples/jsm/controls/OrbitControls';
+import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 export interface CameraControls extends OrbitControls {

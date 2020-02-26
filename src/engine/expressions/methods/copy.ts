@@ -1,8 +1,8 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-import {CoreWalker} from 'src/core/Walker';
-import {CopySopNode} from 'src/engine/nodes/sop/Copy';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {CoreWalker} from '../../../core/Walker';
+import {CopySopNode} from '../../nodes/sop/Copy';
+import {BaseNodeType} from '../../nodes/_Base';
 
 export class Copy extends BaseMethod {
 	static required_arguments() {

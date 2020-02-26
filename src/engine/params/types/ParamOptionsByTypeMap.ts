@@ -1,12 +1,12 @@
-// import {BooleanParam} from 'src/engine/params/Boolean';
-// import {ButtonParam} from 'src/engine/params/Button';
-// import {ColorParam} from 'src/engine/params/Color';
-// import {FloatParam} from 'src/engine/params/Float';
-// import {IntegerParam} from 'src/engine/params/Integer';
-// import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-// import {RampParam} from 'src/engine/params/Ramp';
-// import {SeparatorParam} from 'src/engine/params/Separator';
-import {ParamType} from 'src/engine/poly/ParamType';
+// import {BooleanParam} from '../Boolean';
+// import {ButtonParam} from '../Button';
+// import {ColorParam} from '../Color';
+// import {FloatParam} from '../Float';
+// import {IntegerParam} from '../Integer';
+// import {OperatorPathParam} from '../OperatorPath';
+// import {RampParam} from '../Ramp';
+// import {SeparatorParam} from '../Separator';
+import {ParamType} from '../../poly/ParamType';
 import {
 	BooleanParamOptions,
 	ButtonParamOptions,

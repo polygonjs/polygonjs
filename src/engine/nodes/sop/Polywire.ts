@@ -1,23 +1,23 @@
 import {TypedSopNode} from './_Base';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
-import {CoreTransform} from 'src/core/Transform';
-import {CoreGeometryUtilCircle} from 'src/core/geometry/util/Circle';
-import {CoreGeometryUtilCurve} from 'src/core/geometry/util/Curve';
-import {CoreGeometryOperationSkin} from 'src/core/geometry/operation/Skin';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {CoreTransform} from '../../../core/Transform';
+import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
+import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
+import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
 
 import {Vector3} from 'three/src/math/Vector3';
 // import {TubeBufferGeometry} from 'three/src/geometries/TubeGeometry';
 import {LineSegments} from 'three/src/objects/LineSegments';
 // import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const DEFAULT_R = new Vector3(0, 0, 0);
 const DEFAULT_S = new Vector3(1, 1, 1);
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CorePoint} from 'src/core/geometry/Point';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CorePoint} from '../../../core/geometry/Point';
 class PolywireSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1);
 	segments_radial = ParamConfig.INTEGER(8, {

@@ -6,14 +6,14 @@ import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
 // import {CubicBezierCurve3} from 'three/src/extras/curves/CubicBezierCurve3';
 // import {LineCurve3} from 'three/src/extras/curves/LineCurve3';
 // import {QuadraticBezierCurve3} from 'three/src/extras/curves/QuadraticBezierCurve3';
-import {BufferGeometryUtils} from 'modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
 import lodash_flatten from 'lodash/flatten';
 import lodash_map from 'lodash/map';
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreGeometryUtilCurve} from 'src/core/geometry/util/Curve';
-import {CoreGeometry} from 'src/core/geometry/Geometry';
+import {CoreConstant} from '../../../core/geometry/Constant';
+import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 export enum METHOD {
 	POINTS_COUNT = 'points_count',
@@ -29,10 +29,10 @@ export enum CURVE_TYPE {
 }
 export const CURVE_TYPES = [CURVE_TYPE.CENTRIPETAL, CURVE_TYPE.CHORDAL, CURVE_TYPE.CATMULLROM];
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CorePoint} from 'src/core/geometry/Point';
-import {TypeAssert} from 'src/engine/poly/Assert';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CorePoint} from '../../../core/geometry/Point';
+import {TypeAssert} from '../../poly/Assert';
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
 		menu: {

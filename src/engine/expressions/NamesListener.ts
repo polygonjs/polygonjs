@@ -1,7 +1,7 @@
 // import BaseNode from 'src/engine/nodes/_Base'
-import {BaseParamType} from 'src/engine/params/_Base';
-// import {BaseNode} from 'src/engine/nodes/_Base'
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {BaseParamType} from '../params/_Base';
+// import {BaseNode} from '../nodes/_Base'
+import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import jsep from 'jsep';
 
 // type NodeOrParam = BaseNode | BaseParam

@@ -1,10 +1,10 @@
 // import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
-import {FileCopNode} from 'src/engine/nodes/cop/File';
+import {FileCopNode} from '../../cop/File';
 import {TypedMatNode} from '../_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

@@ -3,22 +3,22 @@ import {Vector4} from 'three/src/math/Vector4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamInitValuesTypeMap} from 'src/engine/params/types/ParamInitValuesTypeMap';
-import {ParamValuesTypeMap} from 'src/engine/params/types/ParamValuesTypeMap';
-import {ParamConstructorByType} from 'src/engine/params/types/ParamConstructorByType';
+import {ParamType} from '../../../../poly/ParamType';
+import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
+import {ParamValuesTypeMap} from '../../../../params/types/ParamValuesTypeMap';
+import {ParamConstructorByType} from '../../../../params/types/ParamConstructorByType';
 
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {TypedParam, BaseParamType} from 'src/engine/params/_Base';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {TypeAssert} from 'src/engine/poly/Assert';
+import {BaseNodeType} from '../../../_Base';
+import {TypedParam, BaseParamType} from '../../../../params/_Base';
+import {NodeContext} from '../../../../poly/NodeContext';
+import {TypeAssert} from '../../../../poly/Assert';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-// import { RampValue } from 'src/engine/params/ramp/RampValue';
-import {RampParam} from 'src/engine/params/Ramp';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-// import {ParamValueComparer} from 'src/engine/nodes/utils/params/ParamValueComparer';
-// import {ParamValueCloner} from 'src/engine/nodes/utils/params/ParamValueCloner';
-// import {CoreTextureLoader} from 'src/Core/Loader/Texture'
+// import { RampValue } from '../../../../params/ramp/RampValue';
+import {RampParam} from '../../../../params/Ramp';
+import {OperatorPathParam} from '../../../../params/OperatorPath';
+// import {ParamValueComparer} from '../../params/ParamValueComparer';
+// import {ParamValueCloner} from '../../params/ParamValueCloner';
+// import {CoreTextureLoader} from '../../../../../Core/Loader/Texture'
 
 export class ParamConfig<T extends ParamType> {
 	private _uniform: IUniform | undefined;

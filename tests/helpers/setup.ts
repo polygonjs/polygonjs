@@ -1,14 +1,14 @@
 import 'qunit';
-import {PolyScene} from 'src/engine/scene/PolyScene';
-import {ObjectsManagerNode} from 'src/engine/nodes/manager/ObjectsManager';
-import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
-import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
-import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
-import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
-import {CopObjNode} from 'src/engine/nodes/obj/Cop';
+import {PolyScene} from '../../src/engine/scene/PolyScene';
+import {ObjectsManagerNode} from '../../src/engine/nodes/manager/ObjectsManager';
+import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
+import {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
+import {MaterialsObjNode} from '../../src/engine/nodes/obj/Materials';
+import {PostProcessObjNode} from '../../src/engine/nodes/obj/PostProcess';
+import {CopObjNode} from '../../src/engine/nodes/obj/Cop';
 
-import 'src/engine/poly/registers/All';
-import {POLY} from 'src/engine/Poly';
+import '../../src/engine/poly/registers/All';
+import {POLY} from '../../src/engine/Poly';
 
 // window.create_renderer_if_none = () => {
 // 	const first_renderer = POLY.renderers_controller.first_renderer();

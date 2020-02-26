@@ -1,4 +1,4 @@
-import {CoreSleep} from 'src/core/Sleep';
+import {CoreSleep} from '../../../src/core/Sleep';
 
 QUnit.test('viewer controls are updated as expected', async (assert) => {
 	const scene = window.scene;

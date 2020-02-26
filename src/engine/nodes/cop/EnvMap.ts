@@ -8,12 +8,12 @@ import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
 // import NodeBase from '../_Base'
 
 import {TypedCopNode} from './_Base';
-// import {BaseParam} from 'src/Engine/Param/_Base'
-// import {CoreTextureLoader} from 'src/core/loader/Texture';
+// import {BaseParam} from '../../../Engine/Param/_Base'
+// import {CoreTextureLoader} from '../../../core/loader/Texture';
 // import { CoreScriptLoader } from "src/Core/Loader/Script";
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {POLY} from 'src/engine/Poly';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {POLY} from '../../Poly';
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	// url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
 	// 	desktop_browse: {file_type: 'texture'},

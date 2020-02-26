@@ -1,6 +1,6 @@
 // import {Camera} from 'three/src/cameras/Camera';
 // import {Vector2} from 'three/src/math/Vector2';
-// import {BaseCamera} from 'src/engine/nodes/Obj/_BaseCamera';
+// import {BaseCamera} from '../../nodes/Obj/_BaseCamera';
 // import {BaseViewer} from '../_Base';
 
 // export function CameraMixin<TBase extends Constructor>(Base: TBase) {

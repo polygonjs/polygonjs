@@ -2,7 +2,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Sphere} from 'three/src/math/Sphere';
 import {Box3} from 'three/src/math/Box3';
 import lodash_sortBy from 'lodash/sortBy';
-import {CorePoint} from 'src/core/geometry/Point';
+import {CorePoint} from '../../geometry/Point';
 // import {CoreMath} from './_Module'
 // import OctreeModule from './Octree/_Module';
 import {OctreeNode, OctreeNodeTraverseCallback} from './Node';

@@ -1,5 +1,5 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-// import {BaseParam} from 'src/engine/params/_Base'
+import {BaseNodeType} from '../engine/nodes/_Base';
+// import {BaseParam} from '../engine/params/_Base'
 import {DecomposedPath} from './DecomposedPath';
 
 // type NodeOrParam = BaseNode | BaseParam

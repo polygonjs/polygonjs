@@ -3,10 +3,10 @@ import {Vector3} from 'three/src/math/Vector3';
 import lodash_max from 'lodash/max';
 import lodash_min from 'lodash/min';
 import lodash_isNumber from 'lodash/isNumber';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribNormalizeSopParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	change_name = ParamConfig.BOOLEAN(false);

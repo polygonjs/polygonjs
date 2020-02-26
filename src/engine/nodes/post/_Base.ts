@@ -2,11 +2,11 @@ import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode} from '../_Base';
 
-import {PostProcessContainer} from 'src/engine/containers/PostProcess';
-import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
+import {PostProcessContainer} from '../../containers/PostProcess';
+import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-// import {PolyScene} from 'src/engine/scene/PolyScene';
+import {NodeContext} from '../../poly/NodeContext';
+// import {PolyScene} from '../../scene/PolyScene';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 

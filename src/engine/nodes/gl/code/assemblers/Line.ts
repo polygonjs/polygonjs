@@ -13,7 +13,7 @@ import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../Output';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../../poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 

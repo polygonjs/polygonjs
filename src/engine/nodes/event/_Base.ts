@@ -1,6 +1,6 @@
 import {TypedNode} from '../_Base';
-import {EventContainer} from 'src/engine/containers/Event';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {EventContainer} from '../../containers/Event';
+import {NodeContext} from '../../poly/NodeContext';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 

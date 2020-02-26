@@ -1,5 +1,5 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseContainer} from 'src/engine/containers/_Base';
+import {BaseNodeType} from '../../_Base';
+import {BaseContainer} from '../../../containers/_Base';
 // import lodash_includes from 'lodash/includes'
 // import lodash_filter from 'lodash/filter'
 import lodash_each from 'lodash/each';
@@ -8,10 +8,10 @@ import lodash_isString from 'lodash/isString';
 import {BaseNamedConnectionPointType} from './NamedConnectionPoint';
 import {NodeConnection} from './NodeConnection';
 
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {NodeEvent} from 'src/engine/poly/NodeEvent';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {TypeAssert} from 'src/engine/poly/Assert';
+import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
+import {NodeEvent} from '../../../poly/NodeEvent';
+import {InputCloneMode} from '../../../poly/InputCloneMode';
+import {TypeAssert} from '../../../poly/Assert';
 
 // export class InputGraphNode extends NodeSimple {
 // 	constructor(name: string) {

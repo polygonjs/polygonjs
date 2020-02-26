@@ -1,8 +1,8 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../_Base';
 import {NameController} from '../NameController';
 
 type Callback = () => void;
-import {CoreWalker} from 'src/core/Walker';
+import {CoreWalker} from '../../../../core/Walker';
 
 export class HierarchyParentController {
 	private _parent: BaseNodeType | null = null;

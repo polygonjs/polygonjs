@@ -1,24 +1,24 @@
 import {CATEGORY_OBJ} from './Category';
 
-import {AmbientLightObjNode} from 'src/engine/nodes/obj/AmbientLight';
-import {AreaLightObjNode} from 'src/engine/nodes/obj/AreaLight';
-import {DirectionalLightObjNode} from 'src/engine/nodes/obj/DirectionalLight';
-import {HemisphereLightObjNode} from 'src/engine/nodes/obj/HemisphereLight';
-import {PointLightObjNode} from 'src/engine/nodes/obj/PointLight';
-import {SpotLightObjNode} from 'src/engine/nodes/obj/SpotLight';
+import {AmbientLightObjNode} from '../../nodes/obj/AmbientLight';
+import {AreaLightObjNode} from '../../nodes/obj/AreaLight';
+import {DirectionalLightObjNode} from '../../nodes/obj/DirectionalLight';
+import {HemisphereLightObjNode} from '../../nodes/obj/HemisphereLight';
+import {PointLightObjNode} from '../../nodes/obj/PointLight';
+import {SpotLightObjNode} from '../../nodes/obj/SpotLight';
 
-import {EventsObjNode} from 'src/engine/nodes/obj/Events';
-import {MaterialsObjNode} from 'src/engine/nodes/obj/Materials';
-import {CopObjNode} from 'src/engine/nodes/obj/Cop';
-import {PostProcessObjNode} from 'src/engine/nodes/obj/PostProcess';
+import {EventsObjNode} from '../../nodes/obj/Events';
+import {MaterialsObjNode} from '../../nodes/obj/Materials';
+import {CopObjNode} from '../../nodes/obj/Cop';
+import {PostProcessObjNode} from '../../nodes/obj/PostProcess';
 
-import {GeoObjNode} from 'src/engine/nodes/obj/Geo';
-import {NullObjNode} from 'src/engine/nodes/obj/Null';
-import {FogObjNode} from 'src/engine/nodes/obj/Fog';
+import {GeoObjNode} from '../../nodes/obj/Geo';
+import {NullObjNode} from '../../nodes/obj/Null';
+import {FogObjNode} from '../../nodes/obj/Fog';
 
-import {OrthographicCameraObjNode} from 'src/engine/nodes/obj/OrthographicCamera';
-import {PerspectiveCameraObjNode} from 'src/engine/nodes/obj/PerspectiveCamera';
-// import {CubeCameraObj} from 'src/engine/nodes/obj/CubeCamera';
+import {OrthographicCameraObjNode} from '../../nodes/obj/OrthographicCamera';
+import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
+// import {CubeCameraObj} from '../../nodes/obj/CubeCamera';
 
 export interface ObjNodeChildrenMap {
 	ambient_light: AmbientLightObjNode;
@@ -38,7 +38,7 @@ export interface ObjNodeChildrenMap {
 	orthographic_camera: OrthographicCameraObjNode;
 }
 
-import {Poly} from 'src/engine/Poly';
+import {Poly} from '../../Poly';
 export class ObjRegister {
 	static run(poly: Poly) {
 		poly.register_node(AmbientLightObjNode, CATEGORY_OBJ.LIGHT);

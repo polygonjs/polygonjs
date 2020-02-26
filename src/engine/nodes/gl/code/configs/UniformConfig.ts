@@ -1,6 +1,6 @@
 import {BaseGlNodeType} from '../../_Base';
 import {UniformGLDefinition} from '../../utils/GLDefinition';
-import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
+import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 // import { Definition } from "../../Definition/_Module";
 // import {DefinitionBaseConfig} from './DefinitionBaseConfig'
 

@@ -1,8 +1,8 @@
 import lodash_groupBy from 'lodash/groupBy';
 import {BaseNodeType, BaseNodeClass} from '../_Base';
 
-import {BaseParamType, BaseParamClass} from 'src/engine/params/_Base';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {BaseParamType, BaseParamClass} from '../../params/_Base';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 enum METHODS {
 	SUCCESSORS = 'graph_successors',

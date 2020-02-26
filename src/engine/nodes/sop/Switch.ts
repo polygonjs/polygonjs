@@ -2,8 +2,8 @@ import {TypedSopNode} from './_Base';
 
 const INPUT_NAME = 'geometry to switch to';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class SwitchSopParamsConfig extends NodeParamsConfig {
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],

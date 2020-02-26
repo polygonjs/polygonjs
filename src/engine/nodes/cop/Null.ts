@@ -1,7 +1,7 @@
 import {Texture} from 'three/src/textures/Texture';
 import {TypedCopNode} from './_Base';
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const ParamsConfig = new NodeParamsConfig();
 export class NullCopNode extends TypedCopNode<NodeParamsConfig> {

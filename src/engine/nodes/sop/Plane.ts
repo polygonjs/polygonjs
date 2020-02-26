@@ -2,15 +2,15 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {TypedSopNode} from './_Base';
-import {CoreTransform} from 'src/core/Transform';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {CoreTransform} from '../../../core/Transform';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const DEFAULT_UP = new Vector3(0, 0, 1);
 const ROTATE_START = new Vector3(0, 0, 1);
 const ROTATE_END = new Vector3(0, 1, 0);
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PlaneSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.VECTOR2([1, 1]);
 	use_segments_count = ParamConfig.BOOLEAN(0);

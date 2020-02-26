@@ -1,11 +1,11 @@
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
-// import {CoreTransform} from 'src/core/Transform';
+// import {CoreTransform} from '../../../core/Transform';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class NullObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new NullObjParamConfig();
 

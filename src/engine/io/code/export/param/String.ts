@@ -1,7 +1,7 @@
 import lodash_isString from 'lodash/isString';
 import {ParamCodeExporter} from '../Param';
 import {SceneCodeExporter} from '../Scene';
-import {StringParam} from 'src/engine/params/String';
+import {StringParam} from '../../../../params/String';
 
 export class ParamStringCodeExporter extends ParamCodeExporter<StringParam> {
 	as_code_default_value_string() {

@@ -1,6 +1,6 @@
-import {SceneJsonImporter} from 'src/engine/io/json/import/Scene';
-import {SceneJsonExporter} from 'src/engine/io/json/export/Scene';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
+import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
+import {PolyScene} from '../../../src/engine/scene/PolyScene';
 
 QUnit.test('scene save simple', async (assert) => {
 	const scene = new PolyScene();

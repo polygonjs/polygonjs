@@ -1,6 +1,6 @@
 import {BaseGlShaderAssembler} from './_Base';
 
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../../../core/ThreeToGl';
 import {OutputGlNode} from '../../Output';
 import {AttributeGlNode} from '../../Attribute';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
@@ -8,8 +8,8 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {GlobalsGlNode} from '../../Globals';
 import {BaseGLDefinition, UniformGLDefinition} from '../../utils/GLDefinition';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
-import {MapUtils} from 'src/core/MapUtils';
-import {ShaderMaterialWithCustomMaterials} from 'src/core/geometry/Material';
+import {MapUtils} from '../../../../../core/MapUtils';
+import {ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'

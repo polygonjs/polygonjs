@@ -3,9 +3,9 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import lodash_times from 'lodash/times';
 
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from 'src/core/geometry/Constant';
+import {CoreConstant} from '../../../core/geometry/Constant';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class LineSopParamsConfig extends NodeParamsConfig {
 	length = ParamConfig.FLOAT(1, {range: [0, 10]});
 	points_count = ParamConfig.INTEGER(1, {

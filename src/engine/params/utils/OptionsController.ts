@@ -1,12 +1,12 @@
 import {BaseParamType} from '../_Base';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {BaseNodeType} from '../../nodes/_Base';
 import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isEqual from 'lodash/isEqual';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamEvent} from 'src/engine/poly/ParamEvent';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {ParamType} from '../../poly/ParamType';
+import {ParamEvent} from '../../poly/ParamEvent';
+import {NodeContext} from '../../poly/NodeContext';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
 const CALLBACK_OPTION = 'callback';

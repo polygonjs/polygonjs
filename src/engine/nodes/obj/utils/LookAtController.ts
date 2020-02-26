@@ -1,8 +1,8 @@
-// import {CameraController} from 'src/core/CameraController';
+// import {CameraController} from '../../../../core/CameraController';
 // import {TransformedObjNode} from './TransformController';
 // import {Object3D} from 'three/src/core/Object3D';
-// import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {OperatorPathParam} from '../../../params/OperatorPath';
+// import {ParamType} from '../../../poly/ParamType';
 // // import {BaseTransformedObjNodeType} from '../_BaseTransformed';
 // import {BaseObjNodeClass} from '../_Base';
 

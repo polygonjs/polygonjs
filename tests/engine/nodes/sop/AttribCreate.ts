@@ -1,5 +1,4 @@
-import {CoreConstant} from 'src/core/geometry/Constant';
-// import {GeometryContainer} from 'src/engine/containers/Geometry';
+import {CoreConstant} from '../../../../src/core/geometry/Constant';
 
 QUnit.test('attrib create simple float vertex', async (assert) => {
 	const geo1 = window.geo1;

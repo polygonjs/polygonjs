@@ -1,15 +1,15 @@
 import {TypedSopNode} from './_Base';
-// import {CoreTransform} from 'src/Core/Transform';
-// import {ParamType} from 'src/Engine/Param/_Module'
+// import {CoreTransform} from '../../../Core/Transform';
+// import {ParamType} from '../../../Engine/Param/_Module'
 
 // interface ActionsByName {
 // 	[propName: string]: THREE.AnimationClip;
 // }
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {Object3DWithAnimation} from 'src/core/geometry/Animation';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {Object3DWithAnimation} from '../../../core/geometry/Animation';
 class AnimationCopySopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new AnimationCopySopParamsConfig();
 

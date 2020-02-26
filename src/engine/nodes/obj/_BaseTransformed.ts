@@ -4,7 +4,7 @@
 // import {LookAtController} from './utils/LookAtController';
 // import {TransformController, TransformedParamConfig} from './utils/TransformController';
 
-// import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+// import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // import {FlagsControllerD} from '../utils/FlagsController';
 // class TransformedObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 

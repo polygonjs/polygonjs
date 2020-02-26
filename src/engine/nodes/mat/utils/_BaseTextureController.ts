@@ -1,16 +1,16 @@
 import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
-import {FileCopNode} from 'src/engine/nodes/cop/File';
+import {FileCopNode} from '../../cop/File';
 import {BaseMatNodeType} from '../_Base';
 
-import {ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {ParamConfig} from '../../utils/params/ParamsConfig';
+import {NodeContext} from '../../../poly/NodeContext';
 import {BaseCopNodeType} from '../../cop/_Base';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {BooleanParam} from 'src/engine/params/Boolean';
+import {OperatorPathParam} from '../../../params/OperatorPath';
+import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseParamType} from '../../../params/_Base';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		use_map = ParamConfig.BOOLEAN(0);

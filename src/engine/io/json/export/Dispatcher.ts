@@ -1,5 +1,5 @@
-import {BaseNodeType} from 'src/engine/nodes/_Base';
-import {BaseParamType} from 'src/engine/params/_Base';
+import {BaseNodeType} from '../../../nodes/_Base';
+import {BaseParamType} from '../../../params/_Base';
 
 import {NodeJsonExporter} from './Node';
 // import {BaseNodeObjJsonExporter} from './node/Obj';
@@ -11,12 +11,12 @@ import {ParamNumericJsonExporter} from './param/Numeric';
 import {ParamOperatorPathJsonExporter} from './param/OperatorPath';
 import {ParamStringJsonExporter} from './param/String';
 import {ParamRampJsonExporter} from './param/Ramp';
-// import {TypedObjNode} from 'src/engine/nodes/obj/_Base';
-import {TypedMultipleParam} from 'src/engine/params/_Multiple';
-import {TypedNumericParam} from 'src/engine/params/_Numeric';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {StringParam} from 'src/engine/params/String';
-import {RampParam} from 'src/engine/params/Ramp';
+// import {TypedObjNode} from '../../../nodes/obj/_Base';
+import {TypedMultipleParam} from '../../../params/_Multiple';
+import {TypedNumericParam} from '../../../params/_Numeric';
+import {OperatorPathParam} from '../../../params/OperatorPath';
+import {StringParam} from '../../../params/String';
+import {RampParam} from '../../../params/Ramp';
 
 export class JsonExportDispatcher {
 	static dispatch_node(node: BaseNodeType) {

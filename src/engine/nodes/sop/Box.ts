@@ -1,14 +1,14 @@
 import {TypedSopNode} from './_Base';
-import {CoreTransform} from 'src/core/Transform';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreTransform} from '../../../core/Transform';
+import {CoreGroup} from '../../../core/geometry/Group';
 
 // import {Vector3} from 'three/src/math/Vector3';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
-// import {CoreGeometry} from 'src/core/geometry/Geometry'
-// import {ParamType} from 'src/engine/poly/ParamType';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+// import {CoreGeometry} from '../../../core/geometry/Geometry'
+// import {ParamType} from '../../poly/ParamType';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BoxSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.FLOAT(1);
 	divisions = ParamConfig.FLOAT(1, {

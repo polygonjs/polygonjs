@@ -1,4 +1,4 @@
-import {POLY} from 'src/engine/Poly';
+import {POLY} from '../../engine/Poly';
 
 // interface BooleanByString {
 // 	[propName: string]: boolean

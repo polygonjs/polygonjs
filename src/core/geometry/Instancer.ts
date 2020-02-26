@@ -10,7 +10,7 @@ import {InstancedBufferAttribute} from 'three/src/core/InstancedBufferAttribute'
 // const THREE = {BoxBufferGeometry, InstancedBufferAttribute, InstancedBufferGeometry, Matrix4, Quaternion, Vector2, Vector3}
 
 import {CorePoint} from './Point';
-// import {Core} from 'src/core/_Module';
+// import {Core} from '../_Module';
 import {CoreGroup} from './Group';
 import {CoreGeometry} from './Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';

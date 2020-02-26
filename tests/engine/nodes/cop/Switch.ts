@@ -1,4 +1,4 @@
-import {CoreSleep} from 'src/core/Sleep';
+import {CoreSleep} from '../../../../src/core/Sleep';
 
 QUnit.test('COP switch simple', async (assert) => {
 	window.scene.performance.start();

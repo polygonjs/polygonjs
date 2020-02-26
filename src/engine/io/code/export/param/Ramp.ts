@@ -1,5 +1,5 @@
 import {ParamCodeExporter} from '../Param';
-import {RampParam} from 'src/engine/params/Ramp';
+import {RampParam} from '../../../../params/Ramp';
 
 export class ParamRampCodeExporter extends ParamCodeExporter<RampParam> {
 	default_value() {

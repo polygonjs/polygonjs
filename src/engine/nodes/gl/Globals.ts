@@ -1,5 +1,5 @@
 import {TypedGlNode} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
+// import {ParamType} from '../../../Engine/Param/_Module';
 // import {Connection} from './GlData';
 // import {Definition} from './Definition/_Module';
 // import {ShaderName} from './Assembler/Util/CodeBuilder';
@@ -8,7 +8,7 @@ import {TypedGlNode} from './_Base';
 // https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)
 // gl_PointCoord
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class GlobalsGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsGlParamsConfig();

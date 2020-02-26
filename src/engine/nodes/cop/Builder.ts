@@ -15,7 +15,7 @@
 // // import NodeBase from '../_Base'
 
 // // import Container from '../../Container/Texture'
-// // import {CoreImage} from 'src/Core/Image'
+// // import {CoreImage} from '../../../Core/Image'
 
 // import {TypedCopNode} from './_Base';
 
@@ -34,10 +34,10 @@
 // }
 // `;
 
-// import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-// import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+// import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+// import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 // import {GlobalsGeometryHandler} from '../gl/Assembler/Globals/Geometry';
-// import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
+// import {GlNodeChildrenMap} from '../../poly/registers/Gl';
 // import {BaseGlNodeType} from '../gl/_Base';
 // class BuilderCopParamsConfig extends NodeParamsConfig {
 // 	resolution = ParamConfig.VECTOR2([256, 256]);

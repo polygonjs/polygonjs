@@ -1,15 +1,15 @@
 import {ShaderAssemblerRender} from './_BaseRender';
 import {IUniforms} from './_Base';
-// import {GlobalsTextureHandler} from 'src/Engine/Node/Gl/Assembler/Globals/Texture'
+// import {GlobalsTextureHandler} from '../../../../../Engine/Node/Gl/Assembler/Globals/Texture'
 
 import TemplateDefault from '../templates/Texture/Default.frag.glsl';
 
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {IUniformsWithFrame} from 'src/engine/scene/utils/UniformsController';
+import {IUniformsWithFrame} from '../../../../scene/utils/UniformsController';
 import {OutputGlNode} from '../../Output';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../../poly/ParamType';
 import {GlobalsGlNode} from '../../Globals';
 import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';

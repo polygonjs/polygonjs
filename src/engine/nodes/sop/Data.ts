@@ -1,6 +1,6 @@
-// import {Core} from 'src/Core/_Module';
+// import {Core} from '../../../Core/_Module';
 import {TypedSopNode} from './_Base';
-import {JsonDataLoader} from 'src/core/loader/geometry/JsonData';
+import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
 
 const DEFAULT_DATA = [
 	{value: -40},
@@ -19,7 +19,7 @@ const DEFAULT_DATA = [
 ];
 const DEFAULT_DATA_STR = JSON.stringify(DEFAULT_DATA);
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DataSopParamsConfig extends NodeParamsConfig {
 	data = ParamConfig.STRING(DEFAULT_DATA_STR);
 }

@@ -1,7 +1,7 @@
-// import {BaseNode} from 'src/engine/nodes/_Base';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {ParamOptions} from 'src/engine/params/utils/OptionsController';
-import {RampParam} from 'src/engine/params/Ramp';
+// import {BaseNode} from '../../_Base';
+import {ParamType} from '../../../poly/ParamType';
+import {ParamOptions} from '../../../params/utils/OptionsController';
+import {RampParam} from '../../../params/Ramp';
 import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';

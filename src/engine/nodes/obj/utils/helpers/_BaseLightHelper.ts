@@ -1,11 +1,11 @@
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
 import {TypedObjNode} from '../../_Base';
 import {Group} from 'three/src/objects/Group';
 import {Light} from 'three/src/lights/Light';
-import {FlagsControllerD} from 'src/engine/nodes/utils/FlagsController';
+import {FlagsControllerD} from '../../../utils/FlagsController';
 export function BaseLightHelperParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		show_helper = ParamConfig.BOOLEAN(1);

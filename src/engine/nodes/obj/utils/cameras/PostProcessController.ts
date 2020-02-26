@@ -4,17 +4,17 @@ import {ACESFilmicToneMapping, sRGBEncoding} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 
 import lodash_range from 'lodash/range';
-// import {BaseParam} from 'src/engine/params/_Base';
-import {BooleanParam} from 'src/engine/params/Boolean';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-import {BasePostProcessNodeType} from 'src/engine/nodes/post/_Base';
-import {BaseCameraObjNodeType} from 'src/engine/nodes/obj/_BaseCamera';
-import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
-import {RenderPass} from 'modules/three/examples/jsm/postprocessing/RenderPass';
-import {Pass} from 'modules/three/examples/jsm/postprocessing/Pass';
-import {NodeContext} from 'src/engine/poly/NodeContext';
-import {ParamType} from 'src/engine/poly/ParamType';
-import {POLY} from 'src/engine/Poly';
+// import {BaseParam} from '../../../../params/_Base';
+import {BooleanParam} from '../../../../params/Boolean';
+import {OperatorPathParam} from '../../../../params/OperatorPath';
+import {BasePostProcessNodeType} from '../../../post/_Base';
+import {BaseCameraObjNodeType} from '../../_BaseCamera';
+import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {RenderPass} from '../../../../../../modules/three/examples/jsm/postprocessing/RenderPass';
+import {Pass} from '../../../../../../modules/three/examples/jsm/postprocessing/Pass';
+import {NodeContext} from '../../../../poly/NodeContext';
+import {ParamType} from '../../../../poly/ParamType';
+import {POLY} from '../../../../Poly';
 
 interface DisposablePass extends Pass {
 	dispose: () => void;

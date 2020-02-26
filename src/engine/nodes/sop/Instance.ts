@@ -1,12 +1,12 @@
 // import {TypedSopNode} from './_Base';
 
-// import {CoreGroup} from 'src/core/geometry/Group';
-// import {CoreInstancer} from 'src/core/geometry/Instancer';
-// import {CoreMaterial} from 'src/core/geometry/Material';
-// import {GlobalsGeometryHandler} from 'src/Engine/Node/Gl/Assembler/Globals/Geometry';
-// import {NodeContext} from 'src/Engine/Poly';
+// import {CoreGroup} from '../../../core/geometry/Group';
+// import {CoreInstancer} from '../../../core/geometry/Instancer';
+// import {CoreMaterial} from '../../../core/geometry/Material';
+// import {GlobalsGeometryHandler} from '../../../Engine/Node/Gl/Assembler/Globals/Geometry';
+// import {NodeContext} from '../../../Engine/Poly';
 
-// import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+// import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // class InstanceSopParamsConfig extends NodeParamsConfig {
 // 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 // 		menu: {

@@ -1,9 +1,9 @@
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {AttribClassMenuEntries, AttribClass} from 'src/core/geometry/Constant';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {AttribClassMenuEntries, AttribClass} from '../../../core/geometry/Constant';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class AttribRenameSopParamsConfig extends NodeParamsConfig {
 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {

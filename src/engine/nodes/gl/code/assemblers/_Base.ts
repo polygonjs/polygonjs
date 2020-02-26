@@ -7,24 +7,24 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {Material} from 'three/src/materials/Material';
 import {Vector2} from 'three/src/math/Vector2';
 
-// import {Connection} from 'src/Engine/Node/Gl/GlData';
+// import {Connection} from '../../../../../Engine/Node/Gl/GlData';
 import {LineType} from '../utils/LineType';
-// import {Output} from 'src/Engine/Node/Gl/Output'
+// import {Output} from '../../../../../Engine/Node/Gl/Output'
 
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
-import {ThreeToGl} from 'src/core/ThreeToGl';
+import {ThreeToGl} from '../../../../../core/ThreeToGl';
 // const BODY_SPLIT_LINE = 'void main() {'
 // export const BODY_SEPARATOR_LINES = lodash_range(3).map(i=>'	')
 import {CodeBuilder} from '../utils/CodeBuilder';
-// import {BaseNode} from 'src/Engine/Node/_Base';
+// import {BaseNode} from '../../../../../Engine/Node/_Base';
 import {BaseGlNodeType} from '../../_Base';
 import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
-// import {IUniformsWithFrame, IUniformsWithResolution} from 'src/engine/scene/utils/UniformsController';
+// import {IUniformsWithFrame, IUniformsWithResolution} from '../../../../scene/utils/UniformsController';
 import {OutputGlNode} from '../../Output';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../../poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 import {GlobalsGlNode} from '../../Globals';

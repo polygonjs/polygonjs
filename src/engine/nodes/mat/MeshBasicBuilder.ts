@@ -1,4 +1,4 @@
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig} from './utils/ColorsController';
 import {SideParamConfig} from './utils/SideController';
 import {SkinningParamConfig} from './utils/SkinningController';
@@ -7,7 +7,7 @@ import {TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/Basic';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {GlAssemblerController} from '../gl/code/Controller';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 class MeshBasicMatParamsConfig extends TextureAlphaMapParamConfig(
 	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
 ) {}

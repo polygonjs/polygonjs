@@ -1,5 +1,5 @@
 import {ParamJsonExporter} from '../Param';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {SceneJsonExporter} from '../Scene';
 
 export class ParamOperatorPathJsonExporter extends ParamJsonExporter<OperatorPathParam> {

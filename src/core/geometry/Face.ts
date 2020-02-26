@@ -8,8 +8,8 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 // const THREE = {BufferGeometry, Triangle, Vector2, Vector3}
 import {CorePoint} from './Point';
 import {CoreGeometry} from './Geometry';
-import {CoreMath} from 'src/core/math/_Module';
-// import {CoreInterpolate} from 'src/core/Math/Interpolate'
+import {CoreMath} from '../math/_Module';
+// import {CoreInterpolate} from '../Math/Interpolate'
 
 interface FaceLike {
 	a: number;

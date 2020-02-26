@@ -1,7 +1,7 @@
 import {GeoObjNode} from '../obj/Geo';
 import {BaseSopNodeType} from '../sop/_Base';
 import {Object3D} from 'three/src/core/Object3D';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 export class DisplayNodeController {
 	_graph_node: CoreGraphNode;

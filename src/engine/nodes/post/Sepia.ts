@@ -1,11 +1,11 @@
 // import {Vector2} from 'three/src/math/Vector2';
 // import {Camera} from 'three/src/cameras/Camera';
 // import {BasePostProcessNode} from './_Base';
-// import {EffectComposer} from 'modules/three/examples/jsm/postprocessing/EffectComposer';
+// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 // import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {ShaderPass} from 'modules/three/examples/jsm/postprocessing/ShaderPass';
+// import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../poly/ParamType';
 
 // interface ShaderPassWithRequiredUniforms extends ShaderPass {
 // 	uniforms: {

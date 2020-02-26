@@ -5,9 +5,9 @@ import {BaseGlNodeType} from '../../_Base';
 // import { VariableConfig } from '../Config/VariableConfig';
 import {TextureAllocationsController} from '../utils/TextureAllocationsController';
 import {GlobalsGeometryHandler} from './Geometry';
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {UniformGLDefinition, AttributeGLDefinition, VaryingGLDefinition} from '../../utils/GLDefinition';
-import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
+import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig'

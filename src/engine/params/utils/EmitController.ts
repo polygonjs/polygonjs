@@ -1,5 +1,5 @@
 import {BaseParamType} from '../_Base';
-import {ParamEvent} from 'src/engine/poly/ParamEvent';
+import {ParamEvent} from '../../poly/ParamEvent';
 
 export class EmitController {
 	_blocked_emit: boolean = false;

@@ -1,4 +1,4 @@
-import {BaseNodeClass} from 'src/engine/nodes/_Base';
+import {BaseNodeClass} from '../nodes/_Base';
 import {NodeContext} from './NodeContext';
 
 export interface RegisterOptions {

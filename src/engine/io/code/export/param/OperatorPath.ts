@@ -1,5 +1,5 @@
 import {ParamCodeExporter} from '../Param';
-import {OperatorPathParam} from 'src/engine/params/OperatorPath';
+import {OperatorPathParam} from '../../../../params/OperatorPath';
 
 export class ParamOperatorPathCodeExporter extends ParamCodeExporter<OperatorPathParam> {
 	as_code_default_value_string() {

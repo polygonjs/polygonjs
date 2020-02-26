@@ -1,4 +1,4 @@
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 
 export class ShaderConfig {
 	constructor(private _name: ShaderName, private _input_names: string[], private _dependencies: ShaderName[]) {}

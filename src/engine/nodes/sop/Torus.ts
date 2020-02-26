@@ -1,7 +1,7 @@
 import {TorusBufferGeometry} from 'three/src/geometries/TorusGeometry';
 import {TypedSopNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TorusSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
 	radius_tube = ParamConfig.FLOAT(1, {range: [0, 1]});

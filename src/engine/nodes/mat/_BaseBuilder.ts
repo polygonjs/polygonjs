@@ -7,9 +7,9 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseGlShaderAssembler} from '../gl/code/assemblers/_Base';
-import {GlNodeChildrenMap} from 'src/engine/poly/registers/Gl';
+import {GlNodeChildrenMap} from '../../poly/registers/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
-import {ShaderMaterialWithCustomMaterials} from 'src/core/geometry/Material';
+import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {CustomMaterialName} from '../gl/code/assemblers/_BaseRender';
 
 export abstract class TypedBuilderMatNode<

@@ -4,12 +4,12 @@ import {Vector3} from 'three/src/math/Vector3';
 
 // import {Object3D} from 'three/src/core/Object3D';
 // import {BaseTransformedObjNodeType} from '../_BaseTransformed';
-import {CoreMath} from 'src/core/math/_Module';
-import {CoreTransform, SetParamsFromMatrixOptions} from 'src/core/Transform';
+import {CoreMath} from '../../../../core/math/_Module';
+import {CoreTransform, SetParamsFromMatrixOptions} from '../../../../core/Transform';
 // import {BaseObjNodeType} from '../_Base';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-// import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+// import {NodeContext} from '../../../poly/NodeContext';
 import {TypedObjNode, BaseObjNodeType} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 // import {FlagsControllerD} from '../../utils/FlagsController';

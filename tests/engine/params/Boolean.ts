@@ -1,4 +1,4 @@
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../src/engine/poly/ParamType';
 
 QUnit.test('boolean evals correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;

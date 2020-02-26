@@ -5,13 +5,13 @@ import lodash_range from 'lodash/range';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_sortBy from 'lodash/sortBy';
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from 'src/core/geometry/Group';
-import {CoreConstant} from 'src/core/geometry/Constant';
-import {CoreMath} from 'src/core/math/_Module';
-import {CoreIterator} from 'src/core/Iterator';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreConstant} from '../../../core/geometry/Constant';
+import {CoreMath} from '../../../core/math/_Module';
+import {CoreIterator} from '../../../core/Iterator';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
-import {InputCloneMode} from 'src/engine/poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class ScatterSopParamsConfig extends NodeParamsConfig {
 	points_count = ParamConfig.INTEGER(100, {
 		range: [0, 100],

@@ -1,9 +1,9 @@
 import {PolyScene} from '../scene/PolyScene';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-// import {NamedGraphNode} from 'src/core/graph/NamedGraphNode';
+import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
+// import {NamedGraphNode} from '../../core/graph/NamedGraphNode';
 
-// import {BaseParam} from 'src/engine/params/_Base';
-// import {GeometryContainer} from 'src/engine/containers/Geometry';
+// import {BaseParam} from '../params/_Base';
+// import {GeometryContainer} from '../containers/Geometry';
 // import {UIData} from './UIData';
 
 // import {Bypass} from './concerns/Bypass';
@@ -44,29 +44,29 @@ import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
-import {ParamsValueAccessor, ParamsValueAccessorType} from 'src/engine/nodes/utils/params/ParamsValueAccessor';
+import {ParamsValueAccessor, ParamsValueAccessorType} from './utils/params/ParamsValueAccessor';
 import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/connections/IOController';
 
 // import {BaseContainer} from '../containers/_Base';
 
-// import {BaseParam} from 'src/engine/params/_Base';
-// import {BooleanParam} from 'src/engine/params/Boolean';
-// import {ButtonParam} from 'src/engine/params/Button';
-// import {ColorParam} from 'src/engine/params/Color';
-// import {FloatParam} from 'src/engine/params/Float';
-// import {IntegerParam} from 'src/engine/params/Integer';
-// import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-// import {RampParam} from 'src/engine/params/Ramp';
-// import {SeparatorParam} from 'src/engine/params/Separator';
-// import {StringParam} from 'src/engine/params/String';
-// import {Vector2Param} from 'src/engine/params/Vector2';
-// import {Vector3Param} from 'src/engine/params/Vector3';
-// import {Vector4Param} from 'src/engine/params/Vector4';
+// import {BaseParam} from '../params/_Base';
+// import {BooleanParam} from '../params/Boolean';
+// import {ButtonParam} from '../params/Button';
+// import {ColorParam} from '../params/Color';
+// import {FloatParam} from '../params/Float';
+// import {IntegerParam} from '../params/Integer';
+// import {OperatorPathParam} from '../params/OperatorPath';
+// import {RampParam} from '../params/Ramp';
+// import {SeparatorParam} from '../params/Separator';
+// import {StringParam} from '../params/String';
+// import {Vector2Param} from '../params/Vector2';
+// import {Vector3Param} from '../params/Vector3';
+// import {Vector4Param} from '../params/Vector4';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 
-// import {TypedContainer} from 'src/engine/containers/_Base';
+// import {TypedContainer} from '../containers/_Base';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
 
 export interface NodeVisitor {
@@ -101,8 +101,8 @@ export interface EmitDataByNodeEventMap extends EmitDataByNodeEventMapGeneric {
 // 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
 // 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 
-import {ContainerMap} from 'src/engine/containers/utils/ContainerMap';
-import {ContainableMap} from 'src/engine/containers/utils/ContainableMap';
+import {ContainerMap} from '../containers/utils/ContainerMap';
+import {ContainableMap} from '../containers/utils/ContainableMap';
 import {BaseContainer} from '../containers/_Base';
 import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';

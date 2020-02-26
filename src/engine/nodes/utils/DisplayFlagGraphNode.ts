@@ -1,5 +1,5 @@
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {BaseNodeType} from 'src/engine/nodes/_Base';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {BaseNodeType} from '../_Base';
 
 export class DisplayFlagGraphNode extends CoreGraphNode {
 	private _owner_post_display_flag_node_set_dirty_bound = this._owner_post_display_flag_node_set_dirty.bind(this);

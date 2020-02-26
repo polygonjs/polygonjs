@@ -1,17 +1,17 @@
-// import {BooleanParam} from 'src/engine/params/Boolean';
-// import {ButtonParam} from 'src/engine/params/Button';
-// import {ColorParam} from 'src/engine/params/Color';
-// import {FloatParam} from 'src/engine/params/Float';
-// import {IntegerParam} from 'src/engine/params/Integer';
-// import {OperatorPathParam} from 'src/engine/params/OperatorPath';
-// import {RampParam} from 'src/engine/params/Ramp';
-// import {SeparatorParam} from 'src/engine/params/Separator';
+// import {BooleanParam} from '../Boolean';
+// import {ButtonParam} from '../Button';
+// import {ColorParam} from '../Color';
+// import {FloatParam} from '../Float';
+// import {IntegerParam} from '../Integer';
+// import {OperatorPathParam} from '../OperatorPath';
+// import {RampParam} from '../Ramp';
+// import {SeparatorParam} from '../Separator';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {Color} from 'three/src/math/Color';
 import {RampValue} from '../ramp/RampValue';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../poly/ParamType';
 
 type ParamValuesTypeMapGeneric = {[key in ParamType]: any};
 export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {

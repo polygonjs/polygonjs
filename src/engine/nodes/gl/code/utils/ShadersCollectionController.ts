@@ -1,4 +1,4 @@
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGLDefinition} from '../../utils/GLDefinition';
 import {LinesController} from './LinesController';
 import {BaseGlNodeType} from '../../_Base';

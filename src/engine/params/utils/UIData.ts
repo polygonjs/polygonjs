@@ -1,7 +1,7 @@
 // import CoreUIData from 'src/core/UIData'
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../_Base';
-import {PolyScene} from 'src/engine/scene/PolyScene';
+import {PolyScene} from '../../scene/PolyScene';
 
 export class UIData extends CoreGraphNode {
 	// private _folder_name: string | undefined;

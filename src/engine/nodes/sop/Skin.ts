@@ -6,11 +6,11 @@ import lodash_reverse from 'lodash/reverse';
 import lodash_compact from 'lodash/compact';
 import {TypedSopNode} from './_Base';
 
-import {CoreGeometryUtilCurve} from 'src/core/geometry/util/Curve';
-import {CoreGeometryOperationSkin} from 'src/core/geometry/operation/Skin';
-import {CoreGroup} from 'src/core/geometry/Group';
+import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
+import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
+import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class SkinSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SkinSopParamsConfig();
 

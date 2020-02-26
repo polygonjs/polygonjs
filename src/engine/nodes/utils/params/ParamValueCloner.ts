@@ -1,4 +1,4 @@
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../../poly/ParamType';
 // import {ParamValuesTypeMap} from './ParamsController';
 // // import lodash_isNumber from 'lodash/isNumber';
 // // import lodash_isArray from 'lodash/isArray';
@@ -7,8 +7,8 @@
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Vector4} from 'three/src/math/Vector4';
 // import {Color} from 'three/src/math/Color';
-// // import {TypeAssert} from 'src/engine/poly/Assert';
-// // import {RampParam} from 'src/engine/params/Ramp';
+// // import {TypeAssert} from '../../../poly/Assert';
+// // import {RampParam} from '../../../params/Ramp';
 // // type ConvertMethod<T extends ParamType> = (val: ParamValuesTypeMap[T]) => ParamValuesTypeMap[T];
 // type Method<T extends ParamType> = (val1: ParamValuesTypeMap[T]) => ParamValuesTypeMap[T];
 // type ParamValuetoInitValueMapGeneric = {[key in ParamType]: Method<key>};

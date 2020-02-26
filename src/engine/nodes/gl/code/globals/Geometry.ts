@@ -5,10 +5,10 @@ import {AttributeGlNode} from '../../Attribute';
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig';
 // import {BaseGlNodeType} from '../../_Base';
 import {VaryingGLDefinition, AttributeGLDefinition} from '../../utils/GLDefinition';
-import {ConnectionPointType} from 'src/engine/nodes/utils/connections/ConnectionPointType';
-// import {TypeAssert} from 'src/engine/poly/Assert';
-import {MapUtils} from 'src/core/MapUtils';
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
+// import {TypeAssert} from '../../../../poly/Assert';
+import {MapUtils} from '../../../../../core/MapUtils';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 

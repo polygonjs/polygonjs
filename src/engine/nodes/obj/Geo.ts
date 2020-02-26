@@ -2,24 +2,24 @@ import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 // const THREE = {Group};
 
-// import {CoreTransform} from 'src/core/Transform';
+// import {CoreTransform} from '../../../core/Transform';
 
 import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
-import {NodeContext} from 'src/engine/poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 
 //import Layers from './Concerns/Layers'
 // import {Transformed} from './Concerns/Transformed';
 
 // sop map
 import {BaseSopNodeType} from '../sop/_Base';
-// import {PolyScene} from 'src/engine/scene/PolyScene';
+// import {PolyScene} from '../../scene/PolyScene';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 
-import {GeoNodeChildrenMap} from 'src/engine/poly/registers/Sop';
+import {GeoNodeChildrenMap} from '../../poly/registers/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 }

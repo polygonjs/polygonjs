@@ -1,12 +1,12 @@
-// import {ParamType} from 'src/engine/poly/ParamType';
+// import {ParamType} from '../../../poly/ParamType';
 // import {ParamInitValuesTypeMap, ParamValuesTypeMap} from './ParamsController';
 // // import lodash_isString from 'lodash/isString';
 // import {Vector2} from 'three/src/math/Vector2';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Vector4} from 'three/src/math/Vector4';
 // import {Color} from 'three/src/math/Color';
-// import {RampValue} from 'src/engine/params/ramp/RampValue';
-// // import {TypeAssert} from 'src/engine/poly/Assert';
+// import {RampValue} from '../../../params/ramp/RampValue';
+// // import {TypeAssert} from '../../../poly/Assert';
 // // type ConvertMethod<T extends ParamType> = (val: ParamValuesTypeMap[T]) => ParamInitValuesTypeMap[T];
 // type IsEqualMethod<T extends ParamType> = (val1: ParamValuesTypeMap[T], val2: ParamValuesTypeMap[T]) => boolean;
 // type ParamValuetoInitValueMapGeneric = {[key in ParamType]: IsEqualMethod<key>};

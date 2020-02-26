@@ -1,8 +1,8 @@
 import {ParamJsonImporter} from '../Param';
-// import {RampValueJson} from 'src/engine/params/ramp/RampValue';
+// import {RampValueJson} from '../../../../params/ramp/RampValue';
 import {ComplexParamJsonExporterData} from '../../export/Param';
-import {RampParam} from 'src/engine/params/Ramp';
-import {ParamType} from 'src/engine/poly/ParamType';
+import {RampParam} from '../../../../params/Ramp';
+import {ParamType} from '../../../../poly/ParamType';
 
 export class ParamRampJsonImporter extends ParamJsonImporter<RampParam> {
 	add_main(data: ComplexParamJsonExporterData<ParamType.RAMP>) {

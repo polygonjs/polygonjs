@@ -1,4 +1,4 @@
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../../src/engine/poly/ParamType';
 
 function ensure_default_value<T extends ParamType>(
 	assert: Assert,

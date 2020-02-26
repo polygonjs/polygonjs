@@ -1,4 +1,4 @@
-import {ParamType} from 'src/engine/poly/ParamType';
+import {ParamType} from '../../../src/engine/poly/ParamType';
 
 QUnit.test('color eval correctly when set to different values', async (assert) => {
 	const scene = window.scene;

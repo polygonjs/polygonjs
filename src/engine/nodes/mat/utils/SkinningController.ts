@@ -1,6 +1,6 @@
 import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
 export function SkinningParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

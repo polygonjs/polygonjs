@@ -1,8 +1,8 @@
-// import {SceneContext} from 'src/core/context/Scene';
+// import {SceneContext} from '../../core/context/Scene';
 import {PolyScene} from '../PolyScene';
-import {CoreGraphNode} from 'src/core/graph/CoreGraphNode';
-import {SceneEvent} from 'src/engine/poly/SceneEvent';
-// import {BaseNode} from 'src/engine/nodes/_Base'
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {SceneEvent} from '../../poly/SceneEvent';
+// import {BaseNode} from '../nodes/_Base'
 
 type FrameRange = [number, number];
 

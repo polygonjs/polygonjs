@@ -1,7 +1,7 @@
-import {ShaderName} from 'src/engine/nodes/utils/shaders/ShaderName';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGLDefinition} from '../../utils/GLDefinition';
 import {BaseGlNodeType} from '../../_Base';
-import {MapUtils} from 'src/core/MapUtils';
+import {MapUtils} from '../../../../../core/MapUtils';
 
 export class LinesController {
 	private _definitions_by_node_id: Map<string, BaseGLDefinition[]> = new Map();

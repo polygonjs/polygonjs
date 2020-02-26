@@ -1,6 +1,6 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-import {TextureContainer} from 'src/engine/containers/Texture';
+import {TextureContainer} from '../../containers/Texture';
 
 export class CopRes extends BaseMethod {
 	// cop_res(0, 'x')
