@@ -272,11 +272,9 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		switch (ext) {
 			case 'ttf': {
 				return this._load_ttf(url);
-				break;
 			}
 			case 'json': {
 				return this._load_json(url);
-				break;
 			}
 			default: {
 				return null;

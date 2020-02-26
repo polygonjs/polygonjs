@@ -29,8 +29,8 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 // 	value: [0, 0, 0],
 // 	string: '',
 // };
-type COMPONENT_INDEX = keyof Vector4Like;
-const COMPONENT_INDEX: Array<COMPONENT_INDEX> = ['x', 'y', 'z', 'w'];
+// type COMPONENT_INDEX = keyof Vector4Like;
+// const COMPONENT_INDEX: Array<COMPONENT_INDEX> = ['x', 'y', 'z', 'w'];
 type ValueArrayByName = Dictionary<number[]>;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
