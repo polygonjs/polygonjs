@@ -7,7 +7,8 @@ import {MaterialsObjNode} from '../../src/engine/nodes/obj/Materials';
 import {PostProcessObjNode} from '../../src/engine/nodes/obj/PostProcess';
 import {CopObjNode} from '../../src/engine/nodes/obj/Cop';
 
-import '../../src/engine/poly/registers/All';
+import {AllRegister} from '../../src/engine/poly/registers/All';
+AllRegister.run();
 import {POLY} from '../../src/engine/Poly';
 
 // window.create_renderer_if_none = () => {
