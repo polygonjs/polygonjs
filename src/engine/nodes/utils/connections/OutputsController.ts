@@ -104,10 +104,13 @@ export class OutputsController<T extends BaseNodeType> {
 		}
 	}
 
-	set_named_output_connection_points(connection_points: BaseNamedConnectionPointType[]) {
+	set_named_output_connection_points(connection_points: BaseNamedConnectionPointType[], set_dirty: boolean = true) {
 		this._has_named_outputs = true;
 		this._named_output_connection_points = connection_points;
-		if (this.node.scene) {
+		if (set_dirty && this.node.scene) {
+			// why do I need this set dirty here?
+			// I currently have to have a flag to optionally prevent this,
+			// for instance from gl nodes which have their outputs updated in a post dirty hook
 			this.node.set_dirty(this.node);
 		}
 		this.node.emit(NodeEvent.NAMED_OUTPUTS_UPDATED);

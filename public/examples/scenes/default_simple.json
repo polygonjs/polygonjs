@@ -37,15 +37,19 @@
 								"type": "float_to_vec3",
 								"params": {},
 								"inputs": [
-									{"name": "x", "node": "constant2", "output": "float"},
-									{"name": "y", "node": "attribute1", "output": "val"},
-									{"name": "z", "node": "param1", "output": "val"}
+									{"name": "x", "node": "attribute1", "output": "val"},
+									{"name": "z", "node": "complement1", "output": "value"}
 								]
 							},
 							"constant2": {
 								"type": "constant",
 								"params": {"type": "2", "value_float": "0.22", "value_vec3": [0, 0.3, 0]},
 								"inputs": []
+							},
+							"complement1": {
+								"type": "complement",
+								"params": {},
+								"inputs": [{"name": "in", "node": "attribute1", "output": "val"}]
 							}
 						},
 						"children_context": "gl",
@@ -80,8 +84,8 @@
 					"controls": "/events1/camera_orbit_controls1",
 					"target": [-0.18931128979003603, 0.42336979919346196, 0.07064319279199466],
 					"fov": 55.29,
-					"t": [0.3518023580563496, 1.406963405614519, 4.863326477077998],
-					"r": [-11.597671442852416, 6.311205900282012, 1.29240031842344]
+					"t": [-0.1972159532644376, 0.8387715170376489, 4.975482879780758],
+					"r": [-4.840953954880215, -0.09200868831154323, -0.007792415849990225]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -297,7 +301,8 @@
 							"attribute1": {"pos": [-100, -50]},
 							"param1": {"pos": [-100, 350]},
 							"float_to_vec3_1": {"pos": [150, -100]},
-							"constant2": {"pos": [-100, -150]}
+							"constant2": {"pos": [-100, -150]},
+							"complement1": {"pos": [50, 0]}
 						}
 					}
 				}

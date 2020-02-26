@@ -55,10 +55,10 @@ export class ConnectionsController {
 	first_input_connection(): NodeConnection {
 		return lodash_compact(this._input_connections)[0];
 	}
-	last_input_connection(): NodeConnection {
-		const connections = lodash_compact(this._input_connections);
-		return connections[connections.length - 1];
-	}
+	// last_input_connection(): NodeConnection {
+	// 	const connections = lodash_compact(this._input_connections);
+	// 	return connections[connections.length - 1];
+	// }
 	input_connections() {
 		return this._input_connections;
 	}

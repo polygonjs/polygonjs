@@ -18,8 +18,8 @@ const ConnectionPointTypesAvailableForAttribute = [
 	ConnectionPointType.VEC4,
 ];
 
-import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {NodeParamsConfig, ParamConfig} from 'src/engine/nodes/utils/params/ParamsConfig';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {

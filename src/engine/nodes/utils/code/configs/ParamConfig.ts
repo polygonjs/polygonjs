@@ -61,14 +61,13 @@ export class ParamConfig<T extends ParamType> {
 		const callback_bound = this._callback.bind(this);
 		switch (this._type) {
 			case ParamType.OPERATOR_PATH:
-				return {callback: callback_bound, node_selection: {context: NodeContext.COP}}; // TODO: typescript - why is COP here?
+				return {callback: callback_bound, node_selection: {context: NodeContext.COP}};
 			default:
 				return {callback: callback_bound};
 		}
 	}
 
 	private _callback(node: BaseNodeType, param: BaseParamType) {
-		// console.log('callback', node, param, param.value);
 		this.uniform.value = param.value;
 	}
 
