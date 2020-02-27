@@ -18,6 +18,7 @@ import {ParamValueToDefaultConverter} from '../utils/params/ParamValueToDefaultC
 // import {ShaderName} from '../utils/shaders/ShaderName';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', BaseGlNodeType, K> {
 	static node_context(): NodeContext {
@@ -194,7 +195,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	// INPUT
 	//
 	//
-	protected gl_input_default_value(name: string) {
+	protected gl_input_default_value(name: string): ParamInitValueSerialized {
 		return null;
 	}
 

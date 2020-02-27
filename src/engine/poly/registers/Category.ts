@@ -20,6 +20,7 @@ export const CATEGORY_GL = {
 	DYNAMICS: 'dynamics',
 	GEOMETRY: 'geometry',
 	GLOBALS: 'globals',
+	LOGIC: 'logic',
 	MATH: 'math',
 	QUAT: 'quat',
 	TRIGO: 'trigo',
