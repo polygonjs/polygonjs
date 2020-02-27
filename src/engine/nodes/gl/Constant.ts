@@ -16,19 +16,19 @@ import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 class ConstantGlParamsConfig extends NodeParamsConfig {
-	type = ParamConfig.INTEGER(0, {
+	type = ParamConfig.INTEGER(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT), {
 		menu: {
 			entries: ConnectionPointTypes.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
 	});
-	value_bool = ParamConfig.BOOLEAN(0, typed_visible_options(ConnectionPointType.BOOL));
-	value_int = ParamConfig.INTEGER(0, typed_visible_options(ConnectionPointType.INT));
-	value_float = ParamConfig.FLOAT(0, typed_visible_options(ConnectionPointType.FLOAT));
-	value_vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(ConnectionPointType.VEC2));
-	value_vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(ConnectionPointType.VEC3));
-	value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typed_visible_options(ConnectionPointType.VEC4));
+	bool = ParamConfig.BOOLEAN(0, typed_visible_options(ConnectionPointType.BOOL));
+	int = ParamConfig.INTEGER(0, typed_visible_options(ConnectionPointType.INT));
+	float = ParamConfig.FLOAT(0, typed_visible_options(ConnectionPointType.FLOAT));
+	vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(ConnectionPointType.VEC2));
+	vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(ConnectionPointType.VEC3));
+	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typed_visible_options(ConnectionPointType.VEC4));
 }
 const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
@@ -41,6 +41,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
 		this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
@@ -79,12 +80,12 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		this._params_by_type =
 			this._params_by_type ||
 			new Map<ConnectionPointType, BaseParamType>([
-				[ConnectionPointType.BOOL, this.p.value_bool],
-				[ConnectionPointType.INT, this.p.value_int],
-				[ConnectionPointType.FLOAT, this.p.value_float],
-				[ConnectionPointType.VEC2, this.p.value_vec2],
-				[ConnectionPointType.VEC3, this.p.value_vec3],
-				[ConnectionPointType.VEC4, this.p.value_vec4],
+				[ConnectionPointType.BOOL, this.p.bool],
+				[ConnectionPointType.INT, this.p.int],
+				[ConnectionPointType.FLOAT, this.p.float],
+				[ConnectionPointType.VEC2, this.p.vec2],
+				[ConnectionPointType.VEC3, this.p.vec3],
+				[ConnectionPointType.VEC4, this.p.vec4],
 			]);
 		const connection_type = ConnectionPointTypes[this.pv.type];
 		return this._params_by_type.get(connection_type)!;
@@ -94,12 +95,14 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 
 	private update_output_type() {
+		const set_dirty = false;
 		const current_connection = this.io.outputs.named_output_connection_points[0];
 		if (current_connection && current_connection.type == this._current_connection_type) {
 			return;
 		}
-		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(this._current_connection_type, this._current_connection_type),
-		]);
+		this.io.outputs.set_named_output_connection_points(
+			[new TypedNamedConnectionPoint(this._current_connection_type, this._current_connection_type)],
+			set_dirty
+		);
 	}
 }

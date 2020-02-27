@@ -1,63 +1,19 @@
-// import {Color} from 'three/src/math/Color';
-// import {Vector2} from 'three/src/math/Vector2';
-// import {Vector3} from 'three/src/math/Vector3';
-// import {Vector4} from 'three/src/math/Vector4';
-
-// import lodash_each from 'lodash/each';
-// import lodash_values from 'lodash/values';
-
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 
-// import {TypedParam} from '../../../params/_Base';
 import {FloatParam} from '../../../params/Float';
 import {OperatorPathParam} from '../../../params/OperatorPath';
 
-// import {Vector2} from 'three/src/math/Vector2';
-// import {Vector3} from 'three/src/math/Vector3';
-// import {Color} from 'three/src/math/Color';
-// import {RampValue} from '../../../params/ramp/RampValue';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamEvent} from '../../../poly/ParamEvent';
-// import {RampValue} from '../../../params/ramp/RampValue';
-// import {Vector4} from 'three/src/math/Vector4';
 import {NodeParamsConfig} from './ParamsConfig';
 
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 import {ParamConstructorByType} from '../../../params/types/ParamConstructorByType';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
-
-// export type ParamInitValue =
-// 	| StringOrNumber
-// 	| StringOrNumber2
-// 	| StringOrNumber3
-// 	| StringOrNumber4
-// 	| boolean
-// 	| string
-// 	| null
-// 	| Color
-// 	| Vector2
-// 	| Vector3
-// 	| Vector4
-// 	| RampValue
-// 	| RampValueJson;
-
-// export type ParamValueSerialized =
-// 	| StringOrNumber
-// 	| StringOrNumber2
-// 	| StringOrNumber3
-// 	| StringOrNumber4
-// 	| boolean
-// 	| string
-// 	| null
-// 	| RampValueJson;
-
-// export type ParamValue = boolean | Color | number | string | RampValue | Vector2 | Vector3 | Vector4 | null;
-// export type MultipleNumericParamValue = Vector2 | Vector3 | Vector4 | Color;
-// export type NumericParamValue = MultipleNumericParamValue | number;
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -373,17 +329,12 @@ export class ParamsController {
 			const param: ParamConstructorMap[T] = new constructor(this.node.scene);
 			param.options.set(options);
 
-			// param.set_scene(this.node.scene);
 			param.set_name(name);
 			param.set_init_value(init_value as never);
 			param.init_components();
 			param.set_node(this.node);
-			// param.initialize();
-			// param.ui_data.set_folder_name(this.current_param_folder_name());
 
 			this._params_by_name[param.name] = param as BaseParamType;
-			// this._params_list.push(param);
-			// this._param_names[param.name()] = true; //.push(param.name());
 
 			// we add the components, so that we can access them with expressions like ch('ty')
 			if (param.is_multiple && param.components) {
@@ -399,34 +350,16 @@ export class ParamsController {
 	}
 
 	private _update_caches() {
-		// _params_list: BaseParam[] = [];
 		this._params_list = Object.values(this._params_by_name);
-		// _param_names: string[] = [];
 		this._param_names = Object.keys(this._params_by_name);
-		// _non_spare_params: BaseParam[] = [];
 		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.is_spare);
-		// _spare_params: BaseParam[] = [];
 		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.is_spare);
-		// _non_spare_param_names: string[] = [];
 		this._non_spare_param_names = Object.values(this._params_by_name)
 			.filter((p) => !p.options.is_spare)
 			.map((p) => p.name);
-		// _spare_param_names: string[] = [];
 		this._spare_param_names = Object.values(this._params_by_name)
 			.filter((p) => p.options.is_spare)
 			.map((p) => p.name);
-		// delete this._param_names[param_name];
-
-		// // delete from this._params_list
-		// let index = -1;
-		// for (let i = 0; i < this._params_list.length; i++) {
-		// 	if (this._params_list[i].name() == param_name) {
-		// 		index = i;
-		// 	}
-		// }
-		// if (index > -1) {
-		// 	this._params_list.splice(index, 1);
-		// }
 	}
 
 	async _eval_param(param: BaseParamType) {
@@ -447,69 +380,28 @@ export class ParamsController {
 	}
 
 	async eval_params(params: BaseParamType[]) {
-		// let param: BaseParam;
 		const promises = [];
 		for (let i = 0; i < params.length; i++) {
 			if (params[i].is_dirty) {
 				promises.push(this._eval_param(params[i]));
 			}
 		}
-		/*const param_values =*/ await Promise.all(promises);
+		await Promise.all(promises);
 
-		// const param_eval_keys = [];
-		// let param_value;
-		// for (let i = 0; i < params.length; i++) {
-		// 	param = params[i];
-		// 	param_value = param_values[i];
-		// 	const param_eval_key = param.eval_key(param_value);
-		// 	param_eval_keys.push(param_eval_key);
-		// }
 		if (this.node.states.error.active) {
 			this.node.set_container(null);
 		}
-		// return param_eval_keys.join('-');
-		// const promises = lodash_map(params, (param, index)=> {
-		// 	return this.self._eval_param(param).then(param_value => {
-		// 		const param_eval_key = param.eval_key(param_value);
-		// 		return param_eval_keys.push(param_eval_key);
-		// 	})
-		// })
-
-		// return new Promise((resolve, reject)=> {
-		// 	return Promise.all(promises).then(() => {
-		// 		if (this.self.is_errored()) {
-		// 			this.self.set_container(null);
-		// 		}
-		// 		// this._params_node.remove_dirty_state()
-		// 		return resolve(param_eval_keys.join('-'));
-		// 	})
-		// })
 	}
-
-	// invalidates_param_results() {
-	// 	// this.params().forEach((param)=>{ param.invalidates_result() });
-	// 	lodash_each(this.params(), (param) => param.invalidates_result());
-	// 	// for(let i=0; i<this._params_list.length; i++){
-	// 	// 	this._params_list[i].invalidates_result()
-	// 	// }
-	// }
 
 	async eval_all() {
 		if (this._params_node) {
 			if (this._params_node.is_dirty || this._params_added_since_last_params_eval) {
-				// const param_names = lodash_values(this.param_names())
-				// const params = param_names.map(param_name=> this.param(param_name))
-				//params = lodash_filter params, (param)->!param.has_parent_param()
-				// if (params.length > 0) {
 				await this.eval_params(this._params_list);
 
-				// this._build_params_eval_key()
 				this._params_node.remove_dirty_state();
-				// }
 				this._params_added_since_last_params_eval = false;
 			}
 		}
-		// return this._params_eval_key
 	}
 
 	//
@@ -519,11 +411,6 @@ export class ParamsController {
 	//
 	set_post_create_params_hook(hook: PostCreateParamsHook) {
 		this._post_create_params_hook = hook;
-	}
-	run_post_create_params_hook() {
-		if (this._post_create_params_hook) {
-			this._post_create_params_hook();
-		}
 	}
 	add_on_scene_load_hook(name: string, method: OnSceneLoadHook) {
 		this._on_scene_load_hook_names = this._on_scene_load_hook_names || [];
@@ -536,6 +423,11 @@ export class ParamsController {
 			console.warn(`hook with name ${name} already exists`, this._on_scene_load_hook_names);
 		}
 	}
+	run_post_create_params_hook() {
+		if (this._post_create_params_hook) {
+			this._post_create_params_hook();
+		}
+	}
 	run_on_scene_load_hooks() {
 		if (this._on_scene_load_hooks) {
 			for (let hook of this._on_scene_load_hooks) {
@@ -543,22 +435,4 @@ export class ParamsController {
 			}
 		}
 	}
-
-	// private _create_params_ui_data_dependencies() {
-	// 	const dependent_params = this._params_list.filter((p) => p.options.ui_data_depends_on_other_params());
-
-	// 	dependent_params.forEach((p) => {
-	// 		p.options.set_ui_data_dependency();
-	// 	});
-	// }
-
-	// within_param_folder(folder_name: string, callback: () => void) {
-	// 	const previous_folder_name = this._current_param_folder_name;
-	// 	this._current_param_folder_name = folder_name;
-	// 	callback();
-	// 	this._current_param_folder_name = previous_folder_name;
-	// }
-	// current_param_folder_name(): string | undefined {
-	// 	return this._current_param_folder_name;
-	// }
 }

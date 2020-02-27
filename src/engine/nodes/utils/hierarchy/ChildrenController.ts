@@ -36,7 +36,9 @@ export class HierarchyChildrenController {
 		return (this._selection = this._selection || new CoreNodeSelection(this.node));
 	}
 	constructor(protected node: BaseNodeType, private _context: NodeContext) {}
-
+	get context() {
+		return this._context;
+	}
 	init(dependent: boolean = false) {
 		// const context = this.node.children_context();
 		// if (context) {
@@ -56,9 +58,6 @@ export class HierarchyChildrenController {
 			}
 		}
 		// }
-	}
-	get context() {
-		return this._context;
 	}
 
 	// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
@@ -101,12 +100,7 @@ export class HierarchyChildrenController {
 	}
 
 	available_children_classes() {
-		if (this._context) {
-			return POLY.registered_nodes(this._context, this.node.type);
-		} else {
-			console.warn('children controller not initialized for node', this.node.type, this.node);
-			return {};
-		}
+		return POLY.registered_nodes(this._context, this.node.type);
 	}
 	// children_allowed(): boolean {
 	// 	// return (this.self.available_children_classes != null) &&
@@ -115,25 +109,26 @@ export class HierarchyChildrenController {
 	// 	return available_classes && Object.keys(available_classes).length > 0;
 	// }
 
-	create_node(node_type: string): BaseNodeType {
-		if (this.available_children_classes() == null) {
-			throw `no children available for ${this.node.full_path()}.`;
-		} else {
-			const node_class = this.available_children_classes()[node_type];
+	is_valid_child_type(node_type: string): boolean {
+		const node_class = this.available_children_classes()[node_type];
+		return node_class != null;
+	}
 
-			if (node_class == null) {
-				const message = `node type ${node_type} not found for ${this.node.full_path()} (${Object.keys(
-					this.available_children_classes()
-				).join(', ')}, ${this._context}, ${this.node.type})`;
-				console.error(message);
-				throw message;
-			} else {
-				const child_node = new node_class(this.node.scene, `child_node_${node_type}`);
-				child_node.initialize_base_and_node();
-				// child_node.set_scene(this.node.scene);
-				this.add_node(child_node);
-				return child_node;
-			}
+	create_node(node_type: string): BaseNodeType {
+		const node_class = this.available_children_classes()[node_type];
+
+		if (node_class == null) {
+			const message = `node type ${node_type} not found for ${this.node.full_path()} (${Object.keys(
+				this.available_children_classes()
+			).join(', ')}, ${this._context}, ${this.node.type})`;
+			console.error(message);
+			throw message;
+		} else {
+			const child_node = new node_class(this.node.scene, `child_node_${node_type}`);
+			child_node.initialize_base_and_node();
+			// child_node.set_scene(this.node.scene);
+			this.add_node(child_node);
+			return child_node;
 		}
 	}
 

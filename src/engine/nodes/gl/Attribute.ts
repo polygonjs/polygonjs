@@ -41,6 +41,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
 		this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	create_params() {
@@ -150,9 +151,11 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
 	}
 	private update_input_and_output_types() {
-		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),
-		]);
+		const set_dirty = false;
+		this.io.outputs.set_named_output_connection_points(
+			[new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypesAvailableForAttribute[this.pv.type])],
+			set_dirty
+		);
 		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
 			this.io.inputs.set_named_input_connection_points([
 				new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),

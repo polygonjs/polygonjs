@@ -134,8 +134,6 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// name
 	set_name(name: string) {
 		super.set_name(name);
-		// this.self.name_graph_node().set_dirty();
-		// this.self.name_graph_node().remove_dirty_state();
 	}
 
 	get value(): ParamValuesTypeMap[T] {
