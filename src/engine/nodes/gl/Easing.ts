@@ -1,199 +1,200 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {Connection} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
+import {TypedGlNode} from './_Base';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
-// // https://github.com/glslify/glsl-easings
-// import CircularInOut from './Gl/easing/circular-in-out.glsl';
-// import ExponentialInOut from './Gl/easing/exponential-in-out.glsl';
-// import CircularIn from './Gl/easing/circular-in.glsl';
-// import ElasticOut from './Gl/easing/elastic-out.glsl';
-// import CubicIn from './Gl/easing/cubic-in.glsl';
-// import ExponentialOut from './Gl/easing/exponential-out.glsl';
-// import QuinticOut from './Gl/easing/quintic-out.glsl';
-// import ElasticInOut from './Gl/easing/elastic-in-out.glsl';
-// import Linear from './Gl/easing/linear.glsl';
-// import CircularOut from './Gl/easing/circular-out.glsl';
-// import BackInOut from './Gl/easing/back-in-out.glsl';
-// import BackIn from './Gl/easing/back-in.glsl';
-// import SineIn from './Gl/easing/sine-in.glsl';
-// import BackOut from './Gl/easing/back-out.glsl';
-// import QuarticInOut from './Gl/easing/quartic-in-out.glsl';
-// import QuadraticIn from './Gl/easing/quadratic-in.glsl';
-// import CubicInOut from './Gl/easing/cubic-in-out.glsl';
-// import ElasticIn from './Gl/easing/elastic-in.glsl';
-// import BounceOut from './Gl/easing/bounce-out.glsl';
-// import QuadraticInOut from './Gl/easing/quadratic-in-out.glsl';
-// import ExponentialIn from './Gl/easing/exponential-in.glsl';
-// import QuinticInOut from './Gl/easing/quintic-in-out.glsl';
-// import SineInOut from './Gl/easing/sine-in-out.glsl';
-// import CubicOut from './Gl/easing/cubic-out.glsl';
-// import QuadraticOut from './Gl/easing/quadratic-out.glsl';
-// import BounceInOut from './Gl/easing/bounce-in-out.glsl';
-// import QuinticIn from './Gl/easing/quintic-in.glsl';
-// import QuarticIn from './Gl/easing/quartic-in.glsl';
-// import QuarticOut from './Gl/easing/quartic-out.glsl';
-// import BounceIn from './Gl/easing/bounce-in.glsl';
-// import SineOut from './Gl/easing/sine-out.glsl';
+// https://github.com/glslify/glsl-easings
+import CircularInOut from './gl/easing/circular-in-out.glsl';
+import ExponentialInOut from './gl/easing/exponential-in-out.glsl';
+import CircularIn from './gl/easing/circular-in.glsl';
+import ElasticOut from './gl/easing/elastic-out.glsl';
+import CubicIn from './gl/easing/cubic-in.glsl';
+import ExponentialOut from './gl/easing/exponential-out.glsl';
+import QuinticOut from './gl/easing/quintic-out.glsl';
+import ElasticInOut from './gl/easing/elastic-in-out.glsl';
+import Linear from './gl/easing/linear.glsl';
+import CircularOut from './gl/easing/circular-out.glsl';
+import BackInOut from './gl/easing/back-in-out.glsl';
+import BackIn from './gl/easing/back-in.glsl';
+import SineIn from './gl/easing/sine-in.glsl';
+import BackOut from './gl/easing/back-out.glsl';
+import QuarticInOut from './gl/easing/quartic-in-out.glsl';
+import QuadraticIn from './gl/easing/quadratic-in.glsl';
+import CubicInOut from './gl/easing/cubic-in-out.glsl';
+import ElasticIn from './gl/easing/elastic-in.glsl';
+import BounceOut from './gl/easing/bounce-out.glsl';
+import QuadraticInOut from './gl/easing/quadratic-in-out.glsl';
+import ExponentialIn from './gl/easing/exponential-in.glsl';
+import QuinticInOut from './gl/easing/quintic-in-out.glsl';
+import SineInOut from './gl/easing/sine-in-out.glsl';
+import CubicOut from './gl/easing/cubic-out.glsl';
+import QuadraticOut from './gl/easing/quadratic-out.glsl';
+import BounceInOut from './gl/easing/bounce-in-out.glsl';
+import QuinticIn from './gl/easing/quintic-in.glsl';
+import QuarticIn from './gl/easing/quartic-in.glsl';
+import QuarticOut from './gl/easing/quartic-out.glsl';
+import BounceIn from './gl/easing/bounce-in.glsl';
+import SineOut from './gl/easing/sine-out.glsl';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {FunctionGLDefinition} from './utils/GLDefinition';
 
-// const IMPORT_BY_EASE_NAME = {
-// 	'circular-in-out': CircularInOut,
-// 	'exponential-in-out': ExponentialInOut,
-// 	'circular-in': CircularIn,
-// 	'elastic-out': ElasticOut,
-// 	'cubic-in': CubicIn,
-// 	'exponential-out': ExponentialOut,
-// 	'quintic-out': QuinticOut,
-// 	'elastic-in-out': ElasticInOut,
-// 	linear: Linear,
-// 	'circular-out': CircularOut,
-// 	'back-in-out': BackInOut,
-// 	'back-in': BackIn,
-// 	'sine-in': SineIn,
-// 	'back-out': BackOut,
-// 	'quartic-in-out': QuarticInOut,
-// 	'quadratic-in': QuadraticIn,
-// 	'cubic-in-out': CubicInOut,
-// 	'elastic-in': ElasticIn,
-// 	'bounce-out': BounceOut,
-// 	'quadratic-in-out': QuadraticInOut,
-// 	'exponential-in': ExponentialIn,
-// 	'quintic-in-out': QuinticInOut,
-// 	'sine-in-out': SineInOut,
-// 	'cubic-out': CubicOut,
-// 	'quadratic-out': QuadraticOut,
-// 	'bounce-in-out': BounceInOut,
-// 	'quintic-in': QuinticIn,
-// 	'quartic-in': QuarticIn,
-// 	'quartic-out': QuarticOut,
-// 	'bounce-in': BounceIn,
-// 	'sine-out': SineOut,
-// };
-// const IMPORT_DEPENDENCIES_BY_EASE_NAME = {
-// 	'bounce-in': [BounceOut],
-// 	'bounce-in-out': [BounceOut],
-// };
+const EASE_NAMES = [
+	'back-in-out',
+	'back-in',
+	'back-out',
+	'bounce-in-out',
+	'bounce-in',
+	'bounce-out',
+	'circular-in-out',
+	'circular-in',
+	'circular-out',
+	'cubic-in-out',
+	'cubic-in',
+	'cubic-out',
+	'elastic-in-out',
+	'elastic-in',
+	'elastic-out',
+	'exponential-in-out',
+	'exponential-in',
+	'exponential-out',
+	'linear',
+	'quadratic-in-out',
+	'quadratic-in',
+	'quadratic-out',
+	// "quartic-in-out",
+	// "quartic-in",
+	// "quartic-out",
+	// "quintic-in-out",
+	// "quintic-in",
+	// "quintic-out",
+	'sine-in-out',
+	'sine-in',
+	'sine-out',
+];
 
-// const METHOD_NAMES_BY_EASE_NAME = {
-// 	'circular-in-out': 'circularInOut',
-// 	'exponential-in-out': 'exponentialInOut',
-// 	'circular-in': 'circularIn',
-// 	'elastic-out': 'elasticOut',
-// 	'cubic-in': 'cubicIn',
-// 	'exponential-out': 'exponentialOut',
-// 	'quintic-out': 'quinticOut',
-// 	'elastic-in-out': 'elasticInOut',
-// 	linear: 'linear',
-// 	'circular-out': 'circularOut',
-// 	'back-in-out': 'backInOut',
-// 	'back-in': 'backIn',
-// 	'sine-in': 'sineIn',
-// 	'back-out': 'backOut',
-// 	'quartic-in-out': 'quarticInOut',
-// 	'quadratic-in': 'quadraticIn',
-// 	'cubic-in-out': 'cubicInOut',
-// 	'elastic-in': 'elasticIn',
-// 	'bounce-out': 'bounceOut',
-// 	'quadratic-in-out': 'quadraticInOut',
-// 	'exponential-in': 'exponentialIn',
-// 	'quintic-in-out': 'quinticInOut',
-// 	'sine-in-out': 'sineInOut',
-// 	'cubic-out': 'cubicOut',
-// 	'quadratic-out': 'quadraticOut',
-// 	'bounce-in-out': 'bounceInOut',
-// 	'quintic-in': 'quinticIn',
-// 	'quartic-in': 'quarticIn',
-// 	'quartic-out': 'quarticOut',
-// 	'bounce-in': 'bounceIn',
-// 	'sine-out': 'sineOut',
-// };
+const IMPORT_BY_EASE_NAME: Dictionary<string> = {
+	'circular-in-out': CircularInOut,
+	'exponential-in-out': ExponentialInOut,
+	'circular-in': CircularIn,
+	'elastic-out': ElasticOut,
+	'cubic-in': CubicIn,
+	'exponential-out': ExponentialOut,
+	'quintic-out': QuinticOut,
+	'elastic-in-out': ElasticInOut,
+	linear: Linear,
+	'circular-out': CircularOut,
+	'back-in-out': BackInOut,
+	'back-in': BackIn,
+	'sine-in': SineIn,
+	'back-out': BackOut,
+	'quartic-in-out': QuarticInOut,
+	'quadratic-in': QuadraticIn,
+	'cubic-in-out': CubicInOut,
+	'elastic-in': ElasticIn,
+	'bounce-out': BounceOut,
+	'quadratic-in-out': QuadraticInOut,
+	'exponential-in': ExponentialIn,
+	'quintic-in-out': QuinticInOut,
+	'sine-in-out': SineInOut,
+	'cubic-out': CubicOut,
+	'quadratic-out': QuadraticOut,
+	'bounce-in-out': BounceInOut,
+	'quintic-in': QuinticIn,
+	'quartic-in': QuarticIn,
+	'quartic-out': QuarticOut,
+	'bounce-in': BounceIn,
+	'sine-out': SineOut,
+};
+const IMPORT_DEPENDENCIES_BY_EASE_NAME: Dictionary<string[]> = {
+	'bounce-in': [BounceOut],
+	'bounce-in-out': [BounceOut],
+};
 
-// const EASE_NAMES = [
-// 	'back-in-out',
-// 	'back-in',
-// 	'back-out',
-// 	'bounce-in-out',
-// 	'bounce-in',
-// 	'bounce-out',
-// 	'circular-in-out',
-// 	'circular-in',
-// 	'circular-out',
-// 	'cubic-in-out',
-// 	'cubic-in',
-// 	'cubic-out',
-// 	'elastic-in-out',
-// 	'elastic-in',
-// 	'elastic-out',
-// 	'exponential-in-out',
-// 	'exponential-in',
-// 	'exponential-out',
-// 	'linear',
-// 	'quadratic-in-out',
-// 	'quadratic-in',
-// 	'quadratic-out',
-// 	// "quartic-in-out",
-// 	// "quartic-in",
-// 	// "quartic-out",
-// 	// "quintic-in-out",
-// 	// "quintic-in",
-// 	// "quintic-out",
-// 	'sine-in-out',
-// 	'sine-in',
-// 	'sine-out',
-// ];
+const METHOD_NAMES_BY_EASE_NAME: Dictionary<string> = {
+	'circular-in-out': 'circularInOut',
+	'exponential-in-out': 'exponentialInOut',
+	'circular-in': 'circularIn',
+	'elastic-out': 'elasticOut',
+	'cubic-in': 'cubicIn',
+	'exponential-out': 'exponentialOut',
+	'quintic-out': 'quinticOut',
+	'elastic-in-out': 'elasticInOut',
+	linear: 'linear',
+	'circular-out': 'circularOut',
+	'back-in-out': 'backInOut',
+	'back-in': 'backIn',
+	'sine-in': 'sineIn',
+	'back-out': 'backOut',
+	'quartic-in-out': 'quarticInOut',
+	'quadratic-in': 'quadraticIn',
+	'cubic-in-out': 'cubicInOut',
+	'elastic-in': 'elasticIn',
+	'bounce-out': 'bounceOut',
+	'quadratic-in-out': 'quadraticInOut',
+	'exponential-in': 'exponentialIn',
+	'quintic-in-out': 'quinticInOut',
+	'sine-in-out': 'sineInOut',
+	'cubic-out': 'cubicOut',
+	'quadratic-out': 'quadraticOut',
+	'bounce-in-out': 'bounceInOut',
+	'quintic-in': 'quinticIn',
+	'quartic-in': 'quarticIn',
+	'quartic-out': 'quarticOut',
+	'bounce-in': 'bounceIn',
+	'sine-out': 'sineOut',
+};
 
-// export class Easing extends BaseNodeGl {
-// 	static type() {
-// 		return 'easing';
-// 	}
+const OUTPUT_NAME = 'out';
+const default_ease_type = EASE_NAMES.indexOf('sine-in-out');
+class EasingGlParamsConfig extends NodeParamsConfig {
+	type = ParamConfig.INTEGER(default_ease_type, {
+		menu: {
+			entries: EASE_NAMES.map((name, i) => {
+				return {name: name, value: i};
+			}),
+		},
+	});
+	input = ParamConfig.FLOAT(0);
+}
+const ParamsConfig = new EasingGlParamsConfig();
+export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'easing';
+	}
 
-// 	_param_type: number;
-// 	_param_in: number;
+	initialize_node() {
+		super.initialize_node();
 
-// 	constructor() {
-// 		super();
+		this.spare_params_controller.set_inputless_param_names(['type']);
 
-// 		this.set_named_outputs([new Connection.Float('out')]);
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+		]);
+	}
 
-// 	create_params() {
-// 		const default_ease_type = EASE_NAMES.indexOf('sine-in-out');
-// 		this.add_param(ParamType.INTEGER, 'type', default_ease_type, {
-// 			menu: {
-// 				type: 'radio',
-// 				entries: EASE_NAMES.map((name, i) => {
-// 					return {name: name, value: i};
-// 				}),
-// 			},
-// 		});
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const ease_name = EASE_NAMES[this.pv.type];
+		const method_name = METHOD_NAMES_BY_EASE_NAME[ease_name];
+		const glsl_function_code = IMPORT_BY_EASE_NAME[ease_name];
 
-// 		this.add_param(ParamType.FLOAT, 'in', 0);
-// 	}
-// 	set_lines() {
-// 		const function_declaration_lines = [];
-// 		const body_lines = [];
+		let ease_functions = [new FunctionGLDefinition(this, ConnectionPointType.FLOAT, glsl_function_code)];
+		const function_dependencies = (IMPORT_DEPENDENCIES_BY_EASE_NAME[ease_name] || []).map(
+			(f) => new FunctionGLDefinition(this, ConnectionPointType.FLOAT, f)
+		);
+		if (function_dependencies) {
+			ease_functions = function_dependencies.concat(ease_functions);
+		}
+		// ease_functions.forEach(ease_function=>{
+		// 	function_declaration_lines.push(ease_function)
+		// })
 
-// 		const ease_name = EASE_NAMES[this._param_type];
-// 		const method_name = METHOD_NAMES_BY_EASE_NAME[ease_name];
-// 		const glsl_function_code = IMPORT_BY_EASE_NAME[ease_name];
+		const in_value = ThreeToGl.float(this.variable_for_input('input'));
+		const out_value = this.gl_var_name(OUTPUT_NAME);
 
-// 		let ease_functions = [new Definition.Function(this, glsl_function_code)];
-// 		const function_dependencies = (IMPORT_DEPENDENCIES_BY_EASE_NAME[ease_name] || []).map(
-// 			(f) => new Definition.Function(this, f)
-// 		);
-// 		if (function_dependencies) {
-// 			ease_functions = function_dependencies.concat(ease_functions);
-// 		}
-// 		// ease_functions.forEach(ease_function=>{
-// 		// 	function_declaration_lines.push(ease_function)
-// 		// })
-
-// 		const in_value = ThreeToGl.float(this.variable_for_input('in'));
-// 		const out_value = this.gl_var_name('out');
-
-// 		body_lines.push(`float ${out_value} = ${method_name}(${in_value})`);
-// 		this.set_definitions(ease_functions);
-// 		this.set_body_lines(body_lines);
-// 	}
-// }
+		const body_line = `float ${out_value} = ${method_name}(${in_value})`;
+		shaders_collection_controller.add_definitions(this, ease_functions);
+		shaders_collection_controller.add_body_lines(this, [body_line]);
+	}
+}

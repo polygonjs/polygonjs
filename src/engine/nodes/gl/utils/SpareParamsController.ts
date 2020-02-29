@@ -11,6 +11,7 @@ import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSeri
 
 export class GlNodeSpareParamsController {
 	private _allow_inputs_created_from_params: boolean = true;
+	private _inputless_param_names: string[] | undefined;
 	constructor(private node: BaseGlNodeType) {}
 
 	disallow_inputs_created_from_params() {
@@ -26,10 +27,13 @@ export class GlNodeSpareParamsController {
 			return;
 		}
 		const connections: BaseNamedConnectionPointType[] = [];
-		const inputless_params_names = this.inputless_params_names();
 		for (let param_name of this.node.params.names) {
 			let add_input = true;
-			if (inputless_params_names.length > 0 && inputless_params_names.includes(param_name)) {
+			if (
+				this._inputless_param_names &&
+				this._inputless_param_names.length > 0 &&
+				this._inputless_param_names.includes(param_name)
+			) {
 				add_input = false;
 			}
 			if (add_input) {
@@ -47,8 +51,8 @@ export class GlNodeSpareParamsController {
 		}
 		this.node.io.inputs.set_named_input_connection_points(connections);
 	}
-	inputless_params_names(): string[] {
-		return [];
+	set_inputless_param_names(names: string[]) {
+		return (this._inputless_param_names = names);
 	}
 	create_spare_parameters() {
 		const raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();

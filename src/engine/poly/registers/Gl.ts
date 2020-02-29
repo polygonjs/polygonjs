@@ -54,6 +54,7 @@ import {ComplementGlNode} from '../../nodes/gl/Complement';
 import {CrossGlNode} from '../../nodes/gl/Cross';
 import {CycleGlNode} from '../../nodes/gl/Cycle';
 import {DiskGlNode} from '../../nodes/gl/Disk';
+import {EasingGlNode} from '../../nodes/gl/Easing';
 import {GlobalsGlNode} from '../../nodes/gl/Globals';
 import {LengthGlNode} from '../../nodes/gl/Length';
 import {MixGlNode} from '../../nodes/gl/Mix';
@@ -87,6 +88,7 @@ export interface GlNodeChildrenMap {
 	distance: DistanceGlNode;
 	divide: DivideGlNode;
 	dot: DotGlNode;
+	easing: EasingGlNode;
 	exp: ExpGlNode;
 	exp2: Exp2GlNode;
 	float_to_int: FloatToIntGlNode;
@@ -154,6 +156,7 @@ export class GlRegister {
 		poly.register_node(DistanceGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(DivideGlNode, CATEGORY_GL.MATH);
 		poly.register_node(DotGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(EasingGlNode, CATEGORY_GL.MATH);
 		poly.register_node(ExpGlNode, CATEGORY_GL.MATH);
 		poly.register_node(Exp2GlNode, CATEGORY_GL.MATH);
 		poly.register_node(FloatToIntGlNode, CATEGORY_GL.CONVERSION);
