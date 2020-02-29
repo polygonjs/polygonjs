@@ -13,9 +13,9 @@ export class GlConnectionsController {
 	private _output_name_function: IONameFunction = (index: number) => {
 		return index == 0 ? 'val' : `val${index}`;
 	};
-	private _default_input_type: ConnectionPointType = ConnectionPointType.FLOAT;
+	// private _default_input_type: ConnectionPointType = ConnectionPointType.FLOAT;
 	private _expected_input_types_function: ExpectedConnectionTypesFunction = () => {
-		const type = this.first_input_connection_type() || this._default_input_type;
+		const type = this.first_input_connection_type() || ConnectionPointType.FLOAT;
 		return [type, type];
 	};
 	private _expected_output_types_function: ExpectedConnectionTypesFunction = () => {
@@ -30,9 +30,9 @@ export class GlConnectionsController {
 	set_output_name_function(func: IONameFunction) {
 		this._output_name_function = func;
 	}
-	set_default_input_type(type: ConnectionPointType) {
-		this._default_input_type = type;
-	}
+	// set_default_input_type(type: ConnectionPointType) {
+	// 	this._default_input_type = type;
+	// }
 	set_expected_input_types_function(func: ExpectedConnectionTypesFunction) {
 		this._expected_input_types_function = func;
 	}

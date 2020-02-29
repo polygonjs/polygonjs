@@ -10,6 +10,9 @@ export class ErrorState {
 	set(message: string | undefined) {
 		if (this._message != message) {
 			this._message = message;
+			if (this._message) {
+				console.log(this.param.full_path(), this._message);
+			}
 			this.param.emit_controller.emit(ParamEvent.ERROR_UPDATED);
 		}
 	}

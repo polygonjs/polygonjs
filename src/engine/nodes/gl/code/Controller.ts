@@ -16,15 +16,16 @@ import {GlobalsBaseController} from './globals/_Base';
 
 // import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {NodeEvent} from '../../../poly/NodeEvent';
+// import {NodeEvent} from '../../../poly/NodeEvent';
 import {ShaderName} from '../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../Output';
 import {GlobalsGlNode} from '../Globals';
-import {BaseParamType} from '../../../params/_Base';
+// import {BaseParamType} from '../../../params/_Base';
 import {ParamJsonExporterData} from '../../../io/json/export/Param';
 import {GlNodeChildrenMap} from '../../../poly/registers/Gl';
 import {BaseGlNodeType} from '../_Base';
 import {ParamType} from '../../../poly/ParamType';
+import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 
 // interface BaseShaderAssemblerConstructor {
 // 	new (): BaseGlShaderAssembler;
@@ -67,7 +68,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	private _shaders_by_name: Map<ShaderName, string> = new Map();
 
 	private _deleted_params_data: Map<string, ParamJsonExporterData<ParamType>> = new Map();
-	private _new_params: BaseParamType[] = [];
+	// private _new_params: BaseParamType[] = [];
 
 	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
 		// if (assembler_class) {
@@ -369,7 +370,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		// TODO: also remove the params that change type
 		const spare_param_names_to_add = lodash_difference(assembler_param_names, current_spare_param_names);
 		const spare_param_names_to_remove = lodash_difference(current_spare_param_names, assembler_param_names);
-		this._new_params = [];
+		// this._new_params = [];
+		const params_update_options: ParamsUpdateOptions = {};
 
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
 		const current_param_names = this.node.params.names;
@@ -397,7 +399,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 				}
 			}
 
-			this.node.params.delete_param(param_name);
+			params_update_options.names_to_delete = params_update_options.names_to_delete || [];
+			params_update_options.names_to_delete.push(param_name);
 		});
 
 		// this.within_param_folder('spare_params', () => {
@@ -409,31 +412,40 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 				// but if cook is false, there is no reason for it to be updated
 				const options = lodash_merge(param_config.param_options, {spare: true, cook: true});
 
-				const param = this.node.add_param(
-					param_config.type,
-					param_config.name,
-					param_config.default_value,
-					options
-				);
-				if (param) {
-					// restore saved state, like expressions
-					const param_data = this._deleted_params_data.get(param.name);
-					if (param_data) {
-						// TODO: typescript
-						// JsonImportDispatcher.dispatch_param(param).process_data(param_data);
-						// looks like there are still some cases where the expression are not recreated
-						// so commenting this out now
-						// delete this._deleted_params_data[param.name()]
-					}
+				// const param = this.node.add_param(
+				// 	param_config.type,
+				// 	param_config.name,
+				// 	param_config.default_value,
+				// 	options
+				// );
+				params_update_options.to_add = params_update_options.to_add || [];
+				params_update_options.to_add.push({
+					name: param_config.name,
+					type: param_config.type,
+					init_value: param_config.default_value as any,
+					options: options,
+				});
 
-					this._new_params.push(param);
-				}
+				// if (param) {
+				// 	// restore saved state, like expressions
+				// 	const param_data = this._deleted_params_data.get(param.name);
+				// 	if (param_data) {
+				// 		// TODO: typescript
+				// 		// JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+				// 		// looks like there are still some cases where the expression are not recreated
+				// 		// so commenting this out now
+				// 		// delete this._deleted_params_data[param.name()]
+				// 	}
+
+				// 	this._new_params.push(param);
+				// }
 			}
 		}
 
-		if (spare_param_names_to_add.length > 0 || spare_param_names_to_remove.length > 0) {
-			this.node.params.post_create_spare_params();
-			this.node.emit(NodeEvent.PARAMS_UPDATED);
-		}
+		this.node.params.update_params(params_update_options);
+		// if (spare_param_names_to_add.length > 0 || spare_param_names_to_remove.length > 0) {
+		// 	this.node.params.post_create_spare_params();
+		// 	this.node.emit(NodeEvent.PARAMS_UPDATED);
+		// }
 	}
 }

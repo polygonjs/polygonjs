@@ -1,20 +1,22 @@
 import {BaseNodeGlMathFunctionArg3GlNode} from './_BaseMathFunctionArg3';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-
+import {FunctionGLDefinition} from './utils/GLDefinition';
 interface MathArg3Options {
 	in?: [string, string, string];
 	out?: string;
 	out_type?: ConnectionPointType;
 	method?: string;
 	default?: Dictionary<any>;
+	functions?: string[];
 }
 
-function MathFunctionArg3Factory(type: string, options: MathArg3Options = {}) {
+export function MathFunctionArg3Factory(type: string, options: MathArg3Options = {}) {
 	const gl_method_name = options.method || type;
 	const gl_output_name = options.out || 'val';
 	const gl_input_names = options.in || ['in0', 'in1', 'in2'];
 	const gl_input_default_values = options.default || {};
 	const out_type = options.out_type || ConnectionPointType.FLOAT;
+	const functions = options.functions || [];
 	return class Node extends BaseNodeGlMathFunctionArg3GlNode {
 		static type() {
 			return type;
@@ -39,6 +41,9 @@ function MathFunctionArg3Factory(type: string, options: MathArg3Options = {}) {
 		}
 		gl_input_default_value(name: string) {
 			return gl_input_default_values[name];
+		}
+		gl_function_definitions(): FunctionGLDefinition[] {
+			return functions.map((f) => new FunctionGLDefinition(this, out_type, f));
 		}
 	};
 }

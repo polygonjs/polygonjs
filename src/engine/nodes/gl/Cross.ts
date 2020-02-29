@@ -1,35 +1,37 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {Connection} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
+import {TypedGlNode} from './_Base';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-// export class Cross extends BaseNodeGl {
-// 	static type() {
-// 		return 'cross';
-// 	}
+const OUTPUT_NAME = 'cross';
 
-// 	constructor() {
-// 		super();
+class CrossGlParamsConfig extends NodeParamsConfig {
+	x = ParamConfig.VECTOR3([0, 0, 1]);
+	y = ParamConfig.VECTOR3([0, 1, 0]);
+}
+const ParamsConfig = new CrossGlParamsConfig();
+export class CrossGlNode extends TypedGlNode<CrossGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'cross';
+	}
 
-// 		this.set_named_outputs([new Connection.Vec3(this.gl_output_name())]);
-// 	}
+	initialize_node() {
+		super.initialize_node();
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR, 'x', [0, 0, 0]);
-// 		this.add_param(ParamType.VECTOR, 'y', [0, 0, 0]);
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.VEC3),
+		]);
+	}
 
-// 	set_lines() {
-// 		const body_lines = [];
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const x = ThreeToGl.float(this.variable_for_input('x'));
+		const y = ThreeToGl.float(this.variable_for_input('y'));
 
-// 		const x = ThreeToGl.float(this.variable_for_input('x'));
-// 		const y = ThreeToGl.float(this.variable_for_input('y'));
-
-// 		const result = this.gl_var_name(this.gl_output_name());
-// 		body_lines.push(`vec3 ${result} = cross(${x}, ${y})`);
-// 		this.set_body_lines(body_lines);
-// 	}
-// 	gl_output_name() {
-// 		return 'cross';
-// 	}
-// }
+		const result = this.gl_var_name(OUTPUT_NAME);
+		const body_line = `vec3 ${result} = cross(${x}, ${y})`;
+		shaders_collection_controller.add_body_lines(this, [body_line]);
+	}
+}

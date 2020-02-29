@@ -44,11 +44,16 @@ import {
 	StepGlNode,
 } from '../../nodes/gl/_Math_Arg2';
 
+import {AddGlNode, DivideGlNode, MultGlNode, SubstractGlNode} from '../../nodes/gl/_Math_Arg2Operation';
+
 import {AndGlNode, OrGlNode} from '../../nodes/gl/_Math_Arg2Boolean';
 import {AlignGlNode} from '../../nodes/gl/Align';
 import {AttributeGlNode} from '../../nodes/gl/Attribute';
 import {ConstantGlNode} from '../../nodes/gl/Constant';
 import {ComplementGlNode} from '../../nodes/gl/Complement';
+import {CrossGlNode} from '../../nodes/gl/Cross';
+import {CycleGlNode} from '../../nodes/gl/Cycle';
+import {DiskGlNode} from '../../nodes/gl/Disk';
 import {GlobalsGlNode} from '../../nodes/gl/Globals';
 import {LengthGlNode} from '../../nodes/gl/Length';
 import {MixGlNode} from '../../nodes/gl/Mix';
@@ -65,6 +70,7 @@ import {QuatToAxisGlNode} from '../../nodes/gl/QuatToAxis';
 export interface GlNodeChildrenMap {
 	abs: AbsGlNode;
 	acos: AcosGlNode;
+	add: AddGlNode;
 	align: AlignGlNode;
 	and: AndGlNode;
 	asin: AsinGlNode;
@@ -74,8 +80,12 @@ export interface GlNodeChildrenMap {
 	constant: ConstantGlNode;
 	cos: CosGlNode;
 	complement: ComplementGlNode;
+	cross: CrossGlNode;
+	cycle: CycleGlNode;
 	degrees: DegreesGlNode;
+	disk: DiskGlNode;
 	distance: DistanceGlNode;
+	divide: DivideGlNode;
 	dot: DotGlNode;
 	exp: ExpGlNode;
 	exp2: Exp2GlNode;
@@ -95,6 +105,7 @@ export interface GlNodeChildrenMap {
 	min: MinGlNode;
 	mix: MixGlNode;
 	mod: ModGlNode;
+	mult: MultGlNode;
 	negate: NegateGlNode;
 	normalize: NormalizeGlNode;
 	null: NullGlNode;
@@ -109,6 +120,7 @@ export interface GlNodeChildrenMap {
 	sin: SinGlNode;
 	sqrt: SqrtGlNode;
 	step: StepGlNode;
+	substract: SubstractGlNode;
 	tan: TanGlNode;
 	quat_mult: QuatMultGlNode;
 	quat_from_axis_angle: QuatFromAxisAngleGlNode;
@@ -125,6 +137,7 @@ export class GlRegister {
 	static run(poly: Poly) {
 		poly.register_node(AbsGlNode, CATEGORY_GL.MATH);
 		poly.register_node(AcosGlNode, CATEGORY_GL.TRIGO);
+		poly.register_node(AddGlNode, CATEGORY_GL.MATH);
 		poly.register_node(AlignGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(AndGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(AsinGlNode, CATEGORY_GL.TRIGO);
@@ -134,8 +147,12 @@ export class GlRegister {
 		poly.register_node(CosGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(ConstantGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(ComplementGlNode, CATEGORY_GL.MATH);
+		poly.register_node(CrossGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(CycleGlNode, CATEGORY_GL.MATH);
 		poly.register_node(DegreesGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(DiskGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(DistanceGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(DivideGlNode, CATEGORY_GL.MATH);
 		poly.register_node(DotGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(ExpGlNode, CATEGORY_GL.MATH);
 		poly.register_node(Exp2GlNode, CATEGORY_GL.MATH);
@@ -156,6 +173,7 @@ export class GlRegister {
 		poly.register_node(MinGlNode, CATEGORY_GL.MATH);
 		poly.register_node(ModGlNode, CATEGORY_GL.MATH);
 		poly.register_node(MixGlNode, CATEGORY_GL.MATH);
+		poly.register_node(MultGlNode, CATEGORY_GL.MATH);
 		poly.register_node(NullGlNode, CATEGORY_GL.UTIL);
 		poly.register_node(NormalizeGlNode, CATEGORY_GL.MATH);
 		poly.register_node(OrGlNode, CATEGORY_GL.LOGIC);
@@ -171,8 +189,9 @@ export class GlRegister {
 		poly.register_node(RefractGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(SignGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SinGlNode, CATEGORY_GL.TRIGO);
-		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(SqrtGlNode, CATEGORY_GL.MATH);
+		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(SubstractGlNode, CATEGORY_GL.MATH);
 		poly.register_node(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(Vec2ToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec3ToFloatGlNode, CATEGORY_GL.CONVERSION);

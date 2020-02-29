@@ -102,7 +102,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	//
 	//
 	gl_input_default_value(name: string): ParamInitValueSerialized {
-		return 0;
+		return null;
 	}
 
 	//

@@ -36,6 +36,7 @@ import './engine/nodes/cop/Switch';
 QUnit.module('gl');
 import './engine/nodes/gl/Attribute';
 import './engine/nodes/gl/Constant';
+import './engine/nodes/gl/Dot';
 import './engine/nodes/gl/Param';
 
 QUnit.module('manager');

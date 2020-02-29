@@ -7,18 +7,31 @@ import {FloatParam} from '../../../params/Float';
 import {OperatorPathParam} from '../../../params/OperatorPath';
 
 import {ParamType} from '../../../poly/ParamType';
-import {ParamEvent} from '../../../poly/ParamEvent';
+// import {ParamEvent} from '../../../poly/ParamEvent';
 import {NodeParamsConfig} from './ParamsConfig';
 
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 import {ParamConstructorByType} from '../../../params/types/ParamConstructorByType';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
+import {NodeEvent} from '../../../poly/NodeEvent';
+import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 
 const NODE_SIMPLE_NAME = 'params';
 
 export type OnSceneLoadHook = () => void;
 type PostCreateParamsHook = () => void;
+
+export interface ParamOptionToAdd<T extends ParamType> {
+	name: string;
+	type: T;
+	init_value: ParamInitValueSerializedTypeMap[T];
+	options?: ParamOptions;
+}
+export interface ParamsUpdateOptions {
+	names_to_delete?: string[];
+	to_add?: ParamOptionToAdd<ParamType>[];
+}
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
@@ -80,6 +93,38 @@ export class ParamsController {
 		// 	}
 		// 	return 0;
 		// };
+	}
+	update_params(options: ParamsUpdateOptions) {
+		let has_created_a_param = false;
+		let has_deleted_a_param = false;
+		if (options.names_to_delete) {
+			for (let name of options.names_to_delete) {
+				if (this.has(name)) {
+					this.delete_param(name);
+					has_deleted_a_param = true;
+				}
+			}
+		}
+		if (options.to_add) {
+			for (let param_data of options.to_add) {
+				const param = this.add_param(
+					param_data.type,
+					param_data.name,
+					param_data.init_value,
+					param_data.options
+				);
+				if (param) {
+					has_created_a_param = true;
+				}
+			}
+		}
+
+		if (has_deleted_a_param || has_created_a_param) {
+			this._update_caches();
+			this.init_param_accessors();
+			// param.emit(ParamEvent.DELETED);
+			this.node.emit(NodeEvent.PARAMS_UPDATED);
+		}
 	}
 	post_create_spare_params() {
 		this._update_caches();
@@ -253,7 +298,7 @@ export class ParamsController {
 			console.warn(
 				`tried to access param '${name}' in node ${this.node.full_path()}, but existing params are: ${
 					this.names
-				}`
+				} on node ${this.node.full_path()}`
 			);
 			return null;
 		}
@@ -262,13 +307,14 @@ export class ParamsController {
 	// 	return `_param_${param_name}`;
 	// }
 
-	delete_params(param_names: string[]) {
-		for (let param_name of param_names) {
-			this.delete_param(param_name);
-		}
-		this._update_caches();
-	}
-	delete_param(param_name: string) {
+	// delete_params(param_names: string[]) {
+	// 	for (let param_name of param_names) {
+	// 		this.delete_param(param_name);
+	// 	}
+
+	// }
+	// call update_params instead
+	private delete_param(param_name: string) {
 		const param = this._params_by_name[param_name];
 		if (param) {
 			if (this._params_node) {
@@ -287,7 +333,7 @@ export class ParamsController {
 			// if(name_index >= 0){
 			// 	this._param_names.splice(name_index, 1)
 			// }
-			param.emit(ParamEvent.DELETED);
+			// param.emit(ParamEvent.DELETED);
 		} else {
 			throw new Error(`param '${param_name}' does not exist on node ${this.node.full_path()}`);
 		}

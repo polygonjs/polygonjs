@@ -10,6 +10,8 @@ import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExpo
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
+import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
+// import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 
 export class NodeJsonImporter<T extends BaseNodeType> {
 	constructor(protected _node: T) {}
@@ -156,18 +158,91 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		});
 	}
 
+	//
+	//
+	// PARAMS
+	//
+	//
 	set_params(data?: Dictionary<ParamJsonExporterData<ParamType>>) {
 		if (!data) {
 			return;
 		}
 		const param_names = Object.keys(data);
 
+		const params_update_options: ParamsUpdateOptions = {};
 		for (let param_name of param_names) {
-			const param_data = data[param_name];
-			if (this._is_param_data_complex(param_data)) {
-				this._process_param_data_complex(param_name, param_data as ComplexParamJsonExporterData<ParamType>);
+			const param_data = data[param_name] as ComplexParamJsonExporterData<ParamType>;
+			const options = param_data['options'];
+			// const is_spare = options && options['spare'] === true;
+
+			const param_type = param_data['type']!;
+			const has_param = this._node.params.has_param(param_name);
+			let has_param_and_same_type = false;
+			let param;
+			if (has_param) {
+				param = this._node.params.get(param_name);
+				// we can safely consider same type if param_type is not mentioned
+				if ((param && param.type == param_type) || param_type == null) {
+					has_param_and_same_type = true;
+				}
+			}
+
+			if (has_param_and_same_type) {
+				if (this._is_param_data_complex(param_data)) {
+					this._process_param_data_complex(param_name, param_data);
+				} else {
+					this._process_param_data_simple(param_name, param_data as SimpleParamJsonExporterData<ParamType>);
+				}
 			} else {
-				this._process_param_data_simple(param_name, param_data as SimpleParamJsonExporterData<ParamType>);
+				// it the param is a spare one,
+				// we check if it is currently exists with same type first.
+				// - if it is, we only update the value
+				// - if it's not, we delete it and add it again
+				params_update_options.names_to_delete = params_update_options.names_to_delete || [];
+				params_update_options.names_to_delete.push(param_name);
+				params_update_options.to_add = params_update_options.to_add || [];
+				params_update_options.to_add.push({
+					name: param_name,
+					type: param_type,
+					init_value: param_data['default_value'] as any,
+					options: options,
+				});
+
+				// if (options && param_type) {
+				// 	if (param_data['default_value']) {
+				// 		if (has_param) {
+				// 			this._node.params.delete_param(param_name);
+				// 		}
+				// 		param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
+				// 		if (param) {
+				// 			JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+				// 		}
+				// 	}
+				// }
+			}
+		}
+
+		// delete and create the spare params we need to
+		const params_delete_required =
+			params_update_options.names_to_delete && params_update_options.names_to_delete.length > 0;
+		const params_add_required = params_update_options.to_add && params_update_options.to_add.length > 0;
+
+		if (params_delete_required || params_add_required) {
+			this._node.params.update_params(params_update_options);
+			// update them based on the imported data
+			for (let spare_param of this._node.params.spare) {
+				const param_data = data[spare_param.name] as ComplexParamJsonExporterData<ParamType>;
+				// JsonImportDispatcher.dispatch_param(spare_param).process_data(param_data);
+				if (!spare_param.parent_param && param_data) {
+					if (this._is_param_data_complex(param_data)) {
+						this._process_param_data_complex(spare_param.name, param_data);
+					} else {
+						this._process_param_data_simple(
+							spare_param.name,
+							param_data as SimpleParamJsonExporterData<ParamType>
+						);
+					}
+				}
 			}
 		}
 		// those hooks are useful for some gl nodes,
@@ -181,39 +256,44 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 	}
 
 	private _process_param_data_complex(param_name: string, param_data: ComplexParamJsonExporterData<ParamType>) {
-		const has_param = this._node.params.has_param(param_name);
-		const param_type = param_data['type']!;
+		const param = this._node.params.get(param_name);
+		if (param) {
+			JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+		}
+		// return
+		// const has_param = this._node.params.has_param(param_name);
+		// const param_type = param_data['type']!;
 
-		let has_param_and_same_type = false;
-		let param;
-		if (has_param) {
-			param = this._node.params.get(param_name);
-			// we can safely consider same type if param_type is not mentioned
-			if ((param && param.type == param_type) || param_type == null) {
-				has_param_and_same_type = true;
-			}
-		}
-		if (has_param_and_same_type) {
-			param = this._node.params.get(param_name);
-			if (param) {
-				JsonImportDispatcher.dispatch_param(param).process_data(param_data);
-				// param.visit(JsonImporterVisitor).process_data(param_data);
-			}
-		} else {
-			const options = param_data['options'];
-			if (options && param_type) {
-				const is_spare = options['spare'] === true;
-				if (is_spare && param_data['default_value']) {
-					if (has_param) {
-						this._node.params.delete_param(param_name);
-					}
-					param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
-					if (param) {
-						JsonImportDispatcher.dispatch_param(param).process_data(param_data);
-					}
-				}
-			}
-		}
+		// let has_param_and_same_type = false;
+		// let param;
+		// if (has_param) {
+		// 	param = this._node.params.get(param_name);
+		// 	// we can safely consider same type if param_type is not mentioned
+		// 	if ((param && param.type == param_type) || param_type == null) {
+		// 		has_param_and_same_type = true;
+		// 	}
+		// }
+		// if (has_param_and_same_type) {
+		// 	param = this._node.params.get(param_name);
+		// 	if (param) {
+		// 		JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+		// 		// param.visit(JsonImporterVisitor).process_data(param_data);
+		// 	}
+		// } else {
+		// 	const options = param_data['options'];
+		// 	if (options && param_type) {
+		// 		const is_spare = options['spare'] === true;
+		// 		if (is_spare && param_data['default_value']) {
+		// 			if (has_param) {
+		// 				this._node.params.delete_param(param_name);
+		// 			}
+		// 			param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
+		// 			if (param) {
+		// 				JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	private _is_param_data_complex(param_data: ParamJsonExporterData<ParamType>): boolean {

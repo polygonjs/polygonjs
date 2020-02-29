@@ -484,8 +484,8 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 
 	private _remove_spare_params() {
 		if (this.params.has_param(FileCopNode.VIDEO_TIME_PARAM_NAME)) {
-			this.params.delete_param(FileCopNode.VIDEO_TIME_PARAM_NAME);
-			this.emit(NodeEvent.PARAMS_UPDATED);
+			this.params.update_params({names_to_delete: [FileCopNode.VIDEO_TIME_PARAM_NAME]});
+			// this.emit(NodeEvent.PARAMS_UPDATED);
 		}
 	}
 

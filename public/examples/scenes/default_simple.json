@@ -53,7 +53,20 @@
 							},
 							"distance1": {
 								"type": "distance",
-								"params": {},
+								"params": {
+									"p0": {
+										"type": "vector2",
+										"default_value": [0, 0],
+										"raw_input": [0, 0],
+										"options": {"spare": true, "cook": false}
+									},
+									"p1": {
+										"type": "vector2",
+										"default_value": [0, 0],
+										"raw_input": [0, 0],
+										"options": {"spare": true, "cook": false}
+									}
+								},
 								"inputs": [
 									{"name": "p0", "node": "constant3", "output": "val"},
 									{"name": "p1", "node": "constant4", "output": "val"}
@@ -63,6 +76,24 @@
 							"constant4": {
 								"type": "constant",
 								"params": {"type": "3", "vec2": ["1", "1"], "vec3": ["1", "1", 0]},
+								"inputs": []
+							},
+							"dot1": {
+								"type": "dot",
+								"params": {
+									"vec0": {
+										"type": "vector3",
+										"default_value": [0, 0, 0],
+										"raw_input": [0, 0, 0],
+										"options": {"spare": true, "cook": false}
+									},
+									"vec1": {
+										"type": "vector3",
+										"default_value": [0, 0, 0],
+										"raw_input": ["1", "2", "3"],
+										"options": {"spare": true, "cook": false}
+									}
+								},
 								"inputs": []
 							}
 						},
@@ -319,7 +350,8 @@
 							"complement1": {"pos": [50, 0]},
 							"distance1": {"pos": [100, -300]},
 							"constant3": {"pos": [-100, -350]},
-							"constant4": {"pos": [-100, -250]}
+							"constant4": {"pos": [-100, -250]},
+							"dot1": {"pos": [100, -450]}
 						}
 					}
 				}

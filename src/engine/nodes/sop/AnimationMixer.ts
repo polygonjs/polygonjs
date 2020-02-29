@@ -117,13 +117,17 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 	private _remove_spare_params() {
 		this._values_by_param_name = {};
 		const current_param_names: string[] = this.params.spare_names;
+		const names_to_delete: string[] = [];
 		current_param_names.forEach((param_name) => {
 			const param = this.params.get_float(param_name);
 			if (param) {
 				this._values_by_param_name[param_name] = param.value;
-				this.params.delete_param(param_name);
+				names_to_delete.push(param_name);
 			}
 		});
+		if (names_to_delete.length > 0) {
+			this.params.update_params({names_to_delete: names_to_delete});
+		}
 	}
 
 	private _update_mixer() {

@@ -1,44 +1,47 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {TypedConnectionFloat} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
-// import DiskMethods from './Gl/disk.glsl';
+import {TypedGlNode} from './_Base';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import DiskMethods from './gl/disk.glsl';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {FunctionGLDefinition} from './utils/GLDefinition';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 
-// export class Disk extends BaseNodeGl {
-// 	static type() {
-// 		return 'disk';
-// 	}
+const OUTPUT_NAME = 'float';
+class DiskGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR2([0, 0]);
+	center = ParamConfig.VECTOR2([0, 0]);
+	radius = ParamConfig.FLOAT(1);
+	feather = ParamConfig.FLOAT(0.1);
+}
+const ParamsConfig = new DiskGlParamsConfig();
+export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'disk';
+	}
 
-// 	constructor() {
-// 		super();
+	initialize_node() {
+		super.initialize_node();
 
-// 		// this.set_inputs([
-// 		// 	new GlDataIONumeric('in')
-// 		// ])
-// 		this.set_named_outputs([new TypedConnectionFloat('float')]);
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+		]);
+	}
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR2, 'position', [0, 0]);
-// 		this.add_param(ParamType.VECTOR2, 'center', [0, 0]);
-// 		this.add_param(ParamType.FLOAT, 'radius', 1);
-// 		this.add_param(ParamType.FLOAT, 'feather', 0.1);
-// 	}
-// 	set_lines() {
-// 		// const function_declaration_lines = []
-// 		const body_lines = [];
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const position = ThreeToGl.vector2(this.variable_for_input('position'));
+		const center = ThreeToGl.vector2(this.variable_for_input('center'));
+		const radius = ThreeToGl.float(this.variable_for_input('radius'));
+		const feather = ThreeToGl.float(this.variable_for_input('feather'));
 
-// 		const position = ThreeToGl.vector2(this.variable_for_input('position'));
-// 		const center = ThreeToGl.vector2(this.variable_for_input('center'));
-// 		const radius = ThreeToGl.float(this.variable_for_input('radius'));
-// 		const feather = ThreeToGl.float(this.variable_for_input('feather'));
+		const float = this.gl_var_name('float');
+		const body_line = `float ${float} = disk(${position}, ${center}, ${radius}, ${feather})`;
+		// this.set_function_declaration_lines(function_declaration_lines)
+		shaders_collection_controller.add_body_lines(this, [body_line]);
 
-// 		const float = this.gl_var_name('float');
-// 		body_lines.push(`float ${float} = disk(${position}, ${center}, ${radius}, ${feather})`);
-// 		// this.set_function_declaration_lines(function_declaration_lines)
-// 		this.set_body_lines(body_lines);
-
-// 		this.add_definitions([new Definition.Function(this, DiskMethods)]);
-// 	}
-// }
+		shaders_collection_controller.add_definitions(this, [
+			new FunctionGLDefinition(this, ConnectionPointType.FLOAT, DiskMethods),
+		]);
+	}
+}
