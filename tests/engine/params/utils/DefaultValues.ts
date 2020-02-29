@@ -18,7 +18,7 @@ function ensure_default_value<T extends ParamType>(
 	if (param) {
 		assert.deepEqual(param.default_value, expected_default_value);
 		assert.deepEqual(param.value, expected_value);
-		geo1.params.delete_param('test');
+		geo1.params.update_params({names_to_delete: ['test']});
 	} else {
 		assert.notOk(true, 'param should have been created');
 	}
