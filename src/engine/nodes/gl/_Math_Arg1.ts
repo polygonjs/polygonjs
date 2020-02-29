@@ -14,10 +14,15 @@ function MathFunctionArg1Factory(type: string, options: MathArg1Options = {}) {
 		static type() {
 			return type;
 		}
-		gl_input_name(): string {
+		initialize_node() {
+			super.initialize_node();
+			this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+			this.gl_connections_controller.set_output_name_function(this._gl_output_name.bind(this));
+		}
+		protected _gl_input_name(index: number): string {
 			return gl_input_name;
 		}
-		gl_output_name(): string {
+		protected _gl_output_name(index: number): string {
 			return gl_output_name;
 		}
 		gl_method_name(): string {
@@ -31,7 +36,7 @@ export class AsinGlNode extends MathFunctionArg1Factory('asin', {out: 'radians'}
 export class AtanGlNode extends MathFunctionArg1Factory('atan', {out: 'radians'}) {}
 export class CeilGlNode extends MathFunctionArg1Factory('ceil') {}
 export class CosGlNode extends MathFunctionArg1Factory('cos', {in: 'radians'}) {}
-export class DegreesGlNode extends MathFunctionArg1Factory('degrees', {in: 'radians'}) {}
+export class DegreesGlNode extends MathFunctionArg1Factory('degrees', {in: 'radians', out: 'degrees'}) {}
 
 export class ExpGlNode extends MathFunctionArg1Factory('exp') {}
 export class Exp2GlNode extends MathFunctionArg1Factory('exp2') {}
@@ -41,7 +46,7 @@ export class InverseSqrtGlNode extends MathFunctionArg1Factory('inverse_sqrt', {
 export class LogGlNode extends MathFunctionArg1Factory('log') {}
 export class Log2GlNode extends MathFunctionArg1Factory('log2') {}
 export class NormalizeGlNode extends MathFunctionArg1Factory('normalize', {out: 'normalized'}) {}
-export class RadiansGlNode extends MathFunctionArg1Factory('radians', {in: 'radians', out: 'degrees'}) {}
+export class RadiansGlNode extends MathFunctionArg1Factory('radians', {in: 'degrees', out: 'radians'}) {}
 export class SignGlNode extends MathFunctionArg1Factory('sign') {}
 export class SinGlNode extends MathFunctionArg1Factory('sin', {in: 'radians'}) {}
 export class SqrtGlNode extends MathFunctionArg1Factory('sqrt') {}

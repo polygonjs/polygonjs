@@ -42,7 +42,7 @@ export class DirtyController {
 			this._post_dirty_hook_names.push(name);
 			this._post_dirty_hooks.push(method);
 		} else {
-			console.warn(`hook with name ${name} already exists`, this._post_dirty_hook_names);
+			console.warn(`hook with name ${name} already exists`, this.node);
 		}
 	}
 	has_hook(name: string): boolean {

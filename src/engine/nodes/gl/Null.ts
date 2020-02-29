@@ -9,15 +9,6 @@ export class NullGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		return 'null';
 	}
 
-	gl_input_name(index: number) {
-		return ['in'][index];
-	}
-	// gl_input_default_value(name: string) {
-	// 	return {
-	// 		in: 1,
-	// 	}[name];
-	// }
-
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const in_value = ThreeToGl.any(this.variable_for_input('in'));
 

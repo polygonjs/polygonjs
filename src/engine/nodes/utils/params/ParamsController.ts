@@ -420,7 +420,7 @@ export class ParamsController {
 			this._on_scene_load_hook_names.push(name);
 			this._on_scene_load_hooks.push(method);
 		} else {
-			console.warn(`hook with name ${name} already exists`, this._on_scene_load_hook_names);
+			console.warn(`hook with name ${name} already exists`, this.node);
 		}
 	}
 	run_post_create_params_hook() {

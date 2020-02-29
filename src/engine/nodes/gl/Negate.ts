@@ -9,9 +9,20 @@ export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		return 'negate';
 	}
 
-	gl_input_name(index: number) {
-		return ['in'][index];
+	initialize_node() {
+		super.initialize_node();
+
+		this.gl_connections_controller.set_input_name_function((index: number) => ['in'][index]);
+		// this.gl_connections_controller.set_expected_input_types_function(() => [
+		// 	ConnectionPointType.VEC3,
+		// 	ConnectionPointType.VEC3,
+		// ]);
+		// this.gl_connections_controller.set_expected_output_types_function(() => [ConnectionPointType.VEC4]);
 	}
+
+	// gl_input_name(index: number) {
+	// 	return ['in'][index];
+	// }
 	// gl_input_default_value(name: string) {
 	// 	return {
 	// 		in: 1,

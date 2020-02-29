@@ -148,10 +148,10 @@ export class HierarchyChildrenController {
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.to_json()});
 		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
-			child_node.lifecycle.on_create();
+			child_node.lifecycle.run_on_create_hooks();
 		}
 		this.set_child_name(child_node, NameController.base_name(child_node));
-		this.node.lifecycle.on_child_add(child_node);
+		this.node.lifecycle.run_on_child_add_hooks(child_node);
 		// this.post_add_node(child_node);
 
 		if (this._is_dependent_on_children && this._children_node) {
@@ -210,8 +210,8 @@ export class HierarchyChildrenController {
 			this._remove_from_nodes_by_type(child_node);
 			this.node.scene.nodes_controller.remove_from_instanciated_node(child_node);
 
-			this.node.lifecycle.on_child_remove(child_node);
-			child_node.lifecycle.on_delete();
+			this.node.lifecycle.run_on_child_remove_hooks(child_node);
+			child_node.lifecycle.run_on_delete_hooks();
 			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graph_node_id});
 		}
 	}

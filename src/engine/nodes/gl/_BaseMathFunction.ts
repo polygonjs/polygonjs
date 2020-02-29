@@ -1,37 +1,36 @@
 import lodash_range from 'lodash/range';
 import lodash_compact from 'lodash/compact';
-import {BaseGlNumericGlNode} from './_BaseNumeric';
+import {BaseAdaptiveGlNode} from './_BaseAdaptive';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export abstract class BaseGlMathFunctionGlNode extends BaseGlNumericGlNode {
+class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new BaseGlMathFunctionParamsConfig();
+export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGlMathFunctionParamsConfig> {
+	params_config = ParamsConfig;
 	protected gl_method_name() {
 		return '';
 	}
 	protected gl_function_definitions(): TypedGLDefinition<GLDefinitionType>[] {
 		return [];
 	}
-	gl_input_name(index: number) {
-		return `val${index}`;
+
+	initialize_node() {
+		super.initialize_node();
+		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
 	}
-	protected gl_output_name() {
-		return 'value';
-	}
-	protected expected_input_types(): ConnectionPointType[] {
-		const type = this.input_connection_type();
+	protected _expected_input_types(): ConnectionPointType[] {
+		const type: ConnectionPointType =
+			this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
 		if (this.io.connections.first_input_connection()) {
 			let count = Math.max(lodash_compact(this.io.connections.input_connections()).length + 1, 2);
 			return lodash_range(count).map((i) => type);
 		} else {
 			return lodash_range(2).map((i) => type);
 		}
-	}
-
-	protected expected_output_types() {
-		const type = this.output_connection_type();
-		return [type];
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
@@ -44,7 +43,7 @@ export abstract class BaseGlMathFunctionGlNode extends BaseGlNumericGlNode {
 		});
 		const joined_args = args.join(', ');
 
-		const sum = this.gl_var_name(this.gl_output_name());
+		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
 		body_lines.push(`${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`);
 		shaders_collection_controller.add_body_lines(this, body_lines);
 		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());

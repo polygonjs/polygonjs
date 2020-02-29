@@ -9,13 +9,19 @@ function MathFunctionArg2BooleanFactory(type: string, options: MathArg2BooleanOp
 		static type() {
 			return type;
 		}
+		initialize_node() {
+			super.initialize_node();
+			this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+			this.gl_connections_controller.set_output_name_function(this._gl_output_name.bind(this));
+		}
+
 		boolean_operation(): string {
 			return options.op;
 		}
-		gl_output_name() {
+		protected _gl_output_name(index: number) {
 			return type;
 		}
-		gl_input_name(index = 0) {
+		protected _gl_input_name(index = 0) {
 			return `${type}${index}`;
 		}
 	};

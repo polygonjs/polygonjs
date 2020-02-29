@@ -4,6 +4,7 @@ import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 interface MathArg2Options {
 	in?: [string, string];
 	out?: string;
+	default_in_type?: ConnectionPointType;
 	out_type?: ConnectionPointType;
 	method?: string;
 }
@@ -12,30 +13,60 @@ function MathFunctionArg2Factory(type: string, options: MathArg2Options = {}) {
 	const gl_method_name = options.method || type;
 	const gl_output_name = options.out || 'val';
 	const gl_input_names = options.in || ['in0', 'in1'];
-	const out_type = options.out_type || ConnectionPointType.FLOAT;
+	const default_in_type = options.default_in_type;
+	const out_type = options.out_type;
 	return class Node extends BaseNodeGlMathFunctionArg2GlNode {
 		static type() {
 			return type;
 		}
-		gl_input_name(index: number): string {
+		initialize_node() {
+			super.initialize_node();
+			this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+			this.gl_connections_controller.set_output_name_function(this._gl_output_name.bind(this));
+
+			if (default_in_type) {
+				this.gl_connections_controller.set_default_input_type(default_in_type);
+			}
+			this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
+
+			if (out_type) {
+				this.gl_connections_controller.set_expected_output_types_function(() => [out_type]);
+			}
+		}
+		_gl_input_name(index: number): string {
 			return gl_input_names[index];
 		}
-		gl_output_name(): string {
+		_gl_output_name(index: number): string {
 			return gl_output_name;
 		}
 		gl_method_name(): string {
 			return gl_method_name;
 		}
-		expected_output_type() {
-			return out_type;
+		protected _expected_input_types() {
+			const type =
+				this.gl_connections_controller.first_input_connection_type() ||
+				default_in_type ||
+				ConnectionPointType.FLOAT;
+			return [type, type];
 		}
 	};
 }
-export class DistanceGlNode extends MathFunctionArg2Factory('distance', {in: ['p0', 'p1']}) {}
-export class DotGlNode extends MathFunctionArg2Factory('dot', {in: ['vec0', 'vec1']}) {}
+export class DistanceGlNode extends MathFunctionArg2Factory('distance', {
+	in: ['p0', 'p1'],
+	default_in_type: ConnectionPointType.VEC3,
+	out_type: ConnectionPointType.FLOAT,
+}) {}
+export class DotGlNode extends MathFunctionArg2Factory('dot', {
+	in: ['vec0', 'vec1'],
+	default_in_type: ConnectionPointType.VEC3,
+	out_type: ConnectionPointType.FLOAT,
+}) {}
 export class MaxGlNode extends MathFunctionArg2Factory('max') {}
 export class MinGlNode extends MathFunctionArg2Factory('min') {}
 export class ModGlNode extends MathFunctionArg2Factory('mod') {}
 export class PowGlNode extends MathFunctionArg2Factory('pow', {in: ['x', 'y']}) {}
-export class ReflectGlNode extends MathFunctionArg2Factory('reflect', {in: ['I', 'N']}) {}
+export class ReflectGlNode extends MathFunctionArg2Factory('reflect', {
+	in: ['I', 'N'],
+	default_in_type: ConnectionPointType.VEC3,
+}) {}
 export class StepGlNode extends MathFunctionArg2Factory('step', {in: ['edge', 'x']}) {}

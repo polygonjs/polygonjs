@@ -18,6 +18,12 @@ export abstract class TypedBuilderMatNode<
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
 
+	initialize_base_node() {
+		super.initialize_base_node();
+
+		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+	}
+
 	//
 	//
 	// MATERIAL

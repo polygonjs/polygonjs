@@ -1,5 +1,15 @@
 import {CATEGORY_GL} from './Category';
 
+import {FloatToIntGlNode, IntToFloatGlNode} from '../../nodes/gl/_ConversionMisc';
+import {FloatToVec2GlNode, FloatToVec3GlNode, FloatToVec4GlNode} from '../../nodes/gl/_ConversionToVec';
+
+import {
+	Vec2ToFloatGlNode,
+	Vec3ToFloatGlNode,
+	Vec4ToFloatGlNode,
+	Vec4ToVectorGlNode,
+} from '../../nodes/gl/_ConversionVecTo';
+
 import {
 	AbsGlNode,
 	AcosGlNode,
@@ -39,9 +49,9 @@ import {AlignGlNode} from '../../nodes/gl/Align';
 import {AttributeGlNode} from '../../nodes/gl/Attribute';
 import {ConstantGlNode} from '../../nodes/gl/Constant';
 import {ComplementGlNode} from '../../nodes/gl/Complement';
-import {FloatToVec3GlNode} from '../../nodes/gl/FloatToVec3';
 import {GlobalsGlNode} from '../../nodes/gl/Globals';
 import {LengthGlNode} from '../../nodes/gl/Length';
+import {MixGlNode} from '../../nodes/gl/Mix';
 import {NegateGlNode} from '../../nodes/gl/Negate';
 import {NullGlNode} from '../../nodes/gl/Null';
 import {OutputGlNode} from '../../nodes/gl/Output';
@@ -69,9 +79,13 @@ export interface GlNodeChildrenMap {
 	dot: DotGlNode;
 	exp: ExpGlNode;
 	exp2: Exp2GlNode;
+	float_to_int: FloatToIntGlNode;
+	float_to_vec2: FloatToVec2GlNode;
 	float_to_vec3: FloatToVec3GlNode;
+	float_to_vec4: FloatToVec4GlNode;
 	floor: FloorGlNode;
 	fract: FractGlNode;
+	int_to_float: FloatToIntGlNode;
 	inverse_sqrt: InverseSqrtGlNode;
 	length: LengthGlNode;
 	log: LogGlNode;
@@ -79,6 +93,7 @@ export interface GlNodeChildrenMap {
 	globals: GlobalsGlNode;
 	max: MaxGlNode;
 	min: MinGlNode;
+	mix: MixGlNode;
 	mod: ModGlNode;
 	negate: NegateGlNode;
 	normalize: NormalizeGlNode;
@@ -99,6 +114,10 @@ export interface GlNodeChildrenMap {
 	quat_from_axis_angle: QuatFromAxisAngleGlNode;
 	quat_to_angle: QuatToAngleGlNode;
 	quat_to_axis: QuatToAxisGlNode;
+	vec2_to_float: Vec2ToFloatGlNode;
+	vec3_to_float: Vec3ToFloatGlNode;
+	vec4_to_float: Vec4ToFloatGlNode;
+	vec4_to_vector: Vec4ToVectorGlNode;
 }
 
 import {Poly} from '../../Poly';
@@ -120,10 +139,14 @@ export class GlRegister {
 		poly.register_node(DotGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(ExpGlNode, CATEGORY_GL.MATH);
 		poly.register_node(Exp2GlNode, CATEGORY_GL.MATH);
+		poly.register_node(FloatToIntGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(FloatToVec2GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(FloatToVec3GlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(FloatToVec4GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(FloorGlNode, CATEGORY_GL.MATH);
 		poly.register_node(FractGlNode, CATEGORY_GL.MATH);
 		poly.register_node(GlobalsGlNode, CATEGORY_GL.GLOBALS);
+		poly.register_node(IntToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(InverseSqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(LengthGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(NegateGlNode, CATEGORY_GL.MATH);
@@ -132,6 +155,7 @@ export class GlRegister {
 		poly.register_node(MaxGlNode, CATEGORY_GL.MATH);
 		poly.register_node(MinGlNode, CATEGORY_GL.MATH);
 		poly.register_node(ModGlNode, CATEGORY_GL.MATH);
+		poly.register_node(MixGlNode, CATEGORY_GL.MATH);
 		poly.register_node(NullGlNode, CATEGORY_GL.UTIL);
 		poly.register_node(NormalizeGlNode, CATEGORY_GL.MATH);
 		poly.register_node(OrGlNode, CATEGORY_GL.LOGIC);
@@ -150,5 +174,9 @@ export class GlRegister {
 		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(SqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(TanGlNode, CATEGORY_GL.TRIGO);
+		poly.register_node(Vec2ToFloatGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec3ToFloatGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec4ToFloatGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec4ToVectorGlNode, CATEGORY_GL.CONVERSION);
 	}
 }

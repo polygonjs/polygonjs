@@ -4,13 +4,11 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 // import {BaseNodeGlMathFunctionArg1} from './_BaseMathFunctionArg1';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {BaseNamedConnectionPointType} from '../utils/connections/NamedConnectionPoint';
-import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ParamType} from '../../poly/ParamType';
 
 const INPUT_NAME = 'export';
 const OUTPUT_NAME = 'val';
 
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 const ConnectionPointTypesAvailableForAttribute = [
 	ConnectionPointType.FLOAT,
 	ConnectionPointType.VEC2,
@@ -20,6 +18,7 @@ const ConnectionPointTypesAvailableForAttribute = [
 
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {GlConnectionsController} from './utils/ConnectionsController';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -38,20 +37,29 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		return 'attribute';
 	}
 
-	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
+	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
+	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
+	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
-		this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
-		this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
+		this.gl_connections_controller.initialize_node();
+
+		this.gl_connections_controller.set_expected_input_types_function(() => []);
+		this.gl_connections_controller.set_expected_output_types_function(() => [
+			ConnectionPointTypesAvailableForAttribute[this.pv.type],
+		]);
+		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
+		// this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 	create_params() {
 		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
 			this.add_param(ParamType.BOOLEAN, 'export_when_connected', 0);
 		}
 	}
-	inputless_params_names(): string[] {
-		return ['type'];
-	}
+	// inputless_params_names(): string[] {
+	// 	return ['type'];
+	// }
 
 	get input_name() {
 		return INPUT_NAME;
@@ -136,30 +144,40 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			return false;
 		}
 	}
+	//
+	//
+	// HOOKS
+	//
+	//
+	private _on_create_set_name_if_none() {
+		if (this.pv.name == '') {
+			this.p.name.set(this.name);
+		}
+	}
 
 	//
 	//
 	// SIGNATURE
 	//
 	//
-	private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
-			this.update_input_and_output_types();
-			this.remove_dirty_state();
-			this.make_output_nodes_dirty();
-		}
-		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
-	}
-	private update_input_and_output_types() {
-		const set_dirty = false;
-		this.io.outputs.set_named_output_connection_points(
-			[new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypesAvailableForAttribute[this.pv.type])],
-			set_dirty
-		);
-		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
-			this.io.inputs.set_named_input_connection_points([
-				new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),
-			]);
-		}
-	}
+	// private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
+	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
+	// 		this.update_input_and_output_types();
+	// 		this.remove_dirty_state();
+	// 		this.make_output_nodes_dirty();
+	// 	}
+	// 	this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
+	// }
+	// private update_input_and_output_types() {
+	// 	const set_dirty = false;
+	// 	this.io.outputs.set_named_output_connection_points(
+	// 		[new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypesAvailableForAttribute[this.pv.type])],
+	// 		set_dirty
+	// 	);
+	// 	if (this.material_node?.assembler_controller.allow_attribute_exports()) {
+	// 		this.io.inputs.set_named_input_connection_points([
+	// 			new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),
+	// 		]);
+	// 	}
+	// }
 }

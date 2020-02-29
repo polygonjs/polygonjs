@@ -26,6 +26,19 @@ QUnit.test('geo obj simple', async (assert) => {
 	window.scene.performance.stop();
 });
 
+QUnit.test('geo obj creates a first sop on create', async (assert) => {
+	const scene = window.scene;
+	const geo2 = scene.root.create_node('geo');
+	assert.equal(geo2.children().length, 1);
+	const child = geo2.children()[0];
+	assert.equal(child.type, 'text');
+	assert.ok(child.flags.display.active);
+	assert.deepEqual(
+		geo2.nodes_by_type('text').map((n) => n.graph_node_id),
+		[child.graph_node_id]
+	);
+});
+
 QUnit.test('geo obj is removed from scene when node is deleted', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.display_scene.children[0];

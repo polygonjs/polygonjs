@@ -70,8 +70,6 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	private _new_params: BaseParamType[] = [];
 
 	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
-		this.node.lifecycle.add_create_hook(this.on_create);
-
 		// if (assembler_class) {
 		this._assembler = new assembler_class(this.node);
 		// }

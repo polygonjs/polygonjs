@@ -25,7 +25,7 @@ export class LifeCycleController {
 	add_on_child_add_hook(callback: CallbackWithChildNode) {
 		this._on_child_add_hooks.push(callback);
 	}
-	on_child_add(node: BaseNodeType) {
+	run_on_child_add_hooks(node: BaseNodeType) {
 		this.execute_hooks_with_child_node(this._on_child_add_hooks, node);
 	}
 
@@ -37,7 +37,7 @@ export class LifeCycleController {
 	add_on_child_remove_hook(callback: CallbackWithChildNode) {
 		this._on_child_remove_hooks.push(callback);
 	}
-	on_child_remove(node: BaseNodeType) {
+	run_on_child_remove_hooks(node: BaseNodeType) {
 		this.execute_hooks_with_child_node(this._on_child_remove_hooks, node);
 	}
 
@@ -46,10 +46,10 @@ export class LifeCycleController {
 	// ON CREATE
 	//
 	//
-	add_create_hook(callback: Callback) {
+	add_on_create_hook(callback: Callback) {
 		this._on_create_hooks.push(callback);
 	}
-	on_create() {
+	run_on_create_hooks() {
 		this.execute_hooks(this._on_create_hooks);
 	}
 
@@ -61,7 +61,7 @@ export class LifeCycleController {
 	add_delete_hook(callback: Callback) {
 		this._on_delete_hooks.push(callback);
 	}
-	on_delete() {
+	run_on_delete_hooks() {
 		this.execute_hooks(this._on_delete_hooks);
 	}
 
@@ -81,17 +81,3 @@ export class LifeCycleController {
 		}
 	}
 }
-
-// export function LifeCycle<TBase extends Constructor>(Base: TBase) {
-// 	return class Mixin extends Base {
-// 		protected self: BaseNode = (<unknown>this) as BaseNode;
-// 		on_child_add(node: BaseNode) {}
-// 		//console.log("A #{this.full_path()} lifecycle on_add_child", node)
-// 		on_child_remove(node: BaseNode) {}
-// 		//console.log("A #{this.full_path()} lifecycle on_child_remove", node)
-
-// 		on_create() {}
-// 		//
-// 		on_delete() {}
-// 	};
-// }

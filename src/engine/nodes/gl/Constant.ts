@@ -1,11 +1,7 @@
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 
-// const OUTPUT_NAME = 'longer_name_to_test';
-
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType, ConnectionPointTypes} from '../utils/connections/ConnectionPointType';
-import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 function typed_visible_options(type: ConnectionPointType) {
 	const val = ConnectionPointTypes.indexOf(type);
@@ -15,6 +11,9 @@ function typed_visible_options(type: ConnectionPointType) {
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlConnectionsController} from './utils/ConnectionsController';
+
+const OUTPUT_NAME = 'val';
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT), {
 		menu: {
@@ -37,20 +36,26 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return 'constant';
 	}
 	private _params_by_type: Map<ConnectionPointType, BaseParamType> | undefined;
+	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	protected _allow_inputs_created_from_params: boolean = false;
-	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
+	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
-		this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
-		this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-		this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.gl_connections_controller.initialize_node();
+
+		this.gl_connections_controller.set_output_name_function((index: number) => OUTPUT_NAME);
+		this.gl_connections_controller.set_expected_input_types_function(() => []);
+		this.gl_connections_controller.set_expected_output_types_function(() => [this._current_connection_type]);
+		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
+		// this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
-	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
-			this.update_output_type();
-			this.remove_dirty_state();
-			this.make_output_nodes_dirty();
-		}
-	}
+	// _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
+	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
+	// 		this.update_output_type();
+	// 		this.remove_dirty_state();
+	// 		this.make_output_nodes_dirty();
+	// 	}
+	// }
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const param = this._current_param;
@@ -91,18 +96,18 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return this._params_by_type.get(connection_type)!;
 	}
 	private get _current_var_name(): string {
-		return this.gl_var_name(this._current_connection_type);
+		return this.gl_var_name(OUTPUT_NAME);
 	}
 
-	private update_output_type() {
-		const set_dirty = false;
-		const current_connection = this.io.outputs.named_output_connection_points[0];
-		if (current_connection && current_connection.type == this._current_connection_type) {
-			return;
-		}
-		this.io.outputs.set_named_output_connection_points(
-			[new TypedNamedConnectionPoint(this._current_connection_type, this._current_connection_type)],
-			set_dirty
-		);
-	}
+	// private update_output_type() {
+	// 	const set_dirty = false;
+	// 	const current_connection = this.io.outputs.named_output_connection_points[0];
+	// 	if (current_connection && current_connection.type == this._current_connection_type) {
+	// 		return;
+	// 	}
+	// 	this.io.outputs.set_named_output_connection_points(
+	// 		[new TypedNamedConnectionPoint(this._current_connection_type, this._current_connection_type)],
+	// 		set_dirty
+	// 	);
+	// }
 }

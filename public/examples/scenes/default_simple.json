@@ -28,28 +28,42 @@
 							"globals1": {"type": "globals", "params": {}, "inputs": []},
 							"constant1": {
 								"type": "constant",
-								"params": {"type": "4", "value_vec3": [0, 0.3, 0]},
+								"params": {"type": "4", "vec3": [0, 0.3, 0]},
 								"inputs": []
 							},
 							"attribute1": {"type": "attribute", "params": {"name": "above"}, "inputs": []},
-							"param1": {"type": "param", "params": {"name": "z", "type": "2"}, "inputs": []},
+							"param1": {"type": "param", "params": {"name": "z"}, "inputs": []},
 							"float_to_vec3_1": {
 								"type": "float_to_vec3",
 								"params": {},
 								"inputs": [
 									{"name": "x", "node": "attribute1", "output": "val"},
-									{"name": "z", "node": "complement1", "output": "value"}
+									{"name": "z", "node": "complement1", "output": "val"}
 								]
 							},
 							"constant2": {
 								"type": "constant",
-								"params": {"type": "2", "value_float": "0.22", "value_vec3": [0, 0.3, 0]},
+								"params": {"float": "0.22", "vec3": [0, 0.3, 0]},
 								"inputs": []
 							},
 							"complement1": {
 								"type": "complement",
 								"params": {},
 								"inputs": [{"name": "in", "node": "attribute1", "output": "val"}]
+							},
+							"distance1": {
+								"type": "distance",
+								"params": {},
+								"inputs": [
+									{"name": "p0", "node": "constant3", "output": "val"},
+									{"name": "p1", "node": "constant4", "output": "val"}
+								]
+							},
+							"constant3": {"type": "constant", "params": {"type": "3"}, "inputs": []},
+							"constant4": {
+								"type": "constant",
+								"params": {"type": "3", "vec2": ["1", "1"], "vec3": ["1", "1", 0]},
+								"inputs": []
 							}
 						},
 						"children_context": "gl",
@@ -302,7 +316,10 @@
 							"param1": {"pos": [-100, 350]},
 							"float_to_vec3_1": {"pos": [150, -100]},
 							"constant2": {"pos": [-100, -150]},
-							"complement1": {"pos": [50, 0]}
+							"complement1": {"pos": [50, 0]},
+							"distance1": {"pos": [100, -300]},
+							"constant3": {"pos": [-100, -350]},
+							"constant4": {"pos": [-100, -250]}
 						}
 					}
 				}

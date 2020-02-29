@@ -20,7 +20,7 @@ QUnit.test('scene save simple', async (assert) => {
 
 	const data = new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene.wait_for_cooks_completed();
+	await scene2.wait_for_cooks_completed();
 	assert.deepEqual(scene2.cameras_controller.master_camera_node?.pv.t.toArray(), [0, 0, 10]);
 	assert.ok(scene2.loading_controller.loaded);
 

@@ -53,8 +53,13 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	// }
 
 	protected _children_controller_context = NodeContext.SOP;
+
+	private _on_create_bound = this._on_create.bind(this);
+	private _on_child_add_bound = this._on_child_add.bind(this);
 	initialize_node() {
 		this.children_controller?.init();
+		this.lifecycle.add_on_create_hook(this._on_create_bound);
+		this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
 
 		this.display_node_controller.initialize_node();
 		this.transform_controller.initialize_node();
@@ -125,22 +130,6 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		}
 	}
 
-	post_display_flag_node_set_dirty() {
-		this.request_display_node();
-	}
-	post_add_node(node: BaseNodeType) {
-		// we test if the scene is loaded
-		// otherwise a display flag will be set for the first node
-		// that is added when the scene is being loaded,
-		// only to be changed again when the actual display node is set.
-		// Without this, we have a jarring first object being displayed
-		// only to be replaced by the proper one when it is ready.
-		if (this.scene.loading_controller.loaded) {
-			if (this.children().length == 1) {
-				node.flags?.display?.set(true);
-			}
-		}
-	}
 	create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
 		return super.create_node(type) as GeoNodeChildrenMap[K];
 	}
@@ -150,13 +139,31 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
 	}
-	// create_node(type: string): BaseSopNode<any> {
-	// 	return super.create_node(type) as  BaseSopNode<any>;
-	// }
-	on_create() {
-		// this.create_node('text')
+
+	//
+	//
+	// HOOK
+	//
+	//
+	_on_create() {
+		this.create_node('text');
 	}
-	// private _core_transform = new CoreTransform();
+	_on_child_add(node: BaseNodeType) {
+		if (this.scene.loading_controller.loaded) {
+			if (this.children().length == 1) {
+				node.flags?.display?.set(true);
+			}
+		}
+	}
+	// post_display_flag_node_set_dirty() {
+	// 	this.request_display_node();
+	// }
+
+	//
+	//
+	// COOK
+	//
+	//
 	cook() {
 		this.transform_controller.update();
 		//this.update_layers()
