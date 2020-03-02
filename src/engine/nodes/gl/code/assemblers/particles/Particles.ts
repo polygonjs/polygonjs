@@ -1,7 +1,7 @@
-import {BaseGlShaderAssembler} from './_Base';
+import {BaseGlShaderAssembler} from '../_Base';
 // import {GlobalsTextureHandler} from '../../Assembler/Globals/Texture';
 
-import TemplateDefault from '../templates/particles/Default.glsl';
+import TemplateDefault from '../../templates/particles/Default.glsl';
 // import TemplatePosition from './Template/Particle/Position.glsl'
 // import TemplateVelocity from './Template/Particle/Velocity.glsl'
 // import TemplateAcceleration from './Template/Particle/Acceleration.glsl'
@@ -9,20 +9,20 @@ import TemplateDefault from '../templates/particles/Default.glsl';
 // import {ShaderConfig} from './Config/ShaderConfig';
 // import {VariableConfig} from './Config/VariableConfig';
 // import {ShaderName, LineType} from '../../../../../Engine/Node/Gl/Assembler/Util/CodeBuilder';
-import {AttributeGlNode} from '../../Attribute';
-import {TextureAllocationsController} from '../utils/TextureAllocationsController';
-import {ThreeToGl} from '../../../../../core/ThreeToGl';
-import {BaseGlNodeType} from '../../_Base';
-import {GlobalsGlNode} from '../../Globals';
-import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {OutputGlNode} from '../../Output';
-import {ParamType} from '../../../../poly/ParamType';
-import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
-import {UniformGLDefinition} from '../../utils/GLDefinition';
-import {GlobalsTextureHandler} from '../globals/Texture';
-import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {AttributeGlNode} from '../../../Attribute';
+import {TextureAllocationsController} from '../../utils/TextureAllocationsController';
+import {ThreeToGl} from '../../../../../../core/ThreeToGl';
+import {BaseGlNodeType} from '../../../_Base';
+import {GlobalsGlNode} from '../../../Globals';
+import {TypedNodeTraverser} from '../../../../utils/shaders/NodeTraverser';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {OutputGlNode} from '../../../Output';
+import {ParamType} from '../../../../../poly/ParamType';
+import {TypedNamedConnectionPoint} from '../../../../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {UniformGLDefinition} from '../../../utils/GLDefinition';
+import {GlobalsTextureHandler} from '../../globals/Texture';
+import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;

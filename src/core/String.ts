@@ -21,7 +21,7 @@ const TAIL_DIGIT_MATCH_REGEXP = /\d+$/;
 const INDICES_LIST_SEPARATOR = /,| /;
 
 // https://stackoverflow.com/questions/41856126/regexp-optional-dot-in-a-decimal-number
-const NUM_REGEXP = /^\d+\.?\d*$/;
+const NUM_REGEXP = /^-?\d+\.?\d*$/;
 enum BooleanString {
 	TRUE = 'true',
 	FALSE = 'false',

@@ -208,10 +208,13 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// }
 	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
 		this._default_value = init_value; //this.convert(init_value);
-		this._raw_input = this._clone_raw_input(init_value);
-		if (!this.is_multiple) {
-			this.set(init_value);
-		}
+		// this._raw_input = this._clone_raw_input(init_value);
+
+		// if (this.is_multiple) {
+		// 	this.init_components();
+		// }
+
+		// this.set(init_value);
 	}
 	// eval_p(): Promise<ParamValuesTypeMap[T]> {
 	// 	return new Promise((resolve, reject) => {

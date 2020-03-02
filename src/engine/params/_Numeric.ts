@@ -34,11 +34,6 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 	// }
 
 	protected process_raw_input() {
-		// this.process_raw_input()
-		// if (this.parent_param) {
-		// 	this.parent_param.set_raw_input_from_components();
-		// }
-
 		this.states.error.clear();
 
 		const converted = this.convert(this._raw_input);

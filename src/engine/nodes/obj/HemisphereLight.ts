@@ -5,7 +5,6 @@ import {TypedLightObjNode} from './_BaseLight';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
-	light = ParamConfig.FOLDER();
 	sky_color = ParamConfig.COLOR([0.2, 0.7, 1]);
 	ground_color = ParamConfig.COLOR([0.1, 0.1, 0.25]);
 	intensity = ParamConfig.FLOAT(1);

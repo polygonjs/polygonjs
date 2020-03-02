@@ -1,111 +1,132 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {Connection} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
+import {TypedGlNode} from './_Base';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
-// import QuaternionMethods from './Gl/quaternion.glsl';
+import QuaternionMethods from './gl/quaternion.glsl';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {FunctionGLDefinition} from './utils/GLDefinition';
 
-// const VARS = {
-// 	position: 'position',
-// 	normal: 'normal',
-// 	instancePosition: 'instancePosition',
-// 	instanceOrientation: 'instanceOrientation',
-// 	instanceScale: 'instanceScale',
-// };
+const VARS = {
+	position: 'position',
+	normal: 'normal',
+	instance_position: 'instancePosition',
+	instance_orientation: 'instanceOrientation',
+	instance_scale: 'instanceScale',
+};
 
-// export class InstanceTransform extends BaseNodeGl {
-// 	static type() {
-// 		return 'instance_transform';
-// 	}
+class InstanceTransformGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR3([0, 0, 0]);
+	normal = ParamConfig.VECTOR3([0, 0, 1]);
+	instance_position = ParamConfig.VECTOR3([0, 0, 0]);
+	instance_orientation = ParamConfig.VECTOR4([0, 0, 0, 0]);
+	instance_scale = ParamConfig.VECTOR3([1, 1, 1]);
+}
+const ParamsConfig = new InstanceTransformGlParamsConfig();
+export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'instance_transform';
+	}
 
-// 	constructor() {
-// 		super();
+	initialize_node() {
+		super.initialize_node();
 
-// 		this.set_named_outputs([
-// 			new Connection.Vec3(this.gl_output_name_position()),
-// 			new Connection.Vec3(this.gl_output_name_normal()),
-// 		]);
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(this.gl_output_name_position(), ConnectionPointType.VEC3),
+			new TypedNamedConnectionPoint(this.gl_output_name_normal(), ConnectionPointType.VEC3),
+		]);
+	}
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR, VARS.position, [0, 0, 0]);
-// 		this.add_param(ParamType.VECTOR, VARS.normal, [0, 0, 1]);
-// 		this.add_param(ParamType.VECTOR, VARS.instancePosition, [0, 0, 0]);
-// 		this.add_param(ParamType.VECTOR4, VARS.instanceOrientation, [0, 0, 0, 0]);
-// 		this.add_param(ParamType.VECTOR, VARS.instanceScale, [1, 1, 1]);
-// 	}
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const body_lines = [];
+		const function_declaration_lines = [];
 
-// 	set_lines() {
-// 		const body_lines = [];
-// 		const function_declaration_lines = [];
+		function_declaration_lines.push(new FunctionGLDefinition(this, ConnectionPointType.VEC4, QuaternionMethods));
 
-// 		function_declaration_lines.push(new Definition.Function(this, QuaternionMethods));
+		const input_position = this.io.inputs.named_input(this.p.position.name);
+		const position = input_position
+			? ThreeToGl.float(this.variable_for_input(this.p.position.name))
+			: this._default_position();
 
-// 		const input_position = this.named_input(VARS.position);
-// 		const position = input_position
-// 			? ThreeToGl.float(this.variable_for_input(VARS.position))
-// 			: this._create_default_position();
+		const input_normal = this.io.inputs.named_input(this.p.normal.name);
+		const normal = input_normal
+			? ThreeToGl.float(this.variable_for_input(this.p.normal.name))
+			: this._default_normal();
 
-// 		const input_normal = this.named_input(VARS.normal);
-// 		const normal = input_normal
-// 			? ThreeToGl.float(this.variable_for_input(VARS.normal))
-// 			: this._create_default_normal();
+		const input_instancePosition = this.io.inputs.named_input(this.p.instance_position.name);
+		const instancePosition = input_instancePosition
+			? ThreeToGl.float(this.variable_for_input(this.p.instance_position.name))
+			: this._default_instance_position(shaders_collection_controller);
+		// const instancePosition = ThreeToGl.float(this.variable_for_input('instancePosition'))
 
-// 		const input_instancePosition = this.named_input(VARS.instancePosition);
-// 		const instancePosition = input_instancePosition
-// 			? ThreeToGl.float(this.variable_for_input(VARS.instancePosition))
-// 			: this._create_default_instancePosition();
-// 		// const instancePosition = ThreeToGl.float(this.variable_for_input('instancePosition'))
+		const input_instanceOrientation = this.io.inputs.named_input(this.p.instance_orientation.name);
+		const instanceOrientation = input_instanceOrientation
+			? ThreeToGl.float(this.variable_for_input(this.p.instance_orientation.name))
+			: this._default_input_instance_orientation(shaders_collection_controller);
 
-// 		const input_instanceOrientation = this.named_input(VARS.instanceOrientation);
-// 		const instanceOrientation = input_instanceOrientation
-// 			? ThreeToGl.float(this.variable_for_input(VARS.instanceOrientation))
-// 			: this._create_default_input_instanceOrientation();
+		const input_instanceScale = this.io.inputs.named_input(this.p.instance_scale.name);
+		const instanceScale = input_instanceScale
+			? ThreeToGl.float(this.variable_for_input(this.p.instance_scale.name))
+			: this._default_input_instance_scale(shaders_collection_controller);
 
-// 		const input_instanceScale = this.named_input(VARS.instanceScale);
-// 		const instanceScale = input_instanceScale
-// 			? ThreeToGl.float(this.variable_for_input(VARS.instanceScale))
-// 			: this._create_default_input_instanceScale();
+		const result_position = this.gl_var_name(this.gl_output_name_position());
+		const result_normal = this.gl_var_name(this.gl_output_name_normal());
+		body_lines.push(`vec3 ${result_position} = vec3(${position})`);
+		body_lines.push(`${result_position} *= ${instanceScale}`);
+		body_lines.push(`${result_position} = rotate_with_quat( ${result_position}, ${instanceOrientation} )`);
+		body_lines.push(`${result_position} += ${instancePosition}`);
+		body_lines.push(`vec3 ${result_normal} = vec3(${normal})`);
+		body_lines.push(`${result_normal} = rotate_with_quat( ${result_normal}, ${instanceOrientation} )`);
 
-// 		const result_position = this.gl_var_name(this.gl_output_name_position());
-// 		const result_normal = this.gl_var_name(this.gl_output_name_normal());
-// 		body_lines.push(`vec3 ${result_position} = vec3(${position})`);
-// 		body_lines.push(`${result_position} *= ${instanceScale}`);
-// 		body_lines.push(`${result_position} = rotate_with_quat( ${result_position}, ${instanceOrientation} )`);
-// 		body_lines.push(`${result_position} += ${instancePosition}`);
-// 		body_lines.push(`vec3 ${result_normal} = vec3(${normal})`);
-// 		body_lines.push(`${result_normal} = rotate_with_quat( ${result_normal}, ${instanceOrientation} )`);
+		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.add_definitions(this, function_declaration_lines);
+	}
+	gl_output_name_position() {
+		return 'position';
+	}
+	gl_output_name_normal() {
+		return 'normal';
+	}
 
-// 		this.add_body_lines(body_lines);
-// 		this.add_definitions(function_declaration_lines);
-// 	}
-// 	gl_output_name_position() {
-// 		return 'position';
-// 	}
-// 	gl_output_name_normal() {
-// 		return 'normal';
-// 	}
-
-// 	_create_default_position() {
-// 		return VARS.position;
-// 	}
-// 	_create_default_normal() {
-// 		return VARS.normal;
-// 	}
-// 	_create_default_instancePosition() {
-// 		return this.assembler()
-// 			.globals_handler()
-// 			.read_attribute(this, 'vec3', VARS.instancePosition, this._shader_name);
-// 	}
-// 	_create_default_input_instanceOrientation() {
-// 		return this.assembler()
-// 			.globals_handler()
-// 			.read_attribute(this, 'vec4', VARS.instanceOrientation, this._shader_name);
-// 	}
-// 	_create_default_input_instanceScale() {
-// 		return this.assembler()
-// 			.globals_handler()
-// 			.read_attribute(this, 'vec3', VARS.instanceScale, this._shader_name);
-// 	}
-// }
+	private _default_position(): string {
+		return VARS.position;
+	}
+	private _default_normal(): string {
+		return VARS.normal;
+	}
+	private _default_instance_position(shaders_collection_controller: ShadersCollectionController): string | undefined {
+		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
+			this,
+			ConnectionPointType.VEC3,
+			VARS.instance_position,
+			shaders_collection_controller
+		);
+		// return this.assembler()
+		// 	.globals_handler()
+		// 	.read_attribute(this, 'vec3', VARS.instance_position, this._shader_name);
+	}
+	private _default_input_instance_orientation(shaders_collection_controller: ShadersCollectionController) {
+		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
+			this,
+			ConnectionPointType.VEC4,
+			VARS.instance_orientation,
+			shaders_collection_controller
+		);
+		// return this.assembler()
+		// 	.globals_handler()
+		// 	.read_attribute(this, 'vec4', VARS.instance_orientation, this._shader_name);
+	}
+	private _default_input_instance_scale(shaders_collection_controller: ShadersCollectionController) {
+		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
+			this,
+			ConnectionPointType.VEC3,
+			VARS.instance_scale,
+			shaders_collection_controller
+		);
+		// return this.assembler()
+		// 	.globals_handler()
+		// 	.read_attribute(this, 'vec3', VARS.instance_scale, this._shader_name);
+	}
+}

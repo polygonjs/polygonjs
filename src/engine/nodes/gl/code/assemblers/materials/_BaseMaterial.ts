@@ -1,16 +1,16 @@
-import {BaseGlShaderAssembler} from './_Base';
+import {BaseGlShaderAssembler} from '../_Base';
 
-import {ThreeToGl} from '../../../../../core/ThreeToGl';
-import {OutputGlNode} from '../../Output';
-import {AttributeGlNode} from '../../Attribute';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {GlobalsGlNode} from '../../Globals';
-import {BaseGLDefinition, UniformGLDefinition} from '../../utils/GLDefinition';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
-import {MapUtils} from '../../../../../core/MapUtils';
-import {ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
-import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {ThreeToGl} from '../../../../../../core/ThreeToGl';
+import {OutputGlNode} from '../../../Output';
+import {AttributeGlNode} from '../../../Attribute';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {GlobalsGlNode} from '../../../Globals';
+import {BaseGLDefinition, UniformGLDefinition} from '../../../utils/GLDefinition';
+import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {MapUtils} from '../../../../../../core/MapUtils';
+import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
+import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
+import {ShaderMaterial} from 'three';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
 
@@ -21,13 +21,45 @@ export enum CustomMaterialName {
 }
 // export type ShaderAssemblerRenderDerivated = {new (node: BaseNodeType): ShaderAssemblerRender};
 // type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;
-export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerRender>;
+export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerMaterial>;
 
-export class ShaderAssemblerRender extends BaseGlShaderAssembler {
-	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerRender> = new Map();
+export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
+	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
+
+	create_material(): ShaderMaterial {
+		return new ShaderMaterial();
+	}
 
 	custom_assembler_class_by_custom_name(): CustomAssemblerMap | undefined {
 		return undefined;
+	}
+
+	protected _add_custom_materials(material: ShaderMaterial) {
+		const class_by_custom_name = this.custom_assembler_class_by_custom_name();
+		if (class_by_custom_name) {
+			class_by_custom_name.forEach(
+				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
+					this._add_custom_material(
+						material as ShaderMaterialWithCustomMaterials,
+						custom_name,
+						assembler_class
+					);
+				}
+			);
+		}
+	}
+	private _add_custom_material(
+		material: ShaderMaterialWithCustomMaterials,
+		custom_name: CustomMaterialName,
+		assembler_class: typeof ShaderAssemblerMaterial
+	) {
+		let custom_assembler: ShaderAssemblerMaterial | undefined = this._assemblers_by_custom_name.get(custom_name);
+		if (!custom_assembler) {
+			custom_assembler = new assembler_class(this._gl_parent_node);
+			this._assemblers_by_custom_name.set(custom_name, custom_assembler);
+		}
+		material.custom_materials = material.custom_materials || {};
+		material.custom_materials[custom_name] = custom_assembler.create_material();
 	}
 
 	async compile_custom_materials(material: ShaderMaterialWithCustomMaterials): Promise<void> {
@@ -37,9 +69,9 @@ export class ShaderAssemblerRender extends BaseGlShaderAssembler {
 		const class_by_custom_name = this.custom_assembler_class_by_custom_name();
 		if (class_by_custom_name) {
 			class_by_custom_name.forEach(
-				async (assembler_class: typeof ShaderAssemblerRender, custom_name: CustomMaterialName) => {
+				async (assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
 					if (this._code_builder) {
-						let assembler: ShaderAssemblerRender | undefined = this._assemblers_by_custom_name.get(
+						let assembler: ShaderAssemblerMaterial | undefined = this._assemblers_by_custom_name.get(
 							custom_name
 						);
 						if (!assembler) {

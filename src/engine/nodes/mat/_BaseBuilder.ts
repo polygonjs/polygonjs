@@ -1,19 +1,13 @@
 import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
-
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-
-// import DisplayFlag from '../Concerns/DisplayFlag';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {BaseGlShaderAssembler} from '../gl/code/assemblers/_Base';
+import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMaterial';
 import {GlNodeChildrenMap} from '../../poly/registers/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
-import {CustomMaterialName} from '../gl/code/assemblers/_BaseRender';
 
 export abstract class TypedBuilderMatNode<
-	A extends BaseGlShaderAssembler,
+	A extends ShaderAssemblerMaterial,
 	K extends NodeParamsConfig
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
@@ -30,15 +24,7 @@ export abstract class TypedBuilderMatNode<
 	//
 	//
 	create_material() {
-		const material = new ShaderMaterial() as ShaderMaterialWithCustomMaterials;
-
-		material.custom_materials = {
-			[CustomMaterialName.DEPTH]: new ShaderMaterial(),
-			[CustomMaterialName.DEPTH_DOF]: new ShaderMaterial(),
-			[CustomMaterialName.DISTANCE]: new ShaderMaterial(),
-		};
-
-		return material;
+		return this.assembler_controller.assembler.create_material() as ShaderMaterialWithCustomMaterials;
 	}
 	//
 	//
@@ -73,4 +59,4 @@ export abstract class TypedBuilderMatNode<
 	protected abstract _compile(): void;
 }
 
-export type BaseBuilderMatNodeType = TypedBuilderMatNode<BaseGlShaderAssembler, NodeParamsConfig>;
+export type BaseBuilderMatNodeType = TypedBuilderMatNode<ShaderAssemblerMaterial, NodeParamsConfig>;

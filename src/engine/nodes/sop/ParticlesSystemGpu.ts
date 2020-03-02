@@ -8,7 +8,7 @@ import {TypedSopNode} from './_Base';
 // import {RenderMaterial} from './Concerns/ParticlesSystemGPU/RenderMaterial';
 // import {ParticleShaderBuilder} from './Concerns/ParticlesSystemGPU/ParticleShaderBuilder'
 // import {AssemblerOwner} from '../../../Engine/Node/Gl/Assembler/Owner';
-import {ShaderAssemblerParticles} from '../gl/code/assemblers/Particles';
+import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
 import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 
 // SPECS:

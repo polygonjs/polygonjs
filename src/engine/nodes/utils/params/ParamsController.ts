@@ -378,6 +378,7 @@ export class ParamsController {
 			param.set_name(name);
 			param.set_init_value(init_value as never);
 			param.init_components();
+			param.set(init_value as never);
 			param.set_node(this.node);
 
 			this._params_by_name[param.name] = param as BaseParamType;

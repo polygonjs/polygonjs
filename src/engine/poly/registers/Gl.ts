@@ -56,6 +56,7 @@ import {CycleGlNode} from '../../nodes/gl/Cycle';
 import {DiskGlNode} from '../../nodes/gl/Disk';
 import {EasingGlNode} from '../../nodes/gl/Easing';
 import {GlobalsGlNode} from '../../nodes/gl/Globals';
+import {InstanceTransformGlNode} from '../../nodes/gl/InstanceTransform';
 import {LengthGlNode} from '../../nodes/gl/Length';
 import {MixGlNode} from '../../nodes/gl/Mix';
 import {NegateGlNode} from '../../nodes/gl/Negate';
@@ -99,6 +100,7 @@ export interface GlNodeChildrenMap {
 	fract: FractGlNode;
 	int_to_float: FloatToIntGlNode;
 	inverse_sqrt: InverseSqrtGlNode;
+	instance_transform: InstanceTransformGlNode;
 	length: LengthGlNode;
 	log: LogGlNode;
 	log2: Log2GlNode;
@@ -168,6 +170,7 @@ export class GlRegister {
 		poly.register_node(GlobalsGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(IntToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(InverseSqrtGlNode, CATEGORY_GL.MATH);
+		poly.register_node(InstanceTransformGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(LengthGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(NegateGlNode, CATEGORY_GL.MATH);
 		poly.register_node(LogGlNode, CATEGORY_GL.MATH);

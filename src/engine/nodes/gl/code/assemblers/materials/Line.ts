@@ -2,20 +2,20 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 
-import {ShaderAssemblerRender, CustomAssemblerMap, CustomMaterialName} from './_BaseRender';
+import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
 
-import {ShaderConfig} from '../configs/ShaderConfig';
-import {VariableConfig} from '../configs/VariableConfig';
-import {GlobalsGeometryHandler} from '../globals/Geometry';
+import {ShaderConfig} from '../../configs/ShaderConfig';
+import {VariableConfig} from '../../configs/VariableConfig';
+import {GlobalsGeometryHandler} from '../../globals/Geometry';
 
 // import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth'
 // import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance'
 import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {OutputGlNode} from '../../Output';
-import {ParamType} from '../../../../poly/ParamType';
-import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {OutputGlNode} from '../../../Output';
+import {ParamType} from '../../../../../poly/ParamType';
+import {TypedNamedConnectionPoint} from '../../../../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
@@ -28,7 +28,7 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.FRAGMENT, []],
 ]);
 
-export class ShaderAssemblerLine extends ShaderAssemblerRender {
+export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'diffuseColor' }
 	get _template_shader() {
 		const template = ShaderLib.dashed;

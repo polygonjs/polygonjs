@@ -29,6 +29,7 @@ import {FuseSopNode} from '../../nodes/sop/Fuse';
 import {HexagonsSopNode} from '../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../nodes/sop/Hierarchy';
 // TODO: heightmap
+import {InstanceSopNode} from '../../nodes/sop/Instance';
 // TODO: particles
 import {JitterSopNode} from '../../nodes/sop/Jitter';
 import {LayerSopNode} from '../../nodes/sop/Layer';
@@ -87,6 +88,7 @@ export interface GeoNodeChildrenMap {
 	fuse: FuseSopNode;
 	hexagons: HexagonsSopNode;
 	hierarchy: HierarchySopNode;
+	instance: InstanceSopNode;
 	jitter: JitterSopNode;
 	layer: LayerSopNode;
 	line: LineSopNode;
@@ -147,6 +149,7 @@ export class SopRegister {
 		poly.register_node(FuseSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(HexagonsSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(HierarchySopNode, CATEGORY_SOP.MISC);
+		poly.register_node(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(JitterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(LineSopNode, CATEGORY_SOP.INPUT);

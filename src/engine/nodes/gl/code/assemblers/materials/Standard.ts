@@ -8,15 +8,15 @@ import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {FrontSide} from 'three/src/constants';
 
 import {ShaderAssemblerMesh} from './_BaseMesh';
-import {BaseGlShaderAssembler} from './_Base';
-import {ShaderConfig} from '../configs/ShaderConfig';
-import {VariableConfig} from '../configs/VariableConfig';
+import {BaseGlShaderAssembler} from '../_Base';
+import {ShaderConfig} from '../../configs/ShaderConfig';
+import {VariableConfig} from '../../configs/VariableConfig';
 
 import metalnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/metalnessmap_fragment.glsl';
 import roughnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
-import {OutputGlNode} from '../../Output';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {ParamType} from '../../../../poly/ParamType';
+import {OutputGlNode} from '../../../Output';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {ParamType} from '../../../../../poly/ParamType';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	is_physical() {

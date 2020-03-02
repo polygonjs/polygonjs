@@ -1,13 +1,13 @@
-// import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {FileCopNode} from '../../cop/File';
 import {TypedMatNode} from '../_Base';
+import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 // import {NodeContext} from '../../../poly/NodeContext';
 // import {BaseCopNodeType} from '../../cop/_Base';
-import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
 export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		use_alpha_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAlphaMapController));
@@ -20,12 +20,11 @@ export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBas
 class TextureAlphaMaterial extends Material {
 	alphaMap!: Texture | null;
 }
+type CurrentMaterial = TextureAlphaMaterial | ShaderMaterial;
 class TextureAlphaMapParamsConfig extends TextureAlphaMapParamConfig(NodeParamsConfig) {}
-class TextureAlphaMapMatNode extends TypedMatNode<TextureAlphaMaterial, TextureAlphaMapParamsConfig> {
+abstract class TextureAlphaMapMatNode extends TypedMatNode<CurrentMaterial, TextureAlphaMapParamsConfig> {
 	texture_alpha_map_controller!: TextureAlphaMapController;
-	create_material() {
-		return new TextureAlphaMaterial();
-	}
+	abstract create_material(): CurrentMaterial;
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {
@@ -36,39 +35,9 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.use_alpha_map, this.node.p.alpha_map);
 	}
 	async update() {
-		this._update_texture(this.node.material, 'alphaMap', this.node.p.use_alpha_map, this.node.p.alpha_map);
+		this._update(this.node.material, 'alphaMap', this.node.p.use_alpha_map, this.node.p.alpha_map);
 	}
 	static async update(node: TextureAlphaMapMatNode) {
 		node.texture_alpha_map_controller.update();
 	}
-
-	// static async update(node: TextureAlphaMapMatNode) {
-	// 	const material = node.material;
-
-	// 	if (node.pv.use_map) {
-	// 		const found_node = node.p.alpha_map.found_node();
-	// 		if (found_node) {
-	// 			if (found_node.node_context() == NodeContext.COP) {
-	// 				const texture_node = found_node as BaseCopNodeType;
-
-	// 				// if the texture has already been created, we don't have to wait for request_container
-	// 				if (texture_node.texture) {
-	// 					texture_node.request_container();
-	// 				} else {
-	// 					await texture_node.request_container();
-	// 				}
-
-	// 				if (texture_node.texture) {
-	// 					material.alphaMap = texture_node.texture;
-	// 					return;
-	// 				}
-	// 			} else {
-	// 				node.states.error.set(`found map node is not a COP node`);
-	// 			}
-	// 		} else {
-	// 			node.states.error.set(`could not find map node`);
-	// 		}
-	// 	}
-	// 	material.alphaMap = null;
-	// }
 }

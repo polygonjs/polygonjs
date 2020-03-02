@@ -31,7 +31,6 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 	cook() {
 		const operation = new CoreGeometryOperationHexagon(this.pv.size, this.pv.hexagon_radius, this.pv.points_only);
 		const geometry = operation.process();
-		console.log(geometry, geometry.attributes.position);
 
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 

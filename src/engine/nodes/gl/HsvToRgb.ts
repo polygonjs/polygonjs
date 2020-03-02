@@ -1,39 +1,43 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {TypedConnectionVec3} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
+import {TypedGlNode} from './_Base';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
-// import Hsv2Rgb from './Gl/hsv2rgb.glsl';
+import Hsv2Rgb from './Gl/hsv2rgb.glsl';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {FunctionGLDefinition} from './utils/GLDefinition';
 
-// export class HsvToRgb extends BaseNodeGl {
-// 	static type() {
-// 		return 'hsv_to_rgb';
-// 	}
+const OUTPUT_NAME = 'rgb';
+class HsvToRgbGlParamsConfig extends NodeParamsConfig {
+	hsv = ParamConfig.VECTOR3([1, 1, 1]);
+}
+const ParamsConfig = new HsvToRgbGlParamsConfig();
+export class HsvToRgbGlNode extends TypedGlNode<HsvToRgbGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'hsv_to_rgb';
+	}
 
-// 	constructor() {
-// 		super();
+	initialize_node() {
+		super.initialize_node();
 
-// 		// this.set_inputs([
-// 		// 	new GlDataIONumeric('in')
-// 		// ])
-// 		this.set_named_outputs([new TypedConnectionVec3('rgb')]);
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.VEC3),
+		]);
+	}
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR, 'hsv', [1, 1, 1]);
-// 	}
-// 	set_lines() {
-// 		const function_declaration_lines = [];
-// 		const body_lines = [];
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const function_declaration_lines = [];
+		const body_lines = [];
 
-// 		function_declaration_lines.push(new Definition.Function(this, Hsv2Rgb));
+		function_declaration_lines.push(new FunctionGLDefinition(this, ConnectionPointType.VEC3, Hsv2Rgb));
 
-// 		const value = ThreeToGl.vector3(this.variable_for_input('hsv'));
+		const value = ThreeToGl.vector3(this.variable_for_input(this.p.hsv.name));
 
-// 		const rgb = this.gl_var_name('rgb');
-// 		body_lines.push(`vec3 ${rgb} = hsv2rgb(${value})`);
-// 		this.set_definitions(function_declaration_lines);
-// 		this.set_body_lines(body_lines);
-// 	}
-// }
+		const rgb = this.gl_var_name(OUTPUT_NAME);
+		body_lines.push(`vec3 ${rgb} = hsv2rgb(${value})`);
+		shaders_collection_controller.add_definitions(this, function_declaration_lines);
+		shaders_collection_controller.add_body_lines(this, body_lines);
+	}
+}

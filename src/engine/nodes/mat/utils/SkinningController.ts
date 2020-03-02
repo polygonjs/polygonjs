@@ -19,15 +19,11 @@ class SkinningMatNode extends TypedMatNode<SkinnedMaterial, SkinningParamsConfig
 }
 
 export class SkinningController extends BaseController {
-	// add_params() {
-	// 	this.node.add_param(ParamType.BOOLEAN, 'skinning', 0);
-	// }
-
 	static update(node: SkinningMatNode) {
-		node.material.skinning = node.pv.skinning;
+		const new_skinning = node.pv.skinning;
+		if (new_skinning != node.material.skinning) {
+			node.material.skinning = new_skinning;
+			node.material.needsUpdate = true;
+		}
 	}
-
-	// update() {
-	// 	this.node.material.skinning = this.node.params.boolean('skinning');
-	// }
 }

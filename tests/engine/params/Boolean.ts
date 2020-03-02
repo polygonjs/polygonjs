@@ -51,6 +51,14 @@ QUnit.test('boolean evals correctly when set to different values', async (assert
 	assert.ok(!boolean_param.has_expression(), '"0" does not create an expression');
 	assert.equal(boolean_param.value, false);
 
+	boolean_param.set('-2');
+	assert.ok(!boolean_param.has_expression(), '"-2" does not create an expression');
+	assert.equal(boolean_param.value, false);
+
+	boolean_param.set('-2.5');
+	assert.ok(!boolean_param.has_expression(), '"-2.5" does not create an expression');
+	assert.equal(boolean_param.value, false);
+
 	boolean_param.set('0+1');
 	assert.ok(boolean_param.has_expression());
 	await boolean_param.compute();

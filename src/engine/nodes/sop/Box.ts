@@ -11,7 +11,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BoxSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.FLOAT(1);
-	divisions = ParamConfig.FLOAT(1, {
+	divisions = ParamConfig.INTEGER(1, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});

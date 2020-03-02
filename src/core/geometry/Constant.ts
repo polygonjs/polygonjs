@@ -63,6 +63,19 @@ export const ObjectTypeMenuEntries = [
 	{name: 'LineSegments', value: ObjectTypes.indexOf(ObjectType.LINE_SEGMENTS)},
 ];
 
+export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
+	if (object instanceof Mesh) {
+		return ObjectType.MESH;
+	}
+	if (object instanceof LineSegments) {
+		return ObjectType.LINE_SEGMENTS;
+	}
+	if (object instanceof Points) {
+		return ObjectType.POINTS;
+	}
+	console.warn('ObjectTypeByObject received an unknown object type', object);
+}
+
 const materials: MaterialsByString = {
 	MeshStandard: new MeshStandardMaterial({
 		color: 0xffffff,

@@ -28,18 +28,15 @@ import {ParamType} from '../../../../poly/ParamType';
 import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
 import {GlobalsGlNode} from '../../Globals';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {AttributeGlNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
 import {GlobalsBaseController} from '../globals/_Base';
-import {CustomMaterialName} from './_BaseRender';
+import {CustomMaterialName} from './materials/_BaseMaterial';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {IUniforms} from '../../../../../core/geometry/Material';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
-export interface IUniforms {
-	[uniform: string]: IUniform;
-}
 interface ITemplateShader {
 	vertexShader?: string;
 	fragmentShader?: string;
@@ -601,7 +598,6 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 
 			for (let line_to_add of lines_to_add) {
 				new_lines.push(line_to_add);
-				// console.log('push', line_to_add);
 			}
 			for (let i = 0; i < SPACED_LINES; i++) {
 				new_lines.push('');

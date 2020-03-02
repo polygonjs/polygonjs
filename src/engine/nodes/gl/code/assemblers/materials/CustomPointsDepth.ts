@@ -4,15 +4,15 @@ import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {RGBADepthPacking} from 'three/src/constants';
 import {BasicDepthPacking} from 'three/src/constants';
 
-import {ShaderAssemblerRender} from './_BaseRender';
+import {ShaderAssemblerMaterial} from './_BaseMaterial';
 
 import TemplateVertex from '../templates/CustomPointsDepth.vert.glsl';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([[ShaderName.VERTEX, '// INSERT DEFINES']]);
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([[ShaderName.VERTEX, '// INSERT BODY']]);
 
-export class ShaderAssemblerCustomPointsDepth extends ShaderAssemblerRender {
+export class ShaderAssemblerCustomPointsDepth extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
 	get _template_shader() {

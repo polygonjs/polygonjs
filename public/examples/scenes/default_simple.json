@@ -17,84 +17,16 @@
 						"params": {"map": "/COP/OUT_diffuse", "env_map": "/COP/OUT_env", "metalness": 0.01},
 						"inputs": []
 					},
-					"mesh_basic_builder1": {
-						"type": "mesh_basic_builder",
+					"mesh_basic1": {"type": "mesh_basic", "params": {}, "inputs": []},
+					"mesh_lambert1": {"type": "mesh_lambert", "params": {}, "inputs": []},
+					"mesh_lambert_builder2": {
+						"type": "mesh_lambert_builder",
 						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
 							"output1": {
 								"type": "output",
 								"params": {},
-								"inputs": [{"name": "color", "node": "float_to_vec3_1", "output": "vec3"}]
-							},
-							"globals1": {"type": "globals", "params": {}, "inputs": []},
-							"constant1": {
-								"type": "constant",
-								"params": {"type": "4", "vec3": [0, 0.3, 0]},
-								"inputs": []
-							},
-							"attribute1": {"type": "attribute", "params": {"name": "above"}, "inputs": []},
-							"param1": {"type": "param", "params": {"name": "z"}, "inputs": []},
-							"float_to_vec3_1": {
-								"type": "float_to_vec3",
-								"params": {},
-								"inputs": [
-									{"name": "x", "node": "attribute1", "output": "val"},
-									{"name": "z", "node": "complement1", "output": "val"}
-								]
-							},
-							"constant2": {
-								"type": "constant",
-								"params": {"float": "0.22", "vec3": [0, 0.3, 0]},
-								"inputs": []
-							},
-							"complement1": {
-								"type": "complement",
-								"params": {},
-								"inputs": [{"name": "in", "node": "attribute1", "output": "val"}]
-							},
-							"distance1": {
-								"type": "distance",
-								"params": {
-									"p0": {
-										"type": "vector2",
-										"default_value": [0, 0],
-										"raw_input": [0, 0],
-										"options": {"spare": true, "cook": false}
-									},
-									"p1": {
-										"type": "vector2",
-										"default_value": [0, 0],
-										"raw_input": [0, 0],
-										"options": {"spare": true, "cook": false}
-									}
-								},
-								"inputs": [
-									{"name": "p0", "node": "constant3", "output": "val"},
-									{"name": "p1", "node": "constant4", "output": "val"}
-								]
-							},
-							"constant3": {"type": "constant", "params": {"type": "3"}, "inputs": []},
-							"constant4": {
-								"type": "constant",
-								"params": {"type": "3", "vec2": ["1", "1"], "vec3": ["1", "1", 0]},
-								"inputs": []
-							},
-							"dot1": {
-								"type": "dot",
-								"params": {
-									"vec0": {
-										"type": "vector3",
-										"default_value": [0, 0, 0],
-										"raw_input": [0, 0, 0],
-										"options": {"spare": true, "cook": false}
-									},
-									"vec1": {
-										"type": "vector3",
-										"default_value": [0, 0, 0],
-										"raw_input": ["1", "2", "3"],
-										"options": {"spare": true, "cook": false}
-									}
-								},
-								"inputs": []
+								"inputs": [{"name": "color", "node": "globals1", "output": "position"}]
 							}
 						},
 						"children_context": "gl",
@@ -129,8 +61,8 @@
 					"controls": "/events1/camera_orbit_controls1",
 					"target": [-0.18931128979003603, 0.42336979919346196, 0.07064319279199466],
 					"fov": 55.29,
-					"t": [-0.1972159532644376, 0.8387715170376489, 4.975482879780758],
-					"r": [-4.840953954880215, -0.09200868831154323, -0.007792415849990225]
+					"t": [1.0055595496895167, 1.7681091581794246, 4.652567805802128],
+					"r": [-16.356324737681106, 14.048388261536084, 4.074959369006643]
 				},
 				"inputs": [],
 				"flags": {"display": true}
@@ -269,10 +201,10 @@
 					}
 				},
 				"children_context": "sop",
-				"params": {},
+				"params": {"t": [0, -0.9000000000000001, 0]},
 				"inputs": [],
 				"flags": {"display": true},
-				"selection": ["material3"]
+				"selection": []
 			},
 			"point_light1": {
 				"type": "point_light",
@@ -317,7 +249,7 @@
 			"ambient_light1": {"type": "ambient_light", "params": {}, "inputs": [], "flags": {"display": true}},
 			"orthographic_camera1": {
 				"type": "orthographic_camera",
-				"params": {},
+				"params": {"background_color": [1, 1, 1]},
 				"inputs": [],
 				"flags": {"display": true}
 			},
@@ -326,33 +258,63 @@
 				"params": {"background_color": [1, 1, 1]},
 				"inputs": ["null4"],
 				"flags": {"display": true}
+			},
+			"geo2": {
+				"type": "geo",
+				"nodes": {
+					"hexagons1": {
+						"type": "hexagons",
+						"params": {"size": [5, 5], "hexagon_radius": 0.81},
+						"inputs": [],
+						"flags": {"display": false}
+					},
+					"box1": {"type": "box", "params": {"size": 0.22}, "inputs": [], "flags": {"display": false}},
+					"copy1": {
+						"type": "copy",
+						"params": {},
+						"inputs": ["box1", "hexagons1"],
+						"flags": {"display": true}
+					},
+					"material1": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_lambert1"},
+						"inputs": ["copy1"],
+						"flags": {"display": false}
+					},
+					"material2": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_lambert_builder2"},
+						"inputs": ["copy1"],
+						"flags": {"display": false}
+					},
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_basic_builder1"},
+						"inputs": ["copy1"],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": []
 			}
 		},
 		"children_context": "objects",
-		"selection": ["geo1"]
+		"selection": []
 	},
 	"ui": {
 		"nodes": {
 			"MAT": {
 				"pos": [-250, 100],
 				"nodes": {
-					"mesh_standard1": {"pos": [0, 150]},
-					"mesh_basic_builder1": {
-						"pos": [0, 50],
-						"nodes": {
-							"output1": {"pos": [250, 100]},
-							"globals1": {"pos": [-100, 150]},
-							"constant1": {"pos": [-250, 0]},
-							"attribute1": {"pos": [-100, -50]},
-							"param1": {"pos": [-100, 350]},
-							"float_to_vec3_1": {"pos": [150, -100]},
-							"constant2": {"pos": [-100, -150]},
-							"complement1": {"pos": [50, 0]},
-							"distance1": {"pos": [100, -300]},
-							"constant3": {"pos": [-100, -350]},
-							"constant4": {"pos": [-100, -250]},
-							"dot1": {"pos": [100, -450]}
-						}
+					"mesh_standard1": {"pos": [0, 200]},
+					"mesh_basic1": {"pos": [0, -50]},
+					"mesh_lambert1": {"pos": [300, -50]},
+					"mesh_lambert_builder2": {
+						"pos": [300, 50],
+						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
 					}
 				}
 			},
@@ -378,7 +340,7 @@
 			},
 			"null1": {"pos": [250, -450]},
 			"geo1": {
-				"pos": [0, -500],
+				"pos": [0, -600],
 				"nodes": {
 					"box1": {"pos": [-500, 50]},
 					"plane1": {"pos": [-900, -50]},
@@ -405,7 +367,18 @@
 			"directional_light1": {"pos": [-50, -150]},
 			"ambient_light1": {"pos": [300, 50]},
 			"orthographic_camera1": {"pos": [-250, -250]},
-			"perspective_camera2": {"pos": [-450, -50]}
+			"perspective_camera2": {"pos": [-450, -50]},
+			"geo2": {
+				"pos": [0, -500],
+				"nodes": {
+					"hexagons1": {"pos": [-100, -150]},
+					"box1": {"pos": [-350, -150]},
+					"copy1": {"pos": [-350, 100]},
+					"material1": {"pos": [-550, 250]},
+					"material2": {"pos": [-300, 300]},
+					"material3": {"pos": [-500, 400]}
+				}
+			}
 		}
 	}
 }

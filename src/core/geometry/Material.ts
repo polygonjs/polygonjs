@@ -8,7 +8,7 @@ import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
-interface IUniforms {
+export interface IUniforms {
 	[uniform: string]: IUniform;
 }
 export interface MaterialWithUniforms extends Material {

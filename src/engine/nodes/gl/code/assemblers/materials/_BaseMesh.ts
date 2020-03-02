@@ -1,11 +1,11 @@
-import {ShaderAssemblerRender, CustomAssemblerMap, CustomMaterialName} from './_BaseRender';
+import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
 
 import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance';
 import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDepthDOF} from './CustomMeshDepthDOF';
-import {GlNodeFinder} from '../utils/NodeFinder';
-import {ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {GlNodeFinder} from '../../utils/NodeFinder';
+import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
@@ -16,7 +16,7 @@ ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance
 ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth);
 ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF);
 
-export abstract class ShaderAssemblerMesh extends ShaderAssemblerRender {
+export abstract class ShaderAssemblerMesh extends ShaderAssemblerMaterial {
 	// TODO: I've noticed a case where instances would not display when those shadow shaders were exported
 	// But the objects display fine if those are not assigned
 	// so it could be a bug at render time (not sure if my code, threejs or hardware)
@@ -42,7 +42,6 @@ export abstract class ShaderAssemblerMesh extends ShaderAssemblerRender {
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
 			material.fragmentShader = new_fragment_shader;
-			// console.log(material.fragmentShader);
 			material.uniforms = this.build_uniforms(this._template_shader?.uniforms);
 			material.needsUpdate = true;
 		}

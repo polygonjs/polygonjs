@@ -11,6 +11,9 @@ import {OperatorPathParam} from '../../../params/OperatorPath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
+import {ShaderMaterial, IUniform} from 'three';
+import {IUniforms} from '../../../../core/geometry/Material';
+
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		use_map = ParamConfig.BOOLEAN(0);
@@ -56,6 +59,19 @@ export function OperatorPathOptions(controller: typeof BaseTextureMapController,
 	};
 }
 
+type TextureUpdateCallback<O extends Object> = (
+	material: Material,
+	object: O,
+	mat_attrib_name: keyof SubType<O, Texture | null>,
+	texture: Texture
+) => void;
+type TextureRemoveCallback<O extends Object> = (
+	material: Material,
+	object: O,
+	mat_attrib_name: keyof SubType<O, Texture | null>
+) => void;
+
+type CurrentMaterial = Material | ShaderMaterial;
 export class BaseTextureMapController extends BaseController {
 	// add_params() {
 	// 	this.node.add_param(ParamType.BOOLEAN, 'skinning', 0);
@@ -70,17 +86,149 @@ export class BaseTextureMapController extends BaseController {
 	}
 	static update(node: BaseNodeType) {}
 
-	async _update_texture<M extends Material>(
+	async _update<M extends CurrentMaterial>(
+		material: M,
+		mat_attrib_name: string,
+		use_map_param: BooleanParam,
+		path_param: OperatorPathParam
+	) {
+		if ((material as ShaderMaterial).uniforms) {
+			const shader_material = material as ShaderMaterial;
+			const attr_name = mat_attrib_name as keyof SubType<IUniforms, Texture | null>;
+			await this._update_texture_on_uniforms(shader_material, attr_name, use_map_param, path_param);
+		} else {
+			const mat = material as Material;
+			const attr_name = mat_attrib_name as keyof SubType<Material, Texture | null>;
+			await this._update_texture_on_material(mat, attr_name, use_map_param, path_param);
+		}
+	}
+
+	//
+	//
+	// FOR CASES WHERE THE TEXTURE IS ON THE UNIFORMS
+	//
+	//
+	async _update_texture_on_uniforms<O extends IUniform>(
+		material: ShaderMaterial,
+		mat_attrib_name: keyof SubType<O, Texture | null>,
+		use_map_param: BooleanParam,
+		path_param: OperatorPathParam
+	) {
+		this._update_required_attribute(
+			material,
+			material.uniforms,
+			mat_attrib_name as never,
+			use_map_param,
+			path_param,
+			this._apply_texture_on_uniforms.bind(this),
+			this._remove_texture_from_uniforms.bind(this)
+		);
+	}
+	private _apply_texture_on_uniforms<O extends IUniforms>(
+		material: Material,
+		uniforms: O,
+		mat_attrib_name: keyof SubType<O, Texture | null>,
+		texture: Texture
+	) {
+		const has_texture = uniforms[mat_attrib_name] != null && uniforms[mat_attrib_name].value != null;
+		let new_texture_is_different = false;
+		if (has_texture) {
+			const current_texture: Texture = (<unknown>uniforms[mat_attrib_name].value) as Texture;
+			if (current_texture.uuid != texture.uuid) {
+				new_texture_is_different = true;
+			}
+		}
+		if (!has_texture || new_texture_is_different) {
+			uniforms[mat_attrib_name].value = texture as any;
+			const define_name = this._define_name(`${mat_attrib_name}`);
+			material.defines[define_name] = 1;
+			material.defines['USE_UV'] = 1;
+			material.needsUpdate = true;
+		}
+	}
+	private _remove_texture_from_uniforms<U extends IUniforms>(
+		material: Material,
+		uniforms: U,
+		mat_attrib_name: keyof SubType<U, Texture | null>
+	) {
+		if (uniforms[mat_attrib_name].value) {
+			uniforms[mat_attrib_name].value = null;
+			const define_name = this._define_name(`${mat_attrib_name}`);
+			delete material.defines[define_name];
+			material.needsUpdate = true;
+		}
+	}
+	private _define_name(mat_attrib_name: string): string {
+		return 'USE_' + mat_attrib_name.replace('_', '').toUpperCase();
+	}
+
+	//
+	//
+	// FOR CASES WHERE THE TEXTURE IS ON THE MATERIAL
+	//
+	//
+	async _update_texture_on_material<M extends Material>(
 		material: M,
 		mat_attrib_name: keyof SubType<M, Texture | null>,
 		use_map_param: BooleanParam,
 		path_param: OperatorPathParam
 	) {
-		// if(!(mat_attrib_name in material)){
-		// 	return
-		// }
+		this._update_required_attribute(
+			material,
+			material,
+			mat_attrib_name,
+			use_map_param,
+			path_param,
+			this._apply_texture_on_material.bind(this),
+			this._remove_texture_from_material.bind(this)
+		);
+	}
+	private _apply_texture_on_material<M extends Material>(
+		material: Material,
+		texture_owner: M,
+		mat_attrib_name: keyof SubType<M, Texture | null>,
+		texture: Texture
+	) {
+		const has_texture = texture_owner[mat_attrib_name] != null;
+		let new_texture_is_different = false;
+		if (has_texture) {
+			const current_texture: Texture = (<unknown>texture_owner[mat_attrib_name]) as Texture;
+			if (current_texture.uuid != texture.uuid) {
+				new_texture_is_different = true;
+			}
+		}
+		if (!has_texture || new_texture_is_different) {
+			texture_owner[mat_attrib_name] = texture as any;
+			material.needsUpdate = true;
+		}
+	}
+	private _remove_texture_from_material<M extends Material>(
+		material: Material,
+		texture_owner: M,
+		mat_attrib_name: keyof SubType<M, Texture | null>
+	) {
+		if (texture_owner[mat_attrib_name]) {
+			texture_owner[mat_attrib_name] = null as any;
+			material.needsUpdate = true;
+		}
+	}
+
+	//
+	//
+	// MAIN ALGO to decide if texture should be updated
+	//
+	//
+	private async _update_required_attribute<O extends Object>(
+		material: Material,
+		texture_owner: O,
+		mat_attrib_name: keyof SubType<O, Texture | null>,
+		use_map_param: BooleanParam,
+		path_param: OperatorPathParam,
+		update_callback: TextureUpdateCallback<O>,
+		remove_callback: TextureRemoveCallback<O>
+	) {
 		if (use_map_param.is_dirty) {
-			use_map_param.compute();
+			await use_map_param.compute();
 		}
 		const use_map: boolean = use_map_param.value;
 
@@ -94,29 +242,11 @@ export class BaseTextureMapController extends BaseController {
 				if (found_node.node_context() == NodeContext.COP) {
 					const texture_node = found_node as BaseCopNodeType;
 
-					// if the texture has already been created, we don't have to wait for request_container
-					// if (texture_node.texture) {
-					// 	console.log('no wait');
-					// 	texture_node.request_container();
-					// } else {
-					// 	console.log('wait');
 					const container = await texture_node.request_container();
 					const texture = container.texture();
-					// }
 
 					if (texture) {
-						const has_no_texture = material[mat_attrib_name] == null;
-						let texture_is_different = false;
-						if (material[mat_attrib_name]) {
-							const current_texture: Texture = (<unknown>material[mat_attrib_name]) as Texture;
-							if (current_texture.uuid != texture.uuid) {
-								texture_is_different = true;
-							}
-						}
-						if (has_no_texture || texture_is_different) {
-							material[mat_attrib_name] = texture as any;
-							material.needsUpdate = true;
-						}
+						update_callback(material, texture_owner, mat_attrib_name, texture);
 						return;
 					} else {
 						this.node.states.error.set(`found node has no texture`);
@@ -128,9 +258,8 @@ export class BaseTextureMapController extends BaseController {
 				this.node.states.error.set(`could not find map node ${path_param.name} with path ${path_param.value}`);
 			}
 		}
-		if (material[mat_attrib_name]) {
-			material[mat_attrib_name] = null as any;
-			material.needsUpdate = true;
-		}
+		// this is not wrapped in an else clause after the "if (use_map) {"
+		// as we should come here after any of the errors above, if any is triggered
+		remove_callback(material, texture_owner, mat_attrib_name);
 	}
 }
