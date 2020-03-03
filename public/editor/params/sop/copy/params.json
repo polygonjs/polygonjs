@@ -1,0 +1,7 @@
+{
+	"count": "Number of instances (only used if there is no second input)",
+	"transform_only": "Only transforms each input objects, instead of copying them",
+	"copy_attributes": "toggle on if you want attributes from the second input to be copied to the instances",
+	"attributes_to_copy": "Which attributes you want to copy",
+	"use_copy_expr": "Allows the use of copy expression"
+}

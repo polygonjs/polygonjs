@@ -1,0 +1,12 @@
+{
+	"allow_pan": 0,
+	"allow_rotate": 1,
+	"allow_zoom": 0,
+	"tdamping": 1,
+	"screen_space_panning": 0,
+	"rotate_speed": 0.5,
+	"min_distance": 1,
+	"max_distance": 50,
+	"polar_angle_rangex": "$PI/2 * 0.5",
+	"polar_angle_rangey": "0.9*$PI/2"
+}

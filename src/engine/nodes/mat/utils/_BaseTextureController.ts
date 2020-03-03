@@ -153,7 +153,6 @@ export class BaseTextureMapController extends BaseController {
 			uniforms[mat_attrib_name].value = texture as any;
 			if (this._do_update_define()) {
 				const define_name = this._define_name(`${mat_attrib_name}`);
-				console.log('texture', define_name, texture);
 				material.defines[define_name] = 1;
 			}
 			material.defines['USE_UV'] = 1;
@@ -175,7 +174,6 @@ export class BaseTextureMapController extends BaseController {
 		}
 	}
 	private _define_name(mat_attrib_name: string): string {
-		console.log('_define_name', mat_attrib_name, 'USE_' + mat_attrib_name.replace('_', '').toUpperCase());
 		return 'USE_' + mat_attrib_name.replace('_', '').toUpperCase();
 	}
 

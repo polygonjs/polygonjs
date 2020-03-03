@@ -3,6 +3,7 @@ import {NodeContext} from './NodeContext';
 
 export interface RegisterOptions {
 	only?: string[];
+	except?: string[];
 }
 
 // export interface BaseNodeConstructor {
@@ -51,6 +52,19 @@ export class NodesRegister {
 			const nodes_for_context = Object.values(this._node_register[context]);
 			return nodes_for_context.filter((node) => {
 				const options = this._node_register_options[context][node.type()];
+				if (!options) {
+					return true;
+				} else {
+					const option_only = options['only'];
+					const option_except = options['except'];
+					const context_and_type = `${context}/${parent_node_type}`;
+					if (option_only) {
+						return option_only.includes(context_and_type);
+					}
+					if (option_except) {
+						return option_except.includes(context_and_type);
+					}
+				}
 				return !options || options['only']?.includes(parent_node_type);
 			});
 		} else {

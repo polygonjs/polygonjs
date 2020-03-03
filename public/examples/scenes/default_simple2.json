@@ -89,7 +89,7 @@
 				"children_context": "mat",
 				"params": {},
 				"inputs": [],
-				"selection": ["mesh_standard_builder1"]
+				"selection": []
 			},
 			"spot_light1": {
 				"type": "spot_light",
@@ -287,7 +287,7 @@
 			}
 		},
 		"children_context": "objects",
-		"selection": []
+		"selection": ["COP"]
 	},
 	"ui": {
 		"nodes": {

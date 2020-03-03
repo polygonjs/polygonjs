@@ -5,17 +5,19 @@ import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMate
 import {GlNodeChildrenMap} from '../../poly/registers/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
+import {NodeContext} from '../../poly/NodeContext';
 
 export abstract class TypedBuilderMatNode<
 	A extends ShaderAssemblerMaterial,
 	K extends NodeParamsConfig
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
-
+	protected _children_controller_context = NodeContext.GL;
 	initialize_base_node() {
 		super.initialize_base_node();
 
 		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		this.children_controller?.init();
 	}
 
 	//
@@ -56,7 +58,12 @@ export abstract class TypedBuilderMatNode<
 			this._compile();
 		}
 	}
-	protected abstract _compile(): void;
+	protected async _compile() {
+		if (this._material) {
+			await this.assembler_controller.assembler.compile_material(this._material);
+			await this.assembler_controller.post_compile();
+		}
+	}
 }
 
 export type BaseBuilderMatNodeType = TypedBuilderMatNode<ShaderAssemblerMaterial, NodeParamsConfig>;

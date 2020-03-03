@@ -1,0 +1,13 @@
+{
+	"url": "Url to read from",
+	"type": {
+		"description": "Mode in which the url will be loaded",
+		"menu_entries": {
+			"auto": "Does a best guess in loading depending on extension. Good for .gltf, .glb, .obj",
+			"json_data": "Auto Mode would load a .json url as if it was created with the Threejs method .toJSON(). But with the json_data mode, the content will be read by creating one point per entry in the array. This is very useful when displaying data from APIs."
+		}
+	},
+	"json_data_prefix": "When using the json_data type, some API payload may not be at the root, but under a specific entry. This allows to only created a geometry from that. The example X demonstrates that.",
+	"reload": "Forces a reload",
+	"open": "Opens the url in a new tab for easy debugging. Useful for json_data mode"
+}

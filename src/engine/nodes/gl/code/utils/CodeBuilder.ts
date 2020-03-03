@@ -96,7 +96,7 @@ export class CodeBuilder {
 		);
 		this.reset();
 		for (let shader_name of this.shader_names()) {
-			const nodes = nodes_by_shader_name.get(shader_name);
+			const nodes = lodash_uniq(nodes_by_shader_name.get(shader_name));
 			this._shaders_collection_controller.set_current_shader_name(shader_name);
 			if (nodes) {
 				for (let node of nodes) {

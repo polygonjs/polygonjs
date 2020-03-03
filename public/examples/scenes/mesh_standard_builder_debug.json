@@ -52,7 +52,7 @@
 							"output1": {"type": "output", "params": {}, "inputs": []}
 						},
 						"children_context": "gl",
-						"params": {},
+						"params": {"use_env_map": 1},
 						"inputs": [],
 						"selection": []
 					}
@@ -107,13 +107,132 @@
 				"inputs": [],
 				"flags": {"display": true}
 			},
+			"basic": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_basic1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": ["-2.5", 0, 0]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"basic_builder": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_basic_builder1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": ["-2.5", 0, "2.5"]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"lambert": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_lambert1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"lambert_builder": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_lambert_builder1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": ["0", 0, "2.5"]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
 			"COP": {
 				"type": "cop",
-				"nodes": {"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}}},
+				"nodes": {
+					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}},
+					"file1": {
+						"type": "file",
+						"params": {"url": "/examples/textures/piz_compressed.exr"},
+						"inputs": [],
+						"flags": {}
+					},
+					"env_map": {"type": "env_map", "params": {}, "inputs": ["file1"], "flags": {}}
+				},
 				"children_context": "cop",
 				"params": {},
 				"inputs": [],
 				"selection": []
+			},
+			"standard": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": [2.5, 0, 0]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
 			},
 			"standard_builder1": {
 				"type": "geo",
@@ -139,7 +258,7 @@
 			}
 		},
 		"children_context": "objects",
-		"selection": []
+		"selection": ["COP"]
 	},
 	"ui": {
 		"nodes": {
@@ -167,7 +286,34 @@
 				}
 			},
 			"hemisphere_light1": {"pos": [0, 450]},
-			"COP": {"pos": [-350, 400], "nodes": {"file_uv": {"pos": [-250, 300]}}},
+			"basic": {
+				"pos": [0, -200],
+				"nodes": {"material3": {"pos": [-200, 100]}, "object_merge1": {"pos": [-200, -100]}}
+			},
+			"basic_builder": {
+				"pos": [0, -100],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"lambert": {
+				"pos": [200, -200],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"lambert_builder": {
+				"pos": [200, -100],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"COP": {
+				"pos": [-350, 350],
+				"nodes": {
+					"file_uv": {"pos": [-250, 300]},
+					"file1": {"pos": [-100, 300]},
+					"env_map": {"pos": [-100, 450]}
+				}
+			},
+			"standard": {
+				"pos": [400, -200],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
 			"standard_builder1": {
 				"pos": [400, -100],
 				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}

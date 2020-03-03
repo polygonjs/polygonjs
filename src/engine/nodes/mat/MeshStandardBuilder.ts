@@ -7,8 +7,9 @@ import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/Tex
 import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {GlAssemblerController} from '../gl/code/Controller';
-import {NodeContext} from '../../poly/NodeContext';
 import {ShaderAssemblerStandard} from '../gl/code/assemblers/materials/Standard';
+import {BaseParamType} from '../../params/_Base';
+import {BaseNodeType} from '../_Base';
 
 import {SHADER_DEFAULTS} from './MeshStandard';
 
@@ -17,8 +18,16 @@ class MeshStandardMatParamsConfig extends TextureEnvMapParamConfig(
 		TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
 	)
 ) {
-	metalness = ParamConfig.FLOAT(SHADER_DEFAULTS.metalness);
-	roughness = ParamConfig.FLOAT(SHADER_DEFAULTS.roughness);
+	metalness = ParamConfig.FLOAT(SHADER_DEFAULTS.metalness, {
+		cook: false,
+		callback: (node: BaseNodeType, param: BaseParamType) =>
+			MeshStandardBuilderMatNode._update_metalness(node as MeshStandardBuilderMatNode),
+	});
+	roughness = ParamConfig.FLOAT(SHADER_DEFAULTS.roughness, {
+		cook: false,
+		callback: (node: BaseNodeType, param: BaseParamType) =>
+			MeshStandardBuilderMatNode._update_roughness(node as MeshStandardBuilderMatNode),
+	});
 }
 const ParamsConfig = new MeshStandardMatParamsConfig();
 
@@ -40,14 +49,12 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		direct_params: true,
 		define: false,
 	});
-	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
 		this.params.set_post_create_params_hook(() => {
 			this.texture_map_controller.initialize_node();
 			this.texture_alpha_map_controller.initialize_node();
 			this.texture_env_map_controller.initialize_node();
 		});
-		this.children_controller?.init();
 	}
 
 	protected _create_assembler_controller() {
@@ -66,18 +73,16 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 
 		if (this._material) {
 			this._material.uniforms.envMapIntensity.value = this.pv.env_map_intensity;
-			this._material.uniforms.roughness.value = this.pv.roughness;
-			this._material.uniforms.metalness.value = this.pv.metalness;
-			this._material.needsUpdate = true;
+			MeshStandardBuilderMatNode._update_metalness(this);
+			MeshStandardBuilderMatNode._update_roughness(this);
 		}
 
 		this.set_material(this.material);
 	}
-
-	protected async _compile() {
-		if (this._material) {
-			await this.assembler_controller.assembler.compile_material(this._material);
-			await this.assembler_controller.post_compile();
-		}
+	static _update_metalness(node: MeshStandardBuilderMatNode) {
+		node.material.uniforms.metalness.value = node.pv.metalness;
+	}
+	static _update_roughness(node: MeshStandardBuilderMatNode) {
+		node.material.uniforms.roughness.value = node.pv.roughness;
 	}
 }

@@ -7,7 +7,6 @@ import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/Tex
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {GlAssemblerController} from '../gl/code/Controller';
-import {NodeContext} from '../../poly/NodeContext';
 class MeshBasicMatParamsConfig extends TextureAlphaMapParamConfig(
 	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
 ) {}
@@ -19,7 +18,6 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		return 'mesh_basic_builder';
 	}
 
-	protected _children_controller_context = NodeContext.GL;
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {uniforms: true});
 	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
 		uniforms: true,
@@ -29,7 +27,6 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 			this.texture_map_controller.initialize_node();
 			this.texture_alpha_map_controller.initialize_node();
 		});
-		this.children_controller?.init();
 	}
 
 	protected _create_assembler_controller() {
@@ -46,14 +43,5 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		await TextureAlphaMapController.update(this);
 
 		this.set_material(this.material);
-	}
-
-	protected async _compile() {
-		if (this._material) {
-			await this.assembler_controller.assembler.compile_material(this._material);
-			await this.assembler_controller.post_compile();
-		}
-		// console.log(this._material.vertexShader);
-		// console.log(this._material.fragmentShader);
 	}
 }

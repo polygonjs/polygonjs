@@ -6,7 +6,7 @@ uniform vec2 resolution;
 
 void main() {
 
-	vec4 diffuseColor;
+	vec4 diffuseColor = vec4(1.0,0.0,1.0,1.0);
 
 
 	// INSERT BODY

@@ -9,3 +9,8 @@ export enum NodeContext {
 	SOP = 'sop',
 	POST = 'post',
 }
+
+export interface NodeContextAndType {
+	context: NodeContext;
+	type: string;
+}

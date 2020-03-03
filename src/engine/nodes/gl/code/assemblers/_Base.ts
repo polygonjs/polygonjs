@@ -227,7 +227,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		// copy the values of the old uniform
 		for (let uniform_name of Object.keys(old_uniforms)) {
 			const new_uniform = new_uniforms[uniform_name];
-			new_uniform.value = old_uniforms[uniform_name].value;
+			if (new_uniform) {
+				new_uniform.value = old_uniforms[uniform_name].value;
+			}
 		}
 
 		for (let param_config of this.param_configs()) {

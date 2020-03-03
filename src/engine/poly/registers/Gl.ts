@@ -136,6 +136,7 @@ export interface GlNodeChildrenMap {
 	vec4_to_vector: Vec4ToVectorGlNode;
 }
 
+import {NodeContext} from '../NodeContext';
 import {Poly} from '../../Poly';
 export class GlRegister {
 	static run(poly: Poly) {
@@ -146,7 +147,7 @@ export class GlRegister {
 		poly.register_node(AndGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(AsinGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(AtanGlNode, CATEGORY_GL.TRIGO);
-		poly.register_node(AttributeGlNode, CATEGORY_GL.GLOBALS);
+		poly.register_node(AttributeGlNode, CATEGORY_GL.GLOBALS, {except: [`${NodeContext.COP}/builder`]});
 		poly.register_node(CeilGlNode, CATEGORY_GL.MATH);
 		poly.register_node(CosGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(ConstantGlNode, CATEGORY_GL.GLOBALS);
