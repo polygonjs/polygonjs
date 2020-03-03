@@ -17,17 +17,7 @@ export class ShaderAssemblerLambert extends ShaderAssemblerMesh {
 	create_material() {
 		const template_shader = this._template_shader;
 		const material = new ShaderMaterial({
-			// vertexColors: VertexColors,
-			// side: FrontSide,
-			// transparent: true,
-			// fog: true,
 			lights: true,
-			// depthTest: true,
-			// alphaTest: 0.5,
-			// defines: {
-			// 	USE_UV: 1,
-			// 	USE_COLOR: 1,
-			// },
 
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 			vertexShader: template_shader.vertexShader,

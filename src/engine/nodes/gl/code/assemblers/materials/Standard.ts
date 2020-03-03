@@ -1,19 +1,14 @@
-import {VertexColors} from 'three/src/constants';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-// import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-// import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-// import {Material} from 'three/src/materials/Material';
-import {FrontSide} from 'three/src/constants';
 
 import {ShaderAssemblerMesh} from './_BaseMesh';
 import {BaseGlShaderAssembler} from '../_Base';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 
-import metalnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/metalnessmap_fragment.glsl';
-import roughnessmap_fragment from '../Gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
+import metalnessmap_fragment from '../../../gl/ShaderLib/ShaderChunk/metalnessmap_fragment.glsl';
+import roughnessmap_fragment from '../../../gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
 import {OutputGlNode} from '../../../Output';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {ParamType} from '../../../../../poly/ParamType';
@@ -23,8 +18,6 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		return false;
 	}
 
-	// _color_declaration() { return 'vec4 diffuseColor' }
-	// _template_shader(){ return ShaderLib.standard }
 	get _template_shader() {
 		const template = this.is_physical() ? ShaderLib.physical : ShaderLib.standard;
 		return {
@@ -34,21 +27,14 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		};
 	}
 
-	_create_material() {
+	create_material() {
 		const template_shader = this._template_shader;
 
 		const options = {
-			vertexColors: VertexColors,
-			side: FrontSide,
-			transparent: true,
-			fog: true,
 			lights: true,
-			depthTest: true,
-			alphaTest: 0.5,
-			// defines: {
-			// 	USE_UV: 1,
-			// 	USE_COLOR: 1,
-			// },
+			extensions: {
+				derivatives: true,
+			},
 
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 			vertexShader: template_shader.vertexShader,
@@ -73,7 +59,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 				roughnessmap_fragment
 			);
 		};
-
+		this._add_custom_materials(material);
 		return material;
 	}
 
@@ -92,6 +78,8 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 
 	add_output_params(output_child: OutputGlNode) {
 		BaseGlShaderAssembler.add_output_params(output_child);
+		// those defaults should be 1. If they were 0, using the params
+		// at the material level would appear not to work
 		output_child.add_param(ParamType.FLOAT, 'metalness', 1);
 		output_child.add_param(ParamType.FLOAT, 'roughness', 1);
 	}

@@ -42,7 +42,9 @@ export abstract class ShaderAssemblerMesh extends ShaderAssemblerMaterial {
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
 			material.fragmentShader = new_fragment_shader;
-			material.uniforms = this.build_uniforms(this._template_shader?.uniforms);
+			if (this._template_shader && this._template_shader.uniforms) {
+				material.uniforms = this.build_uniforms(this._template_shader.uniforms, material.uniforms);
+			}
 			material.needsUpdate = true;
 		}
 

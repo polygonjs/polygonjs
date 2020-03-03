@@ -34,35 +34,35 @@ export class CodeBuilder {
 		const sorted_nodes = node_traverser.sorted_nodes();
 		for (let shader_name of this.shader_names()) {
 			const root_nodes_for_shader = this._assembler.root_nodes_by_shader_name(shader_name);
-			const leaf_nodes_for_shader = this._assembler.leaf_nodes_by_shader_name(shader_name);
+			// const leaf_nodes_for_shader = this._assembler.leaf_nodes_by_shader_name(shader_name);
 
 			// keep track of which nodes are both leaf and root, and do not use their code twice
 			// as this may happen with an attribute node, when used as both import and export
 			// TODO: that seems useless, as I surely should be able to filter duplicates if needed
 
 			// ensure nodes are unique
-			const node_ids: Map<string, boolean> = new Map();
-			nodes_by_shader_name.forEach((nodes, shader_name) => {
-				for (let node of nodes) {
-					node_ids.set(node.graph_node_id, true);
-				}
-			});
+			// const node_ids: Map<string, boolean> = new Map();
+			// nodes_by_shader_name.forEach((nodes, shader_name) => {
+			// 	for (let node of nodes) {
+			// 		node_ids.set(node.graph_node_id, true);
+			// 	}
+			// });
 
 			for (let root_node of root_nodes_for_shader) {
 				// if(!both_leaf_and_root_nodes_by_id[root_node.graph_node_id()]){
-				if (!node_ids.get(root_node.graph_node_id)) {
-					MapUtils.push_on_array_at_entry(nodes_by_shader_name, shader_name, root_node);
-					node_ids.set(root_node.graph_node_id, true);
-				}
+				// if (!node_ids.get(root_node.graph_node_id)) {
+				MapUtils.push_on_array_at_entry(nodes_by_shader_name, shader_name, root_node);
+				// node_ids.set(root_node.graph_node_id, true);
+				// }
 				// }
 			}
-			for (let leaf_node of leaf_nodes_for_shader) {
-				// if(!both_leaf_and_root_nodes_by_id[leaf_node.graph_node_id()]){
-				if (!node_ids.get(leaf_node.graph_node_id)) {
-					MapUtils.unshift_on_array_at_entry(nodes_by_shader_name, shader_name, leaf_node);
-				}
-				// }
-			}
+			// for (let leaf_node of leaf_nodes_for_shader) {
+			// if(!both_leaf_and_root_nodes_by_id[leaf_node.graph_node_id()]){
+			// if (!node_ids.get(leaf_node.graph_node_id)) {
+			// MapUtils.unshift_on_array_at_entry(nodes_by_shader_name, shader_name, leaf_node);
+			// }
+			// }
+			// }
 		}
 
 		// ensure nodes are not added if already present

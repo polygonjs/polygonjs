@@ -10,13 +10,19 @@ import {SkinningController, SkinningParamConfig} from './utils/SkinningControlle
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
+
+export const SHADER_DEFAULTS = {
+	metalness: 1,
+	roughness: 0.5,
+};
+
 class MeshStandardMatParamsConfig extends TextureEnvMapParamConfig(
 	TextureAlphaMapParamConfig(
 		TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
 	)
 ) {
-	metalness = ParamConfig.FLOAT(1);
-	roughness = ParamConfig.FLOAT(0);
+	metalness = ParamConfig.FLOAT(SHADER_DEFAULTS.metalness);
+	roughness = ParamConfig.FLOAT(SHADER_DEFAULTS.roughness);
 }
 // TODO: add the following texture params:
 // - aoMap+aoMapIntensity
@@ -47,9 +53,13 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		});
 	}
 
-	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
-	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
-	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this);
+	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {direct_params: true});
+	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
+		direct_params: true,
+	});
+	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this, {
+		direct_params: true,
+	});
 	initialize_node() {
 		this.params.set_post_create_params_hook(() => {
 			this.texture_map_controller.initialize_node();

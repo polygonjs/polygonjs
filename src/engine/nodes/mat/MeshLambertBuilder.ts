@@ -20,8 +20,10 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		return 'mesh_lambert_builder';
 	}
 
-	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
-	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
+	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {uniforms: true});
+	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
+		uniforms: true,
+	});
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
 		this.params.set_post_create_params_hook(() => {
@@ -36,7 +38,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 	}
 
 	async cook() {
-		this.compile_if_required();
+		await this.compile_if_required();
 
 		ColorsController.update(this);
 		SideController.update(this);

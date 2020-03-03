@@ -2,7 +2,12 @@ import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {FileCopNode} from '../../cop/File';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, OperatorPathOptions} from './_BaseTextureController';
+import {
+	BaseTextureMapController,
+	BooleanParamOptions,
+	OperatorPathOptions,
+	UpdateOptions,
+} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -27,8 +32,8 @@ abstract class TextureEnvMapMatNode extends TypedMatNode<CurrentMaterial, Textur
 }
 
 export class TextureEnvMapController extends BaseTextureMapController {
-	constructor(protected node: TextureEnvMapMatNode) {
-		super(node);
+	constructor(node: TextureEnvMapMatNode, _update_options: UpdateOptions) {
+		super(node, _update_options);
 	}
 	initialize_node() {
 		this.add_hooks(this.node.p.use_env_map, this.node.p.env_map);

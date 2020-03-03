@@ -28,8 +28,10 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 			opacity: 1,
 		});
 	}
-	readonly texture_map_controller: TextureMapController = new TextureMapController(this);
-	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this);
+	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {direct_params: true});
+	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
+		direct_params: true,
+	});
 	initialize_node() {
 		this.params.set_post_create_params_hook(() => {
 			this.texture_map_controller.initialize_node();

@@ -72,10 +72,20 @@ type TextureRemoveCallback<O extends Object> = (
 ) => void;
 
 type CurrentMaterial = Material | ShaderMaterial;
+
+export interface UpdateOptions {
+	direct_params?: boolean;
+	uniforms?: boolean;
+	define?: boolean;
+}
 export class BaseTextureMapController extends BaseController {
-	// add_params() {
-	// 	this.node.add_param(ParamType.BOOLEAN, 'skinning', 0);
-	// }
+	constructor(protected node: BaseMatNodeType, protected _update_options: UpdateOptions) {
+		super(node);
+		if (this._update_options.define == null) {
+			this._update_options.define = true;
+		}
+	}
+
 	protected add_hooks(use_map_param: BooleanParam, path_param: OperatorPathParam) {
 		use_map_param.add_post_dirty_hook('TextureController', () => {
 			this.update();
@@ -92,11 +102,12 @@ export class BaseTextureMapController extends BaseController {
 		use_map_param: BooleanParam,
 		path_param: OperatorPathParam
 	) {
-		if ((material as ShaderMaterial).uniforms) {
+		if (this._update_options.uniforms) {
 			const shader_material = material as ShaderMaterial;
 			const attr_name = mat_attrib_name as keyof SubType<IUniforms, Texture | null>;
 			await this._update_texture_on_uniforms(shader_material, attr_name, use_map_param, path_param);
-		} else {
+		}
+		if (this._update_options.direct_params) {
 			const mat = material as Material;
 			const attr_name = mat_attrib_name as keyof SubType<Material, Texture | null>;
 			await this._update_texture_on_material(mat, attr_name, use_map_param, path_param);
@@ -140,8 +151,11 @@ export class BaseTextureMapController extends BaseController {
 		}
 		if (!has_texture || new_texture_is_different) {
 			uniforms[mat_attrib_name].value = texture as any;
-			const define_name = this._define_name(`${mat_attrib_name}`);
-			material.defines[define_name] = 1;
+			if (this._do_update_define()) {
+				const define_name = this._define_name(`${mat_attrib_name}`);
+				console.log('texture', define_name, texture);
+				material.defines[define_name] = 1;
+			}
 			material.defines['USE_UV'] = 1;
 			material.needsUpdate = true;
 		}
@@ -153,12 +167,15 @@ export class BaseTextureMapController extends BaseController {
 	) {
 		if (uniforms[mat_attrib_name].value) {
 			uniforms[mat_attrib_name].value = null;
-			const define_name = this._define_name(`${mat_attrib_name}`);
-			delete material.defines[define_name];
+			if (this._do_update_define()) {
+				const define_name = this._define_name(`${mat_attrib_name}`);
+				delete material.defines[define_name];
+			}
 			material.needsUpdate = true;
 		}
 	}
 	private _define_name(mat_attrib_name: string): string {
+		console.log('_define_name', mat_attrib_name, 'USE_' + mat_attrib_name.replace('_', '').toUpperCase());
 		return 'USE_' + mat_attrib_name.replace('_', '').toUpperCase();
 	}
 
@@ -261,5 +278,12 @@ export class BaseTextureMapController extends BaseController {
 		// this is not wrapped in an else clause after the "if (use_map) {"
 		// as we should come here after any of the errors above, if any is triggered
 		remove_callback(material, texture_owner, mat_attrib_name);
+	}
+
+	private _do_update_define(): boolean {
+		if (this._update_options.define == null) {
+			return true;
+		}
+		return this._update_options.define;
 	}
 }

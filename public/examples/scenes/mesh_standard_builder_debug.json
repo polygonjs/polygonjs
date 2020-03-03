@@ -1,0 +1,177 @@
+{
+	"properties": {
+		"frame": 600,
+		"frame_range": [1, 600],
+		"frame_range_locked": [true, true],
+		"fps": 60,
+		"master_camera_node_path": "/perspective_camera1"
+	},
+	"root": {
+		"type": "obj",
+		"nodes": {
+			"events1": {
+				"type": "events",
+				"nodes": {"camera_orbit_controls1": {"type": "camera_orbit_controls", "params": {}, "inputs": []}},
+				"children_context": "event",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"perspective_camera1": {
+				"type": "perspective_camera",
+				"params": {
+					"controls": "/events1/camera_orbit_controls1",
+					"target": [-1.1206168441491506, -0.6248028543037529, 1.37086997652168],
+					"fov": 55.29,
+					"t": [1.251606906682306, 5.9738873470648075, 10.083685301577994],
+					"r": [-37.138632638028746, 12.245884186052082, 9.126058421291367],
+					"background_color": [1, 1, 1]
+				},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"orthographic_camera1": {
+				"type": "orthographic_camera",
+				"params": {"background_color": [1, 1, 1]},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"ambient_light1": {
+				"type": "ambient_light",
+				"params": {"intensity": 0.28},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"MAT": {
+				"type": "materials",
+				"nodes": {
+					"mesh_standard_builder1": {
+						"type": "mesh_standard_builder",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {"type": "output", "params": {}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {},
+						"inputs": [],
+						"selection": []
+					}
+				},
+				"children_context": "mat",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"spot_light1": {
+				"type": "spot_light",
+				"params": {"t": [5, 4.1, 0], "r": [0, 0, -34.3], "intensity": 0.65},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"base": {
+				"type": "geo",
+				"nodes": {
+					"transform1": {
+						"type": "transform",
+						"params": {},
+						"inputs": ["sphere1"],
+						"flags": {"display": true}
+					},
+					"sphere1": {
+						"type": "sphere",
+						"params": {"resolution": [30, 30]},
+						"inputs": [],
+						"flags": {"display": false}
+					},
+					"color1": {
+						"type": "color",
+						"params": {"color": ["if (@P.y< 0,0,1)", "if (@P.x< 0,0,1)", "1"]},
+						"inputs": ["transform1"],
+						"flags": {"display": false}
+					},
+					"OUT": {"type": "null", "params": {}, "inputs": ["color1"], "flags": {"display": false}}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": false},
+				"selection": []
+			},
+			"hemisphere_light1": {
+				"type": "hemisphere_light",
+				"params": {
+					"sky_color": [0.6, 0.8980392156862745, 1],
+					"ground_color": [0.2, 0.2, 0.2],
+					"show_helper": 0
+				},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"COP": {
+				"type": "cop",
+				"nodes": {"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}}},
+				"children_context": "cop",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"standard_builder1": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_standard_builder1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": [2.5, 0, 2.5]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			}
+		},
+		"children_context": "objects",
+		"selection": []
+	},
+	"ui": {
+		"nodes": {
+			"events1": {"pos": [-350, 150], "nodes": {"camera_orbit_controls1": {"pos": [-250, 100]}}},
+			"perspective_camera1": {"pos": [-350, 0]},
+			"orthographic_camera1": {"pos": [-350, -100]},
+			"ambient_light1": {"pos": [0, 300]},
+			"MAT": {
+				"pos": [-350, 250],
+				"nodes": {
+					"mesh_standard_builder1": {
+						"pos": [200, 350],
+						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
+					}
+				}
+			},
+			"spot_light1": {"pos": [0, 150]},
+			"base": {
+				"pos": [0, -350],
+				"nodes": {
+					"transform1": {"pos": [0, -50]},
+					"sphere1": {"pos": [0, -200]},
+					"color1": {"pos": [0, 150]},
+					"OUT": {"pos": [0, 300]}
+				}
+			},
+			"hemisphere_light1": {"pos": [0, 450]},
+			"COP": {"pos": [-350, 400], "nodes": {"file_uv": {"pos": [-250, 300]}}},
+			"standard_builder1": {
+				"pos": [400, -100],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			}
+		}
+	}
+}

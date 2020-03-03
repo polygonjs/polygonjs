@@ -221,8 +221,15 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	// 	}
 	// }
 
-	protected build_uniforms(template_uniforms?: IUniforms) {
-		const new_uniforms = template_uniforms ? UniformsUtils.clone(template_uniforms) : {};
+	protected build_uniforms(template_uniforms: IUniforms, old_uniforms: IUniforms) {
+		const new_uniforms = UniformsUtils.clone(template_uniforms);
+
+		// copy the values of the old uniform
+		for (let uniform_name of Object.keys(old_uniforms)) {
+			const new_uniform = new_uniforms[uniform_name];
+			new_uniform.value = old_uniforms[uniform_name].value;
+		}
+
 		for (let param_config of this.param_configs()) {
 			new_uniforms[param_config.uniform_name] = param_config.uniform;
 		}

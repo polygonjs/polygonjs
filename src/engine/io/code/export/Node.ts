@@ -183,7 +183,7 @@ export class NodeCodeExporter {
 	protected add_children() {
 		const children = lodash_sortBy(this._node.children(), (child) => child.name);
 		const nodes_exporter = new NodesCodeExporter(children);
-		nodes_exporter.process().forEach((child_line) => {
+		nodes_exporter.process(this.var_name()).forEach((child_line) => {
 			this._lines.push(child_line);
 		});
 	}
@@ -206,7 +206,7 @@ export class NodeCodeExporter {
 		if (this._node.children_controller?.selection != null) {
 			for (let node of this._node.children_controller.selection.nodes()) {
 				const node_exporter = CodeExporterDispatcher.dispatch_node(node);
-				this._lines.push(`${this.var_name()}.children_controller.selection.add(${node_exporter.var_name()})`);
+				this._lines.push(`${this.var_name()}.children_controller.selection.add([${node_exporter.var_name()}])`);
 			}
 		}
 	}

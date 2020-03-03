@@ -17,6 +17,7 @@ import './engine/params/Boolean';
 import './engine/params/Color';
 import './engine/params/Float';
 import './engine/params/Integer';
+import './engine/params/Multiple';
 import './engine/params/String';
 import './engine/params/Vector3';
 import './engine/params/utils/DefaultValues';
