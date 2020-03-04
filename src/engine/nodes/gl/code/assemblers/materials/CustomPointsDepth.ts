@@ -6,7 +6,7 @@ import {BasicDepthPacking} from 'three/src/constants';
 
 import {ShaderAssemblerMaterial} from './_BaseMaterial';
 
-import TemplateVertex from '../templates/CustomPointsDepth.vert.glsl';
+import TemplateVertex from '../../templates/CustomPointsDepth.vert.glsl';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([[ShaderName.VERTEX, '// INSERT DEFINES']]);
@@ -35,7 +35,7 @@ export class ShaderAssemblerCustomPointsDepth extends ShaderAssemblerMaterial {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
 
-	_create_material() {
+	create_material() {
 		const template_shader = this._template_shader;
 		return new ShaderMaterial({
 			// vertexColors: VertexColors,

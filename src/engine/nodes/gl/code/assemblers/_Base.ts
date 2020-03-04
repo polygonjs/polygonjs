@@ -107,9 +107,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		return this._shaders_by_name;
 	}
 
-	protected _create_material(): ShaderMaterial | undefined {
-		return undefined;
-	}
+	// protected create_material(): ShaderMaterial | undefined {
+	// 	return undefined;
+	// }
 	protected _build_lines() {
 		for (let shader_name of this.shader_names) {
 			const template = this._template_shader_for_shader_name(shader_name);

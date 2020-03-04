@@ -41,24 +41,21 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			uniforms: template.uniforms,
 		};
 	}
-	_create_material() {
+	create_material() {
 		const template_shader = this._template_shader;
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
 		// uniforms.size.value = 10
 
 		const material = new ShaderMaterial({
-			// vertexColors: VertexColors,
-			// side: FrontSide,
 			transparent: true,
 			fog: true,
-			// lights: false,
 
 			// size: 10,
 			// //blending: AdditiveBlending
-			depthTest: true,
+			// depthTest: true,
 			// depthwrite: true,
-			alphaTest: 0.5,
+			// alphaTest: 0.5,
 			defines: {
 				// ALPHATEST: 0.5,
 				USE_SIZEATTENUATION: 1,
@@ -68,10 +65,8 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		});
-
+		this._add_custom_materials(material);
 		return material;
-		// material.uniforms.size.value = 10
-		// return material
 	}
 	// protected insert_body_after(shader_name){
 	// 	return {

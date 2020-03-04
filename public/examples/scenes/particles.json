@@ -1,0 +1,480 @@
+{
+	"properties": {
+		"frame": 600,
+		"frame_range": [1, 600],
+		"frame_range_locked": [true, true],
+		"fps": 60,
+		"master_camera_node_path": "/perspective_camera1"
+	},
+	"root": {
+		"type": "obj",
+		"nodes": {
+			"events1": {
+				"type": "events",
+				"nodes": {"camera_orbit_controls1": {"type": "camera_orbit_controls", "params": {}, "inputs": []}},
+				"children_context": "event",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"perspective_camera1": {
+				"type": "perspective_camera",
+				"params": {
+					"controls": "/events1/camera_orbit_controls1",
+					"target": [-1.1206168441491506, -0.6248028543037529, 1.37086997652168],
+					"fov": 55.29,
+					"t": [4.6748568641623, 3.7420538489210555, 7.639105212298687],
+					"r": [-34.86355569710655, 37.18507695710185, 22.833923697908975],
+					"background_color": [1, 1, 1]
+				},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"orthographic_camera1": {
+				"type": "orthographic_camera",
+				"params": {"background_color": [1, 1, 1]},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"ambient_light1": {
+				"type": "ambient_light",
+				"params": {"intensity": 0.28},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"MAT": {
+				"type": "materials",
+				"nodes": {
+					"mesh_lambert_builder1": {
+						"type": "mesh_lambert_builder",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {"type": "output", "params": {}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {},
+						"inputs": [],
+						"selection": []
+					},
+					"mesh_lambert1": {"type": "mesh_lambert", "params": {"use_vertex_colors": 1}, "inputs": []},
+					"mesh_basic1": {"type": "mesh_basic", "params": {"use_vertex_colors": 1}, "inputs": []},
+					"mesh_basic_builder1": {
+						"type": "mesh_basic_builder",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {
+								"type": "output",
+								"params": {},
+								"inputs": [{"name": "color", "node": "globals1", "output": "position"}]
+							}
+						},
+						"children_context": "gl",
+						"params": {"use_map": 1, "map": "/COP/builder1"},
+						"inputs": [],
+						"selection": []
+					},
+					"mesh_standard1": {"type": "mesh_standard", "params": {"use_env_map": 1}, "inputs": []},
+					"mesh_standard_builder1": {
+						"type": "mesh_standard_builder",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {"type": "output", "params": {}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {"use_env_map": 1},
+						"inputs": [],
+						"selection": []
+					},
+					"points1": {"type": "points", "params": {"size": 0.32}, "inputs": []},
+					"points_builder1": {
+						"type": "points_builder",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {
+								"type": "output",
+								"params": {},
+								"inputs": [
+									{"name": "color", "node": "globals1", "output": "position"},
+									{"name": "gl_PointSize", "node": "constant1", "output": "val"}
+								]
+							},
+							"constant1": {"type": "constant", "params": {"float": 3}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {},
+						"inputs": [],
+						"selection": ["constant1"]
+					}
+				},
+				"children_context": "mat",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"spot_light1": {
+				"type": "spot_light",
+				"params": {"t": [5, 4.1, 0], "r": [0, 0, -34.3], "intensity": 0.65},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"base": {
+				"type": "geo",
+				"nodes": {
+					"transform1": {
+						"type": "transform",
+						"params": {},
+						"inputs": ["sphere1"],
+						"flags": {"display": true}
+					},
+					"sphere1": {
+						"type": "sphere",
+						"params": {"resolution": [30, 30]},
+						"inputs": [],
+						"flags": {"display": false}
+					},
+					"color1": {
+						"type": "color",
+						"params": {"color": ["if (@P.y< 0,0,1)", "if (@P.x< 0,0,1)", "1"]},
+						"inputs": ["transform1"],
+						"flags": {"display": false}
+					},
+					"OUT": {"type": "null", "params": {}, "inputs": ["color1"], "flags": {"display": false}}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": false},
+				"selection": []
+			},
+			"hemisphere_light1": {
+				"type": "hemisphere_light",
+				"params": {
+					"sky_color": [0.6, 0.8980392156862745, 1],
+					"ground_color": [0.2, 0.2, 0.2],
+					"show_helper": 0
+				},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"basic": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_basic1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": ["-2.5", 0, 0]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"basic_builder": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_basic_builder1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": ["-2.5", 0, "2.5"]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"lambert": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_lambert1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"lambert_builder": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_lambert_builder1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": ["0", 0, "2.5"]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"COP": {
+				"type": "cop",
+				"nodes": {
+					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}},
+					"file1": {
+						"type": "file",
+						"params": {"url": "/examples/textures/piz_compressed.exr"},
+						"inputs": [],
+						"flags": {}
+					},
+					"env_map": {"type": "env_map", "params": {}, "inputs": ["file1"], "flags": {}},
+					"builder1": {
+						"type": "builder",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {
+								"type": "output",
+								"params": {},
+								"inputs": [
+									{"name": "color", "node": "constant1", "output": "val"},
+									{"name": "alpha", "node": "constant2", "output": "val"}
+								]
+							},
+							"constant1": {
+								"type": "constant",
+								"params": {"type": "4", "vec3": ["1", 0, 0]},
+								"inputs": []
+							},
+							"constant2": {"type": "constant", "params": {"float": 1}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {},
+						"inputs": [],
+						"flags": {},
+						"selection": []
+					}
+				},
+				"children_context": "cop",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"standard": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": [2.5, 0, 0]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"standard_builder1": {
+				"type": "geo",
+				"nodes": {
+					"material3": {
+						"type": "material",
+						"params": {"material": "/MAT/mesh_standard_builder1"},
+						"inputs": ["object_merge1"],
+						"flags": {"display": true}
+					},
+					"object_merge1": {
+						"type": "object_merge",
+						"params": {"geometry": "/base/OUT"},
+						"inputs": [],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {"t": [2.5, 0, 2.5]},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material3"]
+			},
+			"particles": {
+				"type": "geo",
+				"nodes": {
+					"plane1": {"type": "plane", "params": {}, "inputs": [], "flags": {"display": false}},
+					"transform1": {
+						"type": "transform",
+						"params": {"t": [0, 0.4, 0], "r": [0, 61, 90]},
+						"inputs": ["plane1"],
+						"flags": {"display": false}
+					},
+					"box1": {"type": "box", "params": {}, "inputs": [], "flags": {"display": false}},
+					"scatter1": {
+						"type": "scatter",
+						"params": {},
+						"inputs": ["transform2"],
+						"flags": {"display": false}
+					},
+					"particles_system_gpu1": {
+						"type": "particles_system_gpu",
+						"params": {},
+						"inputs": ["scatter1"],
+						"flags": {"display": false}
+					},
+					"material1": {
+						"type": "material",
+						"params": {"material": "/MAT/points_builder1"},
+						"inputs": ["scatter1"],
+						"flags": {"display": true}
+					},
+					"transform2": {
+						"type": "transform",
+						"params": {"t": [0, 1.6, 0]},
+						"inputs": ["box1"],
+						"flags": {"display": false}
+					}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["material1"]
+			}
+		},
+		"children_context": "objects",
+		"selection": ["particles"]
+	},
+	"ui": {
+		"nodes": {
+			"events1": {"pos": [-350, 150], "nodes": {"camera_orbit_controls1": {"pos": [-250, 100]}}},
+			"perspective_camera1": {"pos": [-350, 0]},
+			"orthographic_camera1": {"pos": [-350, -100]},
+			"ambient_light1": {"pos": [0, 300]},
+			"MAT": {
+				"pos": [-350, 250],
+				"nodes": {
+					"mesh_lambert_builder1": {
+						"pos": [-50, 350],
+						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
+					},
+					"mesh_lambert1": {"pos": [-50, 250]},
+					"mesh_basic1": {"pos": [-300, 250]},
+					"mesh_basic_builder1": {
+						"pos": [-300, 350],
+						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
+					},
+					"mesh_standard1": {"pos": [200, 250]},
+					"mesh_standard_builder1": {
+						"pos": [200, 350],
+						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
+					},
+					"points1": {"pos": [-300, 550]},
+					"points_builder1": {
+						"pos": [-300, 650],
+						"nodes": {
+							"globals1": {"pos": [-200, 0]},
+							"output1": {"pos": [200, 0]},
+							"constant1": {"pos": [0, 200]}
+						}
+					}
+				}
+			},
+			"spot_light1": {"pos": [0, 150]},
+			"base": {
+				"pos": [0, -350],
+				"nodes": {
+					"transform1": {"pos": [0, -50]},
+					"sphere1": {"pos": [0, -200]},
+					"color1": {"pos": [0, 150]},
+					"OUT": {"pos": [0, 300]}
+				}
+			},
+			"hemisphere_light1": {"pos": [0, 450]},
+			"basic": {
+				"pos": [0, -200],
+				"nodes": {"material3": {"pos": [-200, 100]}, "object_merge1": {"pos": [-200, -100]}}
+			},
+			"basic_builder": {
+				"pos": [0, -100],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"lambert": {
+				"pos": [200, -200],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"lambert_builder": {
+				"pos": [200, -100],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"COP": {
+				"pos": [-350, 350],
+				"nodes": {
+					"file_uv": {"pos": [-250, 300]},
+					"file1": {"pos": [-100, 300]},
+					"env_map": {"pos": [-100, 450]},
+					"builder1": {
+						"pos": [50, 300],
+						"nodes": {
+							"globals1": {"pos": [-200, 0]},
+							"output1": {"pos": [200, 0]},
+							"constant1": {"pos": [0, -50]},
+							"constant2": {"pos": [0, 100]}
+						}
+					}
+				}
+			},
+			"standard": {
+				"pos": [400, -200],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"standard_builder1": {
+				"pos": [400, -100],
+				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
+			},
+			"particles": {
+				"pos": [-200, -250],
+				"nodes": {
+					"plane1": {"pos": [-150, -100]},
+					"transform1": {"pos": [-150, 50]},
+					"box1": {"pos": [50, -50]},
+					"scatter1": {"pos": [50, 150]},
+					"particles_system_gpu1": {"pos": [50, 300]},
+					"material1": {"pos": [-200, 400]},
+					"transform2": {"pos": [50, 50]}
+				}
+			}
+		}
+	}
+}

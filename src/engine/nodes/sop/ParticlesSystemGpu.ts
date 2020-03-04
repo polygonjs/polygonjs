@@ -87,6 +87,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
+	protected _children_controller_context = NodeContext.GL;
+	private _on_create_bound = this._on_create.bind(this);
 	initialize_node() {
 		// this._init_common_shader_builder(ShaderAssemblerParticles, {
 		// 	has_display_flag: true,
@@ -99,6 +101,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
 
 		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
+		this.children_controller?.init();
+		this.lifecycle.add_on_create_hook(this._on_create_bound);
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
@@ -243,7 +247,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	// 	this.assembler_controller.set_compilation_required_and_dirty();
 	// }
 
-	on_create() {
+	private _on_create() {
 		// to ensure the doc can create a node to display param documentation
 		// maybe there is a scene in the doc, so this isn't needed?
 		// if(!this.scene()){return}
@@ -264,19 +268,16 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		MAT.set_name(mat_name);
 
 		const create_points_mat = (MAT: MaterialsObjNode, name: string) => {
-			const points_mat = MAT.create_node('points')!;
-			points_mat.set_name(name);
-
-			const points_mat_constant_point_size = points_mat.create_node('constant')!;
-			points_mat_constant_point_size.set_name('constant_point_size');
-			points_mat_constant_point_size.p.value_float.set(4); // to match the default point material
-
-			const points_mat_output1 = points_mat.node('output1');
-			if (points_mat_output1) {
-				points_mat_output1.set_input('gl_PointSize', points_mat_constant_point_size, 'value');
-			}
-
-			return points_mat;
+			// const points_mat = MAT.node('points_builder1') //|| MAT.create_node('points_builder');
+			// points_mat.set_name(name);
+			// const points_mat_constant_point_size = points_mat.create_node('constant')!;
+			// points_mat_constant_point_size.set_name('constant_point_size');
+			// points_mat_constant_point_size.p.value_float.set(4); // to match the default point material
+			// const points_mat_output1 = points_mat.node('output1');
+			// if (points_mat_output1) {
+			// 	points_mat_output1.set_input('gl_PointSize', points_mat_constant_point_size, 'value');
+			// }
+			// return points_mat;
 		};
 		const points_mat = MAT.node(particles_mat_name) || create_points_mat(MAT, particles_mat_name);
 		if (points_mat) {
