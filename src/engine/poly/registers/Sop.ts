@@ -30,7 +30,6 @@ import {HexagonsSopNode} from '../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../nodes/sop/Hierarchy';
 // TODO: heightmap
 import {InstanceSopNode} from '../../nodes/sop/Instance';
-// TODO: particles
 import {JitterSopNode} from '../../nodes/sop/Jitter';
 import {LayerSopNode} from '../../nodes/sop/Layer';
 import {LineSopNode} from '../../nodes/sop/Line';
@@ -41,6 +40,7 @@ import {NormalsSopNode} from '../../nodes/sop/Normals';
 import {NullSopNode} from '../../nodes/sop/Null';
 import {ObjectMergeSopNode} from '../../nodes/sop/ObjectMerge';
 import {OcclusionSopNode} from '../../nodes/sop/Occlusion';
+import {ParticlesSystemGpuSopNode} from '../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../nodes/sop/Peak';
 import {PlaneSopNode} from '../../nodes/sop/Plane';
 import {PointSopNode} from '../../nodes/sop/Point';
@@ -99,6 +99,7 @@ export interface GeoNodeChildrenMap {
 	null: NullSopNode;
 	object_merge: ObjectMergeSopNode;
 	occlusion: OcclusionSopNode;
+	particles_system_gpu: ParticlesSystemGpuSopNode;
 	peak: PeakSopNode;
 	plane: PlaneSopNode;
 	point: PointSopNode;
@@ -160,6 +161,7 @@ export class SopRegister {
 		poly.register_node(NullSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(OcclusionSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.register_node(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PlaneSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(PointSopNode, CATEGORY_SOP.MODIFIER);

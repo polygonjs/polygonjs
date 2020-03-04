@@ -62,8 +62,10 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			this._build_lines();
 		}
 
-		const new_uniforms = this.build_uniforms({}, this._uniforms || {});
-		this._uniforms = new_uniforms;
+		this._uniforms = this._uniforms || {};
+		this.add_uniforms(this._uniforms);
+		// const new_uniforms = this.build_uniforms({}, this._uniforms || {});
+		// this._uniforms = new_uniforms;
 		// this._uniforms = this._uniforms || {};
 		// for (let uniform_name of Object.keys(new_uniforms)) {
 		// 	this._uniforms[uniform_name] = new_uniforms[uniform_name];

@@ -1,4 +1,4 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 // import {Shader} from 'three/src/renderers/shaders/ShaderLib'
@@ -221,34 +221,39 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	// 	}
 	// }
 
-	protected build_uniforms(template_uniforms: IUniforms, old_uniforms: IUniforms) {
-		const new_uniforms = UniformsUtils.clone(template_uniforms);
+	protected add_uniforms(current_uniforms: IUniforms) {
+		// const new_uniforms = UniformsUtils.clone(template_uniforms);
+
+		// copy the new uniforms onto the old ones, only adding, not removing
+		// for (let uniform_name of Object.keys(new_uniforms)) {
+
+		// }
 
 		// copy the values of the old uniform
-		for (let uniform_name of Object.keys(old_uniforms)) {
-			const new_uniform = new_uniforms[uniform_name];
-			if (new_uniform) {
-				new_uniform.value = old_uniforms[uniform_name].value;
-			}
-		}
+		// for (let uniform_name of Object.keys(old_uniforms)) {
+		// 	const new_uniform = new_uniforms[uniform_name];
+		// 	if (new_uniform) {
+		// 		new_uniform.value = old_uniforms[uniform_name].value;
+		// 	}
+		// }
 
 		for (let param_config of this.param_configs()) {
-			new_uniforms[param_config.uniform_name] = param_config.uniform;
+			current_uniforms[param_config.uniform_name] = param_config.uniform;
 		}
 
 		if (this.frame_dependent()) {
-			new_uniforms['frame'] = {
+			current_uniforms['frame'] = {
 				// type: '1f',
 				value: this._gl_parent_node.scene.frame,
 			};
 		}
 		if (this.resolution_dependent()) {
-			new_uniforms['resolution'] = {
+			current_uniforms['resolution'] = {
 				value: new Vector2(1000, 1000),
 			};
 		}
 
-		return new_uniforms;
+		// return new_uniforms;
 	}
 
 	//
