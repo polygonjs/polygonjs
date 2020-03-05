@@ -13,7 +13,6 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionsController} from './utils/ConnectionsController';
 
-const OUTPUT_NAME = 'val';
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT), {
 		menu: {
@@ -35,6 +34,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	static type() {
 		return 'constant';
 	}
+	static readonly OUTPUT_NAME = 'val';
 	private _params_by_type: Map<ConnectionPointType, BaseParamType> | undefined;
 	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	protected _allow_inputs_created_from_params: boolean = false;
@@ -42,7 +42,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	initialize_node() {
 		this.gl_connections_controller.initialize_node();
 
-		this.gl_connections_controller.set_output_name_function((index: number) => OUTPUT_NAME);
+		this.gl_connections_controller.set_output_name_function((index: number) => ConstantGlNode.OUTPUT_NAME);
 		this.gl_connections_controller.set_expected_input_types_function(() => []);
 		this.gl_connections_controller.set_expected_output_types_function(() => [this._current_connection_type]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
@@ -96,7 +96,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return this._params_by_type.get(connection_type)!;
 	}
 	private get _current_var_name(): string {
-		return this.gl_var_name(OUTPUT_NAME);
+		return this.gl_var_name(ConstantGlNode.OUTPUT_NAME);
 	}
 
 	// private update_output_type() {

@@ -8,6 +8,7 @@ import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 // import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
+import lodash_clone from 'lodash/clone';
 
 export class GlNodeSpareParamsController {
 	private _allow_inputs_created_from_params: boolean = true;
@@ -51,9 +52,11 @@ export class GlNodeSpareParamsController {
 		}
 		this.node.io.inputs.set_named_input_connection_points(connections);
 	}
+
 	set_inputless_param_names(names: string[]) {
 		return (this._inputless_param_names = names);
 	}
+
 	create_spare_parameters() {
 		const raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 		const default_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
@@ -84,15 +87,23 @@ export class GlNodeSpareParamsController {
 			// init_value = ParamValueToDefaultConverter.from_value(param_type, last_param_raw_input);
 			// if (init_value == null) {
 			const default_value_from_name = this.node.gl_input_default_value(param_name);
-			if (default_value_from_name != null) {
-				init_value = default_value_from_name;
-			} else {
-				if (last_param_init_value != null) {
-					init_value = last_param_init_value;
+
+			// TODO: this should really store the largest set value
+			// (as in the ones with the most components)
+			// so that for an Add Gl Node, if I set a vec4 to [1,2,3,4]
+			// and then set an input type, which will transform the param to a float
+			// it will have a value of 1.
+			// But if I then set it to a vec4 again, it will remember [1,2,3,4]
+			if (init_value == null)
+				if (default_value_from_name != null) {
+					init_value = default_value_from_name;
 				} else {
-					init_value = connection_point.init_value;
+					if (last_param_init_value != null) {
+						init_value = last_param_init_value;
+					} else {
+						init_value = connection_point.init_value;
+					}
 				}
-			}
 
 			// }
 			// }
@@ -104,11 +115,12 @@ export class GlNodeSpareParamsController {
 			// }
 
 			if (init_value != null) {
+				console.log('init_value', param_name, init_value);
 				params_update_options.to_add = params_update_options.to_add || [];
 				params_update_options.to_add.push({
 					name: param_name,
 					type: param_type,
-					init_value: init_value as any,
+					init_value: lodash_clone(init_value as any),
 					options: {
 						spare: true,
 						cook: false,

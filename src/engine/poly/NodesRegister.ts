@@ -62,7 +62,7 @@ export class NodesRegister {
 						return option_only.includes(context_and_type);
 					}
 					if (option_except) {
-						return option_except.includes(context_and_type);
+						return !option_except.includes(context_and_type);
 					}
 				}
 				return !options || options['only']?.includes(parent_node_type);

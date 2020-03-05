@@ -305,7 +305,11 @@ export class InputsController<T extends BaseNodeType> {
 		if (node) {
 			if (node.io.outputs.has_named_outputs) {
 				// if(node.has_named_output(output_index_or_name)){
-				output_index = node.io.outputs.get_output_index(output_index_or_name) || 0;
+				output_index = node.io.outputs.get_output_index(output_index_or_name);
+				if (output_index == null) {
+					console.warn(`node ${node.full_path()} does not have an output named ${output_index_or_name}`);
+					return;
+				}
 				// this seems to prevent connecting output 1 from a vec to float to something else
 				// } else {
 				// 	console.warn(`${node.full_path()} has no output '${output_index_or_name}'`)

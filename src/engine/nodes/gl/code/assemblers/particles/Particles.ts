@@ -146,13 +146,13 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	add_output_params(output_child: OutputGlNode) {
 		output_child.add_param(ParamType.VECTOR3, 'position', [0, 0, 0]);
 		output_child.add_param(ParamType.VECTOR3, 'velocity', [0, 0, 0]);
-		output_child.add_param(ParamType.VECTOR3, 'acceleration', [0, 0, 0]);
+		// output_child.add_param(ParamType.VECTOR3, 'accacceleration', [0, 0, 0]);
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([
 			new TypedNamedConnectionPoint('position', ConnectionPointType.VEC3),
 			new TypedNamedConnectionPoint('velocity', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('acceleration', ConnectionPointType.VEC3),
+			// new TypedNamedConnectionPoint('acceleration', ConnectionPointType.VEC3),
 			new TypedNamedConnectionPoint('frame', ConnectionPointType.FLOAT),
 		]);
 	}

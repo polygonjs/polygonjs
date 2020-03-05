@@ -1,5 +1,3 @@
-import {Vector2} from 'three/src/math/Vector2';
-
 import {TypedSopNode} from './_Base';
 // import {ParamType} from '../../../Engine/Param/_Module'
 
@@ -35,6 +33,8 @@ import {ParticlesSystemGpuComputeController} from './utils/ParticlesSystemGPU/GP
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
+import {PointsBuilderMatNode} from '../mat/PointsBuilder';
+import {ConstantGlNode} from '../gl/Constant';
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	// gpu compute
 	start_frame = ParamConfig.FLOAT(1, {range: [1, 100]});
@@ -88,7 +88,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	protected _children_controller_context = NodeContext.GL;
-	private _on_create_bound = this._on_create.bind(this);
+	private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
 	initialize_node() {
 		// this._init_common_shader_builder(ShaderAssemblerParticles, {
 		// 	has_display_flag: true,
@@ -101,8 +101,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
 
 		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
+
+		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
 		this.children_controller?.init();
-		this.lifecycle.add_on_create_hook(this._on_create_bound);
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
@@ -247,17 +249,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	// 	this.assembler_controller.set_compilation_required_and_dirty();
 	// }
 
-	private _on_create() {
-		// to ensure the doc can create a node to display param documentation
-		// maybe there is a scene in the doc, so this isn't needed?
-		// if(!this.scene()){return}
-
-		const globals = this.create_node('globals');
-		const output = this.create_node('output');
-
-		globals.ui_data.set_position(new Vector2(-200, 0));
-		output.ui_data.set_position(new Vector2(200, 0));
-
+	private _on_create_prepare_material() {
 		// that's mostly to have the default shader work when creating the node
 		// output.set_input('position', globals, 'position')
 		// or instead we could create the default shader
@@ -268,20 +260,34 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		MAT.set_name(mat_name);
 
 		const create_points_mat = (MAT: MaterialsObjNode, name: string) => {
-			// const points_mat = MAT.node('points_builder1') //|| MAT.create_node('points_builder');
-			// points_mat.set_name(name);
-			// const points_mat_constant_point_size = points_mat.create_node('constant')!;
-			// points_mat_constant_point_size.set_name('constant_point_size');
-			// points_mat_constant_point_size.p.value_float.set(4); // to match the default point material
-			// const points_mat_output1 = points_mat.node('output1');
-			// if (points_mat_output1) {
-			// 	points_mat_output1.set_input('gl_PointSize', points_mat_constant_point_size, 'value');
-			// }
-			// return points_mat;
+			let points_mat = MAT.node('points_builder1') as PointsBuilderMatNode;
+			if (!(points_mat && points_mat.type == PointsBuilderMatNode.type())) {
+				points_mat = MAT.create_node('points_builder');
+			}
+			points_mat.set_name(name);
+
+			let points_mat_constant_point_size = points_mat.node('constant') as ConstantGlNode;
+			if (!(points_mat_constant_point_size && points_mat_constant_point_size.type == ConstantGlNode.type())) {
+				points_mat_constant_point_size = points_mat.create_node('constant');
+				points_mat_constant_point_size.set_name('constant_point_size');
+			}
+			points_mat_constant_point_size.p.float.set(4); // to match the default point material
+			const points_mat_output1 = points_mat.node('output1');
+			if (points_mat_output1) {
+				points_mat_output1.set_input(
+					'gl_PointSize',
+					points_mat_constant_point_size,
+					ConstantGlNode.OUTPUT_NAME
+				);
+			}
+			return points_mat;
 		};
 		const points_mat = MAT.node(particles_mat_name) || create_points_mat(MAT, particles_mat_name);
 		if (points_mat) {
-			this.p.material.set(points_mat.full_path());
+			const new_path = points_mat.full_path();
+			if (this.p.material.raw_input != new_path) {
+				this.p.material.set(new_path);
+			}
 		}
 	}
 }

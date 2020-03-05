@@ -23,8 +23,8 @@
 					"controls": "/events1/camera_orbit_controls1",
 					"target": [-1.1206168441491506, -0.6248028543037529, 1.37086997652168],
 					"fov": 55.29,
-					"t": [4.6748568641623, 3.7420538489210555, 7.639105212298687],
-					"r": [-34.86355569710655, 37.18507695710185, 22.833923697908975],
+					"t": [3.454228501994235, 4.181735932017793, 8.292986769506104],
+					"r": [-34.77511308486838, 28.495918747526307, 18.329167746682305],
 					"background_color": [1, 1, 1]
 				},
 				"inputs": [],
@@ -86,7 +86,7 @@
 						"selection": []
 					},
 					"points1": {"type": "points", "params": {"size": 0.32}, "inputs": []},
-					"points_builder1": {
+					"points_particles": {
 						"type": "points_builder",
 						"nodes": {
 							"globals1": {"type": "globals", "params": {}, "inputs": []},
@@ -95,21 +95,42 @@
 								"params": {},
 								"inputs": [
 									{"name": "color", "node": "globals1", "output": "position"},
-									{"name": "gl_PointSize", "node": "constant1", "output": "val"}
+									{"name": "gl_PointSize", "node": "constant_point_size", "output": "val"}
 								]
 							},
-							"constant1": {"type": "constant", "params": {"float": 3}, "inputs": []}
+							"constant1": {"type": "constant", "params": {"float": 3}, "inputs": []},
+							"constant_point_size": {"type": "constant", "params": {"float": "10"}, "inputs": []}
 						},
 						"children_context": "gl",
 						"params": {},
 						"inputs": [],
-						"selection": ["constant1"]
+						"selection": ["constant_point_size"]
+					},
+					"points_builder1": {
+						"type": "points_builder",
+						"nodes": {
+							"constant1": {"type": "constant", "params": {"float": 3}, "inputs": []},
+							"constant_point_size": {"type": "constant", "params": {"float": 7.9}, "inputs": []},
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {
+								"type": "output",
+								"params": {},
+								"inputs": [
+									{"name": "color", "node": "globals1", "output": "position"},
+									{"name": "gl_PointSize", "node": "constant_point_size", "output": "val"}
+								]
+							}
+						},
+						"children_context": "gl",
+						"params": {},
+						"inputs": [],
+						"selection": ["constant_point_size"]
 					}
 				},
 				"children_context": "mat",
 				"params": {},
 				"inputs": [],
-				"selection": []
+				"selection": ["points_particles"]
 			},
 			"spot_light1": {
 				"type": "spot_light",
@@ -347,22 +368,40 @@
 						"inputs": ["transform2"],
 						"flags": {"display": false}
 					},
-					"particles_system_gpu1": {
-						"type": "particles_system_gpu",
-						"params": {},
-						"inputs": ["scatter1"],
-						"flags": {"display": false}
-					},
 					"material1": {
 						"type": "material",
 						"params": {"material": "/MAT/points_builder1"},
 						"inputs": ["scatter1"],
-						"flags": {"display": true}
+						"flags": {"display": false}
 					},
 					"transform2": {
 						"type": "transform",
 						"params": {"t": [0, 1.6, 0]},
 						"inputs": ["box1"],
+						"flags": {"display": false}
+					},
+					"particles_system_gpu2": {
+						"type": "particles_system_gpu",
+						"nodes": {
+							"globals1": {"type": "globals", "params": {}, "inputs": []},
+							"output1": {"type": "output", "params": {}, "inputs": []}
+						},
+						"children_context": "gl",
+						"params": {"material": "/MAT/points_particles"},
+						"inputs": ["scatter1"],
+						"flags": {"display": true},
+						"selection": []
+					},
+					"scatter2": {
+						"type": "scatter",
+						"params": {},
+						"inputs": ["transform2"],
+						"flags": {"display": false}
+					},
+					"material2": {
+						"type": "material",
+						"params": {"material": "/MAT/points1"},
+						"inputs": ["scatter1"],
 						"flags": {"display": false}
 					}
 				},
@@ -370,7 +409,7 @@
 				"params": {},
 				"inputs": [],
 				"flags": {"display": true},
-				"selection": ["material1"]
+				"selection": []
 			}
 		},
 		"children_context": "objects",
@@ -401,12 +440,22 @@
 						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
 					},
 					"points1": {"pos": [-300, 550]},
-					"points_builder1": {
+					"points_particles": {
 						"pos": [-300, 650],
 						"nodes": {
 							"globals1": {"pos": [-200, 0]},
 							"output1": {"pos": [200, 0]},
-							"constant1": {"pos": [0, 200]}
+							"constant1": {"pos": [-50, 100]},
+							"constant_point_size": {"pos": [0, 250]}
+						}
+					},
+					"points_builder1": {
+						"pos": [-300, 750],
+						"nodes": {
+							"constant1": {"pos": [0, 250]},
+							"constant_point_size": {"pos": [0, 150]},
+							"globals1": {"pos": [-200, 0]},
+							"output1": {"pos": [200, 0]}
 						}
 					}
 				}
@@ -470,9 +519,14 @@
 					"transform1": {"pos": [-150, 50]},
 					"box1": {"pos": [50, -50]},
 					"scatter1": {"pos": [50, 150]},
-					"particles_system_gpu1": {"pos": [50, 300]},
 					"material1": {"pos": [-200, 400]},
-					"transform2": {"pos": [50, 50]}
+					"transform2": {"pos": [50, 50]},
+					"particles_system_gpu2": {
+						"pos": [50, 350],
+						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
+					},
+					"scatter2": {"pos": [200, 150]},
+					"material2": {"pos": [-300, 300]}
 				}
 			}
 		}
