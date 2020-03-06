@@ -34,8 +34,6 @@ export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGl
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const body_lines = [];
-
 		const var_type: ConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
 		const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 			const name = connection.name;
@@ -44,8 +42,8 @@ export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGl
 		const joined_args = args.join(', ');
 
 		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
-		body_lines.push(`${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
+		shaders_collection_controller.add_body_lines(this, [body_line]);
 		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());
 	}
 }

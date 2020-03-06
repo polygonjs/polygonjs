@@ -8,6 +8,7 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 import {GlNodeSpareParamsController} from './utils/SpareParamsController';
+import {GlConnectionsController} from './utils/ConnectionsController';
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', BaseGlNodeType, K> {
 	static node_context(): NodeContext {
@@ -15,18 +16,23 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 	}
 	protected _param_configs_controller: ParamConfigsController | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
-	private _set_mat_to_recompile_bound = this._set_mat_to_recompile.bind(this);
+
 	readonly spare_params_controller: GlNodeSpareParamsController = new GlNodeSpareParamsController(this);
+	public readonly gl_connections_controller: GlConnectionsController | undefined;
 
 	initialize_base_node() {
-		this.io.inputs.set_depends_on_inputs(false);
+		// this.io.inputs.set_depends_on_inputs(false);
 		this.io.connections.init_inputs();
 		this.ui_data.set_layout_horizontal();
 		this.io.outputs.set_named_output_connection_points([]);
-		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_bound);
+
 		this.spare_params_controller.initialize_node();
 	}
-	private _set_mat_to_recompile() {
+	cook() {
+		throw 'gl nodes should never cook';
+	}
+
+	protected _set_mat_to_recompile() {
 		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
 	}
 	get material_node(): AssemblerControllerNode | undefined {

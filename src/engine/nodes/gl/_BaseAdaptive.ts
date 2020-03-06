@@ -16,7 +16,7 @@ export abstract class BaseAdaptiveGlNode<T extends BaseAdaptiveParamsConfig> ext
 	// protected abstract expected_input_types(): ConnectionPointType[];
 	// protected abstract expected_output_types(): ConnectionPointType[];
 
-	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {

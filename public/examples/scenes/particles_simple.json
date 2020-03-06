@@ -45,68 +45,6 @@
 			"MAT": {
 				"type": "materials",
 				"nodes": {
-					"mesh_lambert_builder1": {
-						"type": "mesh_lambert_builder",
-						"nodes": {
-							"globals1": {"type": "globals", "params": {}, "inputs": []},
-							"output1": {
-								"type": "output",
-								"params": {},
-								"inputs": [{"name": "color", "node": "add1", "output": "sum"}]
-							},
-							"add1": {
-								"type": "add",
-								"params": {
-									"add0": {
-										"type": "vector3",
-										"default_value": [0, 0, 0],
-										"raw_input": [0, 0, 0],
-										"options": {"spare": true}
-									},
-									"add1": {
-										"type": "vector3",
-										"default_value": [0, 0, 0],
-										"raw_input": [0, 0, 0],
-										"options": {"spare": true}
-									}
-								},
-								"inputs": [{"name": "add0", "node": "globals1", "output": "position"}]
-							}
-						},
-						"children_context": "gl",
-						"params": {},
-						"inputs": [],
-						"selection": ["add1"]
-					},
-					"mesh_lambert1": {"type": "mesh_lambert", "params": {"use_vertex_colors": 1}, "inputs": []},
-					"mesh_basic1": {"type": "mesh_basic", "params": {"use_vertex_colors": 1}, "inputs": []},
-					"mesh_basic_builder1": {
-						"type": "mesh_basic_builder",
-						"nodes": {
-							"globals1": {"type": "globals", "params": {}, "inputs": []},
-							"output1": {
-								"type": "output",
-								"params": {},
-								"inputs": [{"name": "color", "node": "globals1", "output": "position"}]
-							}
-						},
-						"children_context": "gl",
-						"params": {"use_map": 1, "map": "/COP/builder1"},
-						"inputs": [],
-						"selection": []
-					},
-					"mesh_standard1": {"type": "mesh_standard", "params": {"use_env_map": 1}, "inputs": []},
-					"mesh_standard_builder1": {
-						"type": "mesh_standard_builder",
-						"nodes": {
-							"globals1": {"type": "globals", "params": {}, "inputs": []},
-							"output1": {"type": "output", "params": {}, "inputs": []}
-						},
-						"children_context": "gl",
-						"params": {"use_env_map": 1},
-						"inputs": [],
-						"selection": []
-					},
 					"points1": {"type": "points", "params": {"size": 0.32}, "inputs": []},
 					"points_particles": {
 						"type": "points_builder",
@@ -152,42 +90,13 @@
 				"children_context": "mat",
 				"params": {},
 				"inputs": [],
-				"selection": ["mesh_lambert_builder1"]
+				"selection": []
 			},
 			"spot_light1": {
 				"type": "spot_light",
 				"params": {"t": [5, 4.1, 0], "r": [0, 0, -34.3], "intensity": 0.65},
 				"inputs": [],
 				"flags": {"display": true}
-			},
-			"base": {
-				"type": "geo",
-				"nodes": {
-					"transform1": {
-						"type": "transform",
-						"params": {},
-						"inputs": ["sphere1"],
-						"flags": {"display": true}
-					},
-					"sphere1": {
-						"type": "sphere",
-						"params": {"resolution": [30, 30]},
-						"inputs": [],
-						"flags": {"display": false}
-					},
-					"color1": {
-						"type": "color",
-						"params": {"color": ["if (@P.y< 0,0,1)", "if (@P.x< 0,0,1)", "1"]},
-						"inputs": ["transform1"],
-						"flags": {"display": false}
-					},
-					"OUT": {"type": "null", "params": {}, "inputs": ["color1"], "flags": {"display": false}}
-				},
-				"children_context": "sop",
-				"params": {},
-				"inputs": [],
-				"flags": {"display": false},
-				"selection": []
 			},
 			"hemisphere_light1": {
 				"type": "hemisphere_light",
@@ -198,94 +107,6 @@
 				},
 				"inputs": [],
 				"flags": {"display": true}
-			},
-			"basic": {
-				"type": "geo",
-				"nodes": {
-					"material3": {
-						"type": "material",
-						"params": {"material": "/MAT/mesh_basic1"},
-						"inputs": ["object_merge1"],
-						"flags": {"display": true}
-					},
-					"object_merge1": {
-						"type": "object_merge",
-						"params": {"geometry": "/base/OUT"},
-						"inputs": [],
-						"flags": {"display": false}
-					}
-				},
-				"children_context": "sop",
-				"params": {"t": ["-2.5", 0, 0]},
-				"inputs": [],
-				"flags": {"display": true},
-				"selection": ["material3"]
-			},
-			"basic_builder": {
-				"type": "geo",
-				"nodes": {
-					"material3": {
-						"type": "material",
-						"params": {"material": "/MAT/mesh_basic_builder1"},
-						"inputs": ["object_merge1"],
-						"flags": {"display": true}
-					},
-					"object_merge1": {
-						"type": "object_merge",
-						"params": {"geometry": "/base/OUT"},
-						"inputs": [],
-						"flags": {"display": false}
-					}
-				},
-				"children_context": "sop",
-				"params": {"t": ["-2.5", 0, "2.5"]},
-				"inputs": [],
-				"flags": {"display": true},
-				"selection": ["material3"]
-			},
-			"lambert": {
-				"type": "geo",
-				"nodes": {
-					"material3": {
-						"type": "material",
-						"params": {"material": "/MAT/mesh_lambert1"},
-						"inputs": ["object_merge1"],
-						"flags": {"display": true}
-					},
-					"object_merge1": {
-						"type": "object_merge",
-						"params": {"geometry": "/base/OUT"},
-						"inputs": [],
-						"flags": {"display": false}
-					}
-				},
-				"children_context": "sop",
-				"params": {},
-				"inputs": [],
-				"flags": {"display": true},
-				"selection": ["material3"]
-			},
-			"lambert_builder": {
-				"type": "geo",
-				"nodes": {
-					"material3": {
-						"type": "material",
-						"params": {"material": "/MAT/mesh_lambert_builder1"},
-						"inputs": ["object_merge1"],
-						"flags": {"display": true}
-					},
-					"object_merge1": {
-						"type": "object_merge",
-						"params": {"geometry": "/base/OUT"},
-						"inputs": [],
-						"flags": {"display": false}
-					}
-				},
-				"children_context": "sop",
-				"params": {"t": ["0", 0, "2.5"]},
-				"inputs": [],
-				"flags": {"display": true},
-				"selection": ["material3"]
 			},
 			"COP": {
 				"type": "cop",
@@ -329,50 +150,6 @@
 				"inputs": [],
 				"selection": []
 			},
-			"standard": {
-				"type": "geo",
-				"nodes": {
-					"material3": {
-						"type": "material",
-						"params": {},
-						"inputs": ["object_merge1"],
-						"flags": {"display": true}
-					},
-					"object_merge1": {
-						"type": "object_merge",
-						"params": {"geometry": "/base/OUT"},
-						"inputs": [],
-						"flags": {"display": false}
-					}
-				},
-				"children_context": "sop",
-				"params": {"t": [2.5, 0, 0]},
-				"inputs": [],
-				"flags": {"display": true},
-				"selection": ["material3"]
-			},
-			"standard_builder1": {
-				"type": "geo",
-				"nodes": {
-					"material3": {
-						"type": "material",
-						"params": {"material": "/MAT/mesh_standard_builder1"},
-						"inputs": ["object_merge1"],
-						"flags": {"display": true}
-					},
-					"object_merge1": {
-						"type": "object_merge",
-						"params": {"geometry": "/base/OUT"},
-						"inputs": [],
-						"flags": {"display": false}
-					}
-				},
-				"children_context": "sop",
-				"params": {"t": [2.5, 0, 2.5]},
-				"inputs": [],
-				"flags": {"display": true},
-				"selection": ["material3"]
-			},
 			"particles": {
 				"type": "geo",
 				"nodes": {
@@ -386,8 +163,8 @@
 					"box1": {"type": "box", "params": {}, "inputs": [], "flags": {"display": false}},
 					"scatter1": {
 						"type": "scatter",
-						"params": {},
-						"inputs": ["transform2"],
+						"params": {"points_count": 4},
+						"inputs": ["plane2"],
 						"flags": {"display": false}
 					},
 					"material1": {
@@ -447,7 +224,8 @@
 						"params": {"material": "/MAT/points1"},
 						"inputs": ["scatter1"],
 						"flags": {"display": false}
-					}
+					},
+					"plane2": {"type": "plane", "params": {}, "inputs": [], "flags": {"display": false}}
 				},
 				"children_context": "sop",
 				"params": {},
@@ -457,7 +235,7 @@
 			}
 		},
 		"children_context": "objects",
-		"selection": ["MAT"]
+		"selection": ["particles"]
 	},
 	"ui": {
 		"nodes": {
@@ -468,25 +246,6 @@
 			"MAT": {
 				"pos": [-350, 250],
 				"nodes": {
-					"mesh_lambert_builder1": {
-						"pos": [-50, 350],
-						"nodes": {
-							"globals1": {"pos": [-200, 0]},
-							"output1": {"pos": [200, 0]},
-							"add1": {"pos": [0, 150]}
-						}
-					},
-					"mesh_lambert1": {"pos": [-50, 250]},
-					"mesh_basic1": {"pos": [-300, 250]},
-					"mesh_basic_builder1": {
-						"pos": [-300, 350],
-						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
-					},
-					"mesh_standard1": {"pos": [200, 250]},
-					"mesh_standard_builder1": {
-						"pos": [200, 350],
-						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}}
-					},
 					"points1": {"pos": [-300, 550]},
 					"points_particles": {
 						"pos": [-300, 650],
@@ -509,32 +268,7 @@
 				}
 			},
 			"spot_light1": {"pos": [0, 150]},
-			"base": {
-				"pos": [0, -350],
-				"nodes": {
-					"transform1": {"pos": [0, -50]},
-					"sphere1": {"pos": [0, -200]},
-					"color1": {"pos": [0, 150]},
-					"OUT": {"pos": [0, 300]}
-				}
-			},
 			"hemisphere_light1": {"pos": [0, 450]},
-			"basic": {
-				"pos": [0, -200],
-				"nodes": {"material3": {"pos": [-200, 100]}, "object_merge1": {"pos": [-200, -100]}}
-			},
-			"basic_builder": {
-				"pos": [0, -100],
-				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
-			},
-			"lambert": {
-				"pos": [200, -200],
-				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
-			},
-			"lambert_builder": {
-				"pos": [200, -100],
-				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
-			},
 			"COP": {
 				"pos": [-350, 350],
 				"nodes": {
@@ -552,29 +286,26 @@
 					}
 				}
 			},
-			"standard": {
-				"pos": [400, -200],
-				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
-			},
-			"standard_builder1": {
-				"pos": [400, -100],
-				"nodes": {"material3": {"pos": [0, 150]}, "object_merge1": {"pos": [0, -50]}}
-			},
 			"particles": {
-				"pos": [-200, -250],
+				"pos": [0, -200],
 				"nodes": {
 					"plane1": {"pos": [-150, -100]},
 					"transform1": {"pos": [-150, 50]},
-					"box1": {"pos": [50, -50]},
+					"box1": {"pos": [50, -150]},
 					"scatter1": {"pos": [50, 150]},
 					"material1": {"pos": [-200, 400]},
-					"transform2": {"pos": [50, 50]},
+					"transform2": {"pos": [50, -50]},
 					"particles_system_gpu2": {
 						"pos": [50, 350],
-						"nodes": {"globals1": {"pos": [-200, 0]}, "output1": {"pos": [200, 0]}, "add1": {"pos": [0, 0]}}
+						"nodes": {
+							"globals1": {"pos": [-200, 0]},
+							"output1": {"pos": [200, 0]},
+							"add1": {"pos": [0, 100]}
+						}
 					},
 					"scatter2": {"pos": [200, 150]},
-					"material2": {"pos": [-300, 300]}
+					"material2": {"pos": [-300, 300]},
+					"plane2": {"pos": [200, -50]}
 				}
 			}
 		}

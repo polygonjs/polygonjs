@@ -54,7 +54,7 @@ export class TransformController {
 		this.node.io.inputs.set_count(0, 1);
 		this.node.io.inputs.set_depends_on_inputs(false);
 		this.node.io.outputs.set_has_one_output();
-		this.node.io.inputs.add_hook(() => {
+		this.node.io.inputs.add_on_set_input_hook('on_input_updated', () => {
 			this.on_input_updated();
 		});
 

@@ -51,40 +51,4 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 			return result;
 		}
 	}
-	// convert_value(v) {
-	// 	// if(lodash_isNumber(v)){
-	// 	// 	//
-	// 	// }
-	// 	if (lodash_isBoolean(v)) {
-	// 		v = v ? 1 : 0
-	// 	}
-	// 	if (lodash_isString(v)) {
-	// 		v = parseFloat(v)
-	// 	}
-	// 	if (lodash_isArray(v)) {
-	// 		v = v[0]
-	// 	}
-	// 	return this._ensure_in_range(v)
-	// }
-	// convert_default_value(v) {
-	// 	// if(lodash_isNumber(v)){
-	// 	// 	//
-	// 	// }
-	// 	if (lodash_isBoolean(v)) {
-	// 		v = v ? 1 : 0
-	// 	}
-	// 	// if(lodash_isString(v)){
-	// 	// 	v = parseFloat(v)
-	// 	// }
-	// 	if (lodash_isArray(v)) {
-	// 		v = v[0]
-	// 	}
-	// 	return v
-	// }
-
-	// is_value_expression(v) {
-	// 	//console.log("is_value_expression", this, v, !lodash_isNumber(v))
-	// 	//!lodash_isNumber(v)
-	// 	return `${v}` !== `${parseFloat(v)}`
-	// }
 }

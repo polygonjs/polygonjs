@@ -36,7 +36,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 	static readonly OUTPUT_NAME = 'val';
 	private _params_by_type: Map<ConnectionPointType, BaseParamType> | undefined;
-	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	protected _allow_inputs_created_from_params: boolean = false;
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {

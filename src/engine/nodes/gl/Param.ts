@@ -35,9 +35,10 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	}
 	protected _allow_inputs_created_from_params: boolean = false;
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
+		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
 		this.gl_connections_controller.initialize_node();
 

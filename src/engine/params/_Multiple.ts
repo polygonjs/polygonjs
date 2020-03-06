@@ -4,6 +4,7 @@ import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
+import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
@@ -98,6 +99,15 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// }
 		// });
 		// }
+	}
+	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
+		if (!lodash_isArray(raw_input)) {
+			const number_or_string = raw_input as number | string;
+			const raw_input_wrapped_in_array: StringOrNumber[] = this.components.map(() => number_or_string);
+			return raw_input_wrapped_in_array as ParamInitValuesTypeMap[T];
+		} else {
+			return raw_input as ParamInitValuesTypeMap[T];
+		}
 	}
 
 	protected process_raw_input() {

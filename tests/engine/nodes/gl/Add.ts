@@ -39,6 +39,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	const constant1 = material_basic_builder1.create_node('constant');
 	constant1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.VEC2));
 	add1.set_input(0, constant1);
+	assert.ok(add1.lifecycle.creation_completed);
 	add1.params.get('add1')!.set([1, 2, 3]);
 
 	const data = new SceneJsonExporter(scene).data();

@@ -80,6 +80,8 @@ export class ParticlesSystemGpuRenderController {
 				}
 			}
 		});
+		// console.log(this._render_material.vertexShader);
+		// console.log(this._render_material.fragmentShader);
 	}
 
 	reset_render_material() {
@@ -96,7 +98,6 @@ export class ParticlesSystemGpuRenderController {
 		}
 	}
 	async init_render_material() {
-		console.log('init_render_material');
 		// if (this.self.compile_required()) {
 		// 	return;
 		// }
@@ -117,7 +118,6 @@ export class ParticlesSystemGpuRenderController {
 			await this.node.p.material.compute();
 		}
 		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType; // TODO: typescript - ensure node selection is safe, as it would currently crash with a non builder mat selected
-		console.log('mat_node', mat_node);
 
 		if (mat_node) {
 			const new_texture_allocations_json: TextureAllocationsControllerData = this.node.assembler_controller.assembler.texture_allocations_controller.to_json(

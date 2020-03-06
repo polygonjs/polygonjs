@@ -161,9 +161,12 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return raw_input;
 	}
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
-		this._raw_input = this._clone_raw_input(raw_input);
+		this._raw_input = this._clone_raw_input(this._prefilter_invalid_raw_input(raw_input));
 		this.emit_controller.emit(ParamEvent.RAW_INPUT_UPDATED);
 		this.process_raw_input();
+	}
+	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
+		return raw_input as ParamInitValuesTypeMap[T];
 	}
 	get default_value() {
 		return this._default_value;

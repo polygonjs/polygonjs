@@ -39,6 +39,7 @@ export class InputsController<T extends BaseNodeType> {
 
 	// hooks
 	private _on_update_hooks: OnUpdateHook[] | undefined;
+	private _on_update_hook_names: string[] | undefined;
 
 	// clonable
 	private _user_inputs_clonable_states: InputCloneMode[] | undefined;
@@ -377,23 +378,9 @@ export class InputsController<T extends BaseNodeType> {
 				// this._input_connections[input_index] = null;
 			}
 
-			this.run_hooks();
+			this._run_on_set_input_hooks();
 			this.node.set_dirty(node);
 			this.node.emit(NodeEvent.INPUTS_UPDATED);
-		}
-	}
-	// TODO: make hooks like post set dirty hooks
-	// post_set_input() {} // TODO: typescript: handle hook
-	//
-	add_hook(hook: OnUpdateHook) {
-		this._on_update_hooks = this._on_update_hooks || [];
-		this._on_update_hooks.push(hook);
-	}
-	run_hooks() {
-		if (this._on_update_hooks) {
-			for (let hook of this._on_update_hooks) {
-				hook();
-			}
 		}
 	}
 
@@ -510,5 +497,30 @@ export class InputsController<T extends BaseNodeType> {
 	}
 	override_clonable_state() {
 		return this._override_clonable_state;
+	}
+
+	//
+	//
+	// HOOKS
+	//
+	//
+	add_on_set_input_hook(name: string, hook: OnUpdateHook) {
+		this._on_update_hooks = this._on_update_hooks || [];
+		this._on_update_hook_names = this._on_update_hook_names || [];
+
+		if (!this._on_update_hook_names.includes(name)) {
+			this._on_update_hooks.push(hook);
+			this._on_update_hook_names.push(name);
+		} else {
+			console.warn(`hook with name ${name} already exists`, this.node);
+		}
+	}
+	private _run_on_set_input_hooks() {
+		if (this._on_update_hooks) {
+			console.log('run hooks', this.node.full_path());
+			for (let hook of this._on_update_hooks) {
+				hook();
+			}
+		}
 	}
 }

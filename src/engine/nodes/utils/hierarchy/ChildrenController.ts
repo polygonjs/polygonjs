@@ -128,6 +128,7 @@ export class HierarchyChildrenController {
 			child_node.initialize_base_and_node();
 			// child_node.set_scene(this.node.scene);
 			this.add_node(child_node);
+			child_node.lifecycle.set_creation_completed();
 			return child_node;
 		}
 	}

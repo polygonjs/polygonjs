@@ -150,13 +150,13 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	async cook(input_contents: CoreGroup[]) {
+		this.gpu_controller.set_restart_not_required();
 		const core_group = input_contents[0];
 		// this._simulation_restart_required = false;
 		// let set_group_required = false;
 		// let points:CorePoint[] = [];
-
+		console.log('particles cook');
 		await this.compile_if_required();
-		await this.assembler_controller.assign_uniform_values();
 
 		if (this.is_on_frame_start()) {
 			this.gpu_controller.reset_particle_groups();
@@ -177,11 +177,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			await this.render_controller.init_render_material();
 		}
 
-		// if (this._simulation_restart_required) {
-		// 	this._restart_simulation();
-		// }
-
-		this.gpu_controller.compute_similation();
+		this.gpu_controller.restart_simulation_if_required();
+		this.gpu_controller.compute_similation_if_required();
 		// if (frame >= this.pv.start_frame) {
 		// 	if (this._last_simulated_frame == null) {
 		// 		this._last_simulated_frame = this._param_start_frame - 1;
@@ -199,20 +196,34 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 	async compile_if_required() {
 		if (this.assembler_controller.compile_required()) {
-			// && !this._param_locked){
 			await this.run_assembler();
-			const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();
-			this.gpu_controller.set_shaders_by_name(shaders_by_name);
-			this.render_controller.set_shaders_by_name(shaders_by_name);
-			// if (shaders_by_name) {
-			// 	await this.eval_params(this._new_params);
-			// 	this._shaders_by_name = lodash_cloneDeep(shaders_by_name);
-			// } else {
-			// 	console.warn('no shaders by name from assembler');
-			// }
-			this.gpu_controller.reset_gpu_compute();
-			this.gpu_controller.reset_particle_groups(); // this
 		}
+	}
+	async run_assembler() {
+		const root_nodes = this._find_root_nodes();
+		console.log('root_nodes', root_nodes);
+		if (root_nodes.length > 0) {
+			const globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
+			this.assembler_controller.set_assembler_globals_handler(globals_handler);
+			this.assembler_controller.assembler.set_root_nodes(root_nodes);
+
+			await this.assembler_controller.assembler.compile();
+			await this.assembler_controller.post_compile();
+		}
+
+		const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();
+		this.gpu_controller.set_shaders_by_name(shaders_by_name);
+		this.render_controller.set_shaders_by_name(shaders_by_name);
+		// if (shaders_by_name) {
+		// 	await this.eval_params(this._new_params);
+		// 	this._shaders_by_name = lodash_cloneDeep(shaders_by_name);
+		// } else {
+		// 	console.warn('no shaders by name from assembler');
+		// }
+		this.gpu_controller.reset_gpu_compute();
+		this.gpu_controller.reset_particle_groups(); // this
+
+		await this.assembler_controller.assign_uniform_values(); // TODO: needed?
 	}
 	// shaders_by_name() {
 	// 	return this._shaders_by_name;
@@ -220,17 +231,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	// shaders(): string[] {
 	// 	return Object.keys(this._shaders_by_name).map((k) => this._shaders_by_name[k]);
 	// }
-	private async run_assembler() {
-		const root_nodes = this._find_root_nodes();
-		if (root_nodes.length > 0) {
-			const globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
-			this.assembler_controller.set_assembler_globals_handler(globals_handler);
-			this.assembler_controller.assembler.set_root_nodes(root_nodes);
-
-			this.assembler_controller.assembler.compile();
-			await this.assembler_controller.post_compile();
-		}
-	}
 
 	private _find_root_nodes() {
 		const nodes: BaseGlNodeType[] = GlNodeFinder.find_attribute_export_nodes(this);

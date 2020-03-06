@@ -46,7 +46,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 	static type() {
 		return 'compare';
 	}
-	protected gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		super.initialize_node();
 

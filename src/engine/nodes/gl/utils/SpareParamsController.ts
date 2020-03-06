@@ -115,7 +115,6 @@ export class GlNodeSpareParamsController {
 			// }
 
 			if (init_value != null) {
-				console.log('init_value', param_name, init_value);
 				params_update_options.to_add = params_update_options.to_add || [];
 				params_update_options.to_add.push({
 					name: param_name,
@@ -123,7 +122,6 @@ export class GlNodeSpareParamsController {
 					init_value: lodash_clone(init_value as any),
 					options: {
 						spare: true,
-						cook: false,
 					},
 				});
 				// const param = this.node.add_param(param_type, param_name, init_value, {

@@ -44,7 +44,7 @@ export class GlConnectionsController {
 		return this._output_name_function(index);
 	}
 
-	private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
+	private _update_signature_if_required_bound = this.update_signature_if_required.bind(this);
 	private _initialized: boolean = false;
 	initialize_node() {
 		if (this._initialized) {
@@ -53,6 +53,10 @@ export class GlConnectionsController {
 		}
 		this._initialized = true;
 
+		this.node.io.inputs.add_on_set_input_hook(
+			'_update_signature_if_required',
+			this._update_signature_if_required_bound
+		);
 		this.node.params.add_on_scene_load_hook(
 			'_update_signature_if_required',
 			this._update_signature_if_required_bound
@@ -61,21 +65,27 @@ export class GlConnectionsController {
 		this.node.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
 
-	_update_signature_if_required(dirty_trigger?: CoreGraphNode) {
+	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 		if (!this.node.lifecycle.creation_completed || !this._connections_match_inputs()) {
 			this.update_connection_types();
 			this.node.remove_dirty_state();
-			this.make_successors_dirty();
+			this.make_successors_update_signatures();
 		}
 	}
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
-	protected make_successors_dirty() {
-		this.node.io.connections
-			.output_connections()
-			.map((c) => c.node_dest)
-			.forEach((o) => {
-				o.set_dirty(this.node);
-			});
+	private make_successors_update_signatures() {
+		for (let successor of this.node.graph_all_successors()) {
+			const gl_node = successor as BaseGlNodeType;
+			if (gl_node.gl_connections_controller) {
+				gl_node.gl_connections_controller.update_signature_if_required(this.node);
+			}
+		}
+		// this.node.io.connections
+		// 	.output_connections()
+		// 	.map((c) => c.node_dest)
+		// 	.forEach((o) => {
+		// 		o.set_dirty(this.node);
+		// 	});
 	}
 
 	update_connection_types() {
@@ -86,15 +96,13 @@ export class GlConnectionsController {
 		const named_input_connections = expected_input_types.map((type: ConnectionPointType, i: number) => {
 			return new TypedNamedConnectionPoint(this._input_name_function(i), type);
 		});
-		this.node.io.inputs.set_named_input_connection_points(named_input_connections);
-		// this._init_graph_node_inputs();
-
-		this.node.spare_params_controller.create_spare_parameters();
-
 		const named_outputs = expected_output_types.map((type: ConnectionPointType, i: number) => {
 			return new TypedNamedConnectionPoint(this._output_name_function(i), type);
 		});
+
+		this.node.io.inputs.set_named_input_connection_points(named_input_connections);
 		this.node.io.outputs.set_named_output_connection_points(named_outputs, set_dirty);
+		this.node.spare_params_controller.create_spare_parameters();
 	}
 
 	protected _connections_match_inputs(): boolean {
@@ -103,9 +111,10 @@ export class GlConnectionsController {
 		const expected_input_types = this._expected_input_types_function();
 		const expected_output_types = this._expected_output_types_function();
 
-		if (expected_input_types.length != current_input_types.length) {
-			return false;
-		}
+		if (this.node.name == 'add1')
+			if (expected_input_types.length != current_input_types.length) {
+				return false;
+			}
 		if (expected_output_types.length != current_output_types.length) {
 			return false;
 		}

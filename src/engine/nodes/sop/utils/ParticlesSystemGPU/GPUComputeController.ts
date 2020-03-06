@@ -121,9 +121,9 @@ export class ParticlesSystemGpuComputeController {
 		this._points = this._get_points() || [];
 	}
 
-	compute_similation() {
+	compute_similation_if_required() {
 		const frame = this.node.scene.frame;
-		const start_frame = this.node.pv.start_frame;
+		const start_frame: number = this.node.pv.start_frame;
 		if (frame >= start_frame) {
 			if (this._last_simulated_frame == null) {
 				this._last_simulated_frame = start_frame - 1;
@@ -134,7 +134,7 @@ export class ParticlesSystemGpuComputeController {
 		}
 	}
 
-	protected _compute_simulation(count = 1) {
+	private _compute_simulation(count = 1) {
 		if (!this._gpu_compute) {
 			return;
 		}
@@ -221,13 +221,13 @@ export class ParticlesSystemGpuComputeController {
 		});
 		// for (let shader_name of Object.keys(this._shaders_by_name)) {
 		const all_variables: GPUComputationRendererVariable[] = [];
-		this._shaders_by_name?.forEach((string, shader_name) => {
-			const variable = this._gpu_compute?.addVariable(
-				`texture_${shader_name}`,
-				string,
-				this._created_textures_by_name.get(shader_name)!
-			);
-			if (variable) {
+		this._shaders_by_name?.forEach((shader, shader_name) => {
+			if (this._gpu_compute) {
+				const variable = this._gpu_compute.addVariable(
+					`texture_${shader_name}`,
+					shader,
+					this._created_textures_by_name.get(shader_name)!
+				);
 				this.variables_by_name.set(shader_name, variable);
 				all_variables.push(variable);
 			}
@@ -236,10 +236,12 @@ export class ParticlesSystemGpuComputeController {
 		// this._gpu_compute.setVariableDependencies( this.var_v, [ this.var_P, this.var_v ] );
 		// for (let shader_name of Object.keys(this._shaders_by_name)) {
 		this.variables_by_name?.forEach((variable, shader_name) => {
-			this._gpu_compute?.setVariableDependencies(
-				variable,
-				all_variables // currently all depend on all
-			);
+			if (this._gpu_compute) {
+				this._gpu_compute.setVariableDependencies(
+					variable,
+					all_variables // currently all depend on all
+				);
+			}
 		});
 
 		this._create_texture_render_targets();
@@ -368,6 +370,9 @@ export class ParticlesSystemGpuComputeController {
 		this._gpu_compute = undefined;
 		this._simulation_restart_required = true;
 	}
+	set_restart_not_required() {
+		this._simulation_restart_required = false;
+	}
 	reset_gpu_compute_and_set_dirty() {
 		this.reset_gpu_compute();
 		this.node.set_dirty();
@@ -396,7 +401,12 @@ export class ParticlesSystemGpuComputeController {
 			}
 		});
 	}
-	protected _restart_simulation() {
+	restart_simulation_if_required() {
+		if (this._simulation_restart_required) {
+			this._restart_simulation();
+		}
+	}
+	private _restart_simulation() {
 		this._last_simulated_frame = undefined;
 
 		this._create_texture_render_targets();

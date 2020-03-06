@@ -103,6 +103,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			await node.params.eval_all();
 		}
 
+		console.log('root and leaf:', this._root_nodes, this._leaf_nodes);
 		this._texture_allocations_controller = new TextureAllocationsController();
 		this._texture_allocations_controller.allocate_connections_from_root_nodes(this._root_nodes, this._leaf_nodes);
 
@@ -119,6 +120,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	async update_shaders() {
 		this._shaders_by_name = new Map();
 		this._lines = new Map();
+		console.log('this.shader_names', this.shader_names);
 		for (let shader_name of this.shader_names) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			this._lines.set(shader_name, template.split('\n'));
@@ -133,6 +135,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		for (let shader_name of this.shader_names) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
+				console.log(shader_name, lines.join('\n'));
 				this._shaders_by_name.set(shader_name, lines.join('\n'));
 			}
 		}

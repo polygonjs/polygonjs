@@ -27,6 +27,11 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		return 'output';
 	}
 
+	initialize_node() {
+		super.initialize_node();
+		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
+	}
+
 	create_params() {
 		this.material_node?.assembler_controller.add_output_params(this);
 	}
