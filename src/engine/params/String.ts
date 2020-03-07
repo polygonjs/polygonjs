@@ -81,7 +81,9 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
 			} else {
 				const converted = this.convert(expression_result);
-				if (converted) {
+				// we need to check if equal nulls explicitely
+				// as the empty string '' evals to false...
+				if (converted != null) {
 					this._value = converted;
 					this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 				} else {

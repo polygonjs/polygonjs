@@ -50,6 +50,7 @@ export class NameController {
 			});
 		}
 		this._graph_node.set_successors_dirty();
+
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 

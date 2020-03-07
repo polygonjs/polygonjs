@@ -41,6 +41,30 @@ import './engine/nodes/gl/Constant';
 import './engine/nodes/gl/Dot';
 import './engine/nodes/gl/Param';
 
+QUnit.module('expressions');
+import './engine/expressions/methods/abs';
+import './engine/expressions/methods/bbox';
+import './engine/expressions/methods/ceil';
+import './engine/expressions/methods/centroid';
+import './engine/expressions/methods/ch';
+import './engine/expressions/methods/cos';
+import './engine/expressions/methods/floor';
+import './engine/expressions/methods/if';
+import './engine/expressions/methods/max';
+import './engine/expressions/methods/min';
+import './engine/expressions/methods/opdigits';
+import './engine/expressions/methods/point';
+import './engine/expressions/methods/points_count';
+import './engine/expressions/methods/precision';
+import './engine/expressions/methods/rand';
+import './engine/expressions/methods/round';
+import './engine/expressions/methods/str_chars_count';
+import './engine/expressions/methods/str_index';
+import './engine/expressions/methods/str_sub';
+import './engine/expressions/Evaluator';
+import './engine/expressions/GlobalVariables';
+import './engine/expressions/MissingReferences';
+
 QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';
 

@@ -5,6 +5,7 @@ import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralCon
 import {BaseMethod} from '../methods/_Base';
 import {MethodModule} from '../methods/_Module';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+
 // import {JsepsByString} from '../DependenciesController'
 // import {JsepDependency} from '../JsepDependency'
 import jsep from 'jsep';
@@ -53,13 +54,13 @@ Object.keys(NATIVE_MATH_METHODS_RENAMED).forEach((name) => {
 	DIRECT_EXPRESSION_FUNCTIONS[name] = `Math.${remaped}`;
 });
 CORE_MATH_METHODS.forEach((name) => {
-	DIRECT_EXPRESSION_FUNCTIONS[name] = `POLY.Core.Math.${name}`;
+	DIRECT_EXPRESSION_FUNCTIONS[name] = `Core.Math.${name}`;
 });
 EASING_METHODS.forEach((name) => {
-	DIRECT_EXPRESSION_FUNCTIONS[name] = `POLY.Core.Math.Easing.${name}`;
+	DIRECT_EXPRESSION_FUNCTIONS[name] = `Core.Math.Easing.${name}`;
 });
 CORE_STRING_METHODS.forEach((name) => {
-	DIRECT_EXPRESSION_FUNCTIONS[name] = `POLY.Core.String.${name}`;
+	DIRECT_EXPRESSION_FUNCTIONS[name] = `Core.String.${name}`;
 });
 
 const LITERAL_CONSTRUCT: LiteralConstructDictionary = {
@@ -109,6 +110,8 @@ const PROPERTY_OFFSETS: AnyDictionary = {
 import {BaseTraverser} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {AttributeRequirementsController} from '../AttributeRequirementsController';
+import {CoreMath} from '../../../core/math/_Module';
+import {CoreString} from '../../../core/String';
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction
 const AsyncFunction = Object.getPrototypeOf(async function() {}).constructor;
@@ -119,9 +122,8 @@ export class FunctionGenerator extends BaseTraverser {
 	private _attribute_requirements_controller = new AttributeRequirementsController();
 	// private function_pre_body:string
 	private function_main_string: string | undefined;
-	error_message: string | undefined;
 	private methods: BaseMethod[] = [];
-	private method_index: number = 0;
+	private method_index: number = -1;
 
 	public method_dependencies: MethodDependency[] = [];
 	public immutable_dependencies: CoreGraphNode[] = [];
@@ -144,7 +146,7 @@ export class FunctionGenerator extends BaseTraverser {
 				// this.function_pre_body = ''
 				if (parsed_tree.node) {
 					const function_main_string = this.traverse_node(parsed_tree.node);
-					if (function_main_string && this.error_message == null) {
+					if (function_main_string && !this.is_errored) {
 						this.function_main_string = function_main_string;
 					}
 				} else {
@@ -158,13 +160,15 @@ export class FunctionGenerator extends BaseTraverser {
 			if (this.function_main_string) {
 				try {
 					this.function = new AsyncFunction(
+						'Core',
 						'param',
 						'methods',
+						'_set_error_from_error',
 						`
 					try {
 						${this.function_body()}
 					} catch(e) {
-						param.states.error.set(e.message || e);
+						_set_error_from_error(e)
 						return null;
 					}`
 					);
@@ -181,10 +185,10 @@ export class FunctionGenerator extends BaseTraverser {
 	}
 
 	reset() {
-		this.error_message = undefined;
+		super.reset();
 		this.function_main_string = undefined;
 		this.methods = [];
-		this.method_index = 0;
+		this.method_index = -1;
 		this.function = undefined;
 		this.method_dependencies = [];
 		this.immutable_dependencies = [];
@@ -208,7 +212,9 @@ export class FunctionGenerator extends BaseTraverser {
 						}
 						resolve()
 					} else {
-						reject(new Error('attribute not found'))
+						const error = new Error('attribute not found')
+						_set_error_from_error(error)
+						reject(error)
 					}
 				})
 			}
@@ -216,7 +222,13 @@ export class FunctionGenerator extends BaseTraverser {
 		} else {
 			return `
 			return new Promise( async (resolve, reject)=>{
-				resolve(${this.function_main_string})
+				try {
+					const value = ${this.function_main_string}
+					resolve(value)
+				} catch(e) {
+					_set_error_from_error(e)
+					reject()
+				}
 			})
 			`;
 		}
@@ -230,7 +242,11 @@ export class FunctionGenerator extends BaseTraverser {
 		// this.param.entity_attrib_values.position =
 		// 	this.param.entity_attrib_values.position || new THREE.Vector3()
 		if (this.function) {
-			const result = this.function(this.param, this.methods);
+			const Core = {
+				Math: CoreMath,
+				String: CoreString,
+			};
+			const result = this.function(Core, this.param, this.methods, this._set_error_from_error_bound);
 			return result;
 		}
 	}

@@ -1,5 +1,5 @@
 import {BaseMethod} from './_Base';
-import {BaseNodeClass} from '../../nodes/_Base';
+import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 import {CoreString} from '../../../core/String';
@@ -11,9 +11,10 @@ export class Opdigits extends BaseMethod {
 	}
 
 	find_dependency(index_or_path: number | string): MethodDependency | null {
-		const node = this.find_referenced_graph_node(index_or_path);
-		if (node) {
-			if (node instanceof BaseNodeClass) {
+		const graph_node = this.find_referenced_graph_node(index_or_path);
+		if (graph_node) {
+			const node = graph_node as BaseNodeType;
+			if (node.name_controller) {
 				const name_node = node.name_controller.graph_node;
 				return this.create_dependency(name_node, index_or_path);
 			}

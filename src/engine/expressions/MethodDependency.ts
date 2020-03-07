@@ -4,7 +4,7 @@ import {DecomposedPath} from '../../core/DecomposedPath';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
 import {CoreObject} from '../../core/Object';
-import {BaseNodeType, BaseNodeClass, TypedNode} from '../nodes/_Base';
+import {BaseNodeType, TypedNode} from '../nodes/_Base';
 import jsep from 'jsep';
 
 type NodeOrParam = BaseNodeType | BaseParamType;
@@ -49,8 +49,11 @@ export class MethodDependency extends CoreGraphNode {
 	listen_for_name_changes() {
 		if (this.jsep_node && this.decomposed_path) {
 			this.decomposed_path.named_nodes.forEach((node_in_path) => {
-				if (node_in_path && node_in_path instanceof BaseNodeClass) {
-					this.add_graph_input(node_in_path.name_controller.graph_node);
+				if (node_in_path) {
+					const node = node_in_path as BaseNodeType;
+					if (node.name_controller) {
+						this.add_graph_input(node.name_controller.graph_node);
+					}
 				}
 			});
 		}

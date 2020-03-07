@@ -1,4 +1,5 @@
 import {BaseParamType} from '../../params/_Base';
+import lodash_isString from 'lodash/isString';
 // import {ParsedTree} from './ParsedTree'
 // import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
@@ -9,13 +10,30 @@ export const VARIABLE_PREFIX = '$';
 
 export abstract class BaseTraverser {
 	// private _parsed_tree: ParsedTree
-	public error_message: string | undefined;
+	public _error_message: string | undefined;
 
 	constructor(public param: BaseParamType) {}
 
 	protected set_error(message: string) {
-		this.error_message = this.error_message || message;
+		this._error_message = this._error_message || message;
 		// throw this.error_message
+	}
+	protected _set_error_from_error_bound = this._set_error_from_error.bind(this);
+	private _set_error_from_error(error: Error | string) {
+		if (lodash_isString(error)) {
+			this._error_message = error;
+		} else {
+			this._error_message = error.message;
+		}
+	}
+	get is_errored(): boolean {
+		return this._error_message != null;
+	}
+	get error_message() {
+		return this._error_message;
+	}
+	reset() {
+		this._error_message = undefined;
 	}
 
 	traverse_node(node: jsep.Expression): string | undefined {

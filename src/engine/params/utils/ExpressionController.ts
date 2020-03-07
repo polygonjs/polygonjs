@@ -71,17 +71,18 @@ export class ExpressionController<T extends ParamType> {
 
 	async compute_expression() {
 		if (this._manager && this.active) {
-			return this._manager.compute_function();
+			const result = await this._manager.compute_function();
+			return result;
 		}
 	}
 	private async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
-		try {
-			await this.compute_expression();
-		} catch (e) {
+		console.log('compute_expression_for_entities');
+		await this.compute_expression();
+		console.log('this._manager?.error_message', this._manager?.error_message);
+		if (this._manager?.error_message) {
 			console.warn('expression evalution error');
-			console.warn(e);
-			this.param.node.states.error.set(`expression evalution error: ${e}`);
+			this.param.node.states.error.set(`expression evalution error: ${this._manager?.error_message}`);
 		}
 
 		this.reset_entities();

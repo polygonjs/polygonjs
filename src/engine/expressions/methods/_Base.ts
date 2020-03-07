@@ -112,6 +112,7 @@ export abstract class BaseMethod {
 			return CoreWalker.find_node(this.node, path, decomposed_path);
 		} else {
 			const index = index_or_path;
+			this.node.io.inputs.input(index);
 			return this.node.io.inputs.input(index);
 		}
 

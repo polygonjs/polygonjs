@@ -18,6 +18,7 @@ export class Centroid extends BaseMethod {
 	}
 
 	process_arguments(args: any[]): Promise<any> {
+		console.log('process_arguments', args);
 		return new Promise(async (resolve, reject) => {
 			// const path = args
 			// this.get_referenced_param(path).eval_p().then(val=>{
@@ -30,6 +31,7 @@ export class Centroid extends BaseMethod {
 				try {
 					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
 				} catch (e) {
+					console.warn('caught err');
 					reject(e);
 				}
 

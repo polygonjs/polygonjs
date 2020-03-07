@@ -53,14 +53,17 @@ export class ExpressionManager {
 			this.set_error(this.function_generator.error_message);
 		}
 	}
-	compute_function(): Promise<any> {
+	async compute_function(): Promise<any> {
 		// this.parse_and_update_dependencies_if_not_done(expression);
 		if (this.compute_allowed()) {
 			try {
-				return this.function_generator.eval_function();
+				const new_value = await this.function_generator.eval_function();
+				console.log('new_value', new_value, this.function_generator.error_message);
+				return new_value;
 			} catch (e) {
-				console.warn('compute_function');
-				console.warn(e);
+				if (this.function_generator.is_errored && this.function_generator.error_message) {
+					this.set_error(this.function_generator.error_message);
+				}
 				return new Promise((resolve, reject) => resolve());
 			}
 		} else {

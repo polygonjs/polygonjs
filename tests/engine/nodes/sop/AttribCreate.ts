@@ -86,7 +86,7 @@ QUnit.test('attrib create expression from a non existing attribute', async (asse
 
 	await attrib_create1.request_container();
 	assert.ok(attrib_create1.states.error.active);
-	assert.equal(attrib_create1.states.error.message, 'expression evalution error: Error: attribute not found');
+	assert.equal(attrib_create1.states.error.message, 'expression evalution error: attribute not found');
 
 	attrib_create1.p.value1.set('@P.y > 0');
 	await attrib_create1.request_container();
