@@ -49,8 +49,11 @@ export class NameController {
 				child_node.name_controller.post_set_full_path(); // TODO: typescript: replace post_set_full_path with execute_on_update_full_path_hooks or on_update_full_path
 			});
 		}
-		this._graph_node.set_successors_dirty();
 
+		if (this.node.lifecycle.creation_completed) {
+			this.node.scene.missing_expression_references_controller.check_for_missing_references(this.node);
+			this.node.scene.expressions_controller.regenerate_referring_expressions(this.node);
+		}
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 

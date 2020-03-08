@@ -4,7 +4,6 @@ import lodash_isString from 'lodash/isString';
 // import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
 // import {BaseMethod} from '../../../Engine/Expression/Method/_Base'
-// import {ReferenceSearchResult, MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'
 export const VARIABLE_PREFIX = '$';
 
@@ -14,6 +13,9 @@ export abstract class BaseTraverser {
 
 	constructor(public param: BaseParamType) {}
 
+	protected clear_error() {
+		this._error_message = undefined;
+	}
 	protected set_error(message: string) {
 		this._error_message = this._error_message || message;
 		// throw this.error_message
@@ -95,7 +97,6 @@ export abstract class BaseTraverser {
 	// pt_`@ptnum+1`
 	protected traverse_Compound(node: jsep.Compound): string {
 		const args = node.body;
-		console.log(args);
 		let traversed_args = [];
 		for (let i = 0; i < args.length; i++) {
 			const arg_node = args[i];

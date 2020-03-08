@@ -5,17 +5,14 @@ import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralCon
 import {BaseMethod} from '../methods/_Base';
 import {MethodModule} from '../methods/_Module';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import lodash_isString from 'lodash/isString';
 
 // import {JsepsByString} from '../DependenciesController'
-// import {JsepDependency} from '../JsepDependency'
 import jsep from 'jsep';
 
 // import {Vector3} from 'three/src/math/Vector3'
 type LiteralConstructDictionary = Dictionary<LiteralConstructMethod>;
 type AnyDictionary = Dictionary<any>;
-
-// import {ExpressionStringGenerator} from './ExpressionStringGenerator'
-// import CoreWalker from 'src/core/Walker'
 
 const NATIVE_MATH_METHODS = [
 	'abs',
@@ -242,6 +239,8 @@ export class FunctionGenerator extends BaseTraverser {
 		// this.param.entity_attrib_values.position =
 		// 	this.param.entity_attrib_values.position || new THREE.Vector3()
 		if (this.function) {
+			this.clear_error();
+
 			const Core = {
 				Math: CoreMath,
 				String: CoreString,
@@ -458,6 +457,14 @@ export class FunctionGenerator extends BaseTraverser {
 				method_dependency.set_jsep_node(path_node);
 			}
 			this.method_dependencies.push(method_dependency);
+		} else {
+			if (path_node && lodash_isString(path_argument)) {
+				this.param.scene.missing_expression_references_controller.register(
+					this.param,
+					path_node,
+					path_argument
+				);
+			}
 		}
 		// method_dependencies.resolved_graph_nodes.forEach((graph_node)=>{
 		// 	if(path_node){

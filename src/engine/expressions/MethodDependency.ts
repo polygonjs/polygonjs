@@ -3,11 +3,9 @@ import lodash_isNumber from 'lodash/isNumber';
 import {DecomposedPath} from '../../core/DecomposedPath';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
-import {CoreObject} from '../../core/Object';
-import {BaseNodeType, TypedNode} from '../nodes/_Base';
+// import {CoreObject} from '../../core/Object';
+import {BaseNodeType} from '../nodes/_Base';
 import jsep from 'jsep';
-
-type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
@@ -27,7 +25,7 @@ export class MethodDependency extends CoreGraphNode {
 		this.add_post_dirty_hook('_update_from_name_change', this._update_from_name_change_bound);
 	}
 	_update_from_name_change(trigger?: CoreGraphNode) {
-		if (CoreObject.is_a(trigger, TypedNode) && this.decomposed_path) {
+		if (trigger && this.decomposed_path) {
 			const node = trigger as BaseNodeType;
 			this.decomposed_path.update_from_name_change(node);
 			const new_path = this.decomposed_path.to_path();
@@ -73,17 +71,18 @@ export class MethodDependency extends CoreGraphNode {
 		param: BaseParamType,
 		index_or_path: number | string,
 		node: CoreGraphNode,
-		nodes_in_path?: NodeOrParam[]
+		decomposed_path?: DecomposedPath
 	) {
 		const is_index = lodash_isNumber(index_or_path);
 
-		let decomposed_path: DecomposedPath | undefined = undefined;
-		if (nodes_in_path) {
-			decomposed_path = new DecomposedPath();
-			for (let node_in_path of nodes_in_path) {
-				decomposed_path.add_node(node_in_path.name, node_in_path);
-			}
-		}
+		// if(!decomposed_path){
+		// 	console.log('nodes_in_path', decomposed_path.named_nodes);
+		// 	for (let node_in_path of decomposed_path.named_nodes) {
+		// 		if (node_in_path) {
+		// 			decomposed_path.add_node(node_in_path.name, node_in_path);
+		// 		}
+		// 	}
+		// }
 
 		const instance = new MethodDependency(param, index_or_path, decomposed_path);
 		if (node) {

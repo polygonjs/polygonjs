@@ -162,6 +162,8 @@ export class HierarchyChildrenController {
 			this.node.scene.webgl_controller.set_require_webgl2();
 		}
 
+		this.node.scene.missing_expression_references_controller.check_for_missing_references(child_node);
+
 		return child_node;
 	}
 	// that's redondant with the lifecycle on_child_add and on_child_remove
@@ -231,7 +233,7 @@ export class HierarchyChildrenController {
 			return this.node.parent;
 		}
 
-		const separator = CoreWalker.separator();
+		const separator = CoreWalker.SEPARATOR;
 		if (path[0] === separator) {
 			path = path.substring(1, path.length);
 		}

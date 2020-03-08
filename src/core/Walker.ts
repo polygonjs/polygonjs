@@ -3,16 +3,63 @@ import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
 // import {NodeSimple} from '/graph/NodeSimple'
 
-import {CoreWalkerEmbed} from './WalkerEmbed';
-
 type NodeOrParam = BaseNodeType | BaseParamType;
 
-export class CoreWalker extends CoreWalkerEmbed {
+export class CoreWalker {
 	public static readonly SEPARATOR = '/';
-	public static readonly CURRENT = '.';
+	public static readonly DOT = '.';
+	public static readonly CURRENT = CoreWalker.DOT;
 	public static readonly PARENT = '..';
 	public static readonly CURRENT_WITH_SLASH = `${CoreWalker.CURRENT}/`;
 	public static readonly PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
+	public static readonly NON_LETTER_PREFIXES = [CoreWalker.SEPARATOR, CoreWalker.DOT];
+
+	static find_node(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseNodeType | null {
+		if (!node_src) {
+			return null;
+		}
+
+		const elements: string[] = path.split(CoreWalker.SEPARATOR).filter((e) => e.length > 0);
+		const first_element = elements[0];
+
+		let next_node: BaseNodeType | null = null;
+		if (path[0] === CoreWalker.SEPARATOR) {
+			const path_from_root = path.substr(1);
+			next_node = this.find_node(node_src.root, path_from_root, decomposed_path);
+		} else {
+			switch (first_element) {
+				case CoreWalker.PARENT:
+					decomposed_path?.add_path_element(first_element);
+					next_node = node_src.parent;
+					break;
+				case CoreWalker.CURRENT:
+					decomposed_path?.add_path_element(first_element);
+					next_node = node_src;
+					break;
+				default:
+					// TODO: What does .node means?? in which case is this not a node? (it is for nodes which cannot have children - but I'd like to unify the api)
+					// console.error("rethink this method Walker.find_node")
+					// if (node_src.node != null) {
+					next_node = node_src.node(first_element);
+					if (next_node) {
+						decomposed_path?.add_node(first_element, next_node);
+					}
+
+				// if (next_node == null) { this.find_node_warning(node_src, first_element); }
+				// return next_node;
+				// break
+				// }
+			}
+
+			if (next_node != null && elements.length > 1) {
+				const remainder = elements.slice(1).join(CoreWalker.SEPARATOR);
+				next_node = this.find_node(next_node, remainder, decomposed_path);
+			}
+			return next_node;
+		}
+
+		return next_node;
+	}
 
 	static find_param(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		if (!node_src) {
@@ -117,7 +164,29 @@ export class CoreWalker extends CoreWalkerEmbed {
 			return -1;
 		}
 	}
-	// static make_absolute(node_src: BaseNode, path: string): string {
-	// 	return ""
-	// }
+
+	static make_absolute_path(node_src: BaseNodeType | BaseParamType, path: string): string | null {
+		const path_elements = path.split(CoreWalker.SEPARATOR);
+		const first_element = path_elements.shift();
+
+		if (first_element) {
+			switch (first_element) {
+				case '..': {
+					if (node_src.parent) {
+						return this.make_absolute_path(node_src.parent, path_elements.join(CoreWalker.SEPARATOR));
+					} else {
+						return null;
+					}
+				}
+				case '.': {
+					return this.make_absolute_path(node_src, path_elements.join(CoreWalker.SEPARATOR));
+				}
+				default: {
+					return [node_src.full_path(), path].join(CoreWalker.SEPARATOR);
+				}
+			}
+		} else {
+			return node_src.full_path();
+		}
+	}
 }

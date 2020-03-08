@@ -1,6 +1,3 @@
-// this class is suffixed 'Creator' as opposed to the FunctionGenerator class
-// since it is much simpler and only used to generated the lines for the async function
-// of FunctionGenerator
 export class AttributeRequirementsController {
 	private _attribute_names: Set<string> | undefined;
 	constructor() {}

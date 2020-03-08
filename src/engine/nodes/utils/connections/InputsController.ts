@@ -379,7 +379,8 @@ export class InputsController<T extends BaseNodeType> {
 			}
 
 			this._run_on_set_input_hooks();
-			this.node.set_dirty(node);
+			graph_input_node.set_successors_dirty();
+			// this.node.set_dirty(node);
 			this.node.emit(NodeEvent.INPUTS_UPDATED);
 		}
 	}
@@ -517,7 +518,6 @@ export class InputsController<T extends BaseNodeType> {
 	}
 	private _run_on_set_input_hooks() {
 		if (this._on_update_hooks) {
-			console.log('run hooks', this.node.full_path());
 			for (let hook of this._on_update_hooks) {
 				hook();
 			}

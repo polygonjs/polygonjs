@@ -3,18 +3,21 @@ QUnit.test('an expression refers to a node that is later added', async (assert) 
 	const box1 = geo1.create_node('box');
 	const transform1 = geo1.create_node('transform');
 	transform1.set_input(0, box1);
-	transform1.p.t.x.set("ch('../transform2/tx')");
+	const param = transform1.p.t.x;
+	param.set("ch('../transform2/tx')");
 
 	await transform1.request_container();
-	const t1tx = transform1.p.t.x;
-	await t1tx.compute();
-	assert.equal(t1tx.value, 0);
+	await param.compute();
+	assert.equal(param.value, 0);
 
+	assert.ok(!param.is_dirty);
 	const transform2 = geo1.create_node('transform');
 	assert.equal(transform2.name, 'transform2');
+	assert.ok(param.is_dirty, 'param is now dirty');
 	transform2.p.t.x.set(5);
-	await t1tx.compute();
-	assert.equal(t1tx.value, 5);
+	await param.compute();
+	assert.equal(param.value, 5);
+	assert.ok(!param.is_dirty, 'param is not dirty anymore');
 });
 
 QUnit.test('a node referenced in an expression gets renamed involves updating the expression', async (assert) => {
@@ -45,29 +48,32 @@ QUnit.test('a node referenced in an expression gets renamed involves updating th
 QUnit.test('a top node referenced in an expression gets renamed involves updating the expression', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root;
+	const geo1 = window.geo1;
+
 	const camera = root.create_node('perspective_camera');
 	camera.p.t.x.set(1);
-	const geo1 = window.geo1;
+
 	const box1 = geo1.create_node('box');
 	const transform1 = geo1.create_node('transform');
 	transform1.set_input(0, box1);
-	const pivotx = transform1.p.pivot.x;
-	pivotx.set("ch('/perspective_camera1/tx')");
+	const param = transform1.p.t.x;
+	param.set(`ch('/${camera.name}/tx')`);
 
-	let val;
-	val = await pivotx.compute();
-	assert.equal(val, 1);
+	await param.compute();
+	assert.equal(param.value, 1);
 
 	camera.p.t.x.set(2);
-	val = await pivotx.compute();
-	assert.equal(val, 2);
+	await param.compute();
+	assert.equal(param.value, 2);
 
 	camera.set_name('new_camera');
-	assert.equal(pivotx.raw_input, "ch('/new_camera/tx')");
+	assert.equal(param.raw_input, "ch('/new_camera/tx')");
+	await param.compute();
+	assert.equal(param.value, 2);
 
 	camera.p.t.x.set(3);
-	val = await pivotx.compute();
-	assert.equal(val, 3);
+	await param.compute();
+	assert.equal(param.value, 3);
 });
 
 QUnit.test('a relative path in a operator path param gets updated when ref changes name', async (assert) => {

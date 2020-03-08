@@ -32,7 +32,8 @@ import {CookController} from './utils/CookController';
 import {EventsController} from './utils/EventsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
-import {MissingReferencesController} from '../expressions/MissingReferencesController';
+import {ExpressionsController} from './utils/ExpressionsController';
+import {MissingReferencesController} from './utils/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
 import {CorePerformance} from '../../core/performance/CorePerformance';
 import {TimeController} from './utils/TimeController';
@@ -103,6 +104,10 @@ export class PolyScene {
 	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController();
 	get missing_expression_references_controller() {
 		return this._missing_expression_references_controller;
+	}
+	private _expressions_controller: ExpressionsController = new ExpressionsController();
+	get expressions_controller() {
+		return this._expressions_controller;
 	}
 
 	protected _nodes_controller = new NodesController(this);

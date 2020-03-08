@@ -322,8 +322,8 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 
 	// container
-	request_container() {
-		return this.container_controller.request_container();
+	async request_container() {
+		return await this.container_controller.request_container();
 	}
 	set_container(content: ContainableMap[T], message: string | null = null) {
 		// if message?

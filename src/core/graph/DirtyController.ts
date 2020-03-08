@@ -45,6 +45,15 @@ export class DirtyController {
 			console.warn(`hook with name ${name} already exists`, this.node);
 		}
 	}
+	remove_post_dirty_hook(name: string) {
+		if (this._post_dirty_hook_names && this._post_dirty_hooks) {
+			const index = this._post_dirty_hook_names.indexOf(name);
+			if (index >= 0) {
+				this._post_dirty_hook_names.splice(index, 1);
+				this._post_dirty_hooks.splice(index, 1);
+			}
+		}
+	}
 	has_hook(name: string): boolean {
 		if (this._post_dirty_hook_names) {
 			return this._post_dirty_hook_names.includes(name);
@@ -70,7 +79,6 @@ export class DirtyController {
 		if (propagate == null) {
 			propagate = true;
 		}
-
 		if (
 			original_trigger_graph_node &&
 			this._forbidden_trigger_nodes &&

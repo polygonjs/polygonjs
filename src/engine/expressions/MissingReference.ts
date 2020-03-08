@@ -1,40 +1,38 @@
-import {BaseNodeType} from '../nodes/_Base';
 import {BaseParamType} from '../params/_Base';
-import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
-import jsep from 'jsep';
+// import jsep from 'jsep';
+import {CoreWalker} from '../../core/Walker';
 
 export class MissingExpressionReference {
-	constructor(
-		private param: BaseParamType,
-		private jsep_node: jsep.Expression,
-		public full_path: string,
-		public id: string
-	) {
-		console.log(this.jsep_node, this.param); // TODO: typescript, to not have the missing ref
+	constructor(private param: BaseParamType /*, private jsep_node: jsep.Expression*/, public path: string) {
+		// console.log(this.jsep_node, this.param); // TODO: typescript, to not have the missing ref
 	}
 
-	resolve_with_node(node: BaseNodeType) {
-		console.warn('this should not work! REFACTOR asap');
-		// this.param.parse_expression_and_update_dependencies()
+	matches_path(path: string): boolean {
+		const absolute = CoreWalker.make_absolute_path(this.param.node, this.path);
+		return absolute == path;
 	}
-}
 
-export class ReferenceSearchResult {
-	public found_graph_nodes: CoreGraphNode[] = [];
-	public missing_paths: string[] = [];
-
-	constructor() {}
-	set_found_graph_nodes(graph_nodes: CoreGraphNode[]) {
-		this.found_graph_nodes = graph_nodes;
+	update_from_method_dependency_name_change() {
+		this.param.expression_controller?.update_from_method_dependency_name_change();
 	}
-	set_missing_paths(paths: string[]) {
-		this.missing_paths = paths;
+
+	resolve_missing_dependencies() {
+		const input = this.param.raw_input_serialized;
+		this.param.set(this.param.default_value);
+		this.param.set(input);
+		// parse_expression_and_update_dependencies()
 	}
 }
 
-export interface MissingExpressionReferenceById {
-	[propName: string]: MissingExpressionReference;
-}
-export interface MissingExpressionReferenceByIdByFullPath {
-	[propName: string]: MissingExpressionReferenceById;
-}
+// export class ReferenceSearchResult {
+// 	public found_graph_nodes: CoreGraphNode[] = [];
+// 	public missing_paths: string[] = [];
+
+// 	constructor() {}
+// 	set_found_graph_nodes(graph_nodes: CoreGraphNode[]) {
+// 		this.found_graph_nodes = graph_nodes;
+// 	}
+// 	set_missing_paths(paths: string[]) {
+// 		this.missing_paths = paths;
+// 	}
+// }

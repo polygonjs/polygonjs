@@ -1,5 +1,3 @@
-import {CoreObject} from '../../core/Object';
-
 import {BaseNodeType} from '../nodes/_Base';
 
 // interface ContentOption {
@@ -10,13 +8,12 @@ import {ContainableMap} from './utils/ContainableMap';
 type K = keyof ContainableMap;
 type Containable = ContainableMap[K];
 
-export abstract class TypedContainer<T extends Containable> extends CoreObject {
+export abstract class TypedContainer<T extends Containable> {
 	// protected _node: BaseNode;
 	// protected _eval_key: number
 	protected _content!: T;
 
 	constructor(protected _node: BaseNodeType) {
-		super();
 		// this.update_eval_key();
 		// this.set_content(this._default_content());
 	}

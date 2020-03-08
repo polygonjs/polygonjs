@@ -1,21 +1,20 @@
 import {CoreWalker} from '../../../core/Walker';
 import {DecomposedPath} from '../../../core/DecomposedPath';
 // import {NodeSimple} from '../../../core/graph/NodeSimple'
-import {BaseParamType, TypedParam} from '../../params/_Base';
-import {BaseNodeType, TypedNode} from '../../nodes/_Base';
+import {BaseParamType} from '../../params/_Base';
+import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {BaseContainer} from '../../containers/_Base';
-import {CoreObject} from '../../../core/Object';
 
 // type NodeOrParam = BaseNode | BaseParam;
 
 export abstract class BaseMethod {
 	public node: BaseNodeType;
 
-	constructor(public param: BaseParamType) {
+	constructor(public readonly param: BaseParamType) {
 		// this._init_update_dependencies_mode();
 		this.node = this.param.node;
 	}
@@ -36,18 +35,6 @@ export abstract class BaseMethod {
 	static allowed_arguments_count(count: number) {
 		return count >= this.min_allowed_arguments_count() && count <= this.max_allowed_arguments_count();
 	}
-
-	// process_arguments_and_dependencies(args){
-	// 	return new Promise((resolve, reject)=> {
-	// 		return this.process_arguments(args, value=> {
-	// 			if (this.update_dependencies_mode()) {
-	// 				this.update_dependencies();
-	// 			}
-
-	// 			return resolve(value);
-	// 		});
-	// 	});
-	// }
 
 	process_arguments(args: any): Promise<any> {
 		throw 'Expression.Method._Base.process_arguments virtual method call. Please override';
@@ -97,7 +84,8 @@ export abstract class BaseMethod {
 		// let node
 		if (is_index) {
 			const index = index_or_path as number;
-			return this.node.io.inputs.input_graph_node(index);
+			const input_graph_node = this.node.io.inputs.input_graph_node(index);
+			return input_graph_node;
 		} else {
 			const path = index_or_path as string;
 			return this.get_referenced_node(path, decomposed_path);
@@ -139,25 +127,28 @@ export abstract class BaseMethod {
 		return null;
 	}
 
-	create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency | null {
+	protected create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency | null {
 		// console.log("is_index", index_or_path)
 		const decomposed_path = new DecomposedPath();
 		const node = this.find_referenced_graph_node(index_or_path, decomposed_path);
 		if (node) {
 			return this.create_dependency(node, index_or_path, decomposed_path);
+		} else {
+			console.warn('node not found for path', index_or_path);
 		}
 		return null;
 	}
-	create_dependency(
+	protected create_dependency(
 		node: CoreGraphNode,
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
 	): MethodDependency | null {
-		if (CoreObject.is_a(node, TypedNode) || CoreObject.is_a(node, TypedParam)) {
-			const node_or_param = node as BaseNodeType;
-			return MethodDependency.create(this.param, index_or_path, node_or_param, decomposed_path?.named_nodes);
-		}
-		return MethodDependency.create(this.param, index_or_path, node, decomposed_path?.named_nodes);
+		// if (CoreObject.is_a(node, TypedNode) || CoreObject.is_a(node, TypedParam)) {
+		// 	const node_or_param = node as BaseNodeType;
+		// 	return MethodDependency.create(this.param, index_or_path, node_or_param, decomposed_path?.named_nodes);
+		// }
+		const dependency = MethodDependency.create(this.param, index_or_path, node, decomposed_path);
+		return dependency;
 	}
 
 	//

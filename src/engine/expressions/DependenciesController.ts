@@ -2,15 +2,11 @@ import {BaseParamType} from '../params/_Base';
 // import {ParsedTree} from './Traverser/ParsedTree'
 import {FunctionGenerator} from './traversers/FunctionGenerator';
 // import {NodeSimple} from '../../core/graph/NodeSimple'
-// import {MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'
 // import {NamesListener} from './NamesListener'
 import {MethodDependency} from './MethodDependency';
 import jsep from 'jsep';
 
-// interface MissingExpressionReferenceByString {
-// 	[propName: string]: MissingExpressionReference;
-// }
 export interface JsepsByString {
 	[propName: string]: jsep.Expression[];
 }
@@ -18,7 +14,6 @@ export interface JsepsByString {
 export class DependenciesController {
 	error_message: string | undefined;
 	// private references_controller: MissingReferencesController
-	// private missing_expression_references_by_id: MissingExpressionReferenceByString = {}
 	private cyclic_graph_detected: boolean = false;
 	// private jsep_nodes_by_missing_paths: JsepsByString = {}
 	private method_dependencies: MethodDependency[] = [];

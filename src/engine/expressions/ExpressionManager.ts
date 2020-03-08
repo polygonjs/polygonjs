@@ -1,6 +1,5 @@
 import {BaseParamType} from '../params/_Base';
 import {ParsedTree} from './traversers/ParsedTree';
-// import {MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesController} from './MissingReferencesController'
 // import CoreWalker from 'src/core/Walker'
 
@@ -15,7 +14,7 @@ export class ExpressionManager {
 	private function_generator: FunctionGenerator;
 	private expression_string_generator: ExpressionStringGenerator | undefined;
 	public dependencies_controller: DependenciesController;
-	private _error_message: string | undefined;
+	// private _error_message: string | undefined;
 	private parsed_tree: ParsedTree = new ParsedTree();
 
 	constructor(
@@ -49,21 +48,20 @@ export class ExpressionManager {
 				this.parse_completed = true;
 				this.parse_started = false;
 			}
-		} else {
-			this.set_error(this.function_generator.error_message);
-		}
+		} //else {
+		//this.set_error(this.function_generator.error_message);
+		//}
 	}
 	async compute_function(): Promise<any> {
 		// this.parse_and_update_dependencies_if_not_done(expression);
 		if (this.compute_allowed()) {
 			try {
 				const new_value = await this.function_generator.eval_function();
-				console.log('new_value', new_value, this.function_generator.error_message);
 				return new_value;
 			} catch (e) {
-				if (this.function_generator.is_errored && this.function_generator.error_message) {
-					this.set_error(this.function_generator.error_message);
-				}
+				// if (this.function_generator.is_errored && this.function_generator.error_message) {
+				// 	this.set_error(this.function_generator.error_message);
+				// }
 				return new Promise((resolve, reject) => resolve());
 			}
 		} else {
@@ -76,25 +74,22 @@ export class ExpressionManager {
 	reset() {
 		this.parse_completed = false;
 		this.parse_started = false;
-		this._error_message = undefined;
+		// this._error_message = undefined;
 		// if(force){ // || this.element_index <= 1){
 		this.dependencies_controller.reset();
 		// }
 		this.function_generator.reset();
 	}
 
-	protected set_error(message: string) {
-		this._error_message = this._error_message || message;
-	}
-	get is_errored() {
-		return this._error_message != null;
+	get is_errored(): boolean {
+		return this.function_generator.is_errored;
 	}
 	get error_message() {
-		return this._error_message;
+		return this.function_generator.error_message;
 	}
 
 	private compute_allowed(): boolean {
-		return this._error_message == null && this.function_generator.eval_allowed();
+		return /*this._error_message == null &&*/ this.function_generator.eval_allowed();
 	}
 
 	// private parse_and_update_dependencies(expression: string) {
@@ -118,11 +113,17 @@ export class ExpressionManager {
 			this.expression_string_generator || new ExpressionStringGenerator(this.param);
 
 		const new_expression_string = this.expression_string_generator.parse_tree(this.parsed_tree);
-		this.param.expression_controller?.set_expression(new_expression_string);
+
+		if (new_expression_string) {
+			this.param.set(new_expression_string);
+		} else {
+			console.warn('failed to regenerate expression');
+		}
+		// this.param.expression_controller?.set_expression(new_expression_string);
 
 		// this.reset()
-		if (new_expression_string) {
-			this.parse_expression(new_expression_string);
-		}
+		// if (new_expression_string) {
+		// this.parse_expression(new_expression_string);
+		// }
 	}
 }

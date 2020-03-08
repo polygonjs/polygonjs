@@ -144,11 +144,12 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 	box2.set_input(0, box1);
 
 	await box2.p.size.compute();
-	assert.equal(box2.p.size.value, 24);
-	assert.ok(!box2.p.size.states.error.message);
-	assert.ok(box2.states.error.active);
+	console.log(box2.p.size.states.error.message);
+	assert.equal(box2.p.size.value, 24, 'param evaluates to 24');
+	assert.ok(!box2.p.size.states.error.message, 'param has no error');
+	assert.ok(box2.states.error.active, 'box is errored');
 	await box2.request_container();
-	assert.ok(!box2.p.size.states.error.message);
+	assert.ok(!box2.states.error.message, 'box has no error');
 });
 
 // box1 = geo1.create_node('box')
@@ -178,7 +179,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 
 // 				done()
 
-QUnit.test('if dependent is deleted, node becomes dirty', async (assert) => {
+QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.create_node('box');
@@ -205,7 +206,12 @@ QUnit.test('if dependent is deleted, node becomes dirty', async (assert) => {
 	assert.equal(box2.p.size.graph_predecessors().length, 0);
 
 	await box2.p.size.compute();
-	assert.null(box2.p.size.value);
+	assert.equal(box2.p.size.value, 24);
+	assert.equal(
+		box2.p.size.states.error.message,
+		'expression error: "points_count(\'../box1\')" (invalid input (../box1))'
+	);
+	// assert.equal(box2.states.error.message, 'bla');
 
 	// assert !box2.p.size.is_dirty
 	// box2.request_container =>
@@ -220,24 +226,39 @@ QUnit.test('if dependent is deleted, node becomes dirty', async (assert) => {
 	// 		assert.equal val, 24
 });
 
-QUnit.test('if the points count of input changes, the param gets updated', async (assert) => {
+QUnit.test('points_count: if the points count of input changes, the param gets updated', async (assert) => {
 	const geo1 = window.geo1;
 
+	// create a sphere that would have the display flag
+	// so that the cooking process is not confused by the geo node
+	// requesting it
+	const sphere = geo1.create_node('sphere');
+	sphere.flags.display.set(true);
+
+	// create the boxes we need for this test
 	const box1 = geo1.create_node('box');
 	const box2 = geo1.create_node('box');
 
-	box2.p.size.set('points_count(0)');
+	const param = box2.p.size;
+	param.set('points_count(0)');
 
 	box2.set_input(0, box1);
+	assert.equal(box1.p.divisions.value, 1);
 
-	await box2.p.size.compute();
-	assert.equal(box2.p.size.value, 24);
+	assert.ok(param.is_dirty);
+	await param.compute();
+	assert.ok(!param.is_dirty);
+	assert.equal(param.value, 24);
 
 	box1.p.divisions.set(2);
-	box2.p.size.compute();
-	assert.equal(box2.p.size.value, 54);
+	assert.ok(param.is_dirty);
+	await param.compute();
+	assert.ok(!param.is_dirty);
+	assert.equal(param.value, 54);
 
 	box1.p.divisions.set(3);
-	box2.p.size.compute();
-	assert.equal(box2.p.size.value, 96);
+	assert.ok(param.is_dirty);
+	await param.compute();
+	assert.ok(!param.is_dirty);
+	assert.equal(param.value, 96);
 });

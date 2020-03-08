@@ -25,7 +25,13 @@ export class ExpressionController<T extends ParamType> {
 	protected _entities: CoreEntity[] | undefined;
 	protected _entity_callback: EntityCallback<T> | undefined;
 	protected _manager: ExpressionManager | undefined;
-	constructor(protected param: BaseParamType) {}
+	// private _reset_bound = this.reset.bind(this);
+	constructor(protected param: BaseParamType) {
+		// this.param.dirty_controller.add_post_dirty_hook('expression_controller_reset', this._reset_bound);
+	}
+	// remove_dirty_hook() {
+	// 	// this.param.dirty_controller.remove_post_dirty_hook('expression_controller_reset');
+	// }
 
 	get active() {
 		return this._expression != null;
@@ -48,7 +54,14 @@ export class ExpressionController<T extends ParamType> {
 	get requires_entities() {
 		return this.param.options.is_expression_for_entities;
 	}
+	// private reset() {
+	// 	this._manager?.clear_error();
+	// }
+
 	set_expression(expression: string | undefined, set_dirty: boolean = true) {
+		this.param.scene.missing_expression_references_controller.deregister_param(this.param);
+		this.param.scene.expressions_controller.deregister_param(this.param);
+
 		if (this._expression != expression) {
 			this._expression = expression;
 
@@ -56,9 +69,7 @@ export class ExpressionController<T extends ParamType> {
 				this._manager = this._manager || new ExpressionManager(this.param);
 				this._manager.parse_expression(this._expression);
 			} else {
-				if (this._manager) {
-					this._manager.reset();
-				}
+				this._manager?.reset();
 			}
 
 			if (set_dirty) {
@@ -67,7 +78,11 @@ export class ExpressionController<T extends ParamType> {
 		}
 	}
 
-	update_from_method_dependency_name_change() {}
+	update_from_method_dependency_name_change() {
+		if (this._manager && this.active) {
+			this._manager.update_from_method_dependency_name_change();
+		}
+	}
 
 	async compute_expression() {
 		if (this._manager && this.active) {
@@ -77,11 +92,8 @@ export class ExpressionController<T extends ParamType> {
 	}
 	private async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
-		console.log('compute_expression_for_entities');
 		await this.compute_expression();
-		console.log('this._manager?.error_message', this._manager?.error_message);
 		if (this._manager?.error_message) {
-			console.warn('expression evalution error');
 			this.param.node.states.error.set(`expression evalution error: ${this._manager?.error_message}`);
 		}
 

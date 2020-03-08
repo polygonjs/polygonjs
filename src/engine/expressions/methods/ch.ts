@@ -23,6 +23,8 @@ export class Ch extends BaseMethod {
 		const param = this.get_referenced_param(index_or_path as string, decomposed_path);
 		if (param) {
 			return this.create_dependency(param, index_or_path, decomposed_path);
+		} else {
+			console.warn('could not find param');
 		}
 		return null;
 		// const reference_search_result = new ReferenceSearchResult()

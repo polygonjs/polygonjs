@@ -3,7 +3,6 @@ import {ParsedTree} from './ParsedTree';
 // import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
 // import {BaseMethod} from '../../../Engine/Expression/Method/_Base'
-// import {ReferenceSearchResult, MissingExpressionReference} from './MissingReference'
 // import {MissingReferencesControler} from './MissingReferencesController'
 
 const ARGUMENTS_SEPARATOR = ', ';
@@ -15,9 +14,6 @@ const ARGUMENTS_SEPARATOR = ', ';
 // }
 // interface JsepsByString {
 // 	[propName: string]: jsep.Expression[];
-// }
-// interface MissingExpressionReferenceByString {
-// 	[propName: string]: MissingExpressionReference;
 // }
 import {BaseTraverser} from './_Base';
 
