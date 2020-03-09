@@ -1,34 +1,26 @@
-// import {BaseNodeGlMathFunctionArg3} from './_BaseMathFunctionArg3';
-// import {Connection} from './GlData';
-// import {Definition} from './Definition/_Module';
-// import Quaternion from './Gl/quaternion.glsl';
+import Quaternion from './gl/quaternion.glsl';
+import {MathFunctionArg3Factory} from './_Math_Arg3';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
-// export class VectorAlign extends BaseNodeGlMathFunctionArg3 {
-// 	static type() {
-// 		return 'vector_align';
-// 	}
+const DefaultValues: Dictionary<Number3> = {
+	start: [0, 0, 1],
+	end: [1, 0, 0],
+	up: [0, 1, 0],
+};
 
-// 	gl_input_name(index: number) {
-// 		return ['start', 'end', 'up'][index];
-// 	}
-// 	gl_input_default_value(name: string) {
-// 		return {
-// 			start: [0, 0, 1],
-// 			end: [1, 0, 0],
-// 			up: [0, 1, 0],
-// 		}[name];
-// 	}
-// 	gl_method_name(): string {
-// 		return 'vector_align_with_up';
-// 	}
-
-// 	protected expected_named_input_constructors() {
-// 		return [Connection.Vec3, Connection.Vec3, Connection.Vec3];
-// 	}
-// 	protected expected_named_output_constructors() {
-// 		return [Connection.Vec4];
-// 	}
-// 	gl_function_definitions() {
-// 		return [new Definition.Function(this, Quaternion)];
-// 	}
-// }
+export class VectorAlignGlNode extends MathFunctionArg3Factory('vector_align', {
+	in: ['start', 'end', 'up'],
+	method: 'vector_align_with_up',
+	functions: [Quaternion],
+}) {
+	protected _expected_input_types() {
+		const type = ConnectionPointType.VEC3;
+		return [type, type, type];
+	}
+	protected _expected_output_types() {
+		return [ConnectionPointType.VEC4];
+	}
+	gl_input_default_value(name: string) {
+		return DefaultValues[name];
+	}
+}

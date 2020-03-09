@@ -1,33 +1,35 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {TypedConnectionFloat} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
+import {TypedGlNode} from './_Base';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ThreeToGl} from '../../../core/ThreeToGl';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-// import Hsv2Rgb from './Gl/hsv2rgb.glsl';
+const OUTPUT_NAME = 'lum';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class LuminanceGlParamsConfig extends NodeParamsConfig {
+	hsv = ParamConfig.VECTOR3([1, 1, 1]);
+}
+const ParamsConfig = new LuminanceGlParamsConfig();
+export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'luminance';
+	}
 
-// export class Luminance extends BaseNodeGl {
-// 	static type() {
-// 		return 'luminance';
-// 	}
+	initialize_node() {
+		super.initialize_node();
 
-// 	constructor() {
-// 		super();
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+		]);
+	}
 
-// 		this.set_named_outputs([new TypedConnectionFloat('lum')]);
-// 	}
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const value = ThreeToGl.vector3(this.variable_for_input('color'));
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR, 'color', [1, 1, 1]);
-// 	}
-// 	set_lines() {
-// 		const body_lines = [];
-
-// 		const value = ThreeToGl.vector3(this.variable_for_input('color'));
-
-// 		const lum = this.gl_var_name('lum');
-// 		// linearToRelativeLuminance is declared in threejs common.glsl.js
-// 		body_lines.push(`float ${lum} = linearToRelativeLuminance(${value})`);
-// 		this.set_body_lines(body_lines);
-// 	}
-// }
+		const lum = this.gl_var_name('lum');
+		// linearToRelativeLuminance is declared in threejs common.glsl.js
+		const body_line = `float ${lum} = linearToRelativeLuminance(${value})`;
+		shaders_collection_controller.add_body_lines(this, [body_line]);
+	}
+}

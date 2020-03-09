@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg3GlNode} from './_BaseMathFunctionArg3';
+import {BaseNodeGlMathFunctionArg3GlNode} from './_BaseMathFunction';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 interface MathArg3Options {
@@ -49,3 +49,4 @@ export function MathFunctionArg3Factory(type: string, options: MathArg3Options =
 }
 export class ClampGlNode extends MathFunctionArg3Factory('clamp', {in: ['value', 'min', 'max'], default: {max: 1}}) {}
 export class FaceforwardGlNode extends MathFunctionArg3Factory('face_forward', {in: ['N', 'I', 'Nref']}) {}
+export class SmoothStepGlNode extends MathFunctionArg3Factory('smoothstep', {in: ['edge0', 'edge1', 'x']}) {}

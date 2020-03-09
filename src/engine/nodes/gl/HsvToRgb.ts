@@ -2,13 +2,13 @@ import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
 import Hsv2Rgb from './Gl/hsv2rgb.glsl';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'rgb';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class HsvToRgbGlParamsConfig extends NodeParamsConfig {
 	hsv = ParamConfig.VECTOR3([1, 1, 1]);
 }

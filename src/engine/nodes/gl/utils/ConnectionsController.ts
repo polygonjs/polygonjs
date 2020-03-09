@@ -2,6 +2,7 @@ import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
 import {BaseGlNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
+import {NodeConnection} from '../../utils/connections/NodeConnection';
 
 type IONameFunction = (index: number) => string;
 type ExpectedConnectionTypesFunction = () => ConnectionPointType[];
@@ -145,12 +146,14 @@ export class GlConnectionsController {
 		if (connections) {
 			const first_connection = connections[0];
 			if (first_connection) {
-				const node_src = first_connection.node_src;
-				const output_index = first_connection.output_index;
-				const node_src_output_connection = node_src.io.outputs.named_output_connection_points[output_index];
-				return node_src_output_connection.type;
+				return this.connection_type_from_connection(first_connection);
 			}
 		}
-		// return ConnectionPointType.FLOAT;
+	}
+	connection_type_from_connection(connection: NodeConnection): ConnectionPointType {
+		const node_src = connection.node_src;
+		const output_index = connection.output_index;
+		const node_src_output_connection = node_src.io.outputs.named_output_connection_points[output_index];
+		return node_src_output_connection.type;
 	}
 }

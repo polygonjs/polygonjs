@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunctionArg1';
+import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 
 interface MathArg1Options {
 	in?: string;

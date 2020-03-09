@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunctionArg1';
+import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 // import {ParamType} from '../../../Engine/Param/_Module';
 // import {TypedConnectionFloat} from './GlData'
 import {ThreeToGl} from '../../../core/ThreeToGl';

@@ -1,57 +1,60 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {Connection} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
-// import {CoreTextureLoader} from 'src/Core/Loader/Texture';
-// import {File} from 'src/Engine/Node/Cop/File';
+import {TypedGlNode} from './_Base';
+import {FileCopNode} from '../cop/File';
 
-// export class Texture extends BaseNodeGl {
-// 	static type() {
-// 		return 'texture';
-// 	}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {ThreeToGl} from '../../../core/ThreeToGl';
+import {UniformGLDefinition} from './utils/GLDefinition';
+import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
+import {ParamType} from '../../poly/ParamType';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-// 	_param_param_name: string;
-// 	_param_default_value: string;
+const OUTPUT_NAME = 'rgba';
 
-// 	constructor() {
-// 		super();
+class TextureParamsConfig extends NodeParamsConfig {
+	param_name = ParamConfig.STRING('texture_map');
+	default_value = ParamConfig.STRING(FileCopNode.DEFAULT_NODE_PATH.UV);
+	uv = ParamConfig.VECTOR2([0, 0]);
+}
+const ParamsConfig = new TextureParamsConfig();
+export class Texture extends TypedGlNode<TextureParamsConfig> {
+	param_config = ParamsConfig;
+	static type() {
+		return 'texture';
+	}
 
-// 		this.set_named_outputs([new Connection.Vec4('rgba')]);
-// 	}
+	initialize_node() {
+		super.initialize_node();
 
-// 	create_params() {
-// 		this.add_param(ParamType.STRING, 'param_name', 'texture_map');
-// 		this.add_param(ParamType.STRING, 'default_value', File.DEFAULT_NODE_PATH.UV);
-// 		this.add_param(ParamType.VECTOR2, 'uv', [0, 0]);
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.VEC4),
+		]);
+	}
 
-// 	set_lines() {
-// 		const definitions = [];
-// 		const body_lines = [];
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name));
 
-// 		const uv = ThreeToGl.vector2(this.variable_for_input('uv'));
+		const rgba = this.gl_var_name(OUTPUT_NAME);
+		const map = this._uniform_name();
+		const definition = new UniformGLDefinition(this, ConnectionPointType.SAMPLER_2D, map);
+		const body_line = `vec4 ${rgba} = texture2D(${map}, ${uv})`;
+		shaders_collection_controller.set_definitions([definition]);
+		shaders_collection_controller.set_body_lines([body_line]);
+	}
 
-// 		const rgba = this.gl_var_name('rgba');
-// 		const map = this.uniform_name();
-// 		// const rgb = this.gl_var_name('rgb')
-// 		// const a = this.gl_var_name('a')
-// 		definitions.push(new Definition.Uniform(this, 'sampler2D', map)); //(`uniform sampler2D ${map}`)
-// 		body_lines.push(`vec4 ${rgba} = texture2D(${map}, ${uv})`);
-// 		this.set_definitions(definitions);
-// 		this.set_body_lines(body_lines);
-// 	}
+	set_param_configs() {
+		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
+		this._param_configs_controller.reset();
 
-// 	set_param_configs() {
-// 		this.add_param_config(
-// 			ParamType.OPERATOR_PATH,
-// 			this._param_param_name,
-// 			this._param_default_value,
-// 			this.uniform_name()
-// 		);
-// 	}
-// 	uniform_name() {
-// 		// return 'uMapTest'
-// 		return this.gl_var_name(this._param_param_name);
-// 	}
-// }
+		this._param_configs_controller.create_and_push(
+			ParamType.OPERATOR_PATH,
+			this.pv.param_name,
+			this.pv.default_value,
+			this._uniform_name()
+		);
+	}
+	private _uniform_name() {
+		return this.gl_var_name(this.pv.param_name);
+	}
+}

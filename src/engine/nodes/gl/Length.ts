@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunctionArg1';
+import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
 export class LengthGlNode extends BaseNodeGlMathFunctionArg1GlNode {

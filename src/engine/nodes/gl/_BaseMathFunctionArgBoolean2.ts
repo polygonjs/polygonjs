@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunctionArg2';
+import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';

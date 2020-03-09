@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunctionArg1';
+import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import ComplementMethods from './gl/complement.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';

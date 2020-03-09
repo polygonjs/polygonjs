@@ -1,33 +1,25 @@
-// import {BaseNodeGlMathFunctionArg3} from './_BaseMathFunctionArg3';
-// import {Connection} from './GlData';
-// import {Definition} from './Definition/_Module';
-// import Quaternion from './Gl/quaternion.glsl';
+import Quaternion from './gl/quaternion.glsl';
+import {MathFunctionArg2Factory} from './_Math_Arg2';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
-// export class VectorAngle extends BaseNodeGlMathFunctionArg3 {
-// 	static type() {
-// 		return 'vector_angle';
-// 	}
+const DefaultValues: Dictionary<Number3> = {
+	start: [0, 0, 1],
+	end: [1, 0, 0],
+};
 
-// 	gl_input_name(index: number) {
-// 		return ['start', 'end'][index];
-// 	}
-// 	gl_input_default_value(name: string) {
-// 		return {
-// 			start: [0, 0, 1],
-// 			end: [0, 1, 0],
-// 		}[name];
-// 	}
-// 	gl_method_name(): string {
-// 		return 'vector_angle';
-// 	}
-
-// 	protected expected_named_input_constructors() {
-// 		return [Connection.Vec3, Connection.Vec3];
-// 	}
-// 	protected expected_named_output_constructors() {
-// 		return [Connection.Float];
-// 	}
-// 	gl_function_definitions() {
-// 		return [new Definition.Function(this, Quaternion)];
-// 	}
-// }
+export class VectorAngleGlNode extends MathFunctionArg2Factory('vector_angle', {
+	in: ['start', 'end'],
+	method: 'vector_angle',
+	functions: [Quaternion],
+}) {
+	protected _expected_input_types() {
+		const type = ConnectionPointType.VEC3;
+		return [type, type];
+	}
+	protected _expected_output_types() {
+		return [ConnectionPointType.FLOAT];
+	}
+	gl_input_default_value(name: string) {
+		return DefaultValues[name];
+	}
+}

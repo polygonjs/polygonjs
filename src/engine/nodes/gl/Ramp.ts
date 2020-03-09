@@ -1,89 +1,57 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {
-// 	VAR_TYPES,
-// 	TYPED_CONNECTION_BY_VAR_TYPE,
-// 	TypedConnectionFloat,
-// 	TypedConnectionVec2,
-// 	TypedConnectionVec3,
-// 	TypedConnectionVec4,
-// } from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
-// import {Definition} from './Definition/_Module';
+import {TypedGlNode} from './_Base';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {UniformGLDefinition} from './utils/GLDefinition';
+import {RampParam} from '../../params/Ramp';
+import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
+import {ParamType} from '../../poly/ParamType';
 
-// import {Ramp} from 'src/Engine/Param/Ramp';
-// const RampParam = Ramp;
+const OUTPUT_NAME = 'val';
 
-// // const PARAM_TYPES = {
-// // 	float: ParamType.FLOAT,
-// // 	vec2: ParamType.VECTOR2,
-// // 	vec3: ParamType.VECTOR,
-// // 	vec4: ParamType.VECTOR4
-// // }
-// // const PARAM_DEFAULT_VALUES = {
-// // 	float: 0,
-// // 	vec2: [0,0],
-// // 	vec3: [0,0,0],
-// // 	vec4: [0,0,0,0]
-// // }
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class RampGlParamsConfig extends NodeParamsConfig {
+	name = ParamConfig.STRING('ramp');
+	input = ParamConfig.FLOAT(0);
+}
+const ParamsConfig = new RampGlParamsConfig();
+export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'ramp';
+	}
 
-// const OUTPUT_NAME = 'ramp_val';
+	initialize() {
+		super.initialize_node();
 
-// export class RampGl extends BaseNodeGl {
-// 	static type() {
-// 		return 'ramp';
-// 	}
+		this.io.outputs.set_named_output_connection_points([
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+		]);
+	}
 
-// 	constructor() {
-// 		super();
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const gl_type = ConnectionPointType.FLOAT;
+		const texture_name = this._uniform_name();
+		const var_name = this.gl_var_name(OUTPUT_NAME);
 
-// 		this.set_named_outputs([new TypedConnectionFloat(OUTPUT_NAME)]);
-// 	}
+		const definition = new UniformGLDefinition(this, ConnectionPointType.SAMPLER_2D, texture_name);
+		shaders_collection_controller.add_definitions(this, [definition]);
 
-// 	create_params() {
-// 		this.add_param(ParamType.STRING, 'name', 'ramp');
-// 		this.add_param(ParamType.FLOAT, 'input', 0);
-// 	}
-
-// 	set_lines() {
-// 		const definitions = [];
-
-// 		const gl_type = 'float';
-// 		const texture_name = this.uniform_name();
-// 		const named_output = this.named_outputs()[0];
-// 		const var_name = this.gl_var_name(named_output.name());
-
-// 		definitions.push(new Definition.Uniform(this, 'sampler2D', texture_name)); //(`uniform ${gl_type} ${var_name}`)
-// 		this.set_definitions(definitions);
-
-// 		const input_val = this.variable_for_input('input');
-// 		this.set_body_lines([`${gl_type} ${var_name} = texture2D(${this.uniform_name()}, vec2(${input_val}, 0.0)).x`]);
-// 	}
-// 	set_param_configs() {
-// 		const default_value = RampParam.DEFAULT_VALUE;
-// 		this.add_param_config(ParamType.RAMP, this._param_name, default_value, this.uniform_name());
-// 	}
-// 	uniform_name() {
-// 		const named_output = this.named_outputs()[0];
-// 		const var_name = 'ramp_texture_' + this.gl_var_name(named_output.name());
-// 		return var_name;
-// 	}
-
-// 	// async post_set_dirty(dirty_trigger){
-// 	// 	if(dirty_trigger == this.param('type')){
-// 	// 		// await this.update_output_type()
-// 	// 		this.remove_dirty_state()
-// 	// 		this.make_output_nodes_dirty()
-// 	// 	}
-// 	// }
-// 	// async update_output_type(){
-// 	// 	this.param('type').eval_p().then(val=>{
-// 	// 		const name = VAR_TYPES[val]
-// 	// 		const constructor = TYPED_CONNECTION_BY_VAR_TYPE[name]
-// 	// 		const named_output = new constructor(OUTPUT_NAME)
-// 	// 		this.set_named_outputs([
-// 	// 			named_output
-// 	// 		])
-// 	// 	})
-// 	// }
-// }
+		const input_val = this.variable_for_input(this.p.input.name);
+		const body_line = `${gl_type} ${var_name} = texture2D(${this._uniform_name()}, vec2(${input_val}, 0.0)).x`;
+		shaders_collection_controller.add_body_lines(this, [body_line]);
+	}
+	set_param_configs() {
+		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
+		this._param_configs_controller.reset();
+		this._param_configs_controller.create_and_push(
+			ParamType.RAMP,
+			this.pv.name,
+			RampParam.DEFAULT_VALUE,
+			this._uniform_name()
+		);
+	}
+	private _uniform_name() {
+		return 'ramp_texture_' + this.gl_var_name(OUTPUT_NAME);
+	}
+}

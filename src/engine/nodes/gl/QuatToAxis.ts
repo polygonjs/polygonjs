@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunctionArg1';
+import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import Quaternion from './gl/quaternion.glsl';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {FunctionGLDefinition} from './utils/GLDefinition';

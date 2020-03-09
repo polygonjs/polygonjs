@@ -1,39 +1,53 @@
-// import {BaseNodeGl} from './_Base';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import {TypedConnectionFloat} from './GlData';
-// import {ThreeToGl} from 'src/Core/ThreeToGl';
+import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
+import {ThreeToGl} from '../../../core/ThreeToGl';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {ConnectionPointComponentsCountMap} from '../utils/connections/ConnectionPointType';
 
-// export class Round extends BaseNodeGl {
-// 	static type() {
-// 		return 'round';
-// 	}
+const ALL_COMPONENTS = ['x', 'y', 'z', 'w'];
+// const OUTPUT_NAME = 'round'
 
-// 	constructor() {
-// 		super();
+export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
+	static type() {
+		return 'round';
+	}
 
-// 		// this.set_inputs([
-// 		// 	new GlDataIONumeric('in')
-// 		// ])
-// 		this.set_named_outputs([new TypedConnectionFloat('round')]);
-// 	}
+	// initialize_node() {
+	// 	super.initialize_node();
+	// 	this.set_named_outputs([new TypedConnectionFloat(v)]);
+	// }
 
-// 	create_params() {
-// 		this.add_param(ParamType.FLOAT, 'value', 1);
-// 	}
-// 	// https://hub.jmonkeyengine.org/t/round-with-glsl/8186/6
-// 	set_lines() {
-// 		// const function_declaration_lines = []
-// 		const body_lines = [];
+	// create_params() {
+	// 	this.add_param(ParamType.FLOAT, 'value', 1);
+	// }
+	// https://hub.jmonkeyengine.org/t/round-with-glsl/8186/6
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		// const function_declaration_lines = []
 
-// 		// 		function_declaration_lines.push(`highp float round(float num){
-// 		// 	return floor(num)-fract(num);
-// 		// }`)
+		// 		function_declaration_lines.push(`highp float round(float num){
+		// 	return floor(num)-fract(num);
+		// }`)
+		const input_connection = this.io.inputs.named_input_connection_points[0];
+		const value = ThreeToGl.vector2(this.variable_for_input(input_connection.name));
 
-// 		const value = ThreeToGl.vector2(this.variable_for_input('value'));
+		const output_connection = this.io.outputs.named_output_connection_points[0];
+		const var_name = this.gl_var_name(output_connection.name);
 
-// 		const float = this.gl_var_name('round');
-// 		body_lines.push(`float ${float} = sign(${value})*floor(abs(${value})+0.5)`);
-// 		// this.set_function_declaration_lines(function_declaration_lines)
-// 		this.set_body_lines(body_lines);
-// 	}
-// }
+		const body_lines: string[] = [];
+		const lines_count = ConnectionPointComponentsCountMap[output_connection.type];
+		if (lines_count == 1) {
+			body_lines.push(`${output_connection.type} ${var_name} = ${this._simple_line(value)}`);
+		} else {
+			const simple_lines: string[] = ALL_COMPONENTS.map((c) => {
+				return this._simple_line(`${value}.${c}`);
+			});
+			body_lines.push(
+				`${output_connection.type} ${var_name} = ${output_connection.type}(${simple_lines.join(',')})`
+			);
+		}
+		shaders_collection_controller.add_body_lines(this, body_lines);
+	}
+
+	private _simple_line(value: string) {
+		return `sign(${value})*floor(abs(${value})+0.5)`;
+	}
+}

@@ -1,92 +1,105 @@
-// import {BaseNodeGlMathFunction} from './_BaseMathFunction';
-// import {Connection} from './GlData';
-// import {Definition} from './Definition/_Module';
-// import {ParamType} from 'src/Engine/Param/_Module';
-// import Quaternion from './Gl/quaternion.glsl';
+import {BaseAdaptiveGlNode} from './_BaseAdaptive';
+import Quaternion from './gl/quaternion.glsl';
+import {FunctionGLDefinition} from './utils/GLDefinition';
+import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
-// const MODE_VALUES = {
-// 	AXIS: 0,
-// 	QUAT: 1,
-// };
-// const MODE_NAMES = {
-// 	AXIS: 'from axis + angle',
-// 	QUAT: 'from quaternion',
-// };
-// const MODE_INPUT_NAMES = {
-// 	AXIS: ['vector', 'axis', 'angle'],
-// 	QUAT: ['vector', 'quat'],
-// };
-// const MODE_METHOD_NAMES = {
-// 	AXIS: 'rotate_with_axis_angle',
-// 	QUAT: 'rotate_with_quat',
-// };
-// const MODE_CONNECTIONS = {
-// 	AXIS: [Connection.Vec3, Connection.Vec3, Connection.Float],
-// 	QUAT: [Connection.Vec3, Connection.Vec4],
-// };
+enum Mode {
+	AXIS = 0,
+	QUAT = 1,
+}
+const Modes: Array<Mode> = [Mode.AXIS, Mode.QUAT];
 
-// export class Rotate extends BaseNodeGlMathFunction {
-// 	static type() {
-// 		return 'rotate';
-// 	}
+type StringByMode = {[key in Mode]: string};
+const LabelByMode: StringByMode = {
+	[Mode.AXIS]: 'from axis + angle',
+	[Mode.QUAT]: 'from quaternion',
+};
+type StringArrayByMode = {[key in Mode]: string[]};
+const InputNamesByMode: StringArrayByMode = {
+	[Mode.AXIS]: ['vector', 'axis', 'angle'],
+	[Mode.QUAT]: ['vector', 'quat'],
+};
+const MethodNameByMode: StringByMode = {
+	[Mode.AXIS]: 'rotate_with_axis_angle',
+	[Mode.QUAT]: 'rotate_with_quat',
+};
+type ConnectionTypeArrayByMode = {[key in Mode]: ConnectionPointType[]};
+const InputTypesByMode: ConnectionTypeArrayByMode = {
+	[Mode.AXIS]: [ConnectionPointType.VEC3, ConnectionPointType.VEC3, ConnectionPointType.FLOAT],
+	[Mode.QUAT]: [ConnectionPointType.VEC3, ConnectionPointType.VEC4],
+};
 
-// 	_signature_name: string = 'AXIS';
+const DefaultValues: Dictionary<Number3> = {
+	vector: [0, 0, 1],
+	axis: [0, 1, 0],
+};
 
-// 	constructor() {
-// 		super();
-// 		this.add_post_dirty_hook(this._update_if_signature_changed.bind(this));
-// 	}
+import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 
-// 	gl_input_name(index: number) {
-// 		return MODE_INPUT_NAMES[this._signature_name][index];
-// 	}
-// 	gl_input_default_value(name: string) {
-// 		return {
-// 			vector: [0, 0, 1],
-// 			axis: [0, 1, 0],
-// 		}[name];
-// 	}
-// 	gl_method_name(): string {
-// 		return MODE_METHOD_NAMES[this._signature_name];
-// 	}
+class RotateParamsConfig extends NodeParamsConfig {
+	signature = ParamConfig.INTEGER(Mode.AXIS, {
+		menu: {
+			entries: Modes.map((mode, i) => {
+				const label = LabelByMode[mode];
+				return {name: label, value: i};
+			}),
+		},
+	});
+}
 
-// 	create_params() {
-// 		this.add_param(ParamType.INTEGER, 'signature', MODE_VALUES.AXIS, {
-// 			menu: {
-// 				type: 'radio',
-// 				entries: Object.keys(MODE_VALUES).map((mode) => {
-// 					return {name: MODE_NAMES[mode], value: MODE_VALUES[mode]};
-// 				}),
-// 			},
-// 		});
-// 		this.prepare_signature();
-// 		this.update_connection_types();
-// 	}
-// 	_update_if_signature_changed(dirty_trigger) {
-// 		if (dirty_trigger == this.param('signature')) {
-// 			this.prepare_signature();
-// 			this.update_connection_types();
-// 			this.remove_dirty_state();
-// 			this.make_output_nodes_dirty();
-// 		}
-// 	}
+const ParamsConfig = new RotateParamsConfig();
+export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'rotate';
+	}
 
-// 	protected prepare_signature() {
-// 		const signature_value = this.param('signature').value();
-// 		Object.keys(MODE_VALUES).forEach((signature_name) => {
-// 			if (MODE_VALUES[signature_name] == signature_value) {
-// 				this._signature_name = signature_name;
-// 			}
-// 		});
-// 	}
+	// _signature_name: string = 'AXIS';
 
-// 	protected expected_named_input_constructors() {
-// 		return MODE_CONNECTIONS[this._signature_name];
-// 	}
-// 	protected expected_named_output_constructors() {
-// 		return [Connection.Vec3];
-// 	}
-// 	gl_function_definitions() {
-// 		return [new Definition.Function(this, Quaternion)];
-// 	}
-// }
+	initialize_node() {
+		super.initialize_node();
+		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+	}
+
+	protected _gl_input_name(index: number) {
+		const mode = Modes[this.pv.signature];
+		return InputNamesByMode[mode][index];
+	}
+	gl_input_default_value(name: string) {
+		return DefaultValues[name];
+	}
+	gl_method_name(): string {
+		const mode = Modes[this.pv.signature];
+		return MethodNameByMode[mode];
+	}
+
+	protected _expected_input_types() {
+		const mode = Modes[this.pv.signature];
+		return InputTypesByMode[mode];
+	}
+	protected _expected_output_types() {
+		return [ConnectionPointType.VEC3];
+	}
+	gl_function_definitions() {
+		const type = this._expected_output_types()[0];
+		return [new FunctionGLDefinition(this, type, Quaternion)];
+	}
+
+	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const var_type: ConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
+		const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
+			const name = connection.name;
+			return ThreeToGl.any(this.variable_for_input(name));
+		});
+		const joined_args = args.join(', ');
+
+		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
+		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
+		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());
+	}
+}

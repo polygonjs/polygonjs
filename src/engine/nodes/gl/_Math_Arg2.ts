@@ -1,4 +1,4 @@
-import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunctionArg2';
+import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
 interface MathArg2Options {

@@ -278,8 +278,8 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	// _param_video_time_param: BaseParam
 	private _texture_loader: CoreTextureLoader | undefined;
 
-	static VIDEO_TIME_PARAM_NAME = 'video_time';
-	static DEFAULT_NODE_PATH = {
+	static readonly VIDEO_TIME_PARAM_NAME = 'video_time';
+	static readonly DEFAULT_NODE_PATH = {
 		UV: '/COP/file_uv',
 		ENV_MAP: '/COP/env_map',
 	};
