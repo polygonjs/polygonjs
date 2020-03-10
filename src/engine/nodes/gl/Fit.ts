@@ -8,7 +8,7 @@ const DefaultValues: Dictionary<number> = {
 	src_max: 1,
 };
 
-export class Fit extends BaseNodeGlMathFunctionArg5GlNode {
+export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
 	static type() {
 		return 'fit';
 	}

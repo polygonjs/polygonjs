@@ -1,7 +1,7 @@
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
-import Hsv2Rgb from './Gl/hsv2rgb.glsl';
+import Hsv2Rgb from './gl/hsv2rgb.glsl';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

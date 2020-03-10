@@ -18,7 +18,7 @@ class TextureParamsConfig extends NodeParamsConfig {
 	uv = ParamConfig.VECTOR2([0, 0]);
 }
 const ParamsConfig = new TextureParamsConfig();
-export class Texture extends TypedGlNode<TextureParamsConfig> {
+export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 	param_config = ParamsConfig;
 	static type() {
 		return 'texture';
@@ -39,8 +39,8 @@ export class Texture extends TypedGlNode<TextureParamsConfig> {
 		const map = this._uniform_name();
 		const definition = new UniformGLDefinition(this, ConnectionPointType.SAMPLER_2D, map);
 		const body_line = `vec4 ${rgba} = texture2D(${map}, ${uv})`;
-		shaders_collection_controller.set_definitions([definition]);
-		shaders_collection_controller.set_body_lines([body_line]);
+		shaders_collection_controller.add_definitions(this, [definition]);
+		shaders_collection_controller.add_body_lines(this, [body_line]);
 	}
 
 	set_param_configs() {

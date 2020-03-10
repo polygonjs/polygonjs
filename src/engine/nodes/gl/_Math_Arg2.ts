@@ -1,5 +1,6 @@
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {FunctionGLDefinition} from './utils/GLDefinition';
 
 interface MathArg2Options {
 	in?: [string, string];
@@ -8,15 +9,17 @@ interface MathArg2Options {
 	allowed_in_types?: ConnectionPointType[];
 	out_type?: ConnectionPointType;
 	method?: string;
+	functions?: string[];
 }
 
-function MathFunctionArg2Factory(type: string, options: MathArg2Options = {}) {
+export function MathFunctionArg2Factory(type: string, options: MathArg2Options = {}) {
 	const gl_method_name = options.method || type;
 	const gl_output_name = options.out || 'val';
 	const gl_input_names = options.in || ['in0', 'in1'];
 	const default_in_type = options.default_in_type;
 	const allowed_in_types = options.allowed_in_types;
 	const out_type = options.out_type;
+	const functions = options.functions || [];
 	return class Node extends BaseNodeGlMathFunctionArg2GlNode {
 		static type() {
 			return type;
@@ -40,6 +43,13 @@ function MathFunctionArg2Factory(type: string, options: MathArg2Options = {}) {
 		}
 		gl_method_name(): string {
 			return gl_method_name;
+		}
+		gl_function_definitions(): FunctionGLDefinition[] {
+			if (out_type) {
+				return functions.map((f) => new FunctionGLDefinition(this, out_type, f));
+			} else {
+				return [];
+			}
 		}
 		protected _expected_input_types() {
 			let first_input_type = this.gl_connections_controller.first_input_connection_type();

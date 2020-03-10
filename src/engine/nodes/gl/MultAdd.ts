@@ -6,7 +6,7 @@ const DefaultValues: Dictionary<number> = {
 	mult: 1,
 };
 
-export class MultAdd extends BaseNodeGlMathFunctionArg4GlNode {
+export class MultAddGlNode extends BaseNodeGlMathFunctionArg4GlNode {
 	static type() {
 		return 'mult_add';
 	}
