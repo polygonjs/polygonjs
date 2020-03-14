@@ -59,8 +59,8 @@ export abstract class TypedBuilderMatNode<
 		}
 	}
 	protected async _compile() {
-		if (this._material) {
-			await this.assembler_controller.assembler.compile_material(this._material);
+		if (this.material) {
+			await this.assembler_controller.assembler.compile_material(this.material);
 			await this.assembler_controller.post_compile();
 		}
 	}

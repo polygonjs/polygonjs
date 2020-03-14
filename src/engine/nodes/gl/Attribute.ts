@@ -5,6 +5,8 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {BaseNamedConnectionPointType} from '../utils/connections/NamedConnectionPoint';
 import {ParamType} from '../../poly/ParamType';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlConnectionsController} from './utils/ConnectionsController';
 
 export const ConnectionPointTypesAvailableForAttribute = [
 	ConnectionPointType.FLOAT,
@@ -13,9 +15,7 @@ export const ConnectionPointTypesAvailableForAttribute = [
 	ConnectionPointType.VEC4,
 ];
 
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {GlConnectionsController} from './utils/ConnectionsController';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {

@@ -9,7 +9,7 @@ import {
 	ConnectionPointType,
 } from '../../../../src/engine/nodes/utils/connections/ConnectionPointType';
 import {ConstantGlNode} from '../../../../src/engine/nodes/gl/Constant';
-import {CoreSleep} from '../../../../src/core/Sleep';
+// import {CoreSleep} from '../../../../src/core/Sleep';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 
@@ -28,6 +28,8 @@ import BasicAttribInFragmentFragment from './templates/mesh_basic_builder/Basic.
 import BasicAttribInFragmentOnlyVertex from './templates/mesh_basic_builder/Basic.attribInFragmentOnly.vert.glsl';
 import BasicAttribInFragmentOnlyFragment from './templates/mesh_basic_builder/Basic.attribInFragmentOnly.frag.glsl';
 import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
+import {Vec4ToVectorGlNode} from '../../../../src/engine/nodes/gl/_ConversionVecTo';
+import {TextureGlNode} from '../../../../src/engine/nodes/gl/Texture';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -99,6 +101,8 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
 
+	await scene.wait_for_cooks_completed();
+
 	await mesh_basic1.request_container();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
 	assert.notOk(mesh_basic1.assembler_controller.compile_required());
@@ -107,13 +111,13 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	const attribute1 = mesh_basic1.create_node('attribute');
 	const texture1 = mesh_basic1.create_node('texture');
 	const vec4_to_vector1 = mesh_basic1.create_node('vec4_to_vector');
-	output1.set_input('color', vec4_to_vector1, 'vec');
-	vec4_to_vector1.set_input('vec4', texture1, 'rgba');
-	texture1.set_input('uv', attribute1, 'output_val');
+	output1.set_input('color', vec4_to_vector1, Vec4ToVectorGlNode.OUTPUT_NAME_VEC3);
+	vec4_to_vector1.set_input('vec4', texture1, TextureGlNode.OUTPUT_NAME);
+	texture1.set_input('uv', attribute1);
 	attribute1.p.name.set('uv');
 	attribute1.p.type.set(ConnectionPointTypesAvailableForAttribute.indexOf(ConnectionPointType.VEC2));
 
-	await CoreSleep.sleep(50);
+	// await CoreSleep.sleep(50);
 
 	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
 	await mesh_basic1.request_container();

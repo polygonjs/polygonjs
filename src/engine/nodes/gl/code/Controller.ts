@@ -177,9 +177,9 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	// }
 
 	async post_compile() {
-		if (!this._compile_required) {
-			return;
-		}
+		// if (!this.compile_required()) {
+		// 	return;
+		// }
 		// this.assembler.compile_for_node(this._gl);
 		this.create_spare_parameters();
 		this.set_compilation_required(false);

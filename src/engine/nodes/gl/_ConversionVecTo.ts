@@ -68,30 +68,36 @@ export class Vec4ToVectorGlNode extends BaseVecToGlNode {
 	static type() {
 		return 'vec4_to_vector';
 	}
+	static readonly INPUT_NAME_VEC4 = 'vec4';
+	static readonly OUTPUT_NAME_VEC3 = 'vec3';
+	static readonly OUTPUT_NAME_W = 'w';
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint('vec', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('w', ConnectionPointType.FLOAT),
+			new TypedNamedConnectionPoint(Vec4ToVectorGlNode.OUTPUT_NAME_VEC3, ConnectionPointType.VEC3),
+			new TypedNamedConnectionPoint(Vec4ToVectorGlNode.OUTPUT_NAME_W, ConnectionPointType.FLOAT),
 		]);
 	}
 	create_params() {
-		this.add_param(ParamType.VECTOR4, 'vec', components_v4.map((c) => 0) as Number4);
+		this.add_param(ParamType.VECTOR4, Vec4ToVectorGlNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
-		const vec = this.variable_for_input('vec');
+		const in_vec4 = Vec4ToVectorGlNode.INPUT_NAME_VEC4;
+		const out_vec3 = Vec4ToVectorGlNode.OUTPUT_NAME_VEC3;
+		const out_w = Vec4ToVectorGlNode.OUTPUT_NAME_W;
+		const vec = this.variable_for_input(in_vec4);
 
 		const used_output_names = this.io.outputs.used_output_names();
 
-		if (used_output_names.indexOf('vec') >= 0) {
-			const var_name = this.gl_var_name('vec');
+		if (used_output_names.indexOf(out_vec3) >= 0) {
+			const var_name = this.gl_var_name(out_vec3);
 			body_lines.push(`vec3 ${var_name} = ${vec}.xyz`);
 		}
-		if (used_output_names.indexOf('w') >= 0) {
-			const var_name = this.gl_var_name('w');
+		if (used_output_names.indexOf(out_w) >= 0) {
+			const var_name = this.gl_var_name(out_w);
 			body_lines.push(`float ${var_name} = ${vec}.w`);
 		}
 		shaders_collection_controller.add_body_lines(this, body_lines);

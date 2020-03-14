@@ -241,7 +241,7 @@ export class GlRegister {
 		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(SubstractGlNode, CATEGORY_GL.MATH);
 		poly.register_node(TanGlNode, CATEGORY_GL.TRIGO);
-		poly.register_node(TextureGlNode, CATEGORY_GL.TRIGO);
+		poly.register_node(TextureGlNode, CATEGORY_GL.COLOR);
 		poly.register_node(TwoWaySwitchGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(Vec2ToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec3ToFloatGlNode, CATEGORY_GL.CONVERSION);

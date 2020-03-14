@@ -302,6 +302,12 @@ export class InputsController<T extends BaseNodeType> {
 
 	set_input(input_index_or_name: number | string, node: T | null, output_index_or_name: number | string = 0) {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
+		if (input_index < 0) {
+			const message = `invalid input (${input_index_or_name}) for node ${this.node.full_path()}`;
+			console.warn(message);
+			throw new Error(message);
+		}
+
 		let output_index = 0;
 		if (node) {
 			if (node.io.outputs.has_named_outputs) {
@@ -320,7 +326,9 @@ export class InputsController<T extends BaseNodeType> {
 
 		const graph_input_node = this._graph_node_inputs[input_index];
 		if (graph_input_node == null) {
-			throw `graph_input_node not found at index ${input_index}`;
+			const message = `graph_input_node not found at index ${input_index}`;
+			console.warn(message);
+			throw new Error(message);
 		}
 
 		if (node && this.node.parent != node.parent) {
