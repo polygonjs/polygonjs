@@ -10,7 +10,7 @@ import {ConnectionPointType} from '../../../../utils/connections/ConnectionPoint
 import {MapUtils} from '../../../../../../core/MapUtils';
 import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-import {ShaderMaterial} from 'three';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {GlNodeFinder} from '../../utils/NodeFinder';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'

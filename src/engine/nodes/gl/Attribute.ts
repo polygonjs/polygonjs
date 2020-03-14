@@ -6,10 +6,7 @@ import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {BaseNamedConnectionPointType} from '../utils/connections/NamedConnectionPoint';
 import {ParamType} from '../../poly/ParamType';
 
-const INPUT_NAME = 'export';
-const OUTPUT_NAME = 'val';
-
-const ConnectionPointTypesAvailableForAttribute = [
+export const ConnectionPointTypesAvailableForAttribute = [
 	ConnectionPointType.FLOAT,
 	ConnectionPointType.VEC2,
 	ConnectionPointType.VEC3,
@@ -36,6 +33,8 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	static type() {
 		return 'attribute';
 	}
+	static readonly INPUT_NAME = 'export';
+	static readonly OUTPUT_NAME = 'val';
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
@@ -63,10 +62,10 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	get input_name() {
-		return INPUT_NAME;
+		return AttributeGlNode.INPUT_NAME;
 	}
 	get output_name() {
-		return OUTPUT_NAME;
+		return AttributeGlNode.OUTPUT_NAME;
 	}
 
 	// private create_inputs_from_params() {
@@ -111,11 +110,11 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	//
 	connected_input_node(): BaseGlNodeType | null {
 		// if (this.io.inputs.has_named_inputs) {
-		return this.io.inputs.named_input(INPUT_NAME);
+		return this.io.inputs.named_input(AttributeGlNode.INPUT_NAME);
 		// }
 	}
 	connected_input_connection_point(): BaseNamedConnectionPointType | undefined {
-		return this.io.inputs.named_input_connection_point(INPUT_NAME);
+		return this.io.inputs.named_input_connection_point(AttributeGlNode.INPUT_NAME);
 	}
 	// connected_input(): NamedConnection {
 	// 	const connection_point = this.connected_input_connection_point();
@@ -139,7 +138,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	}
 	get is_exporting(): boolean {
 		if (this.pv.export_when_connected) {
-			const input_node = this.io.inputs.named_input(INPUT_NAME);
+			const input_node = this.io.inputs.named_input(AttributeGlNode.INPUT_NAME);
 			return input_node != null;
 		} else {
 			return false;

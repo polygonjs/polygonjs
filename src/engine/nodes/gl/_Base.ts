@@ -29,7 +29,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		this.spare_params_controller.initialize_node();
 	}
 	cook() {
-		throw 'gl nodes should never cook';
+		console.warn('gl nodes should never cook');
 	}
 
 	protected _set_mat_to_recompile() {
@@ -59,8 +59,15 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 		const connection = this.io.connections.input_connection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
-			const output_name = input_node.io.outputs.named_output_connection_points[connection.output_index].name;
-			return input_node.gl_var_name(output_name);
+			const output_connection_point =
+				input_node.io.outputs.named_output_connection_points[connection.output_index];
+			if (output_connection_point) {
+				const output_name = output_connection_point.name;
+				return input_node.gl_var_name(output_name);
+			} else {
+				console.warn(`no output called '${name}' for gl node ${input_node.full_path()}`);
+				throw 'variable_for_input ERROR';
+			}
 		} else {
 			return ThreeToGl.any(this.params.get(name)?.value);
 		}

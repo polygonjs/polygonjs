@@ -233,7 +233,7 @@ export class GlRegister {
 		poly.register_node(ReflectGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(RefractGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(RgbToHsvGlNode, CATEGORY_GL.COLOR);
-		poly.register_node(RgbToHsvGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(RotateGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(RoundGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SignGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SinGlNode, CATEGORY_GL.TRIGO);

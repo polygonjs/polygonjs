@@ -307,7 +307,7 @@ export class InputsController<T extends BaseNodeType> {
 			if (node.io.outputs.has_named_outputs) {
 				// if(node.has_named_output(output_index_or_name)){
 				output_index = node.io.outputs.get_output_index(output_index_or_name);
-				if (output_index == null) {
+				if (output_index == null || output_index < 0) {
 					console.warn(`node ${node.full_path()} does not have an output named ${output_index_or_name}`);
 					return;
 				}

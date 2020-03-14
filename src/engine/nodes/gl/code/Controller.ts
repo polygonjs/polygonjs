@@ -1,23 +1,15 @@
 import lodash_merge from 'lodash/merge';
 import lodash_intersection from 'lodash/intersection';
 import lodash_difference from 'lodash/difference';
-// import {VertexColors} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
-// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-// import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-// import {FrontSide} from 'three/src/constants';
-// const THREE = {FrontSide, ShaderLib, ShaderMaterial, UniformsUtils, Vector2, VertexColors};
 import {BaseNodeType, TypedNode} from '../../_Base';
-// import {ParamType} from '../../../../Engine/Param/_Module'
 
 import {BaseGlShaderAssembler} from './assemblers/_Base';
 import {GlobalsBaseController} from './globals/_Base';
+import {GlobalsGeometryHandler} from './globals/Geometry';
 
-// import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 // import {NodeEvent} from '../../../poly/NodeEvent';
-import {ShaderName} from '../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../Output';
 import {GlobalsGlNode} from '../Globals';
 // import {BaseParamType} from '../../../params/_Base';
@@ -61,11 +53,11 @@ export class AssemblerControllerNode extends TypedNode<any, BaseNodeType, any> {
 type BaseGlShaderAssemblerConstructor<A extends BaseGlShaderAssembler> = new (...args: any[]) => A;
 export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	protected _assembler!: A;
-	private _globals_handler: GlobalsBaseController | undefined; // = new GlobalsGeometryHandler(this);
+	private _globals_handler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
 	private _compile_required: boolean = true;
 	// private _requester: BaseNodeSop;
 	// private _recompiled: boolean = false;
-	private _shaders_by_name: Map<ShaderName, string> = new Map();
+	// private _shaders_by_name: Map<ShaderName, string> = new Map();
 
 	private _deleted_params_data: Map<string, ParamJsonExporterData<ParamType>> = new Map();
 	// private _new_params: BaseParamType[] = [];
@@ -116,9 +108,9 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	get assembler() {
 		return this._assembler;
 	}
-	get shaders_by_name() {
-		return this._shaders_by_name;
-	}
+	// get shaders_by_name() {
+	// 	return this._shaders_by_name;
+	// }
 	get globals_handler() {
 		return this._globals_handler;
 	}
@@ -160,14 +152,10 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	// 	}
 	// 	await this.assign_uniform_values();
 	// }
-	set_compilation_required() {
-		this._compile_required = true;
+	set_compilation_required(new_state = true) {
+		this._compile_required = new_state;
 	}
 	set_compilation_required_and_dirty(trigger_node?: BaseGlNodeType) {
-		// it may be useful to send the trigger node here
-		// but in the end, the material needs to recook fully
-		// in order to properly assign the uniforms
-		// (unless there is a way to re-assign the same value to a uniform that is not meant to be updated)
 		this.set_compilation_required();
 		this.node.set_dirty(trigger_node);
 	}
@@ -194,7 +182,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		}
 		// this.assembler.compile_for_node(this._gl);
 		this.create_spare_parameters();
-		this._compile_required = false;
+		this.set_compilation_required(false);
 	}
 
 	// private async run_assembler() {

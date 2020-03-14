@@ -11,7 +11,8 @@ import {OperatorPathParam} from '../../../params/OperatorPath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-import {ShaderMaterial, IUniform} from 'three';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {IUniforms} from '../../../../core/geometry/Material';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
