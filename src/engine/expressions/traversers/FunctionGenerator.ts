@@ -17,21 +17,34 @@ type AnyDictionary = Dictionary<any>;
 const NATIVE_MATH_METHODS = [
 	'abs',
 	'acos',
+	'acosh',
 	'asin',
+	'asinh',
 	'atan',
+	'atan2',
+	'atanh',
 	'ceil',
 	'cos',
+	'cosh',
 	'exp',
+	'expm1',
 	'floor',
+	'log',
+	'log1p',
+	'log2',
+	'log10',
 	'max',
 	'min',
 	'pow',
 	'round',
 	'sign',
 	'sin',
+	'sinh',
 	'sqrt',
 	'tan',
+	'tanh',
 ];
+const NATIVE_ES6_MATH_METHODS = ['cbrt', 'hypot', 'log10', 'trunc'];
 const NATIVE_MATH_METHODS_RENAMED: AnyDictionary = {
 	math_random: 'random',
 };
@@ -40,10 +53,13 @@ import {Easing} from '../../../core/math/Easing';
 const EASING_METHODS = Object.keys(Easing);
 
 const CORE_STRING_METHODS = ['precision'];
-const NATIVE_MATH_CONSTANTS = ['PI', 'E'];
+const NATIVE_MATH_CONSTANTS = ['E', 'LN2', 'LN10', 'LOG10E', 'LOG2E', 'PI', 'SQRT1_2', 'SQRT2'];
 
 const DIRECT_EXPRESSION_FUNCTIONS: AnyDictionary = {};
 NATIVE_MATH_METHODS.forEach((name) => {
+	DIRECT_EXPRESSION_FUNCTIONS[name] = `Math.${name}`;
+});
+NATIVE_ES6_MATH_METHODS.forEach((name) => {
 	DIRECT_EXPRESSION_FUNCTIONS[name] = `Math.${name}`;
 });
 Object.keys(NATIVE_MATH_METHODS_RENAMED).forEach((name) => {

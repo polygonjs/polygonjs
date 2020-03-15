@@ -9,7 +9,6 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 const THREE = {BufferGeometry, Float32BufferAttribute, Points};
 
 // import UrlLoader from '../UrlLoader';
-import axios from 'axios';
 import {CoreString} from '../../String';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {CoreConstant} from '../../geometry/Constant';
@@ -51,12 +50,11 @@ export class JsonDataLoader {
 		// const config = {
 		// 	crossdomain: true
 		// }
-		axios
-			.get(url)
-			.then((response) => {
+		fetch(url)
+			.then(async (response) => {
 				// const end_time = performance.now();
 
-				this._json = response.data;
+				this._json = await response.json();
 				if (this._options.data_keys_prefix != null && this._options.data_keys_prefix != '') {
 					this._json = this.get_prefixed_json(this._json, this._options.data_keys_prefix.split('.'));
 				}

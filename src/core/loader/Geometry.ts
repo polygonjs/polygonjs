@@ -7,7 +7,6 @@ import {Object3D} from 'three/src/core/Object3D';
 // import {DRACOLoader} from './Geometry/DRACOLoader';
 // import {JsonData} from './Geometry/JsonData'
 // import {CoreScriptLoader} from './Script';
-import axios from 'axios';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
@@ -73,11 +72,11 @@ export class CoreLoaderGeometry {
 			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 
 			if (this.ext == 'json') {
-				axios
-					.get(url)
-					.then((response) => {
+				fetch(url)
+					.then(async (response) => {
+						const data = await response.json();
 						const obj_loader = new ObjectLoader();
-						obj_loader.parse(response.data, (obj) => {
+						obj_loader.parse(data, (obj) => {
 							resolve(this.on_load_success(obj.children[0]));
 						});
 					})

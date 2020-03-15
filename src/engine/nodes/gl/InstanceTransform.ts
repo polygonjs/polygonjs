@@ -1,5 +1,5 @@
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 
 import QuaternionMethods from './gl/quaternion.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
