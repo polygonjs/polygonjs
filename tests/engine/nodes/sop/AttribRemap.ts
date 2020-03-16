@@ -1,3 +1,5 @@
+import {CorePoint} from '../../../../src/core/geometry/Point';
+
 QUnit.test('attrib_remap simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -14,12 +16,12 @@ QUnit.test('attrib_remap simple', async (assert) => {
 	let container, core_group, values;
 	container = await attrib_create1.request_container();
 	core_group = container.core_content()!;
-	values = core_group.points().map((p) => p.attrib_value('test'));
+	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
 	assert.deepEqual(values, [0, 1, 2, 3]);
 
 	container = await attrib_remap1.request_container();
 	core_group = container.core_content()!;
-	values = core_group.points().map((p) => p.attrib_value('test'));
+	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
 	assert.equal(values[0], 0);
 	assert.in_delta(values[1], 1 / 3, 0.0001);
 	assert.in_delta(values[2], 2 / 3, 0.0001);

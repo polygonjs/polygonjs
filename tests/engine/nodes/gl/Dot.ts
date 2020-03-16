@@ -1,6 +1,7 @@
 import {ConnectionPointType} from '../../../../src/engine/nodes/utils/connections/ConnectionPointType';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
+import {BaseNamedConnectionPointType} from '../../../../src/engine/nodes/utils/connections/NamedConnectionPoint';
 
 QUnit.test('gl dot updates its input and output types correctly', async (assert) => {
 	const MAT = window.MAT;
@@ -13,7 +14,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 	// default inputs and outputs
 	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2);
 	assert.deepEqual(
-		dot1.io.inputs.named_input_connection_points.map((c) => c.type),
+		dot1.io.inputs.named_input_connection_points.map((c: BaseNamedConnectionPointType) => c.type),
 		[ConnectionPointType.VEC3, ConnectionPointType.VEC3]
 	);
 	assert.equal(dot1.io.outputs.named_output_connection_points.length, 1);
@@ -25,7 +26,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 	dot1.set_input(0, constant1, 'val');
 	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2);
 	assert.deepEqual(
-		dot1.io.inputs.named_input_connection_points.map((c) => c.type),
+		dot1.io.inputs.named_input_connection_points.map((c: BaseNamedConnectionPointType) => c.type),
 		[ConnectionPointType.VEC2, ConnectionPointType.VEC2]
 	);
 	assert.equal(dot1.io.outputs.named_output_connection_points.length, 1);
@@ -37,7 +38,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 	dot1.set_input(0, constant1, 'val');
 	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2);
 	assert.deepEqual(
-		dot1.io.inputs.named_input_connection_points.map((c) => c.type),
+		dot1.io.inputs.named_input_connection_points.map((c: BaseNamedConnectionPointType) => c.type),
 		[ConnectionPointType.VEC2, ConnectionPointType.VEC2]
 	);
 	assert.equal(dot1.io.outputs.named_output_connection_points.length, 1);

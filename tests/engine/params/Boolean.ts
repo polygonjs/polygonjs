@@ -1,4 +1,5 @@
 import {ParamType} from '../../../src/engine/poly/ParamType';
+import {CoreGraphNode} from '../../../src/core/graph/CoreGraphNode';
 
 QUnit.test('boolean evals correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
@@ -89,7 +90,7 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 
 	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F')!;
 	assert.deepEqual(
-		spare_boolean.graph_all_predecessors().map((n) => n.graph_node_id),
+		spare_boolean.graph_all_predecessors().map((n: CoreGraphNode) => n.graph_node_id),
 		[scene.time_controller.graph_node.graph_node_id]
 	);
 	assert.ok(spare_boolean.has_expression(), 'has expr');

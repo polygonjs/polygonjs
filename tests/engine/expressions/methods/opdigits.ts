@@ -1,3 +1,5 @@
+import {CorePoint} from '../../../../src/core/geometry/Point';
+
 QUnit.test('expression opdigits works', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -12,7 +14,7 @@ QUnit.test('expression opdigits works', async (assert) => {
 		container
 			.core_content()!
 			.points()
-			.map((p) => p.attrib_value('ptid')),
+			.map((p: CorePoint) => p.attrib_value('ptid')),
 		[1, 1]
 	);
 
@@ -22,7 +24,7 @@ QUnit.test('expression opdigits works', async (assert) => {
 		container
 			.core_content()!
 			.points()
-			.map((p) => p.attrib_value('ptid')),
+			.map((p: CorePoint) => p.attrib_value('ptid')),
 		[12, 12]
 	);
 });

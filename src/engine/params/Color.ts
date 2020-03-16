@@ -48,10 +48,24 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		}
 	}
 	static are_raw_input_equal(
-		raw_input1: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
-		raw_input2: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH]
+		raw_input1: ParamInitValuesTypeMap[ParamType.COLOR],
+		raw_input2: ParamInitValuesTypeMap[ParamType.COLOR]
 	) {
-		return raw_input1 == raw_input2;
+		if (raw_input1 instanceof Color) {
+			if (raw_input2 instanceof Color) {
+				return raw_input1.equals(raw_input2);
+			} else {
+				return raw_input1.r == raw_input2[0] && raw_input1.g == raw_input2[1] && raw_input1.b == raw_input2[2];
+			}
+		} else {
+			if (raw_input2 instanceof Color) {
+				return raw_input1[0] == raw_input2.r && raw_input1[1] == raw_input2.g && raw_input1[2] == raw_input2.b;
+			} else {
+				return (
+					raw_input1[0] == raw_input2[0] && raw_input1[1] == raw_input2[1] && raw_input1[2] == raw_input2[2]
+				);
+			}
+		}
 	}
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
 		return val1.equals(val2);

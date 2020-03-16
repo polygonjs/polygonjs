@@ -1,3 +1,5 @@
+import {CorePoint} from '../../../../src/core/geometry/Point';
+
 QUnit.test('attrib_add_mult simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -15,11 +17,11 @@ QUnit.test('attrib_add_mult simple', async (assert) => {
 	let container, core_group, values;
 	container = await attrib_create1.request_container();
 	core_group = container.core_content()!;
-	values = core_group.points().map((p) => p.attrib_value('test'));
+	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
 	assert.deepEqual(values, [0, 1, 2, 3]);
 
 	container = await attrib_add_mult1.request_container();
 	core_group = container.core_content()!;
-	values = core_group.points().map((p) => p.attrib_value('test'));
+	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
 	assert.deepEqual(values, [0, 0.5, 1, 1.5]);
 });
