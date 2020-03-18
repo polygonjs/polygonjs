@@ -70,10 +70,6 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 	}
 
 	private _cook_with_input(core_group: CoreGroup) {
-		// this.request_input_container 0, (container)=>
-		// 	if container? && (group = container.group({clone: false}))?
-		// 		this.eval_all_params =>
-
 		const divisions = this.pv.divisions;
 
 		const bbox = core_group.bounding_box();

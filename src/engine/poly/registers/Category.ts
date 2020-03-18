@@ -42,6 +42,7 @@ export const CATEGORY_SOP = {
 	INPUT: 'inputs',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
+	PRIMITIVES: 'primitives',
 	RENDER: 'render',
 };
 export const CATEGORY_POST = {

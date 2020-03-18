@@ -14,6 +14,8 @@ const SPHERE_TYPE: SphereTypes = {
 const SPHERE_TYPES: Array<SphereType> = [SphereType.DEFAULT, SphereType.ISOCAHEDRON];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CoreGroup} from '../../../core/geometry/Group';
 class SphereSopParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(SPHERE_TYPE.default, {
 		menu: {
@@ -42,17 +44,48 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 		return 'sphere';
 	}
 
-	cook() {
-		let geometry;
-		if (this.pv.type == SPHERE_TYPE.default) {
-			geometry = this._create_default_sphere();
+	initialize_node() {
+		this.io.inputs.set_count(0, 1);
+		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
+	}
+
+	cook(input_contents: CoreGroup[]) {
+		const core_group = input_contents[0];
+		if (core_group) {
+			this._cook_with_input(core_group);
 		} else {
-			geometry = this._create_default_isocahedron();
+			this._cook_without_input();
 		}
+	}
+	private _cook_without_input() {
+		const geometry = this._create_required_geometry();
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 		this.set_geometry(geometry);
 	}
-	_create_default_sphere() {
+	private _cook_with_input(core_group: CoreGroup) {
+		const bbox = core_group.bounding_box();
+		const size = bbox.max.clone().sub(bbox.min);
+		const center = bbox.max
+			.clone()
+			.add(bbox.min)
+			.multiplyScalar(0.5);
+
+		const geometry = this._create_required_geometry();
+		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
+		geometry.translate(center.x, center.y, center.z);
+		geometry.scale(size.x, size.y, size.z);
+		this.set_geometry(geometry);
+	}
+
+	private _create_required_geometry() {
+		if (this.pv.type == SPHERE_TYPE.default) {
+			return this._create_default_sphere();
+		} else {
+			return this._create_default_isocahedron();
+		}
+	}
+
+	private _create_default_sphere() {
 		if (this.pv.open) {
 			return new SphereBufferGeometry(
 				this.pv.radius,

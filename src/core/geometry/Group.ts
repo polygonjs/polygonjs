@@ -30,15 +30,16 @@ export interface Object3DWithGeometry extends Object3D {
 
 export class CoreGroup {
 	// _group: Group
-	_timestamp: number | undefined;
+	private _timestamp: number | undefined;
 	// _core_objects:
-	_objects: Object3D[] | undefined;
-	_core_objects: CoreObject[] | undefined;
+	private _objects: Object3D[] | undefined;
+	private _core_objects: CoreObject[] | undefined;
 
 	// _geometries: BufferGeometry[];
-	_core_geometries: CoreGeometry[] | undefined;
+	private _core_geometries: CoreGeometry[] | undefined;
 
-	_bounding_box: Box3 | undefined;
+	private _bounding_box: Box3 | undefined;
+	// private _bounding_sphere: Sphere | undefined;
 
 	constructor() {
 		//_group: Group){
@@ -60,6 +61,7 @@ export class CoreGroup {
 	}
 	reset() {
 		this._bounding_box = undefined;
+		// this._bounding_sphere = undefined;
 		this._core_geometries = undefined;
 		this._core_objects = undefined;
 	}
@@ -180,10 +182,8 @@ export class CoreGroup {
 	points_from_group(group: GroupString) {
 		if (group) {
 			const indices = CoreString.indices(group);
-			// if (indices) {
 			const points = this.points();
-			return indices.map((i) => points[i]);
-			// }
+			return lodash_compact(indices.map((i) => points[i]));
 		} else {
 			return this.points();
 		}
@@ -242,6 +242,9 @@ export class CoreGroup {
 	bounding_box(): Box3 {
 		return (this._bounding_box = this._bounding_box || this._compute_bounding_box());
 	}
+	// bounding_sphere(): Sphere {
+	// 	return (this._bounding_sphere = this._bounding_sphere || this._compute_bounding_sphere());
+	// }
 	center(): Vector3 {
 		const center = new Vector3();
 		this.bounding_box().getCenter(center);
@@ -254,14 +257,37 @@ export class CoreGroup {
 	}
 
 	private _compute_bounding_box() {
-		const bbox = new Box3();
+		let bbox: Box3 | undefined; // = new Box3();
 		if (this._objects) {
 			for (let object of this._objects) {
-				bbox.expandByObject(object);
+				const geometry = (object as Object3DWithGeometry).geometry;
+				geometry.computeBoundingBox();
+				if (bbox) {
+					bbox.expandByObject(object);
+				} else {
+					bbox = geometry.boundingBox.clone();
+				}
 			}
 		}
+		bbox = bbox || new Box3(new Vector3(-1, -1, -1), new Vector3(+1, +1, +1));
 		return bbox;
 	}
+	// private _compute_bounding_sphere() {
+	// 	let sphere: Sphere | undefined; // = new Box3();
+	// 	if (this._objects) {
+	// 		for (let object of this._objects) {
+	// 			const geometry = (object as Object3DWithGeometry).geometry;
+	// 			geometry.computeBoundingSphere();
+	// 			if (sphere) {
+	// 				sphere.expandByObject(object);
+	// 			} else {
+	// 				sphere = geometry.boundingBox.clone();
+	// 			}
+	// 		}
+	// 	}
+	// 	sphere = sphere || new Sphere(new Vector3(0, 0, 0), 1);
+	// 	return sphere;
+	// }
 	compute_vertex_normals() {
 		for (let object of this.core_objects()) {
 			object.compute_vertex_normals();

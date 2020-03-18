@@ -8,6 +8,7 @@ import lodash_capitalize from 'lodash/capitalize';
 import lodash_snakeCase from 'lodash/snakeCase';
 import lodash_upperFirst from 'lodash/upperFirst';
 import lodash_camelCase from 'lodash/camelCase';
+import lodash_isNumber from 'lodash/isNumber';
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
@@ -272,7 +273,12 @@ export class CoreString {
 					const range_elements = element.split(range_separator);
 					return lodash_range(parseInt(range_elements[0]), parseInt(range_elements[1]) + 1);
 				} else {
-					return [parseInt(element)];
+					const parsed = parseInt(element);
+					if (lodash_isNumber(parsed)) {
+						return [parsed];
+					} else {
+						return [];
+					}
 				}
 			} else {
 				return [];
