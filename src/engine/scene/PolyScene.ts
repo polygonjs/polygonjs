@@ -44,9 +44,9 @@ import {WebGLController} from './utils/WebGLController';
 import {Scene} from 'three/src/scenes/Scene';
 
 export class PolyScene {
-	protected _display_scene = new Scene();
-	get display_scene() {
-		return this._display_scene;
+	protected _default_scene = new Scene();
+	get default_scene() {
+		return this._default_scene;
 	}
 	_uuid!: string;
 	set_uuid(uuid: string) {

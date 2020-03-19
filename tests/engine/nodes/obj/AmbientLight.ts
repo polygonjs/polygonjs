@@ -1,6 +1,6 @@
 QUnit.test('ambient light simple', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
@@ -34,7 +34,7 @@ QUnit.test('ambient light simple', async (assert) => {
 
 QUnit.test('ambient light display flag off removes from scene', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.equal(
@@ -76,7 +76,7 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 
 QUnit.test('ambient light display flag off still cooks', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
@@ -102,7 +102,7 @@ QUnit.test('ambient light display flag off still cooks', async (assert) => {
 
 QUnit.test('ambient light is removed from scene when node is deleted', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.equal(
@@ -137,7 +137,7 @@ QUnit.test('ambient light is removed from scene when node is deleted', async (as
 
 QUnit.test('ambient light cooks only once when multiple params are updated', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());

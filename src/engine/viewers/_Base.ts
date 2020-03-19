@@ -50,7 +50,7 @@ export abstract class BaseViewer {
 	}
 
 	constructor(protected _container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNodeType) {
-		this._display_scene = this._scene.display_scene;
+		this._display_scene = this._scene.default_scene;
 		this._init_from_scene(camera_node).then(() => {
 			this._build();
 		});

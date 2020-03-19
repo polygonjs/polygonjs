@@ -13,7 +13,6 @@ import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postp
 import {RenderPass} from '../../../../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {Pass} from '../../../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {ParamType} from '../../../../poly/ParamType';
 import {POLY} from '../../../../Poly';
 
 interface DisposablePass extends Pass {
@@ -74,7 +73,7 @@ export class PostProcessController {
 	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			if (this.node.params.boolean('do_post_process')) {
+			if (this.node.pv.do_post_process) {
 				const composer = this.composer(canvas);
 				if (composer) {
 					composer.setSize(size.x, size.y);
@@ -86,7 +85,7 @@ export class PostProcessController {
 				// const delta = cur_t - this._prev_t;
 				// this._prev_t = cur_t;
 				// console.log(cur_t, delta);
-				renderer.render(this.node.scene.display_scene, this.node.object);
+				renderer.render(this.node.scene.default_scene, this.node.object);
 			}
 		}
 	}
@@ -181,7 +180,7 @@ export class PostProcessController {
 	}
 
 	async update_composer_passes() {
-		if (this.node.params.boolean('do_post_process')) {
+		if (this.node.pv.do_post_process) {
 			this._post_process_nodes = [];
 			if (this._fetch_post_process_nodes_in_progress) {
 				return;
@@ -237,7 +236,7 @@ export class PostProcessController {
 
 		this.clear_render_passes(composer);
 
-		const render_scene_pass = new RenderPass(this.node.scene.display_scene, this.node.object);
+		const render_scene_pass = new RenderPass(this.node.scene.default_scene, this.node.object);
 		render_scene_pass.clearAlpha = 0;
 		composer.addPass(render_scene_pass);
 
@@ -277,36 +276,36 @@ export class PostProcessController {
 		// made this current node dirty
 	}
 
-	add_params() {
-		// this.node.within_param_folder('post_process', () => {
-		this.node.add_param(ParamType.BOOLEAN, 'do_post_process', 0);
+	// add_params() {
+	// 	// this.node.within_param_folder('post_process', () => {
+	// 	this.node.add_param(ParamType.BOOLEAN, 'do_post_process', 0);
 
-		lodash_range(4).forEach((i) => {
-			const toggle_param = this.node.add_param(ParamType.BOOLEAN, `use_post_process_node${i + 1}`, 0, {
-				visible_if: {do_post_process: 1},
-			});
+	// 	lodash_range(4).forEach((i) => {
+	// 		const toggle_param = this.node.add_param(ParamType.BOOLEAN, `use_post_process_node${i + 1}`, 0, {
+	// 			visible_if: {do_post_process: 1},
+	// 		});
 
-			if (toggle_param) {
-				const visible_options = {
-					do_post_process: 1,
-					[toggle_param.name]: 1,
-				};
-				const node_path_options = {
-					node_selection: {context: NodeContext.POST},
-					visible_if: visible_options,
-				};
-				const param = this.node.add_param(
-					ParamType.OPERATOR_PATH,
-					`post_process_node${i + 1}`,
-					'',
-					node_path_options
-				);
-				if (param) {
-					this._post_process_use_node_path_params.push(toggle_param);
-					this._post_process_node_path_params.push(param);
-				}
-			}
-		});
-		// });
-	}
+	// 		if (toggle_param) {
+	// 			const visible_options = {
+	// 				do_post_process: 1,
+	// 				[toggle_param.name]: 1,
+	// 			};
+	// 			const node_path_options = {
+	// 				node_selection: {context: NodeContext.POST},
+	// 				visible_if: visible_options,
+	// 			};
+	// 			const param = this.node.add_param(
+	// 				ParamType.OPERATOR_PATH,
+	// 				`post_process_node${i + 1}`,
+	// 				'',
+	// 				node_path_options
+	// 			);
+	// 			if (param) {
+	// 				this._post_process_use_node_path_params.push(toggle_param);
+	// 				this._post_process_node_path_params.push(param);
+	// 			}
+	// 		}
+	// 	});
+	// 	// });
+	// }
 }

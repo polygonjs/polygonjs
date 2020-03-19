@@ -80,7 +80,7 @@ export class FogObjNode extends TypedObjNode<Object3D, FogObjParamConfig> {
 
 		fog.color.copy(this.pv.color);
 
-		this.scene.display_scene.fog = fog;
+		this.scene.default_scene.fog = fog;
 
 		this.cook_controller.end_cook();
 	}

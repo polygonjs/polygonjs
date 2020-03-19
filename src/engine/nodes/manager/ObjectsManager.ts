@@ -61,9 +61,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 	//@_object_uuid_by_node_graph_id = {}
 
-	init_display_scene() {
+	init_default_scene() {
 		this._object.name = '_WORLD_';
-		this._scene.display_scene.add(this._object);
+		this._scene.default_scene.add(this._object);
 	}
 
 	// TODO: is this method still used?

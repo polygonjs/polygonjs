@@ -6,7 +6,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	window.scene.performance.start();
 
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
@@ -56,7 +56,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.equal(
@@ -110,7 +110,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 
 QUnit.test('geo obj renders the child which has the display node', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.display_scene.children[0];
+	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());

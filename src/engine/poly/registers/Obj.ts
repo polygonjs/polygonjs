@@ -15,6 +15,7 @@ import {PostProcessObjNode} from '../../nodes/obj/PostProcess';
 import {GeoObjNode} from '../../nodes/obj/Geo';
 import {NullObjNode} from '../../nodes/obj/Null';
 import {FogObjNode} from '../../nodes/obj/Fog';
+// import {SceneObjNode} from '../../nodes/obj/Scene';
 
 import {OrthographicCameraObjNode} from '../../nodes/obj/OrthographicCamera';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
@@ -23,19 +24,20 @@ import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 export interface ObjNodeChildrenMap {
 	ambient_light: AmbientLightObjNode;
 	area_light: AreaLightObjNode;
-	directional_light: DirectionalLightObjNode;
-	hemisphere_light: HemisphereLightObjNode;
-	point_light: PointLightObjNode;
-	spot_light: SpotLightObjNode;
 	cop: CopObjNode;
+	directional_light: DirectionalLightObjNode;
 	events: EventsObjNode;
 	fog: FogObjNode;
 	geo: GeoObjNode;
+	hemisphere_light: HemisphereLightObjNode;
 	materials: MaterialsObjNode;
 	null: NullObjNode;
-	perspective_camera: PerspectiveCameraObjNode;
-	post_process: PostProcessObjNode;
 	orthographic_camera: OrthographicCameraObjNode;
+	perspective_camera: PerspectiveCameraObjNode;
+	point_light: PointLightObjNode;
+	post_process: PostProcessObjNode;
+	// scene: SceneObjNode;
+	spot_light: SpotLightObjNode;
 }
 
 import {Poly} from '../../Poly';
@@ -55,6 +57,7 @@ export class ObjRegister {
 
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
 		poly.register_node(NullObjNode, CATEGORY_OBJ.GEOMETRY);
+		// poly.register_node(SceneObjNode, CATEGORY_OBJ.MISC);
 
 		poly.register_node(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.register_node(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
