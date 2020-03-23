@@ -31,7 +31,10 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			const var_type: ConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
 			const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 				const name = connection.name;
-				return ThreeToGl.any(this.variable_for_input(name));
+				const variable = this.variable_for_input(name);
+				if (variable) {
+					return ThreeToGl.any(variable);
+				}
 			});
 			const joined_args = args.join(` ${this.gl_operation()} `);
 
@@ -115,7 +118,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 		return [type];
 	}
 
-	protected expected_input_types() {
+	protected _expected_input_types() {
 		const input_connections = this.io.connections.input_connections();
 		if (input_connections) {
 			const first_connection = input_connections[0];

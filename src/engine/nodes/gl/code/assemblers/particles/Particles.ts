@@ -156,7 +156,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			new TypedNamedConnectionPoint('position', ConnectionPointType.VEC3),
 			new TypedNamedConnectionPoint('velocity', ConnectionPointType.VEC3),
 			// new TypedNamedConnectionPoint('acceleration', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('frame', ConnectionPointType.FLOAT),
+			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
 		]);
 	}
 	allow_attribute_exports() {
@@ -321,8 +321,8 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
 			switch (output_name) {
-				case 'frame':
-					this._handle_globals_frame(globals_node, output_name, shaders_collection_controller);
+				case 'time':
+					this._handle_globals_time(globals_node, output_name, shaders_collection_controller);
 					break;
 				default:
 					this._handle_globals_default(globals_node, output_name, shaders_collection_controller);
@@ -330,7 +330,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		}
 	}
 
-	private _handle_globals_frame(
+	private _handle_globals_time(
 		globals_node: GlobalsGlNode,
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController
@@ -341,7 +341,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		const var_name = globals_node.gl_var_name(output_name);
 		const body_line = `float ${var_name} = ${output_name}`;
 		shaders_collection_controller.add_body_lines(globals_node, [body_line]);
-		this.set_frame_dependent();
+		this.set_uniforms_time_dependent();
 	}
 
 	private _handle_globals_default(

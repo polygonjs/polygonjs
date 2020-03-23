@@ -86,15 +86,30 @@ QUnit.test('boolean is_default', async (assert) => {
 QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
-	scene.time_controller.set_frame_range(0, 10);
+	scene.time_controller.set_frame_range(-10, 10);
 
-	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F')!;
+	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F', {spare: true})!;
 	assert.deepEqual(
 		spare_boolean.graph_all_predecessors().map((n: CoreGraphNode) => n.graph_node_id),
 		[scene.time_controller.graph_node.graph_node_id]
 	);
 	assert.ok(spare_boolean.has_expression(), 'has expr');
 	assert.ok(spare_boolean.is_default, 'spare is default');
+
+	scene.set_frame(2);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.is_default, 'spare is default');
+	assert.ok(spare_boolean.value === true, 'value is true');
+
+	scene.set_frame(1);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.is_default, 'spare is default');
+	assert.ok(spare_boolean.value === true, 'value is true');
+
+	scene.set_frame(-1);
+	await spare_boolean.compute();
+	assert.ok(spare_boolean.is_default, 'param is default');
+	assert.ok(spare_boolean.value === false, 'value is false');
 
 	scene.set_frame(1);
 	await spare_boolean.compute();
@@ -103,7 +118,7 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 
 	scene.set_frame(0);
 	await spare_boolean.compute();
-	assert.ok(spare_boolean.is_default);
+	assert.ok(spare_boolean.is_default, 'param is default');
 	assert.ok(spare_boolean.value === false, 'value is false');
 
 	spare_boolean.set(1);

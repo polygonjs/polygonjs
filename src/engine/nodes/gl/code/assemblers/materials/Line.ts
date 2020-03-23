@@ -101,7 +101,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			new TypedNamedConnectionPoint('resolution', ConnectionPointType.VEC2),
 			// new Connection.Vec2('gl_PointCoord'),
 			// new TypedConnectionVec2('uv'),
-			new TypedNamedConnectionPoint('frame', ConnectionPointType.FLOAT),
+			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {

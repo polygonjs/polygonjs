@@ -118,9 +118,9 @@ export class HierarchyChildrenController {
 		const node_class = this.available_children_classes()[node_type];
 
 		if (node_class == null) {
-			const message = `node type ${node_type} not found for ${this.node.full_path()} (${Object.keys(
+			const message = `child node type '${node_type}' not found for node '${this.node.full_path()}'. Available types are: ${Object.keys(
 				this.available_children_classes()
-			).join(', ')}, ${this._context}, ${this.node.type})`;
+			).join(', ')}, ${this._context}, ${this.node.type}`;
 			console.error(message);
 			throw message;
 		} else {

@@ -13,7 +13,7 @@ import {LineType} from '../utils/LineType';
 
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
-import {ThreeToGl} from '../../../../../core/ThreeToGl';
+// import {ThreeToGl} from '../../../../../core/ThreeToGl';
 // const BODY_SPLIT_LINE = 'void main() {'
 // export const BODY_SEPARATOR_LINES = lodash_range(3).map(i=>'	')
 import {CodeBuilder} from '../utils/CodeBuilder';
@@ -70,7 +70,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	private _shader_configs: ShaderConfig[] | undefined;
 	private _variable_configs: VariableConfig[] | undefined;
 
-	private _frame_dependent: boolean = false;
+	private _uniforms_time_dependent: boolean = false;
 	private _resolution_dependent: boolean = false;
 
 	constructor(protected _gl_parent_node: AssemblerControllerNode) {
@@ -241,10 +241,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 			current_uniforms[param_config.uniform_name] = param_config.uniform;
 		}
 
-		if (this.frame_dependent()) {
-			current_uniforms['frame'] = {
+		if (this.uniforms_time_dependent()) {
+			current_uniforms['time'] = {
 				// type: '1f',
-				value: this._gl_parent_node.scene.frame,
+				value: this._gl_parent_node.scene.time,
 			};
 		}
 		if (this.resolution_dependent()) {
@@ -381,7 +381,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 			new TypedNamedConnectionPoint('resolution', ConnectionPointType.VEC2),
 			// new Connection.Vec2('gl_PointCoord'),
 			// new TypedConnectionVec2('uv'),
-			new TypedNamedConnectionPoint('frame', ConnectionPointType.FLOAT),
+			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {
@@ -402,7 +402,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	reset_configs() {
 		this._reset_shader_configs();
 		this._reset_variable_configs();
-		this._reset_frame_dependency();
+		this._reset_uniforms_time_dependency();
 		this._reset_resolution_dependency();
 	}
 	get shader_configs() {
@@ -477,15 +477,15 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		return this.shader_config(shader_name)?.input_names() || [];
 	}
 
-	// frame dependency
-	protected _reset_frame_dependency() {
-		this._frame_dependent = false;
+	// time dependency
+	protected _reset_uniforms_time_dependency() {
+		this._uniforms_time_dependent = false;
 	}
-	set_frame_dependent() {
-		this._frame_dependent = true;
+	set_uniforms_time_dependent() {
+		this._uniforms_time_dependent = true;
 	}
-	frame_dependent(): boolean {
-		return this._frame_dependent;
+	uniforms_time_dependent(): boolean {
+		return this._uniforms_time_dependent;
 	}
 	// resolution dependency
 	protected _reset_resolution_dependency() {
@@ -526,12 +526,12 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		const body = this.builder_lines(shader_name, LineType.BODY);
 
 		let template_lines = template.split('\n');
-		const scene = this._gl_parent_node.scene;
+		// const scene = this._gl_parent_node.scene;
 		const new_lines = [
-			`#define FPS ${ThreeToGl.float(scene.time_controller.fps)}`,
-			`#define TIME_INCREMENT (1.0/${ThreeToGl.float(scene.time_controller.fps)})`,
-			`#define FRAME_RANGE_START ${ThreeToGl.float(scene.time_controller.frame_range[0])}`,
-			`#define FRAME_RANGE_END ${ThreeToGl.float(scene.time_controller.frame_range[1])}`,
+			// `#define FPS ${ThreeToGl.float(scene.time_controller.fps)}`,
+			// `#define TIME_INCREMENT (1.0/${ThreeToGl.float(scene.time_controller.fps)})`,
+			// `#define FRAME_RANGE_START ${ThreeToGl.float(scene.time_controller.frame_range[0])}`,
+			// `#define FRAME_RANGE_END ${ThreeToGl.float(scene.time_controller.frame_range[1])}`,
 		];
 
 		const line_before_define = this.insert_define_after(shader_name);

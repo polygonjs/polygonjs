@@ -112,10 +112,9 @@ export class GlConnectionsController {
 		const expected_input_types = this._expected_input_types_function();
 		const expected_output_types = this._expected_output_types_function();
 
-		if (this.node.name == 'add1')
-			if (expected_input_types.length != current_input_types.length) {
-				return false;
-			}
+		if (expected_input_types.length != current_input_types.length) {
+			return false;
+		}
 		if (expected_output_types.length != current_output_types.length) {
 			return false;
 		}

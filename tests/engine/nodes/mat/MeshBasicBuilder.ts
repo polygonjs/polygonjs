@@ -85,13 +85,13 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 
 	// add frame dependency
 	const float_to_vec3_2 = mesh_basic1.create_node('float_to_vec3');
-	float_to_vec3_2.set_input('z', globals1, 'frame');
+	float_to_vec3_2.set_input('z', globals1, 'time');
 	output1.set_input('position', float_to_vec3_2, 'vec3');
 	await mesh_basic1.request_container();
 	assert.deepEqual(
 		Object.keys(material.uniforms).sort(),
 		Object.keys(BASIC_UNIFORMS)
-			.concat(['frame'])
+			.concat(['time'])
 			.sort()
 	);
 });

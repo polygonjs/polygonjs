@@ -40,6 +40,16 @@ export class ConnectionsController {
 		if (this._input_connections) {
 			if (connection.input_index < this._input_connections.length) {
 				this._input_connections[connection.input_index] = undefined;
+				// if all connections after are also undefined, we can safely shrink the array
+				let all_connections_after_are_undefined = true;
+				for (let i = connection.input_index; i < this._input_connections.length; i++) {
+					if (this._input_connections[i]) {
+						all_connections_after_are_undefined = false;
+					}
+				}
+				if (all_connections_after_are_undefined) {
+					this._input_connections = this._input_connections.slice(0, connection.input_index);
+				}
 			} else {
 				console.warn(`attempt to remove an input connection at index ${connection.input_index}`);
 			}

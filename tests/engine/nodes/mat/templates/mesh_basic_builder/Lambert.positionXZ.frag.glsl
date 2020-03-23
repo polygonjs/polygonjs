@@ -1,7 +1,3 @@
-#define FPS 30.0
-#define TIME_INCREMENT (1.0/30.0)
-#define FRAME_RANGE_START 1.0
-#define FRAME_RANGE_END 240.0
 
 uniform vec3 diffuse;
 uniform float opacity;

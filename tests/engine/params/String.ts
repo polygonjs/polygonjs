@@ -33,10 +33,10 @@ QUnit.test('a string of `$F` will make the param frame dependent', async (assert
 	text_param.set('`$F*2+1`');
 	await text_param.compute();
 	assert.equal(text_param.value, '3');
-	scene.time_controller.increment_frame();
+	scene.time_controller.set_frame(2);
 	await text_param.compute();
 	assert.equal(text_param.value, '5');
-	scene.time_controller.increment_frame();
+	scene.time_controller.set_frame(3);
 	await text_param.compute();
 	assert.equal(text_param.value, '7');
 });
@@ -64,10 +64,10 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	text2_param.set('ok `ch("../' + text1_name + '/text")` middle `pow($F*3,2)` end');
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 9 end');
-	scene.time_controller.increment_frame();
+	scene.time_controller.set_frame(2);
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 36 end');
-	scene.time_controller.increment_frame();
+	scene.time_controller.set_frame(3);
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 81 end');
 	assert.equal(text2_param.graph_predecessors().length, 2);

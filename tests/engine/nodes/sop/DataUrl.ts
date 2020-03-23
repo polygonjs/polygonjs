@@ -30,7 +30,7 @@ QUnit.test('data_url simple', async (assert) => {
 	assert.equal(container.points_count(), 0);
 	assert.equal(
 		data_url1.states.error.message,
-		'could not load geometry from /dataurl_doesnotexist.json (Error: Request failed with status code 404)'
+		'could not load geometry from /dataurl_doesnotexist.json (SyntaxError: Unexpected token < in JSON at position 0)'
 	);
 
 	// restore it with a good url

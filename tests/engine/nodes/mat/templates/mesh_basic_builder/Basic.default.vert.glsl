@@ -1,7 +1,3 @@
-#define FPS 60.0
-#define TIME_INCREMENT (1.0/60.0)
-#define FRAME_RANGE_START 1.0
-#define FRAME_RANGE_END 600.0
 
 #include <common>
 #include <uv_pars_vertex>

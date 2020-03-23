@@ -12,6 +12,7 @@ import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {GlNodeFinder} from '../../utils/NodeFinder';
+import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
 
@@ -129,6 +130,21 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			this.add_uniforms(material.uniforms);
 			// }
 			material.needsUpdate = true;
+		}
+
+		const scene = this._gl_parent_node.scene;
+		if (this.uniforms_time_dependent()) {
+			// make sure not to use this._gl_parent_node.graph_node_id() as the id,
+			// as we need several materials:
+			// - the visible one
+			// - the multiple shadow ones
+			// - and possibly a depth one
+			scene.uniforms_controller.add_time_dependent_uniform_owner(
+				material.uuid,
+				material.uniforms as IUniformsWithTime
+			);
+		} else {
+			scene.uniforms_controller.remove_time_dependent_uniform_owner(material.uuid);
 		}
 
 		// const material = await this._assembler.get_material();
@@ -338,7 +354,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			const globals_shader_name = shaders_collection_controller.current_shader_name;
 
 			switch (output_name) {
-				case 'frame':
+				case 'time':
 					definition = new UniformGLDefinition(globals_node, ConnectionPointType.FLOAT, output_name);
 					if (globals_shader_name) {
 						MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_shader_name, definition);
@@ -352,7 +368,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 					// vertex_body_lines.push(`float ${var_name} = ${output_name}`)
 					body_lines.push(body_line);
-					this.set_frame_dependent();
+					this.set_uniforms_time_dependent();
 					break;
 				case 'gl_FragCoord':
 					this.handle_gl_FragCoord(body_lines, shader_name, var_name);

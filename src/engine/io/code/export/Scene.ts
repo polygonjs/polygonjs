@@ -18,7 +18,7 @@ export class SceneCodeExporter {
 
 		lines.push(`${this.var_name()}.set_frame(${this._scene.frame || 1})`);
 		lines.push(`${this.var_name()}.set_frame_range(${this._scene.frame_range.join(',')})`);
-		lines.push(`${this.var_name()}.time_controller.set_fps(${this._scene.time_controller.fps})`);
+		// lines.push(`${this.var_name()}.time_controller.set_fps(${this._scene.time_controller.fps})`);
 
 		const camera_path = this._scene.cameras_controller.master_camera_node_path;
 		if (camera_path) {

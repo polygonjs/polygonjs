@@ -119,7 +119,9 @@ export class ThreejsViewer extends BaseViewer {
 
 	animate() {
 		if (this.do_render) {
+			this._scene.time_controller.increment_time_if_playing();
 			this.render();
+			this._controls_controller?.update();
 			// this.update_stats()
 			// this._controls?.update(false)
 
@@ -147,14 +149,6 @@ export class ThreejsViewer extends BaseViewer {
 			const size = this.cameras_controller.size;
 			const aspect = this.cameras_controller.aspect;
 			this.cameras_controller.camera_node.post_process_controller.render(this._canvas, size, aspect);
-
-			// TODO: typescript
-			this._controls_controller?.update();
-
-			// TODO: typescript
-			// if (this._capturer) {
-			// 	this._capturer.perform_capture();
-			// }
 		} else {
 			console.warn('no camera to render with');
 		}

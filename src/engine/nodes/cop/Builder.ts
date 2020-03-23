@@ -183,7 +183,9 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				this._uniforms = uniforms;
 			}
 
-			if (this.assembler_controller.assembler.frame_dependent()) {
+			// TODO: remove this once the scene knows how to re-render
+			// the render target if it is .uniforms_time_dependent()
+			if (this.assembler_controller.assembler.uniforms_time_dependent()) {
 				this.states.time_dependent.force_time_dependent();
 			} else {
 				this.states.time_dependent.unforce_time_dependent();

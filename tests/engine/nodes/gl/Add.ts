@@ -16,7 +16,6 @@ QUnit.test('gl add updates its output type correctly when created', async (asser
 	constant1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.VEC2));
 	constant2.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.VEC2));
 
-	console.log('check');
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
 	assert.equal(add1.io.inputs.named_input_connection_points[0].type, ConnectionPointType.FLOAT);
 
@@ -26,6 +25,29 @@ QUnit.test('gl add updates its output type correctly when created', async (asser
 
 	add1.set_input(1, constant2);
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 3);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type, ConnectionPointType.VEC2);
+
+	// remove inputs
+	add1.set_input(1, null);
+	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type, ConnectionPointType.VEC2);
+
+	add1.set_input(0, null);
+	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type, ConnectionPointType.FLOAT);
+
+	// add inputs again to have one empty in the middle
+	add1.set_input(0, constant1);
+	add1.set_input(1, constant1);
+	add1.set_input(2, constant2);
+	assert.equal(add1.io.inputs.named_input_connection_points.length, 4, 'should be 4 connections when 3 inputs +++');
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type, ConnectionPointType.VEC2);
+	add1.set_input(1, null);
+	assert.equal(
+		add1.io.inputs.named_input_connection_points.length,
+		4,
+		'should be 4 connections 2 inputs with one missing in the middle +-+'
+	);
 	assert.equal(add1.io.inputs.named_input_connection_points[0].type, ConnectionPointType.VEC2);
 });
 
