@@ -113,15 +113,6 @@ export class GlNodeSpareParamsController {
 				init_value = array;
 			}
 
-			// }
-			// }
-			// if (default_value == null) {
-			// 	default_value = gl_connection.default_value();
-			// }
-			// if (init_value == null && connection_point.init_value) {
-			// 	init_value = connection_point.init_value;
-			// }
-
 			if (init_value != null) {
 				params_update_options.to_add = params_update_options.to_add || [];
 				params_update_options.to_add.push({
@@ -132,14 +123,6 @@ export class GlNodeSpareParamsController {
 						spare: true,
 					},
 				});
-				// const param = this.node.add_param(param_type, param_name, init_value, {
-				// 	spare: true,
-				// 	cook: true,
-				// });
-
-				// if (param) {
-				// 	has_created_a_param = true;
-				// }
 			}
 		}
 		if (!this.node.scene.loading_controller.is_loading) {
@@ -154,12 +137,5 @@ export class GlNodeSpareParamsController {
 				}
 			}
 		}
-		// if (has_created_a_param || has_deleted_a_param) {
-		// 	if (!this.node.scene.loading_controller.is_loading) {
-		// 		this.node.params.post_create_spare_params();
-
-		// 		this.node.emit(NodeEvent.PARAMS_UPDATED);
-		// 	}
-		// }
 	}
 }

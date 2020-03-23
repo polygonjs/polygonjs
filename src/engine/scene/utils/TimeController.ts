@@ -1,8 +1,6 @@
-// import {SceneContext} from '../../core/context/Scene';
 import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
-// import {BaseNode} from '../nodes/_Base'
 
 type FrameRange = [number, number];
 
@@ -14,14 +12,11 @@ export class TimeController {
 	protected self: PolyScene = (<unknown>this) as PolyScene;
 	private _frame: number = 1;
 	private _time: number = 0;
-	private _performance_now: number = performance.now();
-	private _prev_performance_now: number = this._performance_now;
+	private _prev_performance_now: number = 0;
 	private _graph_node: CoreGraphNode;
 	private _frame_range: FrameRange = [1, 600];
 	private _frame_range_locked: [boolean, boolean] = [true, true];
 	private _playing: boolean = false;
-	// private _frame_interval: number = 1000 / 60;
-	// private _next_frame_bound = this.play_next_frame.bind(this);
 
 	constructor(private scene: PolyScene) {
 		this._graph_node = new CoreGraphNode(scene, 'time controller');
@@ -31,19 +26,6 @@ export class TimeController {
 		return this._graph_node;
 	}
 
-	// init() {
-	// 	this._context = new SceneContext();
-	// 	this._context.set_scene(this.scene);
-
-	// 	this.set_frame_range(1, 240); //100 - 288*100-100
-	// 	this.set_fps(60);
-	// }
-	// context() {
-	// 	return this._context;
-	// }
-	// get fps(): number {
-	// 	return this._fps;
-	// }
 	get frame(): number {
 		return this._frame;
 	}
@@ -76,7 +58,8 @@ export class TimeController {
 			this._time = time;
 
 			if (update_frame) {
-				this.set_frame(Math.floor(this._time * FPS), false);
+				const new_frame = Math.floor(this._time * FPS);
+				this._frame = new_frame;
 			}
 
 			// update time dependents
@@ -109,20 +92,13 @@ export class TimeController {
 		}
 	}
 	increment_time() {
-		this._performance_now = performance.now();
-		const delta = this._performance_now - this._prev_performance_now;
-		const new_time = (this._time + delta) / 1000.0;
+		const performance_now = performance.now();
+		const delta = (performance_now - this._prev_performance_now) / 1000.0;
+		const new_time = this._time + delta;
+		this._prev_performance_now = performance_now;
 		this.set_time(new_time);
 	}
-	// increment_frame(update_time = true) {
-	// 	this.set_frame(this._frame + 1, update_time);
-	// }
-	// decrement_frame(update_time = true) {
-	// 	this.set_frame(this.frame - 1, update_time);
-	// }
-	// set_first_frame() {
-	// 	this.set_frame(this.frame_range[0]);
-	// }
+
 	_ensure_frame_within_bounds(frame: number): number {
 		if (this._frame_range_locked[0] && frame < this._frame_range[0]) {
 			return this._frame_range[1];
@@ -142,11 +118,9 @@ export class TimeController {
 		}
 	}
 	play() {
-		// if (this._playing !== true) {
-		// 	setTimeout(this.play_next_frame.bind(this), this._frame_interval);
-		// }
 		if (this._playing !== true) {
 			this._playing = true;
+			this._prev_performance_now = performance.now();
 			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
 		}
 	}
