@@ -1,6 +1,6 @@
 import {Vector2} from 'three/src/math/Vector2';
 
-import {_Math} from 'three/src/math/Math';
+import {MathUtils} from 'three/src/math/MathUtils';
 import {InstancedBufferAttribute} from 'three/src/core/InstancedBufferAttribute';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
@@ -157,7 +157,10 @@ export class ParticlesSystemGpuComputeController {
 			this._used_textures_size.y = Math.min(nearest_power_of_two, this.node.pv.max_textures_size.y);
 		} else {
 			if (
-				!(_Math.isPowerOfTwo(this.node.pv.textures_size.x) && _Math.isPowerOfTwo(this.node.pv.textures_size.y))
+				!(
+					MathUtils.isPowerOfTwo(this.node.pv.textures_size.x) &&
+					MathUtils.isPowerOfTwo(this.node.pv.textures_size.y)
+				)
 			) {
 				this.node.states.error.set('texture size must be a power of 2');
 				return;

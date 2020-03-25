@@ -1,7 +1,5 @@
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {VertexColors} from 'three/src/constants';
-import {NoColors} from 'three/src/constants';
 import {Material} from 'three/src/materials/Material';
 import {Color} from 'three/src/math/Color';
 
@@ -20,7 +18,7 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 
 class ColoredMaterial extends Material {
 	public color!: Color;
-	vertexColors!: number;
+	vertexColors!: boolean;
 	transparent!: boolean;
 	depthTest!: boolean;
 	alphaTest!: number;
@@ -38,7 +36,7 @@ export class ColorsController extends BaseController {
 		const material = node.material;
 		const pv = node.pv;
 		material.color.copy(pv.color);
-		const new_vertex_color = pv.use_vertex_colors ? VertexColors : NoColors;
+		const new_vertex_color = pv.use_vertex_colors; // ? VertexColors : NoColors;
 		if (new_vertex_color != material.vertexColors) {
 			material.vertexColors = new_vertex_color;
 			material.needsUpdate = true;

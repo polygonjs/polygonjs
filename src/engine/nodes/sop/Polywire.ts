@@ -103,7 +103,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			const matrix = this._core_transform.matrix(t, DEFAULT_R, DEFAULT_S, scale);
 
 			const new_circle = circle_template.clone();
-			new_circle.applyMatrix(matrix);
+			new_circle.applyMatrix4(matrix);
 			circles.push(new_circle);
 		}
 

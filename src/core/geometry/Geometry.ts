@@ -55,7 +55,9 @@ export class CoreGeometry {
 	}
 	_create_bounding_box() {
 		this._geometry.computeBoundingBox();
-		return this._geometry.boundingBox;
+		if (this._geometry.boundingBox) {
+			return this._geometry.boundingBox;
+		}
 	}
 
 	mark_as_instance() {
@@ -431,7 +433,7 @@ export class CoreGeometry {
 
 			switch (object_type) {
 				case CoreConstant.OBJECT_TYPE.POINTS:
-					lodash_each(old_indices, function(old_index, i: number) {
+					lodash_each(old_indices, function (old_index, i: number) {
 						const new_index = new_index_by_old_index[old_index];
 						if (new_index != null) {
 							new_indices.push(new_index);
@@ -440,7 +442,7 @@ export class CoreGeometry {
 					break;
 
 				case CoreConstant.OBJECT_TYPE.MESH:
-					lodash_each(old_indices, function(old_index, i: number) {
+					lodash_each(old_indices, function (old_index, i: number) {
 						if (i % 3 === 0) {
 							const old_index0 = old_indices[i];
 							const old_index1 = old_indices[i + 1];
@@ -458,7 +460,7 @@ export class CoreGeometry {
 					break;
 
 				case CoreConstant.OBJECT_TYPE.LINE_SEGMENTS:
-					lodash_each(old_indices, function(old_index, i: number) {
+					lodash_each(old_indices, function (old_index, i: number) {
 						if (i % 2 === 0) {
 							const old_index0 = old_indices[i];
 							const old_index1 = old_indices[i + 1];

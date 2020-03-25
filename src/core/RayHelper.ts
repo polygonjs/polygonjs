@@ -24,11 +24,11 @@ export class RayHelper {
 	constructor(
 		private event_helper: EventHelper,
 		private default_scene: Scene,
-		private _line_precision_mult: number = 1,
+		// private _line_precision_mult: number = 1,
 		private _point_threshold_mult: number = 1
 	) {
-		this.raycaster.linePrecision = 0.1;
-		this.set_line_precision(0.1);
+		// this.raycaster.linePrecision = 0.1;
+		// this.set_line_precision(0.1);
 	}
 
 	//
@@ -36,15 +36,15 @@ export class RayHelper {
 	// LINE PRECISION
 	//
 	//
-	line_precision() {
-		return this.raycaster.linePrecision;
-	}
-	line_precision_mult() {
-		return this._line_precision_mult;
-	}
-	set_line_precision(line_precision: number) {
-		return (this.raycaster.linePrecision = line_precision);
-	}
+	// line_precision() {
+	// 	return this.raycaster.linePrecision;
+	// }
+	// line_precision_mult() {
+	// 	return this._line_precision_mult;
+	// }
+	// set_line_precision(line_precision: number) {
+	// 	return (this.raycaster.linePrecision = line_precision);
+	// }
 
 	//
 	//

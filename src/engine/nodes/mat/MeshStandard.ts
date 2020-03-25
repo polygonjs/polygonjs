@@ -1,4 +1,3 @@
-import {NoColors} from 'three/src/constants';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
@@ -44,7 +43,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 
 	create_material() {
 		return new MeshStandardMaterial({
-			vertexColors: NoColors,
+			vertexColors: false,
 			side: FrontSide,
 			color: 0xffffff,
 			opacity: 1,
