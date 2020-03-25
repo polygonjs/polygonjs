@@ -15,7 +15,7 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class ColoredMaterial extends Material {
-	vertexColors!: number;
+	vertexColors!: boolean;
 	transparent!: boolean;
 	depthTest!: boolean;
 	alphaTest!: number;

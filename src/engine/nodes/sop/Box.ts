@@ -74,14 +74,11 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 
 		const bbox = core_group.bounding_box();
 		const size = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max
-			.clone()
-			.add(bbox.min)
-			.multiplyScalar(0.5);
+		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 
 		const geometry = new BoxBufferGeometry(size.x, size.y, size.z, divisions, divisions, divisions);
 		const matrix = this._core_transform.translation_matrix(center);
-		geometry.applyMatrix(matrix);
+		geometry.applyMatrix4(matrix);
 
 		// const buffer_geometry = CoreGeometry.clone(geometry);
 		this.set_geometry(geometry);

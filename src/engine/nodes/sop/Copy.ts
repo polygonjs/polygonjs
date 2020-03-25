@@ -135,9 +135,9 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 				// and have a toggle to bake back to the geo?
 				// or just enfore the use of a merge?
 				if (this.pv.transform_only) {
-					moved_object.applyMatrix(matrix);
+					moved_object.applyMatrix4(matrix);
 				} else {
-					moved_object.geometry.applyMatrix(matrix);
+					moved_object.geometry.applyMatrix4(matrix);
 				}
 
 				return this._objects.push(moved_object);

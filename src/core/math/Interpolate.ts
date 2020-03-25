@@ -4,7 +4,7 @@ import lodash_sum from 'lodash/sum';
 
 import {Vector3} from 'three/src/math/Vector3';
 // import {Vector2} from 'three/src/math/Vector2';
-import {_Math} from 'three/src/math/Math';
+// import {_Math} from 'three/src/math/MathU';
 // const THREE = {Math: _Math, Vector2, Vector3}
 import {CorePoint} from '../geometry/Point';
 

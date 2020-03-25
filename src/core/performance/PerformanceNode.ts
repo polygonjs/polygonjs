@@ -1,5 +1,16 @@
 import {BaseNodeType} from '../../engine/nodes/_Base';
 
+export interface PerformancePrintObject {
+	full_path: string;
+	cooks_count: number;
+	cook_time_total: number;
+	cook_time_per_iteration: number;
+	cook_time_total_with_inputs: number;
+	cook_time_total_with_inputs_per_iteration: number;
+	cook_time_total_params: number;
+	cook_time_total_params_per_iteration: number;
+}
+
 export class PerformanceNode {
 	_cooks_count: number = 0;
 	_cook_time_total: number = 0;
@@ -50,7 +61,7 @@ export class PerformanceNode {
 		return this._cooks_count;
 	}
 
-	print_object() {
+	print_object(): PerformancePrintObject {
 		return {
 			full_path: this._node.full_path(),
 			cooks_count: this.cooks_count,

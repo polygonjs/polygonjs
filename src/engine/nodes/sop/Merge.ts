@@ -98,7 +98,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 			const geometries = [];
 			for (let object of objects) {
 				const geometry = object.geometry;
-				geometry.applyMatrix(object.matrix);
+				geometry.applyMatrix4(object.matrix);
 				geometries.push(geometry);
 			}
 

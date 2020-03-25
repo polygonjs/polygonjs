@@ -170,6 +170,6 @@ export class CoreTransform {
 		this._rotate_geometry_q.setFromUnitVectors(vec_origin, this._rotate_geometry_vec_dest);
 		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
 		this._rotate_geometry_m.makeRotationFromQuaternion(this._rotate_geometry_q);
-		geometry.applyMatrix(this._rotate_geometry_m);
+		geometry.applyMatrix4(this._rotate_geometry_m);
 	}
 }

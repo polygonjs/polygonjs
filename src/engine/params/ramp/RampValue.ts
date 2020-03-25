@@ -1,4 +1,4 @@
-import {_Math} from 'three/src/math/Math';
+import {MathUtils} from 'three/src/math/MathUtils';
 
 export interface RampPointJson {
 	position: number;
@@ -58,7 +58,7 @@ export class RampValue {
 	private _uuid: string;
 
 	constructor(private _interpolation: string = RampInterpolation.LINEAR, private _points: RampPoint[] = []) {
-		this._uuid = _Math.generateUUID();
+		this._uuid = MathUtils.generateUUID();
 	}
 
 	get uuid() {

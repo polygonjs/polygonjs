@@ -55,7 +55,7 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
 		const matrix = this._core_transform.translation_matrix(this.pv.center);
-		geometry.applyMatrix(matrix);
+		geometry.applyMatrix4(matrix);
 
 		this.set_geometry(geometry);
 	}
@@ -73,7 +73,7 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 		this._core_transform.rotate_geometry(geometry, ROTATE_START, ROTATE_END);
 
 		const matrix = this._core_transform.translation_matrix(center);
-		geometry.applyMatrix(matrix);
+		geometry.applyMatrix4(matrix);
 
 		// const buffer_geometry = CoreGeometry.clone(geometry);
 		this.set_geometry(geometry);

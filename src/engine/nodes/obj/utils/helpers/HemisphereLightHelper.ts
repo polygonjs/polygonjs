@@ -1,7 +1,6 @@
 import {Color} from 'three/src/math/Color';
 import {OctahedronBufferGeometry} from 'three/src/geometries/OctahedronGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {VertexColors} from 'three/src/constants';
 
 import {HemisphereLightObjNode} from '../../HemisphereLight';
 import {Quaternion} from 'three/src/math/Quaternion';
@@ -15,7 +14,7 @@ export class HemisphereLightHelper extends BaseLightHelper<HemisphereLight, Hemi
 	protected build_helper() {
 		this._geometry.rotateZ(Math.PI * 0.5);
 
-		this._material.vertexColors = VertexColors;
+		this._material.vertexColors = true;
 
 		const position = this._geometry.getAttribute('position');
 		const colors = new Float32Array(position.count * 3);

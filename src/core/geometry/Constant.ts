@@ -3,7 +3,7 @@ import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
 import {Scene} from 'three/src/scenes/Scene';
 import {Points} from 'three/src/objects/Points';
 import {Object3D} from 'three/src/core/Object3D';
-import {NoColors} from 'three/src/constants';
+// import {NoColors} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Group} from 'three/src/objects/Group';
@@ -88,7 +88,7 @@ const materials: MaterialsByString = {
 		// MeshStandardMaterial
 		color: new Color(0.5, 0.5, 1),
 		side: FrontSide,
-		vertexColors: NoColors,
+		vertexColors: false,
 		transparent: true,
 		depthTest: true,
 	}),

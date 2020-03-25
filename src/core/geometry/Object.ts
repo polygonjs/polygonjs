@@ -33,9 +33,9 @@ interface Object3DWithAnimations extends Object3D {
 interface MaterialWithColor extends Material {
 	color: Color;
 }
-interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
-	readonly isSkinnedMesh: boolean;
-}
+// interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
+// 	readonly isSkinnedMesh: boolean;
+// }
 
 export class CoreObject extends CoreEntity {
 	constructor(private _object: Object3D, index: number) {
@@ -187,11 +187,11 @@ export class CoreObject extends CoreEntity {
 
 		var sourceLookup = new Map<Object3D, Object3D>();
 		var cloneLookup = new Map<Object3D, Object3D>();
-		CoreObject.parallelTraverse(src_object, new_object, function(sourceNode: Object3D, clonedNode: Object3D) {
+		CoreObject.parallelTraverse(src_object, new_object, function (sourceNode: Object3D, clonedNode: Object3D) {
 			sourceLookup.set(clonedNode, sourceNode);
 			cloneLookup.set(sourceNode, clonedNode);
 		});
-		new_object.traverse(function(node) {
+		new_object.traverse(function (node) {
 			const src_node = sourceLookup.get(node) as SkinnedMesh;
 			const mesh_node = node as Mesh;
 
@@ -226,7 +226,7 @@ export class CoreObject extends CoreEntity {
 			}
 
 			const skinned_node = node as SkinnedMesh;
-			if ((skinned_node as SkinnedMeshWithisSkinnedMesh).isSkinnedMesh) {
+			if (skinned_node.isSkinnedMesh) {
 				var clonedMesh = skinned_node;
 				var sourceMesh = src_node;
 				var sourceBones = sourceMesh.skeleton.bones;
@@ -234,7 +234,7 @@ export class CoreObject extends CoreEntity {
 				clonedMesh.skeleton = sourceMesh.skeleton.clone();
 				clonedMesh.bindMatrix.copy(sourceMesh.bindMatrix);
 
-				const new_bones = sourceBones.map(function(bone) {
+				const new_bones = sourceBones.map(function (bone) {
 					return cloneLookup.get(bone);
 				}) as Bone[];
 

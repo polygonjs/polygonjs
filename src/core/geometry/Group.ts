@@ -265,7 +265,9 @@ export class CoreGroup {
 				if (bbox) {
 					bbox.expandByObject(object);
 				} else {
-					bbox = geometry.boundingBox.clone();
+					if (geometry.boundingBox) {
+						bbox = geometry.boundingBox.clone();
+					}
 				}
 			}
 		}

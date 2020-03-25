@@ -55,10 +55,10 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 				let geometry;
 				if ((geometry = object.geometry) != null) {
 					geometry.translate(-this.pv.pivot.x, -this.pv.pivot.y, -this.pv.pivot.z);
-					geometry.applyMatrix(matrix);
+					geometry.applyMatrix4(matrix);
 					geometry.translate(this.pv.pivot.x, this.pv.pivot.y, this.pv.pivot.z);
 				} else {
-					object.applyMatrix(matrix);
+					object.applyMatrix4(matrix);
 				}
 			}
 		} else {

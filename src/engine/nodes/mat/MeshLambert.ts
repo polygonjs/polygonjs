@@ -1,4 +1,3 @@
-import {NoColors} from 'three/src/constants';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
@@ -22,7 +21,7 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 
 	create_material() {
 		return new MeshLambertMaterial({
-			vertexColors: NoColors,
+			vertexColors: false,
 			side: FrontSide,
 			color: 0xffffff,
 			opacity: 1,
