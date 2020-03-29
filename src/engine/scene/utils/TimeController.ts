@@ -41,12 +41,12 @@ export class TimeController {
 	set_frame_range(start_frame: number, end_frame: number) {
 		this._frame_range[0] = Math.floor(start_frame);
 		this._frame_range[1] = Math.floor(end_frame);
-		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
+		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	set_frame_range_locked(start_locked: boolean, end_locked: boolean) {
 		this._frame_range_locked[0] = start_locked;
 		this._frame_range_locked[1] = end_locked;
-		this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
+		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	// set_fps(fps: number) {
 	// 	this._fps = Math.floor(fps);
@@ -63,7 +63,7 @@ export class TimeController {
 			}
 
 			// update time dependents
-			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
+			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
 			this.scene.uniforms_controller.update_time_dependent_uniform_owners();
 
 			// we block updates here, so that dependent nodes only cook once
@@ -114,14 +114,14 @@ export class TimeController {
 	pause() {
 		if (this._playing == true) {
 			this._playing = false;
-			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
 		}
 	}
 	play() {
 		if (this._playing !== true) {
 			this._playing = true;
 			this._prev_performance_now = performance.now();
-			this.scene.events_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
 		}
 	}
 	toggle_play_pause() {

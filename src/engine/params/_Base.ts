@@ -273,7 +273,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	emit(event_name: ParamEvent): void {
 		if (this.emit_controller.emit_allowed) {
 			this.emit_controller.increment_count(event_name);
-			this.scene.events_controller.dispatch(this, event_name);
+			this.scene.dispatch_controller.dispatch(this, event_name);
 		}
 	}
 

@@ -48,4 +48,35 @@ export class HierarchyParentController {
 			}
 		}
 	}
+	find_node(path: string): BaseNodeType | null {
+		// if (!this._children_allowed) {
+		// 	return null;
+		// }
+		if (path == null) {
+			return null;
+		}
+		if (path === CoreWalker.CURRENT || path === CoreWalker.CURRENT_WITH_SLASH) {
+			return this.node;
+		}
+		if (path === CoreWalker.PARENT || path === CoreWalker.PARENT_WITH_SLASH) {
+			return this.node.parent;
+		}
+
+		const separator = CoreWalker.SEPARATOR;
+		if (path[0] === separator) {
+			path = path.substring(1, path.length);
+		}
+
+		const elements = path.split(separator);
+		if (elements.length === 1) {
+			const name = elements[0];
+			if (this.node.children_controller) {
+				return this.node.children_controller.child_by_name(name);
+			} else {
+				return null;
+			}
+		} else {
+			return CoreWalker.find_node(this.node, path);
+		}
+	}
 }

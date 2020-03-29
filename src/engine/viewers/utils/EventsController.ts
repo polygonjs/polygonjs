@@ -1,13 +1,13 @@
 import {BaseViewer} from '../_Base';
-import {Vector2} from 'three/src/math/Vector2';
+// import {Vector2} from 'three/src/math/Vector2';
 
-const DIST_UNINITIALIZED = -1;
+// const DIST_UNINITIALIZED = -1;
 type MouseOrTouchEvent = MouseEvent | TouchEvent;
 type MouseOrTouchEventCallback = (e: MouseOrTouchEvent) => void;
 
 export class EventsController {
-	private _mousedown_pos = new Vector2();
-	private _mouse_distance_travelled: number = DIST_UNINITIALIZED;
+	// private _mousedown_pos = new Vector2();
+	// private _mouse_distance_travelled: number = DIST_UNINITIALIZED;
 	protected _bound_on_mousedown: MouseOrTouchEventCallback = this._on_mousedown.bind(this);
 	protected _bound_on_mousemove: MouseOrTouchEventCallback = this._on_mousemove.bind(this);
 	protected _bound_on_mouseup: MouseOrTouchEventCallback = this._on_mouseup.bind(this);
@@ -51,38 +51,42 @@ export class EventsController {
 	}
 
 	protected _on_mousedown(event: MouseOrTouchEvent) {
-		this._mouse_distance_travelled = 0;
-		if (event instanceof MouseEvent) {
-			this._mousedown_pos.x = event.pageX;
-			this._mousedown_pos.y = event.pageY;
-		} else {
-			const touch = event.touches[0];
-			this._mousedown_pos.x = touch.pageX;
-			this._mousedown_pos.y = touch.pageY;
-		}
+		this.viewer.scene.events_controller.process_event(event, this.canvas!, this.camera_node!);
+
+		// this._mouse_distance_travelled = 0;
+		// if (event instanceof MouseEvent) {
+		// 	this._mousedown_pos.x = event.pageX;
+		// 	this._mousedown_pos.y = event.pageY;
+		// } else {
+		// 	const touch = event.touches[0];
+		// 	this._mousedown_pos.x = touch.pageX;
+		// 	this._mousedown_pos.y = touch.pageY;
+		// }
 	}
 
 	protected _on_mousemove(event: MouseOrTouchEvent) {
-		if (this._mouse_distance_travelled !== DIST_UNINITIALIZED) {
-			let distance: number = 0;
-			if (event instanceof MouseEvent) {
-				distance = event.pageX - this._mousedown_pos.x + (event.pageY - this._mousedown_pos.y);
-			} else {
-				const touch = event.touches[0];
-				distance = touch.pageX - this._mousedown_pos.x + (touch.pageY - this._mousedown_pos.y);
-			}
-			this._mouse_distance_travelled += Math.abs(distance);
-		}
+		this.viewer.scene.events_controller.process_event(event, this.canvas!, this.camera_node!);
+		// if (this._mouse_distance_travelled !== DIST_UNINITIALIZED) {
+		// 	let distance: number = 0;
+		// 	if (event instanceof MouseEvent) {
+		// 		distance = event.pageX - this._mousedown_pos.x + (event.pageY - this._mousedown_pos.y);
+		// 	} else {
+		// 		const touch = event.touches[0];
+		// 		distance = touch.pageX - this._mousedown_pos.x + (touch.pageY - this._mousedown_pos.y);
+		// 	}
+		// 	this._mouse_distance_travelled += Math.abs(distance);
+		// }
 
-		if (!this.viewer.controls_controller.active) {
-			// this.viewer.process_picker_nodes_on_mouse_move(event, this.camera_node, this.ray_helper);
-		}
+		// if (!this.viewer.controls_controller.active) {
+		// 	// this.viewer.process_picker_nodes_on_mouse_move(event, this.camera_node, this.ray_helper);
+		// }
 	}
 
 	protected _on_mouseup(event: MouseOrTouchEvent) {
-		if (this._mouse_distance_travelled < 2) {
-			// this.viewer.process_picker_nodes_on_click(event, this.camera_node, this.ray_helper);
-		}
-		this._mouse_distance_travelled = DIST_UNINITIALIZED;
+		this.viewer.scene.events_controller.process_event(event, this.canvas!, this.camera_node!);
+		// if (this._mouse_distance_travelled < 2) {
+		// 	// this.viewer.process_picker_nodes_on_click(event, this.camera_node, this.ray_helper);
+		// }
+		// this._mouse_distance_travelled = DIST_UNINITIALIZED;
 	}
 }

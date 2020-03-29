@@ -12,7 +12,7 @@ interface EventsListener {
 	process_events: (emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
 }
 
-export class EventsController {
+export class DispatchController {
 	constructor(private scene: PolyScene) {}
 
 	private _events_listener: EventsListener | undefined;

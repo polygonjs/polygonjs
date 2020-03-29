@@ -80,7 +80,7 @@ class EventsListener {
 QUnit.test('emit only the minimum times', (assert) => {
 	const geo1 = window.geo1;
 
-	window.scene.events_controller.set_listener(new EventsListener());
+	window.scene.dispatch_controller.set_listener(new EventsListener());
 
 	const t = geo1.p.t;
 	const tx = t.x;

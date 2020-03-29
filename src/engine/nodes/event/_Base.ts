@@ -3,6 +3,7 @@ import {EventContainer} from '../../containers/Event';
 import {NodeContext} from '../../poly/NodeContext';
 import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 
 export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT', BaseEventNodeType, K> {
 	container_controller: TypedContainerController<EventContainer> = new TypedContainerController<EventContainer>(
@@ -18,7 +19,8 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 		// this._init_display_flag({
 		// 	has_display_flag: false
 		// });
-
+		this.io.connections.init_inputs();
+		this.ui_data.set_layout_horizontal();
 		this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 	}
 
@@ -26,6 +28,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 	_eval_all_params_on_dirty() {
 		this.params.eval_all();
 	}
+	process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {}
 }
 
 export type BaseEventNodeType = TypedEventNode<any>;

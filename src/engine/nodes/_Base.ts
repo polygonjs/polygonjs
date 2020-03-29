@@ -352,7 +352,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 		return this.children_controller?.children() || [];
 	}
 	node(path: string) {
-		return this.children_controller?.find_node(path) || null;
+		return this.parent_controller?.find_node(path) || null;
 	}
 	nodes_by_type(type: string) {
 		return this.children_controller?.nodes_by_type(type) || [];
@@ -381,7 +381,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
 		// super.emit(event_name, data);
-		this.scene.events_controller.dispatch(this, event_name, data);
+		this.scene.dispatch_controller.dispatch(this, event_name, data);
 	}
 
 	// serializer

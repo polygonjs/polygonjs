@@ -1,5 +1,5 @@
 import {CoreString} from '../../../../core/String';
-import {CoreWalker} from '../../../../core/Walker';
+
 import {BaseNodeType} from '../../_Base';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 
@@ -151,6 +151,7 @@ export class HierarchyChildrenController {
 		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
 			child_node.lifecycle.run_on_create_hooks();
 		}
+		child_node.lifecycle.run_on_add_hooks();
 		this.set_child_name(child_node, NameController.base_name(child_node));
 		this.node.lifecycle.run_on_child_add_hooks(child_node);
 		// this.post_add_node(child_node);
@@ -219,34 +220,6 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	find_node(path: string): BaseNodeType | null {
-		// if (!this._children_allowed) {
-		// 	return null;
-		// }
-		if (path == null) {
-			return null;
-		}
-		if (path === CoreWalker.CURRENT || path === CoreWalker.CURRENT_WITH_SLASH) {
-			return this.node;
-		}
-		if (path === CoreWalker.PARENT || path === CoreWalker.PARENT_WITH_SLASH) {
-			return this.node.parent;
-		}
-
-		const separator = CoreWalker.SEPARATOR;
-		if (path[0] === separator) {
-			path = path.substring(1, path.length);
-		}
-
-		const elements = path.split(separator);
-		if (elements.length === 1) {
-			const name = elements[0];
-			return this._children[name];
-		} else {
-			return CoreWalker.find_node(this.node, path);
-		}
-	}
-
 	_add_to_nodes_by_type(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.type;
@@ -309,6 +282,9 @@ export class HierarchyChildrenController {
 			}
 		});
 		return nodes;
+	}
+	child_by_name(name: string) {
+		return this._children[name];
 	}
 	// children_and_grandchildren_by_context(context: NodeContext): BaseNode[]{
 	// 	const node_ids = this._children_and_grandchildren_by_context[context] || []

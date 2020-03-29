@@ -1,0 +1,170 @@
+{
+	"properties": {
+		"frame": 240,
+		"frame_range": [1, 600],
+		"frame_range_locked": [true, true],
+		"master_camera_node_path": "/perspective_camera1"
+	},
+	"root": {
+		"type": "obj",
+		"nodes": {
+			"MAT": {
+				"type": "materials",
+				"nodes": {
+					"mesh_standard1": {
+						"type": "mesh_standard",
+						"params": {"use_map": 1, "use_env_map": 1, "roughness": 0.07},
+						"inputs": []
+					}
+				},
+				"children_context": "mat",
+				"params": {},
+				"inputs": [],
+				"selection": []
+			},
+			"events1": {
+				"type": "events",
+				"nodes": {
+					"camera_orbit_controls1": {"type": "camera_orbit_controls", "params": {}, "inputs": []},
+					"mouse_event1": {"type": "mouse_event", "params": {}, "inputs": []},
+					"code1": {
+						"type": "code",
+						"params": {
+							"cook": "return class EventProcessor {\n\tconstructor(){\n\t\tthis.raycaster = new THREE.Raycaster();\n\t\tthis.mouse = new THREE.Vector2();\n\t}\n\tprocess_event(event: MouseEvent){\n\t\tconsole.log(event.client);\n\t\tthis.mouse.x = ( event.clientX / event.target.offsetWidth ) * 2 - 1;\n\t\tthis.mouse.y = - ( event.clientY / event.target.offsetHeight ) * 2 + 1;\n\t\tconsole.log(\"processing event\", this.mouse.x, this.mouse.y);\n\t}\n}\n\n\n"
+						},
+						"inputs": [{"name": "trigger", "node": "mouse_event1", "output": "mousedown"}]
+					},
+					"code2": {
+						"type": "code",
+						"params": {},
+						"inputs": [{"name": "trigger", "node": "mouse_event1", "output": "mouseup"}]
+					}
+				},
+				"children_context": "event",
+				"params": {},
+				"inputs": [],
+				"selection": ["code1"]
+			},
+			"geo1": {
+				"type": "geo",
+				"nodes": {
+					"material1": {"type": "material", "params": {}, "inputs": ["sphere1"], "flags": {"display": false}},
+					"sphere1": {
+						"type": "sphere",
+						"params": {"resolution": ["30", "30"]},
+						"inputs": [],
+						"flags": {"display": false}
+					},
+					"plane1": {"type": "plane", "params": {"size": [3, 3]}, "inputs": [], "flags": {"display": false}},
+					"box1": {"type": "box", "params": {"size": 0.81}, "inputs": [], "flags": {"display": false}},
+					"copy1": {
+						"type": "copy",
+						"params": {"copy_attributes": 1, "attributes_to_copy": "id"},
+						"inputs": ["box1", "attrib_create_id"],
+						"flags": {"display": false}
+					},
+					"attrib_create_id": {
+						"type": "attrib_create",
+						"params": {"name": "id", "value1": "@ptnum"},
+						"inputs": ["plane1"],
+						"flags": {"display": false}
+					},
+					"code1": {
+						"type": "code",
+						"params": {
+							"cook": "const core_group = core_groups[0];\nconst object = core_group.objects()[0]\nobject.position.y = Math.sin(scene.time*10);\nnode.set_core_group(core_groups[0]);\n\n\n"
+						},
+						"inputs": ["transform1"],
+						"flags": {"display": false},
+						"override_clonable_state": true
+					},
+					"transform1": {
+						"type": "transform",
+						"params": {"r": [0, "$F*0", 0]},
+						"inputs": ["copy1"],
+						"flags": {"display": true},
+						"override_clonable_state": true
+					}
+				},
+				"children_context": "sop",
+				"params": {},
+				"inputs": [],
+				"flags": {"display": true},
+				"selection": ["code1"]
+			},
+			"hemisphere_light1": {
+				"type": "hemisphere_light",
+				"params": {
+					"sky_color": [0.2, 0.6980392156862745, 1],
+					"ground_color": [0.09803921568627451, 0.09803921568627451, 0.24705882352941178]
+				},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"perspective_camera1": {
+				"type": "perspective_camera",
+				"params": {
+					"controls": "/events1/camera_orbit_controls1",
+					"t": [-3.877465606280471, 3.568627644189859, 2.49790127091348],
+					"r": [-55.00946770184826, -41.67376545416895, -43.52797965728376]
+				},
+				"inputs": [],
+				"flags": {"display": true}
+			},
+			"spot_light1": {"type": "spot_light", "params": {"t": [2, 2, 0]}, "inputs": [], "flags": {"display": true}},
+			"COP": {
+				"type": "cop",
+				"nodes": {
+					"file2": {
+						"type": "file",
+						"params": {"url": "/examples/textures/piz_compressed.exr"},
+						"inputs": [],
+						"flags": {}
+					},
+					"file_uv": {"type": "file", "params": {}, "inputs": [], "flags": {}},
+					"env_map": {"type": "env_map", "params": {}, "inputs": ["file2"], "flags": {}}
+				},
+				"children_context": "cop",
+				"params": {},
+				"inputs": [],
+				"selection": ["env_map"]
+			}
+		},
+		"children_context": "objects",
+		"selection": []
+	},
+	"ui": {
+		"nodes": {
+			"MAT": {"pos": [-200, 200], "nodes": {"mesh_standard1": {"pos": [-100, 50]}}},
+			"events1": {
+				"pos": [-200, 100],
+				"nodes": {
+					"camera_orbit_controls1": {"pos": [-200, 100]},
+					"mouse_event1": {"pos": [-200, 200]},
+					"code1": {"pos": [-50, 200]},
+					"code2": {"pos": [-50, 300]}
+				}
+			},
+			"geo1": {
+				"pos": [0, -150],
+				"nodes": {
+					"material1": {"pos": [0, 150]},
+					"sphere1": {"pos": [0, 50]},
+					"plane1": {"pos": [-400, 0]},
+					"box1": {"pos": [-650, 50]},
+					"copy1": {"pos": [-500, 250]},
+					"attrib_create_id": {"pos": [-400, 150]},
+					"code1": {"pos": [-500, 500]},
+					"transform1": {"pos": [-550, 350]}
+				}
+			},
+			"hemisphere_light1": {"pos": [150, 100]},
+			"perspective_camera1": {"pos": [-200, -50]},
+			"spot_light1": {"pos": [150, 200]},
+			"COP": {
+				"pos": [-200, 300],
+				"nodes": {"file2": {"pos": [50, 100]}, "file_uv": {"pos": [-100, 100]}, "env_map": {"pos": [50, 200]}}
+			}
+		}
+	}
+}

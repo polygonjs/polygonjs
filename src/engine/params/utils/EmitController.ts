@@ -20,7 +20,7 @@ export class EmitController {
 		//node = this.node()
 		//node? && !node.is_cooking() && this.scene().emit_allowed() # this prevents a camera from updating its param for instance
 		// although maybe I should send a dirty to the store, and then that store queries the param?
-		return this.param.scene.events_controller.emit_allowed;
+		return this.param.scene.dispatch_controller.emit_allowed;
 	}
 
 	block_emit() {

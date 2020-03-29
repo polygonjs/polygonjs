@@ -74,8 +74,4 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			this._function = undefined;
 		}
 	}
-
-	static PARAM_CALLBACK_compile(node: CodeSopNode) {
-		node._compile();
-	}
 }

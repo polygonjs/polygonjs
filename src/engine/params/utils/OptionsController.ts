@@ -44,9 +44,9 @@ export interface ParamOptionsMenuEntry {
 	value: number;
 }
 export enum StringParamLanguage {
-	JAVASCRIPT = 'javascript',
+	// JAVASCRIPT = 'javascript',
 	TYPESCRIPT = 'typescript',
-	GLSL = 'glsl',
+	// GLSL = 'glsl',
 }
 
 interface BaseParamOptions {
@@ -352,6 +352,9 @@ export class OptionsController {
 	}
 	get language(): StringParamLanguage | undefined {
 		return this._options[LANGUAGE_OPTION];
+	}
+	get is_code(): boolean {
+		return this.language != null;
 	}
 
 	// node selection

@@ -29,7 +29,8 @@ import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
 import {CoreGraph} from '../../core/graph/CoreGraph';
 import {CookController} from './utils/CookController';
-import {EventsController} from './utils/EventsController';
+import {DispatchController} from './utils/DispatchController';
+import {EventsController} from './utils/events/EventsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
 import {ExpressionsController} from './utils/ExpressionsController';
@@ -82,6 +83,10 @@ export class PolyScene {
 		return this.cook_controller.wait_for_cooks_completed();
 	}
 
+	private _dispatch_controller: DispatchController | undefined;
+	get dispatch_controller() {
+		return (this._dispatch_controller = this._dispatch_controller || new DispatchController(this));
+	}
 	private _events_controller: EventsController | undefined;
 	get events_controller() {
 		return (this._events_controller = this._events_controller || new EventsController(this));
