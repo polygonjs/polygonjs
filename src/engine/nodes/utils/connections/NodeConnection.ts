@@ -1,19 +1,4 @@
 import {BaseNodeType} from '../../_Base';
-// import {_Math} from 'three/src/math/Math';
-
-// export enum ConnectionType {
-// 	GEOMETRY = 'geometry',
-// 	MATRIX = 'matrix',
-// 	INT = 'int',
-// 	FLOAT = 'float',
-// 	BOOL = 'bool',
-// 	VEC2 = 'vec2',
-// 	VEC3 = 'vec3',
-// 	VEC4 = 'vec4',
-// 	MAT3 = 'mat3',
-// 	RGB = 'rgb',
-// 	RGBA = 'rgba',
-// }
 
 interface DisconnectionOptions {
 	set_input?: boolean;

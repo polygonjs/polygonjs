@@ -126,8 +126,7 @@ import {AttributeRequirementsController} from '../AttributeRequirementsControlle
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction
-const AsyncFunction = Object.getPrototypeOf(async function() {}).constructor;
+import {AsyncFunction} from '../../../core/AsyncFunction';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;

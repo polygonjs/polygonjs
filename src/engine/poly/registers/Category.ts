@@ -36,6 +36,7 @@ export const CATEGORY_MAT = {
 	INSTANCE: 'instances',
 };
 export const CATEGORY_SOP = {
+	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
 	ATTRIBUTE: 'attributes',
 	DYNAMICS: 'dynamics',

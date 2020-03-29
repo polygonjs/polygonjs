@@ -24,6 +24,7 @@ const ENTRIES = 'entries';
 // const TYPE = 'type';
 // const RADIO = 'radio';
 const MULTILINE_OPTION = 'multiline';
+const LANGUAGE_OPTION = 'language';
 const NODE_SELECTION = 'node_selection';
 const NODE_SELECTION_CONTEXT = 'context';
 const DEPENDENT_ON_FOUND_NODE = 'dependent_on_found_node';
@@ -41,6 +42,11 @@ const VISIBLE_IF_OPTION = 'visible_if';
 export interface ParamOptionsMenuEntry {
 	name: string;
 	value: number;
+}
+export enum StringParamLanguage {
+	JAVASCRIPT = 'javascript',
+	TYPESCRIPT = 'typescript',
+	GLSL = 'glsl',
 }
 
 interface BaseParamOptions {
@@ -113,6 +119,7 @@ export interface StringParamOptions
 		DesktopParamOptions,
 		ExpressionParamOptions {
 	multiline?: boolean;
+	language?: StringParamLanguage;
 }
 export interface Vector2ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
 export interface Vector3ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
@@ -342,6 +349,9 @@ export class OptionsController {
 	// multiline
 	get is_multiline(): boolean {
 		return this._options[MULTILINE_OPTION] === true;
+	}
+	get language(): StringParamLanguage | undefined {
+		return this._options[LANGUAGE_OPTION];
 	}
 
 	// node selection
