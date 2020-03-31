@@ -15,7 +15,6 @@
 	],
 	"author": "Guillaume Fradin <gui@polygonjs.com>",
 	"license": "MIT",
-	"private": true,
 	"main": "./dist/polygonjs-engine.js",
 	"types": "./dist/types",
 	"scripts": {

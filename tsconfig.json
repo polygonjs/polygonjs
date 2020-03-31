@@ -20,10 +20,8 @@
 		"allowJs": true,
 		"sourceMap": true,
 
-		// declaration creates problems with anonymous classes from mixins
-		// but trying again to have a module export
-		"declaration": false, // false in dev to avoid having a long list of displayed files
-		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
+		"declaration": true,
+		"declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
 		"importHelpers": true
 	},

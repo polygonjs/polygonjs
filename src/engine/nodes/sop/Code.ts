@@ -14,13 +14,15 @@ node.set_core_group(core_groups[0]);
 
 type EvaluatedFunction = (node: CodeSopNode, scene: PolyScene, core_groups: CoreGroup[]) => void;
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PolyScene} from '../../scene/PolyScene';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 class CodeSopParamsConfig extends NodeParamsConfig {
-	cook = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
+	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
 		label: false,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
+	code_javascript = ParamConfig.STRING('', {hidden: true});
 }
 const ParamsConfig = new CodeSopParamsConfig();
 export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
@@ -50,7 +52,7 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 	}
 
 	private _compile_if_required() {
-		if (!this._function || this._last_compiled_code != this.pv.cook) {
+		if (!this._function || this._last_compiled_code != this.pv.code_javascript) {
 			this._compile();
 		}
 	}
@@ -62,12 +64,12 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 				'scene',
 				'core_groups',
 				`try {
-					${this.pv.cook}
+					${TranspiledFilter.filter(this.pv.code_javascript)}
 				} catch(e) {
 					this.states.error.set(e)
 				}`
 			);
-			this._last_compiled_code = this.pv.cook;
+			this._last_compiled_code = this.pv.code_javascript;
 		} catch (e) {
 			console.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);

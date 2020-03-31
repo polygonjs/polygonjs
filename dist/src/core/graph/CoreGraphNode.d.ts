@@ -1,0 +1,32 @@
+import { CoreGraph, CoreGraphNodeId } from './CoreGraph';
+import { DirtyController, PostDirtyHook } from './DirtyController';
+import { PolyScene } from '../../engine/scene/PolyScene';
+export declare class CoreGraphNode {
+    protected _scene: PolyScene;
+    protected _name: string;
+    private _graph;
+    private _graph_node_id;
+    private _dirty_controller;
+    constructor(_scene: PolyScene, _name: string);
+    get name(): string;
+    set_name(name: string): void;
+    get scene(): PolyScene;
+    get graph(): CoreGraph;
+    get graph_node_id(): CoreGraphNodeId;
+    get dirty_controller(): DirtyController;
+    set_dirty(trigger?: CoreGraphNode | null): void;
+    set_successors_dirty(trigger?: CoreGraphNode): void;
+    remove_dirty_state(): void;
+    get is_dirty(): boolean;
+    add_post_dirty_hook(name: string, callback: PostDirtyHook): void;
+    graph_remove(): void;
+    add_graph_input(src: CoreGraphNode): boolean;
+    remove_graph_input(src: CoreGraphNode): void;
+    graph_disconnect_predecessors(): void;
+    graph_disconnect_successors(): void;
+    graph_predecessor_ids(): CoreGraphNodeId[];
+    graph_predecessors(): CoreGraphNode[];
+    graph_successors(): CoreGraphNode[];
+    graph_all_predecessors(): CoreGraphNode[];
+    graph_all_successors(): CoreGraphNode[];
+}

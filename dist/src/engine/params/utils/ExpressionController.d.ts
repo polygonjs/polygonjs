@@ -1,0 +1,34 @@
+import { BaseParamType } from '../_Base';
+import { ExpressionManager } from '../../expressions/ExpressionManager';
+import { CorePoint } from '../../../core/geometry/Point';
+import { CoreEntity } from '../../../core/geometry/Entity';
+import { ParamType } from '../../poly/ParamType';
+import { ParamValuesTypeMap } from '../types/ParamValuesTypeMap';
+import { CoreObject } from '../../../core/geometry/Object';
+declare type EntityCallback<T extends ParamType> = (entity: CoreEntity, value: ParamValuesTypeMap[T] | any) => void;
+declare type PointEntityCallback<T extends ParamType> = (entity: CorePoint, value: ParamValuesTypeMap[T] | any) => void;
+declare type ObjectEntityCallback<T extends ParamType> = (entity: CoreObject, value: ParamValuesTypeMap[T] | any) => void;
+export declare class ExpressionController<T extends ParamType> {
+    protected param: BaseParamType;
+    protected _expression: string | undefined;
+    protected _entities: CoreEntity[] | undefined;
+    protected _entity_callback: EntityCallback<T> | undefined;
+    protected _manager: ExpressionManager | undefined;
+    constructor(param: BaseParamType);
+    get active(): boolean;
+    get expression(): string | undefined;
+    get is_errored(): boolean;
+    get error_message(): string | null | undefined;
+    get requires_entities(): boolean;
+    set_expression(expression: string | undefined, set_dirty?: boolean): void;
+    update_from_method_dependency_name_change(): void;
+    compute_expression(): Promise<any>;
+    private compute_expression_for_entities;
+    compute_expression_for_points(entities: CorePoint[], callback: PointEntityCallback<T>): Promise<void>;
+    compute_expression_for_objects(entities: CoreObject[], callback: ObjectEntityCallback<T>): Promise<void>;
+    get entities(): CoreEntity[] | undefined;
+    get entity_callback(): EntityCallback<T> | undefined;
+    set_entities(entities: CoreEntity[], callback: EntityCallback<T>): void;
+    reset_entities(): void;
+}
+export {};
