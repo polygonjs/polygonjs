@@ -61,7 +61,7 @@ export declare class ParamsController {
     param_with_type<T extends ParamType>(name: string, type: T): ParamConstructorMap[T] | undefined;
     get_float(name: string): FloatParam;
     get_operator_path(name: string): OperatorPathParam;
-    value(name: string): string | number | boolean | import("three").Color | import("three").Vector3 | import("../../../params/ramp/RampValue").RampValue | import("three").Vector2 | import("three").Vector4 | null | undefined;
+    value(name: string): string | number | boolean | import("three").Vector2 | import("three").Vector3 | import("three").Vector4 | import("three").Color | import("../../../params/ramp/RampValue").RampValue | null | undefined;
     value_with_type<T extends ParamType>(name: string, type: T): ParamValuesTypeMap[T];
     boolean(name: string): boolean;
     float(name: string): number;

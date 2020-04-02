@@ -74,10 +74,10 @@ export interface NodeVisitor {
 	visit_node_obj: (node: BaseNodeType) => any;
 }
 
-interface NodeDeletedEmitData {
+export interface NodeDeletedEmitData {
 	parent_id: string;
 }
-interface NodeCreatedEmitData {
+export interface NodeCreatedEmitData {
 	child_node_json: NodeSerializerData;
 }
 type EmitDataByNodeEventMapGeneric = {[key in NodeEvent]: any};

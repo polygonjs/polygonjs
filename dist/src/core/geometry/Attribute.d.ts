@@ -6,5 +6,5 @@ export declare class CoreAttribute {
         indices: number[];
         values: string[];
     };
-    static default_value(size: number): Vector3 | 0 | Vector2;
+    static default_value(size: number): 0 | Vector2 | Vector3;
 }

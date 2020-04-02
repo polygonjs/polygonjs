@@ -1,3 +1,4 @@
+/// <reference path="../../../../src/core/graph/dagre.d.ts" />
 import { Graph } from '@dagrejs/graphlib';
 import { PolyScene } from '../../engine/scene/PolyScene';
 export declare type CoreGraphNodeId = string;

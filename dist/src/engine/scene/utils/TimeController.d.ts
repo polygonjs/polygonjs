@@ -1,6 +1,6 @@
 import { PolyScene } from '../PolyScene';
 import { CoreGraphNode } from '../../../core/graph/CoreGraphNode';
-declare type FrameRange = [number, number];
+declare type FrameRange = Number2;
 export declare class TimeController {
     private scene;
     protected self: PolyScene;

@@ -1,3 +1,13 @@
+/// <reference path="../../../../custom_typings/guards.d.ts" />
+// finally, guard ALL the types!
+function typeGuard<T extends PrimitiveOrConstructor>(o: any, className: T): o is GuardedType<T> {
+	const localPrimitiveOrConstructor: PrimitiveOrConstructor = className;
+	if (typeof localPrimitiveOrConstructor === 'string') {
+		return typeof o === localPrimitiveOrConstructor;
+	}
+	return o instanceof localPrimitiveOrConstructor;
+}
+
 import lodash_groupBy from 'lodash/groupBy';
 import {BaseNodeType, BaseNodeClass} from '../_Base';
 
@@ -7,15 +17,6 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 enum METHODS {
 	SUCCESSORS = 'graph_successors',
 	PREDECESSORS = 'graph_predecessors',
-}
-
-// finally, guard ALL the types!
-function typeGuard<T extends PrimitiveOrConstructor>(o: any, className: T): o is GuardedType<T> {
-	const localPrimitiveOrConstructor: PrimitiveOrConstructor = className;
-	if (typeof localPrimitiveOrConstructor === 'string') {
-		return typeof o === localPrimitiveOrConstructor;
-	}
-	return o instanceof localPrimitiveOrConstructor;
 }
 
 export class DependenciesController {

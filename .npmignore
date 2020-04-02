@@ -1,0 +1,14 @@
+.vscode/
+coverage
+modules/
+node_modules/
+public/
+src/
+tests/
+webpack/
+.eslintignore
+.eslintrc.js
+.prettierrc.json
+tsconfig.json
+yarn.lock
+yarn-error.log

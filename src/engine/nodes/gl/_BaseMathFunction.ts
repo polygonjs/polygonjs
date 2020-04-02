@@ -7,7 +7,7 @@ import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
+export class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseGlMathFunctionParamsConfig();
 export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGlMathFunctionParamsConfig> {
 	params_config = ParamsConfig;

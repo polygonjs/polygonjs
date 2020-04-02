@@ -13,18 +13,19 @@
 		// output & paths
 		"outDir": "./dist/",
 		"module": "commonjs",
-		"target": "es5",
+		"target": "ES2015",
 		"moduleResolution": "node", // https://vuejs.org/v2/guide/typescript.html
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true, // for lodash imports (https://github.com/lodash/lodash/issues/3192)
 		"allowJs": true,
 		"sourceMap": true,
 
-		"declaration": true,
-		"declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
+		"declaration": true, // be careful as this makes many classes invalid, such as the ones in gl/_ConversionVecTo.ts
+		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
 		"importHelpers": true
+		// "typeRoots": ["node_modules/@types", "./custom_typings"]
 	},
 	// "include": ["./**/*.ts", "./**/*.vue"],
-	"exclude": ["node_modules", "modules", "dist", "public"]
+	"exclude": ["node_modules", "modules", "dist", "public", "webpack"]
 }

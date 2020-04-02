@@ -52,7 +52,7 @@ export declare class PolyScene {
     set_frame(frame: number): void;
     get frame(): number;
     get time(): number;
-    get frame_range(): [number, number];
+    get frame_range(): Number2;
     play(): void;
     pause(): void;
     private _serializer;

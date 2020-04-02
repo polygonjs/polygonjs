@@ -36,6 +36,8 @@ module.exports = (env = {}) => ({
 	},
 	plugins: plugins,
 	output: {
+		library: 'polygonjs-engine',
+		libraryTarget: 'window',
 		// filename: '[name].bundle.js'
 		filename: '[name].js',
 		path: path.resolve(__dirname, '../dist'),

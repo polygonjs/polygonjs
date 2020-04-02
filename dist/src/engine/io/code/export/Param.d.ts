@@ -4,7 +4,7 @@ export declare class ParamCodeExporter<T extends BaseParamType> {
     _lines: string[];
     constructor(_param: T);
     process(): string[];
-    default_value(): string | number | boolean | StringOrNumber3 | import("three").Color | import("three").Vector3 | import("../../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | import("../../../params/ramp/RampValue").RampValue | import("three").Vector2 | import("three").Vector4 | null;
+    default_value(): string | number | boolean | import("three").Vector2 | StringOrNumber2 | StringOrNumber3 | import("three").Vector3 | StringOrNumber4 | import("three").Vector4 | import("three").Color | import("../../../params/ramp/RampValue").RampValue | import("../../../params/ramp/RampValue").RampValueJson | null;
     node_var_name(): string;
     prefix(): string;
     protected add_main(): void;

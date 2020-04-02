@@ -2,7 +2,7 @@ import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 
-type FrameRange = [number, number];
+type FrameRange = Number2;
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float

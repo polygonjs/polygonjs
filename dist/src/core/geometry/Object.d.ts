@@ -26,7 +26,7 @@ export declare class CoreObject extends CoreEntity {
     name(): string;
     human_type(): string;
     attrib_type(name: string): number;
-    attrib_size(name: string): 0 | 1 | 2 | 3;
+    attrib_size(name: string): 0 | 2 | 1 | 3;
     clone(): Object3D;
     static clone(src_object: Object3D): Object3D;
     static parallelTraverse(a: Object3D, b: Object3D, callback: (a: Object3D, b: Object3D) => void): void;

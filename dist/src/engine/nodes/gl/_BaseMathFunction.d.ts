@@ -3,7 +3,7 @@ import { ShadersCollectionController } from './code/utils/ShadersCollectionContr
 import { ConnectionPointType } from '../utils/connections/ConnectionPointType';
 import { GLDefinitionType, TypedGLDefinition } from './utils/GLDefinition';
 import { NodeParamsConfig } from '../utils/params/ParamsConfig';
-declare class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {
+export declare class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {
 }
 export declare abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGlMathFunctionParamsConfig> {
     params_config: BaseGlMathFunctionParamsConfig;
@@ -31,4 +31,3 @@ export declare abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMat
 export declare abstract class BaseNodeGlMathFunctionArg5GlNode extends BaseGlMathFunctionGlNode {
     protected _expected_input_types(): ConnectionPointType[];
 }
-export {};

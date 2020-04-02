@@ -1,3 +1,4 @@
+/// <reference path="./dagre.d.ts" />
 import {Graph, alg} from '@dagrejs/graphlib';
 // import lodash_uniq from 'lodash/uniq';
 // import lodash_flatten from 'lodash/flatten';

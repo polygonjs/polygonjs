@@ -1,3 +1,4 @@
+/// <reference path="../../../../../custom_typings/guards.d.ts" />
 import { BaseNodeType } from '../_Base';
 import { BaseParamType } from '../../params/_Base';
 export declare class DependenciesController {
