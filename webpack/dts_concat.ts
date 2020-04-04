@@ -110,5 +110,54 @@ class FileTracker {
 
 const controller = new Controller();
 controller.resolve_path(ENTRY, 0);
-fs.writeFileSync(OUT_D_TS, controller.assembled_lines.join('\n'));
+const assembled_lines = controller.assembled_lines;
+let lines: string[] = [];
+
+// get lines from libraries
+
+function remove_import_lines(lines: string[]): string[] {
+	let within_import_statement: boolean = false;
+	let line: string;
+	const filtered_lines: string[] = [];
+	for (let i = 0; i < lines.length; i++) {
+		line = lines[i];
+		if (line.includes('import ')) {
+			within_import_statement = true;
+		}
+		if (!within_import_statement) {
+			filtered_lines.push(line);
+		}
+		if (line.includes(';')) {
+			within_import_statement = false;
+		}
+	}
+	return filtered_lines;
+}
+
+//
+//
+// THREE
+//
+//
+const THREE_DTS_FULLPATH = path.resolve(__dirname, '../node_modules/three/src/Three.d.ts');
+const three_lines: string[] = ['export namespace THREE {'];
+const three_lines_main = fs.readFileSync(THREE_DTS_FULLPATH, 'utf8').split('\n');
+for (let three_line_main of three_lines_main) {
+	if (three_line_main.includes(' from ')) {
+		const relative_path_elements = three_line_main.split("'");
+		const relative_path = relative_path_elements[relative_path_elements.length - 2];
+		const full_path = path.resolve(THREE_DTS_FULLPATH, '..', `${relative_path}.d.ts`);
+		const import_lines = fs.readFileSync(full_path, 'utf8').split('\n');
+		const filtered_lines = remove_import_lines(import_lines);
+		for (let import_line of filtered_lines) {
+			three_lines.push(`	${import_line}`);
+		}
+	}
+}
+three_lines.push('}');
+lines = lines.concat(three_lines);
+
+// write out
+lines = lines.concat(assembled_lines);
+fs.writeFileSync(OUT_D_TS, lines.join('\n'));
 console.log(`written ${controller.assembled_lines.length} lines fom ${controller.files_count()} files in `, OUT_D_TS);

@@ -28,6 +28,7 @@ export declare class TypedObjNode<O extends Object3D, K extends NodeParamsConfig
     add_object_to_parent(parent: Object3D): void;
     remove_object_from_parent(): void;
     initialize_base_node(): void;
+    node_sibbling(name: string): BaseObjNodeType | null;
     get children_group(): Group;
     get object(): O;
     _create_object_with_attributes(): O;

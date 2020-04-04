@@ -14,6 +14,7 @@ declare const AbsGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -145,6 +146,7 @@ declare const AcosGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -276,6 +278,7 @@ declare const AsinGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -407,6 +410,7 @@ declare const AtanGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -538,6 +542,7 @@ declare const CeilGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -669,6 +674,7 @@ declare const CosGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -800,6 +806,7 @@ declare const DegreesGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -931,6 +938,7 @@ declare const ExpGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1062,6 +1070,7 @@ declare const Exp2GlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1193,6 +1202,7 @@ declare const FloorGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1324,6 +1334,7 @@ declare const FractGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1455,6 +1466,7 @@ declare const InverseSqrtGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1586,6 +1598,7 @@ declare const LogGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1717,6 +1730,7 @@ declare const Log2GlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1848,6 +1862,7 @@ declare const NormalizeGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -1979,6 +1994,7 @@ declare const RadiansGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -2110,6 +2126,7 @@ declare const SignGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -2241,6 +2258,7 @@ declare const SinGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -2372,6 +2390,7 @@ declare const SqrtGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -2503,6 +2522,7 @@ declare const TanGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;

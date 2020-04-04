@@ -5,7 +5,7 @@ import {BaseViewer} from '../_Base';
 type MouseOrTouchEvent = MouseEvent | TouchEvent;
 type MouseOrTouchEventCallback = (e: MouseOrTouchEvent) => void;
 
-export class EventsController {
+export class ViewerEventsController {
 	// private _mousedown_pos = new Vector2();
 	// private _mouse_distance_travelled: number = DIST_UNINITIALIZED;
 	protected _bound_on_mousedown: MouseOrTouchEventCallback = this._on_mousedown.bind(this);

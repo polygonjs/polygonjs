@@ -19,8 +19,8 @@ export declare class ShaderAssemblerLine extends ShaderAssemblerMaterial {
     create_shader_configs(): ShaderConfig[];
     static add_output_params(output_child: OutputGlNode): void;
     add_output_params(output_child: OutputGlNode): void;
-    static create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC4> | TypedNamedConnectionPoint<ConnectionPointType.FLOAT>)[];
-    create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC4> | TypedNamedConnectionPoint<ConnectionPointType.FLOAT>)[];
+    static create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.FLOAT> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC4>)[];
+    create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.FLOAT> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC4>)[];
     create_variable_configs(): VariableConfig[];
     protected lines_to_remove(shader_name: ShaderName): string[] | undefined;
 }

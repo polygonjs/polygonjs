@@ -10,7 +10,7 @@ import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 
 import {CamerasController} from './utils/CamerasController';
 import {ControlsController} from './utils/ControlsController';
-import {EventsController} from './utils/EventsController';
+import {ViewerEventsController} from './utils/EventsController';
 import {WebGLController} from './utils/WebglController';
 
 // class AbstractViewer {}
@@ -40,9 +40,9 @@ export abstract class BaseViewer {
 	get controls_controller() {
 		return (this._controls_controller = this._controls_controller || new ControlsController(this));
 	}
-	protected _events_controller: EventsController | undefined;
+	protected _events_controller: ViewerEventsController | undefined;
 	get events_controller() {
-		return (this._events_controller = this._events_controller || new EventsController(this));
+		return (this._events_controller = this._events_controller || new ViewerEventsController(this));
 	}
 	protected _webgl_controller: WebGLController | undefined;
 	get webgl_controller() {

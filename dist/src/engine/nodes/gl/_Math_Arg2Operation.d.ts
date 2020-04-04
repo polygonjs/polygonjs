@@ -17,6 +17,7 @@ declare const AddGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -149,6 +150,7 @@ declare const DivideGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -281,6 +283,7 @@ declare const SubstractGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -413,6 +416,7 @@ declare const MultGlNode_base: {
         _assembler: import("./code/assemblers/_Base").BaseGlShaderAssembler | undefined;
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;

@@ -1,7 +1,7 @@
 import { BaseViewer } from '../_Base';
 declare type MouseOrTouchEvent = MouseEvent | TouchEvent;
 declare type MouseOrTouchEventCallback = (e: MouseOrTouchEvent) => void;
-export declare class EventsController {
+export declare class ViewerEventsController {
     protected viewer: BaseViewer;
     protected _bound_on_mousedown: MouseOrTouchEventCallback;
     protected _bound_on_mousemove: MouseOrTouchEventCallback;

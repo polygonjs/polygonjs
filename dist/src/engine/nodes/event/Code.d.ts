@@ -7,9 +7,12 @@ export declare class BaseMouseEventProcessor {
     protected node: CodeEventNode;
     protected raycaster: Raycaster;
     protected mouse: Vector2;
-    constructor();
-    process_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
+    constructor(node: CodeEventNode);
+    process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
+    process_mouse_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
+    process_keyboard_event(event: KeyboardEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
     set_node(node: CodeEventNode): void;
+    initialize_processor(): void;
     protected _set_mouse_from_event_and_canvas(event: MouseEvent, canvas: HTMLCanvasElement): void;
 }
 declare class CodeEventParamsConfig extends NodeParamsConfig {
@@ -19,10 +22,10 @@ declare class CodeEventParamsConfig extends NodeParamsConfig {
 export declare class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
     params_config: CodeEventParamsConfig;
     private _last_compiled_code;
-    private _event_processor;
+    private _processor;
     static type(): string;
     initialize_node(): void;
-    process_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
+    process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
     private _compile_if_required;
     private _compile;
 }

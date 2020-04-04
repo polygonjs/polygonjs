@@ -11,6 +11,7 @@ export declare class TypedPostProcessNode<K extends NodeParamsConfig> extends Ty
     container_controller: TypedContainerController<PostProcessContainer>;
     static node_context(): NodeContext;
     initialize_node(): void;
+    node_sibbling(name: string): BasePostProcessNodeType | null;
     set_render_pass(render_pass: any): void;
     apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNodeType): void;
 }

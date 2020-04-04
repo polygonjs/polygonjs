@@ -111,6 +111,7 @@ export declare class TypedNode<T extends KT, NT extends BaseNodeType, K extends 
     remove_node(node: BaseNodeType): void;
     children(): BaseNodeType[];
     node(path: string): BaseNodeType | null;
+    node_sibbling(name: string): TypedNode<T, NT, any> | null;
     nodes_by_type(type: string): BaseNodeType[];
     set_input(input_index_or_name: number | string, node: NT | null, output_index_or_name?: number | string): void;
     emit(event_name: NodeEvent.CREATED, data: EmitDataByNodeEventMap[NodeEvent.CREATED]): void;

@@ -5,7 +5,7 @@ import {MouseEventsController} from './MouseEventsController';
 import {BaseEventsController} from './_BaseEventsController';
 import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
 
-export class EventsController {
+export class SceneEventsController {
 	private _mouse_events_controller: BaseEventsController<MouseEvent, MouseEventNode> = new MouseEventsController();
 	private _controllers: BaseEventsController<Event, BaseEventNodeType>[] = [this._mouse_events_controller];
 	constructor(scene: PolyScene) {}

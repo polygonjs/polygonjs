@@ -44,6 +44,7 @@ import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/cop/EnvMap';
 import './engine/nodes/cop/File';
 import './engine/nodes/cop/Switch';
+import './engine/nodes/event/Code';
 import './engine/nodes/gl/Add';
 import './engine/nodes/gl/Attribute';
 import './engine/nodes/gl/Constant';

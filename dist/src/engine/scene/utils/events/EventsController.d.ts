@@ -1,7 +1,7 @@
 import { PolyScene } from '../../PolyScene';
 import { BaseEventNodeType } from '../../../nodes/event/_Base';
 import { BaseCameraObjNodeType } from '../../../nodes/obj/_BaseCamera';
-export declare class EventsController {
+export declare class SceneEventsController {
     private _mouse_events_controller;
     private _controllers;
     constructor(scene: PolyScene);

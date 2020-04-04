@@ -58,6 +58,9 @@ import './engine/nodes/cop/EnvMap';
 import './engine/nodes/cop/File';
 import './engine/nodes/cop/Switch';
 
+QUnit.module('event');
+import './engine/nodes/event/Code';
+
 QUnit.module('gl');
 import './engine/nodes/gl/Add';
 import './engine/nodes/gl/Attribute';

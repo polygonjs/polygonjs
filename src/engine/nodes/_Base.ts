@@ -354,6 +354,15 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	node(path: string) {
 		return this.parent_controller?.find_node(path) || null;
 	}
+	node_sibbling(name: string): TypedNode<T, NT, any> | null {
+		if (this.parent) {
+			const node = this.parent.children_controller?.child_by_name(name);
+			if (node) {
+				return node as TypedNode<T, NT, any>;
+			}
+		}
+		return null;
+	}
 	nodes_by_type(type: string) {
 		return this.children_controller?.nodes_by_type(type) || [];
 	}

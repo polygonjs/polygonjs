@@ -28,6 +28,9 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 
 		this.spare_params_controller.initialize_node();
 	}
+	node_sibbling(name: string): BaseGlNodeType | null {
+		return super.node_sibbling(name) as BaseGlNodeType | null;
+	}
 	cook() {
 		console.warn('gl nodes should never cook');
 	}

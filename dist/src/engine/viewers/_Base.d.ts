@@ -3,7 +3,7 @@ import { PolyScene } from '../scene/PolyScene';
 import { BaseCameraObjNodeType } from '../nodes/obj/_BaseCamera';
 import { CamerasController } from './utils/CamerasController';
 import { ControlsController } from './utils/ControlsController';
-import { EventsController } from './utils/EventsController';
+import { ViewerEventsController } from './utils/EventsController';
 import { WebGLController } from './utils/WebglController';
 export declare abstract class BaseViewer {
     protected _container: HTMLElement;
@@ -18,8 +18,8 @@ export declare abstract class BaseViewer {
     get cameras_controller(): CamerasController;
     protected _controls_controller: ControlsController | undefined;
     get controls_controller(): ControlsController;
-    protected _events_controller: EventsController | undefined;
-    get events_controller(): EventsController;
+    protected _events_controller: ViewerEventsController | undefined;
+    get events_controller(): ViewerEventsController;
     protected _webgl_controller: WebGLController | undefined;
     get webgl_controller(): WebGLController;
     constructor(_container: HTMLElement, _scene: PolyScene, camera_node: BaseCameraObjNodeType);

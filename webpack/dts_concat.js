@@ -1,4 +1,9 @@
 "use strict";
+/*
+TO EXPORT THE BUNDLED TYPES:
+- the declaration flag needs to be true in tsconfig
+- but be careful, as not all files are exported, since some have errors, such as nodes/gl/_Math_Arg2
+*/
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -71,7 +76,7 @@ var FileTracker = /** @class */ (function () {
                     // 	throw 'bad file import';
                     // }
                     if (fs_1["default"].existsSync(full_path)) {
-                        var tracker = this.controller.resolve_path(full_path, this.level + 1);
+                        this.controller.resolve_path(full_path, this.level + 1);
                     }
                 }
             }
@@ -107,5 +112,52 @@ var FileTracker = /** @class */ (function () {
 }());
 var controller = new Controller();
 controller.resolve_path(ENTRY, 0);
-fs_1["default"].writeFileSync(OUT_D_TS, controller.assembled_lines.join('\n'));
+var assembled_lines = controller.assembled_lines;
+var lines = [];
+// get lines from libraries
+function remove_import_lines(lines) {
+    var within_import_statement = false;
+    var line;
+    var filtered_lines = [];
+    for (var i = 0; i < lines.length; i++) {
+        line = lines[i];
+        if (line.includes('import ')) {
+            within_import_statement = true;
+        }
+        if (!within_import_statement) {
+            filtered_lines.push(line);
+        }
+        if (line.includes(';')) {
+            within_import_statement = false;
+        }
+    }
+    return filtered_lines;
+}
+//
+//
+// THREE
+//
+//
+var THREE_DTS_FULLPATH = path_1["default"].resolve(__dirname, '../node_modules/three/src/Three.d.ts');
+var three_lines = ['export namespace THREE {'];
+var three_lines_main = fs_1["default"].readFileSync(THREE_DTS_FULLPATH, 'utf8').split('\n');
+for (var _i = 0, three_lines_main_1 = three_lines_main; _i < three_lines_main_1.length; _i++) {
+    var three_line_main = three_lines_main_1[_i];
+    if (three_line_main.includes(' from ')) {
+        var relative_path_elements = three_line_main.split("'");
+        var relative_path = relative_path_elements[relative_path_elements.length - 2];
+        var full_path = path_1["default"].resolve(THREE_DTS_FULLPATH, '..', relative_path + ".d.ts");
+        var import_lines = fs_1["default"].readFileSync(full_path, 'utf8').split('\n');
+        var filtered_lines = remove_import_lines(import_lines);
+        for (var _a = 0, filtered_lines_1 = filtered_lines; _a < filtered_lines_1.length; _a++) {
+            var import_line = filtered_lines_1[_a];
+            three_lines.push("\t" + import_line);
+        }
+    }
+}
+three_lines.push('}');
+lines = lines.concat(three_lines);
+// write out
+lines = lines.concat(assembled_lines);
+fs_1["default"].writeFileSync(OUT_D_TS, lines.join('\n'));
 console.log("written " + controller.assembled_lines.length + " lines fom " + controller.files_count() + " files in ", OUT_D_TS);

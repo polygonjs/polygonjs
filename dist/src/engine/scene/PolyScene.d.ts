@@ -3,7 +3,7 @@ import { Cooker } from './utils/Cooker';
 import { CoreGraph } from '../../core/graph/CoreGraph';
 import { CookController } from './utils/CookController';
 import { DispatchController } from './utils/DispatchController';
-import { EventsController } from './utils/events/EventsController';
+import { SceneEventsController } from './utils/events/EventsController';
 import { LifeCycleController } from './utils/LifeCycleController';
 import { LoadingController } from './utils/LoadingController';
 import { ExpressionsController } from './utils/ExpressionsController';
@@ -32,7 +32,7 @@ export declare class PolyScene {
     private _dispatch_controller;
     get dispatch_controller(): DispatchController;
     private _events_controller;
-    get events_controller(): EventsController;
+    get events_controller(): SceneEventsController;
     private _graph;
     get graph(): CoreGraph;
     private _lifecycle_controller;

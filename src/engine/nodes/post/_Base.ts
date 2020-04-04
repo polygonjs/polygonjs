@@ -23,6 +23,9 @@ export class TypedPostProcessNode<K extends NodeParamsConfig> extends TypedNode<
 		// this.io.inputs.set_count_to_zero();
 		// this._init_outputs({has_outputs: false});
 	}
+	node_sibbling(name: string): BasePostProcessNodeType | null {
+		return super.node_sibbling(name) as BasePostProcessNodeType | null;
+	}
 
 	set_render_pass(render_pass: any) {
 		this.set_container(render_pass);

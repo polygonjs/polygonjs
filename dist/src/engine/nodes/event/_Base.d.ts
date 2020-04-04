@@ -9,6 +9,7 @@ export declare class TypedEventNode<K extends NodeParamsConfig> extends TypedNod
     static node_context(): NodeContext;
     private _eval_all_params_on_dirty_bound;
     initialize_base_node(): void;
+    node_sibbling(name: string): BaseEventNodeType | null;
     _eval_all_params_on_dirty(): void;
     process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType): void;
 }

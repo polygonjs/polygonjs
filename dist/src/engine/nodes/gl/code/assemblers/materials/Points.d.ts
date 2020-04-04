@@ -17,7 +17,7 @@ export declare class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
     };
     create_material(): ShaderMaterial;
     add_output_params(output_child: OutputGlNode): void;
-    create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC4> | TypedNamedConnectionPoint<ConnectionPointType.FLOAT>)[];
+    create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.FLOAT> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC4>)[];
     create_shader_configs(): ShaderConfig[];
     create_variable_configs(): VariableConfig[];
     protected lines_to_remove(shader_name: ShaderName): string[] | undefined;

@@ -23,6 +23,9 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 		this.ui_data.set_layout_horizontal();
 		this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 	}
+	node_sibbling(name: string): BaseEventNodeType | null {
+		return super.node_sibbling(name) as BaseEventNodeType | null;
+	}
 
 	// ensures that event nodes are cooked when scene is loaded
 	_eval_all_params_on_dirty() {

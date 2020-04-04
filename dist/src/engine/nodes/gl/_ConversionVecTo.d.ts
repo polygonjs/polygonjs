@@ -18,6 +18,7 @@ declare const Vec2ToFloatGlNode_base: {
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         readonly gl_connections_controller: import("./utils/ConnectionsController").GlConnectionsController | undefined;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -143,6 +144,7 @@ declare const Vec3ToFloatGlNode_base: {
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         readonly gl_connections_controller: import("./utils/ConnectionsController").GlConnectionsController | undefined;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;
@@ -268,6 +270,7 @@ declare const Vec4ToFloatGlNode_base: {
         readonly spare_params_controller: import("./utils/SpareParamsController").GlNodeSpareParamsController;
         readonly gl_connections_controller: import("./utils/ConnectionsController").GlConnectionsController | undefined;
         initialize_base_node(): void;
+        node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
         cook(): void;
         _set_mat_to_recompile(): void;
         readonly material_node: import("./code/Controller").AssemblerControllerNode | undefined;

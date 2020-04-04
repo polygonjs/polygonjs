@@ -15,6 +15,7 @@ export declare class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'
     readonly spare_params_controller: GlNodeSpareParamsController;
     readonly gl_connections_controller: GlConnectionsController | undefined;
     initialize_base_node(): void;
+    node_sibbling(name: string): BaseGlNodeType | null;
     cook(): void;
     protected _set_mat_to_recompile(): void;
     get material_node(): AssemblerControllerNode | undefined;

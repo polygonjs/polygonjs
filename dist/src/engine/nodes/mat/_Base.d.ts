@@ -10,6 +10,7 @@ export declare abstract class TypedMatNode<M extends Material, K extends NodePar
     static node_context(): NodeContext;
     protected _material: M | undefined;
     initialize_base_node(): void;
+    node_sibbling(name: string): BaseMatNodeType | null;
     private _cook_main_without_inputs_when_dirty_bound;
     private _cook_main_without_inputs_when_dirty;
     private set_material_name;

@@ -52,6 +52,9 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 		this.io.outputs.set_has_one_output();
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
+	node_sibbling(name: string): BaseCopNodeType | null {
+		return super.node_sibbling(name) as BaseCopNodeType | null;
+	}
 
 	set_texture(texture: Texture) {
 		// this._copy_texture(texture);

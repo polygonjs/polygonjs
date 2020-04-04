@@ -4,17 +4,36 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {AsyncFunction} from '../../../core/AsyncFunction';
 
-const DEFAULT_FUNCTION_CODE = `const core_group = core_groups[0];
-const object = core_group.objects()[0];
-object.position.y = -1;
-node.set_core_group(core_groups[0]);
+const DEFAULT_FUNCTION_CODE = `import {BaseCodeSopProcessor, CoreGroup} from 'polygonjs-engine'
+export class CodeSopProcessor extends BaseCodeSopProcessor {
+	constructor(){
+		super();
+	}
+	cook(core_groups: CoreGroup[]){
+		const core_group = core_groups[0];
+		const object = core_group.objects()[0];
+		object.position.y = 1;
+		this.set_core_group(core_groups[0]);
+	}
+}
 
 
 `;
 
-type EvaluatedFunction = (node: CodeSopNode, scene: PolyScene, core_groups: CoreGroup[]) => void;
+export class BaseCodeSopProcessor {
+	protected node!: CodeSopNode;
+	constructor() {}
+	set_node(node: CodeSopNode) {
+		this.node = node;
+	}
+	cook(core_groups: CoreGroup[]) {}
+	protected set_core_group(core_group: CoreGroup) {
+		this.node.set_core_group(core_group);
+	}
+}
 
-import {PolyScene} from '../../scene/PolyScene';
+type EvaluatedFunction = (base_processor_class: typeof BaseCodeSopProcessor) => typeof BaseCodeSopProcessor | undefined;
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 class CodeSopParamsConfig extends NodeParamsConfig {
@@ -29,7 +48,7 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 	params_config = ParamsConfig;
 
 	private _last_compiled_code: string | undefined;
-	private _function: EvaluatedFunction | undefined;
+	private _processor: BaseCodeSopProcessor | undefined;
 
 	static type() {
 		return 'code';
@@ -44,36 +63,45 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 	cook(core_groups: CoreGroup[]) {
 		this._compile_if_required();
 
-		if (this._function) {
-			this._function(this, this.scene, core_groups);
+		if (this._processor) {
+			this._processor.cook(core_groups);
 		} else {
 			this.set_core_group(core_groups[0]);
 		}
 	}
 
 	private _compile_if_required() {
-		if (!this._function || this._last_compiled_code != this.pv.code_javascript) {
+		if (!this._processor || this._last_compiled_code != this.pv.code_javascript) {
 			this._compile();
 		}
 	}
 
 	private _compile() {
 		try {
-			this._function = new AsyncFunction(
-				'node',
-				'scene',
-				'core_groups',
-				`try {
-					${TranspiledFilter.filter(this.pv.code_javascript)}
-				} catch(e) {
-					this.states.error.set(e)
-				}`
+			const function_body = `try {
+				${TranspiledFilter.filter(this.pv.code_javascript)}
+			} catch(e) {
+				this.states.error.set(e)
+			}`;
+			console.log('function_body');
+			console.log(function_body);
+			const processor_creator_function: EvaluatedFunction = new AsyncFunction(
+				'BaseCodeSopProcessor',
+				function_body
 			);
-			this._last_compiled_code = this.pv.code_javascript;
+			const processor_class = processor_creator_function(BaseCodeSopProcessor);
+			if (processor_class) {
+				this._processor = new processor_class();
+				this._processor.set_node(this);
+				this._last_compiled_code = this.pv.code_javascript;
+			} else {
+				this.states.error.set(`cannot generate function`);
+				this._processor = undefined;
+			}
 		} catch (e) {
 			console.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);
-			this._function = undefined;
+			this._processor = undefined;
 		}
 	}
 }

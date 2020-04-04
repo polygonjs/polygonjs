@@ -13,6 +13,7 @@ export declare class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<
     static displayed_input_names(): string[];
     constructor(scene: PolyScene);
     initialize_base_node(): void;
+    node_sibbling(name: string): BaseCopNodeType | null;
     set_texture(texture: Texture): void;
     clear_texture(): void;
 }
