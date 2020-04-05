@@ -23,7 +23,7 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 		},
 		dependent_on_found_node: false,
 	});
-	apply_to_children = ParamConfig.BOOLEAN(0);
+	apply_to_children = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 

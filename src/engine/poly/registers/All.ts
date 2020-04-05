@@ -5,15 +5,15 @@ import {MatRegister} from './Mat';
 import {ObjRegister} from './Obj';
 import {SopRegister} from './Sop';
 
-import {POLY} from '../../Poly';
+import {Poly} from '../../Poly';
 
 export class AllRegister {
 	static run() {
-		CopRegister.run(POLY);
-		EventRegister.run(POLY);
-		GlRegister.run(POLY);
-		MatRegister.run(POLY);
-		ObjRegister.run(POLY);
-		SopRegister.run(POLY);
+		CopRegister.run(Poly.instance());
+		EventRegister.run(Poly.instance());
+		GlRegister.run(Poly.instance());
+		MatRegister.run(Poly.instance());
+		ObjRegister.run(Poly.instance());
+		SopRegister.run(Poly.instance());
 	}
 }

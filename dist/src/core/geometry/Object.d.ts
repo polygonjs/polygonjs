@@ -8,8 +8,8 @@ export declare class CoreObject extends CoreEntity {
     private _object;
     constructor(_object: Object3D, index: number);
     object(): Object3D;
-    geometry(): BufferGeometry;
-    core_geometry(): CoreGeometry;
+    geometry(): BufferGeometry | null;
+    core_geometry(): CoreGeometry | null;
     points(): CorePoint[];
     points_from_group(group: GroupString): CorePoint[];
     compute_vertex_normals(): void;
@@ -26,7 +26,7 @@ export declare class CoreObject extends CoreEntity {
     name(): string;
     human_type(): string;
     attrib_type(name: string): number;
-    attrib_size(name: string): 0 | 2 | 1 | 3;
+    attrib_size(name: string): 1 | 0 | 2 | 3;
     clone(): Object3D;
     static clone(src_object: Object3D): Object3D;
     static parallelTraverse(a: Object3D, b: Object3D, callback: (a: Object3D, b: Object3D) => void): void;

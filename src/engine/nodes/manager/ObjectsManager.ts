@@ -17,7 +17,7 @@ import {BaseObjNodeType} from '../obj/_Base';
 // import {FogObjNode} from '../obj/Fog';
 import {GeoObjNode} from '../obj/Geo';
 
-import {POLY} from '../../Poly';
+import {Poly} from '../../Poly';
 import {NodeContext} from '../../poly/NodeContext';
 // import {PolyScene} from '../../scene/PolyScene';
 // TODO:
@@ -129,7 +129,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 		this._process_queue_start = performance.now();
 		Promise.all(promises).then(() => {
-			POLY.log(`SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`);
+			Poly.instance().log(
+				`SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
+			);
 			// this.scene().performance().print()
 
 			// do the update here if there are no objects to load

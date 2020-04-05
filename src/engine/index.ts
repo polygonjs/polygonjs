@@ -1,17 +1,15 @@
+import {SceneJsonImporter} from './io/json/import/Scene';
 import {PolyScene} from './scene/PolyScene';
-
-import {CoreGraphNode} from '../core/graph/CoreGraphNode';
-import {TypedNode} from './nodes/_Base';
-import {TypedEventNode} from './nodes/event/_Base';
-import {CodeEventNode} from './nodes/event/Code';
-export {PolyScene, CoreGraphNode, TypedEventNode, TypedNode, CodeEventNode};
-
 import {AllRegister} from './poly/registers/All';
 AllRegister.run();
 
-// import {SceneJsonExporter, SceneJsonExporterData} from './io/json/export/Scene';
+export {PolyScene, SceneJsonImporter};
+
+// console.log('adding POLY to window', PolyScene);
+// (window as any).POLYGON = {PolyScene};
+// console.log((window as any).POLYGON);
+
 // import default_scene_data from '../../public/examples/scenes/default_simple.json';
-// import {SceneJsonImporter} from './io/json/import/Scene';
 
 // export class Tester {
 // 	static async load_scene() {

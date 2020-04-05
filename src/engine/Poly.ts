@@ -56,4 +56,4 @@ export class Poly {
 // 	}
 // }
 // make sure not to have library: 'POLY' in webpack for this to work
-export const POLY = Poly.instance();
+// export const POLY = Poly.instance();

@@ -1,5 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
-import {POLY} from '../../../../src/engine/Poly';
+import {Poly} from '../../../../src/engine/Poly';
 
 QUnit.test('COP file simple default', async (assert) => {
 	const COP = window.COP;
@@ -53,7 +53,7 @@ QUnit.test('COP file simple basis', async (assert) => {
 	document.body.appendChild(canvas);
 	const size = new Vector2(canvas.width, canvas.height);
 	window.perspective_camera1.post_process_controller.create_renderer(canvas, size);
-	const renderer = await POLY.renderers_controller.wait_for_renderer();
+	const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
 	assert.ok(renderer);
 
 	const file1 = COP.create_node('file');

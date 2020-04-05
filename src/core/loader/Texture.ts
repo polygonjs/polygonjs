@@ -13,7 +13,7 @@ import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
 import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
 import {TextureContainer} from '../../engine/containers/Texture';
-import {POLY} from '../../engine/Poly';
+import {Poly} from '../../engine/Poly';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -162,7 +162,7 @@ export class CoreTextureLoader {
 				);
 				const loader = new BasisTextureLoader();
 				loader.setTranscoderPath('/three/js/libs/basis/');
-				const renderer = await POLY.renderers_controller.wait_for_renderer();
+				const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
 				if (renderer) {
 					loader.detectSupport(renderer);
 				} else {
@@ -207,7 +207,7 @@ export class CoreTextureLoader {
 			video.setAttribute('loop', `${true}`);
 
 			// wait for onloadedmetadata to ensure that we have a duration
-			video.onloadedmetadata = function() {
+			video.onloadedmetadata = function () {
 				video.pause();
 				const texture = new VideoTexture(video);
 				resolve(texture);

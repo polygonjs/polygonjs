@@ -99,7 +99,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		core_group.core_objects().forEach((core_object) => {
 			const object = core_object.object();
 			const core_geometry = core_object.core_geometry();
-			if ((object as Mesh).isMesh) {
+			if ((object as Mesh).isMesh && core_geometry) {
 				faces = core_geometry.faces();
 				if (!core_geometry.has_attrib(attrib_name)) {
 					core_geometry.add_numeric_attrib(attrib_name, 3, -1);
@@ -125,7 +125,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		core_group.core_objects().forEach((core_object) => {
 			const object = core_object.object();
 			const core_geometry = core_object.core_geometry();
-			if ((object as Mesh).isMesh) {
+			if ((object as Mesh).isMesh && core_geometry) {
 				const faces = core_geometry.faces();
 				// const points_count = core_geometry.points_count();
 
@@ -155,7 +155,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		core_group.core_objects().forEach((core_object) => {
 			const object = core_object.object();
 			const core_geometry = core_object.core_geometry();
-			if ((object as Mesh).isMesh) {
+			if ((object as Mesh).isMesh && core_geometry) {
 				faces = core_geometry.faces();
 				if (!core_geometry.has_attrib(attrib_name)) {
 					core_geometry.add_numeric_attrib(attrib_name, 3, -1);

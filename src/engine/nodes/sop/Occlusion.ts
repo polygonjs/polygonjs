@@ -51,7 +51,10 @@ export class OcclusionSopNode extends TypedSopNode<OcclusionSopParamsConfig> {
 	}
 
 	private async _process_occlusion_on_object(core_object: CoreObject) {
-		const geometry = core_object.core_geometry().geometry();
+		const geometry = core_object.core_geometry()?.geometry();
+		if (!geometry) {
+			return;
+		}
 
 		const position_array = geometry.attributes.position.array;
 		const normal_array = geometry.attributes.normal.array;

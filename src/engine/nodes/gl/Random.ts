@@ -38,9 +38,10 @@ export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
 		// 	return fract(sin(sn) * c);
 		// }`)
 
-		const value = ThreeToGl.vector2(this.variable_for_input('vec2'));
+		const input_name = this.io.inputs.named_input_connection_points[0].name;
+		const value = ThreeToGl.vector2(this.variable_for_input(input_name));
 
-		const float = this.gl_var_name('float');
+		const float = this.gl_var_name(OUTPUT_NAME);
 		const body_line = `float ${float} = rand(${value})`;
 		// this.set_function_declaration_lines(function_declaration_lines)
 		shaders_collection_controller.add_body_lines(this, [body_line]);

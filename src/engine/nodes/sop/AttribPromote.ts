@@ -11,7 +11,7 @@ import {CoreString} from '../../../core/String';
 export enum AttribPromoteMode {
 	MIN = 0,
 	MAX = 1,
-	FIRST_FOUND = 3,
+	FIRST_FOUND = 2,
 }
 // const PROMOTE_MODE:PROMOTE_MODE = {
 // 	MIN: 0,
@@ -37,7 +37,7 @@ class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 			entries: AttribClassMenuEntries,
 		},
 	});
-	mode = ParamConfig.INTEGER(AttribPromoteMode.MIN, {
+	mode = ParamConfig.INTEGER(AttribPromoteMode.FIRST_FOUND, {
 		menu: {
 			entries: PromoteModeMenuEntries,
 		},

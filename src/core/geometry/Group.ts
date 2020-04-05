@@ -261,12 +261,14 @@ export class CoreGroup {
 		if (this._objects) {
 			for (let object of this._objects) {
 				const geometry = (object as Object3DWithGeometry).geometry;
-				geometry.computeBoundingBox();
-				if (bbox) {
-					bbox.expandByObject(object);
-				} else {
-					if (geometry.boundingBox) {
-						bbox = geometry.boundingBox.clone();
+				if (geometry) {
+					geometry.computeBoundingBox();
+					if (bbox) {
+						bbox.expandByObject(object);
+					} else {
+						if (geometry.boundingBox) {
+							bbox = geometry.boundingBox.clone();
+						}
 					}
 				}
 			}

@@ -13,7 +13,7 @@ import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postp
 import {RenderPass} from '../../../../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {Pass} from '../../../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {POLY} from '../../../../Poly';
+import {Poly} from '../../../../Poly';
 
 interface DisposablePass extends Pass {
 	dispose: () => void;
@@ -95,7 +95,7 @@ export class PostProcessController {
 	}
 
 	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer {
-		const gl = POLY.renderers_controller.rendering_context(canvas);
+		const gl = Poly.instance().renderers_controller.rendering_context(canvas);
 
 		const renderer = new WebGLRenderer({
 			canvas: canvas,
@@ -123,7 +123,7 @@ export class PostProcessController {
 		// renderer.extensions.get( 'WEBGL_color_buffer_float' );
 		// renderer.extensions.get( 'WEBGL_draw_buffers' );
 
-		POLY.renderers_controller.register_renderer(renderer);
+		Poly.instance().renderers_controller.register_renderer(renderer);
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		this.set_renderer_size(canvas, size);
 		renderer.setPixelRatio(window.devicePixelRatio);
@@ -133,7 +133,7 @@ export class PostProcessController {
 	delete_renderer(canvas: HTMLCanvasElement) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			POLY.renderers_controller.deregister_renderer(renderer);
+			Poly.instance().renderers_controller.deregister_renderer(renderer);
 		}
 	}
 	set_renderer_size(canvas: HTMLCanvasElement, size: Vector2) {

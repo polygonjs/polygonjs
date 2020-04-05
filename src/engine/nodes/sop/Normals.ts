@@ -185,12 +185,14 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		// this._create_init_normal();
 
 		for (let core_object of core_group.core_objects()) {
-			const geometry = core_object.core_geometry().geometry();
-			const normal_attrib = geometry.attributes[NORMAL_ATTRIB_NAME];
-			if (normal_attrib) {
-				const array = normal_attrib.array as number[];
-				for (let i = 0; i < array.length; i++) {
-					array[i] *= -1;
+			const geometry = core_object.core_geometry()?.geometry();
+			if (geometry) {
+				const normal_attrib = geometry.attributes[NORMAL_ATTRIB_NAME];
+				if (normal_attrib) {
+					const array = normal_attrib.array as number[];
+					for (let i = 0; i < array.length; i++) {
+						array[i] *= -1;
+					}
 				}
 			}
 		}

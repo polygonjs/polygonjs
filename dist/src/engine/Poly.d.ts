@@ -20,4 +20,3 @@ export declare class Poly {
     set_env(env: string): void;
     get env(): string | undefined;
 }
-export declare const POLY: Poly;

@@ -9,7 +9,7 @@ import {CopObjNode} from '../../src/engine/nodes/obj/Cop';
 
 import {AllRegister} from '../../src/engine/poly/registers/All';
 AllRegister.run();
-import {POLY} from '../../src/engine/Poly';
+import {Poly} from '../../src/engine/Poly';
 
 // window.create_renderer_if_none = () => {
 // 	const first_renderer = POLY.renderers_controller.first_renderer();
@@ -35,7 +35,7 @@ QUnit.testStart(async () => {
 	window.scene = new PolyScene();
 	window.scene.set_name('test scene');
 	window.scene.set_uuid('test');
-	POLY.set_env('test');
+	Poly.instance().set_env('test');
 
 	window.scene.loading_controller.mark_as_loading();
 	window.scene.cooker.block();

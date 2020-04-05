@@ -62,8 +62,8 @@ export declare class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType
     set_param_configs_owner(param_config_owner: CodeBuilder): void;
     static add_output_params(output_child: OutputGlNode): void;
     add_output_params(output_child: OutputGlNode): void;
-    static create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.FLOAT> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC4>)[];
-    create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.FLOAT> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC4>)[];
+    static create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC4> | TypedNamedConnectionPoint<ConnectionPointType.FLOAT>)[];
+    create_globals_node_output_connections(): (TypedNamedConnectionPoint<ConnectionPointType.VEC3> | TypedNamedConnectionPoint<ConnectionPointType.VEC2> | TypedNamedConnectionPoint<ConnectionPointType.VEC4> | TypedNamedConnectionPoint<ConnectionPointType.FLOAT>)[];
     add_globals_params(globals_node: GlobalsGlNode): void;
     allow_attribute_exports(): boolean;
     reset_configs(): void;

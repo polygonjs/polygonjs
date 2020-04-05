@@ -2,7 +2,7 @@ import {PolyScene} from '../PolyScene';
 
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import '../../Poly';
-import {POLY} from '../../Poly';
+import {Poly} from '../../Poly';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {ParamEvent} from '../../poly/ParamEvent';
@@ -32,7 +32,7 @@ export class DispatchController {
 			this.scene.loading_controller.loaded &&
 			this._events_listener != null &&
 			this.scene.loading_controller.auto_updating &&
-			!POLY.player_mode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
+			!Poly.instance().player_mode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
 		);
 	}
 	// store_commit(event_name: string, payload: any = this) {

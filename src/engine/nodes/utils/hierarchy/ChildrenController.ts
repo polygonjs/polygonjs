@@ -12,7 +12,7 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
 
-import {POLY} from '../../../Poly';
+import {Poly} from '../../../Poly';
 // import {NameController} from '../NameController';
 
 // interface HierarchyOptions {
@@ -100,7 +100,7 @@ export class HierarchyChildrenController {
 	}
 
 	available_children_classes() {
-		return POLY.registered_nodes(this._context, this.node.type);
+		return Poly.instance().registered_nodes(this._context, this.node.type);
 	}
 	// children_allowed(): boolean {
 	// 	// return (this.self.available_children_classes != null) &&

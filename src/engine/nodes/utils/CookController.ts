@@ -1,6 +1,6 @@
 import {BaseNodeType} from '../_Base';
 import {BaseContainer} from '../../containers/_Base';
-import {POLY} from '../../Poly';
+import {Poly} from '../../Poly';
 
 export class CookController {
 	_cooking: boolean = false;
@@ -130,7 +130,7 @@ export class CookController {
 			this.node.remove_dirty_state();
 			this._terminate_cook_process();
 		} else {
-			POLY.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.full_path());
+			Poly.instance().log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.full_path());
 			this._cooking = false;
 			this.cook_main();
 		}

@@ -13,7 +13,7 @@ export declare class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
     static get component_names(): string[];
     get default_value_serialized(): StringOrNumber3;
     get value_serialized(): Number3;
-    protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]): StringOrNumber3 | Color;
+    protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]): Color | StringOrNumber3;
     static are_raw_input_equal(raw_input1: ParamInitValuesTypeMap[ParamType.COLOR], raw_input2: ParamInitValuesTypeMap[ParamType.COLOR]): boolean;
     static are_values_equal(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]): boolean;
     init_components(): void;

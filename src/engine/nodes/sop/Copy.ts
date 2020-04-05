@@ -137,7 +137,12 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 				if (this.pv.transform_only) {
 					moved_object.applyMatrix4(matrix);
 				} else {
-					moved_object.geometry.applyMatrix4(matrix);
+					const geometry = moved_object.geometry;
+					if (geometry) {
+						moved_object.geometry.applyMatrix4(matrix);
+					} else {
+						moved_object.applyMatrix4(matrix);
+					}
 				}
 
 				return this._objects.push(moved_object);

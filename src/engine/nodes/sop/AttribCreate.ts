@@ -137,6 +137,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 	async add_numeric_attribute_to_points(core_object: CoreObject) {
 		const core_geometry = core_object.core_geometry();
+		if (!core_geometry) {
+			return;
+		}
 		const points = core_object.points_from_group(this.pv.group);
 
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
@@ -296,7 +299,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		}
 
 		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
-		core_object.core_geometry().set_indexed_attribute(this.pv.name, index_data['values'], index_data['indices']);
+		core_object.core_geometry()?.set_indexed_attribute(this.pv.name, index_data['values'], index_data['indices']);
 	}
 
 	async add_string_attribute_to_object(core_objects: CoreObject[]) {

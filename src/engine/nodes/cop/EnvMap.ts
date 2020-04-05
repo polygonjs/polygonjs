@@ -13,7 +13,7 @@ import {TypedCopNode} from './_Base';
 // import { CoreScriptLoader } from "src/Core/Loader/Script";
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {POLY} from '../../Poly';
+import {Poly} from '../../Poly';
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	// url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
 	// 	desktop_browse: {file_type: 'texture'},
@@ -60,7 +60,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		// texture.minFilter = NearestFilter;
 		// texture.encoding = LinearEncoding;
 
-		const renderer = await POLY.renderers_controller.wait_for_renderer();
+		const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
 		// if (!renderer) {
 		// 	await CoreSleep.sleep(1000);
 		// 	console.log('waited 1s');

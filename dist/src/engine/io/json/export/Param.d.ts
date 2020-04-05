@@ -18,7 +18,7 @@ export declare class ParamJsonExporter<T extends BaseParamType> {
     protected _complex_data: ComplexParamJsonExporterData<ParamType>;
     constructor(_param: T);
     get required(): boolean;
-    data(): string | number | boolean | StringOrNumber2 | StringOrNumber3 | StringOrNumber4 | import("../../../params/ramp/RampValue").RampValueJson | ComplexParamJsonExporterData<ParamType> | null;
+    data(): string | number | boolean | StringOrNumber3 | import("../../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | ComplexParamJsonExporterData<ParamType> | null;
     private _data_simple;
     private _data_complex;
     protected _require_data_complex(): boolean;

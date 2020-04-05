@@ -3,7 +3,7 @@ import { CoreGroup } from '../../../core/geometry/Group';
 export declare enum AttribPromoteMode {
     MIN = 0,
     MAX = 1,
-    FIRST_FOUND = 3
+    FIRST_FOUND = 2
 }
 import { NodeParamsConfig } from '../utils/params/ParamsConfig';
 declare class AttribPromoteSopParamsConfig extends NodeParamsConfig {

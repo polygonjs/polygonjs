@@ -86,6 +86,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	_set_from_attribute(core_object: CoreObject) {
 		const core_geometry = core_object.core_geometry();
+		if (!core_geometry) {
+			return;
+		}
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 		const points = core_geometry.points();
 
@@ -141,6 +144,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	_eval_simple_values(core_object: CoreObject) {
 		const core_geometry = core_object.core_geometry();
+		if (!core_geometry) {
+			return;
+		}
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 
 		let new_color: Color;
@@ -157,7 +163,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const points = core_object.points();
 		const object = core_object.object();
 		const core_geometry = core_object.core_geometry();
-		this._create_init_color(core_geometry, DEFAULT_COLOR);
+		if (core_geometry) {
+			this._create_init_color(core_geometry, DEFAULT_COLOR);
+		}
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
 			const array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];

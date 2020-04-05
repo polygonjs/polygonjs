@@ -1,6 +1,0 @@
-{
-	"start_frame": "Frame when the simulation starts",
-	"textures_size": "Defines the size of the texture used to by the GPU to simulate the particles. A texture of 64x64 will be able to hold 4096 particles. You can use the different presets to easily change this number.",
-	"reset": "Restart the simulation",
-	"material": "which material will be used to render the particles (not to be confused with the shaders used to run the simulation, which is created by the glsl nodes inside the particles_system_gpu)"
-}

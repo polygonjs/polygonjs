@@ -1,5 +1,5 @@
 import {BaseMethod} from './_Base';
-import {POLY} from '../../Poly';
+import {Poly} from '../../Poly';
 
 export class Local extends BaseMethod {
 	// constructor() {
@@ -29,9 +29,10 @@ export class Local extends BaseMethod {
 
 			let url;
 
-			if (POLY.desktop_controller().active()) {
-				POLY.desktop_controller().add_local_path(name, this.param);
-				url = POLY.desktop_controller().local_path_server_url(name);
+			const desktop_controller = Poly.instance().desktop_controller();
+			if (desktop_controller.active()) {
+				desktop_controller.add_local_path(name, this.param);
+				url = desktop_controller.local_path_server_url(name);
 				resolve(url);
 			} else {
 				return resolve('');

@@ -52,12 +52,16 @@ export class CoreObject extends CoreEntity {
 	object() {
 		return this._object;
 	}
-	geometry() {
-		return (this._object as Mesh).geometry as BufferGeometry;
+	geometry(): BufferGeometry | null {
+		return (this._object as Mesh).geometry as BufferGeometry | null;
 	}
-	core_geometry(): CoreGeometry {
+	core_geometry(): CoreGeometry | null {
 		const geo = this.geometry();
-		return new CoreGeometry(geo);
+		if (geo) {
+			return new CoreGeometry(geo);
+		} else {
+			return null;
+		}
 		// const geo = this.geometry()
 		// if (geo) {
 		// 	return new CoreGeometry(geo)
@@ -66,7 +70,7 @@ export class CoreObject extends CoreEntity {
 		// }
 	}
 	points() {
-		return this.core_geometry().points();
+		return this.core_geometry()?.points() || [];
 	}
 	points_from_group(group: GroupString): CorePoint[] {
 		if (group) {
@@ -83,7 +87,7 @@ export class CoreObject extends CoreEntity {
 	}
 
 	compute_vertex_normals() {
-		this.core_geometry().compute_vertex_normals();
+		this.core_geometry()?.compute_vertex_normals();
 	}
 
 	add_attribute(name: string, value: AttribValue) {
@@ -105,7 +109,7 @@ export class CoreObject extends CoreEntity {
 		if (default_value == null) {
 			default_value = CoreAttribute.default_value(size);
 		}
-		this.core_geometry().add_numeric_attrib(name, size, default_value);
+		this.core_geometry()?.add_numeric_attrib(name, size, default_value);
 	}
 
 	attribute_names(): string[] {

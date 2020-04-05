@@ -60,18 +60,18 @@ module.exports = (env) => {
 						chunks: 'all',
 						priority: 10,
 					},
-					regl: {
-						test: /\/node_modules\/(regl)|(gl-matrix)|(gl-ve3)|(gl-mat4)\//,
-						name: 'regl',
-						chunks: 'all',
-						priority: 10,
-					},
-					opentype: {
-						test: /\/node_modules\/opentype.js\//,
-						name: 'opentype',
-						chunks: 'all',
-						priority: 10,
-					},
+					// regl: {
+					// 	test: /\/node_modules\/(regl)|(gl-matrix)|(gl-ve3)|(gl-mat4)\//,
+					// 	name: 'regl',
+					// 	chunks: 'all',
+					// 	priority: 10,
+					// },
+					// opentype: {
+					// 	test: /\/node_modules\/opentype.js\//,
+					// 	name: 'opentype',
+					// 	chunks: 'all',
+					// 	priority: 10,
+					// },
 					lodash: {
 						test: /\/node_modules\/lodash\//,
 						name: 'lodash',
@@ -80,23 +80,23 @@ module.exports = (env) => {
 					},
 					vendors: {
 						test: /[\\/]node_modules[\\/]/,
-						name: 'vendor',
+						name: 'vendors',
 						chunks: 'all',
 						priority: 1,
 					},
-					modules_three: {
-						test: /\/modules\/three\//,
-						chunks: 'all',
-						priority: 10,
-						name: function(module, chunks, cacheGroupKey) {
-							const moduleFileName = module
-								.identifier()
-								.split('/')
-								.reduceRight((item) => item);
-							const allChunksNames = chunks.map((item) => item.name).join('~');
-							return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-						},
-					},
+					// modules_three: {
+					// 	test: /\/modules\/three\//,
+					// 	chunks: 'all',
+					// 	priority: 10,
+					// 	name: function(module, chunks, cacheGroupKey) {
+					// 		const moduleFileName = module
+					// 			.identifier()
+					// 			.split('/')
+					// 			.reduceRight((item) => item);
+					// 		const allChunksNames = chunks.map((item) => item.name).join('~');
+					// 		return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+					// 	},
+					// },
 					// nodes: {
 					// 	test: /\/src\/engine\/nodes\//,
 					// 	chunks: 'all',

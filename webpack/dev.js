@@ -23,7 +23,7 @@ module.exports = (env) => {
 
 	return merge(common_options, {
 		mode: 'development',
-		devtool: 'inline-source-map', //  'cheap-module-eval-source-map',
+		devtool: 'inline-source-map', // 'cheap-module-eval-source-map',
 		devServer: {
 			contentBase: path.join(__dirname, '../public'),
 			hot: true,
