@@ -9,7 +9,7 @@ export class Poly {
 	static _instance: Poly | undefined;
 	renderers_controller: RenderersController = new RenderersController();
 	nodes_register: NodesRegister = new NodesRegister();
-
+	// public readonly js_version: string = '0';
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();

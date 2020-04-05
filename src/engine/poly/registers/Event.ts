@@ -5,6 +5,7 @@ import {CameraOrbitControlsEventNode} from '../../nodes/event/CameraOrbitControl
 import {CodeEventNode} from '../../nodes/event/Code';
 import {MouseEventNode} from '../../nodes/event/MouseEvent';
 import {PassEventNode} from '../../nodes/event/PassEvent';
+import {RaycastEventNode} from '../../nodes/event/Raycast';
 
 export interface EventNodeChildrenMap {
 	camera_orbit_controls: CameraMapControlsEventNode;
@@ -12,6 +13,7 @@ export interface EventNodeChildrenMap {
 	code: CodeEventNode;
 	mouse_event: MouseEventNode;
 	pass_event: PassEventNode;
+	raycast: RaycastEventNode;
 }
 
 import {Poly} from '../../Poly';
@@ -22,5 +24,6 @@ export class EventRegister {
 		poly.register_node(CodeEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(MouseEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(PassEventNode, CATEGORY_EVENT.MISC);
+		poly.register_node(RaycastEventNode, CATEGORY_EVENT.MISC);
 	}
 }
