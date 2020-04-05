@@ -1,5 +1,12 @@
 import {SceneJsonImporter} from './io/json/import/Scene';
 import {PolyScene} from './scene/PolyScene';
+
+// setTimeout(async () => {
+// 	// import {AllRegister} from './poly/registers/All';
+// 	const {AllRegister} = await import('./poly/registers/All');
+// 	AllRegister.run();
+// }, 1000);
+
 import {AllRegister} from './poly/registers/All';
 AllRegister.run();
 

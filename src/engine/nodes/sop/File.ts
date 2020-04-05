@@ -39,7 +39,6 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 
 	private _on_load(objects: Object3D[]) {
-		console.log('objects', objects);
 		objects = lodash_flatten(objects);
 		this.set_objects(objects);
 	}

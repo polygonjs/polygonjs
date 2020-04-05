@@ -2,7 +2,7 @@
 // import {Vector2} from 'three/src/math/Vector2';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, CameraTransformParamConfig} from './_BaseCamera';
-import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
+// import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT = {
@@ -11,8 +11,7 @@ const DEFAULT = {
 
 // const EVENT_CHANGE = { type: 'change' };
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
-import {CameraBackgroundParamConfig} from './utils/cameras/background/_BaseController';
+import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
@@ -22,11 +21,9 @@ export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(
 		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 0}});
 	};
 }
-class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
-	CameraBackgroundParamConfig(
-		TransformedParamConfig(
-			LayerParamConfig(PerspectiveCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
-		)
+class PerspectiveCameraObjParamConfig extends CameraRenderParamConfig(
+	TransformedParamConfig(
+		LayerParamConfig(PerspectiveCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
 	)
 ) {}
 const ParamsConfig = new PerspectiveCameraObjParamConfig();
@@ -37,9 +34,9 @@ export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCame
 		return 'perspective_camera';
 	}
 
-	protected get background_controller_constructor() {
-		return PerspectiveCameraBackgroundController;
-	}
+	// protected get background_controller_constructor() {
+	// 	return PerspectiveCameraBackgroundController;
+	// }
 
 	create_object() {
 		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);

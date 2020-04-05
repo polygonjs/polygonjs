@@ -47,14 +47,12 @@ export class CoreLoaderGeometry {
 	constructor(
 		private url: string // private type: LoaderType, // private requester: any
 	) {
-		const elements = this.url.split('.');
+		const url_without_params = this.url.split('?')[0];
+		const elements = url_without_params.split('.');
 		this.ext = elements[elements.length - 1].toLowerCase();
 		if (this.ext === 'zip') {
 			this.ext = elements[elements.length - 2];
 		}
-		// if(!this.type){
-		// 	console.error("CoreLoaderGeometry type is not valid", this.type)
-		// }
 	}
 
 	load(on_success: (objects: Object3D[]) => void, on_error: (error: string) => void) {
@@ -69,7 +67,7 @@ export class CoreLoaderGeometry {
 
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			const url = this.url.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 
 			if (this.ext == 'json') {
 				fetch(url)
@@ -89,7 +87,6 @@ export class CoreLoaderGeometry {
 					loader.load(
 						url,
 						(object: any) => {
-							console.log(object);
 							this.on_load_success(object).then((object2) => {
 								resolve(object2);
 							});
@@ -173,7 +170,6 @@ export class CoreLoaderGeometry {
 		const scene = gltf['scene'];
 		scene.animations = gltf.animations;
 
-		console.log('[scene]', [scene]);
 		return [scene]; //.children
 	}
 	private on_load_succes_drc(geometry: BufferGeometry): Object3D[] {
@@ -229,7 +225,6 @@ export class CoreLoaderGeometry {
 		draco_loader.setDecoderPath(decoder_path);
 		draco_loader.setDecoderConfig({type: 'js'});
 		// loader.setDRACOLoader(draco_loader);
-		// console.log('loader', loader);
 		return draco_loader;
 	}
 	async loader_for_obj() {

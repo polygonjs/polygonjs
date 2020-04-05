@@ -74,7 +74,8 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			return expected_input_types;
 		}
 		protected _expected_output_types() {
-			const type = this._expected_input_types()[0];
+			const input_types = this._expected_input_types();
+			const type = input_types[1] || input_types[0] || ConnectionPointType.FLOAT;
 			return [type];
 		}
 	};
@@ -118,29 +119,32 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 		return [type];
 	}
 
-	protected _expected_input_types() {
+	protected _expected_input_types(): ConnectionPointType[] {
 		const input_connections = this.io.connections.input_connections();
 		if (input_connections) {
 			const first_connection = input_connections[0];
 
 			if (first_connection) {
-				const connection_point_for_first_connection = this.io.inputs.named_input_connection_points[
-					first_connection.input_index
-				];
+				const connection_point_for_first_connection =
+					first_connection.node_src.io.outputs.named_output_connection_points[first_connection.output_index];
+				// this.io.inputs.named_input_connection_points[
+				// 	first_connection.input_index
+				// ];
 				const type = connection_point_for_first_connection.type;
-				const expected_count = input_connections ? input_connections.length + 1 : 2;
+				const expected_count = Math.max(input_connections.length + 1, 2);
 				const empty_array = new Array(expected_count);
 
 				if (type == ConnectionPointType.FLOAT) {
-					const second_connection = input_connections ? input_connections[1] : null;
+					const second_connection = input_connections[1];
 					if (second_connection) {
-						const connection_point_for_second_connection = this.io.inputs.named_input_connection_points[
-							second_connection.input_index
-						];
+						const connection_point_for_second_connection =
+							second_connection.node_src.io.outputs.named_output_connection_points[
+								second_connection.output_index
+							];
 						const second_type = connection_point_for_second_connection.type;
 						if (second_type == ConnectionPointType.FLOAT) {
 							// if first 2 inputs are float: n+1 float inputs
-							return empty_array.map((i) => type);
+							return empty_array.fill(type);
 						} else {
 							// if first input is float and 2nd is different: 1 float, 1 like second, and no other input
 							return [type, second_type];
@@ -151,8 +155,10 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 					}
 				} else {
 					// if first input is not a float: n+1 inputs with same type
-					return empty_array.map(() => type);
+					return empty_array.fill(type);
 				}
+			} else {
+				// if we arrive here, we simply go to the last return statement
 			}
 		}
 		return [ConnectionPointType.FLOAT, ConnectionPointType.FLOAT];

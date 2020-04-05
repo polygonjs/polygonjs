@@ -71,7 +71,7 @@ export class ThreejsViewer extends BaseViewer {
 		this.cameras_controller.compute_size_and_aspect();
 		const size: Vector2 = this.cameras_controller.size;
 
-		this.cameras_controller.camera_node?.post_process_controller.create_renderer(this._canvas, size);
+		this.cameras_controller.camera_node?.render_controller.create_renderer(this._canvas, size);
 		// this.canvas_context = canvas.getContext('2d')
 
 		// init renderer
@@ -138,7 +138,7 @@ export class ThreejsViewer extends BaseViewer {
 			cancelAnimationFrame(this._request_animation_frame_id);
 		}
 		if (this._canvas) {
-			this.cameras_controller.camera_node?.post_process_controller.delete_renderer(this._canvas);
+			this.cameras_controller.camera_node?.render_controller.delete_renderer(this._canvas);
 		}
 		// POLY.renderers_controller.deregister_renderer(@renderer)
 		// this.dispose_camera()
@@ -148,7 +148,7 @@ export class ThreejsViewer extends BaseViewer {
 		if (this.cameras_controller.camera_node && this._canvas) {
 			const size = this.cameras_controller.size;
 			const aspect = this.cameras_controller.aspect;
-			this.cameras_controller.camera_node.post_process_controller.render(this._canvas, size, aspect);
+			this.cameras_controller.camera_node.render_controller.render(this._canvas, size, aspect);
 		} else {
 			console.warn('no camera to render with');
 		}

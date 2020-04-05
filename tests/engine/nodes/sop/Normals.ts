@@ -2,6 +2,7 @@ QUnit.test('normals simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.create_node('sphere');
+	sphere1.p.resolution.set([8, 6]);
 	const noise1 = geo1.create_node('noise');
 	const normals1 = geo1.create_node('normals');
 
@@ -14,32 +15,20 @@ QUnit.test('normals simple', async (assert) => {
 	let container, normal;
 
 	container = await noise1.request_container();
-	normal = container
-		.core_content()!
-		.points()[0]
-		.normal()
-		.toArray();
+	normal = container.core_content()!.points()[0].normal().toArray();
 	assert.in_delta(normal[0], 0, 0.05);
 	assert.in_delta(normal[1], 1, 0.05);
 	assert.in_delta(normal[2], 0, 0.05);
 
 	container = await normals1.request_container();
-	normal = container
-		.core_content()!
-		.points()[0]
-		.normal()
-		.toArray();
+	normal = container.core_content()!.points()[0].normal().toArray();
 	assert.in_delta(normal[0], 0.05, 0.05);
 	assert.in_delta(normal[1], -0.95, 0.05);
 	assert.in_delta(normal[2], -0.4, 0.05);
 
 	normals1.p.invert.set(1);
 	container = await normals1.request_container();
-	normal = container
-		.core_content()!
-		.points()[0]
-		.normal()
-		.toArray();
+	normal = container.core_content()!.points()[0].normal().toArray();
 	assert.in_delta(normal[0], -0.05, 0.05);
 	assert.in_delta(normal[1], 0.95, 0.05);
 	assert.in_delta(normal[2], 0.4, 0.05);

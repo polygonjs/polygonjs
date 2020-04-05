@@ -2,6 +2,7 @@ QUnit.test('noise simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.create_node('sphere');
+	sphere1.p.resolution.set([8, 6]);
 	const noise1 = geo1.create_node('noise');
 	noise1.set_input(0, sphere1);
 	noise1.p.use_normals.set(1);

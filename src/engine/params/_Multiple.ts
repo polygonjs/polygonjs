@@ -120,14 +120,27 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 		// if (lodash_isArray(values)) {
 		const value = this._raw_input;
+		let prev_value: number = 0;
 		if (lodash_isArray(value)) {
 			for (let i = 0; i < components.length; i++) {
-				components[i].set((value as any)[i]);
+				let component_value = (value as any)[i];
+				// use the prev value, in case we give an array that is too short
+				if (component_value == null) {
+					component_value = prev_value;
+				}
+				components[i].set(component_value);
+				prev_value = component_value;
 			}
 		} else {
 			for (let i = 0; i < components.length; i++) {
 				const component_name = this.component_names[i];
-				components[i].set((value as any)[component_name]);
+				let component_value = (value as any)[component_name];
+				// use the prev value, in case we give a vec2 instead of vec3
+				if (component_value == null) {
+					component_value = prev_value;
+				}
+				components[i].set(component_value);
+				prev_value = component_value;
 			}
 		}
 		// } else {

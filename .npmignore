@@ -5,6 +5,7 @@ node_modules/
 public/
 src/
 tests/
+dist/tests
 webpack/
 .eslintignore
 .eslintrc.js

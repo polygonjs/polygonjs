@@ -2,6 +2,7 @@ QUnit.test('cache static', async (assert) => {
 	let container;
 	const geo1 = window.geo1;
 	const sphere1 = geo1.create_node('sphere');
+	sphere1.p.resolution.set([8, 6]);
 	const plane1 = geo1.create_node('plane');
 	const cache1 = geo1.create_node('cache');
 

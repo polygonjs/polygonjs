@@ -13,7 +13,7 @@ export class Fit01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 		return 'fit01';
 	}
 
-	gl_input_name(index: number): string {
+	_gl_input_name(index: number): string {
 		return ['val', 'src_min', 'src_max'][index];
 	}
 	gl_input_default_value(name: string) {

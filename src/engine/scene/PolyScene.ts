@@ -192,6 +192,7 @@ export class PolyScene {
 	//
 	//
 	constructor() {
+		this._default_scene.name = 'default_scene';
 		// this.mark_as_loaded()
 		this._graph.set_scene(this);
 		// this.time_controller.init();

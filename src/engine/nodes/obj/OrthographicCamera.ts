@@ -5,7 +5,7 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 // import lodash_clamp from 'lodash/clamp';
 import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, CameraTransformParamConfig} from './_BaseCamera';
 
-import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
+// import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
 // import {ParamType} from '../../poly/ParamType';
 
 const DEFAULT = {
@@ -16,8 +16,7 @@ const DEFAULT = {
 };
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
-import {CameraBackgroundParamConfig} from './utils/cameras/background/_BaseController';
+import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
@@ -28,11 +27,9 @@ export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>
 	};
 }
 
-class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
-	CameraBackgroundParamConfig(
-		TransformedParamConfig(
-			LayerParamConfig(OrthographicCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
-		)
+class OrthographicCameraObjParamConfig extends CameraRenderParamConfig(
+	TransformedParamConfig(
+		LayerParamConfig(OrthographicCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
 	)
 ) {}
 const ParamsConfig = new OrthographicCameraObjParamConfig();
@@ -43,9 +40,9 @@ export class OrthographicCameraObjNode extends TypedCameraObjNode<
 > {
 	params_config = ParamsConfig;
 
-	protected get background_controller_constructor() {
-		return OrthographicCameraBackgroundController;
-	}
+	// protected get background_controller_constructor() {
+	// 	return OrthographicCameraBackgroundController;
+	// }
 
 	static type() {
 		return 'orthographic_camera';

@@ -5,7 +5,7 @@ import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {ControlsController} from './utils/cameras/ControlsController';
 import {LayersController} from './utils/LayersController';
-import {PostProcessController} from './utils/cameras/PostProcessController';
+import {RenderController} from './utils/cameras/RenderController';
 
 // import {Dirtyable} from './Concerns/Dirtyable';
 // import {Layers} from './Concerns/Layers';
@@ -16,7 +16,7 @@ import {PostProcessController} from './utils/cameras/PostProcessController';
 // import {CameraControls} from './Concerns/CameraControls';
 // import {File} from '../../../Engine/Node/Cop/File'
 import {ThreejsViewer} from '../../viewers/Threejs';
-import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
+// import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
 import {NodeContext} from '../../poly/NodeContext';
 
 export interface OrthoOrPerspCamera extends Camera {
@@ -34,8 +34,7 @@ export const BASE_CAMERA_DEFAULT = {
 };
 
 import {FlagsControllerD} from '../utils/FlagsController';
-import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
-import {CameraBackgroundParamConfig} from './utils/cameras/background/_BaseController';
+import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {LayerParamConfig} from './utils/LayersController';
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -72,8 +71,8 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 	};
 }
 
-export class BaseCameraObjParamsConfig extends CameraPostProcessParamConfig(
-	CameraBackgroundParamConfig(TransformedParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig))))
+export class BaseCameraObjParamsConfig extends CameraRenderParamConfig(
+	TransformedParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig)))
 ) {}
 
 export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
@@ -90,14 +89,14 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	readonly transform_controller: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
-	protected _background_controller: BaseBackgroundController | undefined;
-	get background_controller(): BaseBackgroundController {
-		return (this._background_controller =
-			this._background_controller || new this.background_controller_constructor(this));
-	}
-	protected get background_controller_constructor() {
-		return BaseBackgroundController;
-	}
+	// protected _background_controller: BaseBackgroundController | undefined;
+	// get background_controller(): BaseBackgroundController {
+	// 	return (this._background_controller =
+	// 		this._background_controller || new this.background_controller_constructor(this));
+	// }
+	// protected get background_controller_constructor() {
+	// 	return BaseBackgroundController;
+	// }
 	protected _controls_controller: ControlsController | undefined;
 	get controls_controller(): ControlsController {
 		return (this._controls_controller = this._controls_controller || new ControlsController(this));
@@ -106,9 +105,9 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	get layers_controller() {
 		return (this._layers_controller = this._layers_controller || new LayersController(this));
 	}
-	protected _post_process_controller: PostProcessController | undefined;
-	get post_process_controller(): PostProcessController {
-		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
+	protected _render_controller: RenderController | undefined;
+	get render_controller(): RenderController {
+		return (this._render_controller = this._render_controller || new RenderController(this));
 	}
 
 	// protected _used_in_scene: boolean = true;
@@ -160,7 +159,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	async cook() {
 		this.transform_controller.update();
 		this.layers_controller.update();
-		await this.background_controller.update();
+		// await this.background_controller.update();
 
 		if (this._object.near != this.pv.near || this._object.far != this.pv.far) {
 			this._object.near = this.pv.near;
@@ -168,7 +167,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 			this._object.updateProjectionMatrix();
 		}
 
-		await this.post_process_controller.update_composer_passes();
+		this.render_controller.update_scene();
 		this.update_camera();
 		this.controls_controller.update_controls();
 

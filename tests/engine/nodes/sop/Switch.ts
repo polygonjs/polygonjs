@@ -20,5 +20,5 @@ QUnit.test('switch simple', async (assert) => {
 	// core_group = container.core_content();
 	// ({geometry} = core_group.objects()[0]);
 
-	assert.equal(container.points_count(), 63);
+	assert.equal(container.points_count(), 961);
 });

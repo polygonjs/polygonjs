@@ -8,12 +8,23 @@ import {SopRegister} from './Sop';
 import {Poly} from '../../Poly';
 
 export class AllRegister {
-	static run() {
+	static async run() {
+		// const {CopRegister} = await import(/* webpackChunkName: "Cop" */ './Cop');
 		CopRegister.run(Poly.instance());
+
+		// const {EventRegister} = await import(/* webpackChunkName: "Event" */ './Event');
 		EventRegister.run(Poly.instance());
+
+		// const {GlRegister} = await import(/* webpackChunkName: "Gl" */ './Gl');
 		GlRegister.run(Poly.instance());
+
+		// const {MatRegister} = await import(/* webpackChunkName: "Mat" */ './Mat');
 		MatRegister.run(Poly.instance());
+
+		// const {ObjRegister} = await import(/* webpackChunkName: "Obj" */ './Obj');
 		ObjRegister.run(Poly.instance());
+
+		// const {SopRegister} = await import(/* webpackChunkName: "Sop" */ './Sop');
 		SopRegister.run(Poly.instance());
 	}
 }

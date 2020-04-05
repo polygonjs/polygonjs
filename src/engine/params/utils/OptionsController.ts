@@ -108,6 +108,7 @@ export interface IntegerParamOptions extends NumberParamOptions, MenuParamOption
 export interface OperatorPathParamOptions extends BaseParamOptions, DesktopParamOptions, CallbackParamOptions {
 	node_selection?: {
 		context?: NodeContext;
+		type?: string;
 	};
 	dependent_on_found_node?: boolean;
 }

@@ -28,6 +28,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 			this._cook_main_without_inputs_when_dirty_bound
 		);
 	}
+	// TODO: I may be able to swap those methods to param callbacks for most params
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
 		// if (this.used_in_scene) {

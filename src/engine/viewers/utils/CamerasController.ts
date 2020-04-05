@@ -68,7 +68,7 @@ export class CamerasController {
 			return;
 		}
 		this.compute_size_and_aspect();
-		this._camera_node?.post_process_controller.set_renderer_size(this.viewer.canvas, this._size);
+		this._camera_node?.render_controller.set_renderer_size(this.viewer.canvas, this._size);
 		this.update_camera_aspect();
 	}
 	compute_size_and_aspect() {

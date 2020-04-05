@@ -25,7 +25,7 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	radius = ParamConfig.FLOAT(1, {visible_if: {type: SPHERE_TYPE.default}});
-	resolution = ParamConfig.VECTOR2([8, 6], {visible_if: {type: SPHERE_TYPE.default}});
+	resolution = ParamConfig.VECTOR2([30, 30], {visible_if: {type: SPHERE_TYPE.default}});
 	open = ParamConfig.BOOLEAN(0, {visible_if: {type: SPHERE_TYPE.default}});
 	angle_range_x = ParamConfig.VECTOR2([0, '$PI*2'], {visible_if: {type: SPHERE_TYPE.default, open: true}});
 	angle_range_y = ParamConfig.VECTOR2([0, '$PI*2'], {visible_if: {type: SPHERE_TYPE.default, open: true}});
@@ -65,10 +65,7 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 	private _cook_with_input(core_group: CoreGroup) {
 		const bbox = core_group.bounding_box();
 		const size = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max
-			.clone()
-			.add(bbox.min)
-			.multiplyScalar(0.5);
+		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 
 		const geometry = this._create_required_geometry();
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);

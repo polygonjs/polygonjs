@@ -10,10 +10,11 @@ export class NullGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const in_value = ThreeToGl.any(this.variable_for_input('in'));
+		const in_value = ThreeToGl.any(this.variable_for_input(this._gl_input_name(0)));
 
-		const gl_type = this.io.inputs.named_input_connection_points[0].type;
-		const out = this.gl_var_name('value');
+		const out_connection_point = this.io.outputs.named_output_connection_points[0];
+		const gl_type = out_connection_point.type;
+		const out = this.gl_var_name(out_connection_point.name);
 		const body_line = `${gl_type} ${out} = ${in_value}`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 	}

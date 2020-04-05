@@ -105,12 +105,24 @@ export class GlNodeSpareParamsController {
 					init_value = connection_point.init_value;
 				}
 			}
-			if (lodash_isArray(connection_point.init_value) && lodash_isNumber(init_value)) {
-				const array = new Array(connection_point.init_value.length) as Number2;
-				for (let i = 0; i < array.length; i++) {
-					array[i] = init_value;
+			if (lodash_isArray(connection_point.init_value)) {
+				// if we need to use an init_value from a float to an array
+				if (lodash_isNumber(init_value)) {
+					const array = new Array(connection_point.init_value.length) as Number2;
+					array.fill(init_value);
+					init_value = array;
 				}
-				init_value = array;
+				// if we need to use an init_value from a array to an array, we need to check their length.
+				// if they are different, we need to match them.
+				else if (lodash_isArray(init_value)) {
+					if (init_value.length < connection_point.init_value.length) {
+					}
+					if (init_value.length > connection_point.init_value.length) {
+					}
+					if (init_value.length == connection_point.init_value.length) {
+						init_value = connection_point.init_value;
+					}
+				}
 			}
 
 			if (init_value != null) {

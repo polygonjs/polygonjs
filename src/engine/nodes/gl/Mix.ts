@@ -1,9 +1,18 @@
 import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
+const DefaultValues: Dictionary<number> = {
+	blend: 0.5,
+};
 export class MixGlNode extends BaseGlMathFunctionGlNode {
 	static type() {
 		return 'mix';
+	}
+	protected gl_method_name() {
+		return 'mix';
+	}
+	gl_input_default_value(name: string) {
+		return DefaultValues[name];
 	}
 
 	initialize_node() {

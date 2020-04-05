@@ -19,7 +19,7 @@ import noise4D from './gl/noise/noise4D.glsl';
 import {ConnectionPointType, ConnectionPointComponentsCountMap} from '../utils/connections/ConnectionPointType';
 // import psrdnoise2D from './Gl/noise/psrdnoise2D.glsl'
 
-enum NOISE_NAME {
+export enum NoiseName {
 	// 'cellular2D',
 	// 'cellular2x2',
 	// 'cellular2x2x2',
@@ -43,49 +43,49 @@ enum NOISE_NAME {
 	// 'Simplex Rotating', // srnoise
 	// 'Simplex', // snoise
 }
-const NOISE_NAMES: Array<NOISE_NAME> = [
-	NOISE_NAME.CLASSIC_PERLIN_2D,
-	NOISE_NAME.CLASSIC_PERLIN_3D,
-	NOISE_NAME.CLASSIC_PERLIN_4D,
-	NOISE_NAME.NOISE_2D,
-	NOISE_NAME.NOISE_3D,
-	NOISE_NAME.NOISE_4D,
+export const NOISE_NAMES: Array<NoiseName> = [
+	NoiseName.CLASSIC_PERLIN_2D,
+	NoiseName.CLASSIC_PERLIN_3D,
+	NoiseName.CLASSIC_PERLIN_4D,
+	NoiseName.NOISE_2D,
+	NoiseName.NOISE_3D,
+	NoiseName.NOISE_4D,
 ];
 
-type StringByNoise = {[key in NOISE_NAME]: string};
+type StringByNoise = {[key in NoiseName]: string};
 const IMPORT_BY_NOISE_NAME: StringByNoise = {
-	[NOISE_NAME.CLASSIC_PERLIN_2D]: classicnoise2D,
-	[NOISE_NAME.CLASSIC_PERLIN_3D]: classicnoise3D,
-	[NOISE_NAME.CLASSIC_PERLIN_4D]: classicnoise4D,
-	[NOISE_NAME.NOISE_2D]: noise2D,
-	[NOISE_NAME.NOISE_3D]: noise3D,
-	[NOISE_NAME.NOISE_4D]: noise4D,
+	[NoiseName.CLASSIC_PERLIN_2D]: classicnoise2D,
+	[NoiseName.CLASSIC_PERLIN_3D]: classicnoise3D,
+	[NoiseName.CLASSIC_PERLIN_4D]: classicnoise4D,
+	[NoiseName.NOISE_2D]: noise2D,
+	[NoiseName.NOISE_3D]: noise3D,
+	[NoiseName.NOISE_4D]: noise4D,
 };
-type ConnectionTypeByNoise = {[key in NOISE_NAME]: ConnectionPointType};
+type ConnectionTypeByNoise = {[key in NoiseName]: ConnectionPointType};
 const INPUT_TYPES_BY_NOISE_NAME: ConnectionTypeByNoise = {
-	[NOISE_NAME.CLASSIC_PERLIN_2D]: ConnectionPointType.VEC2,
-	[NOISE_NAME.CLASSIC_PERLIN_3D]: ConnectionPointType.VEC3,
-	[NOISE_NAME.CLASSIC_PERLIN_4D]: ConnectionPointType.VEC4,
-	[NOISE_NAME.NOISE_2D]: ConnectionPointType.VEC2,
-	[NOISE_NAME.NOISE_3D]: ConnectionPointType.VEC3,
-	[NOISE_NAME.NOISE_4D]: ConnectionPointType.VEC4,
+	[NoiseName.CLASSIC_PERLIN_2D]: ConnectionPointType.VEC2,
+	[NoiseName.CLASSIC_PERLIN_3D]: ConnectionPointType.VEC3,
+	[NoiseName.CLASSIC_PERLIN_4D]: ConnectionPointType.VEC4,
+	[NoiseName.NOISE_2D]: ConnectionPointType.VEC2,
+	[NoiseName.NOISE_3D]: ConnectionPointType.VEC3,
+	[NoiseName.NOISE_4D]: ConnectionPointType.VEC4,
 };
 
 const OUTPUT_TYPE_BY_NOISE_NAME: ConnectionTypeByNoise = {
-	[NOISE_NAME.CLASSIC_PERLIN_2D]: ConnectionPointType.FLOAT,
-	[NOISE_NAME.CLASSIC_PERLIN_3D]: ConnectionPointType.FLOAT,
-	[NOISE_NAME.CLASSIC_PERLIN_4D]: ConnectionPointType.FLOAT,
-	[NOISE_NAME.NOISE_2D]: ConnectionPointType.FLOAT,
-	[NOISE_NAME.NOISE_3D]: ConnectionPointType.FLOAT,
-	[NOISE_NAME.NOISE_4D]: ConnectionPointType.FLOAT,
+	[NoiseName.CLASSIC_PERLIN_2D]: ConnectionPointType.FLOAT,
+	[NoiseName.CLASSIC_PERLIN_3D]: ConnectionPointType.FLOAT,
+	[NoiseName.CLASSIC_PERLIN_4D]: ConnectionPointType.FLOAT,
+	[NoiseName.NOISE_2D]: ConnectionPointType.FLOAT,
+	[NoiseName.NOISE_3D]: ConnectionPointType.FLOAT,
+	[NoiseName.NOISE_4D]: ConnectionPointType.FLOAT,
 };
 const METHOD_NAMES_BY_NOISE_NAME: StringByNoise = {
-	[NOISE_NAME.CLASSIC_PERLIN_2D]: 'cnoise',
-	[NOISE_NAME.CLASSIC_PERLIN_3D]: 'cnoise',
-	[NOISE_NAME.CLASSIC_PERLIN_4D]: 'cnoise',
-	[NOISE_NAME.NOISE_2D]: 'snoise',
-	[NOISE_NAME.NOISE_3D]: 'snoise',
-	[NOISE_NAME.NOISE_4D]: 'snoise',
+	[NoiseName.CLASSIC_PERLIN_2D]: 'cnoise',
+	[NoiseName.CLASSIC_PERLIN_3D]: 'cnoise',
+	[NoiseName.CLASSIC_PERLIN_4D]: 'cnoise',
+	[NoiseName.NOISE_2D]: 'snoise',
+	[NoiseName.NOISE_3D]: 'snoise',
+	[NoiseName.NOISE_4D]: 'snoise',
 };
 
 enum OUTPUT_TYPE {
@@ -121,7 +121,7 @@ const CONNECTION_TYPE_BY_OUTPUT_TYPE: ConnectionTypeByOutputType = {
 
 const ALL_COMPONENTS = ['x', 'y', 'z', 'w'];
 const OUTPUT_NAME = 'noise';
-const default_noise_type = NOISE_NAMES.indexOf(NOISE_NAME.NOISE_3D);
+const default_noise_type = NOISE_NAMES.indexOf(NoiseName.NOISE_3D);
 const default_output_type = OUTPUT_TYPE.NoChange;
 
 const DefaultValues: Dictionary<number> = {
@@ -184,6 +184,8 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 
 		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+		this.gl_connections_controller.set_output_name_function(() => OUTPUT_NAME);
 	}
 
 	protected _gl_input_name(index: number) {
