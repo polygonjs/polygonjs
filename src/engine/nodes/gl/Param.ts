@@ -13,6 +13,7 @@ import {UniformGLDefinition} from './utils/GLDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionsController} from './utils/ConnectionsController';
+import {GlParamConfig} from './code/utils/ParamConfig';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT), {
@@ -79,19 +80,11 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 			lodash_isArray(default_value) &&
 			default_value.length == 3
 		) {
-			this._param_configs_controller.create_and_push(
-				ParamType.COLOR,
-				this.pv.name,
-				default_value,
-				this.uniform_name()
-			);
+			const param_config = new GlParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniform_name());
+			this._param_configs_controller.push(param_config);
 		} else {
-			this._param_configs_controller.create_and_push(
-				param_type,
-				this.pv.name,
-				default_value,
-				this.uniform_name()
-			);
+			const param_config = new GlParamConfig(param_type, this.pv.name, default_value, this.uniform_name());
+			this._param_configs_controller.push(param_config);
 		}
 	}
 	uniform_name() {

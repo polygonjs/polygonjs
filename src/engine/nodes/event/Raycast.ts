@@ -42,11 +42,11 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 	geo_attribute = ParamConfig.BOOLEAN(0);
 	geo_attribute_name = ParamConfig.STRING('id', {
-		visible_if: {do_geo_attribute: 1},
+		visible_if: {geo_attribute: 1},
 		cook: false,
 	});
 	geo_attribute_value = ParamConfig.FLOAT(0, {
-		visible_if: {do_geo_attribute: 1},
+		visible_if: {geo_attribute: 1},
 		cook: false,
 	});
 }
@@ -70,7 +70,8 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			new TypedNamedConnectionPoint('trigger', ConnectionPointType.BOOL),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint('next', ConnectionPointType.BOOL),
+			new TypedNamedConnectionPoint('hit', ConnectionPointType.BOOL),
+			new TypedNamedConnectionPoint('no_hit', ConnectionPointType.BOOL),
 		]);
 	}
 
@@ -94,14 +95,13 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 				intersection.point.toArray(this._intersection_position);
 				this.p.position.set(this._intersection_position);
 
-				if (this.pv.do_geo_attribute) {
+				if (this.pv.geo_attribute == true) {
 					const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
 					if (geometry) {
 						const attribute = geometry.getAttribute(this.pv.geo_attribute_name);
 						if (attribute) {
 							const val = attribute.array[0];
-							if (val) {
-								console.log('set val', val);
+							if (val != null) {
 								this.p.geo_attribute_value.set(val);
 							}
 						}

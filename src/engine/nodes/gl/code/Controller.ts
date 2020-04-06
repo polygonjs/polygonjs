@@ -1,4 +1,3 @@
-import lodash_merge from 'lodash/merge';
 import lodash_intersection from 'lodash/intersection';
 import lodash_difference from 'lodash/difference';
 import {Vector2} from 'three/src/math/Vector2';
@@ -304,13 +303,13 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	// 	}
 	// 	// this.cook_main_without_inputs()
 	// }
-	async assign_uniform_values() {
-		if (this._assembler) {
-			for (let param_config of this._assembler.param_configs()) {
-				await param_config.set_uniform_value(this.node);
-			}
-		}
-	}
+	// async assign_uniform_values() {
+	// 	if (this._assembler) {
+	// 		for (let param_config of this._assembler.param_configs()) {
+	// 			await param_config.set_uniform_value(this.node);
+	// 		}
+	// 	}
+	// }
 
 	// process_uniforms(renderer, display_scene, camera, geometry, material, group) {
 	// 	const scene_frame = this.scene().frame()
@@ -394,24 +393,15 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		// this.within_param_folder('spare_params', () => {
 		for (let param_config of param_configs) {
 			if (spare_param_names_to_add.indexOf(param_config.name) >= 0) {
-				// TODO: shouldn't it be cook: false ??
-				// as there is no need to cook the node if I'm only changing the uniform
-				// unless maybe for textures?
-				// but if cook is false, there is no reason for it to be updated
-				const options = lodash_merge(param_config.param_options, {spare: true, cook: true});
+				param_config.param_options.spare = true;
+				param_config.param_options.cook = false; // it should update the uniforms only via its callback
 
-				// const param = this.node.add_param(
-				// 	param_config.type,
-				// 	param_config.name,
-				// 	param_config.default_value,
-				// 	options
-				// );
 				params_update_options.to_add = params_update_options.to_add || [];
 				params_update_options.to_add.push({
 					name: param_config.name,
 					type: param_config.type,
 					init_value: param_config.default_value as any,
-					options: options,
+					options: param_config.param_options,
 				});
 
 				// if (param) {

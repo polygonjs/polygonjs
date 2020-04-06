@@ -50,6 +50,7 @@ import {AndGlNode, OrGlNode} from '../../nodes/gl/_Math_Arg2Boolean';
 import {AlignGlNode} from '../../nodes/gl/Align';
 import {AttributeGlNode} from '../../nodes/gl/Attribute';
 import {ConstantGlNode} from '../../nodes/gl/Constant';
+import {CompareGlNode} from '../../nodes/gl/Compare';
 import {ComplementGlNode} from '../../nodes/gl/Complement';
 import {CrossGlNode} from '../../nodes/gl/Cross';
 import {CycleGlNode} from '../../nodes/gl/Cycle';
@@ -96,6 +97,7 @@ export interface GlNodeChildrenMap {
 	ceil: CeilGlNode;
 	constant: ConstantGlNode;
 	cos: CosGlNode;
+	compare: CompareGlNode;
 	complement: ComplementGlNode;
 	cross: CrossGlNode;
 	cycle: CycleGlNode;
@@ -181,6 +183,7 @@ export class GlRegister {
 		poly.register_node(CeilGlNode, CATEGORY_GL.MATH);
 		poly.register_node(CosGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(ConstantGlNode, CATEGORY_GL.GLOBALS);
+		poly.register_node(CompareGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(ComplementGlNode, CATEGORY_GL.MATH);
 		poly.register_node(CrossGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(CycleGlNode, CATEGORY_GL.MATH);

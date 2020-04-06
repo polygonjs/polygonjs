@@ -12,7 +12,7 @@ const ParamsConfig = new BaseGlMathFunctionParamsConfig();
 export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGlMathFunctionParamsConfig> {
 	params_config = ParamsConfig;
 	protected gl_method_name() {
-		return 'no_method_name_defined';
+		return ''; // leave blank to allow nodes such as mult, add, substract to work
 	}
 	protected gl_function_definitions(): TypedGLDefinition<GLDefinitionType>[] {
 		return [];

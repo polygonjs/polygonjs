@@ -197,14 +197,15 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 
 	private _expected_input_types(): ConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];
+		const amplitude_type = this._expected_output_types()[0];
 		const type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
-		return [type, type, type, type];
+		return [amplitude_type, type, type, type];
 	}
 	private _expected_output_types(): ConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const output_type = OUTPUT_TYPES[this.pv.output_type];
 		if (output_type == OUTPUT_TYPE.NoChange) {
-			return [OUTPUT_TYPE_BY_NOISE_NAME[noise_name]];
+			return [INPUT_TYPES_BY_NOISE_NAME[noise_name]];
 		} else {
 			return [CONNECTION_TYPE_BY_OUTPUT_TYPE[output_type]];
 		}
@@ -233,7 +234,6 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 			const requested_components_count = ConnectionPointComponentsCountMap[output_gl_type];
 			// const noise_output_components_count = OUTPUT_TYPE_BY_NOISE_NAME[output_gl_type]
 
-			// console.log("compare", output_gl_type, requested_components_count, noise_output_components_count)
 			// if(requested_components_count < noise_output_components_count){
 			// 	// not sure we ever go through here with the current noise set
 			// 	let component = lodash_range(requested_components_count).map(i=>ALL_COMPONENTS[i]).join('')
@@ -250,7 +250,6 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 				// if (lodash_isArray(input_constructor)) {
 				// TODO: for noise3Dgrad and other noises with 2 inputs
 				// } else {
-				// console.log(INPUT_TYPES_BY_NOISE_NAME, noise_name)
 				const offset_gl_type = input_type;
 				const offset_components_count = ConnectionPointComponentsCountMap[offset_gl_type];
 				const offset_values = lodash_range(offset_components_count)
@@ -298,7 +297,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 	}
 
 	private single_noise_line(output_name_suffix?: string, component?: string, offset2?: string) {
-		const noise_name = NOISE_NAMES[this.pv.type];
+		// const noise_name = NOISE_NAMES[this.pv.type];
 		// const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name]
 		const method_name = this.fbm_method_name();
 
@@ -347,7 +346,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 			return `float ${noise}${output_name_suffix} = (${right_hand}).${component}`;
 		} else {
 			// it looks like we never go here with the current set of noises
-			const output_type = OUTPUT_TYPE_BY_NOISE_NAME[noise_name];
+			const output_type = this.io.outputs.named_output_connection_points[0].type;
 			return `${output_type} ${noise} = ${right_hand}`;
 		}
 	}

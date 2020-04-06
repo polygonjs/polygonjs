@@ -9,12 +9,14 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 import {GlNodeSpareParamsController} from './utils/SpareParamsController';
 import {GlConnectionsController} from './utils/ConnectionsController';
+import {GlParamConfig} from './code/utils/ParamConfig';
+import {ParamType} from '../../poly/ParamType';
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', BaseGlNodeType, K> {
 	static node_context(): NodeContext {
 		return NodeContext.GL;
 	}
-	protected _param_configs_controller: ParamConfigsController | undefined;
+	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
 	readonly spare_params_controller: GlNodeSpareParamsController = new GlNodeSpareParamsController(this);

@@ -12,9 +12,11 @@ import {ShadersCollectionController} from './ShadersCollectionController';
 import {CodeFormatter} from './CodeFormatter';
 
 import {LineType} from './LineType';
+import {GlParamConfig} from './ParamConfig';
+import {ParamType} from '../../../../poly/ParamType';
 
 export class CodeBuilder {
-	_param_configs_controller: ParamConfigsController = new ParamConfigsController();
+	_param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> = new ParamConfigsController();
 	_param_configs_set_allowed: boolean = true;
 
 	private _shaders_collection_controller: ShadersCollectionController | undefined;

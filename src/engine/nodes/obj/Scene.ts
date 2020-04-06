@@ -131,7 +131,6 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		this._update_enviromment();
 		this._update_material_override();
 
-		console.log(this.object);
 		this.cook_controller.end_cook();
 	}
 

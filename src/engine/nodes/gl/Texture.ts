@@ -10,6 +10,7 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ParamType} from '../../poly/ParamType';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {GlParamConfig} from './code/utils/ParamConfig';
 class TextureParamsConfig extends NodeParamsConfig {
 	param_name = ParamConfig.STRING('texture_map');
 	default_value = ParamConfig.STRING(FileCopNode.DEFAULT_NODE_PATH.UV);
@@ -46,12 +47,13 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
 
-		this._param_configs_controller.create_and_push(
+		const param_config = new GlParamConfig(
 			ParamType.OPERATOR_PATH,
 			this.pv.param_name,
 			this.pv.default_value,
 			this._uniform_name()
 		);
+		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {
 		return this.gl_var_name(this.pv.param_name);

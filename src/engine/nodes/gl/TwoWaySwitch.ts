@@ -2,7 +2,7 @@ import {ParamlessTypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {GlConnectionsController} from './utils/ConnectionsController';
 
-const OUTPUT_NAME = 'value';
+const OUTPUT_NAME = 'val';
 enum InputName {
 	CONDITION = 'condition',
 	IF_TRUE = 'if_true',
@@ -55,7 +55,7 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		const if_true = ThreeToGl.any(this.variable_for_input(InputName.IF_TRUE));
 		const if_false = ThreeToGl.any(this.variable_for_input(InputName.IF_FALSE));
 
-		const gl_type = this._expected_output_types()[1];
+		const gl_type = this._expected_output_types()[0];
 		body_lines.push(`${gl_type} ${value}`);
 		body_lines.push(`if(${condition}){`);
 		body_lines.push(`${value} = ${if_true}`);

@@ -223,7 +223,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.gpu_controller.reset_gpu_compute();
 		this.gpu_controller.reset_particle_groups(); // this
 
-		await this.assembler_controller.assign_uniform_values(); // TODO: needed?
+		// await this.assembler_controller.assign_uniform_values(); // TODO: needed?
 	}
 	// shaders_by_name() {
 	// 	return this._shaders_by_name;

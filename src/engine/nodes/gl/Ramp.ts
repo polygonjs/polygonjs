@@ -10,6 +10,7 @@ import {ParamType} from '../../poly/ParamType';
 const OUTPUT_NAME = 'val';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {GlParamConfig} from './code/utils/ParamConfig';
 class RampGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('ramp');
 	input = ParamConfig.FLOAT(0);
@@ -44,12 +45,13 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	set_param_configs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
-		this._param_configs_controller.create_and_push(
+		const param_config = new GlParamConfig(
 			ParamType.RAMP,
 			this.pv.name,
 			RampParam.DEFAULT_VALUE,
 			this._uniform_name()
 		);
+		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {
 		return 'ramp_texture_' + this.gl_var_name(OUTPUT_NAME);
