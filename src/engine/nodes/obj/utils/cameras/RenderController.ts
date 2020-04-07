@@ -7,7 +7,6 @@ import {BaseCameraObjNodeType} from '../../_BaseCamera';
 import {Poly} from '../../../../Poly';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {BaseObjNodeType} from '../../_Base';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {SceneObjNode} from '../../Scene';
 export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -19,7 +18,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			visible_if: {use_custom_scene: 1},
 			node_selection: {
 				context: NodeContext.OBJ,
-				type: 'scene',
+				type: SceneObjNode.type(),
 			},
 			// callback: (node: BaseNodeType, param: BaseParamType) => {
 			// 	BaseCameraObjNodeClass.PARAM_CALLBACK_reload(node as FileSopNode);
@@ -37,29 +36,50 @@ export class RenderController {
 
 	// private _prev_t = 0;
 	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
-		const renderer = this.renderer(canvas);
-		if (renderer) {
-			if (this._resolved_scene) {
-				renderer.render(this._resolved_scene, this.node.object);
+		if (this.node.pv.do_post_process) {
+			this.node.post_process_controller.render(canvas, size, aspect);
+		} else {
+			const renderer = this.renderer(canvas);
+			if (renderer) {
+				if (this._resolved_scene) {
+					renderer.render(this._resolved_scene, this.node.object);
+				}
 			}
 		}
 	}
-	update_scene() {
+	get resolved_scene() {
+		return this._resolved_scene;
+	}
+	async update_scene() {
 		if (this.node.pv.use_custom_scene) {
-			const node = this.node.p.scene.found_node() as BaseObjNodeType;
-			if (node.type == SceneObjNode.type()) {
-				// it's probably weird to cook the node here, but that works for now
-				if (node.is_dirty) {
-					node.cook_controller.cook_main_without_inputs();
+			const param = this.node.p.scene;
+			if (param.is_dirty) {
+				await param.compute();
+			}
+			const node = this.node.p.scene.found_node();
+			if (node) {
+				if (node.node_context() == NodeContext.OBJ) {
+					if (node.type == SceneObjNode.type()) {
+						// it's probably weird to cook the node here, but that works for now
+						if (node.is_dirty) {
+							node.cook_controller.cook_main_without_inputs();
+						}
+						this._resolved_scene = (node as SceneObjNode).object;
+					} else {
+						this.node.states.error.set('found node not a scene node');
+					}
+				} else {
+					this.node.states.error.set('found node not an OBJ');
 				}
-				this._resolved_scene = (node as SceneObjNode).object;
+			} else {
+				this.node.states.error.set('no node found');
 			}
 		} else {
 			this._resolved_scene = this.node.scene.default_scene;
 		}
 	}
 
-	private renderer(canvas: HTMLCanvasElement) {
+	renderer(canvas: HTMLCanvasElement) {
 		return this._renderers_by_canvas_id[canvas.id];
 	}
 
@@ -104,6 +124,9 @@ export class RenderController {
 		if (renderer) {
 			Poly.instance().renderers_controller.deregister_renderer(renderer);
 		}
+	}
+	canvas_resolution(canvas: HTMLCanvasElement) {
+		return this._resolution_by_canvas_id[canvas.id];
 	}
 	set_renderer_size(canvas: HTMLCanvasElement, size: Vector2) {
 		this._resolution_by_canvas_id[canvas.id] = this._resolution_by_canvas_id[canvas.id] || new Vector2();

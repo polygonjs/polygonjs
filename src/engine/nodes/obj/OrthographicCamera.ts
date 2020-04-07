@@ -17,6 +17,7 @@ const DEFAULT = {
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraRenderParamConfig} from './utils/cameras/RenderController';
+import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
@@ -27,9 +28,11 @@ export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>
 	};
 }
 
-class OrthographicCameraObjParamConfig extends CameraRenderParamConfig(
-	TransformedParamConfig(
-		LayerParamConfig(OrthographicCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
+	CameraRenderParamConfig(
+		TransformedParamConfig(
+			LayerParamConfig(OrthographicCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+		)
 	)
 ) {}
 const ParamsConfig = new OrthographicCameraObjParamConfig();

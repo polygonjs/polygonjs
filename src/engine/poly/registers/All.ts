@@ -3,6 +3,7 @@ import {EventRegister} from './Event';
 import {GlRegister} from './Gl';
 import {MatRegister} from './Mat';
 import {ObjRegister} from './Obj';
+import {PostRegister} from './Post';
 import {SopRegister} from './Sop';
 
 import {Poly} from '../../Poly';
@@ -23,6 +24,8 @@ export class AllRegister {
 
 		// const {ObjRegister} = await import(/* webpackChunkName: "Obj" */ './Obj');
 		ObjRegister.run(Poly.instance());
+
+		PostRegister.run(Poly.instance());
 
 		// const {SopRegister} = await import(/* webpackChunkName: "Sop" */ './Sop');
 		SopRegister.run(Poly.instance());

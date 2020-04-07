@@ -6,9 +6,9 @@ import {Object3D} from 'three/src/core/Object3D';
 
 import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class FileSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('', {
 		desktop_browse: {file_type: 'geometry'},

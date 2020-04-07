@@ -12,6 +12,7 @@ const DEFAULT = {
 // const EVENT_CHANGE = { type: 'change' };
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraRenderParamConfig} from './utils/cameras/RenderController';
+import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
@@ -21,9 +22,11 @@ export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(
 		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 0}});
 	};
 }
-class PerspectiveCameraObjParamConfig extends CameraRenderParamConfig(
-	TransformedParamConfig(
-		LayerParamConfig(PerspectiveCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
+	CameraRenderParamConfig(
+		TransformedParamConfig(
+			LayerParamConfig(PerspectiveCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+		)
 	)
 ) {}
 const ParamsConfig = new PerspectiveCameraObjParamConfig();

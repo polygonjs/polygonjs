@@ -4,8 +4,10 @@ import {Camera} from 'three/src/cameras/Camera';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {ControlsController} from './utils/cameras/ControlsController';
-import {LayersController} from './utils/LayersController';
-import {RenderController} from './utils/cameras/RenderController';
+import {LayersController, LayerParamConfig} from './utils/LayersController';
+import {PostProcessController, CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
+import {RenderController, CameraRenderParamConfig} from './utils/cameras/RenderController';
+import {TransformedParamConfig, TransformController} from './utils/TransformController';
 
 // import {Dirtyable} from './Concerns/Dirtyable';
 // import {Layers} from './Concerns/Layers';
@@ -18,6 +20,10 @@ import {RenderController} from './utils/cameras/RenderController';
 import {ThreejsViewer} from '../../viewers/Threejs';
 // import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
 import {NodeContext} from '../../poly/NodeContext';
+import {FlagsControllerD} from '../utils/FlagsController';
+import {BaseParamType} from '../../params/_Base';
+import {BaseNodeType} from '../_Base';
+import {TypedObjNode} from './_Base';
 
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
@@ -33,15 +39,7 @@ export const BASE_CAMERA_DEFAULT = {
 	far: 100.0,
 };
 
-import {FlagsControllerD} from '../utils/FlagsController';
-import {CameraRenderParamConfig} from './utils/cameras/RenderController';
-import {LayerParamConfig} from './utils/LayersController';
-
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {BaseParamType} from '../../params/_Base';
-import {BaseNodeType} from '../_Base';
-import {TransformedParamConfig, TransformController} from './utils/TransformController';
-import {TypedObjNode} from './_Base';
 
 export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -71,8 +69,8 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 	};
 }
 
-export class BaseCameraObjParamsConfig extends CameraRenderParamConfig(
-	TransformedParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig)))
+export class BaseCameraObjParamsConfig extends CameraPostProcessParamConfig(
+	CameraRenderParamConfig(TransformedParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig))))
 ) {}
 
 export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
@@ -108,6 +106,10 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	protected _render_controller: RenderController | undefined;
 	get render_controller(): RenderController {
 		return (this._render_controller = this._render_controller || new RenderController(this));
+	}
+	protected _post_process_controller: PostProcessController | undefined;
+	get post_process_controller(): PostProcessController {
+		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
 
 	// protected _used_in_scene: boolean = true;
