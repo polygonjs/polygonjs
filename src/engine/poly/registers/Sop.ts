@@ -1,3 +1,8 @@
+// for dynamic imports, use
+// https://wanago.io/2018/08/20/webpack-4-course-part-eight-dynamic-imports-with-prefetch-and-preload/
+// with webpackExclude to not bundle files like _Base.ts or what is under utils/
+// with webpackChunkName and [request] to ensure meaningful name
+// more on https://webpack.js.org/api/module-methods/
 import {CATEGORY_SOP} from './Category';
 
 import {AddSopNode} from '../../nodes/sop/Add';
