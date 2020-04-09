@@ -1,56 +1,49 @@
-// import {Vector2} from 'three/src/math/Vector2';
-// import {Camera} from 'three/src/cameras/Camera';
-// import {BasePostProcessNode} from './_Base';
-// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
-// import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {ParamType} from '../../poly/ParamType';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {DotScreenShader} from '../../../../modules/three/examples/jsm/shaders/DotScreenShader';
+import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
-// export class DotScreen extends BasePostProcessNode {
-// 	@ParamV2('center') _param_center: Vector2;
-// 	@ParamF('angle') _param_angle: number;
-// 	@ParamF('scale') _param_scale: number;
-// 	static type() {
-// 		return 'dot_screen';
-// 	}
-// 	static required_three_imports() {
-// 		return ['postprocessing/DotScreenPass'];
-// 	}
+interface DotScreenPassWithUniforms extends ShaderPass {
+	uniforms: {
+		center: IUniform;
+		angle: IUniform;
+		scale: IUniform;
+	};
+}
 
-// 	private _shader_class: any;
-// 	static async load_js() {
-// 		// await CoreScriptLoader.load_three_render_pass('DotScreenPass', {
-// 		// 	shaders: ['DotScreenShader']
-// 		// })
-// 		const {DotScreenPass} = await CoreScriptLoader.module(this.required_imports()[0]);
-// 		return DotScreenPass;
-// 	}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class DotScreenPostParamsConfig extends NodeParamsConfig {
+	center = ParamConfig.VECTOR2([0.5, 0.5], {
+		callback: PostParamCallback,
+	});
+	angle = ParamConfig.FLOAT('$PI*0.5', {
+		range: [0, 10],
+		range_locked: [false, false],
+		callback: PostParamCallback,
+	});
+	scale = ParamConfig.FLOAT(1.0, {
+		range: [0, 1],
+		range_locked: [false, false],
+		callback: PostParamCallback,
+	});
+}
+const ParamsConfig = new DotScreenPostParamsConfig();
+export class DotScreenPostNode extends TypedPostProcessNode<ShaderPass, DotScreenPostParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'dot_screen';
+	}
 
-// 	create_params() {
-// 		this.add_param(ParamType.VECTOR2, 'center', [0.5, 0.5]);
-// 		this.add_param(ParamType.FLOAT, 'angle', 1.57, {range: [0, 10], range_locked: [false, false]});
-// 		this.add_param(ParamType.FLOAT, 'scale', 1.0, {range: [0, 1], range_locked: [false, false]});
-// 	}
+	protected _create_pass(context: TypedPostNodeContext) {
+		const pass = new ShaderPass(DotScreenShader) as DotScreenPassWithUniforms;
 
-// 	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
-// 		// const pass = new THREE[BloomPass_name](
-// 		// 	this._param_strength,
-// 		// 	this._param_kernel_size,
-// 		// 	this._param_sigma,
-// 		// 	256
-// 		// )
-// 		const pass = new this._shader_class(
-// 			this._param_center || new Vector2(0, 0),
-// 			this._param_angle || 1,
-// 			this._param_scale || 1
-// 		);
+		this.update_pass(pass);
 
-// 		composer.addPass(pass);
-// 	}
-
-// 	async cook() {
-// 		if (!this._shader_class) {
-// 			this._shader_class = await DotScreen.load_js();
-// 		}
-// 		this.cook_controller.end_cook();
-// 	}
-// }
+		return pass;
+	}
+	update_pass(pass: DotScreenPassWithUniforms) {
+		pass.uniforms.center.value = this.pv.center;
+		pass.uniforms.angle.value = this.pv.angle;
+		pass.uniforms.scale.value = this.pv.scale;
+	}
+}

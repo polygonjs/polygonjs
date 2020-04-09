@@ -119,10 +119,4 @@
 // 		composer.addPass(pass);
 // 	}
 
-// 	async cook() {
-// 		if (!this._pass) {
-// 			this._pass = await DepthOfField.load_js();
-// 		}
-// 		this.cook_controller.end_cook();
-// 	}
 // }

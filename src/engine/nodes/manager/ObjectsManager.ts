@@ -66,11 +66,6 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		this._scene.default_scene.add(this._object);
 	}
 
-	// TODO: is this method still used?
-	// available_children_classes() {
-	// 	return POLY.Engine.Node.Obj;
-	// }
-
 	object() {
 		return this._object;
 	}

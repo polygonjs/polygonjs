@@ -12,6 +12,7 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;
+	private _found_node_with_expected_type: BaseNodeType | null = null;
 
 	static type() {
 		return ParamType.OPERATOR_PATH;
@@ -72,17 +73,21 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			}
 			this._found_node = node;
 			if (node) {
-				const expected_context = this.options.node_selection_context;
-				const node_context = node.parent?.children_controller?.context;
-				if (expected_context == node_context || expected_context == null) {
-					if (dependent_on_found_node) {
-						this.add_graph_input(node);
-					} else {
+				if (this._is_node_expected_context(node)) {
+					if (this._is_node_expected_type(node)) {
+						this._found_node_with_expected_type = node;
+						if (dependent_on_found_node) {
+							this.add_graph_input(node);
+						}
 						// this._found_node.add_param_referree(this) // TODO: typescript
+					} else {
+						this.states.error.set(
+							`node type is ${node.type} but the params expects a ${this._expected_type()}`
+						);
 					}
 				} else {
 					this.states.error.set(
-						`node context is ${expected_context} but the params expects a ${node_context}`
+						`node context is ${node.node_context()} but the params expects a ${this._expected_context()}`
 					);
 				}
 			} // else {
@@ -97,5 +102,30 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 
 	found_node() {
 		return this._found_node;
+	}
+	found_node_with_expected_type() {
+		return this._found_node_with_expected_type;
+	}
+	private _expected_context() {
+		return this.options.node_selection_context;
+	}
+	private _is_node_expected_context(node: BaseNodeType) {
+		const expected_context = this._expected_context();
+		if (expected_context == null) {
+			return true;
+		}
+		const node_context = node.parent?.children_controller?.context;
+		return expected_context == node_context;
+	}
+	private _expected_type() {
+		return this.options.node_selection_type;
+	}
+	private _is_node_expected_type(node: BaseNodeType) {
+		const expected_type = this._expected_type();
+		if (expected_type == null) {
+			return true;
+		}
+		const node_type = node.type;
+		return expected_type == node_type;
 	}
 }

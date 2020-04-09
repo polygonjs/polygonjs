@@ -3,7 +3,7 @@ import {PixelShader} from '../../../../modules/three/examples/jsm/shaders/PixelS
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
-interface ShaderPassWithRequiredUniforms extends ShaderPass {
+interface PixelPassWithUniforms extends ShaderPass {
 	uniforms: {
 		resolution: IUniform;
 		pixelSize: IUniform;
@@ -26,14 +26,14 @@ export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostPar
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {
-		const pass = new ShaderPass(PixelShader) as ShaderPassWithRequiredUniforms;
+		const pass = new ShaderPass(PixelShader) as PixelPassWithUniforms;
 		pass.uniforms.resolution.value = context.resolution;
 		pass.uniforms.resolution.value.multiplyScalar(window.devicePixelRatio);
-		pass.uniforms.pixelSize.value = this.pv.pixel_size;
+		this.update_pass(pass);
 
 		return pass;
 	}
-	update_pass(pass: ShaderPassWithRequiredUniforms) {
+	update_pass(pass: PixelPassWithUniforms) {
 		pass.uniforms.pixelSize.value = this.pv.pixel_size;
 	}
 }

@@ -21,7 +21,7 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	// shadows
 	cast_shadows = ParamConfig.BOOLEAN(1);
 	shadow_res = ParamConfig.VECTOR2([1024, 1024]);
-	shadow_bias = ParamConfig.FLOAT(0.001);
+	shadow_bias = ParamConfig.FLOAT(0.001, {range: [-0.01, 0.01], range_locked: [false, false]});
 
 	// helper
 	show_helper = ParamConfig.BOOLEAN(1);

@@ -1,89 +1,87 @@
-// import {Vector2} from 'three/src/math/Vector2';
-// import {Camera} from 'three/src/cameras/Camera';
-// // import {CanvasTexture} from 'three/src/textures/CanvasTexture'
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
 
-// import {BasePostProcessNode} from './_Base';
-// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
-// import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-// import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
-// import VertexShader from './Image/vert.glsl';
-// import FragmentShader from './Image/frag.glsl';
+import VertexShader from './Image/vert.glsl';
+import FragmentShader from './Image/frag.glsl';
 
-// import {FileCopNode} from '../cop/File';
-// import {NodeContext} from '../../poly/NodeContext';
-// import {ParamType} from '../../poly/ParamType';
-// // import {FuseActiveDesignPass} from '../../../Engine/Viewer/Fuse/FuseActiveDesignPass'
+import {FileCopNode} from '../cop/File';
+import {NodeContext} from '../../poly/NodeContext';
 
-// interface ShaderPassWithRequiredUniforms extends ShaderPass {
-// 	uniforms: {
-// 		map: IUniform;
-// 	};
-// }
+interface ShaderPassWithRequiredUniforms extends ShaderPass {
+	uniforms: {
+		map: IUniform;
+		darkness: IUniform;
+		offset: IUniform;
+	};
+}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseCopNodeType} from '../cop/_Base';
+class ImagePostParamsConfig extends NodeParamsConfig {
+	map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
+		node_selection: {context: NodeContext.COP},
+		callback: PostParamCallback,
+	});
+	darkness = ParamConfig.FLOAT(0, {
+		range: [0, 2],
+		range_locked: [true, false],
+		callback: PostParamCallback,
+	});
+	offset = ParamConfig.FLOAT(0, {
+		range: [0, 2],
+		range_locked: [true, false],
+		callback: PostParamCallback,
+	});
+}
+const ParamsConfig = new ImagePostParamsConfig();
+export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'image';
+	}
 
-// export class Image extends BasePostProcessNode {
-// 	@ParamF('offset') _param_offset: number;
-// 	@ParamF('darkness') _param_darkness: number;
-// 	static type() {
-// 		return 'image';
-// 	}
+	static _create_shader() {
+		return {
+			uniforms: {
+				tDiffuse: {value: null} as IUniform,
+				map: {value: null} as IUniform,
+				offset: {value: 1.0},
+				darkness: {value: 1.0},
+			},
+			vertexShader: VertexShader,
+			fragmentShader: FragmentShader,
+		};
+	}
 
-// 	private _shader_class: any;
-// 	private _pass: ShaderPassWithRequiredUniforms;
+	protected _create_pass(context: TypedPostNodeContext) {
+		const pass = new ShaderPass(ImagePostNode._create_shader()) as ShaderPassWithRequiredUniforms;
+		this.update_pass(pass);
 
-// 	// static async load_js(){
-// 	// 	const {VignetteShader} = await CoreScriptLoader.load_module_three_shader('VignetteShader')
-// 	// 	return VignetteShader;
-// 	// }
-// 	static _create_shader() {
-// 		return {
-// 			uniforms: {
-// 				tDiffuse: {value: null} as IUniform,
-// 				map: {value: null} as IUniform,
-// 				offset: {value: 1.0},
-// 				darkness: {value: 1.0},
-// 			},
-// 			vertexShader: VertexShader,
-// 			fragmentShader: FragmentShader,
-// 		};
-// 	}
+		return pass;
+	}
+	update_pass(pass: ShaderPassWithRequiredUniforms) {
+		pass.uniforms.darkness.value = this.pv.darkness;
+		pass.uniforms.offset.value = this.pv.offset;
 
-// 	create_params() {
-// 		this.add_param(ParamType.OPERATOR_PATH, 'map', FileCopNode.DEFAULT_NODE_PATH.UV, {
-// 			// texture: texture_options,
-// 			// visible_if: visible_options,
-// 			node_selection: {context: NodeContext.COP},
-// 		});
-// 		// this.add_param(ParamType.FLOAT, 'offset', 1, {range: [0, 1], range_locked: [false, false]})
-// 		this.add_param(ParamType.FLOAT, 'mult', 1, {range: [0, 2], range_locked: [true, false]});
-// 	}
-
-// 	apply_to_composer(composer: EffectComposer, camera: Camera, resolution: Vector2, camera_node: BaseCameraObjNode) {
-// 		// const pass = new ShaderPass(this._shader_class)
-// 		// pass.uniforms["offset"].value = this._param_offset
-// 		// pass.uniforms["darkness"].value = this._param_darkness
-// 		if (this._pass) {
-// 			composer.addPass(this._pass);
-// 		}
-// 	}
-
-// 	async cook() {
-// 		this._shader_class = this._shader_class || Image._create_shader();
-// 		this._pass = this._pass || (new ShaderPass(this._shader_class) as ShaderPassWithRequiredUniforms);
-
-// 		const map_node = this.params.get_operator_path('map').found_node();
-// 		if (map_node) {
-// 			const map_container = await map_node.request_container();
-// 			const texture = map_container.core_content();
-// 			if (texture) {
-// 				this._pass.uniforms['map'].value = texture;
-// 				console.log(this._pass.uniforms);
-// 			}
-// 		} else {
-// 			this.states.error.set('map node not found');
-// 		}
-
-// 		this.cook_controller.end_cook();
-// 	}
-// }
+		this._update_map(pass);
+	}
+	private async _update_map(pass: ShaderPassWithRequiredUniforms) {
+		if (this.p.map.is_dirty) {
+			await this.p.map.compute();
+		}
+		const found_node = this.p.map.found_node();
+		if (found_node) {
+			if (found_node.node_context() == NodeContext.COP) {
+				const cop_node = found_node as BaseCopNodeType;
+				const map_container = await cop_node.request_container();
+				const texture = map_container.core_content();
+				pass.uniforms.map.value = texture;
+			} else {
+				this.states.error.set('node is not COP');
+			}
+		} else {
+			this.states.error.set('no map found');
+		}
+	}
+}

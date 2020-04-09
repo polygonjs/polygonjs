@@ -27,6 +27,7 @@ const MULTILINE_OPTION = 'multiline';
 const LANGUAGE_OPTION = 'language';
 const NODE_SELECTION = 'node_selection';
 const NODE_SELECTION_CONTEXT = 'context';
+const NODE_SELECTION_TYPE = 'type';
 const DEPENDENT_ON_FOUND_NODE = 'dependent_on_found_node';
 const RANGE_OPTION = 'range';
 const RANGE_LOCKED_OPTION = 'range_locked';
@@ -122,9 +123,10 @@ export interface StringParamOptions
 	multiline?: boolean;
 	language?: StringParamLanguage;
 }
-export interface Vector2ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
-export interface Vector3ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
-export interface Vector4ParamOptions extends BaseParamOptions, ExpressionParamOptions {}
+interface VectorParamOptions extends BaseParamOptions, ExpressionParamOptions, CallbackParamOptions {}
+export interface Vector2ParamOptions extends VectorParamOptions {}
+export interface Vector3ParamOptions extends VectorParamOptions {}
+export interface Vector4ParamOptions extends VectorParamOptions {}
 
 export interface ParamOptions
 	extends NumberParamOptions,
@@ -367,6 +369,11 @@ export class OptionsController {
 			return this.node_selection_options[NODE_SELECTION_CONTEXT];
 		}
 	}
+	get node_selection_type() {
+		if (this.node_selection_options) {
+			return this.node_selection_options[NODE_SELECTION_TYPE];
+		}
+	}
 
 	dependent_on_found_node() {
 		if (DEPENDENT_ON_FOUND_NODE in this._options) {
@@ -385,8 +392,8 @@ export class OptionsController {
 		return this._options[RANGE_OPTION] || [0, 1];
 		// }
 	}
-	get step(): number {
-		return this._options[STEP_OPTION] || 0.01;
+	get step(): number | undefined {
+		return this._options[STEP_OPTION];
 	}
 
 	private range_locked(): Boolean2 {

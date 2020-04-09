@@ -1,5 +1,13 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {ACESFilmicToneMapping, sRGBEncoding} from 'three/src/constants';
+import {
+	ACESFilmicToneMapping,
+	sRGBEncoding,
+	// shadow map
+	BasicShadowMap,
+	PCFShadowMap,
+	PCFSoftShadowMap,
+	VSMShadowMap,
+} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 import {Scene} from 'three/src/scenes/Scene';
 
@@ -27,6 +35,9 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 	};
 }
 
+const SHADOW_MAP_TYPES = [BasicShadowMap, PCFShadowMap, PCFSoftShadowMap, VSMShadowMap];
+const DEFAULT_SHADOW_MAP_TYPE = SHADOW_MAP_TYPES[2];
+
 export class RenderController {
 	private _renderers_by_canvas_id: Dictionary<WebGLRenderer> = {};
 	private _resolution_by_canvas_id: Dictionary<Vector2> = {};
@@ -52,27 +63,19 @@ export class RenderController {
 	}
 	async update_scene() {
 		if (this.node.pv.use_custom_scene) {
+			console.log('update_scene', this.node.full_path());
 			const param = this.node.p.scene;
 			if (param.is_dirty) {
 				await param.compute();
 			}
-			const node = this.node.p.scene.found_node();
+			const node = this.node.p.scene.found_node() as SceneObjNode;
 			if (node) {
-				if (node.node_context() == NodeContext.OBJ) {
-					if (node.type == SceneObjNode.type()) {
-						// it's probably weird to cook the node here, but that works for now
-						if (node.is_dirty) {
-							node.cook_controller.cook_main_without_inputs();
-						}
-						this._resolved_scene = (node as SceneObjNode).object;
-					} else {
-						this.node.states.error.set('found node not a scene node');
-					}
-				} else {
-					this.node.states.error.set('found node not an OBJ');
+				// it's probably weird to cook the node here, but that works for now
+				if (node.is_dirty) {
+					node.cook_controller.cook_main_without_inputs();
 				}
-			} else {
-				this.node.states.error.set('no node found');
+				console.log('resolved scene from ', node.full_path());
+				this._resolved_scene = (node as SceneObjNode).object;
 			}
 		} else {
 			this._resolved_scene = this.node.scene.default_scene;
@@ -94,6 +97,8 @@ export class RenderController {
 		});
 
 		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
+
 		renderer.physicallyCorrectLights = true; // https://discourse.threejs.org/t/three-js-white-is-too-bright/11873/3
 
 		// TODO: find a way to have those accessible via params
