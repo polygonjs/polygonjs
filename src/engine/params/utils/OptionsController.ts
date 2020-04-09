@@ -12,6 +12,7 @@ const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
 const CALLBACK_OPTION = 'callback';
 const CALLBACK_STRING_OPTION = 'callback_string';
 // const COLOR_OPTION = 'color';
+const COMPUTE_ON_DIRTY = 'compute_on_dirty';
 const COOK_OPTION = 'cook';
 const DESKTOP_BROWSE_OPTION = 'desktop_browse';
 const FILE_TYPE_OPTION = 'file_type';
@@ -84,6 +85,9 @@ interface AssetParamOptions {
 interface DesktopParamOptions {
 	desktop_browse?: Dictionary<string>;
 }
+interface ComputeOnDirtyParamOptions {
+	compute_on_dirty?: boolean;
+}
 interface CallbackParamOptions {
 	callback?: (node: BaseNodeType, param: BaseParamType) => any;
 	callback_string?: string;
@@ -92,14 +96,20 @@ interface CallbackParamOptions {
 // actual param options
 export interface BooleanParamOptions
 	extends BaseParamOptions,
+		ComputeOnDirtyParamOptions,
 		MenuParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
 export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions {}
-export interface ColorParamOptions extends BaseParamOptions, ExpressionParamOptions {}
+export interface ColorParamOptions
+	extends BaseParamOptions,
+		ExpressionParamOptions,
+		CallbackParamOptions,
+		ComputeOnDirtyParamOptions {}
 export interface FloatParamOptions
 	extends NumberParamOptions,
 		MenuParamOptions,
+		ComputeOnDirtyParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
 export interface FolderParamOptions extends BaseParamOptions {
@@ -130,6 +140,7 @@ export interface Vector4ParamOptions extends VectorParamOptions {}
 
 export interface ParamOptions
 	extends NumberParamOptions,
+		ComputeOnDirtyParamOptions,
 		FolderParamOptions,
 		ExpressionParamOptions,
 		ButtonParamOptions,
@@ -233,6 +244,11 @@ export class OptionsController {
 	// referenced assets
 	get always_reference_asset(): boolean {
 		return this._options[ALWAYS_REFERENCE_ASSET_OPTION] || false;
+	}
+
+	// compute on dirty
+	get compute_on_dirty(): boolean {
+		return this._options[COMPUTE_ON_DIRTY] || false;
 	}
 
 	// callback

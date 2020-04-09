@@ -46,9 +46,9 @@ export class RenderController {
 	constructor(private node: BaseCameraObjNodeType) {}
 
 	// private _prev_t = 0;
-	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
+	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number) {
 		if (this.node.pv.do_post_process) {
-			this.node.post_process_controller.render(canvas, size, aspect);
+			this.node.post_process_controller.render(canvas, size);
 		} else {
 			const renderer = this.renderer(canvas);
 			if (renderer) {

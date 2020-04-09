@@ -1,5 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {UnrealBloomPass} from '../../../../modules/three/examples/jsm/postprocessing/UnrealBloomPass';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -7,13 +7,13 @@ class UnrealBloomPostParamsConfig extends NodeParamsConfig {
 	strength = ParamConfig.FLOAT(1.5, {
 		range: [0, 3],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	radius = ParamConfig.FLOAT(1, {
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	threshold = ParamConfig.FLOAT(0, {
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new UnrealBloomPostParamsConfig();

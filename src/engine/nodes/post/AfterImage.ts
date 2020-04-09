@@ -1,9 +1,9 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {AfterimagePass} from '../../../../modules/three/examples/jsm/postprocessing/AfterimagePass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN} from '../utils/code/gl/Uniforms';
 interface AfterImagePassWithUniforms extends AfterimagePass {
 	uniforms: {
-		damp: IUniform;
+		damp: IUniformN;
 	};
 }
 
@@ -12,7 +12,7 @@ class AfterImagePostParamsConfig extends NodeParamsConfig {
 	damp = ParamConfig.FLOAT(0.96, {
 		range: [0, 1],
 		range_locked: [true, true],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new AfterImagePostParamsConfig();

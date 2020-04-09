@@ -1,12 +1,12 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {BleachBypassShader} from '../../../../modules/three/examples/jsm/shaders/BleachBypassShader';
 
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface BleachPassWithUniforms extends ShaderPass {
 	uniforms: {
-		opacity: IUniform;
+		opacity: IUniformN;
 	};
 }
 
@@ -23,7 +23,7 @@ class BleachPostParamsConfig extends NodeParamsConfig {
 	opacity = ParamConfig.FLOAT(0.95, {
 		range: [-5, 5],
 		range_locked: [true, true],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new BleachPostParamsConfig();

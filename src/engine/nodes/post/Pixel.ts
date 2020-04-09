@@ -1,12 +1,12 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {PixelShader} from '../../../../modules/three/examples/jsm/shaders/PixelShader';
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN, IUniformV2} from '../utils/code/gl/Uniforms';
 
 interface PixelPassWithUniforms extends ShaderPass {
 	uniforms: {
-		resolution: IUniform;
-		pixelSize: IUniform;
+		resolution: IUniformV2;
+		pixelSize: IUniformN;
 	};
 }
 
@@ -15,7 +15,7 @@ class PixelPostParamsConfig extends NodeParamsConfig {
 	pixel_size = ParamConfig.INTEGER(16, {
 		range: [1, 50],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new PixelPostParamsConfig();

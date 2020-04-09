@@ -58,10 +58,12 @@ export class PostProcessController {
 	}
 
 	// private _prev_t = 0;
-	render(canvas: HTMLCanvasElement, size: Vector2, aspect: number) {
+	render(canvas: HTMLCanvasElement, size?: Vector2) {
 		const composer = this.composer(canvas);
 		if (composer) {
-			composer.setSize(size.x, size.y);
+			if (size) {
+				composer.setSize(size.x, size.y);
+			}
 			if (this.node.pv.use_render_target) {
 				const renderer = this.node.render_controller.renderer(canvas);
 				renderer.clear();
@@ -107,11 +109,11 @@ export class PostProcessController {
 			// to achieve better antialiasing
 			// while using post:
 			// composer.setPixelRatio( window.devicePixelRatio*2 )
-			composer.setPixelRatio(window.devicePixelRatio * 2);
+			composer.setPixelRatio(window.devicePixelRatio * 1);
 
 			const scene = this.node.render_controller.resolved_scene || this.node.scene.default_scene;
 			const camera = this.node.object;
-			if (this.node.pv.prepend_render_pass) {
+			if (this.node.pv.prepend_render_pass == true) {
 				const render_pass = new RenderPass(scene, camera);
 				composer.addPass(render_pass);
 			}

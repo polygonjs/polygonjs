@@ -1,122 +1,158 @@
-// import {Vector2} from 'three/src/math/Vector2';
-// // import {OrthoOrPerspCamera} from '../obj/_BaseCamera';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {BokehPass2} from '../../../../modules/core/post_process/BokehPass2';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
+	focal_depth = ParamConfig.FLOAT(10, {
+		range: [0, 50],
+		range_locked: [true, false],
+		step: 0.001,
+		...PostParamOptions,
+	});
+	f_stop = ParamConfig.FLOAT(10, {
+		range: [0.1, 22],
+		range_locked: [true, true],
+		...PostParamOptions,
+	});
+	max_blur = ParamConfig.FLOAT(2, {
+		range: [0, 10],
+		range_locked: [true, false],
+		...PostParamOptions,
+	});
+	vignetting = ParamConfig.BOOLEAN(0, {
+		...PostParamOptions,
+	});
+	depth_blur = ParamConfig.BOOLEAN(0, {
+		...PostParamOptions,
+	});
+	threshold = ParamConfig.FLOAT(0.5, {
+		range: [0, 1],
+		range_locked: [true, true],
+		step: 0.001,
+		...PostParamOptions,
+	});
+	gain = ParamConfig.FLOAT(1, {
+		range: [0, 100],
+		range_locked: [true, true],
+		step: 0.001,
+		...PostParamOptions,
+	});
+	bias = ParamConfig.FLOAT(1, {
+		range: [0, 3],
+		range_locked: [true, true],
+		step: 0.001,
+		...PostParamOptions,
+	});
+	fringe = ParamConfig.FLOAT(0.7, {
+		range: [0, 5],
+		range_locked: [true, false],
+		step: 0.001,
+		...PostParamOptions,
+	});
+	noise = ParamConfig.BOOLEAN(0, {
+		...PostParamOptions,
+	});
+	dithering = ParamConfig.FLOAT(0, {
+		range: [0, 0.001],
+		range_locked: [true, true],
+		step: 0.0001,
+		...PostParamOptions,
+	});
+	pentagon = ParamConfig.BOOLEAN(0, {
+		...PostParamOptions,
+	});
+	rings = ParamConfig.INTEGER(3, {
+		range: [1, 8],
+		range_locked: [true, true],
+		...PostParamOptions,
+	});
+	samples = ParamConfig.INTEGER(4, {
+		range: [1, 13],
+		range_locked: [true, true],
+		...PostParamOptions,
+	});
+	clear_color = ParamConfig.COLOR([1, 1, 1], {
+		...PostParamOptions,
+	});
+}
+const ParamsConfig = new DepthOfFieldPostParamsConfig();
+export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, DepthOfFieldPostParamsConfig> {
+	params_config = ParamsConfig;
 
-// import {BasePostProcessNode} from './_Base';
-// import {BaseCameraObjNode} from '../obj/_BaseCamera';
-// import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
-// import {PerspectiveCamera} from 'three';
-// import {ParamType} from '../../poly/ParamType';
+	static type() {
+		return 'depth_of_field';
+	}
 
-// export class DepthOfField extends BasePostProcessNode {
-// 	@ParamF('strength') _param_focal_depth: number;
-// 	@ParamF('f_stop') _param_f_stop: number;
-// 	@ParamF('max_blur') _param_max_blur: number;
-// 	@ParamF('vignetting') _param_vignetting: boolean;
-// 	@ParamF('depth_blur') _param_depth_blur: boolean;
-// 	@ParamF('threshold') _param_threshold: number;
-// 	@ParamF('gain') _param_gain: number;
-// 	@ParamF('bias') _param_bias: number;
-// 	@ParamF('fringe') _param_fringe: number;
-// 	@ParamF('noise') _param_noise: number;
-// 	@ParamF('dithering') _param_dithering: number;
-// 	@ParamF('pentagon') _param_pentagon: number;
-// 	@ParamF('rings') _param_rings: number;
-// 	@ParamF('samples') _param_samples: number;
-// 	private _pass: any;
+	static saturate(x: number) {
+		return Math.max(0, Math.min(1, x));
+	}
 
-// 	static type() {
-// 		return 'depth_of_field';
-// 	}
-// 	static required_imports() {
-// 		return ['Core/PostProcess/BokehPass2'];
-// 	}
+	static linearize(depth: number, near: number, far: number) {
+		var zfar = far;
+		var znear = near;
+		return (-zfar * znear) / (depth * (zfar - znear) - zfar);
+	}
 
-// 	static async load_js() {
-// 		// const {BokehPass2} = await import('src/Core/PostProcess/BokehPass2')
-// 		const {BokehPass2} = await CoreScriptLoader.module(DepthOfField.required_imports()[0]);
-// 		return BokehPass2;
-// 	}
+	static smoothstep(near: number, far: number, depth: number) {
+		var x = this.saturate((depth - near) / (far - near));
+		return x * x * (3 - 2 * x);
+	}
 
-// 	static saturate(x: number) {
-// 		return Math.max(0, Math.min(1, x));
-// 	}
+	protected _create_pass(context: TypedPostNodeContext) {
+		const camera = context.camera;
+		if ((camera as PerspectiveCamera).isPerspectiveCamera) {
+			const camera_node = context.camera_node as PerspectiveCameraObjNode;
+			const pass = new BokehPass2(this, context.scene, camera_node, context.resolution);
 
-// 	static linearize(depth: number, near: number, far: number) {
-// 		var zfar = far;
-// 		var znear = near;
-// 		return (-zfar * znear) / (depth * (zfar - znear) - zfar);
-// 	}
+			this.update_pass(pass);
 
-// 	static smoothstep(near: number, far: number, depth: number) {
-// 		var x = this.saturate((depth - near) / (far - near));
-// 		return x * x * (3 - 2 * x);
-// 	}
+			// TODO: add a dispose to get rid of those connections when the node is deleted
+			// or when the camera is deleted
+			// and maybe the graph node should be on the pass itself?
+			// so that it can be called when we call .dispose() on it?
+			const core_graph_node = new CoreGraphNode(this.scene, 'DOF');
+			core_graph_node.add_graph_input(camera_node.p.near);
+			core_graph_node.add_graph_input(camera_node.p.far);
+			core_graph_node.add_graph_input(camera_node.p.fov);
+			core_graph_node.add_graph_input(this.p.focal_depth);
+			core_graph_node.add_post_dirty_hook('post/DOF', () => {
+				this.update_pass_from_camera_node(pass, camera_node);
+			});
 
-// 	create_params() {
-// 		this.add_param(ParamType.FLOAT, 'focal_depth', 10, {range: [0, 200], range_locked: [true, false]});
-// 		this.add_param(ParamType.FLOAT, 'f_stop', 10, {range: [0.1, 22], range_locked: [true, true]});
-// 		this.add_param(ParamType.FLOAT, 'max_blur', 10, {range: [0, 10], range_locked: [true, false]});
-// 		this.add_param(ParamType.BOOLEAN, 'vignetting', 0);
-// 		this.add_param(ParamType.BOOLEAN, 'depth_blur', 0);
+			return pass;
+		}
+	}
+	update_pass_from_camera_node(pass: BokehPass2, camera_node: PerspectiveCameraObjNode) {
+		pass.update_camera_uniforms_with_node(this, camera_node);
+	}
+	update_pass(pass: BokehPass2) {
+		pass.bokeh_uniforms['fstop'].value = this.pv.f_stop;
+		pass.bokeh_uniforms['maxblur'].value = this.pv.max_blur;
 
-// 		this.add_param(ParamType.FLOAT, 'threshold', 0.5, {range: [0, 1], range_locked: [true, true], step: 0.001});
-// 		this.add_param(ParamType.FLOAT, 'gain', 1, {range: [0, 100], range_locked: [true, true], step: 0.001});
-// 		this.add_param(ParamType.FLOAT, 'bias', 0.5, {range: [0, 3], range_locked: [true, true], step: 0.001});
-// 		this.add_param(ParamType.FLOAT, 'fringe', 0.7, {range: [0, 5], range_locked: [true, false], step: 0.001});
+		pass.bokeh_uniforms['threshold'].value = this.pv.threshold;
+		pass.bokeh_uniforms['gain'].value = this.pv.gain;
+		pass.bokeh_uniforms['bias'].value = this.pv.bias;
+		pass.bokeh_uniforms['fringe'].value = this.pv.fringe;
+		pass.bokeh_uniforms['dithering'].value = this.pv.dithering;
 
-// 		this.add_param(ParamType.BOOLEAN, 'noise', 0);
-// 		this.add_param(ParamType.FLOAT, 'dithering', 0, {range: [0, 0.001], range_locked: [true, true], step: 0.0001});
+		// booleans
+		pass.bokeh_uniforms['noise'].value = this.pv.noise ? 1 : 0;
+		pass.bokeh_uniforms['pentagon'].value = this.pv.pentagon ? 1 : 0;
+		pass.bokeh_uniforms['vignetting'].value = this.pv.vignetting ? 1 : 0;
+		pass.bokeh_uniforms['depthblur'].value = this.pv.depth_blur ? 1 : 0;
 
-// 		this.add_param(ParamType.BOOLEAN, 'pentagon', 0);
-// 		this.add_param(ParamType.INTEGER, 'rings', 3, {range: [1, 8], range_locked: [true, true]});
-// 		this.add_param(ParamType.INTEGER, 'samples', 4, {range: [1, 13], range_locked: [true, true]});
-// 	}
+		// debug
+		pass.bokeh_uniforms['shaderFocus'].value = 0;
+		pass.bokeh_uniforms['showFocus'].value = 0;
+		pass.bokeh_uniforms['manualdof'].value = 0;
+		pass.bokeh_uniforms['focusCoords'].value.set(0.5, 0.5);
 
-// 	apply_to_composer(
-// 		composer: EffectComposer,
-// 		camera: PerspectiveCamera,
-// 		resolution: Vector2,
-// 		camera_node: BaseCameraObjNode
-// 	) {
-// 		const pass = new this._pass(this.scene.display_scene, camera, [resolution.x, resolution.y], camera_node);
+		pass.bokeh_material.defines['RINGS'] = this.pv.rings;
+		pass.bokeh_material.defines['SAMPLES'] = this.pv.samples;
+		pass.bokeh_material.needsUpdate = true;
 
-// 		pass.processing.bokeh_uniforms['fstop'].value = this._param_f_stop;
-// 		pass.processing.bokeh_uniforms['maxblur'].value = this._param_max_blur;
-
-// 		pass.processing.bokeh_uniforms['threshold'].value = this._param_threshold;
-// 		pass.processing.bokeh_uniforms['gain'].value = this._param_gain;
-// 		pass.processing.bokeh_uniforms['bias'].value = this._param_bias;
-// 		pass.processing.bokeh_uniforms['fringe'].value = this._param_fringe;
-// 		pass.processing.bokeh_uniforms['dithering'].value = this._param_dithering;
-
-// 		// from camera
-// 		pass.processing.bokeh_uniforms['focalLength'].value = camera.getFocalLength();
-// 		pass.processing.bokeh_uniforms['znear'].value = camera.near;
-// 		pass.processing.bokeh_uniforms['zfar'].value = camera.far;
-
-// 		// focal length
-// 		var sdistance = DepthOfField.smoothstep(camera.near, camera.far, this._param_focal_depth);
-// 		var ldistance = DepthOfField.linearize(1 - sdistance, camera.near, camera.far);
-// 		pass.processing.bokeh_uniforms['focalDepth'].value = ldistance; //this._param_focal_depth
-
-// 		// booleans
-// 		pass.processing.bokeh_uniforms['noise'].value = this._param_noise ? 1 : 0;
-// 		pass.processing.bokeh_uniforms['pentagon'].value = this._param_pentagon ? 1 : 0;
-// 		pass.processing.bokeh_uniforms['vignetting'].value = this._param_vignetting ? 1 : 0;
-// 		pass.processing.bokeh_uniforms['depthblur'].value = this._param_depth_blur ? 1 : 0;
-
-// 		// debug
-// 		pass.processing.bokeh_uniforms['shaderFocus'].value = 0;
-// 		pass.processing.bokeh_uniforms['showFocus'].value = 0;
-// 		pass.processing.bokeh_uniforms['manualdof'].value = 0;
-// 		pass.processing.bokeh_uniforms['focusCoords'].value.set(0.5, 0.5);
-
-// 		pass.processing.materialBokeh.defines['RINGS'] = this._param_rings;
-// 		pass.processing.materialBokeh.defines['SAMPLES'] = this._param_samples;
-// 		pass.processing.materialBokeh.needsUpdate = true;
-
-// 		composer.passes = [];
-// 		composer.addPass(pass);
-// 	}
-
-// }
+		pass.clear_color.copy(this.pv.clear_color);
+	}
+}

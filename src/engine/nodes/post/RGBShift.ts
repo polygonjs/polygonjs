@@ -1,12 +1,12 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RGBShiftShader} from '../../../../modules/three/examples/jsm/shaders/RGBShiftShader';
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface RGBShiftPassWithUniforms extends ShaderPass {
 	uniforms: {
-		amount: IUniform;
-		angle: IUniform;
+		amount: IUniformN;
+		angle: IUniformN;
 	};
 }
 
@@ -15,12 +15,12 @@ class RGBShiftPostParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(0.005, {
 		range: [0, 1],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	angle = ParamConfig.FLOAT(0, {
 		range: [0, 10],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new RGBShiftPostParamsConfig();

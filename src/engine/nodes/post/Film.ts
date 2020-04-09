@@ -1,14 +1,14 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {FilmPass} from '../../../../modules/three/examples/jsm/postprocessing/FilmPass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface FilmPassWithUniforms extends FilmPass {
 	uniforms: {
-		time: IUniform;
-		nIntensity: IUniform;
-		sIntensity: IUniform;
-		sCount: IUniform;
-		grayscale: IUniform;
+		time: IUniformN;
+		nIntensity: IUniformN;
+		sIntensity: IUniformN;
+		sCount: IUniformN;
+		grayscale: IUniformN;
 	};
 }
 
@@ -17,20 +17,20 @@ class FilmPostParamsConfig extends NodeParamsConfig {
 	noise_intensity = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
 		range_locked: [false, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	scanlines_intensity = ParamConfig.FLOAT(0.05, {
 		range: [0, 1],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	scanlines_count = ParamConfig.FLOAT(4096, {
 		range: [0, 4096],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	grayscale = ParamConfig.BOOLEAN(1, {
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new FilmPostParamsConfig();
@@ -55,6 +55,6 @@ export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsC
 		pass.uniforms.nIntensity.value = this.pv.noise_intensity;
 		pass.uniforms.sIntensity.value = this.pv.scanlines_intensity;
 		pass.uniforms.sCount.value = this.pv.scanlines_count;
-		pass.uniforms.grayscale.value = this.pv.scanlines_count;
+		pass.uniforms.grayscale.value = this.pv.grayscale ? 1 : 0;
 	}
 }

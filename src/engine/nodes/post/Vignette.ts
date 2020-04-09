@@ -1,12 +1,12 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {VignetteShader} from '../../../../modules/three/examples/jsm/shaders/VignetteShader';
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface VignettePassWithUniforms extends ShaderPass {
 	uniforms: {
-		offset: IUniform;
-		darkness: IUniform;
+		offset: IUniformN;
+		darkness: IUniformN;
 	};
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -14,12 +14,12 @@ class VignettePostParamsConfig extends NodeParamsConfig {
 	offset = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		range_locked: [false, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	darkness = ParamConfig.FLOAT(1, {
 		range: [0, 2],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new VignettePostParamsConfig();

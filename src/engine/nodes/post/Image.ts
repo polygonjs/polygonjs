@@ -1,7 +1,7 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN, IUniformTexture} from '../utils/code/gl/Uniforms';
 
 import VertexShader from './Image/vert.glsl';
 import FragmentShader from './Image/frag.glsl';
@@ -11,9 +11,9 @@ import {NodeContext} from '../../poly/NodeContext';
 
 interface ShaderPassWithRequiredUniforms extends ShaderPass {
 	uniforms: {
-		map: IUniform;
-		darkness: IUniform;
-		offset: IUniform;
+		map: IUniformTexture;
+		darkness: IUniformN;
+		offset: IUniformN;
 	};
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -21,17 +21,17 @@ import {BaseCopNodeType} from '../cop/_Base';
 class ImagePostParamsConfig extends NodeParamsConfig {
 	map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
 		node_selection: {context: NodeContext.COP},
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	darkness = ParamConfig.FLOAT(0, {
 		range: [0, 2],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	offset = ParamConfig.FLOAT(0, {
 		range: [0, 2],
 		range_locked: [true, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new ImagePostParamsConfig();
@@ -44,8 +44,8 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 	static _create_shader() {
 		return {
 			uniforms: {
-				tDiffuse: {value: null} as IUniform,
-				map: {value: null} as IUniform,
+				tDiffuse: {value: null} as IUniformTexture,
+				map: {value: null} as IUniformTexture,
 				offset: {value: 1.0},
 				darkness: {value: 1.0},
 			},

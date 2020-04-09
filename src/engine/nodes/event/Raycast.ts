@@ -14,7 +14,8 @@ import {BaseObjNodeType} from '../obj/_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GeoObjNode} from '../obj/Geo';
-import {Mesh, BufferGeometry} from 'three';
+import {Mesh} from 'three/src/objects/Mesh';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 class RaycastParamsConfig extends NodeParamsConfig {
 	use_camera = ParamConfig.BOOLEAN(1);
 	// camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {

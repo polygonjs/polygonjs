@@ -55,8 +55,22 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 		// s = ParamConfig.VECTOR3([1, 1, 1]);
 		// scale = ParamConfig.FLOAT(1);
 		target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
-		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
-		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
+		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
+			range: [0, 100],
+			cook: false,
+			compute_on_dirty: true,
+			callback: (node: BaseNodeType, param: BaseParamType) => {
+				BaseCameraObjNodeClass.PARAM_CALLBACK_update_from_param(node as BaseCameraObjNodeType, param);
+			},
+		});
+		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {
+			range: [0, 100],
+			cook: false,
+			compute_on_dirty: true,
+			callback: (node: BaseNodeType, param: BaseParamType) => {
+				BaseCameraObjNodeClass.PARAM_CALLBACK_update_from_param(node as BaseCameraObjNodeType, param);
+			},
+		});
 		// aspect = ParamConfig.FLOAT(1);
 		// lock_width = ParamConfig.BOOLEAN(1);
 		// look_at = ParamConfig.OPERATOR_PATH('');
@@ -166,6 +180,7 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		if (this._object.near != this.pv.near || this._object.far != this.pv.far) {
 			this._object.near = this.pv.near;
 			this._object.far = this.pv.far;
+			console.log('far updated in cook', this.object.far);
 			this._object.updateProjectionMatrix();
 		}
 
@@ -217,6 +232,11 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	}
 	create_viewer(element: HTMLElement): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this);
+	}
+
+	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeClass, param: BaseParamType) {
+		(node.object as any)[param.name] = (node.pv as any)[param.name];
+		console.log(`updated ${param.name}`);
 	}
 }
 // 	console.warn "camera #{this.full_path()} has no controls assigned"

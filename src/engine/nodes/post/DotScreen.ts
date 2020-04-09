@@ -1,30 +1,30 @@
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamCallback} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {DotScreenShader} from '../../../../modules/three/examples/jsm/shaders/DotScreenShader';
 import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN, IUniformV2} from '../utils/code/gl/Uniforms';
 
 interface DotScreenPassWithUniforms extends ShaderPass {
 	uniforms: {
-		center: IUniform;
-		angle: IUniform;
-		scale: IUniform;
+		center: IUniformV2;
+		angle: IUniformN;
+		scale: IUniformN;
 	};
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DotScreenPostParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR2([0.5, 0.5], {
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	angle = ParamConfig.FLOAT('$PI*0.5', {
 		range: [0, 10],
 		range_locked: [false, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 	scale = ParamConfig.FLOAT(1.0, {
 		range: [0, 1],
 		range_locked: [false, false],
-		callback: PostParamCallback,
+		...PostParamOptions,
 	});
 }
 const ParamsConfig = new DotScreenPostParamsConfig();

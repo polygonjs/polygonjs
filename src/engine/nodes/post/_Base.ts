@@ -14,6 +14,8 @@ import {FlagsControllerB} from '../utils/FlagsController';
 import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 
+const INPUT_PASS_NAME = 'input pass';
+const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
 export interface TypedPostNodeContext {
 	composer: EffectComposer;
 	camera: Camera;
@@ -23,9 +25,13 @@ export interface TypedPostNodeContext {
 	canvas: HTMLCanvasElement;
 }
 
-export function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
+function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
 	TypedPostProcessNode.PARAM_CALLBACK_update_passes(node as BasePostProcessNodeType);
 }
+export const PostParamOptions = {
+	cook: false,
+	callback: PostParamCallback,
+};
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<
 	'POST',
@@ -43,6 +49,9 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	protected _passes_by_canvas_id: Map<string, P> = new Map();
 
+	static displayed_input_names(): string[] {
+		return DEFAULT_INPUT_NAMES;
+	}
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.outputs.set_has_one_output();
@@ -71,7 +80,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 				}
 			}
 			if (pass) {
-				console.log('adding pass', this.full_path());
+				// console.log('adding pass', this.full_path());
 				context.composer.addPass(pass);
 			}
 		}

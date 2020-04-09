@@ -47,5 +47,8 @@ export const CATEGORY_SOP = {
 	RENDER: 'render',
 };
 export const CATEGORY_POST = {
-	PASS: 'passes',
+	BLUR: 'blur',
+	COLOR: 'color',
+	MISC: 'misc',
+	EFFECT: 'effect',
 };
