@@ -61,7 +61,7 @@ type EvaluatedFunction = (
 
 class CodeEventParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
-		label: false,
+		show_label: false,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
 	code_javascript = ParamConfig.STRING('', {hidden: true});

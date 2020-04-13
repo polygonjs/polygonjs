@@ -5,7 +5,7 @@ import {MethodDependency} from '../MethodDependency';
 import {CoreString} from '../../../core/String';
 // import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
-export class Opdigits extends BaseMethod {
+export class OpdigitsExpression extends BaseMethod {
 	static required_arguments() {
 		return [['string', 'path to node']];
 	}

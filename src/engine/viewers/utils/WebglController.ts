@@ -1,9 +1,9 @@
-import {BaseViewer} from '../_Base';
+import {BaseViewerType} from '../_Base';
 
 export class WebGLController {
 	public request_animation_frame_id: number | undefined;
 
-	constructor(protected viewer: BaseViewer) {}
+	constructor(protected viewer: BaseViewerType) {}
 
 	init() {
 		const canvas = this.viewer.canvas;

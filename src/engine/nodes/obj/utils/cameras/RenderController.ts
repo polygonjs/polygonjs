@@ -11,7 +11,7 @@ import {
 import {Vector2} from 'three/src/math/Vector2';
 import {Scene} from 'three/src/scenes/Scene';
 
-import {BaseCameraObjNodeType} from '../../_BaseCamera';
+import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {Poly} from '../../../../Poly';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
@@ -43,7 +43,7 @@ export class RenderController {
 	private _resolution_by_canvas_id: Dictionary<Vector2> = {};
 	private _resolved_scene: Scene | undefined;
 
-	constructor(private node: BaseCameraObjNodeType) {}
+	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
 	// private _prev_t = 0;
 	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number) {

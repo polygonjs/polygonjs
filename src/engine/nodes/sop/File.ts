@@ -10,7 +10,7 @@ import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class FileSopParamsConfig extends NodeParamsConfig {
-	url = ParamConfig.STRING('', {
+	url = ParamConfig.STRING('/examples/models/wolf.obj', {
 		desktop_browse: {file_type: 'geometry'},
 		always_reference_asset: true,
 	});
@@ -28,9 +28,9 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		return 'file';
 	}
 
-	initialize_node() {
-		// this.io.inputs.set_count_to_zero();
-	}
+	// initialize_node() {
+	// 	// this.io.inputs.set_count_to_zero();
+	// }
 
 	// TODO: no error when trying to load a non existing zip file??
 	cook() {

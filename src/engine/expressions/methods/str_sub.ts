@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
-export class StrSub extends BaseMethod {
+export class StrSubExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
 	static required_arguments() {
 		return [

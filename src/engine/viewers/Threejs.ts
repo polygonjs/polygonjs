@@ -2,9 +2,9 @@ import {PolyScene} from '../scene/PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 // import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
 // import {Color} from 'three/src/math/Color'
-
-import {BaseViewer} from './_Base';
-import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
+import {ViewerControlsController} from './utils/ControlsController';
+import {TypedViewer} from './_Base';
+import {BaseThreejsCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 
 // import 'src/engine/Poly';
 // import {POLY} from '../Poly';
@@ -18,14 +18,18 @@ declare global {
 	}
 }
 
-export class ThreejsViewer extends BaseViewer {
+export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
 	private do_render: boolean = true;
 
 	private _animate_method: () => void = this.animate.bind(this);
 
-	constructor(_container: HTMLElement, protected _scene: PolyScene, camera_node: BaseCameraObjNodeType) {
-		super(_container, _scene, camera_node);
+	constructor(
+		_container: HTMLElement,
+		protected _scene: PolyScene,
+		protected _camera_node: BaseThreejsCameraObjNodeType
+	) {
+		super(_container, _scene, _camera_node);
 
 		this._canvas = document.createElement('canvas');
 		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');
@@ -36,7 +40,11 @@ export class ThreejsViewer extends BaseViewer {
 		this._container.classList.add(CSS_CLASS);
 		this._container.style.height = '100%';
 
+		this._build();
 		this._set_events();
+	}
+	get controls_controller(): ViewerControlsController {
+		return (this._controls_controller = this._controls_controller || new ViewerControlsController(this));
 	}
 
 	public _build() {
@@ -46,8 +54,12 @@ export class ThreejsViewer extends BaseViewer {
 
 	dispose() {
 		this._cancel_animate();
-		this.controls_controller.dispose_controls();
-		// this._dispose_graph_node()
+		this.controls_controller.dispose();
+		// TODO: also dispose the renderer
+		super.dispose();
+	}
+	get camera_controls_controller() {
+		return this._camera_node.controls_controller;
 	}
 
 	private _set_events() {
@@ -56,9 +68,17 @@ export class ThreejsViewer extends BaseViewer {
 
 		// if (POLY.player_mode()) {
 		window.onresize = () => {
-			this.cameras_controller.on_resize();
+			this.on_resize();
 		};
 		// }
+	}
+	on_resize() {
+		if (!this.canvas) {
+			return;
+		}
+		this.cameras_controller.compute_size_and_aspect();
+		this._camera_node.render_controller.set_renderer_size(this.canvas, this.cameras_controller.size);
+		this.cameras_controller.update_camera_aspect();
 	}
 	// protected _on_touchmove(event: TouchEvent){
 	// 	console.log("touch", event)
@@ -66,12 +86,14 @@ export class ThreejsViewer extends BaseViewer {
 
 	private _init_display() {
 		if (!this._canvas) {
+			console.warn('no canvas found for viewer');
 			return;
 		}
 		this.cameras_controller.compute_size_and_aspect();
 		const size: Vector2 = this.cameras_controller.size;
 
-		this.cameras_controller.camera_node?.render_controller.create_renderer(this._canvas, size);
+		console.log('create renderer');
+		this._camera_node.render_controller.create_renderer(this._canvas, size);
 		// this.canvas_context = canvas.getContext('2d')
 
 		// init renderer
@@ -100,19 +122,7 @@ export class ThreejsViewer extends BaseViewer {
 		// window.viewer_renderer = @renderer
 		// POLY.renderers_controller.register_renderer(@renderer)
 
-		//this._init_webgl_utils()
-
-		// init scene
-		// @display_scene.background = new THREE.Color("//111")
-
-		//window.display_scene = @display_scene
-
-		// this._init_ray_helper(); // TODO: typescript
-
-		//@cam_animation_helper = new CameraAnimationHelper(@ray_helper, @event_helper)
-
 		this.cameras_controller.prepare_current_camera();
-		// this._add_helpers_to_scene()
 
 		this.animate();
 	}
@@ -138,7 +148,7 @@ export class ThreejsViewer extends BaseViewer {
 			cancelAnimationFrame(this._request_animation_frame_id);
 		}
 		if (this._canvas) {
-			this.cameras_controller.camera_node?.render_controller.delete_renderer(this._canvas);
+			this._camera_node.render_controller.delete_renderer(this._canvas);
 		}
 		// POLY.renderers_controller.deregister_renderer(@renderer)
 		// this.dispose_camera()
@@ -148,7 +158,7 @@ export class ThreejsViewer extends BaseViewer {
 		if (this.cameras_controller.camera_node && this._canvas) {
 			const size = this.cameras_controller.size;
 			const aspect = this.cameras_controller.aspect;
-			this.cameras_controller.camera_node.render_controller.render(this._canvas, size, aspect);
+			this._camera_node.render_controller.render(this._canvas, size, aspect);
 		} else {
 			console.warn('no camera to render with');
 		}

@@ -5,7 +5,7 @@ import {DecomposedPath} from '../../../core/DecomposedPath';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 
-export class Ch extends BaseMethod {
+export class ChExpression extends BaseMethod {
 	// constructor() {
 	// 	super();
 	// }

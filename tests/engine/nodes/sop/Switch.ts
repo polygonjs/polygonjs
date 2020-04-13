@@ -1,4 +1,4 @@
-QUnit.test('switch simple', async (assert) => {
+QUnit.test('SOP switch simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.create_node('box');

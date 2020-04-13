@@ -5,7 +5,7 @@ export enum NodeContext {
 	JS = 'js',
 	MANAGER = 'managers',
 	MAT = 'mat',
-	OBJ = 'objects',
+	OBJ = 'obj',
 	SOP = 'sop',
 	POST = 'post',
 }

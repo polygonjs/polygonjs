@@ -34,6 +34,7 @@ import {GlobalsBaseController} from '../globals/_Base';
 import {CustomMaterialName} from './materials/_BaseMaterial';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 import {IUniforms} from '../../../../../core/geometry/Material';
+import {ParamGlNode} from '../../Param';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -266,11 +267,15 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 		const list = [];
 		for (let node of this._root_nodes) {
 			switch (node.type) {
-				case 'output': {
+				case OutputGlNode.type(): {
 					list.push(node);
 					break;
 				}
-				case 'attribute': {
+				case ParamGlNode.type(): {
+					list.push(node);
+					break;
+				}
+				case AttributeGlNode.type(): {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
 					// const attrib_name = (node as AttributeGlNode).attribute_name;
 					// const variable = this._texture_allocations_controller.variable(attrib_name);

@@ -67,7 +67,8 @@ export class CoreLoaderGeometry {
 
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			const url = this.url.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			// do not add ? here. Let the requester do it if necessary
+			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 
 			if (this.ext == 'json') {
 				fetch(url)
@@ -83,6 +84,7 @@ export class CoreLoaderGeometry {
 					});
 			} else {
 				const loader = await this.loader_for_ext();
+				console.log('loader', loader);
 				if (loader) {
 					loader.load(
 						url,
@@ -228,8 +230,8 @@ export class CoreLoaderGeometry {
 		return draco_loader;
 	}
 	async loader_for_obj() {
-		const {OBJLoader} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader`);
-		return new OBJLoader();
+		const {OBJLoader2} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader2`);
+		return new OBJLoader2();
 	}
 
 	// 	const ext_lowercase = this.ext.toLowerCase();

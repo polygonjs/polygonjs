@@ -195,15 +195,15 @@ export class CoreImage {
 	// }
 
 	static async image_to_blob(img: HTMLImageElement): Promise<Blob> {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			try {
 				let xhr = new XMLHttpRequest();
 				xhr.open('GET', img.src);
 				xhr.responseType = 'blob';
-				xhr.onerror = function() {
+				xhr.onerror = function () {
 					reject('Network error.');
 				};
-				xhr.onload = function() {
+				xhr.onload = function () {
 					if (xhr.status === 200) {
 						resolve(xhr.response);
 					} else {
@@ -217,20 +217,23 @@ export class CoreImage {
 		});
 	}
 
-	// static data_from_url(url: string): Promise<ImageData> {
-	// 	return new Promise((resolve, reject) => {
-	// 		const img = new Image();
-	// 		img.crossOrigin = 'Anonymous';
-	// 		img.onload = () => {
-	// 			const canvas = document.createElement('canvas');
-	// 			canvas.width = img.width;
-	// 			canvas.height = img.height;
-	// 			const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-	// 			context.drawImage(img, 0, 0, img.width, img.height);
-	// 			const data = context.getImageData(0, 0, img.width, img.height);
-	// 			resolve(data);
-	// 		};
-	// 		img.src = url;
-	// 	});
-	// }
+	static data_from_url(url: string): Promise<ImageData> {
+		return new Promise((resolve, reject) => {
+			const img = new Image();
+			img.crossOrigin = 'Anonymous';
+			img.onload = () => {
+				const data = this.data_from_image(img);
+				resolve(data);
+			};
+			img.src = url;
+		});
+	}
+	static data_from_image(img: HTMLImageElement): ImageData {
+		const canvas = document.createElement('canvas');
+		canvas.width = img.width;
+		canvas.height = img.height;
+		const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+		context.drawImage(img, 0, 0, img.width, img.height);
+		return context.getImageData(0, 0, img.width, img.height);
+	}
 }

@@ -1,14 +1,14 @@
 import {CATEGORY_GL} from './Category';
 
-import {FloatToIntGlNode, IntToFloatGlNode} from '../../nodes/gl/_ConversionMisc';
-import {FloatToVec2GlNode, FloatToVec3GlNode, FloatToVec4GlNode} from '../../nodes/gl/_ConversionToVec';
+import {FloatToIntGlNode, IntToFloatGlNode} from '../../../nodes/gl/_ConversionMisc';
+import {FloatToVec2GlNode, FloatToVec3GlNode, FloatToVec4GlNode} from '../../../nodes/gl/_ConversionToVec';
 
 import {
 	Vec2ToFloatGlNode,
 	Vec3ToFloatGlNode,
 	Vec4ToFloatGlNode,
 	Vec4ToVectorGlNode,
-} from '../../nodes/gl/_ConversionVecTo';
+} from '../../../nodes/gl/_ConversionVecTo';
 
 import {
 	AbsGlNode,
@@ -31,7 +31,7 @@ import {
 	SinGlNode,
 	SqrtGlNode,
 	TanGlNode,
-} from '../../nodes/gl/_Math_Arg1';
+} from '../../../nodes/gl/_Math_Arg1';
 
 import {
 	DistanceGlNode,
@@ -42,48 +42,48 @@ import {
 	PowGlNode,
 	ReflectGlNode,
 	StepGlNode,
-} from '../../nodes/gl/_Math_Arg2';
+} from '../../../nodes/gl/_Math_Arg2';
 
-import {AddGlNode, DivideGlNode, MultGlNode, SubstractGlNode} from '../../nodes/gl/_Math_Arg2Operation';
+import {AddGlNode, DivideGlNode, MultGlNode, SubstractGlNode} from '../../../nodes/gl/_Math_Arg2Operation';
 
-import {AndGlNode, OrGlNode} from '../../nodes/gl/_Math_Arg2Boolean';
-import {AlignGlNode} from '../../nodes/gl/Align';
-import {AttributeGlNode} from '../../nodes/gl/Attribute';
-import {ConstantGlNode} from '../../nodes/gl/Constant';
-import {CompareGlNode} from '../../nodes/gl/Compare';
-import {ComplementGlNode} from '../../nodes/gl/Complement';
-import {CrossGlNode} from '../../nodes/gl/Cross';
-import {CycleGlNode} from '../../nodes/gl/Cycle';
-import {DiskGlNode} from '../../nodes/gl/Disk';
-import {EasingGlNode} from '../../nodes/gl/Easing';
-import {FitGlNode} from '../../nodes/gl/Fit';
-import {Fit01GlNode} from '../../nodes/gl/Fit01';
-import {GlobalsGlNode} from '../../nodes/gl/Globals';
-import {HsvToRgbGlNode} from '../../nodes/gl/HsvToRgb';
-import {InstanceTransformGlNode} from '../../nodes/gl/InstanceTransform';
-import {LengthGlNode} from '../../nodes/gl/Length';
-import {LuminanceGlNode} from '../../nodes/gl/Luminance';
-import {MixGlNode} from '../../nodes/gl/Mix';
-import {MultAddGlNode} from '../../nodes/gl/MultAdd';
-import {NegateGlNode} from '../../nodes/gl/Negate';
-import {NoiseGlNode} from '../../nodes/gl/Noise';
-import {NullGlNode} from '../../nodes/gl/Null';
-import {OutputGlNode} from '../../nodes/gl/Output';
-import {ParamGlNode} from '../../nodes/gl/Param';
-import {RefractGlNode} from '../../nodes/gl/Refract';
-import {QuatMultGlNode} from '../../nodes/gl/QuatMult';
-import {QuatFromAxisAngleGlNode} from '../../nodes/gl/QuatFromAxisAngle';
-import {QuatToAngleGlNode} from '../../nodes/gl/QuatToAngle';
-import {QuatToAxisGlNode} from '../../nodes/gl/QuatToAxis';
-import {RampGlNode} from '../../nodes/gl/Ramp';
-import {RandomGlNode} from '../../nodes/gl/Random';
-import {RgbToHsvGlNode} from '../../nodes/gl/RgbToHsv';
-import {RotateGlNode} from '../../nodes/gl/Rotate';
-import {RoundGlNode} from '../../nodes/gl/Round';
-import {TextureGlNode} from '../../nodes/gl/Texture';
-import {TwoWaySwitchGlNode} from '../../nodes/gl/TwoWaySwitch';
-import {VectorAlignGlNode} from '../../nodes/gl/VectorAlign';
-import {VectorAngleGlNode} from '../../nodes/gl/VectorAngle';
+import {AndGlNode, OrGlNode} from '../../../nodes/gl/_Math_Arg2Boolean';
+import {AlignGlNode} from '../../../nodes/gl/Align';
+import {AttributeGlNode} from '../../../nodes/gl/Attribute';
+import {ConstantGlNode} from '../../../nodes/gl/Constant';
+import {CompareGlNode} from '../../../nodes/gl/Compare';
+import {ComplementGlNode} from '../../../nodes/gl/Complement';
+import {CrossGlNode} from '../../../nodes/gl/Cross';
+import {CycleGlNode} from '../../../nodes/gl/Cycle';
+import {DiskGlNode} from '../../../nodes/gl/Disk';
+import {EasingGlNode} from '../../../nodes/gl/Easing';
+import {FitGlNode} from '../../../nodes/gl/Fit';
+import {Fit01GlNode} from '../../../nodes/gl/Fit01';
+import {GlobalsGlNode} from '../../../nodes/gl/Globals';
+import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
+import {InstanceTransformGlNode} from '../../../nodes/gl/InstanceTransform';
+import {LengthGlNode} from '../../../nodes/gl/Length';
+import {LuminanceGlNode} from '../../../nodes/gl/Luminance';
+import {MixGlNode} from '../../../nodes/gl/Mix';
+import {MultAddGlNode} from '../../../nodes/gl/MultAdd';
+import {NegateGlNode} from '../../../nodes/gl/Negate';
+import {NoiseGlNode} from '../../../nodes/gl/Noise';
+import {NullGlNode} from '../../../nodes/gl/Null';
+import {OutputGlNode} from '../../../nodes/gl/Output';
+import {ParamGlNode} from '../../../nodes/gl/Param';
+import {RefractGlNode} from '../../../nodes/gl/Refract';
+import {QuatMultGlNode} from '../../../nodes/gl/QuatMult';
+import {QuatFromAxisAngleGlNode} from '../../../nodes/gl/QuatFromAxisAngle';
+import {QuatToAngleGlNode} from '../../../nodes/gl/QuatToAngle';
+import {QuatToAxisGlNode} from '../../../nodes/gl/QuatToAxis';
+import {RampGlNode} from '../../../nodes/gl/Ramp';
+import {RandomGlNode} from '../../../nodes/gl/Random';
+import {RgbToHsvGlNode} from '../../../nodes/gl/RgbToHsv';
+import {RotateGlNode} from '../../../nodes/gl/Rotate';
+import {RoundGlNode} from '../../../nodes/gl/Round';
+import {TextureGlNode} from '../../../nodes/gl/Texture';
+import {TwoWaySwitchGlNode} from '../../../nodes/gl/TwoWaySwitch';
+import {VectorAlignGlNode} from '../../../nodes/gl/VectorAlign';
+import {VectorAngleGlNode} from '../../../nodes/gl/VectorAngle';
 
 export interface GlNodeChildrenMap {
 	abs: AbsGlNode;
@@ -168,8 +168,8 @@ export interface GlNodeChildrenMap {
 	vector_angle: VectorAngleGlNode;
 }
 
-import {NodeContext} from '../NodeContext';
-import {Poly} from '../../Poly';
+import {NodeContext} from '../../NodeContext';
+import {Poly} from '../../../Poly';
 export class GlRegister {
 	static run(poly: Poly) {
 		poly.register_node(AbsGlNode, CATEGORY_GL.MATH);

@@ -1,7 +1,7 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
-import {MatNodeChildrenMap} from '../../poly/registers/Mat';
+import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 
 export class MaterialsObjNode extends BaseManagerObjNode {

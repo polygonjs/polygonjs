@@ -23,7 +23,7 @@ import {NodeContext} from '../../poly/NodeContext';
 // TODO:
 // ensure removing a node removes its content from the scene (spotlight?)
 
-import {ObjNodeChildrenMap} from '../../poly/registers/Obj';
+import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';

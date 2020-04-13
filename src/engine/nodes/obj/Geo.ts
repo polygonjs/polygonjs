@@ -16,7 +16,7 @@ import {BaseSopNodeType} from '../sop/_Base';
 // import {PolyScene} from '../../scene/PolyScene';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 
-import {GeoNodeChildrenMap} from '../../poly/registers/Sop';
+import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -1,4 +1,4 @@
-import {BaseCameraObjNodeType} from '../../_BaseCamera';
+import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {BaseCameraControlsEventNodeType, CameraControls} from '../../../event/_BaseCameraControls';
 import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
 import {BaseParamType} from '../../../../params/_Base';
@@ -6,13 +6,13 @@ import {CameraOrbitControlsEventNode} from '../../../event/CameraOrbitControls';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
-export class ControlsController {
+export class ThreejsCameraControlsController {
 	_applied_controls_by_element_id: Dictionary<Dictionary<boolean>> = {};
 	private _controls_node: BaseCameraControlsEventNodeType | null = null;
 	private controls_start_listener: (() => void) | undefined;
 	private controls_end_listener: (() => void) | undefined;
 
-	constructor(private node: BaseCameraObjNodeType) {}
+	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
 	controls_param(): BaseParamType | null {
 		if (this.node.params.has(CONTROLS_PARAM_NAME)) {

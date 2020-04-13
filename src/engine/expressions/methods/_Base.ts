@@ -11,7 +11,7 @@ import {BaseContainer} from '../../containers/_Base';
 
 // type NodeOrParam = BaseNode | BaseParam;
 
-export abstract class BaseMethod {
+export class BaseMethod {
 	public node: BaseNodeType;
 
 	constructor(public readonly param: BaseParamType) {

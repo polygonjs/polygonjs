@@ -5,7 +5,7 @@ import {ParamInitValueSerializedTypeMap} from '../types/ParamInitValueSerialized
 
 export interface ParamSerializerData {
 	name: string;
-	type: string;
+	type: ParamType;
 	raw_input: ParamInitValueSerializedTypeMap[ParamType];
 	value: ParamValueSerializedTypeMap[ParamType];
 	expression?: string;

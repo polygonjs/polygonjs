@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
-export class StrCharsCount extends BaseMethod {
+export class StrCharsCountExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
 	static required_arguments() {
 		return [['string', 'string to count characters of']];

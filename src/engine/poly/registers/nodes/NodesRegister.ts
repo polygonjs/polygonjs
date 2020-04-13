@@ -1,5 +1,5 @@
-import {BaseNodeClass} from '../nodes/_Base';
-import {NodeContext} from './NodeContext';
+import {BaseNodeClass} from '../../../nodes/_Base';
+import {NodeContext} from '../../NodeContext';
 
 export interface RegisterOptions {
 	only?: string[];

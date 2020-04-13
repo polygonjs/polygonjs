@@ -38,7 +38,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 class CodeSopParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
-		label: false,
+		show_label: false,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
 	code_javascript = ParamConfig.STRING('', {hidden: true});

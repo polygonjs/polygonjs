@@ -67,6 +67,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 				this.remove_dirty_state();
 				this.set_successors_dirty(this);
 				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+				this.options.execute_callback();
 				if (this._expression_controller) {
 					this._expression_controller.set_expression(undefined, false);
 					this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
@@ -86,6 +87,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 				if (converted != null) {
 					this._value = converted;
 					this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+					this.options.execute_callback();
 				} else {
 					this.states.error.set(`expression returns an invalid type (${expression_result})`);
 				}

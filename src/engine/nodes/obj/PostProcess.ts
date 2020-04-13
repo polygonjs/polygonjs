@@ -1,6 +1,6 @@
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from '../../poly/NodeContext';
-import {PostNodeChildrenMap} from '../../poly/registers/Post';
+import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 
 export class PostProcessObjNode extends BaseManagerObjNode {

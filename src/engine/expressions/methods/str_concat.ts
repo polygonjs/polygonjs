@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
-export class StrConcat extends BaseMethod {
+export class StrConcatExpression extends BaseMethod {
 	// str_concat(1,2) => '12'
 	// str_concat(1,"a") => '1a'
 	// str_concat("a",12, "b", " ", 17) => 'a12b 17'

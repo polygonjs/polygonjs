@@ -1,11 +1,11 @@
 import {CATEGORY_EVENT} from './Category';
 
-import {CameraMapControlsEventNode} from '../../nodes/event/CameraMapControls';
-import {CameraOrbitControlsEventNode} from '../../nodes/event/CameraOrbitControls';
-import {CodeEventNode} from '../../nodes/event/Code';
-import {MouseEventNode} from '../../nodes/event/MouseEvent';
-import {PassEventNode} from '../../nodes/event/PassEvent';
-import {RaycastEventNode} from '../../nodes/event/Raycast';
+import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
+import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
+import {CodeEventNode} from '../../../nodes/event/Code';
+import {MouseEventNode} from '../../../nodes/event/MouseEvent';
+import {PassEventNode} from '../../../nodes/event/PassEvent';
+import {RaycastEventNode} from '../../../nodes/event/Raycast';
 
 export interface EventNodeChildrenMap {
 	camera_orbit_controls: CameraMapControlsEventNode;
@@ -16,7 +16,7 @@ export interface EventNodeChildrenMap {
 	raycast: RaycastEventNode;
 }
 
-import {Poly} from '../../Poly';
+import {Poly} from '../../../Poly';
 export class EventRegister {
 	static run(poly: Poly) {
 		poly.register_node(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);

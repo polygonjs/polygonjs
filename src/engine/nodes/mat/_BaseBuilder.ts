@@ -2,7 +2,7 @@ import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMaterial';
-import {GlNodeChildrenMap} from '../../poly/registers/Gl';
+import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../poly/NodeContext';

@@ -2,7 +2,7 @@ import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {TextureContainer} from '../../containers/Texture';
 
-export class CopRes extends BaseMethod {
+export class CopResExpression extends BaseMethod {
 	// cop_res(0, 'x')
 	// cop_res('../REF_bbox', 'x')
 	static required_arguments() {

@@ -1,28 +1,28 @@
 import {CATEGORY_POST} from './Category';
 
-import {AfterImagePostNode} from '../../nodes/post/AfterImage';
-import {BleachPostNode} from '../../nodes/post/Bleach';
-import {BrightnessContrastPostNode} from '../../nodes/post/BrightnessContrast';
-import {ClearPostNode} from '../../nodes/post/Clear';
-import {ClearMaskPostNode} from '../../nodes/post/ClearMask';
-import {ColorCorrectionPostNode} from '../../nodes/post/ColorCorrection';
-import {CopyPostNode} from '../../nodes/post/Copy';
-import {DepthOfFieldPostNode} from '../../nodes/post/DepthOfField';
-import {DotScreenPostNode} from '../../nodes/post/DotScreen';
-import {FilmPostNode} from '../../nodes/post/Film';
-import {FXAAPostNode} from '../../nodes/post/FXAA';
-import {GammaCorrectionPostNode} from '../../nodes/post/GammaCorrection';
-import {HorizontalBlurPostNode} from '../../nodes/post/HorizontalBlur';
-import {ImagePostNode} from '../../nodes/post/Image';
-import {MaskPostNode} from '../../nodes/post/Mask';
-import {NullPostNode} from '../../nodes/post/Null';
-import {PixelPostNode} from '../../nodes/post/Pixel';
-import {RenderPostNode} from '../../nodes/post/Render';
-import {RGBShiftPostNode} from '../../nodes/post/RGBShift';
-import {SepiaPostNode} from '../../nodes/post/Sepia';
-import {UnrealBloomPostNode} from '../../nodes/post/UnrealBloom';
-import {VerticalBlurPostNode} from '../../nodes/post/VerticalBlur';
-import {VignettePostNode} from '../../nodes/post/Vignette';
+import {AfterImagePostNode} from '../../../nodes/post/AfterImage';
+import {BleachPostNode} from '../../../nodes/post/Bleach';
+import {BrightnessContrastPostNode} from '../../../nodes/post/BrightnessContrast';
+import {ClearPostNode} from '../../../nodes/post/Clear';
+import {ClearMaskPostNode} from '../../../nodes/post/ClearMask';
+import {ColorCorrectionPostNode} from '../../../nodes/post/ColorCorrection';
+import {CopyPostNode} from '../../../nodes/post/Copy';
+import {DepthOfFieldPostNode} from '../../../nodes/post/DepthOfField';
+import {DotScreenPostNode} from '../../../nodes/post/DotScreen';
+import {FilmPostNode} from '../../../nodes/post/Film';
+import {FXAAPostNode} from '../../../nodes/post/FXAA';
+import {GammaCorrectionPostNode} from '../../../nodes/post/GammaCorrection';
+import {HorizontalBlurPostNode} from '../../../nodes/post/HorizontalBlur';
+import {ImagePostNode} from '../../../nodes/post/Image';
+import {MaskPostNode} from '../../../nodes/post/Mask';
+import {NullPostNode} from '../../../nodes/post/Null';
+import {PixelPostNode} from '../../../nodes/post/Pixel';
+import {RenderPostNode} from '../../../nodes/post/Render';
+import {RGBShiftPostNode} from '../../../nodes/post/RGBShift';
+import {SepiaPostNode} from '../../../nodes/post/Sepia';
+import {UnrealBloomPostNode} from '../../../nodes/post/UnrealBloom';
+import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
+import {VignettePostNode} from '../../../nodes/post/Vignette';
 
 export interface PostNodeChildrenMap {
 	after_image: AfterImagePostNode;
@@ -50,7 +50,7 @@ export interface PostNodeChildrenMap {
 	vignette: VignettePostNode;
 }
 
-import {Poly} from '../../Poly';
+import {Poly} from '../../../Poly';
 export class PostRegister {
 	static run(poly: Poly) {
 		poly.register_node(AfterImagePostNode, CATEGORY_POST.EFFECT);

@@ -3,7 +3,7 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 // import {CoreGroup} from '../../../core/Geometry/Group'
 
-export class Point extends BaseMethod {
+export class PointExpression extends BaseMethod {
 	static required_arguments() {
 		return [
 			['string', 'path to node'],

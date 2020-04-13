@@ -1,7 +1,12 @@
 // import lodash_clamp from 'lodash/clamp';
 // import {Vector2} from 'three/src/math/Vector2';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, CameraTransformParamConfig} from './_BaseCamera';
+import {
+	TypedThreejsCameraObjNode,
+	BASE_CAMERA_DEFAULT,
+	ThreejsCameraTransformParamConfig,
+	CameraMasterCameraParamConfig,
+} from './_BaseCamera';
 // import {PerspectiveCameraBackgroundController} from './utils/cameras/background/PerspectiveCameraController';
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
@@ -25,13 +30,20 @@ export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(
 class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
 		TransformedParamConfig(
-			LayerParamConfig(PerspectiveCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+			LayerParamConfig(
+				PerspectiveCameraObjParamConfigMixin(
+					ThreejsCameraTransformParamConfig(CameraMasterCameraParamConfig(NodeParamsConfig))
+				)
+			)
 		)
 	)
 ) {}
 const ParamsConfig = new PerspectiveCameraObjParamConfig();
 
-export class PerspectiveCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, PerspectiveCameraObjParamConfig> {
+export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
+	PerspectiveCamera,
+	PerspectiveCameraObjParamConfig
+> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'perspective_camera';

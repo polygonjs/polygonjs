@@ -1,7 +1,8 @@
 import {BaseNodeClass} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
-import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/NodesRegister';
+import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/registers/nodes/NodesRegister';
+import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
 import {NodeContext} from './poly/NodeContext';
 // import {ViewerLoadersManager} from '/viewers/LoadersManager';
 
@@ -9,6 +10,7 @@ export class Poly {
 	static _instance: Poly | undefined;
 	renderers_controller: RenderersController = new RenderersController();
 	nodes_register: NodesRegister = new NodesRegister();
+	expressions_register: ExpressionRegister = new ExpressionRegister();
 	// public readonly js_version: string = '0';
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;

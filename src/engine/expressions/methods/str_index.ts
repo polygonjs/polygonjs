@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
-export class StrIndex extends BaseMethod {
+export class StrIndexExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
 	static required_arguments() {
 		return [

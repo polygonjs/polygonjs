@@ -3,7 +3,7 @@ import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 import {GeometryContainer} from '../../containers/Geometry';
 
-export class Centroid extends BaseMethod {
+export class CentroidExpression extends BaseMethod {
 	// bbox(0).min.x
 	// bbox('../REF_bbox').min.x
 	static required_arguments() {
@@ -35,10 +35,7 @@ export class Centroid extends BaseMethod {
 
 				if (container) {
 					const bbox = container.bounding_box();
-					const center = bbox.min
-						.clone()
-						.add(bbox.max)
-						.multiplyScalar(0.5);
+					const center = bbox.min.clone().add(bbox.max).multiplyScalar(0.5);
 
 					const value = center[component_name];
 					if (value != null) {

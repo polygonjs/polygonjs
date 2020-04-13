@@ -3,7 +3,7 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 // import {CoreGroup} from '../../../core/Geometry/Group';
 
-export class PointsCount extends BaseMethod {
+export class PointsCountExpression extends BaseMethod {
 	// npoints(0)
 	// npoints('../REF_bbox')
 	static required_arguments() {

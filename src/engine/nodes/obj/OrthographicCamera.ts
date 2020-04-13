@@ -3,7 +3,12 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 // import {Group} from 'three/src/objects/Group';
 // import {CameraHelper} from 'three/src/helpers/CameraHelper';
 // import lodash_clamp from 'lodash/clamp';
-import {TypedCameraObjNode, BASE_CAMERA_DEFAULT, CameraTransformParamConfig} from './_BaseCamera';
+import {
+	TypedThreejsCameraObjNode,
+	BASE_CAMERA_DEFAULT,
+	ThreejsCameraTransformParamConfig,
+	CameraMasterCameraParamConfig,
+} from './_BaseCamera';
 
 // import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
 // import {ParamType} from '../../poly/ParamType';
@@ -31,13 +36,17 @@ export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>
 class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
 		TransformedParamConfig(
-			LayerParamConfig(OrthographicCameraObjParamConfigMixin(CameraTransformParamConfig(NodeParamsConfig)))
+			LayerParamConfig(
+				OrthographicCameraObjParamConfigMixin(
+					ThreejsCameraTransformParamConfig(CameraMasterCameraParamConfig(NodeParamsConfig))
+				)
+			)
 		)
 	)
 ) {}
 const ParamsConfig = new OrthographicCameraObjParamConfig();
 
-export class OrthographicCameraObjNode extends TypedCameraObjNode<
+export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	OrthographicCamera,
 	OrthographicCameraObjParamConfig
 > {

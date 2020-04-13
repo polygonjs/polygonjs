@@ -7,8 +7,6 @@ import {MaterialsObjNode} from '../../src/engine/nodes/obj/Materials';
 import {PostProcessObjNode} from '../../src/engine/nodes/obj/PostProcess';
 import {CopObjNode} from '../../src/engine/nodes/obj/Cop';
 
-import {AllRegister} from '../../src/engine/poly/registers/All';
-AllRegister.run();
 import {Poly} from '../../src/engine/Poly';
 
 // window.create_renderer_if_none = () => {
@@ -33,6 +31,7 @@ declare global {
 QUnit.testStart(async () => {
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
+	console.log('window.scene');
 	window.scene.set_name('test scene');
 	window.scene.set_uuid('test');
 	Poly.instance().set_env('test');

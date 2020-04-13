@@ -3,7 +3,7 @@ import {Camera} from 'three/src/cameras/Camera';
 
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
-import {ControlsController} from './utils/cameras/ControlsController';
+import {ThreejsCameraControlsController} from './utils/cameras/ControlsController';
 import {LayersController, LayerParamConfig} from './utils/LayersController';
 import {PostProcessController, CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {RenderController, CameraRenderParamConfig} from './utils/cameras/RenderController';
@@ -40,8 +40,19 @@ export const BASE_CAMERA_DEFAULT = {
 };
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {BaseViewerType} from '../../viewers/_Base';
 
-export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
+export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		set_master_camera = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType, param: BaseParamType) => {
+				BaseCameraObjNodeClass.PARAM_CALLBACK_set_master_camera(node as BaseCameraObjNodeType);
+			},
+		});
+	};
+}
+
+export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		camera = ParamConfig.FOLDER();
 		controls = ParamConfig.OPERATOR_PATH('', {
@@ -49,11 +60,7 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 				context: NodeContext.EVENT,
 			},
 		});
-		// add transform params
-		// t = ParamConfig.VECTOR3([0, 0, 0]);
-		// r = ParamConfig.VECTOR3([0, 0, 0]);
-		// s = ParamConfig.VECTOR3([1, 1, 1]);
-		// scale = ParamConfig.FLOAT(1);
+
 		target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
 			range: [0, 100],
@@ -74,23 +81,30 @@ export function CameraTransformParamConfig<TBase extends Constructor>(Base: TBas
 		// aspect = ParamConfig.FLOAT(1);
 		// lock_width = ParamConfig.BOOLEAN(1);
 		// look_at = ParamConfig.OPERATOR_PATH('');
-
-		set_master_camera = ParamConfig.BUTTON(null, {
-			callback: (node: BaseNodeType, param: BaseParamType) => {
-				BaseCameraObjNodeClass.PARAM_CALLBACK_set_master_camera(node as BaseCameraObjNodeType);
-			},
-		});
 	};
 }
 
-export class BaseCameraObjParamsConfig extends CameraPostProcessParamConfig(
-	CameraRenderParamConfig(TransformedParamConfig(LayerParamConfig(CameraTransformParamConfig(NodeParamsConfig))))
+export class BaseCameraObjParamsConfig extends CameraMasterCameraParamConfig(NodeParamsConfig) {}
+export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConfig(
+	CameraRenderParamConfig(
+		TransformedParamConfig(
+			LayerParamConfig(ThreejsCameraTransformParamConfig(CameraMasterCameraParamConfig(NodeParamsConfig)))
+		)
+	)
 ) {}
 
-export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCameraObjParamsConfig> extends TypedObjNode<
-	O,
-	K
-> {
+// export abstract class TypedMinimalCameraObjNode<
+// 	O extends OrthoOrPerspCamera,
+// 	K extends NodeParamsConfig
+// > extends TypedObjNode<O, K> {
+// 	setup_for_aspect_ratio(aspect: number) {}
+// 	abstract create_viewer(element: HTMLElement): BaseViewer;
+// }
+
+export abstract class TypedCameraObjNode<
+	O extends OrthoOrPerspCamera,
+	K extends BaseCameraObjParamsConfig
+> extends TypedObjNode<O, K> {
 	// public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
 	protected _object!: O;
@@ -98,8 +112,6 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	get object() {
 		return this._object;
 	}
-	readonly transform_controller: TransformController = new TransformController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	// protected _background_controller: BaseBackgroundController | undefined;
 	// get background_controller(): BaseBackgroundController {
@@ -109,35 +121,8 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	// protected get background_controller_constructor() {
 	// 	return BaseBackgroundController;
 	// }
-	protected _controls_controller: ControlsController | undefined;
-	get controls_controller(): ControlsController {
-		return (this._controls_controller = this._controls_controller || new ControlsController(this));
-	}
-	protected _layers_controller: LayersController | undefined;
-	get layers_controller() {
-		return (this._layers_controller = this._layers_controller || new LayersController(this));
-	}
-	protected _render_controller: RenderController | undefined;
-	get render_controller(): RenderController {
-		return (this._render_controller = this._render_controller || new RenderController(this));
-	}
-	protected _post_process_controller: PostProcessController | undefined;
-	get post_process_controller(): PostProcessController {
-		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
-	}
 
 	// protected _used_in_scene: boolean = true;
-	initialize_base_node() {
-		super.initialize_base_node();
-		// this.io.inputs.set_count(0, 1);
-		this.io.outputs.set_has_one_output();
-		// this._init_dirtyable_hook();
-
-		// this.flags.display.add_hook(() => {
-		// 	this.set_used_in_scene(this.flags.display.active || false);
-		// });
-		this.transform_controller.initialize_node();
-	}
 
 	// create_common_params() {
 	// 	// this.within_param_folder('transform', () => {
@@ -173,6 +158,75 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 	// 	lines
 
 	async cook() {
+		this.update_camera();
+		this._object.dispatchEvent(EVENT_CHANGE);
+		this.cook_controller.end_cook();
+	}
+
+	on_create() {}
+	on_delete() {}
+
+	camera() {
+		return this._object;
+	}
+	update_camera() {}
+
+	static PARAM_CALLBACK_set_master_camera(node: BaseCameraObjNodeType) {
+		node.set_as_master_camera();
+	}
+	set_as_master_camera() {
+		this.scene.cameras_controller.set_master_camera_node_path(this.full_path());
+	}
+
+	setup_for_aspect_ratio(aspect: number) {}
+	protected _update_for_aspect_ratio(): void {}
+
+	update_transform_params_from_object() {
+		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
+		CoreTransform.set_params_from_object(this._object, this);
+	}
+	abstract create_viewer(element: HTMLElement): BaseViewerType;
+
+	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
+		(node.object as any)[param.name] = (node.pv as any)[param.name];
+		console.log(`updated ${param.name}`);
+	}
+}
+// 	console.warn "camera #{this.full_path()} has no controls assigned"
+
+// controls_node: ->
+// 	if @_param_controls? && @_param_controls != ''
+// 		Core.Walker.find_node(this, @_param_controls)
+
+// export type BaseMinimalCameraObjNodeType = TypedMinimalCameraObjNode<OrthoOrPerspCamera, NodeParamsConfig>;
+export class TypedThreejsCameraObjNode<
+	O extends OrthoOrPerspCamera,
+	K extends BaseThreejsCameraObjParamsConfig
+> extends TypedCameraObjNode<O, K> {
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	readonly transform_controller: TransformController = new TransformController(this);
+	protected _controls_controller: ThreejsCameraControlsController | undefined;
+	get controls_controller(): ThreejsCameraControlsController {
+		return (this._controls_controller = this._controls_controller || new ThreejsCameraControlsController(this));
+	}
+	protected _layers_controller: LayersController | undefined;
+	get layers_controller() {
+		return (this._layers_controller = this._layers_controller || new LayersController(this));
+	}
+	protected _render_controller: RenderController | undefined;
+	get render_controller(): RenderController {
+		return (this._render_controller = this._render_controller || new RenderController(this));
+	}
+	protected _post_process_controller: PostProcessController | undefined;
+	get post_process_controller(): PostProcessController {
+		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
+	}
+	initialize_base_node() {
+		super.initialize_base_node();
+		this.io.outputs.set_has_one_output();
+		this.transform_controller.initialize_node();
+	}
+	async cook() {
 		this.transform_controller.update();
 		this.layers_controller.update();
 		// await this.background_controller.update();
@@ -196,25 +250,6 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 		this.cook_controller.end_cook();
 	}
 
-	on_create() {}
-	//
-	on_delete() {}
-	//
-
-	camera() {
-		return this._object;
-	}
-
-	update_camera() {}
-
-	//
-	static PARAM_CALLBACK_set_master_camera(node: BaseCameraObjNodeType) {
-		node.set_as_master_camera();
-	}
-	set_as_master_camera() {
-		this.scene.cameras_controller.set_master_camera_node_path(this.full_path());
-	}
-
 	setup_for_aspect_ratio(aspect: number) {
 		if (lodash_isNaN(aspect)) {
 			return;
@@ -224,26 +259,22 @@ export class TypedCameraObjNode<O extends OrthoOrPerspCamera, K extends BaseCame
 			this._update_for_aspect_ratio();
 		}
 	}
-	protected _update_for_aspect_ratio(): void {}
-
-	update_transform_params_from_object() {
-		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
-		CoreTransform.set_params_from_object(this._object, this);
-	}
 	create_viewer(element: HTMLElement): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this);
 	}
-
-	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeClass, param: BaseParamType) {
-		(node.object as any)[param.name] = (node.pv as any)[param.name];
-		console.log(`updated ${param.name}`);
-	}
 }
-// 	console.warn "camera #{this.full_path()} has no controls assigned"
-
-// controls_node: ->
-// 	if @_param_controls? && @_param_controls != ''
-// 		Core.Walker.find_node(this, @_param_controls)
 
 export type BaseCameraObjNodeType = TypedCameraObjNode<OrthoOrPerspCamera, BaseCameraObjParamsConfig>;
-export class BaseCameraObjNodeClass extends TypedCameraObjNode<OrthoOrPerspCamera, BaseCameraObjParamsConfig> {}
+export abstract class BaseCameraObjNodeClass extends TypedCameraObjNode<
+	OrthoOrPerspCamera,
+	BaseCameraObjParamsConfig
+> {}
+
+export type BaseThreejsCameraObjNodeType = TypedThreejsCameraObjNode<
+	OrthoOrPerspCamera,
+	BaseThreejsCameraObjParamsConfig
+>;
+export class BaseThreejsCameraObjNodeClass extends TypedThreejsCameraObjNode<
+	OrthoOrPerspCamera,
+	BaseThreejsCameraObjParamsConfig
+> {}

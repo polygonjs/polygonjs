@@ -4,7 +4,7 @@ import {CoreWalker} from '../../../core/Walker';
 import {CopySopNode} from '../../nodes/sop/Copy';
 import {BaseNodeType} from '../../nodes/_Base';
 
-export class Copy extends BaseMethod {
+export class CopyExpression extends BaseMethod {
 	static required_arguments() {
 		return [
 			['string', 'path to copy'],

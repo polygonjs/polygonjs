@@ -3,7 +3,6 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
 import {BaseMethod} from '../methods/_Base';
-import {MethodModule} from '../methods/_Module';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import lodash_isString from 'lodash/isString';
 
@@ -85,7 +84,7 @@ NATIVE_MATH_CONSTANTS.forEach((name) => {
 	GLOBAL_CONSTANTS[name] = `Math.${name}`;
 });
 
-const INDIRECT_EXPRESSION_METHODS: AnyDictionary = MethodModule;
+// const INDIRECT_EXPRESSION_METHODS: AnyDictionary = MethodModule;
 
 // const NODE_TYPE_METHODS = {
 // 	CallExpression: 'setup_graph_call_expression',
@@ -127,6 +126,7 @@ import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 
 import {AsyncFunction} from '../../../core/AsyncFunction';
+import {Poly} from '../../Poly';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
@@ -291,7 +291,7 @@ export class FunctionGenerator extends BaseTraverser {
 			}
 
 			// indirect methods (points_count, asset...)
-			const indirect_method = INDIRECT_EXPRESSION_METHODS[method_name];
+			const indirect_method = Poly.instance().expressions_register.get_method(method_name);
 			if (indirect_method) {
 				const path_node = node.arguments[0];
 				// const path_argument = this.string_generator.traverse_node(path_node)
@@ -461,7 +461,11 @@ export class FunctionGenerator extends BaseTraverser {
 		path_argument: number | string,
 		path_node?: jsep.Expression
 	) {
-		const method_constructor = INDIRECT_EXPRESSION_METHODS[method_name];
+		const method_constructor = Poly.instance().expressions_register.get_method(method_name);
+		if (!method_constructor) {
+			this.set_error(`method not found (${method_name})`);
+			return;
+		}
 		const method = new method_constructor(this.param) as BaseMethod;
 		this.method_index += 1;
 		this.methods[this.method_index] = method;

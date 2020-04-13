@@ -12,9 +12,14 @@ import lodash_clone from 'lodash/clone';
 import lodash_isArray from 'lodash/isArray';
 import lodash_isNumber from 'lodash/isNumber';
 
+/*
+GlNodeSpareParamsController creates spare params from inputs on gl nodes
+*/
 export class GlNodeSpareParamsController {
 	private _allow_inputs_created_from_params: boolean = true;
 	private _inputless_param_names: string[] | undefined;
+	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
+	private _default_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	constructor(private node: BaseGlNodeType) {}
 
 	disallow_inputs_created_from_params() {
@@ -59,9 +64,10 @@ export class GlNodeSpareParamsController {
 		return (this._inputless_param_names = names);
 	}
 
+	//
+	// Create spare params on gl nodes
+	//
 	create_spare_parameters() {
-		const raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
-		const default_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 		const current_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 
@@ -69,8 +75,8 @@ export class GlNodeSpareParamsController {
 			if (this.node.params.has(param_name)) {
 				const param = this.node.params.get(param_name);
 				if (param) {
-					raw_input_serialized_by_param_name.set(param_name, param.raw_input_serialized);
-					default_value_serialized_by_param_name.set(param_name, param.default_value_serialized);
+					this._raw_input_serialized_by_param_name.set(param_name, param.raw_input_serialized);
+					this._default_value_serialized_by_param_name.set(param_name, param.default_value_serialized);
 					params_update_options.names_to_delete = params_update_options.names_to_delete || [];
 					params_update_options.names_to_delete.push(param_name);
 				}
@@ -84,7 +90,7 @@ export class GlNodeSpareParamsController {
 			// let raw_input: ParamInitValueSerialized= null
 
 			// const raw_input = raw_input_serialized_by_param_name.get(param_name);
-			const last_param_init_value = default_value_serialized_by_param_name.get(param_name);
+			const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
 			// if (last_param_raw_input != null && last_param_init_value != null) {
 			// init_value = ParamValueToDefaultConverter.from_value(param_type, last_param_raw_input);
 			// if (init_value == null) {
@@ -130,7 +136,9 @@ export class GlNodeSpareParamsController {
 				params_update_options.to_add.push({
 					name: param_name,
 					type: param_type,
+					// TODO: I should really treat differently init_value and raw_input here
 					init_value: lodash_clone(init_value as any),
+					raw_input: lodash_clone(init_value as any),
 					options: {
 						spare: true,
 					},
@@ -142,7 +150,7 @@ export class GlNodeSpareParamsController {
 
 			for (let spare_param of this.node.params.spare) {
 				if (!spare_param.parent_param) {
-					const raw_input = raw_input_serialized_by_param_name.get(spare_param.name);
+					const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name);
 					if (raw_input) {
 						spare_param.set(raw_input as any);
 					}

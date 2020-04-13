@@ -1,7 +1,7 @@
 import {BaseMethod} from './_Base';
 import {Poly} from '../../Poly';
 
-export class Local extends BaseMethod {
+export class LocalExpression extends BaseMethod {
 	// constructor() {
 	// 	super();
 	// }

@@ -76,6 +76,7 @@ import './engine/nodes/manager/ObjectsManager';
 
 QUnit.module('mat');
 import './engine/nodes/mat/MeshBasicBuilder';
+import './engine/nodes/mat/SpareParams';
 
 QUnit.module('obj');
 import './engine/nodes/obj/utils/DisplayNodeController';
@@ -110,6 +111,7 @@ import './engine/nodes/sop/Delete';
 import './engine/nodes/sop/Face';
 import './engine/nodes/sop/File';
 import './engine/nodes/sop/Fuse';
+import './engine/nodes/sop/HeightMap';
 import './engine/nodes/sop/Hexagons';
 import './engine/nodes/sop/Hierarchy';
 import './engine/nodes/sop/Jitter';

@@ -16,7 +16,7 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	const element = document.createElement('div');
 	document.body.appendChild(element);
 	const viewer = perspective_camera1.create_viewer(element);
-	await viewer.cameras_controller.set_camera_node(perspective_camera1);
+	// await viewer.cameras_controller.set_camera_node(perspective_camera1);
 
 	// no controls initially
 	CoreSleep.sleep(100);

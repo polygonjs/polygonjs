@@ -1,6 +1,7 @@
 import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
+import {PerspectiveCameraObjNode} from '../../../src/engine/nodes/obj/PerspectiveCamera';
 
 QUnit.test('scene save simple', async (assert) => {
 	const scene = new PolyScene();
@@ -21,7 +22,8 @@ QUnit.test('scene save simple', async (assert) => {
 	const data = new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
-	assert.deepEqual(scene2.cameras_controller.master_camera_node?.pv.t.toArray(), [0, 0, 10]);
+	const camera_node = scene2.cameras_controller.master_camera_node as PerspectiveCameraObjNode;
+	assert.deepEqual(camera_node.pv.t.toArray(), [0, 0, 10]);
 	assert.ok(scene2.loading_controller.loaded);
 
 	const new_geo1 = scene2.node('/geo1')!;

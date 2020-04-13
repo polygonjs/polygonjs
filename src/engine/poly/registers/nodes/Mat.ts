@@ -1,13 +1,13 @@
 import {CATEGORY_MAT} from './Category';
 
-import {MeshBasicMatNode} from '../../nodes/mat/MeshBasic';
-import {MeshBasicBuilderMatNode} from '../../nodes/mat/MeshBasicBuilder';
-import {MeshLambertMatNode} from '../../nodes/mat/MeshLambert';
-import {MeshLambertBuilderMatNode} from '../../nodes/mat/MeshLambertBuilder';
-import {MeshStandardMatNode} from '../../nodes/mat/MeshStandard';
-import {MeshStandardBuilderMatNode} from '../../nodes/mat/MeshStandardBuilder';
-import {PointsMatNode} from '../../nodes/mat/Points';
-import {PointsBuilderMatNode} from '../../nodes/mat/PointsBuilder';
+import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
+import {MeshBasicBuilderMatNode} from '../../../nodes/mat/MeshBasicBuilder';
+import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
+import {MeshLambertBuilderMatNode} from '../../../nodes/mat/MeshLambertBuilder';
+import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
+import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
+import {PointsMatNode} from '../../../nodes/mat/Points';
+import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
 
 export interface MatNodeChildrenMap {
 	mesh_basic: MeshBasicMatNode;
@@ -20,7 +20,7 @@ export interface MatNodeChildrenMap {
 	points_builder: PointsBuilderMatNode;
 }
 
-import {Poly} from '../../Poly';
+import {Poly} from '../../../Poly';
 export class MatRegister {
 	static run(poly: Poly) {
 		poly.register_node(MeshBasicMatNode, CATEGORY_MAT.MESH);

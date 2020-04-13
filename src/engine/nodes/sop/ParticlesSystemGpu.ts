@@ -25,7 +25,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {MaterialsObjNode} from '../obj/Materials';
-import {GlNodeChildrenMap} from '../../poly/registers/Gl';
+import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/RenderController';
 import {ParticlesSystemGpuComputeController} from './utils/ParticlesSystemGPU/GPUComputeController';

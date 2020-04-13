@@ -118,7 +118,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (output_nodes.length > 1) {
 			this._gl_parent_node.states.error.set('only one output node allowed');
 		}
-		this.set_root_nodes(output_nodes);
+		const param_nodes = GlNodeFinder.find_param_nodes(this._gl_parent_node);
+		const root_nodes = output_nodes.concat(param_nodes);
+		this.set_root_nodes(root_nodes);
 		await this._update_shaders();
 
 		const new_vertex_shader = this._shaders_by_name.get(ShaderName.VERTEX);

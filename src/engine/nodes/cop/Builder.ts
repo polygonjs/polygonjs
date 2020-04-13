@@ -37,7 +37,7 @@ void main()	{
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
-import {GlNodeChildrenMap} from '../../poly/registers/Gl';
+import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {NodeContext} from '../../poly/NodeContext';

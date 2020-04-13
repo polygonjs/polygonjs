@@ -4,7 +4,7 @@ import {LinearFilter, RGBFormat} from 'three/src/constants';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 
 import {BasePostProcessNodeType} from '../../../post/_Base';
-import {BaseCameraObjNodeType} from '../../_BaseCamera';
+import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {NodeContext} from '../../../../poly/NodeContext';
 
@@ -42,7 +42,7 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 export class PostProcessController {
 	private _composers_by_canvas_id: Dictionary<EffectComposer> = {};
 
-	constructor(private node: BaseCameraObjNodeType) {
+	constructor(private node: BaseThreejsCameraObjNodeType) {
 		if (this.node.p.post_process_node) {
 			this._add_param_dirty_hook();
 		} else {

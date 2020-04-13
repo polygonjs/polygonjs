@@ -26,6 +26,7 @@ export interface ParamOptionToAdd<T extends ParamType> {
 	name: string;
 	type: T;
 	init_value: ParamInitValueSerializedTypeMap[T];
+	raw_input: ParamInitValueSerializedTypeMap[T];
 	options?: ParamOptions;
 }
 export interface ParamsUpdateOptions {
@@ -114,6 +115,7 @@ export class ParamsController {
 					param_data.options
 				);
 				if (param) {
+					param.set(param_data.raw_input as never);
 					has_created_a_param = true;
 				}
 			}

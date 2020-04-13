@@ -7,7 +7,7 @@ async function with_file(path: string) {
 	return container;
 }
 
-QUnit.test('file simple', async (assert) => {
+QUnit.test('SOP file simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.create_node('file');
@@ -59,39 +59,39 @@ QUnit.test('file simple', async (assert) => {
 	assert.equal(container.points_count(), 36);
 });
 
-QUnit.test('file obj wolf', async (assert) => {
+QUnit.test('SOP file obj wolf', async (assert) => {
 	const container = await with_file('/examples/models/wolf.obj');
 	assert.equal(container.points_count(), 5352);
 });
-QUnit.test('file json wolf', async (assert) => {
+QUnit.test('SOP file json wolf', async (assert) => {
 	const container = await with_file('/examples/models/wolf.json');
 	assert.equal(container.points_count(), 5352);
 });
-QUnit.test('file glb stork', async (assert) => {
+QUnit.test('SOP file glb stork', async (assert) => {
 	const container = await with_file('/examples/models/stork.glb');
 	assert.equal(container.points_count(), 358);
 });
-QUnit.test('file glb soldier', async (assert) => {
+QUnit.test('SOP file glb soldier', async (assert) => {
 	const container = await with_file('/examples/models/soldier.glb');
 	assert.equal(container.points_count(), 7434);
 });
-QUnit.test('file glb json', async (assert) => {
+QUnit.test('SOP file glb json', async (assert) => {
 	const container = await with_file('/examples/models/parrot.glb');
 	assert.equal(container.points_count(), 497);
 });
-QUnit.test('file glb horse', async (assert) => {
+QUnit.test('SOP file glb horse', async (assert) => {
 	const container = await with_file('/examples/models/horse.glb');
 	assert.equal(container.points_count(), 796);
 });
-QUnit.test('file glb flamingo', async (assert) => {
+QUnit.test('SOP file glb flamingo', async (assert) => {
 	const container = await with_file('/examples/models/flamingo.glb');
 	assert.equal(container.points_count(), 337);
 });
-QUnit.test('file z3 glb with draco', async (assert) => {
+QUnit.test('SOP file z3 glb with draco', async (assert) => {
 	const container = await with_file('/examples/models/z3.glb');
 	assert.equal(container.points_count(), 498800);
 });
-QUnit.test('file draco bunny', async (assert) => {
+QUnit.test('SOP file draco bunny', async (assert) => {
 	const container = await with_file('/examples/models/bunny.drc');
 	assert.equal(container.points_count(), 34834);
 });

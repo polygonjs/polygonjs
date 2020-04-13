@@ -88,12 +88,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	float_to_vec3_2.set_input('z', globals1, 'time');
 	output1.set_input('position', float_to_vec3_2, 'vec3');
 	await mesh_basic1.request_container();
-	assert.deepEqual(
-		Object.keys(material.uniforms).sort(),
-		Object.keys(BASIC_UNIFORMS)
-			.concat(['time'])
-			.sort()
-	);
+	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).concat(['time']).sort());
 });
 
 QUnit.test('mesh basic builder can save and load param configs', async (assert) => {
@@ -123,8 +118,8 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	await mesh_basic1.request_container();
 	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
 	// mesh_basic1.param_names();
-	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture_map']);
-	assert.equal(mesh_basic1.p.texture_map.value, '/COP/file_uv');
+	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
+	assert.equal(mesh_basic1.p.texture_map.value, '/COP/file_uv', 'texture_map value is "/COP/file_uv"');
 	mesh_basic1.params.get('texture_map')!.set('/COP/file2');
 
 	const data = new SceneJsonExporter(scene).data();
@@ -135,9 +130,9 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	const new_mesh_basic1 = scene2.node('/MAT/mesh_basic_builder1') as BaseBuilderMatNodeType;
 	await new_mesh_basic1.request_container();
-	assert.notOk(new_mesh_basic1.assembler_controller.compile_required());
-	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['texture_map']);
-	assert.equal(new_mesh_basic1.params.get('texture_map')?.value, '/COP/file2');
+	assert.notOk(new_mesh_basic1.assembler_controller.compile_required(), 'compile is not required');
+	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
+	assert.equal(new_mesh_basic1.params.get('texture_map')?.value, '/COP/file2', 'texture_map value is "/COP/file_uv"');
 });
 
 QUnit.test(

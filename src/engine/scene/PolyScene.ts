@@ -137,6 +137,7 @@ export class PolyScene {
 	set_frame(frame: number) {
 		this.time_controller.set_frame(frame);
 	}
+
 	get frame() {
 		return this.time_controller.frame;
 	}

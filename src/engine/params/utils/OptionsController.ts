@@ -19,6 +19,7 @@ const FILE_TYPE_OPTION = 'file_type';
 // const EXPRESSION_ONLY_OPTION = 'expression_only';
 const EXPRESSION = 'expression';
 const FOR_ENTITIES = 'for_entities';
+const LABEL = 'label';
 const LEVEL = 'level';
 const MENU = 'menu';
 const ENTRIES = 'entries';
@@ -37,7 +38,7 @@ const SPARE_OPTION = 'spare';
 const TEXTURE_OPTION = 'texture';
 const ENV_OPTION = 'env';
 const HIDDEN_OPTION = 'hidden';
-const LABEL_OPTION = 'label';
+const SHOW_LABEL_OPTION = 'show_label';
 const FIELD_OPTION = 'field';
 const VISIBLE_IF_OPTION = 'visible_if';
 
@@ -58,7 +59,7 @@ interface BaseParamOptions {
 	spare?: boolean;
 	// visible
 	hidden?: boolean;
-	label?: boolean;
+	show_label?: boolean;
 	field?: boolean;
 	visible_if?: Dictionary<number | boolean>;
 }
@@ -92,6 +93,9 @@ interface CallbackParamOptions {
 	callback?: (node: BaseNodeType, param: BaseParamType) => any;
 	callback_string?: string;
 }
+interface LabelParamOptions {
+	label?: string;
+}
 
 // actual param options
 export interface BooleanParamOptions
@@ -100,7 +104,7 @@ export interface BooleanParamOptions
 		MenuParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
-export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions {}
+export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions, LabelParamOptions {}
 export interface ColorParamOptions
 	extends BaseParamOptions,
 		ExpressionParamOptions,
@@ -129,6 +133,7 @@ export interface StringParamOptions
 	extends BaseParamOptions,
 		AssetParamOptions,
 		DesktopParamOptions,
+		CallbackParamOptions,
 		ExpressionParamOptions {
 	multiline?: boolean;
 	language?: StringParamLanguage;
@@ -202,10 +207,12 @@ export class OptionsController {
 	set(options: ParamOptions) {
 		this._default_options = options;
 		this._options = lodash_cloneDeep(this._default_options);
+		this._handle_compute_on_dirty();
 	}
 	copy(options_controller: OptionsController) {
 		this._default_options = lodash_cloneDeep(options_controller.default);
 		this._options = lodash_cloneDeep(options_controller.current);
+		this._handle_compute_on_dirty();
 	}
 	set_option(name: keyof ParamOptions, value: any) {
 		return Object.assign(this._options, name, value);
@@ -249,6 +256,18 @@ export class OptionsController {
 	// compute on dirty
 	get compute_on_dirty(): boolean {
 		return this._options[COMPUTE_ON_DIRTY] || false;
+	}
+	private _compute_on_dirty_callback_added: boolean | undefined;
+	private _handle_compute_on_dirty() {
+		if (this.compute_on_dirty) {
+			if (!this._compute_on_dirty_callback_added) {
+				this.param.add_post_dirty_hook('compute_on_dirty', () => {
+					this.param.compute();
+				});
+
+				this._compute_on_dirty_callback_added = true;
+			}
+		}
 	}
 
 	// callback
@@ -462,11 +481,14 @@ export class OptionsController {
 		this._options[HIDDEN_OPTION] = !state;
 		this.param.emit(ParamEvent.VISIBLE_UPDATED);
 	}
-
+	// label
+	get label() {
+		return this._options[LABEL];
+	}
 	get is_label_hidden(): boolean {
 		const type = this.param.type;
 		return (
-			this._options[LABEL_OPTION] === false ||
+			this._options[SHOW_LABEL_OPTION] === false ||
 			type === ParamType.BUTTON ||
 			type === ParamType.SEPARATOR ||
 			(type === ParamType.BOOLEAN && this.is_field_hidden())

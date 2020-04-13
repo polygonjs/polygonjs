@@ -1,4 +1,4 @@
-import {BaseViewer} from '../_Base';
+import {BaseViewerType} from '../_Base';
 // import {Vector2} from 'three/src/math/Vector2';
 
 // const DIST_UNINITIALIZED = -1;
@@ -13,7 +13,7 @@ export class ViewerEventsController {
 	protected _bound_on_mouseup: MouseOrTouchEventCallback = this._on_mouseup.bind(this);
 	// protected _bound_on_click: MouseEventCallback
 
-	constructor(protected viewer: BaseViewer) {}
+	constructor(protected viewer: BaseViewerType) {}
 
 	get camera_node() {
 		return this.viewer.cameras_controller.camera_node;
@@ -44,10 +44,10 @@ export class ViewerEventsController {
 		this.canvas.addEventListener('mouseup', this._bound_on_mouseup);
 
 		// this._bound_on_touchmove = this._bound_on_touchmove || this._on_touchmove.bind(this)
-		this.canvas.addEventListener('touchstart', this._bound_on_mousedown, false);
-		this.canvas.addEventListener('touchmove', this._bound_on_mousemove, false);
-		this.canvas.addEventListener('touchend', this._bound_on_mouseup, false);
-		this.canvas.addEventListener('touchcancel', this._bound_on_mouseup, false);
+		this.canvas.addEventListener('touchstart', this._bound_on_mousedown, {passive: true});
+		this.canvas.addEventListener('touchmove', this._bound_on_mousemove, {passive: true});
+		this.canvas.addEventListener('touchend', this._bound_on_mouseup, {passive: true});
+		this.canvas.addEventListener('touchcancel', this._bound_on_mouseup, {passive: true});
 	}
 
 	protected _on_mousedown(event: MouseOrTouchEvent) {

@@ -205,6 +205,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 					name: param_name,
 					type: param_type,
 					init_value: param_data['default_value'] as any,
+					raw_input: param_data['raw_input'] as any,
 					options: options,
 				});
 
