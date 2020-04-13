@@ -78,12 +78,16 @@ export interface UpdateOptions {
 	direct_params?: boolean;
 	uniforms?: boolean;
 	define?: boolean;
+	define_uv?: boolean;
 }
 export class BaseTextureMapController extends BaseController {
 	constructor(protected node: BaseMatNodeType, protected _update_options: UpdateOptions) {
 		super(node);
 		if (this._update_options.define == null) {
 			this._update_options.define = true;
+		}
+		if (this._update_options.define_uv == null) {
+			this._update_options.define_uv = true;
 		}
 	}
 
@@ -156,7 +160,9 @@ export class BaseTextureMapController extends BaseController {
 				const define_name = this._define_name(`${mat_attrib_name}`);
 				material.defines[define_name] = 1;
 			}
-			material.defines['USE_UV'] = 1;
+			if (this._update_options.define_uv) {
+				material.defines['USE_UV'] = 1;
+			}
 			material.needsUpdate = true;
 		}
 	}

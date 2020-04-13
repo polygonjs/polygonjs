@@ -84,7 +84,6 @@ export class CoreLoaderGeometry {
 					});
 			} else {
 				const loader = await this.loader_for_ext();
-				console.log('loader', loader);
 				if (loader) {
 					loader.load(
 						url,
@@ -127,7 +126,6 @@ export class CoreLoaderGeometry {
 	}
 
 	private async on_load_success(object: Object3D | BufferGeometry | object): Promise<Object3D[]> {
-		// console.log("animation?", object.animations)
 		// if(object.animations){
 		// 	await CoreScriptLoader.load('/three/js/utils/SkeletonUtils')
 		// }
@@ -191,6 +189,8 @@ export class CoreLoaderGeometry {
 				return this.loader_for_drc();
 			case 'obj':
 				return this.loader_for_obj();
+			case 'fbx':
+				return this.loader_for_fbx();
 		}
 	}
 
@@ -232,6 +232,10 @@ export class CoreLoaderGeometry {
 	async loader_for_obj() {
 		const {OBJLoader2} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader2`);
 		return new OBJLoader2();
+	}
+	async loader_for_fbx() {
+		const {FBXLoader} = await import(`../../../modules/three/examples/jsm/loaders/FBXLoader`);
+		return new FBXLoader();
 	}
 
 	// 	const ext_lowercase = this.ext.toLowerCase();

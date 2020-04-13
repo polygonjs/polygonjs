@@ -8,6 +8,7 @@ import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
 import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
+import {MeshTranslucentMatNode} from '../../../nodes/mat/MeshTranslucent';
 
 export interface MatNodeChildrenMap {
 	mesh_basic: MeshBasicMatNode;
@@ -16,6 +17,7 @@ export interface MatNodeChildrenMap {
 	mesh_lambert_builder: MeshLambertBuilderMatNode;
 	mesh_standard: MeshStandardMatNode;
 	mesh_standard_builder: MeshStandardBuilderMatNode;
+	mesh_translucent: MeshTranslucentMatNode;
 	points: PointsMatNode;
 	points_builder: PointsBuilderMatNode;
 }
@@ -29,6 +31,7 @@ export class MatRegister {
 		poly.register_node(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.register_node(MeshStandardMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.register_node(MeshTranslucentMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.register_node(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
 	}

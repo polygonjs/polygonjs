@@ -52,7 +52,11 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 	}
 
 	private _set_position_from_data_texture(core_object: CoreObject, texture: Texture) {
-		const {data, resx, resy} = this._data_from_texture(texture);
+		const texture_data = this._data_from_texture(texture);
+		if (!texture_data) {
+			return;
+		}
+		const {data, resx, resy} = texture_data;
 		const texture_component_size = data.length / (resx * resy);
 
 		const geometry = core_object.core_geometry()?.geometry();
@@ -98,9 +102,10 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 	private _data_from_texture(texture: Texture) {
 		console.log('texture', texture);
 		if (texture.image) {
+			if (texture.image.data) {
+				return this._data_from_data_texture(texture);
+			}
 			return this._data_from_default_texture(texture);
-		} else {
-			return this._data_from_data_texture(texture);
 		}
 	}
 	private _data_from_default_texture(texture: Texture) {

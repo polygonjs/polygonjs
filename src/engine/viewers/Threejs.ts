@@ -92,7 +92,6 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.cameras_controller.compute_size_and_aspect();
 		const size: Vector2 = this.cameras_controller.size;
 
-		console.log('create renderer');
 		this._camera_node.render_controller.create_renderer(this._canvas, size);
 		// this.canvas_context = canvas.getContext('2d')
 

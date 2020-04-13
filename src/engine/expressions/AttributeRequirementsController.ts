@@ -37,10 +37,12 @@ export class AttributeRequirementsController {
 				const var_name = AttributeRequirementsController.var_attribute(attribute_name);
 				var_names.push(var_name);
 			});
-			return var_names.join(' && ');
-		} else {
-			return 'true';
+			if (var_names.length > 0) {
+				return var_names.join(' && ');
+			}
 		}
+		// TODO: add test that a Point Sop can take an expression that does not require attributes
+		return 'true';
 	}
 
 	add(attribute_name: string) {

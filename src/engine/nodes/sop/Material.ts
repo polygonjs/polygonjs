@@ -1,20 +1,16 @@
 import {TypedSopNode} from './_Base';
-// import {BaseNodeMat} from '../Mat/_Base'
-
 import {CoreMaterial} from '../../../core/geometry/Material';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
-
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseMatNodeType} from '../mat/_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {Object3D} from 'three/src/core/Object3D';
+import {BaseBuilderMatNodeType} from '../mat/_BaseBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseBuilderMatNodeType} from '../mat/_BaseBuilder';
 class MaterialSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');
 	material = ParamConfig.OPERATOR_PATH('/MAT/mesh_standard1', {
@@ -60,9 +56,10 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 			} else {
 				const material_node = node as BaseMatNodeType;
 				const material = material_node.material;
-				if (material instanceof ShaderMaterial) {
-					const material_builder_node = node as BaseBuilderMatNodeType;
-					material_builder_node.assembler_controller.set_assembler_globals_handler(this._globals_handler);
+				if ((node as BaseBuilderMatNodeType).assembler_controller != null) {
+					(node as BaseBuilderMatNodeType).assembler_controller.set_assembler_globals_handler(
+						this._globals_handler
+					);
 				}
 
 				await material_node.request_container();
