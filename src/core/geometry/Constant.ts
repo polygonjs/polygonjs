@@ -131,10 +131,10 @@ export const CoreConstant = {
 		OBJECT: AttribClass.OBJECT,
 	},
 
-	ATTRIB_TYPE: {
-		NUMERIC: 0,
-		STRING: 1,
-	},
+	// ATTRIB_TYPE: {
+	// 	NUMERIC: AttribType.NUMERIC,
+	// 	STRING: AttribType.STRING,
+	// },
 
 	OBJECT_TYPE: {
 		// TODO: typescript

@@ -25,7 +25,7 @@ import lodash_isArray from 'lodash/isArray';
 import lodash_isNumber from 'lodash/isNumber';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
-import {CoreConstant, ObjectType} from './Constant';
+import {CoreConstant, ObjectType, AttribType} from './Constant';
 import {CoreAttribute} from './Attribute';
 import {MonkeyPatcher} from './MonkeyPatcher';
 
@@ -106,9 +106,9 @@ export class CoreGeometry {
 	}
 	attrib_type(name: string) {
 		if (this.is_attrib_indexed(name)) {
-			return CoreConstant.ATTRIB_TYPE.STRING;
+			return AttribType.STRING;
 		} else {
-			return CoreConstant.ATTRIB_TYPE.NUMERIC;
+			return AttribType.NUMERIC;
 		}
 	}
 
@@ -237,9 +237,9 @@ export class CoreGeometry {
 
 	add_attribute(name: string, attrib_data: CoreAttributeData) {
 		switch (attrib_data.type()) {
-			case CoreConstant.ATTRIB_TYPE.STRING:
+			case AttribType.STRING:
 				return console.log('TODO: to implement');
-			case CoreConstant.ATTRIB_TYPE.NUMERIC:
+			case AttribType.NUMERIC:
 				return this.add_numeric_attrib(name, attrib_data.size());
 		}
 	}

@@ -10,7 +10,7 @@ import {CoreTransform, SetParamsFromMatrixOptions} from '../../../../core/Transf
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 // import {NodeContext} from '../../../poly/NodeContext';
-import {TypedObjNode, BaseObjNodeType} from '../_Base';
+import {TypedObjNode} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 // import {FlagsControllerD} from '../../utils/FlagsController';
 // import {LookAtController} from './LookAtController';
@@ -51,12 +51,12 @@ export class TransformController {
 		// });
 		// this.node.set_used_in_scene(true);
 
-		this.node.io.inputs.set_count(0, 1);
-		this.node.io.inputs.set_depends_on_inputs(false);
-		this.node.io.outputs.set_has_one_output();
-		this.node.io.inputs.add_on_set_input_hook('on_input_updated', () => {
-			this.on_input_updated();
-		});
+		// this.node.io.inputs.set_count(0, 1);
+		// this.node.io.inputs.set_depends_on_inputs(false);
+		// this.node.io.outputs.set_has_one_output();
+		// this.node.io.inputs.add_on_set_input_hook('on_input_updated', () => {
+		// 	this.on_input_updated();
+		// });
 
 		const hook_name = '_cook_main_without_inputs_when_dirty';
 		if (!this.node.dirty_controller.has_hook(hook_name)) {
@@ -71,16 +71,16 @@ export class TransformController {
 		// }
 	}
 
-	static on_input_updated(node: BaseObjNodeType) {
-		if (node.io.inputs.input(0) != null) {
-			node.root.add_to_parent_transform(node);
-		} else {
-			node.root.remove_from_parent_transform(node);
-		}
-	}
-	on_input_updated() {
-		TransformController.on_input_updated(this.node);
-	}
+	// static on_input_updated(node: BaseObjNodeType) {
+	// 	if (node.io.inputs.input(0) != null) {
+	// 		node.root.add_to_parent_transform(node);
+	// 	} else {
+	// 		node.root.remove_from_parent_transform(node);
+	// 	}
+	// }
+	// on_input_updated() {
+	// 	TransformController.on_input_updated(this.node);
+	// }
 
 	update(matrix?: Matrix4) {
 		// const object = this.node.object;

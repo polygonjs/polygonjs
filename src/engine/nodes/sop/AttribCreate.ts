@@ -1,13 +1,7 @@
 import lodash_trim from 'lodash/trim';
 
 import {TypedSopNode} from './_Base';
-import {
-	CoreConstant,
-	AttribClassMenuEntries,
-	AttribTypeMenuEntries,
-	AttribClass,
-	AttribType,
-} from '../../../core/geometry/Constant';
+import {AttribClassMenuEntries, AttribTypeMenuEntries, AttribClass, AttribType} from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 // import {CoreGeometry} from '../../../core/geometry/Geometry'
 import {CoreObject} from '../../../core/geometry/Object';
@@ -50,26 +44,26 @@ class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.INTEGER(1, {
 		range: [1, 4],
 		range_locked: [true, true],
-		visible_if: {type: CoreConstant.ATTRIB_TYPE.NUMERIC},
+		visible_if: {type: AttribType.NUMERIC},
 	});
 	value1 = ParamConfig.FLOAT(0, {
-		visible_if: {type: CoreConstant.ATTRIB_TYPE.NUMERIC, size: 1},
+		visible_if: {type: AttribType.NUMERIC, size: 1},
 		expression: {for_entities: true},
 	});
 	value2 = ParamConfig.VECTOR2([0, 0], {
-		visible_if: {type: CoreConstant.ATTRIB_TYPE.NUMERIC, size: 2},
+		visible_if: {type: AttribType.NUMERIC, size: 2},
 		expression: {for_entities: true},
 	});
 	value3 = ParamConfig.VECTOR3([0, 0, 0], {
-		visible_if: {type: CoreConstant.ATTRIB_TYPE.NUMERIC, size: 3},
+		visible_if: {type: AttribType.NUMERIC, size: 3},
 		expression: {for_entities: true},
 	});
 	value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
-		visible_if: {type: CoreConstant.ATTRIB_TYPE.NUMERIC, size: 4},
+		visible_if: {type: AttribType.NUMERIC, size: 4},
 		expression: {for_entities: true},
 	});
 	string = ParamConfig.STRING('', {
-		visible_if: {type: CoreConstant.ATTRIB_TYPE.STRING},
+		visible_if: {type: AttribType.STRING},
 		expression: {for_entities: true},
 	});
 }
@@ -112,10 +106,10 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		for (let i = 0; i < core_objects.length; i++) {
 			const core_object = core_objects[i];
 			switch (this.pv.type) {
-				case CoreConstant.ATTRIB_TYPE.NUMERIC:
+				case AttribType.NUMERIC:
 					await this.add_numeric_attribute_to_points(core_object);
 					break;
-				case CoreConstant.ATTRIB_TYPE.STRING:
+				case AttribType.STRING:
 					await this.add_string_attribute_to_points(core_object);
 					break;
 			}
@@ -125,10 +119,10 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	async add_object_attribute(core_group: CoreGroup) {
 		const core_objects = core_group.core_objects_from_group(this.pv.group);
 		switch (this.pv.type) {
-			case CoreConstant.ATTRIB_TYPE.NUMERIC:
+			case AttribType.NUMERIC:
 				await this.add_numeric_attribute_to_object(core_objects);
 				break;
-			case CoreConstant.ATTRIB_TYPE.STRING:
+			case AttribType.STRING:
 				await this.add_string_attribute_to_object(core_objects);
 				break;
 		}

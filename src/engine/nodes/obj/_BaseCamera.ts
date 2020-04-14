@@ -41,6 +41,7 @@ export const BASE_CAMERA_DEFAULT = {
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
+import {HierarchyController} from './utils/HierarchyController';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -204,6 +205,7 @@ export class TypedThreejsCameraObjNode<
 	K extends BaseThreejsCameraObjParamsConfig
 > extends TypedCameraObjNode<O, K> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
 	readonly transform_controller: TransformController = new TransformController(this);
 	protected _controls_controller: ThreejsCameraControlsController | undefined;
 	get controls_controller(): ThreejsCameraControlsController {
@@ -224,6 +226,7 @@ export class TypedThreejsCameraObjNode<
 	initialize_base_node() {
 		super.initialize_base_node();
 		this.io.outputs.set_has_one_output();
+		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
 	}
 	async cook() {

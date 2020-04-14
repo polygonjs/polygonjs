@@ -8,14 +8,62 @@ import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
+import {CsvLoader} from '../../../core/loader/geometry/Csv';
+
+export enum DataType {
+	JSON = 'json',
+	CSV = 'csv',
+}
+export const DATA_TYPES: DataType[] = [DataType.JSON, DataType.CSV];
+
 class DataUrlSopParamsConfig extends NodeParamsConfig {
-	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');
-	json_data_keys_prefix = ParamConfig.STRING('');
-	skip_entries = ParamConfig.STRING('');
-	convert = ParamConfig.BOOLEAN(0);
-	convert_to_numeric = ParamConfig.STRING('', {
-		visible_if: {convert: 1},
+	data_type = ParamConfig.INTEGER(DATA_TYPES.indexOf(DataType.JSON), {
+		menu: {
+			entries: DATA_TYPES.map((t, i) => {
+				return {
+					name: t,
+					value: i,
+				};
+			}),
+		},
 	});
+	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');
+
+	//
+	// JSON params
+	//
+	json_data_keys_prefix = ParamConfig.STRING('', {
+		visible_if: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+	});
+	skip_entries = ParamConfig.STRING('', {
+		visible_if: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+	});
+	convert = ParamConfig.BOOLEAN(0, {
+		visible_if: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+	});
+	convert_to_numeric = ParamConfig.STRING('', {
+		visible_if: {
+			data_type: DATA_TYPES.indexOf(DataType.JSON),
+			convert: 1,
+		},
+	});
+
+	//
+	// CSV params
+	//
+	read_attrib_names_from_file = ParamConfig.BOOLEAN(1, {
+		visible_if: {data_type: DATA_TYPES.indexOf(DataType.CSV)},
+	});
+	attrib_names = ParamConfig.STRING('height scale', {
+		visible_if: {
+			data_type: DATA_TYPES.indexOf(DataType.CSV),
+			read_attrib_names_from_file: 0,
+		},
+	});
+
+	//
+	// reload
+	//
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			DataUrlSopNode.PARAM_CALLBACK_reload(node as DataUrlSopNode, param);
@@ -30,8 +78,20 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		return 'data_url';
 	}
 
-	// TODO: no error when trying to load a non existing zip file??
 	async cook() {
+		switch (DATA_TYPES[this.pv.data_type]) {
+			case DataType.JSON:
+				return this._load_json();
+			case DataType.CSV:
+				return this._load_csv();
+		}
+	}
+	//
+	//
+	// JSON
+	//
+	//
+	private _load_json() {
 		const loader = new JsonDataLoader({
 			data_keys_prefix: this.pv.json_data_keys_prefix,
 			skip_entries: this.pv.skip_entries,
@@ -48,6 +108,22 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	_on_error(error: ErrorEvent) {
 		this.states.error.set(`could not load geometry from ${this.pv.url} (${error})`);
 		this.cook_controller.end_cook();
+	}
+
+	//
+	//
+	// CSV
+	//
+	//
+	async _load_csv() {
+		const attrib_names = this.pv.read_attrib_names_from_file ? undefined : this.pv.attrib_names.split(' ');
+		const loader = new CsvLoader(attrib_names);
+		const points = await loader.load(this.pv.url);
+		if (points) {
+			this.set_objects([points]);
+		} else {
+			this.states.error.set('could not generate points');
+		}
 	}
 
 	// async _on_open_url(){

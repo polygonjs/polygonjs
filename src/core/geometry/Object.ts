@@ -13,7 +13,7 @@ import {Bone} from 'three/src/objects/Bone';
 import {CoreGeometry} from './Geometry';
 import {GroupString} from './Group';
 import {CoreAttribute} from './Attribute';
-import {CoreConstant} from './Constant';
+import {CoreConstant, AttribType} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
@@ -156,9 +156,9 @@ export class CoreObject extends CoreEntity {
 	attrib_type(name: string) {
 		const val = this.attrib_value(name);
 		if (lodash_isString(val)) {
-			return CoreConstant.ATTRIB_TYPE.STRING;
+			return AttribType.STRING;
 		} else {
-			return CoreConstant.ATTRIB_TYPE.NUMERIC;
+			return AttribType.NUMERIC;
 		}
 	}
 

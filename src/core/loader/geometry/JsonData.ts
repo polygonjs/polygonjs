@@ -11,7 +11,7 @@ const THREE = {BufferGeometry, Float32BufferAttribute, Points};
 // import UrlLoader from '../UrlLoader';
 import {CoreString} from '../../String';
 import {CoreGeometry} from '../../geometry/Geometry';
-import {CoreConstant} from '../../geometry/Constant';
+import {CoreConstant, AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 // import {BaseNodeType} from '../../../engine/nodes/_Base';
@@ -106,7 +106,7 @@ export class JsonDataLoader {
 				const data = this._attribute_datas_by_name[attrib_name];
 				const size = data.size();
 
-				if (data.type() === CoreConstant.ATTRIB_TYPE.STRING) {
+				if (data.type() === AttribType.STRING) {
 					// const index_data = CoreAttribute.array_to_indexed_arrays(
 					// 	attrib_values as string[]
 					// )

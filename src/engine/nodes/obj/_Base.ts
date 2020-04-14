@@ -47,19 +47,8 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	// protected _main_group = new Group();
 	protected _children_group = new Group();
 	protected _object!: O;
-	// _sop_loaded: boolean = false;
-
-	// protected _look_at_controller: LookAtController | undefined;
-	// get look_at_controller(): LookAtController {
-	// 	return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
-	// }
-	// protected _transform_controller: TransformController | undefined;
-	// get transform_controller(): TransformController {
-	// 	return (this._transform_controller = this._transform_controller || new TransformController(this));
-	// }
 
 	protected _attachable_to_hierarchy: boolean = true;
 	get attachable_to_hierarchy() {

@@ -1,4 +1,4 @@
-import {CoreConstant} from '../../../../src/core/geometry/Constant';
+import {CoreConstant, AttribType} from '../../../../src/core/geometry/Constant';
 
 QUnit.test('attrib create simple float vertex', async (assert) => {
 	const geo1 = window.geo1;
@@ -281,7 +281,7 @@ QUnit.test('attrib create simple string object', async (assert) => {
 	attrib_create1.p.name.set('test_string');
 	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(1);
-	attrib_create1.p.type.set(CoreConstant.ATTRIB_TYPE.STRING);
+	attrib_create1.p.type.set(AttribType.STRING);
 	attrib_create1.p.string.set('pt_`$F`');
 	attrib_create1.set_input(0, box1);
 
@@ -354,7 +354,7 @@ QUnit.test('attrib create for string on vertices', async (assert) => {
 	const attrib_create1 = geo1.create_node('attrib_create');
 	attrib_create1.set_input(0, box1);
 	attrib_create1.p.name.set('ids');
-	attrib_create1.p.type.set(CoreConstant.ATTRIB_TYPE.STRING);
+	attrib_create1.p.type.set(AttribType.STRING);
 	attrib_create1.p.string.set('pt_`@ptnum*2`');
 
 	let container = await attrib_create1.request_container();

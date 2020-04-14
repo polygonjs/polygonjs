@@ -128,7 +128,6 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
 			material.fragmentShader = new_fragment_shader;
-			console.log(this._gl_parent_node.name, material.vertexShader, material.fragmentShader);
 			// if (this._template_shader && this._template_shader.uniforms) {
 			this.add_uniforms(material.uniforms);
 			// }

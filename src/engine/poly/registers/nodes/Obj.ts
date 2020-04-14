@@ -12,6 +12,7 @@ import {MaterialsObjNode} from '../../../nodes/obj/Materials';
 import {CopObjNode} from '../../../nodes/obj/Cop';
 import {PostProcessObjNode} from '../../../nodes/obj/PostProcess';
 
+import {BlendObjNode} from '../../../nodes/obj/Blend';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
 import {NullObjNode} from '../../../nodes/obj/Null';
 import {FogObjNode} from '../../../nodes/obj/Fog';
@@ -24,6 +25,7 @@ import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
 export interface ObjNodeChildrenMap {
 	ambient_light: AmbientLightObjNode;
 	area_light: AreaLightObjNode;
+	blend: BlendObjNode;
 	cop: CopObjNode;
 	directional_light: DirectionalLightObjNode;
 	events: EventsObjNode;
@@ -55,8 +57,9 @@ export class ObjRegister {
 		poly.register_node(CopObjNode, CATEGORY_OBJ.MANAGER);
 		poly.register_node(PostProcessObjNode, CATEGORY_OBJ.MANAGER);
 
+		poly.register_node(BlendObjNode, CATEGORY_OBJ.MISC);
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
-		poly.register_node(NullObjNode, CATEGORY_OBJ.GEOMETRY);
+		poly.register_node(NullObjNode, CATEGORY_OBJ.MISC);
 		poly.register_node(SceneObjNode, CATEGORY_OBJ.MISC);
 
 		poly.register_node(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);

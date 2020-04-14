@@ -20,6 +20,7 @@ import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {HierarchyController} from './utils/HierarchyController';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 }
@@ -30,6 +31,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	static type() {
 		return 'geo';
 	}
+	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
 	readonly transform_controller: TransformController = new TransformController(this);
 	protected _display_node_controller: DisplayNodeController = new DisplayNodeController(this);
 	get display_node_controller() {
@@ -62,6 +64,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
 
 		this.display_node_controller.initialize_node();
+		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
 		// this.flags.display.add_hook(() => {
 		// 	this.set_used_in_scene(this.flags.display.active);

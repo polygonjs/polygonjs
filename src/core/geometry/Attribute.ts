@@ -1,6 +1,5 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
-const THREE = {Vector2, Vector3};
 
 const ATTRIB_NAME_MAP: Dictionary<string> = {
 	P: 'position',
@@ -59,9 +58,9 @@ export class CoreAttribute {
 			case 1:
 				return 0;
 			case 2:
-				return new THREE.Vector2(0, 0);
+				return new Vector2(0, 0);
 			case 3:
-				return new THREE.Vector3(0, 0, 0);
+				return new Vector3(0, 0, 0);
 			default:
 				throw `size ${size} not yet implemented`;
 		}
