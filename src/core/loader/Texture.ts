@@ -127,7 +127,7 @@ export class CoreTextureLoader {
 
 			if (CoreTextureLoader.VIDEO_EXTENSIONS.includes(ext)) {
 				const texture: VideoTexture = await this._load_as_video(url);
-				return texture;
+				resolve(texture);
 			} else {
 				this.loader_for_ext(ext).then((loader) => {
 					loader.load(url, resolve, undefined, (error: any) => {
