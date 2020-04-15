@@ -81,7 +81,6 @@ export class DisplayNodeController {
 		}
 		this._children_uuids_dict = {};
 		this._children_length = 0;
-		console.log('remove children for ', this.node.full_path());
 	}
 
 	get used_in_scene() {
@@ -98,7 +97,6 @@ export class DisplayNodeController {
 	}
 
 	private async _set_content_under_sop_group() {
-		console.warn('_set_content_under_sop_group', this.node.full_path(), this._display_node);
 		// we also check that the parent are the same, in case the node has been deleted
 		if (this._display_node && this._display_node.parent?.graph_node_id == this.node.graph_node_id) {
 			const container = await this._display_node.request_container();
@@ -119,7 +117,6 @@ export class DisplayNodeController {
 					this.remove_children();
 					for (let object of new_objects) {
 						this.parent_object.add(object);
-						console.log('add to parent', this.node.full_path(), object);
 						this._children_uuids_dict[object.uuid] = true;
 					}
 					this._children_length = new_objects.length;

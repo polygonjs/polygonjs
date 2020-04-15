@@ -10,7 +10,23 @@ import {MathUtils} from 'three/src/math/MathUtils';
 
 import {BaseNodeType} from '../engine/nodes/_Base';
 
-const DEFAULT_ROTATION_ORDER = 'XYZ';
+export enum RotationOrder {
+	XYZ = 'XYZ',
+	YXZ = 'YXZ',
+	ZXY = 'ZXY',
+	ZYX = 'ZYX',
+	YZX = 'YZX',
+	XZY = 'XZY',
+}
+export const ROTATION_ORDERS: RotationOrder[] = [
+	RotationOrder.XYZ,
+	RotationOrder.YXZ,
+	RotationOrder.ZXY,
+	RotationOrder.ZYX,
+	RotationOrder.YZX,
+	RotationOrder.XZY,
+];
+export const DEFAULT_ROTATION_ORDER = RotationOrder.XYZ;
 
 export interface SetParamsFromMatrixOptions {
 	scale?: boolean;
@@ -151,16 +167,16 @@ export class CoreTransform {
 	// }
 	private _matrix = new Matrix4().identity();
 	private _matrix_q = new Quaternion();
-	private _matrix_e = new Euler();
+	private _matrix_euler = new Euler();
 	private _matrix_s = new Vector3();
-	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
-		this._matrix_e.set(
+	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number, rotation_order: RotationOrder) {
+		this._matrix_euler.set(
 			MathUtils.degToRad(r.x),
 			MathUtils.degToRad(r.y),
 			MathUtils.degToRad(r.z),
-			DEFAULT_ROTATION_ORDER
+			rotation_order
 		);
-		this._matrix_q.setFromEuler(this._matrix_e);
+		this._matrix_q.setFromEuler(this._matrix_euler);
 
 		this._matrix_s.copy(s).multiplyScalar(scale);
 

@@ -174,8 +174,13 @@ export class NodeCodeExporter {
 	}
 	protected add_display_flag() {
 		if (this._node.flags?.has_display()) {
-			if (this._node.flags.display?.active) {
-				this._lines.push(`${this.var_name()}.flags.display.set(true)`);
+			const active = this._node.flags.display?.active;
+			if (this._node.parent?.display_node_controller) {
+				if (active) {
+					this._lines.push(`${this.var_name()}.flags.display.set(true)`);
+				}
+			} else {
+				this._lines.push(`${this.var_name()}.flags.display.set(${active})`);
 			}
 		}
 	}

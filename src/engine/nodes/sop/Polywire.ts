@@ -1,6 +1,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {CoreTransform} from '../../../core/Transform';
+import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
@@ -101,7 +101,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 		const scale = 1;
 		for (let position of positions) {
 			const t = position;
-			const matrix = this._core_transform.matrix(t, DEFAULT_R, DEFAULT_S, scale);
+			const matrix = this._core_transform.matrix(t, DEFAULT_R, DEFAULT_S, scale, DEFAULT_ROTATION_ORDER);
 
 			const new_circle = circle_template.clone();
 			new_circle.applyMatrix4(matrix);

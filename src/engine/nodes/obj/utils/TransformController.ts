@@ -1,22 +1,18 @@
-import {Euler} from 'three/src/math/Euler';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Vector3} from 'three/src/math/Vector3';
-
-// import {Object3D} from 'three/src/core/Object3D';
-// import {BaseTransformedObjNodeType} from '../_BaseTransformed';
-import {CoreMath} from '../../../../core/math/_Module';
-import {CoreTransform, SetParamsFromMatrixOptions} from '../../../../core/Transform';
-// import {BaseObjNodeType} from '../_Base';
-
-import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-// import {NodeContext} from '../../../poly/NodeContext';
 import {TypedObjNode} from '../_Base';
+import {Matrix4} from 'three/src/math/Matrix4';
+import {CoreTransform, SetParamsFromMatrixOptions, ROTATION_ORDERS, RotationOrder} from '../../../../core/Transform';
 import {Object3D} from 'three/src/core/Object3D';
-// import {FlagsControllerD} from '../../utils/FlagsController';
-// import {LookAtController} from './LookAtController';
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function TransformedParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
+		rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
+			menu: {
+				entries: ROTATION_ORDERS.map((order, v) => {
+					return {name: order, value: v};
+				}),
+			},
+		});
 		t = ParamConfig.VECTOR3([0, 0, 0]);
 		r = ParamConfig.VECTOR3([0, 0, 0]);
 		s = ParamConfig.VECTOR3([1, 1, 1]);
@@ -28,36 +24,13 @@ export function TransformedParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 class TransformedParamsConfig extends TransformedParamConfig(NodeParamsConfig) {}
 export class TransformedObjNode extends TypedObjNode<Object3D, TransformedParamsConfig> {
-	// public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	readonly transform_controller: TransformController = new TransformController(this);
-	// get transform_controller(): TransformController {
-	// 	return this._transform_controller; // = this._transform_controller || new TransformController(this));
-	// }
 }
 
 export class TransformController {
 	constructor(private node: TransformedObjNode) {}
 
-	// protected _look_at_controller = new LookAtController(this.node);
-	// get look_at_controller(): LookAtController {
-	// 	return (this._look_at_controller = this._look_at_controller || new LookAtController(this));
-	// }
-
 	initialize_node() {
-		// not sure we should change if it is used in the scene, as parented children may still be
-		// this.node.flags.display.add_hook(() => {
-		// 	// this.node.set_used_in_scene(this.node.flags.display.active || false);
-		// 	this.node.object.visible = this.node.flags.display.active;
-		// });
-		// this.node.set_used_in_scene(true);
-
-		// this.node.io.inputs.set_count(0, 1);
-		// this.node.io.inputs.set_depends_on_inputs(false);
-		// this.node.io.outputs.set_has_one_output();
-		// this.node.io.inputs.add_on_set_input_hook('on_input_updated', () => {
-		// 	this.on_input_updated();
-		// });
-
 		const hook_name = '_cook_main_without_inputs_when_dirty';
 		if (!this.node.dirty_controller.has_hook(hook_name)) {
 			this.node.dirty_controller.add_post_dirty_hook(hook_name, this._cook_main_without_inputs_when_dirty_bound);
@@ -66,48 +39,11 @@ export class TransformController {
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		// if (this.node.used_in_scene) {
 		await this.node.cook_controller.cook_main_without_inputs();
-		// }
 	}
 
-	// static on_input_updated(node: BaseObjNodeType) {
-	// 	if (node.io.inputs.input(0) != null) {
-	// 		node.root.add_to_parent_transform(node);
-	// 	} else {
-	// 		node.root.remove_from_parent_transform(node);
-	// 	}
-	// }
-	// on_input_updated() {
-	// 	TransformController.on_input_updated(this.node);
-	// }
-
 	update(matrix?: Matrix4) {
-		// const object = this.node.object;
-		// const update_full_matrix = false; // if true the camera controls do not work anymore
-		//matrix = Core.Transform.matrix_from_node_with_transform_params(this)
-
-		// if (object) {
-		// if update_full_matrix
-		// 	object.matrixAutoUpdate = false
-		// 	object.matrix = matrix
-		// else
-
-		// if (this._look_at_controller.active == true) {
-		// 	return this._look_at_controller.compute(); //this._use_look_at_param();
-		// } else {
 		this.update_transform_with_matrix(matrix);
-		// }
-		// if matrix?
-		// 	# do not apply to cameras with control
-		// 	object.matrixAutoUpdate = false
-		// 	object.matrix = matrix
-		// else
-		// 	this.update_transform_from_params()
-		// } else {
-		// 	console.warn(`no object to update for ${this.node.full_path()}`);
-		// 	// return false;
-		// }
 	}
 
 	update_transform_with_matrix(matrix?: Matrix4) {
@@ -120,47 +56,59 @@ export class TransformController {
 			object.matrixAutoUpdate = false;
 			object.matrix = matrix;
 
-			return object.dispatchEvent({type: 'change'});
+			object.dispatchEvent({type: 'change'});
 		} else {
-			return this.update_transform_from_params();
+			this._update_matrix_from_params_with_core_transform();
+			// this.update_transform_from_params();
 		}
 	}
 
-	private _update_transform_from_params_scale = new Vector3();
-	update_transform_from_params() {
+	// private _update_transform_from_params_scale = new Vector3();
+	// protected update_transform_from_params() {
+	// 	const object = this.node.object;
+	// 	if (object) {
+	// 		const position: Vector3 = this.node.pv.t;
+	// 		const rotation: Vector3 = this.node.pv.r;
+
+	// 		this._update_transform_from_params_scale.copy(this.node.pv.s).multiplyScalar(this.node.pv.scale);
+
+	// 		object.matrixAutoUpdate = false;
+	// 		object.position.copy(position);
+	// 		const radians = [
+	// 			CoreMath.degrees_to_radians(rotation.x),
+	// 			CoreMath.degrees_to_radians(rotation.y),
+	// 			CoreMath.degrees_to_radians(rotation.z),
+	// 		];
+	// 		const euler = new Euler(
+	// 			radians[0],
+	// 			radians[1],
+	// 			radians[2]
+	// 			//'XYZ'
+	// 		);
+	// 		object.rotation.copy(euler);
+	// 		object.scale.copy(this._update_transform_from_params_scale);
+	// 		object.matrixAutoUpdate = true;
+	// 		object.updateMatrix();
+
+	// 		object.dispatchEvent({type: 'change'});
+	// 	}
+	// }
+	private _core_transform = new CoreTransform();
+	private _update_matrix_from_params_with_core_transform() {
 		const object = this.node.object;
-		if (object) {
-			const position: Vector3 = this.node.pv.t;
-			//quaternion = new Quaternion()
-			const rotation: Vector3 = this.node.pv.r;
+		object.matrixAutoUpdate = false;
+		const matrix = this._core_transform.matrix(
+			this.node.pv.t,
+			this.node.pv.r,
+			this.node.pv.s,
+			this.node.pv.scale,
+			ROTATION_ORDERS[this.node.pv.rotation_order]
+		);
+		object.matrix.identity();
+		object.applyMatrix4(matrix);
+		object.matrixAutoUpdate = true;
 
-			this._update_transform_from_params_scale.copy(this.node.pv.s).multiplyScalar(this.node.pv.scale);
-			// const scale: Vector3 = this.node.pv.s
-			// 	.clone()
-			// 	.multiplyScalar(this.node.pv.scale);
-			//matrix.decompose( position, quaternion, scale )
-
-			object.matrixAutoUpdate = false;
-			object.position.copy(position);
-			//object.quaternion.copy(quaternion)
-			const radians = [
-				CoreMath.degrees_to_radians(rotation.x),
-				CoreMath.degrees_to_radians(rotation.y),
-				CoreMath.degrees_to_radians(rotation.z),
-			];
-			const euler = new Euler(
-				radians[0],
-				radians[1],
-				radians[2]
-				//'XYZ'
-			);
-			object.rotation.copy(euler);
-			object.scale.copy(this._update_transform_from_params_scale);
-			object.matrixAutoUpdate = true;
-			object.updateMatrix();
-
-			object.dispatchEvent({type: 'change'});
-		}
+		object.dispatchEvent({type: 'change'});
 	}
 
 	set_params_from_matrix(matrix: Matrix4, options: SetParamsFromMatrixOptions = {}) {

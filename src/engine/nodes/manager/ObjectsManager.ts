@@ -183,7 +183,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	are_children_cooking(): boolean {
 		const children = this.children();
 		for (let child of children) {
-			if (child.is_display_node_cooking()) {
+			if (child.cook_controller.is_cooking || child.is_display_node_cooking()) {
 				return true;
 			}
 		}

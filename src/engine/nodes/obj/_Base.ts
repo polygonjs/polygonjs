@@ -177,6 +177,11 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// request_display_node() {}
 
 	is_display_node_cooking(): boolean {
+		if (this._display_node_controller) {
+			if (this._display_node_controller.display_node) {
+				return this._display_node_controller.display_node.cook_controller.is_cooking;
+			}
+		}
 		return false;
 	}
 

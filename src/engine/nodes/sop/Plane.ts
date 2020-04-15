@@ -14,7 +14,11 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PlaneSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.VECTOR2([1, 1]);
 	use_segments_count = ParamConfig.BOOLEAN(0);
-	step_size = ParamConfig.FLOAT(1, {visible_if: {use_segments_count: 0}});
+	step_size = ParamConfig.FLOAT(1, {
+		range: [0.001, 1],
+		range_locked: [true, false],
+		visible_if: {use_segments_count: 0},
+	});
 	segments = ParamConfig.VECTOR2([1, 1], {visible_if: {use_segments_count: 1}});
 	direction = ParamConfig.VECTOR3([0, 1, 0]);
 	center = ParamConfig.VECTOR3([0, 0, 0]);
@@ -80,20 +84,18 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 	}
 
 	_create_plane(size: Vector2) {
-		let segments_count;
+		let segments_count = new Vector2(1, 1);
 		size = size.clone();
 		if (this.pv.use_segments_count) {
-			segments_count = {
-				x: Math.floor(this.pv.segments.x),
-				y: Math.floor(this.pv.segments.y),
-			};
+			segments_count.x = Math.floor(this.pv.segments.x);
+			segments_count.y = Math.floor(this.pv.segments.y);
 		} else {
-			segments_count = {
-				x: Math.floor(size.x / this.pv.step_size),
-				y: Math.floor(size.y / this.pv.step_size),
-			};
-			size.x = segments_count.x * this.pv.step_size;
-			size.y = segments_count.y * this.pv.step_size;
+			if (this.pv.step_size > 0) {
+				segments_count.x = Math.floor(size.x / this.pv.step_size);
+				segments_count.y = Math.floor(size.y / this.pv.step_size);
+				size.x = segments_count.x * this.pv.step_size;
+				size.y = segments_count.y * this.pv.step_size;
+			}
 		}
 		return new PlaneBufferGeometry(size.x, size.y, segments_count.x, segments_count.y);
 	}
