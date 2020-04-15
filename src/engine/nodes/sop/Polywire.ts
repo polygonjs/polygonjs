@@ -18,6 +18,7 @@ const DEFAULT_S = new Vector3(1, 1, 1);
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
+import {ObjectType} from '../../../core/geometry/Constant';
 class PolywireSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1);
 	segments_radial = ParamConfig.INTEGER(8, {
@@ -64,7 +65,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			geometry.dispose();
 		}
 		if (merged_geometry) {
-			const object = this.create_object(merged_geometry);
+			const object = this.create_object(merged_geometry, ObjectType.MESH);
 
 			this.set_object(object);
 		} else {

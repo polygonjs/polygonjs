@@ -1,7 +1,7 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
 import {CoreTransform} from '../../../core/Transform';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 
 import {CoreGeometryOperationHexagon} from '../../../core/geometry/operation/Hexagon';
 
@@ -35,7 +35,7 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
 		if (this.pv.points_only) {
-			this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.POINTS);
+			this.set_geometry(geometry, ObjectType.POINTS);
 		} else {
 			this.set_geometry(geometry);
 		}

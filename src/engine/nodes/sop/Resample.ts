@@ -11,7 +11,7 @@ import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/
 import lodash_flatten from 'lodash/flatten';
 import lodash_map from 'lodash/map';
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
@@ -127,7 +127,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			}
 		}
 		const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
-		const object = this.create_object(merged_geometry, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
+		const object = this.create_object(merged_geometry, ObjectType.LINE_SEGMENTS);
 		return object;
 	}
 

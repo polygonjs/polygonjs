@@ -68,7 +68,10 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 			cook: false,
 			compute_on_dirty: true,
 			callback: (node: BaseNodeType, param: BaseParamType) => {
-				BaseCameraObjNodeClass.PARAM_CALLBACK_update_from_param(node as BaseCameraObjNodeType, param);
+				BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_update_near_far_from_param(
+					node as BaseThreejsCameraObjNodeType,
+					param
+				);
 			},
 		});
 		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {
@@ -76,7 +79,10 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 			cook: false,
 			compute_on_dirty: true,
 			callback: (node: BaseNodeType, param: BaseParamType) => {
-				BaseCameraObjNodeClass.PARAM_CALLBACK_update_from_param(node as BaseCameraObjNodeType, param);
+				BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_update_near_far_from_param(
+					node as BaseThreejsCameraObjNodeType,
+					param
+				);
 			},
 		});
 		// aspect = ParamConfig.FLOAT(1);
@@ -234,12 +240,7 @@ export class TypedThreejsCameraObjNode<
 		this.layers_controller.update();
 		// await this.background_controller.update();
 
-		if (this._object.near != this.pv.near || this._object.far != this.pv.far) {
-			this._object.near = this.pv.near;
-			this._object.far = this.pv.far;
-			console.log('far updated in cook', this.object.far);
-			this._object.updateProjectionMatrix();
-		}
+		this.update_near_far();
 
 		this.render_controller.update_scene();
 		this.update_camera();
@@ -251,6 +252,17 @@ export class TypedThreejsCameraObjNode<
 		// this._object.dispatchEvent( EVENT_CHANGE )
 		this._object.dispatchEvent(EVENT_CHANGE);
 		this.cook_controller.end_cook();
+	}
+
+	static PARAM_CALLBACK_update_near_far_from_param(node: BaseThreejsCameraObjNodeType, param: BaseParamType) {
+		node.update_near_far();
+	}
+	update_near_far() {
+		if (this._object.near != this.pv.near || this._object.far != this.pv.far) {
+			this._object.near = this.pv.near;
+			this._object.far = this.pv.far;
+			this._object.updateProjectionMatrix();
+		}
 	}
 
 	setup_for_aspect_ratio(aspect: number) {

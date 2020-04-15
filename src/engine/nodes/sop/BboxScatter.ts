@@ -2,7 +2,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import lodash_range from 'lodash/range';
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -56,6 +56,6 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 
-		this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.POINTS);
+		this.set_geometry(geometry, ObjectType.POINTS);
 	}
 }

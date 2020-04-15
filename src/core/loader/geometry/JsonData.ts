@@ -8,14 +8,11 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 const THREE = {BufferGeometry, Float32BufferAttribute, Points};
 
-// import UrlLoader from '../UrlLoader';
 import {CoreString} from '../../String';
 import {CoreGeometry} from '../../geometry/Geometry';
-import {CoreConstant, AttribType} from '../../geometry/Constant';
+import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
-// import {BaseNodeType} from '../../../engine/nodes/_Base';
-import {Object3D} from 'three/src/core/Object3D';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 
@@ -41,7 +38,7 @@ export class JsonDataLoader {
 
 	load(
 		url: string,
-		success_callback: (object: Object3D) => void,
+		success_callback: (geometry: BufferGeometry) => void,
 		progress_callback: (() => void) | undefined,
 		error_callback: (error: ErrorEvent) => void | undefined
 	) {
@@ -136,7 +133,8 @@ export class JsonDataLoader {
 				}
 			}
 		}
-		return new THREE.Points(geometry, CoreConstant.MATERIALS[THREE.Points.name]);
+		return geometry;
+		// return new THREE.Points(geometry, CoreConstant.MATERIALS[THREE.Points.name]);
 	}
 
 	private _find_attributes() {

@@ -106,7 +106,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 			const merged_geometry = CoreGeometry.merge_geometries(geometries);
 			if (merged_geometry) {
 				const object = this.create_object(merged_geometry, type);
-				merged_objects.push(object);
+				merged_objects.push(object as Object3DWithGeometry);
 			}
 
 			// objects.forEach( object=> {

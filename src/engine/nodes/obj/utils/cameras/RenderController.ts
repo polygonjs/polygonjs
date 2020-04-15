@@ -63,7 +63,7 @@ export class RenderController {
 	}
 	async update_scene() {
 		if (this.node.pv.use_custom_scene) {
-			console.log('update_scene', this.node.full_path());
+			console.warn('update_scene', this.node.full_path());
 			const param = this.node.p.scene;
 			if (param.is_dirty) {
 				await param.compute();
@@ -74,8 +74,7 @@ export class RenderController {
 				if (node.is_dirty) {
 					node.cook_controller.cook_main_without_inputs();
 				}
-				console.log('resolved scene from ', node.full_path());
-				this._resolved_scene = (node as SceneObjNode).object;
+				this._resolved_scene = node.object;
 			}
 		} else {
 			this._resolved_scene = this.node.scene.default_scene;

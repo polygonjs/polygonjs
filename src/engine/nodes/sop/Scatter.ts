@@ -6,7 +6,7 @@ import lodash_isNumber from 'lodash/isNumber';
 import lodash_sortBy from 'lodash/sortBy';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreIterator} from '../../../core/Iterator';
 
@@ -163,7 +163,7 @@ export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 			geometry.setAttribute('id', new THREE.BufferAttribute(new Float32Array(ids), 1));
 		}
 
-		this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.POINTS);
+		this.set_geometry(geometry, ObjectType.POINTS);
 	}
 
 	// private _add_point(point_index: number) {

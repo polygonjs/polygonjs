@@ -20,6 +20,7 @@ const DEFAULT_DATA = [
 const DEFAULT_DATA_STR = JSON.stringify(DEFAULT_DATA);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ObjectType} from '../../../core/geometry/Constant';
 class DataSopParamsConfig extends NodeParamsConfig {
 	data = ParamConfig.STRING(DEFAULT_DATA_STR);
 }
@@ -42,8 +43,8 @@ export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 		if (json) {
 			const loader = new JsonDataLoader();
 			loader.set_json(json);
-			const object = loader.create_object();
-			this.set_object(object);
+			const geometry = loader.create_object();
+			this.set_geometry(geometry, ObjectType.POINTS);
 		} else {
 			this.cook_controller.end_cook();
 		}

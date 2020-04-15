@@ -7,8 +7,8 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
-import {CoreConstant} from '../../../core/geometry/Constant';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreConstant, ObjectByObjectType, OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE} from '../../../core/geometry/Constant';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreMaterial} from '../../../core/geometry/Material';
 import {ObjectType} from '../../../core/geometry/Constant';
 
@@ -168,7 +168,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	// 	}
 	// }
 
-	set_geometry(geometry: BufferGeometry, type?: ObjectType) {
+	set_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		// this._clear_objects();
 		// this.add_geometry(geometry, type);
 		// this.set_container(this.group(), MESSAGE.FROM_SET_GEOMETRY);
@@ -179,7 +179,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	}
 	//this.end_cook()
 
-	set_geometries(geometries: BufferGeometry[], type?: ObjectType) {
+	set_geometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
 		// this._clear_objects();
 		const objects: Object3D[] = [];
 		let object;
@@ -225,16 +225,13 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	// 	return group;
 	// }
 
-	create_object(geometry: BufferGeometry, type?: ObjectType): Object3DWithGeometry {
+	create_object<OT extends ObjectType>(geometry: BufferGeometry, type: OT): ObjectByObjectType[OT] {
 		// ensure it has an index
 		if (!geometry.index) {
 			const position_array = geometry.getAttribute('position').array;
 			geometry.setIndex(lodash_range(position_array.length / 3));
 		}
 
-		if (type == null) {
-			type = CoreConstant.OBJECT_TYPE.MESH;
-		}
 		// if (!lodash_includes(CoreConstant.OBJECT_TYPES, type)) {
 		// 	const human_type = CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[type];
 		// 	const human_names = CoreConstant.OBJECT_TYPES.map(
@@ -244,14 +241,14 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		// }
 
 		// if (geometry != null) {
-		const object_constructor = CoreConstant.CONSTRUCTORS_BY_NAME[type]; //THREE[type];
+		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type]; //THREE[type];
 		const material = CoreConstant.MATERIALS[type].clone();
-		const object = new object_constructor(geometry, material) as Object3DWithGeometry;
+		const object = new object_constructor(geometry, material);
 		object.castShadow = true;
 		object.receiveShadow = true;
 		object.frustumCulled = false;
 
-		return object;
+		return object as ObjectByObjectType[OT];
 		// }
 	}
 

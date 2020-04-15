@@ -56,13 +56,34 @@ export enum ObjectType {
 	POINTS = 'POINTS',
 	LINE_SEGMENTS = 'LINE_SEGMENTS',
 }
-export const ObjectTypes = [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS];
-export const ObjectTypeMenuEntries = [
-	{name: 'Mesh', value: ObjectTypes.indexOf(ObjectType.MESH)},
-	{name: 'Points', value: ObjectTypes.indexOf(ObjectType.POINTS)},
-	{name: 'LineSegments', value: ObjectTypes.indexOf(ObjectType.LINE_SEGMENTS)},
-];
-
+export interface ObjectByObjectType {
+	[ObjectType.MESH]: Mesh;
+	[ObjectType.POINTS]: Points;
+	[ObjectType.LINE_SEGMENTS]: LineSegments;
+}
+export interface ObjectConstructorByObjectType {
+	[ObjectType.MESH]: typeof Mesh;
+	[ObjectType.POINTS]: typeof Points;
+	[ObjectType.LINE_SEGMENTS]: typeof LineSegments;
+}
+export const OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE: ObjectConstructorByObjectType = {
+	[ObjectType.MESH]: Mesh,
+	[ObjectType.POINTS]: Points,
+	[ObjectType.LINE_SEGMENTS]: LineSegments,
+};
+export function object_type_from_constructor(constructor: Function) {
+	switch (constructor) {
+		case Mesh:
+			return ObjectType.MESH;
+		case Points:
+			return ObjectType.POINTS;
+		case LineSegments:
+			return ObjectType.LINE_SEGMENTS;
+		default:
+			console.warn('object type not supported', constructor);
+			return ObjectType.MESH;
+	}
+}
 export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
 	if (object instanceof Mesh) {
 		return ObjectType.MESH;
@@ -75,6 +96,12 @@ export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
 	}
 	console.warn('ObjectTypeByObject received an unknown object type', object);
 }
+export const ObjectTypes = [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS];
+export const ObjectTypeMenuEntries = [
+	{name: 'Mesh', value: ObjectTypes.indexOf(ObjectType.MESH)},
+	{name: 'Points', value: ObjectTypes.indexOf(ObjectType.POINTS)},
+	{name: 'LineSegments', value: ObjectTypes.indexOf(ObjectType.LINE_SEGMENTS)},
+];
 
 const materials: MaterialsByString = {
 	MeshStandard: new MeshStandardMaterial({
@@ -136,12 +163,12 @@ export const CoreConstant = {
 	// 	STRING: AttribType.STRING,
 	// },
 
-	OBJECT_TYPE: {
-		// TODO: typescript
-		MESH: ObjectType.MESH,
-		POINTS: ObjectType.POINTS,
-		LINE_SEGMENTS: ObjectType.LINE_SEGMENTS,
-	},
+	// OBJECT_TYPE: {
+	// 	// TODO: typescript
+	// 	MESH: ObjectType.MESH,
+	// 	POINTS: ObjectType.POINTS,
+	// 	LINE_SEGMENTS: ObjectType.LINE_SEGMENTS,
+	// },
 	OBJECT_TYPES: ObjectTypes,
 	CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME: {
 		[Scene.name]: 'Scene',
@@ -158,36 +185,6 @@ export const CoreConstant = {
 		[ObjectType.POINTS]: Points,
 		[ObjectType.LINE_SEGMENTS]: LineSegments,
 	},
-	// CONSTRUCTORS_BY_TYPE: {
-	// 	['MESH']: Mesh,
-	// 	['POINTS']: Points,
-	// 	['LINE_SEGMENTS']: LineSegments,
-	// },
-	// OBJECT_TYPE_BY_CONSTRUCTOR_NAME: {
-	// 	[Mesh.name]: 'MESH',
-	// 	[Points.name]: 'POINTS',
-	// 	[LineSegments.name]: 'LINE_SEGMENTS',
-	// },
+
 	MATERIALS: materials,
 };
-
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Scene.name] = 'Scene'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Group.name] = 'Group'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Object3D.name] = 'Object3D'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Mesh.name] = 'Mesh'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Points.name] = 'Points'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[LineSegments.name] = 'LineSegments'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[Bone.name] = 'Bone'
-// CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[SkinnedMesh.name] = 'SkinnedMesh'
-
-// CoreConstant.CONSTRUCTORS_BY_NAME[Mesh.name] = Mesh
-// CoreConstant.CONSTRUCTORS_BY_NAME[Points.name] = Points
-// CoreConstant.CONSTRUCTORS_BY_NAME[LineSegments.name] = LineSegments
-
-// CoreConstant.CONSTRUCTORS_BY_TYPE['MESH'] = Mesh
-// CoreConstant.CONSTRUCTORS_BY_TYPE['POINTS'] = Points
-// CoreConstant.CONSTRUCTORS_BY_TYPE['LINE_SEGMENTS'] = LineSegments
-
-// CoreConstant.OBJECT_TYPE_BY_CONSTRUCTOR_NAME[Mesh.name] = 'MESH'
-// CoreConstant.OBJECT_TYPE_BY_CONSTRUCTOR_NAME[Points.name] = 'POINTS'
-// CoreConstant.OBJECT_TYPE_BY_CONSTRUCTOR_NAME[LineSegments.name] = 'LINE_SEGMENTS'

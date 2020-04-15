@@ -31,7 +31,6 @@ declare global {
 QUnit.testStart(async () => {
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
-	console.log('window.scene');
 	window.scene.set_name('test scene');
 	window.scene.set_uuid('test');
 	Poly.instance().set_env('test');
@@ -52,21 +51,4 @@ QUnit.testStart(async () => {
 	window.scene.loading_controller.set_auto_update(true);
 	await window.scene.loading_controller.mark_as_loaded();
 	window.scene.cooker.unblock();
-
-	// resolve();
-	// });
 });
-
-// window.POLY.set = 'test';
-
-// import './Runner/Helper';
-// import './Helper';
-// import './Core/_Module';
-// import './Engine/_Module';
-// import './Editor/_Module';
-
-// window.test_runner_manager.run()
-
-// console.log('Qunit start');
-// QUnit.start();
-// console.log('Qunit started');

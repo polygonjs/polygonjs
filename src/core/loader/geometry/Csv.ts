@@ -1,12 +1,11 @@
 import lodash_isString from 'lodash/isString';
 import lodash_last from 'lodash/last';
 import lodash_flatten from 'lodash/flatten';
-import {Points} from 'three/src/objects/Points';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
-import {AttribType, CoreConstant} from '../../geometry/Constant';
+import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
 
 type CsvValue = string | number | number[];
@@ -23,6 +22,7 @@ export class CsvLoader {
 	// const attribute_types_by_name: Dictionary<AttribType> = {};
 	// const attribute_sizes_by_name:Dictionary<1|2|3|4> = {};
 	private attribute_data_by_name: Dictionary<CoreAttributeData> = {};
+	private _loading = false;
 
 	constructor(private attribute_names?: string[]) {
 		if (!this.attribute_names) {
@@ -30,11 +30,19 @@ export class CsvLoader {
 		}
 	}
 	async load(url: string) {
+		// we need to check if it is currently loading, as we accumulate the points_count durig read.
+		// If another load was to start before the first load is completed, the points_count would be messed up.
+		if (this._loading) {
+			console.warn('is already loading');
+			return;
+		}
+		this._loading = true;
+		this.points_count = 0;
 		await this.load_data(url);
 		this.infer_types();
 		this.read_values();
-		const points = this.create_points();
-		return points;
+		const geometry = this.create_points();
+		return geometry;
 	}
 
 	private async load_data(url: string) {
@@ -44,9 +52,6 @@ export class CsvLoader {
 
 		if (!this.attribute_names) {
 			this.attribute_names = this.lines[0].split(CsvLoader.SEPARATOR);
-			this.points_count = this.lines.length - 1;
-		} else {
-			this.points_count = this.lines.length;
 		}
 		this.attribute_names = this.attribute_names.map((name) => CoreAttribute.remap_name(name));
 		for (let attribute_name of this.attribute_names) {
@@ -100,6 +105,7 @@ export class CsvLoader {
 						this.attribute_values_by_name[attribute_name].push(value);
 					}
 				}
+				this.points_count += 1;
 			}
 		}
 
@@ -138,7 +144,6 @@ export class CsvLoader {
 		}
 		geometry.setIndex(indices);
 
-		// create object
-		return new Points(geometry, CoreConstant.MATERIALS.Points);
+		return geometry;
 	}
 }

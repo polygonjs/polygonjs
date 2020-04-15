@@ -6,6 +6,7 @@ import {TypedSopNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CorePoint} from '../../../core/geometry/Point';
 class JitterSopParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(1);
 	seed = ParamConfig.INTEGER(1, {range: [0, 100]});
@@ -30,22 +31,23 @@ export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
 	cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		core_group.points().forEach((point, i) => {
+		const points = core_group.points();
+		let point: CorePoint;
+
+		for (let i = 0; i < points.length; i++) {
+			point = points[i];
 			// TODO: replace by a pseudo random
 			const offset = new THREE.Vector3(
-				2 * (CoreMath.rand(i * 75 + 764 + this.pv.seed) - 0.5),
-				2 * (CoreMath.rand(i * 5678 + 3653 + this.pv.seed) - 0.5),
-				2 * (CoreMath.rand(i * 657 + 48464 + this.pv.seed) - 0.5)
+				2 * (CoreMath.rand_float(i * 75 + 764 + this.pv.seed) - 0.5),
+				2 * (CoreMath.rand_float(i * 5678 + 3653 + this.pv.seed) - 0.5),
+				2 * (CoreMath.rand_float(i * 657 + 48464 + this.pv.seed) - 0.5)
 			);
 			offset.normalize();
-			offset.multiplyScalar(this.pv.amount);
+			offset.multiplyScalar(this.pv.amount * CoreMath.rand_float(i * 78 + 54 + this.pv.seed));
 
-			const new_position = point
-				.position()
-				.clone()
-				.add(offset);
+			const new_position = point.position().clone().add(offset);
 			point.set_position(new_position);
-		});
+		}
 
 		this.set_core_group(core_group);
 	}

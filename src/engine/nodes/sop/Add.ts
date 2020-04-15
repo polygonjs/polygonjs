@@ -7,7 +7,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {TypedSopNode} from './_Base';
 // import {Core} from '../../../Core/_Module';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
 // import {CoreGeometryUtilShape} from '../../../core/geometry/util/Shape';
 
@@ -59,7 +59,7 @@ export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
 				this.pv.position.toArray(positions, i * 3);
 			});
 			geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-			const object = this.create_object(geometry, CoreConstant.OBJECT_TYPE.POINTS);
+			const object = this.create_object(geometry, ObjectType.POINTS);
 
 			if (this._objects) {
 				this._objects.push(object);

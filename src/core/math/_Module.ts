@@ -7,6 +7,9 @@ import lodash_isNumber from 'lodash/isNumber';
 import {Easing} from './Easing';
 
 const RAD_DEG_RATIO = Math.PI / 180;
+const RAND_A = 12.9898;
+const RAND_B = 78.233;
+const RAND_C = 43758.5453;
 
 export class CoreMath {
 	// static Octree = Octree
@@ -72,21 +75,17 @@ export class CoreMath {
 		return 2 * Math.ceil(number * 0.5);
 	}
 
-	static rand_float(number: number): number {
-		const vec = {
-			x: number,
-			y: 136574,
-		};
-		return this.rand_vec2(vec);
+	private static _vec = {x: 0, y: 136574};
+	static rand_float(x: number, y: number = 136574): number {
+		this._vec.x = x;
+		this._vec.y = y;
+		return this.rand_vec2(this._vec);
 	}
 
 	static rand_vec2(uv: Vector2Like) {
-		const a = 12.9898;
-		const b = 78.233;
-		const c = 43758.5453;
-		const dt = uv.x * a + uv.y * b; //dot( uv.xy, vec2( a,b ) )
+		const dt = uv.x * RAND_A + uv.y * RAND_B; //dot( uv.xy, vec2( a,b ) )
 		const sn = dt % Math.PI;
-		return this.fract(Math.sin(sn) * c);
+		return this.fract(Math.sin(sn) * RAND_C);
 	}
 
 	// https://www.movable-type.co.uk/scripts/latlong.html

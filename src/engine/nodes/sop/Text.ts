@@ -2,7 +2,7 @@ import lodash_range from 'lodash/range';
 
 // import {CoreFont} from '../../../Core/Font'
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 
 import {TextBufferGeometry} from 'three/src/geometries/TextGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -182,7 +182,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			const geometry = new BufferGeometry();
 			geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 			geometry.setIndex(indices);
-			this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
+			this.set_geometry(geometry, ObjectType.LINE_SEGMENTS);
 		}
 	}
 	private async _create_geometry_from_type_stroke(font: Font) {

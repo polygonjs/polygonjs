@@ -3,7 +3,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import lodash_times from 'lodash/times';
 
 import {TypedSopNode} from './_Base';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {ObjectType} from '../../../core/geometry/Constant';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class LineSopParamsConfig extends NodeParamsConfig {
@@ -31,10 +31,7 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 		const positions: number[] = new Array(points_count * 3);
 		const indices: number[] = new Array(points_count);
 
-		const last_pt = this.pv.direction
-			.clone()
-			.normalize()
-			.multiplyScalar(this.pv.length);
+		const last_pt = this.pv.direction.clone().normalize().multiplyScalar(this.pv.length);
 
 		lodash_times(points_count, (i) => {
 			const i_n = i / (points_count - 1);
@@ -50,6 +47,6 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 		geometry.setIndex(indices);
-		this.set_geometry(geometry, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
+		this.set_geometry(geometry, ObjectType.LINE_SEGMENTS);
 	}
 }

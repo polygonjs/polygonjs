@@ -9,6 +9,7 @@ import {
 	ObjectType,
 	ObjectTypeMenuEntries,
 	ObjectTypes,
+	object_type_from_constructor,
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
@@ -106,26 +107,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		return 'delete';
 	}
 
-	// _param_attrib_class: number;
-	// _param_invert: boolean;
-	// _param_hide_objects: boolean;
-	// _param_by_object_type: boolean;
-	// _param_object_type: number;
-	// _param_by_attrib: boolean;
-	// _param_attrib_name: string;
-	// _param_attrib_float: number;
-	// _param_attrib_string: string;
-	// _param_attrib_vector: Vector3;
-	// _param_attrib_ComparisonOperator: number;
-	// _param_by_expression: boolean;
-	// _param_expression: string;
-	// _param_by_bbox: boolean;
-	// _param_bbox_size: Vector3;
-	// _param_bbox_center: Vector3;
-	// _param_by_visible: boolean;
-
 	private _bbox_cache: Box3 | undefined;
-
 	private _marked_for_deletion_per_object_index: Map<number, boolean> = new Map();
 
 	static displayed_input_names(): string[] {
@@ -213,7 +195,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 					objects_to_keep.push(object);
 				}
 				if (marked_for_deletion) {
-					point_objects_from_deleted_objects.push(this._point_object(core_object));
+					point_objects_from_deleted_objects.push(this._point_object(core_object) as Object3DWithGeometry);
 				}
 			}
 			// if (marked_for_deletion) {
@@ -244,8 +226,6 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.set_objects(objects_to_keep);
 	}
 
-	//console.log("#{cmptr} marked for deletion")
-
 	// TODO: ensure that geometries with no remaining points are removed from the group
 	private async _eval_for_points(core_group: CoreGroup) {
 		const core_objects = core_group.core_objects();
@@ -255,6 +235,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			let core_geometry = core_object.core_geometry();
 			if (core_geometry) {
 				let points = core_geometry.points_from_geometry();
+
 				const init_points_count = points.length;
 				if (this.pv.by_expression) {
 					points = await this._eval_expressions_for_points(points);
@@ -274,7 +255,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 						// TODO: if the new geo only has unconnected points, how do I know it and how do I change the material if it was previously a mesh?
 						object.geometry = CoreGeometry.geometry_from_points(
 							points,
-							(<unknown>object.constructor) as ObjectType
+							object_type_from_constructor(object.constructor)
 						);
 					} else {
 						// TODO: do not dispose material if not cloned
@@ -293,23 +274,6 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	private async _eval_expressions_for_points(points: CorePoint[]) {
 		const kept_points = [];
 
-		// const promises = points.map((point, i)=> {
-		// 	return new Promise( async (resolve, reject)=> {
-		// 		this.context().set_entity(point);
-		// 		const val = await(this.param('expression').eval_p());
-		// 		const keep_point = this.pv.invert ?
-		// 			val === true
-		// 		:
-		// 			val === false;
-
-		// 		if (keep_point) {
-		// 			kept_points.push(point);
-		// 		}
-		// 		resolve();
-		// 	});
-		// });
-
-		// await(Promise.all(promises));
 		const param = this.p.expression;
 		if (this.p.expression.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
@@ -333,7 +297,6 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				}
 			}
 		}
-		console.log(kept_points);
 		return kept_points;
 	}
 

@@ -1,23 +1,10 @@
 import {Vector3} from 'three/src/math/Vector3';
-// import {Vector2} from 'three/src/math/Vector2'
 import {Int32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Box3} from 'three/src/math/Box3';
 import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
-
-// const THREE = {
-// 	Box3,
-// 	BufferGeometry,
-// 	Float32BufferAttribute,
-// 	Int32BufferAttribute,
-// 	InterleavedBufferAttribute,
-// 	Vector2,
-// 	Vector3,
-// }
 import lodash_range from 'lodash/range';
-import lodash_uniq from 'lodash/uniq';
-import lodash_each from 'lodash/each';
 import lodash_chunk from 'lodash/chunk';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_clone from 'lodash/clone';
@@ -25,12 +12,14 @@ import lodash_isArray from 'lodash/isArray';
 import lodash_isNumber from 'lodash/isNumber';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
-import {CoreConstant, ObjectType, AttribType} from './Constant';
+import {ObjectType, AttribType} from './Constant';
 import {CoreAttribute} from './Attribute';
 import {MonkeyPatcher} from './MonkeyPatcher';
-
-import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreAttributeData} from './AttributeData';
+import {CoreGeometryBuilderPoints} from './builders/Points';
+import {CoreGeometryBuilderMerge} from './builders/Merge';
+import {CoreGeometryBuilderMesh} from './builders/Mesh';
+import {CoreGeometryBuilderLineSegments} from './builders/LineSegments';
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -355,188 +344,22 @@ export class CoreGeometry {
 		return points;
 	}
 
-	static geometry_from_points(points: CorePoint[], object_type: ObjectType): BufferGeometry {
-		const geometry = new BufferGeometry();
-		const geometry_wrapper = new this(geometry);
-
-		const first_point = points[0];
-		if (first_point != null) {
-			const old_geometry = first_point.geometry();
-			const old_geometry_wrapper = first_point.geometry_wrapper();
-
-			// index
-			const new_index_by_old_index: Dictionary<number> = {};
-			lodash_each(points, (point, i) => (new_index_by_old_index[point.index] = i));
-
-			const indices = this._indices_from_points(new_index_by_old_index, old_geometry, object_type);
-			if (indices != null && indices.length !== 0) {
-				geometry.setIndex(indices);
-			}
-
-			// attributes
-			const {attributes} = old_geometry;
-			// const new_attributes = {}
-			for (let attribute_name of Object.keys(attributes)) {
-				const attrib_values = old_geometry_wrapper.user_data_attribs()[attribute_name];
-				const is_attrib_indexed = attrib_values != null;
-
-				if (is_attrib_indexed) {
-					const new_values = lodash_uniq(points.map((point) => point.attrib_value(attribute_name)));
-					const new_index_by_value: Dictionary<number> = {};
-					lodash_each(new_values, (new_value, i) => (new_index_by_value[new_value] = i));
-
-					geometry_wrapper.user_data_attribs()[attribute_name] = new_values;
-
-					// const old_attrib = old_geometry.getAttribute(attribute_name)
-					// const old_attrib_array = old_attrib.array
-					const new_attrib_indices = [];
-					for (let point of points) {
-						// const old_index = old_attrib_array[point.index()]
-						const new_index = new_index_by_value[point.attrib_value(attribute_name)];
-						new_attrib_indices.push(new_index);
-					}
-
-					geometry.setAttribute(attribute_name, new Float32BufferAttribute(new_attrib_indices, 1));
-				} else {
-					const values = [];
-					const attrib_size = attributes[attribute_name].itemSize;
-					for (let point of points) {
-						const value = point.attrib_value(attribute_name);
-						switch (attrib_size) {
-							case 1:
-								values.push(value);
-							case 3:
-								values.push(value.x);
-								values.push(value.y);
-								values.push(value.z);
-						}
-					}
-
-					geometry.setAttribute(attribute_name, new Float32BufferAttribute(values, attrib_size));
-				}
-			}
-		}
-
-		return geometry;
-	}
-
-	static _indices_from_points(
-		new_index_by_old_index: Dictionary<number>,
-		old_geometry: BufferGeometry,
-		object_type: ObjectType
-	) {
-		const index_attrib = old_geometry.index;
-		if (index_attrib != null) {
-			const old_indices = index_attrib.array;
-
-			const new_indices: number[] = [];
-
-			switch (object_type) {
-				case CoreConstant.OBJECT_TYPE.POINTS:
-					lodash_each(old_indices, function (old_index, i: number) {
-						const new_index = new_index_by_old_index[old_index];
-						if (new_index != null) {
-							new_indices.push(new_index);
-						}
-					});
-					break;
-
-				case CoreConstant.OBJECT_TYPE.MESH:
-					lodash_each(old_indices, function (old_index, i: number) {
-						if (i % 3 === 0) {
-							const old_index0 = old_indices[i];
-							const old_index1 = old_indices[i + 1];
-							const old_index2 = old_indices[i + 2];
-							const new_index0 = new_index_by_old_index[old_index0];
-							const new_index1 = new_index_by_old_index[old_index1];
-							const new_index2 = new_index_by_old_index[old_index2];
-							if (new_index0 != null && new_index1 != null && new_index2 != null) {
-								new_indices.push(new_index0);
-								new_indices.push(new_index1);
-								new_indices.push(new_index2);
-							}
-						}
-					});
-					break;
-
-				case CoreConstant.OBJECT_TYPE.LINE_SEGMENTS:
-					lodash_each(old_indices, function (old_index, i: number) {
-						if (i % 2 === 0) {
-							const old_index0 = old_indices[i];
-							const old_index1 = old_indices[i + 1];
-							const new_index0 = new_index_by_old_index[old_index0];
-							const new_index1 = new_index_by_old_index[old_index1];
-							if (new_index0 != null && new_index1 != null) {
-								new_indices.push(new_index0);
-								new_indices.push(new_index1);
-							}
-						}
-					});
-					break;
-			}
-
-			return new_indices;
+	private static _mesh_builder = new CoreGeometryBuilderMesh();
+	private static _points_builder = new CoreGeometryBuilderPoints();
+	private static _lines_segment_builder = new CoreGeometryBuilderLineSegments();
+	static geometry_from_points(points: CorePoint[], object_type: ObjectType) {
+		switch (object_type) {
+			case ObjectType.MESH:
+				return this._mesh_builder.from_points(points);
+			case ObjectType.POINTS:
+				return this._points_builder.from_points(points);
+			case ObjectType.LINE_SEGMENTS:
+				return this._lines_segment_builder.from_points(points);
 		}
 	}
 
 	static merge_geometries(geometries: BufferGeometry[]) {
-		if (geometries.length === 0) {
-			return;
-		}
-
-		//
-		// 1/3. set the new attrib indices for the indexed attributes
-		//
-		const core_geometries = geometries.map((geometry) => new CoreGeometry(geometry));
-		const indexed_attribute_names = core_geometries[0].indexed_attribute_names();
-
-		const new_values_by_attribute_name: Dictionary<string[]> = {};
-		for (let indexed_attribute_name of indexed_attribute_names) {
-			const index_by_values: Dictionary<number> = {};
-			const all_geometries_points = [];
-			for (let core_geometry of core_geometries) {
-				const geometry_points = core_geometry.points();
-				for (let point of geometry_points) {
-					all_geometries_points.push(point);
-					const value = point.attrib_value(indexed_attribute_name);
-					//value_index = point.attrib_value_index(indexed_attribute_name)
-					// TODO: typescript: that doesn't seem right
-					index_by_values[value] != null
-						? index_by_values[value]
-						: (index_by_values[value] = Object.keys(index_by_values).length);
-				}
-			}
-
-			const values = Object.keys(index_by_values);
-			for (let point of all_geometries_points) {
-				const value = point.attrib_value(indexed_attribute_name);
-				const new_index = index_by_values[value];
-				point.set_attrib_index(indexed_attribute_name, new_index);
-			}
-
-			new_values_by_attribute_name[indexed_attribute_name] = values;
-		}
-
-		//
-		// 2/3. merge the geos
-		//
-		const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
-
-		//
-		// 3/3. add the index attrib values
-		//
-
-		const merged_geometry_wrapper = new this(merged_geometry);
-		Object.keys(new_values_by_attribute_name).forEach((indexed_attribute_name) => {
-			const values = new_values_by_attribute_name[indexed_attribute_name];
-			merged_geometry_wrapper.set_indexed_attribute_values(indexed_attribute_name, values);
-		});
-
-		if (merged_geometry) {
-			delete merged_geometry.userData.mergedUserData;
-		}
-
-		return merged_geometry;
+		return CoreGeometryBuilderMerge.merge(geometries);
 	}
 
 	segments() {

@@ -1,14 +1,11 @@
-import {Object3D} from 'three/src/core/Object3D';
-// import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
-
-// import {CoreLoaderGeometry, LoaderType, LOADER_TYPES} from '../../../Core/Loader/Geometry';
 import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {CsvLoader} from '../../../core/loader/geometry/Csv';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {ObjectType} from '../../../core/geometry/Constant';
 
 export enum DataType {
 	JSON = 'json',
@@ -101,9 +98,8 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		loader.load(this.pv.url, this._on_load.bind(this), undefined, this._on_error.bind(this));
 	}
 
-	_on_load(objects: Object3D) {
-		// objects = lodash_flatten(objects);
-		this.set_objects([objects]);
+	_on_load(geometry: BufferGeometry) {
+		this.set_geometry(geometry, ObjectType.POINTS);
 	}
 	_on_error(error: ErrorEvent) {
 		this.states.error.set(`could not load geometry from ${this.pv.url} (${error})`);
@@ -118,9 +114,9 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	async _load_csv() {
 		const attrib_names = this.pv.read_attrib_names_from_file ? undefined : this.pv.attrib_names.split(' ');
 		const loader = new CsvLoader(attrib_names);
-		const points = await loader.load(this.pv.url);
-		if (points) {
-			this.set_objects([points]);
+		const geometry = await loader.load(this.pv.url);
+		if (geometry) {
+			this.set_geometry(geometry, ObjectType.POINTS);
 		} else {
 			this.states.error.set('could not generate points');
 		}
