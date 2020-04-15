@@ -1,30 +1,10 @@
 import {Group} from 'three/src/objects/Group';
-// import lodash_isEqual from 'lodash/isEqual';
-// import lodash_map from 'lodash/map';
-
 import {TypedBaseManagerNode} from './_Base';
-// import {CoreObject} from '../../../core/Object';
-// import {BaseNode} from '../_Base';
 import {BaseObjNodeType} from '../obj/_Base';
-
-// import {BaseManagerObjNode} from '../obj/_BaseManager';
-// import {BaseCameraObjNodeClass} from '../obj/_BaseCamera';
-// import {BaseLightObjNodeClass} from '../obj/_BaseLight';
-
-// obj nodes
-// import {EventsObjNode} from '../obj/Events';
-// import {MaterialsObjNode} from '../obj/Materials';
-// import {FogObjNode} from '../obj/Fog';
 import {GeoObjNode} from '../obj/Geo';
-
 import {Poly} from '../../Poly';
 import {NodeContext} from '../../poly/NodeContext';
-// import {PolyScene} from '../../scene/PolyScene';
-// TODO:
-// ensure removing a node removes its content from the scene (spotlight?)
-
 import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
@@ -35,31 +15,20 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	static type() {
 		return 'obj';
 	}
-	// children_context() {
-	// 	return NodeContext.OBJ;
-	// }
 
 	private _object: Group = new Group();
 	private _queued_nodes_by_id: Dictionary<BaseObjNodeType> = {};
 	private _queued_nodes_by_path: Dictionary<BaseObjNodeType> = {};
 	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
-	// private _loaded_geo_node_by_id: Dictionary<boolean> = {};
 	private _process_queue_start: number = -1;
 
 	protected _children_controller_context = NodeContext.OBJ;
 	initialize_node() {
 		this.children_controller?.init();
 
-		// this.flags.add_display();
-
 		this.lifecycle.add_on_child_add_hook(this._on_child_add.bind(this));
 		this.lifecycle.add_on_child_remove_hook(this._on_child_remove.bind(this));
-		// this.flags.add_bypass({has_bypass_flag: false});
-
-		// this.set_min_inputs_count(0);
-		// this.set_max_inputs_count(0);
 	}
-	//@_object_uuid_by_node_graph_id = {}
 
 	init_default_scene() {
 		this._object.name = '_WORLD_';
@@ -98,17 +67,6 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 			delete this._queued_nodes_by_id[id];
 
 			const full_path = `_____${node.render_order}__${node.full_path()}`;
-			// we want to process managers, cameras, then lights, then everything else
-			// so we add a prefix for those
-			// if (this._is_node_manager(node)) {
-			// 	full_path = `/_____005_${full_path}`;
-			// } else if (this._is_node_fog(node)) {
-			// 	full_path = `/_____002_${full_path}`;
-			// } else if (this._is_node_camera(node)) {
-			// 	full_path = `/_____003_${full_path}`;
-			// } else if (this._is_node_light(node)) {
-			// 	full_path = `/_____004_${full_path}`;
-			// }
 
 			this._queued_nodes_by_path[full_path] = node;
 		}
@@ -150,20 +108,6 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		}
 	}
 
-	// _is_node_fog(node: BaseObjNodeType) {
-	// 	return CoreObject.is_a(node, FogObjNode);
-	// }
-	// _is_node_camera(node: BaseObjNodeType) {
-	// 	return CoreObject.is_a(node, BaseCameraObjNodeClass);
-	// }
-
-	// _is_node_event(node: BaseObjNodeType) {
-	// 	return CoreObject.is_a(node, EventsObjNode);
-	// }
-	// _is_node_mat(node: BaseObjNodeType) {
-	// 	return CoreObject.is_a(node, MaterialsObjNode);
-	// }
-
 	//
 	//
 	// OBJ PARENTING
@@ -196,14 +140,6 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	add_to_scene(node: BaseObjNodeType): void {
-		// if (this._is_node_fog(node)) {
-		// console.log("fog")
-		// # TODO: ensure fog is removed if we set display or bypass flag
-		// # TODO: ensure we get a warning if more than 1 fog
-		// # TODO: why does it get added twice when its parameters are changed?
-		// node.get_fog (fog)=>
-		// 	@_scene.display_scene().fog = fog
-		// #console.log("added fog", node.object())
 		if (node.attachable_to_hierarchy) {
 			const parent_object = this.get_parent_for_node(node);
 			if (parent_object) {
@@ -212,9 +148,15 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 				// });
 
 				if (node.used_in_scene) {
-					// parent_object.add(node.object);
+					// I need to query the display_node_controller here,
+					// for geo obj whose display_node is a node without inputs.
+					// Since that node will not be made dirty, it seems that there is
+					// nothing triggering the obj to request it itself.
+					// TODO: investigate if it has a performance cost, or if it could be done
+					// only when scene loads. Or if the display_node_controller itself could be improved
+					// to take care of it itself.
+					node.display_node_controller?.request_display_node_container();
 					node.add_object_to_parent(parent_object);
-					// await node.cook_controller.cook_main_without_inputs();
 				} else {
 					node.remove_object_from_parent();
 					// parent_object.remove(node.object);
@@ -260,48 +202,13 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return node_by_id;
 	}
 
-	// async notify_geo_loaded(geo_node: GeoObjNode) {
-	// 	this._loaded_geo_node_by_id = this._loaded_geo_node_by_id || {};
-	// 	this._loaded_geo_node_by_id[geo_node.graph_node_id] = true;
-
-	// 	this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
-
-	// 	if (this.scene) {
-	// 		this.scene.loading_controller.on_first_object_loaded();
-
-	// 		if (lodash_isEqual(Object.keys(this._loaded_geo_node_by_id), Object.keys(this._expected_geo_nodes))) {
-	// 			this.update_on_all_objects_loaded();
-	// 		}
-	// 	}
-	// }
-
-	// update_on_all_objects_loaded() {
-	// 	this.scene.loading_controller.on_all_objects_loaded();
-	// 	// this.scene.cube_cameras_controller.on_all_objects_loaded(); // TODO: typescript
-	// }
-
 	add_to_parent_transform(node: BaseObjNodeType) {
 		this.update_object(node);
 	}
-	// return if !this.scene().loaded()
-
-	// transformed_node.request_container (input_container)->
-	// 	object = input_container.object()
-
-	// 	transformed_node.request_input_container 0, (parent_input_container)->
-	// 		parent = parent_input_container.object()
-	// 		parent.add(object)
 
 	remove_from_parent_transform(node: BaseObjNodeType) {
 		this.update_object(node);
 	}
-	// return if !this.scene().loaded()
-
-	// transformed_node.request_container (input_container)=>
-	// 	object = input_container.object()
-
-	// 	this.get_parent_for_node transformed_node, (parent_object)=>
-	// 		parent_object.add(object)
 
 	private _on_child_add(node?: BaseNodeType) {
 		if (node) {

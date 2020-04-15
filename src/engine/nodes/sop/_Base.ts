@@ -197,6 +197,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		const core_group = this.container_controller.container.core_content() || new CoreGroup();
 		core_group.set_objects(objects);
 		core_group.touch();
+		console.log('set container', this.full_path(), core_group);
 		this.set_container(core_group);
 	}
 

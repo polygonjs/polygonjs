@@ -10,14 +10,11 @@ import {MathUtils} from 'three/src/math/MathUtils';
 
 import {BaseNodeType} from '../engine/nodes/_Base';
 
-const ROTATION_ORDER = 'XYZ';
+const DEFAULT_ROTATION_ORDER = 'XYZ';
 
 export interface SetParamsFromMatrixOptions {
 	scale?: boolean;
 }
-
-// TODO: remove the "new" in this whole file
-// const euler = new Euler(0, 0, 0, ROTATION_ORDER)
 
 export class CoreTransform {
 	// static create_params(node: BaseNodeType) {
@@ -48,6 +45,14 @@ export class CoreTransform {
 	// 	scale = node.param('scale').eval()
 	// 	this.matrix(t, r, s, scale)
 
+	private static set_params_from_matrix_position = new Vector3();
+	private static set_params_from_matrix_quaternion = new Quaternion();
+	private static set_params_from_matrix_scale = new Vector3();
+	private static set_params_from_matrix_euler = new Euler();
+	private static set_params_from_matrix_rotation = new Vector3();
+	private static set_params_from_matrix_t: Number3 = [0, 0, 0];
+	private static set_params_from_matrix_r: Number3 = [0, 0, 0];
+	private static set_params_from_matrix_s: Number3 = [0, 0, 0];
 	static set_params_from_matrix(matrix: Matrix4, node: BaseNodeType, options: SetParamsFromMatrixOptions = {}) {
 		let update_scale = options['scale'];
 		if (update_scale == null) {
@@ -58,14 +63,15 @@ export class CoreTransform {
 		// PRECISION = 1000
 		// components = ['x', 'y', 'z']
 
-		const position = new Vector3();
-		const quaternion = new Quaternion();
-		const scale = new Vector3();
-		matrix.decompose(position, quaternion, scale);
+		matrix.decompose(
+			this.set_params_from_matrix_position,
+			this.set_params_from_matrix_quaternion,
+			this.set_params_from_matrix_scale
+		);
 
-		const euler = new Euler().setFromQuaternion(quaternion);
-		const rotation = euler.toVector3();
-		rotation.divideScalar(Math.PI / 180);
+		this.set_params_from_matrix_euler.setFromQuaternion(this.set_params_from_matrix_quaternion);
+		this.set_params_from_matrix_euler.toVector3(this.set_params_from_matrix_rotation);
+		this.set_params_from_matrix_rotation.divideScalar(Math.PI / 180);
 
 		// limit precision of position and rotation
 		// lodash_each [position, rotation], (vector)->
@@ -80,11 +86,14 @@ export class CoreTransform {
 		// 	rounded = Math.round(val)
 		// 	if Math.abs(val - rounded) < EPSILON
 		// 		scale[c] = rounded
+		this.set_params_from_matrix_position.toArray(this.set_params_from_matrix_t);
+		this.set_params_from_matrix_rotation.toArray(this.set_params_from_matrix_r);
+		this.set_params_from_matrix_scale.toArray(this.set_params_from_matrix_s);
 
 		node.scene.batch_update(() => {
-			node.params.set_vector3('r', rotation.toArray() as Number3);
-			node.params.set_vector3('t', position.toArray() as Number3);
-			node.params.set_vector3('s', scale.toArray() as Number3);
+			node.params.set_vector3('t', this.set_params_from_matrix_t);
+			node.params.set_vector3('r', this.set_params_from_matrix_r);
+			node.params.set_vector3('s', this.set_params_from_matrix_s);
 			if (update_scale) {
 				node.params.set_float('scale', 1);
 			}
@@ -122,13 +131,11 @@ export class CoreTransform {
 		return this._translation_matrix;
 	}
 
-	static matrix_quaternion(matrix: Matrix4): Quaternion {
-		const t = new Vector3();
-		const quat = new Quaternion();
-		const s = new Vector3();
-		matrix.decompose(t, quat, s);
-		return quat;
-	}
+	// private static matrix_quaternion_t = new Vector3();
+	// private static matrix_quaternion_s = new Vector3();
+	// static matrix_quaternion(matrix: Matrix4, target_quat: Quaternion): void {
+	// 	matrix.decompose(this.matrix_quaternion_t, target_quat, this.matrix_quaternion_s);
+	// }
 
 	// static matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
 	// 	// if I don't clone here, it created issues in the transform SOP
@@ -147,7 +154,12 @@ export class CoreTransform {
 	private _matrix_e = new Euler();
 	private _matrix_s = new Vector3();
 	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
-		this._matrix_e.set(MathUtils.degToRad(r.x), MathUtils.degToRad(r.y), MathUtils.degToRad(r.z), ROTATION_ORDER);
+		this._matrix_e.set(
+			MathUtils.degToRad(r.x),
+			MathUtils.degToRad(r.y),
+			MathUtils.degToRad(r.z),
+			DEFAULT_ROTATION_ORDER
+		);
 		this._matrix_q.setFromEuler(this._matrix_e);
 
 		this._matrix_s.copy(s).multiplyScalar(scale);

@@ -175,9 +175,6 @@ export class HierarchyChildrenController {
 		if (child_node.parent != this.node) {
 			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
 		} else {
-			// set other dependencies dirty
-			child_node.set_successors_dirty(this.node);
-
 			if (this._is_dependent_on_children && this._children_node) {
 				this._children_node.remove_graph_input(child_node);
 			}
@@ -205,14 +202,21 @@ export class HierarchyChildrenController {
 				}
 			});
 
-			// disconnect successors
-			child_node.graph_disconnect_successors();
-
 			// remove from children
 			child_node.set_parent(null);
 			delete this._children[child_node.name];
 			this._remove_from_nodes_by_type(child_node);
 			this.node.scene.nodes_controller.remove_from_instanciated_node(child_node);
+
+			// set other dependencies dirty
+			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input
+			// but that prevented the obj/geo node to properly clear its sop_group if this was the last node
+			if (this._is_dependent_on_children && this._children_node) {
+				this._children_node.set_successors_dirty(this.node);
+			}
+			child_node.set_successors_dirty(this.node);
+			// disconnect successors
+			child_node.graph_disconnect_successors();
 
 			this.node.lifecycle.run_on_child_remove_hooks(child_node);
 			child_node.lifecycle.run_on_delete_hooks();

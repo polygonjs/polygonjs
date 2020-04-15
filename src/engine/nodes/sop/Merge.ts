@@ -1,29 +1,16 @@
-// import lodash_times from 'lodash/times';
-// import lodash_each from 'lodash/each';
-// import lodash_difference from 'lodash/difference';
-// import lodash_keys from 'lodash/keys';
-// import {Object3D} from 'three/src/core/Object3D';
-// import {Group} from 'three/src/objects/Group';
-// import {BufferAttribute} from 'three/src/core/BufferAttribute';
-// const THREE = {BufferAttribute, Group, Object3D};
 import {TypedSopNode} from './_Base';
-// import {ParamType} from '../../../Engine/Param/_Module';
-
-// import {CoreGroup} from '../../../Core/Geometry/Group';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
-// import {CoreConstant} from '../../../Core/Geometry/Constant';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Points} from 'three/src/objects/Points';
-type ObjectsByType = {[key in ObjectType]: Object3DWithGeometry[]};
-type ObjectTypes = Array<ObjectType>;
 
 const INPUT_NAME = 'geometry to merge';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {MapUtils} from '../../../core/MapUtils';
 class MergeSopParamsConfig extends NodeParamsConfig {
 	compact = ParamConfig.BOOLEAN(1);
 }
@@ -65,11 +52,10 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 	}
 
 	_make_compact(all_objects: Object3DWithGeometry[]): Object3DWithGeometry[] {
-		const objects_by_type: ObjectsByType = {
-			[ObjectType.MESH]: [],
-			[ObjectType.POINTS]: [],
-			[ObjectType.LINE_SEGMENTS]: [],
-		};
+		const objects_by_type: Map<ObjectType, Object3DWithGeometry[]> = new Map();
+		objects_by_type.set(ObjectType.MESH, []);
+		objects_by_type.set(ObjectType.POINTS, []);
+		objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
 		const merged_objects: Object3DWithGeometry[] = [];
 
 		for (let object of all_objects) {
@@ -78,13 +64,13 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 				if (object.geometry) {
 					// const type = child.constructor.name;
 					if ((object as Mesh).isMesh) {
-						objects_by_type[ObjectType.MESH].push(object);
+						MapUtils.push_on_array_at_entry(objects_by_type, ObjectType.MESH, object);
 					} else {
 						if ((object as LineSegments).isLineSegments) {
-							objects_by_type[ObjectType.LINE_SEGMENTS].push(object);
+							MapUtils.push_on_array_at_entry(objects_by_type, ObjectType.LINE_SEGMENTS, object);
 						} else {
 							if ((object as Points).isPoints) {
-								objects_by_type[ObjectType.POINTS].push(object);
+								MapUtils.push_on_array_at_entry(objects_by_type, ObjectType.POINTS, object);
 							}
 						}
 					}
@@ -92,9 +78,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 			});
 		}
 
-		for (let type of Object.keys(objects_by_type) as ObjectTypes) {
-			const objects = objects_by_type[type];
-
+		objects_by_type.forEach((objects, object_type) => {
 			const geometries = [];
 			for (let object of objects) {
 				const geometry = object.geometry;
@@ -105,20 +89,11 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 			// TODO: test that this works with geometries with same attributes
 			const merged_geometry = CoreGeometry.merge_geometries(geometries);
 			if (merged_geometry) {
-				const object = this.create_object(merged_geometry, type);
+				const object = this.create_object(merged_geometry, object_type);
 				merged_objects.push(object as Object3DWithGeometry);
 			}
+		});
 
-			// objects.forEach( object=> {
-			// 	if (object.parent != null) {
-			// 		object.parent.remove(object);
-			// 	}
-			// 	if (object.geometry != null) {
-			// 		object.geometry.dispose();
-			// 	}
-			// 	(object.material != null ? object.material.dispose() : undefined);
-			// });
-		}
 		return merged_objects;
 	}
 }

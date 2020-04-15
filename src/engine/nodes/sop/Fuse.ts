@@ -8,7 +8,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
-import {ObjectType} from '../../../core/geometry/Constant';
+import {object_type_from_constructor} from '../../../core/geometry/Constant';
 class FuseSopParamsConfig extends NodeParamsConfig {
 	dist = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],
@@ -77,7 +77,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		if (kept_points.length > 0) {
 			(object as Mesh).geometry = CoreGeometry.geometry_from_points(
 				kept_points,
-				(<unknown>object.constructor) as ObjectType
+				object_type_from_constructor(object.constructor)
 			);
 			return object;
 		} else {
