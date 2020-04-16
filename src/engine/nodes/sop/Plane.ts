@@ -16,7 +16,7 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 	use_segments_count = ParamConfig.BOOLEAN(0);
 	step_size = ParamConfig.FLOAT(1, {
 		range: [0.001, 1],
-		range_locked: [true, false],
+		range_locked: [false, false],
 		visible_if: {use_segments_count: 0},
 	});
 	segments = ParamConfig.VECTOR2([1, 1], {visible_if: {use_segments_count: 1}});
