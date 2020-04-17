@@ -47,9 +47,7 @@ export class TransformController {
 	}
 
 	update_transform_with_matrix(matrix?: Matrix4) {
-		//console.warn "no object to update for #{this.full_path()}"
 		const object = this.node.object;
-		//matrix ?= Core.Transform.matrix_from_node_with_transform_params(this)
 		if (matrix != null && !matrix.equals(object.matrix)) {
 			// do not apply to cameras with control
 

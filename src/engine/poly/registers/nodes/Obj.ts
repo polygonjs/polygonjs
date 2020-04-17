@@ -15,7 +15,7 @@ import {PostProcessObjNode} from '../../../nodes/obj/PostProcess';
 import {BlendObjNode} from '../../../nodes/obj/Blend';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
 import {NullObjNode} from '../../../nodes/obj/Null';
-import {FogObjNode} from '../../../nodes/obj/Fog';
+import {RivetObjNode} from '../../../nodes/obj/Rivet';
 import {SceneObjNode} from '../../../nodes/obj/Scene';
 
 import {OrthographicCameraObjNode} from '../../../nodes/obj/OrthographicCamera';
@@ -29,7 +29,6 @@ export interface ObjNodeChildrenMap {
 	cop: CopObjNode;
 	directional_light: DirectionalLightObjNode;
 	events: EventsObjNode;
-	fog: FogObjNode;
 	geo: GeoObjNode;
 	hemisphere_light: HemisphereLightObjNode;
 	materials: MaterialsObjNode;
@@ -38,6 +37,7 @@ export interface ObjNodeChildrenMap {
 	perspective_camera: PerspectiveCameraObjNode;
 	point_light: PointLightObjNode;
 	post_process: PostProcessObjNode;
+	rivet: RivetObjNode;
 	scene: SceneObjNode;
 	spot_light: SpotLightObjNode;
 }
@@ -57,15 +57,14 @@ export class ObjRegister {
 		poly.register_node(CopObjNode, CATEGORY_OBJ.MANAGER);
 		poly.register_node(PostProcessObjNode, CATEGORY_OBJ.MANAGER);
 
-		poly.register_node(BlendObjNode, CATEGORY_OBJ.MISC);
+		poly.register_node(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
-		poly.register_node(NullObjNode, CATEGORY_OBJ.MISC);
-		poly.register_node(SceneObjNode, CATEGORY_OBJ.MISC);
+		poly.register_node(NullObjNode, CATEGORY_OBJ.TRANSFORM);
+		poly.register_node(RivetObjNode, CATEGORY_OBJ.TRANSFORM);
+		poly.register_node(SceneObjNode, CATEGORY_OBJ.ADVANCED);
 
 		poly.register_node(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.register_node(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
 		// poly.register_node(CubeCameraObj, CATEGORY_OBJ.CAMERA)
-
-		poly.register_node(FogObjNode, CATEGORY_OBJ.MISC);
 	}
 }

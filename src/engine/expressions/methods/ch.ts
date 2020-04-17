@@ -46,7 +46,9 @@ export class ChExpression extends BaseMethod {
 			const path = args[0];
 			const ref = this.get_referenced_param(path);
 			if (ref) {
-				await ref.compute();
+				if (ref.is_dirty) {
+					await ref.compute();
+				}
 				const result = ref.value;
 				if (result != null) {
 					// if (lodash_isNumber(result)) {

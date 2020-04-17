@@ -1,18 +1,25 @@
 import {TypedSopNode} from './_Base';
-// import {GroupParamController} from './utils/GroupParamController';
-
-import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreTransform, ROTATION_ORDERS, RotationOrder} from '../../../core/Transform';
-// import {ParamType} from '../../poly/ParamType';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
-// const DEFAULT_PARAMS = {
-// 	PIVOT: [0, 0, 0] as [number, number, number],
-// };
+enum TargetType {
+	OBJECTS = 'objects',
+	GEOMETRIES = 'geometries',
+}
+const TARGET_TYPES: Array<TargetType> = [TargetType.GEOMETRIES, TargetType.OBJECTS];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Matrix4, Object3D} from 'three';
 class TransformSopParamConfig extends NodeParamsConfig {
-	group = ParamConfig.STRING('');
+	apply_on = ParamConfig.INTEGER(TARGET_TYPES.indexOf(TargetType.GEOMETRIES), {
+		menu: {
+			entries: TARGET_TYPES.map((target_type, i) => {
+				return {name: target_type, value: i};
+			}),
+		},
+	});
+	group = ParamConfig.STRING('', {visible_if: {apply_on: TARGET_TYPES.indexOf(TargetType.GEOMETRIES)}});
 
 	// transform
 	rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
@@ -37,16 +44,11 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	static type() {
 		return 'transform';
 	}
-	// allow_eval_key_check() {
-	// 	return true;
-	// }
 
 	static displayed_input_names(): string[] {
 		return ['geometry to transform'];
 	}
 
-	// constructor(scene: PolyScene) {
-	// 	super(scene);
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
@@ -63,6 +65,21 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 			ROTATION_ORDERS[this.pv.rotation_order]
 		);
 
+		switch (TARGET_TYPES[this.pv.apply_on]) {
+			case TargetType.GEOMETRIES: {
+				this._apply_matrix_to_geometries(objects, matrix);
+				break;
+			}
+			case TargetType.OBJECTS: {
+				this._apply_matrix_to_objects(objects, matrix);
+				break;
+			}
+		}
+
+		this.set_objects(objects);
+	}
+
+	private _apply_matrix_to_geometries(objects: Object3DWithGeometry[], matrix: Matrix4) {
 		if (this.pv.group === '') {
 			for (let object of objects) {
 				let geometry;
@@ -83,7 +100,10 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 				point.set_position(position.add(this.pv.pivot));
 			}
 		}
-
-		this.set_objects(objects);
+	}
+	private _apply_matrix_to_objects(objects: Object3D[], matrix: Matrix4) {
+		for (let object of objects) {
+			object.applyMatrix4(matrix);
+		}
 	}
 }

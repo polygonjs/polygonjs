@@ -3,7 +3,8 @@ export const CATEGORY_OBJ = {
 	MANAGER: 'managers',
 	GEOMETRY: 'geometries',
 	CAMERA: 'cameras',
-	MISC: 'misc',
+	TRANSFORM: 'transform',
+	ADVANCED: 'advanced',
 };
 export const CATEGORY_COP = {
 	INPUT: 'inputs',

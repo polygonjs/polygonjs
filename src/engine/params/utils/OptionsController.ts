@@ -120,7 +120,11 @@ export interface FolderParamOptions extends BaseParamOptions {
 	level?: number;
 }
 export interface IntegerParamOptions extends NumberParamOptions, MenuParamOptions, CallbackParamOptions {}
-export interface OperatorPathParamOptions extends BaseParamOptions, DesktopParamOptions, CallbackParamOptions {
+export interface OperatorPathParamOptions
+	extends BaseParamOptions,
+		DesktopParamOptions,
+		ComputeOnDirtyParamOptions,
+		CallbackParamOptions {
 	node_selection?: {
 		context?: NodeContext;
 		type?: string;
