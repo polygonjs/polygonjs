@@ -18,7 +18,6 @@ QUnit.test('walker from a box', (assert) => {
 	assert.equal(window.scene.node('.'), scene.root);
 	assert.equal(window.scene.node('/geo1'), window.geo1);
 	assert.notEqual(window.scene.node('/geo10'), window.geo1);
-	// done()
 });
 
 QUnit.test('a param to another', (assert) => {

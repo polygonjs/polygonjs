@@ -98,11 +98,11 @@ export class RivetObjNode extends TypedObjNode<Group, RivetObjParamConfig> {
 		if (geometry) {
 			const position_array = geometry.attributes['position'].array;
 			this._found_point_post.fromArray(position_array, this.pv.point_index * 3);
-			observed_object.updateMatrixWorld(true);
+			observed_object.updateWorldMatrix(true, true);
 			observed_object.localToWorld(this._found_point_post);
 			this.object.position.copy(this._found_point_post);
 			this.object.updateMatrix();
-			this.object.updateMatrixWorld(true);
+			this.object.updateWorldMatrix(true, true);
 		}
 	}
 }

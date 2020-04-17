@@ -2,15 +2,13 @@ import {TypedSopNode} from './_Base';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
-import {ObjectType} from '../../../core/geometry/Constant';
-import {Mesh} from 'three/src/objects/Mesh';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {Points} from 'three/src/objects/Points';
+import {ObjectType, object_type_from_constructor} from '../../../core/geometry/Constant';
 
 const INPUT_NAME = 'geometry to merge';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {MapUtils} from '../../../core/MapUtils';
+import {Material, Mesh} from 'three';
 class MergeSopParamsConfig extends NodeParamsConfig {
 	compact = ParamConfig.BOOLEAN(1);
 }
@@ -52,45 +50,50 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 	}
 
 	_make_compact(all_objects: Object3DWithGeometry[]): Object3DWithGeometry[] {
+		const materials_by_object_type: Map<ObjectType, Material> = new Map();
 		const objects_by_type: Map<ObjectType, Object3DWithGeometry[]> = new Map();
 		objects_by_type.set(ObjectType.MESH, []);
 		objects_by_type.set(ObjectType.POINTS, []);
 		objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
-		const merged_objects: Object3DWithGeometry[] = [];
+		const ordered_object_types: ObjectType[] = [];
 
 		for (let object of all_objects) {
 			object.traverse((object3d: Object3D) => {
 				const object = object3d as Object3DWithGeometry;
 				if (object.geometry) {
-					// const type = child.constructor.name;
-					if ((object as Mesh).isMesh) {
-						MapUtils.push_on_array_at_entry(objects_by_type, ObjectType.MESH, object);
-					} else {
-						if ((object as LineSegments).isLineSegments) {
-							MapUtils.push_on_array_at_entry(objects_by_type, ObjectType.LINE_SEGMENTS, object);
-						} else {
-							if ((object as Points).isPoints) {
-								MapUtils.push_on_array_at_entry(objects_by_type, ObjectType.POINTS, object);
-							}
+					const object_type = object_type_from_constructor(object.constructor);
+					if (!ordered_object_types.includes(object_type)) {
+						ordered_object_types.push(object_type);
+					}
+					if (object_type) {
+						const found_mat = materials_by_object_type.get(object_type);
+						if (!found_mat) {
+							materials_by_object_type.set(object_type, (object as Mesh).material as Material);
 						}
+						MapUtils.push_on_array_at_entry(objects_by_type, object_type, object);
 					}
 				}
 			});
 		}
 
-		objects_by_type.forEach((objects, object_type) => {
-			const geometries = [];
-			for (let object of objects) {
-				const geometry = object.geometry;
-				geometry.applyMatrix4(object.matrix);
-				geometries.push(geometry);
-			}
+		const merged_objects: Object3DWithGeometry[] = [];
+		ordered_object_types.forEach((object_type) => {
+			const objects = objects_by_type.get(object_type);
+			if (objects) {
+				const geometries = [];
+				for (let object of objects) {
+					const geometry = object.geometry;
+					geometry.applyMatrix4(object.matrix);
+					geometries.push(geometry);
+				}
 
-			// TODO: test that this works with geometries with same attributes
-			const merged_geometry = CoreGeometry.merge_geometries(geometries);
-			if (merged_geometry) {
-				const object = this.create_object(merged_geometry, object_type);
-				merged_objects.push(object as Object3DWithGeometry);
+				// TODO: test that this works with geometries with same attributes
+				const merged_geometry = CoreGeometry.merge_geometries(geometries);
+				if (merged_geometry) {
+					const material = materials_by_object_type.get(object_type);
+					const object = this.create_object(merged_geometry, object_type, material);
+					merged_objects.push(object as Object3DWithGeometry);
+				}
 			}
 		});
 

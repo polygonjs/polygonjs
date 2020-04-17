@@ -225,7 +225,11 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	// 	return group;
 	// }
 
-	create_object<OT extends ObjectType>(geometry: BufferGeometry, type: OT): ObjectByObjectType[OT] {
+	create_object<OT extends ObjectType>(
+		geometry: BufferGeometry,
+		type: OT,
+		material?: Material
+	): ObjectByObjectType[OT] {
 		// ensure it has an index
 		if (!geometry.index) {
 			const position_array = geometry.getAttribute('position').array;
@@ -242,7 +246,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 
 		// if (geometry != null) {
 		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type]; //THREE[type];
-		const material = CoreConstant.MATERIALS[type].clone();
+		material = material || CoreConstant.MATERIALS[type].clone();
 		const object = new object_constructor(geometry, material);
 		object.castShadow = true;
 		object.receiveShadow = true;

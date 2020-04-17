@@ -14,9 +14,8 @@ QUnit.test('merge simple', async (assert) => {
 	assert.equal(container.points_count(), 100);
 });
 
-QUnit.skip('merge geos with different attributes', (assert) => {
+QUnit.skip('merge geos with different attributes', async (assert) => {
 	const geo1 = window.geo1;
-	// var done = assert.async();
 
 	const sphere1 = geo1.create_node('sphere');
 	const box1 = geo1.create_node('box');
@@ -37,17 +36,26 @@ QUnit.skip('merge geos with different attributes', (assert) => {
 	merge1.set_input(0, attrib_create1);
 	merge1.set_input(1, attrib_create2);
 
-	// skip();
+	let container = await merge1.request_container();
+	let core_group = container.core_content()!;
+	assert.equal(core_group.points_count(), 12);
 });
-// attrib_create1.request_container (container)=>
-// 	assert.equal _.keys(container.group().children[0].geometry.attributes).sort().join(':'), ['position', 'normal', 'uv', 'blend'].sort().join(':')
 
-// 	attrib_create2.request_container (container)=>
-// 		assert.equal _.keys(container.group().children[0].geometry.attributes).sort().join(':'), ['position', 'normal', 'uv', 'selected'].sort().join(':')
+import {Points} from 'three/src/objects/Points';
+import {Mesh} from 'three/src/objects/Mesh';
+QUnit.test('sop merge has predictable order in assembled objects', async (assert) => {
+	const geo1 = window.geo1;
 
-// 		merge1.request_container (container)=>
-// 			assert.equal _.keys(container.group().children[0].geometry.attributes).sort().join(':'), ['position', 'normal', 'uv', 'blend', 'selected'].sort().join(':')
+	const add1 = geo1.create_node('add');
+	const plane1 = geo1.create_node('plane');
 
-// 			assert.equal container.points_count(), 87
+	const merge1 = geo1.create_node('merge');
+	merge1.set_input(0, add1);
+	merge1.set_input(1, plane1);
 
-// 			done()
+	let container = await merge1.request_container();
+	let core_group = container.core_content()!;
+	let objects = core_group.objects();
+	assert.equal(objects[0].constructor, Points);
+	assert.equal(objects[1].constructor, Mesh);
+});
