@@ -6,6 +6,7 @@
 import {CATEGORY_SOP} from './Category';
 
 import {AddSopNode} from '../../../nodes/sop/Add';
+import {AmmoSolverSopNode} from '../../../nodes/sop/AmmoSolver';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
@@ -68,6 +69,7 @@ import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 
 export interface GeoNodeChildrenMap {
 	add: AddSopNode;
+	ammo_solver: AmmoSolverSopNode;
 	animation_copy: AnimationCopySopNode;
 	animation_mixer: AnimationMixerSopNode;
 	attrib_add_mult: AttribAddMultSopNode;
@@ -132,6 +134,7 @@ import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
 		poly.register_node(AddSopNode, CATEGORY_SOP.INPUT);
+		poly.register_node(AmmoSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		poly.register_node(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
 		poly.register_node(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);

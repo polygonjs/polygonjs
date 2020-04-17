@@ -8,7 +8,8 @@ const INPUT_NAME = 'geometry to merge';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {MapUtils} from '../../../core/MapUtils';
-import {Material, Mesh} from 'three';
+import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three/src/objects/Mesh';
 class MergeSopParamsConfig extends NodeParamsConfig {
 	compact = ParamConfig.BOOLEAN(1);
 }
@@ -100,29 +101,3 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 		return merged_objects;
 	}
 }
-
-// _add_missing_attributes: (geo0, geo1)->
-// 	geo0_attribute_names = lodash_keys(geo0.attributes)
-// 	geo1_attribute_names = lodash_keys(geo1.attributes)
-
-// 	attributes_not_in_geo0 = lodash_difference(geo1_attribute_names, geo0_attribute_names)
-// 	attributes_not_in_geo1 = lodash_difference(geo0_attribute_names, geo1_attribute_names)
-
-// 	lodash_each attributes_not_in_geo0, (attribute_not_in_geo0)=>
-// 		this._add_attribute(geo0, attribute_not_in_geo0, geo1.attributes[attribute_not_in_geo0])
-// 	lodash_each attributes_not_in_geo1, (attribute_not_in_geo1)=>
-// 		this._add_attribute(geo1, attribute_not_in_geo1, geo0.attributes[attribute_not_in_geo1])
-
-// _add_attribute: (geo, attrib_name, attribute_template)->
-
-// 	item_size = attribute_template['itemSize']
-// 	normalized = attribute_template['normalized']
-// 	points_count = geo.getAttribute('position').array.length / 3
-
-// 	raw_values = []
-// 	lodash_times points_count, (i)->
-// 		lodash_times item_size, (j)->
-// 			raw_values.push(0)
-
-// 	values = new Float32Array(raw_values)
-// 	geo.setAttribute( attrib_name, new BufferAttribute( values, item_size, normalized) )

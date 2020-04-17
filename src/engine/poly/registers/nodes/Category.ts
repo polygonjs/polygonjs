@@ -44,6 +44,7 @@ export const CATEGORY_SOP = {
 	INPUT: 'inputs',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
+	PHYSICS: 'physics',
 	PRIMITIVES: 'primitives',
 	RENDER: 'render',
 };

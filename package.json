@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"@dagrejs/graphlib": "dagrejs/graphlib",
+		"ammojs-typed": "^1.0.2",
 		"geo-ambient-occlusion": "^3.0.4",
 		"jsep": "^0.3.4",
 		"lodash": "^4.17.15",
