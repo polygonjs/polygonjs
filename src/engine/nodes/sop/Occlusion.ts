@@ -3,7 +3,6 @@
 import geoao from 'geo-ambient-occlusion';
 
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-const THREE = {Float32BufferAttribute};
 import {TypedSopNode} from './_Base';
 
 // import {CoreGroup} from '../../../Core/Geometry/Group';
@@ -71,7 +70,7 @@ export class OcclusionSopNode extends TypedSopNode<OcclusionSopParamsConfig> {
 		}
 		const ao = aoSampler.report();
 
-		geometry.setAttribute(this.pv.attrib_name, new THREE.Float32BufferAttribute(ao, 1));
+		geometry.setAttribute(this.pv.attrib_name, new Float32BufferAttribute(ao, 1));
 
 		aoSampler.dispose();
 	}
