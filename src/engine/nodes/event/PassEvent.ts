@@ -2,7 +2,7 @@ import {TypedEventNode, BaseEventNodeType} from './_Base';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 
 class PassEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PassEventParamsConfig();
@@ -23,11 +23,11 @@ export class PassEventNode extends TypedEventNode<PassEventParamsConfig> {
 		]);
 	}
 
-	process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {
+	process_event(event_context: EventContext<Event>) {
 		const connections = this.io.connections.output_connections();
 		const nodes: BaseEventNodeType[] = connections.map((connection) => connection.node_dest) as BaseEventNodeType[];
 		for (let node of nodes) {
-			node.process_event(event, canvas, camera_node);
+			node.process_event(event_context);
 		}
 	}
 }

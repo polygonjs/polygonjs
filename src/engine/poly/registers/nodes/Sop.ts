@@ -5,8 +5,8 @@
 // more on https://webpack.js.org/api/module-methods/
 import {CATEGORY_SOP} from './Category';
 
+import {AmmoSolverSopNodeOld} from '../../../nodes/sop/AmmoSolver';
 import {AddSopNode} from '../../../nodes/sop/Add';
-import {AmmoSolverSopNode} from '../../../nodes/sop/AmmoSolver';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
@@ -50,6 +50,9 @@ import {ObjectMergeSopNode} from '../../../nodes/sop/ObjectMerge';
 import {OcclusionSopNode} from '../../../nodes/sop/Occlusion';
 import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../../nodes/sop/Peak';
+import {PhysicsRBDAttributesSopNode} from '../../../nodes/sop/PhysicsRBDAttributes';
+import {PhysicsForceAttributesSopNode} from '../../../nodes/sop/PhysicsForceAttributes';
+import {PhysicsRBDSolverSopNode} from '../../../nodes/sop/PhysicsRBDSolver';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
 import {PointSopNode} from '../../../nodes/sop/Point';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
@@ -59,6 +62,7 @@ import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {ShadowsSopNode} from '../../../nodes/sop/Shadows';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
+import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
@@ -69,7 +73,6 @@ import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 
 export interface GeoNodeChildrenMap {
 	add: AddSopNode;
-	ammo_solver: AmmoSolverSopNode;
 	animation_copy: AnimationCopySopNode;
 	animation_mixer: AnimationMixerSopNode;
 	attrib_add_mult: AttribAddMultSopNode;
@@ -112,6 +115,9 @@ export interface GeoNodeChildrenMap {
 	occlusion: OcclusionSopNode;
 	particles_system_gpu: ParticlesSystemGpuSopNode;
 	peak: PeakSopNode;
+	physics_rbd_attributes: PhysicsRBDAttributesSopNode;
+	physics_force_attributes: PhysicsForceAttributesSopNode;
+	physics_rbd_solver: PhysicsRBDSolverSopNode;
 	plane: PlaneSopNode;
 	point: PointSopNode;
 	polywire: PolywireSopNode;
@@ -121,6 +127,7 @@ export interface GeoNodeChildrenMap {
 	shadows: ShadowsSopNode;
 	skin: SkinSopNode;
 	sphere: SphereSopNode;
+	subdivide: SubdivideSopNode;
 	switch: SwitchSopNode;
 	text: TextSopNode;
 	torus: TorusSopNode;
@@ -133,8 +140,8 @@ export interface GeoNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
+		poly.register_node(AmmoSolverSopNodeOld, CATEGORY_SOP.INPUT);
 		poly.register_node(AddSopNode, CATEGORY_SOP.INPUT);
-		poly.register_node(AmmoSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		poly.register_node(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
 		poly.register_node(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
@@ -178,6 +185,9 @@ export class SopRegister {
 		poly.register_node(OcclusionSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.register_node(PeakSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(PhysicsRBDAttributesSopNode, CATEGORY_SOP.PHYSICS);
+		poly.register_node(PhysicsForceAttributesSopNode, CATEGORY_SOP.PHYSICS);
+		poly.register_node(PhysicsRBDSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PolywireSopNode, CATEGORY_SOP.MODIFIER);
@@ -187,6 +197,7 @@ export class SopRegister {
 		poly.register_node(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(ShadowsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);

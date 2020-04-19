@@ -45,7 +45,6 @@ export class RenderController {
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
-	// private _prev_t = 0;
 	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number) {
 		if (this.node.pv.do_post_process) {
 			this.node.post_process_controller.render(canvas, size);

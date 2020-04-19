@@ -52,6 +52,7 @@ export enum StringParamLanguage {
 	// GLSL = 'glsl',
 }
 
+export type VisibleIfParamOptions = Dictionary<number | boolean>;
 interface BaseParamOptions {
 	// cook
 	cook?: boolean;
@@ -61,7 +62,7 @@ interface BaseParamOptions {
 	hidden?: boolean;
 	show_label?: boolean;
 	field?: boolean;
-	visible_if?: Dictionary<number | boolean>;
+	visible_if?: VisibleIfParamOptions;
 }
 interface MenuParamOptions {
 	menu?: {

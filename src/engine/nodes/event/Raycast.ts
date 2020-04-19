@@ -1,54 +1,109 @@
 import {TypedEventNode} from './_Base';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-
-import {Object3D} from 'three/src/core/Object3D';
-import {Vector2} from 'three/src/math/Vector2';
-import {Raycaster} from 'three/src/core/Raycaster';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
-import {BaseObjNodeType} from '../obj/_Base';
+import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsController';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {RaycastCPUController} from './utils/raycast/CPUController';
+import {RaycastGPUController} from './utils/raycast/GPUController';
+
+enum RaycastMode {
+	CPU = 'cpu',
+	GPU = 'gpu',
+}
+const RAYCAST_MODES: Array<RaycastMode> = [RaycastMode.CPU, RaycastMode.GPU];
+function visible_for_cpu(options: VisibleIfParamOptions = {}): ParamOptions {
+	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
+	return {visible_if: options};
+}
+function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
+	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.GPU);
+	return {visible_if: options};
+}
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {GeoObjNode} from '../obj/Geo';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+
 class RaycastParamsConfig extends NodeParamsConfig {
-	use_camera = ParamConfig.BOOLEAN(1);
+	// override_camera = ParamConfig.BOOLEAN(1);
 	// camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 	// 	node_selection: {
 	// 		context: NodeContext.OBJ,
 	// 	},
 	// 	dependent_on_found_node: false,
 	// })
+	mode = ParamConfig.INTEGER(RAYCAST_MODES.indexOf(RaycastMode.CPU), {
+		menu: {
+			entries: RAYCAST_MODES.map((name, value) => {
+				return {
+					name,
+					value,
+				};
+			}),
+		},
+	});
+	//
+	//
+	// COMMON
+	//
+	//
+	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
+
+	//
+	//
+	// GPU
+	//
+	//
+	material = ParamConfig.OPERATOR_PATH('/MAT/mesh_basic_builder1', {
+		node_selection: {
+			context: NodeContext.MAT,
+		},
+		dependent_on_found_node: false,
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			RaycastGPUController.PARAM_CALLBACK_update_material(node as RaycastEventNode);
+		},
+		...visible_for_gpu(),
+	});
+	pixel_value = ParamConfig.VECTOR4([0, 0, 0, 0], {
+		cook: false,
+		...visible_for_gpu(),
+	});
+
+	//
+	//
+	// CPU
+	//
+	//
 	target = ParamConfig.OPERATOR_PATH('/geo1', {
 		node_selection: {
 			context: NodeContext.OBJ,
 		},
 		dependent_on_found_node: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastEventNode.PARAM_CALLBACK_update_target(node as RaycastEventNode);
+			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
+		...visible_for_cpu(),
 	});
 	traverse_children = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastEventNode.PARAM_CALLBACK_update_target(node as RaycastEventNode);
+			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
+		...visible_for_cpu(),
 	});
-	sep = ParamConfig.SEPARATOR();
-	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
-	position = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
-	geo_attribute = ParamConfig.BOOLEAN(0);
+	sep = ParamConfig.SEPARATOR(null, {
+		...visible_for_cpu(),
+	});
+
+	position = ParamConfig.VECTOR3([0, 0, 0], {cook: false, ...visible_for_cpu()});
+	geo_attribute = ParamConfig.BOOLEAN(0, visible_for_cpu());
 	geo_attribute_name = ParamConfig.STRING('id', {
-		visible_if: {geo_attribute: 1},
 		cook: false,
+		...visible_for_cpu({geo_attribute: 1}),
 	});
 	geo_attribute_value = ParamConfig.FLOAT(0, {
-		visible_if: {geo_attribute: 1},
 		cook: false,
+		...visible_for_cpu({geo_attribute: 1}),
 	});
 }
 const ParamsConfig = new RaycastParamsConfig();
@@ -59,11 +114,9 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	static type() {
 		return 'raycast';
 	}
-	private _mouse: Vector2 = new Vector2();
-	private _mouse_array: Number2 = [0, 0];
-	private _raycaster = new Raycaster();
-	private _resolved_target: Object3D | undefined;
-	private _intersection_position: Number3 = [0, 0, 0];
+
+	public readonly cpu_controller: RaycastCPUController = new RaycastCPUController(this);
+	public readonly gpu_controller: RaycastGPUController = new RaycastGPUController(this);
 
 	initialize_node() {
 		// TODO: do not use GL connection Types here
@@ -76,56 +129,11 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		]);
 	}
 
-	process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {
-		if (event instanceof MouseEvent) {
-			this._mouse.x = (event.offsetX / canvas.offsetWidth) * 2 - 1;
-			this._mouse.y = -(event.offsetY / canvas.offsetHeight) * 2 + 1;
-			this._mouse.toArray(this._mouse_array);
-			this.p.mouse.set(this._mouse_array);
-		}
-		if (this.pv.use_camera) {
-			this._raycaster.setFromCamera(this._mouse, camera_node.object);
+	process_event(context: EventContext<MouseEvent>) {
+		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
+			this.cpu_controller.process_event(context);
 		} else {
-			// this._raycaster.ray.origin.copy(this.pv.ray_origin)
-			// this._raycaster.ray.direction.copy(this.pv.ray_direction)
+			this.gpu_controller.process_event(context);
 		}
-		if (this._resolved_target) {
-			const intersections = this._raycaster.intersectObject(this._resolved_target, true);
-			const intersection = intersections[0];
-			if (intersection) {
-				intersection.point.toArray(this._intersection_position);
-				this.p.position.set(this._intersection_position);
-
-				if (this.pv.geo_attribute == true) {
-					const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
-					if (geometry) {
-						const attribute = geometry.getAttribute(this.pv.geo_attribute_name);
-						if (attribute) {
-							const val = attribute.array[0];
-							if (val != null) {
-								this.p.geo_attribute_value.set(val);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	update_target() {
-		const node = this.p.target.found_node() as BaseObjNodeType;
-		if (node) {
-			if (node.node_context() == NodeContext.OBJ) {
-				this._resolved_target = this.pv.traverse_children ? node.object : (node as GeoObjNode).sop_group;
-			} else {
-				this.states.error.set('target is not an obj');
-			}
-		} else {
-			this.states.error.set('no target found');
-		}
-	}
-
-	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {
-		node.update_target();
 	}
 }

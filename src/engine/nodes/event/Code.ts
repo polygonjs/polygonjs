@@ -3,8 +3,8 @@ import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoi
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {AsyncFunction} from '../../../core/AsyncFunction';
 const DEFAULT_FUNCTION_CODE = `
-import {BaseMouseEventProcessor, BaseCameraObjNodeType} from 'polygonjs-engine'
-export class EventProcessor extends BaseMouseEventProcessor {
+import {BaseEventProcessor, BaseCameraObjNodeType} from 'polygonjs-engine'
+export class EventProcessor extends BaseEventProcessor {
 	initialize_processor(){
 	}
 	process_mouse_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType){
@@ -21,13 +21,13 @@ export class EventProcessor extends BaseMouseEventProcessor {
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 
 import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster} from 'three/src/core/Raycaster';
 import * as THREE from 'three';
-export class BaseMouseEventProcessor {
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+export class BaseEventProcessor {
 	// it looks like I still need to import raycaster and vector2 without the three namespace
 	// otherwise they are seen as 'any' in the editor
 	protected raycaster = new Raycaster();
@@ -35,15 +35,15 @@ export class BaseMouseEventProcessor {
 	constructor(protected node: CodeEventNode) {
 		this.initialize_processor();
 	}
-	process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {
-		if (event instanceof MouseEvent) {
-			this.process_mouse_event(event, canvas, camera_node);
+	process_event(event_context: EventContext<Event>) {
+		if (event_context.event instanceof MouseEvent) {
+			this.process_mouse_event(event_context as EventContext<MouseEvent>);
 		} else if (event instanceof KeyboardEvent) {
-			this.process_keyboard_event(event, canvas, camera_node);
+			this.process_keyboard_event(event_context as EventContext<KeyboardEvent>);
 		}
 	}
-	process_mouse_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {}
-	process_keyboard_event(event: KeyboardEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {}
+	process_mouse_event(event_context: EventContext<MouseEvent>) {}
+	process_keyboard_event(event_context: EventContext<KeyboardEvent>) {}
 	set_node(node: CodeEventNode) {
 		this.node = node;
 	}
@@ -55,9 +55,9 @@ export class BaseMouseEventProcessor {
 }
 
 type EvaluatedFunction = (
-	base_event_processor_class: typeof BaseMouseEventProcessor,
+	base_event_processor_class: typeof BaseEventProcessor,
 	THREE: any
-) => typeof BaseMouseEventProcessor | undefined;
+) => typeof BaseEventProcessor | undefined;
 
 class CodeEventParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
@@ -72,7 +72,7 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 	params_config = ParamsConfig;
 
 	private _last_compiled_code: string | undefined;
-	private _processor: BaseMouseEventProcessor | undefined;
+	private _processor: BaseEventProcessor | undefined;
 
 	static type() {
 		return 'code';
@@ -84,11 +84,11 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 		]);
 	}
 
-	process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {
+	process_event(event_context: EventContext<Event>) {
 		this._compile_if_required();
 
 		if (this._processor) {
-			this._processor.process_event(event, canvas, camera_node);
+			this._processor.process_event(event_context);
 		}
 	}
 	private _compile_if_required() {
@@ -106,11 +106,11 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 			console.log('function_body');
 			console.log(function_body);
 			const processor_creator_function: EvaluatedFunction = new AsyncFunction(
-				'BaseMouseEventProcessor',
+				'BaseEventProcessor',
 				'THREE',
 				function_body
 			);
-			const processor_class = processor_creator_function(BaseMouseEventProcessor, THREE);
+			const processor_class = processor_creator_function(BaseEventProcessor, THREE);
 			if (processor_class) {
 				this._processor = new processor_class(this);
 				this._last_compiled_code = this.pv.code_javascript;

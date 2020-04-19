@@ -2,8 +2,7 @@ import {PolyScene} from '../../PolyScene';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
 import {MouseEventNode} from '../../../nodes/event/MouseEvent';
 import {MouseEventsController} from './MouseEventsController';
-import {BaseEventsController} from './_BaseEventsController';
-import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
+import {BaseEventsController, EventContext} from './_BaseEventsController';
 
 export class SceneEventsController {
 	private _mouse_events_controller: BaseEventsController<MouseEvent, MouseEventNode> = new MouseEventsController();
@@ -23,10 +22,10 @@ export class SceneEventsController {
 		}
 	}
 
-	process_event(event: Event, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {
+	process_event(event_content: EventContext<Event>) {
 		for (let controller of this._controllers) {
-			if (controller.accepts_event(event)) {
-				controller.process(event, canvas, camera_node);
+			if (controller.accepts_event(event_content.event)) {
+				controller.process(event_content);
 				return;
 			}
 		}

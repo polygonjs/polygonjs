@@ -2,11 +2,11 @@ import {TypedEventNode, BaseEventNodeType} from './_Base';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../scene/utils/events/MouseEventsController';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 class MouseEventParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
@@ -37,11 +37,11 @@ export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 		});
 	}
 
-	process_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType) {
+	process_event(event_context: EventContext<MouseEvent>) {
 		if (!this.pv.active) {
 			return;
 		}
-		const index = this.io.outputs.get_output_index(event.type);
+		const index = this.io.outputs.get_output_index(event_context.event.type);
 		if (index >= 0) {
 			const connections = this.io.connections.output_connections();
 			const current_connections = connections.filter((connection) => connection.output_index == index);
@@ -49,7 +49,7 @@ export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 				(connection) => connection.node_dest
 			) as BaseEventNodeType[];
 			for (let node of nodes) {
-				node.process_event(event, canvas, camera_node);
+				node.process_event(event_context);
 			}
 		}
 	}
