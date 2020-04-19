@@ -24,8 +24,12 @@ export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 				if (existing) {
 					if (existing.data_type != definition.data_type) {
 						this._errored = true;
-						this._error_message = `attempt to create ${definition.name} with types ${definition.data_type}`;
-						console.warn('emitting error message', this._error_message);
+						this._error_message = `attempt to create '${definition.name}' with types '${
+							definition.data_type
+						}' by node '${definition.node.full_path()}', when there is already an existing with type ${
+							existing.data_type
+						} from node '${existing.node.full_path()}'`;
+						console.warn('emitting error message:', this._error_message);
 					}
 				} else {
 					definitions_by_name.set(name, definition);

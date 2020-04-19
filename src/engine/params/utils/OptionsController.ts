@@ -289,7 +289,18 @@ export class OptionsController {
 		const callback = this.get_callback();
 		if (callback != null) {
 			if (this.node && !this.node.cook_controller.is_cooking) {
-				callback(this.node, this.param);
+				if (this.param.parent_param) {
+					// if the param is a component of a MultipleParam,
+					// we let the parent handle the callback.
+					// The main reason is for material builder uniforms.
+					// If the component executes the callback, the uniform that is expecting a vector
+					// will be receiving a float. The reason is that the callback is created by the ParamConfig, and it is then passed down to the component unchanged.
+					// I could maybe find a way so that the param config creates callback for the multiple param
+					// and also for the components. But they would have to be assigned correctly by the multiple param
+					this.param.parent_param.options.execute_callback();
+				} else {
+					callback(this.node, this.param);
+				}
 			}
 		}
 	}

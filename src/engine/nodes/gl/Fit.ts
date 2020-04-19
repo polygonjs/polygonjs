@@ -6,6 +6,8 @@ import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 const DefaultValues: Dictionary<number> = {
 	src_min: 0,
 	src_max: 1,
+	dest_min: 0,
+	dest_max: 1,
 };
 
 export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
