@@ -16,6 +16,7 @@ import {HorizontalBlurPostNode} from '../../../nodes/post/HorizontalBlur';
 import {ImagePostNode} from '../../../nodes/post/Image';
 import {MaskPostNode} from '../../../nodes/post/Mask';
 import {NullPostNode} from '../../../nodes/post/Null';
+import {OutlinePostNode} from '../../../nodes/post/Outline';
 import {PixelPostNode} from '../../../nodes/post/Pixel';
 import {RenderPostNode} from '../../../nodes/post/Render';
 import {RGBShiftPostNode} from '../../../nodes/post/RGBShift';
@@ -41,6 +42,7 @@ export interface PostNodeChildrenMap {
 	image: ImagePostNode;
 	masl: MaskPostNode;
 	null: NullPostNode;
+	outline: OutlinePostNode;
 	pixel: PixelPostNode;
 	render: RenderPostNode;
 	rgb_shift: RGBShiftPostNode;
@@ -69,6 +71,7 @@ export class PostRegister {
 		poly.register_node(ImagePostNode, CATEGORY_POST.MISC);
 		poly.register_node(MaskPostNode, CATEGORY_POST.MISC);
 		poly.register_node(NullPostNode, CATEGORY_POST.MISC);
+		poly.register_node(OutlinePostNode, CATEGORY_POST.EFFECT);
 		poly.register_node(PixelPostNode, CATEGORY_POST.EFFECT);
 		poly.register_node(RenderPostNode, CATEGORY_POST.MISC);
 		poly.register_node(RGBShiftPostNode, CATEGORY_POST.EFFECT);

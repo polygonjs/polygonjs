@@ -85,7 +85,10 @@ export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
 		return [ConnectionPointType.VEC3];
 	}
 	gl_function_definitions() {
-		const type = this._expected_output_types()[0];
+		// const type = this._expected_output_types()[0];
+		// do not use type from the output, as there seem to always be a def somewhere
+		// TODO: I probably don't need a data type in FunctionGLDefinition
+		const type = ConnectionPointType.VEC4;
 		return [new FunctionGLDefinition(this, type, Quaternion)];
 	}
 

@@ -9,13 +9,15 @@ import {ParamValuesTypeMap} from '../../../../params/types/ParamValuesTypeMap';
 import {ParamConstructorByType} from '../../../../params/types/ParamConstructorByType';
 
 import {BaseNodeType} from '../../../_Base';
-import {TypedParam, BaseParamType} from '../../../../params/_Base';
+import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 // import { RampValue } from '../../../../params/ramp/RampValue';
 import {RampParam} from '../../../../params/Ramp';
 import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {ParamConfig} from '../../../utils/code/configs/ParamConfig';
+// import {ColorParam} from '../../../../params/Color';
+import {Color} from 'three/src/math/Color';
 // import {ParamValueComparer} from '../../params/ParamValueComparer';
 // import {ParamValueCloner} from '../../params/ParamValueCloner';
 // import {CoreTextureLoader} from '../../../../../Core/Loader/Texture'
@@ -42,8 +44,24 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	}
 
 	protected _callback(node: BaseNodeType, param: BaseParamType) {
+		// const val = this._convert_param_value_to_uniform(param);
+		// console.log(this.uniform_name, this._type, param.type, val, param);
 		this.uniform.value = param.value;
 	}
+
+	// private _converted_color: Vector3 | undefined;
+	// private _convert_param_value_to_uniform(param: BaseParamType) {
+	// 	switch (param.type) {
+	// 		case ParamType.COLOR:
+	// 			this._converted_color = this._converted_color || new Vector3();
+	// 			this._converted_color.x = (param as ColorParam).value.r;
+	// 			this._converted_color.y = (param as ColorParam).value.g;
+	// 			this._converted_color.z = (param as ColorParam).value.b;
+	// 			return this._converted_color;
+	// 		default:
+	// 			return param.value;
+	// 	}
+	// }
 
 	// TODO: refactor that to use the default values map?
 	static uniform_by_type(type: ParamType): IUniform {
@@ -53,7 +71,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 			case ParamType.BUTTON:
 				return {value: 0};
 			case ParamType.COLOR:
-				return {value: new Vector3(0, 0, 0)};
+				return {value: new Color(0, 0, 0)};
 			case ParamType.FLOAT:
 				return {value: 0};
 			case ParamType.FOLDER:
@@ -79,40 +97,40 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		TypeAssert.unreachable(type);
 	}
 
-	async set_uniform_value(node: BaseNodeType) {
-		// return new Promise( async (resolve, reject)=>{
-		const uniform = this.uniform;
-		// the cache cannot be trusted...
-		const param = node.params.get(this._name) as TypedParam<T>;
-		if (param) {
-			await param.compute(); //node[node.param_cache_name(this._name)]
-			const value = param.value;
+	// async set_uniform_value(node: BaseNodeType) {
+	// 	// return new Promise( async (resolve, reject)=>{
+	// 	const uniform = this.uniform;
+	// 	// the cache cannot be trusted...
+	// 	const param = node.params.get(this._name) as TypedParam<T>;
+	// 	if (param) {
+	// 		await param.compute(); //node[node.param_cache_name(this._name)]
+	// 		const value = param.value;
 
-			if ((value != null && this.has_value_changed(value)) || this.is_video_texture()) {
-				// this._update_cached_value(value);
-				// console.log(this._name, value)
+	// 		if ((value != null && this.has_value_changed(value)) || this.is_video_texture()) {
+	// 			// this._update_cached_value(value);
+	// 			// console.log(this._name, value)
 
-				switch (this._type) {
-					case ParamType.OPERATOR_PATH: {
-						await this.set_uniform_value_from_texture((<unknown>param) as OperatorPathParam, uniform);
-						break;
-					}
-					case ParamType.RAMP: {
-						this.set_uniform_value_from_ramp((<unknown>param) as RampParam, uniform);
-						break;
-					}
-					default: {
-						uniform.value = param.value;
-						break;
-					}
-				}
-				// resolve()
-			} // else {
-			//	resolve()
-			//}
-			// })
-		}
-	}
+	// 			switch (this._type) {
+	// 				case ParamType.OPERATOR_PATH: {
+	// 					await this.set_uniform_value_from_texture((<unknown>param) as OperatorPathParam, uniform);
+	// 					break;
+	// 				}
+	// 				case ParamType.RAMP: {
+	// 					this.set_uniform_value_from_ramp((<unknown>param) as RampParam, uniform);
+	// 					break;
+	// 				}
+	// 				default: {
+	// 					uniform.value = param.value;
+	// 					break;
+	// 				}
+	// 			}
+	// 			// resolve()
+	// 		} // else {
+	// 		//	resolve()
+	// 		//}
+	// 		// })
+	// 	}
+	// }
 
 	async set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
 		// this._texture_loader = this._texture_loader || new CoreTextureLoader(node, node.param(this.name()))

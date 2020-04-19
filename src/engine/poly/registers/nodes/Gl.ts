@@ -43,6 +43,7 @@ import {
 	ReflectGlNode,
 	StepGlNode,
 } from '../../../nodes/gl/_Math_Arg2';
+import {ClampGlNode, FaceforwardGlNode, SmoothStepGlNode} from '../../../nodes/gl/_Math_Arg3';
 
 import {AddGlNode, DivideGlNode, MultGlNode, SubstractGlNode} from '../../../nodes/gl/_Math_Arg2Operation';
 
@@ -62,7 +63,8 @@ import {GlobalsGlNode} from '../../../nodes/gl/Globals';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
 import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
 import {InstanceTransformGlNode} from '../../../nodes/gl/InstanceTransform';
-// import {LabToRgbGlNode} from '../../../nodes/gl/LabToRgb';
+// import {LabToRgbGlNode} from '../../../nodes/gl/LabToRgb'; // TODO: still need work, not looking good
+// import {LchToRgbGlNode} from '../../../nodes/gl/LchToRgb'; // TODO: still need work, not looking good
 import {LengthGlNode} from '../../../nodes/gl/Length';
 import {LuminanceGlNode} from '../../../nodes/gl/Luminance';
 import {MixGlNode} from '../../../nodes/gl/Mix';
@@ -97,6 +99,7 @@ export interface GlNodeChildrenMap {
 	atan: AtanGlNode;
 	attribute: AttributeGlNode;
 	ceil: CeilGlNode;
+	clamp: ClampGlNode;
 	constant: ConstantGlNode;
 	cos: CosGlNode;
 	compare: CompareGlNode;
@@ -111,6 +114,7 @@ export interface GlNodeChildrenMap {
 	easing: EasingGlNode;
 	exp: ExpGlNode;
 	exp2: Exp2GlNode;
+	face_forward: FaceforwardGlNode;
 	fit: FitGlNode;
 	fit01: Fit01GlNode;
 	float_to_int: FloatToIntGlNode;
@@ -125,6 +129,7 @@ export interface GlNodeChildrenMap {
 	inverse_sqrt: InverseSqrtGlNode;
 	instance_transform: InstanceTransformGlNode;
 	// lab_to_rgb: LabToRgbGlNode;
+	// lch_to_rgb: LchToRgbGlNode;
 	length: LengthGlNode;
 	log: LogGlNode;
 	log2: Log2GlNode;
@@ -158,6 +163,7 @@ export interface GlNodeChildrenMap {
 	round: RoundGlNode;
 	sign: SignGlNode;
 	sin: SinGlNode;
+	smooth_step: SmoothStepGlNode;
 	sqrt: SqrtGlNode;
 	step: StepGlNode;
 	substract: SubstractGlNode;
@@ -185,6 +191,7 @@ export class GlRegister {
 		poly.register_node(AtanGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(AttributeGlNode, CATEGORY_GL.GLOBALS, {except: [`${NodeContext.COP}/builder`]});
 		poly.register_node(CeilGlNode, CATEGORY_GL.MATH);
+		poly.register_node(ClampGlNode, CATEGORY_GL.MATH);
 		poly.register_node(CosGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(ConstantGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(CompareGlNode, CATEGORY_GL.LOGIC);
@@ -199,6 +206,7 @@ export class GlRegister {
 		poly.register_node(EasingGlNode, CATEGORY_GL.MATH);
 		poly.register_node(ExpGlNode, CATEGORY_GL.MATH);
 		poly.register_node(Exp2GlNode, CATEGORY_GL.MATH);
+		poly.register_node(FaceforwardGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(FitGlNode, CATEGORY_GL.MATH);
 		poly.register_node(Fit01GlNode, CATEGORY_GL.MATH);
 		poly.register_node(FloatToIntGlNode, CATEGORY_GL.CONVERSION);
@@ -214,6 +222,7 @@ export class GlRegister {
 		poly.register_node(InverseSqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(InstanceTransformGlNode, CATEGORY_GL.GEOMETRY);
 		// poly.register_node(LabToRgbGlNode, CATEGORY_GL.COLOR);
+		// poly.register_node(LchToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.register_node(LengthGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(LuminanceGlNode, CATEGORY_GL.COLOR);
 		poly.register_node(NegateGlNode, CATEGORY_GL.MATH);
@@ -246,6 +255,7 @@ export class GlRegister {
 		poly.register_node(RoundGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SignGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SinGlNode, CATEGORY_GL.TRIGO);
+		poly.register_node(SmoothStepGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(SubstractGlNode, CATEGORY_GL.MATH);

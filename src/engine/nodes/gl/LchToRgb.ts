@@ -9,14 +9,14 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'rgb';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class LabToRgbGlParamsConfig extends NodeParamsConfig {
-	lab = ParamConfig.VECTOR3([1, 1, 1]);
+class LchToRgbGlParamsConfig extends NodeParamsConfig {
+	lch = ParamConfig.VECTOR3([1, 1, 1]);
 }
-const ParamsConfig = new LabToRgbGlParamsConfig();
-export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
+const ParamsConfig = new LchToRgbGlParamsConfig();
+export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'lab_to_rgb';
+		return 'lch_to_rgb';
 	}
 
 	initialize_node() {
@@ -33,13 +33,10 @@ export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 
 		function_declaration_lines.push(new FunctionGLDefinition(this, ConnectionPointType.VEC3, ColorGlslLib));
 
-		const value = ThreeToGl.vector3(this.variable_for_input(this.p.lab.name));
+		const value = ThreeToGl.vector3(this.variable_for_input(this.p.lch.name));
 
 		const rgb = this.gl_var_name(OUTPUT_NAME);
-		// body_lines.push(
-		// 	`vec3 ${rgb} = labToRgb(vec3(${value}.x*100.0, (${value}.y-0.5)*(2.0*128.0), (${value}.z-0.5)*(2.0*128.0) ))`
-		// );
-		body_lines.push(`vec3 ${rgb} = labToRgb(vec3(${value}.x*100.0, -128.0, 128.0 ))`);
+		body_lines.push(`vec3 ${rgb} = lchToRgb(${value})`);
 		shaders_collection_controller.add_definitions(this, function_declaration_lines);
 		shaders_collection_controller.add_body_lines(this, body_lines);
 	}

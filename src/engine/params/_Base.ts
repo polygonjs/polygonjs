@@ -210,7 +210,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	this._default_value = default_value;
 	// }
 	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
-		this._default_value = init_value; //this.convert(init_value);
+		this._default_value = this._clone_raw_input(this._prefilter_invalid_raw_input(init_value));
 		// this._raw_input = this._clone_raw_input(init_value);
 
 		// if (this.is_multiple) {
