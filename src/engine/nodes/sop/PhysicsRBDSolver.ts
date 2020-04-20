@@ -1,16 +1,18 @@
 // https://stackblitz.com/edit/ammojs-typed-falling-cubes?file=simulation.ts
 import {TypedSopNode} from './_Base';
+import lodash_isString from 'lodash/isString';
 import {CoreGroup} from '../../../core/geometry/Group';
 import Ammo from 'ammojs-typed';
-import {AmmoRBDBodyHelper} from '../../../core/physics/ammo/RBDBodyHelper';
-import {CollisionFlag, BodyState} from '../../../core/physics/ammo/Constant';
+import {AmmoRBDBodyHelper, RBDAttribute} from '../../../core/physics/ammo/RBDBodyHelper';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
 import {CoreObject} from '../../../core/geometry/Object';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
 import {AmmoForceHelper} from '../../../core/physics/ammo/ForceHelper';
+
+const NULL_ID = '';
+
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AmmoSolverSopParamsConfig extends NodeParamsConfig {
 	gravity = ParamConfig.VECTOR3([0, -9.81, 0]);
 	max_substeps = ParamConfig.INTEGER(2, {
@@ -40,10 +42,15 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 	// private sphereShape: Ammo.btSphereShape | undefined;
 	// private transform: Ammo.btTransform | undefined;
 	private _gravity: Ammo.btVector3 | undefined;
+	private _bodies_by_id: Map<string, Ammo.btRigidBody> = new Map();
+	private _bodies_active_state_by_id: Map<string, boolean> = new Map();
+	// helpers
 	private _body_helper: AmmoRBDBodyHelper | undefined;
 	private _force_helper: AmmoForceHelper | undefined;
-	private _input_objects: CoreObject[] | undefined;
+	// inputs
+	private _input_init: CoreObject[] | undefined;
 	private _input_force_points: CorePoint[] | undefined;
+	private _input_update: CoreObject[] | undefined;
 
 	static displayed_input_names(): string[] {
 		return ['RBDs', 'Forces', 'Updated RBD Attributes'];
@@ -59,11 +66,7 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER, InputCloneMode.NEVER]);
 
 		// physics
-		// const graph_node = new CoreGraphNode(this.scene, 'time');
 		this.add_graph_input(this.scene.time_controller.graph_node);
-		// graph_node.add_post_dirty_hook('ammo_solver', () => {
-		// 	this.cook_controller.cook_main_without_inputs();
-		// });
 		Ammo(Ammo).then(() => {
 			this.prepare();
 		});
@@ -82,10 +85,6 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 			this.config
 		);
 		this.world.setGravity(new Ammo.btVector3(0, -10, 0));
-		// const box_size = 0.5;
-		// this.boxShape = new Ammo.btBoxShape(new Ammo.btVector3(box_size, box_size, box_size));
-		// this.sphereShape = new Ammo.btSphereShape(box_size);
-		// this.transform = new Ammo.btTransform();
 		this._gravity = new Ammo.btVector3(0, 0, 0);
 	}
 
@@ -93,17 +92,19 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		if (this.scene.frame == 1) {
 			this.reset();
 		}
-		if (!this._input_objects) {
-			this._input_objects = input_contents[0].core_objects();
+		if (!this._input_init) {
+			this._input_init = input_contents[0].core_objects();
 
 			this.init();
 			// this.createGroundShape();
 		}
-		if (this._input_objects) {
+		if (this._input_init) {
 			const force_core_group = input_contents[1];
+			const update_core_group = input_contents[2];
 			this._input_force_points = force_core_group ? force_core_group.points() : undefined;
+			this._input_update = update_core_group ? update_core_group.core_objects() : undefined;
 			this.simulate(0.05);
-			this.set_objects(this._input_objects.map((co) => co.object()));
+			this.set_objects(this._input_init.map((co) => co.object()));
 		} else {
 			this.set_objects([]);
 		}
@@ -132,89 +133,48 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 	// 	// this.bodies.push(body);
 	// }
 	private init() {
-		if (!(this.world && this._gravity && this._input_objects && this._body_helper)) {
+		if (!(this.world && this._gravity && this._input_init && this._body_helper)) {
 			return;
 		}
 		this._gravity.setValue(this.pv.gravity.x, this.pv.gravity.y, this.pv.gravity.z);
 		this.world.setGravity(this._gravity);
 
-		for (let i = 0; i < this._input_objects.length; i++) {
-			const body = this._body_helper.create_body(this._input_objects[i]);
+		for (let i = 0; i < this._input_init.length; i++) {
+			const core_object = this._input_init[i];
+			const id = this._body_helper.read_object_attribute(core_object, RBDAttribute.ID, NULL_ID);
+			if (id == NULL_ID) {
+				console.warn('no id for RBD');
+			}
 
+			const body = this._body_helper.create_body(core_object);
 			this.world.addRigidBody(body);
+			this._body_helper.finalize_body(body, core_object);
+
+			this._bodies_by_id.set(id, body);
+			this._bodies_active_state_by_id.set(id, this._body_helper.is_active(body));
 			this.bodies.push(body);
 		}
 		this._transform_core_objects_from_bodies();
+		this._create_constraints();
 	}
-	protected resetPositions() {
-		for (let i = 0; i < this.bodies.length; i++) {
-			const body = this.bodies[i];
-			if (i == 12) {
-				body.setCollisionFlags(CollisionFlag.KINEMATIC_OBJECT);
-				body.setActivationState(BodyState.DISABLE_DEACTIVATION);
+	private _create_constraints() {
+		const rbd0 = this._bodies_by_id.get('/geo1/physics_rbd_attributes1:0')!;
+		const rbd1 = this._bodies_by_id.get('/geo1/physics_rbd_attributes1:1')!;
+		var pivotA = new Ammo.btVector3(0, 0.5, 0);
+		var pivotB = new Ammo.btVector3(0, -0.5, 0);
+		var axis = new Ammo.btVector3(0, 1, 0);
+		const hinge = new Ammo.btHingeConstraint(rbd0, rbd1, pivotA, pivotB, axis, axis, true);
+		this.world?.addConstraint(hinge);
+	}
 
-				// const rbd_transform = body.getWorldTransform();
-				const rbd_transform = new Ammo.btTransform();
-				body.getMotionState().getWorldTransform(rbd_transform);
-				const origin = rbd_transform.getOrigin();
-				origin.setX(2 * i);
-				origin.setY(3 * (i + 1));
-				// origin.setZ(2.2 * (0.5 - Math.random()));
-				const rot = (Math.PI * i) / 4;
-				const rotation = rbd_transform.getRotation();
-				rotation.setX(rot);
-				rotation.setY(rot);
-				rotation.setZ(rot);
-				// rotation.setY(360 * Math.random());
-				// rotation.setZ(360 * Math.random());
-				// rotation.setW(360 * Math.random());
-				rotation.normalize();
-				rbd_transform.setRotation(rotation);
-				body.setRestitution(0.8);
-				body.setDamping(0, 0.5);
-				body.getMotionState().setWorldTransform(rbd_transform);
-				// body.setLinearVelocity(new Ammo.btVector3(0, 5, 0));
-				// body.applyForce(new Ammo.btVector3(0, 0, 1), new Ammo.btVector3(0, 50, 0));
-				// body.applyImpulse()
-				// body.applyCentralImpulse(new Ammo.btVector3(0, 0, 50));
-				// body.applyCentralLocalForce(new Ammo.btVector3(0, 0, 50)); // seems local to itself
-			} else {
-				// const rbd_transform = body.getWorldTransform();
-				// // const rbd_transform = new Ammo.btTransform();
-				// // body.getMotionState().getWorldTransform(rbd_transform);
-				// const origin = rbd_transform.getOrigin();
-				// origin.setX(2 * i);
-				// origin.setY(3 * (i + 1));
-				// // origin.setZ(2.2 * (0.5 - Math.random()));
-				// const rot = (Math.PI * i) / 4;
-				// const rotation = rbd_transform.getRotation();
-				// rotation.setX(rot);
-				// rotation.setY(rot);
-				// rotation.setZ(rot);
-				// // rotation.setY(360 * Math.random());
-				// // rotation.setZ(360 * Math.random());
-				// // rotation.setW(360 * Math.random());
-				// rotation.normalize();
-				// rbd_transform.setRotation(rotation);
-				// body.setRestitution(0.8);
-				// body.setDamping(0, 0.5);
-				// body.getMotionState().setWorldTransform(rbd_transform);
-				// body.setLinearVelocity(new Ammo.btVector3(0, 5, 0));
-				// body.applyForce(new Ammo.btVector3(0, 0, 1), new Ammo.btVector3(0, 50, 0));
-				// body.applyImpulse()
-				// body.applyCentralImpulse(new Ammo.btVector3(0, 0, 50));
-				// body.applyCentralLocalForce(new Ammo.btVector3(0, 0, 50)); // seems local to itself
-			}
-		}
-	}
 	private simulate(dt: number) {
-		if (!(this._input_objects && this._body_helper)) {
+		if (!(this._input_init && this._body_helper)) {
 			return;
 		}
 
 		this.world?.stepSimulation(dt, this.pv.max_substeps);
 		this._apply_custom_forces();
-		// this._move_kinematics();
+		this._apply_rbd_update();
 		this._transform_core_objects_from_bodies();
 	}
 	private _apply_custom_forces() {
@@ -226,31 +186,49 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		}
 	}
 
-	protected _move_kinematics() {
-		let body: Ammo.btRigidBody;
-		for (let i = 0; i < this.bodies.length; i++) {
-			if (i == 3) {
-				console.log(i);
-				body = this.bodies[i];
-				const rbd_transform = new Ammo.btTransform();
-				body.getMotionState().getWorldTransform(rbd_transform);
-				const origin = rbd_transform.getOrigin();
-				const new_x = origin.x() - 0.1;
-				const new_y = 0 + Math.abs(Math.sin(this.scene.time * 10));
-				console.log(new_x, new_y);
-				origin.setX(new_x);
-				origin.setY(new_y);
-				body.getMotionState().setWorldTransform(rbd_transform);
+	// TODO: use a deleted attribute to remove RBDs?
+	// TODO: keep track of newly added ids
+	private _apply_rbd_update() {
+		if (!(this._input_update && this._body_helper)) {
+			return;
+		}
+		for (let core_object of this._input_update) {
+			const id = core_object.attrib_value(RBDAttribute.ID);
+			if (lodash_isString(id)) {
+				const body = this._bodies_by_id.get(id);
+				if (body) {
+					this._update_active_state(id, body, core_object);
+					this._update_kinematic_transform(body, core_object);
+				}
 			}
+		}
+	}
+	private _update_active_state(id: string, body: Ammo.btRigidBody, core_object: CoreObject) {
+		const current_state = this._bodies_active_state_by_id.get(id);
+		const active_attr = core_object.attrib_value(RBDAttribute.ACTIVE);
+		const new_state = active_attr == 1;
+		if (current_state != new_state) {
+			if (new_state == true) {
+				this._body_helper?.make_active(body, this.world!);
+			} else {
+				this._body_helper?.make_kinematic(body);
+			}
+			this._bodies_active_state_by_id.set(id, new_state);
+		}
+	}
+
+	protected _update_kinematic_transform(body: Ammo.btRigidBody, core_object: CoreObject) {
+		if (this._body_helper && this._body_helper.is_kinematic(body)) {
+			this._body_helper.transform_body_from_core_object(body, core_object);
 		}
 	}
 
 	private _transform_core_objects_from_bodies() {
-		if (!(this._input_objects && this._body_helper)) {
+		if (!(this._input_init && this._body_helper)) {
 			return;
 		}
-		for (let i = 0; i < this._input_objects.length; i++) {
-			this._body_helper.transform_core_object_from_body(this._input_objects[i], this.bodies[i]);
+		for (let i = 0; i < this._input_init.length; i++) {
+			this._body_helper.transform_core_object_from_body(this._input_init[i], this.bodies[i]);
 		}
 	}
 
@@ -263,7 +241,7 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		node.reset();
 	}
 	private reset() {
-		this._input_objects = undefined;
+		this._input_init = undefined;
 
 		if (!this.world) {
 			return;

@@ -50,6 +50,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	}
 
 	initialize_node() {
+		// this.ui_data.set_param_label(this.p.apply_on, (v)=>TARGET_TYPES[v])
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}

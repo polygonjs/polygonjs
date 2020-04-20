@@ -31,6 +31,7 @@ import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
+import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {FaceSopNode} from '../../../nodes/sop/Face';
 import {FileSopNode} from '../../../nodes/sop/File';
 import {FuseSopNode} from '../../../nodes/sop/Fuse';
@@ -68,6 +69,7 @@ import {TextSopNode} from '../../../nodes/sop/Text';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
+import {TransformResetSopNode} from '../../../nodes/sop/TransformReset';
 import {TubeSopNode} from '../../../nodes/sop/Tube';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 
@@ -96,6 +98,7 @@ export interface GeoNodeChildrenMap {
 	data_url: DataUrlSopNode;
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
+	draw_range: DrawRangeSopNode;
 	face: FaceSopNode;
 	file: FileSopNode;
 	fuse: FuseSopNode;
@@ -133,6 +136,7 @@ export interface GeoNodeChildrenMap {
 	torus: TorusSopNode;
 	torus_knot: TorusKnotSopNode;
 	transform: TransformSopNode;
+	transform_reset: TransformResetSopNode;
 	tube: TubeSopNode;
 	uv_project: UvProjectSopNode;
 }
@@ -166,6 +170,7 @@ export class SopRegister {
 		poly.register_node(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.register_node(DeleteSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(FuseSopNode, CATEGORY_SOP.MODIFIER);
@@ -203,6 +208,7 @@ export class SopRegister {
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TransformSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(TransformResetSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
 	}

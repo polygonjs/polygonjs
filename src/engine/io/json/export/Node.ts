@@ -154,9 +154,9 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 					// const output_index = input_connections[input_index].output_index();
 					const output_index = connection.output_index;
 					const output_name = input.io.outputs.named_output_connection_points[output_index].name;
-					data.push({name: input_name, node: input.name, output: output_name});
+					data[input_index] = {name: input_name, node: input.name, output: output_name};
 				} else {
-					data.push(input.name);
+					data[input_index] = input.name;
 				}
 			}
 		});

@@ -1,5 +1,5 @@
 import lodash_isNumber from 'lodash/isNumber';
-// import lodash_isBoolean from 'lodash/isBoolean'
+import lodash_isBoolean from 'lodash/isBoolean';
 
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
@@ -34,10 +34,14 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		if (lodash_isNumber(raw_val)) {
 			return Math.round(raw_val);
 		} else {
-			if (CoreString.is_number(raw_val)) {
-				const parsed = parseInt(raw_val);
-				if (lodash_isNumber(parsed)) {
-					return parsed;
+			if (lodash_isBoolean(raw_val)) {
+				return raw_val ? 1 : 0;
+			} else {
+				if (CoreString.is_number(raw_val)) {
+					const parsed = parseInt(raw_val);
+					if (lodash_isNumber(parsed)) {
+						return parsed;
+					}
 				}
 			}
 			return null;

@@ -82,6 +82,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		// this.ui_data.set_param_label(this.p.name)
 	}
 
 	cook(input_contents: CoreGroup[]) {

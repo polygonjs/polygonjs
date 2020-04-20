@@ -36,7 +36,8 @@ class PhysicsForceAttributesSopParamsConfig extends NodeParamsConfig {
 	// directional
 	direction = ParamConfig.VECTOR3([0, -9.81, 0], {...visible_for_directional()});
 	// radial
-	center = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_radial()});
+	// center = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_radial()});
+	amount = ParamConfig.FLOAT(1, {...visible_for_radial()});
 	max_distance = ParamConfig.FLOAT(10, {...visible_for_radial()});
 	max_speed = ParamConfig.FLOAT(10, {...visible_for_radial()});
 }
@@ -87,7 +88,8 @@ export class PhysicsForceAttributesSopNode extends TypedSopNode<PhysicsForceAttr
 	}
 	private _apply_attributes_radial(points: CorePoint[]) {
 		for (let point of points) {
-			point.set_attrib_value(RadialForceAttribute.CENTER, this.pv.center);
+			point.set_attrib_value(RadialForceAttribute.CENTER, point.position());
+			point.set_attrib_value(RadialForceAttribute.AMOUNT, this.pv.amount);
 			point.set_attrib_value(RadialForceAttribute.MAX_DISTANCE, this.pv.max_distance);
 			point.set_attrib_value(RadialForceAttribute.MAX_SPEED, this.pv.max_speed);
 		}

@@ -85,16 +85,17 @@ export class CookController {
 
 		this._init_cooking_start_time(perf_active);
 
+		const inputs = this.node.io.inputs.inputs();
 		const input_contents = [];
 		if (input_containers) {
-			let input_container;
-			for (let i = 0; i < input_containers.length; i++) {
+			let input_container: BaseContainer | null;
+			for (let i = 0; i < inputs.length; i++) {
 				input_container = input_containers[i];
 				if (input_container) {
 					if (this.node.io.inputs.input_clonable_state_with_override(i)) {
-						input_contents.push(input_container.core_content_cloned());
+						input_contents[i] = input_container.core_content_cloned();
 					} else {
-						input_contents.push(input_container.core_content());
+						input_contents[i] = input_container.core_content();
 					}
 				}
 			}
@@ -200,7 +201,7 @@ export class CookController {
 
 		let input_containers: (BaseContainer | null)[] = [];
 		if (this._inputs_evaluation_required) {
-			input_containers = await this.node.io.inputs.eval_required_inputs_p();
+			input_containers = await this.node.io.inputs.eval_required_inputs();
 		}
 		// const inputs_eval_key = input_containers.map( c => c.eval_key()).join('-');
 

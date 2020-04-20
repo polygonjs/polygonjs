@@ -26,6 +26,7 @@ export enum DirectionalForceAttribute {
 //
 export enum RadialForceAttribute {
 	CENTER = 'center',
+	AMOUNT = 'amount',
 	MAX_DISTANCE = 'max_distance',
 	MAX_SPEED = 'max_speed',
 }
@@ -42,6 +43,7 @@ const DIRECTIONAL_FORCE_DEFAULT_ATTRIBUTE_VALUES = {
 };
 const RADIAL_FORCE_DEFAULT_ATTRIBUTE_VALUES = {
 	[RadialForceAttribute.CENTER]: [0, 0, 0] as Number3,
+	[RadialForceAttribute.AMOUNT]: 1,
 	[RadialForceAttribute.MAX_DISTANCE]: 10,
 	[RadialForceAttribute.MAX_SPEED]: 10,
 };
@@ -103,16 +105,21 @@ export class AmmoForceHelper {
 	private _apply_radial_force_to_body(core_point: CorePoint, body: Ammo.btRigidBody) {
 		body.getMotionState().getWorldTransform(this._t);
 
+		const position = core_point.position();
+		const amount = core_point.attrib_value(RadialForceAttribute.AMOUNT);
+		const max_distance = core_point.attrib_value(RadialForceAttribute.MAX_DISTANCE);
+
 		const o = this._t.getOrigin();
-		const amount = 0.5 * 20;
-		this._impulse.setValue(-o.x(), -o.y(), -o.z());
+		this._impulse.setValue(position.x - o.x(), position.y - o.y(), position.z - o.z());
 		const length = this._impulse.length();
-		if (length > 1) {
-			this._impulse.op_mul(amount / length);
-		}
-		const threshold = 0.001; // no need to apply if very small
-		if (this._impulse.length() > threshold) {
-			body.applyCentralForce(this._impulse);
+		if (length < max_distance) {
+			if (length > 1) {
+				this._impulse.op_mul(amount / length);
+			}
+			const threshold = 0.001; // no need to apply if very small
+			if (this._impulse.length() > threshold) {
+				body.applyCentralForce(this._impulse);
+			}
 		}
 	}
 }

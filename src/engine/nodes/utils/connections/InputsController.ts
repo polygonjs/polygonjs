@@ -201,22 +201,25 @@ export class InputsController<T extends BaseNodeType> {
 	// 		}
 	// 	}
 	// }
-	async eval_required_inputs_p() {
+	async eval_required_inputs() {
 		let containers: Array<BaseContainer | null> = [];
 		if (this._max_inputs_count > 0) {
 			const existing_input_indices: number[] = [];
-			this.inputs().forEach((input, i) => {
-				if (input) {
+			const inputs = this.inputs();
+			for (let i = 0; i < inputs.length; i++) {
+				if (inputs[i]) {
 					existing_input_indices.push(i);
 				}
-			});
+			}
 			// const existing_inputs = lodash_compact(this.inputs());
 			if (existing_input_indices.length < this._min_inputs_count) {
 				this.node.states.error.set('inputs are missing');
 			} else {
 				if (existing_input_indices.length > 0) {
-					const promises = existing_input_indices.map((input_index) => {
-						return this.node.io.inputs.eval_required_input(input_index);
+					const promises = inputs.map((input, input_index) => {
+						if (input) {
+							return this.node.io.inputs.eval_required_input(input_index);
+						}
 					});
 					containers = await Promise.all(promises);
 				}

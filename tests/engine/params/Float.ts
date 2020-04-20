@@ -38,3 +38,24 @@ QUnit.test('float has_expression() returns false when removing the expression', 
 	param.set('-2.5*$F');
 	assert.ok(param.has_expression());
 });
+
+QUnit.test('float param can take an expression returning a boolean', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+
+	const box1 = geo1.create_node('box');
+	const param = box1.p.size;
+
+	param.set('1+1');
+	await param.compute();
+	assert.equal(param.value, 2);
+
+	scene.set_frame(1);
+	param.set('$F>10');
+	await param.compute();
+	assert.equal(param.value, 0);
+
+	scene.set_frame(11);
+	await param.compute();
+	assert.equal(param.value, 1);
+});

@@ -1,5 +1,5 @@
 import Ammo from 'ammojs-typed';
-import {CollisionFlag, BodyState} from './Constant';
+import {CollisionFlag} from './Constant';
 import {CoreObject} from '../../geometry/Object';
 import {Vector3, Quaternion, Matrix4} from 'three';
 
@@ -8,6 +8,7 @@ export enum RBDAttribute {
 	ANGULAR_DAMPING = 'angular_damping',
 	DAMPING = 'damping',
 	FRICTION = 'friction',
+	ID = 'id',
 	MASS = 'mass',
 	RESTITUTION = 'restitution',
 	SHAPE = 'shape',
@@ -34,17 +35,20 @@ export class AmmoRBDBodyHelper {
 	private _default_shape_size_box: Number3 = [1, 1, 1];
 	create_body(core_object: CoreObject) {
 		// read attributes
-		const active = this._read_object_attribute(core_object, RBDAttribute.ACTIVE, true);
-		const mass = this._read_object_attribute(core_object, RBDAttribute.MASS, 1);
-		const shape_index = this._read_object_attribute(
+
+		let mass = this.read_object_attribute<number>(core_object, RBDAttribute.MASS, 1);
+		// if (!active) {
+		// 	mass = 0;
+		// }
+		const shape_index = this.read_object_attribute<number>(
 			core_object,
 			RBDAttribute.SHAPE,
 			RBD_SHAPES.indexOf(RBDShape.BOX)
 		);
-		const restitution = this._read_object_attribute(core_object, RBDAttribute.RESTITUTION, 1);
-		const damping = this._read_object_attribute(core_object, RBDAttribute.DAMPING, 1);
-		const angular_damping = this._read_object_attribute(core_object, RBDAttribute.ANGULAR_DAMPING, 1);
-		const friction = this._read_object_attribute(core_object, RBDAttribute.FRICTION, 0.5);
+		const restitution = this.read_object_attribute<number>(core_object, RBDAttribute.RESTITUTION, 1);
+		const damping = this.read_object_attribute<number>(core_object, RBDAttribute.DAMPING, 1);
+		const angular_damping = this.read_object_attribute<number>(core_object, RBDAttribute.ANGULAR_DAMPING, 1);
+		const friction = this.read_object_attribute<number>(core_object, RBDAttribute.FRICTION, 0.5);
 
 		// create body
 		const startTransform = new Ammo.btTransform();
@@ -62,28 +66,49 @@ export class AmmoRBDBodyHelper {
 		body.setRestitution(restitution);
 		body.setDamping(damping, angular_damping);
 		body.setFriction(friction);
+		return body;
+	}
+	// It is crucial to make the body kinematic AFTER it being added to the physics world.
+	// Otherwise, when it switches state, such as starting kinematic and then becoming dynamic,
+	// It will not be assigned to the correct collition group, and therefore will not collide with
+	// static bodies
+	finalize_body(body: Ammo.btRigidBody, core_object: CoreObject) {
+		const active = this.read_object_attribute<boolean>(core_object, RBDAttribute.ACTIVE, true);
 		if (!active) {
+			//} || mass == 0) {
 			this.make_kinematic(body);
 		}
 
 		// set transform
-		this._transform_body_from_core_object(body, core_object);
+		this.transform_body_from_core_object(body, core_object);
 
 		return body;
 	}
 
 	make_kinematic(body: Ammo.btRigidBody) {
 		body.setCollisionFlags(CollisionFlag.KINEMATIC_OBJECT);
-		body.setActivationState(BodyState.DISABLE_DEACTIVATION);
+		// body.setActivationState(BodyState.DISABLE_DEACTIVATION);
+	}
+	make_active(body: Ammo.btRigidBody, world: Ammo.btDiscreteDynamicsWorld) {
+		body.setCollisionFlags(0);
+		// body.setActivationState(BodyState.ACTIVE_TAG);
+		// body.activate(true);
+		// body.setMassProps(1, new Ammo.btVector3(0, 0, 0));
+		// body.setGravity(world.getGravity());
 	}
 	is_kinematic(body: Ammo.btRigidBody) {
-		return body.getCollisionFlags() == CollisionFlag.KINEMATIC_OBJECT;
+		return body.isKinematicObject();
+		// return body.getCollisionFlags() == CollisionFlag.KINEMATIC_OBJECT;
+	}
+	is_active(body: Ammo.btRigidBody) {
+		// return body.isActive();
+		return !this.is_kinematic(body);
 	}
 
 	private _t = new Vector3();
 	private _q = new Quaternion();
 	private _s = new Vector3();
-	private _transform_body_from_core_object(body: Ammo.btRigidBody, core_object: CoreObject) {
+	transform_body_from_core_object(body: Ammo.btRigidBody, core_object: CoreObject) {
 		const matrix = core_object.object().matrix;
 		matrix.decompose(this._t, this._q, this._s);
 
@@ -114,66 +139,10 @@ export class AmmoRBDBodyHelper {
 		object.rotation.setFromQuaternion(this._read_quat);
 	}
 
-	// private init_active_transform(body: Ammo.btRigidBody) {
-	// 	const i = body.getUserIndex();
-	// 	const rbd_transform = body.getWorldTransform();
-	// 	// const rbd_transform = new Ammo.btTransform();
-	// 	// body.getMotionState().getWorldTransform(rbd_transform);
-	// 	const origin = rbd_transform.getOrigin();
-	// 	origin.setX(2 * i);
-	// 	origin.setY(3 * (i + 1));
-	// 	// origin.setZ(2.2 * (0.5 - Math.random()));
-	// 	const rot = (Math.PI * i) / 4;
-	// 	const rotation = rbd_transform.getRotation();
-	// 	rotation.setX(rot);
-	// 	rotation.setY(rot);
-	// 	rotation.setZ(rot);
-	// 	// rotation.setY(360 * Math.random());
-	// 	// rotation.setZ(360 * Math.random());
-	// 	// rotation.setW(360 * Math.random());
-	// 	rotation.normalize();
-	// 	rbd_transform.setRotation(rotation);
-	// 	body.setRestitution(0.8);
-	// 	body.setDamping(0, 0.5);
-	// 	// body.getMotionState().setWorldTransform(rbd_transform);
-	// 	// body.setLinearVelocity(new Ammo.btVector3(0, 5, 0));
-	// 	// body.applyForce(new Ammo.btVector3(0, 0, 1), new Ammo.btVector3(0, 50, 0));
-	// 	// body.applyImpulse()
-	// 	// body.applyCentralImpulse(new Ammo.btVector3(0, 0, 50));
-	// 	// body.applyCentralLocalForce(new Ammo.btVector3(0, 0, 50)); // seems local to itself
-	// }
-	init_kinematic_transform(body: Ammo.btRigidBody) {
-		// const rbd_transform = body.getWorldTransform();
-		const rbd_transform = new Ammo.btTransform();
-		body.getMotionState().getWorldTransform(rbd_transform);
-		const origin = rbd_transform.getOrigin();
-		origin.setX(2);
-		origin.setY(3);
-		// origin.setZ(2.2 * (0.5 - Math.random()));
-		const rot = (Math.PI * 3) / 4;
-		const rotation = rbd_transform.getRotation();
-		rotation.setX(rot);
-		rotation.setY(rot);
-		rotation.setZ(rot);
-		// rotation.setY(360 * Math.random());
-		// rotation.setZ(360 * Math.random());
-		// rotation.setW(360 * Math.random());
-		rotation.normalize();
-		rbd_transform.setRotation(rotation);
-		body.setRestitution(0.8);
-		body.setDamping(0, 0.5);
-		body.getMotionState().setWorldTransform(rbd_transform);
-		// body.setLinearVelocity(new Ammo.btVector3(0, 5, 0));
-		// body.applyForce(new Ammo.btVector3(0, 0, 1), new Ammo.btVector3(0, 50, 0));
-		// body.applyImpulse()
-		// body.applyCentralImpulse(new Ammo.btVector3(0, 0, 50));
-		// body.applyCentralLocalForce(new Ammo.btVector3(0, 0, 50)); // seems local to itself
-	}
-
 	private _find_or_create_shape(shape: RBDShape, core_object: CoreObject): Ammo.btCollisionShape {
 		switch (shape) {
 			case RBDShape.BOX: {
-				const shape_size = this._read_object_attribute(
+				const shape_size = this.read_object_attribute(
 					core_object,
 					RBDAttribute.SHAPE_SIZE_BOX,
 					this._default_shape_size_box
@@ -182,7 +151,7 @@ export class AmmoRBDBodyHelper {
 				return new Ammo.btBoxShape(size_v);
 			}
 			case RBDShape.SPHERE: {
-				const shape_size = this._read_object_attribute(core_object, RBDAttribute.SHAPE_SIZE_SPHERE, 0.5);
+				const shape_size = this.read_object_attribute(core_object, RBDAttribute.SHAPE_SIZE_SPHERE, 0.5);
 				return new Ammo.btSphereShape(shape_size * 0.5);
 			}
 			default: {
@@ -191,11 +160,7 @@ export class AmmoRBDBodyHelper {
 		}
 	}
 
-	private _read_object_attribute<A extends AttribValue>(
-		core_object: CoreObject,
-		attrib_name: string,
-		default_value: A
-	): A {
+	read_object_attribute<A extends AttribValue>(core_object: CoreObject, attrib_name: string, default_value: A): A {
 		const val = core_object.attrib_value(attrib_name) as A;
 		if (val == null) {
 			return default_value;

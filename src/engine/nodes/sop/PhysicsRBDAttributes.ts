@@ -11,6 +11,7 @@ const RBD_ATTRIBUTE_MODES: Array<RBDAttributeMode> = [RBDAttributeMode.OBJECTS, 
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Mesh, Vector3} from 'three';
+import {CoreObject} from '../../../core/geometry/Object';
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(RBD_ATTRIBUTE_MODES.indexOf(RBDAttributeMode.OBJECTS), {
 		menu: {
@@ -33,6 +34,7 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	// shape_size_box = ParamConfig.VECTOR3([1, 1, 1], {
 	// 	visible_if: {shape: RBD_SHAPES.indexOf(RBDShape.BOX)},
 	// });
+	add_id = ParamConfig.BOOLEAN(1);
 	mass = ParamConfig.FLOAT(1);
 	restitution = ParamConfig.FLOAT(0.5);
 	damping = ParamConfig.FLOAT(0);
@@ -63,13 +65,20 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 
 	private _add_object_attributes(core_group: CoreGroup) {
 		let bbox_size = new Vector3();
-		for (let core_object of core_group.core_objects()) {
+		const core_objects = core_group.core_objects();
+		let core_object: CoreObject;
+		for (let i = 0; i < core_objects.length; i++) {
+			core_object = core_objects[i];
 			core_object.set_attrib_value(RBDAttribute.ACTIVE, this.pv.active ? 1 : 0);
 			core_object.set_attrib_value(RBDAttribute.MASS, this.pv.mass);
 			core_object.set_attrib_value(RBDAttribute.RESTITUTION, this.pv.restitution);
 			core_object.set_attrib_value(RBDAttribute.DAMPING, this.pv.damping);
 			core_object.set_attrib_value(RBDAttribute.ANGULAR_DAMPING, this.pv.angular_damping);
 			core_object.set_attrib_value(RBDAttribute.FRICTION, this.pv.friction);
+
+			if (this.pv.add_id == true) {
+				core_object.set_attrib_value(RBDAttribute.ID, `${this.full_path()}:${i}`);
+			}
 
 			// shape
 			core_object.set_attrib_value(RBDAttribute.SHAPE, this.pv.shape);
