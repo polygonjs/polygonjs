@@ -3,12 +3,12 @@ import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoi
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {AsyncFunction} from '../../../core/AsyncFunction';
 const DEFAULT_FUNCTION_CODE = `
-import {BaseEventProcessor, BaseCameraObjNodeType} from 'polygonjs-engine'
+import {BaseEventProcessor, EventContext} from 'polygonjs-engine'
 export class EventProcessor extends BaseEventProcessor {
 	initialize_processor(){
 	}
-	process_mouse_event(event: MouseEvent, canvas: HTMLCanvasElement, camera_node: BaseCameraObjNodeType){
-		this._set_mouse_from_event_and_canvas(event, canvas);
+	process_mouse_event(event_context: EventContext){
+		this._set_mouse_from_event_and_canvas(event_context.event, event_context.canvas);
 		console.log(this.node.scene.time);
 		console.log("processing event", this.mouse.x, this.mouse.y);
 	}

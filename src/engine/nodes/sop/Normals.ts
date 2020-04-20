@@ -11,6 +11,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 const NORMAL_ATTRIB_NAME = 'normal';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	edit = ParamConfig.BOOLEAN(0);
 	update_x = ParamConfig.BOOLEAN(0, {
@@ -129,7 +130,13 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = core_object.points();
 
-		const array = geometry.getAttribute(NORMAL_ATTRIB_NAME).array as number[];
+		let attrib = geometry.getAttribute(NORMAL_ATTRIB_NAME);
+		if (!attrib) {
+			const core_geometry = new CoreGeometry(geometry);
+			core_geometry.add_numeric_attrib(NORMAL_ATTRIB_NAME, 3, 0);
+			attrib = geometry.getAttribute(NORMAL_ATTRIB_NAME);
+		}
+		const array = attrib.array as number[];
 
 		// x
 		if (this.pv.update_x) {

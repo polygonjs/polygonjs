@@ -1,10 +1,43 @@
 import {TypedSopNode} from './_Base';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {RBDAttribute, RBD_SHAPES, RBDShape} from '../../../core/physics/ammo/RBDBodyHelper';
+
+enum RBDAttributeMode {
+	OBJECTS = 'objects',
+	POINTS = 'points',
+}
+const RBD_ATTRIBUTE_MODES: Array<RBDAttributeMode> = [RBDAttributeMode.OBJECTS, RBDAttributeMode.POINTS];
+
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Mesh, Vector3} from 'three';
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
+	mode = ParamConfig.INTEGER(RBD_ATTRIBUTE_MODES.indexOf(RBDAttributeMode.OBJECTS), {
+		menu: {
+			entries: RBD_ATTRIBUTE_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
 	active = ParamConfig.BOOLEAN(1);
+	shape = ParamConfig.INTEGER(RBD_SHAPES.indexOf(RBDShape.BOX), {
+		menu: {
+			entries: RBD_SHAPES.map((name, value) => {
+				return {name: name, value: value};
+			}),
+		},
+	});
+	// shape_size_sphere = ParamConfig.FLOAT(1, {
+	// 	visible_if: {shape: RBD_SHAPES.indexOf(RBDShape.SPHERE)},
+	// });
+	// shape_size_box = ParamConfig.VECTOR3([1, 1, 1], {
+	// 	visible_if: {shape: RBD_SHAPES.indexOf(RBDShape.BOX)},
+	// });
+	mass = ParamConfig.FLOAT(1);
+	restitution = ParamConfig.FLOAT(0.5);
+	damping = ParamConfig.FLOAT(0);
+	angular_damping = ParamConfig.FLOAT(0);
+	friction = ParamConfig.FLOAT(0.5);
 }
 const ParamsConfig = new PhysicsRBDAttributesSopParamsConfig();
 
@@ -20,7 +53,55 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		console.error('physics attributes cook');
+		if (RBD_ATTRIBUTE_MODES[this.pv.mode] == RBDAttributeMode.OBJECTS) {
+			this._add_object_attributes(input_contents[0]);
+		} else {
+			this._add_point_attributes(input_contents[0]);
+		}
 		this.set_core_group(input_contents[0]);
+	}
+
+	private _add_object_attributes(core_group: CoreGroup) {
+		let bbox_size = new Vector3();
+		for (let core_object of core_group.core_objects()) {
+			core_object.set_attrib_value(RBDAttribute.ACTIVE, this.pv.active ? 1 : 0);
+			core_object.set_attrib_value(RBDAttribute.MASS, this.pv.mass);
+			core_object.set_attrib_value(RBDAttribute.RESTITUTION, this.pv.restitution);
+			core_object.set_attrib_value(RBDAttribute.DAMPING, this.pv.damping);
+			core_object.set_attrib_value(RBDAttribute.ANGULAR_DAMPING, this.pv.angular_damping);
+			core_object.set_attrib_value(RBDAttribute.FRICTION, this.pv.friction);
+
+			// shape
+			core_object.set_attrib_value(RBDAttribute.SHAPE, this.pv.shape);
+			const shape = RBD_SHAPES[this.pv.shape];
+			switch (shape) {
+				case RBDShape.BOX: {
+					const geometry = (core_object.object() as Mesh).geometry;
+					geometry.computeBoundingBox();
+					const bbox = geometry.boundingBox;
+					if (bbox) {
+						bbox.getSize(bbox_size);
+						core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_BOX, bbox_size);
+					}
+					break;
+				}
+				case RBDShape.SPHERE: {
+					const geometry = (core_object.object() as Mesh).geometry;
+					geometry.computeBoundingSphere();
+					const bounding_sphere = geometry.boundingSphere;
+					if (bounding_sphere) {
+						core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_SPHERE, bounding_sphere.radius);
+					}
+					break;
+				}
+				default: {
+				}
+			}
+		}
+	}
+	private _add_point_attributes(core_group: CoreGroup) {
+		for (let core_point of core_group.points()) {
+			core_point.set_attrib_value(RBDAttribute.ACTIVE, this.pv.active ? 1 : 0);
+		}
 	}
 }

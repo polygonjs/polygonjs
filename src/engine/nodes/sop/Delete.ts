@@ -93,7 +93,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 
 	// by_visible
 	by_visible = ParamConfig.BOOLEAN(0);
-	keep_points = ParamConfig.BOOLEAN(1, {
+	keep_points = ParamConfig.BOOLEAN(0, {
 		visible_if: {
 			class: AttribClass.OBJECT,
 		},
@@ -195,7 +195,11 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 					objects_to_keep.push(object);
 				}
 				if (marked_for_deletion) {
-					point_objects_from_deleted_objects.push(this._point_object(core_object) as Object3DWithGeometry);
+					if (this.pv.keep_points) {
+						point_objects_from_deleted_objects.push(
+							this._point_object(core_object) as Object3DWithGeometry
+						);
+					}
 				}
 			}
 			// if (marked_for_deletion) {
