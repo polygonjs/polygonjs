@@ -63,12 +63,15 @@ export class CoreInstancer {
 		});
 	}
 
+	private _point_scale = new Vector3()
+	private _point_normal = new Vector3()
+	private _point_up = new Vector3()
 	_matrix_from_point(point: CorePoint): Matrix4 {
 		const t = point.position();
 		//r = new Vector3(0,0,0)
-		let scale = this._is_scale_present ? point.attrib_value(SCALE_ATTRIB_NAME) : DEFAULT.SCALE;
-		const pscale = this._is_pscale_present ? point.attrib_value(PSCALE_ATTRIB_NAME) : DEFAULT.PSCALE;
-		scale = scale.clone().multiplyScalar(pscale);
+		const scale: Vector3 = this._is_scale_present ? point.attrib_value(SCALE_ATTRIB_NAME, this._point_scale) as Vector3 : DEFAULT.SCALE;
+		const pscale:number = this._is_pscale_present ? point.attrib_value(PSCALE_ATTRIB_NAME) as number : DEFAULT.PSCALE;
+		scale.multiplyScalar(pscale);
 
 		//matrix = #Core.Transform.matrix(t, r, s, scale)
 		const matrix = new Matrix4();
@@ -85,8 +88,8 @@ export class CoreInstancer {
 		if (this._do_rotate_matrices) {
 			const rotate_matrix = this._matrices[MATRIX_R];
 			const eye = DEFAULT.EYE;
-			const center = point.attrib_value(NORMAL_ATTRIB_NAME).multiplyScalar(-1);
-			const up = this._is_up_present ? point.attrib_value(UP_ATTRIB_NAME) : DEFAULT.UP;
+			const center = (point.attrib_value(NORMAL_ATTRIB_NAME, this._point_normal) as Vector3).multiplyScalar(-1);
+			const up = this._is_up_present ? point.attrib_value(UP_ATTRIB_NAME, this._point_up) as Vector3 : DEFAULT.UP;
 			up.normalize();
 			rotate_matrix.lookAt(eye, center, up);
 
@@ -98,6 +101,8 @@ export class CoreInstancer {
 		return matrix;
 	}
 
+	private static _point_color = new Vector3()
+	private static _point_uv = new Vector2()
 	static create_instance_buffer_geo(
 		geometry_to_instance: BufferGeometry,
 		template_core_group: CoreGroup,
@@ -139,7 +144,7 @@ export class CoreInstancer {
 			quaternion.toArray(orients, index4);
 			scale.toArray(scales, index3);
 
-			const color = has_color ? instance_pt.attrib_value(ATTRIB_NAME_COLOR) : DEFAULT_COLOR;
+			const color = has_color ? instance_pt.attrib_value(ATTRIB_NAME_COLOR, this._point_color) as Vector3 : DEFAULT_COLOR;
 			color.toArray(colors, index3);
 		});
 
@@ -149,7 +154,7 @@ export class CoreInstancer {
 			const uvs = new Float32Array(instances_count * 2);
 			instance_pts.forEach((instance_pt, i) => {
 				const index2 = i * 2;
-				const uv = has_uv ? instance_pt.attrib_value(ATTRIB_NAME_UV) : DEFAULT_UV;
+				const uv = has_uv ? instance_pt.attrib_value(ATTRIB_NAME_UV, this._point_uv) as Vector2 : DEFAULT_UV;
 				uv.toArray(uvs, index2);
 			});
 			geometry.setAttribute('instanceUv', new InstancedBufferAttribute(uvs, 2));
@@ -171,7 +176,7 @@ export class CoreInstancer {
 				if (lodash_isNumber(value)) {
 					values[i] = value;
 				} else {
-					value.toArray(values, i * attrib_size);
+					(value as Vector3).toArray(values, i * attrib_size);
 				}
 			});
 			geometry.setAttribute(attrib_name, new InstancedBufferAttribute(values, attrib_size));

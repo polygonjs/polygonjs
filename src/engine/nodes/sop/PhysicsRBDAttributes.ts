@@ -10,8 +10,11 @@ enum RBDAttributeMode {
 const RBD_ATTRIBUTE_MODES: Array<RBDAttributeMode> = [RBDAttributeMode.OBJECTS, RBDAttributeMode.POINTS];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Mesh, Vector3} from 'three';
+import {Mesh} from 'three/src/objects/Mesh';
+import {Vector3} from 'three/src/math/Vector3';
+
 import {CoreObject} from '../../../core/geometry/Object';
+import {TypeAssert} from '../../poly/Assert';
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(RBD_ATTRIBUTE_MODES.indexOf(RBDAttributeMode.OBJECTS), {
 		menu: {
@@ -64,7 +67,6 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	}
 
 	private _add_object_attributes(core_group: CoreGroup) {
-		let bbox_size = new Vector3();
 		const core_objects = core_group.core_objects();
 		let core_object: CoreObject;
 		for (let i = 0; i < core_objects.length; i++) {
@@ -81,32 +83,35 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			}
 
 			// shape
-			core_object.set_attrib_value(RBDAttribute.SHAPE, this.pv.shape);
-			const shape = RBD_SHAPES[this.pv.shape];
-			switch (shape) {
-				case RBDShape.BOX: {
-					const geometry = (core_object.object() as Mesh).geometry;
-					geometry.computeBoundingBox();
-					const bbox = geometry.boundingBox;
-					if (bbox) {
-						bbox.getSize(bbox_size);
-						core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_BOX, bbox_size);
-					}
-					break;
+			this._add_object_shape_specific_attributes(core_object);
+		}
+	}
+	private _bbox_size = new Vector3();
+	private _add_object_shape_specific_attributes(core_object: CoreObject) {
+		core_object.set_attrib_value(RBDAttribute.SHAPE, this.pv.shape);
+		const shape = RBD_SHAPES[this.pv.shape];
+		switch (shape) {
+			case RBDShape.BOX: {
+				const geometry = (core_object.object() as Mesh).geometry;
+				geometry.computeBoundingBox();
+				const bbox = geometry.boundingBox;
+				if (bbox) {
+					bbox.getSize(this._bbox_size);
+					core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_BOX, this._bbox_size);
 				}
-				case RBDShape.SPHERE: {
-					const geometry = (core_object.object() as Mesh).geometry;
-					geometry.computeBoundingSphere();
-					const bounding_sphere = geometry.boundingSphere;
-					if (bounding_sphere) {
-						core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_SPHERE, bounding_sphere.radius);
-					}
-					break;
+				return;
+			}
+			case RBDShape.SPHERE: {
+				const geometry = (core_object.object() as Mesh).geometry;
+				geometry.computeBoundingSphere();
+				const bounding_sphere = geometry.boundingSphere;
+				if (bounding_sphere) {
+					core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_SPHERE, bounding_sphere.radius);
 				}
-				default: {
-				}
+				return;
 			}
 		}
+		TypeAssert.unreachable(shape);
 	}
 	private _add_point_attributes(core_group: CoreGroup) {
 		for (let core_point of core_group.points()) {

@@ -62,8 +62,8 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 
 	private _core_group: CoreGroup | undefined;
 	private _core_object: CoreObject | undefined;
-	private _values_per_attrib_name: Dictionary<number[]> = {};
-	private _filtered_values_per_attrib_name: Dictionary<number | undefined> = {};
+	private _values_per_attrib_name: Dictionary<NumericAttribValue[]> = {};
+	private _filtered_values_per_attrib_name: Dictionary<NumericAttribValue | undefined> = {};
 	cook(input_contents: CoreGroup[]) {
 		this._core_group = input_contents[0];
 
@@ -141,7 +141,14 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 	private find_values_from_points(attrib_name: string) {
 		if (this._core_object) {
 			const points = this._core_object.points();
-			this._values_per_attrib_name[attrib_name] = points.map((point) => point.attrib_value(attrib_name));
+			const first_point = points[0];
+			if (first_point) {
+				if (!first_point.is_attrib_indexed(attrib_name)) {
+					this._values_per_attrib_name[attrib_name] = points.map(
+						(point) => point.attrib_value(attrib_name) as NumericAttribValue
+					);
+				}
+			}
 		}
 	}
 

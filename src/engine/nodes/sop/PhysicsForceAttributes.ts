@@ -25,6 +25,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions, VisibleIfParamOptions} from '../../params/utils/OptionsController';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
+import {TypeAssert} from '../../poly/Assert';
 class PhysicsForceAttributesSopParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(FORCE_TYPES.indexOf(ForceType.DIRECTIONAL), {
 		menu: {
@@ -64,21 +65,23 @@ export class PhysicsForceAttributesSopNode extends TypedSopNode<PhysicsForceAttr
 			point.set_attrib_value(FORCE_TYPE_ATTRIBUTE_NAME, this.pv.type);
 		}
 
+		this._apply_force_attributes(points, force_type);
+		this.set_core_group(input_contents[0]);
+	}
+	private _apply_force_attributes(points: CorePoint[], force_type: ForceType) {
 		switch (force_type) {
 			case ForceType.DIRECTIONAL: {
-				this._apply_attributes_directional(points);
-				break;
+				return this._apply_attributes_directional(points);
 			}
 			case ForceType.RADIAL: {
-				this._apply_attributes_radial(points);
-				break;
+				return this._apply_attributes_radial(points);
 			}
 			// case ForceType.VORTEX: {
 			// 	this._apply_attributes_vortex(core_group);
 			// 	break;
 			// }
 		}
-		this.set_core_group(input_contents[0]);
+		TypeAssert.unreachable(force_type);
 	}
 
 	private _apply_attributes_directional(points: CorePoint[]) {

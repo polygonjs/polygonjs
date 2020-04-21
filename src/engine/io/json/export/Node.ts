@@ -58,16 +58,23 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 			this._data['nodes'] = nodes_data;
 
 			// required by the Store::Scene::Exporter.rb
-			const context = this._node.children_controller?.context;
-			if (context) {
-				this._data['children_context'] = context;
-			}
+			// Update: removed as there should be a better way
+			// const context = this._node.children_controller?.context;
+			// if (context) {
+			// 	this._data['children_context'] = context;
+			// }
 		}
 
 		if (!this.is_root()) {
-			this._data['params'] = this.params_data();
+			const params_data = this.params_data();
+			if (Object.keys(params_data).length > 0) {
+				this._data['params'] = params_data;
+			}
 			//data['custom'] = []
-			this._data['inputs'] = this.inputs_data();
+			const inputs_data = this.inputs_data();
+			if (inputs_data.length > 0) {
+				this._data['inputs'] = inputs_data;
+			}
 		}
 
 		// TODO: does that create flags automatically? it should not
@@ -97,7 +104,10 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 						selected_children.push(child);
 					}
 				}
-				this._data['selection'] = selected_children.map((n) => n.name);
+				const selection_data = selected_children.map((n) => n.name);
+				if (selection_data.length > 0) {
+					this._data['selection'] = selection_data;
+				}
 			}
 		}
 

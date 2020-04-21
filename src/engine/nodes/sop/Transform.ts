@@ -10,7 +10,8 @@ enum TargetType {
 const TARGET_TYPES: Array<TargetType> = [TargetType.GEOMETRIES, TargetType.OBJECTS];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Matrix4, Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
+import {Matrix4} from 'three/src/math/Matrix4';
 class TransformSopParamConfig extends NodeParamsConfig {
 	apply_on = ParamConfig.INTEGER(TARGET_TYPES.indexOf(TargetType.GEOMETRIES), {
 		menu: {

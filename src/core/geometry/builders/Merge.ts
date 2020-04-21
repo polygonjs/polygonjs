@@ -22,7 +22,7 @@ export class CoreGeometryBuilderMerge {
 				const geometry_points = core_geometry.points();
 				for (let point of geometry_points) {
 					all_geometries_points.push(point);
-					const value = point.attrib_value(indexed_attribute_name);
+					const value: string = point.indexed_attrib_value(indexed_attribute_name);
 					//value_index = point.attrib_value_index(indexed_attribute_name)
 					// TODO: typescript: that doesn't seem right
 					index_by_values[value] != null
@@ -33,7 +33,7 @@ export class CoreGeometryBuilderMerge {
 
 			const values = Object.keys(index_by_values);
 			for (let point of all_geometries_points) {
-				const value = point.attrib_value(indexed_attribute_name);
+				const value = point.indexed_attrib_value(indexed_attribute_name);
 				const new_index = index_by_values[value];
 				point.set_attrib_index(indexed_attribute_name, new_index);
 			}

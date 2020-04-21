@@ -1,5 +1,7 @@
-import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+import lodash_isNumber from 'lodash/isNumber';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
@@ -24,6 +26,8 @@ const Operations: Operations = [Operation.ADD, Operation.SET, Operation.MULT, Op
 // 	new Vector3(425, 25746, 95242),
 // 	new Vector3(765132, 21, 9245),
 // ]
+
+const ATTRIB_NORMAL = 'normal';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class NoiseSopParamsConfig extends NodeParamsConfig {
@@ -73,6 +77,9 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 	private _rest_core_group_timestamp: number | undefined;
 	private _rest_points: CorePoint[] = [];
+	private _rest_pos = new Vector3();
+	private _rest_value2 = new Vector2();
+	private _noise_value_v = new Vector3();
 
 	static displayed_input_names(): string[] {
 		return ['geometry to add noise to', 'rest geometry'];
@@ -100,80 +107,54 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		// const {SimplexNoise} = await import(`three/examples/jsm/math/SimplexNoise`)
 		const simplex = this._get_simplex();
 
-		const use_normals = this.pv.use_normals && core_group.has_attrib('normal');
+		const use_normals = this.pv.use_normals && core_group.has_attrib(ATTRIB_NORMAL);
 		const target_attrib_size = core_group.attrib_size(this.pv.attrib_name);
 
 		for (let i = 0; i < dest_points.length; i++) {
 			const dest_point = dest_points[i];
 			let rest_point = core_group_rest ? this._rest_points[i] : dest_point;
-			const current_attrib_value = rest_point.attrib_value(this.pv.attrib_name);
-			const pos = rest_point
-				.position()
-				.add(this.pv.offset)
-				.multiply(this.pv.freq);
+			const current_attrib_value = rest_point.attrib_value(this.pv.attrib_name) as NumericAttribValue;
 
-			let noise_value = (() => {
-				if (use_normals) {
-					const normal = rest_point.attrib_value('normal');
-					const noise = this.pv.amount * this._fbm(simplex, pos.x, pos.y, pos.z);
-					return normal.clone().multiplyScalar(noise);
-					//vertex.add(noise_vector)
-				} else {
-					return new Vector3(
-						this.pv.amount * this._fbm(simplex, pos.x + 545, pos.y + 125454, pos.z + 2142),
-						this.pv.amount * this._fbm(simplex, pos.x - 425, pos.y - 25746, pos.z + 95242),
-						this.pv.amount * this._fbm(simplex, pos.x + 765132, pos.y + 21, pos.z - 9245)
+			const noise_result = this._noise_value(use_normals, simplex, rest_point);
+			const noise_value = this._make_noise_value_correct_size(noise_result, target_attrib_size);
+
+			const operation = Operations[this.pv.operation];
+
+			if (lodash_isNumber(current_attrib_value) && lodash_isNumber(noise_value)) {
+				const new_attrib_value_f = this._new_attrib_value_from_float(
+					operation,
+					current_attrib_value,
+					noise_value
+				);
+				dest_point.set_attrib_value(this.pv.attrib_name, new_attrib_value_f);
+			} else {
+				if (current_attrib_value instanceof Vector2 && noise_value instanceof Vector2) {
+					const new_attrib_value_v = this._new_attrib_value_from_vector2(
+						operation,
+						current_attrib_value,
+						noise_value
 					);
-				}
-			})();
-
-			noise_value = (() => {
-				switch (target_attrib_size) {
-					case 1:
-						return noise_value.x;
-					case 2:
-						return new Vector2(noise_value.x, noise_value.y);
-					case 3:
-						return noise_value;
-				}
-			})();
-
-			const new_attrib_value = (() => {
-				const operation = Operations[this.pv.operation];
-				switch (target_attrib_size) {
-					case 1:
-						switch (operation) {
-							case Operation.ADD:
-								return current_attrib_value + noise_value;
-							case Operation.SET:
-								return noise_value;
-							case Operation.MULT:
-								return current_attrib_value * noise_value;
-							case Operation.DIVIDE:
-								return current_attrib_value / noise_value;
-							case Operation.SUBSTRACT:
-								return current_attrib_value - noise_value;
+					dest_point.set_attrib_value(this.pv.attrib_name, new_attrib_value_v);
+				} else {
+					if (current_attrib_value instanceof Vector3 && noise_value instanceof Vector3) {
+						const new_attrib_value_v = this._new_attrib_value_from_vector3(
+							operation,
+							current_attrib_value,
+							noise_value
+						);
+						dest_point.set_attrib_value(this.pv.attrib_name, new_attrib_value_v);
+					} else {
+						if (current_attrib_value instanceof Vector4 && noise_value instanceof Vector4) {
+							const new_attrib_value_v = this._new_attrib_value_from_vector4(
+								operation,
+								current_attrib_value,
+								noise_value
+							);
+							dest_point.set_attrib_value(this.pv.attrib_name, new_attrib_value_v);
 						}
-						TypeAssert.unreachable(operation);
-						break;
-					default:
-						switch (operation) {
-							case Operation.ADD:
-								return current_attrib_value.add(noise_value);
-							case Operation.SET:
-								return noise_value;
-							case Operation.MULT:
-								return current_attrib_value.multiply(noise_value);
-							case Operation.DIVIDE:
-								return current_attrib_value.divide(noise_value);
-							case Operation.SUBSTRACT:
-								return current_attrib_value.sub(noise_value);
-						}
-						TypeAssert.unreachable(operation);
+					}
 				}
-			})();
-
-			dest_point.set_attrib_value(this.pv.attrib_name, new_attrib_value);
+			}
 		}
 
 		if (!this.io.inputs.input_cloned(0)) {
@@ -186,6 +167,114 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			core_group.compute_vertex_normals();
 		}
 		this.set_core_group(core_group);
+	}
+
+	private _noise_value(use_normals: boolean, simplex: SimplexNoise, rest_point: CorePoint) {
+		const pos = rest_point.position(this._rest_pos).add(this.pv.offset).multiply(this.pv.freq);
+		if (use_normals) {
+			const noise = this.pv.amount * this._fbm(simplex, pos.x, pos.y, pos.z);
+			const normal = rest_point.attrib_value(ATTRIB_NORMAL) as Vector3;
+			this._noise_value_v.copy(normal);
+			return this._noise_value_v.multiplyScalar(noise);
+		} else {
+			this._noise_value_v.set(
+				this.pv.amount * this._fbm(simplex, pos.x + 545, pos.y + 125454, pos.z + 2142),
+				this.pv.amount * this._fbm(simplex, pos.x - 425, pos.y - 25746, pos.z + 95242),
+				this.pv.amount * this._fbm(simplex, pos.x + 765132, pos.y + 21, pos.z - 9245)
+			);
+			return this._noise_value_v;
+		}
+	}
+	private _make_noise_value_correct_size(noise_value: Vector3, target_attrib_size: number) {
+		switch (target_attrib_size) {
+			case 1:
+				return noise_value.x;
+			case 2:
+				this._rest_value2.set(noise_value.x, noise_value.y);
+				return this._rest_value2;
+			case 3:
+				return noise_value;
+			default:
+				return noise_value;
+		}
+	}
+
+	private _new_attrib_value_from_float(
+		operation: Operation,
+		current_attrib_value: number,
+		noise_value: number
+	): number {
+		switch (operation) {
+			case Operation.ADD:
+				return current_attrib_value + noise_value;
+			case Operation.SET:
+				return noise_value;
+			case Operation.MULT:
+				return current_attrib_value * noise_value;
+			case Operation.DIVIDE:
+				return current_attrib_value / noise_value;
+			case Operation.SUBSTRACT:
+				return current_attrib_value - noise_value;
+		}
+		TypeAssert.unreachable(operation);
+	}
+
+	private _new_attrib_value_from_vector2(
+		operation: Operation,
+		current_attrib_value: Vector2,
+		noise_value: Vector2
+	): Vector2 {
+		switch (operation) {
+			case Operation.ADD:
+				return current_attrib_value.add(noise_value);
+			case Operation.SET:
+				return noise_value;
+			case Operation.MULT:
+				return current_attrib_value.multiply(noise_value);
+			case Operation.DIVIDE:
+				return current_attrib_value.divide(noise_value);
+			case Operation.SUBSTRACT:
+				return current_attrib_value.sub(noise_value);
+		}
+		TypeAssert.unreachable(operation);
+	}
+	private _new_attrib_value_from_vector3(
+		operation: Operation,
+		current_attrib_value: Vector3,
+		noise_value: Vector3
+	): Vector3 {
+		switch (operation) {
+			case Operation.ADD:
+				return current_attrib_value.add(noise_value);
+			case Operation.SET:
+				return noise_value;
+			case Operation.MULT:
+				return current_attrib_value.multiply(noise_value);
+			case Operation.DIVIDE:
+				return current_attrib_value.divide(noise_value);
+			case Operation.SUBSTRACT:
+				return current_attrib_value.sub(noise_value);
+		}
+		TypeAssert.unreachable(operation);
+	}
+	private _new_attrib_value_from_vector4(
+		operation: Operation,
+		current_attrib_value: Vector4,
+		noise_value: Vector4
+	): Vector4 {
+		switch (operation) {
+			case Operation.ADD:
+				return current_attrib_value.add(noise_value);
+			case Operation.SET:
+				return noise_value;
+			case Operation.MULT:
+				return current_attrib_value.multiplyScalar(noise_value.x);
+			case Operation.DIVIDE:
+				return current_attrib_value.divideScalar(noise_value.x);
+			case Operation.SUBSTRACT:
+				return current_attrib_value.sub(noise_value);
+		}
+		TypeAssert.unreachable(operation);
 	}
 
 	private _fbm(simplex: SimplexNoise, x: number, y: number, z: number): number {
@@ -214,7 +303,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	private _create_simplex(): SimplexNoise {
 		const seed = this.pv.seed;
 		const random_generator = {
-			random: function() {
+			random: function () {
 				return CoreMath.rand_float(seed);
 			},
 		};

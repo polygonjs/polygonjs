@@ -1,5 +1,5 @@
 import lodash_max from 'lodash/max';
-// import lodash_last from 'lodash/last'
+import lodash_isNumber from 'lodash/isNumber';
 import lodash_sum from 'lodash/sum';
 
 import {Vector3} from 'three/src/math/Vector3';
@@ -56,14 +56,19 @@ export class CoreInterpolate {
 		const distance = position_dest.distanceTo(position_src);
 
 		const value_src = point_src.attrib_value(attrib_name);
-		return this._weighted_value_from_distance(
-			point_dest,
-			value_src,
-			attrib_name,
-			distance,
-			distance_threshold,
-			blend_with
-		);
+		if (lodash_isNumber(value_src)) {
+			return this._weighted_value_from_distance(
+				point_dest,
+				value_src,
+				attrib_name,
+				distance,
+				distance_threshold,
+				blend_with
+			);
+		} else {
+			console.warn('value is not a number', value_src);
+			return 0;
+		}
 	}
 
 	static _weight_from_distance(distance: number, distance_threshold: number, blend_with: number) {
@@ -82,8 +87,13 @@ export class CoreInterpolate {
 			return value_src;
 		} else {
 			const value_dest = point_dest.attrib_value(attrib_name);
-			const blend = this._weight_from_distance(distance, distance_threshold, blend_with);
-			return blend * value_dest + (1 - blend) * value_src;
+			if (lodash_isNumber(value_dest)) {
+				const blend = this._weight_from_distance(distance, distance_threshold, blend_with);
+				return blend * value_dest + (1 - blend) * value_src;
+			} else {
+				console.warn('value is not a number', value_dest);
+				return 0;
+			}
 			// switch (point_dest.attrib_size(attrib_name)) {
 			// 	case 1:
 			// 		// const value_src_as_number = value_src as number;

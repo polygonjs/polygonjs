@@ -66,7 +66,7 @@ export class CorePoint extends CoreEntity {
 		return this._core_geometry.has_attrib(remapped_name);
 	}
 
-	attrib_value(name: string) {
+	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		//, target){ // target could be used, but not entirely sure I am ready now
 
 		if (name === PTNUM) {
@@ -86,8 +86,7 @@ export class CorePoint extends CoreEntity {
 			if (attrib) {
 				const {array} = attrib;
 				if (this._core_geometry.is_attrib_indexed(remaped_name)) {
-					const value_index = this.attrib_value_index(remaped_name); //attrib.value()
-					return this._core_geometry.user_data_attrib(remaped_name)[value_index];
+					return this.indexed_attrib_value(remaped_name);
 				} else {
 					const size = attrib.itemSize;
 					const start_index = this._index * size;
@@ -98,23 +97,19 @@ export class CorePoint extends CoreEntity {
 								return array[start_index];
 								break;
 							case 2:
-								return new Vector2(array[start_index + 0], array[start_index + 1]);
+								target = target || new Vector2();
+								target.fromArray(array, start_index);
+								return target;
 								break;
 							case 3:
-								return new Vector3(
-									array[start_index + 0],
-									array[start_index + 1],
-									array[start_index + 2]
-								);
-								// target.fromArray(array, start_index)
+								target = target || new Vector3();
+								target.fromArray(array, start_index);
+								return target;
 								break;
 							case 4:
-								return new Vector4(
-									array[start_index + 0],
-									array[start_index + 1],
-									array[start_index + 2],
-									array[start_index + 3]
-								);
+								target = target || new Vector4();
+								target.fromArray(array, start_index);
+								return target;
 								break;
 							default:
 								throw `size not valid (${size})`;
@@ -139,7 +134,12 @@ export class CorePoint extends CoreEntity {
 		}
 	}
 
-	attrib_value_index(name: string) {
+	indexed_attrib_value(name: string): string {
+		const value_index = this.attrib_value_index(name); //attrib.value()
+		return this._core_geometry.user_data_attrib(name)[value_index];
+	}
+
+	attrib_value_index(name: string): number {
 		if (this._core_geometry.is_attrib_indexed(name)) {
 			//@_attributes[name].value()
 			return this._geometry.getAttribute(name).array[this._index];
@@ -147,12 +147,19 @@ export class CorePoint extends CoreEntity {
 			return -1;
 		}
 	}
+	is_attrib_indexed(name: string) {
+		return this._core_geometry.is_attrib_indexed(name);
+	}
 
-	position(): Vector3 {
+	position(target?: Vector3): Vector3 {
 		//@_attributes['position'].value()
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION);
-		this._position = this._position || new Vector3();
-		return this._position.fromArray(array, this._index * 3);
+		if (target) {
+			return target.fromArray(array, this._index * 3);
+		} else {
+			this._position = this._position || new Vector3();
+			return this._position.fromArray(array, this._index * 3);
+		}
 	}
 	set_position(new_position: Vector3) {
 		this.set_attrib_value_vector3(ATTRIB_NAMES.POSITION, new_position);

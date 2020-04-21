@@ -1,5 +1,6 @@
 import {Box3} from 'three/src/math/Box3';
 import lodash_isString from 'lodash/isString';
+import lodash_isNumber from 'lodash/isNumber';
 import lodash_each from 'lodash/each';
 import {TypedSopNode} from './_Base';
 import {CoreString} from '../../../core/String';
@@ -347,7 +348,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			comparison_attrib_values.forEach((comparison_attrib_value: string | number) => {
 				return points.forEach((point) => {
 					const attrib_value = point.attrib_value(this.pv.attrib_name);
-
+					if(lodash_isNumber(attrib_value) || lodash_isString(attrib_value)){
 					// TODO: and for vectors? should I have a point.attrib(name).is_equal(value)
 					// or point.is_attrib_equal(name, value) ?
 					//keep_point = (attrib_value != comparison_attrib_value)
@@ -360,6 +361,10 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 					if (keep_point) {
 						return kept_points.push(point);
 					}
+					} else {
+						this.states.error.set(`only string or float attributes are supported`)
+					}
+
 				});
 			});
 		}

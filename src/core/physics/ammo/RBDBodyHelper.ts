@@ -1,7 +1,10 @@
 import Ammo from 'ammojs-typed';
 import {CollisionFlag} from './Constant';
 import {CoreObject} from '../../geometry/Object';
-import {Vector3, Quaternion, Matrix4} from 'three';
+import {Vector3} from 'three/src/math/Vector3';
+import {Quaternion} from 'three/src/math/Quaternion';
+import {Matrix4} from 'three/src/math/Matrix4';
+import {TypeAssert} from '../../../engine/poly/Assert';
 
 export enum RBDAttribute {
 	ACTIVE = 'active',
@@ -17,16 +20,16 @@ export enum RBDAttribute {
 }
 export enum RBDShape {
 	BOX = 'box',
-	CAPSULE = 'capsule',
-	CONE = 'cone',
-	CYLINDER = 'cylinder',
+	// CAPSULE = 'capsule',
+	// CONE = 'cone',
+	// CYLINDER = 'cylinder',
 	SPHERE = 'sphere',
 }
 export const RBD_SHAPES: Array<RBDShape> = [
 	RBDShape.BOX,
-	RBDShape.CAPSULE,
-	RBDShape.CONE,
-	RBDShape.CYLINDER,
+	// RBDShape.CAPSULE,
+	// RBDShape.CONE,
+	// RBDShape.CYLINDER,
 	RBDShape.SPHERE,
 ];
 // also investigate btMultiSphereShape, btConvexHullShape, btCompoundShape, btConcaveShape, btConvexShape,
@@ -154,10 +157,8 @@ export class AmmoRBDBodyHelper {
 				const shape_size = this.read_object_attribute(core_object, RBDAttribute.SHAPE_SIZE_SPHERE, 0.5);
 				return new Ammo.btSphereShape(shape_size * 0.5);
 			}
-			default: {
-				return new Ammo.btSphereShape(1 * 0.5);
-			}
 		}
+		TypeAssert.unreachable(shape);
 	}
 
 	read_object_attribute<A extends AttribValue>(core_object: CoreObject, attrib_name: string, default_value: A): A {

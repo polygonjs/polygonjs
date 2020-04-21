@@ -15,6 +15,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
+const POSITION_ATTRIBUTE_NAME = 'position';
 export enum METHOD {
 	POINTS_COUNT = 'points_count',
 	SEGMENT_LENGTH = 'segment_length',
@@ -33,6 +34,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
+import {Vector3} from 'three/src/math/Vector3';
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
 		menu: {
@@ -136,7 +138,9 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			return;
 		}
 
-		const old_curve_positions = lodash_map(points, (point) => point.attrib_value('position'));
+		const old_curve_positions = lodash_map(points, (point) =>
+			point.attrib_value(POSITION_ATTRIBUTE_NAME)
+		) as Vector3[];
 		const closed = false;
 		const curve_type = CURVE_TYPES[this.pv.curve_type];
 		const tension = this.pv.tension;

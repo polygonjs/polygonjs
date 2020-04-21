@@ -1,5 +1,7 @@
 import Ammo from 'ammojs-typed';
+import lodash_isNumber from 'lodash/isNumber';
 import {CorePoint} from '../../geometry/Point';
+import {TypeAssert} from '../../../engine/poly/Assert';
 
 export enum ForceType {
 	DIRECTIONAL = 'directional',
@@ -65,23 +67,29 @@ export const FORCE_DEFAULT_ATTRIBUTE_VALUES = {
 export class AmmoForceHelper {
 	apply_force(core_point: CorePoint, bodies: Ammo.btRigidBody[]) {
 		const type_index = core_point.attrib_value(FORCE_TYPE_ATTRIBUTE_NAME);
+		if (!lodash_isNumber(type_index)) {
+			console.warn('force type is not a number:', type_index);
+			return;
+		}
 		if (type_index != null) {
 			const force_type = FORCE_TYPES[type_index];
 			if (force_type) {
-				switch (force_type) {
-					case ForceType.DIRECTIONAL: {
-						for (let body of bodies) {
-							this._apply_directional_force_to_body(core_point, body);
-						}
-					}
-					case ForceType.RADIAL: {
-						for (let body of bodies) {
-							this._apply_radial_force_to_body(core_point, body);
-						}
-					}
+				for (let body of bodies) {
+					this._apply_force_to_body(core_point, body, force_type);
 				}
 			}
 		}
+	}
+	private _apply_force_to_body(core_point: CorePoint, body: Ammo.btRigidBody, force_type: ForceType) {
+		switch (force_type) {
+			case ForceType.DIRECTIONAL: {
+				return this._apply_directional_force_to_body(core_point, body);
+			}
+			case ForceType.RADIAL: {
+				return this._apply_radial_force_to_body(core_point, body);
+			}
+		}
+		TypeAssert.unreachable(force_type);
 	}
 
 	private _t = new Ammo.btTransform();
@@ -107,6 +115,10 @@ export class AmmoForceHelper {
 
 		const position = core_point.position();
 		const amount = core_point.attrib_value(RadialForceAttribute.AMOUNT);
+		if (!lodash_isNumber(amount)) {
+			console.warn('force amount is not a number:', amount);
+			return;
+		}
 		const max_distance = core_point.attrib_value(RadialForceAttribute.MAX_DISTANCE);
 
 		const o = this._t.getOrigin();

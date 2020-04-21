@@ -7,7 +7,8 @@ import {Vector2} from 'three/src/math/Vector2';
 import {LinearFilter, NearestFilter, RGBAFormat, FloatType, NoToneMapping, LinearEncoding} from 'three/src/constants';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
-import {Scene, WebGLRenderer} from 'three';
+import {Scene} from 'three/src/scenes/Scene';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 
 interface SceneRestoreContext {
 	overrideMaterial: Material | null;

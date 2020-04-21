@@ -5,6 +5,7 @@ import {CoreGeometry} from '../Geometry';
 import {CorePoint} from '../Point';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Vector2} from 'three/src/math/Vector2';
 
 export class CoreGeometryUtilCurve {
 	static accumulated_curve_point_indices(indices: number[]) {
@@ -69,14 +70,15 @@ export class CoreGeometryUtilCurve {
 			// const position = point.position();
 			// new_positions.push(position.toArray());
 			attrib_names.forEach((attrib_name) => {
-				let attrib_value = point.attrib_value(attrib_name);
+				const attrib_value = point.attrib_value(attrib_name);
 				const attrib_size = attrib_sizes_by_name[attrib_name];
+				let attrib_value_f: number[];
 				if (attrib_size > 1) {
-					attrib_value = attrib_value.toArray();
+					attrib_value_f = (attrib_value as Vector2).toArray();
 				} else {
-					attrib_value = [attrib_value];
+					attrib_value_f = [attrib_value as number];
 				}
-				attrib_value.forEach((v: number) => {
+				attrib_value_f.forEach((v: number) => {
 					new_attribute_values_by_name[attrib_name].push(v);
 				});
 			});

@@ -2,7 +2,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DrawRangeSopParamsConfig extends NodeParamsConfig {
 	start = ParamConfig.INTEGER(0, {

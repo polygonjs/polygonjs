@@ -84,7 +84,11 @@ export class DotGlNode extends MathFunctionArg2Factory('dot', {
 }) {}
 export class MaxGlNode extends MathFunctionArg2Factory('max') {}
 export class MinGlNode extends MathFunctionArg2Factory('min') {}
-export class ModGlNode extends MathFunctionArg2Factory('mod') {}
+export class ModGlNode extends MathFunctionArg2Factory('mod') {
+	gl_input_default_value(name: string) {
+		return ({in1: 1} as Dictionary<number>)[name];
+	}
+}
 export class PowGlNode extends MathFunctionArg2Factory('pow', {in: ['x', 'y']}) {}
 export class ReflectGlNode extends MathFunctionArg2Factory('reflect', {
 	in: ['I', 'N'],

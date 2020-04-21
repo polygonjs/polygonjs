@@ -4,7 +4,7 @@ import {SubdivisionModifier} from 'three/examples/jsm/modifiers/SubdivisionModif
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 class SubdivideSopParamsConfig extends NodeParamsConfig {
 	subdivisions = ParamConfig.INTEGER(1, {
 		range: [0, 5],

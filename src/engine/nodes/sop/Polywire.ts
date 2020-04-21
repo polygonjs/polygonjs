@@ -12,6 +12,7 @@ import {LineSegments} from 'three/src/objects/LineSegments';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
+const POSITION_ATTRIBUTE_NAME = 'position';
 const DEFAULT_R = new Vector3(0, 0, 0);
 const DEFAULT_S = new Vector3(1, 1, 1);
 
@@ -94,7 +95,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			return;
 		}
 
-		const positions = points.map((point) => point.attrib_value('position'));
+		const positions = points.map((point) => point.attrib_value(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 
 		const circle_template = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segments_radial);
 		const circles: BufferGeometry[] = [];

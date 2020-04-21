@@ -1,6 +1,5 @@
 import lodash_max from 'lodash/max';
 import lodash_min from 'lodash/min';
-import lodash_sortBy from 'lodash/sortBy';
 import lodash_uniq from 'lodash/uniq';
 import lodash_isNumber from 'lodash/isNumber';
 import {Vector3} from 'three/src/math/Vector3';
@@ -43,23 +42,24 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 
 		const attrib_size = points[0].attrib_size(this.pv.name);
 		const values = points.map((point) => point.attrib_value(this.pv.name));
-		let min: NumericAttribValue, max: NumericAttribValue;
+		// let min: NumericAttribValue, max: NumericAttribValue;
 		let normalized_values: NumericAttribValue[] = new Array(points.length);
 		switch (attrib_size) {
 			case 1:
+				const valuesf = values as number[];
 				if (this.pv.only_integer_values) {
-					const sorted_values = lodash_uniq(lodash_sortBy(values));
+					const sorted_values = lodash_uniq(valuesf);
 					const index_by_value: Dictionary<number> = {};
 					sorted_values.forEach((sorted_value, i) => (index_by_value[sorted_value] = i));
-					normalized_values = values.map((value) => index_by_value[value]);
+					normalized_values = valuesf.map((value) => index_by_value[value]);
 				} else {
-					min = lodash_min(values);
-					max = lodash_max(values);
+					const minf = lodash_min(valuesf);
+					const maxf = lodash_max(valuesf);
 					//this._save_min_max(group, min, max)
-					if (lodash_isNumber(min) && lodash_isNumber(max)) {
-						for (let i = 0; i < values.length; i++) {
-							const value = values[i];
-							const normalized_value = max > min ? (value - min) / (max - min) : 1;
+					if (lodash_isNumber(minf) && lodash_isNumber(maxf)) {
+						for (let i = 0; i < valuesf.length; i++) {
+							const value = valuesf[i];
+							const normalized_value = maxf > minf ? (value - minf) / (maxf - minf) : 1;
 							normalized_values[i] = normalized_value;
 						}
 					}
@@ -67,24 +67,25 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 				break;
 
 			case 3:
-				min = new Vector3(
-					lodash_min(values.map((v) => v.x)),
-					lodash_min(values.map((v) => v.y)),
-					lodash_min(values.map((v) => v.z))
+				const valuesv = values as Vector3[];
+				const minv = new Vector3(
+					lodash_min(valuesv.map((v) => v.x)),
+					lodash_min(valuesv.map((v) => v.y)),
+					lodash_min(valuesv.map((v) => v.z))
 				);
-				max = new Vector3(
-					lodash_max(values.map((v) => v.x)),
-					lodash_max(values.map((v) => v.y)),
-					lodash_max(values.map((v) => v.z))
+				const maxv = new Vector3(
+					lodash_max(valuesv.map((v) => v.x)),
+					lodash_max(valuesv.map((v) => v.y)),
+					lodash_max(valuesv.map((v) => v.z))
 				);
 				//this._save_min_max(group, min, max)
-				if (min instanceof Vector3 && max instanceof Vector3) {
-					for (let i = 0; i < values.length; i++) {
-						const value = values[i];
+				if (minv instanceof Vector3 && maxv instanceof Vector3) {
+					for (let i = 0; i < valuesv.length; i++) {
+						const value = valuesv[i];
 						const normalized_value = new Vector3(
-							(value.x - min.x) / (max.x - min.x),
-							(value.y - min.y) / (max.y - min.y),
-							(value.z - min.z) / (max.z - min.z)
+							(value.x - minv.x) / (maxv.x - minv.x),
+							(value.y - minv.y) / (maxv.y - minv.y),
+							(value.z - minv.z) / (maxv.z - minv.z)
 						);
 						normalized_values[i] = normalized_value;
 					}

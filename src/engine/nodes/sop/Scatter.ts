@@ -101,13 +101,15 @@ export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 
 					for (let attrib_name of attrib_names) {
 						const attrib_value = face.attrib_value_at_position(attrib_name, position);
-						if (lodash_isNumber(attrib_value)) {
-							attrib_values_by_name.get(attrib_name)!.push(attrib_value);
-						} else {
-							attrib_value.toArray(
-								attrib_values_by_name.get(attrib_name),
-								attrib_values_by_name.get(attrib_name)!.length
-							);
+						if (attrib_value) {
+							if (lodash_isNumber(attrib_value)) {
+								attrib_values_by_name.get(attrib_name)!.push(attrib_value);
+							} else {
+								attrib_value.toArray(
+									attrib_values_by_name.get(attrib_name),
+									attrib_values_by_name.get(attrib_name)!.length
+								);
+							}
 						}
 					}
 

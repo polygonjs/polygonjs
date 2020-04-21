@@ -346,10 +346,10 @@ export class ParticlesSystemGpuComputeController {
 						let cmptr = texture_position;
 						for (let point of this._points) {
 							if (attrib_size == 1) {
-								const val = point.attrib_value(variable_name);
+								const val: number = point.attrib_value(variable_name) as number;
 								array[cmptr] = val;
 							} else {
-								point.attrib_value(variable_name).toArray(array, cmptr);
+								(point.attrib_value(variable_name) as Vector2).toArray(array, cmptr);
 							}
 							cmptr += 4;
 						}

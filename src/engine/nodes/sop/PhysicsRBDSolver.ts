@@ -164,7 +164,8 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		var pivotB = new Ammo.btVector3(0, -0.5, 0);
 		var axis = new Ammo.btVector3(0, 1, 0);
 		const hinge = new Ammo.btHingeConstraint(rbd0, rbd1, pivotA, pivotB, axis, axis, true);
-		this.world?.addConstraint(hinge);
+		const disable_collision_between_linked_bodies = true;
+		this.world?.addConstraint(hinge, disable_collision_between_linked_bodies);
 	}
 
 	private simulate(dt: number) {

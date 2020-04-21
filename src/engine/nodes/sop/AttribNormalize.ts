@@ -53,12 +53,12 @@ export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParam
 				// 	normalized_values = lodash_map(values, value=> index_by_value[value]);
 
 				// } else {
-				min = lodash_min(values);
-				max = lodash_max(values);
+				const minf = lodash_min(values as number[]);
+				const maxf = lodash_max(values as number[]);
 				//this._save_min_max(group, min, max)
-				if (lodash_isNumber(min) && lodash_isNumber(max)) {
-					for (let value of values) {
-						const normalized_value = max > min ? (value - min) / (max - min) : 1;
+				if (lodash_isNumber(minf) && lodash_isNumber(maxf)) {
+					for (let value of values as number[]) {
+						const normalized_value = maxf > minf ? (value - minf) / (maxf - minf) : 1;
 						normalized_values.push(normalized_value);
 					}
 				}
@@ -66,18 +66,18 @@ export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParam
 
 			case 3:
 				min = new Vector3(
-					lodash_min(values.map((v) => v.x)),
-					lodash_min(values.map((v) => v.y)),
-					lodash_min(values.map((v) => v.z))
+					lodash_min((values as Vector3[]).map((v) => v.x)),
+					lodash_min((values as Vector3[]).map((v) => v.y)),
+					lodash_min((values as Vector3[]).map((v) => v.z))
 				);
 				max = new Vector3(
-					lodash_max(values.map((v) => v.x)),
-					lodash_max(values.map((v) => v.y)),
-					lodash_max(values.map((v) => v.z))
+					lodash_max((values as Vector3[]).map((v) => v.x)),
+					lodash_max((values as Vector3[]).map((v) => v.y)),
+					lodash_max((values as Vector3[]).map((v) => v.z))
 				);
 				//this._save_min_max(group, min, max)
 				if (min instanceof Vector3 && max instanceof Vector3) {
-					for (let value of values) {
+					for (let value of values as Vector3[]) {
 						const normalized_value = new Vector3(
 							(value.x - min.x) / (max.x - min.x),
 							(value.y - min.y) / (max.y - min.y),
