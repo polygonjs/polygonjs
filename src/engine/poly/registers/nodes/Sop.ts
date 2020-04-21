@@ -63,6 +63,7 @@ import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {ShadowsSopNode} from '../../../nodes/sop/Shadows';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
+import {SplitSopNode} from '../../../nodes/sop/Split';
 import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TextSopNode} from '../../../nodes/sop/Text';
@@ -130,6 +131,7 @@ export interface GeoNodeChildrenMap {
 	shadows: ShadowsSopNode;
 	skin: SkinSopNode;
 	sphere: SphereSopNode;
+	split: SplitSopNode;
 	subdivide: SubdivideSopNode;
 	switch: SwitchSopNode;
 	text: TextSopNode;
@@ -202,6 +204,7 @@ export class SopRegister {
 		poly.register_node(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(ShadowsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.register_node(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);

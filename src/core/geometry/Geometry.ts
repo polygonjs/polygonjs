@@ -12,7 +12,7 @@ import lodash_isArray from 'lodash/isArray';
 import lodash_isNumber from 'lodash/isNumber';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
-import {ObjectType, AttribType} from './Constant';
+import {ObjectType, AttribType, AttribSize} from './Constant';
 import {CoreAttribute} from './Attribute';
 import {MonkeyPatcher} from './MonkeyPatcher';
 import {CoreAttributeData} from './AttributeData';
@@ -105,7 +105,7 @@ export class CoreGeometry {
 		return Object.keys(this._geometry.attributes);
 	}
 	attrib_sizes() {
-		const h: Dictionary<number> = {};
+		const h: Dictionary<AttribSize> = {};
 		for (let attrib_name of this.attrib_names()) {
 			h[attrib_name] = this._geometry.attributes[attrib_name].itemSize;
 		}

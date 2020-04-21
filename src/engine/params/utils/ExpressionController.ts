@@ -90,7 +90,7 @@ export class ExpressionController<T extends ParamType> {
 			return result;
 		}
 	}
-	private async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
+	async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
 		await this.compute_expression();
 		if (this._manager?.error_message) {

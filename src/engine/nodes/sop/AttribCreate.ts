@@ -1,7 +1,14 @@
 import lodash_trim from 'lodash/trim';
 
 import {TypedSopNode} from './_Base';
-import {AttribClassMenuEntries, AttribTypeMenuEntries, AttribClass, AttribType} from '../../../core/geometry/Constant';
+import {
+	AttribClassMenuEntries,
+	AttribTypeMenuEntries,
+	AttribClass,
+	AttribType,
+	ATTRIBUTE_CLASSES,
+	ATTRIBUTE_TYPES,
+} from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 // import {CoreGeometry} from '../../../core/geometry/Geometry'
 import {CoreObject} from '../../../core/geometry/Object';
@@ -28,14 +35,15 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 type ValueArrayByName = Dictionary<number[]>;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TypeAssert} from '../../poly/Assert';
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('');
-	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
+	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
-	type = ParamConfig.INTEGER(AttribType.NUMERIC, {
+	type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
@@ -86,48 +94,54 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-
 		if (this.pv.name && lodash_trim(this.pv.name) != '') {
-			switch (this.pv.class) {
-				case AttribClass.VERTEX:
-					this.add_point_attribute(core_group);
-					break;
-				case AttribClass.OBJECT:
-					this.add_object_attribute(core_group);
-					break;
-			}
+			this._add_attribute(ATTRIBUTE_CLASSES[this.pv.class], input_contents[0]);
 		} else {
 			this.states.error.set('attribute name is not valid');
 		}
 	}
+	private async _add_attribute(attrib_class: AttribClass, core_group: CoreGroup) {
+		const attrib_type = ATTRIBUTE_TYPES[this.pv.type];
+		switch (attrib_class) {
+			case AttribClass.VERTEX:
+				await this.add_point_attribute(attrib_type, core_group);
+				return this.set_core_group(core_group);
+			case AttribClass.OBJECT:
+				await this.add_object_attribute(attrib_type, core_group);
+				return this.set_core_group(core_group);
+		}
+		TypeAssert.unreachable(attrib_class);
+	}
 
-	async add_point_attribute(core_group: CoreGroup) {
+	async add_point_attribute(attrib_type: AttribType, core_group: CoreGroup) {
 		const core_objects = core_group.core_objects();
-		for (let i = 0; i < core_objects.length; i++) {
-			const core_object = core_objects[i];
-			switch (this.pv.type) {
-				case AttribType.NUMERIC:
-					await this.add_numeric_attribute_to_points(core_object);
-					break;
-				case AttribType.STRING:
-					await this.add_string_attribute_to_points(core_object);
-					break;
+		switch (attrib_type) {
+			case AttribType.NUMERIC: {
+				for (let i = 0; i < core_objects.length; i++) {
+					await this.add_numeric_attribute_to_points(core_objects[i]);
+				}
+				return;
+			}
+			case AttribType.STRING: {
+				for (let i = 0; i < core_objects.length; i++) {
+					await this.add_string_attribute_to_points(core_objects[i]);
+				}
+				return;
 			}
 		}
-		this.set_core_group(core_group);
+		TypeAssert.unreachable(attrib_type);
 	}
-	async add_object_attribute(core_group: CoreGroup) {
+	async add_object_attribute(attrib_type: AttribType, core_group: CoreGroup) {
 		const core_objects = core_group.core_objects_from_group(this.pv.group);
-		switch (this.pv.type) {
+		switch (attrib_type) {
 			case AttribType.NUMERIC:
 				await this.add_numeric_attribute_to_object(core_objects);
-				break;
+				return;
 			case AttribType.STRING:
 				await this.add_string_attribute_to_object(core_objects);
-				break;
+				return;
 		}
-		this.set_core_group(core_group);
+		TypeAssert.unreachable(attrib_type);
 	}
 
 	async add_numeric_attribute_to_points(core_object: CoreObject) {

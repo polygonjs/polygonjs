@@ -137,6 +137,7 @@ export enum AttribClass {
 	VERTEX = 0,
 	OBJECT = 1,
 }
+export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT];
 
 export const AttribClassMenuEntries = [
 	{name: 'vertex', value: AttribClass.VERTEX},
@@ -147,10 +148,25 @@ export enum AttribType {
 	NUMERIC = 0,
 	STRING = 1,
 }
+export const ATTRIBUTE_TYPES: Array<AttribType> = [AttribType.NUMERIC, AttribType.STRING];
 export const AttribTypeMenuEntries = [
 	{name: 'numeric', value: AttribType.NUMERIC},
 	{name: 'string', value: AttribType.STRING},
 ];
+
+export enum AttribSize {
+	FLOAT = 1,
+	VECTOR2 = 2,
+	VECTOR3 = 3,
+	VECTOR4 = 4,
+}
+export const ATTRIBUTE_SIZES: Array<AttribSize> = [
+	AttribSize.FLOAT,
+	AttribSize.VECTOR2,
+	AttribSize.VECTOR3,
+	AttribSize.VECTOR4,
+];
+export const ATTRIBUTE_SIZE_RANGE: Number2 = [AttribSize.FLOAT, AttribSize.VECTOR4];
 
 export const CoreConstant = {
 	ATTRIB_CLASS: {

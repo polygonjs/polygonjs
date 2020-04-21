@@ -1,9 +1,4 @@
-import {Box3} from 'three/src/math/Box3';
-import lodash_isString from 'lodash/isString';
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_each from 'lodash/each';
 import {TypedSopNode} from './_Base';
-import {CoreString} from '../../../core/String';
 import {
 	AttribClass,
 	AttribClassMenuEntries,
@@ -11,6 +6,12 @@ import {
 	ObjectTypeMenuEntries,
 	ObjectTypes,
 	object_type_from_constructor,
+	AttribType,
+	AttribTypeMenuEntries,
+	ATTRIBUTE_TYPES,
+	AttribSize,
+	ATTRIBUTE_CLASSES,
+	ATTRIBUTE_SIZE_RANGE,
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
@@ -18,40 +19,44 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreObject} from '../../../core/geometry/Object';
 
-enum ComparisonOperator {
-	'==' = 0,
-	'<' = 1,
-	'<=' = 2,
-	'>=' = 3,
-	'>' = 4,
-	'!=' = 5,
-}
-const ComparisonOperatorMenuEntries = [
-	{name: '==', value: ComparisonOperator['==']},
-	{name: '<', value: ComparisonOperator['<']},
-	{name: '<=', value: ComparisonOperator['<=']},
-	{name: '>=', value: ComparisonOperator['>=']},
-	{name: '>', value: ComparisonOperator['>']},
-	{name: '!=', value: ComparisonOperator['!=']},
-];
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EntitySelectionHelper} from './utils/delete/EntitySelectionHelper';
+import {
+	ByAttributeHelper,
+	ComparisonOperatorMenuEntries,
+	ComparisonOperator,
+	COMPARISON_OPERATORS,
+} from './utils/delete/ByAttributeHelper';
+import {ByExpressionHelper} from './utils/delete/ByExpressionHelper';
+import {ByBboxHelper} from './utils/delete/ByBboxHelper';
+import {Object3D} from 'three';
+import {ByObjectTypeHelper} from './utils/delete/ByObjectTypeHelper';
 class DeleteSopParamsConfig extends NodeParamsConfig {
-	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
+	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
 	invert = ParamConfig.BOOLEAN(0);
-	hide_objects = ParamConfig.BOOLEAN(0);
+	// hide_objects = ParamConfig.BOOLEAN(0, {
+	// 	visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
+	// });
 
 	// by_object_type
-	by_object_type = ParamConfig.BOOLEAN(0);
+	by_object_type = ParamConfig.BOOLEAN(0, {
+		visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
+	});
 	object_type = ParamConfig.INTEGER(ObjectTypes.indexOf(ObjectType.MESH), {
 		menu: {
 			entries: ObjectTypeMenuEntries,
 		},
-		visible_if: {by_object_type: true},
+		visible_if: {
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
+			by_object_type: true,
+		},
+	});
+	separator_object_type = ParamConfig.SEPARATOR(null, {
+		visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
 
 	// by_expression
@@ -60,44 +65,82 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 		visible_if: {by_expression: true},
 		expression: {for_entities: true},
 	});
+	separator_expression = ParamConfig.SEPARATOR();
 
 	// by_attrib
 	by_attrib = ParamConfig.BOOLEAN(0);
+	attrib_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
+		menu: {
+			entries: AttribTypeMenuEntries,
+		},
+		visible_if: {by_attrib: 1},
+	});
 	attrib_name = ParamConfig.STRING('', {
-		visible_if: {by_attrib: true},
+		visible_if: {by_attrib: 1},
 	});
-	attrib_string = ParamConfig.STRING('', {
-		visible_if: {by_attrib: true},
+	attrib_size = ParamConfig.INTEGER(1, {
+		range: ATTRIBUTE_SIZE_RANGE,
+		range_locked: [true, true],
+		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
 	});
-	// attrib_float = ParamConfig.FLOAT(0, {
-	// 	visible_if: {by_attrib: true},
-	// })
-	attrib_numeric = ParamConfig.VECTOR4([0, 0, 0, 0], {
-		visible_if: {by_attrib: true},
-	});
-	attrib_comparison_operator = ParamConfig.INTEGER(ComparisonOperator['=='], {
+	attrib_comparison_operator = ParamConfig.INTEGER(COMPARISON_OPERATORS.indexOf(ComparisonOperator.EQUAL), {
 		menu: {
 			entries: ComparisonOperatorMenuEntries,
 		},
-		visible_if: {by_attrib: true},
+		visible_if: {
+			by_attrib: true,
+			attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
+			attrib_size: AttribSize.FLOAT,
+		},
 	});
+	attrib_value1 = ParamConfig.FLOAT(0, {
+		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 1},
+	});
+	attrib_value2 = ParamConfig.VECTOR2([0, 0], {
+		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 2},
+	});
+	attrib_value3 = ParamConfig.VECTOR3([0, 0, 0], {
+		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 3},
+	});
+	attrib_value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
+		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 4},
+	});
+	attrib_string = ParamConfig.STRING('', {
+		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
+	});
+	separator_attrib = ParamConfig.SEPARATOR();
 
 	// by_bbox
-	by_bbox = ParamConfig.BOOLEAN(0);
+	by_bbox = ParamConfig.BOOLEAN(0, {
+		visible_if: {
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		},
+	});
 	bbox_size = ParamConfig.VECTOR3([1, 1, 1], {
-		visible_if: {by_bbox: true},
+		visible_if: {
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			by_bbox: true,
+		},
 	});
 	bbox_center = ParamConfig.VECTOR3([0, 0, 0], {
-		visible_if: {by_bbox: true},
+		visible_if: {
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			by_bbox: true,
+		},
+	});
+	separator_bbox = ParamConfig.SEPARATOR(null, {
+		visible_if: {
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		},
 	});
 	//this.add_param( ParamType.STRING, 'index_mode', Core.Geometry.Geometry.INDEX_MODE_FACES )
 
 	// by_visible
-	by_visible = ParamConfig.BOOLEAN(0);
+	// by_visible = ParamConfig.BOOLEAN(0, {
+	// 	visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
+	// });
 	keep_points = ParamConfig.BOOLEAN(0, {
-		visible_if: {
-			class: AttribClass.OBJECT,
-		},
+		visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
 }
 const ParamsConfig = new DeleteSopParamsConfig();
@@ -108,8 +151,12 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		return 'delete';
 	}
 
-	private _bbox_cache: Box3 | undefined;
 	private _marked_for_deletion_per_object_index: Map<number, boolean> = new Map();
+	public readonly entity_selection_helper = new EntitySelectionHelper(this);
+	public readonly by_bbox_helper = new ByBboxHelper(this);
+	public readonly by_expression_helper = new ByExpressionHelper(this);
+	public readonly by_attribute_helper = new ByAttributeHelper(this);
+	public readonly by_object_type_helper = new ByObjectTypeHelper(this);
 
 	static displayed_input_names(): string[] {
 		return ['geometry to delete from'];
@@ -123,7 +170,6 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		this._bbox_cache = undefined;
 		switch (this.pv.class) {
 			case AttribClass.VERTEX:
 				await this._eval_for_points(core_group);
@@ -135,9 +181,8 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private async _eval_for_objects(core_group: CoreGroup) {
-		// const objects_to_delete = [];
-		const objects_to_keep = [];
 		const core_objects = core_group.core_objects();
+		this.entity_selection_helper.init(core_objects);
 
 		this._marked_for_deletion_per_object_index = new Map();
 		for (let core_object of core_objects) {
@@ -145,316 +190,72 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		}
 
 		if (this.pv.by_expression) {
-			await this._eval_expressions_for_objects(core_objects);
+			await this.by_expression_helper.eval_for_entities(core_objects);
 		}
 
 		if (this.pv.by_object_type) {
-			this._eval_type_for_objects(core_objects);
+			this.by_object_type_helper.eval_for_objects(core_objects);
 		}
 
-		if (this.pv.by_attrib && this.pv.attrib_name !== '') {
-			this._eval_attrib_for_objects(core_objects);
-
-			// 	if !is_deleted && @_param_by_bbox
-			// 		is_deleted = this._eval_bbox_for_object(object)
-
-			// 	if !is_deleted && @_param_by_visible
-			// 		is_deleted = !object.visible
-
-			// 	if @_param_invert
-			// 		is_deleted = !is_deleted
-
-			// 	if @_param_hide_objects
-			// 		object.visible = !is_deleted
-			// 	else
-			// 		if is_deleted
-			// 			objects_to_delete.push(object)
-
-			// true; // to ensure the loop isn't breaking, which is what happens when setting the object.visible to false...
+		if (this.pv.by_attrib && this.pv.attrib_name != '') {
+			this.by_attribute_helper.eval_for_entities(core_objects);
 		}
 
-		if (this.pv.invert) {
-			this._marked_for_deletion_per_object_index.forEach((marked_for_deletion, object_index) => {
-				this._marked_for_deletion_per_object_index.set(object_index, !marked_for_deletion);
-			});
-		}
+		const core_objects_to_keep = this.entity_selection_helper.entities_to_keep() as CoreObject[];
+		const objects_to_keep = core_objects_to_keep.map((co) => co.object());
 
-		let core_object, object;
-		const point_objects_from_deleted_objects: Object3DWithGeometry[] = [];
-		// for (let object_index of Object.keys(this._marked_for_deletion_per_object_index)) {
-		this._marked_for_deletion_per_object_index.forEach((marked_for_deletion, object_index) => {
-			core_object = core_objects[object_index];
-			object = core_object.object();
-
-			if (this.pv.hide_objects) {
-				objects_to_keep.push(object);
-				if (marked_for_deletion) {
-					object.visible = false;
-				}
-			} else {
-				if (!marked_for_deletion) {
-					objects_to_keep.push(object);
-				}
-				if (marked_for_deletion) {
-					if (this.pv.keep_points) {
-						point_objects_from_deleted_objects.push(
-							this._point_object(core_object) as Object3DWithGeometry
-						);
-					}
-				}
+		if (this.pv.keep_points) {
+			const core_objects_to_delete = this.entity_selection_helper.entities_to_delete() as CoreObject[];
+			for (let core_object_to_delete of core_objects_to_delete) {
+				const point_object = this._point_object(core_object_to_delete);
+				objects_to_keep.push(point_object);
 			}
-			// if (marked_for_deletion) {
-			// 	cmptr += 1;
-			// 	if (this.pv.hide_objects) {
-			// 		object.visible = true;
-
-			// 	} else {
-			// 		// object.parent.remove(object);
-			// 		// const c = () =>
-			// 		// 	object.traverse(function(object_child) {
-			// 		// 		if (object_child.geometry != null) {
-			// 		// 			object_child.geometry.dispose();
-			// 		// 		}
-			// 		// 		// const material = object_child.material
-			// 		// 		// if(material){ material.dispose() }
-			// 		// 	})
-			// 		// ;
-			// 		// setTimeout(c, 25);
-			// 	}
-			// }
-		});
-
-		for (let object of point_objects_from_deleted_objects) {
-			objects_to_keep.push(object);
 		}
 
 		this.set_objects(objects_to_keep);
 	}
 
-	// TODO: ensure that geometries with no remaining points are removed from the group
 	private async _eval_for_points(core_group: CoreGroup) {
 		const core_objects = core_group.core_objects();
 		let core_object;
+		let objects: Object3D[] = [];
 		for (let i = 0; i < core_objects.length; i++) {
 			core_object = core_objects[i];
 			let core_geometry = core_object.core_geometry();
 			if (core_geometry) {
-				let points = core_geometry.points_from_geometry();
+				const object = core_object.object() as Object3DWithGeometry;
+				const points = core_geometry.points_from_geometry();
+				this.entity_selection_helper.init(points);
 
 				const init_points_count = points.length;
 				if (this.pv.by_expression) {
-					points = await this._eval_expressions_for_points(points);
+					await this.by_expression_helper.eval_for_entities(points);
 				}
-
-				if (this.pv.by_attrib && this.pv.attrib_name !== '') {
-					points = this._eval_attrib_for_points(points);
+				// TODO: the helpers do not yet take into account if an entity has been selected or not.
+				// This could really speed up iterating through them, as I could skip the ones that have already been
+				if (this.pv.by_attrib && this.pv.attrib_name != '') {
+					this.by_attribute_helper.eval_for_entities(points);
 				}
 				if (this.pv.by_bbox) {
-					points = this._eval_bbox_for_points(points);
+					this.by_bbox_helper.eval_for_points(points);
 				}
+				const kept_points = this.entity_selection_helper.entities_to_keep() as CorePoint[];
 
-				if (points.length != init_points_count) {
-					const object = core_object.object() as Object3DWithGeometry;
+				if (kept_points.length == init_points_count) {
+					objects.push(object);
+				} else {
 					core_geometry.geometry().dispose();
-					if (points.length > 0) {
-						// TODO: if the new geo only has unconnected points, how do I know it and how do I change the material if it was previously a mesh?
+					if (kept_points.length > 0) {
 						object.geometry = CoreGeometry.geometry_from_points(
-							points,
+							kept_points,
 							object_type_from_constructor(object.constructor)
 						);
-					} else {
-						// TODO: do not dispose material if not cloned
-						// if (object.material != null) {
-						// 	object.material.dispose();
-						// }
-						object.parent != null ? object.parent.remove(object) : undefined;
+						objects.push(object);
 					}
 				}
 			}
 		}
-
-		this.set_core_group(core_group);
-	}
-
-	private async _eval_expressions_for_points(points: CorePoint[]) {
-		const kept_points = [];
-
-		const param = this.p.expression;
-		if (this.p.expression.has_expression() && param.expression_controller) {
-			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
-				let keep_point = !value;
-				if (this.pv.invert) {
-					keep_point = !keep_point;
-				}
-				if (keep_point) {
-					kept_points.push(point);
-				}
-			});
-		} else {
-			const value = this.pv.expression;
-			let keep_point = !value;
-			if (this.pv.invert) {
-				keep_point = !keep_point;
-			}
-			for (let i = 0; i < points.length; i++) {
-				if (keep_point) {
-					kept_points.push(points[i]);
-				}
-			}
-		}
-		return kept_points;
-	}
-
-	private async _eval_expressions_for_objects(core_objects: CoreObject[]) {
-		const param = this.p.expression;
-
-		if (param.has_expression() && param.expression_controller) {
-			await param.expression_controller.compute_expression_for_objects(core_objects, (core_object, value) => {
-				const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);
-				if (!is_marked_for_deletion) {
-					this._marked_for_deletion_per_object_index.set(core_object.index, value);
-				}
-			});
-		} else {
-			for (let core_object of core_objects) {
-				this._marked_for_deletion_per_object_index.set(core_object.index, param.value);
-			}
-		}
-
-		// for (let core_object of core_objects) {
-		// 	const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);
-
-		// 	if (!is_marked_for_deletion) {
-		// 		this.processing_context.set_entity(core_object);
-		// 		// param.set_dirty();
-		// 		await param.compute();
-		// 		this._marked_for_deletion_per_object_index.set(core_object.index, param.value);
-		// 	}
-		// }
-	}
-
-	private _eval_attrib_for_points(points: CorePoint[]) {
-		const kept_points: CorePoint[] = [];
-
-		if (points.length > 0) {
-			const first_attrib_value = points[0].attrib_value(this.pv.attrib_name);
-			// TODO: should I just have @_param_attrib_string?
-			// although I may need a vector one... maybe a multiple string?
-			const comparison_attrib_values = lodash_isString(first_attrib_value)
-				? //@_param_attrib_string
-				  CoreString.attrib_names(this.pv.attrib_string)
-				: [this.pv.attrib_numeric.x];
-
-			comparison_attrib_values.forEach((comparison_attrib_value: string | number) => {
-				return points.forEach((point) => {
-					const attrib_value = point.attrib_value(this.pv.attrib_name);
-					if(lodash_isNumber(attrib_value) || lodash_isString(attrib_value)){
-					// TODO: and for vectors? should I have a point.attrib(name).is_equal(value)
-					// or point.is_attrib_equal(name, value) ?
-					//keep_point = (attrib_value != comparison_attrib_value)
-					let keep_point = !this._comparison(attrib_value, comparison_attrib_value);
-
-					if (this.pv.invert) {
-						keep_point = !keep_point;
-					}
-
-					if (keep_point) {
-						return kept_points.push(point);
-					}
-					} else {
-						this.states.error.set(`only string or float attributes are supported`)
-					}
-
-				});
-			});
-		}
-
-		return kept_points;
-	}
-
-	private _comparison(attrib_value: number | string, comparison_attrib_value: number | string) {
-		switch (this.pv.attrib_ComparisonOperator) {
-			case ComparisonOperator['==']:
-				return attrib_value === comparison_attrib_value;
-			case ComparisonOperator['<=']:
-				return attrib_value <= comparison_attrib_value;
-			case ComparisonOperator['<']:
-				return attrib_value < comparison_attrib_value;
-			case ComparisonOperator['>']:
-				return attrib_value > comparison_attrib_value;
-			case ComparisonOperator['>=']:
-				return attrib_value >= comparison_attrib_value;
-			case ComparisonOperator['!=']:
-				return attrib_value !== comparison_attrib_value;
-		}
-	}
-
-	private _eval_type_for_objects(core_objects: CoreObject[]) {
-		const object_type_name = ObjectTypes[this.pv.object_type];
-
-		for (let core_object of core_objects) {
-			const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);
-
-			if (!is_marked_for_deletion) {
-				const object = core_object.object();
-
-				if (object.constructor.name === object_type_name) {
-					this._marked_for_deletion_per_object_index.set(core_object.index, true);
-				}
-			}
-		}
-	}
-
-	private _eval_attrib_for_objects(core_objects: CoreObject[]) {
-		for (let core_object of core_objects) {
-			const is_marked_for_deletion = this._marked_for_deletion_per_object_index.get(core_object.index);
-
-			if (!is_marked_for_deletion) {
-				// const object = core_object.object();
-				const attrib_value = core_object.attrib_value(this.pv.attrib_name);
-
-				const comparison_attrib_value = lodash_isString(attrib_value)
-					? this.pv.attrib_string
-					: this.pv.attrib_float;
-
-				if (attrib_value === comparison_attrib_value) {
-					this._marked_for_deletion_per_object_index.set(core_object.index, true);
-				}
-			}
-		}
-	}
-
-	private _eval_bbox_for_points(points: CorePoint[]) {
-		const kept_points: CorePoint[] = [];
-
-		lodash_each(points, (point, i) => {
-			const in_bbox = this._bbox.containsPoint(point.position());
-
-			const keep_point = this.pv.invert ? in_bbox : !in_bbox;
-
-			if (keep_point) {
-				return kept_points.push(point);
-			}
-		});
-
-		return kept_points;
-	}
-
-	// private _eval_bbox_for_object(object: Object3D): boolean {
-	// 	const object_bbox = new Box3().setFromObject(object);
-	// 	const center = new Vector3();
-	// 	object_bbox.getCenter(center);
-
-	// 	return this.pv.bbox().containsPoint(center);
-	// }
-
-	private get _bbox() {
-		return this._bbox_cache != null
-			? this._bbox_cache
-			: (this._bbox_cache = new Box3(
-					this.pv.bbox_center.clone().sub(this.pv.bbox_size.clone().multiplyScalar(0.5)),
-					this.pv.bbox_center.clone().add(this.pv.bbox_size.clone().multiplyScalar(0.5))
-			  ));
+		this.set_objects(objects);
 	}
 
 	private _point_object(core_object: CoreObject) {

@@ -138,6 +138,9 @@ export class CorePoint extends CoreEntity {
 		const value_index = this.attrib_value_index(name); //attrib.value()
 		return this._core_geometry.user_data_attrib(name)[value_index];
 	}
+	string_attrib_value(name: string) {
+		return this.indexed_attrib_value(name);
+	}
 
 	attrib_value_index(name: string): number {
 		if (this._core_geometry.is_attrib_indexed(name)) {

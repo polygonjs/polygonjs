@@ -18,7 +18,7 @@ import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 // import {Core} from '../_Module'
 import {CoreString} from '../String';
-import {CoreConstant, AttribClass} from './Constant';
+import {CoreConstant, AttribClass, AttribSize} from './Constant';
 
 // import './MonkeyPatch'
 
@@ -307,9 +307,17 @@ export class CoreGroup {
 		}
 	}
 	attrib_type(name: string) {
-		const first_geometry = this.core_geometries()[0];
-		if (first_geometry != null) {
-			return first_geometry.attrib_type(name);
+		const first_core_geometry = this.core_geometries()[0];
+		if (first_core_geometry != null) {
+			return first_core_geometry.attrib_type(name);
+		} else {
+			return null;
+		}
+	}
+	object_attrib_type(name: string) {
+		const first_core_object = this.core_objects()[0];
+		if (first_core_object != null) {
+			return first_core_object.attrib_type(name);
 		} else {
 			return null;
 		}
@@ -384,6 +392,14 @@ export class CoreGroup {
 		let first_geometry;
 		if ((first_geometry = this.core_geometries()[0]) != null) {
 			return first_geometry.attrib_sizes();
+		} else {
+			return {};
+		}
+	}
+	object_attrib_sizes(): Dictionary<AttribSize> {
+		let first_object;
+		if ((first_object = this.core_objects()[0]) != null) {
+			return first_object.attrib_sizes();
 		} else {
 			return {};
 		}

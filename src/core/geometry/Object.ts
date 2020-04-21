@@ -1,5 +1,6 @@
-import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
 import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Color} from 'three/src/math/Color';
@@ -13,7 +14,7 @@ import {Bone} from 'three/src/objects/Bone';
 import {CoreGeometry} from './Geometry';
 import {GroupString} from './Group';
 import {CoreAttribute} from './Attribute';
-import {CoreConstant, AttribType} from './Constant';
+import {CoreConstant, AttribType, AttribSize} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
@@ -23,6 +24,7 @@ import lodash_isString from 'lodash/isString';
 import lodash_isArray from 'lodash/isArray';
 import lodash_isNumber from 'lodash/isNumber';
 import {CoreEntity} from './Entity';
+import {ParamInitValueSerialized} from '../../engine/params/types/ParamInitValueSerialized';
 const PTNUM = 'ptnum';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
@@ -90,14 +92,19 @@ export class CoreObject extends CoreEntity {
 		this.core_geometry()?.compute_vertex_normals();
 	}
 
-	add_attribute(name: string, value: AttribValue) {
-		let data;
+	static add_attribute(object: Object3D, name: string, value: AttribValue) {
+		let data: ParamInitValueSerialized;
 		if (!lodash_isNumber(value) && !lodash_isArray(value) && !lodash_isString(value)) {
-			data = (value as Vector3).toArray();
+			data = (value as Vector3).toArray() as Number3;
 		} else {
 			data = value;
 		}
-		this._object.userData[ATTRIBUTES][name] = data;
+		const user_data = object.userData;
+		user_data[ATTRIBUTES] = user_data[ATTRIBUTES] || {};
+		user_data[ATTRIBUTES][name] = data;
+	}
+	add_attribute(name: string, value: AttribValue) {
+		CoreObject.add_attribute(this._object, name, value);
 	}
 	add_numeric_attrib(name: string, value: NumericAttribValue) {
 		this.add_attribute(name, value);
@@ -133,17 +140,30 @@ export class CoreObject extends CoreEntity {
 		delete this._object.userData[ATTRIBUTES][name];
 	}
 
-	attrib_value(name: string): AttribValue {
+	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		if (name === PTNUM) {
 			return this.index;
 		} else {
-			let val = this._object.userData[ATTRIBUTES][name];
+			let val = this._object.userData[ATTRIBUTES][name] as AttribValue;
 			if (val == null) {
 				if (name == NAME_ATTR) {
 					val = this._object.name;
 				}
+			} else {
+				if (lodash_isArray(val) && target) {
+					target.fromArray(val);
+					return target;
+				}
 			}
 			return val;
+		}
+	}
+	string_attrib_value(name: string) {
+		const str = this.attrib_value(name);
+		if (lodash_isString(str)) {
+			return str;
+		} else {
+			return `${str}`;
 		}
 	}
 	name(): string {
@@ -152,7 +172,16 @@ export class CoreObject extends CoreEntity {
 	human_type(): string {
 		return CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[this._object.constructor.name];
 	}
-
+	attrib_types() {
+		const h: Dictionary<AttribType> = {};
+		for (let attrib_name of this.attrib_names()) {
+			const type = this.attrib_type(attrib_name);
+			if (type != null) {
+				h[attrib_name] = type;
+			}
+		}
+		return h;
+	}
 	attrib_type(name: string) {
 		const val = this.attrib_value(name);
 		if (lodash_isString(val)) {
@@ -161,23 +190,34 @@ export class CoreObject extends CoreEntity {
 			return AttribType.NUMERIC;
 		}
 	}
-
-	attrib_size(name: string) {
+	attrib_sizes() {
+		const h: Dictionary<AttribSize> = {};
+		for (let attrib_name of this.attrib_names()) {
+			const size = this.attrib_size(attrib_name);
+			if (size != null) {
+				h[attrib_name] = size;
+			}
+		}
+		return h;
+	}
+	attrib_size(name: string): AttribSize | null {
 		const val = this.attrib_value(name);
 		if (val == null) {
-			return 0;
+			return null;
 		}
 
 		if (lodash_isString(val) || lodash_isNumber(val)) {
-			return 1;
+			return AttribSize.FLOAT;
 		} else {
 			switch (val.constructor) {
 				case Vector2:
-					return 2;
+					return AttribSize.VECTOR2;
 				case Vector3:
-					return 3;
+					return AttribSize.VECTOR3;
+				case Vector4:
+					return AttribSize.VECTOR4;
 				default:
-					return 0;
+					return null;
 			}
 		}
 	}

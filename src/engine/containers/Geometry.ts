@@ -10,6 +10,8 @@ import {CoreGeometry} from '../../core/geometry/Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {ContainableMap} from './utils/ContainableMap';
+import {CoreObject} from '../../core/geometry/Object';
+import {AttribType} from '../../core/geometry/Constant';
 // import {CoreConstant} from '../../core/geometry/Constant'
 
 // const CoreGeometryGroup = CoreGroup
@@ -186,6 +188,12 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 			return this._content.objects()[0];
 		}
 	}
+	private first_core_object() {
+		const object = this.first_object();
+		if (object) {
+			return new CoreObject(object, 0);
+		}
+	}
 	private first_geometry(): BufferGeometry | null {
 		const object = this.first_object();
 		if (object) {
@@ -241,7 +249,7 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 		return names_by_type;
 	}
 
-	vertex_attribute_names() {
+	point_attribute_names() {
 		let names: string[] = [];
 		const geometry = this.first_geometry();
 		if (geometry) {
@@ -249,7 +257,7 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 		}
 		return names;
 	}
-	vertex_attribute_sizes_by_name() {
+	point_attribute_sizes_by_name() {
 		let sizes_by_name: Dictionary<number> = {};
 		const geometry = this.first_geometry();
 		if (geometry) {
@@ -260,14 +268,37 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 		}
 		return sizes_by_name;
 	}
-	vertex_attribute_types_by_name() {
-		let types_by_name: Dictionary<number> = {};
+	object_attribute_sizes_by_name() {
+		let sizes_by_name: Dictionary<number> = {};
+		const core_object = this.first_core_object();
+		if (core_object) {
+			for (let name of core_object.attrib_names()) {
+				const size = core_object.attrib_size(name);
+				if (size != null) {
+					sizes_by_name[name] = size;
+				}
+			}
+		}
+		return sizes_by_name;
+	}
+	point_attribute_types_by_name() {
+		let types_by_name: Dictionary<AttribType> = {};
 		const geometry = this.first_geometry();
 		if (geometry) {
 			const core_geo = new CoreGeometry(geometry);
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
 				types_by_name[attrib_name] = core_geo.attrib_type(attrib_name);
 			});
+		}
+		return types_by_name;
+	}
+	object_attribute_types_by_name() {
+		let types_by_name: Dictionary<AttribType> = {};
+		const core_object = this.first_core_object();
+		if (core_object) {
+			for (let name of core_object.attrib_names()) {
+				types_by_name[name] = core_object.attrib_type(name);
+			}
 		}
 		return types_by_name;
 	}
