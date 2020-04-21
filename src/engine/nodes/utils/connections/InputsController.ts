@@ -469,20 +469,19 @@ export class InputsController<T extends BaseNodeType> {
 	}
 	input_clonable_state_with_override(index: number): boolean {
 		const states = this.inputs_clonable_state();
-		// for (let i = 0; i < states.length; i++) {
-		// TODO: typescript: not sure if this loop was justified
 		const state = states[index];
-		switch (state) {
-			case InputCloneMode.ALWAYS:
-				return true;
-			case InputCloneMode.NEVER:
-				return false;
-			case InputCloneMode.FROM_NODE:
-				return !this._override_clonable_state;
-			// default:
-			// 	throw new Error('unsupported type');
+		if (state != null) {
+			switch (state) {
+				case InputCloneMode.ALWAYS:
+					return true;
+				case InputCloneMode.NEVER:
+					return false;
+				case InputCloneMode.FROM_NODE:
+					return !this._override_clonable_state;
+			}
+			return TypeAssert.unreachable(state);
 		}
-		return TypeAssert.unreachable(state);
+		return true;
 		// }
 	}
 

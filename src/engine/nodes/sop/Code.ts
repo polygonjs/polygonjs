@@ -6,8 +6,7 @@ import {AsyncFunction} from '../../../core/AsyncFunction';
 
 const DEFAULT_FUNCTION_CODE = `import {BaseCodeSopProcessor, CoreGroup} from 'polygonjs-engine'
 export class CodeSopProcessor extends BaseCodeSopProcessor {
-	constructor(){
-		super();
+	initialize_processor(){
 	}
 	cook(core_groups: CoreGroup[]){
 		const core_group = core_groups[0];
@@ -25,10 +24,15 @@ export class BaseCodeSopProcessor {
 	constructor() {}
 	set_node(node: CodeSopNode) {
 		this.node = node;
+		this.initialize_processor();
 	}
 	cook(core_groups: CoreGroup[]) {}
+	initialize_processor() {}
 	protected set_core_group(core_group: CoreGroup) {
 		this.node.set_core_group(core_group);
+	}
+	protected set_objects(objects: Object3D[]) {
+		this.node.set_objects(objects);
 	}
 }
 
@@ -36,6 +40,7 @@ type EvaluatedFunction = (base_processor_class: typeof BaseCodeSopProcessor) => 
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
+import {Object3D} from 'three';
 class CodeSopParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
 		show_label: false,
@@ -57,7 +62,12 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(0, 4);
 		this.ui_data.set_width(100);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_clonable_state([
+			InputCloneMode.FROM_NODE,
+			InputCloneMode.NEVER,
+			InputCloneMode.NEVER,
+			InputCloneMode.NEVER,
+		]);
 	}
 
 	cook(core_groups: CoreGroup[]) {

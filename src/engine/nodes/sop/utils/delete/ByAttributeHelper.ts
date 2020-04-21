@@ -96,7 +96,6 @@ export class ByAttributeHelper {
 
 	private _eval_for_points_numeric_float(entities: CoreEntity[]) {
 		let attrib_name = this.node.pv.attrib_name;
-		console.log('this.node.pv.attrib_value1', this.node.pv.attrib_value1);
 		const compared_value = this.node.pv.attrib_value1;
 		let value: number;
 		const comparison_operator: ComparisonOperator = COMPARISON_OPERATORS[this.node.pv.attrib_comparison_operator];
