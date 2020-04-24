@@ -131,12 +131,6 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			this._scene.time_controller.increment_time_if_playing();
 			this.render();
 			this._controls_controller?.update();
-			// this.update_stats()
-			// this._controls?.update(false)
-
-			// @_renders_count ?= 0
-			// @_renders_count += 1
-			// if @_renders_count < 6
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
 		}
 	}
@@ -149,8 +143,6 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		if (this._canvas) {
 			this._camera_node.render_controller.delete_renderer(this._canvas);
 		}
-		// POLY.renderers_controller.deregister_renderer(@renderer)
-		// this.dispose_camera()
 	}
 
 	render() {

@@ -28,6 +28,11 @@ export class SceneJsonImporter {
 			if (frame_range_locked) {
 				scene.time_controller.set_frame_range_locked(frame_range_locked[0], frame_range_locked[1]);
 			}
+			const realtime_state = properties['realtime_state'];
+			if (realtime_state != null) {
+				scene.time_controller.set_realtime_state(realtime_state);
+			}
+
 			// scene.time_controller.set_fps(properties['fps'] || 30);
 			if (properties['master_camera_node_path']) {
 				scene.cameras_controller.set_master_camera_node_path(properties['master_camera_node_path']);

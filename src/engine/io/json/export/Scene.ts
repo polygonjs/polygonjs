@@ -9,6 +9,7 @@ export interface SceneJsonExporterData {
 		frame: number;
 		frame_range: Number2;
 		frame_range_locked: Boolean2;
+		realtime_state: boolean;
 		// fps: number;
 		master_camera_node_path: string | null;
 	};
@@ -33,6 +34,7 @@ export class SceneJsonExporter {
 				frame: this._scene.frame || 1,
 				frame_range: this._scene.frame_range,
 				frame_range_locked: this._scene.time_controller.frame_range_locked,
+				realtime_state: this._scene.time_controller.realtime_state,
 				// fps: this._scene.time_controller.fps,
 				master_camera_node_path: this._scene.cameras_controller.master_camera_node_path,
 			},
