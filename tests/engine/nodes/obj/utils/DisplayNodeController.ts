@@ -17,7 +17,6 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	assert.ok(box1.flags.display.active, 'display flag is set on');
 	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, box1.graph_node_id, 'display node is box');
 	await scene.wait_for_cooks_completed();
-	console.log(box1.container_controller.container.core_content);
 	assert.equal(
 		geo1.sop_group.children[0].uuid,
 		box1.container_controller.container.core_content()?.objects()[0].uuid
@@ -26,7 +25,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	assert.equal(box1.cook_controller.cooks_count, 1);
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.wait_for_cooks_completed();
-	assert.equal(box1.cook_controller.cooks_count, 2);
+	assert.equal(box1.cook_controller.cooks_count, 2, 'box has cooked once more');
 	assert.ok(geo1.sop_group.visible);
 
 	geo1.flags.display.set(false);
@@ -37,7 +36,6 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	assert.equal(box1.cook_controller.cooks_count, 2, 'box has not cooked again');
 	assert.ok(!geo1.sop_group.visible);
 
-	console.log('main_group.children');
 	assert.equal(main_group.children.length, 2);
 
 	assert.equal(geo1.cook_controller.cooks_count, 0);

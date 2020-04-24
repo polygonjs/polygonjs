@@ -32,7 +32,6 @@ export class NodeCookController {
 	private _init_cooking_state() {
 		this._cooking = true;
 		this._cooking_dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
-		this._performance_controller.reset();
 	}
 
 	private async _start_cook_if_no_errors(input_contents: any[]) {
@@ -57,11 +56,8 @@ export class NodeCookController {
 		this._init_cooking_state();
 		this.node.states.error.clear();
 
-		// inputs
-		const input_contents = await this.evaluate_inputs();
-		//params
-		await this.evaluate_params();
-
+		const input_contents = await this._evaluate_inputs();
+		await this._evaluate_params();
 		await this._start_cook_if_no_errors(input_contents);
 	}
 	async cook_main_without_inputs() {
@@ -75,10 +71,9 @@ export class NodeCookController {
 			return;
 		}
 		this._init_cooking_state();
-		// this._init_cooking_start_time();
 		this.node.states.error.clear();
 
-		await this.evaluate_params();
+		await this._evaluate_params();
 		await this._start_cook_if_no_errors([]);
 	}
 
@@ -103,14 +98,7 @@ export class NodeCookController {
 		}
 	}
 
-	// private async evaluate_inputs_and_params() {
-
-	// 	const inputs_contents = await this.evaluate_inputs()
-
-	// 	await this.evaluate_params();
-	// 	return inputs_contents;
-	// }
-	private async evaluate_inputs() {
+	private async _evaluate_inputs() {
 		this._performance_controller.record_inputs_start();
 
 		let input_containers: (BaseContainer | null)[] = [];
@@ -136,7 +124,7 @@ export class NodeCookController {
 		this._performance_controller.record_inputs_end();
 		return input_contents;
 	}
-	private async evaluate_params() {
+	private async _evaluate_params() {
 		this._performance_controller.record_params_start();
 		await this.node.params.eval_all();
 		this._performance_controller.record_params_end();
@@ -148,14 +136,16 @@ export class NodeCookController {
 	//
 	//
 	get cooks_count(): number {
-		return this._performance_controller.data.cooks_count;
+		return this._performance_controller.cooks_count;
+	}
+	get cook_time(): number {
+		return this._performance_controller.data.cook_time;
 	}
 
 	private _finalize_cook_performance() {
 		if (!this._core_performance.started) {
 			return;
 		}
-		this._performance_controller.record_cooks_count();
 		this._performance_controller.record_cook_end();
 
 		this._core_performance.record_node_cook_data(this.node, this._performance_controller.data);
