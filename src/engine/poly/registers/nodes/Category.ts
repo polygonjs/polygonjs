@@ -1,3 +1,9 @@
+export const CATEGORY_ANIM = {
+	INPUT: 'inputs',
+	MISC: 'misc',
+	MODIFIER: 'modifiers',
+};
+
 export const CATEGORY_OBJ = {
 	LIGHT: 'lights',
 	MANAGER: 'managers',
@@ -12,6 +18,7 @@ export const CATEGORY_COP = {
 	MISC: 'misc',
 };
 export const CATEGORY_EVENT = {
+	ANIMATION: 'animation',
 	CAMERA: 'cameras',
 	MISC: 'misc',
 };

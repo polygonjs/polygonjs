@@ -9,6 +9,7 @@ import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
 
 export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;
@@ -103,6 +104,36 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	found_node() {
 		return this._found_node;
 	}
+	found_node_with_context<N extends NodeContext>(context: N): BaseNodeByContextMap[N] | undefined {
+		return this._found_node_with_expected_type as BaseNodeByContextMap[N];
+		// if (node) {
+		// 	if (node.node_context() == context) {
+		// 		return node as BaseNodeByContextMap[N];
+		// 	} else {
+		// 		this.states.error.set(`expected node context to be ${context}, but was instead ${node.node_context()}`);
+		// 	}
+		// } else {
+		// 	this.states.error.set('no node found');
+		// }
+	}
+	// found_node_with_context_and_type<N extends NodeContext, K extends keyof ChildrenNodeMapByContextMap[N]>(
+	// 	context: N,
+	// 	type: K
+	// ): ChildrenNodeMapByContextMap[N][K] | undefined {
+	found_node_with_context_and_type<N extends NodeContext, K extends keyof ChildrenNodeMapByContextMap[N]>(
+		context: N,
+		type: K
+	): ChildrenNodeMapByContextMap[N][K] | undefined {
+		const node = this.found_node_with_context(context);
+		if (node) {
+			if (node.type == type) {
+				return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
+			} else {
+				this.states.error.set(`expected node type to be ${type}, but was instead ${node.type}`);
+			}
+		}
+	}
+
 	found_node_with_expected_type() {
 		return this._found_node_with_expected_type;
 	}

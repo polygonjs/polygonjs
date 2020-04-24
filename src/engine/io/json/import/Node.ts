@@ -11,13 +11,14 @@ import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
+import {SceneJsonImporter} from '../../..';
 // import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 
 export class NodeJsonImporter<T extends BaseNodeType> {
 	constructor(protected _node: T) {}
 
-	process_data(data: NodeJsonExporterData) {
-		this.create_nodes(data['nodes']);
+	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
+		this.create_nodes(scene_importer, data['nodes']);
 		this.set_selection(data['selection']);
 
 		// inputs clone
@@ -39,7 +40,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		this.set_inputs(data['inputs']);
 	}
 
-	process_ui_data(data: NodeJsonExporterUIData) {
+	process_ui_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterUIData) {
 		if (!data) {
 			return;
 		}
@@ -53,10 +54,10 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		if (comment) {
 			ui_data.set_comment(comment);
 		}
-		this.process_nodes_ui_data(data['nodes']);
+		this.process_nodes_ui_data(scene_importer, data['nodes']);
 	}
 
-	create_nodes(data?: Dictionary<NodeJsonExporterData>) {
+	create_nodes(scene_importer: SceneJsonImporter, data?: Dictionary<NodeJsonExporterData>) {
 		if (!data) {
 			return;
 		}
@@ -67,10 +68,15 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 			const node_data = data[node_name];
 			const node_type = node_data['type'];
 			if (this._node.children_allowed() && this._node.children_controller) {
-				const node = this._node.create_node(node_type);
-				if (node) {
-					node.set_name(node_name);
-					nodes.push(node);
+				try {
+					const node = this._node.create_node(node_type);
+					if (node) {
+						node.set_name(node_name);
+						nodes.push(node);
+					}
+				} catch (e) {
+					scene_importer.report.add_warning(`failed to create node with type '${node_type}'`);
+					console.log('failed to create node with type', node_type, e);
 				}
 			}
 		}
@@ -79,7 +85,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		for (let node of nodes) {
 			const importer = JsonImportDispatcher.dispatch_node(node); //.visit(JsonImporterVisitor)
 			importers.push(importer);
-			importer.process_data(data[node.name]);
+			importer.process_data(scene_importer, data[node.name]);
 			index++;
 		}
 		index = 0;
@@ -142,7 +148,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		});
 	}
 
-	process_nodes_ui_data(data: Dictionary<NodeJsonExporterUIData>) {
+	process_nodes_ui_data(scene_importer: SceneJsonImporter, data: Dictionary<NodeJsonExporterUIData>) {
 		if (!data) {
 			return;
 		}
@@ -152,7 +158,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 			const node = this._node.node(node_name);
 			if (node) {
 				const node_data = data[node_name];
-				JsonImportDispatcher.dispatch_node(node).process_ui_data(node_data);
+				JsonImportDispatcher.dispatch_node(node).process_ui_data(scene_importer, node_data);
 				// node.visit(JsonImporterVisitor).process_ui_data(node_data);
 			}
 		});

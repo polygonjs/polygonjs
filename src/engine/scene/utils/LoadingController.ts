@@ -1,5 +1,7 @@
 import {PolyScene} from '../PolyScene';
+import {SceneEventType} from './events/SceneEventsController';
 
+const LOADED_EVENT_CONTEXT = {event: new Event(SceneEventType.LOADED)};
 export class LoadingController {
 	constructor(private scene: PolyScene) {}
 
@@ -12,10 +14,7 @@ export class LoadingController {
 	}
 	async mark_as_loaded() {
 		await this._set_loading_state(false);
-		// POLY.notify_scene_loaded(this.scene);
-		// this.cooker().block()
-		// this.root().set_children_dirty_without_propagation()
-		// this.cooker().unblock()
+		this.scene.events_dispatcher.process_event(LOADED_EVENT_CONTEXT);
 	}
 	private async _set_loading_state(state: boolean) {
 		this._loading_state = state;
@@ -29,8 +28,7 @@ export class LoadingController {
 	}
 	get auto_updating() {
 		return this._auto_updating;
-	} // _init_auto_update: ->
-	// 	this.set_auto_update(true)
+	}
 	async set_auto_update(new_state: boolean) {
 		if (this._auto_updating !== new_state) {
 			this._auto_updating = new_state;
@@ -41,16 +39,8 @@ export class LoadingController {
 				const root = this.scene.root;
 				if (root) {
 					await root.process_queue();
-					// const c = async () => {
-					// 	await root.process_queue();
-					// };
-					// setTimeout(c, 50);
 				}
-			} else {
-				// if (callback != null) { callback(); }
 			}
-		} else {
-			// if (callback != null) { callback(); }
 		}
 	}
 

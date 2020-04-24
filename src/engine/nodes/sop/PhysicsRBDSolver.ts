@@ -2,13 +2,13 @@
 import {TypedSopNode} from './_Base';
 import lodash_isString from 'lodash/isString';
 import {CoreGroup} from '../../../core/geometry/Group';
-import Ammo from 'ammojs-typed';
 import {AmmoRBDBodyHelper, RBDAttribute} from '../../../core/physics/ammo/RBDBodyHelper';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {AmmoForceHelper} from '../../../core/physics/ammo/ForceHelper';
+import Ammo from 'ammojs-typed';
 
 const NULL_ID = '';
 

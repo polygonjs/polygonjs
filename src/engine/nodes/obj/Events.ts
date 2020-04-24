@@ -5,7 +5,7 @@ import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
 
 export class EventsObjNode extends BaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.EVENT;
+	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 	static type() {
 		return 'events';
 	}

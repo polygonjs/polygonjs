@@ -5,6 +5,7 @@ import {ChExpression} from '../../../expressions/methods/ch';
 import {CopyExpression} from '../../../expressions/methods/copy';
 import {CopResExpression} from '../../../expressions/methods/cop_res';
 // import {Local} from '../../../expressions/methods/local';
+import {ObjectsCountExpression} from '../../../expressions/methods/objects_count';
 import {OpdigitsExpression} from '../../../expressions/methods/opdigits';
 import {PointExpression} from '../../../expressions/methods/point';
 import {PointsCountExpression} from '../../../expressions/methods/points_count';
@@ -21,6 +22,7 @@ export interface ExpressionMap extends Dictionary<typeof BaseMethod> {
 	ch: typeof ChExpression;
 	copy: typeof CopyExpression;
 	cop_res: typeof CopResExpression;
+	objects_count: typeof ObjectsCountExpression;
 	opdigits: typeof OpdigitsExpression;
 	point: typeof PointExpression;
 	points_count: typeof PointsCountExpression;
@@ -40,6 +42,7 @@ export class AllExpressionsRegister {
 		poly.expressions_register.register_expression(CopyExpression, 'copy');
 		poly.expressions_register.register_expression(CopResExpression, 'cop_res');
 		// poly.expressions_register.register_expression(Local, 'local');
+		poly.expressions_register.register_expression(ObjectsCountExpression, 'objects_count');
 		poly.expressions_register.register_expression(OpdigitsExpression, 'opdigits');
 		poly.expressions_register.register_expression(PointExpression, 'point');
 		poly.expressions_register.register_expression(PointsCountExpression, 'points_count');

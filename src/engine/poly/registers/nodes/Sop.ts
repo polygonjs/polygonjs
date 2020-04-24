@@ -5,7 +5,6 @@
 // more on https://webpack.js.org/api/module-methods/
 import {CATEGORY_SOP} from './Category';
 
-import {AmmoSolverSopNodeOld} from '../../../nodes/sop/AmmoSolver';
 import {AddSopNode} from '../../../nodes/sop/Add';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
@@ -66,10 +65,12 @@ import {SphereSopNode} from '../../../nodes/sop/Sphere';
 import {SplitSopNode} from '../../../nodes/sop/Split';
 import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
+import {TestAnimationSopNode} from '../../../nodes/sop/TestAnimation';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
+import {TransformCopySopNode} from '../../../nodes/sop/TransformCopy';
 import {TransformResetSopNode} from '../../../nodes/sop/TransformReset';
 import {TubeSopNode} from '../../../nodes/sop/Tube';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
@@ -134,10 +135,12 @@ export interface GeoNodeChildrenMap {
 	split: SplitSopNode;
 	subdivide: SubdivideSopNode;
 	switch: SwitchSopNode;
+	test_animation: TestAnimationSopNode;
 	text: TextSopNode;
 	torus: TorusSopNode;
 	torus_knot: TorusKnotSopNode;
 	transform: TransformSopNode;
+	transform_copy: TransformCopySopNode;
 	transform_reset: TransformResetSopNode;
 	tube: TubeSopNode;
 	uv_project: UvProjectSopNode;
@@ -146,7 +149,6 @@ export interface GeoNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
-		poly.register_node(AmmoSolverSopNodeOld, CATEGORY_SOP.INPUT);
 		poly.register_node(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		poly.register_node(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
@@ -187,7 +189,7 @@ export class SopRegister {
 		poly.register_node(MergeSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(NormalsSopNode, CATEGORY_SOP.MODIFIER);
-		poly.register_node(NullSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(NullSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(OcclusionSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
@@ -207,10 +209,12 @@ export class SopRegister {
 		poly.register_node(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
+		poly.register_node(TestAnimationSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TransformSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(TransformCopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TransformResetSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(UvProjectSopNode, CATEGORY_SOP.MODIFIER);

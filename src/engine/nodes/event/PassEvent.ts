@@ -1,8 +1,10 @@
-import {TypedEventNode, BaseEventNodeType} from './_Base';
+import {TypedEventNode} from './_Base';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+
+const OUTPUT_NAME = 'event';
 
 class PassEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PassEventParamsConfig();
@@ -19,15 +21,17 @@ export class PassEventNode extends TypedEventNode<PassEventParamsConfig> {
 			[0, 1, 2, 3].map((i) => new TypedNamedConnectionPoint(`trigger${i}`, ConnectionPointType.BOOL))
 		);
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint('event', ConnectionPointType.BOOL),
+			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.BOOL),
 		]);
 	}
 
 	process_event(event_context: EventContext<Event>) {
-		const connections = this.io.connections.output_connections();
-		const nodes: BaseEventNodeType[] = connections.map((connection) => connection.node_dest) as BaseEventNodeType[];
-		for (let node of nodes) {
-			node.process_event(event_context);
-		}
+		this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+
+		// const connections = this.io.connections.output_connections();
+		// const nodes: BaseEventNodeType[] = connections.map((connection) => connection.node_dest) as BaseEventNodeType[];
+		// for (let node of nodes) {
+		// 	node.process_event(event_context);
+		// }
 	}
 }

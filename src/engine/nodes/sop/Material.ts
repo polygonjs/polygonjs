@@ -49,37 +49,30 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		// const group =	container.group(); // {clone: this.do_clone_inputs()})
 		const core_group = core_groups[0];
 
-		const node = this.p.material.found_node();
-		if (node) {
-			if (node.node_context() != NodeContext.MAT) {
-				this.states.error.set('node is not a material');
-			} else {
-				const material_node = node as BaseMatNodeType;
-				const material = material_node.material;
-				if ((node as BaseBuilderMatNodeType).assembler_controller != null) {
-					(node as BaseBuilderMatNodeType).assembler_controller.set_assembler_globals_handler(
-						this._globals_handler
-					);
-				}
-
-				await material_node.request_container();
-				if (material) {
-					for (let object of core_group.objects_from_group(this.pv.group)) {
-						if (this.pv.apply_to_children) {
-							object.traverse((grand_child) => {
-								this.apply_material(grand_child, material);
-							});
-						} else {
-							this.apply_material(object, material);
-						}
-					}
-					this.set_core_group(core_group);
-				} else {
-					this.states.error.set(`material invalid. (error: '${material_node.states.error.message}')`);
-				}
+		const material_node = this.p.material.found_node_with_context(NodeContext.MAT);
+		if (material_node) {
+			const material = material_node.material;
+			if ((material_node as BaseBuilderMatNodeType).assembler_controller != null) {
+				(material_node as BaseBuilderMatNodeType).assembler_controller.set_assembler_globals_handler(
+					this._globals_handler
+				);
 			}
-		} else {
-			this.states.error.set(`node '${this.pv.material}' not found`);
+
+			await material_node.request_container();
+			if (material) {
+				for (let object of core_group.objects_from_group(this.pv.group)) {
+					if (this.pv.apply_to_children) {
+						object.traverse((grand_child) => {
+							this.apply_material(grand_child, material);
+						});
+					} else {
+						this.apply_material(object, material);
+					}
+				}
+				this.set_core_group(core_group);
+			} else {
+				this.states.error.set(`material invalid. (error: '${material_node.states.error.message}')`);
+			}
 		}
 	}
 

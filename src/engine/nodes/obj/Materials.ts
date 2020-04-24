@@ -5,7 +5,7 @@ import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 
 export class MaterialsObjNode extends BaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MAT;
+	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 	static type() {
 		return 'materials';
 	}

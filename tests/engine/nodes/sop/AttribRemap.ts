@@ -21,7 +21,7 @@ QUnit.test('attrib_remap simple', async (assert) => {
 
 	container = await attrib_remap1.request_container();
 	core_group = container.core_content()!;
-	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
+	values = core_group.points().map((p: CorePoint) => p.attrib_value('test') as number);
 	assert.equal(values[0], 0);
 	assert.in_delta(values[1], 1 / 3, 0.0001);
 	assert.in_delta(values[2], 2 / 3, 0.0001);

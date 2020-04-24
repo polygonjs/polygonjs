@@ -52,6 +52,6 @@ export class ViewerEventsController {
 			canvas: this.canvas,
 			camera_node: this.camera_node,
 		};
-		this.viewer.scene.events_controller.process_event(event_context);
+		this.viewer.scene.events_dispatcher.process_event(event_context);
 	}
 }

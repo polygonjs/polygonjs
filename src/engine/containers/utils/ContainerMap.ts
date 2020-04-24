@@ -1,23 +1,23 @@
-import {GeometryContainer} from '../Geometry';
-import {MaterialContainer} from '../Material';
-import {TextureContainer} from '../Texture';
-import {ObjectContainer} from '../Object';
+import {AnimationContainer} from '../Animation';
 import {EventContainer} from '../Event';
-import {ManagerContainer} from '../Manager';
-import {PostProcessContainer} from '../PostProcess';
+import {GeometryContainer} from '../Geometry';
 import {GlContainer} from '../Gl';
 import {JsContainer} from '../Js';
+import {ManagerContainer} from '../Manager';
+import {MaterialContainer} from '../Material';
+import {ObjectContainer} from '../Object';
+import {PostProcessContainer} from '../PostProcess';
+import {TextureContainer} from '../Texture';
 
 export interface ContainerMap {
-	GEOMETRY: GeometryContainer;
-	MATERIAL: MaterialContainer;
-	TEXTURE: TextureContainer;
-	OBJECT: ObjectContainer;
+	ANIMATION: AnimationContainer;
 	EVENT: EventContainer;
-	MANAGER: ManagerContainer;
-	POST: PostProcessContainer;
+	GEOMETRY: GeometryContainer;
 	GL: GlContainer;
+	MANAGER: ManagerContainer;
+	MATERIAL: MaterialContainer;
+	OBJECT: ObjectContainer;
+	TEXTURE: TextureContainer;
+	POST: PostProcessContainer;
 	JS: JsContainer;
 }
-// type K = keyof ContainerMap;
-// type Container = ContainerMap[K];

@@ -2,13 +2,15 @@ import {PolyScene} from '../../../scene/PolyScene';
 // import {JsonImporterVisitor} from './Visitor'
 import {SceneJsonExporterData} from '../export/Scene';
 import {JsonImportDispatcher} from './Dispatcher';
+import {ImportReport} from './ImportReport';
 
 export class SceneJsonImporter {
+	public readonly report = new ImportReport(this);
 	constructor(private _data: SceneJsonExporterData) {}
 
-	static load_data(data: SceneJsonExporterData) {
+	static async load_data(data: SceneJsonExporterData) {
 		const importer = new SceneJsonImporter(data);
-		return importer.scene();
+		return await importer.scene();
 	}
 
 	async scene(): Promise<PolyScene> {
@@ -39,10 +41,10 @@ export class SceneJsonImporter {
 
 		const importer = JsonImportDispatcher.dispatch_node(scene.root);
 		if (this._data['root']) {
-			importer.process_data(this._data['root']);
+			importer.process_data(this, this._data['root']);
 		}
 		if (this._data['ui']) {
-			importer.process_ui_data(this._data['ui']);
+			importer.process_ui_data(this, this._data['ui']);
 		}
 
 		await scene.loading_controller.mark_as_loaded();

@@ -19,19 +19,6 @@ import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDB} from '../utils/FlagsController';
-// import * as Container from '../../Container/Geometry';
-
-// import {AttribTypeParam} from './concerns/AttribTypeParam';
-// import {Bypass} from './Concerns/Bypass';
-// import {GroupParam} from './concerns/GroupParam';
-// import {Named} from './concerns/Named'; // TODO; typescript
-// import {ObjectTypeParam} from './concerns/ObjectTypeParam';
-
-// TODO: do I really need to add attributes in objects?
-// TODO: after setting a node dirty, it should clear its object
-
-// import {RequestContainerGeometryCallback} from '../../../Engine/Container/Geometry'
-// const CONTAINER_CLASS = 'Geometry';
 
 enum MESSAGE {
 	FROM_SET_CORE_GROUP = 'from set_core_group',
@@ -60,13 +47,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	// _master_group: Group
-	// _objects: Object3D[] = []
-
 	initialize_base_node() {
-		// this.flags.add_bypass();
-
-		// this.flags.add_display();
 		if (this.flags.display) {
 			this.flags.display.set(false);
 			this.flags.display.add_hook(() => {
@@ -79,43 +60,8 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 			});
 		}
 		this.io.outputs.set_has_one_output();
-		// this.container_controller.init(CONTAINER_CLASS);
 	}
 
-	// request_container() {
-	// 	return super.request_container(); //as Promise<GeometryContainer>;
-	// }
-
-	//
-	//
-	// GEOMETRY
-	//
-	//
-	// group(): Group {
-	// 	return this._master_group = this._master_group || this._create_group()
-	// }
-	// set_group(group: Group){
-	// 	this._clear_objectsI() //(MESSAGE.FROM_SET_GROUP);
-	// 	this._master_group.add(group)
-	// 	// let child;
-
-	// 	// const new_children = [];
-	// 	// while (child = group.children[0]) {
-	// 	// 	new_children.push(child);
-	// 	// 	group.remove(child);
-	// 	// }
-
-	// 	// new_children.forEach(child=> {
-	// 	// 	this._master_group.add( child );
-	// 	// });
-
-	// 	// // if (this.allow_add_object_attributes()) {
-	// 	// 	this._master_group.traverse(object=> {
-	// 	// 		this._set_object_attributes(object);
-	// 	// 	});
-	// 	// // }
-	// 	this.set_container(this._master_group, MESSAGE.FROM_SET_GROUP);
-	// }
 	set_core_group(core_group: CoreGroup) {
 		const objects = core_group.objects();
 		for (let object of objects) {
@@ -125,62 +71,22 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 	}
 
 	set_object(object: Object3D) {
-		// this._clear_objects();
-		// this.add_object(object);
-		// this.set_container(this.group(), MESSAGE.FROM_SET_OBJECT);
 		this._set_object_attributes(object);
-		// const core_group = new CoreGroup();
-		// core_group.set_objects([object]);
 		this.set_container_objects([object], MESSAGE.FROM_SET_OBJECT);
 	}
 	set_objects(objects: Object3D[]) {
-		// this._clear_objects();
-		// const list = objects;
-		// lodash_times(list.length, i=> {
-		// 	const object = list[i];
-		// 	this.add_object(object);
-		// });
 		for (let object of objects) {
 			this._set_object_attributes(object);
 		}
-		// const core_group = new CoreGroup();
-		// core_group.set_objects(objects);
 		this.set_container_objects(objects, MESSAGE.FROM_SET_OBJECTS);
 	}
 
-	// add_object(object: Object3D) {
-	// 	if (object != null) {
-	// 		this.group().add(object);
-	// 		// if (this.allow_add_object_attributes()) {
-	// 		this._set_object_attributes(object);
-	// 		// }
-	// 		return object;
-	// 	}
-	// }
-	// add_geometry(geometry: BufferGeometry, type: ObjectType) {
-	// 	let object;
-	// 	if (geometry.index == null) {
-	// 		this._add_index(geometry);
-	// 	}
-
-	// 	if ((object = this.create_object(geometry, type)) != null) {
-	// 		this.add_object(object);
-	// 	}
-	// }
-
 	set_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
-		// this._clear_objects();
-		// this.add_geometry(geometry, type);
-		// this.set_container(this.group(), MESSAGE.FROM_SET_GEOMETRY);
 		const object = this.create_object(geometry, type);
-		// const core_group = new CoreGroup();
-		// core_group.set_objects([object]);
 		this.set_container_objects([object], MESSAGE.FROM_SET_GEOMETRY);
 	}
-	//this.end_cook()
 
 	set_geometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
-		// this._clear_objects();
 		const objects: Object3D[] = [];
 		let object;
 		geometries.forEach((geometry) => {
@@ -188,8 +94,6 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 			this._set_object_attributes(object);
 			objects.push(object);
 		});
-		// const core_group = new CoreGroup();
-		// core_group.set_objects(objects);
 		this.set_container_objects(objects, MESSAGE.FROM_SET_GEOMETRIES);
 	}
 
@@ -199,31 +103,6 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		core_group.touch();
 		this.set_container(core_group);
 	}
-
-	// do_clone_inputs() {
-	// 	let result = true;
-	// 	if (this.has_param('do_not_clone_inputs')) {
-	// 		result = false;
-	// 	}
-	// 	return result;
-	// }
-	// allow_add_object_attributes() {
-	// 	if (!this.do_clone_inputs()) { return false; }
-	// 	let result = true;
-	// 	if (this.has_param('do_not_add_object_attributes')) {
-	// 		result = false;
-	// 	}
-	// 	return result;
-	// }
-
-	// _create_group() {
-	// 	const group = new Group();
-	// 	group.name = this.full_path();
-
-	// 	this._init_sop_bypass_group(group)
-
-	// 	return group;
-	// }
 
 	create_object<OT extends ObjectType>(
 		geometry: BufferGeometry,
@@ -236,15 +115,6 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 			geometry.setIndex(lodash_range(position_array.length / 3));
 		}
 
-		// if (!lodash_includes(CoreConstant.OBJECT_TYPES, type)) {
-		// 	const human_type = CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[type];
-		// 	const human_names = CoreConstant.OBJECT_TYPES.map(
-		// 		(n) => CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[n]
-		// 	);
-		// 	throw `type '${human_type}' not recognized. Available types are ${human_names.join(', ')}.`;
-		// }
-
-		// if (geometry != null) {
 		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type]; //THREE[type];
 		material = material || CoreConstant.MATERIALS[type].clone();
 		const object = new object_constructor(geometry, material);
@@ -256,28 +126,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		// }
 	}
 
-	_set_object_attributes(object: Object3D) {
-		// if (!this.allow_add_object_attributes()) { return; }
-		// TODO: the exception below are just to debug when a geo could be reused or not cloned properly
-		// I could remove that when more sure it all refreshes fine, and this would allow the null or merge to
-		// not have to clone the data
-		// if ((object.name == null) && (object.name !== '')) {
-		// 	if (this.do_clone_inputs()) {
-		// 		throw `object.name already set to ${object.node_name} (attempt to set by ${this.full_path()})`;
-		// 	}
-		// } else {
-		// 	object.name = this.full_path();
-		// }
-
-		// if ((geometry = object.geometry) != null) {
-		// 	if ((geometry.name == null) && (geometry.name !== '')) {
-		// 		if (this.do_clone_inputs()) {
-		// 			throw `geometry.node_name already set to ${geometry.node_name} (attempt to set by ${this.full_path()})`;
-		// 		}
-		// 	} else {
-		// 		geometry.name = this.full_path();
-		// 	}
-		// }
+	protected _set_object_attributes(object: Object3D) {
 		const material: Material = (object as Mesh).material as Material;
 		if (material) {
 			if (!this.scene) {
@@ -291,35 +140,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETR
 		}
 	}
 
-	// _clear_objects() {
-	// 	const group = this.group();
-
-	// 	let child
-	// 	while(child = group.children[0]) {
-	// 		group.remove(child);
-	// 	}
-	// 	// const children = lodash_clone(group.children);
-	// 	// let child;
-	// 	// for(let i=0; i < children.length; i++){
-	// 	// 	child = children[i]
-	// 	// 	group.remove(child);
-	// 	// 	child.traverse((object)=>{
-	// 	// 		if (object.geometry != null) {
-	// 	// 			object.geometry.dispose();
-	// 	// 		}
-	// 	// 		// no more material dispose since each the materials are not cloned
-	// 	// 		// if (object.material){
-	// 	// 		// 	if (lodash_isArray(object.material)){
-	// 	// 		// 		object.material.forEach((mat)=>{mat.dispose()})
-	// 	// 		// 	} else {
-	// 	// 		// 		object.material.dispose()
-	// 	// 		// 	}
-	// 	// 		// }
-	// 	// 	});
-	// 	// }
-	// }
-
-	_add_index(geometry: BufferGeometry) {
+	protected _add_index(geometry: BufferGeometry) {
 		const position_attrib = geometry.getAttribute('position');
 		const position_array = position_attrib.array;
 		const points_count = position_array.length / 3;

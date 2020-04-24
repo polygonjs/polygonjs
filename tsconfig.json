@@ -25,7 +25,7 @@
 		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
 		"importHelpers": true
-		// "typeRoots": ["node_modules/@types", "./custom_typings"]
+		// "typeRoots": []
 	},
 	// "include": ["./**/*.ts", "./**/*.vue"],
 	"exclude": ["node_modules", "modules", "dist", "public", "webpack"]

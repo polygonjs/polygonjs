@@ -1,4 +1,4 @@
-import {TypedEventNode, BaseEventNodeType} from './_Base';
+import {TypedEventNode} from './_Base';
 import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../scene/utils/events/MouseEventsController';
@@ -7,6 +7,7 @@ import {BaseParamType} from '../../params/_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {DispatcherRegisterer} from './utils/DispatcherRegisterer';
 class MouseEventParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
@@ -21,6 +22,7 @@ export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 	static type() {
 		return 'mouse_event';
 	}
+	private dispatcher_registerer = new DispatcherRegisterer(this);
 	initialize_node() {
 		// TODO: do not use GL connection Types here
 		this.io.outputs.set_named_output_connection_points(
@@ -29,39 +31,31 @@ export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 			})
 		);
 
-		this.lifecycle.add_on_add_hook(() => {
-			this.scene.events_controller.register_event_node(this);
-		});
-		this.lifecycle.add_delete_hook(() => {
-			this.scene.events_controller.unregister_event_node(this);
-		});
+		this.dispatcher_registerer.initialize();
 	}
 
 	process_event(event_context: EventContext<MouseEvent>) {
 		if (!this.pv.active) {
 			return;
 		}
-		const index = this.io.outputs.get_output_index(event_context.event.type);
-		if (index >= 0) {
-			const connections = this.io.connections.output_connections();
-			const current_connections = connections.filter((connection) => connection.output_index == index);
-			const nodes: BaseEventNodeType[] = current_connections.map(
-				(connection) => connection.node_dest
-			) as BaseEventNodeType[];
-			for (let node of nodes) {
-				node.process_event(event_context);
-			}
+		if (!event_context.event) {
+			return;
 		}
+		this.dispatch_event_to_output(event_context.event.type, event_context);
+		// const index = this.io.outputs.get_output_index(event_context.event.type);
+		// if (index >= 0) {
+		// 	const connections = this.io.connections.output_connections();
+		// 	const current_connections = connections.filter((connection) => connection.output_index == index);
+		// 	const nodes: BaseEventNodeType[] = current_connections.map(
+		// 		(connection) => connection.node_dest
+		// 	) as BaseEventNodeType[];
+		// 	for (let node of nodes) {
+		// 		node.process_event(event_context);
+		// 	}
+		// }
 	}
 
-	_update_register() {
-		if (this.pv.active) {
-			this.scene.events_controller.register_event_node(this);
-		} else {
-			this.scene.events_controller.unregister_event_node(this);
-		}
-	}
 	static PARAM_CALLBACK_toggle_active(node: MouseEventNode) {
-		node._update_register();
+		node.dispatcher_registerer.update_register();
 	}
 }

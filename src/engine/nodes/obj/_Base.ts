@@ -22,11 +22,11 @@ interface Object3DWithNode extends Object3D {
 
 export enum ObjNodeRenderOrder {
 	MANAGER = 0,
-	FOG = 1,
+	// FOG = 1,
 	CAMERA = 2,
 	LIGHT = 3,
-	EVENT = 4,
-	MAT = 5,
+	// EVENT = 4,
+	// MAT = 5,
 }
 
 export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<

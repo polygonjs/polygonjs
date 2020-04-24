@@ -1,26 +1,15 @@
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
-// const THREE = {Group};
-
-// import {CoreTransform} from '../../../core/Transform';
-
+import {Mesh} from 'three/src/objects/Mesh';
 import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
-
-//import Layers from './Concerns/Layers'
-// import {Transformed} from './Concerns/Transformed';
-
-// sop map
 import {BaseSopNodeType} from '../sop/_Base';
-// import {PolyScene} from '../../scene/PolyScene';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
-
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 }
@@ -38,10 +27,12 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		return this._display_node_controller;
 	}
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-
+	create_object() {
+		return new Group();
+	}
 	private _sop_group = this._create_sop_group();
 	private _create_sop_group() {
-		return new Group();
+		return new Mesh();
 	}
 	get sop_group() {
 		return this._sop_group;
@@ -82,10 +73,6 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 		// this.io.inputs.set_count(0, 1);
 		// this.io.outputs.set_has_one_output();
-	}
-
-	create_object() {
-		return new Group();
 	}
 
 	//base_layers_included: -> false

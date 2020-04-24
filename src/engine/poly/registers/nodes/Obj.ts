@@ -7,6 +7,7 @@ import {HemisphereLightObjNode} from '../../../nodes/obj/HemisphereLight';
 import {PointLightObjNode} from '../../../nodes/obj/PointLight';
 import {SpotLightObjNode} from '../../../nodes/obj/SpotLight';
 
+import {AnimationsObjNode} from '../../../nodes/obj/Animations';
 import {EventsObjNode} from '../../../nodes/obj/Events';
 import {MaterialsObjNode} from '../../../nodes/obj/Materials';
 import {CopObjNode} from '../../../nodes/obj/Cop';
@@ -24,6 +25,7 @@ import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
 
 export interface ObjNodeChildrenMap {
 	ambient_light: AmbientLightObjNode;
+	animations: AnimationsObjNode;
 	area_light: AreaLightObjNode;
 	blend: BlendObjNode;
 	cop: CopObjNode;
@@ -52,6 +54,7 @@ export class ObjRegister {
 		poly.register_node(PointLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.register_node(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 
+		poly.register_node(AnimationsObjNode, CATEGORY_OBJ.MANAGER);
 		poly.register_node(EventsObjNode, CATEGORY_OBJ.MANAGER);
 		poly.register_node(MaterialsObjNode, CATEGORY_OBJ.MANAGER);
 		poly.register_node(CopObjNode, CATEGORY_OBJ.MANAGER);

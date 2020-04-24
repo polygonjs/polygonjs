@@ -27,18 +27,19 @@
 // import {CubeCamerasController} from './utils/CubeCamerasController';
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
-import {CoreGraph} from '../../core/graph/CoreGraph';
 import {CookController} from './utils/CookController';
+import {CoreGraph} from '../../core/graph/CoreGraph';
+import {CorePerformance} from '../../core/performance/CorePerformance';
 import {DispatchController} from './utils/DispatchController';
-import {SceneEventsController} from './utils/events/EventsController';
+import {ExpressionsController} from './utils/ExpressionsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
-import {ExpressionsController} from './utils/ExpressionsController';
 import {MissingReferencesController} from './utils/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
-import {CorePerformance} from '../../core/performance/CorePerformance';
-import {TimeController} from './utils/TimeController';
 import {PolySceneSerializer} from './utils/Serializer';
+// import {RivetObjNodesRegister} from './utils/RivetObjNodesRegister';
+import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
+import {TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {WebGLController} from './utils/WebGLController';
 
@@ -87,9 +88,9 @@ export class PolyScene {
 	get dispatch_controller() {
 		return (this._dispatch_controller = this._dispatch_controller || new DispatchController(this));
 	}
-	private _events_controller: SceneEventsController | undefined;
-	get events_controller() {
-		return (this._events_controller = this._events_controller || new SceneEventsController(this));
+	private _events_dispatcher: SceneEventsDispatcher | undefined;
+	get events_dispatcher() {
+		return (this._events_dispatcher = this._events_dispatcher || new SceneEventsDispatcher(this));
 	}
 
 	private _graph = new CoreGraph();
@@ -124,6 +125,10 @@ export class PolyScene {
 	get performance() {
 		return (this._performance = this._performance || new CorePerformance());
 	}
+	// protected _rivets_register: RivetObjNodesRegister | undefined;
+	// get rivets_register() {
+	// 	return (this._rivets_register = this._rivets_register || new RivetObjNodesRegister(this));
+	// }
 
 	//
 	//

@@ -1,3 +1,4 @@
+import {AnimRegister} from './Anim';
 import {CopRegister} from './Cop';
 import {EventRegister} from './Event';
 import {GlRegister} from './Gl';
@@ -10,6 +11,9 @@ import {Poly} from '../../../Poly';
 
 export class AllNodesRegister {
 	static async run(poly: Poly) {
+		// const {AnimRegister} = await import(/* webpackChunkName: "Anim" */ './Anim');
+		AnimRegister.run(poly);
+
 		// const {CopRegister} = await import(/* webpackChunkName: "Cop" */ './Cop');
 		CopRegister.run(poly);
 

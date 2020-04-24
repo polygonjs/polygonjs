@@ -4,6 +4,14 @@ TO EXPORT THE BUNDLED TYPES:
 - but be careful, as not all files are exported, since some have errors, such as nodes/gl/_Math_Arg2
 */
 
+// TODO: remove the 'export {}'
+// TODO: find all remaining import statement
+// TODO: check for still remaining imports that have been half removed
+// TODO: find remaining 'x: ParamType.FLOAT>;'
+// TODO: remove comments
+// TODO: check that all exports have a unique name
+// TODO: and overall double check that the syntax highligh looks ok at end of file
+
 import path from 'path';
 import fs from 'fs';
 
@@ -17,6 +25,8 @@ const NODE_MODULES = ['three', 'lodash'].concat(IGNORED_NODE_MODULES);
 const IGNORED_NODE_MODULE_PATHS = IGNORED_NODE_MODULES.map((name) => {
 	return path.resolve(__dirname, '../node_modules', name);
 });
+
+const DTS_IMPORT = /import\(".*"\)\./i;
 
 class Controller {
 	assembled_lines: string[] = [];
@@ -79,6 +89,7 @@ class FileTracker {
 					}
 				}
 			} else {
+				line = line.replace(DTS_IMPORT, '');
 				assembled_lines.push(line);
 			}
 		}
@@ -108,31 +119,36 @@ class FileTracker {
 	}
 }
 
+class THREEHandler {
+	static remove_import_lines(lines: string[]): string[] {
+		let within_import_statement: boolean = false;
+		let line: string;
+		const filtered_lines: string[] = [];
+		for (let i = 0; i < lines.length; i++) {
+			line = lines[i];
+			if (line.includes('import ')) {
+				within_import_statement = true;
+			}
+			if (!within_import_statement) {
+				filtered_lines.push(line);
+			}
+			if (line.includes(';')) {
+				within_import_statement = false;
+			}
+		}
+		return filtered_lines;
+	}
+}
+
+//
+//
+// START
+//
+//
 const controller = new Controller();
 controller.resolve_path(ENTRY, 0);
 const assembled_lines = controller.assembled_lines;
 let lines: string[] = [];
-
-// get lines from libraries
-
-function remove_import_lines(lines: string[]): string[] {
-	let within_import_statement: boolean = false;
-	let line: string;
-	const filtered_lines: string[] = [];
-	for (let i = 0; i < lines.length; i++) {
-		line = lines[i];
-		if (line.includes('import ')) {
-			within_import_statement = true;
-		}
-		if (!within_import_statement) {
-			filtered_lines.push(line);
-		}
-		if (line.includes(';')) {
-			within_import_statement = false;
-		}
-	}
-	return filtered_lines;
-}
 
 //
 //
@@ -148,7 +164,7 @@ for (let three_line_main of three_lines_main) {
 		const relative_path = relative_path_elements[relative_path_elements.length - 2];
 		const full_path = path.resolve(THREE_DTS_FULLPATH, '..', `${relative_path}.d.ts`);
 		const import_lines = fs.readFileSync(full_path, 'utf8').split('\n');
-		const filtered_lines = remove_import_lines(import_lines);
+		const filtered_lines = THREEHandler.remove_import_lines(import_lines);
 		for (let import_line of filtered_lines) {
 			three_lines.push(`	${import_line}`);
 		}

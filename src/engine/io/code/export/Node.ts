@@ -22,6 +22,7 @@ export class NodeCodeExporter {
 		this.add_children();
 		this.add_selection();
 
+		this.add_comment();
 		this.add_position({});
 		this.add_input_clonable_state();
 		this.add_bypass_flag();
@@ -131,6 +132,16 @@ export class NodeCodeExporter {
 				this._lines.push(line);
 			}
 		});
+	}
+	protected add_comment() {
+		if (this._node.parent) {
+			// if not root
+			let comment = this._node.ui_data.comment;
+			if (comment) {
+				comment = SceneCodeExporter.sanitize_string(comment);
+				this._lines.push(`${this.var_name()}.ui_data.set_comment('${comment}')`);
+			}
+		}
 	}
 	protected add_position(options: PositionData = {}) {
 		if (this._node.parent) {

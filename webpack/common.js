@@ -37,6 +37,9 @@ module.exports = (env = {}) => {
 		entry: {
 			'polygonjs-engine': './src/engine/index.ts',
 		},
+		node: {
+			fs: 'empty', // to attempt bundling ammo-typed without error in prod
+		},
 		plugins: plugins,
 		output: {
 			library: 'POLY',

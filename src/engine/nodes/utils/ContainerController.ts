@@ -74,7 +74,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 		}
 
 		if (!container) {
-			container = this.node.container_controller.container.clone();
+			container = this.node.container_controller.container; //.clone();
 		}
 		// removing the clone, as this seems to defeat the no cloning of inputs
 		// container = container || this._container

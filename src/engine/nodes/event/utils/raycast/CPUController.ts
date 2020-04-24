@@ -17,6 +17,9 @@ export class RaycastCPUController {
 	private _intersection_position: Number3 = [0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
 	process_event(context: EventContext<MouseEvent>) {
+		if (!(context.canvas && context.camera_node)) {
+			return;
+		}
 		if (context.event instanceof MouseEvent) {
 			this._mouse.x = (context.event.offsetX / context.canvas.offsetWidth) * 2 - 1;
 			this._mouse.y = -(context.event.offsetY / context.canvas.offsetHeight) * 2 + 1;

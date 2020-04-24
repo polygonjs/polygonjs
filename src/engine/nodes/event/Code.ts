@@ -3,11 +3,11 @@ import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoi
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {AsyncFunction} from '../../../core/AsyncFunction';
 const DEFAULT_FUNCTION_CODE = `
-import {BaseEventProcessor, EventContext} from 'polygonjs-engine'
-export class EventProcessor extends BaseEventProcessor {
+import {BaseCodeEventProcessor, EventContext} from 'polygonjs-engine'
+export class EventProcessor extends BaseCodeEventProcessor {
 	initialize_processor(){
 	}
-	process_mouse_event(event_context: EventContext){
+	process_mouse_event(event_context: EventContext<MouseEvent>){
 		this._set_mouse_from_event_and_canvas(event_context.event, event_context.canvas);
 		console.log(this.node.scene.time);
 		console.log("processing event", this.mouse.x, this.mouse.y);
@@ -27,7 +27,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster} from 'three/src/core/Raycaster';
 import * as THREE from 'three';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-export class BaseEventProcessor {
+export class BaseCodeEventProcessor {
 	// it looks like I still need to import raycaster and vector2 without the three namespace
 	// otherwise they are seen as 'any' in the editor
 	protected raycaster = new Raycaster();
@@ -55,9 +55,9 @@ export class BaseEventProcessor {
 }
 
 type EvaluatedFunction = (
-	base_event_processor_class: typeof BaseEventProcessor,
+	base_event_processor_class: typeof BaseCodeEventProcessor,
 	THREE: any
-) => typeof BaseEventProcessor | undefined;
+) => typeof BaseCodeEventProcessor | undefined;
 
 class CodeEventParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
@@ -72,7 +72,7 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 	params_config = ParamsConfig;
 
 	private _last_compiled_code: string | undefined;
-	private _processor: BaseEventProcessor | undefined;
+	private _processor: BaseCodeEventProcessor | undefined;
 
 	static type() {
 		return 'code';
@@ -106,11 +106,11 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 			console.log('function_body');
 			console.log(function_body);
 			const processor_creator_function: EvaluatedFunction = new AsyncFunction(
-				'BaseEventProcessor',
+				'BaseCodeEventProcessor',
 				'THREE',
 				function_body
 			);
-			const processor_class = processor_creator_function(BaseEventProcessor, THREE);
+			const processor_class = processor_creator_function(BaseCodeEventProcessor, THREE);
 			if (processor_class) {
 				this._processor = new processor_class(this);
 				this._last_compiled_code = this.pv.code_javascript;

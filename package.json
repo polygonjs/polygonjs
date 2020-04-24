@@ -51,7 +51,7 @@
 		"qunit": "^2.9.3",
 		"terser-webpack-plugin": "^2.3.5",
 		"ts-declaration-webpack-plugin": "^1.2.3",
-		"ts-loader": "^7.0.0",
+		"ts-loader": "^7.0.1",
 		"ts-shader-loader": "^1.0.6",
 		"tslib": "^1.11.1",
 		"typescript": "^3.8.3",

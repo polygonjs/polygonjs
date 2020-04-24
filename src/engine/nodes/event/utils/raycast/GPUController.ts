@@ -40,6 +40,10 @@ export class RaycastGPUController {
 	private _param_read: Number4 = [0, 0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
 	process_event(context: EventContext<MouseEvent>) {
+		if (!(context.canvas && context.event && context.camera_node)) {
+			return;
+		}
+
 		if (context.event instanceof MouseEvent) {
 			this._mouse.x = context.event.offsetX / context.canvas.offsetWidth;
 			this._mouse.y = 1 - context.event.offsetY / context.canvas.offsetHeight;

@@ -31,6 +31,22 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 		this.params.eval_all();
 	}
 	process_event(event_context: EventContext<Event>) {}
+
+	protected dispatch_event_to_output(output_name: string, event_context: EventContext<Event>) {
+		const index = this.io.outputs.get_output_index(output_name);
+		if (index >= 0) {
+			const connections = this.io.connections.output_connections();
+			const current_connections = connections.filter((connection) => connection.output_index == index);
+			const nodes: BaseEventNodeType[] = current_connections.map(
+				(connection) => connection.node_dest
+			) as BaseEventNodeType[];
+			for (let node of nodes) {
+				node.process_event(event_context);
+			}
+		} else {
+			console.warn(`requested output '${output_name}' does not exist on node '${this.full_path()}'`);
+		}
+	}
 }
 
 export type BaseEventNodeType = TypedEventNode<any>;

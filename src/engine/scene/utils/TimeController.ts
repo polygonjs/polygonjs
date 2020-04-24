@@ -1,12 +1,16 @@
 import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
+import {SceneEventType} from './events/SceneEventsController';
 
 type FrameRange = Number2;
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
+const PLAY_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
+const PAUSE_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
+const TIME_CHANGE_EVENT_CONTEXT = {event: new Event(SceneEventType.TIME_CHANGE)};
 
 export class TimeController {
 	protected self: PolyScene = (<unknown>this) as PolyScene;
@@ -59,7 +63,12 @@ export class TimeController {
 
 			if (update_frame) {
 				const new_frame = Math.floor(this._time * FPS);
-				this._frame = new_frame;
+				const bounded_frame = this._ensure_frame_within_bounds(new_frame);
+				if (new_frame != bounded_frame) {
+					this.set_frame(bounded_frame, true);
+				} else {
+					this._frame = new_frame;
+				}
 			}
 
 			// update time dependents
@@ -70,6 +79,9 @@ export class TimeController {
 			this.scene.cooker.block();
 			this.graph_node.set_successors_dirty();
 			this.scene.cooker.unblock();
+
+			// dispatch events after nodes have cooked
+			this.scene.events_dispatcher.process_event(TIME_CHANGE_EVENT_CONTEXT);
 		}
 	}
 
@@ -114,7 +126,9 @@ export class TimeController {
 	pause() {
 		if (this._playing == true) {
 			this._playing = false;
+			// TODO: try and unify the dispatch controller and events dispatcher
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+			this.scene.events_dispatcher.process_event(PAUSE_EVENT_CONTEXT);
 		}
 	}
 	play() {
@@ -122,6 +136,7 @@ export class TimeController {
 			this._playing = true;
 			this._prev_performance_now = performance.now();
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+			this.scene.events_dispatcher.process_event(PLAY_EVENT_CONTEXT);
 		}
 	}
 	toggle_play_pause() {
