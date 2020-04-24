@@ -4,7 +4,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Float32BufferAttribute, BufferAttribute} from 'three/src/core/BufferAttribute';
 class AttribCopySopParamsConfig extends NodeParamsConfig {
 	// class = ParamConfig.INTEGER(CoreConstant.ATTRIB_CLASS.VERTEX, {
 	// 	menu: {
@@ -17,6 +17,16 @@ class AttribCopySopParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	tnew_name = ParamConfig.BOOLEAN(0);
 	new_name = ParamConfig.STRING('', {visible_if: {tnew_name: 1}});
+
+	src_offset = ParamConfig.INTEGER(0, {
+		range: [0, 3],
+		range_locked: [true, true],
+	});
+	dest_offset = ParamConfig.INTEGER(0, {
+		range: [0, 3],
+		range_locked: [true, true],
+	});
+
 	// to_all_components = ParamConfig.BOOLEAN(1)
 	// src_component = ParamConfig.INTEGER(0, {
 	// 	range: [0, 2],
@@ -101,12 +111,60 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 			if (dest_points_count > src_points_count) {
 				this.states.error.set('not enough points in second input');
 			}
-			const src_array = src_attrib.array as number[];
-			const sub_array = src_array.slice(0, dest_points_count * size);
+
 			const dest_name = this.pv.tnew_name ? this.pv.new_name : attrib_name;
-			dest_geometry.setAttribute(dest_name, new Float32BufferAttribute(sub_array, size));
+			// let dest_array:number[]|undefined
+			let dest_attribute = dest_geometry.getAttribute(dest_name);
+			// if(dest_attribute){
+			// 	dest_array = dest_attribute.array as number[]
+			// }
+			if (dest_attribute) {
+				this._fill_dest_array(dest_attribute as BufferAttribute, src_attrib as BufferAttribute);
+				(dest_attribute as BufferAttribute).needsUpdate = true;
+			} else {
+				const src_array = src_attrib.array as number[];
+				const dest_array = src_array.slice(0, dest_points_count * size);
+				dest_geometry.setAttribute(dest_name, new Float32BufferAttribute(dest_array, size));
+			}
 		} else {
 			this.states.error.set(`attribute '${attrib_name}' does not exist on second input`);
+		}
+	}
+
+	private _fill_dest_array(dest_attribute: BufferAttribute, src_attribute: BufferAttribute) {
+		const dest_array = dest_attribute.array as number[];
+		const src_array = src_attribute.array as number[];
+		const dest_array_size = dest_array.length;
+		const dest_item_size = dest_attribute.itemSize;
+		const src_item_size = src_attribute.itemSize;
+		const src_offset = this.pv.src_offset;
+		const dest_offset = this.pv.dest_offset;
+		// if same itemSize, we copy item by item
+		if (dest_attribute.itemSize == src_attribute.itemSize) {
+			dest_attribute.copyArray(src_attribute.array);
+			for (let i = 0; i < dest_array_size; i++) {
+				dest_array[i] = src_array[i];
+			}
+		} else {
+			const points_count = dest_array.length / dest_item_size;
+			if (dest_item_size < src_item_size) {
+				// if dest attrib is smaller than src attrib (ie: vector -> to float)
+				// we copy only the selected items from src
+				for (let i = 0; i < points_count; i++) {
+					for (let j = 0; j < dest_item_size; j++) {
+						dest_array[i * dest_item_size + j + dest_offset] =
+							src_array[i * src_item_size + j + src_offset];
+					}
+				}
+			} else {
+				// if dest attrib is larger than src attrib (ie: float -> vector )
+				for (let i = 0; i < points_count; i++) {
+					for (let j = 0; j < src_item_size; j++) {
+						dest_array[i * dest_item_size + j + dest_offset] =
+							src_array[i * src_item_size + j + src_offset];
+					}
+				}
+			}
 		}
 	}
 

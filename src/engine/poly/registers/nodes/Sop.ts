@@ -65,7 +65,6 @@ import {SphereSopNode} from '../../../nodes/sop/Sphere';
 import {SplitSopNode} from '../../../nodes/sop/Split';
 import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
-import {TestAnimationSopNode} from '../../../nodes/sop/TestAnimation';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
@@ -135,7 +134,6 @@ export interface GeoNodeChildrenMap {
 	split: SplitSopNode;
 	subdivide: SubdivideSopNode;
 	switch: SwitchSopNode;
-	test_animation: TestAnimationSopNode;
 	text: TextSopNode;
 	torus: TorusSopNode;
 	torus_knot: TorusKnotSopNode;
@@ -209,7 +207,6 @@ export class SopRegister {
 		poly.register_node(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
-		poly.register_node(TestAnimationSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
