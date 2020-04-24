@@ -20,7 +20,7 @@ const ParamsConfig = new SceneEventParamsConfig();
 export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'scene_event';
+		return 'scene';
 	}
 	private dispatcher_registerer = new DispatcherRegisterer(this);
 	initialize_node() {

@@ -7,6 +7,7 @@ import {TrackAnimNode} from '../../../nodes/anim/Track';
 import {TransformAnimNode} from '../../../nodes/anim/Transform';
 
 export interface AnimNodeChildrenMap {
+	delete: DeleteAnimNode;
 	merge: MergeAnimNode;
 	null: NullAnimNode;
 	track: TrackAnimNode;

@@ -53,6 +53,12 @@ import './engine/params/utils/TimeDependent';
 QUnit.module('nodes utils');
 import './engine/nodes/utils/ChildrenContext';
 
+QUnit.module('anim');
+import './engine/nodes/anim/Track';
+import './engine/nodes/anim/Delete';
+import './engine/nodes/anim/Merge';
+import './engine/nodes/anim/Null';
+
 QUnit.module('cop');
 import './engine/nodes/cop/EnvMap';
 import './engine/nodes/cop/File';

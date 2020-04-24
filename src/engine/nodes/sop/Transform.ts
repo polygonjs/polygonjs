@@ -2,25 +2,30 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreTransform, ROTATION_ORDERS, RotationOrder} from '../../../core/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {Object3D} from 'three/src/core/Object3D';
+import {Matrix4} from 'three/src/math/Matrix4';
 
-enum TargetType {
+export enum TransformSopTargetType {
 	OBJECTS = 'objects',
 	GEOMETRIES = 'geometries',
 }
-const TARGET_TYPES: Array<TargetType> = [TargetType.GEOMETRIES, TargetType.OBJECTS];
+export const TRANSFORM_SOP_TARGET_TYPES: Array<TransformSopTargetType> = [
+	TransformSopTargetType.GEOMETRIES,
+	TransformSopTargetType.OBJECTS,
+];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Object3D} from 'three/src/core/Object3D';
-import {Matrix4} from 'three/src/math/Matrix4';
 class TransformSopParamConfig extends NodeParamsConfig {
-	apply_on = ParamConfig.INTEGER(TARGET_TYPES.indexOf(TargetType.GEOMETRIES), {
+	apply_on = ParamConfig.INTEGER(TRANSFORM_SOP_TARGET_TYPES.indexOf(TransformSopTargetType.GEOMETRIES), {
 		menu: {
-			entries: TARGET_TYPES.map((target_type, i) => {
+			entries: TRANSFORM_SOP_TARGET_TYPES.map((target_type, i) => {
 				return {name: target_type, value: i};
 			}),
 		},
 	});
-	group = ParamConfig.STRING('', {visible_if: {apply_on: TARGET_TYPES.indexOf(TargetType.GEOMETRIES)}});
+	group = ParamConfig.STRING('', {
+		visible_if: {apply_on: TRANSFORM_SOP_TARGET_TYPES.indexOf(TransformSopTargetType.GEOMETRIES)},
+	});
 
 	// transform
 	rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
@@ -67,12 +72,12 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 			ROTATION_ORDERS[this.pv.rotation_order]
 		);
 
-		switch (TARGET_TYPES[this.pv.apply_on]) {
-			case TargetType.GEOMETRIES: {
+		switch (TRANSFORM_SOP_TARGET_TYPES[this.pv.apply_on]) {
+			case TransformSopTargetType.GEOMETRIES: {
 				this._apply_matrix_to_geometries(objects, matrix);
 				break;
 			}
-			case TargetType.OBJECTS: {
+			case TransformSopTargetType.OBJECTS: {
 				this._apply_matrix_to_objects(objects, matrix);
 				break;
 			}

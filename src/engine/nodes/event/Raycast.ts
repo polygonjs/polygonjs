@@ -122,10 +122,11 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		// TODO: do not use GL connection Types here
 		this.io.inputs.set_named_input_connection_points([
 			new TypedNamedConnectionPoint('trigger', ConnectionPointType.BOOL),
+			new TypedNamedConnectionPoint('mouse', ConnectionPointType.BOOL),
 		]);
 		this.io.outputs.set_named_output_connection_points([
 			new TypedNamedConnectionPoint('hit', ConnectionPointType.BOOL),
-			new TypedNamedConnectionPoint('no_hit', ConnectionPointType.BOOL),
+			new TypedNamedConnectionPoint('miss', ConnectionPointType.BOOL),
 		]);
 	}
 

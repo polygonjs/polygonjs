@@ -9,11 +9,11 @@ const OUTPUT_NAME = 'event';
 class PassEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PassEventParamsConfig();
 
-export class PassEventNode extends TypedEventNode<PassEventParamsConfig> {
+export class AnyEventNode extends TypedEventNode<PassEventParamsConfig> {
 	params_config = ParamsConfig;
 
 	static type() {
-		return 'pass';
+		return 'any';
 	}
 	initialize_node() {
 		// TODO: do not use GL connection Types here

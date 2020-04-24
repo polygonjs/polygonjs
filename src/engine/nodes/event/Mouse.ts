@@ -4,23 +4,47 @@ import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../scene/utils/events/MouseEventsController';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {DispatcherRegisterer} from './utils/DispatcherRegisterer';
+
+const event_param_options: ParamOptions = {
+	visible_if: {active: 1},
+	callback: (node: BaseNodeType, param: BaseParamType) => {
+		MouseEventNode.PARAM_CALLBACK_update_register(node as MouseEventNode);
+	},
+};
+
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ParamOptions} from '../../params/utils/OptionsController';
 class MouseEventParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			MouseEventNode.PARAM_CALLBACK_toggle_active(node as MouseEventNode);
+			MouseEventNode.PARAM_CALLBACK_update_register(node as MouseEventNode);
 		},
 	});
+	sep = ParamConfig.SEPARATOR();
+	auxclick = ParamConfig.BOOLEAN(0, event_param_options);
+	click = ParamConfig.BOOLEAN(0, event_param_options);
+	contextmenu = ParamConfig.BOOLEAN(0, event_param_options);
+	dblclick = ParamConfig.BOOLEAN(0, event_param_options);
+	mousedown = ParamConfig.BOOLEAN(1, event_param_options);
+	mouseenter = ParamConfig.BOOLEAN(0, event_param_options);
+	mouseleave = ParamConfig.BOOLEAN(0, event_param_options);
+	mousemove = ParamConfig.BOOLEAN(1, event_param_options);
+	mouseover = ParamConfig.BOOLEAN(0, event_param_options);
+	mouseout = ParamConfig.BOOLEAN(0, event_param_options);
+	mouseup = ParamConfig.BOOLEAN(1, event_param_options);
+	pointerlockchange = ParamConfig.BOOLEAN(0, event_param_options);
+	pointerlockerror = ParamConfig.BOOLEAN(0, event_param_options);
+	select = ParamConfig.BOOLEAN(0, event_param_options);
+	wheel = ParamConfig.BOOLEAN(0, event_param_options);
 }
 const ParamsConfig = new MouseEventParamsConfig();
 
 export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mouse_event';
+		return 'mouse';
 	}
 	private dispatcher_registerer = new DispatcherRegisterer(this);
 	initialize_node() {
@@ -55,7 +79,7 @@ export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 		// }
 	}
 
-	static PARAM_CALLBACK_toggle_active(node: MouseEventNode) {
+	static PARAM_CALLBACK_update_register(node: MouseEventNode) {
 		node.dispatcher_registerer.update_register();
 	}
 }

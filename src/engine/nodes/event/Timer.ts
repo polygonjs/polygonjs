@@ -2,7 +2,7 @@ import {TypedEventNode} from './_Base';
 
 const INPUT_START_NAME = 'start';
 const INPUT_END_NAME = 'stop';
-const OUTPUT_NAME = 'on_completed';
+const OUTPUT_NAME = 'tick';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ConnectionPointType} from '../utils/connections/ConnectionPointType';

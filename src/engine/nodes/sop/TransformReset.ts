@@ -25,9 +25,11 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 		const core_group = input_contents[0];
 		const objects = core_group.objects();
 		for (let object of objects) {
-			object.position.set(0, 0, 0);
-			object.rotation.set(0, 0, 0);
-			object.scale.set(1, 1, 1);
+			// object.position.set(0, 0, 0);
+			// object.rotation.set(0, 0, 0);
+			// object.scale.set(1, 1, 1);
+			object.matrix.identity();
+			object.matrix.decompose(object.position, object.quaternion, object.scale);
 		}
 
 		this.set_core_group(core_group);

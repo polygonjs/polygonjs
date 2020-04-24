@@ -1,17 +1,17 @@
 import {BaseEventsController} from './_BaseEventsController';
-import {SceneEventNode} from '../../../nodes/event/SceneEvent';
+import {SceneEventNode} from '../../../nodes/event/Scene';
 
 export enum SceneEventType {
 	LOADED = 'scene_loaded',
 	PLAY = 'play',
 	PAUSE = 'pause',
-	TIME_CHANGE = 'time_change',
+	TICK = 'tick',
 }
 export const ACCEPTED_SCENE_EVENT_TYPES: SceneEventType[] = [
 	SceneEventType.LOADED,
 	SceneEventType.PLAY,
 	SceneEventType.PAUSE,
-	SceneEventType.TIME_CHANGE,
+	SceneEventType.TICK,
 ];
 
 export class SceneEventsController extends BaseEventsController<Event, SceneEventNode> {

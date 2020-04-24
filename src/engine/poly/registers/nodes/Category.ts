@@ -18,8 +18,10 @@ export const CATEGORY_COP = {
 	MISC: 'misc',
 };
 export const CATEGORY_EVENT = {
+	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
 	CAMERA: 'cameras',
+	INPUT: 'inputs',
 	MISC: 'misc',
 };
 export const CATEGORY_GL = {

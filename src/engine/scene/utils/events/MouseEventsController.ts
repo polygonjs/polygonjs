@@ -1,5 +1,5 @@
 import {BaseEventsController} from './_BaseEventsController';
-import {MouseEventNode} from '../../../nodes/event/MouseEvent';
+import {MouseEventNode} from '../../../nodes/event/Mouse';
 
 // https://developer.mozilla.org/en-US/docs/Web/Events
 enum MouseEventType {

@@ -1,7 +1,7 @@
 import {PolyScene} from '../../PolyScene';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
-import {MouseEventNode} from '../../../nodes/event/MouseEvent';
-import {SceneEventNode} from '../../../nodes/event/SceneEvent';
+import {MouseEventNode} from '../../../nodes/event/Mouse';
+import {SceneEventNode} from '../../../nodes/event/Scene';
 import {MouseEventsController} from './MouseEventsController';
 import {SceneEventsController} from './SceneEventsController';
 import {BaseEventsController, EventContext} from './_BaseEventsController';

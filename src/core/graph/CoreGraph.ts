@@ -1,19 +1,8 @@
 /// <reference path="./dagre.d.ts" />
 import {Graph, alg} from '@dagrejs/graphlib';
-// import lodash_uniq from 'lodash/uniq';
-// import lodash_flatten from 'lodash/flatten';
 import {PolyScene} from '../../engine/scene/PolyScene';
-// import {NodeSimple} from './NodeSimple'
-// import {GraphNode} from './concerns/GraphNode'
-// import {SceneNodeDirtyable} from './SceneNodeDirtyable';
 
-// class DummyClass {}
-// class GraphNodeDummy extends Dirtyable(DummyClass) {}
-
-// TODO: typescript, using ids with a specific type (https://basarat.gitbook.io/typescript/main-1/nominaltyping)
-// export interface CoreGraphNodeId extends String {
-// 	// _CoreGraphNodeIdBrand: string;
-// }
+// TODO: try using ids with a specific type (https://basarat.gitbook.io/typescript/main-1/nominaltyping)
 export type CoreGraphNodeId = string;
 import {CoreGraphNode} from './CoreGraphNode';
 
@@ -61,20 +50,8 @@ export class CoreGraph {
 			}
 		}
 		return nodes;
-		// if (ids) {
-		// 	let node: any;
-		// 	return ids.map((id) => {
-		// 		if ((node = this.node_from_id(id)) != null) {
-		// 			return node;
-		// 		} else {
-		// 			return console.warn(`could not find node with id ${id}`);
-		// 		}
-		// 	});
-		// } else {
-		// 	return [];
-		// }
 	}
-	// TODO: typescript: this should return CoreGraphNodeId|null
+	// TODO: this should return CoreGraphNodeId|null
 	node_from_id(id: string): CoreGraphNode {
 		return this._graph.node(id);
 	}
@@ -86,7 +63,6 @@ export class CoreGraph {
 		if (this._graph.hasNode(src_id) && this._graph.hasNode(dest_id)) {
 			this._graph.setEdge(src_id, dest_id);
 
-			// const scene_auto_updating = this.scene().auto_updating();
 			const scene_loading = this._scene ? this._scene.loading_controller.is_loading : true;
 			const check_if_graph_has_cycle = !scene_loading;
 			let graph_has_cycle = false;
@@ -129,24 +105,6 @@ export class CoreGraph {
 			this.disconnect(node, successor);
 		}
 	}
-	// disconnect_predecessors(node){
-	// 	const node_id = node.graph_node_id;
-	// 	const predecessor_ids = this._graph.predecessors(node_id);
-	// 	if( predecessor_ids ){
-	// 		for(let predecessor_id of predecessor_ids){
-	// 			this._graph.removeEdge(predecessor_id, node_id);
-	// 		}
-	// 	}
-	// }
-	// disconnect_successors(node){
-	// 	const node_id = node.graph_node_id;
-	// 	const successor_ids = this._graph.successors(node_id);
-	// 	if (successor_ids) {
-	// 		for(let successor_id of successor_ids){
-	// 			this._graph.removeEdge(node_id, successor_id);
-	// 		}
-	// 	}
-	// }
 
 	predecessor_ids(id: CoreGraphNodeId) {
 		return this._graph.predecessors(id) || [];

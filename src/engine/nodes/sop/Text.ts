@@ -13,14 +13,11 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
-
 import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-
-var opentype = require('opentype.js');
-
 import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
 
+var opentype = require('opentype.js');
 const DEFAULT_URL = '/fonts/droid_sans_regular.typeface.json';
 
 declare global {
@@ -28,12 +25,6 @@ declare global {
 		opentype: any;
 	}
 }
-
-// const DEFAULT_PARAMS = {
-// 	size: 1,
-// 	height: 0.1,
-// 	curveSegments: 1
-// };
 
 export enum TEXT_TYPE {
 	MESH = 'mesh',
@@ -188,15 +179,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private async _create_geometry_from_type_stroke(font: Font) {
 		const shapes = this.shapes_from_font(font);
 		if (shapes) {
-			// const color = new Color( 0xffffff );
 			this._svg_loader = this._svg_loader || (await this._load_svg_loader());
 			// TODO: typescript: correct definition for last 3 optional args
 			var style = this._svg_loader.getStrokeStyle(this.pv.stroke_width, 'white', 'miter', 'butt', 4);
 			const geometries = [];
-
-			// const positions = [];
-			// const indices = [];
-			// let current_index = 0;
 
 			for (let i = 0; i < shapes.length; i++) {
 				const shape = shapes[i];
@@ -248,18 +234,6 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private displayed_text(): string {
 		return this.pv.text || '';
 	}
-
-	// _create_shape(font){
-	// 	const shapes = font.generateShapes( this.displayed_text(), 100 );
-	// 	var geometry = new ShapeBufferGeometry( shapes );
-	// 	return geometry
-	// 	// geometry.computeBoundingBox();
-	// 	// xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-	// 	// geometry.translate( xMid, 0, 0 );
-	// 	// make shape ( N.B. edge view not visible )
-	// 	// text = new Mesh( geometry, matLite );
-	// 	// text.position.z = - 150;
-	// }
 
 	private _load_url(url: string) {
 		if (url === '') {
@@ -316,17 +290,6 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		});
 	}
 
-	// private _default_font_parameters(options){
-	// 	if (options == null) { options = {}; }
-	// 	const default_options = lodash_clone(DEFAULT_PARAMS);
-	// 	if (options['font'] == null) { options['font'] = this.font(); }
-
-	// 	for(let key of Object.keys(options)){
-	// 		default_options[key] = options[key];
-	// 	}
-
-	// 	return default_options;
-	// }
 	private async _load_ttf_loader(): Promise<TTFLoader> {
 		const {TTFLoader} = await import(`../../../../modules/three/examples/jsm/loaders/TTFLoader`);
 		const loader_constructor = (<unknown>TTFLoader) as typeof TTFLoader;

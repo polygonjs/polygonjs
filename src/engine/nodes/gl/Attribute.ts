@@ -134,7 +134,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	}
 	// }
 	get is_importing(): boolean {
-		return this.io.outputs.used_output_names().length > 0; // TODO: typescript - ensure that we can check that the connected outputs are part of the nodes retrived by the node traverser
+		return this.io.outputs.used_output_names().length > 0; // TODO: ensure that we can check that the connected outputs are part of the nodes retrived by the node traverser
 	}
 	get is_exporting(): boolean {
 		if (this.pv.export_when_connected) {

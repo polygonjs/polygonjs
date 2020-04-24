@@ -11,9 +11,9 @@ import {NodeContext} from '../../poly/NodeContext';
 import {TransformAnimNode} from '../anim/Transform';
 import {AnimationsObjNode} from '../obj/Animations';
 
-const OUTPUT_NAME = 'on_completed';
+const OUTPUT_NAME = 'done';
 
-class AnimationTransformEventParamsConfig extends NodeParamsConfig {
+class AnimationMultiCacheEventParamsConfig extends NodeParamsConfig {
 	animation_network = ParamConfig.OPERATOR_PATH('/ANIM', {
 		node_selection: {
 			context: NodeContext.OBJ,
@@ -23,13 +23,13 @@ class AnimationTransformEventParamsConfig extends NodeParamsConfig {
 	});
 	cache = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			AnimationTransformEventNode.PARAM_CALLBACK_cache(node as AnimationTransformEventNode);
+			AnimationMultiCacheEventNode.PARAM_CALLBACK_cache(node as AnimationMultiCacheEventNode);
 		},
 	});
 }
-const ParamsConfig = new AnimationTransformEventParamsConfig();
+const ParamsConfig = new AnimationMultiCacheEventParamsConfig();
 
-export class AnimationTransformEventNode extends TypedEventNode<AnimationTransformEventParamsConfig> {
+export class AnimationMultiCacheEventNode extends TypedEventNode<AnimationMultiCacheEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'animation_transform';
@@ -48,7 +48,7 @@ export class AnimationTransformEventNode extends TypedEventNode<AnimationTransfo
 		this.cache();
 	}
 
-	static PARAM_CALLBACK_cache(node: AnimationTransformEventNode) {
+	static PARAM_CALLBACK_cache(node: AnimationMultiCacheEventNode) {
 		node.cache();
 	}
 	private async cache() {

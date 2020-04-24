@@ -45,9 +45,12 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 		for (let i = 0; i < target_objects.length; i++) {
 			target_object = target_objects[i];
 			src_object = src_objects[i];
-			target_object.position.copy(src_object.position);
-			target_object.quaternion.copy(src_object.quaternion);
-			target_object.scale.copy(src_object.scale);
+			// target_object.position.copy(src_object.position);
+			// target_object.quaternion.copy(src_object.quaternion);
+			// target_object.scale.copy(src_object.scale);
+			src_object.updateMatrix();
+			target_object.matrix.copy(src_object.matrix);
+			target_object.matrix.decompose(target_object.position, target_object.quaternion, target_object.scale);
 		}
 
 		this.set_objects(target_objects);

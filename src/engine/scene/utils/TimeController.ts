@@ -10,7 +10,7 @@ type FrameRange = Number2;
 const FPS = 60.0;
 const PLAY_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
 const PAUSE_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
-const TIME_CHANGE_EVENT_CONTEXT = {event: new Event(SceneEventType.TIME_CHANGE)};
+const TIME_CHANGE_EVENT_CONTEXT = {event: new Event(SceneEventType.TICK)};
 
 export class TimeController {
 	protected self: PolyScene = (<unknown>this) as PolyScene;
