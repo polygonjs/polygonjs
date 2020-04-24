@@ -3,55 +3,56 @@ import {BaseNodeType} from '../../engine/nodes/_Base';
 export interface PerformancePrintObject {
 	full_path: string;
 	cooks_count: number;
-	cook_time_total: number;
+	total_cook_time: number;
 	cook_time_per_iteration: number;
-	cook_time_total_with_inputs: number;
-	cook_time_total_with_inputs_per_iteration: number;
-	cook_time_total_params: number;
-	cook_time_total_params_per_iteration: number;
+	// cook_time_total_with_inputs: number;
+	// cook_time_total_with_inputs_per_iteration: number;
+	// cook_time_total_params: number;
+	params_time_per_iteration: number;
 }
 
+import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 export class PerformanceNode {
 	_cooks_count: number = 0;
-	_cook_time_total: number = 0;
-	_cook_time_total_with_inputs: number = 0;
-	_cook_time_total_params: number = 0;
+	_total_cook_time: number = 0;
+	_total_inputs_time: number = 0;
+	_total_params_time: number = 0;
 	constructor(private _node: BaseNodeType) {}
 
-	update_cook_data(): void {
+	update_cook_data(performance_data: NodePerformanceData): void {
 		this._cooks_count += 1;
-		this._cook_time_total += this._node.cook_controller.cook_time;
-		this._cook_time_total_with_inputs += this._node.cook_controller.cook_time_with_inputs;
-		this._cook_time_total_params += this._node.cook_controller.cook_time_params;
+		this._total_cook_time += performance_data.cook_time;
+		this._total_inputs_time += performance_data.inputs_time;
+		this._total_params_time += performance_data.params_time;
 	}
 
-	get cook_time_total(): number {
-		return this._cook_time_total;
+	get total_cook_time(): number {
+		return this._total_cook_time;
 	}
 	get cook_time_per_iteration(): number {
 		if (this._cooks_count > 0) {
-			return this._cook_time_total / this._cooks_count;
+			return this._total_cook_time / this._cooks_count;
 		} else {
 			return 0;
 		}
 	}
-	get cook_time_total_with_inputs(): number {
-		return this._cook_time_total_with_inputs;
+	get total_inputs_time(): number {
+		return this._total_inputs_time;
 	}
-	get cook_time_total_with_inputs_per_iteration(): number {
+	get inputs_time_per_iteration(): number {
 		if (this._cooks_count > 0) {
-			return this._cook_time_total_with_inputs / this._cooks_count;
+			return this._total_inputs_time / this._cooks_count;
 		} else {
 			return 0;
 		}
 	}
 
-	get cook_time_total_params(): number {
-		return this._cook_time_total_params;
+	get total_params_time(): number {
+		return this._total_params_time;
 	}
-	get cook_time_total_params_per_iteration(): number {
+	get params_time_per_iteration(): number {
 		if (this._cooks_count > 0) {
-			return this._cook_time_total_params / this._cooks_count;
+			return this._total_params_time / this._cooks_count;
 		} else {
 			return 0;
 		}
@@ -65,12 +66,12 @@ export class PerformanceNode {
 		return {
 			full_path: this._node.full_path(),
 			cooks_count: this.cooks_count,
-			cook_time_total: this.cook_time_total,
+			total_cook_time: this.total_cook_time,
 			cook_time_per_iteration: this.cook_time_per_iteration,
-			cook_time_total_with_inputs: this.cook_time_total_with_inputs,
-			cook_time_total_with_inputs_per_iteration: this.cook_time_total_with_inputs_per_iteration,
-			cook_time_total_params: this.cook_time_total_params,
-			cook_time_total_params_per_iteration: this.cook_time_total_params_per_iteration,
+			// cook_time_total_with_inputs: this.cook_time_total_with_inputs,
+			// cook_time_total_with_inputs_per_iteration: this.cook_time_total_with_inputs_per_iteration,
+			// cook_time_total_params: this.cook_time_total_params,
+			params_time_per_iteration: this.params_time_per_iteration,
 		};
 	}
 }

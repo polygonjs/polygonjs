@@ -35,7 +35,7 @@ import {HierarchyParentController} from './utils/hierarchy/ParentController';
 import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
-import {CookController} from './utils/CookController';
+import {NodeCookController} from './utils/CookController';
 import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
@@ -124,7 +124,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	private _states: StatesController | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
-	private _cook_controller: CookController | undefined;
+	private _cook_controller: NodeCookController | undefined;
 	public readonly flags: FlagsController | undefined;
 	protected _display_node_controller: DisplayNodeController | undefined;
 	get display_node_controller() {
@@ -183,8 +183,8 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	// get container_controller(): TypedContainerController<T> {
 	// 	return (this._container_controller = this._container_controller || new TypedContainerController<T>(this));
 	// }
-	get cook_controller(): CookController {
-		return (this._cook_controller = this._cook_controller || new CookController(this));
+	get cook_controller(): NodeCookController {
+		return (this._cook_controller = this._cook_controller || new NodeCookController(this));
 	}
 	get io(): IOController<NT> {
 		return (this._io = this._io || new IOController<NT>((<unknown>this) as NT));

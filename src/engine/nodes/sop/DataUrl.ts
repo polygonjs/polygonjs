@@ -6,6 +6,7 @@ import {BaseNodeType} from '../_Base';
 import {CsvLoader} from '../../../core/loader/geometry/Csv';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {CoreLoaderUtils} from '../../../core/loader/Utils';
 
 export enum DataType {
 	JSON = 'json',
@@ -114,7 +115,8 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	async _load_csv() {
 		const attrib_names = this.pv.read_attrib_names_from_file ? undefined : this.pv.attrib_names.split(' ');
 		const loader = new CsvLoader(attrib_names);
-		const geometry = await loader.load(this.pv.url);
+		const url = CoreLoaderUtils.append_timestamp_to_url(this.pv.url);
+		const geometry = await loader.load(url);
 		if (geometry) {
 			this.set_geometry(geometry, ObjectType.POINTS);
 		} else {

@@ -2,6 +2,7 @@ import lodash_uniq from 'lodash/uniq';
 import lodash_clone from 'lodash/clone';
 import lodash_sortBy from 'lodash/sortBy';
 import {PerformanceNode} from './PerformanceNode';
+import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 
 export class CorePerformance {
@@ -51,12 +52,12 @@ export class CorePerformance {
 		return this._started;
 	}
 
-	record_node_cook_data(node: BaseNodeType) {
+	record_node_cook_data(node: BaseNodeType, performance_data: NodePerformanceData) {
 		const id = node.graph_node_id;
 		if (this._nodes_cook_data[id] == null) {
 			this._nodes_cook_data[id] = new PerformanceNode(node);
 		}
-		this._nodes_cook_data[id].update_cook_data();
+		this._nodes_cook_data[id].update_cook_data(performance_data);
 	}
 
 	record(name: string) {
@@ -85,14 +86,14 @@ export class CorePerformance {
 
 	print_node_cook_data() {
 		let performance_nodes = Object.values(this._nodes_cook_data);
-		performance_nodes = lodash_sortBy(performance_nodes, (performance_node) => -performance_node.cook_time_total);
+		performance_nodes = lodash_sortBy(performance_nodes, (performance_node) => performance_node.total_cook_time);
 
 		const print_objects = performance_nodes.map((performance_node) => performance_node.print_object());
 
 		console.log('--------------- NODES COOK TIME -----------');
 
 		const table_entries = [];
-		const sorted_print_objects = lodash_sortBy(print_objects, (print_object) => -print_object['cook_time_total']);
+		const sorted_print_objects = lodash_sortBy(print_objects, (print_object) => -print_object.total_cook_time);
 		for (let print_object of sorted_print_objects) {
 			table_entries.push(print_object);
 		}

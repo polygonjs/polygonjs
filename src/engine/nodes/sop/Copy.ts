@@ -34,7 +34,6 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private _attribute_names_to_copy: string[] = [];
-	// private _group: Group|undefined;
 	private _objects: Object3D[] = [];
 	private _stamp_node!: CopyStamp;
 
@@ -46,10 +45,6 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.io.inputs.set_count(1, 2);
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
 	}
-
-	// async evaluate_inputs_and_params() {
-	// 	await this.eval_all_params()
-	// }
 
 	async cook() {
 		let core_group0;
