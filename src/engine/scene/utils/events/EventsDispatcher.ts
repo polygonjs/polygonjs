@@ -4,50 +4,84 @@ import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {MouseEventsController} from './MouseEventsController';
 import {SceneEventsController} from './SceneEventsController';
-import {BaseEventsController, EventContext} from './_BaseEventsController';
+import {BaseSceneEventsController, BaseSceneEventsControllerClass} from './_BaseEventsController';
+import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
+import {KeyboardEventsController} from './KeyboardEventsController';
+import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 
 export class SceneEventsDispatcher {
-	private _mouse_events_controller: BaseEventsController<MouseEvent, MouseEventNode> = new MouseEventsController();
-	private _scene_events_controller: BaseEventsController<Event, SceneEventNode> = new SceneEventsController();
-	private _controllers: BaseEventsController<Event, BaseEventNodeType>[] = [
-		this._mouse_events_controller,
-		this._scene_events_controller,
-	];
-	constructor(scene: PolyScene) {}
+	private _keyboard_events_controller: KeyboardEventsController | undefined;
+	private _mouse_events_controller: MouseEventsController | undefined;
+	private _scene_events_controller: SceneEventsController | undefined;
+	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
+	constructor(public scene: PolyScene) {}
 
-	register_event_node(node: BaseEventNodeType) {
-		const controller = this._get_controller_for_node(node);
+	register_event_node(node: BaseInputEventNodeType) {
+		const controller = this._find_or_create_controller_for_node(node);
 		if (controller) {
 			controller.register_node(node);
 		}
 	}
-	unregister_event_node(node: BaseEventNodeType) {
-		const controller = this._get_controller_for_node(node);
+	unregister_event_node(node: BaseInputEventNodeType) {
+		const controller = this._find_or_create_controller_for_node(node);
 		if (controller) {
 			controller.unregister_node(node);
 		}
 	}
-
-	process_event(event_content: EventContext<Event>) {
-		if (!event_content.event) {
-			return;
+	update_viewer_event_listeners(node: BaseInputEventNodeType) {
+		const controller = this._find_or_create_controller_for_node(node);
+		if (controller) {
+			controller.update_viewer_event_listeners();
 		}
+	}
+	traverse_controllers(callback: (controller: BaseSceneEventsController<Event, BaseInputEventNodeType>) => void) {
 		for (let controller of this._controllers) {
-			if (controller.accepts_event(event_content.event)) {
-				controller.process(event_content);
-				return;
-			}
+			callback(controller);
 		}
 	}
 
-	private _get_controller_for_node<T extends BaseEventNodeType>(
+	// process_event(event_content: EventContext<Event>) {
+	// 	if (!event_content.event) {
+	// 		return;
+	// 	}
+	// 	for (let controller of this._controllers) {
+	// 		if (controller.accepts_event(event_content.event)) {
+	// 			controller.process_event(event_content);
+	// 			return;
+	// 		}
+	// 	}
+	// }
+
+	private _find_or_create_controller_for_node<T extends BaseEventNodeType>(
 		node: T
-	): BaseEventsController<Event, BaseEventNodeType> | undefined {
+	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
 		switch (node.type) {
+			case KeyboardEventNode.type():
+				return this.keyboard_events_controller;
 			case MouseEventNode.type():
-				return this._mouse_events_controller;
+				return this.mouse_events_controller;
 			case SceneEventNode.type():
-				return this._scene_events_controller;
+				return this.scene_events_controller;
 		}
+	}
+
+	get keyboard_events_controller() {
+		return (this._keyboard_events_controller =
+			this._keyboard_events_controller || this._create_controller(KeyboardEventsController));
+	}
+	get mouse_events_controller() {
+		return (this._mouse_events_controller =
+			this._mouse_events_controller || this._create_controller(MouseEventsController));
+	}
+	get scene_events_controller() {
+		return (this._scene_events_controller =
+			this._scene_events_controller || this._create_controller(SceneEventsController));
+	}
+	private _create_controller<T extends BaseSceneEventsControllerClass>(event_constructor: Constructor<T>): T {
+		const controller = new event_constructor(this);
+		if (!this._controllers.includes(controller)) {
+			this._controllers.push(controller);
+		}
+		return controller;
 	}
 }

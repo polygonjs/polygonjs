@@ -39,8 +39,8 @@ export class RaycastGPUController {
 	private _read = new Float32Array(4);
 	private _param_read: Number4 = [0, 0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
-	process_event(context: EventContext<MouseEvent>) {
-		if (!(context.canvas && context.event && context.camera_node)) {
+	update_mouse(context: EventContext<MouseEvent>) {
+		if (!(context.canvas && context.event)) {
 			return;
 		}
 
@@ -50,11 +50,16 @@ export class RaycastGPUController {
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
 		}
+	}
+
+	process_event(context: EventContext<MouseEvent>) {
+		if (!(context.canvas && context.camera_node)) {
+			return;
+		}
+
 		const camera_node = context.camera_node;
 		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).render_controller;
-		// TODO: when triggered on mousemove, this can actually be run more often that the renderer.
-		// So I should instead try and give a hook to the renderer_controller, and get the response here
-		// to then modify the buffer
+
 		if (renderer_controller) {
 			const canvas = context.canvas;
 			this._render_target =
@@ -96,6 +101,12 @@ export class RaycastGPUController {
 			this._param_read[2] = this._read[2];
 			this._param_read[3] = this._read[3];
 			this._node.p.pixel_value.set(this._param_read);
+
+			if (this._node.pv.pixel_value.x > this._node.pv.hit_threshold) {
+				this._node.trigger_hit();
+			} else {
+				this._node.trigger_miss();
+			}
 		}
 	}
 

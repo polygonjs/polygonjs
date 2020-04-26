@@ -1,49 +1,36 @@
-import {TypedEventNode} from './_Base';
 import {ACCEPTED_SCENE_EVENT_TYPES} from '../../scene/utils/events/SceneEventsController';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {DispatcherRegisterer} from './utils/DispatcherRegisterer';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 class SceneEventParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			SceneEventNode.PARAM_CALLBACK_toggle_active(node as SceneEventNode);
+			SceneEventNode.PARAM_CALLBACK_update_register(node as SceneEventNode);
 		},
 	});
+	sep = ParamConfig.SEPARATOR(null, {visible_if: {active: true}});
+	scene_loaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	play = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	pause = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	tick = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 }
 const ParamsConfig = new SceneEventParamsConfig();
 
-export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
+export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'scene';
 	}
-	private dispatcher_registerer = new DispatcherRegisterer(this);
+	protected accepted_event_types() {
+		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
+	}
 	initialize_node() {
-		// TODO: do not use GL connection Types here
 		this.io.outputs.set_named_output_connection_points(
 			ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.BASE);
 			})
 		);
-
-		this.dispatcher_registerer.initialize();
-	}
-
-	process_event(event_context: EventContext<MouseEvent>) {
-		if (!this.pv.active) {
-			return;
-		}
-		if (!event_context.event) {
-			return;
-		}
-		this.dispatch_event_to_output(event_context.event.type, event_context);
-	}
-
-	static PARAM_CALLBACK_toggle_active(node: SceneEventNode) {
-		node.dispatcher_registerer.update_register();
 	}
 }

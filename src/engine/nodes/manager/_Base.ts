@@ -5,9 +5,6 @@ export class TypedBaseManagerNode<K extends NodeParamsConfig> extends TypedNode<
 	static node_context(): NodeContext {
 		return NodeContext.MANAGER;
 	}
-	// node_sibbling(name: string): BaseManagerNodeType | null {
-	// 	return super.node_sibbling(name) as BaseManagerNodeType | null;
-	// }
 }
 
 export type BaseManagerNodeType = TypedBaseManagerNode<any>;

@@ -87,9 +87,6 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 		// this._sop_loaded = false; // TODO: typescript, this should be moved to GeoObjNode
 	}
-	// node_sibbling(name: string): BaseObjNodeType | null {
-	// 	return super.node_sibbling(name) as BaseObjNodeType | null;
-	// }
 
 	// this.add_param 'toggle', 'display', 1,
 	// 	callback: this.post_state_display_flag.bind(this)

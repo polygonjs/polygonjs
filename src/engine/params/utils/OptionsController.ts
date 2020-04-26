@@ -7,6 +7,8 @@ import {ParamType} from '../../poly/ParamType';
 import {ParamEvent} from '../../poly/ParamEvent';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import lodash_isArray from 'lodash/isArray';
+import lodash_flatten from 'lodash/flatten';
 
 const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
 const CALLBACK_OPTION = 'callback';
@@ -62,7 +64,7 @@ interface BaseParamOptions {
 	hidden?: boolean;
 	show_label?: boolean;
 	field?: boolean;
-	visible_if?: VisibleIfParamOptions;
+	visible_if?: VisibleIfParamOptions | VisibleIfParamOptions[];
 }
 interface MenuParamOptions {
 	menu?: {
@@ -519,7 +521,16 @@ export class OptionsController {
 		return VISIBLE_IF_OPTION in this._options;
 	}
 	visibility_predecessors() {
-		const predecessor_names = Object.keys(this._options[VISIBLE_IF_OPTION] || {});
+		const visibility_options = this._options[VISIBLE_IF_OPTION];
+		if (!visibility_options) {
+			return [];
+		}
+		let predecessor_names: string[] = [];
+		if (lodash_isArray(visibility_options)) {
+			predecessor_names = lodash_flatten(visibility_options.map((options) => Object.keys(options)));
+		} else {
+			predecessor_names = Object.keys(visibility_options);
+		}
 		const node = this.param.node;
 		return lodash_compact(
 			predecessor_names.map((name) => {
@@ -565,15 +576,21 @@ export class OptionsController {
 		if (options) {
 			const params = this.visibility_predecessors();
 			const promises = params.map((p) => p.compute());
-			this._programatic_visible_state = true;
+			this._programatic_visible_state = false;
 			await Promise.all(promises);
-			for (let param of params) {
-				const expected_val = options[param.name];
-				const val = param.value;
-				if (expected_val != val) {
-					this._programatic_visible_state = false;
+
+			if (lodash_isArray(options)) {
+				for (let options_set of options) {
+					const satisfied_values = params.filter((param) => param.value == options_set[param.name]);
+					if (satisfied_values.length == params.length) {
+						this._programatic_visible_state = true;
+					}
 				}
+			} else {
+				const satisfied_values = params.filter((param) => param.value == options[param.name]);
+				this._programatic_visible_state = satisfied_values.length == params.length;
 			}
+
 			this.param.emit(ParamEvent.VISIBLE_UPDATED);
 		}
 	}

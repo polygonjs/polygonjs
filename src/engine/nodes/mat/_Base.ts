@@ -24,9 +24,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 			this._cook_main_without_inputs_when_dirty_bound
 		);
 	}
-	// node_sibbling(name: string): BaseMatNodeType | null {
-	// 	return super.node_sibbling(name) as BaseMatNodeType | null;
-	// }
+
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
 		await this.cook_controller.cook_main_without_inputs();

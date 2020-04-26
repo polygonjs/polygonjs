@@ -8,6 +8,8 @@ export class CameraMapControlsEventNode extends CameraOrbitControlsEventNode {
 	}
 
 	async create_controls_instance(camera: Camera, element: HTMLElement) {
-		return new MapControls(camera, element);
+		const controls = new MapControls(camera, element);
+		this._bind_listeners_to_controls_instance(controls);
+		return controls;
 	}
 }

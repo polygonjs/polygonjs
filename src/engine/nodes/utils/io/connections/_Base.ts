@@ -30,6 +30,9 @@ export class BaseConnectionPoint {
 	get type() {
 		return this._type;
 	}
+	are_types_matched(src_type: string, dest_type: string): boolean {
+		return true;
+	}
 	// get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 	// 	return ConnectionPointTypeToParamTypeMap[this._type];
 	// }

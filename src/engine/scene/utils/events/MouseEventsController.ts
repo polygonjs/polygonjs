@@ -1,4 +1,4 @@
-import {BaseEventsController} from './_BaseEventsController';
+import {BaseSceneEventsController} from './_BaseEventsController';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
 
 // https://developer.mozilla.org/en-US/docs/Web/Events
@@ -37,8 +37,15 @@ export const ACCEPTED_MOUSE_EVENT_TYPES: MouseEventType[] = [
 	MouseEventType.wheel,
 ];
 
-export class MouseEventsController extends BaseEventsController<MouseEvent, MouseEventNode> {
-	accepts_event(event: MouseEvent) {
-		return ACCEPTED_MOUSE_EVENT_TYPES.includes(event.type as MouseEventType);
+export class MouseEventsController extends BaseSceneEventsController<MouseEvent, MouseEventNode> {
+	protected _require_canvas_event_listeners: boolean = true;
+	type() {
+		return 'mouse';
 	}
+	accepted_event_types() {
+		return ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`);
+	}
+	// accepts_event(event: MouseEvent) {
+	// 	return ACCEPTED_MOUSE_EVENT_TYPES.includes(event.type as MouseEventType);
+	// }
 }

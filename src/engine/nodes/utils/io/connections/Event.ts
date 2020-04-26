@@ -38,23 +38,32 @@ export interface EventConnectionPointData<T extends EventConnectionPointType> {
 }
 
 import {BaseConnectionPoint} from './_Base';
+import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 export class EventConnectionPoint<T extends EventConnectionPointType> extends BaseConnectionPoint {
 	protected _json: EventConnectionPointData<T> | undefined;
 
 	constructor(
 		protected _name: string,
-		protected _type: T // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
+		protected _type: T, // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
+		protected _event_listener?: (event_context: EventContext<any>) => void
 	) {
 		super(_name, _type);
 		// if (this._init_value === undefined) {
 		// this._init_value = null
 		// }
 	}
-	get name() {
-		return this._name;
-	}
 	get type() {
 		return this._type;
+	}
+	are_types_matched(src_type: string, dest_type: string): boolean {
+		if (dest_type == EventConnectionPointType.BASE) {
+			return true;
+		} else {
+			return src_type == dest_type;
+		}
+	}
+	get event_listener() {
+		return this._event_listener;
 	}
 	// get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 	// 	return ConnectionPointTypeToParamTypeMap[this._type];

@@ -24,14 +24,10 @@ function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
+const OUTPUT_HIT = 'hit';
+const OUTPUT_MISS = 'miss';
+
 class RaycastParamsConfig extends NodeParamsConfig {
-	// override_camera = ParamConfig.BOOLEAN(1);
-	// camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-	// 	node_selection: {
-	// 		context: NodeContext.OBJ,
-	// 	},
-	// 	dependent_on_found_node: false,
-	// })
 	mode = ParamConfig.INTEGER(RAYCAST_MODES.indexOf(RaycastMode.CPU), {
 		menu: {
 			entries: RAYCAST_MODES.map((name, value) => {
@@ -48,6 +44,35 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
+	override_camera = ParamConfig.BOOLEAN(0);
+	override_ray = ParamConfig.BOOLEAN(0, {
+		visible_if: {
+			mode: RAYCAST_MODES.indexOf(RaycastMode.CPU),
+			override_camera: 1,
+		},
+	});
+	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
+		node_selection: {
+			context: NodeContext.OBJ,
+		},
+		dependent_on_found_node: false,
+		visible_if: {
+			override_camera: 1,
+			override_ray: 0,
+		},
+	});
+	ray_origin = ParamConfig.VECTOR3([0, 0, 0], {
+		visible_if: {
+			override_camera: 1,
+			override_ray: 1,
+		},
+	});
+	ray_direction = ParamConfig.VECTOR3([0, 0, 1], {
+		visible_if: {
+			override_camera: 1,
+			override_ray: 1,
+		},
+	});
 
 	//
 	//
@@ -65,6 +90,10 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_gpu(),
 	});
 	pixel_value = ParamConfig.VECTOR4([0, 0, 0, 0], {
+		cook: false,
+		...visible_for_gpu(),
+	});
+	hit_threshold = ParamConfig.FLOAT(0.5, {
 		cook: false,
 		...visible_for_gpu(),
 	});
@@ -118,18 +147,32 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	public readonly gpu_controller: RaycastGPUController = new RaycastGPUController(this);
 
 	initialize_node() {
-		// TODO: do not use GL connection Types here
 		this.io.inputs.set_named_input_connection_points([
-			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
-			new EventConnectionPoint('mouse', EventConnectionPointType.BASE),
+			new EventConnectionPoint('trigger', EventConnectionPointType.BASE, this._process_trigger_event.bind(this)),
+			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			new EventConnectionPoint('hit', EventConnectionPointType.BASE),
-			new EventConnectionPoint('miss', EventConnectionPointType.BASE),
+			new EventConnectionPoint(OUTPUT_HIT, EventConnectionPointType.BASE),
+			new EventConnectionPoint(OUTPUT_MISS, EventConnectionPointType.BASE),
 		]);
 	}
 
-	process_event(context: EventContext<MouseEvent>) {
+	trigger_hit() {
+		this.dispatch_event_to_output(OUTPUT_HIT, {});
+	}
+	trigger_miss() {
+		this.dispatch_event_to_output(OUTPUT_MISS, {});
+	}
+
+	private _process_mouse_event(context: EventContext<MouseEvent>) {
+		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
+			this.cpu_controller.update_mouse(context);
+		} else {
+			this.gpu_controller.update_mouse(context);
+		}
+	}
+
+	private _process_trigger_event(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
 			this.cpu_controller.process_event(context);
 		} else {

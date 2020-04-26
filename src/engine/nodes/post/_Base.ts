@@ -45,9 +45,6 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.io.inputs.set_count(1);
 		this.io.outputs.set_has_one_output();
 	}
-	// node_sibbling(name: string): BasePostProcessNodeType | null {
-	// 	return super.node_sibbling(name) as BasePostProcessNodeType | null;
-	// }
 
 	set_render_pass(render_pass: any) {
 		this.set_container(render_pass);

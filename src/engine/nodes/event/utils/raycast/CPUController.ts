@@ -8,6 +8,8 @@ import {BaseObjNodeType} from '../../../obj/_Base';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {GeoObjNode} from '../../../obj/Geo';
+import {PerspectiveCameraObjNode} from '../../../obj/PerspectiveCamera';
+import {OrthographicCameraObjNode} from '../../../obj/OrthographicCamera';
 
 export class RaycastCPUController {
 	private _mouse: Vector2 = new Vector2();
@@ -16,7 +18,8 @@ export class RaycastCPUController {
 	private _resolved_target: Object3D | undefined;
 	private _intersection_position: Number3 = [0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
-	process_event(context: EventContext<MouseEvent>) {
+
+	update_mouse(context: EventContext<MouseEvent>) {
 		if (!(context.canvas && context.camera_node)) {
 			return;
 		}
@@ -26,15 +29,20 @@ export class RaycastCPUController {
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
 		}
-		if (this._node.pv.use_camera) {
-			this._raycaster.setFromCamera(this._mouse, context.camera_node.object);
-		} else {
-			// this._raycaster.ray.origin.copy(this.pv.ray_origin)
-			// this._raycaster.ray.direction.copy(this.pv.ray_direction)
+		this._raycaster.setFromCamera(this._mouse, context.camera_node.object);
+	}
+
+	process_event(context: EventContext<MouseEvent>) {
+		this._prepare_raycaster(context);
+
+		if (!this._resolved_target) {
+			this.update_target();
 		}
+
 		if (this._resolved_target) {
 			const intersections = this._raycaster.intersectObject(this._resolved_target, true);
 			const intersection = intersections[0];
+			console.log(intersection);
 			if (intersection) {
 				intersection.point.toArray(this._intersection_position);
 				this._node.p.position.set(this._intersection_position);
@@ -51,9 +59,37 @@ export class RaycastCPUController {
 						}
 					}
 				}
+				this._node.trigger_hit();
+			} else {
+				this._node.trigger_miss();
 			}
 		}
 	}
+	private _prepare_raycaster(context: EventContext<MouseEvent>) {
+		if (this._node.pv.override_camera) {
+			if (this._node.pv.override_ray) {
+				this._raycaster.ray.origin.copy(this._node.pv.ray_origin);
+				this._raycaster.ray.direction.copy(this._node.pv.ray_direction);
+			} else {
+				const obj_node = this._node.p.camera.found_node_with_context(NodeContext.OBJ);
+				if (obj_node) {
+					if (
+						obj_node.type == PerspectiveCameraObjNode.type() ||
+						obj_node.type == OrthographicCameraObjNode.type()
+					) {
+						const camera_node = obj_node as PerspectiveCameraObjNode;
+						this._raycaster.setFromCamera(this._mouse, camera_node.object);
+					}
+				}
+			}
+		} else {
+			// we should not expect a camera node here, as the trigger may happen via any event type
+			// if (context.camera_node) {
+			// 	this._raycaster.setFromCamera(this._mouse, context.camera_node.object);
+			// }
+		}
+	}
+
 	update_target() {
 		const node = this._node.p.target.found_node() as BaseObjNodeType;
 		if (node) {

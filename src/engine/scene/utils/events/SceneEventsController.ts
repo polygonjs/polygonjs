@@ -1,4 +1,4 @@
-import {BaseEventsController} from './_BaseEventsController';
+import {BaseSceneEventsController} from './_BaseEventsController';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 
 export enum SceneEventType {
@@ -14,8 +14,14 @@ export const ACCEPTED_SCENE_EVENT_TYPES: SceneEventType[] = [
 	SceneEventType.TICK,
 ];
 
-export class SceneEventsController extends BaseEventsController<Event, SceneEventNode> {
-	accepts_event(event: Event) {
-		return ACCEPTED_SCENE_EVENT_TYPES.includes(event.type as SceneEventType);
+export class SceneEventsController extends BaseSceneEventsController<Event, SceneEventNode> {
+	type() {
+		return 'scene';
 	}
+	accepted_event_types() {
+		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
+	}
+	// accepts_event(event: Event) {
+	// 	return ACCEPTED_SCENE_EVENT_TYPES.includes(event.type as SceneEventType);
+	// }
 }

@@ -1,30 +1,3 @@
-// import {Scene} from 'three/src/scenes/Scene'
-// import {CoreGraph} from '../../core/graph/CoreGraph'
-// import {CorePerformance} from '../../core/performance/CorePerformance'
-// import {Cooker} from '../../core/graph/Cooker'
-// import {EmitPayload} from '../../core/graph/NodeScene'
-// import {BaseNode} from '../nodes/_Base'
-
-// import {CoreObject} from '../../core/Object';
-// import {Debug} from './concerns/Debug';
-// import {Env} from './concerns/Env'
-// import {ExpressionRegister} from './concerns/ExpressionRegister';
-// import {Frame} from './concerns/Frame';
-// import {GraphMixin} from './concerns/Graph';
-// import {Js} from './concerns/Js';
-// import {Json} from './concerns/Json';
-// import {LifeCycle} from './concerns/LifeCycle';
-// import {Loading} from './concerns/Loading';
-// import {Name} from './concerns/Name';
-// import {Nodes} from './concerns/Nodes';
-// import {ObjectMixin} from './concerns/Object';
-// import {PickerNodes} from './concerns/PickerNodes';
-// import {PerformanceMixin} from './concerns/Performance';
-// import {Renderer} from './concerns/Renderer';
-// import {Store} from './concerns/Store';
-// import {Uniforms} from './concerns/Uniforms';
-
-// import {CubeCamerasController} from './utils/CubeCamerasController';
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
 import {CookController} from './utils/CookController';
@@ -37,10 +10,10 @@ import {LoadingController} from './utils/LoadingController';
 import {MissingReferencesController} from './utils/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
 import {PolySceneSerializer} from './utils/Serializer';
-// import {RivetObjNodesRegister} from './utils/RivetObjNodesRegister';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
 import {TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
+import {ViewersRegister} from './utils/ViewersRegister';
 import {WebGLController} from './utils/WebGLController';
 
 import {Scene} from 'three/src/scenes/Scene';
@@ -125,10 +98,11 @@ export class PolyScene {
 	get performance() {
 		return (this._performance = this._performance || new CorePerformance());
 	}
-	// protected _rivets_register: RivetObjNodesRegister | undefined;
-	// get rivets_register() {
-	// 	return (this._rivets_register = this._rivets_register || new RivetObjNodesRegister(this));
-	// }
+
+	protected _viewers_register: ViewersRegister | undefined;
+	get viewers_register() {
+		return (this._viewers_register = this._viewers_register || new ViewersRegister(this));
+	}
 
 	//
 	//

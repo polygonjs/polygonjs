@@ -14,7 +14,7 @@ export class LoadingController {
 	}
 	async mark_as_loaded() {
 		await this._set_loading_state(false);
-		this.scene.events_dispatcher.process_event(LOADED_EVENT_CONTEXT);
+		this.scene.events_dispatcher.scene_events_controller.process_event(LOADED_EVENT_CONTEXT);
 	}
 	private async _set_loading_state(state: boolean) {
 		this._loading_state = state;

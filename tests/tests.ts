@@ -66,6 +66,7 @@ import './engine/nodes/cop/Switch';
 
 QUnit.module('event');
 import './engine/nodes/event/Code';
+import './engine/nodes/event/SetParam';
 
 QUnit.module('gl');
 import './engine/nodes/gl/Add';
@@ -156,3 +157,4 @@ import './engine/nodes/sop/UvProject';
 
 QUnit.module('viewer');
 import './engine/viewers/Controls';
+import './engine/viewers/Events';

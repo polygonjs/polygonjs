@@ -9,8 +9,8 @@ type FrameRange = Number2;
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
 const PLAY_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
-const PAUSE_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
-const TIME_CHANGE_EVENT_CONTEXT = {event: new Event(SceneEventType.TICK)};
+const PAUSE_EVENT_CONTEXT = {event: new Event(SceneEventType.PAUSE)};
+const TICK_EVENT_CONTEXT = {event: new Event(SceneEventType.TICK)};
 
 export class TimeController {
 	protected self: PolyScene = (<unknown>this) as PolyScene;
@@ -89,7 +89,7 @@ export class TimeController {
 			this.scene.cooker.unblock();
 
 			// dispatch events after nodes have cooked
-			this.scene.events_dispatcher.process_event(TIME_CHANGE_EVENT_CONTEXT);
+			this.scene.events_dispatcher.scene_events_controller.process_event(TICK_EVENT_CONTEXT);
 		}
 	}
 
@@ -140,7 +140,8 @@ export class TimeController {
 			this._playing = false;
 			// TODO: try and unify the dispatch controller and events dispatcher
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.events_dispatcher.process_event(PAUSE_EVENT_CONTEXT);
+			console.log('pause');
+			this.scene.events_dispatcher.scene_events_controller.process_event(PAUSE_EVENT_CONTEXT);
 		}
 	}
 	play() {
@@ -148,7 +149,8 @@ export class TimeController {
 			this._playing = true;
 			this._prev_performance_now = performance.now();
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.events_dispatcher.process_event(PLAY_EVENT_CONTEXT);
+			console.log('play');
+			this.scene.events_dispatcher.scene_events_controller.process_event(PLAY_EVENT_CONTEXT);
 		}
 	}
 	toggle_play_pause() {

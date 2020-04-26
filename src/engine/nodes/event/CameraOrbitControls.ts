@@ -6,6 +6,11 @@ import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+
+const OUTPUT_START = 'start';
+const OUTPUT_CHANGE = 'change';
+const OUTPUT_END = 'end';
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	allow_pan = ParamConfig.BOOLEAN(1);
 	allow_rotate = ParamConfig.BOOLEAN(1);
@@ -33,9 +38,29 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	static type() {
 		return 'camera_orbit_controls';
 	}
+	initialize_node() {
+		this.io.outputs.set_named_output_connection_points([
+			new EventConnectionPoint(OUTPUT_START, EventConnectionPointType.BASE),
+			new EventConnectionPoint(OUTPUT_CHANGE, EventConnectionPointType.BASE),
+			new EventConnectionPoint(OUTPUT_END, EventConnectionPointType.BASE),
+		]);
+	}
+
 	async create_controls_instance(camera: Camera, element: HTMLElement) {
 		const controls = new OrbitControls(camera, element);
+		this._bind_listeners_to_controls_instance(controls);
 		return controls;
+	}
+	protected _bind_listeners_to_controls_instance(controls: OrbitControls) {
+		controls.addEventListener('start', () => {
+			this.dispatch_event_to_output(OUTPUT_START, {});
+		});
+		controls.addEventListener('change', () => {
+			this.dispatch_event_to_output(OUTPUT_CHANGE, {});
+		});
+		controls.addEventListener('end', () => {
+			this.dispatch_event_to_output(OUTPUT_END, {});
+		});
 	}
 
 	setup_controls(controls: OrbitControls) {

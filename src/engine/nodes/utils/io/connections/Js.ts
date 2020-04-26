@@ -147,11 +147,11 @@ export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConn
 		this._init_value = JsConnectionPointInitValueMap[this._type];
 		// }
 	}
-	get name() {
-		return this._name;
-	}
 	get type() {
 		return this._type;
+	}
+	are_types_matched(src_type: string, dest_type: string): boolean {
+		return src_type == dest_type;
 	}
 	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 		return JsConnectionPointTypeToParamTypeMap[this._type];

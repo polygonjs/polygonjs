@@ -21,6 +21,8 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _display_scene: Scene;
 	protected _canvas: HTMLCanvasElement | undefined;
 	protected _active: boolean = false;
+	private static _next_viewer_id = 0;
+	private _id: Readonly<number>;
 
 	get active() {
 		return this._active;
@@ -54,6 +56,8 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		// this._init_from_scene(this._camera_node).then(() => {
 		// this._build();
 		// });
+		this._id = TypedViewer._next_viewer_id++;
+		this._scene.viewers_register.register_viewer(this);
 	}
 	get container() {
 		return this._container;
@@ -70,6 +74,9 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	get camera_controls_controller(): ThreejsCameraControlsController | undefined {
 		return undefined;
 	}
+	get id() {
+		return this._id;
+	}
 
 	// private async _init_from_scene(camera_node: BaseCameraObjNodeType) {
 	// 	// camera_node || this._scene.cameras_controller.master_camera_node
@@ -78,6 +85,8 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// }
 	// protected abstract _build(): void;
 	dispose() {
+		this._scene.viewers_register.unregister_viewer(this);
+		this.events_controller.dispose();
 		let child: Element;
 		while ((child = this._container.children[0])) {
 			this._container.removeChild(child);
