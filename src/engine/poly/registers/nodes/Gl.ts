@@ -123,6 +123,7 @@ export interface GlNodeChildrenMap {
 	float_to_vec4: FloatToVec4GlNode;
 	floor: FloorGlNode;
 	fract: FractGlNode;
+	globals: GlobalsGlNode;
 	hsluv_to_rgb: HsluvToRgbGlNode;
 	hsv_to_rgb: HsvToRgbGlNode;
 	int_to_float: FloatToIntGlNode;
@@ -134,7 +135,6 @@ export interface GlNodeChildrenMap {
 	log: LogGlNode;
 	log2: Log2GlNode;
 	luminance: LuminanceGlNode;
-	globals: GlobalsGlNode;
 	max: MaxGlNode;
 	min: MinGlNode;
 	mix: MixGlNode;

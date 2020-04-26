@@ -117,12 +117,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
 	}
 
-	// create_params() {
-	// 	// this._create_gpu_compute_params();
-	// 	// this._create_render_params();
-	// 	this._create_lifespan_params();
-	// }
-
 	async _reset_material_if_dirty() {
 		// if(
 		// 	dirty_trigger.graph_node_id &&

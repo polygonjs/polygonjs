@@ -1,9 +1,10 @@
 import {Material} from 'three/src/materials/Material';
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
+import {NodeContext} from '../poly/NodeContext';
 
-export class MaterialContainer extends TypedContainer<ContainableMap['MATERIAL']> {
-	set_content(content: ContainableMap['MATERIAL']) {
+export class MaterialContainer extends TypedContainer<NodeContext.MAT> {
+	set_content(content: ContainableMap[NodeContext.MAT]) {
 		super.set_content(content);
 	}
 	set_material(material: Material) {

@@ -1,6 +1,9 @@
-import {ParamTypeToConnectionPointTypeMap} from '../../utils/connections/ConnectionPointType';
+import {
+	ParamTypeToConnectionPointTypeMap,
+	BaseGlConnectionPoint,
+	GlConnectionPoint,
+} from '../../utils/io/connections/Gl';
 import {BaseGlNodeType} from '../_Base';
-import {BaseNamedConnectionPointType, TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
 // import {ParamValue} from '../../../params/types/ParamValue';
 import {ParamType} from '../../../poly/ParamType';
 // import {ParamValueToDefaultConverter} from '../../utils/params/ParamValueToDefaultConverter';
@@ -34,7 +37,7 @@ export class GlNodeSpareParamsController {
 		if (!this._allow_inputs_created_from_params) {
 			return;
 		}
-		const connections: BaseNamedConnectionPointType[] = [];
+		const connections: BaseGlConnectionPoint[] = [];
 		for (let param_name of this.node.params.names) {
 			let add_input = true;
 			if (
@@ -50,7 +53,7 @@ export class GlNodeSpareParamsController {
 					if (param && !param.parent_param) {
 						const connection_type = ParamTypeToConnectionPointTypeMap[param.type];
 						if (connection_type) {
-							const connection = new TypedNamedConnectionPoint(param.name, connection_type);
+							const connection = new GlConnectionPoint(param.name, connection_type);
 							connections.push(connection);
 						}
 					}

@@ -1,6 +1,10 @@
 import lodash_range from 'lodash/range';
 import {TypedGlNode} from './_Base';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {
+	GlConnectionPoint,
+	GlConnectionPointComponentsCountMap,
+	GlConnectionPointType,
+} from '../utils/io/connections/Gl';
 import {GlConnectionsController} from './utils/ConnectionsController';
 
 // https://github.com/stegu/webgl-noise/
@@ -16,7 +20,7 @@ import noise2D from './gl/noise/noise2D.glsl';
 import noise3D from './gl/noise/noise3D.glsl';
 // import noise3Dgrad from './Gl/noise/noise3Dgrad.glsl'
 import noise4D from './gl/noise/noise4D.glsl';
-import {ConnectionPointType, ConnectionPointComponentsCountMap} from '../utils/connections/ConnectionPointType';
+
 // import psrdnoise2D from './Gl/noise/psrdnoise2D.glsl'
 
 export enum NoiseName {
@@ -61,23 +65,23 @@ const IMPORT_BY_NOISE_NAME: StringByNoise = {
 	[NoiseName.NOISE_3D]: noise3D,
 	[NoiseName.NOISE_4D]: noise4D,
 };
-type ConnectionTypeByNoise = {[key in NoiseName]: ConnectionPointType};
+type ConnectionTypeByNoise = {[key in NoiseName]: GlConnectionPointType};
 const INPUT_TYPES_BY_NOISE_NAME: ConnectionTypeByNoise = {
-	[NoiseName.CLASSIC_PERLIN_2D]: ConnectionPointType.VEC2,
-	[NoiseName.CLASSIC_PERLIN_3D]: ConnectionPointType.VEC3,
-	[NoiseName.CLASSIC_PERLIN_4D]: ConnectionPointType.VEC4,
-	[NoiseName.NOISE_2D]: ConnectionPointType.VEC2,
-	[NoiseName.NOISE_3D]: ConnectionPointType.VEC3,
-	[NoiseName.NOISE_4D]: ConnectionPointType.VEC4,
+	[NoiseName.CLASSIC_PERLIN_2D]: GlConnectionPointType.VEC2,
+	[NoiseName.CLASSIC_PERLIN_3D]: GlConnectionPointType.VEC3,
+	[NoiseName.CLASSIC_PERLIN_4D]: GlConnectionPointType.VEC4,
+	[NoiseName.NOISE_2D]: GlConnectionPointType.VEC2,
+	[NoiseName.NOISE_3D]: GlConnectionPointType.VEC3,
+	[NoiseName.NOISE_4D]: GlConnectionPointType.VEC4,
 };
 
 const OUTPUT_TYPE_BY_NOISE_NAME: ConnectionTypeByNoise = {
-	[NoiseName.CLASSIC_PERLIN_2D]: ConnectionPointType.FLOAT,
-	[NoiseName.CLASSIC_PERLIN_3D]: ConnectionPointType.FLOAT,
-	[NoiseName.CLASSIC_PERLIN_4D]: ConnectionPointType.FLOAT,
-	[NoiseName.NOISE_2D]: ConnectionPointType.FLOAT,
-	[NoiseName.NOISE_3D]: ConnectionPointType.FLOAT,
-	[NoiseName.NOISE_4D]: ConnectionPointType.FLOAT,
+	[NoiseName.CLASSIC_PERLIN_2D]: GlConnectionPointType.FLOAT,
+	[NoiseName.CLASSIC_PERLIN_3D]: GlConnectionPointType.FLOAT,
+	[NoiseName.CLASSIC_PERLIN_4D]: GlConnectionPointType.FLOAT,
+	[NoiseName.NOISE_2D]: GlConnectionPointType.FLOAT,
+	[NoiseName.NOISE_3D]: GlConnectionPointType.FLOAT,
+	[NoiseName.NOISE_4D]: GlConnectionPointType.FLOAT,
 };
 const METHOD_NAMES_BY_NOISE_NAME: StringByNoise = {
 	[NoiseName.CLASSIC_PERLIN_2D]: 'cnoise',
@@ -110,13 +114,13 @@ const OUTPUT_TYPE_LABEL: StringByOutputType = {
 	[OUTPUT_TYPE.Vec3]: 'Vec3',
 	[OUTPUT_TYPE.Vec4]: 'Vec4',
 };
-type ConnectionTypeByOutputType = {[key in OUTPUT_TYPE]: ConnectionPointType};
+type ConnectionTypeByOutputType = {[key in OUTPUT_TYPE]: GlConnectionPointType};
 const CONNECTION_TYPE_BY_OUTPUT_TYPE: ConnectionTypeByOutputType = {
-	[OUTPUT_TYPE.NoChange]: ConnectionPointType.FLOAT,
-	[OUTPUT_TYPE.Float]: ConnectionPointType.FLOAT,
-	[OUTPUT_TYPE.Vec2]: ConnectionPointType.VEC2,
-	[OUTPUT_TYPE.Vec3]: ConnectionPointType.VEC3,
-	[OUTPUT_TYPE.Vec4]: ConnectionPointType.VEC4,
+	[OUTPUT_TYPE.NoChange]: GlConnectionPointType.FLOAT,
+	[OUTPUT_TYPE.Float]: GlConnectionPointType.FLOAT,
+	[OUTPUT_TYPE.Vec2]: GlConnectionPointType.VEC2,
+	[OUTPUT_TYPE.Vec3]: GlConnectionPointType.VEC3,
+	[OUTPUT_TYPE.Vec4]: GlConnectionPointType.VEC4,
 };
 
 const ALL_COMPONENTS = ['x', 'y', 'z', 'w'];
@@ -179,7 +183,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		this.spare_params_controller.set_inputless_param_names(['octaves', 'amp_attenuation', 'freq_increase']);
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 
 		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
@@ -195,13 +199,13 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		return DefaultValues[name];
 	}
 
-	private _expected_input_types(): ConnectionPointType[] {
+	private _expected_input_types(): GlConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const amplitude_type = this._expected_output_types()[0];
 		const type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
 		return [amplitude_type, type, type, type];
 	}
-	private _expected_output_types(): ConnectionPointType[] {
+	private _expected_output_types(): GlConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const output_type = OUTPUT_TYPES[this.pv.output_type];
 		if (output_type == OUTPUT_TYPE.NoChange) {
@@ -218,9 +222,9 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const noise_function = IMPORT_BY_NOISE_NAME[noise_name];
 		const noise_output_gl_type = OUTPUT_TYPE_BY_NOISE_NAME[noise_name];
-		function_declaration_lines.push(new FunctionGLDefinition(this, noise_output_gl_type, NoiseCommon));
-		function_declaration_lines.push(new FunctionGLDefinition(this, noise_output_gl_type, noise_function));
-		function_declaration_lines.push(new FunctionGLDefinition(this, noise_output_gl_type, this.fbm_function()));
+		function_declaration_lines.push(new FunctionGLDefinition(this, NoiseCommon));
+		function_declaration_lines.push(new FunctionGLDefinition(this, noise_function));
+		function_declaration_lines.push(new FunctionGLDefinition(this, this.fbm_function()));
 
 		const output_gl_type = this._expected_output_types()[0];
 
@@ -231,7 +235,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 			body_lines.push(line);
 		} else {
 			// if the requested output type does not match the noise signature
-			const requested_components_count = ConnectionPointComponentsCountMap[output_gl_type];
+			const requested_components_count = GlConnectionPointComponentsCountMap[output_gl_type];
 			// const noise_output_components_count = OUTPUT_TYPE_BY_NOISE_NAME[output_gl_type]
 
 			// if(requested_components_count < noise_output_components_count){
@@ -251,7 +255,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 				// TODO: for noise3Dgrad and other noises with 2 inputs
 				// } else {
 				const offset_gl_type = input_type;
-				const offset_components_count = ConnectionPointComponentsCountMap[offset_gl_type];
+				const offset_components_count = GlConnectionPointComponentsCountMap[offset_gl_type];
 				const offset_values = lodash_range(offset_components_count)
 					.map((j) => ThreeToGl.float(1000 * i))
 					.join(', ');

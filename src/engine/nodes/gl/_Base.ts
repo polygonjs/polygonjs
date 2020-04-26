@@ -11,11 +11,14 @@ import {GlNodeSpareParamsController} from './utils/SpareParamsController';
 import {GlConnectionsController} from './utils/ConnectionsController';
 import {GlParamConfig} from './code/utils/ParamConfig';
 import {ParamType} from '../../poly/ParamType';
+// import {BaseGlConnectionPoint} from '../utils/io/connections/Gl';
+// import {IOController} from '../utils/io/IOController';
 
-export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', BaseGlNodeType, K> {
+export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {
 	static node_context(): NodeContext {
 		return NodeContext.GL;
 	}
+
 	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
@@ -30,9 +33,9 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<'GL', Bas
 
 		this.spare_params_controller.initialize_node();
 	}
-	node_sibbling(name: string): BaseGlNodeType | null {
-		return super.node_sibbling(name) as BaseGlNodeType | null;
-	}
+	// node_sibbling(name: string): BaseGlNodeType | null {
+	// 	return super.node_sibbling(name) as BaseGlNodeType | null;
+	// }
 	cook() {
 		console.warn('gl nodes should never cook');
 	}

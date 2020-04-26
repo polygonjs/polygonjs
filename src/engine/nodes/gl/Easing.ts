@@ -34,9 +34,8 @@ import QuarticOut from './gl/easing/quartic-out.glsl';
 import BounceIn from './gl/easing/bounce-in.glsl';
 import SineOut from './gl/easing/sine-out.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const EASE_NAMES = [
@@ -170,7 +169,7 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		this.spare_params_controller.set_inputless_param_names(['type']);
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 	}
 
@@ -179,9 +178,9 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		const method_name = METHOD_NAMES_BY_EASE_NAME[ease_name];
 		const glsl_function_code = IMPORT_BY_EASE_NAME[ease_name];
 
-		let ease_functions = [new FunctionGLDefinition(this, ConnectionPointType.FLOAT, glsl_function_code)];
+		let ease_functions = [new FunctionGLDefinition(this, glsl_function_code)];
 		const function_dependencies = (IMPORT_DEPENDENCIES_BY_EASE_NAME[ease_name] || []).map(
-			(f) => new FunctionGLDefinition(this, ConnectionPointType.FLOAT, f)
+			(f) => new FunctionGLDefinition(this, f)
 		);
 		if (function_dependencies) {
 			ease_functions = function_dependencies.concat(ease_functions);

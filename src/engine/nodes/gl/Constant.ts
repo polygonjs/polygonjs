@@ -1,10 +1,10 @@
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 
-import {ConnectionPointType, ConnectionPointTypes} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
 
-function typed_visible_options(type: ConnectionPointType) {
-	const val = ConnectionPointTypes.indexOf(type);
+function typed_visible_options(type: GlConnectionPointType) {
+	const val = GL_CONNECTION_POINT_TYPES.indexOf(type);
 	return {visible_if: {type: val}};
 }
 
@@ -14,19 +14,19 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {GlConnectionsController} from './utils/ConnectionsController';
 
 class ConstantGlParamsConfig extends NodeParamsConfig {
-	type = ParamConfig.INTEGER(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT), {
+	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
 		menu: {
-			entries: ConnectionPointTypes.map((name, i) => {
+			entries: GL_CONNECTION_POINT_TYPES.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
 	});
-	bool = ParamConfig.BOOLEAN(0, typed_visible_options(ConnectionPointType.BOOL));
-	int = ParamConfig.INTEGER(0, typed_visible_options(ConnectionPointType.INT));
-	float = ParamConfig.FLOAT(0, typed_visible_options(ConnectionPointType.FLOAT));
-	vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(ConnectionPointType.VEC2));
-	vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(ConnectionPointType.VEC3));
-	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typed_visible_options(ConnectionPointType.VEC4));
+	bool = ParamConfig.BOOLEAN(0, typed_visible_options(GlConnectionPointType.BOOL));
+	int = ParamConfig.INTEGER(0, typed_visible_options(GlConnectionPointType.INT));
+	float = ParamConfig.FLOAT(0, typed_visible_options(GlConnectionPointType.FLOAT));
+	vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(GlConnectionPointType.VEC2));
+	vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(GlConnectionPointType.VEC3));
+	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typed_visible_options(GlConnectionPointType.VEC4));
 }
 const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
@@ -35,7 +35,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return 'constant';
 	}
 	static readonly OUTPUT_NAME = 'val';
-	private _params_by_type: Map<ConnectionPointType, BaseParamType> | undefined;
+	private _params_by_type: Map<GlConnectionPointType, BaseParamType> | undefined;
 	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	protected _allow_inputs_created_from_params: boolean = false;
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
@@ -74,7 +74,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		if (this.pv.type == null) {
 			console.warn('constant gl node type if not valid');
 		}
-		const connection_type = ConnectionPointTypes[this.pv.type];
+		const connection_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		if (connection_type == null) {
 			console.warn('constant gl node type if not valid');
 		}
@@ -84,21 +84,24 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	private get _current_param(): BaseParamType {
 		this._params_by_type =
 			this._params_by_type ||
-			new Map<ConnectionPointType, BaseParamType>([
-				[ConnectionPointType.BOOL, this.p.bool],
-				[ConnectionPointType.INT, this.p.int],
-				[ConnectionPointType.FLOAT, this.p.float],
-				[ConnectionPointType.VEC2, this.p.vec2],
-				[ConnectionPointType.VEC3, this.p.vec3],
-				[ConnectionPointType.VEC4, this.p.vec4],
+			new Map<GlConnectionPointType, BaseParamType>([
+				[GlConnectionPointType.BOOL, this.p.bool],
+				[GlConnectionPointType.INT, this.p.int],
+				[GlConnectionPointType.FLOAT, this.p.float],
+				[GlConnectionPointType.VEC2, this.p.vec2],
+				[GlConnectionPointType.VEC3, this.p.vec3],
+				[GlConnectionPointType.VEC4, this.p.vec4],
 			]);
-		const connection_type = ConnectionPointTypes[this.pv.type];
+		const connection_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		return this._params_by_type.get(connection_type)!;
 	}
 	private get _current_var_name(): string {
 		return this.gl_var_name(ConstantGlNode.OUTPUT_NAME);
 	}
 
+	set_gl_type(type: GlConnectionPointType) {
+		this.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
+	}
 	// private update_output_type() {
 	// 	const set_dirty = false;
 	// 	const current_connection = this.io.outputs.named_output_connection_points[0];

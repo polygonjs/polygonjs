@@ -1,9 +1,10 @@
 import {Object3D} from 'three/src/core/Object3D';
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
+import {NodeContext} from '../poly/NodeContext';
 
-export class ObjectContainer extends TypedContainer<ContainableMap['OBJECT']> {
-	set_content(content: ContainableMap['OBJECT']) {
+export class ObjectContainer extends TypedContainer<NodeContext.OBJ> {
+	set_content(content: ContainableMap[NodeContext.OBJ]) {
 		super.set_content(content);
 	}
 	set_object(object: Object3D) {

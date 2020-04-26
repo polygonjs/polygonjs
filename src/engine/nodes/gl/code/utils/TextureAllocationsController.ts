@@ -10,9 +10,8 @@ import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {ShaderName, ParticleShaderNames} from '../../../utils/shaders/ShaderName';
 import {PolyScene} from '../../../../scene/PolyScene';
-import {ConnectionPointComponentsCountMap} from '../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointComponentsCountMap, BaseGlConnectionPoint} from '../../../utils/io/connections/Gl';
 import {AttributeGlNode} from '../../Attribute';
-import {BaseNamedConnectionPointType} from '../../../utils/connections/NamedConnectionPoint';
 import {GlobalsGlNode} from '../../Globals';
 
 export type TextureAllocationsControllerData = Dictionary<TextureVariableData[] | undefined>[];
@@ -38,7 +37,7 @@ export class TextureAllocationsController {
 							// connections_by_node_id[node_id].push(named_input)
 							const variable = new TextureVariable(
 								connection_point.name,
-								ConnectionPointComponentsCountMap[connection_point.type]
+								GlConnectionPointComponentsCountMap[connection_point.type]
 							);
 							variable.add_graph_node_id(node_id);
 							variables.push(variable);
@@ -50,14 +49,14 @@ export class TextureAllocationsController {
 					const attrib_node = node as AttributeGlNode;
 					const named_input: BaseGlNodeType | null = attrib_node.connected_input_node();
 					const connection_point:
-						| BaseNamedConnectionPointType
+						| BaseGlConnectionPoint
 						| undefined = attrib_node.connected_input_connection_point();
 					if (named_input && connection_point) {
 						// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
 						// connections_by_node_id[node_id].push(named_input)
 						const variable = new TextureVariable(
 							attrib_node.attribute_name,
-							ConnectionPointComponentsCountMap[connection_point.type]
+							GlConnectionPointComponentsCountMap[connection_point.type]
 						);
 						variable.add_graph_node_id(node_id);
 						variables.push(variable);
@@ -87,7 +86,7 @@ export class TextureAllocationsController {
 								const gl_type = connection_point.type;
 								const variable = new TextureVariable(
 									output_name,
-									ConnectionPointComponentsCountMap[gl_type]
+									GlConnectionPointComponentsCountMap[gl_type]
 								);
 								variable.add_graph_node_id(node_id);
 								variables.push(variable);
@@ -104,7 +103,7 @@ export class TextureAllocationsController {
 						// connections_by_node_id[node_id].push(named_output)
 						const variable = new TextureVariable(
 							attribute_node.attribute_name,
-							ConnectionPointComponentsCountMap[connection_point.type]
+							GlConnectionPointComponentsCountMap[connection_point.type]
 						);
 						variable.add_graph_node_id(node_id);
 						variables.push(variable);

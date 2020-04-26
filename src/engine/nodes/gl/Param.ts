@@ -1,10 +1,11 @@
 import {TypedGlNode} from './_Base';
 import {
-	ConnectionPointTypes,
-	ConnectionPointType,
-	ConnectionPointInitValueMap,
-	ConnectionPointTypeToParamTypeMap,
-} from '../utils/connections/ConnectionPointType';
+	GL_CONNECTION_POINT_TYPES,
+	// GlConnectionPoint,
+	GlConnectionPointType,
+	GlConnectionPointInitValueMap,
+	GlConnectionPointTypeToParamTypeMap,
+} from '../utils/io/connections/Gl';
 import lodash_isArray from 'lodash/isArray';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -16,15 +17,15 @@ import {GlConnectionsController} from './utils/ConnectionsController';
 import {GlParamConfig} from './code/utils/ParamConfig';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
-	type = ParamConfig.INTEGER(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT), {
+	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
 		menu: {
-			entries: ConnectionPointTypes.map((name, i) => {
+			entries: GL_CONNECTION_POINT_TYPES.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
 	});
 	as_color = ParamConfig.BOOLEAN(0, {
-		visible_if: {type: ConnectionPointTypes.indexOf(ConnectionPointType.VEC3)},
+		visible_if: {type: GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.VEC3)},
 	});
 }
 const ParamsConfig = new ParamGlParamsConfig();
@@ -44,7 +45,9 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		this.gl_connections_controller.initialize_node();
 
 		this.gl_connections_controller.set_expected_input_types_function(() => []);
-		this.gl_connections_controller.set_expected_output_types_function(() => [ConnectionPointTypes[this.pv.type]]);
+		this.gl_connections_controller.set_expected_output_types_function(() => [
+			GL_CONNECTION_POINT_TYPES[this.pv.type],
+		]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.add_post_dirty_hook('_update_if_type_changed', this._update_signature_if_required_bound);
@@ -60,16 +63,16 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const definitions = [];
 
-		const gl_type = ConnectionPointTypes[this.pv.type];
+		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		const var_name = this.uniform_name();
 
 		definitions.push(new UniformGLDefinition(this, gl_type, var_name));
 		shaders_collection_controller.add_definitions(this, definitions);
 	}
 	set_param_configs() {
-		const gl_type = ConnectionPointTypes[this.pv.type];
-		const default_value = ConnectionPointInitValueMap[gl_type];
-		let param_type = ConnectionPointTypeToParamTypeMap[gl_type];
+		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
+		const default_value = GlConnectionPointInitValueMap[gl_type];
+		let param_type = GlConnectionPointTypeToParamTypeMap[gl_type];
 
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
@@ -91,6 +94,10 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		const output_connection_point = this.io.outputs.named_output_connection_points[0];
 		const var_name = this.gl_var_name(output_connection_point.name);
 		return var_name;
+	}
+	set_gl_type(type: GlConnectionPointType) {
+		const index = GL_CONNECTION_POINT_TYPES.indexOf(type);
+		this.p.type.set(index);
 	}
 
 	// update_output_type() {

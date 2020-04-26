@@ -1,21 +1,13 @@
 import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
-import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ManagerContainer} from '../../containers/Manager';
-
-export class TypedBaseManagerNode<K extends NodeParamsConfig> extends TypedNode<'MANAGER', BaseManagerNodeType, K> {
-	container_controller: TypedContainerController<ManagerContainer> = new TypedContainerController<ManagerContainer>(
-		this,
-		ManagerContainer
-	);
-
+export class TypedBaseManagerNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.MANAGER, K> {
 	static node_context(): NodeContext {
 		return NodeContext.MANAGER;
 	}
-	node_sibbling(name: string): BaseManagerNodeType | null {
-		return super.node_sibbling(name) as BaseManagerNodeType | null;
-	}
+	// node_sibbling(name: string): BaseManagerNodeType | null {
+	// 	return super.node_sibbling(name) as BaseManagerNodeType | null;
+	// }
 }
 
 export type BaseManagerNodeType = TypedBaseManagerNode<any>;

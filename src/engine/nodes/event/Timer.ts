@@ -5,8 +5,7 @@ const INPUT_END_NAME = 'stop';
 const OUTPUT_NAME = 'tick';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 class TimerEventParamsConfig extends NodeParamsConfig {
 	period = ParamConfig.INTEGER(1000);
 }
@@ -19,11 +18,11 @@ export class TimerEventNode extends TypedEventNode<TimerEventParamsConfig> {
 	}
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint(INPUT_START_NAME, ConnectionPointType.BOOL),
-			new TypedNamedConnectionPoint(INPUT_END_NAME, ConnectionPointType.BOOL),
+			new EventConnectionPoint(INPUT_START_NAME, EventConnectionPointType.BASE),
+			new EventConnectionPoint(INPUT_END_NAME, EventConnectionPointType.BASE),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.BOOL),
+			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}
 

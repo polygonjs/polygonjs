@@ -37,6 +37,19 @@ export const CATEGORY_GL = {
 	UTIL: 'util',
 	INSTANCE: 'instance',
 };
+export const CATEGORY_JS = {
+	COLOR: 'color',
+	CONVERSION: 'conversion',
+	DYNAMICS: 'dynamics',
+	GEOMETRY: 'geometry',
+	GLOBALS: 'globals',
+	LOGIC: 'logic',
+	MATH: 'math',
+	QUAT: 'quat',
+	TRIGO: 'trigo',
+	UTIL: 'util',
+	INSTANCE: 'instance',
+};
 export const CATEGORY_MAT = {
 	ADVANCED: 'advanced',
 	MESH: 'meshes',

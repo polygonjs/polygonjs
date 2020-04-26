@@ -1,7 +1,7 @@
 import {TypedContainer} from './_Base';
-import {ContainableMap} from './utils/ContainableMap';
+import {NodeContext} from '../poly/NodeContext';
 
-export class GlContainer extends TypedContainer<ContainableMap['GL']> {
+export class GlContainer extends TypedContainer<NodeContext.GL> {
 	object() {
 		return this._content;
 	}

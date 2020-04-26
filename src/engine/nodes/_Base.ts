@@ -1,33 +1,5 @@
 import {PolyScene} from '../scene/PolyScene';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
-// import {NamedGraphNode} from '../../core/graph/NamedGraphNode';
-
-// import {BaseParam} from '../params/_Base';
-// import {GeometryContainer} from '../containers/Geometry';
-// import {UIData} from './UIData';
-
-// import {Bypass} from './concerns/Bypass';
-// import {ConnectionsOwner} from './concerns/ConnectionsOwner';
-// import {ContainerOwner} from './concerns/ContainerOwner';
-// import {Cook} from './concerns/Cook';
-// import {CustomNode} from './concerns/CustomNode';
-// import {Dependencies} from './concerns/old/Dependencies';
-// import {DisplayFlag} from './concerns/DisplayFlag';
-// import {Errored} from './concerns/Errored';
-// import {HierarchyChildrenOwner} from './concerns/HierarchyChildrenOwner';
-// import {HierarchyParentOwner} from './concerns/old/HierarchyParentOwner';
-// import {InputsClonable} from './concerns/InputsClonable';
-// import {InputsOwner} from './concerns/InputsOwner';
-// import {Json} from './concerns/Json';
-// import {LifeCycle} from './concerns/old/LifeCycle';
-// import {Named} from './concerns/Named';
-// import {OutputsOwner} from './concerns/OutputsOwner';
-// import {ParamsOwner} from './concerns/ParamsOwner';
-// import {Selectable} from './concerns/old/Selectable';
-// import {TimeDependent} from './concerns/TimeDependent';
-// import {UIDataOwner} from './concerns/UIDataOwner';
-// import {Visit} from './concerns/Visit';
-
 import {UIData} from './utils/UIData';
 import {FlagsController} from './utils/FlagsController';
 import {StatesController} from './utils/StatesController';
@@ -42,31 +14,12 @@ import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
 import {ParamsController} from './utils/params/ParamsController';
 import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
-
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from './utils/params/ParamsValueAccessor';
 import {ProcessingContext} from './utils/ProcessingContext';
-import {IOController} from './utils/connections/IOController';
-
-// import {BaseContainer} from '../containers/_Base';
-
-// import {BaseParam} from '../params/_Base';
-// import {BooleanParam} from '../params/Boolean';
-// import {ButtonParam} from '../params/Button';
-// import {ColorParam} from '../params/Color';
-// import {FloatParam} from '../params/Float';
-// import {IntegerParam} from '../params/Integer';
-// import {OperatorPathParam} from '../params/OperatorPath';
-// import {RampParam} from '../params/Ramp';
-// import {SeparatorParam} from '../params/Separator';
-// import {StringParam} from '../params/String';
-// import {Vector2Param} from '../params/Vector2';
-// import {Vector3Param} from '../params/Vector3';
-// import {Vector4Param} from '../params/Vector4';
+import {IOController} from './utils/io/IOController';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
-
-// import {TypedContainer} from '../containers/_Base';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
 
 export interface NodeVisitor {
@@ -86,35 +39,17 @@ export interface EmitDataByNodeEventMap extends EmitDataByNodeEventMapGeneric {
 	[NodeEvent.DELETED]: NodeDeletedEmitData;
 	[NodeEvent.ERROR_UPDATED]: undefined;
 }
-// emit(event_name: NodeEvent.CREATED, data: EmitDataByNodeEventMap[NodeEvent.CREATED]): void;
-// 	emit(event_name: NodeEvent.DELETED, data: NodeDeletedEmitData): void;
-// 	emit(event_name: NodeEvent.NAME_UPDATED): void;
-// 	emit(event_name: NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE): void;
-// 	emit(event_name: NodeEvent.NAMED_INPUTS_UPDATED): void;
-// 	emit(event_name: NodeEvent.NAMED_OUTPUTS_UPDATED): void;
-// 	emit(event_name: NodeEvent.INPUTS_UPDATED): void;
-// 	emit(event_name: NodeEvent.PARAMS_UPDATED): void;
-// 	emit(event_name: NodeEvent.UI_DATA_POSITION_UPDATED): void;
-// 	emit(event_name: NodeEvent.UI_DATA_COMMENT_UPDATED): void;
-// 	emit(event_name: NodeEvent.ERROR_UPDATED): void;
-// 	emit(event_name: NodeEvent.FLAG_BYPASS_UPDATED): void;
-// 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
-// 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 
-import {ContainerMap} from '../containers/utils/ContainerMap';
+// import {ContainerMap, ContainerType} from '../containers/utils/ContainerMap';
 import {ContainableMap} from '../containers/utils/ContainableMap';
-import {BaseContainer} from '../containers/_Base';
 import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
+import {NodeTypeMap} from '../containers/utils/ContainerMap';
+// import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
-// type Container = ContainerMap[KT];
-type KT = keyof ContainerMap;
-export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodeParamsConfig> extends CoreGraphNode {
-	container_controller: TypedContainerController<ContainerMap[T]> = new TypedContainerController<ContainerMap[T]>(
-		this,
-		BaseContainer
-	);
+export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
+	container_controller: TypedContainerController<NC> = new TypedContainerController<NC>(this);
 
 	private _parent_controller: HierarchyParentController | undefined;
 
@@ -140,7 +75,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 
 	private _processing_context: ProcessingContext | undefined;
 	private _name_controller: NameController | undefined;
-	private _io: IOController<NT> | undefined;
+
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
@@ -180,14 +115,13 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	get serializer(): NodeSerializer {
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
-	// get container_controller(): TypedContainerController<T> {
-	// 	return (this._container_controller = this._container_controller || new TypedContainerController<T>(this));
-	// }
+
 	get cook_controller(): NodeCookController {
 		return (this._cook_controller = this._cook_controller || new NodeCookController(this));
 	}
-	get io(): IOController<NT> {
-		return (this._io = this._io || new IOController<NT>((<unknown>this) as NT));
+	protected _io: IOController<NC> | undefined;
+	get io(): IOController<NC> {
+		return (this._io = this._io || new IOController(this));
 	}
 	get name_controller(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
@@ -221,25 +155,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 	protected initialize_base_node() {}
 	protected initialize_node() {}
-	// constructor() {
-	// 	super('base_node');
 
-	// 	// this._init_node_scene()
-	// 	// this._init_context_owner()
-	// 	// this._init_dirtyable()
-	// 	// this._init_graph_node()
-
-	// 	// this._init_bypass_flag();
-	// 	// this._init_display_flag();
-	// 	//this._init_context()
-	// 	// this._init_cook();
-	// 	// this._init_error();
-	// 	// this._init_inputs();
-	// 	// this._init_outputs();
-	// 	// this._init_hierarchy_parent_owner();
-	// 	//this._init_time_dependent()
-	// 	// this._init_ui_data();
-	// }
 	static type(): string {
 		throw 'type to be overriden';
 	}
@@ -255,24 +171,21 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 		return c.node_context();
 	}
 
-	static required_three_imports(): string[] {
-		return [];
-	}
-	static required_imports() {
-		let three_imports = this.required_three_imports();
-		if (three_imports) {
-			// if (!lodash_isArray(three_imports)) {
-			// 	three_imports = [<unknown>three_imports as string];
-			// }
-			return three_imports.map((e) => `three/examples/jsm/${e}`);
-		} else {
-			return [];
-		}
-	}
-	required_imports() {
-		const c = this.constructor as typeof BaseNodeClass;
-		return c.required_imports();
-	}
+	// static required_three_imports(): string[] {
+	// 	return [];
+	// }
+	// static required_imports() {
+	// 	let three_imports = this.required_three_imports();
+	// 	if (three_imports) {
+	// 		return three_imports.map((e) => `three/examples/jsm/${e}`);
+	// 	} else {
+	// 		return [];
+	// 	}
+	// }
+	// required_imports() {
+	// 	const c = this.constructor as typeof BaseNodeClass;
+	// 	return c.required_imports();
+	// }
 	static require_webgl2(): boolean {
 		return false;
 	}
@@ -281,14 +194,6 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 		return c.require_webgl2();
 	}
 
-	// set_scene(scene: PolyScene) {
-	// 	super.set_scene(scene);
-	// 	// this.io.inputs._init_graph_node_inputs();
-	// }
-
-	// accepts_visitor<T extends NodeVisitor>(visitor: T): ReturnType<T['visit_node']> {
-	// 	return visitor.visit_node(this);
-	// }
 	set_parent(parent: BaseNodeType | null) {
 		this.parent_controller.set_parent(parent);
 	}
@@ -312,9 +217,6 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	): ParamConstructorMap[T] | undefined {
 		return this._params_controller?.add_param(type, name, default_value, options);
 	}
-	// within_param_folder(folder_name: string, callback: () => void) {
-	// 	this._params_controller?.within_param_folder(folder_name, callback);
-	// }
 
 	// cook
 	cook(input_contents: any[]): any {
@@ -325,8 +227,7 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	async request_container() {
 		return await this.container_controller.request_container();
 	}
-	set_container(content: ContainableMap[T], message: string | null = null) {
-		// if message?
+	set_container(content: ContainableMap[NC], message: string | null = null) {
 		// TODO: typescript: why is this a type of never
 		this.container_controller.container.set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
@@ -337,7 +238,6 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 				(content as any).node = this;
 			}
 		}
-		//if @_container.has_content()?
 		this.cook_controller.end_cook(message);
 	}
 
@@ -354,11 +254,11 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	node(path: string) {
 		return this.parent_controller?.find_node(path) || null;
 	}
-	node_sibbling(name: string): TypedNode<T, NT, any> | null {
+	node_sibbling(name: string): NodeTypeMap[NC] | null {
 		if (this.parent) {
 			const node = this.parent.children_controller?.child_by_name(name);
 			if (node) {
-				return node as TypedNode<T, NT, any>;
+				return node as NodeTypeMap[NC];
 			}
 		}
 		return null;
@@ -368,12 +268,15 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 
 	// inputs
-	set_input(input_index_or_name: number | string, node: NT | null, output_index_or_name: number | string = 0) {
+	set_input(
+		input_index_or_name: number | string,
+		node: NodeTypeMap[NC] | null,
+		output_index_or_name: number | string = 0
+	) {
 		this.io.inputs.set_input(input_index_or_name, node, output_index_or_name);
 	}
 
 	// emit
-
 	emit(event_name: NodeEvent.CREATED, data: EmitDataByNodeEventMap[NodeEvent.CREATED]): void;
 	emit(event_name: NodeEvent.DELETED, data: EmitDataByNodeEventMap[NodeEvent.DELETED]): void;
 	emit(event_name: NodeEvent.NAME_UPDATED): void;
@@ -389,7 +292,6 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
-		// super.emit(event_name, data);
 		this.scene.dispatch_controller.dispatch(this, event_name, data);
 	}
 
@@ -399,5 +301,5 @@ export class TypedNode<T extends KT, NT extends BaseNodeType, K extends NodePara
 	}
 }
 
-export type BaseNodeType = TypedNode<any, BaseNodeType, any>;
-export class BaseNodeClass extends TypedNode<any, BaseNodeType, any> {}
+export type BaseNodeType = TypedNode<any, any>;
+export class BaseNodeClass extends TypedNode<any, any> {}

@@ -1,7 +1,7 @@
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGlMathFunctionArg2GlNode {
@@ -11,11 +11,11 @@ export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGl
 		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}
 	protected _expected_input_types() {
-		return [ConnectionPointType.BOOL, ConnectionPointType.BOOL];
+		return [GlConnectionPointType.BOOL, GlConnectionPointType.BOOL];
 	}
 
 	protected _expected_output_types() {
-		return [ConnectionPointType.BOOL];
+		return [GlConnectionPointType.BOOL];
 	}
 
 	abstract boolean_operation(): string;

@@ -1,7 +1,6 @@
 import {BaseNodeGlMathFunctionArg3GlNode} from './_BaseMathFunction';
 import FitMethods from './gl/fit.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 
 const DefaultValues: Dictionary<number> = {
 	src_min: 0,
@@ -24,6 +23,6 @@ export class Fit01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	}
 
 	gl_function_definitions() {
-		return [new FunctionGLDefinition(this, ConnectionPointType.FLOAT, FitMethods)];
+		return [new FunctionGLDefinition(this, FitMethods)];
 	}
 }

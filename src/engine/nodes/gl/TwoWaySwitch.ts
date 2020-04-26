@@ -10,7 +10,7 @@ enum InputName {
 }
 const InputNames: Array<InputName> = [InputName.CONDITION, InputName.IF_TRUE, InputName.IF_FALSE];
 
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 	static type() {
@@ -34,13 +34,13 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 	protected _gl_output_name() {
 		return OUTPUT_NAME;
 	}
-	protected _expected_input_types(): ConnectionPointType[] {
+	protected _expected_input_types(): GlConnectionPointType[] {
 		const second_or_third_connection =
 			this.io.connections.input_connection(1) || this.io.connections.input_connection(2);
-		const type: ConnectionPointType = second_or_third_connection
+		const type: GlConnectionPointType = second_or_third_connection
 			? this.gl_connections_controller.connection_type_from_connection(second_or_third_connection)
-			: ConnectionPointType.FLOAT;
-		return [ConnectionPointType.BOOL, type, type];
+			: GlConnectionPointType.FLOAT;
+		return [GlConnectionPointType.BOOL, type, type];
 	}
 	protected _expected_output_types() {
 		const type = this._expected_input_types()[1];

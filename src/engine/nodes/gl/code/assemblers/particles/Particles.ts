@@ -18,11 +18,11 @@ import {TypedNodeTraverser} from '../../../../utils/shaders/NodeTraverser';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {ParamType} from '../../../../../poly/ParamType';
-import {TypedNamedConnectionPoint} from '../../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {UniformGLDefinition} from '../../../utils/GLDefinition';
 import {GlobalsTextureHandler} from '../../globals/Texture';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
+import {NodeContext} from '../../../../../poly/NodeContext';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;
@@ -93,7 +93,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		return list;
 	}
 	async setup_shader_names_and_variables() {
-		const node_traverser = new TypedNodeTraverser<BaseGlNodeType>(this, this._gl_parent_node);
+		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(this, this._gl_parent_node);
 		this._leaf_nodes = node_traverser.leaves_from_nodes(this._root_nodes);
 
 		for (let node of this._root_nodes) {
@@ -153,10 +153,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint('position', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('velocity', ConnectionPointType.VEC3),
+			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('velocity', GlConnectionPointType.VEC3),
 			// new TypedNamedConnectionPoint('acceleration', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
+			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		]);
 	}
 	allow_attribute_exports() {
@@ -335,7 +335,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		const definition = new UniformGLDefinition(globals_node, ConnectionPointType.FLOAT, output_name);
+		const definition = new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name);
 		shaders_collection_controller.add_definitions(globals_node, [definition]);
 
 		const var_name = globals_node.gl_var_name(output_name);

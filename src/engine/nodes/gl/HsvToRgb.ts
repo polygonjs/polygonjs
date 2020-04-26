@@ -2,8 +2,7 @@ import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
 import Hsv2Rgb from './gl/hsv2rgb.glsl';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
@@ -23,7 +22,7 @@ export class HsvToRgbGlNode extends TypedGlNode<HsvToRgbGlParamsConfig> {
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.VEC3),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
@@ -31,7 +30,7 @@ export class HsvToRgbGlNode extends TypedGlNode<HsvToRgbGlParamsConfig> {
 		const function_declaration_lines = [];
 		const body_lines = [];
 
-		function_declaration_lines.push(new FunctionGLDefinition(this, ConnectionPointType.VEC3, Hsv2Rgb));
+		function_declaration_lines.push(new FunctionGLDefinition(this, Hsv2Rgb));
 
 		const value = ThreeToGl.vector3(this.variable_for_input(this.p.hsv.name));
 

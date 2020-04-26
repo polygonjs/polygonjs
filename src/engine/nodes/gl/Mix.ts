@@ -1,5 +1,5 @@
 import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 const DefaultValues: Dictionary<number> = {
 	blend: 0.5,
@@ -29,8 +29,8 @@ export class MixGlNode extends BaseGlMathFunctionGlNode {
 	}
 
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
-		return [type, type, ConnectionPointType.FLOAT];
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		return [type, type, GlConnectionPointType.FLOAT];
 	}
 
 	protected _expected_output_types() {

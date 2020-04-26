@@ -4,7 +4,7 @@ import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {ConnectionPointComponentsCountMap, ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPointComponentsCountMap} from '../utils/io/connections/Gl';
 import {GlConnectionsController} from './utils/ConnectionsController';
 
 const TEST_NAMES = ['Equal', 'Less Than', 'Greater Than', 'Less Than Or Equal', 'Greater Than Or Equal', 'Not Equal'];
@@ -56,13 +56,13 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
 		this.gl_connections_controller.set_output_name_function((index: number) => OUTPUT_NAME);
 		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_type.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(() => [ConnectionPointType.BOOL]);
+		this.gl_connections_controller.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
 	}
 	protected _gl_input_name(index: number) {
 		return ['value0', 'value1'][index];
 	}
 	protected _expected_input_type() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type];
 	}
 
@@ -77,7 +77,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		const first_connection = this.io.inputs.named_input_connection_points[0];
 		let components_count = 1;
 		if (first_connection) {
-			components_count = ConnectionPointComponentsCountMap[first_connection.type] || 1;
+			components_count = GlConnectionPointComponentsCountMap[first_connection.type] || 1;
 		}
 
 		if (components_count > 1) {

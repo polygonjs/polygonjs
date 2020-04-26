@@ -1,6 +1,4 @@
 import {TypedEventNode} from './_Base';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
@@ -24,6 +22,7 @@ function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
 class RaycastParamsConfig extends NodeParamsConfig {
 	// override_camera = ParamConfig.BOOLEAN(1);
@@ -121,12 +120,12 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	initialize_node() {
 		// TODO: do not use GL connection Types here
 		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint('trigger', ConnectionPointType.BOOL),
-			new TypedNamedConnectionPoint('mouse', ConnectionPointType.BOOL),
+			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
+			new EventConnectionPoint('mouse', EventConnectionPointType.BASE),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint('hit', ConnectionPointType.BOOL),
-			new TypedNamedConnectionPoint('miss', ConnectionPointType.BOOL),
+			new EventConnectionPoint('hit', EventConnectionPointType.BASE),
+			new EventConnectionPoint('miss', EventConnectionPointType.BASE),
 		]);
 	}
 

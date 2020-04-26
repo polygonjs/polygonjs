@@ -1,5 +1,5 @@
 import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 export class RefractGlNode extends BaseGlMathFunctionGlNode {
 	static type() {
@@ -20,8 +20,8 @@ export class RefractGlNode extends BaseGlMathFunctionGlNode {
 	}
 
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.VEC3;
-		return [type, type, ConnectionPointType.FLOAT];
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.VEC3;
+		return [type, type, GlConnectionPointType.FLOAT];
 	}
 
 	protected _expected_output_types() {

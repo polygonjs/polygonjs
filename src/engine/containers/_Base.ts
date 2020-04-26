@@ -1,27 +1,20 @@
-import {BaseNodeType} from '../nodes/_Base';
-
-// interface ContentOption {
-// 	clone?: boolean
-// }
+import {TypedNode} from '../nodes/_Base';
 
 import {ContainableMap} from './utils/ContainableMap';
-type K = keyof ContainableMap;
-type Containable = ContainableMap[K];
+import {NodeContext} from '../poly/NodeContext';
 
-export abstract class TypedContainer<T extends Containable> {
-	// protected _node: BaseNode;
-	// protected _eval_key: number
-	protected _content!: T;
+export abstract class TypedContainer<NC extends NodeContext> {
+	protected _content!: ContainableMap[NC];
 
-	constructor(protected _node: BaseNodeType) {
+	constructor(protected _node: TypedNode<NC, any>) {
 		// this.update_eval_key();
 		// this.set_content(this._default_content());
 	}
 
-	set_node(node: BaseNodeType) {
+	set_node(node: TypedNode<NC, any>) {
 		this._node = node;
 	}
-	node(): BaseNodeType {
+	node(): TypedNode<NC, any> {
 		return this._node;
 	}
 
@@ -36,7 +29,7 @@ export abstract class TypedContainer<T extends Containable> {
 	// }
 	reset_caches() {}
 
-	set_content(content: T) {
+	set_content(content: ContainableMap[NC]) {
 		this.reset_caches();
 		this._content = content;
 		this._post_set_content();
@@ -49,10 +42,10 @@ export abstract class TypedContainer<T extends Containable> {
 		return this._content;
 	}
 	protected _post_set_content() {}
-	public core_content(): T | undefined {
+	public core_content(): ContainableMap[NC] | undefined {
 		return this._content;
 	}
-	public core_content_cloned(): T | undefined {
+	public core_content_cloned(): ContainableMap[NC] | undefined {
 		return this._content;
 	}
 	// abstract clone_content(): T

@@ -1,13 +1,9 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode, BaseNodeType} from '../_Base';
-
-import {PostProcessContainer} from '../../containers/PostProcess';
 import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NodeContext} from '../../poly/NodeContext';
-// import {PolyScene} from '../../scene/PolyScene';
-import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three/src/scenes/Scene';
 import {FlagsControllerB} from '../utils/FlagsController';
@@ -33,19 +29,12 @@ export const PostParamOptions = {
 	callback: PostParamCallback,
 };
 
-export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<
-	'POST',
-	BasePostProcessNodeType,
-	K
-> {
-	container_controller: TypedContainerController<PostProcessContainer> = new TypedContainerController<
-		PostProcessContainer
-	>(this, PostProcessContainer);
-
-	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
+export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
 	static node_context(): NodeContext {
 		return NodeContext.POST;
 	}
+
+	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
 
 	protected _passes_by_canvas_id: Map<string, P> = new Map();
 
@@ -56,9 +45,9 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.io.inputs.set_count(1);
 		this.io.outputs.set_has_one_output();
 	}
-	node_sibbling(name: string): BasePostProcessNodeType | null {
-		return super.node_sibbling(name) as BasePostProcessNodeType | null;
-	}
+	// node_sibbling(name: string): BasePostProcessNodeType | null {
+	// 	return super.node_sibbling(name) as BasePostProcessNodeType | null;
+	// }
 
 	set_render_pass(render_pass: any) {
 		this.set_container(render_pass);

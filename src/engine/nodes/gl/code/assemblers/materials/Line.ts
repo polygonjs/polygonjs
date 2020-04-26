@@ -14,8 +14,7 @@ import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {ParamType} from '../../../../../poly/ParamType';
-import {TypedNamedConnectionPoint} from '../../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
@@ -93,15 +92,15 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 	}
 	static create_globals_node_output_connections() {
 		return [
-			new TypedNamedConnectionPoint('position', ConnectionPointType.VEC3),
+			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			// new Connection.Vec3('normal'),
-			new TypedNamedConnectionPoint('color', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('uv', ConnectionPointType.VEC2),
-			new TypedNamedConnectionPoint('gl_FragCoord', ConnectionPointType.VEC4),
-			new TypedNamedConnectionPoint('resolution', ConnectionPointType.VEC2),
+			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
+			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
 			// new Connection.Vec2('gl_PointCoord'),
 			// new TypedConnectionVec2('uv'),
-			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
+			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {

@@ -1,5 +1,5 @@
 import {GlobalsGlNode} from '../../Globals';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
@@ -27,7 +27,7 @@ export abstract class GlobalsBaseController {
 
 	abstract read_attribute(
 		node: BaseGlNodeType,
-		gl_type: ConnectionPointType,
+		gl_type: GlConnectionPointType,
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	): string | undefined;

@@ -1,8 +1,7 @@
 import {TypedGlNode} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 class VecToParamsConfig extends NodeParamsConfig {}
@@ -27,7 +26,7 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 		initialize_node() {
 			this.io.outputs.set_named_output_connection_points(
 				components.map((c) => {
-					return new TypedNamedConnectionPoint(c, ConnectionPointType.FLOAT);
+					return new GlConnectionPoint(c, GlConnectionPointType.FLOAT);
 				})
 			);
 		}
@@ -74,8 +73,8 @@ export class Vec4ToVectorGlNode extends BaseVecToGlNode {
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(Vec4ToVectorGlNode.OUTPUT_NAME_VEC3, ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint(Vec4ToVectorGlNode.OUTPUT_NAME_W, ConnectionPointType.FLOAT),
+			new GlConnectionPoint(Vec4ToVectorGlNode.OUTPUT_NAME_VEC3, GlConnectionPointType.VEC3),
+			new GlConnectionPoint(Vec4ToVectorGlNode.OUTPUT_NAME_W, GlConnectionPointType.FLOAT),
 		]);
 	}
 	create_params() {

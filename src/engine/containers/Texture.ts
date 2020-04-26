@@ -1,9 +1,10 @@
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
+import {NodeContext} from '../poly/NodeContext';
 
-export class TextureContainer extends TypedContainer<ContainableMap['TEXTURE']> {
+export class TextureContainer extends TypedContainer<NodeContext.COP> {
 	// _content: Texture;
-	set_content(content: ContainableMap['TEXTURE']) {
+	set_content(content: ContainableMap[NodeContext.COP]) {
 		super.set_content(content);
 	}
 
@@ -13,13 +14,13 @@ export class TextureContainer extends TypedContainer<ContainableMap['TEXTURE']> 
 	// 	}
 	// 	this.set_content(texture);
 	// }
-	texture(): ContainableMap['TEXTURE'] {
+	texture(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
-	core_content(): ContainableMap['TEXTURE'] {
+	core_content(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
-	core_content_cloned(): ContainableMap['TEXTURE'] | undefined {
+	core_content_cloned(): ContainableMap[NodeContext.COP] | undefined {
 		console.log('clone', this._content);
 		const texture = this._content?.clone();
 		if (texture) {

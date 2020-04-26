@@ -3,7 +3,7 @@ import lodash_compact from 'lodash/compact';
 import {BaseAdaptiveGlNode} from './_BaseAdaptive';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
@@ -24,9 +24,9 @@ export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGl
 		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
 		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
 	}
-	protected _expected_input_types(): ConnectionPointType[] {
-		const type: ConnectionPointType =
-			this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+	protected _expected_input_types(): GlConnectionPointType[] {
+		const type: GlConnectionPointType =
+			this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		if (this.io.connections.first_input_connection()) {
 			let count = Math.max(lodash_compact(this.io.connections.input_connections()).length + 1, 2);
 			return lodash_range(count).map((i) => type);
@@ -43,7 +43,7 @@ export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGl
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type: ConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
+		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
 		const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 			const name = connection.name;
 			return ThreeToGl.any(this.variable_for_input(name));
@@ -67,7 +67,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 		return 'in';
 	}
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type];
 	}
 }
@@ -79,7 +79,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type];
 	}
 }
@@ -91,7 +91,7 @@ export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, type];
 	}
 }
@@ -102,7 +102,7 @@ export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, type, type];
 	}
 }
@@ -113,7 +113,7 @@ export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg5GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, type, type, type];
 	}
 }

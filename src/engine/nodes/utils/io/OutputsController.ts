@@ -1,0 +1,107 @@
+import lodash_isNumber from 'lodash/isNumber';
+import lodash_uniq from 'lodash/uniq';
+import lodash_isString from 'lodash/isString';
+import {NodeEvent} from '../../../poly/NodeEvent';
+import {NodeContext} from '../../../poly/NodeContext';
+import {ConnectionPointTypeMap} from './connections/ConnectionMap';
+import {TypedNode} from '../../_Base';
+export class OutputsController<NC extends NodeContext> {
+	private _has_outputs: boolean = false;
+	private _named_output_connection_points: ConnectionPointTypeMap[NC][] | undefined;
+	private _has_named_outputs: boolean = false;
+
+	constructor(private node: TypedNode<NC, any>) {}
+
+	set_has_one_output() {
+		this._has_outputs = true;
+	}
+	set_has_no_output() {
+		this._has_outputs = false;
+	}
+
+	get has_outputs() {
+		return this._has_outputs;
+	}
+	get has_named_outputs() {
+		return this._has_named_outputs;
+	}
+	has_named_output(name: string): boolean {
+		return this.get_named_output_index(name) >= 0;
+	}
+	get named_output_connection_points(): ConnectionPointTypeMap[NC][] {
+		return this._named_output_connection_points || [];
+	}
+	named_output_connection(index: number): ConnectionPointTypeMap[NC] | undefined {
+		if (this._named_output_connection_points) {
+			return this._named_output_connection_points[index];
+		}
+	}
+
+	get_named_output_index(name: string): number {
+		if (this._named_output_connection_points) {
+			for (let i = 0; i < this._named_output_connection_points.length; i++) {
+				if (this._named_output_connection_points[i].name == name) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	get_output_index(output_index_or_name: number | string): number {
+		if (output_index_or_name != null) {
+			if (lodash_isString(output_index_or_name)) {
+				if (this.has_named_outputs) {
+					return this.get_named_output_index(output_index_or_name);
+				} else {
+					console.warn(`node ${this.node.full_path()} has no named outputs`);
+					return -1;
+				}
+			} else {
+				return output_index_or_name;
+			}
+		}
+		return -1;
+	}
+
+	named_output_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
+		if (this._named_output_connection_points) {
+			for (let connection_point of this._named_output_connection_points) {
+				if (connection_point.name == name) {
+					return connection_point;
+				}
+			}
+		}
+	}
+
+	set_named_output_connection_points(connection_points: ConnectionPointTypeMap[NC][], set_dirty: boolean = true) {
+		this._has_named_outputs = true;
+		this._named_output_connection_points = connection_points;
+		if (set_dirty && this.node.scene) {
+			// why do I need this set dirty here?
+			// I currently have to have a flag to optionally prevent this,
+			// for instance from gl nodes which have their outputs updated in a post dirty hook
+			this.node.set_dirty(this.node);
+		}
+		this.node.emit(NodeEvent.NAMED_OUTPUTS_UPDATED);
+	}
+	used_output_names(): string[] {
+		const connections_controller = this.node.io.connections;
+		if (connections_controller) {
+			const output_connections = connections_controller.output_connections();
+			let output_indices = output_connections.map((connection) => (connection ? connection.output_index : null));
+			output_indices = lodash_uniq(output_indices);
+			const used_output_indices: number[] = [];
+			output_indices.forEach((index) => {
+				if (lodash_isNumber(index)) {
+					used_output_indices.push(index);
+				}
+			});
+			const used_output_names: string[] = used_output_indices.map((index) => {
+				return this.named_output_connection_points[index].name;
+			});
+			return used_output_names;
+		} else {
+			return [];
+		}
+	}
+}

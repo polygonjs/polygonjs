@@ -1,7 +1,5 @@
 import {TypedNode} from '../_Base';
-import {TextureContainer} from '../../containers/Texture';
 import {Texture} from 'three/src/textures/Texture';
-import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {PolyScene} from '../../scene/PolyScene';
@@ -19,11 +17,7 @@ for (var i = 0; i < size; i++) {
 }
 const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfFloatType);
 
-export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE', BaseCopNodeType, K> {
-	container_controller: TypedContainerController<TextureContainer> = new TypedContainerController<TextureContainer>(
-		this,
-		TextureContainer
-	);
+export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.COP, K> {
 	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
 	// private _typed_array = new Uint8ClampedArray(512 * 512 * 4);
 	// protected _texture: Texture = new DataTexture(this._typed_array, 512, 512, RGBFormat);
@@ -52,9 +46,9 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<'TEXTURE
 		this.io.outputs.set_has_one_output();
 		// this.container_controller.init(CONTAINER_CLASS);
 	}
-	node_sibbling(name: string): BaseCopNodeType | null {
-		return super.node_sibbling(name) as BaseCopNodeType | null;
-	}
+	// node_sibbling(name: string): BaseCopNodeType | null {
+	// 	return super.node_sibbling(name) as BaseCopNodeType | null;
+	// }
 
 	set_texture(texture: Texture) {
 		// this._copy_texture(texture);

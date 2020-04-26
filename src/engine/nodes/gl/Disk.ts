@@ -2,10 +2,9 @@ import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import DiskMethods from './gl/disk.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 
 const OUTPUT_NAME = 'float';
 class DiskGlParamsConfig extends NodeParamsConfig {
@@ -25,7 +24,7 @@ export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 	}
 
@@ -40,8 +39,6 @@ export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
 		// this.set_function_declaration_lines(function_declaration_lines)
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 
-		shaders_collection_controller.add_definitions(this, [
-			new FunctionGLDefinition(this, ConnectionPointType.FLOAT, DiskMethods),
-		]);
+		shaders_collection_controller.add_definitions(this, [new FunctionGLDefinition(this, DiskMethods)]);
 	}
 }

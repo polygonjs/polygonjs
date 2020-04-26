@@ -1,12 +1,15 @@
+// nodes
 import {BaseSopNodeType} from '../nodes/sop/_Base';
 import {BaseAnimNodeType} from '../nodes/anim/_Base';
 import {BaseCopNodeType} from '../nodes/cop/_Base';
 import {BaseEventNodeType} from '../nodes/event/_Base';
 import {BaseGlNodeType} from '../nodes/gl/_Base';
+import {BaseJsNodeType} from '../nodes/js/_Base';
 import {BaseManagerNodeType} from '../nodes/manager/_Base';
 import {BaseMatNodeType} from '../nodes/mat/_Base';
 import {BaseObjNodeType} from '../nodes/obj/_Base';
 import {BasePostProcessNodeType} from '../nodes/post/_Base';
+// registers
 import {GeoNodeChildrenMap} from './registers/nodes/Sop';
 import {GlNodeChildrenMap} from './registers/nodes/Gl';
 import {EventNodeChildrenMap} from './registers/nodes/Event';
@@ -21,7 +24,7 @@ export enum NodeContext {
 	COP = 'cop',
 	EVENT = 'event',
 	GL = 'gl',
-	// JS = 'js',
+	JS = 'js',
 	MANAGER = 'managers',
 	MAT = 'mat',
 	OBJ = 'obj',
@@ -34,7 +37,7 @@ export interface BaseNodeByContextMap {
 	[NodeContext.COP]: BaseCopNodeType;
 	[NodeContext.EVENT]: BaseEventNodeType;
 	[NodeContext.GL]: BaseGlNodeType;
-	// [NodeContext.JS]: BaseJsNodeType;
+	[NodeContext.JS]: BaseJsNodeType;
 	[NodeContext.MANAGER]: BaseManagerNodeType;
 	[NodeContext.MAT]: BaseMatNodeType;
 	[NodeContext.OBJ]: BaseObjNodeType;
@@ -46,7 +49,7 @@ export interface ChildrenNodeMapByContextMap {
 	[NodeContext.COP]: CopNodeChildrenMap;
 	[NodeContext.EVENT]: EventNodeChildrenMap;
 	[NodeContext.GL]: GlNodeChildrenMap;
-	// [NodeContext.JS]: BaseGlNodeType;
+	[NodeContext.JS]: BaseJsNodeType;
 	[NodeContext.MANAGER]: {};
 	[NodeContext.MAT]: MatNodeChildrenMap;
 	[NodeContext.OBJ]: ObjNodeChildrenMap;

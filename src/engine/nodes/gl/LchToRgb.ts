@@ -2,13 +2,12 @@ import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 
 import ColorGlslLib from './gl/color.glsl';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'rgb';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {GlConnectionPoint, GlConnectionPointType} from '../utils/io/connections/Gl';
 class LchToRgbGlParamsConfig extends NodeParamsConfig {
 	lch = ParamConfig.VECTOR3([1, 1, 1]);
 }
@@ -23,7 +22,7 @@ export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.VEC3),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
@@ -31,7 +30,7 @@ export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
 		const function_declaration_lines = [];
 		const body_lines = [];
 
-		function_declaration_lines.push(new FunctionGLDefinition(this, ConnectionPointType.VEC3, ColorGlslLib));
+		function_declaration_lines.push(new FunctionGLDefinition(this, ColorGlslLib));
 
 		const value = ThreeToGl.vector3(this.variable_for_input(this.p.lch.name));
 

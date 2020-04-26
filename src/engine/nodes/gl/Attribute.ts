@@ -2,17 +2,16 @@ import lodash_trim from 'lodash/trim';
 
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 // import {BaseNodeGlMathFunctionArg1} from './_BaseMathFunctionArg1';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {BaseNamedConnectionPointType} from '../utils/connections/NamedConnectionPoint';
+import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 import {ParamType} from '../../poly/ParamType';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionsController} from './utils/ConnectionsController';
 
-export const ConnectionPointTypesAvailableForAttribute = [
-	ConnectionPointType.FLOAT,
-	ConnectionPointType.VEC2,
-	ConnectionPointType.VEC3,
-	ConnectionPointType.VEC4,
+const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
+	GlConnectionPointType.FLOAT,
+	GlConnectionPointType.VEC2,
+	GlConnectionPointType.VEC3,
+	GlConnectionPointType.VEC4,
 ];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -20,7 +19,7 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
 		menu: {
-			entries: ConnectionPointTypesAvailableForAttribute.map((name, i) => {
+			entries: ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
@@ -46,7 +45,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 
 		this.gl_connections_controller.set_expected_input_types_function(() => []);
 		this.gl_connections_controller.set_expected_output_types_function(() => [
-			ConnectionPointTypesAvailableForAttribute[this.pv.type],
+			ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
@@ -100,8 +99,11 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	get attribute_name(): string {
 		return lodash_trim(this.pv.name);
 	}
-	gl_type(): ConnectionPointType {
+	gl_type(): GlConnectionPointType {
 		return this.io.outputs.named_output_connection_points[0].type;
+	}
+	set_gl_type(type: GlConnectionPointType) {
+		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(type));
 	}
 	//
 	//
@@ -113,7 +115,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		return this.io.inputs.named_input(AttributeGlNode.INPUT_NAME);
 		// }
 	}
-	connected_input_connection_point(): BaseNamedConnectionPointType | undefined {
+	connected_input_connection_point(): BaseGlConnectionPoint | undefined {
 		return this.io.inputs.named_input_connection_point(AttributeGlNode.INPUT_NAME);
 	}
 	// connected_input(): NamedConnection {
@@ -122,7 +124,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 		return this.io.inputs.named_inputs().filter((ni) => ni.name() == Attribute.input_name())[0];
 	// 	}
 	// }
-	output_connection_point(): BaseNamedConnectionPointType | undefined {
+	output_connection_point(): BaseGlConnectionPoint | undefined {
 		// if (this.io.inputs.has_named_inputs) {
 		return this.io.outputs.named_output_connection_points_by_name(this.input_name);
 		// }

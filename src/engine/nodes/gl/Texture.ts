@@ -1,8 +1,7 @@
 import {TypedGlNode} from './_Base';
 import {FileCopNode} from '../cop/File';
 
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {UniformGLDefinition} from './utils/GLDefinition';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -28,7 +27,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(TextureGlNode.OUTPUT_NAME, ConnectionPointType.VEC4),
+			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}
 
@@ -37,7 +36,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 
 		const rgba = this.gl_var_name(TextureGlNode.OUTPUT_NAME);
 		const map = this._uniform_name();
-		const definition = new UniformGLDefinition(this, ConnectionPointType.SAMPLER_2D, map);
+		const definition = new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, map);
 		const body_line = `vec4 ${rgba} = texture2D(${map}, ${uv})`;
 		shaders_collection_controller.add_definitions(this, [definition]);
 		shaders_collection_controller.add_body_lines(this, [body_line]);

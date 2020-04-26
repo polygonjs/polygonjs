@@ -1,4 +1,4 @@
-import {ConnectionPointType} from '../../../../src/engine/nodes/utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 
@@ -10,11 +10,11 @@ QUnit.test('gl param updates its output type correctly when created', async (ass
 	const param1 = material_basic_builder1.create_node('param');
 
 	assert.equal(param1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(param1.io.outputs.named_output_connection_points[0].type, ConnectionPointType.FLOAT);
+	assert.equal(param1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.FLOAT);
 
 	param1.p.type.set(param1.pv.type + 1);
 	assert.equal(param1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(param1.io.outputs.named_output_connection_points[0].type, ConnectionPointType.VEC2);
+	assert.equal(param1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.VEC2);
 });
 
 QUnit.test('gl param updates its output type correctly when scene is loaded', async (assert) => {
@@ -39,7 +39,7 @@ QUnit.test('gl param updates its output type correctly when scene is loaded', as
 	assert.ok(param2);
 	assert.equal(param2.pv.type, 3);
 	assert.equal(param1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(param1.io.outputs.named_output_connection_points[0].type, ConnectionPointType.VEC2);
+	assert.equal(param1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.VEC2);
 });
 
 QUnit.skip('gl param updates it parent material with new spare parameters', async (assert) => {});

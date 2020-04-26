@@ -11,8 +11,7 @@ import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {OutputGlNode} from '../../../Output';
 import {ParamType} from '../../../../../poly/ParamType';
 import {GlobalsGlNode} from '../../../Globals';
-import {TypedNamedConnectionPoint} from '../../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {UniformGLDefinition} from '../../../utils/GLDefinition';
 // import {BaseGlNodeType} from '../../../_Base';
@@ -102,8 +101,8 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint('gl_FragCoord', ConnectionPointType.VEC2),
-			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
+			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 			// new Connection.Vec2('resolution'),
 		]);
 	}
@@ -341,7 +340,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 
 			switch (output_name) {
 				case 'time':
-					definitions.push(new UniformGLDefinition(globals_node, ConnectionPointType.FLOAT, output_name));
+					definitions.push(new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name));
 					// vertex_definitions.push(definition)
 					// fragment_definitions.push(definition)
 					// definitions_by_shader_name[globals_node._shader_name].push(definition)

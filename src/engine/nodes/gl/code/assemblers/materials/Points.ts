@@ -13,8 +13,7 @@ import {ShaderAssemblerCustomPointsDistance} from './CustomPointsDistance';
 import {ShaderAssemblerCustomPointsDepthDOF} from './CustomPointsDepthDOF';
 import {OutputGlNode} from '../../../Output';
 import {ParamType} from '../../../../../poly/ParamType';
-import {TypedNamedConnectionPoint} from '../../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
@@ -83,7 +82,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	}
 	create_globals_node_output_connections() {
 		return BaseGlShaderAssembler.create_globals_node_output_connections().concat([
-			new TypedNamedConnectionPoint('gl_PointCoord', ConnectionPointType.VEC2),
+			new GlConnectionPoint('gl_PointCoord', GlConnectionPointType.VEC2),
 		]);
 	}
 

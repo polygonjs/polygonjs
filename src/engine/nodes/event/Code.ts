@@ -1,6 +1,4 @@
 import {TypedEventNode} from './_Base';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {AsyncFunction} from '../../../core/AsyncFunction';
 const DEFAULT_FUNCTION_CODE = `
 import {BaseCodeEventProcessor, EventContext} from 'polygonjs-engine'
@@ -27,6 +25,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster} from 'three/src/core/Raycaster';
 import * as THREE from 'three';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 export class BaseCodeEventProcessor {
 	// it looks like I still need to import raycaster and vector2 without the three namespace
 	// otherwise they are seen as 'any' in the editor
@@ -78,9 +77,8 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 		return 'code';
 	}
 	initialize_node() {
-		// TODO: do not use GL connection Types here
 		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint('trigger', ConnectionPointType.BOOL),
+			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
 	}
 

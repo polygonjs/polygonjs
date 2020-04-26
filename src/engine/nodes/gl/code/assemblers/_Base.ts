@@ -10,8 +10,7 @@ import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../Output';
 import {ParamType} from '../../../../poly/ParamType';
-import {TypedNamedConnectionPoint} from '../../../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
+import {GlConnectionPoint, GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {GlobalsGlNode} from '../../Globals';
 import {AttributeGlNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
@@ -20,6 +19,7 @@ import {CustomMaterialName} from './materials/_BaseMaterial';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 import {IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
+import {NodeContext} from '../../../../poly/NodeContext';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -44,7 +44,7 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 
 const SPACED_LINES = 3;
 
-export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
+export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	protected _shaders_by_name: Map<ShaderName, string> = new Map();
 	protected _lines: StringArrayByShaderName = new Map();
 	protected _code_builder: CodeBuilder | undefined;
@@ -363,15 +363,15 @@ export class BaseGlShaderAssembler extends TypedAssembler<BaseGlNodeType> {
 	}
 	static create_globals_node_output_connections() {
 		return [
-			new TypedNamedConnectionPoint('position', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('normal', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('color', ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint('uv', ConnectionPointType.VEC2),
-			new TypedNamedConnectionPoint('gl_FragCoord', ConnectionPointType.VEC4),
-			new TypedNamedConnectionPoint('resolution', ConnectionPointType.VEC2),
+			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
+			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
 			// new Connection.Vec2('gl_PointCoord'),
 			// new TypedConnectionVec2('uv'),
-			new TypedNamedConnectionPoint('time', ConnectionPointType.FLOAT),
+			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {

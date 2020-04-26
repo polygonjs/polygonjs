@@ -1,15 +1,13 @@
 import {TypedEventNode} from './_Base';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {BaseNodeType} from '../_Base';
 import lodash_min from 'lodash/min';
 import lodash_max from 'lodash/max';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {NodeContext} from '../../poly/NodeContext';
 import {TransformAnimNode} from '../anim/Transform';
 import {AnimationsObjNode} from '../obj/Animations';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
 const OUTPUT_NAME = 'done';
 
@@ -35,12 +33,11 @@ export class AnimationMultiCacheEventNode extends TypedEventNode<AnimationMultiC
 		return 'animation_transform';
 	}
 	initialize_node() {
-		// TODO: do not use GL connection Types here
 		this.io.inputs.set_named_input_connection_points([
-			new TypedNamedConnectionPoint('trigger', ConnectionPointType.BOOL),
+			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.BOOL),
+			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}
 

@@ -11,12 +11,8 @@ import {CoreConstant, ObjectByObjectType, OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE} fro
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreMaterial} from '../../../core/geometry/Material';
 import {ObjectType} from '../../../core/geometry/Constant';
-
-import {GeometryContainer} from '../../containers/Geometry';
-import {TypedContainerController} from '../utils/ContainerController';
 import {BaseMatNodeType} from '../mat/_Base';
 import {NodeContext} from '../../poly/NodeContext';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDB} from '../utils/FlagsController';
 
@@ -32,16 +28,11 @@ enum MESSAGE {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<'GEOMETRY', BaseSopNodeType, K> {
-	container_controller: TypedContainerController<GeometryContainer> = new TypedContainerController<GeometryContainer>(
-		this,
-		GeometryContainer
-	);
-	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
-
+export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
 	}
+	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
 	static displayed_input_names(): string[] {
 		return DEFAULT_INPUT_NAMES;

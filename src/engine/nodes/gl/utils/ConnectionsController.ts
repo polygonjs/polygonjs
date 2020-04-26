@@ -1,11 +1,11 @@
-import {ConnectionPointType} from '../../utils/connections/ConnectionPointType';
 import {BaseGlNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
-import {TypedNamedConnectionPoint} from '../../utils/connections/NamedConnectionPoint';
-import {NodeConnection} from '../../utils/connections/NodeConnection';
+import {GlConnectionPoint, GlConnectionPointType} from '../../utils/io/connections/Gl';
+import {TypedNodeConnection} from '../../utils/io/NodeConnection';
+import {NodeContext} from '../../../poly/NodeContext';
 
 type IONameFunction = (index: number) => string;
-type ExpectedConnectionTypesFunction = () => ConnectionPointType[];
+type ExpectedConnectionTypesFunction = () => GlConnectionPointType[];
 
 export class GlConnectionsController {
 	private _input_name_function: IONameFunction = (index: number) => {
@@ -16,7 +16,7 @@ export class GlConnectionsController {
 	};
 	// private _default_input_type: ConnectionPointType = ConnectionPointType.FLOAT;
 	private _expected_input_types_function: ExpectedConnectionTypesFunction = () => {
-		const type = this.first_input_connection_type() || ConnectionPointType.FLOAT;
+		const type = this.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type];
 	};
 	private _expected_output_types_function: ExpectedConnectionTypesFunction = () => {
@@ -94,11 +94,11 @@ export class GlConnectionsController {
 		const expected_input_types = this._expected_input_types_function();
 		const expected_output_types = this._expected_output_types_function();
 
-		const named_input_connections = expected_input_types.map((type: ConnectionPointType, i: number) => {
-			return new TypedNamedConnectionPoint(this._input_name_function(i), type);
+		const named_input_connections = expected_input_types.map((type: GlConnectionPointType, i: number) => {
+			return new GlConnectionPoint(this._input_name_function(i), type);
 		});
-		const named_outputs = expected_output_types.map((type: ConnectionPointType, i: number) => {
-			return new TypedNamedConnectionPoint(this._output_name_function(i), type);
+		const named_outputs = expected_output_types.map((type: GlConnectionPointType, i: number) => {
+			return new GlConnectionPoint(this._output_name_function(i), type);
 		});
 
 		this.node.io.inputs.set_named_input_connection_points(named_input_connections);
@@ -140,7 +140,7 @@ export class GlConnectionsController {
 	// 	return this.first_input_connection_type();
 	// }
 
-	first_input_connection_type(): ConnectionPointType | undefined {
+	first_input_connection_type(): GlConnectionPointType | undefined {
 		const connections = this.node.io.connections.input_connections();
 		if (connections) {
 			const first_connection = connections[0];
@@ -149,7 +149,7 @@ export class GlConnectionsController {
 			}
 		}
 	}
-	connection_type_from_connection(connection: NodeConnection): ConnectionPointType {
+	connection_type_from_connection(connection: TypedNodeConnection<NodeContext.GL>): GlConnectionPointType {
 		const node_src = connection.node_src;
 		const output_index = connection.output_index;
 		const node_src_output_connection = node_src.io.outputs.named_output_connection_points[output_index];

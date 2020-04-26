@@ -1,7 +1,7 @@
 import {BaseAdaptiveGlNode} from './_BaseAdaptive';
 import Quaternion from './gl/quaternion.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 enum Mode {
 	AXIS = 0,
@@ -23,10 +23,10 @@ const MethodNameByMode: StringByMode = {
 	[Mode.AXIS]: 'rotate_with_axis_angle',
 	[Mode.QUAT]: 'rotate_with_quat',
 };
-type ConnectionTypeArrayByMode = {[key in Mode]: ConnectionPointType[]};
+type ConnectionTypeArrayByMode = {[key in Mode]: GlConnectionPointType[]};
 const InputTypesByMode: ConnectionTypeArrayByMode = {
-	[Mode.AXIS]: [ConnectionPointType.VEC3, ConnectionPointType.VEC3, ConnectionPointType.FLOAT],
-	[Mode.QUAT]: [ConnectionPointType.VEC3, ConnectionPointType.VEC4],
+	[Mode.AXIS]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC3, GlConnectionPointType.FLOAT],
+	[Mode.QUAT]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC4],
 };
 
 const DefaultValues: Dictionary<Number3> = {
@@ -82,18 +82,18 @@ export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
 		return InputTypesByMode[mode];
 	}
 	protected _expected_output_types() {
-		return [ConnectionPointType.VEC3];
+		return [GlConnectionPointType.VEC3];
 	}
 	gl_function_definitions() {
 		// const type = this._expected_output_types()[0];
 		// do not use type from the output, as there seem to always be a def somewhere
 		// TODO: I probably don't need a data type in FunctionGLDefinition
-		const type = ConnectionPointType.VEC4;
-		return [new FunctionGLDefinition(this, type, Quaternion)];
+		// const type = GlConnectionPointType.VEC4;
+		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type: ConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
+		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
 		const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 			const name = connection.name;
 			return ThreeToGl.any(this.variable_for_input(name));

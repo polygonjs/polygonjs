@@ -1,12 +1,7 @@
 import {Object3D} from 'three/src/core/Object3D';
-
 import {TypedNode, BaseNodeType} from '../_Base';
-// import {BaseSopNode} from '../sop/_Base';
-// import {LookAt} from './Concerns/LookAt';
-import {ObjectContainer} from '../../containers/Object';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {TypedContainerController} from '../utils/ContainerController';
 import {ObjectsManagerNode} from '../manager/ObjectsManager';
 import {Group} from 'three/src/objects/Group';
 
@@ -16,36 +11,21 @@ const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_
 interface Object3DWithNode extends Object3D {
 	node: BaseNodeType;
 }
-// interface BaseObjNodeVisitor extends BaseNodeVisitor {
-// 	visit_node_obj: (node: BaseObjNodeType) => any;
-// }
 
 export enum ObjNodeRenderOrder {
 	MANAGER = 0,
-	// FOG = 1,
 	CAMERA = 2,
 	LIGHT = 3,
-	// EVENT = 4,
-	// MAT = 5,
 }
 
-export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<
-	'OBJECT',
-	BaseObjNodeType,
-	K
-> {
-	container_controller: TypedContainerController<ObjectContainer> = new TypedContainerController<ObjectContainer>(
-		this,
-		ObjectContainer
-	);
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
-	// public readonly add_to_hierarchy: boolean = true;
+export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<NodeContext.OBJ, K> {
 	static node_context(): NodeContext {
 		return NodeContext.OBJ;
 	}
 	static displayed_input_names(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
+	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 
 	protected _children_group = new Group();
 	protected _object!: O;
@@ -107,9 +87,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 		// this._sop_loaded = false; // TODO: typescript, this should be moved to GeoObjNode
 	}
-	node_sibbling(name: string): BaseObjNodeType | null {
-		return super.node_sibbling(name) as BaseObjNodeType | null;
-	}
+	// node_sibbling(name: string): BaseObjNodeType | null {
+	// 	return super.node_sibbling(name) as BaseObjNodeType | null;
+	// }
 
 	// this.add_param 'toggle', 'display', 1,
 	// 	callback: this.post_state_display_flag.bind(this)

@@ -1,5 +1,5 @@
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 
@@ -7,7 +7,7 @@ interface MathArg2OperationOptions {
 	in_prefix: string;
 	out: string;
 	operation: string;
-	allowed_in_types?: ConnectionPointType[];
+	allowed_in_types?: GlConnectionPointType[];
 }
 
 function MathFunctionArg2OperationFactory(type: string, options: MathArg2OperationOptions) {
@@ -28,7 +28,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
 		}
 		set_lines(shaders_collection_controller: ShadersCollectionController) {
-			const var_type: ConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
+			const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
 			const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 				const name = connection.name;
 				const variable = this.variable_for_input(name);
@@ -63,7 +63,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 					}
 				}
 			}
-			const type = first_input_type || ConnectionPointType.FLOAT;
+			const type = first_input_type || GlConnectionPointType.FLOAT;
 
 			const current_connections = this.io.connections.input_connections();
 			const expected_count = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
@@ -75,7 +75,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 		}
 		protected _expected_output_types() {
 			const input_types = this._expected_input_types();
-			const type = input_types[1] || input_types[0] || ConnectionPointType.FLOAT;
+			const type = input_types[1] || input_types[0] || GlConnectionPointType.FLOAT;
 			return [type];
 		}
 	};
@@ -119,7 +119,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 		return [type];
 	}
 
-	protected _expected_input_types(): ConnectionPointType[] {
+	protected _expected_input_types(): GlConnectionPointType[] {
 		const input_connections = this.io.connections.input_connections();
 		if (input_connections) {
 			const first_connection = input_connections[0];
@@ -134,7 +134,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 				const expected_count = Math.max(input_connections.length + 1, 2);
 				const empty_array = new Array(expected_count);
 
-				if (type == ConnectionPointType.FLOAT) {
+				if (type == GlConnectionPointType.FLOAT) {
 					const second_connection = input_connections[1];
 					if (second_connection) {
 						const connection_point_for_second_connection =
@@ -142,7 +142,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 								second_connection.output_index
 							];
 						const second_type = connection_point_for_second_connection.type;
-						if (second_type == ConnectionPointType.FLOAT) {
+						if (second_type == GlConnectionPointType.FLOAT) {
 							// if first 2 inputs are float: n+1 float inputs
 							return empty_array.fill(type);
 						} else {
@@ -161,6 +161,6 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 				// if we arrive here, we simply go to the last return statement
 			}
 		}
-		return [ConnectionPointType.FLOAT, ConnectionPointType.FLOAT];
+		return [GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT];
 	}
 }

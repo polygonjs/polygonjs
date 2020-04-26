@@ -1,7 +1,6 @@
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
@@ -23,7 +22,7 @@ export class FloatToIntGlNode extends TypedGlNode<FloatToIntGlParamsConfig> {
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME_INT, ConnectionPointType.INT),
+			new GlConnectionPoint(OUTPUT_NAME_INT, GlConnectionPointType.INT),
 		]);
 	}
 
@@ -54,7 +53,7 @@ export class IntToFloatGlNode extends TypedGlNode<IntToFloatGlParamsConfig> {
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME_FLOAT, ConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME_FLOAT, GlConnectionPointType.FLOAT),
 		]);
 	}
 

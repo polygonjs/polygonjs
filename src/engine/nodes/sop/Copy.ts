@@ -47,19 +47,27 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	async cook() {
-		let core_group0;
 		const container0 = await this.container_controller.request_input_container(0);
-		if (container0 != null && (core_group0 = container0.core_content()) != null) {
-			if (this.io.inputs.has_input(1)) {
-				let core_group1;
-				const container1 = await this.container_controller.request_input_container(1);
-				if (container1 != null && (core_group1 = container1.core_content()) != null) {
-					await this.cook_with_template(core_group0, core_group1);
+		if (container0) {
+			const core_group0 = container0.core_content();
+			if (core_group0) {
+				if (this.io.inputs.has_input(1)) {
+					const container1 = await this.container_controller.request_input_container(1);
+					if (container1) {
+						const core_group1 = container1.core_content();
+						if (core_group1) {
+							await this.cook_with_template(core_group0, core_group1);
+						} else {
+							this.states.error.set('second input invalid');
+						}
+					} else {
+						this.states.error.set('second input required');
+					}
 				} else {
-					this.states.error.set('second input required');
+					this.cook_without_template(core_group0);
 				}
 			} else {
-				this.cook_without_template(core_group0);
+				this.states.error.set('first input invalid');
 			}
 		} else {
 			this.states.error.set('first input required');
@@ -171,10 +179,14 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		return new Promise(async (resolve, reject) => {
 			if (this.pv.use_copy_expr) {
 				const container0 = await this.container_controller.request_input_container(0);
-				let core_group0: CoreGroup;
-				if (container0 && (core_group0 = container0.core_content()) != null) {
+				if (container0) {
+					const core_group0 = container0.core_content();
 					// this.stamp_node.increment_global_value()
-					resolve(core_group0);
+					if (core_group0) {
+						resolve(core_group0);
+					} else {
+						resolve();
+					}
 				} else {
 					this.states.error.set(`input failed for index ${this.stamp_value()}`);
 					resolve();

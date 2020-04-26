@@ -1,14 +1,8 @@
 import {TypedNode} from '../_Base';
-import {EventContainer} from '../../containers/Event';
 import {NodeContext} from '../../poly/NodeContext';
-import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT', BaseEventNodeType, K> {
-	container_controller: TypedContainerController<EventContainer> = new TypedContainerController<EventContainer>(
-		this,
-		EventContainer
-	);
+export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.EVENT, K> {
 	static node_context(): NodeContext {
 		return NodeContext.EVENT;
 	}
@@ -22,9 +16,9 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<'EVENT
 		this.ui_data.set_layout_horizontal();
 		this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 	}
-	node_sibbling(name: string): BaseEventNodeType | null {
-		return super.node_sibbling(name) as BaseEventNodeType | null;
-	}
+	// node_sibbling(name: string): BaseEventNodeType | null {
+	// 	return super.node_sibbling(name) as BaseEventNodeType | null;
+	// }
 
 	// ensures that event nodes are cooked when scene is loaded
 	_eval_all_params_on_dirty() {

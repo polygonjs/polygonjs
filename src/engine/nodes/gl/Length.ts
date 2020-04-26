@@ -1,5 +1,5 @@
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 export class LengthGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	static type() {
@@ -21,6 +21,6 @@ export class LengthGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	}
 
 	protected _expected_output_types() {
-		return [ConnectionPointType.FLOAT];
+		return [GlConnectionPointType.FLOAT];
 	}
 }

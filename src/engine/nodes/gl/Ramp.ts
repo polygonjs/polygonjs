@@ -1,6 +1,5 @@
 import {TypedGlNode} from './_Base';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {GlConnectionPoint, GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {UniformGLDefinition} from './utils/GLDefinition';
 import {RampParam} from '../../params/Ramp';
@@ -26,16 +25,16 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const gl_type = ConnectionPointType.FLOAT;
+		const gl_type = GlConnectionPointType.FLOAT;
 		const texture_name = this._uniform_name();
 		const var_name = this.gl_var_name(OUTPUT_NAME);
 
-		const definition = new UniformGLDefinition(this, ConnectionPointType.SAMPLER_2D, texture_name);
+		const definition = new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, texture_name);
 		shaders_collection_controller.add_definitions(this, [definition]);
 
 		const input_val = this.variable_for_input(this.p.input.name);

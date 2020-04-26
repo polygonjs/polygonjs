@@ -1,7 +1,7 @@
-import {TypedNode} from '../../_Base';
 import {ShaderName} from './ShaderName';
-
-export abstract class TypedAssembler<T extends TypedNode<any, any, any>> {
+import {NodeContext} from '../../../poly/NodeContext';
+import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
+export abstract class TypedAssembler<NC extends NodeContext> {
 	abstract get shader_names(): ShaderName[];
-	abstract input_names_for_shader_name(node: T, shader_name: ShaderName): string[];
+	abstract input_names_for_shader_name(node: NodeTypeMap[NC], shader_name: ShaderName): string[];
 }

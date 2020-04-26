@@ -1,5 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
-import {BaseNodeType, TypedNode} from '../../_Base';
+import {TypedNode} from '../../_Base';
 import {BaseGlShaderAssembler} from './assemblers/_Base';
 import {GlobalsBaseController} from './globals/_Base';
 import {GlobalsGeometryHandler} from './globals/Geometry';
@@ -9,7 +9,7 @@ import {GlNodeChildrenMap} from '../../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../_Base';
 import {AssemblerNodeSpareParamsController} from './SpareParamsController';
 
-export class AssemblerControllerNode extends TypedNode<any, BaseNodeType, any> {
+export class AssemblerControllerNode extends TypedNode<any, any> {
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
 		return super.create_node(type) as GlNodeChildrenMap[K];
 	}

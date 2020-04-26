@@ -34,9 +34,13 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 		const input_index = this.pv.input;
 		if (this.io.inputs.has_input(input_index)) {
 			const container = await this.container_controller.request_input_container(input_index);
-			this.set_texture(container.texture());
+			if (container) {
+				this.set_texture(container.texture());
+				return;
+			}
 		} else {
 			this.states.error.set(`no input ${input_index}`);
 		}
+		this.cook_controller.end_cook();
 	}
 }

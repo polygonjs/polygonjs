@@ -1,47 +1,21 @@
 import {TypedNode} from '../_Base';
-
 import {Material} from 'three/src/materials/Material';
-
-// import DisplayFlag from '../Concerns/DisplayFlag';
-
-import {MaterialContainer} from '../../containers/Material';
 import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from '../../poly/NodeContext';
-import {TypedContainerController} from '../utils/ContainerController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-// type RenderHook = (object: Object3D) => void;
 
 export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfig> extends TypedNode<
-	'MATERIAL',
-	BaseMatNodeType,
+	NodeContext.MAT,
 	K
 > {
-	container_controller: TypedContainerController<MaterialContainer> = new TypedContainerController<MaterialContainer>(
-		this,
-		MaterialContainer
-	);
 	static node_context(): NodeContext {
 		return NodeContext.MAT;
 	}
 
 	protected _material: M | undefined;
-	// protected _update_methods: RenderHook[] = [];
 
 	initialize_base_node() {
 		super.initialize_base_node();
-		// this._update_methods = [];
-
-		// this._init_bypass_flag({
-		// 	has_bypass_flag: false,
-		// });
-		// this._init_display_flag({
-		// 	has_display_flag: false,
-		// });
-
-		// this.set_inputs_count_to_zero();
-		// this._init_outputs({has_outputs: false});
-
-		// this.container_controller.init(MaterialContainer);
 
 		this.name_controller.add_post_set_full_path_hook(this.set_material_name.bind(this));
 
@@ -49,15 +23,10 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 			'_cook_main_without_inputs_when_dirty',
 			this._cook_main_without_inputs_when_dirty_bound
 		);
-
-		// it's probably good not to have to create any material in the constructor
-		// but only on request
-		// this._material = this.create_material();
-		// this.set_material(this._material);
 	}
-	node_sibbling(name: string): BaseMatNodeType | null {
-		return super.node_sibbling(name) as BaseMatNodeType | null;
-	}
+	// node_sibbling(name: string): BaseMatNodeType | null {
+	// 	return super.node_sibbling(name) as BaseMatNodeType | null;
+	// }
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
 		await this.cook_controller.cook_main_without_inputs();

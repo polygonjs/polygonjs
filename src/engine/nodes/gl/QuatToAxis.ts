@@ -1,6 +1,6 @@
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import Quaternion from './gl/quaternion.glsl';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
@@ -12,8 +12,8 @@ export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		super.initialize_node();
 
 		this.gl_connections_controller.set_input_name_function((index: number) => ['quat'][index]);
-		this.gl_connections_controller.set_expected_input_types_function(() => [ConnectionPointType.VEC4]);
-		this.gl_connections_controller.set_expected_output_types_function(() => [ConnectionPointType.VEC3]);
+		this.gl_connections_controller.set_expected_input_types_function(() => [GlConnectionPointType.VEC4]);
+		this.gl_connections_controller.set_expected_output_types_function(() => [GlConnectionPointType.VEC3]);
 	}
 
 	// protected _gl_input_name(index: number) {
@@ -30,6 +30,6 @@ export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	return [ConnectionPointType.VEC3];
 	// }
 	gl_function_definitions() {
-		return [new FunctionGLDefinition(this, ConnectionPointType.VEC3, Quaternion)];
+		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 }

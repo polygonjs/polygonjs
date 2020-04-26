@@ -5,7 +5,7 @@ import {AttributeGlNode} from '../../Attribute';
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig';
 // import {BaseGlNodeType} from '../../_Base';
 import {VaryingGLDefinition, AttributeGLDefinition} from '../../utils/GLDefinition';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
 // import {TypeAssert} from '../../../../poly/Assert';
 import {MapUtils} from '../../../../../core/MapUtils';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
@@ -92,7 +92,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 	// }
 	read_attribute(
 		node: BaseGlNodeType,
-		gl_type: ConnectionPointType,
+		gl_type: GlConnectionPointType,
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {
@@ -101,7 +101,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 
 	static read_attribute(
 		node: BaseGlNodeType,
-		gl_type: ConnectionPointType,
+		gl_type: GlConnectionPointType,
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	): string | undefined {
@@ -196,7 +196,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 	}
 	handle_attribute_node(
 		node: AttributeGlNode,
-		gl_type: ConnectionPointType,
+		gl_type: GlConnectionPointType,
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {

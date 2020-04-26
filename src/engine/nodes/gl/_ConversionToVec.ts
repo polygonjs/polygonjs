@@ -1,7 +1,6 @@
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
@@ -24,7 +23,7 @@ export class FloatToVec2GlNode extends TypedGlNode<FloatToVec2GlParamsConfig> {
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(FloatToVec2GlNode.OUTPUT_NAME, ConnectionPointType.VEC2),
+			new GlConnectionPoint(FloatToVec2GlNode.OUTPUT_NAME, GlConnectionPointType.VEC2),
 		]);
 	}
 
@@ -58,7 +57,7 @@ export class FloatToVec3GlNode extends TypedGlNode<FloatToVec3GlParamsConfig> {
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(FloatToVec3GlNode.OUTPUT_NAME, ConnectionPointType.VEC3),
+			new GlConnectionPoint(FloatToVec3GlNode.OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
@@ -94,7 +93,7 @@ export class FloatToVec4GlNode extends TypedGlNode<FloatToVec4GlParamsConfig> {
 
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(FloatToVec4GlNode.OUTPUT_NAME, ConnectionPointType.VEC4),
+			new GlConnectionPoint(FloatToVec4GlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}
 

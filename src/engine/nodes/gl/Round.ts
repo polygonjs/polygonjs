@@ -1,7 +1,7 @@
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {ConnectionPointComponentsCountMap} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointComponentsCountMap} from '../utils/io/connections/Gl';
 
 const ALL_COMPONENTS = ['x', 'y', 'z', 'w'];
 // const OUTPUT_NAME = 'round'
@@ -33,7 +33,7 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		const var_name = this.gl_var_name(output_connection.name);
 
 		const body_lines: string[] = [];
-		const lines_count = ConnectionPointComponentsCountMap[output_connection.type];
+		const lines_count = GlConnectionPointComponentsCountMap[output_connection.type];
 		if (lines_count == 1) {
 			body_lines.push(`${output_connection.type} ${var_name} = ${this._simple_line(value)}`);
 		} else {

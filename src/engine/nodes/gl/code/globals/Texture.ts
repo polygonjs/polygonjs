@@ -7,7 +7,7 @@ import {TextureAllocationsController} from '../utils/TextureAllocationsControlle
 import {GlobalsGeometryHandler} from './Geometry';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {UniformGLDefinition, AttributeGLDefinition, VaryingGLDefinition} from '../../utils/GLDefinition';
-import {ConnectionPointType} from '../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig'
@@ -143,7 +143,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 	read_attribute(
 		node: BaseGlNodeType,
-		gl_type: ConnectionPointType,
+		gl_type: GlConnectionPointType,
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {
@@ -169,7 +169,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				const var_name_texture = allocation.texture_name;
 				const texture_definition = new UniformGLDefinition(
 					node,
-					ConnectionPointType.SAMPLER_2D,
+					GlConnectionPointType.SAMPLER_2D,
 					var_name_texture
 				);
 				// definitions_by_shader_name[shader_name].push(texture_definition)
@@ -197,12 +197,12 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 		const particles_sim_uv_attrib_definition = new AttributeGLDefinition(
 			node,
-			ConnectionPointType.VEC2,
+			GlConnectionPointType.VEC2,
 			GlobalsTextureHandler.UV_ATTRIB
 		);
 		const particles_sim_uv_varying_definition = new VaryingGLDefinition(
 			node,
-			ConnectionPointType.VEC2,
+			GlConnectionPointType.VEC2,
 			GlobalsTextureHandler.UV_VARYING
 		);
 

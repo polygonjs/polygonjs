@@ -6,7 +6,7 @@ import {AttributeGlNode} from '../../../Attribute';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlobalsGlNode} from '../../../Globals';
 import {BaseGLDefinition, UniformGLDefinition} from '../../../utils/GLDefinition';
-import {ConnectionPointType} from '../../../../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import {MapUtils} from '../../../../../../core/MapUtils';
 import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
@@ -357,7 +357,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 			switch (output_name) {
 				case 'time':
-					definition = new UniformGLDefinition(globals_node, ConnectionPointType.FLOAT, output_name);
+					definition = new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name);
 					if (globals_shader_name) {
 						MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_shader_name, definition);
 					}
@@ -378,7 +378,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 				case 'resolution':
 					this.handle_resolution(body_lines, shader_name, var_name);
-					definition = new UniformGLDefinition(globals_node, ConnectionPointType.VEC2, output_name);
+					definition = new UniformGLDefinition(globals_node, GlConnectionPointType.VEC2, output_name);
 					if (globals_shader_name) {
 						MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_shader_name, definition);
 					}

@@ -1,13 +1,9 @@
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 
-import {ConnectionPointTypesAvailableForAttribute} from '../../../../src/engine/nodes/gl/Attribute';
 import {GlobalsGlNode} from '../../../../src/engine/nodes/gl/Globals';
 import {OutputGlNode} from '../../../../src/engine/nodes/gl/Output';
-import {
-	ConnectionPointTypes,
-	ConnectionPointType,
-} from '../../../../src/engine/nodes/utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {ConstantGlNode} from '../../../../src/engine/nodes/gl/Constant';
 // import {CoreSleep} from '../../../../src/core/Sleep';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -57,7 +53,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).sort());
 
 	const constant1 = mesh_basic1.create_node('constant');
-	constant1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.VEC3));
+	constant1.set_gl_type(GlConnectionPointType.VEC3);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.set_input('color', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
@@ -110,7 +106,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	vec4_to_vector1.set_input('vec4', texture1, TextureGlNode.OUTPUT_NAME);
 	texture1.set_input('uv', attribute1);
 	attribute1.p.name.set('uv');
-	attribute1.p.type.set(ConnectionPointTypesAvailableForAttribute.indexOf(ConnectionPointType.VEC2));
+	attribute1.set_gl_type(GlConnectionPointType.VEC2);
 
 	// await CoreSleep.sleep(50);
 
@@ -144,7 +140,7 @@ QUnit.test(
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 		const attribute1 = mesh_basic1.create_node('attribute');
 		attribute1.p.name.set('uv');
-		attribute1.p.type.set(ConnectionPointTypesAvailableForAttribute.indexOf(ConnectionPointType.VEC2));
+		attribute1.set_gl_type(GlConnectionPointType.VEC2);
 		const vec2_to_float1 = mesh_basic1.create_node('vec2_to_float');
 		const float_to_vec31 = mesh_basic1.create_node('float_to_vec3');
 		vec2_to_float1.set_input(0, attribute1);

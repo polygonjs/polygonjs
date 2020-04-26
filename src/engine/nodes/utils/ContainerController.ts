@@ -1,21 +1,23 @@
-import {BaseContainer, TypedContainer} from '../../containers/_Base';
-import {BaseNodeType} from '../_Base';
+import {TypedNode} from '../_Base';
+import {NodeContext} from '../../poly/NodeContext';
+import {ContainerMap, ContainerClassMap} from '../../containers/utils/ContainerMap';
 
-type Callback<T extends TypedContainer<any>> = (container: T | undefined) => void;
+type Callback<NC extends NodeContext> = (container: ContainerMap[NC] | undefined) => void;
 
-export class TypedContainerController<T extends TypedContainer<any>> {
-	private _callbacks: Callback<T>[] = [];
-	protected _container: T;
+export class TypedContainerController<NC extends NodeContext> {
+	private _callbacks: Callback<NC>[] = [];
+	protected _container: ContainerMap[NC];
 
-	constructor(protected node: BaseNodeType, container_class: typeof BaseContainer) {
-		this._container = new container_class(this.node) as T;
+	constructor(protected node: TypedNode<NC, any>) {
+		const container_class = ContainerClassMap[node.node_context()];
+		this._container = new container_class(this.node as any) as ContainerMap[NC];
 	}
 
 	get container() {
 		return this._container;
 	}
 
-	request_container(): Promise<T> {
+	request_container(): Promise<ContainerMap[NC]> {
 		return new Promise((resolve, reject) => {
 			this._callbacks.push(resolve);
 			this.node.scene.cook_controller.add_node(this.node);
@@ -35,7 +37,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 			this.request_input_container(input_index).then((container) => {
 				this.node.remove_dirty_state();
 				if (container) {
-					this.notify_requesters(container);
+					this.notify_requesters(container as ContainerMap[NC]);
 				} else {
 					this.node.states.error.set('input invalid');
 				}
@@ -51,7 +53,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 	}
 
 	async request_input_container(input_index: number) {
-		const input_node = this.node.io.inputs.input(input_index);
+		const input_node = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
 		if (input_node) {
 			input_node.processing_context.copy(this.node.processing_context);
 			const container = await input_node.container_controller.request_container();
@@ -62,7 +64,7 @@ export class TypedContainerController<T extends TypedContainer<any>> {
 			return null;
 		}
 	}
-	notify_requesters(container?: T) {
+	notify_requesters(container?: ContainerMap[NC]) {
 		// make a copy of the callbacks first,
 		// to ensure that new ones are not added to this list
 		// in side effects from those callbacks

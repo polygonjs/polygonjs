@@ -12,6 +12,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {ContainableMap} from './utils/ContainableMap';
 import {CoreObject} from '../../core/geometry/Object';
 import {AttribType} from '../../core/geometry/Constant';
+import {NodeContext} from '../poly/NodeContext';
 // import {CoreConstant} from '../../core/geometry/Constant'
 
 // const CoreGeometryGroup = CoreGroup
@@ -24,7 +25,7 @@ import {AttribType} from '../../core/geometry/Constant';
 // interface BooleanByString {
 // 	[propName: string]: boolean
 // }
-export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']> {
+export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// protected _group: Group = new Group()
 	// private _objects_by_uuid: BooleanByString = {}
 	// protected _content: Object3D[] = []
@@ -105,7 +106,7 @@ export class GeometryContainer extends TypedContainer<ContainableMap['GEOMETRY']
 	// core_group() {
 	// 	return this._core_group; //this.group_wrapper(options)
 	// }
-	set_content(content: ContainableMap['GEOMETRY']) {
+	set_content(content: ContainableMap[NodeContext.SOP]) {
 		super.set_content(content);
 	}
 	// object(options){

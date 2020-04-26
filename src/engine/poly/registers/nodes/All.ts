@@ -2,6 +2,7 @@ import {AnimRegister} from './Anim';
 import {CopRegister} from './Cop';
 import {EventRegister} from './Event';
 import {GlRegister} from './Gl';
+import {JsRegister} from './Js';
 import {MatRegister} from './Mat';
 import {ObjRegister} from './Obj';
 import {PostRegister} from './Post';
@@ -22,6 +23,9 @@ export class AllNodesRegister {
 
 		// const {GlRegister} = await import(/* webpackChunkName: "Gl" */ './Gl');
 		GlRegister.run(poly);
+
+		// const {JsRegister} = await import(/* webpackChunkName: "Js" */ './Js');
+		JsRegister.run(poly);
 
 		// const {MatRegister} = await import(/* webpackChunkName: "Mat" */ './Mat');
 		MatRegister.run(poly);

@@ -14,6 +14,7 @@ import {CodeFormatter} from './CodeFormatter';
 import {LineType} from './LineType';
 import {GlParamConfig} from './ParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
+import {NodeContext} from '../../../../poly/NodeContext';
 
 export class CodeBuilder {
 	_param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> = new ParamConfigsController();
@@ -21,17 +22,18 @@ export class CodeBuilder {
 
 	private _shaders_collection_controller: ShadersCollectionController | undefined;
 	_lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
-	_function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
+	// _function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
 
 	constructor(private _assembler: BaseGlShaderAssembler, private _gl_parent_node: BaseNodeType) {}
 
 	async build_from_nodes(root_nodes: BaseGlNodeType[]) {
-		const node_traverser = new TypedNodeTraverser<BaseGlNodeType>(this._assembler, this._gl_parent_node);
+		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(this._assembler, this._gl_parent_node);
 		node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
 		for (let shader_name of this.shader_names()) {
-			nodes_by_shader_name.set(shader_name, node_traverser.nodes_for_shader_name(shader_name));
+			const nodes = node_traverser.nodes_for_shader_name(shader_name);
+			nodes_by_shader_name.set(shader_name, nodes);
 		}
 		const sorted_nodes = node_traverser.sorted_nodes();
 		for (let shader_name of this.shader_names()) {
@@ -114,7 +116,7 @@ export class CodeBuilder {
 			// 	lines_map.set(line_type, []);
 			// }
 			this._lines.set(shader_name, lines_map);
-			this._function_declared.set(shader_name, new Map());
+			// this._function_declared.set(shader_name, new Map());
 		}
 	}
 

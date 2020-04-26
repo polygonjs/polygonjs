@@ -1,4 +1,4 @@
-import {ConnectionPointType} from '../../../../src/engine/nodes/utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 
@@ -10,11 +10,11 @@ QUnit.test('gl constant updates its output type correctly when created', async (
 	const constant1 = material_basic_builder1.create_node('constant');
 
 	assert.equal(constant1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, ConnectionPointType.FLOAT);
+	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.FLOAT);
 
 	constant1.p.type.set(constant1.pv.type + 1);
 	assert.equal(constant1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, ConnectionPointType.VEC2);
+	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.VEC2);
 });
 
 QUnit.test('gl constant updates its output type correctly when scene is loaded', async (assert) => {
@@ -38,5 +38,5 @@ QUnit.test('gl constant updates its output type correctly when scene is loaded',
 	assert.ok(constant2);
 	assert.equal(constant2.pv.type, 3);
 	assert.equal(constant1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, ConnectionPointType.VEC2);
+	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.VEC2);
 });

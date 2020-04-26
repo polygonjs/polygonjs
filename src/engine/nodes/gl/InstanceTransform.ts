@@ -3,8 +3,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 
 import QuaternionMethods from './gl/quaternion.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
@@ -34,8 +33,8 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(this.gl_output_name_position(), ConnectionPointType.VEC3),
-			new TypedNamedConnectionPoint(this.gl_output_name_normal(), ConnectionPointType.VEC3),
+			new GlConnectionPoint(this.gl_output_name_position(), GlConnectionPointType.VEC3),
+			new GlConnectionPoint(this.gl_output_name_normal(), GlConnectionPointType.VEC3),
 		]);
 	}
 
@@ -43,7 +42,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		const body_lines = [];
 		const function_declaration_lines = [];
 
-		function_declaration_lines.push(new FunctionGLDefinition(this, ConnectionPointType.VEC4, QuaternionMethods));
+		function_declaration_lines.push(new FunctionGLDefinition(this, QuaternionMethods));
 
 		const input_position = this.io.inputs.named_input(this.p.position.name);
 		const position = input_position
@@ -99,7 +98,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	private _default_instance_position(shaders_collection_controller: ShadersCollectionController): string | undefined {
 		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
 			this,
-			ConnectionPointType.VEC3,
+			GlConnectionPointType.VEC3,
 			VARS.instance_position,
 			shaders_collection_controller
 		);
@@ -110,7 +109,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	private _default_input_instance_orientation(shaders_collection_controller: ShadersCollectionController) {
 		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
 			this,
-			ConnectionPointType.VEC4,
+			GlConnectionPointType.VEC4,
 			VARS.instance_orientation,
 			shaders_collection_controller
 		);
@@ -121,7 +120,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	private _default_input_instance_scale(shaders_collection_controller: ShadersCollectionController) {
 		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
 			this,
-			ConnectionPointType.VEC3,
+			GlConnectionPointType.VEC3,
 			VARS.instance_scale,
 			shaders_collection_controller
 		);

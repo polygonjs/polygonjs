@@ -1,13 +1,13 @@
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 interface MathArg2Options {
 	in?: [string, string];
 	out?: string;
-	default_in_type?: ConnectionPointType;
-	allowed_in_types?: ConnectionPointType[];
-	out_type?: ConnectionPointType;
+	default_in_type?: GlConnectionPointType;
+	allowed_in_types?: GlConnectionPointType[];
+	out_type?: GlConnectionPointType;
 	method?: string;
 	functions?: string[];
 }
@@ -46,7 +46,7 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 		}
 		gl_function_definitions(): FunctionGLDefinition[] {
 			if (out_type) {
-				return functions.map((f) => new FunctionGLDefinition(this, out_type, f));
+				return functions.map((f) => new FunctionGLDefinition(this, f));
 			} else {
 				return [];
 			}
@@ -65,22 +65,22 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 					}
 				}
 			}
-			const type = first_input_type || default_in_type || ConnectionPointType.FLOAT;
+			const type = first_input_type || default_in_type || GlConnectionPointType.FLOAT;
 			return [type, type];
 		}
 	};
 }
 export class DistanceGlNode extends MathFunctionArg2Factory('distance', {
 	in: ['p0', 'p1'],
-	default_in_type: ConnectionPointType.VEC3,
-	allowed_in_types: [ConnectionPointType.VEC2, ConnectionPointType.VEC3, ConnectionPointType.VEC4],
-	out_type: ConnectionPointType.FLOAT,
+	default_in_type: GlConnectionPointType.VEC3,
+	allowed_in_types: [GlConnectionPointType.VEC2, GlConnectionPointType.VEC3, GlConnectionPointType.VEC4],
+	out_type: GlConnectionPointType.FLOAT,
 }) {}
 export class DotGlNode extends MathFunctionArg2Factory('dot', {
 	in: ['vec0', 'vec1'],
-	default_in_type: ConnectionPointType.VEC3,
-	allowed_in_types: [ConnectionPointType.VEC2, ConnectionPointType.VEC3, ConnectionPointType.VEC4],
-	out_type: ConnectionPointType.FLOAT,
+	default_in_type: GlConnectionPointType.VEC3,
+	allowed_in_types: [GlConnectionPointType.VEC2, GlConnectionPointType.VEC3, GlConnectionPointType.VEC4],
+	out_type: GlConnectionPointType.FLOAT,
 }) {}
 export class MaxGlNode extends MathFunctionArg2Factory('max') {}
 export class MinGlNode extends MathFunctionArg2Factory('min') {}
@@ -92,6 +92,6 @@ export class ModGlNode extends MathFunctionArg2Factory('mod') {
 export class PowGlNode extends MathFunctionArg2Factory('pow', {in: ['x', 'y']}) {}
 export class ReflectGlNode extends MathFunctionArg2Factory('reflect', {
 	in: ['I', 'N'],
-	default_in_type: ConnectionPointType.VEC3,
+	default_in_type: GlConnectionPointType.VEC3,
 }) {}
 export class StepGlNode extends MathFunctionArg2Factory('step', {in: ['edge', 'x']}) {}

@@ -1,8 +1,7 @@
 import {TypedEventNode} from './_Base';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
 const OUTPUT_NAME = 'event';
 
@@ -16,12 +15,11 @@ export class AnyEventNode extends TypedEventNode<PassEventParamsConfig> {
 		return 'any';
 	}
 	initialize_node() {
-		// TODO: do not use GL connection Types here
 		this.io.inputs.set_named_input_connection_points(
-			[0, 1, 2, 3].map((i) => new TypedNamedConnectionPoint(`trigger${i}`, ConnectionPointType.BOOL))
+			[0, 1, 2, 3].map((i) => new EventConnectionPoint(`trigger${i}`, EventConnectionPointType.BASE))
 		);
 		this.io.outputs.set_named_output_connection_points([
-			new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointType.BOOL),
+			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}
 

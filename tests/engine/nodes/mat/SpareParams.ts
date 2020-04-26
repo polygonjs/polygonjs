@@ -2,10 +2,7 @@ import {OutputGlNode} from '../../../../src/engine/nodes/gl/Output';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
-import {
-	ConnectionPointTypes,
-	ConnectionPointType,
-} from '../../../../src/engine/nodes/utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {FloatParam} from '../../../../src/engine/params/Float';
@@ -32,7 +29,7 @@ QUnit.test(
 
 		const param1 = mesh_basic1.create_node('param');
 		const param_name = param1.p.name.value;
-		param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT));
+		param1.set_gl_type(GlConnectionPointType.FLOAT);
 
 		assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
 		await mesh_basic1.request_container();
@@ -43,12 +40,12 @@ QUnit.test(
 		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.FLOAT);
 
 		// changing the param type updates the spare param type
-		param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.INT));
+		param1.set_gl_type(GlConnectionPointType.INT);
 		await mesh_basic1.request_container();
 		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.INTEGER);
 
 		// we revert back to float for the rest of the test
-		param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT));
+		param1.set_gl_type(GlConnectionPointType.FLOAT);
 		await mesh_basic1.request_container();
 		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.FLOAT);
 
@@ -93,7 +90,7 @@ QUnit.test(
 		);
 
 		// if I change the type of the param, the raw_input stays
-		param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.INT));
+		param1.set_gl_type(GlConnectionPointType.INT);
 		await mesh_basic1.request_container();
 		let spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type, ParamType.INTEGER);
@@ -106,7 +103,7 @@ QUnit.test(
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 124);
 
 		// we revert back to float for the rest of the test
-		param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT));
+		param1.set_gl_type(GlConnectionPointType.FLOAT);
 		await mesh_basic1.request_container();
 		spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type, ParamType.FLOAT);
@@ -166,7 +163,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	const param_name = param1.p.name.value;
 	const uniform_name = param1.uniform_name();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
-	param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT));
+	param1.set_gl_type(GlConnectionPointType.FLOAT);
 	await CoreSleep.sleep(100);
 	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type, ParamType.FLOAT, 'param is float');
@@ -175,7 +172,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0.25);
 
 	// now change to vec3
-	param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.VEC3));
+	param1.set_gl_type(GlConnectionPointType.VEC3);
 	await CoreSleep.sleep(100);
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as Vector3Param;
 	assert.equal(vec3_spare_param.type, ParamType.VECTOR3, 'param is vec3');
@@ -234,7 +231,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	const param_name = param1.p.name.value;
 	const uniform_name = param1.uniform_name();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
-	param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.FLOAT));
+	param1.set_gl_type(GlConnectionPointType.FLOAT);
 	await CoreSleep.sleep(100);
 	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type, ParamType.FLOAT, 'param is float');
@@ -243,7 +240,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0.25);
 
 	// now change to vec3
-	param1.p.type.set(ConnectionPointTypes.indexOf(ConnectionPointType.VEC3));
+	param1.set_gl_type(GlConnectionPointType.VEC3);
 	param1.p.as_color.set(1);
 	await CoreSleep.sleep(100);
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as ColorParam;

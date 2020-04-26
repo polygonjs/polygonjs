@@ -39,6 +39,7 @@ import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
+import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LineSopNode} from '../../../nodes/sop/Line';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
@@ -108,6 +109,7 @@ export interface GeoNodeChildrenMap {
 	hierarchy: HierarchySopNode;
 	instance: InstanceSopNode;
 	jitter: JitterSopNode;
+	js_point: JsPointSopNode;
 	layer: LayerSopNode;
 	line: LineSopNode;
 	material: MaterialSopNode;
@@ -181,6 +183,7 @@ export class SopRegister {
 		poly.register_node(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.register_node(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(JitterSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(JsPointSopNode, CATEGORY_SOP.ADVANCED);
 		poly.register_node(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(MaterialSopNode, CATEGORY_SOP.RENDER);

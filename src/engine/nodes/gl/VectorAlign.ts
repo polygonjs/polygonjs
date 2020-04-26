@@ -1,6 +1,6 @@
 import Quaternion from './gl/quaternion.glsl';
 import {MathFunctionArg3Factory} from './_Math_Arg3';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 const DefaultValues: Dictionary<Number3> = {
 	start: [0, 0, 1],
@@ -14,11 +14,11 @@ export class VectorAlignGlNode extends MathFunctionArg3Factory('vector_align', {
 	functions: [Quaternion],
 }) {
 	protected _expected_input_types() {
-		const type = ConnectionPointType.VEC3;
+		const type = GlConnectionPointType.VEC3;
 		return [type, type, type];
 	}
 	protected _expected_output_types() {
-		return [ConnectionPointType.VEC4];
+		return [GlConnectionPointType.VEC4];
 	}
 	gl_input_default_value(name: string) {
 		return DefaultValues[name];

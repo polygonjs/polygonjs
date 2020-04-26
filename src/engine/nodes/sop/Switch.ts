@@ -40,9 +40,16 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 		const input_index = this.pv.input;
 		if (this.io.inputs.has_input(input_index)) {
 			const container = await this.container_controller.request_input_container(input_index);
-			this.set_core_group(container.core_content());
+			if (container) {
+				const core_group = container.core_content();
+				if (core_group) {
+					this.set_core_group(core_group);
+					return;
+				}
+			}
 		} else {
 			this.states.error.set(`no input ${input_index}`);
 		}
+		this.cook_controller.end_cook();
 	}
 }

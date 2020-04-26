@@ -1,6 +1,5 @@
 import {TypedEventNode} from './_Base';
-import {TypedNamedConnectionPoint} from '../utils/connections/NamedConnectionPoint';
-import {ConnectionPointType} from '../utils/connections/ConnectionPointType';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../scene/utils/events/MouseEventsController';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
@@ -48,10 +47,9 @@ export class MouseEventNode extends TypedEventNode<MouseEventParamsConfig> {
 	}
 	private dispatcher_registerer = new DispatcherRegisterer(this);
 	initialize_node() {
-		// TODO: do not use GL connection Types here
 		this.io.outputs.set_named_output_connection_points(
 			ACCEPTED_MOUSE_EVENT_TYPES.map((event_type) => {
-				return new TypedNamedConnectionPoint(event_type, ConnectionPointType.BOOL);
+				return new EventConnectionPoint(event_type, EventConnectionPointType.MOUSE);
 			})
 		);
 

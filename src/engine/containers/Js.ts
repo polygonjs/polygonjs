@@ -1,7 +1,7 @@
 import {TypedContainer} from './_Base';
-import {ContainableMap} from './utils/ContainableMap';
+import {NodeContext} from '../poly/NodeContext';
 
-export class JsContainer extends TypedContainer<ContainableMap['JS']> {
+export class JsContainer extends TypedContainer<NodeContext.JS> {
 	object() {
 		return this._content;
 	}

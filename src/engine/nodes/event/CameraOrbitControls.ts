@@ -33,14 +33,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	static type() {
 		return 'camera_orbit_controls';
 	}
-	// static required_three_imports() {
-	// 	return ['controls/OrbitControls'];
-	// }
-
 	async create_controls_instance(camera: Camera, element: HTMLElement) {
-		// const c = this.constructor as typeof CameraOrbitControlsEventNode;
-		// const {OrbitControls} = await CoreScriptLoader.module(c.required_imports()[0]);
-
 		const controls = new OrbitControls(camera, element);
 		return controls;
 	}
