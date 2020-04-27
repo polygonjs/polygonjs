@@ -53,7 +53,7 @@ import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../../nodes/sop/Peak';
 import {PhysicsRBDAttributesSopNode} from '../../../nodes/sop/PhysicsRBDAttributes';
 import {PhysicsForceAttributesSopNode} from '../../../nodes/sop/PhysicsForceAttributes';
-import {PhysicsRBDSolverSopNode} from '../../../nodes/sop/PhysicsRBDSolver';
+import {PhysicsSolverSopNode} from '../../../nodes/sop/PhysicsSolver';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
 import {PointSopNode} from '../../../nodes/sop/Point';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
@@ -123,7 +123,7 @@ export interface GeoNodeChildrenMap {
 	peak: PeakSopNode;
 	physics_rbd_attributes: PhysicsRBDAttributesSopNode;
 	physics_force_attributes: PhysicsForceAttributesSopNode;
-	physics_rbd_solver: PhysicsRBDSolverSopNode;
+	physics_solver: PhysicsSolverSopNode;
 	plane: PlaneSopNode;
 	point: PointSopNode;
 	polywire: PolywireSopNode;
@@ -197,7 +197,7 @@ export class SopRegister {
 		poly.register_node(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PhysicsRBDAttributesSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(PhysicsForceAttributesSopNode, CATEGORY_SOP.PHYSICS);
-		poly.register_node(PhysicsRBDSolverSopNode, CATEGORY_SOP.PHYSICS);
+		poly.register_node(PhysicsSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PolywireSopNode, CATEGORY_SOP.MODIFIER);

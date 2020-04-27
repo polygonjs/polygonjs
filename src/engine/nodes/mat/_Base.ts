@@ -1,6 +1,5 @@
 import {TypedNode} from '../_Base';
 import {Material} from 'three/src/materials/Material';
-import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
@@ -55,7 +54,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 	//run_update_methods: ->
 
-	add_render_hook(object: Object3D) {}
+	// add_render_hook(object: Object3D) {}
 }
 //delete object.onBeforeRender
 

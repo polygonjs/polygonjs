@@ -13,7 +13,10 @@ import Ammo from 'ammojs-typed';
 const NULL_ID = '';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Object3D} from 'three';
 class AmmoSolverSopParamsConfig extends NodeParamsConfig {
+	start_frame = ParamConfig.INTEGER(1);
+
 	gravity = ParamConfig.VECTOR3([0, -9.81, 0]);
 	max_substeps = ParamConfig.INTEGER(2, {
 		range: [1, 10],
@@ -21,16 +24,16 @@ class AmmoSolverSopParamsConfig extends NodeParamsConfig {
 	});
 	reset = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			PhysicsRBDSolverSopNode.PARAM_CALLBACK_reset(node as PhysicsRBDSolverSopNode);
+			PhysicsSolverSopNode.PARAM_CALLBACK_reset(node as PhysicsSolverSopNode);
 		},
 	});
 }
 const ParamsConfig = new AmmoSolverSopParamsConfig();
 
-export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig> {
+export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'physics_rbd_solver';
+		return 'physics_solver';
 	}
 	private config: Ammo.btDefaultCollisionConfiguration | undefined;
 	private dispatcher: Ammo.btCollisionDispatcher | undefined;
@@ -50,7 +53,8 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 	// inputs
 	private _input_init: CoreObject[] | undefined;
 	private _input_force_points: CorePoint[] | undefined;
-	private _input_update: CoreObject[] | undefined;
+	private _input_attributes_update: CoreObject[] | undefined;
+	private _objects_with_RBDs: Object3D[] = [];
 
 	static displayed_input_names(): string[] {
 		return ['RBDs', 'Forces', 'Updated RBD Attributes'];
@@ -60,10 +64,13 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		this.io.inputs.set_count(1, 3);
 		this.ui_data.set_width(100);
 
-		// this have to clone for now, to allow for reposition the input core_objects
+		// this has to clone for now, to allow for reposition the input core_objects
 		// when re-initializing the sim. If we do not clone, the objects will be modified,
 		// and therefore the reseting the transform of the RBDs will be based on moved objects, which is wrong. Oh so very wrong.
+		// But we also set the cook controller to disallow_inputs_evaluation
+		// to ensure it is not cloned on every frame
 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER, InputCloneMode.NEVER]);
+		this.cook_controller.disallow_inputs_evaluation();
 
 		// physics
 		this.add_graph_input(this.scene.time_controller.graph_node);
@@ -88,26 +95,36 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 		this._gravity = new Ammo.btVector3(0, 0, 0);
 	}
 
-	cook(input_contents: CoreGroup[]) {
-		if (this.scene.frame == 1) {
+	async cook(input_contents: CoreGroup[]) {
+		if (this.scene.frame == this.pv.start_frame) {
 			this.reset();
 		}
 		if (!this._input_init) {
-			this._input_init = input_contents[0].core_objects();
-
+			this._input_init = await this._fetch_input_init();
 			this.init();
 			// this.createGroundShape();
 		}
-		if (this._input_init) {
-			const force_core_group = input_contents[1];
-			const update_core_group = input_contents[2];
-			this._input_force_points = force_core_group ? force_core_group.points() : undefined;
-			this._input_update = update_core_group ? update_core_group.core_objects() : undefined;
-			this.simulate(0.05);
-			this.set_objects(this._input_init.map((co) => co.object()));
-		} else {
-			this.set_objects([]);
+		// if (this.pv.emit_every_frame && this.scene.frame != this.pv.start_frame) {
+		// 	this.check_for_new_RBDs(input_contents[0]);
+		// }
+
+		const force_core_group = input_contents[1];
+		const update_core_group = input_contents[2];
+		this._input_force_points = force_core_group ? force_core_group.points() : undefined;
+		this._input_attributes_update = update_core_group ? update_core_group.core_objects() : undefined;
+		this.simulate(0.05);
+		this.set_objects(this._objects_with_RBDs);
+	}
+
+	private async _fetch_input_init() {
+		const container = await this.container_controller.request_input_container(0);
+		if (container) {
+			const core_group = container.core_content_cloned();
+			if (core_group) {
+				return core_group.core_objects();
+			}
 		}
+		return [];
 	}
 
 	// protected createGroundShape() {
@@ -141,18 +158,7 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 
 		for (let i = 0; i < this._input_init.length; i++) {
 			const core_object = this._input_init[i];
-			const id = this._body_helper.read_object_attribute(core_object, RBDAttribute.ID, NULL_ID);
-			if (id == NULL_ID) {
-				console.warn('no id for RBD');
-			}
-
-			const body = this._body_helper.create_body(core_object);
-			this.world.addRigidBody(body);
-			this._body_helper.finalize_body(body, core_object);
-
-			this._bodies_by_id.set(id, body);
-			this._bodies_active_state_by_id.set(id, this._body_helper.is_active(body));
-			this.bodies.push(body);
+			this._add_rbd_from_object(core_object, this._body_helper, this.world);
 		}
 		this._transform_core_objects_from_bodies();
 		this._create_constraints();
@@ -190,10 +196,10 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 	// TODO: use a deleted attribute to remove RBDs?
 	// TODO: keep track of newly added ids
 	private _apply_rbd_update() {
-		if (!(this._input_update && this._body_helper)) {
+		if (!(this._input_attributes_update && this._body_helper)) {
 			return;
 		}
-		for (let core_object of this._input_update) {
+		for (let core_object of this._input_attributes_update) {
 			const id = core_object.attrib_value(RBDAttribute.ID);
 			if (lodash_isString(id)) {
 				const body = this._bodies_by_id.get(id);
@@ -225,12 +231,51 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 	}
 
 	private _transform_core_objects_from_bodies() {
-		if (!(this._input_init && this._body_helper)) {
+		if (!this._body_helper) {
 			return;
 		}
-		for (let i = 0; i < this._input_init.length; i++) {
-			this._body_helper.transform_core_object_from_body(this._input_init[i], this.bodies[i]);
+		for (let i = 0; i < this._objects_with_RBDs.length; i++) {
+			this._body_helper.transform_core_object_from_body(this._objects_with_RBDs[i], this.bodies[i]);
 		}
+	}
+	// private check_for_new_RBDs(core_group: CoreGroup) {
+	// 	if (!this._body_helper) {
+	// 		return;
+	// 	}
+	// 	for (let core_object of core_group.core_objects()) {
+	// 		const id = core_object.attrib_value(RBDAttribute.ID);
+	// 		if (lodash_isString(id)) {
+	// 			const body = this._bodies_by_id.get(id);
+	// 			if (!body) {
+	// 				this._add_rbd_from_object(core_object, this._body_helper, this.world!);
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	private _add_rbd_from_object(
+		core_object: CoreObject,
+		body_helper: AmmoRBDBodyHelper,
+		world: Ammo.btDiscreteDynamicsWorld
+	) {
+		const id = body_helper.read_object_attribute(core_object, RBDAttribute.ID, NULL_ID);
+		if (id == NULL_ID) {
+			console.warn('no id for RBD');
+		}
+		const body = body_helper.create_body(core_object);
+
+		const simulated = body_helper.read_object_attribute(core_object, RBDAttribute.SIMULATED, false);
+
+		if (simulated) {
+			world.addRigidBody(body);
+			body_helper.finalize_body(body, core_object);
+			this._bodies_by_id.set(id, body);
+			this.bodies.push(body);
+			this._bodies_active_state_by_id.set(id, body_helper.is_active(body));
+		}
+		const object = core_object.object();
+		this._objects_with_RBDs.push(object);
+		object.visible = simulated;
 	}
 
 	//
@@ -238,18 +283,21 @@ export class PhysicsRBDSolverSopNode extends TypedSopNode<AmmoSolverSopParamsCon
 	// PARAM CALLBACKS
 	//
 	//
-	static PARAM_CALLBACK_reset(node: PhysicsRBDSolverSopNode) {
+	static PARAM_CALLBACK_reset(node: PhysicsSolverSopNode) {
 		node.reset();
 	}
 	private reset() {
-		this._input_init = undefined;
-
 		if (!this.world) {
 			return;
 		}
 		for (let i = 0; i < this.bodies.length; i++) {
 			this.world.removeRigidBody(this.bodies[i]);
 		}
+		this._bodies_by_id.clear();
+		this._bodies_active_state_by_id.clear();
 		this.bodies = [];
+		this._objects_with_RBDs = [];
+		this._input_init = undefined;
+		this.scene.set_frame(this.pv.start_frame);
 	}
 }

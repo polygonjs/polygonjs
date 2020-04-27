@@ -1,5 +1,4 @@
 import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 // import {Group} from 'three/src/objects/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -9,9 +8,7 @@ import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
 import {CoreConstant, ObjectByObjectType, OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CoreMaterial} from '../../../core/geometry/Material';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {BaseMatNodeType} from '../mat/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDB} from '../utils/FlagsController';
@@ -54,21 +51,21 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	set_core_group(core_group: CoreGroup) {
-		const objects = core_group.objects();
-		for (let object of objects) {
-			this._set_object_attributes(object);
-		}
+		// const objects = core_group.objects();
+		// for (let object of objects) {
+		// 	this._set_object_attributes(object);
+		// }
 		this.set_container(core_group, MESSAGE.FROM_SET_CORE_GROUP);
 	}
 
 	set_object(object: Object3D) {
-		this._set_object_attributes(object);
+		// this._set_object_attributes(object);
 		this.set_container_objects([object], MESSAGE.FROM_SET_OBJECT);
 	}
 	set_objects(objects: Object3D[]) {
-		for (let object of objects) {
-			this._set_object_attributes(object);
-		}
+		// for (let object of objects) {
+		// 	this._set_object_attributes(object);
+		// }
 		this.set_container_objects(objects, MESSAGE.FROM_SET_OBJECTS);
 	}
 
@@ -80,11 +77,11 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	set_geometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
 		const objects: Object3D[] = [];
 		let object;
-		geometries.forEach((geometry) => {
+		for (let geometry of geometries) {
 			object = this.create_object(geometry, type);
-			this._set_object_attributes(object);
+			// this._set_object_attributes(object);
 			objects.push(object);
-		});
+		}
 		this.set_container_objects(objects, MESSAGE.FROM_SET_GEOMETRIES);
 	}
 
@@ -117,19 +114,19 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		// }
 	}
 
-	protected _set_object_attributes(object: Object3D) {
-		const material: Material = (object as Mesh).material as Material;
-		if (material) {
-			if (!this.scene) {
-				console.log('no scene');
-				throw 'no scene';
-			}
-			const material_node = CoreMaterial.node(this.scene, material) as BaseMatNodeType;
-			if (material_node) {
-				material_node.add_render_hook(object);
-			}
-		}
-	}
+	// protected _set_object_attributes(object: Object3D) {
+	// 	const material: Material = (object as Mesh).material as Material;
+	// 	if (material) {
+	// 		if (!this.scene) {
+	// 			console.log('no scene');
+	// 			throw 'no scene';
+	// 		}
+	// 		// const material_node = CoreMaterial.node(this.scene, material) as BaseMatNodeType;
+	// 		// if (material_node) {
+	// 		// 	material_node.add_render_hook(object);
+	// 		// }
+	// 	}
+	// }
 
 	protected _add_index(geometry: BufferGeometry) {
 		const position_attrib = geometry.getAttribute('position');

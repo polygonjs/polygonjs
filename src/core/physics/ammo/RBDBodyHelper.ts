@@ -5,6 +5,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {TypeAssert} from '../../../engine/poly/Assert';
+import {Object3D} from 'three';
 
 export enum RBDAttribute {
 	ACTIVE = 'active',
@@ -14,6 +15,7 @@ export enum RBDAttribute {
 	ID = 'id',
 	MASS = 'mass',
 	RESTITUTION = 'restitution',
+	SIMULATED = 'simulated',
 	SHAPE = 'shape',
 	SHAPE_SIZE_SPHERE = 'shape_size_sphere',
 	SHAPE_SIZE_BOX = 'shape_size_box',
@@ -130,14 +132,13 @@ export class AmmoRBDBodyHelper {
 	private _read_t = new Ammo.btTransform();
 	private _read_quat = new Quaternion();
 	private _read_mat4 = new Matrix4();
-	transform_core_object_from_body(core_object: CoreObject, body: Ammo.btRigidBody) {
+	transform_core_object_from_body(object: Object3D, body: Ammo.btRigidBody) {
 		body.getMotionState().getWorldTransform(this._read_t);
 		const o = this._read_t.getOrigin();
 		const r = this._read_t.getRotation();
 		this._read_quat.set(r.x(), r.y(), r.z(), r.w());
 
 		this._read_mat4.identity();
-		const object = core_object.object();
 		object.position.set(o.x(), o.y(), o.z());
 		object.rotation.setFromQuaternion(this._read_quat);
 	}

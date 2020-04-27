@@ -140,7 +140,6 @@ export class TimeController {
 			this._playing = false;
 			// TODO: try and unify the dispatch controller and events dispatcher
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			console.log('pause');
 			this.scene.events_dispatcher.scene_events_controller.process_event(PAUSE_EVENT_CONTEXT);
 		}
 	}
@@ -149,7 +148,6 @@ export class TimeController {
 			this._playing = true;
 			this._prev_performance_now = performance.now();
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			console.log('play');
 			this.scene.events_dispatcher.scene_events_controller.process_event(PLAY_EVENT_CONTEXT);
 		}
 	}

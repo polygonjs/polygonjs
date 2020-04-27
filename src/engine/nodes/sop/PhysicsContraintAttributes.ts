@@ -4,7 +4,6 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {RBDAttribute, RBD_SHAPES, RBDShape} from '../../../core/physics/ammo/RBDBodyHelper';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Vector3} from 'three/src/math/Vector3';
-
 import {CoreObject} from '../../../core/geometry/Object';
 import {TypeAssert} from '../../poly/Assert';
 
@@ -15,7 +14,7 @@ enum RBDAttributeMode {
 const RBD_ATTRIBUTE_MODES: Array<RBDAttributeMode> = [RBDAttributeMode.OBJECTS, RBDAttributeMode.POINTS];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
+class PhysicsConstraintAttributesSopParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(RBD_ATTRIBUTE_MODES.indexOf(RBDAttributeMode.OBJECTS), {
 		menu: {
 			entries: RBD_ATTRIBUTE_MODES.map((name, value) => {
@@ -45,12 +44,12 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	friction = ParamConfig.FLOAT(0.5);
 	simulated = ParamConfig.FLOAT(1);
 }
-const ParamsConfig = new PhysicsRBDAttributesSopParamsConfig();
+const ParamsConfig = new PhysicsConstraintAttributesSopParamsConfig();
 
-export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttributesSopParamsConfig> {
+export class PhysicsConstraintAttributesSopNode extends TypedSopNode<PhysicsConstraintAttributesSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'physics_rbd_attributes';
+		return 'physics_constraint_attributes';
 	}
 
 	initialize_node() {
