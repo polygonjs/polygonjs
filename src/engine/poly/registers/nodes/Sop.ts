@@ -71,6 +71,7 @@ import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
 import {TransformCopySopNode} from '../../../nodes/sop/TransformCopy';
+import {TransformMultiSopNode} from '../../../nodes/sop/TransformMulti';
 import {TransformResetSopNode} from '../../../nodes/sop/TransformReset';
 import {TubeSopNode} from '../../../nodes/sop/Tube';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
@@ -141,6 +142,7 @@ export interface GeoNodeChildrenMap {
 	torus_knot: TorusKnotSopNode;
 	transform: TransformSopNode;
 	transform_copy: TransformCopySopNode;
+	transform_multi: TransformMultiSopNode;
 	transform_reset: TransformResetSopNode;
 	tube: TubeSopNode;
 	uv_project: UvProjectSopNode;
@@ -215,6 +217,7 @@ export class SopRegister {
 		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TransformCopySopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(TransformMultiSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TransformResetSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(UvProjectSopNode, CATEGORY_SOP.MODIFIER);

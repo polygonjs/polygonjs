@@ -16,8 +16,8 @@ export interface NodeSerializerData {
 	named_output_connections: BaseConnectionPointData[];
 	param_ids: string[];
 	// spare_params: Dictionary<string>;
-	override_clonable_state: boolean;
-	inputs_clonable_state_with_override: boolean[];
+	override_cloned_state_allowed: boolean;
+	inputs_clone_required_states: boolean | boolean[];
 	flags?: {
 		//has_display: this.has_display_flag()
 		display?: boolean;
@@ -55,8 +55,8 @@ export class NodeSerializer {
 			named_output_connections: this.named_output_connections(),
 			param_ids: this.to_json_params(include_param_components),
 			// spare_params: this.to_json_spare_params(include_param_components),
-			override_clonable_state: this.node.io.inputs.override_clonable_state(),
-			inputs_clonable_state_with_override: this.node.io.inputs.inputs_clonable_state_with_override(),
+			override_cloned_state_allowed: this.node.io.inputs.override_cloned_state_allowed(),
+			inputs_clone_required_states: this.node.io.inputs.clone_required_states(),
 			flags: {
 				//has_display: this.has_display_flag()
 				display: this.node.flags?.display?.active,

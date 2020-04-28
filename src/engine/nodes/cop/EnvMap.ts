@@ -39,7 +39,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		this.io.inputs.set_count(1);
 
 		// for now, if I clone the input, it gets messed up
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 	}
 
 	// create_params() {

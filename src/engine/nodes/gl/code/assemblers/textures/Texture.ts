@@ -46,7 +46,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	// 	return undefined;
 	// }
 
-	async update_fragment_shader() {
+	update_fragment_shader() {
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
 		for (let shader_name of this.shader_names) {
@@ -57,7 +57,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		}
 		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
-			await this.build_code_from_nodes(this._root_nodes);
+			this.build_code_from_nodes(this._root_nodes);
 
 			this._build_lines();
 		}

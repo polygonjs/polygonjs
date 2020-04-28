@@ -122,6 +122,7 @@ export class CoreGraph {
 	}
 
 	private all_next_ids(node: CoreGraphNode, method: 'successor_ids' | 'predecessor_ids'): CoreGraphNodeId[] {
+		const ids_by_id: Map<CoreGraphNodeId, boolean> = new Map();
 		const ids: CoreGraphNodeId[] = [];
 		let next_ids = this[method](node.graph_node_id);
 
@@ -134,13 +135,17 @@ export class CoreGraph {
 			}
 
 			for (let id of next_ids) {
-				ids.push(id);
+				ids_by_id.set(id, true);
+				// ids.push(id);
 			}
 			for (let id of next_next_ids) {
 				next_ids.push(id);
 			}
 			next_ids = next_next_ids;
 		}
+		ids_by_id.forEach((bool, id) => {
+			ids.push(id);
+		});
 		return ids;
 	}
 	all_predecessor_ids(node: CoreGraphNode): CoreGraphNodeId[] {

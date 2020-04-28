@@ -64,14 +64,14 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		material.custom_materials[custom_name] = custom_assembler.create_material();
 	}
 
-	async compile_custom_materials(material: ShaderMaterialWithCustomMaterials): Promise<void> {
+	compile_custom_materials(material: ShaderMaterialWithCustomMaterials) {
 		// const custom_materials_by_name: Map<CustomMaterialName, ShaderMaterial> = new Map();
 		// this._assemblers_by_custom_name.clear();
 
 		const class_by_custom_name = this.custom_assembler_class_by_custom_name();
 		if (class_by_custom_name) {
 			class_by_custom_name.forEach(
-				async (assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
+				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
 					if (this._code_builder) {
 						let assembler: ShaderAssemblerMaterial | undefined = this._assemblers_by_custom_name.get(
 							custom_name
@@ -88,7 +88,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						const custom_material = material.custom_materials[custom_name];
 						if (custom_material) {
-							await assembler.compile_material(custom_material);
+							assembler.compile_material(custom_material);
 						}
 						// if (material) {
 						// 	// add needsUpdate = true, as we always get the same material
@@ -108,7 +108,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// return custom_materials_by_name;
 	}
-	async compile_material(material: ShaderMaterial) {
+	compile_material(material: ShaderMaterial) {
 		// no need to compile if the globals handler has not been declared
 		if (!this.compile_allowed()) {
 			return;
@@ -121,7 +121,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		const param_nodes = GlNodeFinder.find_param_nodes(this._gl_parent_node);
 		const root_nodes = output_nodes.concat(param_nodes);
 		this.set_root_nodes(root_nodes);
-		await this._update_shaders();
+		this._update_shaders();
 
 		const new_vertex_shader = this._shaders_by_name.get(ShaderName.VERTEX);
 		const new_fragment_shader = this._shaders_by_name.get(ShaderName.FRAGMENT);
@@ -156,7 +156,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// assign custom materials
 		if ((material as ShaderMaterialWithCustomMaterials).custom_materials) {
-			await this.compile_custom_materials(material as ShaderMaterialWithCustomMaterials);
+			this.compile_custom_materials(material as ShaderMaterialWithCustomMaterials);
 		}
 		// const custom_materials = await this.get_custom_materials();
 		// const material_with_custom_materials = material as ShaderMaterialWithCustomMaterials;
@@ -170,7 +170,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// this.create_spare_parameters();
 	}
-	private async _update_shaders() {
+	private _update_shaders() {
 		this._shaders_by_name = new Map();
 		this._lines = new Map();
 		for (let shader_name of this.shader_names) {
@@ -181,7 +181,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
-			await this.build_code_from_nodes(this._root_nodes);
+			this.build_code_from_nodes(this._root_nodes);
 
 			this._build_lines();
 		}

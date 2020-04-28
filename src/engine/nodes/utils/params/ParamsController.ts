@@ -121,6 +121,7 @@ export class ParamsController {
 			}
 		}
 
+		console.log('params updated');
 		if (has_deleted_a_param || has_created_a_param) {
 			this._update_caches();
 			this.init_param_accessors();
@@ -442,14 +443,15 @@ export class ParamsController {
 		}
 	}
 
+	params_eval_required() {
+		return this._params_node && (this._params_node.is_dirty || this._params_added_since_last_params_eval);
+	}
 	async eval_all() {
-		if (this._params_node) {
-			if (this._params_node.is_dirty || this._params_added_since_last_params_eval) {
-				await this.eval_params(this._params_list);
+		if (this.params_eval_required()) {
+			await this.eval_params(this._params_list);
 
-				this._params_node.remove_dirty_state();
-				this._params_added_since_last_params_eval = false;
-			}
+			this._params_node?.remove_dirty_state();
+			this._params_added_since_last_params_eval = false;
 		}
 	}
 

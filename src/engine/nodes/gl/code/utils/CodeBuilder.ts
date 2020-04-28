@@ -26,7 +26,7 @@ export class CodeBuilder {
 
 	constructor(private _assembler: BaseGlShaderAssembler, private _gl_parent_node: BaseNodeType) {}
 
-	async build_from_nodes(root_nodes: BaseGlNodeType[]) {
+	build_from_nodes(root_nodes: BaseGlNodeType[]) {
 		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(this._assembler, this._gl_parent_node);
 		node_traverser.traverse(root_nodes);
 
@@ -60,9 +60,9 @@ export class CodeBuilder {
 			// node.set_assembler(this._assembler);
 			node.reset_code();
 		}
-		for (let node of sorted_nodes) {
-			await node.params.eval_all();
-		}
+		// for (let node of sorted_nodes) {
+		// 	await node.params.eval_all();
+		// }
 
 		// const param_promises = sorted_nodes.map(node=>{
 		// 	return node.eval_all_params()

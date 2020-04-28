@@ -25,7 +25,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	}
 
 	async cook() {
-		await this.compile_if_required();
+		this.compile_if_required();
 
 		ColorsController.update(this);
 		SideController.update(this);

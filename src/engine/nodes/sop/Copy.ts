@@ -43,7 +43,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1, 2);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
 	}
 
 	async cook() {

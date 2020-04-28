@@ -38,9 +38,9 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// 	return this._shaders_by_name
 	// }
 
-	async compile() {
-		await this.setup_shader_names_and_variables();
-		await this.update_shaders();
+	compile() {
+		this.setup_shader_names_and_variables();
+		this.update_shaders();
 	}
 
 	root_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
@@ -92,16 +92,16 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		}
 		return list;
 	}
-	async setup_shader_names_and_variables() {
+	setup_shader_names_and_variables() {
 		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(this, this._gl_parent_node);
 		this._leaf_nodes = node_traverser.leaves_from_nodes(this._root_nodes);
 
-		for (let node of this._root_nodes) {
-			await node.params.eval_all();
-		}
-		for (let node of this._leaf_nodes) {
-			await node.params.eval_all();
-		}
+		// for (let node of this._root_nodes) {
+		// 	await node.params.eval_all();
+		// }
+		// for (let node of this._leaf_nodes) {
+		// 	await node.params.eval_all();
+		// }
 
 		console.log('root and leaf:', this._root_nodes, this._leaf_nodes);
 		this._texture_allocations_controller = new TextureAllocationsController();
@@ -117,7 +117,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 
 		this._reset_shader_configs();
 	}
-	async update_shaders() {
+	update_shaders() {
 		this._shaders_by_name = new Map();
 		this._lines = new Map();
 		console.log('this.shader_names', this.shader_names);
@@ -127,7 +127,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		}
 		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
-			await this.build_code_from_nodes(this._root_nodes);
+			this.build_code_from_nodes(this._root_nodes);
 
 			this._build_lines();
 		}

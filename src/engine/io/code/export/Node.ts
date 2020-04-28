@@ -169,10 +169,10 @@ export class NodeCodeExporter {
 	}
 
 	protected add_input_clonable_state() {
-		if (this._node.io.inputs.override_clonable_state_allowed()) {
-			const override = this._node.io.inputs.override_clonable_state();
-			if (override) {
-				this._lines.push(`${this.var_name()}.io.inputs.set_override_clonable_state(true)`);
+		if (this._node.io.inputs.override_cloned_state_allowed()) {
+			const overriden = this._node.io.inputs.cloned_state_overriden();
+			if (overriden) {
+				this._lines.push(`${this.var_name()}.io.inputs.override_cloned_state(true)`);
 			}
 		}
 	}

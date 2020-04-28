@@ -86,7 +86,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	}
 	initialize_node() {
 		this.io.inputs.set_count(1, 2);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
 	async cook(input_contents: CoreGroup[]) {
@@ -157,7 +157,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			}
 		}
 
-		if (!this.io.inputs.input_cloned(0)) {
+		if (!this.io.inputs.clone_required(0)) {
 			for (let geometry of core_group.geometries()) {
 				(geometry.getAttribute(this.pv.attrib_name) as BufferAttribute).needsUpdate = true;
 			}

@@ -8,6 +8,16 @@ import {BaseNodeType} from '../_Base';
 import {GeoObjNode} from './Geo';
 import {HierarchyController} from './utils/HierarchyController';
 import {NodeContext} from '../../poly/NodeContext';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Scene} from 'three/src/scenes/Scene';
+import {Camera} from 'three/src/cameras/Camera';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Geometry} from 'three/src/core/Geometry';
+import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three/src/objects/Mesh';
+import {Vector3} from 'three/src/math/Vector3';
+import {Object3DWithGeometry} from '../../../core/geometry/Group';
+
 // import {Object3DWithGeometry} from '../../../core/geometry/Group';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
@@ -22,8 +32,6 @@ type RenderHook = (
 	group: Group
 ) => void;
 
-import {WebGLRenderer, Scene, Camera, BufferGeometry, Material, Geometry, Mesh, Vector3} from 'three';
-import {Object3DWithGeometry} from '../../../core/geometry/Group';
 class RivetObjParamConfig extends NodeParamsConfig {
 	object = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {

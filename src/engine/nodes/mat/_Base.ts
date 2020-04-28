@@ -18,10 +18,9 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 		this.name_controller.add_post_set_full_path_hook(this.set_material_name.bind(this));
 
-		this.add_post_dirty_hook(
-			'_cook_main_without_inputs_when_dirty',
-			this._cook_main_without_inputs_when_dirty_bound
-		);
+		this.add_post_dirty_hook('_cook_main_without_inputs_when_dirty', () => {
+			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
+		});
 	}
 
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);

@@ -52,7 +52,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 		// this.ui_data.set_icon('palette');
 	}
 
@@ -74,7 +74,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		}
 
 		// needs update required for when no cloning
-		if (!this.io.inputs.input_cloned(0)) {
+		if (!this.io.inputs.clone_required(0)) {
 			const geometries = core_group.geometries();
 			for (let geometry of geometries) {
 				(geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).needsUpdate = true;

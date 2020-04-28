@@ -17,6 +17,8 @@ export class PointExpression extends BaseMethod {
 	}
 
 	process_arguments(args: any[]): Promise<any> {
+		// const time_start = performance.now();
+		// console.log('point start', args);
 		return new Promise(async (resolve, reject) => {
 			if (args.length == 3) {
 				const index_or_path = args[0];
@@ -30,6 +32,7 @@ export class PointExpression extends BaseMethod {
 				}
 				if (container) {
 					const value = this._get_value_from_container(container, attrib_name, point_index);
+					// console.log('point end', args, value, performance.now() - time_start);
 					resolve(value);
 				}
 			} else {

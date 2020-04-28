@@ -24,12 +24,7 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 4);
-		this.io.inputs.init_inputs_clonable_state([
-			InputCloneMode.NEVER,
-			InputCloneMode.NEVER,
-			InputCloneMode.NEVER,
-			InputCloneMode.NEVER,
-		]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 		this.ui_data.set_width(100);
 		// this.ui_data.set_icon('code-branch');
 

@@ -46,7 +46,7 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 	}
 
 	cook(input_contents: CoreGroup[]) {

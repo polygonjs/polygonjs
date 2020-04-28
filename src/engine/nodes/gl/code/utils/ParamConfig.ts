@@ -18,6 +18,7 @@ import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {ParamConfig} from '../../../utils/code/configs/ParamConfig';
 // import {ColorParam} from '../../../../params/Color';
 import {Color} from 'three/src/math/Color';
+// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {ParamValueComparer} from '../../params/ParamValueComparer';
 // import {ParamValueCloner} from '../../params/ParamValueCloner';
 // import {CoreTextureLoader} from '../../../../../Core/Loader/Texture'
@@ -47,6 +48,17 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		// const val = this._convert_param_value_to_uniform(param);
 		// console.log(this.uniform_name, this._type, param.type, val, param);
 		this.uniform.value = param.value;
+
+		// console.log(
+		// 	'ran callback, set uniform value',
+		// 	param.graph_node_id,
+		// 	param.name,
+		// 	this.uniform_name,
+		// 	param.value,
+		// 	this.uniform.value,
+		// 	(param.node as any).material.uniforms[this.uniform_name].value
+		// 	// (param.node as any).material.uniforms[this.uniform_name].value
+		// );
 	}
 
 	// private _converted_color: Vector3 | undefined;
@@ -132,7 +144,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	// 	}
 	// }
 
-	async set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
+	set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
 		// this._texture_loader = this._texture_loader || new CoreTextureLoader(node, node.param(this.name()))
 
 		// // param.graph_disconnect_predecessors()
@@ -140,9 +152,16 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		// uniform.value = texture
 		const found_node = param.found_node();
 		if (found_node) {
-			const container = await found_node.request_container();
-			const texture = container.texture();
-			uniform.value = texture;
+			if (found_node.is_dirty) {
+				found_node.request_container().then((container) => {
+					const texture = container.texture();
+					uniform.value = texture;
+				});
+			} else {
+				const container = found_node.container_controller.container;
+				const texture = container.texture();
+				uniform.value = texture;
+			}
 		} else {
 			uniform.value = null;
 		}

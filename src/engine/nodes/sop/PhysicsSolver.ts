@@ -13,7 +13,7 @@ import Ammo from 'ammojs-typed';
 const NULL_ID = '';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
 class AmmoSolverSopParamsConfig extends NodeParamsConfig {
 	start_frame = ParamConfig.INTEGER(1);
 
@@ -69,7 +69,7 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 		// and therefore the reseting the transform of the RBDs will be based on moved objects, which is wrong. Oh so very wrong.
 		// But we also set the cook controller to disallow_inputs_evaluation
 		// to ensure it is not cloned on every frame
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER, InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER, InputCloneMode.NEVER]);
 		this.cook_controller.disallow_inputs_evaluation();
 
 		// physics

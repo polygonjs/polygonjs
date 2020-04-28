@@ -8,6 +8,8 @@ import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {BaseContainer} from '../../containers/_Base';
+import {ContainerMap} from '../../containers/utils/ContainerMap';
+import {NodeContext} from '../../poly/NodeContext';
 
 // type NodeOrParam = BaseNode | BaseParam;
 
@@ -44,7 +46,14 @@ export class BaseMethod {
 		const referenced_node = this.get_referenced_node(index_or_path);
 
 		if (referenced_node) {
-			const container = await referenced_node.request_container();
+			// const time_start = performance.now();
+			let container: ContainerMap[NodeContext];
+			if (referenced_node.is_dirty) {
+				container = await referenced_node.request_container();
+			} else {
+				container = referenced_node.container_controller.container;
+			}
+			// console.log('request container', referenced_node.full_path(), performance.now() - time_start);
 			if (container) {
 				const core_group = container.core_content();
 				if (core_group) {
@@ -91,36 +100,26 @@ export class BaseMethod {
 			return this.get_referenced_node(path, decomposed_path);
 		}
 	}
+	// caching the node by path here prevents having expressions such as points_count(0)
+	// evaluate to an error when the input is disconnected
+	// private _node_by_path: Map<string | number, BaseNodeType | null | undefined> = new Map();
 	get_referenced_node(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNodeType | null {
-		// if ((index_or_path != null) && (index_or_path.is_a != null) && index_or_path.is_a(BaseNode)) {
-		// 	index_or_path = index_or_path.full_path();
-		// }
+		// let node = this._node_by_path.get(index_or_path);
+		// if (node) {
+		// 	return node;
+		// } else {
+		let node: BaseNodeType | null;
 		if (lodash_isString(index_or_path)) {
 			const path = index_or_path;
-			return CoreWalker.find_node(this.node, path, decomposed_path);
+			node = CoreWalker.find_node(this.node, path, decomposed_path);
 		} else {
 			const index = index_or_path;
 			this.node.io.inputs.input(index);
-			return this.node.io.inputs.input(index);
+			node = this.node.io.inputs.input(index);
 		}
-
-		// if (referenced_node != null) {
-
-		// 	if (this.update_dependencies_mode()) {
-		// 		//node_connect_result = this.param().add_graph_input(referenced_node)
-
-		// 		const expression_node_connect_result = this.jsep_node()._graph_node.add_graph_input(referenced_node);
-		// 		//if !(node_connect_result && expression_node_connect_result)
-		// 		if (!expression_node_connect_result) {
-		// 			throw "cannot create infinite graph";
-		// 		}
-		// 	}
-
-		// } else {
-		// 	throw `no node found for argument ${index_or_path}`;
-		// }
-
-		// return referenced_node;
+		// this._node_by_path.set(index_or_path, node);
+		return node || null;
+		//}
 	}
 
 	find_dependency(args: any): MethodDependency | null {

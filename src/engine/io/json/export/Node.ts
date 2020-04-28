@@ -27,7 +27,7 @@ export interface NodeJsonExporterData {
 	inputs?: InputData[];
 	selection?: string[];
 	flags?: FlagsData;
-	override_clonable_state: boolean;
+	cloned_state_overriden: boolean;
 }
 
 export interface NodeJsonExporterUIData {
@@ -112,10 +112,10 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 		}
 
 		// inputs clone
-		if (this._node.io.inputs.override_clonable_state_allowed()) {
-			const override = this._node.io.inputs.override_clonable_state();
-			if (override) {
-				this._data['override_clonable_state'] = override;
+		if (this._node.io.inputs.override_cloned_state_allowed()) {
+			const overriden = this._node.io.inputs.cloned_state_overriden();
+			if (overriden) {
+				this._data['cloned_state_overriden'] = overriden;
 			}
 		}
 

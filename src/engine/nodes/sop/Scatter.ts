@@ -46,7 +46,7 @@ export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 	}
 
 	async cook(input_contents: CoreGroup[]) {

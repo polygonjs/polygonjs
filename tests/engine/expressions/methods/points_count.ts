@@ -1,3 +1,5 @@
+import {CoreSleep} from '../../../../src/core/Sleep';
+
 QUnit.test('expression points_count works with path', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -125,6 +127,10 @@ QUnit.test('expression points_count fails with bad input index 1', async (assert
 
 QUnit.test('expression points_count fails with bad input index 0', async (assert) => {
 	const geo1 = window.geo1;
+	const dummy = geo1.create_node('plane');
+	dummy.flags.display.set(true);
+
+	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, dummy.graph_node_id);
 
 	const box1 = geo1.create_node('box');
 	const box2 = geo1.create_node('box');
@@ -141,10 +147,12 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 		'param \'size\' error: expression error: "points_count(0)" (invalid input (0))'
 	);
 
+	await box2.request_container();
+	await CoreSleep.sleep(10);
+
 	box2.set_input(0, box1);
 
 	await box2.p.size.compute();
-	console.log(box2.p.size.states.error.message);
 	assert.equal(box2.p.size.value, 24, 'param evaluates to 24');
 	assert.ok(!box2.p.size.states.error.message, 'param has no error');
 	assert.ok(box2.states.error.active, 'box is errored');
@@ -194,7 +202,7 @@ QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (a
 	await box2.request_container();
 	assert.ok(!box2.is_dirty);
 
-	assert.equal(box2.p.size.graph_all_predecessors().length, 9);
+	assert.equal(box2.p.size.graph_all_predecessors().length, 10, 'has 10 predecessors');
 	assert.equal(box2.p.size.graph_predecessors().length, 1);
 	assert.equal(box2.p.size.graph_predecessors()[0].name, 'box1');
 

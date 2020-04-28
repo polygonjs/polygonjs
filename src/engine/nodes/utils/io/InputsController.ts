@@ -2,16 +2,17 @@ import lodash_isString from 'lodash/isString';
 import {TypedNodeConnection} from './NodeConnection';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 import {NodeEvent} from '../../../poly/NodeEvent';
-import {InputCloneMode} from '../../../poly/InputCloneMode';
-import {TypeAssert} from '../../../poly/Assert';
 import {NodeContext} from '../../../poly/NodeContext';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
 import {ContainerMap, NodeTypeMap} from '../../../containers/utils/ContainerMap';
+import {ClonedStatesController} from './utils/ClonedStatesController';
+import {InputCloneMode} from '../../../poly/InputCloneMode';
 
 type OnUpdateHook = () => void;
 
 export class InputsController<NC extends NodeContext> {
+	private _graph_node: CoreGraphNode | undefined;
 	private _graph_node_inputs: CoreGraphNode[] = [];
 	private _inputs: Array<NodeTypeMap[NC] | null> = [];
 	private _has_named_inputs: boolean = false;
@@ -25,11 +26,13 @@ export class InputsController<NC extends NodeContext> {
 	private _on_update_hook_names: string[] | undefined;
 
 	// clonable
-	private _user_inputs_clonable_states: InputCloneMode[] | undefined;
-	private _inputs_clonable_states: InputCloneMode[] | undefined;
-	private _override_clonable_state: boolean = false;
 
-	constructor(protected node: TypedNode<NC, any>) {}
+	// private _user_inputs_clonable_states: InputCloneMode[] | undefined;
+	// private _inputs_clonable_states: InputCloneMode[] | undefined;
+	// private _inputs_cloned_state: boolean[] = [];
+	// private _override_clonable_state: boolean = false;
+
+	constructor(public node: TypedNode<NC, any>) {}
 
 	set_depends_on_inputs(depends_on_inputs: boolean) {
 		this._depends_on_inputs = depends_on_inputs;
@@ -74,7 +77,12 @@ export class InputsController<NC extends NodeContext> {
 	private _create_graph_node_input(index: number): CoreGraphNode {
 		const graph_input_node = new CoreGraphNode(this.node.scene, `input_${index}`);
 		// graph_input_node.set_scene(this.node.scene);
-		this.node.add_graph_input(graph_input_node);
+		if (!this._graph_node) {
+			this._graph_node = new CoreGraphNode(this.node.scene, 'inputs');
+			this.node.add_graph_input(this._graph_node);
+		}
+
+		this._graph_node.add_graph_input(graph_input_node);
 		return graph_input_node;
 	}
 
@@ -92,33 +100,70 @@ export class InputsController<NC extends NodeContext> {
 		this.set_min_inputs_count(min);
 		this.set_max_inputs_count(max);
 
-		this.init_inputs_clonable_state();
+		// this._clonable_states_controller.init_inputs_clonable_state();
 		this.init_connections_controller_inputs();
 	}
 	private init_connections_controller_inputs() {
 		this.node.io.connections.init_inputs();
 	}
 
-	async eval_required_inputs() {
-		let containers: Array<ContainerMap[NC] | null | undefined> = [];
+	is_any_input_dirty() {
+		return this._graph_node?.is_dirty || false;
+		// if (this._max_inputs_count > 0) {
+		// 	for (let i = 0; i < this._inputs.length; i++) {
+		// 		if (this._inputs[i]?.is_dirty) {
+		// 			return true;
+		// 		}
+		// 	}
+		// } else {
+		// 	return false;
+		// }
+	}
+	containers_without_evaluation() {
+		const containers: Array<ContainerMap[NC] | null | undefined> = [];
+		for (let i = 0; i < this._inputs.length; i++) {
+			containers.push(this._inputs[i]?.container_controller.container as ContainerMap[NC]);
+		}
+		return containers;
+	}
+
+	existing_input_indices() {
+		const existing_input_indices: number[] = [];
 		if (this._max_inputs_count > 0) {
-			const existing_input_indices: number[] = [];
-			const inputs = this.inputs();
-			for (let i = 0; i < inputs.length; i++) {
-				if (inputs[i]) {
+			for (let i = 0; i < this._inputs.length; i++) {
+				if (this._inputs[i]) {
 					existing_input_indices.push(i);
 				}
 			}
+		}
+		return existing_input_indices;
+	}
+
+	async eval_required_inputs() {
+		let containers: Array<ContainerMap[NC] | null | undefined> = [];
+		if (this._max_inputs_count > 0) {
+			const existing_input_indices = this.existing_input_indices();
 			if (existing_input_indices.length < this._min_inputs_count) {
 				this.node.states.error.set('inputs are missing');
 			} else {
 				if (existing_input_indices.length > 0) {
-					const promises = inputs.map((input, input_index) => {
+					const promises: Promise<ContainerMap[NC] | null>[] = [];
+					let input: NodeTypeMap[NC] | null;
+					for (let i = 0; i < this._inputs.length; i++) {
+						input = this._inputs[i];
 						if (input) {
-							return this.node.io.inputs.eval_required_input(input_index) as Promise<ContainerMap[NC]>;
+							// I tried here to only use a promise for dirty inputs,
+							// but that messes up with the order
+							// if (input.is_dirty) {
+							// 	containers.push(input.container_controller.container as ContainerMap[NC]);
+							// } else {
+							promises.push(this.eval_required_input(i) as Promise<ContainerMap[NC]>);
+							// }
 						}
-					});
+					}
 					containers = await Promise.all(promises);
+					// containers = containers.concat(promised_containers);
+					this._graph_node?.remove_dirty_state();
 				}
 			}
 		}
@@ -126,7 +171,16 @@ export class InputsController<NC extends NodeContext> {
 	}
 
 	async eval_required_input(input_index: number) {
-		const container = await this.node.container_controller.request_input_container(input_index);
+		// console.log(performance.now(), 'eval_required_input start', this.node.full_path(), input_index);
+		let container: ContainerMap[NC] | null;
+		const input_node = this.input(input_index);
+		if (input_node && !input_node.is_dirty) {
+			container = input_node.container_controller.container as ContainerMap[NC] | null;
+		} else {
+			container = await this.node.container_controller.request_input_container(input_index);
+			this._graph_node_inputs[input_index].remove_dirty_state();
+		}
+		// console.log(performance.now(), this.node.full_path(), 'eval_required_input', input_index);
 		// we do not clone here, as we just check if a group is present
 		if (container && container.core_content()) {
 			// return container;
@@ -299,70 +353,108 @@ export class InputsController<NC extends NodeContext> {
 	// CLONABLE STATES
 	//
 	//
-	override_clonable_state_allowed() {
-		let value = false;
-		for (let state of this.inputs_clonable_state()) {
-			if (state == InputCloneMode.FROM_NODE) {
-				value = true;
-			}
+	private _cloned_states_controller: ClonedStatesController<NC> | undefined;
+	init_inputs_cloned_state(states: InputCloneMode | InputCloneMode[]) {
+		if (!this._cloned_states_controller) {
+			this._cloned_states_controller = new ClonedStatesController(this);
+			this._cloned_states_controller.init_inputs_cloned_state(states);
 		}
-		return value;
 	}
-
-	inputs_clonable_state(): InputCloneMode[] {
-		return (this._inputs_clonable_states = this._inputs_clonable_states || this.init_inputs_clonable_state());
+	override_cloned_state_allowed(): boolean {
+		return this._cloned_states_controller?.override_cloned_state_allowed() || false;
 	}
-	input_cloned(index: number): boolean {
-		return this.input_clonable_state_with_override(index);
+	override_cloned_state(state: boolean) {
+		this._cloned_states_controller?.override_cloned_state(state);
 	}
-	inputs_clonable_state_with_override(): boolean[] {
-		const list = [];
-		const states = this.inputs_clonable_state();
-		for (let i = 0; i < states.length; i++) {
-			list.push(this.input_clonable_state_with_override(i));
-		}
-		return list;
+	cloned_state_overriden() {
+		return this._cloned_states_controller?.overriden() || false;
 	}
-	input_clonable_state_with_override(index: number): boolean {
-		const states = this.inputs_clonable_state();
-		const state = states[index];
+	clone_required(index: number) {
+		const state = this._cloned_states_controller?.clone_required_state(index);
 		if (state != null) {
-			switch (state) {
-				case InputCloneMode.ALWAYS:
-					return true;
-				case InputCloneMode.NEVER:
-					return false;
-				case InputCloneMode.FROM_NODE:
-					return !this._override_clonable_state;
-			}
-			return TypeAssert.unreachable(state);
+			return state;
 		}
 		return true;
 	}
-
-	init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
-		if (values) {
-			this._user_inputs_clonable_states = values;
+	clone_required_states(): boolean | boolean[] {
+		const states = this._cloned_states_controller?.clone_required_states();
+		if (states != null) {
+			return states;
 		}
-		this._inputs_clonable_states = this._user_inputs_clonable_states || this._default_inputs_clonale_state_values();
+		return true;
+	}
+	// override_clonable_state() {
+	// 	return this._clonable_states_controller.override_clonable_state();
+	// }
+	// inputs_clonable_state_with_override() {
+	// 	return this._clonable_states_controller.inputs_clonable_state_with_override();
+	// }
 
-		return this._inputs_clonable_states;
-	}
-	private _default_inputs_clonale_state_values() {
-		const list = [];
-		for (let i = 0; i < this._max_inputs_count; i++) {
-			list.push(InputCloneMode.ALWAYS);
-		}
-		return list;
-	}
+	// private get inputs_clonable_state(): InputCloneMode[] {
+	// 	return (this._inputs_clonable_states = this._inputs_clonable_states || this.init_inputs_clonable_state());
+	// }
+	// input_cloned(index: number): boolean {
+	// 	return this._inputs_cloned_state[index];
+	// }
+	// inputs_clonable_state_with_override(): boolean[] {
+	// 	// const list = [];
+	// 	// const states = this.inputs_clonable_state();
+	// 	// for (let i = 0; i < states.length; i++) {
+	// 	// 	list.push(this.input_clonable_state_with_override(i));
+	// 	// }
+	// 	// return list;
+	// 	return this._inputs_cloned_state;
+	// }
+	// private _input_clonable_state_with_override(index: number): boolean {
+	// 	const states = this.inputs_clonable_state;
+	// 	const state = states[index];
+	// 	if (state != null) {
+	// 		switch (state) {
+	// 			case InputCloneMode.ALWAYS:
+	// 				return true;
+	// 			case InputCloneMode.NEVER:
+	// 				return false;
+	// 			case InputCloneMode.FROM_NODE:
+	// 				return !this._override_clonable_state;
+	// 		}
+	// 		return TypeAssert.unreachable(state);
+	// 	}
+	// 	return true;
+	// }
 
-	set_override_clonable_state(state: boolean) {
-		this._override_clonable_state = state;
-		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
-	}
-	override_clonable_state() {
-		return this._override_clonable_state;
-	}
+	// init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
+	// 	if (values) {
+	// 		this._user_inputs_clonable_states = values;
+	// 	}
+	// 	this._inputs_clonable_states = this._user_inputs_clonable_states || this._default_inputs_clonale_state_values();
+
+	// 	this._update_clonable_states_with_override();
+
+	// 	return this._inputs_clonable_states;
+	// }
+	// private _default_inputs_clonale_state_values() {
+	// 	const list = [];
+	// 	for (let i = 0; i < this._max_inputs_count; i++) {
+	// 		list.push(InputCloneMode.ALWAYS);
+	// 	}
+	// 	return list;
+	// }
+
+	// set_override_clonable_state(state: boolean) {
+	// 	this._override_clonable_state = state;
+	// 	this._update_clonable_states_with_override();
+	// 	this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
+	// }
+	// override_clonable_state() {
+	// 	return this._override_clonable_state;
+	// }
+	// private _update_clonable_states_with_override() {
+	// 	const states: boolean[] = [];
+	// 	for (let i = 0; i < this._inputs.length; i++) {
+	// 		states[i] = this._input_clonable_state_with_override(i);
+	// 	}
+	// 	this._inputs_cloned_state = states;
+	// }
 
 	//
 	//

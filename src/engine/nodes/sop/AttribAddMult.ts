@@ -22,7 +22,7 @@ export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsCon
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	cook(input_contents: CoreGroup[]) {
@@ -51,7 +51,7 @@ export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsCon
 				const value = values[i];
 				values[i] = (value + pre_add) * mult + post_add;
 			}
-			if (!this.io.inputs.input_cloned(0)) {
+			if (!this.io.inputs.clone_required(0)) {
 				attribute.needsUpdate = true;
 			}
 		}

@@ -1,14 +1,18 @@
 import {BaseNodeType} from '../_Base';
-import {BaseContainer} from '../../containers/_Base';
 import {Poly} from '../../Poly';
 import {CorePerformance} from '../../../core/performance/CorePerformance';
 import {NodeCookPerformanceformanceController} from './cook/PerformanceController';
+import {ContainerMap} from '../../containers/utils/ContainerMap';
+import {NodeContext} from '../../poly/NodeContext';
+import {ContainableMap} from '../../containers/utils/ContainableMap';
 
-export class NodeCookController {
+export class NodeCookController<NC extends NodeContext> {
 	private _core_performance: CorePerformance;
 	private _cooking: boolean = false;
 	private _cooking_dirty_timestamp: number | undefined;
-	private _performance_controller = new NodeCookPerformanceformanceController(this);
+	private _performance_controller: NodeCookPerformanceformanceController = new NodeCookPerformanceformanceController(
+		this
+	);
 
 	constructor(private node: BaseNodeType) {
 		this._core_performance = this.node.scene.performance;
@@ -34,31 +38,39 @@ export class NodeCookController {
 		this._cooking_dirty_timestamp = this.node.dirty_controller.dirty_timestamp;
 	}
 
-	private async _start_cook_if_no_errors(input_contents: any[]) {
+	private _start_cook_if_no_errors(input_contents: ContainableMap[NC][]) {
 		if (this.node.states.error.active) {
 			this.end_cook();
 		} else {
 			try {
 				this._performance_controller.record_cook_start();
-				await this.node.cook(input_contents);
+				this.node.cook(input_contents);
 			} catch (e) {
 				this.node.states.error.set(`node internal error: '${e}'.`);
-				console.error(this.node.full_path(), e);
 				this.end_cook();
 			}
 		}
 	}
 
 	async cook_main() {
+		// console.log(performance.now(), 'cook main start', this.node.full_path());
 		if (this.is_cooking) {
 			return;
 		}
 		this._init_cooking_state();
 		this.node.states.error.clear();
 
-		const input_contents = await this._evaluate_inputs();
-		await this._evaluate_params();
-		await this._start_cook_if_no_errors(input_contents);
+		let input_contents: ContainableMap[NC][];
+		if (this._inputs_evaluation_required) {
+			input_contents = await this._evaluate_inputs();
+		} else {
+			input_contents = [];
+		}
+		if (this.node.params.params_eval_required()) {
+			await this._evaluate_params();
+		}
+		this._start_cook_if_no_errors(input_contents);
+		// console.log(performance.now(), 'cook main end', this.node.full_path());
 	}
 	async cook_main_without_inputs() {
 		this.node.scene.cook_controller.add_node(this.node);
@@ -73,8 +85,10 @@ export class NodeCookController {
 		this._init_cooking_state();
 		this.node.states.error.clear();
 
-		await this._evaluate_params();
-		await this._start_cook_if_no_errors([]);
+		if (this.node.params.params_eval_required()) {
+			await this._evaluate_params();
+		}
+		this._start_cook_if_no_errors([]);
 	}
 
 	end_cook(message?: string | null) {
@@ -94,33 +108,43 @@ export class NodeCookController {
 	private _terminate_cook_process() {
 		if (this.is_cooking) {
 			this._cooking = false;
-			setTimeout(this.node.container_controller.notify_requesters.bind(this.node.container_controller), 0);
+			// setTimeout(this.node.container_controller.notify_requesters.bind(this.node.container_controller), 0);
+			this.node.container_controller.notify_requesters();
 		}
 	}
 
-	private async _evaluate_inputs() {
+	private async _evaluate_inputs(): Promise<ContainableMap[NC][]> {
 		this._performance_controller.record_inputs_start();
 
-		let input_containers: (BaseContainer | null)[] = [];
+		// console.log(performance.now(), '_evaluate_inputs 0', this.node.full_path());
+		let input_containers: (ContainerMap[NC] | null)[] = [];
+		const io_inputs = this.node.io.inputs;
 		if (this._inputs_evaluation_required) {
-			input_containers = await this.node.io.inputs.eval_required_inputs();
+			if (io_inputs.is_any_input_dirty()) {
+				input_containers = await io_inputs.eval_required_inputs();
+			} else {
+				input_containers = io_inputs.containers_without_evaluation();
+			}
 		}
+		// console.log(performance.now(), '_evaluate_inputs 1', this.node.full_path());
 
-		const inputs = this.node.io.inputs.inputs();
-		const input_contents = [];
-		if (input_containers) {
-			let input_container: BaseContainer | null;
-			for (let i = 0; i < inputs.length; i++) {
-				input_container = input_containers[i];
-				if (input_container) {
-					if (this.node.io.inputs.input_clonable_state_with_override(i)) {
-						input_contents[i] = input_container.core_content_cloned();
-					} else {
-						input_contents[i] = input_container.core_content();
-					}
+		const inputs = io_inputs.inputs();
+		const input_contents: ContainableMap[NC][] = [];
+		// if (input_containers) {
+		let input_container: ContainerMap[NC] | null;
+		for (let i = 0; i < inputs.length; i++) {
+			input_container = input_containers[i];
+			if (input_container) {
+				if (io_inputs.clone_required(i)) {
+					// console.log('cloned');
+					input_contents[i] = input_container.core_content_cloned() as ContainableMap[NC];
+				} else {
+					input_contents[i] = input_container.core_content() as ContainableMap[NC];
 				}
 			}
 		}
+		// }
+		// console.log(performance.now(), '_evaluate_inputs 2', this.node.full_path());
 		this._performance_controller.record_inputs_end();
 		return input_contents;
 	}

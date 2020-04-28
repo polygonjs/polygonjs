@@ -38,7 +38,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		this.io.inputs.set_count(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 
 		// this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
@@ -61,7 +61,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.gpu_controller.set_restart_not_required();
 		const core_group = input_contents[0];
 
-		await this.compile_if_required();
+		this.compile_if_required();
 
 		// if (!this.render_controller.initialized) {
 		// 	this.render_controller.init_core_group(core_group);

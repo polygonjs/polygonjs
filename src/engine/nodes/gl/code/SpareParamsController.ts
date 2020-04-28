@@ -91,6 +91,12 @@ export class AssemblerNodeSpareParamsController {
 
 		this._node.params.update_params(params_update_options);
 		this._created_spare_param_names = params_update_options.to_add?.map((o) => o.name) || [];
+		// for (let name of this._created_spare_param_names) {
+		// 	const param = this._node.params.get(name);
+		// 	if (param) {
+		// 		param.options.execute_callback();
+		// 	}
+		// }
 	}
 
 	// TODO: handle the case where a param created by user already exists.

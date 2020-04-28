@@ -27,10 +27,10 @@ export abstract class TypedContainer<NC extends NodeContext> {
 	// 	}
 	// 	return cloned_container;
 	// }
-	reset_caches() {}
+	// reset_caches() {}
 
 	set_content(content: ContainableMap[NC]) {
-		this.reset_caches();
+		// this.reset_caches();
 		this._content = content;
 		this._post_set_content();
 	}

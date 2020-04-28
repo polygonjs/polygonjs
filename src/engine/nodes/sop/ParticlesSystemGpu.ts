@@ -98,7 +98,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.io.inputs.set_count(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 
 		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
@@ -149,8 +149,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		// this._simulation_restart_required = false;
 		// let set_group_required = false;
 		// let points:CorePoint[] = [];
-		console.log('particles cook');
-		await this.compile_if_required();
+		this.compile_if_required();
 
 		if (this.is_on_frame_start()) {
 			this.gpu_controller.reset_particle_groups();

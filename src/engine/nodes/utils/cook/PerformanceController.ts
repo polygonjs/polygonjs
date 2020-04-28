@@ -17,7 +17,7 @@ export class NodeCookPerformanceformanceController {
 		cook_time: 0,
 	};
 
-	constructor(private cook_controller: NodeCookController) {}
+	constructor(private cook_controller: NodeCookController<any>) {}
 
 	get cooks_count() {
 		return this._cooks_count;

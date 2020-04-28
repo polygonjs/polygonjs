@@ -14,7 +14,7 @@ export class NullSopNode extends TypedSopNode<NullSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 		this.ui_data.set_border_radius(1000);
 	}
 

@@ -22,10 +22,10 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		this.set_selection(data['selection']);
 
 		// inputs clone
-		if (this._node.io.inputs.override_clonable_state_allowed()) {
-			const override = data['override_clonable_state'];
+		if (this._node.io.inputs.override_cloned_state_allowed()) {
+			const override = data['cloned_state_overriden'];
 			if (override) {
-				this._node.io.inputs.set_override_clonable_state(override);
+				this._node.io.inputs.override_cloned_state(override);
 			}
 		}
 

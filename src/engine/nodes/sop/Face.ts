@@ -37,7 +37,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	cook(input_contents: CoreGroup[]) {

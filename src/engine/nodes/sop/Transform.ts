@@ -52,13 +52,13 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	}
 
 	static displayed_input_names(): string[] {
-		return ['geometry to transform'];
+		return ['geometries or objects to transform'];
 	}
 
 	initialize_node() {
 		// this.ui_data.set_param_label(this.p.apply_on, (v)=>TARGET_TYPES[v])
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	private _core_transform = new CoreTransform();

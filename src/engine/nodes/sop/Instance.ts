@@ -48,7 +48,7 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 		this.lifecycle.add_on_create_hook(this._on_create_bound);
 
 		this.io.inputs.set_count(2);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
 	}
 
 	async cook(input_contents: CoreGroup[]) {

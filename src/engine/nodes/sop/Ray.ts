@@ -43,7 +43,7 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(2);
-		this.io.inputs.init_inputs_clonable_state([
+		this.io.inputs.init_inputs_cloned_state([
 			InputCloneMode.FROM_NODE,
 			InputCloneMode.ALWAYS, // to assign double sided mat
 		]);

@@ -19,7 +19,7 @@ export class DelaySopNode extends TypedSopNode<DelaySopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.ALWAYS);
 	}
 
 	cook(inputs_contents: CoreGroup[]) {

@@ -133,7 +133,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	async cook() {
-		await this.compile_if_required();
+		this.compile_if_required();
 		// await this.assembler_controller.assign_uniform_values();
 
 		this.render_on_target();
@@ -145,11 +145,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		};
 	}
 
-	async compile_if_required() {
+	compile_if_required() {
 		if (this.assembler_controller.compile_required()) {
 			// && !this.pv.locked){
 			// this._texture_material = undefined;
-			await this.run_assembler();
+			this.run_assembler();
 			// const fragment_shader = this.assembler_controller.assembler.fragment_shader();
 			// const uniforms = this.assembler_controller.assembler.uniforms();
 			// if (fragment_shader && uniforms) {
@@ -162,7 +162,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			this.assembler_controller.post_compile();
 		}
 	}
-	private async run_assembler() {
+	private run_assembler() {
 		const output_nodes = GlNodeFinder.find_output_nodes(this);
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node allowed');
@@ -173,7 +173,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			this.assembler_controller.assembler.set_root_nodes([output_node]);
 
 			// main compilation
-			await this.assembler_controller.assembler.update_fragment_shader();
+			this.assembler_controller.assembler.update_fragment_shader();
 
 			// receives fragment and uniforms
 			const fragment_shader = this.assembler_controller.assembler.fragment_shader();

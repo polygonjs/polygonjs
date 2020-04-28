@@ -63,7 +63,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		super();
 	}
 
-	async compile() {}
+	compile() {}
 
 	// private get material() {
 	// 	return (this._material = this._material || this._create_material());
@@ -315,8 +315,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	get code_builder() {
 		return (this._code_builder = this._code_builder || new CodeBuilder(this, this._gl_parent_node));
 	}
-	async build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
-		await this.code_builder.build_from_nodes(root_nodes);
+	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
+		this.code_builder.build_from_nodes(root_nodes);
 	}
 	allow_new_param_configs() {
 		this.code_builder.allow_new_param_configs();
@@ -609,7 +609,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		}
 	}
 
-	async get_custom_materials(): Promise<Map<CustomMaterialName, ShaderMaterial>> {
+	get_custom_materials(): Map<CustomMaterialName, ShaderMaterial> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
 	}
 

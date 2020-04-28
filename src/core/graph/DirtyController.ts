@@ -140,7 +140,8 @@ export class DirtyController {
 		// cooker.block();
 
 		const propagate = false;
-		this._cached_successors = this._cached_successors || this.node.graph_all_successors(); //this._dirtyable_all_successors(original_trigger_graph_node);
+		this._cached_successors = this._cached_successors || this.node.graph_all_successors();
+
 		// successors = successors.filter(n=>!n.is_dirty())
 		for (let successor of this._cached_successors) {
 			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);

@@ -29,7 +29,7 @@ import {
 } from './utils/delete/ByAttributeHelper';
 import {ByExpressionHelper} from './utils/delete/ByExpressionHelper';
 import {ByBboxHelper} from './utils/delete/ByBboxHelper';
-import {Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
 import {ByObjectTypeHelper} from './utils/delete/ByObjectTypeHelper';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
@@ -164,7 +164,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	async cook(input_contents: CoreGroup[]) {

@@ -65,7 +65,7 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 		return this._compile_required;
 	}
 
-	async post_compile() {
+	post_compile() {
 		this.create_spare_parameters();
 		this.set_compilation_required(false);
 	}

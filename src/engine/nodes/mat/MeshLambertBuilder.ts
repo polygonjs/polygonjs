@@ -35,13 +35,13 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 	}
 
 	async cook() {
-		await this.compile_if_required();
+		this.compile_if_required();
 
 		ColorsController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
-		await TextureMapController.update(this);
-		await TextureAlphaMapController.update(this);
+		TextureMapController.update(this);
+		TextureAlphaMapController.update(this);
 
 		this.set_material(this.material);
 	}

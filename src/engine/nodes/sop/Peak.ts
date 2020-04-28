@@ -22,7 +22,7 @@ export class PeakSopNode extends TypedSopNode<PeakSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	cook(input_contents: CoreGroup[]) {
@@ -41,7 +41,7 @@ export class PeakSopNode extends TypedSopNode<PeakSopParamsConfig> {
 						point.set_position(new_position);
 					}
 
-					if (!this.io.inputs.input_cloned(0)) {
+					if (!this.io.inputs.clone_required(0)) {
 						const attrib = core_geometry.geometry().getAttribute(POSITION) as BufferAttribute;
 						attrib.needsUpdate = true;
 					}

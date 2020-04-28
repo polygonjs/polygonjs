@@ -16,16 +16,11 @@ import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from './utils/params/ParamsValueAccessor';
-import {ProcessingContext} from './utils/ProcessingContext';
+// import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/io/IOController';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
-
-export interface NodeVisitor {
-	visit_node: (node: BaseNodeType) => any;
-	visit_node_obj: (node: BaseNodeType) => any;
-}
 
 export interface NodeDeletedEmitData {
 	parent_id: string;
@@ -59,7 +54,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _states: StatesController | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
-	private _cook_controller: NodeCookController | undefined;
+	private _cook_controller: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
 	protected _display_node_controller: DisplayNodeController | undefined;
 	get display_node_controller() {
@@ -73,7 +68,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>()) as ParamsAccessorType<K>;
 	// readonly p: ParamsAccessor<K> = new ParamsAccessor<K>(this);
 
-	private _processing_context: ProcessingContext | undefined;
+	// private _processing_context: ProcessingContext | undefined;
 	private _name_controller: NameController | undefined;
 
 	get parent_controller(): HierarchyParentController {
@@ -116,7 +111,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
 
-	get cook_controller(): NodeCookController {
+	get cook_controller(): NodeCookController<NC> {
 		return (this._cook_controller = this._cook_controller || new NodeCookController(this));
 	}
 	protected _io: IOController<NC> | undefined;
@@ -135,9 +130,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get params(): ParamsController {
 		return (this._params_controller = this._params_controller || new ParamsController(this));
 	}
-	get processing_context(): ProcessingContext {
-		return (this._processing_context = this._processing_context || new ProcessingContext(this));
-	}
+	// get processing_context(): ProcessingContext {
+	// 	return (this._processing_context = this._processing_context || new ProcessingContext(this));
+	// }
 
 	constructor(scene: PolyScene, name: string = 'BaseNode') {
 		super(scene, name);
@@ -225,7 +220,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	// container
 	async request_container() {
-		return await this.container_controller.request_container();
+		if (!this.is_dirty) {
+			return this.container_controller.container;
+		} else {
+			return await this.container_controller.request_container();
+		}
 	}
 	set_container(content: ContainableMap[NC], message: string | null = null) {
 		// TODO: typescript: why is this a type of never

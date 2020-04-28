@@ -5,7 +5,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
 
 export enum RBDAttribute {
 	ACTIVE = 'active',

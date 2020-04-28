@@ -66,7 +66,7 @@ interface BaseParamOptions {
 	field?: boolean;
 	visible_if?: VisibleIfParamOptions | VisibleIfParamOptions[];
 }
-interface MenuParamOptions {
+export interface MenuParamOptions {
 	menu?: {
 		// type: 'radio';
 		entries: ParamOptionsMenuEntry[];
