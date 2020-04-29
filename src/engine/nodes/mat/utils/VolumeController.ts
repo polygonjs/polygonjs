@@ -1,0 +1,58 @@
+import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {TypedMatNode} from '../_Base';
+import {Material} from 'three/src/materials/Material';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Scene} from 'three/src/scenes/Scene';
+import {Camera} from 'three/src/cameras/Camera';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Geometry} from 'three/src/core/Geometry';
+import {Group} from 'three/src/objects/Group';
+import {Box3} from 'three/src/math/Box3';
+import {Object3D} from 'three/src/core/Object3D';
+
+export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		color = ParamConfig.COLOR([1, 1, 1]);
+		step_size = ParamConfig.FLOAT(0.01);
+		density = ParamConfig.FLOAT(1);
+		shadow_density = ParamConfig.FLOAT(1);
+		light_dir = ParamConfig.VECTOR3([-1, -1, -1]);
+	};
+}
+class VolumeMaterial extends ShaderMaterial {}
+class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
+
+abstract class VolumeMatNode extends TypedMatNode<VolumeMaterial, TextureMapParamsConfig> {}
+
+export class VolumeController {
+	constructor(private node: VolumeMatNode) {}
+
+	private static _object_bbox = new Box3();
+	static render_hook(
+		renderer: WebGLRenderer,
+		scene: Scene,
+		camera: Camera,
+		geometry: BufferGeometry | Geometry,
+		material: Material,
+		group: Group | null,
+		object: Object3D
+	) {
+		if (object) {
+			this._object_bbox.setFromObject(object);
+			const shader_material = material as ShaderMaterial;
+			shader_material.uniforms.u_BoundingBoxMin.value.copy(this._object_bbox.min);
+			shader_material.uniforms.u_BoundingBoxMax.value.copy(this._object_bbox.max);
+		}
+	}
+
+	update_uniforms_from_params() {
+		const uniforms = this.node.material.uniforms;
+
+		uniforms.u_Color.value.copy(this.node.pv.color);
+		uniforms.u_StepSize.value = this.node.pv.step_size;
+		uniforms.u_VolumeDensity.value = this.node.pv.density;
+		uniforms.u_ShadowDensity.value = this.node.pv.shadow_density;
+		uniforms.u_DirectionalLightsDirection.value[0].copy(this.node.pv.light_dir);
+	}
+}
