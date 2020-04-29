@@ -6,9 +6,11 @@ import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
 import {MeshLambertBuilderMatNode} from '../../../nodes/mat/MeshLambertBuilder';
 import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
 import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
+import {MeshTranslucentMatNode} from '../../../nodes/mat/MeshTranslucent';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
-import {MeshTranslucentMatNode} from '../../../nodes/mat/MeshTranslucent';
+import {VolumeMatNode} from '../../../nodes/mat/Volume';
+import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
 
 export interface MatNodeChildrenMap {
 	mesh_basic: MeshBasicMatNode;
@@ -20,6 +22,8 @@ export interface MatNodeChildrenMap {
 	mesh_translucent: MeshTranslucentMatNode;
 	points: PointsMatNode;
 	points_builder: PointsBuilderMatNode;
+	volume: VolumeMatNode;
+	volume_builder: VolumeBuilderMatNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -34,5 +38,7 @@ export class MatRegister {
 		poly.register_node(MeshTranslucentMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.register_node(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.register_node(VolumeMatNode, CATEGORY_MAT.VOLUME);
+		poly.register_node(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 	}
 }

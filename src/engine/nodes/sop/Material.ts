@@ -85,6 +85,7 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		// does it get cloned when a node fetches the container?
 		// I may only need to clone it for the copy SOP
 		object_with_material.material = material;
+		CoreMaterial.apply_render_hook(object, material);
 		CoreMaterial.apply_custom_materials(object, material);
 	}
 }

@@ -67,7 +67,12 @@ export class DisplayNodeController {
 			if (this._display_node) {
 				this._graph_node.add_graph_input(this._display_node);
 			}
-			this.request_display_node_container();
+
+			// use a timeout here, so that the node isn't cooked too early when being copy/pasted, if it had the display flag on.
+			// This would make nodes error
+			setTimeout(() => {
+				this.request_display_node_container();
+			}, 0);
 		}
 	}
 

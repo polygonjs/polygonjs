@@ -23,14 +23,7 @@ import {Object3DWithGeometry} from '../../../core/geometry/Group';
 // import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 // import {BaseParamType} from '../../params/_Base';
 
-type RenderHook = (
-	renderer: WebGLRenderer,
-	scene: Scene,
-	camera: Camera,
-	geometry: BufferGeometry | Geometry,
-	material: Material,
-	group: Group
-) => void;
+import {RenderHook} from '../../../core/geometry/Material';
 
 class RivetObjParamConfig extends NodeParamsConfig {
 	object = ParamConfig.OPERATOR_PATH('', {
@@ -140,7 +133,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		camera: Camera,
 		geometry: BufferGeometry | Geometry,
 		material: Material,
-		group: Group
+		group: Group | null
 	) {
 		if (!this.pv.active) {
 			return;
