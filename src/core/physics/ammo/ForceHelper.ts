@@ -122,10 +122,10 @@ export class AmmoForceHelper {
 		const max_distance = core_point.attrib_value(RadialForceAttribute.MAX_DISTANCE);
 
 		const o = this._t.getOrigin();
-		this._impulse.setValue(position.x - o.x(), position.y - o.y(), position.z - o.z());
+		this._impulse.setValue(o.x() - position.x, o.y() - position.y, o.z() - position.z);
 		const length = this._impulse.length();
 		if (length < max_distance) {
-			if (length > 1) {
+			if (length != 0) {
 				this._impulse.op_mul(amount / length);
 			}
 			const threshold = 0.001; // no need to apply if very small

@@ -100,7 +100,7 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 			this.reset();
 		}
 		if (!this._input_init) {
-			this._input_init = await this._fetch_input_init();
+			this._input_init = await this._fetch_input_objects(0);
 			this.init();
 			// this.createGroundShape();
 		}
@@ -108,23 +108,37 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 		// 	this.check_for_new_RBDs(input_contents[0]);
 		// }
 
-		const force_core_group = input_contents[1];
-		const update_core_group = input_contents[2];
-		this._input_force_points = force_core_group ? force_core_group.points() : undefined;
-		this._input_attributes_update = update_core_group ? update_core_group.core_objects() : undefined;
+		this._input_force_points = await this._fetch_input_points(1);
+		this._input_attributes_update = await this._fetch_input_objects(2);
 		this.simulate(0.05);
 		this.set_objects(this._objects_with_RBDs);
 	}
 
-	private async _fetch_input_init() {
-		const container = await this.container_controller.request_input_container(0);
-		if (container) {
-			const core_group = container.core_content_cloned();
-			if (core_group) {
-				return core_group.core_objects();
+	private async _fetch_input_objects(input_index: number) {
+		const input_node = this.io.inputs.input(input_index);
+		if (input_node) {
+			const container = await this.container_controller.request_input_container(input_index);
+			if (container) {
+				const core_group = container.core_content_cloned();
+				if (core_group) {
+					return core_group.core_objects();
+				}
 			}
 		}
 		return [];
+	}
+	private async _fetch_input_points(input_index: number) {
+		const input_node = this.io.inputs.input(input_index);
+		if (input_node) {
+			const container = await this.container_controller.request_input_container(input_index);
+			if (container) {
+				const core_group = container.core_content_cloned();
+				if (core_group) {
+					return core_group.points();
+				}
+			}
+		}
+		return undefined;
 	}
 
 	// protected createGroundShape() {
@@ -161,9 +175,9 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 			this._add_rbd_from_object(core_object, this._body_helper, this.world);
 		}
 		this._transform_core_objects_from_bodies();
-		this._create_constraints();
+		// this._create_constraints();
 	}
-	private _create_constraints() {
+	protected _create_constraints() {
 		const rbd0 = this._bodies_by_id.get('/geo1/physics_rbd_attributes1:0')!;
 		const rbd1 = this._bodies_by_id.get('/geo1/physics_rbd_attributes1:1')!;
 		var pivotA = new Ammo.btVector3(0, 0.5, 0);

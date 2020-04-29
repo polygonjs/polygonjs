@@ -52,33 +52,41 @@ export class CoreInstancer {
 		this._do_rotate_matrices = this._is_normal_present; //&& this._is_up_present;
 	}
 
-	matrices(): Matrix4[] {
+	matrices() {
 		this._matrices = {};
 		this._matrices[MATRIX_T] = new Matrix4();
 		this._matrices[MATRIX_R] = new Matrix4();
 		this._matrices[MATRIX_S] = new Matrix4();
 
 		return this._group_wrapper.points().map((point) => {
-			return this._matrix_from_point(point);
+			const matrix = new Matrix4();
+			this._matrix_from_point(point, matrix);
+			return matrix;
 		});
 	}
 
-	private _point_scale = new Vector3()
-	private _point_normal = new Vector3()
-	private _point_up = new Vector3()
-	_matrix_from_point(point: CorePoint): Matrix4 {
+	private _point_scale = new Vector3();
+	private _point_normal = new Vector3();
+	private _point_up = new Vector3();
+	// private _point_m = new Matrix4()
+	_matrix_from_point(point: CorePoint, matrix: Matrix4) {
 		const t = point.position();
 		//r = new Vector3(0,0,0)
-		const scale: Vector3 = this._is_scale_present ? point.attrib_value(SCALE_ATTRIB_NAME, this._point_scale) as Vector3 : DEFAULT.SCALE;
-		const pscale:number = this._is_pscale_present ? point.attrib_value(PSCALE_ATTRIB_NAME) as number : DEFAULT.PSCALE;
-		scale.multiplyScalar(pscale);
+		if (this._is_scale_present) {
+			point.attrib_value(SCALE_ATTRIB_NAME, this._point_scale);
+		} else {
+			this._point_scale.copy(DEFAULT.SCALE);
+		}
+		const pscale: number = this._is_pscale_present
+			? (point.attrib_value(PSCALE_ATTRIB_NAME) as number)
+			: DEFAULT.PSCALE;
+		this._point_scale.multiplyScalar(pscale);
 
 		//matrix = #Core.Transform.matrix(t, r, s, scale)
-		const matrix = new Matrix4();
-		matrix.identity();
+		// matrix.identity();
 
 		const scale_matrix = this._matrices[MATRIX_S];
-		scale_matrix.makeScale(scale.x, scale.y, scale.z);
+		scale_matrix.makeScale(this._point_scale.x, this._point_scale.y, this._point_scale.z);
 
 		const translate_matrix = this._matrices[MATRIX_T];
 		translate_matrix.makeTranslation(t.x, t.y, t.z);
@@ -88,21 +96,24 @@ export class CoreInstancer {
 		if (this._do_rotate_matrices) {
 			const rotate_matrix = this._matrices[MATRIX_R];
 			const eye = DEFAULT.EYE;
-			const center = (point.attrib_value(NORMAL_ATTRIB_NAME, this._point_normal) as Vector3).multiplyScalar(-1);
-			const up = this._is_up_present ? point.attrib_value(UP_ATTRIB_NAME, this._point_up) as Vector3 : DEFAULT.UP;
-			up.normalize();
-			rotate_matrix.lookAt(eye, center, up);
+			point.attrib_value(NORMAL_ATTRIB_NAME, this._point_normal);
+			this._point_normal.multiplyScalar(-1);
+			if (this._is_up_present) {
+				point.attrib_value(UP_ATTRIB_NAME, this._point_up);
+			} else {
+				this._point_up.copy(DEFAULT.UP);
+			}
+			this._point_up.normalize();
+			rotate_matrix.lookAt(eye, this._point_normal, this._point_up);
 
 			matrix.multiply(rotate_matrix);
 		}
 
 		matrix.multiply(scale_matrix);
-
-		return matrix;
 	}
 
-	private static _point_color = new Vector3()
-	private static _point_uv = new Vector2()
+	private static _point_color = new Vector3();
+	private static _point_uv = new Vector2();
 	static create_instance_buffer_geo(
 		geometry_to_instance: BufferGeometry,
 		template_core_group: CoreGroup,
@@ -144,7 +155,9 @@ export class CoreInstancer {
 			quaternion.toArray(orients, index4);
 			scale.toArray(scales, index3);
 
-			const color = has_color ? instance_pt.attrib_value(ATTRIB_NAME_COLOR, this._point_color) as Vector3 : DEFAULT_COLOR;
+			const color = has_color
+				? (instance_pt.attrib_value(ATTRIB_NAME_COLOR, this._point_color) as Vector3)
+				: DEFAULT_COLOR;
 			color.toArray(colors, index3);
 		});
 
@@ -154,7 +167,7 @@ export class CoreInstancer {
 			const uvs = new Float32Array(instances_count * 2);
 			instance_pts.forEach((instance_pt, i) => {
 				const index2 = i * 2;
-				const uv = has_uv ? instance_pt.attrib_value(ATTRIB_NAME_UV, this._point_uv) as Vector2 : DEFAULT_UV;
+				const uv = has_uv ? (instance_pt.attrib_value(ATTRIB_NAME_UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
 			});
 			geometry.setAttribute('instanceUv', new InstancedBufferAttribute(uvs, 2));

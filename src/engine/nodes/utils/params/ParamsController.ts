@@ -121,7 +121,6 @@ export class ParamsController {
 			}
 		}
 
-		console.log('params updated');
 		if (has_deleted_a_param || has_created_a_param) {
 			this._update_caches();
 			this.init_param_accessors();

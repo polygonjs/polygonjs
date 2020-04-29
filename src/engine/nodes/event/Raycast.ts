@@ -4,7 +4,7 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsController';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {RaycastCPUController} from './utils/raycast/CPUController';
+import {RaycastCPUController, CPU_INTERSECT_WITH_OPTIONS, CPUIntersectWith} from './utils/raycast/CPUController';
 import {RaycastGPUController} from './utils/raycast/GPUController';
 
 enum RaycastMode {
@@ -12,8 +12,19 @@ enum RaycastMode {
 	GPU = 'gpu',
 }
 const RAYCAST_MODES: Array<RaycastMode> = [RaycastMode.CPU, RaycastMode.GPU];
+
 function visible_for_cpu(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
+	return {visible_if: options};
+}
+function visible_for_cpu_geometry(options: VisibleIfParamOptions = {}): ParamOptions {
+	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
+	options['intersect_with'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY);
+	return {visible_if: options};
+}
+function visible_for_cpu_plane(options: VisibleIfParamOptions = {}): ParamOptions {
+	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
+	options['intersect_with'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.PLANE);
 	return {visible_if: options};
 }
 function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
@@ -103,6 +114,31 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// CPU
 	//
 	//
+	intersect_with = ParamConfig.INTEGER(CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY), {
+		menu: {
+			entries: CPU_INTERSECT_WITH_OPTIONS.map((name, value) => {
+				return {name, value};
+			}),
+		},
+		...visible_for_cpu(),
+	});
+	//
+	//
+	// CPU PLANE
+	//
+	//
+	plane_direction = ParamConfig.VECTOR3([0, 1, 0], {
+		...visible_for_cpu_plane(),
+	});
+	plane_offset = ParamConfig.FLOAT(0, {
+		...visible_for_cpu_plane(),
+	});
+
+	//
+	//
+	// CPU GEOMETRY
+	//
+	//
 	target = ParamConfig.OPERATOR_PATH('/geo1', {
 		node_selection: {
 			context: NodeContext.OBJ,
@@ -111,27 +147,27 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
-		...visible_for_cpu(),
+		...visible_for_cpu_geometry(),
 	});
 	traverse_children = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
-		...visible_for_cpu(),
+		...visible_for_cpu_geometry(),
 	});
 	sep = ParamConfig.SEPARATOR(null, {
-		...visible_for_cpu(),
+		...visible_for_cpu_geometry(),
 	});
 
 	position = ParamConfig.VECTOR3([0, 0, 0], {cook: false, ...visible_for_cpu()});
-	geo_attribute = ParamConfig.BOOLEAN(0, visible_for_cpu());
+	geo_attribute = ParamConfig.BOOLEAN(0, visible_for_cpu_geometry());
 	geo_attribute_name = ParamConfig.STRING('id', {
 		cook: false,
-		...visible_for_cpu({geo_attribute: 1}),
+		...visible_for_cpu_geometry({geo_attribute: 1}),
 	});
 	geo_attribute_value = ParamConfig.FLOAT(0, {
 		cook: false,
-		...visible_for_cpu({geo_attribute: 1}),
+		...visible_for_cpu_geometry({geo_attribute: 1}),
 	});
 }
 const ParamsConfig = new RaycastParamsConfig();

@@ -89,3 +89,17 @@ QUnit.test('copy without template and stamp', async (assert) => {
 });
 
 QUnit.skip('copy with group sets an error', (assert) => {});
+QUnit.skip(
+	'copy with transform_only can update the input 0 with different scale multiple times and give reliable scale',
+	(assert) => {
+		// create an attrib_create, pipe in input 1
+		// set a pscale attrib of 0.5
+		// set transform_only to 1
+		// check the output size
+		// set pscale attrib of 0.25
+		// check the output size
+		// set pscale attrib of 0.75
+		// check the output size
+	}
+);
+QUnit.skip('copy does not modify input 0 with transform_only', (assert) => {});

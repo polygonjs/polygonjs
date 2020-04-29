@@ -13,6 +13,8 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
+import {Vector3} from 'three/src/math/Vector3';
+import {Quaternion} from 'three/src/math/Quaternion';
 class CopySopParamsConfig extends NodeParamsConfig {
 	count = ParamConfig.INTEGER(1, {
 		range: [1, 20],
@@ -81,6 +83,10 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		const instancer = new CoreInstancer(template_core_group);
 		let instance_matrices = instancer.matrices();
+		const t = new Vector3();
+		const q = new Quaternion();
+		const s = new Vector3();
+		instance_matrices[0].decompose(t, q, s);
 
 		this._attribute_names_to_copy = CoreString.attrib_names(this.pv.attributes_to_copy).filter((attrib_name) =>
 			template_core_group.has_attrib(attrib_name)

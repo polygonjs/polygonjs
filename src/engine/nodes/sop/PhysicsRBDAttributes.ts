@@ -4,7 +4,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {RBDAttribute, RBD_SHAPES, RBDShape} from '../../../core/physics/ammo/RBDBodyHelper';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Vector3} from 'three/src/math/Vector3';
-
+import {Quaternion} from 'three/src/math/Quaternion';
 import {CoreObject} from '../../../core/geometry/Object';
 import {TypeAssert} from '../../poly/Assert';
 
@@ -89,26 +89,33 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		}
 	}
 	private _bbox_size = new Vector3();
+	private _object_t = new Vector3();
+	private _object_q = new Quaternion();
+	private _object_s = new Vector3();
 	private _add_object_shape_specific_attributes(core_object: CoreObject) {
 		core_object.set_attrib_value(RBDAttribute.SHAPE, this.pv.shape);
 		const shape = RBD_SHAPES[this.pv.shape];
+		const object = core_object.object() as Mesh;
+		object.matrix.decompose(this._object_t, this._object_q, this._object_s);
 		switch (shape) {
 			case RBDShape.BOX: {
-				const geometry = (core_object.object() as Mesh).geometry;
+				const geometry = object.geometry;
 				geometry.computeBoundingBox();
 				const bbox = geometry.boundingBox;
 				if (bbox) {
 					bbox.getSize(this._bbox_size);
+					this._bbox_size.multiply(this._object_s);
 					core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_BOX, this._bbox_size);
 				}
 				return;
 			}
 			case RBDShape.SPHERE: {
-				const geometry = (core_object.object() as Mesh).geometry;
+				const geometry = object.geometry;
 				geometry.computeBoundingSphere();
 				const bounding_sphere = geometry.boundingSphere;
 				if (bounding_sphere) {
-					core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_SPHERE, bounding_sphere.radius * 2);
+					const diameter = 2 * bounding_sphere.radius * this._object_s.x;
+					core_object.set_attrib_value(RBDAttribute.SHAPE_SIZE_SPHERE, diameter);
 				}
 				return;
 			}

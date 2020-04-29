@@ -71,7 +71,6 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 
 	set_compilation_required(new_state = true) {
 		this._compile_required = new_state;
-		console.warn('set_compilation_required', new_state);
 	}
 	set_compilation_required_and_dirty(trigger_node?: BaseGlNodeType) {
 		this.set_compilation_required();

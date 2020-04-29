@@ -19,9 +19,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	}
 
 	request_container(): Promise<ContainerMap[NC]> | ContainerMap[NC] {
-		if (!this.node.is_dirty) {
-			return this.container;
-		} else {
+		if (this.node.is_dirty || this.node.flags?.bypass?.active) {
 			// console.log(performance.now(), 'request_container', this.node.full_path());
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve);
@@ -31,16 +29,18 @@ export class TypedContainerController<NC extends NodeContext> {
 				// setTimeout(this.process_container_request.bind(this), 0);
 				this.process_container_request();
 			});
+		} else {
+			return this.container;
 		}
 	}
-
+	// TODO: should I merge this into the method above?
 	process_container_request() {
 		if (this.node.flags?.bypass?.active) {
 			const input_index = 0;
 			this.request_input_container(input_index).then((container) => {
 				this.node.remove_dirty_state();
 				if (container) {
-					this.notify_requesters(container as ContainerMap[NC]);
+					this.notify_requesters(container);
 				} else {
 					this.node.states.error.set('input invalid');
 				}
@@ -59,7 +59,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		const input_node = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
 		if (input_node) {
 			// input_node.processing_context.copy(this.node.processing_context);
-			if (input_node.is_dirty) {
+			if (input_node.is_dirty || input_node.flags?.bypass?.active) {
 				const container = await input_node.container_controller.request_container();
 				return container;
 			} else {

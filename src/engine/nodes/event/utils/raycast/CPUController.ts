@@ -10,6 +10,15 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {GeoObjNode} from '../../../obj/Geo';
 import {PerspectiveCameraObjNode} from '../../../obj/PerspectiveCamera';
 import {OrthographicCameraObjNode} from '../../../obj/OrthographicCamera';
+import {TypeAssert} from '../../../../poly/Assert';
+import {Plane} from 'three/src/math/Plane';
+import {Vector3} from 'three/src/math/Vector3';
+
+export enum CPUIntersectWith {
+	GEOMETRY = 'geometry',
+	PLANE = 'plane',
+}
+export const CPU_INTERSECT_WITH_OPTIONS: CPUIntersectWith[] = [CPUIntersectWith.GEOMETRY, CPUIntersectWith.PLANE];
 
 export class RaycastCPUController {
 	private _mouse: Vector2 = new Vector2();
@@ -35,6 +44,31 @@ export class RaycastCPUController {
 	process_event(context: EventContext<MouseEvent>) {
 		this._prepare_raycaster(context);
 
+		const type = CPU_INTERSECT_WITH_OPTIONS[this._node.pv.intersect_with];
+		switch (type) {
+			case CPUIntersectWith.GEOMETRY: {
+				return this._intersect_with_geometry(context);
+			}
+			case CPUIntersectWith.PLANE: {
+				return this._intersect_with_plane(context);
+			}
+		}
+		TypeAssert.unreachable(type);
+	}
+
+	private _plane = new Plane();
+	private _plane_intersect_target = new Vector3();
+	private _plane_intersect_target_array: Number3 = [0, 0, 0];
+	private _intersect_with_plane(context: EventContext<MouseEvent>) {
+		this._plane.normal.copy(this._node.pv.plane_direction);
+		this._plane.constant = this._node.pv.plane_offset;
+		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
+		this._plane_intersect_target.toArray(this._plane_intersect_target_array);
+		this._node.p.position.set(this._plane_intersect_target_array);
+		this._node.trigger_hit();
+	}
+
+	private _intersect_with_geometry(context: EventContext<MouseEvent>) {
 		if (!this._resolved_target) {
 			this.update_target();
 		}
@@ -42,7 +76,6 @@ export class RaycastCPUController {
 		if (this._resolved_target) {
 			const intersections = this._raycaster.intersectObject(this._resolved_target, true);
 			const intersection = intersections[0];
-			console.log(intersection);
 			if (intersection) {
 				intersection.point.toArray(this._intersection_position);
 				this._node.p.position.set(this._intersection_position);
