@@ -20,7 +20,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	private _queued_nodes_by_id: Dictionary<BaseObjNodeType> = {};
 	private _queued_nodes_by_path: Dictionary<BaseObjNodeType> = {};
 	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
-	private _process_queue_start: number = -1;
+	// private _process_queue_start: number = -1;
 
 	protected _children_controller_context = NodeContext.OBJ;
 	initialize_node() {
@@ -80,11 +80,10 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 		this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
 
-		this._process_queue_start = performance.now();
+		// this._process_queue_start = performance.now();
 		Promise.all(promises).then(() => {
-			Poly.instance().log(
-				`SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
-			);
+			Poly.instance().log(`SCENE LOADED '${this.scene.name}`);
+			// `SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
 			// this.scene().performance().print()
 
 			// do the update here if there are no objects to load

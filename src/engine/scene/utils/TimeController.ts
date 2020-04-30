@@ -2,18 +2,15 @@ import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {SceneEventType} from './events/SceneEventsController';
+import {EventContext} from './events/_BaseEventsController';
 
 type FrameRange = Number2;
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
-const PLAY_EVENT_CONTEXT = {event: new Event(SceneEventType.PLAY)};
-const PAUSE_EVENT_CONTEXT = {event: new Event(SceneEventType.PAUSE)};
-const TICK_EVENT_CONTEXT = {event: new Event(SceneEventType.TICK)};
 
 export class TimeController {
-	protected self: PolyScene = (<unknown>this) as PolyScene;
 	private _frame: number = 1;
 	private _time: number = 0;
 	private _prev_performance_now: number = 0;
@@ -22,6 +19,19 @@ export class TimeController {
 	private _realtime_state = true;
 	private _frame_range_locked: [boolean, boolean] = [true, true];
 	private _playing: boolean = false;
+
+	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
+	private _PAUSE_EVENT_CONTEXT: EventContext<Event> | undefined;
+	private _TICK_EVENT_CONTEXT: EventContext<Event> | undefined;
+	get PLAY_EVENT_CONTEXT() {
+		return (this._PLAY_EVENT_CONTEXT = this._PLAY_EVENT_CONTEXT || {event: new Event(SceneEventType.PLAY)});
+	}
+	get PAUSE_EVENT_CONTEXT() {
+		return (this._PAUSE_EVENT_CONTEXT = this._PAUSE_EVENT_CONTEXT || {event: new Event(SceneEventType.PAUSE)});
+	}
+	get TICK_EVENT_CONTEXT() {
+		return (this._TICK_EVENT_CONTEXT = this._TICK_EVENT_CONTEXT || {event: new Event(SceneEventType.TICK)});
+	}
 
 	constructor(private scene: PolyScene) {
 		this._graph_node = new CoreGraphNode(scene, 'time controller');
@@ -89,7 +99,7 @@ export class TimeController {
 			this.scene.cooker.unblock();
 
 			// dispatch events after nodes have cooked
-			this.scene.events_dispatcher.scene_events_controller.process_event(TICK_EVENT_CONTEXT);
+			this.scene.events_dispatcher.scene_events_controller.process_event(this.TICK_EVENT_CONTEXT);
 		}
 	}
 
@@ -140,7 +150,7 @@ export class TimeController {
 			this._playing = false;
 			// TODO: try and unify the dispatch controller and events dispatcher
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.events_dispatcher.scene_events_controller.process_event(PAUSE_EVENT_CONTEXT);
+			this.scene.events_dispatcher.scene_events_controller.process_event(this.PAUSE_EVENT_CONTEXT);
 		}
 	}
 	play() {
@@ -148,7 +158,7 @@ export class TimeController {
 			this._playing = true;
 			this._prev_performance_now = performance.now();
 			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.events_dispatcher.scene_events_controller.process_event(PLAY_EVENT_CONTEXT);
+			this.scene.events_dispatcher.scene_events_controller.process_event(this.PLAY_EVENT_CONTEXT);
 		}
 	}
 	toggle_play_pause() {

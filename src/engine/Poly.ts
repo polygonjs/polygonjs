@@ -6,6 +6,11 @@ import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegiste
 import {NodeContext} from './poly/NodeContext';
 // import {ViewerLoadersManager} from '/viewers/LoadersManager';
 
+// declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
+// https://github.com/TypeStrong/ts-loader/issues/37
+declare const POLYGONJS_VERSION: string;
+const _POLYGONJS_VERSION = POLYGONJS_VERSION;
+
 export class Poly {
 	static _instance: Poly | undefined;
 	renderers_controller: RenderersController = new RenderersController();
@@ -14,12 +19,19 @@ export class Poly {
 	// public readonly js_version: string = '0';
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
+	private _version: Readonly<string> = _POLYGONJS_VERSION;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	static instance() {
 		return (this._instance = this._instance || new Poly());
 	}
-	private constructor() {}
+	private constructor() {
+		console.log(`POLYGONJS: '${this._version}'`);
+	}
+
+	version() {
+		return this._version;
+	}
 
 	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		this.nodes_register.register_node(node, tab_menu_category, options);
