@@ -1,64 +1,20 @@
-// import {Vector3} from 'three/src/math/Vector3'
-// import {Vector2} from 'three/src/math/Vector2'
-
 import {CoreWalker} from '../../core/Walker';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
-// import {NodeScene} from '../../core/graph/NodeScene';
-// import {NamedGraphNode} from '../../core/graph/NamedGraphNode';
 import {BaseNodeType} from '../nodes/_Base';
-
-// import {CallbackOption} from './concerns/options/Callback'
-// import {ColorOption} from './concerns/options/Color'
-// import {CookOption} from './concerns/options/Cook'
-// import {DesktopOption} from './concerns/options/Desktop'
-// import {ExpressionOption} from './concerns/options/Expression'
-// import {MenuOption} from './concerns/options/Menu'
-// import {NodeSelectionOption} from './concerns/options/NodeSelection'
-// import {RangeOption} from './concerns/options/Range'
-// import {AssetReferenceOption} from './concerns/options/AssetReference'
-// import {SpareOption} from './concerns/options/Spare'
-// import {MultilineOption} from './concerns/options/Multiline'
-// import {TextureOption} from './concerns/options/Texture'
-// import {VisibleOption} from './concerns/options/Visible'
-
-// import {Emit} from './concerns/Emit';
-// import {Errored} from './concerns/Errored';
-// import {Eval} from './concerns/Eval';
-// import {Expression} from './concerns/Expression';
-// import {Hierarchy} from './concerns/Hierarchy';
-// import {Json} from './concerns/Json';
-// import {Named} from './concerns/Named';
-// import {Node} from './concerns/Node';
-// import {Options} from './concerns/Options';
-// import {TimeDependent} from './concerns/TimeDependent';
-// import {Type} from './concerns/Type';
-// import {UIDataOwner} from './concerns/UIDataOwner';
-// import {VisitorsBase} from './concerns/visitors/_Base';
-
 import {OptionsController} from './utils/OptionsController';
 import {ExpressionController} from './utils/ExpressionController';
 import {EmitController} from './utils/EmitController';
 import {ParamSerializer} from './utils/Serializer';
 import {StatesController} from './utils/StatesController';
-// import {UIData} from './utils/UIData';
-
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {PolyScene} from '../scene/PolyScene';
-
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from '../params/types/ParamValuesTypeMap';
 import {ParamValueSerializedTypeMap} from '../params/types/ParamValueSerializedTypeMap';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
-// import {TypedNumericParam} from './_Numeric';
-
-// export interface ParamVisitor {
-// 	visit_param: (param: BaseParamType) => any;
-// 	visit_multiple_param: (param: TypedMultipleParam<any>) => any;
-// 	visit_numeric_param: (param: TypedNumericParam<any>) => any;
-// }
 
 // type ParamTypeElem = ParamType;
 type ComputeCallback = (value: void) => void;

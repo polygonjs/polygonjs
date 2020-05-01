@@ -25,7 +25,7 @@ export enum NodeContext {
 	EVENT = 'event',
 	GL = 'gl',
 	JS = 'js',
-	MANAGER = 'managers',
+	MANAGER = 'manager',
 	MAT = 'mat',
 	OBJ = 'obj',
 	POST = 'post',

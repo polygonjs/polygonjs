@@ -9,10 +9,11 @@ import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {DesktopFileType} from '../../params/utils/OptionsController';
 class FileSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('/examples/models/wolf.obj', {
-		desktop_browse: {file_type: 'geometry'},
-		always_reference_asset: true,
+		desktop_browse: {file_type: DesktopFileType.GEOMETRY},
+		asset_reference: true,
 	});
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {

@@ -2,7 +2,7 @@ import {Group} from 'three/src/objects/Group';
 import {TypedBaseManagerNode} from './_Base';
 import {BaseObjNodeType} from '../obj/_Base';
 import {GeoObjNode} from '../obj/Geo';
-import {Poly} from '../../Poly';
+// import {Poly} from '../../Poly';
 import {NodeContext} from '../../poly/NodeContext';
 import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -82,10 +82,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 		// this._process_queue_start = performance.now();
 		Promise.all(promises).then(() => {
-			Poly.instance().log(`SCENE LOADED '${this.scene.name}`);
+			// Poly.instance().log(`SCENE LOADED '${this.scene.name}`);
 			// `SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
 			// this.scene().performance().print()
-
 			// do the update here if there are no objects to load
 			// otherwise an empty scene will have a loader that never gets removed
 			// if (Object.keys(this._expected_geo_nodes).length == 0) {

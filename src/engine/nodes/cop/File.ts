@@ -137,10 +137,12 @@ const ATTRIB_MAPPING: AttribMapping = {
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {DesktopFileType} from '../../params/utils/OptionsController';
 class FileCopParamsConfig extends NodeParamsConfig {
 	//
 	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
-		desktop_browse: {file_type: 'texture'},
+		desktop_browse: {file_type: DesktopFileType.TEXTURE},
+		asset_reference: true,
 	});
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {

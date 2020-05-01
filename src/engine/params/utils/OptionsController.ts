@@ -9,8 +9,9 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import lodash_isArray from 'lodash/isArray';
 import lodash_flatten from 'lodash/flatten';
+import {StringParam} from '../String';
 
-const ALWAYS_REFERENCE_ASSET_OPTION = 'always_reference_asset';
+const ASSET_REFERENCE_OPTION = 'asset_reference';
 const CALLBACK_OPTION = 'callback';
 const CALLBACK_STRING_OPTION = 'callback_string';
 // const COLOR_OPTION = 'color';
@@ -54,6 +55,11 @@ export enum StringParamLanguage {
 	// GLSL = 'glsl',
 }
 
+export enum DesktopFileType {
+	TEXTURE = 'texture',
+	GEOMETRY = 'geometry',
+}
+
 export type VisibleIfParamOptions = Dictionary<number | boolean>;
 interface BaseParamOptions {
 	// cook
@@ -84,10 +90,12 @@ interface NumberParamOptions extends BaseParamOptions {
 	step?: number;
 }
 interface AssetParamOptions {
-	always_reference_asset?: boolean;
+	asset_reference?: boolean;
 }
 interface DesktopParamOptions {
-	desktop_browse?: Dictionary<string>;
+	desktop_browse?: {
+		file_type: DesktopFileType;
+	};
 }
 interface ComputeOnDirtyParamOptions {
 	compute_on_dirty?: boolean;
@@ -214,15 +222,21 @@ export class OptionsController {
 	set(options: ParamOptions) {
 		this._default_options = options;
 		this._options = lodash_cloneDeep(this._default_options);
-		this._handle_compute_on_dirty();
+		this.post_set_options();
 	}
 	copy(options_controller: OptionsController) {
 		this._default_options = lodash_cloneDeep(options_controller.default);
 		this._options = lodash_cloneDeep(options_controller.current);
-		this._handle_compute_on_dirty();
+		this.post_set_options();
 	}
 	set_option(name: keyof ParamOptions, value: any) {
 		return Object.assign(this._options, name, value);
+	}
+	private post_set_options() {
+		this._handle_compute_on_dirty();
+		if (this.asset_reference && this.param.type == ParamType.STRING) {
+			this.param.scene.assets_controller.register_param(this.param as StringParam);
+		}
 	}
 	get param() {
 		return this._param;
@@ -256,8 +270,8 @@ export class OptionsController {
 	}
 
 	// referenced assets
-	get always_reference_asset(): boolean {
-		return this._options[ALWAYS_REFERENCE_ASSET_OPTION] || false;
+	get asset_reference(): boolean {
+		return this._options[ASSET_REFERENCE_OPTION] || false;
 	}
 
 	// compute on dirty
@@ -351,7 +365,7 @@ export class OptionsController {
 	get desktop_browse_allowed(): boolean {
 		return this.desktop_browse_option != null;
 	}
-	desktop_browse_file_type(): string | null {
+	desktop_browse_file_type(): DesktopFileType | null {
 		if (this.desktop_browse_option) {
 			return this.desktop_browse_option[FILE_TYPE_OPTION];
 		} else {

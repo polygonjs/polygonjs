@@ -17,6 +17,7 @@ import {ViewersRegister} from './utils/ViewersRegister';
 import {WebGLController} from './utils/WebGLController';
 
 import {Scene} from 'three/src/scenes/Scene';
+import {SceneAssetsController} from './utils/AssetsController';
 
 export class PolyScene {
 	protected _default_scene = new Scene();
@@ -52,6 +53,11 @@ export class PolyScene {
 	// get cube_cameras_controller() {
 	// 	return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
 	// }
+	private _assets_controller: SceneAssetsController | undefined;
+	get assets_controller() {
+		return (this._assets_controller = this._assets_controller || new SceneAssetsController());
+	}
+
 	public readonly cook_controller = new CookController();
 	async wait_for_cooks_completed() {
 		return this.cook_controller.wait_for_cooks_completed();

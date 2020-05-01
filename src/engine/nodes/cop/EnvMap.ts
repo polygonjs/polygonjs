@@ -14,11 +14,7 @@ import {TypedCopNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Poly} from '../../Poly';
-class EnvMapCopParamsConfig extends NodeParamsConfig {
-	// url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
-	// 	desktop_browse: {file_type: 'texture'},
-	// });
-}
+class EnvMapCopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	params_config = ParamsConfig;
