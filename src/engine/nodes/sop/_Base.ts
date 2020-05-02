@@ -1,9 +1,6 @@
 import {Object3D} from 'three/src/core/Object3D';
 import {Material} from 'three/src/materials/Material';
-// import {Group} from 'three/src/objects/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-// import lodash_includes from 'lodash/includes';
-import lodash_range from 'lodash/range';
 import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
 import {CoreConstant, ObjectByObjectType, OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE} from '../../../core/geometry/Constant';
@@ -12,6 +9,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDB} from '../utils/FlagsController';
+import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
 
 enum MESSAGE {
 	FROM_SET_CORE_GROUP = 'from set_core_group',
@@ -98,10 +96,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		material?: Material
 	): ObjectByObjectType[OT] {
 		// ensure it has an index
-		if (!geometry.index) {
-			const position_array = geometry.getAttribute('position').array;
-			geometry.setIndex(lodash_range(position_array.length / 3));
-		}
+		this._create_index_if_none(geometry);
 
 		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type]; //THREE[type];
 		material = material || CoreConstant.MATERIALS[type].clone();
@@ -112,6 +107,10 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 
 		return object as ObjectByObjectType[OT];
 		// }
+	}
+
+	protected _create_index_if_none(geometry: BufferGeometry) {
+		CoreGeometryIndexBuilder.create_index_if_none(geometry);
 	}
 
 	// protected _set_object_attributes(object: Object3D) {

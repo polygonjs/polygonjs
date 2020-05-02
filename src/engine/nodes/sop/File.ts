@@ -10,6 +10,7 @@ import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {DesktopFileType} from '../../params/utils/OptionsController';
+import {Mesh, BufferGeometry} from 'three';
 class FileSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('/examples/models/wolf.obj', {
 		desktop_browse: {file_type: DesktopFileType.GEOMETRY},
@@ -41,10 +42,24 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 
 	private _on_load(objects: Object3D[]) {
 		objects = lodash_flatten(objects);
+
+		for (let object of objects) {
+			object.traverse((child) => {
+				this._ensure_geometry_has_index(child);
+			});
+		}
 		this.set_objects(objects);
 	}
 	private _on_error(message: string) {
 		this.states.error.set(`could not load geometry from ${this.pv.url} (${message})`);
+	}
+
+	private _ensure_geometry_has_index(object: Object3D) {
+		const mesh = object as Mesh;
+		const geometry = mesh.geometry;
+		if (geometry) {
+			this._create_index_if_none(geometry as BufferGeometry);
+		}
 	}
 
 	// if I add this again, check if it can also work for desktop

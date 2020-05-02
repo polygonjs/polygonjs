@@ -1,6 +1,7 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
 import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
 
 export class CoreGeometryBuilderMerge {
 	static merge(geometries: BufferGeometry[]) {
@@ -9,7 +10,14 @@ export class CoreGeometryBuilderMerge {
 		}
 
 		//
-		// 1/3. set the new attrib indices for the indexed attributes
+		// 1/4. add indices if none
+		//
+		for (let geometry of geometries) {
+			CoreGeometryIndexBuilder.create_index_if_none(geometry);
+		}
+
+		//
+		// 2/4. set the new attrib indices for the indexed attributes
 		//
 		const core_geometries = geometries.map((geometry) => new CoreGeometry(geometry));
 		const indexed_attribute_names = core_geometries[0].indexed_attribute_names();
@@ -42,12 +50,12 @@ export class CoreGeometryBuilderMerge {
 		}
 
 		//
-		// 2/3. merge the geos
+		// 3/4. merge the geos
 		//
 		const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
 
 		//
-		// 3/3. add the index attrib values
+		// 4/4. add the index attrib values
 		//
 
 		const merged_geometry_wrapper = new CoreGeometry(merged_geometry);

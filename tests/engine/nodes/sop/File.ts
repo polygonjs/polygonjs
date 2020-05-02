@@ -1,4 +1,5 @@
 import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/nodes/sop/Hierarchy';
+import {Mesh, BufferGeometry} from 'three';
 
 async function with_file(path: string) {
 	const geo1 = window.geo1;
@@ -80,6 +81,11 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	assert.equal(core_content.points_count(), 0);
 	const first_object = core_content.objects()[0];
 	assert.equal(first_object.children.length, 4);
+
+	const first_mesh = first_object.children[0] as Mesh;
+	const first_geometry = first_mesh.geometry as BufferGeometry;
+	console.log('first_geometry', first_geometry);
+	assert.ok(first_geometry.index, 'geometry has index');
 });
 QUnit.test('SOP file json wolf', async (assert) => {
 	const container = await with_file('/examples/models/wolf.json');
