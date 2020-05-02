@@ -1,4 +1,5 @@
 import {Matrix4} from 'three/src/math/Matrix4';
+import {CoreSleep} from '../../../../src/core/Sleep';
 
 QUnit.test('geo obj simple', async (assert) => {
 	const scene = window.scene;
@@ -86,10 +87,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 	assert.equal(geo1.object.uuid, obj.uuid);
 	assert.deepEqual(
 		obj.matrix.toArray(),
-		new Matrix4()
-			.makeTranslation(2, 0, 0)
-			.multiply(new Matrix4().makeScale(1, 4, 1))
-			.toArray(),
+		new Matrix4().makeTranslation(2, 0, 0).multiply(new Matrix4().makeScale(1, 4, 1)).toArray(),
 		'matrix is not what we expect'
 	);
 	assert.equal(geo1.cook_controller.cooks_count, 1, 'cooks count should be 1');
@@ -112,6 +110,8 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 
 	file1.flags.display.set(true);
 	await scene.wait_for_cooks_completed();
+	await file1.request_container();
+	await CoreSleep.sleep(10);
 	assert.equal(obj.children.length, 2);
 	assert.equal(obj.children[1].children[0].children.length, 4);
 });

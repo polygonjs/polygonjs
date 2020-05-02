@@ -11,7 +11,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {ContainableMap} from './utils/ContainableMap';
 import {CoreObject} from '../../core/geometry/Object';
-import {AttribType} from '../../core/geometry/Constant';
+import {AttribType, ObjectData} from '../../core/geometry/Constant';
 import {NodeContext} from '../poly/NodeContext';
 // import {CoreConstant} from '../../core/geometry/Constant'
 
@@ -320,6 +320,20 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 
 		// return this._points_count != null ? this._points_count : (this._points_count = this._compute_points_count());
+	}
+	total_points_count(): number {
+		if (this._content) {
+			return this._content.total_points_count();
+		} else {
+			return 0;
+		}
+	}
+	objects_data(): ObjectData[] {
+		if (this._content) {
+			return this._content.objects_data();
+		} else {
+			return [];
+		}
 	}
 
 	// _compute_points_count() {

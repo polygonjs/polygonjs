@@ -11,5 +11,5 @@ QUnit.test('animation_mixer simple', async (assert) => {
 	let container;
 
 	container = await animation_mixer1.request_container();
-	assert.equal(container.points_count(), 7434); // I should really do a better test
+	assert.equal(container.total_points_count(), 7434); // I should really do a better test
 });

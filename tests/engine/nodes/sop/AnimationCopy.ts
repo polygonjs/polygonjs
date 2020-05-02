@@ -14,5 +14,5 @@ QUnit.test('animation_copy simple', async (assert) => {
 	file1.p.url.set('/examples/models/soldier.glb');
 
 	let container = await animation_copy1.request_container();
-	assert.equal(container.points_count(), 7434); // I should really do a better test
+	assert.equal(container.total_points_count(), 7434); // I should really do a better test
 });

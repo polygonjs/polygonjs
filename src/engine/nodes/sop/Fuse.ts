@@ -75,10 +75,13 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		(object as Mesh).geometry.dispose();
 		if (kept_points.length > 0) {
-			(object as Mesh).geometry = CoreGeometry.geometry_from_points(
+			const geometry = CoreGeometry.geometry_from_points(
 				kept_points,
 				object_type_from_constructor(object.constructor)
 			);
+			if (geometry) {
+				(object as Mesh).geometry = geometry;
+			}
 			return object;
 		} else {
 			// if(object.material){ object.material.dispose() }

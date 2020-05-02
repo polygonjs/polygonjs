@@ -1,9 +1,19 @@
+import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/nodes/sop/Hierarchy';
+
 async function with_file(path: string) {
 	const geo1 = window.geo1;
 	const file1 = geo1.create_node('file');
 	file1.p.url.set(path);
 
 	const container = await file1.request_container();
+	return container;
+}
+async function with_hierarchy() {
+	const hierarchy1 = window.geo1.create_node('hierarchy');
+	const file1 = window.geo1.nodes_by_type('file')[0];
+	hierarchy1.set_input(0, file1);
+	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	const container = await hierarchy1.request_container();
 	return container;
 }
 
@@ -22,7 +32,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.ok(!file1.is_dirty);
 	// let core_group = container.core_content()!;
 	// let {geometry} = core_group.objects()[0];
-	assert.equal(container.points_count(), 15012);
+	assert.equal(container.total_points_count(), 15012, 'total points_count is 15012');
 
 	file1.p.url.set('/examples/models/box.obj');
 	assert.ok(file1.is_dirty);
@@ -31,7 +41,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.ok(!file1.is_dirty);
 	// core_group = container.core_content();
 	// ({geometry} = core_group.objects()[0]);
-	assert.equal(container.points_count(), 36);
+	assert.equal(container.total_points_count(), 36);
 
 	// set error state
 	file1.p.url.set('/file_sop_doesnotexist.obj');
@@ -56,40 +66,50 @@ QUnit.test('SOP file simple', async (assert) => {
 	core_group = container.core_content()!;
 	//geometry = group.children[0].geometry
 	assert.ok(core_group);
-	assert.equal(container.points_count(), 36);
+	assert.equal(container.total_points_count(), 36);
 });
 
 QUnit.test('SOP file obj wolf', async (assert) => {
 	const container = await with_file('/examples/models/wolf.obj');
-	assert.equal(container.points_count(), 5352);
+	const core_content = container.core_content()!;
+	assert.equal(container.objects_count(), 1);
+	assert.equal(container.points_count(), 0);
+	console.log(container.objects_count_by_type());
+	assert.deepEqual(container.objects_count_by_type(), {Object3D: 1});
+	assert.equal(core_content.objects().length, 1);
+	assert.equal(core_content.points_count(), 0);
+	const first_object = core_content.objects()[0];
+	assert.equal(first_object.children.length, 4);
 });
 QUnit.test('SOP file json wolf', async (assert) => {
 	const container = await with_file('/examples/models/wolf.json');
-	assert.equal(container.points_count(), 5352);
+	assert.equal(container.total_points_count(), 5352);
 });
 QUnit.test('SOP file glb stork', async (assert) => {
 	const container = await with_file('/examples/models/stork.glb');
-	assert.equal(container.points_count(), 358);
+	assert.equal(container.total_points_count(), 358);
 });
 QUnit.test('SOP file glb soldier', async (assert) => {
 	const container = await with_file('/examples/models/soldier.glb');
-	assert.equal(container.points_count(), 7434);
+	assert.equal(container.total_points_count(), 7434);
 });
 QUnit.test('SOP file glb json', async (assert) => {
 	const container = await with_file('/examples/models/parrot.glb');
-	assert.equal(container.points_count(), 497);
+	assert.equal(container.total_points_count(), 497);
 });
 QUnit.test('SOP file glb horse', async (assert) => {
 	const container = await with_file('/examples/models/horse.glb');
-	assert.equal(container.points_count(), 796);
+	assert.equal(container.total_points_count(), 796);
 });
 QUnit.test('SOP file glb flamingo', async (assert) => {
 	const container = await with_file('/examples/models/flamingo.glb');
-	assert.equal(container.points_count(), 337);
+	assert.equal(container.total_points_count(), 337);
 });
 QUnit.test('SOP file z3 glb with draco', async (assert) => {
 	const container = await with_file('/examples/models/z3.glb');
-	assert.equal(container.points_count(), 498800);
+	assert.equal(container.points_count(), 0);
+	const container2 = await with_hierarchy();
+	assert.equal(container2.points_count(), 498800);
 });
 QUnit.test('SOP file draco bunny', async (assert) => {
 	const container = await with_file('/examples/models/bunny.drc');

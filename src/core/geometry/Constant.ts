@@ -14,33 +14,45 @@ import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 
-
 interface MaterialsByString {
 	[propName: string]: Material;
 }
 
 export enum ObjectType {
-	MESH = 'MESH',
-	POINTS = 'POINTS',
-	LINE_SEGMENTS = 'LINE_SEGMENTS',
+	OBJECT3D = 'Object3D',
+	MESH = 'Mesh',
+	POINTS = 'Points',
+	LINE_SEGMENTS = 'LineSegments',
+}
+
+export interface ObjectData {
+	type: ObjectType;
+	name: string | null;
+	children_count: number;
+	points_count: number;
 }
 export interface ObjectByObjectType {
 	[ObjectType.MESH]: Mesh;
 	[ObjectType.POINTS]: Points;
 	[ObjectType.LINE_SEGMENTS]: LineSegments;
+	[ObjectType.OBJECT3D]: Object3D;
 }
 export interface ObjectConstructorByObjectType {
 	[ObjectType.MESH]: typeof Mesh;
 	[ObjectType.POINTS]: typeof Points;
 	[ObjectType.LINE_SEGMENTS]: typeof LineSegments;
+	[ObjectType.OBJECT3D]: typeof Object3D;
 }
 export const OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE: ObjectConstructorByObjectType = {
 	[ObjectType.MESH]: Mesh,
 	[ObjectType.POINTS]: Points,
 	[ObjectType.LINE_SEGMENTS]: LineSegments,
+	[ObjectType.OBJECT3D]: Object3D,
 };
 export function object_type_from_constructor(constructor: Function) {
 	switch (constructor) {
+		case Object3D:
+			return ObjectType.OBJECT3D;
 		case Mesh:
 			return ObjectType.MESH;
 		case Points:
@@ -61,6 +73,9 @@ export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
 	}
 	if (object instanceof Points) {
 		return ObjectType.POINTS;
+	}
+	if (object instanceof Object3D) {
+		return ObjectType.OBJECT3D;
 	}
 	console.warn('ObjectTypeByObject received an unknown object type', object);
 }

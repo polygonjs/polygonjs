@@ -18,7 +18,7 @@ import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 // import {Core} from '../_Module'
 import {CoreString} from '../String';
-import {CoreConstant, AttribClass, AttribSize} from './Constant';
+import {CoreConstant, AttribClass, AttribSize, ObjectData, object_type_from_constructor} from './Constant';
 
 // import './MonkeyPatch'
 
@@ -98,16 +98,38 @@ export class CoreGroup {
 		return (this._core_objects = this._core_objects || this._create_core_objects());
 	}
 	private _create_core_objects(): CoreObject[] {
-		const list: CoreObject[] = [];
+		// const list: CoreObject[] = [];
+		// if (this._objects) {
+		// 	for (let i = 0; i < this._objects.length; i++) {
+		// 		this._objects[i].traverse((object) => {
+		// 			const core_object = new CoreObject(object, i);
+		// 			list.push(core_object);
+		// 		});
+		// 	}
+		// }
 		if (this._objects) {
-			for (let i = 0; i < this._objects.length; i++) {
-				this._objects[i].traverse((object) => {
-					const core_object = new CoreObject(object, i);
-					list.push(core_object);
-				});
-			}
+			return this._objects.map((object, i) => new CoreObject(object, i));
 		}
-		return list;
+		return [];
+		// return list;
+	}
+	objects_data(): ObjectData[] {
+		if (this._objects) {
+			return this._objects.map((object) => this._object_data(object));
+		}
+		return [];
+	}
+	private _object_data(object: Object3D): ObjectData {
+		let points_count = 0;
+		if ((object as Mesh).geometry) {
+			points_count = CoreGeometry.points_count((object as Mesh).geometry as BufferGeometry);
+		}
+		return {
+			type: object_type_from_constructor(object.constructor),
+			name: object.name,
+			children_count: object.children.length,
+			points_count: points_count,
+		};
 	}
 
 	// group() {
@@ -178,6 +200,22 @@ export class CoreGroup {
 	}
 	points_count() {
 		return lodash_sum(this.core_geometries().map((g) => g.points_count()));
+	}
+	total_points_count() {
+		if (this._objects) {
+			let sum = 0;
+			for (let object of this._objects) {
+				object.traverse((object) => {
+					const geometry = (object as Mesh).geometry as BufferGeometry;
+					if (geometry) {
+						sum += CoreGeometry.points_count(geometry);
+					}
+				});
+			}
+			return sum;
+		} else {
+			return 0;
+		}
 	}
 	points_from_group(group: GroupString) {
 		if (group) {

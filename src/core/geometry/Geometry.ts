@@ -20,6 +20,7 @@ import {CoreGeometryBuilderPoints} from './builders/Points';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
 import {CoreGeometryBuilderMesh} from './builders/Mesh';
 import {CoreGeometryBuilderLineSegments} from './builders/LineSegments';
+import {TypeAssert} from '../../engine/poly/Assert';
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -355,7 +356,10 @@ export class CoreGeometry {
 				return this._points_builder.from_points(points);
 			case ObjectType.LINE_SEGMENTS:
 				return this._lines_segment_builder.from_points(points);
+			case ObjectType.OBJECT3D:
+				return null;
 		}
+		TypeAssert.unreachable(object_type);
 	}
 
 	static merge_geometries(geometries: BufferGeometry[]) {

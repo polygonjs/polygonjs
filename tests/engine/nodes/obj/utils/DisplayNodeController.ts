@@ -1,6 +1,7 @@
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {CoreSleep} from '../../../../../src/core/Sleep';
 
 QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	window.scene.performance.start();
@@ -17,6 +18,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	assert.ok(box1.flags.display.active, 'display flag is set on');
 	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, box1.graph_node_id, 'display node is box');
 	await scene.wait_for_cooks_completed();
+	await CoreSleep.sleep(10);
 	assert.equal(
 		geo1.sop_group.children[0].uuid,
 		box1.container_controller.container.core_content()?.objects()[0].uuid
@@ -25,14 +27,17 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	assert.equal(box1.cook_controller.cooks_count, 1);
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.wait_for_cooks_completed();
+	await CoreSleep.sleep(10);
 	assert.equal(box1.cook_controller.cooks_count, 2, 'box has cooked once more');
 	assert.ok(geo1.sop_group.visible);
 
 	geo1.flags.display.set(false);
 	await scene.wait_for_cooks_completed();
+	await CoreSleep.sleep(10);
 
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.wait_for_cooks_completed();
+	await CoreSleep.sleep(10);
 	assert.equal(box1.cook_controller.cooks_count, 2, 'box has not cooked again');
 	assert.ok(!geo1.sop_group.visible);
 
@@ -122,8 +127,16 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// display the box
 	box1.flags.display.set(true);
 	await scene.wait_for_cooks_completed();
+	await box1.request_container();
+	await plane1.request_container();
+	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2, 'obj has 2 children');
-	assert.deepEqual(obj.children.map((c) => c.name).sort(), ['/geo1:parented_outputs', '/geo1:sop_group']);
+	assert.deepEqual(
+		obj.children.map((c) => c.name).sort(),
+		['/geo1:parented_outputs', '/geo1:sop_group'],
+		'object contains a hierarchy parent and a sop group'
+	);
+	console.log('obj', obj);
 	let geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	assert.equal(geometry.getAttribute('position').array.length, 24 * 3);
 
@@ -131,6 +144,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	plane1.flags.display.set(true);
 	assert.notOk(box1.flags.display.active);
 	await scene.wait_for_cooks_completed();
+	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2);
 	geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	let positions = geometry.getAttribute('position').array;
@@ -141,6 +155,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// update the plane
 	plane1.p.size.set([2, 5]);
 	await scene.wait_for_cooks_completed();
+	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2);
 	geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	positions = geometry.getAttribute('position').array;
