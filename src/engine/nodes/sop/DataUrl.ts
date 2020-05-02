@@ -25,7 +25,9 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');
+	url = ParamConfig.STRING('/examples/sop/data_url/basic.json', {
+		asset_reference: true,
+	});
 
 	//
 	// JSON params
