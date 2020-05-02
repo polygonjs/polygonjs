@@ -266,9 +266,9 @@ var OBJLoader = ( function () {
 				var src = this.colors;
 				var dst = this.object.geometry.colors;
 
-				dst.push( src[ a + 0 ], src[ a + 1 ], src[ a + 2 ] );
-				dst.push( src[ b + 0 ], src[ b + 1 ], src[ b + 2 ] );
-				dst.push( src[ c + 0 ], src[ c + 1 ], src[ c + 2 ] );
+				if ( src[ a ] !== undefined ) dst.push( src[ a + 0 ], src[ a + 1 ], src[ a + 2 ] );
+				if ( src[ b ] !== undefined ) dst.push( src[ b + 0 ], src[ b + 1 ], src[ b + 2 ] );
+				if ( src[ c ] !== undefined ) dst.push( src[ c + 0 ], src[ c + 1 ], src[ c + 2 ] );
 
 			},
 
@@ -301,12 +301,7 @@ var OBJLoader = ( function () {
 				var ic = this.parseVertexIndex( c, vLen );
 
 				this.addVertex( ia, ib, ic );
-
-				if ( this.colors.length > 0 ) {
-
-					this.addColor( ia, ib, ic );
-
-				}
+				this.addColor( ia, ib, ic );
 
 				if ( ua !== undefined && ua !== '' ) {
 
@@ -474,7 +469,14 @@ var OBJLoader = ( function () {
 
 								);
 
+							} else {
+
+								// if no colors are defined, add placeholders so color and vertex indices match
+
+								state.colors.push( undefined, undefined, undefined );
+
 							}
+
 							break;
 						case 'vn':
 							state.normals.push(
@@ -551,6 +553,7 @@ var OBJLoader = ( function () {
 						}
 
 					}
+
 					state.addLineGeometry( lineVertices, lineUVs );
 
 				} else if ( lineFirstChar === 'p' ) {
@@ -626,6 +629,7 @@ var OBJLoader = ( function () {
 						state.object.smooth = true;
 
 					}
+
 					var material = state.object.currentMaterial();
 					if ( material ) material.smooth = state.object.smooth;
 

@@ -16,8 +16,8 @@ import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
-
-var opentype = require('opentype.js');
+// import {opentype} from 'opentype.js'
+// var opentype = require('opentype.js');
 const DEFAULT_URL = '/fonts/droid_sans_regular.typeface.json';
 
 declare global {
@@ -259,7 +259,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private _load_ttf(url: string): Promise<Font> {
 		return new Promise(async (resolve, reject) => {
 			this._ttf_loader = this._ttf_loader || (await this._load_ttf_loader());
-			window.opentype = opentype;
+			// window.opentype = opentype;
 			this._ttf_loader.load(
 				url,
 				(fnt: object) => {

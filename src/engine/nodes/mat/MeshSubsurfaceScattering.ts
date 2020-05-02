@@ -1,7 +1,7 @@
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {TypedMatNode} from './_Base';
 
-import {TranslucentShader} from '../../../../modules/three/examples/jsm/shaders/TranslucentShader';
+import {SubsurfaceScatteringShader} from '../../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
 import {SideController, SideParamConfig} from './utils/SideController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
@@ -12,8 +12,8 @@ function ParamOptionsFactoryColor(uniform_name: string) {
 	return {
 		cook: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			MeshTranslucentMatNode.PARAM_CALLBACK_update_uniformColor(
-				node as MeshTranslucentMatNode,
+			MeshSubsurfaceScatteringMatNode.PARAM_CALLBACK_update_uniformColor(
+				node as MeshSubsurfaceScatteringMatNode,
 				param,
 				uniform_name
 			);
@@ -24,8 +24,8 @@ function ParamOptionsFactoryTexture(uniform_name: string) {
 	return {
 		cook: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			MeshTranslucentMatNode.PARAM_CALLBACK_update_uniformTexture(
-				node as MeshTranslucentMatNode,
+			MeshSubsurfaceScatteringMatNode.PARAM_CALLBACK_update_uniformTexture(
+				node as MeshSubsurfaceScatteringMatNode,
 				param,
 				uniform_name
 			);
@@ -36,7 +36,11 @@ function ParamOptionsFactoryN(uniform_name: string) {
 	return {
 		cook: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			MeshTranslucentMatNode.PARAM_CALLBACK_update_uniformN(node as MeshTranslucentMatNode, param, uniform_name);
+			MeshSubsurfaceScatteringMatNode.PARAM_CALLBACK_update_uniformN(
+				node as MeshSubsurfaceScatteringMatNode,
+				param,
+				uniform_name
+			);
 		},
 	};
 }
@@ -51,7 +55,7 @@ import {BaseCopNodeType} from '../cop/_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {OperatorPathParam} from '../../params/OperatorPath';
-class MeshTranslucentMatParamsConfig extends TextureMapParamConfig(
+class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
 	TextureAlphaMapParamConfig(SkinningParamConfig(SideParamConfig(NodeParamsConfig)))
 ) {
 	diffuse = ParamConfig.COLOR([1, 1, 1], {
@@ -85,7 +89,7 @@ class MeshTranslucentMatParamsConfig extends TextureMapParamConfig(
 		...ParamOptionsFactoryN('thicknessScale'),
 	});
 }
-const ParamsConfig = new MeshTranslucentMatParamsConfig();
+const ParamsConfig = new MeshSubsurfaceScatteringMatParamsConfig();
 
 interface ShaderMaterialWithUniforms extends ShaderMaterial {
 	uniforms: {
@@ -102,17 +106,20 @@ interface ShaderMaterialWithUniforms extends ShaderMaterial {
 	};
 }
 
-export class MeshTranslucentMatNode extends TypedMatNode<ShaderMaterialWithUniforms, MeshTranslucentMatParamsConfig> {
+export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
+	ShaderMaterialWithUniforms,
+	MeshSubsurfaceScatteringMatParamsConfig
+> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_translucent';
+		return 'mesh_subsurface_scattering';
 	}
 	create_material() {
-		const uniforms = UniformsUtils.clone(TranslucentShader.uniforms);
+		const uniforms = UniformsUtils.clone(SubsurfaceScatteringShader.uniforms);
 		const material: ShaderMaterialWithUniforms = new ShaderMaterial({
 			uniforms: uniforms,
-			vertexShader: TranslucentShader.vertexShader,
-			fragmentShader: TranslucentShader.fragmentShader,
+			vertexShader: SubsurfaceScatteringShader.vertexShader,
+			fragmentShader: SubsurfaceScatteringShader.fragmentShader,
 			lights: true,
 		}) as ShaderMaterialWithUniforms;
 		material.extensions.derivatives = true;
@@ -157,11 +164,15 @@ export class MeshTranslucentMatNode extends TypedMatNode<ShaderMaterialWithUnifo
 	// static PARAM_CALLBACK_update_thickness_map(node: MeshTranslucentMatNode) {
 	// 	node.update_thickness_map();
 	// }
-	static PARAM_CALLBACK_update_uniformN(node: MeshTranslucentMatNode, param: BaseParamType, uniform_name: string) {
+	static PARAM_CALLBACK_update_uniformN(
+		node: MeshSubsurfaceScatteringMatNode,
+		param: BaseParamType,
+		uniform_name: string
+	) {
 		node.material.uniforms[uniform_name].value = param.value;
 	}
 	static PARAM_CALLBACK_update_uniformColor(
-		node: MeshTranslucentMatNode,
+		node: MeshSubsurfaceScatteringMatNode,
 		param: BaseParamType,
 		uniform_name: string
 	) {
@@ -170,7 +181,7 @@ export class MeshTranslucentMatNode extends TypedMatNode<ShaderMaterialWithUnifo
 		}
 	}
 	static PARAM_CALLBACK_update_uniformTexture(
-		node: MeshTranslucentMatNode,
+		node: MeshSubsurfaceScatteringMatNode,
 		param: BaseParamType,
 		uniform_name: string
 	) {

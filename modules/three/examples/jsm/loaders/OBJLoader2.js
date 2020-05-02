@@ -37,6 +37,7 @@ const OBJLoader2 = function ( manager ) {
 		scope._onAssetAvailable( payload );
 
 	};
+
 	this.parser.setCallbackOnAssetAvailable( defaultOnAssetAvailable );
 
 };
@@ -237,26 +238,31 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 			this.parser.setCallbackOnLoad( onLoad );
 
 		}
+
 		if ( onError === null || onError === undefined || ! ( onError instanceof Function ) ) {
 
 			onError = function ( event ) {
 
 				let errorMessage = event;
+
 				if ( event.currentTarget && event.currentTarget.statusText !== null ) {
 
 					errorMessage = 'Error occurred while downloading!\nurl: ' + event.currentTarget.responseURL + '\nstatus: ' + event.currentTarget.statusText;
 
 				}
+
 				scope.parser.callbacks.onError( errorMessage );
 
 			};
 
 		}
+
 		if ( ! url ) {
 
 			onError( 'An invalid url was provided. Unable to continue!' );
 
 		}
+
 		let urlFull = new URL( url, window.location.href ).href;
 		let filename = urlFull;
 		let urlParts = urlFull.split( '/' );
@@ -266,6 +272,7 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 			this.path = urlParts.slice( 0, urlParts.length - 1 ).join( '/' ) + '/';
 
 		}
+
 		if ( onFileLoadProgress === null || onFileLoadProgress === undefined || ! ( onFileLoadProgress instanceof Function ) ) {
 
 			let numericalValueRef = 0;
@@ -275,6 +282,7 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 				if ( ! event.lengthComputable ) return;
 
 				numericalValue = event.loaded / event.total;
+
 				if ( numericalValue > numericalValueRef ) {
 
 					numericalValueRef = numericalValue;
@@ -293,6 +301,7 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 			scope.parser.callbacks.onLoad( scope.parse( content ), "OBJLoader2#load: Parsing completed" );
 
 		};
+
 		let fileLoader = new FileLoader( this.manager );
 		fileLoader.setPath( this.path || this.resourcePath );
 		fileLoader.setResponseType( 'arraybuffer' );
@@ -314,6 +323,7 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 			throw 'Provided content is not a valid ArrayBuffer or String. Unable to continue parsing';
 
 		}
+
 		if ( this.parser.logging.enabled ) {
 
 			console.time( 'OBJLoader parse: ' + this.modelName );
@@ -341,11 +351,13 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 			this.parser.callbacks.onError( 'Provided content was neither of type String nor Uint8Array! Aborting...' );
 
 		}
+
 		if ( this.parser.logging.enabled ) {
 
 			console.timeEnd( 'OBJLoader parse: ' + this.modelName );
 
 		}
+
 		return this.baseObject3d;
 
 	},

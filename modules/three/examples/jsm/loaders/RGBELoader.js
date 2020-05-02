@@ -56,6 +56,7 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 					case rgbe_memory_error: console.error( "RGBELoader: Error: " + ( msg || '' ) );
 
 				}
+
 				return RGBE_RETURN_FAILURE;
 
 			},
@@ -102,6 +103,7 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 					return s + chunk.slice( 0, i );
 
 				}
+
 				return false;
 
 			},
@@ -144,12 +146,14 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 					return rgbe_error( rgbe_read_error, "no header found" );
 
 				}
+
 				/* if you want to require the magic token then uncomment the next line */
 				if ( ! ( match = line.match( magic_token_re ) ) ) {
 
 					return rgbe_error( rgbe_format_error, "bad initial token" );
 
 				}
+
 				header.valid |= RGBE_VALID_PROGRAMTYPE;
 				header.programtype = match[ 1 ];
 				header.string += line + "\n";
@@ -172,17 +176,20 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 						header.gamma = parseFloat( match[ 1 ], 10 );
 
 					}
+
 					if ( match = line.match( exposure_re ) ) {
 
 						header.exposure = parseFloat( match[ 1 ], 10 );
 
 					}
+
 					if ( match = line.match( format_re ) ) {
 
 						header.valid |= RGBE_VALID_FORMAT;
 						header.format = match[ 1 ];//'32-bit_rle_rgbe';
 
 					}
+
 					if ( match = line.match( dimensions_re ) ) {
 
 						header.valid |= RGBE_VALID_DIMENSIONS;
@@ -200,6 +207,7 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 					return rgbe_error( rgbe_format_error, "missing format specifier" );
 
 				}
+
 				if ( ! ( header.valid & RGBE_VALID_DIMENSIONS ) ) {
 
 					return rgbe_error( rgbe_format_error, "missing image size specifier" );
@@ -237,7 +245,7 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 
 				data_rgba = new Uint8Array( 4 * w * h );
 
-				if ( ! data_rgba || ! data_rgba.length ) {
+				if ( ! data_rgba.length ) {
 
 					return rgbe_error( rgbe_memory_error, "unable to allocate buffer space" );
 

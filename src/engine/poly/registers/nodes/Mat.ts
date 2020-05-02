@@ -6,7 +6,7 @@ import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
 import {MeshLambertBuilderMatNode} from '../../../nodes/mat/MeshLambertBuilder';
 import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
 import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
-import {MeshTranslucentMatNode} from '../../../nodes/mat/MeshTranslucent';
+import {MeshSubsurfaceScatteringMatNode} from '../../../nodes/mat/MeshSubsurfaceScattering';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
 import {VolumeMatNode} from '../../../nodes/mat/Volume';
@@ -19,7 +19,7 @@ export interface MatNodeChildrenMap {
 	mesh_lambert_builder: MeshLambertBuilderMatNode;
 	mesh_standard: MeshStandardMatNode;
 	mesh_standard_builder: MeshStandardBuilderMatNode;
-	mesh_translucent: MeshTranslucentMatNode;
+	mesh_subsurface_scattering: MeshSubsurfaceScatteringMatNode;
 	points: PointsMatNode;
 	points_builder: PointsBuilderMatNode;
 	volume: VolumeMatNode;
@@ -35,7 +35,7 @@ export class MatRegister {
 		poly.register_node(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.register_node(MeshStandardMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		poly.register_node(MeshTranslucentMatNode, CATEGORY_MAT.MESH);
+		poly.register_node(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.register_node(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.register_node(VolumeMatNode, CATEGORY_MAT.VOLUME);

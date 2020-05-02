@@ -120,6 +120,7 @@ export class DisplayNodeController {
 				// update hierarchy if different
 				if (new_objects_are_different) {
 					this.remove_children();
+					console.log('new_objects', new_objects);
 					for (let object of new_objects) {
 						this.parent_object.add(object);
 						this._children_uuids_dict[object.uuid] = true;

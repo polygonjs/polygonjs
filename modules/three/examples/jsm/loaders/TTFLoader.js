@@ -10,6 +10,7 @@ import {Loader} from 'three/src/loaders/Loader';
  * to create THREE.Font objects.
  */
 
+import { opentype } from "../libs/opentype.module.min.js";
 
 var TTFLoader = function ( manager ) {
 
