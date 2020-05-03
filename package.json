@@ -1,7 +1,10 @@
 {
 	"name": "polygonjs-engine",
 	"version": "1.0.8",
-	"description": "",
+	"engines": {
+		"node": "12.16.1"
+	},
+	"description": "node-based webgl 3D engine https://polygonjs.com",
 	"repository": {
 		"url": "git@github.com:polygonjs/polygonjs-engine.git",
 		"type": "git"
