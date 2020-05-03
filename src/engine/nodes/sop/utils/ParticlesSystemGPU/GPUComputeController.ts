@@ -17,30 +17,12 @@ import {CoreMath} from '../../../../../core/math/_Module';
 // import particleVertexShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.vert.glsl'
 // import particleFragmentShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.frag.glsl'
 import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
-import {GPUComputationRenderer} from './GPUComputationRenderer';
+import {GPUComputationRenderer, GPUComputationRendererVariable} from './GPUComputationRenderer';
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Poly} from '../../../../Poly';
 import {CorePoint} from '../../../../../core/geometry/Point';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
-
-interface GPUComputationRendererVariable {
-	name: string;
-	renderTargets: WebGLRenderTarget[];
-	material: ShaderMaterial;
-}
-interface GPUComputationRenderer {
-	new (x: number, y: number, renderer: WebGLRenderer): GPUComputationRenderer;
-	compute(): void;
-	init(): string | null;
-	addVariable(name: string, fragment_shader: string, variable: DataTexture): GPUComputationRendererVariable;
-	setVariableDependencies(variable: GPUComputationRendererVariable, vars: GPUComputationRendererVariable[]): void;
-	renderTexture(texture: DataTexture, render_target: WebGLRenderTarget): void;
-	createTexture(): DataTexture;
-	getCurrentRenderTarget(variable: GPUComputationRendererVariable): WebGLRenderTarget;
-}
 
 export class ParticlesSystemGpuComputeController {
 	protected _gpu_compute: GPUComputationRenderer | undefined;
@@ -187,6 +169,9 @@ export class ParticlesSystemGpuComputeController {
 			this._renderer = renderer;
 		} else {
 			this.node.states.error.set('no renderer found');
+		}
+		if (!this._renderer) {
+			return;
 		}
 		// console.log(this._renderer.extensions, this._renderer.capabilities)
 		// if(!this._renderer.extensions.get( 'WEBGL_draw_buffers' )){
