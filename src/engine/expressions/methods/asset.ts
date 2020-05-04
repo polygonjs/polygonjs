@@ -31,10 +31,8 @@ export class AssetExpression extends BaseMethod {
 		const scene_uuid: string = scene.uuid;
 
 		name = encodeURIComponent(name);
-		console.log('AssetExpression._resolver', AssetExpression._resolver);
 		const url = AssetExpression._resolver(name, scene_uuid);
 
-		console.log('fetching', url);
 		const response = await fetch(url);
 		const data = await response.json();
 		return data['url'] || '';
