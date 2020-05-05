@@ -1,6 +1,6 @@
 {
 	"name": "polygonjs-engine",
-	"version": "1.0.17",
+	"version": "1.0.18",
 	"engines": {
 		"node": "12.16.1",
 		"yarn": "1.22.4"
@@ -32,6 +32,7 @@
 	"dependencies": {
 		"@dagrejs/graphlib": "dagrejs/graphlib",
 		"@mapbox/mapbox-sdk": "^0.10.0",
+		"@types/mapbox-gl": "^1.9.1",
 		"ammojs-typed": "^1.0.2",
 		"fork-ts-checker-webpack-plugin": "^4.1.2",
 		"geo-ambient-occlusion": "^3.0.4",
@@ -44,7 +45,6 @@
 	"devDependencies": {
 		"@types/graphlib": "^2.1.4",
 		"@types/lodash": "^4.14.150",
-		"@types/mapbox-gl": "^1.9.1",
 		"@types/opentype.js": "^0.7.2",
 		"@types/qunit": "^2.9.1",
 		"@typescript-eslint/eslint-plugin": "^2.31.0",
