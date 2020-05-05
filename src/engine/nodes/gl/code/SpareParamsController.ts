@@ -91,12 +91,26 @@ export class AssemblerNodeSpareParamsController {
 
 		this._node.params.update_params(params_update_options);
 		this._created_spare_param_names = params_update_options.to_add?.map((o) => o.name) || [];
-		// for (let name of this._created_spare_param_names) {
-		// 	const param = this._node.params.get(name);
-		// 	if (param) {
-		// 		param.options.execute_callback();
-		// 	}
-		// }
+
+		// We force the param configs to run their callbacks to ensure that the uniforms are up to date.
+		// This seems better than running the parameter options callback, since it would check
+		// if the scene is loading or the node cooking, which is unnecessary for uniforms
+		for (let param_config of param_configs) {
+			const param = this._node.params.get(param_config.name);
+			if (param) {
+				param_config.execute_callback(this._node, param);
+
+				// we also have a special case for operator path,
+				// since they would not have found their node at load time
+				if (param.type == ParamType.OPERATOR_PATH) {
+					setTimeout(() => {
+						console.log('FORCE OPERATOR PATH TO COMPUTE');
+						param.compute();
+						param.options.execute_callback();
+					}, 200);
+				}
+			}
+		}
 	}
 
 	// TODO: handle the case where a param created by user already exists.

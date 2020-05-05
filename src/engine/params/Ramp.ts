@@ -18,6 +18,9 @@ import {ParamEvent} from '../poly/ParamEvent';
 // interface RampParamVisitor extends TypedParamVisitor {
 // 	visit_ramp_param: (param: RampParam) => any;
 // }
+const TEXTURE_WIDTH = 1024;
+const TEXTURE_HEIGHT = 1;
+const TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
 
 export class RampParam extends TypedParam<ParamType.RAMP> {
 	static type() {
@@ -25,7 +28,8 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	}
 
 	private _ramp_interpolant: CubicInterpolant | undefined;
-	private _ramp_texture: DataTexture | undefined;
+	private _texture_data = new Uint8Array(3 * TEXTURE_SIZE);
+	private _ramp_texture = new DataTexture(this._texture_data, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBFormat);
 
 	static DEFAULT_VALUE = new RampValue(RampInterpolation.LINEAR, [new RampPoint(0, 0), new RampPoint(1, 1)]);
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.to_json();
@@ -75,9 +79,11 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
 		return val1.is_equal(val2);
 	}
-	private _reset_ramp_interpolant_and_texture_bound = this._reset_ramp_interpolant_and_texture.bind(this);
 	initialize_param() {
-		this.add_post_dirty_hook('_reset_ramp_interpolant_and_texture', this._reset_ramp_interpolant_and_texture_bound);
+		this.add_post_dirty_hook(
+			'_reset_ramp_interpolant_and_texture',
+			this.reset_ramp_interpolant_and_texture.bind(this)
+		);
 	}
 	// accepts_visitor(visitor: RampParamVisitor) {
 	// 	return visitor.visit_ramp_param(this);
@@ -104,6 +110,8 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			}
 		}
 
+		this._update_ramp_texture();
+		this.options.execute_callback();
 		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
 	}
 
@@ -136,39 +144,29 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		return false;
 	}
 
-	_reset_ramp_interpolant_and_texture() {
+	reset_ramp_interpolant_and_texture() {
 		this._ramp_interpolant = undefined;
-		this._ramp_texture = undefined;
+		// this._ramp_texture = undefined;
 	}
 	ramp_texture() {
-		return (this._ramp_texture = this._ramp_texture || this._create_ramp_texture());
+		return this._ramp_texture;
 	}
-	_create_ramp_texture() {
-		const width = 1024;
-		const height = 1;
-
-		const size = width * height;
-		const data = new Uint8Array(3 * size);
-
+	private _update_ramp_texture() {
+		this._update_ramp_texture_data();
+		this.ramp_texture().needsUpdate = true;
+	}
+	private _update_ramp_texture_data() {
 		let stride = 0;
 		let position = 0;
 		let value = 0;
-		for (var i = 0; i < size; i++) {
+		for (var i = 0; i < TEXTURE_SIZE; i++) {
 			stride = i * 3;
-			position = i / width;
+			position = i / TEXTURE_WIDTH;
 			value = this.value_at_position(position);
-			data[stride] = value * 255; // if I set 256, a value of 1 will become 0
+			this._texture_data[stride] = value * 255; // if I set 256, a value of 1 will become 0
 			// data[ stride+1 ] = 1
 			// data[ stride+2 ] = 2
 		}
-
-		const texture = new DataTexture(data, width, height, RGBFormat);
-		// texture.wrapS = ClampToEdgeWrapping
-		// texture.wrapT = ClampToEdgeWrapping
-		// texture.wrapS = ClampToEdgeWrapping
-		// texture.wrapT = ClampToEdgeWrapping
-		texture.needsUpdate = true;
-		return texture;
 	}
 
 	static create_interpolant(positions: Float32Array, values: Float32Array) {

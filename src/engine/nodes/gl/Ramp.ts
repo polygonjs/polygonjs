@@ -8,8 +8,9 @@ import {ParamType} from '../../poly/ParamType';
 
 const OUTPUT_NAME = 'val';
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/ParamConfig';
+
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RampGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('ramp');
 	input = ParamConfig.FLOAT(0);
@@ -21,7 +22,7 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		return 'ramp';
 	}
 
-	initialize() {
+	initialize_node() {
 		super.initialize_node();
 
 		this.io.outputs.set_named_output_connection_points([
@@ -50,6 +51,7 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 			RampParam.DEFAULT_VALUE,
 			this._uniform_name()
 		);
+		console.log('add param config');
 		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {

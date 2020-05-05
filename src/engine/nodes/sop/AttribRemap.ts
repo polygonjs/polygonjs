@@ -1,10 +1,10 @@
-import lodash_max from 'lodash/max';
-import lodash_min from 'lodash/min';
-import lodash_uniq from 'lodash/uniq';
-import lodash_isNumber from 'lodash/isNumber';
+import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {AttribSize} from '../../../core/geometry/Constant';
+import {TypeAssert} from '../../poly/Assert';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
@@ -31,7 +31,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		this.set_core_group(core_group);
 	}
 
-	_remap_attribute(core_group: CoreGroup) {
+	private _remap_attribute(core_group: CoreGroup) {
 		const points = core_group.points();
 		if (points.length === 0) {
 			return;
@@ -43,55 +43,8 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		const attrib_size = points[0].attrib_size(this.pv.name);
 		const values = points.map((point) => point.attrib_value(this.pv.name));
 		// let min: NumericAttribValue, max: NumericAttribValue;
-		let normalized_values: NumericAttribValue[] = new Array(points.length);
-		switch (attrib_size) {
-			case 1:
-				const valuesf = values as number[];
-				if (this.pv.only_integer_values) {
-					const sorted_values = lodash_uniq(valuesf);
-					const index_by_value: Dictionary<number> = {};
-					sorted_values.forEach((sorted_value, i) => (index_by_value[sorted_value] = i));
-					normalized_values = valuesf.map((value) => index_by_value[value]);
-				} else {
-					const minf = lodash_min(valuesf);
-					const maxf = lodash_max(valuesf);
-					//this._save_min_max(group, min, max)
-					if (lodash_isNumber(minf) && lodash_isNumber(maxf)) {
-						for (let i = 0; i < valuesf.length; i++) {
-							const value = valuesf[i];
-							const normalized_value = maxf > minf ? (value - minf) / (maxf - minf) : 1;
-							normalized_values[i] = normalized_value;
-						}
-					}
-				}
-				break;
-
-			case 3:
-				const valuesv = values as Vector3[];
-				const minv = new Vector3(
-					lodash_min(valuesv.map((v) => v.x)),
-					lodash_min(valuesv.map((v) => v.y)),
-					lodash_min(valuesv.map((v) => v.z))
-				);
-				const maxv = new Vector3(
-					lodash_max(valuesv.map((v) => v.x)),
-					lodash_max(valuesv.map((v) => v.y)),
-					lodash_max(valuesv.map((v) => v.z))
-				);
-				//this._save_min_max(group, min, max)
-				if (minv instanceof Vector3 && maxv instanceof Vector3) {
-					for (let i = 0; i < valuesv.length; i++) {
-						const value = valuesv[i];
-						const normalized_value = new Vector3(
-							(value.x - minv.x) / (maxv.x - minv.x),
-							(value.y - minv.y) / (maxv.y - minv.y),
-							(value.z - minv.z) / (maxv.z - minv.z)
-						);
-						normalized_values[i] = normalized_value;
-					}
-				}
-				break;
-		}
+		let remaped_values: NumericAttribValue[] = new Array(points.length);
+		this._get_remaped_values(attrib_size, values, remaped_values);
 
 		let target_name = this.pv.name;
 		if (this.pv.change_name) {
@@ -101,16 +54,76 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 			}
 		}
 
-		normalized_values.forEach((normalized_value, i) => {
+		let i = 0;
+		for (let normalized_value of remaped_values) {
 			const point = points[i];
 			point.set_attrib_value(target_name, normalized_value);
-		});
+			i++;
+		}
+	}
+
+	private _get_remaped_values(attrib_size: AttribSize, values: AttribValue[], remaped_values: NumericAttribValue[]) {
+		switch (attrib_size) {
+			case AttribSize.FLOAT:
+				return this._get_normalized_float(values, remaped_values);
+			case AttribSize.VECTOR2:
+				return this._get_normalized_vector2(values, remaped_values);
+			case AttribSize.VECTOR3:
+				return this._get_normalized_vector3(values, remaped_values);
+			case AttribSize.VECTOR4:
+				return this._get_normalized_vector4(values, remaped_values);
+		}
+		TypeAssert.unreachable(attrib_size);
+	}
+
+	private _get_normalized_float(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+		const valuesf = values as number[];
+
+		const ramp_param = this.p.ramp;
+
+		for (let i = 0; i < valuesf.length; i++) {
+			const value = valuesf[i];
+			const remaped_value = ramp_param.value_at_position(value);
+			remaped_values[i] = remaped_value;
+		}
+	}
+	private _get_normalized_vector2(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+		const valuesv = values as Vector2[];
+		const ramp_param = this.p.ramp;
+		for (let i = 0; i < valuesv.length; i++) {
+			const value = valuesv[i];
+			const remaped_value = new Vector2(
+				ramp_param.value_at_position(value.x),
+				ramp_param.value_at_position(value.y)
+			);
+			remaped_values[i] = remaped_value;
+		}
+	}
+	private _get_normalized_vector3(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+		const valuesv = values as Vector3[];
+		const ramp_param = this.p.ramp;
+		for (let i = 0; i < valuesv.length; i++) {
+			const value = valuesv[i];
+			const remaped_value = new Vector3(
+				ramp_param.value_at_position(value.x),
+				ramp_param.value_at_position(value.y),
+				ramp_param.value_at_position(value.z)
+			);
+			remaped_values[i] = remaped_value;
+		}
+	}
+	private _get_normalized_vector4(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+		const valuesv = values as Vector4[];
+		const ramp_param = this.p.ramp;
+		for (let i = 0; i < valuesv.length; i++) {
+			const value = valuesv[i];
+			const remaped_value = new Vector4(
+				ramp_param.value_at_position(value.x),
+				ramp_param.value_at_position(value.y),
+				ramp_param.value_at_position(value.z),
+				ramp_param.value_at_position(value.w)
+			);
+			remaped_values[i] = remaped_value;
+		}
 	}
 }
-
-// TODO: they should be saved as a detail, not per object
-// _save_min_max: (group, min, max)->
-// 	group.traverse (object)=>
-// 		object_wrapper = new Core.Geometry.Object(object)
-// 		object_wrapper.add_attribute("#{@_param_name}_min", min)
-// 		object_wrapper.add_attribute("#{@_param_name}_max", max)
