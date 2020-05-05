@@ -79,12 +79,12 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
 		return val1.is_equal(val2);
 	}
-	initialize_param() {
-		this.add_post_dirty_hook(
-			'_reset_ramp_interpolant_and_texture',
-			this.reset_ramp_interpolant_and_texture.bind(this)
-		);
-	}
+	// initialize_param() {
+	// 	this.add_post_dirty_hook(
+	// 		'_reset_ramp_interpolant_and_texture',
+	// 		this.reset_ramp_interpolant.bind(this)
+	// 	);
+	// }
 	// accepts_visitor(visitor: RampParamVisitor) {
 	// 	return visitor.visit_ramp_param(this);
 	// }
@@ -110,9 +110,11 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			}
 		}
 
+		this._reset_ramp_interpolant();
 		this._update_ramp_texture();
 		this.options.execute_callback();
 		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+		this.set_successors_dirty(this);
 	}
 
 	// convert_value(v) {
@@ -144,7 +146,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		return false;
 	}
 
-	reset_ramp_interpolant_and_texture() {
+	private _reset_ramp_interpolant() {
 		this._ramp_interpolant = undefined;
 		// this._ramp_texture = undefined;
 	}

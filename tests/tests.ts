@@ -84,6 +84,7 @@ import './engine/nodes/manager/ObjectsManager';
 QUnit.module('mat');
 import './engine/nodes/mat/MeshBasicBuilder';
 import './engine/nodes/mat/SpareParams';
+import './engine/nodes/mat/Uniforms';
 import './engine/nodes/mat/VolumeBuilder';
 
 QUnit.module('obj');

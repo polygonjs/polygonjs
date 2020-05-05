@@ -103,9 +103,10 @@ export class AssemblerNodeSpareParamsController {
 				// we also have a special case for operator path,
 				// since they would not have found their node at load time
 				if (param.type == ParamType.OPERATOR_PATH) {
-					setTimeout(() => {
-						console.log('FORCE OPERATOR PATH TO COMPUTE');
-						param.compute();
+					setTimeout(async () => {
+						if (param.is_dirty) {
+							await param.compute();
+						}
 						param.options.execute_callback();
 					}, 200);
 				}
