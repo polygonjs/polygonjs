@@ -1,0 +1,30 @@
+import { Vector3 } from 'three/src/math/Vector3';
+import { LinearInterpolant } from 'three/src/math/interpolants/LinearInterpolant';
+import { Group } from 'three/src/objects/Group';
+import { Object3D } from 'three/src/core/Object3D';
+import { BufferGeometry } from 'three/src/core/BufferGeometry';
+import { MapboxCameraObjNode } from '../../engine/nodes/obj/MapboxCamera';
+export declare class CoreMapboxTransform {
+    private _camera_node;
+    static WORLD_SCALE: number;
+    private pos_offset;
+    constructor(_camera_node: MapboxCameraObjNode);
+    transform_group2(group: Group): void;
+    transform_group_FINAL(object: Object3D): void;
+    transform_geometry_FINAL(geometry: BufferGeometry): void;
+    transform_position_FINAL(position: Vector3): Vector3;
+    untransform_position_FINAL(position: Vector3): Vector3;
+    transform_group3(group: Object3D): void;
+    transform_group(group: Group): void;
+    private transform_geometry3;
+    private transform_geometry_with_max_ratio;
+    private transform_position3;
+    private untransform_position3;
+    private transform_position_with_max_ratio;
+    private group_bbox_ratio;
+    private bbox_ratio;
+    private static _interpolant;
+    static _step_size_from_zoom_interpolant(): LinearInterpolant;
+    static _create_step_size_from_zoom_interpolant(): LinearInterpolant;
+    static step_size_from_zoom(zoom: number): number;
+}
