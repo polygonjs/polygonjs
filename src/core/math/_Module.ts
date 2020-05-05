@@ -1,9 +1,6 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Triangle} from 'three/src/math/Triangle';
-const THREE = {Triangle, Vector3};
 import lodash_isNumber from 'lodash/isNumber';
-// import {Octree} from './Octree'
-// import Interpolate from './Interpolate'
 import {Easing} from './Easing';
 
 const RAD_DEG_RATIO = Math.PI / 180;
@@ -103,23 +100,23 @@ export class CoreMath {
 		return d;
 	}
 
-	static expand_triangle(triangle: Triangle, margin: number): Triangle {
-		const mid_point = new THREE.Vector3();
-		triangle.getMidpoint(mid_point);
+	private static _triangle_mid = new Vector3();
+	private static _triangle_mid_to_corner = new Vector3();
+	static expand_triangle(triangle: Triangle, margin: number) {
+		triangle.getMidpoint(this._triangle_mid);
 
-		enum TriangleProp {
-			a = 'a',
-			b = 'b',
-			c = 'c',
-		}
-		for (let prop of ['a', 'b', 'c']) {
-			const delta = triangle[prop as TriangleProp].clone().sub(mid_point);
-			const delta_n = delta.clone().normalize();
-			const length = delta.length() + margin;
-
-			triangle[prop as TriangleProp] = mid_point.clone().add(delta_n.multiplyScalar(length));
-		}
-		return triangle;
+		// a
+		this._triangle_mid_to_corner.copy(triangle.a).sub(this._triangle_mid);
+		this._triangle_mid_to_corner.normalize().multiplyScalar(margin);
+		triangle.a.add(this._triangle_mid_to_corner);
+		// b
+		this._triangle_mid_to_corner.copy(triangle.b).sub(this._triangle_mid);
+		this._triangle_mid_to_corner.normalize().multiplyScalar(margin);
+		triangle.b.add(this._triangle_mid_to_corner);
+		// c
+		this._triangle_mid_to_corner.copy(triangle.c).sub(this._triangle_mid);
+		this._triangle_mid_to_corner.normalize().multiplyScalar(margin);
+		triangle.c.add(this._triangle_mid_to_corner);
 	}
 
 	static nearestPower2(num: number) {

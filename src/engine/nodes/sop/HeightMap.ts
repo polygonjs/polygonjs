@@ -47,7 +47,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 				this.states.error.set('found node is not a texture');
 			}
 		}
-
+		core_group.compute_vertex_normals();
 		this.set_core_group(core_group);
 	}
 
@@ -64,7 +64,6 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 			return;
 		}
 
-		console.log('geometry', geometry);
 		const positions = geometry.getAttribute('position').array as number[];
 		const uv_attrib = geometry.getAttribute('uv');
 		const normal_attrib = geometry.getAttribute('normal');
@@ -93,14 +92,13 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 			val = data[texture_component_size * j];
 
 			index = i * 3;
-			positions[index + 0] = normals[index + 0] * val * this.pv.mult;
-			positions[index + 1] = normals[index + 1] * val * this.pv.mult;
-			positions[index + 2] = normals[index + 2] * val * this.pv.mult;
+			positions[index + 0] += normals[index + 0] * val * this.pv.mult;
+			positions[index + 1] += normals[index + 1] * val * this.pv.mult;
+			positions[index + 2] += normals[index + 2] * val * this.pv.mult;
 		}
 	}
 
 	private _data_from_texture(texture: Texture) {
-		console.log('texture', texture);
 		if (texture.image) {
 			if (texture.image.data) {
 				return this._data_from_data_texture(texture);

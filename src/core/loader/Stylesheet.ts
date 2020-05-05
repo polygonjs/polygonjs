@@ -21,7 +21,6 @@ export class CoreStylesheetLoader {
 				stylesheet.href = `${url}?${performance.now()}`;
 				stylesheet.id = id;
 				document.getElementsByTagName('head')[0].appendChild(stylesheet);
-				console.log('loading', url);
 			}
 		}
 	}

@@ -1,0 +1,30 @@
+import {CoreSleep} from '../../../../src/core/Sleep';
+
+QUnit.test('mapbox_layer simple', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+
+	const mapbox_camera1 = scene.root.create_node('mapbox_camera');
+	const mapbox_layer1 = geo1.create_node('mapbox_layer');
+	// await CoreSleep.sleep(200);
+	mapbox_layer1.flags.display.set(true);
+
+	const element = document.createElement('div');
+	// defined size should help predict the plane dimensions
+	element.style.maxWidth = '200px';
+	element.style.maxHeight = '200px';
+	document.body.append(element);
+	const viewer = mapbox_camera1.create_viewer(element);
+
+	await viewer.wait_for_map_loaded();
+	// await CoreSleep.sleep(5000);
+	let container = await mapbox_layer1.request_container();
+	await CoreSleep.sleep(100);
+	const core_group = container.core_content()!;
+	assert.equal(core_group.objects().length, 35);
+	assert.equal(core_group.points_count(), 224);
+
+	// clear viewer
+	viewer.dispose();
+	document.body.removeChild(element);
+});

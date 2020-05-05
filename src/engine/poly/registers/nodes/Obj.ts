@@ -21,6 +21,7 @@ import {SceneObjNode} from '../../../nodes/obj/Scene';
 
 import {OrthographicCameraObjNode} from '../../../nodes/obj/OrthographicCamera';
 import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
+import {MapboxCameraObjNode} from '../../../nodes/obj/MapboxCamera';
 // import {CubeCameraObj} from '../../nodes/obj/CubeCamera';
 
 export interface ObjNodeChildrenMap {
@@ -33,6 +34,7 @@ export interface ObjNodeChildrenMap {
 	events: EventsObjNode;
 	geo: GeoObjNode;
 	hemisphere_light: HemisphereLightObjNode;
+	mapbox_camera: MapboxCameraObjNode;
 	materials: MaterialsObjNode;
 	null: NullObjNode;
 	orthographic_camera: OrthographicCameraObjNode;
@@ -66,6 +68,7 @@ export class ObjRegister {
 		poly.register_node(RivetObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.register_node(SceneObjNode, CATEGORY_OBJ.ADVANCED);
 
+		poly.register_node(MapboxCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.register_node(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.register_node(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
 		// poly.register_node(CubeCameraObj, CATEGORY_OBJ.CAMERA)
