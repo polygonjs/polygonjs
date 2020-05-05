@@ -30,8 +30,8 @@
 		"concat_dts": "./node_modules/typescript/bin/tsc --allowSyntheticDefaultImports --esModuleInterop --moduleResolution node webpack/dts_concat.ts; node webpack/dts_concat.js"
 	},
 	"dependencies": {
-		"@mapbox/mapbox-sdk": "^0.10.0",
 		"@dagrejs/graphlib": "dagrejs/graphlib",
+		"@mapbox/mapbox-sdk": "^0.10.0",
 		"ammojs-typed": "^1.0.2",
 		"fork-ts-checker-webpack-plugin": "^4.1.2",
 		"geo-ambient-occlusion": "^3.0.4",
@@ -47,8 +47,8 @@
 		"@types/mapbox-gl": "^1.9.1",
 		"@types/opentype.js": "^0.7.2",
 		"@types/qunit": "^2.9.1",
-		"@typescript-eslint/eslint-plugin": "^2.30.0",
-		"@typescript-eslint/parser": "^2.30.0",
+		"@typescript-eslint/eslint-plugin": "^2.31.0",
+		"@typescript-eslint/parser": "^2.31.0",
 		"clean-webpack-plugin": "^3.0.0",
 		"compression-webpack-plugin": "^3.1.0",
 		"eslint": "^6.8.0",
@@ -66,6 +66,7 @@
 		"webpack": "^4.43.0",
 		"webpack-bundle-analyzer": "^3.7.0",
 		"webpack-cli": "^3.3.11",
-		"webpack-dev-server": "^3.10.3"
+		"webpack-dev-server": "^3.10.3",
+		"webpack-merge": "^4.2.2"
 	}
 }
