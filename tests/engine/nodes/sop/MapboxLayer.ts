@@ -21,8 +21,8 @@ QUnit.test('mapbox_layer simple', async (assert) => {
 	let container = await mapbox_layer1.request_container();
 	await CoreSleep.sleep(100);
 	const core_group = container.core_content()!;
-	assert.equal(core_group.objects().length, 35);
-	assert.equal(core_group.points_count(), 224);
+	assert.in_delta(core_group.objects().length, 50, 30);
+	assert.in_delta(core_group.points_count(), 350, 150);
 
 	// clear viewer
 	viewer.dispose();
