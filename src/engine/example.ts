@@ -6,7 +6,6 @@ AllRegister.run();
 
 export {PolyScene, SceneJsonImporter};
 
-console.log('example');
 const scene_url = '/examples/scenes/mesh_lambert_builder.json';
 async function load_scene() {
 	const response = await fetch(scene_url);

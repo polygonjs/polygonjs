@@ -280,16 +280,4 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		});
 		return renderTarget;
 	}
-
-	// create_material(fragment_shader:string, uniforms:IUniforms) {
-	// 	var material = new ShaderMaterial({
-	// 		uniforms: uniforms,
-	// 		vertexShader: PASS_THROUGH_SHADER,
-	// 		fragmentShader: fragment_shader
-	// 	});
-
-	// 	// addResolutionDefine( material );
-
-	// 	return material;
-	// }
 }

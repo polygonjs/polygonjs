@@ -14,12 +14,12 @@ export class AllNodesRegister {
 	static async run(poly: Poly) {
 		AnimRegister.run(poly);
 		CopRegister.run(poly);
-		EventRegister.run(poly);
-		GlRegister.run(poly);
-		JsRegister.run(poly);
-		MatRegister.run(poly);
-		ObjRegister.run(poly);
-		PostRegister.run(poly);
-		SopRegister.run(poly);
+		// EventRegister.run(poly);
+		// GlRegister.run(poly);
+		// JsRegister.run(poly);
+		// MatRegister.run(poly);
+		// ObjRegister.run(poly);
+		// PostRegister.run(poly);
+		// SopRegister.run(poly);
 	}
 }
