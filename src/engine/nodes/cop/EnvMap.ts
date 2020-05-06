@@ -56,7 +56,10 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		// texture.minFilter = NearestFilter;
 		// texture.encoding = LinearEncoding;
 
-		const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+		let renderer = Poly.instance().renderers_controller.first_renderer();
+		if (!renderer) {
+			renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+		}
 		// if (!renderer) {
 		// 	await CoreSleep.sleep(1000);
 		// 	console.log('waited 1s');

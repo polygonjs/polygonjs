@@ -102,7 +102,7 @@ export class RenderersController {
 		delete this._renderers[(renderer as POLYWebGLRenderer)._polygon_id];
 		renderer.dispose();
 	}
-	private first_renderer(): WebGLRenderer | null {
+	first_renderer(): WebGLRenderer | null {
 		const first_id = Object.keys(this._renderers)[0];
 		if (first_id) {
 			return this._renderers[first_id];

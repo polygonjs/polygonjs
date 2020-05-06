@@ -1,49 +1,43 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Scene} from 'three/src/scenes/Scene';
-import {RGBAFormat} from 'three/src/constants';
+import {
+	FloatType,
+	HalfFloatType,
+	RGBAFormat,
+	NearestFilter,
+	LinearFilter,
+	ClampToEdgeWrapping,
+} from 'three/src/constants';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {NearestFilter} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
-import {HalfFloatType} from 'three/src/constants';
-import {FloatType} from 'three/src/constants';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {ClampToEdgeWrapping} from 'three/src/constants';
 import {Camera} from 'three/src/cameras/Camera';
-
-// import NodeBase from '../_Base'
-
-// import Container from '../../Container/Texture'
-// import {CoreImage} from '../../../Core/Image'
-
 import {TypedCopNode} from './_Base';
-
-// import { GlobalsGeometryHandler } from "src/Engine/Node/Gl/Assembler/Globals/Geometry";
 import {GlAssemblerController} from '../gl/code/Controller';
 import {ShaderAssemblerTexture} from '../gl/code/assemblers/textures/Texture';
-
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-export interface IUniforms {
-	[uniform: string]: IUniform;
-}
-
-const PASS_THROUGH_SHADER = `
-void main()	{
-	gl_Position = vec4( position, 1.0 );
-}
-`;
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {NodeContext} from '../../poly/NodeContext';
-import {CoreSleep} from '../../../core/Sleep';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+export interface IUniforms {
+	[uniform: string]: IUniform;
+}
+
+const VERTEX_SHADER = `
+void main()	{
+	gl_Position = vec4( position, 1.0 );
+}
+`;
+const RESOLUTION_DEFAULT: Number2 = [256, 256];
+
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Poly} from '../../Poly';
+
 class BuilderCopParamsConfig extends NodeParamsConfig {
-	resolution = ParamConfig.VECTOR2([256, 256]);
+	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
 }
 
 const ParamsConfig = new BuilderCopParamsConfig();
@@ -73,15 +67,15 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _uniforms: IUniforms | undefined;
 	private _texture_material: ShaderMaterial = new ShaderMaterial({
 		uniforms: {},
-		vertexShader: PASS_THROUGH_SHADER,
+		vertexShader: VERTEX_SHADER,
 		fragmentShader: '',
 	});
 	private _texture_scene: Scene = new Scene();
 	private _texture_camera: Camera = new Camera();
-	private _render_target: WebGLRenderTarget | undefined;
-	private _renderer: WebGLRenderer | undefined;
-	private _pixelBuffer: Float32Array | undefined;
-	// private _assembler: ShaderAssemblerTexture;
+	private _render_target: WebGLRenderTarget = this._create_render_target(
+		RESOLUTION_DEFAULT[0],
+		RESOLUTION_DEFAULT[1]
+	);
 
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
@@ -91,18 +85,18 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		this._texture_scene.add(this._texture_mesh);
 		this._texture_camera.position.z = 1;
 
-		// this._init_common_shader_builder(ShaderAssemblerTexture, {
-		// 	has_display_flag: true
-		// });
-		// this.set_inputs_count_to_zero();
+		// this ensures the builder recooks when its children are changed
+		// and not just when a material that use it requests it
+		this.add_post_dirty_hook('_cook_main_without_inputs_when_dirty', () => {
+			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
+		});
 
 		this.dirty_controller.add_post_dirty_hook(
 			'_reset_if_resolution_changed',
 			this._reset_if_resolution_changed.bind(this)
 		);
 		this.params.set_post_create_params_hook(() => {
-			this._render_target = this._create_render_target();
-			this._renderer = this._create_renderer(this._render_target);
+			this._reset();
 		});
 	}
 
@@ -116,26 +110,22 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
 	}
 
+	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
+	private async _cook_main_without_inputs_when_dirty() {
+		await this.cook_controller.cook_main_without_inputs();
+	}
+
 	private _reset_if_resolution_changed(trigger?: CoreGraphNode) {
 		if (trigger && trigger.graph_node_id == this.p.resolution.graph_node_id) {
 			this._reset();
 		}
 	}
 	private _reset() {
-		this._render_target = this._create_render_target();
-		this._renderer = this._create_renderer(this._render_target);
-		this._pixelBuffer = this._create_pixel_buffer();
-	}
-	private _create_pixel_buffer() {
-		const width = this.pv.resolution.x;
-		const height = this.pv.resolution.y;
-		return new Float32Array(width * height * 4);
+		this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
 	}
 
 	async cook() {
 		this.compile_if_required();
-		// await this.assembler_controller.assign_uniform_values();
-
 		this.render_on_target();
 	}
 
@@ -147,18 +137,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	compile_if_required() {
 		if (this.assembler_controller.compile_required()) {
-			// && !this.pv.locked){
-			// this._texture_material = undefined;
 			this.run_assembler();
-			// const fragment_shader = this.assembler_controller.assembler.fragment_shader();
-			// const uniforms = this.assembler_controller.assembler.uniforms();
-			// if (fragment_shader && uniforms) {
-			// 	// await this.eval_params(this._new_params);
-			// 	this._fragment_shader = fragment_shader;
-			// 	this._uniforms = uniforms;
-			// } else {
-			// 	throw 'STOP';
-			// }
 			this.assembler_controller.post_compile();
 		}
 	}
@@ -200,75 +179,51 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				value: this.pv.resolution,
 			};
 		}
-
-		// this._compile_required = false;
-	}
-
-	private _create_renderer(render_target: WebGLRenderTarget) {
-		const renderer = new WebGLRenderer({antialias: true});
-		renderer.setPixelRatio(window.devicePixelRatio);
-		// document.body.appendChild( renderer.domElement )
-		renderer.autoClear = false;
-
-		renderer.setRenderTarget(render_target);
-
-		return renderer;
 	}
 
 	async render_on_target() {
-		const width = this.pv.resolution.x;
-		const height = this.pv.resolution.y;
-
-		// var passThruUniforms = {
-		// 	passThruTexture: { value: null }
-		// };
-
-		if (!(this._renderer && this._render_target)) {
+		if (!this._render_target) {
 			return;
 		}
-		this._renderer.clear();
-		this._renderer.render(this._texture_scene, this._texture_camera);
-		// renderer.setClearColor( 0x000000 ) // cancels the bg color
+		// keep in mind that this only works with a single renderer
+		let renderer = Poly.instance().renderers_controller.first_renderer();
+		if (!renderer) {
+			renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+		}
+		const prev_target = renderer.getRenderTarget();
+		renderer.setRenderTarget(this._render_target);
+		renderer.clear();
+		renderer.render(this._texture_scene, this._texture_camera);
+		console.warn('rendered');
+		renderer.setRenderTarget(prev_target);
+		console.log(this._texture_material.fragmentShader);
 
-		//read the pixel
-		this._pixelBuffer = this._pixelBuffer || this._create_pixel_buffer();
-		this._renderer.readRenderTargetPixels(this._render_target, 0, 0, width, height, this._pixelBuffer);
-
-		// renderer.setRenderTarget( null );
-
-		// var pixelBuffer2 = new Uint8Array( width * height * 4 );
-		// var pixelBuffer2 = Uint8Array.from(pixelBuffer)
-
-		// be careful about the type FloatType
-		// as this may require webgl extensions
-		// see https://threejs.org/docs/#api/en/textures/DataTexture
-		const texture = new DataTexture(this._pixelBuffer, width, height, RGBAFormat, FloatType);
-		// // texture.wrapS = ClampToEdgeWrapping
-		// // texture.wrapT = ClampToEdgeWrapping
-		// // texture.wrapS = ClampToEdgeWrapping
-		// // texture.wrapT = ClampToEdgeWrapping
-		// this._texture.needsUpdate = true;
-
-		await CoreSleep.sleep(2000);
-
-		if (texture) {
-			this.set_texture(texture);
+		if (this._render_target.texture) {
+			this.set_texture(this._render_target.texture);
 		} else {
 			this.cook_controller.end_cook();
 		}
-
-		// this.set_texture(this._texture);
-		// this.cook_controller.end_cook();
 	}
 
-	private _create_render_target() {
+	render_target() {
+		return this._render_target;
+	}
+
+	private _create_render_target(width: number, height: number) {
+		if (this._render_target) {
+			const image = this._render_target.texture.image;
+			if (image.width == width && image.height == height) {
+				return this._render_target;
+			}
+		}
+
 		const wrapS = ClampToEdgeWrapping;
 		const wrapT = ClampToEdgeWrapping;
 
-		const minFilter = NearestFilter;
+		const minFilter = LinearFilter;
 		const magFilter = NearestFilter;
 
-		var renderTarget = new WebGLRenderTarget(this.pv.resolution.x, this.pv.resolution.y, {
+		var renderTarget = new WebGLRenderTarget(width, height, {
 			wrapS: wrapS,
 			wrapT: wrapT,
 			minFilter: minFilter,
