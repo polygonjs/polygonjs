@@ -85,6 +85,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		this._texture_scene.add(this._texture_mesh);
 		this._texture_camera.position.z = 1;
 
+		// this ensures the builder recooks when its children are changed
+		// and not just when a material that use it requests it
 		this.add_post_dirty_hook('_cook_main_without_inputs_when_dirty', () => {
 			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
 		});
