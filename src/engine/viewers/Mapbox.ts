@@ -34,6 +34,7 @@ export class MapboxViewer extends TypedViewer<MapboxCameraObjNode> {
 		this._element.appendChild(this._canvas_container);
 		this._element.classList.add(CSS_CLASS);
 		this._canvas_container.id = `mapbox_container_id_${Math.random()}`.replace('.', '_');
+		this._canvas_container.style.height = '100%';
 		this._map = this._camera_node.create_map(this._canvas_container);
 
 		this.mapbox_events_controller.init_events();
