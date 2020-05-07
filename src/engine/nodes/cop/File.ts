@@ -199,6 +199,7 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	flip_y = ParamConfig.BOOLEAN(0);
 	is_video = ParamConfig.BOOLEAN(0, {
 		hidden: true,
 		cook: false,
@@ -322,6 +323,7 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 				}
 			}
 		}
+		texture.flipY = this.pv.flip_y;
 	}
 	//
 	//
