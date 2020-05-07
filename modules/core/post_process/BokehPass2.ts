@@ -19,7 +19,6 @@ import {Color} from 'three/src/math/Color';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {DepthOfFieldPostNode} from '../../../src/engine/nodes/post/DepthOfField';
-import {PerspectiveCameraObjNode} from '../../../src/engine/nodes/obj/PerspectiveCamera';
 
 interface BokehUniforms {
 	tColor: IUniformTexture;
@@ -86,15 +85,13 @@ export class BokehPass2 {
 	public bokeh_material: BokehShaderMaterial;
 	private _quad: Mesh;
 	public clear_color = new Color(1, 1, 1);
-	private _camera: PerspectiveCamera;
 
 	constructor(
 		private _depth_of_field_node: DepthOfFieldPostNode,
 		private _scene: Scene,
-		private _camera_node: PerspectiveCameraObjNode,
+		private _camera: PerspectiveCamera,
 		private _resolution: Vector2
 	) {
-		this._camera = this._camera_node.object;
 		this._core_scene = new CoreScene(this._scene);
 		const shaderSettings = {
 			rings: 3,
@@ -162,7 +159,7 @@ export class BokehPass2 {
 			fragmentShader: depthShader.fragmentShader,
 		});
 
-		this.update_camera_uniforms_with_node(this._depth_of_field_node, this._camera_node);
+		this.update_camera_uniforms_with_node(this._depth_of_field_node, this._camera);
 	}
 
 	setSize(width: number, height: number) {
@@ -220,22 +217,21 @@ export class BokehPass2 {
 		renderer.setClearColor(prev_clear_color);
 	}
 
-	update_camera_uniforms_with_node(node: DepthOfFieldPostNode, camera_node: PerspectiveCameraObjNode) {
+	update_camera_uniforms_with_node(node: DepthOfFieldPostNode, camera: PerspectiveCamera) {
 		// from camera
-		const camera = camera_node.object;
 		this.bokeh_uniforms['focalLength'].value = camera.getFocalLength();
-		this.bokeh_uniforms['znear'].value = camera_node.pv.near;
-		this.bokeh_uniforms['zfar'].value = camera_node.pv.far;
+		this.bokeh_uniforms['znear'].value = camera.near;
+		this.bokeh_uniforms['zfar'].value = camera.far;
 
 		// focal length
-		var sdistance = DepthOfFieldPostNode.smoothstep(camera_node.pv.near, camera_node.pv.far, node.pv.focal_depth);
-		var ldistance = DepthOfFieldPostNode.linearize(1 - sdistance, camera_node.pv.near, camera_node.pv.far);
+		var sdistance = DepthOfFieldPostNode.smoothstep(camera.near, camera.far, node.pv.focal_depth);
+		var ldistance = DepthOfFieldPostNode.linearize(1 - sdistance, camera.near, camera.far);
 		this.bokeh_uniforms['focalDepth'].value = ldistance; //this._param_focal_depth
 
 		// depth materials
 		this._camera_uniforms = {
-			mNear: {value: camera_node.pv.near},
-			mFar: {value: camera_node.pv.far},
+			mNear: {value: camera.near},
+			mFar: {value: camera.far},
 		};
 		for (let material of [this.materialDepth, this.materialDepthInstance]) {
 			material.uniforms['mNear'].value = this._camera_uniforms['mNear'].value;

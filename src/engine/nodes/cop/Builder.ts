@@ -216,7 +216,6 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		} else {
 			this.cook_controller.end_cook();
 		}
-		console.log(this._texture_material.fragmentShader);
 	}
 
 	render_target() {

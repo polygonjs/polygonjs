@@ -188,10 +188,8 @@ export abstract class TypedCameraObjNode<
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
 		(node.object as any)[param.name] = (node.pv as any)[param.name];
-		console.log(`updated ${param.name}`);
 	}
 }
-// 	console.warn "camera #{this.full_path()} has no controls assigned"
 
 // controls_node: ->
 // 	if @_param_controls? && @_param_controls != ''
@@ -282,6 +280,9 @@ export class TypedThreejsCameraObjNode<
 	create_viewer(element: HTMLElement): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this);
 	}
+	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
+		node.post_process_controller.reset();
+	}
 }
 
 export type BaseCameraObjNodeType = TypedCameraObjNode<OrthoOrPerspCamera, BaseCameraObjParamsConfig>;
@@ -297,4 +298,6 @@ export type BaseThreejsCameraObjNodeType = TypedThreejsCameraObjNode<
 export class BaseThreejsCameraObjNodeClass extends TypedThreejsCameraObjNode<
 	OrthoOrPerspCamera,
 	BaseThreejsCameraObjParamsConfig
-> {}
+> {
+	PARAM_CALLBACK_update_effects_composer(node: BaseNodeType) {}
+}

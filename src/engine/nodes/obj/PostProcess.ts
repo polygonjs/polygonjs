@@ -3,15 +3,17 @@ import {NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
+import {EffectsComposerController} from '../post/utils/EffectsComposerController';
 export class PostProcessObjNode extends BaseManagerObjNode {
 	static type() {
 		return 'post_process';
 	}
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(this, {
-		on_display_node_remove: () => {},
-		on_display_node_set: () => {},
-		on_display_node_update: () => {},
-	});
+	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
+
+	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+		this,
+		this.effects_composer_controller.display_node_controller_callbacks()
+	);
 
 	protected _children_controller_context = NodeContext.POST;
 	initialize_node() {

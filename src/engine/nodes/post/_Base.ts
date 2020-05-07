@@ -16,9 +16,9 @@ export interface TypedPostNodeContext {
 	composer: EffectComposer;
 	camera: Camera;
 	resolution: Vector2;
-	camera_node: BaseCameraObjNodeType;
 	scene: Scene;
 	canvas: HTMLCanvasElement;
+	camera_node?: BaseCameraObjNodeType;
 }
 
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
@@ -76,7 +76,6 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 				}
 			}
 			if (pass) {
-				// console.log('adding pass', this.full_path());
 				context.composer.addPass(pass);
 			}
 		}

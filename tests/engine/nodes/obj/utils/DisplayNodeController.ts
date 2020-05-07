@@ -133,7 +133,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	assert.equal(obj.children.length, 2, 'obj has 2 children');
 	assert.deepEqual(
 		obj.children.map((c) => c.name).sort(),
-		['/geo1:parented_outputs', '/geo1:sop_group'],
+		['/geo1:parented_outputs', 'geo1:sop_group'],
 		'object contains a hierarchy parent and a sop group'
 	);
 	console.log('obj', obj);
