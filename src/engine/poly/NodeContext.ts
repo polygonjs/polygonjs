@@ -32,6 +32,14 @@ export enum NodeContext {
 	SOP = 'sop',
 }
 
+export enum NetworkNodeType {
+	ANIM = 'animations',
+	COP = 'cop',
+	EVENT = 'events',
+	MAT = 'materials',
+	POST = 'post_process',
+}
+
 export interface BaseNodeByContextMap {
 	[NodeContext.ANIM]: BaseAnimNodeType;
 	[NodeContext.COP]: BaseCopNodeType;

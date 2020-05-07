@@ -20,7 +20,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	await scene.wait_for_cooks_completed();
 	await CoreSleep.sleep(10);
 	assert.equal(
-		geo1.sop_group.children[0].uuid,
+		geo1.children_display_controller.sop_group.children[0].uuid,
 		box1.container_controller.container.core_content()?.objects()[0].uuid
 	);
 
@@ -29,7 +29,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	await scene.wait_for_cooks_completed();
 	await CoreSleep.sleep(10);
 	assert.equal(box1.cook_controller.cooks_count, 2, 'box has cooked once more');
-	assert.ok(geo1.sop_group.visible);
+	assert.ok(geo1.children_display_controller.sop_group.visible);
 
 	geo1.flags.display.set(false);
 	await scene.wait_for_cooks_completed();
@@ -39,7 +39,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	await scene.wait_for_cooks_completed();
 	await CoreSleep.sleep(10);
 	assert.equal(box1.cook_controller.cooks_count, 2, 'box has not cooked again');
-	assert.ok(!geo1.sop_group.visible);
+	assert.ok(!geo1.children_display_controller.sop_group.visible);
 
 	assert.equal(main_group.children.length, 2);
 
@@ -69,7 +69,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 			.join(':'),
 		'/geo1:/perspective_camera1'
 	);
-	assert.ok(geo1.sop_group.visible);
+	assert.ok(geo1.children_display_controller.sop_group.visible);
 
 	geo1.flags.display.set(false);
 	assert.equal(main_group.children.length, 2);
@@ -80,7 +80,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 			.join(':'),
 		'/geo1:/perspective_camera1'
 	);
-	assert.ok(!geo1.sop_group.visible);
+	assert.ok(!geo1.children_display_controller.sop_group.visible);
 });
 
 QUnit.test('geo obj display flag off does not cook its content on load', async (assert) => {
@@ -96,7 +96,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	assert.ok(box1.flags.display.active, 'display flag is set on');
 	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, box1.graph_node_id, 'display node is box');
 	assert.equal(box1.cook_controller.cooks_count, 0, 'box has not cooked');
-	assert.equal(geo1.sop_group.children.length, 0, 'sop_group is empty');
+	assert.equal(geo1.children_display_controller.sop_group.children.length, 0, 'sop_group is empty');
 
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.wait_for_cooks_completed();
@@ -106,7 +106,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	await scene.wait_for_cooks_completed();
 	assert.equal(box1.cook_controller.cooks_count, 1);
 	assert.equal(
-		geo1.sop_group.children[0].uuid,
+		geo1.children_display_controller.sop_group.children[0].uuid,
 		box1.container_controller.container.core_content()?.objects()[0].uuid
 	);
 });

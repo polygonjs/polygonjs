@@ -1,7 +1,7 @@
 import {PolyScene} from '../scene/PolyScene';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {UIData} from './utils/UIData';
-import {FlagsController} from './utils/FlagsController';
+import {FlagsController, FlagsControllerD} from './utils/FlagsController';
 import {StatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
 import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController';
@@ -56,10 +56,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _serializer: NodeSerializer | undefined;
 	private _cook_controller: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
-	protected _display_node_controller: DisplayNodeController | undefined;
-	get display_node_controller() {
-		return this._display_node_controller;
-	}
+	public readonly display_node_controller: DisplayNodeController | undefined;
 
 	private _params_controller: ParamsController | undefined;
 	readonly params_config: K | undefined;
@@ -302,3 +299,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 export type BaseNodeType = TypedNode<any, any>;
 export class BaseNodeClass extends TypedNode<any, any> {}
+
+export class BaseNodeClassWithDisplayFlag extends TypedNode<any, any> {
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+}

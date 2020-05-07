@@ -153,7 +153,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 					// TODO: investigate if it has a performance cost, or if it could be done
 					// only when scene loads. Or if the display_node_controller itself could be improved
 					// to take care of it itself.
-					node.display_node_controller?.request_display_node_container();
+					node.children_display_controller?.request_display_node_container();
 					node.add_object_to_parent(parent_object);
 				} else {
 					node.remove_object_from_parent();

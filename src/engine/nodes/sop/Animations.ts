@@ -1,20 +1,14 @@
-import {BaseManagerObjNode} from './_BaseManager';
+import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
-import {ObjNodeRenderOrder} from './_Base';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
 
-export class AnimationsObjNode extends BaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
-	static type(): Readonly<NetworkNodeType.ANIM> {
+export class AnimationsSopNode extends BaseNetworkSopNode {
+	static type() {
 		return NetworkNodeType.ANIM;
 	}
-	// children_context(){ return NodeContext.MAT }
 
 	protected _children_controller_context = NodeContext.ANIM;
-	initialize_node() {
-		this.children_controller?.init();
-	}
 
 	create_node<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K] {
 		return super.create_node(type) as AnimNodeChildrenMap[K];

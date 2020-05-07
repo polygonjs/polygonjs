@@ -6,7 +6,7 @@ import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three/src/scenes/Scene';
-import {FlagsControllerB} from '../utils/FlagsController';
+import {FlagsControllerDB} from '../utils/FlagsController';
 import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 
@@ -34,7 +34,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		return NodeContext.POST;
 	}
 
-	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
+	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
 	protected _passes_by_canvas_id: Map<string, P> = new Map();
 
@@ -42,6 +42,16 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		return DEFAULT_INPUT_NAMES;
 	}
 	initialize_node() {
+		this.flags.display.set(false);
+		this.flags.display.add_hook(() => {
+			if (this.flags.display.active) {
+				const parent = this.parent;
+				if (parent && parent.display_node_controller) {
+					parent.display_node_controller.set_display_node(this);
+				}
+			}
+		});
+
 		this.io.inputs.set_count(1);
 		this.io.outputs.set_has_one_output();
 	}

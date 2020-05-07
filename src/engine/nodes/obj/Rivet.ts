@@ -172,7 +172,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 			if (node.node_context() == NodeContext.OBJ && node.type == GeoObjNode.type()) {
 				const geo_node = node as GeoObjNode;
 				// this._remove_render_hook();
-				this._resolved_sop_group = geo_node.sop_group;
+				this._resolved_sop_group = geo_node.children_display_controller.sop_group;
 			} else {
 				this.states.error.set('found node is not a geo node');
 			}

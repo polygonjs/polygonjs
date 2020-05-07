@@ -1,6 +1,5 @@
 import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
-
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {ThreejsCameraControlsController} from './utils/cameras/ControlsController';
@@ -8,18 +7,10 @@ import {LayersController, LayerParamConfig} from './utils/LayersController';
 import {PostProcessController, CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {RenderController, CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
-
-// import {Dirtyable} from './Concerns/Dirtyable';
-// import {Layers} from './Concerns/Layers';
-// import {PostProcess} from './Concerns/PostProcess';
-// import {Transformed} from './Concerns/Transformed';
-// import {Background} from './Concerns/Background';
-// import {CoreTextureLoader} from '../../../Core/Loader/Texture'
-// import {CameraControls} from './Concerns/CameraControls';
-// import {File} from '../../../Engine/Node/Cop/File'
-import {ThreejsViewer} from '../../viewers/Threejs';
-// import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
+import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
+import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
+import {ThreejsViewer} from '../../viewers/Threejs';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
@@ -88,6 +79,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		// aspect = ParamConfig.FLOAT(1);
 		// lock_width = ParamConfig.BOOLEAN(1);
 		// look_at = ParamConfig.OPERATOR_PATH('');
+		display = ParamConfig.BOOLEAN(1);
 	};
 }
 
@@ -229,11 +221,24 @@ export class TypedThreejsCameraObjNode<
 	get post_process_controller(): PostProcessController {
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
+
+	// display_node and children_display controllers
+	public readonly children_display_controller: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+		this,
+		this.children_display_controller.display_node_controller_callbacks()
+	);
+	//
+	protected _children_controller_context = NodeContext.SOP;
+
 	initialize_base_node() {
 		super.initialize_base_node();
 		this.io.outputs.set_has_one_output();
 		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
+
+		this.display_node_controller.initialize_node();
+		this.children_display_controller.initialize_node();
 	}
 	async cook() {
 		this.transform_controller.update();

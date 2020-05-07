@@ -127,7 +127,9 @@ export class RaycastCPUController {
 		const node = this._node.p.target.found_node() as BaseObjNodeType;
 		if (node) {
 			if (node.node_context() == NodeContext.OBJ) {
-				this._resolved_target = this._node.pv.traverse_children ? node.object : (node as GeoObjNode).sop_group;
+				this._resolved_target = this._node.pv.traverse_children
+					? node.object
+					: (node as GeoObjNode).children_display_controller.sop_group;
 			} else {
 				this._node.states.error.set('target is not an obj');
 			}

@@ -1,19 +1,14 @@
-import {BaseManagerObjNode} from './_BaseManager';
+import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
-import {ObjNodeRenderOrder} from './_Base';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
 
-export class EventsObjNode extends BaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+export class EventsSopNode extends BaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.EVENT;
 	}
 
 	protected _children_controller_context = NodeContext.EVENT;
-	initialize_node() {
-		this.children_controller?.init();
-	}
 
 	create_node<K extends keyof EventNodeChildrenMap>(type: K): EventNodeChildrenMap[K] {
 		return super.create_node(type) as EventNodeChildrenMap[K];

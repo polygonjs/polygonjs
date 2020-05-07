@@ -22,6 +22,7 @@ import {BaseGlNodeType} from '../gl/_Base';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {NodeContext} from '../../poly/NodeContext';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {DataTexture} from 'three/src/textures/DataTexture';
 export interface IUniforms {
 	[uniform: string]: IUniform;
 }
@@ -38,6 +39,7 @@ import {Poly} from '../../Poly';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
+	use_data_texture = ParamConfig.BOOLEAN(1);
 }
 
 const ParamsConfig = new BuilderCopParamsConfig();
@@ -76,6 +78,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		RESOLUTION_DEFAULT[0],
 		RESOLUTION_DEFAULT[1]
 	);
+
+	private _data_texture: DataTexture | undefined;
 
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
@@ -122,6 +126,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 	private _reset() {
 		this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
+		this._data_texture = undefined;
 	}
 
 	async cook() {
@@ -194,15 +199,24 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		renderer.setRenderTarget(this._render_target);
 		renderer.clear();
 		renderer.render(this._texture_scene, this._texture_camera);
-		console.warn('rendered');
 		renderer.setRenderTarget(prev_target);
-		console.log(this._texture_material.fragmentShader);
 
 		if (this._render_target.texture) {
-			this.set_texture(this._render_target.texture);
+			if (!this.pv.use_data_texture) {
+				this.set_texture(this._render_target.texture);
+			} else {
+				const w = this.pv.resolution.x;
+				const h = this.pv.resolution.y;
+				this._data_texture = this._data_texture || this._create_data_texture(w, h);
+				renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
+				this._data_texture.needsUpdate = true;
+
+				this.set_texture(this._data_texture);
+			}
 		} else {
 			this.cook_controller.end_cook();
 		}
+		console.log(this._texture_material.fragmentShader);
 	}
 
 	render_target() {
@@ -234,5 +248,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			depthBuffer: false,
 		});
 		return renderTarget;
+	}
+	private _create_data_texture(width: number, height: number) {
+		const pixel_buffer = this._create_pixel_buffer(width, height);
+		const data_texture = new DataTexture(pixel_buffer, width, height, RGBAFormat, FloatType);
+		return data_texture;
+	}
+	private _create_pixel_buffer(width: number, height: number) {
+		return new Float32Array(width * height * 4);
 	}
 }

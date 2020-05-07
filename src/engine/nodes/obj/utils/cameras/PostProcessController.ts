@@ -6,7 +6,7 @@ import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {BasePostProcessNodeType} from '../../../post/_Base';
 import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
-import {NodeContext} from '../../../../poly/NodeContext';
+import {NetworkNodeType} from '../../../../poly/NodeContext';
 
 // interface DisposablePass extends Pass {
 // 	dispose: () => void;
@@ -17,12 +17,12 @@ import {RenderPass} from '../../../../../../modules/three/examples/jsm/postproce
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
-		post_process_node = ParamConfig.OPERATOR_PATH('/POST/OUT', {
+		post_process_node = ParamConfig.OPERATOR_PATH('./post_process1', {
 			visible_if: {
 				do_post_process: 1,
 			},
 			node_selection: {
-				context: NodeContext.POST,
+				type: NetworkNodeType.POST,
 			},
 			cook: false,
 		});
@@ -120,16 +120,22 @@ export class PostProcessController {
 
 			const found_node = this.node.p.post_process_node.found_node();
 			if (found_node) {
-				if (found_node.node_context() == NodeContext.POST) {
-					const post_node = found_node as BasePostProcessNodeType;
-					post_node.setup_composer({
-						composer: composer,
-						camera: camera,
-						resolution: this.node.render_controller.canvas_resolution(canvas),
-						camera_node: this.node,
-						scene: scene,
-						canvas: canvas,
-					});
+				if (found_node.type == NetworkNodeType.POST) {
+					const display_node = found_node.display_node_controller?.display_node;
+					if (display_node) {
+						const post_node = display_node as BasePostProcessNodeType;
+						post_node.setup_composer({
+							composer: composer,
+							camera: camera,
+							resolution: this.node.render_controller.canvas_resolution(canvas),
+							camera_node: this.node,
+							scene: scene,
+							canvas: canvas,
+						});
+						console.log('composer setup');
+					} else {
+						this.node.states.error.set('node display node found inside post process network');
+					}
 				} else {
 					this.node.states.error.set('found node is not a post process node');
 				}

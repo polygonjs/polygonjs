@@ -1,20 +1,14 @@
-import {BaseManagerObjNode} from './_BaseManager';
+import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
-import {ObjNodeRenderOrder} from './_Base';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 
-export class MaterialsObjNode extends BaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+export class MaterialsSopNode extends BaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.MAT;
 	}
-	// children_context(){ return NodeContext.MAT }
 
 	protected _children_controller_context = NodeContext.MAT;
-	initialize_node() {
-		this.children_controller?.init();
-	}
 
 	create_node<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K] {
 		return super.create_node(type) as MatNodeChildrenMap[K];

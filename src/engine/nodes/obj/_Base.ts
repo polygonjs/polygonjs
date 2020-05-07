@@ -4,6 +4,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ObjectsManagerNode} from '../manager/ObjectsManager';
 import {Group} from 'three/src/objects/Group';
+import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
@@ -62,57 +63,14 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		}
 	}
 
-	// protected _displayed_in_scene: boolean = true;
-	// get displayed_in_scene() {
-	// 	return this._displayed_in_scene;
-	// }
-	// set_displayed_in_scene(state:boolean){
-	// 	this._displayed_in_scene = state;
-	// }
+	public readonly children_display_controller: ChildrenDisplayController | undefined;
 
 	initialize_base_node() {
-		// this.container_controller.init(ObjectContainer);
 		this._object = this._create_object_with_attributes();
-		// this._init_container_owner('Object');
-		// this.flags.add_display();
 		this.name_controller.add_post_set_full_path_hook(this.set_object_name.bind(this));
 		this.set_object_name();
-
-		// this.io.inputs.add_hook(() => {
-		// 	this.transform_controller.on_input_updated();
-		// });
-		// this._init_bypass_flag({
-		// 	has_bypass_flag: false,
-		// });
-
-		// this._sop_loaded = false; // TODO: typescript, this should be moved to GeoObjNode
 	}
 
-	// this.add_param 'toggle', 'display', 1,
-	// 	callback: this.post_state_display_flag.bind(this)
-
-	// cook: ->
-	// 	super
-	// 	console.error(this.constructor, 'cook method is not overloaded')
-
-	// post_set_dirty: (original_trigger_graph_node, direct_trigger_graph_node)->
-	// 	#console.log("#{this.full_path()} set dirty by #{original_trigger_graph_node?.full_path()} and #{direct_trigger_graph_node?.full_path()}")
-	// 	this.is_displayed (is_displayed)=>
-	// 		if is_displayed
-	// 			this.parent().update_object(this)
-
-	//post_remove_dirty_state: ->
-	//console.log("obj #{this.full_path()} remove dirty")
-	//console.log("remove_dirty_state: #{this.full_path()}")
-
-	// set_object: (object)->
-
-	// 	if object?
-	// 		object.name = this.name()
-	// 		this.set_container(object)
-	// get main_group() {
-	// 	return this._main_group;
-	// }
 	get children_group() {
 		return this._children_group;
 	}
@@ -122,12 +80,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 	_create_object_with_attributes(): O {
 		const object = this.create_object();
-		// object.name = 'content';
-		// if (object != null) {
-		// 	object.name = this.full_path();
 		(object as Object3DWithNode).node = this;
-		// }
-		// this._main_group.add(this._children_group);
 		object.add(this._children_group);
 		return object as O;
 	}
@@ -137,76 +90,23 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 			this._children_group.name = `${this.full_path()}:parented_outputs`;
 		}
 	}
-	// private set_group_name() {
-	// 	// ensures the material has a full path set
-	// 	// allowing the render hook to be set
-	// 	//this.set_material(@_material)
-	// 	const group = this.group;
-	// 	if (group) {
-	// 		group.name = this.full_path();
-	// 	}
-	// }
 
 	create_object(): Object3D {
 		return new Object3D();
 	}
 
-	// request_display_node() {}
-
 	is_display_node_cooking(): boolean {
-		if (this._display_node_controller) {
-			if (this._display_node_controller.display_node) {
-				return this._display_node_controller.display_node.cook_controller.is_cooking;
+		if (this.display_node_controller) {
+			if (this.display_node_controller.display_node) {
+				return this.display_node_controller.display_node.cook_controller.is_cooking;
 			}
 		}
 		return false;
 	}
 
-	// post_state_display_flag() {
-	// 	const object = this.object;
-	// 	if (object != null) {
-	// 		const displayed = this.is_displayed();
-	// 		if (displayed) {
-	// 			object.visible = displayed;
-
-	// 			if (!this._sop_loaded) {
-	// 				this.request_display_node();
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	is_displayed(): boolean {
 		return this.flags?.display?.active || false;
-		// if (callback == null) {
-		// 	throw 'no callback given to is_displayed';
-		// }
-
-		// const display_flag_state = this.display_flag_state();
-		// return callback(display_flag_state);
 	}
-	// if !display_flag_state
-	// 	callback(false)
-
-	// else
-	// 	this.param('display').eval (val)->
-	// 		callback(val)
-
-	// accepts_visitor<T extends NodeVisitor>(visitor: T): ReturnType<T['visit_node_obj']> {
-	// 	return visitor.visit_node_obj(this);
-	// }
-
-	// replaces Dirtyable (TODO: try and replace this method name)
-	// protected _init_dirtyable_hook() {
-	// this.add_post_dirty_hook(this._cook_main_without_inputs_later.bind(this));
-	// }
-	// private _cook_main_without_inputs_later() {
-	// 	const c = () => {
-	// 		this.cook_controller.cook_main_without_inputs();
-	// 	};
-	// 	setTimeout(c, 0);
-	// 	// this.eval_all_params().then( ()=>{ this.cook() } )
-	// }
 }
 
 export type BaseObjNodeType = TypedObjNode<Object3D, any>;

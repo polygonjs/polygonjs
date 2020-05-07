@@ -1,9 +1,10 @@
-import {BaseManagerObjNode} from './_BaseManager';
+import {BaseNetworkSopNode} from './_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
-export class PostProcessObjNode extends BaseManagerObjNode {
+
+export class PostProcessSopNode extends BaseNetworkSopNode {
 	static type() {
 		return 'post_process';
 	}
@@ -14,9 +15,6 @@ export class PostProcessObjNode extends BaseManagerObjNode {
 	});
 
 	protected _children_controller_context = NodeContext.POST;
-	initialize_node() {
-		this.children_controller?.init();
-	}
 
 	create_node<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K] {
 		return super.create_node(type) as PostNodeChildrenMap[K];

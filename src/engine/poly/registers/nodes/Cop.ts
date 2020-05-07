@@ -5,6 +5,7 @@ import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {FileCopNode} from '../../../nodes/cop/File';
 import {MapboxTileCopNode} from '../../../nodes/cop/MapboxTile';
 import {NullCopNode} from '../../../nodes/cop/Null';
+import {PostCopNode} from '../../../nodes/cop/Post';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 
 export interface CopNodeChildrenMap {
@@ -12,6 +13,7 @@ export interface CopNodeChildrenMap {
 	env_map: EnvMapCopNode;
 	file: FileCopNode;
 	mapbox_tile: MapboxTileCopNode;
+	Post: PostCopNode;
 	null: NullCopNode;
 	switch: SwitchCopNode;
 }
@@ -24,6 +26,7 @@ export class CopRegister {
 		poly.register_node(FileCopNode, CATEGORY_COP.INPUT);
 		poly.register_node(MapboxTileCopNode, CATEGORY_COP.INPUT);
 		poly.register_node(NullCopNode, CATEGORY_COP.MISC);
+		poly.register_node(PostCopNode, CATEGORY_COP.FILTER);
 		poly.register_node(SwitchCopNode, CATEGORY_COP.MISC);
 	}
 }
