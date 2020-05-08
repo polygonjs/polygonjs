@@ -22,7 +22,6 @@ import {BaseGlNodeType} from '../gl/_Base';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {NodeContext} from '../../poly/NodeContext';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {DataTexture} from 'three/src/textures/DataTexture';
 export interface IUniforms {
 	[uniform: string]: IUniform;
 }
@@ -36,6 +35,7 @@ const RESOLUTION_DEFAULT: Number2 = [256, 256];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Poly} from '../../Poly';
+import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
@@ -78,14 +78,14 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		RESOLUTION_DEFAULT[0],
 		RESOLUTION_DEFAULT[1]
 	);
-
-	private _data_texture: DataTexture | undefined;
+	private _data_texture_controller: DataTextureController | undefined;
 
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
 		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
 		this.children_controller?.init();
 		this._texture_mesh.material = this._texture_material;
+		this._texture_mesh.scale.multiplyScalar(0.25);
 		this._texture_scene.add(this._texture_mesh);
 		this._texture_camera.position.z = 1;
 
@@ -126,7 +126,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 	private _reset() {
 		this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
-		this._data_texture = undefined;
+		this._data_texture_controller?.reset();
 	}
 
 	async cook() {
@@ -202,16 +202,21 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		renderer.setRenderTarget(prev_target);
 
 		if (this._render_target.texture) {
-			if (!this.pv.use_data_texture) {
-				this.set_texture(this._render_target.texture);
-			} else {
-				const w = this.pv.resolution.x;
-				const h = this.pv.resolution.y;
-				this._data_texture = this._data_texture || this._create_data_texture(w, h);
-				renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
-				this._data_texture.needsUpdate = true;
+			if (this.pv.use_data_texture) {
+				// const w = this.pv.resolution.x;
+				// const h = this.pv.resolution.y;
+				// this._data_texture = this._data_texture || this._create_data_texture(w, h);
+				// renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
+				// this._data_texture.needsUpdate = true;
+				this._data_texture_controller =
+					this._data_texture_controller ||
+					new DataTextureController(DataTextureControllerBufferType.Float32Array);
+				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
+				console.log('data_texture', data_texture);
 
-				this.set_texture(this._data_texture);
+				this.set_texture(data_texture);
+			} else {
+				this.set_texture(this._render_target.texture);
 			}
 		} else {
 			this.cook_controller.end_cook();
@@ -247,13 +252,5 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			depthBuffer: false,
 		});
 		return renderTarget;
-	}
-	private _create_data_texture(width: number, height: number) {
-		const pixel_buffer = this._create_pixel_buffer(width, height);
-		const data_texture = new DataTexture(pixel_buffer, width, height, RGBAFormat, FloatType);
-		return data_texture;
-	}
-	private _create_pixel_buffer(width: number, height: number) {
-		return new Float32Array(width * height * 4);
 	}
 }

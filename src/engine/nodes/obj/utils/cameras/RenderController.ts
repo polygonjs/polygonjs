@@ -52,7 +52,7 @@ export class RenderController {
 			const renderer = this.renderer(canvas);
 			if (renderer) {
 				if (this._resolved_scene) {
-					renderer.render(this._resolved_scene, this.node.object);
+					// renderer.render(this._resolved_scene, this.node.object);
 				}
 			}
 		}
@@ -93,6 +93,7 @@ export class RenderController {
 			alpha: true,
 			context: gl,
 		});
+		console.log('created renderer', this.node.full_path());
 
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;

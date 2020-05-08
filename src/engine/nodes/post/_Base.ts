@@ -17,7 +17,7 @@ export interface TypedPostNodeContext {
 	camera: Camera;
 	resolution: Vector2;
 	scene: Scene;
-	canvas: HTMLCanvasElement;
+	requester: BaseNodeType;
 	camera_node?: BaseCameraObjNodeType;
 }
 
@@ -36,7 +36,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
-	protected _passes_by_canvas_id: Map<string, P> = new Map();
+	protected _passes_by_requester_id: Map<string, P> = new Map();
 
 	static displayed_input_names(): string[] {
 		return DEFAULT_INPUT_NAMES;
@@ -68,11 +68,11 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			input.setup_composer(context);
 		}
 		if (!this.flags.bypass.active) {
-			let pass = this._passes_by_canvas_id.get(context.canvas.id);
+			let pass = this._passes_by_requester_id.get(context.requester.graph_node_id);
 			if (!pass) {
 				pass = this._create_pass(context);
 				if (pass) {
-					this._passes_by_canvas_id.set(context.canvas.id, pass);
+					this._passes_by_requester_id.set(context.requester.graph_node_id, pass);
 				}
 			}
 			if (pass) {
@@ -89,7 +89,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 	private _update_pass_bound = this.update_pass.bind(this);
 	private update_passes() {
-		this._passes_by_canvas_id.forEach(this._update_pass_bound);
+		this._passes_by_requester_id.forEach(this._update_pass_bound);
 	}
 	protected update_pass(pass: P) {}
 }

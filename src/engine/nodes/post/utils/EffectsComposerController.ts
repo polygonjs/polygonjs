@@ -1,5 +1,4 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {LinearFilter, RGBFormat} from 'three/src/constants';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {EffectComposer} from '../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {RenderPass} from '../../../../../modules/three/examples/jsm/postprocessing/RenderPass';
@@ -26,9 +25,10 @@ interface CreateEffectsComposerOptions {
 	scene: Scene;
 	camera: Camera;
 	resolution: Vector2;
-	canvas: HTMLCanvasElement;
+	render_target?: WebGLRenderTarget;
+	requester: BaseNodeType;
 	camera_node?: BaseCameraObjNodeType;
-	use_render_target?: boolean;
+	// use_render_target?: boolean;
 	prepend_render_pass?: boolean;
 }
 
@@ -49,28 +49,17 @@ export class EffectsComposerController {
 		const renderer = options.renderer;
 
 		let composer: EffectComposer;
-		if (options.use_render_target) {
-			renderer.autoClear = false;
-			const parameters = {
-				minFilter: LinearFilter,
-				magFilter: LinearFilter,
-				format: RGBFormat,
-				stencilBuffer: true,
-			};
-
-			const render_target = new WebGLRenderTarget(
-				renderer.domElement.offsetWidth,
-				renderer.domElement.offsetHeight,
-				parameters
-			);
-			composer = new EffectComposer(renderer, render_target);
+		if (options.render_target) {
+			composer = new EffectComposer(renderer, options.render_target);
 		} else {
 			composer = new EffectComposer(renderer);
 		}
 		// to achieve better antialiasing
 		// while using post:
 		// composer.setPixelRatio( window.devicePixelRatio*2 )
-		composer.setPixelRatio(window.devicePixelRatio * 1);
+		// be careful, as this messes up with the renderer
+		// and when using in cop/post has the output texture be 2x as large
+		// composer.setPixelRatio(window.devicePixelRatio * 1);
 
 		this._build_passes(composer, options);
 
@@ -84,13 +73,15 @@ export class EffectsComposerController {
 		}
 
 		const post_node = this.node.display_node_controller.display_node as BasePostProcessNodeType;
-		post_node.setup_composer({
-			composer: composer,
-			camera: options.camera,
-			resolution: options.resolution,
-			camera_node: options.camera_node,
-			scene: options.scene,
-			canvas: options.canvas,
-		});
+		if (post_node) {
+			post_node.setup_composer({
+				composer: composer,
+				camera: options.camera,
+				resolution: options.resolution,
+				camera_node: options.camera_node,
+				scene: options.scene,
+				requester: options.requester,
+			});
+		}
 	}
 }

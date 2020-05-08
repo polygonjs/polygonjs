@@ -21,7 +21,6 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 		return this._content;
 	}
 	core_content_cloned(): ContainableMap[NodeContext.COP] | undefined {
-		console.log('clone', this._content);
 		const texture = this._content?.clone();
 		if (texture) {
 			texture.needsUpdate = true;

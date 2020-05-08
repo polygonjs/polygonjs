@@ -11,6 +11,7 @@ import {BaseNetworkPostProcessNodeType} from '../../../post/utils/EffectsCompose
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../../_Base';
+import {WebGLRenderTarget, LinearFilter, RGBFormat} from 'three';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
@@ -87,7 +88,6 @@ export class PostProcessController {
 	}
 
 	private _create_composer(canvas: HTMLCanvasElement) {
-		console.warn('create composer');
 		const renderer = this.node.render_controller.renderer(canvas);
 		if (renderer) {
 			const scene = this.node.render_controller.resolved_scene || this.node.scene.default_scene;
@@ -98,14 +98,32 @@ export class PostProcessController {
 				if (found_node.type == NetworkNodeType.POST) {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;
 					const resolution = this.node.render_controller.canvas_resolution(canvas);
+
+					let render_target: WebGLRenderTarget | undefined;
+					if (this.node.pv.use_render_target) {
+						renderer.autoClear = false;
+						const parameters = {
+							minFilter: LinearFilter,
+							magFilter: LinearFilter,
+							format: RGBFormat,
+							stencilBuffer: true,
+						};
+
+						render_target = new WebGLRenderTarget(
+							renderer.domElement.offsetWidth,
+							renderer.domElement.offsetHeight,
+							parameters
+						);
+					}
+
 					const composer = post_process_network.effects_composer_controller.create_effects_composer({
 						renderer,
 						scene,
 						camera,
 						resolution,
-						canvas,
+						requester: this.node,
 						camera_node: this.node,
-						use_render_target: this.node.pv.use_render_target,
+						render_target: render_target,
 						prepend_render_pass: this.node.pv.prepend_render_pass,
 					});
 					// this._rebuild_required = false
