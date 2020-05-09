@@ -12,9 +12,9 @@ export class AnimationsObjNode extends BaseManagerObjNode {
 	// children_context(){ return NodeContext.MAT }
 
 	protected _children_controller_context = NodeContext.ANIM;
-	initialize_node() {
-		this.children_controller?.init();
-	}
+	// initialize_node() {
+	// 	this.children_controller?.init({dependent: false});
+	// }
 
 	create_node<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K] {
 		return super.create_node(type) as AnimNodeChildrenMap[K];

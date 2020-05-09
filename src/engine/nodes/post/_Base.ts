@@ -52,7 +52,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			}
 		});
 
-		this.io.inputs.set_count(1);
+		this.io.inputs.set_count(0, 1);
 		this.io.outputs.set_has_one_output();
 	}
 
@@ -63,7 +63,10 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.cook_controller.end_cook();
 	}
 	setup_composer(context: TypedPostNodeContext): void {
-		const input = this.io.inputs.input(0);
+		this._add_pass_from_input(0, context);
+	}
+	protected _add_pass_from_input(index: number, context: TypedPostNodeContext) {
+		const input = this.io.inputs.input(index);
 		if (input) {
 			input.setup_composer(context);
 		}
@@ -80,6 +83,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			}
 		}
 	}
+
 	protected _create_pass(context: TypedPostNodeContext): P | undefined {
 		return undefined;
 	}

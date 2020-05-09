@@ -235,7 +235,6 @@ export class TypedThreejsCameraObjNode<
 		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
 
-		this.display_node_controller.initialize_node();
 		this.children_display_controller.initialize_node();
 	}
 	async cook() {

@@ -28,9 +28,9 @@ export class BaseNetworkSopNode extends TypedNode<NodeContext.SOP, BaseNetworkSo
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
 	}
-	initialize_base_node() {
-		this.children_controller?.init();
-	}
+	// initialize_base_node() {
+	// 	this.children_controller?.init({dependent: false});
+	// }
 	cook() {
 		this.cook_controller.end_cook();
 	}

@@ -11,9 +11,9 @@ export class EventsObjNode extends BaseManagerObjNode {
 	}
 
 	protected _children_controller_context = NodeContext.EVENT;
-	initialize_node() {
-		this.children_controller?.init();
-	}
+	// initialize_node() {
+	// 	this.children_controller?.init({dependent: false});
+	// }
 
 	create_node<K extends keyof EventNodeChildrenMap>(type: K): EventNodeChildrenMap[K] {
 		return super.create_node(type) as EventNodeChildrenMap[K];

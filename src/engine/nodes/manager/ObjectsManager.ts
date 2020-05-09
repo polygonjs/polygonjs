@@ -24,7 +24,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	protected _children_controller_context = NodeContext.OBJ;
 	initialize_node() {
-		this.children_controller?.init();
+		// this.children_controller?.init({dependent: false});
 
 		this.lifecycle.add_on_child_add_hook(this._on_child_add.bind(this));
 		this.lifecycle.add_on_child_remove_hook(this._on_child_remove.bind(this));

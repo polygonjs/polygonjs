@@ -21,6 +21,8 @@ import {PixelPostNode} from '../../../nodes/post/Pixel';
 import {RenderPostNode} from '../../../nodes/post/Render';
 import {RGBShiftPostNode} from '../../../nodes/post/RGBShift';
 import {SepiaPostNode} from '../../../nodes/post/Sepia';
+import {SequencePostNode} from '../../../nodes/post/Sequence';
+// import {TriangleBlurPostNode} from '../../../nodes/post/TriangleBlur';
 import {UnrealBloomPostNode} from '../../../nodes/post/UnrealBloom';
 import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
@@ -47,6 +49,8 @@ export interface PostNodeChildrenMap {
 	render: RenderPostNode;
 	rgb_shift: RGBShiftPostNode;
 	sepia: SepiaPostNode;
+	sequence: SequencePostNode;
+	// triangle_blur: TriangleBlurPostNode;
 	unreal_bloom: UnrealBloomPostNode;
 	vertical_blur: VerticalBlurPostNode;
 	vignette: VignettePostNode;
@@ -76,6 +80,8 @@ export class PostRegister {
 		poly.register_node(RenderPostNode, CATEGORY_POST.MISC);
 		poly.register_node(RGBShiftPostNode, CATEGORY_POST.EFFECT);
 		poly.register_node(SepiaPostNode, CATEGORY_POST.COLOR);
+		poly.register_node(SequencePostNode, CATEGORY_POST.MISC);
+		// poly.register_node(TriangleBlurPostNode, CATEGORY_POST.BLUR);
 		poly.register_node(UnrealBloomPostNode, CATEGORY_POST.EFFECT);
 		poly.register_node(VerticalBlurPostNode, CATEGORY_POST.BLUR);
 		poly.register_node(VignettePostNode, CATEGORY_POST.EFFECT);

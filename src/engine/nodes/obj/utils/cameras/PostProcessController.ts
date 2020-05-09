@@ -8,6 +8,11 @@ import {BaseNetworkPostProcessNodeType} from '../../../post/utils/EffectsCompose
 // interface DisposablePass extends Pass {
 // 	dispose: () => void;
 // }
+const POST_PROCESS_PARAM_OPTIONS = {
+	callback: (node: BaseNodeType) => {
+		BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_reset_effects_composer(node as BaseThreejsCameraObjNodeType);
+	},
+};
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../../_Base';
@@ -23,21 +28,18 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 				type: NetworkNodeType.POST,
 			},
 			// cook: false,
-			callback: (node: BaseNodeType) => {
-				BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_reset_effects_composer(
-					node as BaseThreejsCameraObjNodeType
-				);
-			},
+			...POST_PROCESS_PARAM_OPTIONS,
 		});
-		prepend_render_pass = ParamConfig.BOOLEAN(1, {
-			visible_if: {
-				do_post_process: 1,
-			},
-		});
+		// prepend_render_pass = ParamConfig.BOOLEAN(1, {
+		// 	visible_if: {
+		// 		do_post_process: 1,
+		// 	},
+		// });
 		use_render_target = ParamConfig.BOOLEAN(0, {
 			visible_if: {
 				do_post_process: 1,
 			},
+			...POST_PROCESS_PARAM_OPTIONS,
 		});
 	};
 }
@@ -124,9 +126,8 @@ export class PostProcessController {
 						requester: this.node,
 						camera_node: this.node,
 						render_target: render_target,
-						prepend_render_pass: this.node.pv.prepend_render_pass,
+						// prepend_render_pass: this.node.pv.prepend_render_pass,
 					});
-					// this._rebuild_required = false
 					return composer;
 				} else {
 					this.node.states.error.set('found node is not a post process node');

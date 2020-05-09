@@ -91,30 +91,13 @@ export class DirtyController {
 			original_trigger_graph_node = this.node;
 		}
 
-		//return if this.set_dirty_allowed? && !this.set_dirty_allowed(original_trigger_graph_node)
-
-		// if (this.scene && this.scene() != null && this.scene().loaded()){
-		// 	let id = null
-		// 	if (this.full_path){id = this.full_path()} else {id = this}
-		// 	console.log("set dirty", id)
-		// }
-
-		// TODO: why can't I not propagate if the node is already dirty?
-		// one possible reason is that node might be cooking, and this would not update the dirty_timestamp correctly?
-		//return if this.is_dirty()
-		// if(!this.scene().is_loading()){
-		// 	console.log("set dirty", (this.full_path ? this.full_path() : this))
-		// }
-
 		this._dirty = true;
 		this._dirty_timestamp = performance.now();
 		this._dirty_count += 1;
 
 		this.run_post_dirty_hooks(original_trigger_graph_node);
-		// this.post_set_dirty(original_trigger_graph_node);
 
 		if (propagate === true) {
-			//&& @_dirty #&& window.scene.auto_updating()
 			this.set_successors_dirty(original_trigger_graph_node);
 		}
 	}
@@ -145,7 +128,6 @@ export class DirtyController {
 		// successors = successors.filter(n=>!n.is_dirty())
 		for (let successor of this._cached_successors) {
 			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);
-			// console.log(successor);
 		}
 
 		// cooker.unblock();

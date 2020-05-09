@@ -104,7 +104,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
 		this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
-		this.children_controller?.init();
+		// this.children_controller?.init({dependent: false});
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {

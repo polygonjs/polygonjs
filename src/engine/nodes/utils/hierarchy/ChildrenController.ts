@@ -1,8 +1,6 @@
 import {CoreString} from '../../../../core/String';
 
 import {BaseNodeType} from '../../_Base';
-import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
-
 import lodash_includes from 'lodash/includes';
 import lodash_keys from 'lodash/keys';
 import lodash_sortBy from 'lodash/sortBy';
@@ -11,7 +9,6 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
-
 import {Poly} from '../../../Poly';
 // import {NameController} from '../NameController';
 
@@ -19,17 +16,19 @@ import {Poly} from '../../../Poly';
 // 	context: NodeContext
 // 	dependent?: boolean;
 // }
-const NODE_SIMPLE_NAME = 'children';
+// const NODE_SIMPLE_NAME = 'children';
+
+// interface ChildrenControllerOptions {
+// 	dependent: boolean;
+// }
 
 export class HierarchyChildrenController {
-	// private _context: NodeContext | undefined;
-	// private _children_allowed: boolean = false;
 	private _children: Dictionary<BaseNodeType> = {};
 	private _children_by_type: Dictionary<string[]> = {};
 	private _children_and_grandchildren_by_context: Dictionary<string[]> = {};
 
-	private _is_dependent_on_children: boolean = false;
-	private _children_node: CoreGraphNode | undefined;
+	// private _is_dependent_on_children: boolean = false;
+	// private _children_node: CoreGraphNode | undefined;
 
 	private _selection: CoreNodeSelection | undefined;
 	get selection(): CoreNodeSelection {
@@ -39,26 +38,27 @@ export class HierarchyChildrenController {
 	get context() {
 		return this._context;
 	}
-	init(dependent: boolean = false) {
-		// const context = this.node.children_context();
-		// if (context) {
-		// this._available_children_classes = options['children'] || {};
-		// this._available_children_classes = window.POLY.registered_nodes(context, this.self.type())
+	// init(options: ChildrenControllerOptions) {
+	// 	console.warn('init children controller', this.node, this._context);
+	// 	// const context = this.node.children_context();
+	// 	// if (context) {
+	// 	// this._available_children_classes = options['children'] || {};
+	// 	// this._available_children_classes = window.POLY.registered_nodes(context, this.self.type())
 
-		// this._children_allowed = true;
-		this._children = {};
+	// 	// this._children_allowed = true;
+	// 	this._children = {};
 
-		// const is_dependent = options['dependent'];
-		if (dependent) {
-			this._is_dependent_on_children = dependent;
-			if (this._is_dependent_on_children) {
-				this._children_node = new CoreGraphNode(this.node.scene, NODE_SIMPLE_NAME);
-				// this._children_node.set_scene(this.node.scene);
-				this.node.add_graph_input(this._children_node);
-			}
-		}
-		// }
-	}
+	// 	// const is_dependent = options['dependent'];
+	// 	if (options.dependent) {
+	// 		this._is_dependent_on_children = options.dependent;
+	// 		if (this._is_dependent_on_children) {
+	// 			this._children_node = new CoreGraphNode(this.node.scene, NODE_SIMPLE_NAME);
+	// 			// this._children_node.set_scene(this.node.scene);
+	// 			this.node.add_graph_input(this._children_node);
+	// 		}
+	// 	}
+	// 	// }
+	// }
 
 	// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
 	set_child_name(node: BaseNodeType, new_name: string): void {
@@ -156,9 +156,9 @@ export class HierarchyChildrenController {
 		this.node.lifecycle.run_on_child_add_hooks(child_node);
 		// this.post_add_node(child_node);
 
-		if (this._is_dependent_on_children && this._children_node) {
-			this._children_node.add_graph_input(child_node);
-		}
+		// if (this._is_dependent_on_children && this._children_node) {
+		// 	this._children_node.add_graph_input(child_node);
+		// }
 		if (child_node.require_webgl2()) {
 			this.node.scene.webgl_controller.set_require_webgl2();
 		}
@@ -175,9 +175,9 @@ export class HierarchyChildrenController {
 		if (child_node.parent != this.node) {
 			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
 		} else {
-			if (this._is_dependent_on_children && this._children_node) {
-				this._children_node.remove_graph_input(child_node);
-			}
+			// if (this._is_dependent_on_children && this._children_node) {
+			// 	this._children_node.remove_graph_input(child_node);
+			// }
 
 			if (this.selection.contains(child_node)) {
 				this.selection.remove([child_node]);
@@ -211,9 +211,9 @@ export class HierarchyChildrenController {
 			// set other dependencies dirty
 			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input
 			// but that prevented the obj/geo node to properly clear its sop_group if this was the last node
-			if (this._is_dependent_on_children && this._children_node) {
-				this._children_node.set_successors_dirty(this.node);
-			}
+			// if (this._is_dependent_on_children && this._children_node) {
+			// 	this._children_node.set_successors_dirty(this.node);
+			// }
 			child_node.set_successors_dirty(this.node);
 			// disconnect successors
 			child_node.graph_disconnect_successors();

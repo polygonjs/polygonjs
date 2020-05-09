@@ -11,6 +11,7 @@ export interface DisplayNodeControllerCallbacks {
 handles callbacks when the children's display flag is updated
 */
 export class DisplayNodeController {
+	private _initialized: boolean = false;
 	private _graph_node: CoreGraphNode;
 	private _display_node: BaseNodeClassWithDisplayFlag | undefined = undefined;
 	private _on_display_node_remove_callback: () => void;
@@ -32,6 +33,12 @@ export class DisplayNodeController {
 	}
 
 	initialize_node() {
+		if (this._initialized) {
+			console.error('display node controller already initialed', this.node);
+			return;
+		}
+		this._initialized = true;
+
 		this.node.lifecycle.add_on_child_add_hook((child_node) => {
 			if (!this._display_node) {
 				child_node.flags?.display?.set(true);
@@ -54,6 +61,10 @@ export class DisplayNodeController {
 	}
 
 	async set_display_node(new_display_node: BaseNodeClassWithDisplayFlag | undefined) {
+		if (!this._initialized) {
+			console.error('display node controller not initialized', this.node);
+		}
+
 		if (this._display_node != new_display_node) {
 			const old_display_node = this._display_node;
 			if (old_display_node) {

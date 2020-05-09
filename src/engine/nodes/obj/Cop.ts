@@ -10,10 +10,10 @@ export class CopObjNode extends BaseManagerObjNode {
 	// children_context(){ return NodeContext.COP }
 
 	protected _children_controller_context = NodeContext.COP;
-	initialize_node() {
-		this.children_controller?.init();
-		// this._init_manager();
-	}
+	// initialize_node() {
+	// 	this.children_controller?.init({dependent: false});
+	// 	// this._init_manager();
+	// }
 
 	create_node<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K] {
 		return super.create_node(type) as CopNodeChildrenMap[K];

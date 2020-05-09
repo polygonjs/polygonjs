@@ -40,7 +40,6 @@ export class DataTextureController {
 		const texture = render_target.texture;
 		const image = texture.image;
 		const pixel_buffer = this._create_pixel_buffer(image.width, image.height);
-		console.log('creating data texture', image.width, image.height);
 		const data_texture = new DataTexture(
 			pixel_buffer,
 			image.width,

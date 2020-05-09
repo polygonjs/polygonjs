@@ -41,7 +41,9 @@ export class EffectsComposerController {
 			on_display_node_set: () => {
 				this.node.set_dirty();
 			},
-			on_display_node_update: () => {},
+			on_display_node_update: () => {
+				this.node.set_dirty();
+			},
 		};
 	}
 
@@ -82,6 +84,7 @@ export class EffectsComposerController {
 				scene: options.scene,
 				requester: options.requester,
 			});
+			console.log('setup', this.node.full_path(), composer.passes);
 		}
 	}
 }

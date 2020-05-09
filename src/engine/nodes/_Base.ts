@@ -138,9 +138,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _initialized: boolean = false;
 	public initialize_base_and_node() {
 		if (!this._initialized) {
+			this._initialized = true;
+
+			this.display_node_controller?.initialize_node();
+
 			this.initialize_base_node(); // for base classes of Sop, Obj...
 			this.initialize_node(); // for Derivated node clases, like BoxSop, TransformSop...
-			this._initialized = true;
 		} else {
 			console.warn('node already initialized');
 		}

@@ -16,9 +16,6 @@ export class PostProcessObjNode extends BaseManagerObjNode {
 	);
 
 	protected _children_controller_context = NodeContext.POST;
-	initialize_node() {
-		this.children_controller?.init();
-	}
 
 	create_node<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K] {
 		return super.create_node(type) as PostNodeChildrenMap[K];

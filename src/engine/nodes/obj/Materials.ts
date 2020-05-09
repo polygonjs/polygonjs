@@ -12,9 +12,9 @@ export class MaterialsObjNode extends BaseManagerObjNode {
 	// children_context(){ return NodeContext.MAT }
 
 	protected _children_controller_context = NodeContext.MAT;
-	initialize_node() {
-		this.children_controller?.init();
-	}
+	// initialize_node() {
+	// 	this.children_controller?.init({dependent: false});
+	// }
 
 	create_node<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K] {
 		return super.create_node(type) as MatNodeChildrenMap[K];
