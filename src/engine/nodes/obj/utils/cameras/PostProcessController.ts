@@ -4,6 +4,9 @@ import {BaseThreejsCameraObjNodeType, BaseThreejsCameraObjNodeClass} from '../..
 import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {NetworkNodeType} from '../../../../poly/NodeContext';
 import {BaseNetworkPostProcessNodeType} from '../../../post/utils/EffectsComposerController';
+import {BaseNodeType} from '../../../_Base';
+import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {LinearFilter, RGBFormat} from 'three/src/constants';
 
 // interface DisposablePass extends Pass {
 // 	dispose: () => void;
@@ -15,8 +18,6 @@ const POST_PROCESS_PARAM_OPTIONS = {
 };
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {BaseNodeType} from '../../../_Base';
-import {WebGLRenderTarget, LinearFilter, RGBFormat} from 'three';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
@@ -69,10 +70,10 @@ export class PostProcessController {
 			if (size) {
 				composer.setSize(size.x, size.y);
 			}
-			if (this.node.pv.use_render_target) {
-				const renderer = this.node.render_controller.renderer(canvas);
-				renderer.clear();
-			}
+			// if (this.node.pv.use_render_target) {
+			// 	const renderer = this.node.render_controller.renderer(canvas);
+			// 	renderer.clear();
+			// }
 			composer.render();
 		}
 	}

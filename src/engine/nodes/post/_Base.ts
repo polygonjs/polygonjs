@@ -9,6 +9,7 @@ import {Scene} from 'three/src/scenes/Scene';
 import {FlagsControllerDB} from '../utils/FlagsController';
 import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
+import {ParamOptions} from '../../params/utils/OptionsController';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
@@ -24,9 +25,10 @@ export interface TypedPostNodeContext {
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
 	TypedPostProcessNode.PARAM_CALLBACK_update_passes(node as BasePostProcessNodeType);
 }
-export const PostParamOptions = {
+export const PostParamOptions: ParamOptions = {
 	cook: false,
 	callback: PostParamCallback,
+	compute_on_dirty: true, // important if an expression drives a param
 };
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
@@ -64,12 +66,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 	setup_composer(context: TypedPostNodeContext): void {
 		this._add_pass_from_input(0, context);
-	}
-	protected _add_pass_from_input(index: number, context: TypedPostNodeContext) {
-		const input = this.io.inputs.input(index);
-		if (input) {
-			input.setup_composer(context);
-		}
+
 		if (!this.flags.bypass.active) {
 			let pass = this._passes_by_requester_id.get(context.requester.graph_node_id);
 			if (!pass) {
@@ -81,6 +78,12 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			if (pass) {
 				context.composer.addPass(pass);
 			}
+		}
+	}
+	protected _add_pass_from_input(index: number, context: TypedPostNodeContext) {
+		const input = this.io.inputs.input(index);
+		if (input) {
+			input.setup_composer(context);
 		}
 	}
 

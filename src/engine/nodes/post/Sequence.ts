@@ -1,11 +1,11 @@
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
-import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
+import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 class SequencePostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SequencePostParamsConfig();
-export class SequencePostNode extends TypedPostProcessNode<RenderPass, SequencePostParamsConfig> {
+export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'sequence';

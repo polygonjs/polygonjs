@@ -13,8 +13,6 @@ interface TriangleBlurPassWithUniforms extends ShaderPass {
 	resolution: Vector2;
 }
 
-// copied from TriangleBlur and modified to use tDiffuse instead of texture
-// but it still only displays a texture full frame. Debug needed...
 const FRAGMENT = `
 #include <common>
 #define ITERATIONS 10.0
@@ -33,12 +31,12 @@ void main() {
 	}
 	gl_FragColor = color / total;
 }`;
-const uniforms = UniformsUtils.clone(HorizontalBlurShader);
+const uniforms = UniformsUtils.clone(HorizontalBlurShader.uniforms);
 uniforms['delta'] = {value: new Vector2()};
 const Shader = {
 	uniforms: uniforms,
 	vertexShader: HorizontalBlurShader.vertexShader,
-	fragmentShader: [FRAGMENT, HorizontalBlurShader.fragmentShader][1],
+	fragmentShader: [FRAGMENT, HorizontalBlurShader.fragmentShader][0],
 };
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
