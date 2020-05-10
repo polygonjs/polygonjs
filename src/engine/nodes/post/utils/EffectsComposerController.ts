@@ -58,7 +58,7 @@ export class EffectsComposerController {
 		}
 		// to achieve better antialiasing
 		// while using post:
-		// composer.setPixelRatio( window.devicePixelRatio*2 )
+		// composer.setPixelRatio(window.devicePixelRatio * 2);
 		// be careful, as this messes up with the renderer
 		// and when using in cop/post has the output texture be 2x as large
 		// composer.setPixelRatio(window.devicePixelRatio * 1);
@@ -84,7 +84,6 @@ export class EffectsComposerController {
 				scene: options.scene,
 				requester: options.requester,
 			});
-			console.log('setup', this.node.full_path(), composer.passes);
 		}
 	}
 }

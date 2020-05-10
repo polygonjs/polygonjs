@@ -18,6 +18,7 @@ const POST_PROCESS_PARAM_OPTIONS = {
 };
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
+import {Poly} from '../../../../Poly';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
@@ -85,7 +86,8 @@ export class PostProcessController {
 		}
 	}
 
-	private composer(canvas: HTMLCanvasElement): EffectComposer {
+	// method could be private, but is public for the test suite
+	composer(canvas: HTMLCanvasElement): EffectComposer {
 		return (this._composers_by_canvas_id[canvas.id] =
 			this._composers_by_canvas_id[canvas.id] || this._create_composer(canvas));
 	}
@@ -112,7 +114,7 @@ export class PostProcessController {
 							stencilBuffer: true,
 						};
 
-						render_target = new WebGLRenderTarget(
+						render_target = Poly.instance().renderers_controller.render_target(
 							renderer.domElement.offsetWidth,
 							renderer.domElement.offsetHeight,
 							parameters

@@ -1,159 +1,62 @@
-// import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-// import {Vector2} from 'three/src/math/Vector2';
-// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-// import {Scene} from 'three/src/scenes/Scene';
-// import {RGBAFormat} from 'three/src/constants';
-// import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-// import {NearestFilter} from 'three/src/constants';
-// import {Mesh} from 'three/src/objects/Mesh';
-// import {HalfFloatType} from 'three/src/constants';
-// import {FloatType} from 'three/src/constants';
-// import {DataTexture} from 'three/src/textures/DataTexture';
-// import {ClampToEdgeWrapping} from 'three/src/constants';
-// import {Camera} from 'three/src/cameras/Camera';
-// const THREE = {
-// 	Camera,
-// 	ClampToEdgeWrapping,
-// 	DataTexture,
-// 	FloatType,
-// 	HalfFloatType,
-// 	Mesh,
-// 	NearestFilter,
-// 	PlaneBufferGeometry,
-// 	RGBAFormat,
-// 	Scene,
-// 	ShaderMaterial,
-// 	Vector2,
-// 	WebGLRenderTarget,
-// };
-// // import NodeBase from '../_Base'
+import {TypedCopNode} from './_Base';
+import {DataTexture} from 'three/src/textures/DataTexture';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseNodeType} from '../_Base';
 
-// // import Container from '../../Container/Texture'
-// // import {CoreImage} from '../../../Core/Image'
-// import {ThreeToGl} from '../../../Core/ThreeToGl';
+class ColorCopParamsConfig extends NodeParamsConfig {
+	resolution = ParamConfig.VECTOR2([256, 256], {
+		callback: (node: BaseNodeType) => {
+			ColorCopNode.PARAM_CALLBACK_reset(node as ColorCopNode);
+		},
+	});
+	color = ParamConfig.COLOR([1, 1, 1]);
+}
+const ParamsConfig = new ColorCopParamsConfig();
 
-// import {BaseNodeCop} from './_Base';
+export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'color';
+	}
+	private _data_texture: DataTexture | undefined;
 
-// export class Color extends BaseNodeCop {
-// 	static type() {
-// 		return 'color';
-// 	}
+	cook() {
+		const w = this.pv.resolution.x;
+		const h = this.pv.resolution.y;
+		this._data_texture = this._data_texture || this._create_data_texture(w, h);
 
-// 	private _param_resolution: Vector2;
+		const pixels_count = h * w;
+		const c = this.pv.color.toArray();
+		const r = c[0] * 255;
+		const g = c[1] * 255;
+		const b = c[2] * 255;
+		const a = 255;
+		const data = this._data_texture.image.data;
+		for (let i = 0; i < pixels_count; i++) {
+			data[i * 4 + 0] = r;
+			data[i * 4 + 1] = g;
+			data[i * 4 + 2] = b;
+			data[i * 4 + 3] = a;
+		}
+		this._data_texture.needsUpdate = true;
 
-// 	initialize_node() {
-// 		super();
+		this.set_texture(this._data_texture);
+	}
 
-// 		this.set_inputs_count_to_zero();
-// 	}
+	private _create_data_texture(width: number, height: number) {
+		const pixel_buffer = this._create_pixel_buffer(width, height);
+		return new DataTexture(pixel_buffer, width, height);
+	}
+	private _create_pixel_buffer(width: number, height: number) {
+		const size = width * height * 4;
 
-// 	create_params() {
-// 		this.add_param(ParamType.COLOR, 'color', [1, 1, 1]);
-// 		this.add_param(ParamType.VECTOR2, 'resolution', [256, 256]);
-// 	}
+		return new Uint8Array(size);
+	}
 
-// 	// TODO: typescript: that's wayyy too complicated
-// 	// I should be able to just fill up an array for a DataTexture
-// 	cook() {
-// 		const width = this._param_resolution.x;
-// 		const height = this._param_resolution.y;
-
-// 		this._texture_scene = new Scene();
-// 		var camera = new Camera();
-// 		camera.position.z = 1;
-// 		var passThruUniforms = {
-// 			passThruTexture: {value: null},
-// 		};
-// 		var passThruShader = this.createShaderMaterial(this.getRedFragmentShader(), passThruUniforms);
-// 		var mesh = new Mesh(new PlaneBufferGeometry(2, 2), passThruShader);
-// 		this._texture_scene.add(mesh);
-// 		const render_target = this.create_render_target();
-// 		const renderer = POLY.renderers_controller.first_renderer();
-// 		if (!renderer) {
-// 			console.warn(`${this.full_path()} found no renderer`);
-// 		}
-
-// 		renderer.setRenderTarget(render_target);
-// 		renderer.clear();
-// 		renderer.render(this._texture_scene, camera);
-// 		// renderer.setClearColor( 0x000000 ) // cancels the bg color
-
-// 		var pixelBuffer = new Float32Array(width * height * 4);
-// 		//read the pixel
-// 		renderer.readRenderTargetPixels(render_target, 0, 0, width, height, pixelBuffer);
-
-// 		renderer.setRenderTarget(null);
-
-// 		const texture = new DataTexture(pixelBuffer, width, height, RGBAFormat);
-// 		// // texture.wrapS = ClampToEdgeWrapping
-// 		// // texture.wrapT = ClampToEdgeWrapping
-// 		// // texture.wrapS = ClampToEdgeWrapping
-// 		// // texture.wrapT = ClampToEdgeWrapping
-// 		texture.needsUpdate = true;
-
-// 		this.set_texture(texture);
-// 	}
-
-// 	create_render_target() {
-// 		const wrapS = ClampToEdgeWrapping;
-// 		const wrapT = ClampToEdgeWrapping;
-
-// 		const minFilter = NearestFilter;
-// 		const magFilter = NearestFilter;
-
-// 		var renderTarget = new WebGLRenderTarget(this._param_resolution.x, this._param_resolution.y, {
-// 			wrapS: wrapS,
-// 			wrapT: wrapT,
-// 			minFilter: minFilter,
-// 			magFilter: magFilter,
-// 			format: RGBAFormat,
-// 			type: /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType,
-// 			stencilBuffer: false,
-// 			depthBuffer: false,
-// 		});
-// 		return renderTarget;
-// 	}
-
-// 	createShaderMaterial(computeFragmentShader, uniforms) {
-// 		uniforms = uniforms || {};
-
-// 		var material = new ShaderMaterial({
-// 			uniforms: uniforms,
-// 			vertexShader: this.getPassThroughVertexShader(),
-// 			fragmentShader: computeFragmentShader,
-// 		});
-
-// 		// addResolutionDefine( material );
-
-// 		return material;
-// 	}
-// 	getPassThroughVertexShader() {
-// 		return 'void main()	{\n' + '\n' + '	gl_Position = vec4( position, 1.0 );\n' + '\n' + '}\n';
-// 	}
-// 	getRedFragmentShader() {
-// 		return (
-// 			'uniform sampler2D passThruTexture;\n' +
-// 			'\n' +
-// 			'void main() {\n' +
-// 			'\n' +
-// 			`	gl_FragColor = vec4( ${ThreeToGl.float(this._param_color.r)}, ${ThreeToGl.float(
-// 				this._param_color.g
-// 			)}, ${ThreeToGl.float(this._param_color.b)}, 1.0 );\n` +
-// 			'\n' +
-// 			'}\n'
-// 		);
-// 	}
-// 	getPassThroughFragmentShader() {
-// 		return (
-// 			'uniform sampler2D passThruTexture;\n' +
-// 			'\n' +
-// 			'void main() {\n' +
-// 			'\n' +
-// 			'	vec2 uv = gl_FragCoord.xy / resolution.xy;\n' +
-// 			'\n' +
-// 			'	gl_FragColor = texture2D( passThruTexture, uv );\n' +
-// 			'\n' +
-// 			'}\n'
-// 		);
-// 	}
-// }
+	static PARAM_CALLBACK_reset(node: ColorCopNode) {
+		node._reset();
+	}
+	private _reset() {
+		this._data_texture = undefined;
+	}
+}

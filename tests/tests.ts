@@ -97,6 +97,9 @@ import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';
 import './engine/nodes/obj/HemisphereLight';
 
+QUnit.module('post');
+import './engine/nodes/post/Base';
+
 QUnit.module('sop');
 import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AnimationCopy';

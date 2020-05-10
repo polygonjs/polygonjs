@@ -73,6 +73,8 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 			} else {
 				this.states.error.set(`material invalid. (error: '${material_node.states.error.message}')`);
 			}
+		} else {
+			this.states.error.set(`no material node found`);
 		}
 	}
 

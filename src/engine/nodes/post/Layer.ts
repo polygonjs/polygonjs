@@ -10,6 +10,7 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {IUniformV2, IUniformN, IUniformTexture} from '../utils/code/gl/Uniforms';
 import VERTEX from './gl/default.vert.glsl';
 import FRAGMENT from './gl/Layer.frag.glsl';
+import {Poly} from '../../Poly';
 
 interface LayerUniforms {
 	// tDiffuse: IUniformTexture;
@@ -95,19 +96,21 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 			format: RGBAFormat,
 			stencilBuffer: true,
 		};
-
-		const render_target1 = new WebGLRenderTarget(
+		const render_target1 = Poly.instance().renderers_controller.render_target(
 			renderer.domElement.offsetWidth,
 			renderer.domElement.offsetHeight,
 			parameters
 		);
-		const render_target2 = new WebGLRenderTarget(
+		const render_target2 = Poly.instance().renderers_controller.render_target(
 			renderer.domElement.offsetWidth,
 			renderer.domElement.offsetHeight,
 			parameters
 		);
+		console.log(render_target1);
 		const composer1 = new EffectComposer(renderer, render_target1);
 		const composer2 = new EffectComposer(renderer, render_target2);
+		// renderToScreen = false to ensure the last pass of each composer is still
+		// written to the render_target
 		composer1.renderToScreen = false;
 		composer2.renderToScreen = false;
 
@@ -117,9 +120,6 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 		cloned_context2.composer = composer2;
 		this._add_pass_from_input(0, cloned_context1);
 		this._add_pass_from_input(1, cloned_context2);
-
-		console.log('composer1', composer1.passes);
-		console.log('composer2', composer2.passes);
 
 		const pass = new LayerPass(composer1, composer2);
 		this.update_pass(pass);

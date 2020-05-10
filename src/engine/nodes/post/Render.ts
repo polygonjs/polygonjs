@@ -47,14 +47,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 
 	protected _create_pass(context: TypedPostNodeContext) {
 		const pass = new RenderPass(context.scene, context.camera) as RenderPassWithContext;
-		// (pass as any).clear = false;
-		// pass.clearColor = new Color(0, 0, 0);
-		// pass.clearAlpha = 0;
-		// pass.clearDepth = true;
-		// (pass as any).clearAlpha = false;
-		// (pass as any).clearDepth = true;
-		console.log('pass', pass);
-		// (pass as any).material.transparent = true; // FIX
+
 		pass.context = {
 			camera: context.camera,
 			scene: context.scene,
@@ -64,9 +57,6 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 	}
 
 	update_pass(pass: RenderPassWithContext) {
-		// pass.clearColor = this.pv.clear_color;
-		// pass.clearAlpha = this.pv.clear_alpha;
-		// pass.clearDepth = this.pv.clear_depth;
 		this._update_camera(pass);
 		this._update_scene(pass);
 	}

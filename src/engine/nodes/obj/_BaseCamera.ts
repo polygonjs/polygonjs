@@ -14,6 +14,7 @@ import {ThreejsViewer} from '../../viewers/Threejs';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
+import {BaseSopNodeType} from '../sop/_Base';
 import {TypedObjNode} from './_Base';
 
 export interface OrthoOrPerspCamera extends Camera {
@@ -33,6 +34,7 @@ export const BASE_CAMERA_DEFAULT = {
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
+import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -237,6 +239,17 @@ export class TypedThreejsCameraObjNode<
 
 		this.children_display_controller.initialize_node();
 	}
+
+	create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
+		return super.create_node(type) as GeoNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseSopNodeType[];
+	}
+	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	}
+
 	async cook() {
 		this.transform_controller.update();
 		this.layers_controller.update();
