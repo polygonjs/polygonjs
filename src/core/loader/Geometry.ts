@@ -44,14 +44,22 @@ import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 export class CoreLoaderGeometry {
 	private ext: string;
 
-	constructor(
-		private url: string // private type: LoaderType, // private requester: any
-	) {
-		const url_without_params = this.url.split('?')[0];
-		const elements = url_without_params.split('.');
-		this.ext = elements[elements.length - 1].toLowerCase();
-		if (this.ext === 'zip') {
-			this.ext = elements[elements.length - 2];
+	constructor(private url: string) {
+		const _url = new URL(this.url);
+		const ext = _url.searchParams.get('ext');
+		// the loader checks first an 'ext' in the query params
+		// for urls such as http://domain.com/file?path=geometry.obj&t=aaa&ext=obj
+		// to know what extension it is, since it may not be before the '?'.
+		// But if there is not, the part before the '?' is used
+		if (ext) {
+			this.ext = ext;
+		} else {
+			const url_without_params = this.url.split('?')[0];
+			const elements = url_without_params.split('.');
+			this.ext = elements[elements.length - 1].toLowerCase();
+			if (this.ext === 'zip') {
+				this.ext = elements[elements.length - 2];
+			}
 		}
 	}
 
@@ -84,6 +92,7 @@ export class CoreLoaderGeometry {
 					});
 			} else {
 				const loader = await this.loader_for_ext();
+				console.log('file loader', loader);
 				if (loader) {
 					loader.load(
 						url,
