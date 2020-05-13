@@ -20,6 +20,7 @@ import {ShadersCollectionController} from '../utils/ShadersCollectionController'
 import {IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
+import {ShaderChunk} from 'three';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -115,114 +116,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 	protected get _template_shader(): ITemplateShader | undefined {
 		return undefined;
-	} //Shader - could not find the import?
-	// abstract _color_declaration(): string
-	// private async _update_material(/*master_assembler?: BaseGlShaderAssembler*/) {
-	// 	if (!this.material || !this._material) {
-	// 		return;
-	// 	}
-	// 	const template_shader = this._template_shader;
-	// 	if (!template_shader) {
-	// 		return;
-	// 	}
-	// 	this._lines = new Map();
-	// 	for (let shader_name of this.shader_names) {
-	// 		const template = this._template_shader_for_shader_name(shader_name);
-	// 		if (template) {
-	// 			this._lines.set(shader_name, template.split('\n'));
-	// 		}
-	// 	}
-	// 	if (this._root_nodes.length > 0) {
-	// 		// this._output_node.set_color_declaration(this._color_declaration())
-	// 		// if(!master_assembler){
-	// 		// this._output_node.set_assembler(this)
-	// 		await this.build_code_from_nodes(this._root_nodes);
-	// 		// }
-
-	// 		(this._material as any).extensions = {derivatives: true};
-	// 		// this._material?.derivatives = true;
-	// 		this._build_lines();
-	// 		// this._lines[ShaderName.FRAGMENT].unshift('#extension GL_OES_standard_derivatives : enable')
-	// 	}
-
-	// 	// TODO: typescript - not sure that is still useful
-	// 	// for (let param_config of this.param_configs()) {
-	// 	// 	param_config.material = this._material;
-	// 	// }
-
-	// 	// instead of replacing fully the uniforms,
-	// 	// I simply add to them the new ones or replace the existing ones
-	// 	// otherwise this would break the particles_system_gpu
-	// 	// which would not reset correctly when going back to first frame.
-	// 	// Not entirely sure why, but this seems to be due to the texture uniforms
-	// 	// which are removed and then readded. This seems to mess up somewhere with how
-	// 	// the material updates itself...
-	// 	// this._material.uniforms = this.build_uniforms(template_shader)
-	// 	const new_uniforms = this.build_uniforms(template_shader.uniforms);
-	// 	this.material.uniforms = this.material.uniforms || {};
-	// 	for (let uniform_name of Object.keys(new_uniforms)) {
-	// 		this.material.uniforms[uniform_name] = new_uniforms[uniform_name];
-	// 	}
-
-	// 	for (let shader_name of this.shader_names) {
-	// 		const lines = this._lines.get(shader_name);
-	// 		if (lines) {
-	// 			const shader = lines.join('\n');
-	// 			switch (shader_name) {
-	// 				case ShaderName.VERTEX: {
-	// 					this._material.vertexShader = shader;
-	// 					break;
-	// 				}
-	// 				case ShaderName.FRAGMENT: {
-	// 					this._material.fragmentShader = shader;
-	// 					break;
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	const scene = this._gl_parent_node.scene;
-	// 	// const id = this._gl_parent_node.graph_node_id()
-	// 	if (this.frame_dependent()) {
-	// 		// make sure not to use this._gl_parent_node.graph_node_id() as the id,
-	// 		// as we need several materials:
-	// 		// - the visible one
-	// 		// - the multiple shadow ones
-	// 		// - and possibly a depth one
-	// 		scene.uniforms_controller.add_frame_dependent_uniform_owner(
-	// 			this._material.uuid,
-	// 			this._material.uniforms as IUniformsWithFrame
-	// 		);
-	// 	} else {
-	// 		scene.uniforms_controller.remove_frame_dependent_uniform_owner(this._material.uuid);
-	// 	}
-
-	// 	if (this.resolution_dependent()) {
-	// 		scene.uniforms_controller.add_resolution_dependent_uniform_owner(
-	// 			this._material.uuid,
-	// 			this._material.uniforms as IUniformsWithResolution
-	// 		);
-	// 	} else {
-	// 		scene.uniforms_controller.remove_resolution_dependent_uniform_owner(this._material.uuid);
-	// 	}
-	// }
+	}
 
 	protected add_uniforms(current_uniforms: IUniforms) {
-		// const new_uniforms = UniformsUtils.clone(template_uniforms);
-
-		// copy the new uniforms onto the old ones, only adding, not removing
-		// for (let uniform_name of Object.keys(new_uniforms)) {
-
-		// }
-
-		// copy the values of the old uniform
-		// for (let uniform_name of Object.keys(old_uniforms)) {
-		// 	const new_uniform = new_uniforms[uniform_name];
-		// 	if (new_uniform) {
-		// 		new_uniform.value = old_uniforms[uniform_name].value;
-		// 	}
-		// }
-
 		for (let param_config of this.param_configs()) {
 			current_uniforms[param_config.uniform_name] = param_config.uniform;
 		}
@@ -238,8 +134,6 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 				value: new Vector2(1000, 1000),
 			};
 		}
-
-		// return new_uniforms;
 	}
 
 	//
@@ -613,23 +507,23 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
 	}
 
-	// protected expand_shader(shader_string: string) {
-	// 	function parseIncludes(string: string) {
-	// 		var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
-	// 		function replace(match: string, include: string) {
-	// 			var replace = ShaderChunk[include];
+	protected expand_shader(shader_string: string) {
+		function parseIncludes(string: string) {
+			var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
+			function replace(match: string, include: string): string {
+				var replace = ShaderChunk[include];
 
-	// 			if (replace === undefined) {
-	// 				throw new Error('Can not resolve #include <' + include + '>');
-	// 			}
+				if (replace === undefined) {
+					throw new Error('Can not resolve #include <' + include + '>');
+				}
 
-	// 			return parseIncludes(replace);
-	// 		}
+				return parseIncludes(replace);
+			}
 
-	// 		return string.replace(pattern, replace);
-	// 	}
-	// 	return parseIncludes(shader_string);
-	// }
+			return string.replace(pattern, replace);
+		}
+		return parseIncludes(shader_string);
+	}
 
 	//
 	//

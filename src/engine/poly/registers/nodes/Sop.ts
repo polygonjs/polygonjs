@@ -73,6 +73,9 @@ import {SkinSopNode} from '../../../nodes/sop/Skin';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
 import {SplitSopNode} from '../../../nodes/sop/Split';
 import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
+import {SubnetSopNode} from '../../../nodes/sop/Subnet';
+import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
+import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
@@ -152,6 +155,9 @@ export interface GeoNodeChildrenMap {
 	sphere: SphereSopNode;
 	split: SplitSopNode;
 	subdivide: SubdivideSopNode;
+	subnet: SubnetSopNode;
+	subnet_input: SubnetInputSopNode;
+	subnet_output: SubnetOutputSopNode;
 	switch: SwitchSopNode;
 	text: TextSopNode;
 	torus: TorusSopNode;
@@ -235,6 +241,13 @@ export class SopRegister {
 		poly.register_node(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(SubnetSopNode, CATEGORY_SOP.MISC);
+		poly.register_node(SubnetInputSopNode, CATEGORY_SOP.MISC, {
+			only: [`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`],
+		});
+		poly.register_node(SubnetOutputSopNode, CATEGORY_SOP.MISC, {
+			only: [`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`],
+		});
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);

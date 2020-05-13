@@ -45,8 +45,12 @@ export class CoreLoaderGeometry {
 	private ext: string;
 
 	constructor(private url: string) {
-		const _url = new URL(this.url);
-		const ext = _url.searchParams.get('ext');
+		let _url: URL;
+		let ext: string | null = null;
+		try {
+			_url = new URL(this.url);
+			ext = _url.searchParams.get('ext');
+		} catch (e) {}
 		// the loader checks first an 'ext' in the query params
 		// for urls such as http://domain.com/file?path=geometry.obj&t=aaa&ext=obj
 		// to know what extension it is, since it may not be before the '?'.
@@ -77,6 +81,7 @@ export class CoreLoaderGeometry {
 		return new Promise(async (resolve, reject) => {
 			// do not add ? here. Let the requester do it if necessary
 			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			console.log(url);
 
 			if (this.ext == 'json') {
 				fetch(url)

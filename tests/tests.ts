@@ -156,6 +156,7 @@ import './engine/nodes/sop/Shadows';
 import './engine/nodes/sop/Skin';
 import './engine/nodes/sop/Sphere';
 import './engine/nodes/sop/Subdivide';
+import './engine/nodes/sop/Subnet';
 import './engine/nodes/sop/Switch';
 import './engine/nodes/sop/Text';
 import './engine/nodes/sop/Torus';

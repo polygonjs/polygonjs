@@ -23,8 +23,11 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 
 const CUSTOM_ASSEMBLER_MAP: CustomAssemblerMap = new Map();
 CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomPointsDistance);
-CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDepth);
 CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomPointsDepthDOF);
+if (false) {
+	// currently not working
+	CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDepth);
+}
 
 export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'diffuseColor' }
