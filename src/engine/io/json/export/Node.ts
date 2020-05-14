@@ -6,8 +6,11 @@ import {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from './Param';
 import {ParamType} from '../../../poly/ParamType';
 
+// revert to using index instead of name
+// for gl nodes such as the if node, whose input names
+// changes depending on the input
 interface NamedInputData {
-	name: string;
+	index: number;
 	node: string;
 	output: string;
 }
@@ -153,18 +156,18 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 
 	protected inputs_data() {
 		const data: InputData[] = [];
-		// Object.keys(this._node.io.inputs.inputs()).forEach((input_index) => {
 		this._node.io.inputs.inputs().forEach((input, input_index) => {
-			// const input = this._node.io.inputs.input(input_index);
 			if (input) {
-				// const connection_point = this._node.io.inputs.named_input_connection_points;
 				const connection = this._node.io.connections.input_connection(input_index)!;
 				if (this._node.io.inputs.has_named_inputs) {
-					const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
-					// const output_index = input_connections[input_index].output_index();
+					// const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
 					const output_index = connection.output_index;
 					const output_name = input.io.outputs.named_output_connection_points[output_index].name;
-					data[input_index] = {name: input_name, node: input.name, output: output_name};
+					data[input_index] = {
+						index: input_index,
+						node: input.name,
+						output: output_name,
+					};
 				} else {
 					data[input_index] = input.name;
 				}

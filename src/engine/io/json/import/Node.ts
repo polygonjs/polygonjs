@@ -137,12 +137,12 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 					this._node.set_input(i, input_node);
 				} else {
 					const input_node = this._node.parent.node(input_data['node']);
-					const input_name = input_data['name'];
-					if (this._node.io.inputs.has_named_input(input_name)) {
-						this._node.set_input(input_data['name'], input_node, input_data['output']);
-					} else {
-						console.warn(`${this._node.full_path()} has no input named ${input_name}`);
-					}
+					const input_index = input_data['index'];
+					// if (this._node.io.inputs.has_named_input(input_index)) {
+					this._node.set_input(input_index, input_node, input_data['output']);
+					// } else {
+					// 	console.warn(`${this._node.full_path()} has no input named ${input_name}`);
+					// }
 				}
 			}
 		});

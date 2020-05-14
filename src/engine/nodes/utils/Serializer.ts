@@ -12,8 +12,8 @@ export interface NodeSerializerData {
 	children: string[];
 	inputs: Array<string | undefined>;
 	input_connection_output_indices: Array<number | undefined> | undefined;
-	named_input_connections: BaseConnectionPointData[];
-	named_output_connections: BaseConnectionPointData[];
+	named_input_connection_points: BaseConnectionPointData[];
+	named_output_connection_points: BaseConnectionPointData[];
 	param_ids: string[];
 	// spare_params: Dictionary<string>;
 	override_cloned_state_allowed: boolean;
@@ -50,9 +50,9 @@ export class NodeSerializer {
 			error_message: this.node.states.error.message,
 			children: this.children_ids(),
 			inputs: this.input_ids(),
-			input_connection_output_indices: this.connection_input_indices(),
-			named_input_connections: this.named_input_connections(),
-			named_output_connections: this.named_output_connections(),
+			input_connection_output_indices: this.input_connection_output_indices(),
+			named_input_connection_points: this.named_input_connection_points(),
+			named_output_connection_points: this.named_output_connection_points(),
 			param_ids: this.to_json_params(include_param_components),
 			// spare_params: this.to_json_spare_params(include_param_components),
 			override_cloned_state_allowed: this.node.io.inputs.override_cloned_state_allowed(),
@@ -80,15 +80,15 @@ export class NodeSerializer {
 		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graph_node_id : undefined));
 	}
 
-	connection_input_indices() {
+	input_connection_output_indices() {
 		return this.node.io.connections
 			.input_connections()
 			?.map((connection) => (connection != null ? connection.output_index : undefined));
 	}
-	named_input_connections() {
+	named_input_connection_points() {
 		return this.node.io.inputs.named_input_connection_points.map((i) => i.to_json());
 	}
-	named_output_connections() {
+	named_output_connection_points() {
 		return this.node.io.outputs.named_output_connection_points.map((o) => o.to_json());
 	}
 

@@ -145,11 +145,11 @@ export class JsConnectionsController {
 		if (connections) {
 			const first_connection = connections[0];
 			if (first_connection) {
-				return this.connection_type_from_connection(first_connection);
+				return this.connection_point_type_from_connection(first_connection);
 			}
 		}
 	}
-	connection_type_from_connection(connection: TypedNodeConnection<NodeContext.JS>): JsConnectionPointType {
+	connection_point_type_from_connection(connection: TypedNodeConnection<NodeContext.JS>): JsConnectionPointType {
 		const node_src = connection.node_src;
 		const output_index = connection.output_index;
 		const node_src_output_connection = node_src.io.outputs.named_output_connection_points[output_index];

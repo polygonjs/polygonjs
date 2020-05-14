@@ -81,7 +81,6 @@ export class CoreLoaderGeometry {
 		return new Promise(async (resolve, reject) => {
 			// do not add ? here. Let the requester do it if necessary
 			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-			console.log(url);
 
 			if (this.ext == 'json') {
 				fetch(url)
@@ -97,7 +96,6 @@ export class CoreLoaderGeometry {
 					});
 			} else {
 				const loader = await this.loader_for_ext();
-				console.log('file loader', loader);
 				if (loader) {
 					loader.load(
 						url,

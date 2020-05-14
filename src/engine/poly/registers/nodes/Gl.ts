@@ -62,6 +62,7 @@ import {Fit01GlNode} from '../../../nodes/gl/Fit01';
 import {GlobalsGlNode} from '../../../nodes/gl/Globals';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
 import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
+import {IfGlNode} from '../../../nodes/gl/If';
 import {InstanceTransformGlNode} from '../../../nodes/gl/InstanceTransform';
 // import {LabToRgbGlNode} from '../../../nodes/gl/LabToRgb'; // TODO: still need work, not looking good
 // import {LchToRgbGlNode} from '../../../nodes/gl/LchToRgb'; // TODO: still need work, not looking good
@@ -84,6 +85,8 @@ import {RandomGlNode} from '../../../nodes/gl/Random';
 import {RgbToHsvGlNode} from '../../../nodes/gl/RgbToHsv';
 import {RotateGlNode} from '../../../nodes/gl/Rotate';
 import {RoundGlNode} from '../../../nodes/gl/Round';
+import {SubnetInputGlNode} from '../../../nodes/gl/SubnetInput';
+import {SubnetOutputGlNode} from '../../../nodes/gl/SubnetOutput';
 import {TextureGlNode} from '../../../nodes/gl/Texture';
 import {TwoWaySwitchGlNode} from '../../../nodes/gl/TwoWaySwitch';
 import {VectorAlignGlNode} from '../../../nodes/gl/VectorAlign';
@@ -126,6 +129,7 @@ export interface GlNodeChildrenMap {
 	globals: GlobalsGlNode;
 	hsluv_to_rgb: HsluvToRgbGlNode;
 	hsv_to_rgb: HsvToRgbGlNode;
+	if: IfGlNode;
 	int_to_float: FloatToIntGlNode;
 	inverse_sqrt: InverseSqrtGlNode;
 	instance_transform: InstanceTransformGlNode;
@@ -166,6 +170,8 @@ export interface GlNodeChildrenMap {
 	smooth_step: SmoothStepGlNode;
 	sqrt: SqrtGlNode;
 	step: StepGlNode;
+	subnet_input: SubnetInputGlNode;
+	subnet_output: SubnetOutputGlNode;
 	substract: SubstractGlNode;
 	tan: TanGlNode;
 	texture: TextureGlNode;
@@ -218,6 +224,7 @@ export class GlRegister {
 		poly.register_node(GlobalsGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(HsluvToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.register_node(HsvToRgbGlNode, CATEGORY_GL.COLOR);
+		poly.register_node(IfGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(IntToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(InverseSqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(InstanceTransformGlNode, CATEGORY_GL.GEOMETRY);
@@ -258,6 +265,8 @@ export class GlRegister {
 		poly.register_node(SmoothStepGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(SubnetInputGlNode, CATEGORY_GL.LOGIC);
+		poly.register_node(SubnetOutputGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(SubstractGlNode, CATEGORY_GL.MATH);
 		poly.register_node(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(TextureGlNode, CATEGORY_GL.COLOR);

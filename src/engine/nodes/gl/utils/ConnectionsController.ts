@@ -1,6 +1,6 @@
 import {BaseGlNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
-import {GlConnectionPoint, GlConnectionPointType} from '../../utils/io/connections/Gl';
+import {GlConnectionPoint, GlConnectionPointType, BaseGlConnectionPoint} from '../../utils/io/connections/Gl';
 import {TypedNodeConnection} from '../../utils/io/NodeConnection';
 import {NodeContext} from '../../../poly/NodeContext';
 
@@ -94,15 +94,19 @@ export class GlConnectionsController {
 		const expected_input_types = this._expected_input_types_function();
 		const expected_output_types = this._expected_output_types_function();
 
-		const named_input_connections = expected_input_types.map((type: GlConnectionPointType, i: number) => {
+		const named_input_connection_points = expected_input_types.map((type: GlConnectionPointType, i: number) => {
 			return new GlConnectionPoint(this._input_name_function(i), type);
 		});
-		const named_outputs = expected_output_types.map((type: GlConnectionPointType, i: number) => {
+		const named_output_connect_points = expected_output_types.map((type: GlConnectionPointType, i: number) => {
 			return new GlConnectionPoint(this._output_name_function(i), type);
 		});
 
-		this.node.io.inputs.set_named_input_connection_points(named_input_connections);
-		this.node.io.outputs.set_named_output_connection_points(named_outputs, set_dirty);
+		this.node.io.inputs.set_named_input_connection_points(named_input_connection_points);
+		console.log(
+			this.node.full_path(),
+			named_output_connect_points.map((cp) => cp.name)
+		);
+		this.node.io.outputs.set_named_output_connection_points(named_output_connect_points, set_dirty);
 		this.node.spare_params_controller.create_spare_parameters();
 	}
 
@@ -145,14 +149,21 @@ export class GlConnectionsController {
 		if (connections) {
 			const first_connection = connections[0];
 			if (first_connection) {
-				return this.connection_type_from_connection(first_connection);
+				return this.connection_point_type_from_connection(first_connection);
 			}
 		}
 	}
-	connection_type_from_connection(connection: TypedNodeConnection<NodeContext.GL>): GlConnectionPointType {
+	connection_point_from_connection(connection: TypedNodeConnection<NodeContext.GL>): BaseGlConnectionPoint {
 		const node_src = connection.node_src;
 		const output_index = connection.output_index;
-		const node_src_output_connection = node_src.io.outputs.named_output_connection_points[output_index];
-		return node_src_output_connection.type;
+		return node_src.io.outputs.named_output_connection_points[output_index];
+	}
+	connection_point_type_from_connection(connection: TypedNodeConnection<NodeContext.GL>): GlConnectionPointType {
+		const connection_point = this.connection_point_from_connection(connection);
+		return connection_point.type;
+	}
+	connection_point_name_from_connection(connection: TypedNodeConnection<NodeContext.GL>): string {
+		const connection_point = this.connection_point_from_connection(connection);
+		return connection_point.name;
 	}
 }
