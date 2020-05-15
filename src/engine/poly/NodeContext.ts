@@ -32,6 +32,18 @@ export enum NodeContext {
 	SOP = 'sop',
 }
 
+export type NodeContextUnion =
+	| NodeContext.ANIM
+	| NodeContext.COP
+	| NodeContext.EVENT
+	| NodeContext.GL
+	| NodeContext.JS
+	| NodeContext.MANAGER
+	| NodeContext.MAT
+	| NodeContext.OBJ
+	| NodeContext.POST
+	| NodeContext.SOP;
+
 export enum NetworkNodeType {
 	ANIM = 'animations',
 	COP = 'cop',

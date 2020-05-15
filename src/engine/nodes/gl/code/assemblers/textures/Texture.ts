@@ -9,7 +9,6 @@ import {VariableConfig} from '../../configs/VariableConfig';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {OutputGlNode} from '../../../Output';
-import {ParamType} from '../../../../../poly/ParamType';
 import {GlobalsGlNode} from '../../../Globals';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
@@ -76,9 +75,13 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	add_output_params(output_child: OutputGlNode) {
-		output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
+	add_output_inputs(output_child: OutputGlNode) {
+		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
+		output_child.io.inputs.set_named_input_connection_points([
+			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
+		]);
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([

@@ -60,16 +60,16 @@ export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
 
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 	}
 
 	protected _gl_input_name(index: number) {
 		const mode = Modes[this.pv.signature];
 		return InputNamesByMode[mode][index];
 	}
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return DefaultValues[name];
 	}
 	gl_method_name(): string {
@@ -100,7 +100,7 @@ export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
 		});
 		const joined_args = args.join(', ');
 
-		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
+		const sum = this.gl_var_name(this.io.connection_points.output_name(0));
 		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());

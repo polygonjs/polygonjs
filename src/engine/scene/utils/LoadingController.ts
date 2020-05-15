@@ -26,7 +26,6 @@ export class LoadingController {
 	}
 	private async _set_loading_state(state: boolean) {
 		this._loading_state = state;
-		console.log('********* loadnig state', this._loading_state);
 		await this.set_auto_update(!this._loading_state);
 	}
 	get is_loading() {

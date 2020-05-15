@@ -60,8 +60,8 @@ export const JsConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTyp
 // Map to convert from a ParamType to GL Data type
 //
 //
-type ParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: JsConnectionPointType | undefined};
-export interface IParamTypeToConnectionPointTypeMap extends ParamTypeToConnectionPointTypeMapGeneric {
+type JsParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: JsConnectionPointType | undefined};
+export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConnectionPointTypeMapGeneric {
 	[ParamType.BOOLEAN]: JsConnectionPointType.BOOL;
 	[ParamType.COLOR]: JsConnectionPointType.VEC3;
 	[ParamType.INTEGER]: JsConnectionPointType.INT;
@@ -76,7 +76,7 @@ export interface IParamTypeToConnectionPointTypeMap extends ParamTypeToConnectio
 	[ParamType.SEPARATOR]: undefined;
 	[ParamType.STRING]: undefined;
 }
-export const ParamTypeToConnectionPointTypeMap: IParamTypeToConnectionPointTypeMap = {
+export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointTypeMap = {
 	[ParamType.BOOLEAN]: JsConnectionPointType.BOOL,
 	[ParamType.COLOR]: JsConnectionPointType.VEC3,
 	[ParamType.INTEGER]: JsConnectionPointType.INT,

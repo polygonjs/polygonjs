@@ -9,7 +9,7 @@ import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../Output';
-import {ParamType} from '../../../../poly/ParamType';
+// import {ParamType} from '../../../../poly/ParamType';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {GlobalsGlNode} from '../../Globals';
 import {AttributeGlNode} from '../../Attribute';
@@ -245,15 +245,24 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	static add_output_params(output_child: OutputGlNode) {
-		output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		output_child.params.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
+	static output_input_connection_points() {
+		return [
+			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
+			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+		];
+		// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
+		// output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
+		// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+		// output_child.params.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
+		// output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
-	add_output_params(output_child: OutputGlNode) {
-		BaseGlShaderAssembler.add_output_params(output_child);
+	add_output_inputs(output_child: OutputGlNode) {
+		output_child.io.inputs.set_named_input_connection_points(
+			BaseGlShaderAssembler.output_input_connection_points()
+		);
 	}
 	static create_globals_node_output_connections() {
 		return [

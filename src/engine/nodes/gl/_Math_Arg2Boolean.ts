@@ -11,8 +11,8 @@ function MathFunctionArg2BooleanFactory(type: string, options: MathArg2BooleanOp
 		}
 		initialize_node() {
 			super.initialize_node();
-			this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
-			this.gl_connections_controller.set_output_name_function(this._gl_output_name.bind(this));
+			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 		}
 
 		boolean_operation(): string {

@@ -93,8 +93,8 @@
 // // Map to convert from a ParamType to GL Data type
 // //
 // //
-// type ParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: ConnectionPointType | undefined};
-// export interface IParamTypeToConnectionPointTypeMap extends ParamTypeToConnectionPointTypeMapGeneric {
+// type GLParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: ConnectionPointType | undefined};
+// export interface IGLParamTypeToConnectionPointTypeMap extends GLParamTypeToConnectionPointTypeMapGeneric {
 // 	[ParamType.BOOLEAN]: ConnectionPointType.BOOL;
 // 	[ParamType.COLOR]: ConnectionPointType.VEC3;
 // 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
@@ -115,7 +115,7 @@
 // 	[ParamType.SEPARATOR]: undefined;
 // 	[ParamType.STRING]: undefined;
 // }
-// export const ParamTypeToConnectionPointTypeMap: IParamTypeToConnectionPointTypeMap = {
+// export const GLParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointTypeMap = {
 // 	[ParamType.BOOLEAN]: ConnectionPointType.BOOL,
 // 	[ParamType.COLOR]: ConnectionPointType.VEC3,
 // 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]

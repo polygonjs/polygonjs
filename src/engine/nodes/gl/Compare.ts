@@ -5,7 +5,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionPointType, GlConnectionPointComponentsCountMap} from '../utils/io/connections/Gl';
-import {GlConnectionsController} from './utils/ConnectionsController';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
 
 const TEST_NAMES = ['Equal', 'Less Than', 'Greater Than', 'Less Than Or Equal', 'Greater Than Or Equal', 'Not Equal'];
 const TEST_OPERATIONS_FLOAT = ['==', '<', '>', '<=', '>=', '!='];
@@ -46,23 +46,23 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 	static type() {
 		return 'compare';
 	}
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		super.initialize_node();
 
-		this.spare_params_controller.set_inputless_param_names(['test']);
+		this.io.connection_points.spare_params.set_inputless_param_names(['test']);
 
-		this.gl_connections_controller.initialize_node();
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
-		this.gl_connections_controller.set_output_name_function((index: number) => OUTPUT_NAME);
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_type.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
+		this.io.connection_points.initialize_node();
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_output_name_function((index: number) => OUTPUT_NAME);
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_type.bind(this));
+		this.io.connection_points.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
 	}
 	protected _gl_input_name(index: number) {
 		return ['value0', 'value1'][index];
 	}
 	protected _expected_input_type() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type];
 	}
 

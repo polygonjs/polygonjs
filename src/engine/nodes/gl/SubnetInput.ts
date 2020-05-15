@@ -2,8 +2,8 @@ import {TypedGlNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlConnectionsController} from './utils/ConnectionsController';
-import {IfGlNode} from './If';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
+import {IfThenGlNode} from './IfThen';
 class SubnetInputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetInputGlParamsConfig();
 
@@ -13,27 +13,29 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 		return 'subnet_input';
 	}
 
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
-		this.gl_connections_controller.initialize_node();
-
-		this.gl_connections_controller.set_output_name_function(this._expected_output_names.bind(this));
-		this.gl_connections_controller.set_expected_input_types_function(() => []);
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_output_name_function(this._expected_output_names.bind(this));
+		this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 
 		this.lifecycle.add_on_add_hook(() => {
 			this._connect_to_parent_connections_controller();
 		});
 	}
 
+	get parent() {
+		return super.parent as IfThenGlNode | null;
+	}
+
 	protected _expected_output_types() {
-		const parent = this.parent as IfGlNode;
-		return parent.child_subnet_input_expected_output_types();
+		const parent = this.parent;
+		return parent?.child_subnet_input_expected_output_types() || [];
 	}
 
 	private _expected_output_names(index: number) {
-		const parent = this.parent as IfGlNode;
-		return parent.child_subnet_input_expected_output_name(index);
+		const parent = this.parent;
+		return parent?.child_subnet_input_expected_output_name(index) || `out${index}`;
 	}
 
 	private _connect_to_parent_connections_controller() {

@@ -39,6 +39,7 @@ export interface EventConnectionPointData<T extends EventConnectionPointType> {
 
 import {BaseConnectionPoint} from './_Base';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
+import {ParamType} from '../../../../poly/ParamType';
 export class EventConnectionPoint<T extends EventConnectionPointType> extends BaseConnectionPoint {
 	protected _json: EventConnectionPointData<T> | undefined;
 
@@ -54,6 +55,9 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 	}
 	get type() {
 		return this._type;
+	}
+	get param_type() {
+		return ParamType.FLOAT; // should never be used anyway
 	}
 	are_types_matched(src_type: string, dest_type: string): boolean {
 		if (dest_type == EventConnectionPointType.BASE) {

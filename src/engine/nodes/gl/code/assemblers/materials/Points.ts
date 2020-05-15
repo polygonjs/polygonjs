@@ -12,7 +12,6 @@ import {ShaderAssemblerCustomPointsDepth} from './CustomPointsDepth';
 import {ShaderAssemblerCustomPointsDistance} from './CustomPointsDistance';
 import {ShaderAssemblerCustomPointsDepthDOF} from './CustomPointsDepthDOF';
 import {OutputGlNode} from '../../../Output';
-import {ParamType} from '../../../../../poly/ParamType';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
@@ -79,9 +78,10 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	// those shadow shaders should ideally be overriden
 	// to properly take into account point size
 
-	add_output_params(output_child: OutputGlNode) {
-		BaseGlShaderAssembler.add_output_params(output_child);
-		output_child.add_param(ParamType.FLOAT, 'gl_PointSize', 1);
+	add_output_inputs(output_child: OutputGlNode) {
+		const list = BaseGlShaderAssembler.output_input_connection_points();
+		list.push(new GlConnectionPoint('gl_PointSize', GlConnectionPointType.FLOAT));
+		output_child.io.inputs.set_named_input_connection_points(list);
 	}
 	create_globals_node_output_connections() {
 		return BaseGlShaderAssembler.create_globals_node_output_connections().concat([

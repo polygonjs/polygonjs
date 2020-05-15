@@ -8,6 +8,7 @@ import {TypedNode} from '../../_Base';
 import {ContainerMap, NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
+import {BaseConnectionPoint} from './connections/_Base';
 
 type OnUpdateHook = () => void;
 
@@ -49,7 +50,7 @@ export class InputsController<NC extends NodeContext> {
 	named_input_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_input_connection_points) {
 			for (let connection_point of this._named_input_connection_points) {
-				if (connection_point.name == name) {
+				if (connection_point && connection_point.name == name) {
 					return connection_point;
 				}
 			}
@@ -199,7 +200,7 @@ export class InputsController<NC extends NodeContext> {
 	get_named_input_index(name: string): number {
 		if (this._named_input_connection_points) {
 			for (let i = 0; i < this._named_input_connection_points.length; i++) {
-				if (this._named_input_connection_points[i].name == name) {
+				if (this._named_input_connection_points[i]?.name == name) {
 					return i;
 				}
 			}
@@ -235,7 +236,13 @@ export class InputsController<NC extends NodeContext> {
 			if (node.io.outputs.has_named_outputs) {
 				output_index = node.io.outputs.get_output_index(output_index_or_name);
 				if (output_index == null || output_index < 0) {
-					console.warn(`node ${node.full_path()} does not have an output named ${output_index_or_name}`);
+					const connection_points = node.io.outputs.named_output_connection_points as BaseConnectionPoint[];
+					const names = connection_points.map((cp) => cp.name);
+					console.warn(
+						`node ${node.full_path()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
+							', '
+						)}`
+					);
 					return;
 				}
 			}

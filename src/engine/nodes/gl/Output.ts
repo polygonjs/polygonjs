@@ -6,19 +6,7 @@ import {TypedGlNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-class OutputGlParamsConfig extends NodeParamsConfig {
-	// type = ParamConfig.INTEGER(0, {
-	// 	menu: {
-	// 		entries: ConnectionPointTypes.map((name, i) => {
-	// 			return {name: name, value: i};
-	// 		}),
-	// 	},
-	// });
-	// value_float = ParamConfig.FLOAT(0, ConstantGlNode.typed_visible_options(ConnectionPointType.FLOAT));
-	// value_vec2 = ParamConfig.VECTOR2([0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC2));
-	// value_vec3 = ParamConfig.VECTOR3([0, 0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC3));
-	// value_vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], ConstantGlNode.typed_visible_options(ConnectionPointType.VEC4));
-}
+class OutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputGlParamsConfig();
 
 export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
@@ -30,10 +18,10 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 	initialize_node() {
 		super.initialize_node();
 		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
-	}
 
-	create_params() {
-		this.material_node?.assembler_controller.add_output_params(this);
+		this.lifecycle.add_on_add_hook(() => {
+			this.material_node?.assembler_controller.add_output_inputs(this);
+		});
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {

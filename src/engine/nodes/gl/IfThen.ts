@@ -3,28 +3,26 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlConnectionsController} from './utils/ConnectionsController';
 import {NodeContext} from '../../poly/NodeContext';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
-class IfGlParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new IfGlParamsConfig();
+import {SubnetOutputGlNode} from './SubnetOutput';
+class IfThenGlParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new IfThenGlParamsConfig();
 
-export class IfGlNode extends TypedGlNode<IfGlParamsConfig> {
+export class IfThenGlNode extends TypedGlNode<IfThenGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'if';
+		return 'if_then';
 	}
 
 	protected _children_controller_context = NodeContext.GL;
 
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
-		this.gl_connections_controller.initialize_node();
-
-		this.gl_connections_controller.set_input_name_function(this._expected_input_name.bind(this));
-		this.gl_connections_controller.set_output_name_function(this._expected_output_name.bind(this));
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._expected_input_name.bind(this));
+		this.io.connection_points.set_output_name_function(this._expected_output_name.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 
 		this.lifecycle.add_on_create_hook(this._on_create_bound);
 	}
@@ -45,7 +43,7 @@ export class IfGlNode extends TypedGlNode<IfGlParamsConfig> {
 			if (current_connections) {
 				const connection = current_connections[i];
 				if (connection) {
-					const type = this.gl_connections_controller.connection_point_type_from_connection(connection);
+					const type = this.io.connection_points.connection_point_type_from_connection(connection);
 					types.push(type);
 				} else {
 					types.push(default_type);
@@ -56,14 +54,19 @@ export class IfGlNode extends TypedGlNode<IfGlParamsConfig> {
 		}
 		return types;
 	}
+
 	protected _expected_output_types() {
-		// TODO: that should be from the subnet output
-		const types: GlConnectionPointType[] = [];
-		const input_types = this._expected_input_types();
-		for (let i = 1; i < input_types.length - 1; i++) {
-			types.push(input_types[i]);
+		const found_node = this.nodes_by_type(SubnetOutputGlNode.type())[0];
+		if (found_node) {
+			const types: GlConnectionPointType[] = [];
+			const output_node_connection_points = found_node.io.inputs.named_input_connection_points;
+			for (let i = 0; i < output_node_connection_points.length - 1; i++) {
+				types.push(output_node_connection_points[i].type);
+			}
+			return types;
+		} else {
+			return [];
 		}
-		return types;
 	}
 	protected _expected_input_name(index: number) {
 		if (index == 0) {
@@ -71,7 +74,7 @@ export class IfGlNode extends TypedGlNode<IfGlParamsConfig> {
 		} else {
 			const connection = this.io.connections.input_connection(index);
 			if (connection) {
-				const name = this.gl_connections_controller.connection_point_name_from_connection(connection);
+				const name = this.io.connection_points.connection_point_name_from_connection(connection);
 				return name;
 			} else {
 				return `in${index}`;
@@ -121,7 +124,7 @@ export class IfGlNode extends TypedGlNode<IfGlParamsConfig> {
 		const subnet_input1 = this.create_node('subnet_input');
 		const subnet_output1 = this.create_node('subnet_output');
 
-		subnet_input1.ui_data.set_position(0, -100);
-		subnet_output1.ui_data.set_position(0, +100);
+		subnet_input1.ui_data.set_position(-100, 0);
+		subnet_output1.ui_data.set_position(+100, 0);
 	}
 }

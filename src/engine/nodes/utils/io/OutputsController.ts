@@ -40,7 +40,7 @@ export class OutputsController<NC extends NodeContext> {
 	get_named_output_index(name: string): number {
 		if (this._named_output_connection_points) {
 			for (let i = 0; i < this._named_output_connection_points.length; i++) {
-				if (this._named_output_connection_points[i].name == name) {
+				if (this._named_output_connection_points[i]?.name == name) {
 					return i;
 				}
 			}
@@ -66,7 +66,7 @@ export class OutputsController<NC extends NodeContext> {
 	named_output_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_output_connection_points) {
 			for (let connection_point of this._named_output_connection_points) {
-				if (connection_point.name == name) {
+				if (connection_point?.name == name) {
 					return connection_point;
 				}
 			}
@@ -96,9 +96,13 @@ export class OutputsController<NC extends NodeContext> {
 					used_output_indices.push(index);
 				}
 			});
-			const used_output_names: string[] = used_output_indices.map((index) => {
-				return this.named_output_connection_points[index].name;
-			});
+			const used_output_names: string[] = [];
+			for (let index of used_output_indices) {
+				const name = this.named_output_connection_points[index]?.name;
+				if (name) {
+					used_output_names.push(name);
+				}
+			}
 			return used_output_names;
 		} else {
 			return [];

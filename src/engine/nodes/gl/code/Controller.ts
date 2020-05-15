@@ -50,8 +50,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		return this._globals_handler;
 	}
 
-	add_output_params(output_child: OutputGlNode) {
-		this._assembler.add_output_params(output_child);
+	add_output_inputs(output_child: OutputGlNode) {
+		this._assembler.add_output_inputs(output_child);
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		this._assembler.add_globals_params(globals_node);

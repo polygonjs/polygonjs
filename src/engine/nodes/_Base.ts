@@ -41,6 +41,7 @@ import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
 import {NodeTypeMap} from '../containers/utils/ContainerMap';
+import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
 // import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
@@ -211,6 +212,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		options?: ParamOptions
 	): ParamConstructorMap[T] | undefined {
 		return this._params_controller?.add_param(type, name, default_value, options);
+	}
+	param_default_value(name: string): ParamInitValueSerialized {
+		return null;
 	}
 
 	// cook

@@ -2,7 +2,7 @@ import {TypedGlNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlConnectionsController} from './utils/ConnectionsController';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 // import {IfGlNode} from './If';
 class SubnetOutputGlParamsConfig extends NodeParamsConfig {}
@@ -10,17 +10,16 @@ const ParamsConfig = new SubnetOutputGlParamsConfig();
 
 export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> {
 	params_config = ParamsConfig;
-	static type() {
+	static type(): Readonly<'subnet_output'> {
 		return 'subnet_output';
 	}
 
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
-		this.gl_connections_controller.initialize_node();
-
 		// this.gl_connections_controller.set_input_name_function(this._expected_input_names.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(() => []);
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(() => []);
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_create_spare_params_from_inputs(false);
 	}
 
 	private _expected_inputs_count() {
@@ -39,7 +38,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 			if (current_connections) {
 				const connection = current_connections[i];
 				if (connection) {
-					const type = this.gl_connections_controller.connection_point_type_from_connection(connection);
+					const type = this.io.connection_points.connection_point_type_from_connection(connection);
 					types.push(type);
 				} else {
 					types.push(default_type);

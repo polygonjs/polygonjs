@@ -10,9 +10,11 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 
 	private _eval_all_params_on_dirty_bound = this._eval_all_params_on_dirty.bind(this);
 	initialize_base_node() {
-		this.io.connections.init_inputs();
 		this.ui_data.set_layout_horizontal();
 		this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
+
+		this.io.connections.init_inputs();
+		this.io.connection_points.spare_params.initialize_node();
 	}
 
 	// ensures that event nodes are cooked when scene is loaded

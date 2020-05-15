@@ -2,22 +2,21 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {BaseShaderAssemblerVolume} from './_BaseVolume';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
-import {ParamType} from '../../../../../poly/ParamType';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {FrontSide} from 'three/src/constants';
 import {CoreMaterial} from '../../../../../../core/geometry/Material';
 import {VolumeController} from '../../../../mat/utils/VolumeController';
-
-import VERTEX from '../../../gl/volume/vert.glsl';
-import FRAGMENT from '../../../gl/volume/frag.glsl';
-import {VOLUME_UNIFORMS} from '../../../gl/volume/uniforms';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {GlobalsGlNode} from '../../../Globals';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {BaseGLDefinition, UniformGLDefinition} from '../../../utils/GLDefinition';
 import {MapUtils} from '../../../../../../core/MapUtils';
+
+import VERTEX from '../../../gl/volume/vert.glsl';
+import FRAGMENT from '../../../gl/volume/frag.glsl';
+import {VOLUME_UNIFORMS} from '../../../gl/volume/uniforms';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	[ShaderName.VERTEX, '// start builder body code'],
@@ -50,14 +49,16 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 		return material;
 	}
 
-	static add_output_params(output_child: OutputGlNode) {
-		// adding the color here would require to understand how to have the color affect the light in raymarch_light
-		// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.FLOAT, 'density', 1, {hidden: true});
-	}
-	add_output_params(output_child: OutputGlNode) {
-		ShaderAssemblerVolume.add_output_params(output_child);
+	// static add_output_inputs(output_child: OutputGlNode) {
+	// 	// adding the color here would require to understand how to have the color affect the light in raymarch_light
+	// 	// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+	// 	// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
+	// 	// output_child.params.add_param(ParamType.FLOAT, 'density', 1, {hidden: true});
+	// }
+	add_output_inputs(output_child: OutputGlNode) {
+		output_child.io.inputs.set_named_input_connection_points([
+			new GlConnectionPoint('density', GlConnectionPointType.FLOAT, 1),
+		]);
 	}
 	static create_globals_node_output_connections() {
 		return [

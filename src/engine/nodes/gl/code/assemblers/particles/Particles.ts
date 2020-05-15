@@ -17,7 +17,6 @@ import {GlobalsGlNode} from '../../../Globals';
 import {TypedNodeTraverser} from '../../../../utils/shaders/NodeTraverser';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
-import {ParamType} from '../../../../../poly/ParamType';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {UniformGLDefinition} from '../../../utils/GLDefinition';
 import {GlobalsTextureHandler} from '../../globals/Texture';
@@ -103,7 +102,6 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		// 	await node.params.eval_all();
 		// }
 
-		console.log('root and leaf:', this._root_nodes, this._leaf_nodes);
 		this._texture_allocations_controller = new TextureAllocationsController();
 		this._texture_allocations_controller.allocate_connections_from_root_nodes(this._root_nodes, this._leaf_nodes);
 
@@ -120,7 +118,6 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	update_shaders() {
 		this._shaders_by_name = new Map();
 		this._lines = new Map();
-		console.log('this.shader_names', this.shader_names);
 		for (let shader_name of this.shader_names) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			this._lines.set(shader_name, template.split('\n'));
@@ -135,7 +132,6 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		for (let shader_name of this.shader_names) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
-				console.log(shader_name, lines.join('\n'));
 				this._shaders_by_name.set(shader_name, lines.join('\n'));
 			}
 		}
@@ -146,10 +142,13 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	add_output_params(output_child: OutputGlNode) {
-		output_child.add_param(ParamType.VECTOR3, 'position', [0, 0, 0]);
-		output_child.add_param(ParamType.VECTOR3, 'velocity', [0, 0, 0]);
-		// output_child.add_param(ParamType.VECTOR3, 'accacceleration', [0, 0, 0]);
+	add_output_inputs(output_child: OutputGlNode) {
+		// output_child.add_param(ParamType.VECTOR3, 'position', [0, 0, 0]);
+		// output_child.add_param(ParamType.VECTOR3, 'velocity', [0, 0, 0]);
+		output_child.io.inputs.set_named_input_connection_points([
+			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('velocity', GlConnectionPointType.VEC3),
+		]);
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([

@@ -20,13 +20,13 @@ export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGl
 
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 	}
 	protected _expected_input_types(): GlConnectionPointType[] {
 		const type: GlConnectionPointType =
-			this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+			this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		if (this.io.connections.first_input_connection()) {
 			let count = Math.max(lodash_compact(this.io.connections.input_connections()).length + 1, 2);
 			return lodash_range(count).map((i) => type);
@@ -50,7 +50,7 @@ export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGl
 		});
 		const joined_args = args.join(', ');
 
-		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
+		const sum = this.gl_var_name(this.io.connection_points.output_name(0));
 		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());
@@ -67,7 +67,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 		return 'in';
 	}
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type];
 	}
 }
@@ -79,7 +79,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type];
 	}
 }
@@ -91,7 +91,7 @@ export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, type];
 	}
 }
@@ -102,7 +102,7 @@ export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, type, type];
 	}
 }
@@ -113,7 +113,7 @@ export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg5GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, type, type, type];
 	}
 }

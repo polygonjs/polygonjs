@@ -5,7 +5,6 @@ import {
 	GlConnectionPointComponentsCountMap,
 	GlConnectionPointType,
 } from '../utils/io/connections/Gl';
-import {GlConnectionsController} from './utils/ConnectionsController';
 
 // https://github.com/stegu/webgl-noise/
 import NoiseCommon from './gl/noise/common.glsl';
@@ -176,26 +175,30 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		return 'noise';
 	}
 
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.initialize_node();
-		this.spare_params_controller.set_inputless_param_names(['octaves', 'amp_attenuation', 'freq_increase']);
+		this.io.connection_points.initialize_node();
+		this.io.connection_points.spare_params.set_inputless_param_names([
+			'octaves',
+			'amp_attenuation',
+			'freq_increase',
+		]);
 
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
-		this.gl_connections_controller.set_output_name_function(() => OUTPUT_NAME);
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_output_name_function(() => OUTPUT_NAME);
 	}
 
 	protected _gl_input_name(index: number) {
 		return [InputName.AMP, InputName.POSITION, InputName.FREQ, InputName.OFFSET][index];
 	}
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return DefaultValues[name];
 	}
 

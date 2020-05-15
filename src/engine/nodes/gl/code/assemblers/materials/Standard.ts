@@ -11,7 +11,7 @@ import metalnessmap_fragment from '../../../gl/ShaderLib/ShaderChunk/metalnessma
 import roughnessmap_fragment from '../../../gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
 import {OutputGlNode} from '../../../Output';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
-import {ParamType} from '../../../../../poly/ParamType';
+import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	is_physical() {
@@ -49,7 +49,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		const material = new ShaderMaterial(options);
 
 		// replace some shader chunks
-		material.onBeforeCompile = function(shader) {
+		material.onBeforeCompile = function (shader) {
 			shader.fragmentShader = shader.fragmentShader.replace(
 				'#include <metalnessmap_fragment>',
 				metalnessmap_fragment
@@ -76,12 +76,16 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	// 	return gltf_material;
 	// }
 
-	add_output_params(output_child: OutputGlNode) {
-		BaseGlShaderAssembler.add_output_params(output_child);
+	add_output_inputs(output_child: OutputGlNode) {
+		// BaseGlShaderAssembler.add_output_inputs(output_child);
+		const list = BaseGlShaderAssembler.output_input_connection_points();
+		list.push(new GlConnectionPoint('metalness', GlConnectionPointType.FLOAT, 1));
+		list.push(new GlConnectionPoint('roughness', GlConnectionPointType.FLOAT, 1));
+		output_child.io.inputs.set_named_input_connection_points(list);
 		// those defaults should be 1. If they were 0, using the params
 		// at the material level would appear not to work
-		output_child.add_param(ParamType.FLOAT, 'metalness', 1);
-		output_child.add_param(ParamType.FLOAT, 'roughness', 1);
+		// output_child.add_param(ParamType.FLOAT, 'metalness', 1);
+		// output_child.add_param(ParamType.FLOAT, 'roughness', 1);
 	}
 	// create_globals_node_output_connections(){
 	// 	return BaseShaderAssembler.create_globals_node_output_connections().concat([

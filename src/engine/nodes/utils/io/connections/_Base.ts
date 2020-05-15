@@ -7,22 +7,24 @@
 // } from '../ConnectionPointType';
 // import {ParamInitValuesTypeMap} from '../params/ParamsController';
 
+import {ParamType} from '../../../../poly/ParamType';
+
 export interface BaseConnectionPointData {
 	name: string;
 	type: string;
 }
 
-export class BaseConnectionPoint {
+export abstract class BaseConnectionPoint {
 	protected _json: BaseConnectionPointData | undefined;
 	// protected _init_value: any;
 
-	constructor(
-		protected _name: string,
-		protected _type: string // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
-	) {
+	constructor(protected _name: string, protected _type: string, protected _init_value?: any) {
 		// if (this._init_value === undefined) {
 		// this._init_value = ConnectionPointInitValueMap[this._type];
 		// }
+	}
+	get init_value() {
+		return this._init_value;
 	}
 	get name() {
 		return this._name;
@@ -33,6 +35,7 @@ export class BaseConnectionPoint {
 	are_types_matched(src_type: string, dest_type: string): boolean {
 		return true;
 	}
+	abstract get param_type(): ParamType;
 	// get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 	// 	return ConnectionPointTypeToParamTypeMap[this._type];
 	// }

@@ -10,7 +10,7 @@ export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	initialize_node() {
 		super.initialize_node();
 
-		this.gl_connections_controller.set_input_name_function((index: number) => ['in'][index]);
+		this.io.connection_points.set_input_name_function((index: number) => ['in'][index]);
 	}
 
 	protected _gl_input_name(index: number) {
@@ -21,7 +21,7 @@ export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		const in_value = ThreeToGl.any(this.variable_for_input(this._gl_input_name(0)));
 
 		const gl_type = this.io.inputs.named_input_connection_points[0].type;
-		const out = this.gl_var_name(this.gl_connections_controller.output_name(0));
+		const out = this.gl_var_name(this.io.connection_points.output_name(0));
 		const body_line = `${gl_type} ${out} = -1.0 * ${in_value}`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 	}
