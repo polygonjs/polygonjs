@@ -31,7 +31,6 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 		GlConnectionPointType.VEC2,
 		'first type is vec2'
 	);
-	console.log('A');
 	dot1.set_input(0, constant1, 'val');
 	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2, '2 inputs');
 	assert.deepEqual(
@@ -39,8 +38,6 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 		[GlConnectionPointType.VEC2, GlConnectionPointType.VEC2],
 		'types are vec2'
 	);
-	console.log('B');
-	return;
 	assert.equal(dot1.io.outputs.named_output_connection_points.length, 1);
 	assert.equal(dot1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.FLOAT);
 

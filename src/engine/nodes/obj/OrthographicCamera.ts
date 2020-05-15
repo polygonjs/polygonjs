@@ -70,29 +70,6 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 			BASE_CAMERA_DEFAULT.far
 		);
 	}
-	//@_helper = new CameraHelper( @_camera )
-	//group = new Group()
-	//group.add(@_camera)
-	//group.add(@_helper)
-
-	//this.set_object(@_camera)
-
-	// create_params() {
-	// 	// this.create_common_params();
-	// 	// this.add_param('float', 'left', DEFAULT.left)
-	// 	// this.add_param('float', 'right', DEFAULT.right)
-	// 	// this.add_param('float', 'top', DEFAULT.top)
-	// 	// this.add_param('float', 'bottom', DEFAULT.bottom)
-
-	// 	// this.within_param_folder('render', () => {
-	// 	this.add_param(ParamType.FLOAT, 'size', 2, {range: [0, 10]});
-	// 	// left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number
-	// 	this.add_param(ParamType.VECTOR2, 'vertical_size_range', [0, 10], {visible_if: {lock_width: 1}});
-	// 	this.add_param(ParamType.VECTOR2, 'horizontal_size_range', [0, 10], {visible_if: {lock_width: 0}});
-
-	// 	// this.create_player_camera_params();
-	// 	// });
-	// }
 
 	update_camera() {
 		this._update_for_aspect_ratio();

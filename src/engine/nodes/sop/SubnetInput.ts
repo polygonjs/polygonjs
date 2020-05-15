@@ -2,6 +2,7 @@ import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {NetworkChildNodeType} from '../../poly/NodeContext';
 class SubnetInputSopParamsConfig extends NodeParamsConfig {
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
@@ -16,7 +17,7 @@ const ParamsConfig = new SubnetInputSopParamsConfig();
 export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'subnet_input';
+		return NetworkChildNodeType.INPUT;
 	}
 
 	private _current_parent_input_graph_node: CoreGraphNode | undefined;

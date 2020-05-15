@@ -1,8 +1,6 @@
 import lodash_uniq from 'lodash/uniq';
 import {BaseGlNodeType} from '../../_Base';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
-import {BaseNodeType} from '../../../_Base';
-import {BaseGlShaderAssembler} from '../assemblers/_Base';
 import {MapUtils} from '../../../../../core/MapUtils';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {GLDefinitionType, BaseGLDefinition} from '../../utils/GLDefinition';
@@ -16,6 +14,7 @@ import {GlParamConfig} from './ParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 
+type RootNodesForShaderMethod = (shader_name: ShaderName) => BaseGlNodeType[];
 export class CodeBuilder {
 	_param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> = new ParamConfigsController();
 	_param_configs_set_allowed: boolean = true;
@@ -24,20 +23,24 @@ export class CodeBuilder {
 	_lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
 	// _function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
 
-	constructor(private _assembler: BaseGlShaderAssembler, private _gl_parent_node: BaseNodeType) {}
-
+	constructor(
+		private _node_traverser: TypedNodeTraverser<NodeContext.GL>,
+		private _root_nodes_for_shader_method: RootNodesForShaderMethod
+	) {}
+	shader_names() {
+		return this._node_traverser.shader_names();
+	}
 	build_from_nodes(root_nodes: BaseGlNodeType[]) {
-		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(this._assembler, this._gl_parent_node);
-		node_traverser.traverse(root_nodes);
+		this._node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
 		for (let shader_name of this.shader_names()) {
-			const nodes = node_traverser.nodes_for_shader_name(shader_name);
+			const nodes = this._node_traverser.nodes_for_shader_name(shader_name);
 			nodes_by_shader_name.set(shader_name, nodes);
 		}
-		const sorted_nodes = node_traverser.sorted_nodes();
+		const sorted_nodes = this._node_traverser.sorted_nodes();
 		for (let shader_name of this.shader_names()) {
-			const root_nodes_for_shader = this._assembler.root_nodes_by_shader_name(shader_name);
+			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name);
 
 			for (let root_node of root_nodes_for_shader) {
 				MapUtils.push_on_array_at_entry(nodes_by_shader_name, shader_name, root_node);
@@ -103,10 +106,6 @@ export class CodeBuilder {
 	}
 	allow_new_param_configs() {
 		this._param_configs_set_allowed = true;
-	}
-
-	shader_names() {
-		return this._assembler.shader_names;
 	}
 
 	private reset() {

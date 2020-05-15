@@ -1,6 +1,5 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import lodash_range from 'lodash/range';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 
@@ -27,31 +26,24 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 
 	cook(input_contents: CoreGroup[]) {
 		const container = input_contents[0];
-		// const group = container.group();
-
 		const step_size = this.pv.step_size;
-		// jitter = @_param_jitter
-
 		const bbox = container.bounding_box();
+		const min = bbox.min
+		const max = bbox.max
 
-		const range = {
-			x: lodash_range(bbox.min.x, bbox.max.x, step_size),
-			y: lodash_range(bbox.min.y, bbox.max.y, step_size),
-			z: lodash_range(bbox.min.z, bbox.max.z, step_size),
-		};
 
-		// create buffer geometry
-		// const vertices_count = range.x * range.y * range.z;
+
 		const positions: number[] = [];
-		range.x.forEach((x) => {
-			range.y.forEach((y) => {
-				range.z.forEach((z) => {
+		for(let x=min.x;x<max.x;x+=step_size){
+			for(let y=min.x;y<max.y;y+=step_size){
+				for(let z=min.x;z<max.z;z+=step_size){
 					positions.push(x);
 					positions.push(y);
 					positions.push(z);
-				});
-			});
-		});
+				}
+			}
+		}
+
 
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));

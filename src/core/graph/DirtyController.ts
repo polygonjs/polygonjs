@@ -60,20 +60,13 @@ export class DirtyController {
 		}
 		return false;
 	}
-	// using a dirty block doesn't quite work, as I would need to be able
-	// to fetch the graph for all successors that haven't been blocked
-	// block_dirty_propagation: ->
-	// 	@_dirty_propagation_allowed = false
-	// unblock_dirty_propagation: ->
-	// 	@_dirty_propagation_allowed = true
+
 	remove_dirty_state(): void {
 		this._dirty = false;
 	}
 	set_forbidden_trigger_nodes(nodes: CoreGraphNode[]) {
 		this._forbidden_trigger_nodes = nodes.map((n) => n.graph_node_id);
 	}
-	//@_clean_for_frame = this.context().frame()
-	//this.post_remove_dirty_state(message)
 
 	set_dirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
 		if (propagate == null) {

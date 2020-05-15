@@ -1,19 +1,18 @@
 import {TypedGlNode} from './_Base';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-// import {GlConnectionsController} from './utils/GLConnectionsController';
 import {IfThenGlNode} from './IfThen';
+import {NetworkChildNodeType} from '../../poly/NodeContext';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 class SubnetInputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetInputGlParamsConfig();
 
 export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'subnet_input';
+		return NetworkChildNodeType.INPUT;
 	}
 
-	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		this.io.connection_points.set_output_name_function(this._expected_output_names.bind(this));
 		this.io.connection_points.set_expected_input_types_function(() => []);
@@ -46,10 +45,29 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		// const definitions = [];
-		// const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
-		// const var_name = this.uniform_name();
-		// definitions.push(new UniformGLDefinition(this, gl_type, var_name));
-		// shaders_collection_controller.add_definitions(this, definitions);
+		if (!this.parent) {
+			return;
+		}
+
+		const body_lines: string[] = [];
+
+		const connections = this.parent.io.connections.input_connections();
+		if (connections) {
+			for (let connection of connections) {
+				if (connection) {
+					// if under an if_then node
+					if (connection.input_index != 0) {
+						const connection_point = connection.dest_connection_point();
+						const in_value = ThreeToGl.any(this.parent.variable_for_input(connection_point.name));
+						const gl_type = connection_point.type;
+						const out = this.gl_var_name(connection_point.name);
+						const body_line = `${gl_type} ${out} = ${in_value}`;
+						body_lines.push(body_line);
+					}
+				}
+			}
+		}
+
+		shaders_collection_controller.add_body_lines(this, body_lines);
 	}
 }

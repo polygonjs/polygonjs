@@ -1,13 +1,8 @@
 import {PolyScene} from '../scene/PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
-// import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer'
-// import {Color} from 'three/src/math/Color'
 import {ViewerControlsController} from './utils/ControlsController';
 import {TypedViewer} from './_Base';
 import {BaseThreejsCameraObjNodeType} from '../nodes/obj/_BaseCamera';
-
-// import 'src/engine/Poly';
-// import {POLY} from '../Poly';
 
 const CSS_CLASS = 'CoreThreejsViewer';
 
@@ -66,11 +61,9 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.events_controller.init();
 		this.webgl_controller.init();
 
-		// if (POLY.player_mode()) {
 		window.onresize = () => {
 			this.on_resize();
 		};
-		// }
 	}
 	on_resize() {
 		if (!this.canvas) {
@@ -80,9 +73,6 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this._camera_node.render_controller.set_renderer_size(this.canvas, this.cameras_controller.size);
 		this.cameras_controller.update_camera_aspect();
 	}
-	// protected _on_touchmove(event: TouchEvent){
-	// 	console.log("touch", event)
-	// }
 
 	private _init_display() {
 		if (!this._canvas) {
@@ -96,20 +86,20 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		// this.canvas_context = canvas.getContext('2d')
 
 		// init renderer
-		// @renderer = new THREE.WebGLRenderer
+		// renderer = new THREE.WebGLRenderer
 		// 	canvas: canvas
 		// 	antialias: true
 		// 	alpha: true
 
-		// @renderer.shadowMap.enabled = true
+		// renderer.shadowMap.enabled = true
 		// this.compute_size_and_aspect()
 
 		//
 		// https://stackoverflow.com/questions/31407778/display-scene-at-lower-resolution-in-three-js
 		// TODO: this article mentions that setSize should be called after
-		// @renderer.setSize(this._size[0], this._size[1])
-		// @renderer.setPixelRatio(window.devicePixelRatio)
-		// @renderer.setSize(size[0]*1.5, size[1]*1.5)
+		// renderer.setSize(this._size[0], this._size[1])
+		// renderer.setPixelRatio(window.devicePixelRatio)
+		// renderer.setSize(size[0]*1.5, size[1]*1.5)
 		// canvas.width = "//{size[0]}px"
 		// canvas.height = "//{size[1]}px"
 		// canvas.style.width = "//{size[0]}px"
@@ -118,8 +108,8 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		// TODO: ensure the renderers get added to a list
 		//if !this.player_mode
 		//	console.log("set window.viewer_renderer from Threejs.vue component")
-		// window.viewer_renderer = @renderer
-		// POLY.renderers_controller.register_renderer(@renderer)
+		// window.viewer_renderer = renderer
+		// POLY.renderers_controller.register_renderer(renderer)
 
 		this.cameras_controller.prepare_current_camera();
 

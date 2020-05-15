@@ -44,9 +44,7 @@ QUnit.test('gl mult default connections', async (assert) => {
 	);
 
 	// float * vec3
-	console.log('*** updating constant');
 	constant2.set_gl_type(GlConnectionPointType.VEC3);
-	console.log('*** check');
 	assert.deepEqual(
 		mult1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
 		[GlConnectionPointType.FLOAT, GlConnectionPointType.VEC3]

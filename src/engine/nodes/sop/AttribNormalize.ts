@@ -46,16 +46,8 @@ export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParam
 		let min: NumericAttribValue, max: NumericAttribValue;
 		switch (attrib_size) {
 			case 1:
-				// if (this._param_only_integer_values) {
-				// 	const sorted_values = lodash_uniq(lodash_sortBy(values));
-				// 	const index_by_value = {};
-				// 	lodash_each(sorted_values, (sorted_value, i)=> index_by_value[sorted_value] = i);
-				// 	normalized_values = lodash_map(values, value=> index_by_value[value]);
-
-				// } else {
 				const minf = lodash_min(values as number[]);
 				const maxf = lodash_max(values as number[]);
-				//this._save_min_max(group, min, max)
 				if (lodash_isNumber(minf) && lodash_isNumber(maxf)) {
 					for (let value of values as number[]) {
 						const normalized_value = maxf > minf ? (value - minf) / (maxf - minf) : 1;
@@ -103,10 +95,3 @@ export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParam
 		});
 	}
 }
-
-// TODO: they should be saved as a detail, not per object
-// _save_min_max: (group, min, max)->
-// 	group.traverse (object)=>
-// 		object_wrapper = new Core.Geometry.Object(object)
-// 		object_wrapper.add_attribute("#{@pv.name}_min", min)
-// 		object_wrapper.add_attribute("#{@pv.name}_max", max)

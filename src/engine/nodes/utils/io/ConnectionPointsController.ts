@@ -7,8 +7,7 @@ import {
 } from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
 import {ConnectionPointsSpareParamsController} from './ConnectionPointsSpareParamsController';
-import {NodeContext} from '../../../poly/NodeContext';
-import {TypedNodeConnection} from './NodeConnection';
+import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 
 type IONameFunction = (index: number) => string;
 type ExpectedConnectionTypesFunction<NC extends NodeContext> = () => ConnectionPointEnumMap[NC][];
@@ -127,7 +126,12 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		if (!this.node.lifecycle.creation_completed || !this._connections_match_inputs()) {
 			this.update_connection_types();
 			this.node.remove_dirty_state();
-			this.make_successors_update_signatures();
+
+			// no need to update the successors when loading,
+			// since the connection point types are stored in the scene data
+			if (!this.node.scene.loading_controller.is_loading) {
+				this.make_successors_update_signatures();
+			}
 		}
 	}
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
@@ -138,6 +142,10 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			if (node.io && node.io.has_connection_points_controller && node.io.connection_points.initialized()) {
 				node.io.connection_points.update_signature_if_required(this.node);
 			}
+		}
+		// we also need to have subnet_output nodes update their parents
+		if (this.node.type == NetworkChildNodeType.OUTPUT) {
+			// this.node.parent?.io.connection_points.update_signature_if_required(this.node);
 		}
 	}
 
@@ -253,21 +261,28 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		if (connections) {
 			const first_connection = connections[0];
 			if (first_connection) {
-				return this.connection_point_type_from_connection(first_connection);
+				return first_connection.src_connection_point()!.type as ConnectionPointEnumMap[NC];
 			}
 		}
 	}
-	connection_point_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointTypeMap[NC] {
-		const node_src = connection.node_src;
-		const output_index = connection.output_index;
-		return node_src.io.outputs.named_output_connection_points[output_index] as ConnectionPointTypeMap[NC];
-	}
-	connection_point_type_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointEnumMap[NC] {
-		const connection_point = this.connection_point_from_connection(connection)!;
-		return connection_point.type as ConnectionPointEnumMap[NC];
-	}
-	connection_point_name_from_connection(connection: TypedNodeConnection<NC>): string {
-		const connection_point = this.connection_point_from_connection(connection)!;
-		return connection_point.name;
-	}
+	// input_connection_point_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointTypeMap[NC] {
+	// 	const node_dest = connection.node_dest;
+	// 	const output_index = connection.output_index;
+	// 	return node_dest.io.outputs.named_output_connection_points[output_index] as ConnectionPointTypeMap[NC];
+	// }
+	// output_connection_point_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointTypeMap[NC] {
+	// 	const node_src = connection.node_src;
+	// 	const output_index = connection.output_index;
+	// 	return node_src.io.outputs.named_output_connection_points[output_index] as ConnectionPointTypeMap[NC];
+	// }
+	// connection_point_type_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointEnumMap[NC] {
+	// 	return connection.dest_connection_point()?.type as ConnectionPointEnumMap[NC];
+	// 	// const connection_point = this.output_connection_point_from_connection(connection)!;
+	// 	// return connection_point.type as ConnectionPointEnumMap[NC];
+	// }
+	// connection_point_name_from_connection(connection: TypedNodeConnection<NC>): string {
+	// 	return connection.dest_connection_point()!.name
+	// 	// const connection_point = this.output_connection_point_from_connection(connection)!;
+	// 	// return connection_point.name;
+	// }
 }

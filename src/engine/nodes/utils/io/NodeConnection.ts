@@ -1,6 +1,7 @@
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
+import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 interface DisconnectionOptions {
 	set_input?: boolean;
 }
@@ -37,6 +38,16 @@ export class TypedNodeConnection<NC extends NodeContext> {
 	}
 	get input_index() {
 		return this._input_index;
+	}
+	src_connection_point(): ConnectionPointTypeMap[NC] {
+		const node_src = this._node_src;
+		const output_index = this._output_index;
+		return node_src.io.outputs.named_output_connection_points[output_index];
+	}
+	dest_connection_point(): ConnectionPointTypeMap[NC] {
+		const node_dest = this._node_dest;
+		const input_index = this._input_index;
+		return node_dest.io.inputs.named_input_connection_points[input_index];
 	}
 
 	disconnect(options: DisconnectionOptions = {}) {

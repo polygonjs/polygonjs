@@ -2,13 +2,14 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {NetworkChildNodeType} from '../../poly/NodeContext';
 class SubnetOutputSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputSopParamsConfig();
 
 export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'subnet_output'> {
-		return 'subnet_output';
+	static type(): Readonly<NetworkChildNodeType.OUTPUT> {
+		return NetworkChildNodeType.OUTPUT;
 	}
 
 	initialize_node() {

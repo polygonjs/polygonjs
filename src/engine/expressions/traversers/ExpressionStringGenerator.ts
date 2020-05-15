@@ -1,20 +1,9 @@
 import {BaseParamType} from '../../params/_Base';
 import {ParsedTree} from './ParsedTree';
-// import {LiteralConstructsController} from './LiteralConstructsController'
 import jsep from 'jsep';
-// import {BaseMethod} from '../../../Engine/Expression/Method/_Base'
-// import {MissingReferencesControler} from './MissingReferencesController'
 
 const ARGUMENTS_SEPARATOR = ', ';
-// const ATTRIBUTE_PREFIX = '@'
-// const VARIABLE_PREFIX = '$'
 
-// export interface MethodsByName {
-// 	[propName: string]: BaseMethod;
-// }
-// interface JsepsByString {
-// 	[propName: string]: jsep.Expression[];
-// }
 import {BaseTraverser} from './_Base';
 
 export class ExpressionStringGenerator extends BaseTraverser {

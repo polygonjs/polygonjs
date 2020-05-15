@@ -8,7 +8,7 @@ import {GlNodeChildrenMap} from '../../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../_Base';
 import {AssemblerNodeSpareParamsController} from './SpareParamsController';
 
-export class AssemblerControllerNode extends TypedNode<any, any> {
+export class BaseGlParentNode extends TypedNode<any, any> {
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
 		return super.create_node(type) as GlNodeChildrenMap[K];
 	}
@@ -18,7 +18,8 @@ export class AssemblerControllerNode extends TypedNode<any, any> {
 	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
 	}
-
+}
+export class AssemblerControllerNode extends BaseGlParentNode {
 	assembler_controller!: GlAssemblerController<BaseGlShaderAssembler>;
 }
 

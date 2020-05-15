@@ -26,7 +26,13 @@ export class JsCodeBuilder {
 	constructor(private _assembler: BaseJsFunctionAssembler, private _gl_parent_node: BaseNodeType) {}
 
 	async build_from_nodes(root_nodes: BaseJsNodeType[]) {
-		const node_traverser = new TypedNodeTraverser<NodeContext.JS>(this._assembler, this._gl_parent_node);
+		const node_traverser = new TypedNodeTraverser<NodeContext.JS>(
+			this._gl_parent_node,
+			this._assembler.shader_names,
+			(root_node, shader_name) => {
+				return this._assembler.input_names_for_shader_name(root_node, shader_name);
+			}
+		);
 		node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseJsNodeType[]> = new Map();

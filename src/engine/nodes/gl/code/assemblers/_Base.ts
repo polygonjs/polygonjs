@@ -21,6 +21,7 @@ import {IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderChunk} from 'three';
+import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -207,7 +208,19 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 	get code_builder() {
-		return (this._code_builder = this._code_builder || new CodeBuilder(this, this._gl_parent_node));
+		return (this._code_builder = this._code_builder || this._create_code_builder());
+	}
+	private _create_code_builder() {
+		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
+			this._gl_parent_node,
+			this.shader_names,
+			(root_node, shader_name) => {
+				return this.input_names_for_shader_name(root_node, shader_name);
+			}
+		);
+		return new CodeBuilder(node_traverser, (shader_name) => {
+			return this.root_nodes_by_shader_name(shader_name);
+		});
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
 		this.code_builder.build_from_nodes(root_nodes);

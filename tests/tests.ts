@@ -76,10 +76,12 @@ import './engine/nodes/gl/Add';
 import './engine/nodes/gl/Attribute';
 import './engine/nodes/gl/Constant';
 import './engine/nodes/gl/Dot';
+import './engine/nodes/gl/IfThen';
 import './engine/nodes/gl/Mult';
 import './engine/nodes/gl/MultAdd';
 import './engine/nodes/gl/Noise';
 import './engine/nodes/gl/Param';
+import './engine/nodes/gl/Rotate';
 
 QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';

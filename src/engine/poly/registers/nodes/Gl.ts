@@ -129,7 +129,7 @@ export interface GlNodeChildrenMap {
 	globals: GlobalsGlNode;
 	hsluv_to_rgb: HsluvToRgbGlNode;
 	hsv_to_rgb: HsvToRgbGlNode;
-	if: IfThenGlNode;
+	if_then: IfThenGlNode;
 	int_to_float: FloatToIntGlNode;
 	inverse_sqrt: InverseSqrtGlNode;
 	instance_transform: InstanceTransformGlNode;
@@ -265,8 +265,12 @@ export class GlRegister {
 		poly.register_node(SmoothStepGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
-		poly.register_node(SubnetInputGlNode, CATEGORY_GL.LOGIC);
-		poly.register_node(SubnetOutputGlNode, CATEGORY_GL.LOGIC);
+		poly.register_node(SubnetInputGlNode, CATEGORY_GL.LOGIC, {
+			only: [`${IfThenGlNode.node_context()}/${IfThenGlNode.type()}`],
+		});
+		poly.register_node(SubnetOutputGlNode, CATEGORY_GL.LOGIC, {
+			only: [`${IfThenGlNode.node_context()}/${IfThenGlNode.type()}`],
+		});
 		poly.register_node(SubstractGlNode, CATEGORY_GL.MATH);
 		poly.register_node(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(TextureGlNode, CATEGORY_GL.COLOR);

@@ -51,6 +51,10 @@ export enum NetworkNodeType {
 	MAT = 'materials',
 	POST = 'post_process',
 }
+export enum NetworkChildNodeType {
+	INPUT = 'subnet_input',
+	OUTPUT = 'subnet_output',
+}
 
 export interface BaseNodeByContextMap {
 	[NodeContext.ANIM]: BaseAnimNodeType;

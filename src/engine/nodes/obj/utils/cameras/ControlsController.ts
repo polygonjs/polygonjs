@@ -56,10 +56,6 @@ export class ThreejsCameraControlsController {
 	async apply_controls(html_element: HTMLElement) {
 		const controls_node = await this.controls_node();
 		if (controls_node) {
-			// keep last_control_node_id to ensure we don't apply the controls more than once
-			// OR it allow the viewer to remain in control of this
-			//if !@_last_control_node_id? || (@_last_control_node_id != controls_node.graph_node_id)
-			// but for now, the controls are still applied again after mouse up
 			const controls_id = controls_node.controls_id();
 			let controls_aleady_applied = false;
 			if (

@@ -13,12 +13,7 @@ export enum AttribPromoteMode {
 	MAX = 1,
 	FIRST_FOUND = 2,
 }
-// const PROMOTE_MODE:PROMOTE_MODE = {
-// 	MIN: 0,
-// 	MAX: 1,
-// 	// AVERAGE: 2,
-// 	FIRST_FOUND: 3,
-// };
+
 const PromoteModeMenuEntries = [
 	{name: 'min', value: AttribPromoteMode.MIN},
 	{name: 'max', value: AttribPromoteMode.MAX},
@@ -77,54 +72,8 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 			this.set_values();
 		}
 
-		// switch @_param_class_from
-		// 	when Core.Geometry.ATTRIB_CLASS.VERTEX then this.promote_attribute_from_vertex()
-		// 	when Core.Geometry.ATTRIB_CLASS.OBJECT then this.promote_attribute_from_object()
 		this.set_core_group(this._core_group);
 	}
-
-	// private promote_attribute_from_vertex() {
-	// 	// switch (this.pv.class_to) {
-	// 	// 	case AttribClass.VERTEX:
-	// 			return this.promote_attribute_from_vertex_to_vertex();
-	// 		// case AttribClass.OBJECT:
-	// 		// return this.promote_attribute_from_vertex_to_object();
-	// 	// }
-	// }
-
-	// private promote_attribute_from_object() {
-	// 	switch (this.pv.class_to) {
-	// 		case AttribClass.VERTEX:
-	// 		// return this.promote_attribute_from_object_to_vertex();
-	// 		case AttribClass.OBJECT:
-	// 		// return this.promote_attribute_from_object_to_object();
-	// 	}
-	// }
-
-	// private promote_attribute_from_vertex_to_vertex() {
-	// 	if (this._core_group) {
-	// 		const attrib_names = CoreString.attrib_names(this.pv.name);
-	// 		const points = this._core_group.points();
-	// 		for (let attrib_name of attrib_names) {
-	// 			const values = lodash_map(points, (point) => point.attrib_value(attrib_name));
-	// 			const new_value = (() => {
-	// 				switch (this.pv.mode) {
-	// 					case PromoteMode.MIN:
-	// 						return lodash_min(values);
-	// 					case PromoteMode.MAX:
-	// 						return lodash_max(values);
-	// 					// case PROMOTE_MODE.AVERAGE: return lodash_average(values);
-	// 					default:
-	// 						return null;
-	// 				}
-	// 			})();
-
-	// 			if (new_value != null) {
-	// 				lodash_each(points, (point) => point.set_attrib_value(attrib_name, new_value));
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	private find_values() {
 		const attrib_names = CoreString.attrib_names(this.pv.name);

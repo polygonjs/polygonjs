@@ -193,11 +193,6 @@ export abstract class TypedCameraObjNode<
 	}
 }
 
-// controls_node: ->
-// 	if @_param_controls? && @_param_controls != ''
-// 		Core.Walker.find_node(this, @_param_controls)
-
-// export type BaseMinimalCameraObjNodeType = TypedMinimalCameraObjNode<OrthoOrPerspCamera, NodeParamsConfig>;
 export class TypedThreejsCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseThreejsCameraObjParamsConfig

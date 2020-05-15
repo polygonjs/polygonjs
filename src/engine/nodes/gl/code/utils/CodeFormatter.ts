@@ -26,11 +26,15 @@ export class CodeFormatter {
 		if (line.indexOf('#if') == 0 || line.indexOf('#endif') == 0) {
 			add_suffix = false;
 		}
+		line = `${LINE_PREFIXES[line_type]}${line}`;
 		if (add_suffix) {
-			return `${LINE_PREFIXES[line_type]}${line}${LINE_SUFFIXES[line_type]}`;
-		} else {
-			return `${LINE_PREFIXES[line_type]}${line}`;
+			const last_char = line[line.length - 1];
+			const suffix = LINE_SUFFIXES[line_type];
+			if (last_char != suffix) {
+				line += suffix;
+			}
 		}
+		return line;
 	}
 	static post_line_separator(line_type: LineType) {
 		return line_type == LineType.BODY ? '	' : '';

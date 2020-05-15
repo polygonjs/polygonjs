@@ -6,14 +6,6 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Float32BufferAttribute, BufferAttribute} from 'three/src/core/BufferAttribute';
 class AttribCopySopParamsConfig extends NodeParamsConfig {
-	// class = ParamConfig.INTEGER(CoreConstant.ATTRIB_CLASS.VERTEX, {
-	// 	menu: {
-	// 		entries: [
-	// 			{name: 'vertex', value: CoreConstant.ATTRIB_CLASS.VERTEX},
-	// 			{name: 'object', value: CoreConstant.ATTRIB_CLASS.OBJECT},
-	// 		],
-	// 	},
-	// })
 	name = ParamConfig.STRING('');
 	tnew_name = ParamConfig.BOOLEAN(0);
 	new_name = ParamConfig.STRING('', {visible_if: {tnew_name: 1}});
@@ -26,18 +18,6 @@ class AttribCopySopParamsConfig extends NodeParamsConfig {
 		range: [0, 3],
 		range_locked: [true, true],
 	});
-
-	// to_all_components = ParamConfig.BOOLEAN(1)
-	// src_component = ParamConfig.INTEGER(0, {
-	// 	range: [0, 2],
-	// 	range_locked: [true, true],
-	// 	visible_if: {to_all_components: 0},
-	// })
-	// dest_component = ParamConfig.INTEGER(0, {
-	// 	range: [0, 2],
-	// 	range_locked: [true, true],
-	// 	visible_if: {to_all_components: 0},
-	// })
 }
 const ParamsConfig = new AttribCopySopParamsConfig();
 
@@ -67,15 +47,6 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		for (let attrib_name of attrib_names) {
 			this.copy_vertex_attribute_between_core_groups(core_group_dest, core_group_src, attrib_name);
 		}
-
-		// switch (this.pv.class) {
-		// 	case CoreConstant.ATTRIB_CLASS.VERTEX:
-		// 		this.copy_vertex_attribute(core_group_dest, core_group_src);
-		// 		break;
-		// 	case CoreConstant.ATTRIB_CLASS.OBJECT:
-		// 		this.copy_object_attribute(core_group_dest, core_group_src);
-		// 		break;
-		// }
 
 		return this.set_core_group(core_group_dest);
 	}
@@ -113,11 +84,7 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 			}
 
 			const dest_name = this.pv.tnew_name ? this.pv.new_name : attrib_name;
-			// let dest_array:number[]|undefined
 			let dest_attribute = dest_geometry.getAttribute(dest_name);
-			// if(dest_attribute){
-			// 	dest_array = dest_attribute.array as number[]
-			// }
 			if (dest_attribute) {
 				this._fill_dest_array(dest_attribute as BufferAttribute, src_attrib as BufferAttribute);
 				(dest_attribute as BufferAttribute).needsUpdate = true;
@@ -167,76 +134,4 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 			}
 		}
 	}
-
-	// _src_value_to_all_components(src_attrib_value: NumericAttribValue, dest_attrib_size) {
-	// 	if (lodash_isNumber(src_attrib_value)) {
-	// 		switch (dest_attrib_size) {
-	// 			case 1:
-	// 				return src_attrib_value;
-	// 			case 2:
-	// 				return new THREE.Vector2(src_attrib_value, src_attrib_value);
-	// 			case 3:
-	// 				return new THREE.Vector3(src_attrib_value, src_attrib_value, src_attrib_value);
-	// 		}
-	// 	} else {
-	// 		switch (dest_attrib_size) {
-	// 			case 1:
-	// 				return src_attrib_value.x;
-	// 			case 2:
-	// 				return new THREE.Vector2(src_attrib_value.x, src_attrib_value.y);
-	// 			case 3:
-	// 				return new THREE.Vector3(
-	// 					src_attrib_value.x,
-	// 					src_attrib_value.y,
-	// 					src_attrib_value.z || src_attrib_value.y
-	// 				);
-	// 		}
-	// 	}
-	// }
-
-	// _src_value_to_component(src_attrib_value, current_dest_value, src_component, dest_component) {
-	// 	const src_component_value = (() => {
-	// 		switch (src_component) {
-	// 			case 0:
-	// 				return src_attrib_value.x || src_attrib_value;
-	// 			case 1:
-	// 				return src_attrib_value.y;
-	// 			case 2:
-	// 				return src_attrib_value.z;
-	// 		}
-	// 	})();
-
-	// 	const dest_component_name = ['x', 'y', 'z'][dest_component];
-	// 	if (current_dest_value[dest_component_name] != null) {
-	// 		current_dest_value[dest_component_name] = src_component_value;
-	// 		return current_dest_value;
-	// 	} else {
-	// 		const src_component_name = ['x', 'y', 'z'][src_component];
-	// 		return src_attrib_value[src_component_name];
-	// 	}
-	// }
-
-	// TODO: find a way to use the point method, but have the group api allow easy switch
-	// private  copy_object_attribute(core_group_dest: CoreGroup, core_group_src:CoreGroup) {
-	// 	// const objects_dest = core_group_dest.objects();
-	// 	// const objects_src = core_group_src.objects();
-
-	// 	//attribute_names = core_group_src.attrib_names_matching_mask(@_param_name)
-
-	// 	//lodash_each attribute_names, (attrib_name) =>
-	// 	const attrib_name = this.pv.name;
-
-	// 	if (!core_group_dest.has_attrib(attrib_name)) {
-	// 		const attrib_size = core_group_src.attrib_size(attrib_name);
-	// 		core_group_dest.add_numeric_vertex_attrib(attrib_name, attrib_size, 0);
-	// 	}
-
-	// 	lodash_each(points_dest, (point_dest, i) => {
-	// 		let point_src;
-	// 		if ((point_src = points_src[i]) != null) {
-	// 			const attrib_value = point_src.attrib_value(attrib_name);
-	// 			point_dest.set_attrib_value(attrib_name, attrib_value);
-	// 		}
-	// 	});
-	// }
 }

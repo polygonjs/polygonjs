@@ -16,10 +16,7 @@ export class OctreeNode {
 	_bounding_boxes_by_octant_prepared: boolean = false;
 
 	constructor(private _bbox: Box3, private _level: number = 0) {
-		this._center = this._bbox.max
-			.clone()
-			.add(this._bbox.min)
-			.multiplyScalar(0.5);
+		this._center = this._bbox.max.clone().add(this._bbox.min).multiplyScalar(0.5);
 	}
 	// set_bounding_box(bbox: Box3) {
 	// 	this._bbox = bbox;
@@ -44,7 +41,6 @@ export class OctreeNode {
 		return false;
 	}
 
-	//@PERF = 0
 	points_in_sphere(sphere: Sphere, accumulated_points: CorePoint[]): void {
 		if (this._leaves.length == 0) {
 			const found_points = lodash_flatten(Object.values(this._points_by_octant_id));
@@ -53,25 +49,17 @@ export class OctreeNode {
 				accumulated_points.push(point);
 			});
 		} else {
-			//start_time = performance.now()
 			const leaves_intersecting_with_sphere = this._leaves.filter((leaf) => leaf.intersects_sphere(sphere));
 
-			//console.log("level: #{@_level}, found #{leaves_intersecting_with_sphere.length} leaves ")
 			leaves_intersecting_with_sphere.forEach((leaf) => leaf.points_in_sphere(sphere, accumulated_points));
 		}
 	}
-	//this.constructor.PERF += performance.now()-start_time
 
 	bounding_box(): Box3 | undefined {
 		return this._bbox;
 	}
 
-	// points_count: ->
-	// 	@_points_count
-
 	set_points(points: CorePoint[]) {
-		//@_points_count = points.length
-
 		this._points_by_octant_id = {};
 		for (let point of points) {
 			this.add_point(point);
@@ -90,7 +78,6 @@ export class OctreeNode {
 		const leaf = new OctreeNode(box, this._level + 1);
 		this._leaves_by_octant[octant_id] = leaf;
 		this._leaves.push(leaf);
-		//throw "test #{@_level}"
 
 		leaf.set_points(this._points_by_octant_id[octant_id]);
 	}
@@ -130,10 +117,7 @@ export class OctreeNode {
 			corner.z = this._bbox.max.z;
 		}
 
-		return corner
-			.clone()
-			.add(this._center)
-			.multiplyScalar(0.5);
+		return corner.clone().add(this._center).multiplyScalar(0.5);
 	}
 
 	private _prepare_leaves_bboxes() {
@@ -147,10 +131,7 @@ export class OctreeNode {
 		bbox_centers.push(this._bbox_center(1, 1, 0));
 		bbox_centers.push(this._bbox_center(1, 1, 1));
 
-		const bbox_size_quarter = this._bbox.max
-			.clone()
-			.sub(this._bbox.min)
-			.multiplyScalar(0.25);
+		const bbox_size_quarter = this._bbox.max.clone().sub(this._bbox.min).multiplyScalar(0.25);
 		for (let bbox_center of bbox_centers) {
 			const octant_id = this._octant_id(bbox_center);
 			const bbox = new Box3(

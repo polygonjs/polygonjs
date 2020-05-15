@@ -107,7 +107,6 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	texture1.set_input('uv', attribute1);
 	attribute1.p.name.set('uv');
 	attribute1.set_gl_type(GlConnectionPointType.VEC2);
-	return;
 
 	// await CoreSleep.sleep(50);
 
@@ -166,7 +165,6 @@ QUnit.test(
 		await mesh_basic1.request_container();
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInFragmentOnly.vert);
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInFragmentOnly.frag);
-		return;
 	}
 );
 

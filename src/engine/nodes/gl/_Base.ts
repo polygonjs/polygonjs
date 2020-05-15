@@ -48,7 +48,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 	get material_node(): AssemblerControllerNode | undefined {
 		if (this.parent) {
-			if (this.parent.type == this.type) {
+			if (this.parent.node_context() == NodeContext.GL) {
 				return (this.parent as BaseGlNodeType)?.material_node;
 			} else {
 				return this.parent as AssemblerControllerNode;
