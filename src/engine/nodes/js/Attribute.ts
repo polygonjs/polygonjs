@@ -2,7 +2,6 @@ import lodash_trim from 'lodash/trim';
 import {TypedJsNode, BaseJsNodeType} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 import {LinesController} from './code/utils/LinesController';
-import {JsConnectionsController} from './utils/ConnectionsController';
 
 const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 	JsConnectionPointType.FLOAT,
@@ -35,14 +34,13 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
-	public readonly js_connections_controller: JsConnectionsController = new JsConnectionsController(this);
 	initialize_node() {
 		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.js_connections_controller.initialize_node();
+		this.io.connection_points.initialize_node();
 
-		this.js_connections_controller.set_expected_input_types_function(() => []);
-		this.js_connections_controller.set_expected_output_types_function(() => [
+		this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_output_types_function(() => [
 			ATTRIBUTE_NODE_AVAILABLE_JS_TYPES[this.pv.type],
 		]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);

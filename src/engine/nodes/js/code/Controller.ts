@@ -1,4 +1,3 @@
-import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode} from '../../_Base';
 import {BaseJsFunctionAssembler} from './assemblers/_Base';
 import {OutputJsNode} from '../Output';
@@ -50,8 +49,8 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 		const globals = this.node.create_node('globals');
 		const output = this.node.create_node('output');
 
-		globals.ui_data.set_position(new Vector2(-200, 0));
-		output.ui_data.set_position(new Vector2(200, 0));
+		globals.ui_data.set_position(-200, 0);
+		output.ui_data.set_position(200, 0);
 	}
 
 	set_compilation_required(new_state = true) {

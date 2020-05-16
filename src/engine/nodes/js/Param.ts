@@ -13,7 +13,6 @@ import {ParamType} from '../../poly/ParamType';
 import {UniformJsDefinition} from './utils/JsDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {LinesController} from './code/utils/LinesController';
-import {JsConnectionsController} from './utils/ConnectionsController';
 import {JsParamConfig} from './code/utils/ParamConfig';
 class ParamJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
@@ -37,16 +36,13 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	}
 	protected _allow_inputs_created_from_params: boolean = false;
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	public readonly js_connections_controller: JsConnectionsController = new JsConnectionsController(this);
 	initialize_node() {
 		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_function_node_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.js_connections_controller.initialize_node();
+		this.io.connection_points.initialize_node();
 
-		this.js_connections_controller.set_expected_input_types_function(() => []);
-		this.js_connections_controller.set_expected_output_types_function(() => [
-			JS_CONNECTION_POINT_TYPES[this.pv.type],
-		]);
+		this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_output_types_function(() => [JS_CONNECTION_POINT_TYPES[this.pv.type]]);
 	}
 
 	set_lines(lines_controller: LinesController) {

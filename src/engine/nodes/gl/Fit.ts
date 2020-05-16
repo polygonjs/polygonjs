@@ -17,7 +17,7 @@ export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
 	protected _gl_input_name(index: number): string {
 		return ['val', 'src_min', 'src_max', 'dest_min', 'dest_max'][index];
 	}
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return DefaultValues[name];
 	}
 	protected gl_method_name(): string {

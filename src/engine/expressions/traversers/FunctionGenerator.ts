@@ -84,22 +84,6 @@ NATIVE_MATH_CONSTANTS.forEach((name) => {
 	GLOBAL_CONSTANTS[name] = `Math.${name}`;
 });
 
-// const INDIRECT_EXPRESSION_METHODS: AnyDictionary = MethodModule;
-
-// const NODE_TYPE_METHODS = {
-// 	CallExpression: 'setup_graph_call_expression',
-// 	MemberExpression: 'setup_graph_member_expression',
-// 	BinaryExpression: 'setup_graph_binary_expression',
-// 	UnaryExpression: 'setup_graph_unary_expression',
-// 	LogicalExpression: 'setup_graph_logical_expression',
-// 	Literal: 'setup_graph_literal',
-// 	Identifier: 'setup_graph_identifier'
-// };
-//
-
-// const IDENTIFIER_METHODS = {
-// 	'$F': '_setup_graph_identifier_as_global_frame'
-// }
 const QUOTE = "'";
 const ARGUMENTS_SEPARATOR = ', ';
 const ATTRIBUTE_PREFIX = '@';
@@ -115,10 +99,6 @@ const PROPERTY_OFFSETS: AnyDictionary = {
 	b: 2,
 };
 
-// export interface MethodsByName {
-// 	[propName: string]: BaseMethod;
-// }
-
 import {BaseTraverser} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {AttributeRequirementsController} from '../AttributeRequirementsController';
@@ -130,9 +110,7 @@ import {Poly} from '../../Poly';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
-	// private function_pre_entities_loop_lines: string[] = [];
 	private _attribute_requirements_controller = new AttributeRequirementsController();
-	// private function_pre_body:string
 	private function_main_string: string | undefined;
 	private methods: BaseMethod[] = [];
 	private method_index: number = -1;

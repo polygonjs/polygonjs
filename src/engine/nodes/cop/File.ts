@@ -37,16 +37,17 @@ import {
 	// RGBEFormat,
 	// DepthFormat,
 	// DepthStencilFormat,
-	// LinearEncoding,
-	// sRGBEncoding,
-	// GammaEncoding,
-	// RGBEEncoding,
-	// LogLuvEncoding,
-	// RGBM7Encoding,
-	// RGBM16Encoding,
-	// RGBDEncoding,
-	// BasicDepthPacking,
-	// RGBADepthPacking,
+	// encodings
+	LinearEncoding,
+	sRGBEncoding,
+	GammaEncoding,
+	RGBEEncoding,
+	LogLuvEncoding,
+	RGBM7Encoding,
+	RGBM16Encoding,
+	RGBDEncoding,
+	BasicDepthPacking,
+	RGBADepthPacking,
 } from 'three/src/constants';
 import {Texture} from 'three/src/textures/Texture';
 
@@ -62,6 +63,18 @@ const MAPPINGS = [
 	{SphericalReflectionMapping},
 	{CubeUVReflectionMapping},
 	{CubeUVRefractionMapping},
+];
+const ENCODINGS = [
+	{LinearEncoding},
+	{sRGBEncoding},
+	{GammaEncoding},
+	{RGBEEncoding},
+	{LogLuvEncoding},
+	{RGBM7Encoding},
+	{RGBM16Encoding},
+	{RGBDEncoding},
+	{BasicDepthPacking},
+	{RGBADepthPacking},
 ];
 
 const WRAPPINGS: Dictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
@@ -116,14 +129,23 @@ const MIN_FILTERS: Dictionary<number>[] = [
 // ];
 
 interface AttribMapping {
+	encoding: string;
 	mapping: string;
 	wrapS: string;
 	wrapT: string;
 	minFilter: string;
 	magFilter: string;
 }
-const ATTRIB_MAPPING_KEYS: Array<keyof AttribMapping> = ['mapping', 'wrapS', 'wrapT', 'minFilter', 'magFilter'];
+const ATTRIB_MAPPING_KEYS: Array<keyof AttribMapping> = [
+	'encoding',
+	'mapping',
+	'wrapS',
+	'wrapT',
+	'minFilter',
+	'magFilter',
+];
 const ATTRIB_MAPPING: AttribMapping = {
+	encoding: 'encoding',
 	mapping: 'mapping',
 	wrapS: 'wrap_s',
 	wrapT: 'wrap_t',
@@ -147,6 +169,16 @@ class FileCopParamsConfig extends NodeParamsConfig {
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			FileCopNode.PARAM_CALLBACK_reload(node as FileCopNode, param);
+		},
+	});
+	encoding = ParamConfig.INTEGER(LinearEncoding, {
+		menu: {
+			entries: ENCODINGS.map((m) => {
+				return {
+					name: Object.keys(m)[0],
+					value: Object.values(m)[0] as number,
+				};
+			}),
 		},
 	});
 	mapping = ParamConfig.INTEGER(UVMapping, {
@@ -199,6 +231,7 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	flip_y = ParamConfig.BOOLEAN(0);
 	is_video = ParamConfig.BOOLEAN(0, {
 		hidden: true,
 		cook: false,
@@ -322,6 +355,7 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 				}
 			}
 		}
+		texture.flipY = this.pv.flip_y;
 	}
 	//
 	//

@@ -6,9 +6,10 @@ import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three/src/scenes/Scene';
-import {FlagsControllerB} from '../utils/FlagsController';
+import {FlagsControllerDB} from '../utils/FlagsController';
 import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
+import {ParamOptions} from '../../params/utils/OptionsController';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
@@ -16,17 +17,18 @@ export interface TypedPostNodeContext {
 	composer: EffectComposer;
 	camera: Camera;
 	resolution: Vector2;
-	camera_node: BaseCameraObjNodeType;
 	scene: Scene;
-	canvas: HTMLCanvasElement;
+	requester: BaseNodeType;
+	camera_node?: BaseCameraObjNodeType;
 }
 
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
 	TypedPostProcessNode.PARAM_CALLBACK_update_passes(node as BasePostProcessNodeType);
 }
-export const PostParamOptions = {
+export const PostParamOptions: ParamOptions = {
 	cook: false,
 	callback: PostParamCallback,
+	compute_on_dirty: true, // important if an expression drives a param
 };
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
@@ -34,15 +36,25 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		return NodeContext.POST;
 	}
 
-	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
+	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
-	protected _passes_by_canvas_id: Map<string, P> = new Map();
+	protected _passes_by_requester_id: Map<string, P> = new Map();
 
 	static displayed_input_names(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 	initialize_node() {
-		this.io.inputs.set_count(1);
+		this.flags.display.set(false);
+		this.flags.display.add_hook(() => {
+			if (this.flags.display.active) {
+				const parent = this.parent;
+				if (parent && parent.display_node_controller) {
+					parent.display_node_controller.set_display_node(this);
+				}
+			}
+		});
+
+		this.io.inputs.set_count(0, 1);
 		this.io.outputs.set_has_one_output();
 	}
 
@@ -53,24 +65,28 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.cook_controller.end_cook();
 	}
 	setup_composer(context: TypedPostNodeContext): void {
-		const input = this.io.inputs.input(0);
-		if (input) {
-			input.setup_composer(context);
-		}
+		this._add_pass_from_input(0, context);
+
 		if (!this.flags.bypass.active) {
-			let pass = this._passes_by_canvas_id.get(context.canvas.id);
+			let pass = this._passes_by_requester_id.get(context.requester.graph_node_id);
 			if (!pass) {
 				pass = this._create_pass(context);
 				if (pass) {
-					this._passes_by_canvas_id.set(context.canvas.id, pass);
+					this._passes_by_requester_id.set(context.requester.graph_node_id, pass);
 				}
 			}
 			if (pass) {
-				// console.log('adding pass', this.full_path());
 				context.composer.addPass(pass);
 			}
 		}
 	}
+	protected _add_pass_from_input(index: number, context: TypedPostNodeContext) {
+		const input = this.io.inputs.input(index);
+		if (input) {
+			input.setup_composer(context);
+		}
+	}
+
 	protected _create_pass(context: TypedPostNodeContext): P | undefined {
 		return undefined;
 	}
@@ -80,7 +96,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 	private _update_pass_bound = this.update_pass.bind(this);
 	private update_passes() {
-		this._passes_by_canvas_id.forEach(this._update_pass_bound);
+		this._passes_by_requester_id.forEach(this._update_pass_bound);
 	}
 	protected update_pass(pass: P) {}
 }

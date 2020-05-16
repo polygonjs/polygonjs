@@ -166,7 +166,7 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 	initialize_node() {
 		super.initialize_node();
 
-		this.spare_params_controller.set_inputless_param_names(['type']);
+		this.io.connection_points.spare_params.set_inputless_param_names(['type']);
 
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),

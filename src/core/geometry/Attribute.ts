@@ -8,18 +8,6 @@ const ATTRIB_NAME_MAP: Dictionary<string> = {
 };
 
 export class CoreAttribute {
-	// constructor: (@_size, @_value)->
-	// 	#
-
-	// size: ->
-	// 	@_size
-
-	// value: ->
-	// 	@_value
-
-	// set_value: (value)->
-	// 	@_value = value
-
 	static remap_name(name: string): string {
 		return ATTRIB_NAME_MAP[name] || name;
 	}

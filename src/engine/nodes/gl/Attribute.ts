@@ -5,7 +5,6 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 import {ParamType} from '../../poly/ParamType';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlConnectionsController} from './utils/ConnectionsController';
 
 const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 	GlConnectionPointType.FLOAT,
@@ -37,14 +36,14 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.gl_connections_controller.initialize_node();
+		this.io.connection_points.initialize_node();
 
-		this.gl_connections_controller.set_expected_input_types_function(() => []);
-		this.gl_connections_controller.set_expected_output_types_function(() => [
+		this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_output_types_function(() => [
 			ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);

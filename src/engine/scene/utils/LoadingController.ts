@@ -19,13 +19,20 @@ export class LoadingController {
 	}
 	async mark_as_loaded() {
 		await this._set_loading_state(false);
+		this.trigger_loaded_event();
+	}
+	trigger_loaded_event() {
 		// we only dispatch events in the browser. If this is run from nodejs, we do not.
 		if (globalThis.Event) {
 			this.scene.events_dispatcher.scene_events_controller.process_event(this.LOADED_EVENT_CONTEXT);
 		}
 	}
+
 	private async _set_loading_state(state: boolean) {
 		this._loading_state = state;
+		if (this._loading_state == false) {
+			console.log('*** scene loaded');
+		}
 		await this.set_auto_update(!this._loading_state);
 	}
 	get is_loading() {

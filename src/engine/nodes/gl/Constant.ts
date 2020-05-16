@@ -11,7 +11,7 @@ function typed_visible_options(type: GlConnectionPointType) {
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlConnectionsController} from './utils/ConnectionsController';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
 
 class ConstantGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
@@ -36,26 +36,12 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 	static readonly OUTPUT_NAME = 'val';
 	private _params_by_type: Map<GlConnectionPointType, BaseParamType> | undefined;
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	protected _allow_inputs_created_from_params: boolean = false;
-	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
-		this.gl_connections_controller.initialize_node();
-
-		this.gl_connections_controller.set_output_name_function((index: number) => ConstantGlNode.OUTPUT_NAME);
-		this.gl_connections_controller.set_expected_input_types_function(() => []);
-		this.gl_connections_controller.set_expected_output_types_function(() => [this._current_connection_type]);
-		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
-		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-		// this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.io.connection_points.set_output_name_function((index: number) => ConstantGlNode.OUTPUT_NAME);
+		this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_output_types_function(() => [this._current_connection_type]);
 	}
-	// _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
-	// 		this.update_output_type();
-	// 		this.remove_dirty_state();
-	// 		this.make_output_nodes_dirty();
-	// 	}
-	// }
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		const param = this._current_param;
@@ -102,15 +88,4 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	set_gl_type(type: GlConnectionPointType) {
 		this.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
 	}
-	// private update_output_type() {
-	// 	const set_dirty = false;
-	// 	const current_connection = this.io.outputs.named_output_connection_points[0];
-	// 	if (current_connection && current_connection.type == this._current_connection_type) {
-	// 		return;
-	// 	}
-	// 	this.io.outputs.set_named_output_connection_points(
-	// 		[new TypedNamedConnectionPoint(this._current_connection_type, this._current_connection_type)],
-	// 		set_dirty
-	// 	);
-	// }
 }

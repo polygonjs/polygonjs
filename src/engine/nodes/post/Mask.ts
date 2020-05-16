@@ -1,4 +1,4 @@
-import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {MaskPass} from '../../../../modules/three/examples/jsm/postprocessing/MaskPass';
 import {NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
@@ -7,27 +7,32 @@ import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
 
 interface MaskPassWithContext extends MaskPass {
-	context_scene: Scene;
-	context_camera: Camera;
+	context: {
+		scene: Scene;
+		camera: Camera;
+	};
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class MaskPostParamsConfig extends NodeParamsConfig {
-	override_scene = ParamConfig.BOOLEAN(0);
+	override_scene = ParamConfig.BOOLEAN(0, PostParamOptions);
 	scene = ParamConfig.OPERATOR_PATH('/scene1', {
 		visible_if: {override_scene: 1},
 		node_selection: {
 			context: NodeContext.OBJ,
 			type: SceneObjNode.type(),
 		},
+		...PostParamOptions,
 	});
-	override_camera = ParamConfig.BOOLEAN(0);
+	override_camera = ParamConfig.BOOLEAN(0, PostParamOptions);
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 		visible_if: {override_camera: 1},
 		node_selection: {
 			context: NodeContext.OBJ,
 		},
+		...PostParamOptions,
 	});
+	inverse = ParamConfig.BOOLEAN(0, PostParamOptions);
 }
 const ParamsConfig = new MaskPostParamsConfig();
 export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, MaskPostParamsConfig> {
@@ -38,13 +43,16 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 
 	protected _create_pass(context: TypedPostNodeContext) {
 		const pass = new MaskPass(context.scene, context.camera) as MaskPassWithContext;
-		pass.context_scene = context.scene;
-		pass.context_camera = context.camera;
+		pass.context = {
+			scene: context.scene,
+			camera: context.camera,
+		};
 		this.update_pass(pass);
 
 		return pass;
 	}
 	update_pass(pass: MaskPassWithContext) {
+		pass.inverse = this.pv.inverse;
 		this._update_scene(pass);
 		this._update_camera(pass);
 	}
@@ -59,7 +67,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 				return;
 			}
 		}
-		pass.scene = pass.context_scene;
+		pass.scene = pass.context.scene;
 	}
 	private async _update_camera(pass: MaskPassWithContext) {
 		if (this.pv.override_camera) {
@@ -72,6 +80,6 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 				return;
 			}
 		}
-		pass.camera = pass.context_camera;
+		pass.camera = pass.context.camera;
 	}
 }

@@ -47,22 +47,27 @@ export class RenderController {
 
 	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number) {
 		if (this.node.pv.do_post_process) {
+			// this.render_with_renderer(canvas);
 			this.node.post_process_controller.render(canvas, size);
 		} else {
-			const renderer = this.renderer(canvas);
-			if (renderer) {
-				if (this._resolved_scene) {
-					renderer.render(this._resolved_scene, this.node.object);
-				}
+			this.render_with_renderer(canvas);
+		}
+	}
+	render_with_renderer(canvas: HTMLCanvasElement) {
+		const renderer = this.renderer(canvas);
+		if (renderer) {
+			// renderer.autoClear = false;
+			if (this._resolved_scene) {
+				renderer.render(this._resolved_scene, this.node.object);
 			}
 		}
 	}
+
 	get resolved_scene() {
 		return this._resolved_scene;
 	}
 	async update_scene() {
 		if (this.node.pv.use_custom_scene) {
-			console.warn('update_scene', this.node.full_path());
 			const param = this.node.p.scene;
 			if (param.is_dirty) {
 				await param.compute();

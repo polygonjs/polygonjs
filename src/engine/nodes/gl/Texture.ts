@@ -26,6 +26,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 	initialize_node() {
 		super.initialize_node();
 
+		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);

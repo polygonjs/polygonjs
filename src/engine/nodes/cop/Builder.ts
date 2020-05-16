@@ -34,10 +34,12 @@ void main()	{
 const RESOLUTION_DEFAULT: Number2 = [256, 256];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Poly} from '../../Poly';
+import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
+import {CopRendererController} from './utils/RendererController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
+	use_camera_renderer = ParamConfig.BOOLEAN(0);
 }
 
 const ParamsConfig = new BuilderCopParamsConfig();
@@ -76,12 +78,15 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		RESOLUTION_DEFAULT[0],
 		RESOLUTION_DEFAULT[1]
 	);
+	private _data_texture_controller: DataTextureController | undefined;
+	private _renderer_controller: CopRendererController | undefined;
 
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
 		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-		this.children_controller?.init();
+		// this.children_controller?.init({dependent: false});
 		this._texture_mesh.material = this._texture_material;
+		this._texture_mesh.scale.multiplyScalar(0.25);
 		this._texture_scene.add(this._texture_mesh);
 		this._texture_camera.position.z = 1;
 
@@ -122,6 +127,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 	private _reset() {
 		this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
+		this._data_texture_controller?.reset();
 	}
 
 	async cook() {
@@ -185,21 +191,31 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (!this._render_target) {
 			return;
 		}
-		// keep in mind that this only works with a single renderer
-		let renderer = Poly.instance().renderers_controller.first_renderer();
-		if (!renderer) {
-			renderer = await Poly.instance().renderers_controller.wait_for_renderer();
-		}
+		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
+		const renderer = await this._renderer_controller.renderer();
+
 		const prev_target = renderer.getRenderTarget();
 		renderer.setRenderTarget(this._render_target);
 		renderer.clear();
 		renderer.render(this._texture_scene, this._texture_camera);
-		console.warn('rendered');
 		renderer.setRenderTarget(prev_target);
-		console.log(this._texture_material.fragmentShader);
 
 		if (this._render_target.texture) {
-			this.set_texture(this._render_target.texture);
+			if (this.pv.use_camera_renderer) {
+				this.set_texture(this._render_target.texture);
+			} else {
+				// const w = this.pv.resolution.x;
+				// const h = this.pv.resolution.y;
+				// this._data_texture = this._data_texture || this._create_data_texture(w, h);
+				// renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
+				// this._data_texture.needsUpdate = true;
+				this._data_texture_controller =
+					this._data_texture_controller ||
+					new DataTextureController(DataTextureControllerBufferType.Float32Array);
+				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
+
+				this.set_texture(data_texture);
+			}
 		} else {
 			this.cook_controller.end_cook();
 		}

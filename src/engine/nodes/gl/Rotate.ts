@@ -3,30 +3,30 @@ import Quaternion from './gl/quaternion.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
-enum Mode {
+export enum GlRotateMode {
 	AXIS = 0,
 	QUAT = 1,
 }
-const Modes: Array<Mode> = [Mode.AXIS, Mode.QUAT];
+const Modes: Array<GlRotateMode> = [GlRotateMode.AXIS, GlRotateMode.QUAT];
 
-type StringByMode = {[key in Mode]: string};
+type StringByMode = {[key in GlRotateMode]: string};
 const LabelByMode: StringByMode = {
-	[Mode.AXIS]: 'from axis + angle',
-	[Mode.QUAT]: 'from quaternion',
+	[GlRotateMode.AXIS]: 'from axis + angle',
+	[GlRotateMode.QUAT]: 'from quaternion',
 };
-type StringArrayByMode = {[key in Mode]: string[]};
+type StringArrayByMode = {[key in GlRotateMode]: string[]};
 const InputNamesByMode: StringArrayByMode = {
-	[Mode.AXIS]: ['vector', 'axis', 'angle'],
-	[Mode.QUAT]: ['vector', 'quat'],
+	[GlRotateMode.AXIS]: ['vector', 'axis', 'angle'],
+	[GlRotateMode.QUAT]: ['vector', 'quat'],
 };
 const MethodNameByMode: StringByMode = {
-	[Mode.AXIS]: 'rotate_with_axis_angle',
-	[Mode.QUAT]: 'rotate_with_quat',
+	[GlRotateMode.AXIS]: 'rotate_with_axis_angle',
+	[GlRotateMode.QUAT]: 'rotate_with_quat',
 };
-type ConnectionTypeArrayByMode = {[key in Mode]: GlConnectionPointType[]};
+type ConnectionTypeArrayByMode = {[key in GlRotateMode]: GlConnectionPointType[]};
 const InputTypesByMode: ConnectionTypeArrayByMode = {
-	[Mode.AXIS]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC3, GlConnectionPointType.FLOAT],
-	[Mode.QUAT]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC4],
+	[GlRotateMode.AXIS]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC3, GlConnectionPointType.FLOAT],
+	[GlRotateMode.QUAT]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC4],
 };
 
 const DefaultValues: Dictionary<Number3> = {
@@ -39,7 +39,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ThreeToGl} from '../../../core/ThreeToGl';
 
 class RotateParamsConfig extends NodeParamsConfig {
-	signature = ParamConfig.INTEGER(Mode.AXIS, {
+	signature = ParamConfig.INTEGER(GlRotateMode.AXIS, {
 		menu: {
 			entries: Modes.map((mode, i) => {
 				const label = LabelByMode[mode];
@@ -56,20 +56,22 @@ export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
 		return 'rotate';
 	}
 
-	// _signature_name: string = 'AXIS';
-
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+	}
+	set_signature(mode: GlRotateMode) {
+		const index = Modes.indexOf(mode);
+		this.p.signature.set(index);
 	}
 
 	protected _gl_input_name(index: number) {
 		const mode = Modes[this.pv.signature];
 		return InputNamesByMode[mode][index];
 	}
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return DefaultValues[name];
 	}
 	gl_method_name(): string {
@@ -100,7 +102,7 @@ export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
 		});
 		const joined_args = args.join(', ');
 
-		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
+		const sum = this.gl_var_name(this.io.connection_points.output_name(0));
 		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());

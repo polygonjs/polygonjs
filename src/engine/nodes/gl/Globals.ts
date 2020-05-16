@@ -19,8 +19,11 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		return 'globals';
 	}
 
-	create_params() {
-		this.material_node?.assembler_controller.add_globals_params(this);
+	initialize_node() {
+		super.initialize_node();
+		this.lifecycle.add_on_add_hook(() => {
+			this.material_node?.assembler_controller.add_globals_params(this);
+		});
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {

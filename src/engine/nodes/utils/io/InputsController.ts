@@ -8,6 +8,7 @@ import {TypedNode} from '../../_Base';
 import {ContainerMap, NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
+import {BaseConnectionPoint} from './connections/_Base';
 
 type OnUpdateHook = () => void;
 
@@ -49,20 +50,60 @@ export class InputsController<NC extends NodeContext> {
 	named_input_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_input_connection_points) {
 			for (let connection_point of this._named_input_connection_points) {
-				if (connection_point.name == name) {
+				if (connection_point && connection_point.name == name) {
 					return connection_point;
 				}
 			}
 		}
 	}
+
 	set_named_input_connection_points(connection_points: ConnectionPointTypeMap[NC][]) {
 		this._has_named_inputs = true;
+
+		const connections = this.node.io.connections.input_connections();
+		if (connections) {
+			for (let connection of connections) {
+				if (connection) {
+					// assume we only work with indices for now, not with connection point names
+					// so we only need to check again the new max number of connection points.
+					if (connection.input_index >= connection_points.length) {
+						connection.disconnect({set_input: true});
+					}
+				}
+			}
+		}
+
+		// update connections
 		this._named_input_connection_points = connection_points;
 		this.set_min_inputs_count(0);
 		this.set_max_inputs_count(connection_points.length);
 		this.init_graph_node_inputs();
 		this.node.emit(NodeEvent.NAMED_INPUTS_UPDATED);
 	}
+	// private _has_connected_inputs() {
+	// 	for (let input of this._inputs) {
+	// 		if (input != null) {
+	// 			return true;
+	// 		}
+	// 	}
+	// 	return false;
+	// }
+
+	// private _check_name_changed(connection_points: ConnectionPointTypeMap[NC][]) {
+	// 	if (this._named_input_connection_points) {
+	// 		if (this._named_input_connection_points.length != connection_points.length) {
+	// 			return true;
+	// 		} else {
+	// 			for (let i = 0; i < this._named_input_connection_points.length; i++) {
+	// 				if (this._named_input_connection_points[i]?.name != connection_points[i]?.name) {
+	// 					return true;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	return false;
+	// }
+
 	get has_named_inputs() {
 		return this._has_named_inputs;
 	}
@@ -171,7 +212,6 @@ export class InputsController<NC extends NodeContext> {
 	}
 
 	async eval_required_input(input_index: number) {
-		// console.log(performance.now(), 'eval_required_input start', this.node.full_path(), input_index);
 		let container: ContainerMap[NC] | null;
 		const input_node = this.input(input_index);
 		if (input_node && !input_node.is_dirty) {
@@ -180,7 +220,6 @@ export class InputsController<NC extends NodeContext> {
 			container = await this.node.container_controller.request_input_container(input_index);
 			this._graph_node_inputs[input_index].remove_dirty_state();
 		}
-		// console.log(performance.now(), this.node.full_path(), 'eval_required_input', input_index);
 		// we do not clone here, as we just check if a group is present
 		if (container && container.core_content()) {
 			// return container;
@@ -199,7 +238,7 @@ export class InputsController<NC extends NodeContext> {
 	get_named_input_index(name: string): number {
 		if (this._named_input_connection_points) {
 			for (let i = 0; i < this._named_input_connection_points.length; i++) {
-				if (this._named_input_connection_points[i].name == name) {
+				if (this._named_input_connection_points[i]?.name == name) {
 					return i;
 				}
 			}
@@ -235,7 +274,13 @@ export class InputsController<NC extends NodeContext> {
 			if (node.io.outputs.has_named_outputs) {
 				output_index = node.io.outputs.get_output_index(output_index_or_name);
 				if (output_index == null || output_index < 0) {
-					console.warn(`node ${node.full_path()} does not have an output named ${output_index_or_name}`);
+					const connection_points = node.io.outputs.named_output_connection_points as BaseConnectionPoint[];
+					const names = connection_points.map((cp) => cp.name);
+					console.warn(
+						`node ${node.full_path()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
+							', '
+						)}`
+					);
 					return;
 				}
 			}
@@ -383,78 +428,6 @@ export class InputsController<NC extends NodeContext> {
 		}
 		return true;
 	}
-	// override_clonable_state() {
-	// 	return this._clonable_states_controller.override_clonable_state();
-	// }
-	// inputs_clonable_state_with_override() {
-	// 	return this._clonable_states_controller.inputs_clonable_state_with_override();
-	// }
-
-	// private get inputs_clonable_state(): InputCloneMode[] {
-	// 	return (this._inputs_clonable_states = this._inputs_clonable_states || this.init_inputs_clonable_state());
-	// }
-	// input_cloned(index: number): boolean {
-	// 	return this._inputs_cloned_state[index];
-	// }
-	// inputs_clonable_state_with_override(): boolean[] {
-	// 	// const list = [];
-	// 	// const states = this.inputs_clonable_state();
-	// 	// for (let i = 0; i < states.length; i++) {
-	// 	// 	list.push(this.input_clonable_state_with_override(i));
-	// 	// }
-	// 	// return list;
-	// 	return this._inputs_cloned_state;
-	// }
-	// private _input_clonable_state_with_override(index: number): boolean {
-	// 	const states = this.inputs_clonable_state;
-	// 	const state = states[index];
-	// 	if (state != null) {
-	// 		switch (state) {
-	// 			case InputCloneMode.ALWAYS:
-	// 				return true;
-	// 			case InputCloneMode.NEVER:
-	// 				return false;
-	// 			case InputCloneMode.FROM_NODE:
-	// 				return !this._override_clonable_state;
-	// 		}
-	// 		return TypeAssert.unreachable(state);
-	// 	}
-	// 	return true;
-	// }
-
-	// init_inputs_clonable_state(values: InputCloneMode[] | null = null) {
-	// 	if (values) {
-	// 		this._user_inputs_clonable_states = values;
-	// 	}
-	// 	this._inputs_clonable_states = this._user_inputs_clonable_states || this._default_inputs_clonale_state_values();
-
-	// 	this._update_clonable_states_with_override();
-
-	// 	return this._inputs_clonable_states;
-	// }
-	// private _default_inputs_clonale_state_values() {
-	// 	const list = [];
-	// 	for (let i = 0; i < this._max_inputs_count; i++) {
-	// 		list.push(InputCloneMode.ALWAYS);
-	// 	}
-	// 	return list;
-	// }
-
-	// set_override_clonable_state(state: boolean) {
-	// 	this._override_clonable_state = state;
-	// 	this._update_clonable_states_with_override();
-	// 	this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
-	// }
-	// override_clonable_state() {
-	// 	return this._override_clonable_state;
-	// }
-	// private _update_clonable_states_with_override() {
-	// 	const states: boolean[] = [];
-	// 	for (let i = 0; i < this._inputs.length; i++) {
-	// 		states[i] = this._input_clonable_state_with_override(i);
-	// 	}
-	// 	this._inputs_cloned_state = states;
-	// }
 
 	//
 	//

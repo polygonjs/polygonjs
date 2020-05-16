@@ -33,34 +33,6 @@ export interface SetParamsFromMatrixOptions {
 }
 
 export class CoreTransform {
-	// static create_params(node: BaseNodeType) {
-	// 	node.add_param(ParamType.VECTOR3, 't', [0, 0, 0]);
-	// 	node.add_param(ParamType.VECTOR3, 'r', [0, 0, 0]);
-	// 	node.add_param(ParamType.VECTOR3, 's', [1, 1, 1]);
-	// 	node.add_param(ParamType.FLOAT, 'scale', 1, {range: [0, 10]});
-	// 	node.add_param(ParamType.OPERATOR_PATH, 'look_at', '');
-	// 	node.add_param(ParamType.VECTOR3, 'up', [0, 1, 0]);
-	// }
-
-	// static matrix_from_node_with_transform_params(node: BaseNodeType): Matrix4 {
-	// 	const t = node.params.vector3('t');
-	// 	const r = node.params
-	// 		.vector3('r')
-	// 		.clone()
-	// 		.multiplyScalar(Math.PI / 180);
-	// 	const s = node.params.vector3('s');
-	// 	const scale = node.params.float('scale');
-	// 	return this.matrix(t, r, s, scale);
-	// }
-
-	// if this is done, make sure to use eval with a  callback
-	// @matrix_from_params: (node) ->
-	// 	t = node.param('t').eval()
-	// 	r = node.param('r').eval().multiplyScalar( Math.PI / 180 )
-	// 	s = node.param('s').eval()
-	// 	scale = node.param('scale').eval()
-	// 	this.matrix(t, r, s, scale)
-
 	private static set_params_from_matrix_position = new Vector3();
 	private static set_params_from_matrix_quaternion = new Quaternion();
 	private static set_params_from_matrix_scale = new Vector3();

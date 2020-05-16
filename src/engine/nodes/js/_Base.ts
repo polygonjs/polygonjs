@@ -1,5 +1,4 @@
 import {TypedNode} from '../_Base';
-import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseJsFunctionAssembler} from './code/assemblers/_Base';
 import {AssemblerControllerNode} from './code/Controller';
 import {NodeContext} from '../../poly/NodeContext';
@@ -7,8 +6,6 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {LinesController} from './code/utils/LinesController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
-import {JsNodeSpareParamsController} from './utils/SpareParamsController';
-import {JsConnectionsController} from './utils/ConnectionsController';
 import {JsParamConfig} from './code/utils/ParamConfig';
 import {ParamType} from '../../poly/ParamType';
 // import {BaseGlConnectionPoint} from '../utils/io/connections/Gl';
@@ -22,15 +19,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseJsFunctionAssembler | undefined;
 
-	readonly spare_params_controller: JsNodeSpareParamsController = new JsNodeSpareParamsController(this);
-	public readonly js_connections_controller: JsConnectionsController | undefined;
-
 	initialize_base_node() {
-		this.io.connections.init_inputs();
 		this.ui_data.set_layout_horizontal();
-		this.io.outputs.set_named_output_connection_points([]);
-
-		this.spare_params_controller.initialize_node();
+		this.io.connection_points.initialize_node();
 	}
 	cook() {
 		console.warn('js nodes should never cook');
@@ -73,7 +64,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				throw 'variable_for_input ERROR';
 			}
 		} else {
-			return ThreeToGl.any(this.params.get(name)?.value);
+			return 'to debug...'; //ThreeToGl.any(this.params.get(name)?.value);
 		}
 	}
 

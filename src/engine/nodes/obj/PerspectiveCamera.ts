@@ -20,6 +20,7 @@ import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
+
 export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		fov = ParamConfig.FLOAT(DEFAULT.fov, {range: [0, 100]});
@@ -49,26 +50,9 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 		return 'perspective_camera';
 	}
 
-	// protected get background_controller_constructor() {
-	// 	return PerspectiveCameraBackgroundController;
-	// }
-
 	create_object() {
 		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}
-
-	// create_params() {
-	// 	// this.create_common_params();
-	// 	// this.within_param_folder('render', () => {
-	// 	// this.add_param(ParamType.FLOAT, 'fov', DEFAULT.fov, {
-	// 	// 	range: [0, 180],
-	// 	// 	range_locked: [true, true],
-	// 	// });
-	// 	// this.add_param(ParamType.VECTOR2, 'vertical_fov_range', [0, 100], {visible_if: {lock_width: 1}});
-	// 	// this.add_param(ParamType.VECTOR2, 'horizontal_fov_range', [0, 100], {visible_if: {lock_width: 0}});
-	// 	// this.create_player_camera_params();
-	// 	// });
-	// }
 
 	update_camera() {
 		if (this._object.fov != this.pv.fov) {

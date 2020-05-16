@@ -236,7 +236,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		});
 	}
 
-	// TODO: what if I combine both @_param_count and stamping?!
+	// TODO: what if I combine both param_count and stamping?!
 	private cook_without_template(instance_core_group: CoreGroup) {
 		this._objects = [];
 		this._copy_moved_objects_for_each_instance(instance_core_group).then(() => {

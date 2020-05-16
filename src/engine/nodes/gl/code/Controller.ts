@@ -1,4 +1,3 @@
-import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode} from '../../_Base';
 import {BaseGlShaderAssembler} from './assemblers/_Base';
 import {GlobalsBaseController} from './globals/_Base';
@@ -9,7 +8,7 @@ import {GlNodeChildrenMap} from '../../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../_Base';
 import {AssemblerNodeSpareParamsController} from './SpareParamsController';
 
-export class AssemblerControllerNode extends TypedNode<any, any> {
+export class BaseGlParentNode extends TypedNode<any, any> {
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
 		return super.create_node(type) as GlNodeChildrenMap[K];
 	}
@@ -19,7 +18,8 @@ export class AssemblerControllerNode extends TypedNode<any, any> {
 	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
 	}
-
+}
+export class AssemblerControllerNode extends BaseGlParentNode {
 	assembler_controller!: GlAssemblerController<BaseGlShaderAssembler>;
 }
 
@@ -51,8 +51,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		return this._globals_handler;
 	}
 
-	add_output_params(output_child: OutputGlNode) {
-		this._assembler.add_output_params(output_child);
+	add_output_inputs(output_child: OutputGlNode) {
+		this._assembler.add_output_inputs(output_child);
 	}
 	add_globals_params(globals_node: GlobalsGlNode) {
 		this._assembler.add_globals_params(globals_node);
@@ -65,8 +65,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		const globals = this.node.create_node('globals');
 		const output = this.node.create_node('output');
 
-		globals.ui_data.set_position(new Vector2(-200, 0));
-		output.ui_data.set_position(new Vector2(200, 0));
+		globals.ui_data.set_position(-200, 0);
+		output.ui_data.set_position(200, 0);
 	}
 
 	set_compilation_required(new_state = true) {

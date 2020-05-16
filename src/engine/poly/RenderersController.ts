@@ -1,9 +1,7 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Texture} from 'three/src/textures/Texture';
-// import {NearestFilter, LinearEncoding, HalfFloatType} from 'three/src/constants'
-// import EquirectangularToCubeGenerator from 'src/core/Utils/EquirectangularToCubeGenerator';
-// import PMREMGenerator from 'src/core/Utils/PMREMGenerator';
-// import PMREMCubeUVPacker from 'src/core/Utils/PMREMCubeUVPacker';
+import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
 
 interface RendererByString {
 	[propName: string]: WebGLRenderer;
@@ -23,6 +21,13 @@ const CONTEXT_OPTIONS = {
 
 type Callback = (value: WebGLRenderer) => void;
 
+enum WebGLContext {
+	WEBGL = 'webgl',
+	WEBGL2 = 'webgl2',
+	EXPERIMENTAL_WEBGL = 'experimental-webgl',
+	EXPERIMENTAL_WEBGL2 = 'experimental-webgl2',
+}
+
 export class RenderersController {
 	_next_renderer_id: number = 0;
 	_next_env_map_id: number = 0;
@@ -30,6 +35,7 @@ export class RenderersController {
 	_env_maps: TextureByString = {};
 	private _require_webgl2: boolean = false;
 	private _resolves: Callback[] = [];
+	private _webgl2_available: boolean | undefined;
 
 	constructor() {}
 
@@ -38,6 +44,17 @@ export class RenderersController {
 			this._require_webgl2 = true;
 		}
 	}
+	webgl2_available() {
+		if (this._webgl2_available === undefined) {
+			this._webgl2_available = this._set_webgl2_available();
+		}
+		return this._webgl2_available;
+	}
+	private _set_webgl2_available() {
+		const canvas = document.createElement('canvas');
+		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
+	}
+
 	rendering_context(canvas: HTMLCanvasElement): WebGLRenderingContext {
 		let gl: WebGLRenderingContext | null = null;
 		if (this._require_webgl2) {
@@ -55,23 +72,19 @@ export class RenderersController {
 		return gl;
 	}
 	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext {
-		let context_name = webgl2 ? 'webgl2' : 'webgl';
+		let context_name: WebGLContext;
+		if (this.webgl2_available()) {
+			context_name = WebGLContext.WEBGL2;
+		} else {
+			context_name = webgl2 ? WebGLContext.WEBGL2 : WebGLContext.WEBGL;
+		}
 		let gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
 		if (!gl) {
-			context_name = webgl2 ? 'experimental-webgl2' : 'experimental-webgl';
+			context_name = webgl2 ? WebGLContext.EXPERIMENTAL_WEBGL2 : WebGLContext.EXPERIMENTAL_WEBGL;
 			gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
 		}
 		return gl as WebGLRenderingContext;
 	}
-	// private _rendering_context_webgl(
-	// 	canvas: HTMLCanvasElement
-	// ): WebGLRenderingContext {
-	// 	let gl = canvas.getContext('webgl', CONTEXT_OPTIONS)
-	// 	if (!gl) {
-	// 		gl = canvas.getContext('experimental-webgl', CONTEXT_OPTIONS)
-	// 	}
-	// 	return gl as WebGLRenderingContext
-	// }
 
 	register_renderer(renderer: WebGLRenderer) {
 		if ((renderer as POLYWebGLRenderer)._polygon_id) {
@@ -131,56 +144,11 @@ export class RenderersController {
 		}
 	}
 
-	// async register_env_map(env_map: Texture){
-	// 	console.log("register_env_map", env_map)
-	// 	if(env_map._polygon_id){
-	// 		throw new Error('cube_map already registered')
-	// 	}
-	// 	const texture = await this.prepare_env_map(env_map)
-	// 	texture._polygon_id = (this._next_env_map_id += 1)
-	// 	this._env_maps[texture._polygon_id] = texture
-	// 	return texture
-	// }
-	// deregister_env_map(env_map: Texture){
-	// 	console.log("deregister_env_map", env_map)
-	// 	delete this._env_maps[env_map._polygon_id]
-	// 	env_map.dispose()
-	// }
-
-	// private async prepare_env_map(texture: Texture): Texture{
-	// 	texture.minFilter = NearestFilter;
-	// 	texture.magFilter = NearestFilter;
-	// 	texture.encoding = LinearEncoding;
-
-	// 	await CoreScriptLoader.load_three('loaders/EXRLoader')
-	// 	await CoreScriptLoader.load_three('loaders/EquirectangularToCubeGenerator')
-	// 	const EquirectangularToCubeGenerator_name = 'EquirectangularToCubeGenerator'
-	// 	const PMREMGenerator_name = 'PMREMGenerator'
-	// 	const PMREMCubeUVPacker_name = 'PMREMCubeUVPacker'
-
-	// 	const cubemapGenerator = new THREE[EquirectangularToCubeGenerator_name]( texture, { resolution: 512, type: HalfFloatType } );
-
-	// 	const renderer = this.first_renderer()
-	// 	if(renderer){
-	// 		const cubeMapTexture = cubemapGenerator.update( renderer );
-
-	// 		const pmremGenerator = new THREE[PMREMGenerator_name]( cubeMapTexture );
-	// 		pmremGenerator.update( renderer );
-
-	// 		const pmremCubeUVPacker = new THREE[PMREMCubeUVPacker_name]( pmremGenerator.cubeLods );
-	// 		pmremCubeUVPacker.update( renderer );
-
-	// 		renderer.gammaInput = false;
-	// 		renderer.gammaOutput = true;
-
-	// 		const exrCubeRenderTarget = pmremCubeUVPacker.CubeUVRenderTarget;
-
-	// 		texture.dispose();
-	// 		cubemapGenerator.dispose();
-	// 		pmremGenerator.dispose();
-	// 		pmremCubeUVPacker.dispose();
-
-	// 		return exrCubeRenderTarget.texture;
-	// 	}
-	// }
+	render_target(width: number, height: number, parameters: WebGLRenderTargetOptions): WebGLRenderTarget {
+		if (this.webgl2_available()) {
+			return new WebGLMultisampleRenderTarget(width, height, parameters);
+		} else {
+			return new WebGLRenderTarget(width, height, parameters);
+		}
+	}
 }

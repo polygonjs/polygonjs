@@ -1,39 +1,20 @@
 import lodash_compact from 'lodash/compact';
 import lodash_uniq from 'lodash/uniq';
-// import {BaseGlNodeType} from '../../gl/_Base';
-// import {OutputGlNode} from '../gl/Output';
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
-import {TypedAssembler} from './BaseAssembler';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
+import {TypedNode} from '../../_Base';
+import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
+import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
 type NumberByString = Map<string, number>;
 type BooleanByString = Map<string, boolean>;
 type BooleanByStringByShaderName = Map<ShaderName, BooleanByString>;
 type StringArrayByString = Map<string, string[]>;
-
-// interface BaseNodeGlArrayByString {
-// 	[propName: string]: BaseNodeGl[]
-// }
-// interface StringArrayByString {
-// 	[propName: string]: string[]
-// }
-
-// import {LineType, LINE_TYPES} from './CodeBuilder'
-
-// const VERTEX_INPUT_NAMES = [
-// 	'position',
-// 	'normal',
-// 	'gl_PointSize'
-// ]
-// const FRAGMENT_INPUT_NAMES = [
-// 	'color',
-// 	'alpha'
-// ]
-import {TypedNode} from '../../_Base';
-import {NodeContext} from '../../../poly/NodeContext';
-import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
-
+type InputNamesByShaderNameMethod<NC extends NodeContext> = (
+	root_node: NodeTypeMap[NC],
+	shader_name: ShaderName
+) => string[];
 export class TypedNodeTraverser<NC extends NodeContext> {
 	private _leaves_graph_id: BooleanByStringByShaderName = new Map();
 	private _graph_ids_by_shader_name: BooleanByStringByShaderName = new Map();
@@ -43,26 +24,31 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private _graph: CoreGraph;
 	private _shader_name!: ShaderName;
 
-	constructor(private _assembler: TypedAssembler<NC>, private _gl_parent_node: TypedNode<NC, any>) {
+	constructor(
+		private _gl_parent_node: TypedNode<NC, any>,
+		private _shader_names: ShaderName[],
+		private _input_names_for_shader_name_method: InputNamesByShaderNameMethod<NC>
+	) {
 		this._graph = this._gl_parent_node.scene.graph;
 	}
 
 	private reset() {
 		this._leaves_graph_id.clear();
+		this._graph_ids_by_shader_name.clear();
 		this._outputs_by_graph_id.clear();
 		this._depth_by_graph_id.clear();
 		this._graph_id_by_depth.clear();
 
-		this.shader_names().forEach((shader_name) => {
+		this._shader_names.forEach((shader_name) => {
 			this._graph_ids_by_shader_name.set(shader_name, new Map());
 		});
 	}
 
 	shader_names() {
-		return this._assembler.shader_names;
+		return this._shader_names;
 	}
 	input_names_for_shader_name(root_node: NodeTypeMap[NC], shader_name: ShaderName) {
-		return this._assembler.input_names_for_shader_name(root_node, shader_name);
+		return this._input_names_for_shader_name_method(root_node, shader_name);
 	}
 
 	traverse(root_nodes: NodeTypeMap[NC][]) {
@@ -205,14 +191,14 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private find_leaves(node: NodeTypeMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graph_node_id, true);
 
-		let inputs = node.io.inputs.inputs() as (NodeTypeMap[NC] | null)[];
+		// const inputs = node.io.inputs.inputs() as (NodeTypeMap[NC] | null)[];
+		const inputs = this._find_inputs_or_children(node) as NodeTypeMap[NC][];
 		const compact_inputs: NodeTypeMap[NC][] = lodash_compact(inputs);
 		const input_graph_ids = lodash_uniq(compact_inputs.map((n) => n.graph_node_id));
 		const unique_inputs = input_graph_ids.map((graph_id) =>
 			this._graph.node_from_id(graph_id)
 		) as NodeTypeMap[NC][];
 		if (unique_inputs.length > 0) {
-			// const promises = unique_inputs.forEach((input)=>{
 			for (let input of unique_inputs) {
 				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, input.graph_node_id, node.graph_node_id);
 
@@ -220,6 +206,20 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			}
 		} else {
 			this._leaves_graph_id.get(this._shader_name)!.set(node.graph_node_id, true);
+		}
+	}
+
+	private _find_inputs_or_children(node: NodeTypeMap[NC]) {
+		// return node.io.inputs.inputs();
+		if (node.type == NetworkChildNodeType.INPUT) {
+			return node.parent?.io.inputs.inputs() || [];
+		} else {
+			if (node.children_allowed()) {
+				const output_node = node.children_controller?.output_node();
+				return [output_node];
+			} else {
+				return node.io.inputs.inputs();
+			}
 		}
 	}
 

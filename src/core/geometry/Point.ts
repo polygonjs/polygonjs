@@ -52,11 +52,7 @@ export class CorePoint extends CoreEntity {
 		return (this._geometry = this._geometry || this._core_geometry.geometry());
 	}
 
-	// add_attribute: (name, size, value)->
-	// 	@_attributes[name] = new Attribute(size, value)
-
 	attrib_size(name: string): number {
-		//@_attributes[name].size()
 		name = CoreAttribute.remap_name(name);
 		return this._geometry.getAttribute(name).itemSize;
 	}
@@ -67,8 +63,6 @@ export class CorePoint extends CoreEntity {
 	}
 
 	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		//, target){ // target could be used, but not entirely sure I am ready now
-
 		if (name === PTNUM) {
 			return this.index;
 		} else {
@@ -81,7 +75,6 @@ export class CorePoint extends CoreEntity {
 			}
 			const remaped_name = CoreAttribute.remap_name(name);
 
-			//if (attrib = @_attributes[name])?
 			const attrib = this._geometry.getAttribute(remaped_name);
 			if (attrib) {
 				const {array} = attrib;
@@ -144,7 +137,6 @@ export class CorePoint extends CoreEntity {
 
 	attrib_value_index(name: string): number {
 		if (this._core_geometry.is_attrib_indexed(name)) {
-			//@_attributes[name].value()
 			return this._geometry.getAttribute(name).array[this._index];
 		} else {
 			return -1;
@@ -155,7 +147,6 @@ export class CorePoint extends CoreEntity {
 	}
 
 	position(target?: Vector3): Vector3 {
-		//@_attributes['position'].value()
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION);
 		if (target) {
 			return target.fromArray(array, this._index * 3);
@@ -186,10 +177,6 @@ export class CorePoint extends CoreEntity {
 			throw 'Point.set_attrib_value requires a name';
 		}
 
-		// attrib = @_attributes[name]
-		// attrib.set_value(value)
-		//value = attrib.value()
-		//value = this.attrib_value()
 		const attrib = this._geometry.getAttribute(name);
 		const array = attrib.array as number[];
 		const attrib_size = attrib.itemSize;
@@ -241,9 +228,6 @@ export class CorePoint extends CoreEntity {
 	}
 
 	set_attrib_index(name: string, new_value_index: number) {
-		// attrib = @_attributes[name]
-		// attrib.set_value(new_value_index)
-		//value = attrib.value()
 		const array = this._geometry.getAttribute(name).array as number[];
 		return (array[this._index] = new_value_index);
 	}

@@ -5,10 +5,41 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionPointType, GlConnectionPointComponentsCountMap} from '../utils/io/connections/Gl';
-import {GlConnectionsController} from './utils/ConnectionsController';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
 
-const TEST_NAMES = ['Equal', 'Less Than', 'Greater Than', 'Less Than Or Equal', 'Greater Than Or Equal', 'Not Equal'];
-const TEST_OPERATIONS_FLOAT = ['==', '<', '>', '<=', '>=', '!='];
+export enum GlCompareTestName {
+	EQUAL = 'Equal',
+	LESS_THAN = 'Less Than',
+	GREATER_THAN = 'Greater Than',
+	LESS_THAN_OR_EQUAL = 'Less Than Or Equal',
+	GREATER_THAN_OR_EQUAL = 'Greater Than Or Equal',
+	NOT_EQUAL = 'Not Equal',
+}
+enum TestOperation {
+	EQUAL = '==',
+	LESS_THAN = '<',
+	GREATER_THAN = '>',
+	LESS_THAN_OR_EQUAL = '<=',
+	GREATER_THAN_OR_EQUAL = '>=',
+	NOT_EQUAL = '!=',
+}
+
+const TEST_NAMES: GlCompareTestName[] = [
+	GlCompareTestName.EQUAL,
+	GlCompareTestName.LESS_THAN,
+	GlCompareTestName.GREATER_THAN,
+	GlCompareTestName.LESS_THAN_OR_EQUAL,
+	GlCompareTestName.GREATER_THAN_OR_EQUAL,
+	GlCompareTestName.NOT_EQUAL,
+];
+const TEST_OPERATIONS_FLOAT: TestOperation[] = [
+	TestOperation.EQUAL,
+	TestOperation.LESS_THAN,
+	TestOperation.GREATER_THAN,
+	TestOperation.LESS_THAN_OR_EQUAL,
+	TestOperation.GREATER_THAN_OR_EQUAL,
+	TestOperation.NOT_EQUAL,
+];
 const AND_SEPARATOR = ' && ';
 // const VECTOR_COMPARISON_METHODS = {
 // 	"==": 'equal',
@@ -34,8 +65,8 @@ class CompareGlParamsConfig extends NodeParamsConfig {
 		menu: {
 			entries: TEST_NAMES.map((name, i) => {
 				const operator = TEST_OPERATIONS_FLOAT[i];
-				name = `${lodash_padEnd(operator, 2, ' ')} (${name})`;
-				return {name: name, value: i};
+				const label = `${lodash_padEnd(operator, 2, ' ')} (${name})`;
+				return {name: label, value: i};
 			}),
 		},
 	});
@@ -46,23 +77,27 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 	static type() {
 		return 'compare';
 	}
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		super.initialize_node();
 
-		this.spare_params_controller.set_inputless_param_names(['test']);
+		this.io.connection_points.spare_params.set_inputless_param_names(['test']);
 
-		this.gl_connections_controller.initialize_node();
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
-		this.gl_connections_controller.set_output_name_function((index: number) => OUTPUT_NAME);
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_type.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
+		this.io.connection_points.initialize_node();
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_output_name_function((index: number) => OUTPUT_NAME);
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_type.bind(this));
+		this.io.connection_points.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
 	}
+	set_test_name(test: GlCompareTestName) {
+		this.p.test.set(TEST_NAMES.indexOf(test));
+	}
+
 	protected _gl_input_name(index: number) {
 		return ['value0', 'value1'][index];
 	}
 	protected _expected_input_type() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type];
 	}
 

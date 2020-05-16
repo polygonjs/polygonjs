@@ -70,11 +70,6 @@ export class ParamJsonExporter<T extends BaseParamType> {
 			this.add_main();
 		}
 
-		// if(this._param.is_referencing_asset()){
-		// 	// console.log("this._param.is_referencing_asset()", this._param.is_referencing_asset())
-		// 	this._data['referenced_asset'] = this._param.referenced_asset()
-		// }
-
 		if (this._param.options.has_options_overridden) {
 			const overridden_options: OverridenOptions = {};
 			const options_overridden = this._param.options.overridden_options;

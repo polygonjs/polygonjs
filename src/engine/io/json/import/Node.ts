@@ -1,23 +1,25 @@
-import {BaseNodeType} from '../../../nodes/_Base';
+import {TypedNode} from '../../../nodes/_Base';
 import lodash_isString from 'lodash/isString';
 import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isObject from 'lodash/isObject';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_isArray from 'lodash/isArray';
 
-import {NodeJsonExporterData, NodeJsonExporterUIData, InputData} from '../export/Node';
+import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
 import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
 import {SceneJsonImporter} from '../../..';
+import {NodeContext} from '../../../poly/NodeContext';
 // import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
-
-export class NodeJsonImporter<T extends BaseNodeType> {
+type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
+export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T) {}
 
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
+		this.set_connection_points(data['connection_points']);
 		this.create_nodes(scene_importer, data['nodes']);
 		this.set_selection(data['selection']);
 
@@ -63,7 +65,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		}
 
 		const node_names = Object.keys(data);
-		const nodes: BaseNodeType[] = [];
+		const nodes: BaseNodeTypeWithIO[] = [];
 		for (let node_name of node_names) {
 			const node_data = data[node_name];
 			const node_type = node_data['type'];
@@ -76,7 +78,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 					}
 				} catch (e) {
 					scene_importer.report.add_warning(`failed to create node with type '${node_type}'`);
-					console.log('failed to create node with type', node_type, e);
+					console.warn('failed to create node with type', node_type, e);
 				}
 			}
 		}
@@ -98,7 +100,7 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 	set_selection(data?: string[]) {
 		if (this._node.children_allowed() && this._node.children_controller) {
 			if (data && data.length > 0) {
-				const selected_nodes: BaseNodeType[] = [];
+				const selected_nodes: BaseNodeTypeWithIO[] = [];
 				data.forEach((node_name) => {
 					const node = this._node.node(node_name);
 					if (node) {
@@ -124,28 +126,46 @@ export class NodeJsonImporter<T extends BaseNodeType> {
 		}
 	}
 
+	set_connection_points(connection_points_data: IoConnectionPointsData | undefined) {
+		if (!connection_points_data) {
+			return;
+		}
+		if (connection_points_data['in']) {
+			this._node.io.saved_connection_points_data.set_in(connection_points_data['in']);
+		}
+		if (connection_points_data['out']) {
+			this._node.io.saved_connection_points_data.set_out(connection_points_data['out']);
+		}
+
+		if (this._node.io.has_connection_points_controller) {
+			this._node.io.connection_points.update_signature_if_required();
+		}
+	}
+
 	set_inputs(inputs_data?: InputData[]) {
 		if (!inputs_data) {
 			return;
 		}
 
-		inputs_data.forEach((input_data, i) => {
+		let input_data: InputData;
+		for (let i = 0; i < inputs_data.length; i++) {
+			input_data = inputs_data[i];
 			if (input_data && this._node.parent) {
 				if (lodash_isString(input_data)) {
 					const input_node_name = input_data;
-					const input_node = this._node.parent.node(input_node_name);
+					const input_node = this._node.node_sibbling(input_node_name);
 					this._node.set_input(i, input_node);
 				} else {
-					const input_node = this._node.parent.node(input_data['node']);
-					const input_name = input_data['name'];
-					if (this._node.io.inputs.has_named_input(input_name)) {
-						this._node.set_input(input_data['name'], input_node, input_data['output']);
-					} else {
-						console.warn(`${this._node.full_path()} has no input named ${input_name}`);
-					}
+					const input_node = this._node.node_sibbling(input_data['node']);
+					const input_index = input_data['index'];
+					// if (this._node.io.inputs.has_named_input(input_index)) {
+					this._node.set_input(input_index, input_node, input_data['output']);
+					// } else {
+					// 	console.warn(`${this._node.full_path()} has no input named ${input_name}`);
+					// }
 				}
 			}
-		});
+		}
 	}
 
 	process_nodes_ui_data(scene_importer: SceneJsonImporter, data: Dictionary<NodeJsonExporterUIData>) {

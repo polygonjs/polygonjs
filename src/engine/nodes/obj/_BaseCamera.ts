@@ -1,6 +1,5 @@
 import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
-
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {ThreejsCameraControlsController} from './utils/cameras/ControlsController';
@@ -8,21 +7,14 @@ import {LayersController, LayerParamConfig} from './utils/LayersController';
 import {PostProcessController, CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {RenderController, CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
-
-// import {Dirtyable} from './Concerns/Dirtyable';
-// import {Layers} from './Concerns/Layers';
-// import {PostProcess} from './Concerns/PostProcess';
-// import {Transformed} from './Concerns/Transformed';
-// import {Background} from './Concerns/Background';
-// import {CoreTextureLoader} from '../../../Core/Loader/Texture'
-// import {CameraControls} from './Concerns/CameraControls';
-// import {File} from '../../../Engine/Node/Cop/File'
-import {ThreejsViewer} from '../../viewers/Threejs';
-// import {BaseBackgroundController} from './utils/cameras/background/_BaseController';
+import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
+import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
+import {ThreejsViewer} from '../../viewers/Threejs';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
+import {BaseSopNodeType} from '../sop/_Base';
 import {TypedObjNode} from './_Base';
 
 export interface OrthoOrPerspCamera extends Camera {
@@ -42,6 +34,7 @@ export const BASE_CAMERA_DEFAULT = {
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
+import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -88,6 +81,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		// aspect = ParamConfig.FLOAT(1);
 		// lock_width = ParamConfig.BOOLEAN(1);
 		// look_at = ParamConfig.OPERATOR_PATH('');
+		display = ParamConfig.BOOLEAN(1);
 	};
 }
 
@@ -196,16 +190,9 @@ export abstract class TypedCameraObjNode<
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
 		(node.object as any)[param.name] = (node.pv as any)[param.name];
-		console.log(`updated ${param.name}`);
 	}
 }
-// 	console.warn "camera #{this.full_path()} has no controls assigned"
 
-// controls_node: ->
-// 	if @_param_controls? && @_param_controls != ''
-// 		Core.Walker.find_node(this, @_param_controls)
-
-// export type BaseMinimalCameraObjNodeType = TypedMinimalCameraObjNode<OrthoOrPerspCamera, NodeParamsConfig>;
 export class TypedThreejsCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseThreejsCameraObjParamsConfig
@@ -229,12 +216,35 @@ export class TypedThreejsCameraObjNode<
 	get post_process_controller(): PostProcessController {
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
+
+	// display_node and children_display controllers
+	public readonly children_display_controller: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+		this,
+		this.children_display_controller.display_node_controller_callbacks()
+	);
+	//
+	protected _children_controller_context = NodeContext.SOP;
+
 	initialize_base_node() {
 		super.initialize_base_node();
 		this.io.outputs.set_has_one_output();
 		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
+
+		this.children_display_controller.initialize_node();
 	}
+
+	create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
+		return super.create_node(type) as GeoNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseSopNodeType[];
+	}
+	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	}
+
 	async cook() {
 		this.transform_controller.update();
 		this.layers_controller.update();
@@ -277,6 +287,9 @@ export class TypedThreejsCameraObjNode<
 	create_viewer(element: HTMLElement): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this);
 	}
+	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
+		node.post_process_controller.reset();
+	}
 }
 
 export type BaseCameraObjNodeType = TypedCameraObjNode<OrthoOrPerspCamera, BaseCameraObjParamsConfig>;
@@ -292,4 +305,6 @@ export type BaseThreejsCameraObjNodeType = TypedThreejsCameraObjNode<
 export class BaseThreejsCameraObjNodeClass extends TypedThreejsCameraObjNode<
 	OrthoOrPerspCamera,
 	BaseThreejsCameraObjParamsConfig
-> {}
+> {
+	PARAM_CALLBACK_update_effects_composer(node: BaseNodeType) {}
+}

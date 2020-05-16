@@ -21,11 +21,11 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 		}
 		initialize_node() {
 			super.initialize_node();
-			this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
-			this.gl_connections_controller.set_output_name_function(this._gl_output_name.bind(this));
+			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 
-			this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-			this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+			this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+			this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		}
 		set_lines(shaders_collection_controller: ShadersCollectionController) {
 			const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
@@ -38,7 +38,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			});
 			const joined_args = args.join(` ${this.gl_operation()} `);
 
-			const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
+			const sum = this.gl_var_name(this.io.connection_points.output_name(0));
 			const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
 			shaders_collection_controller.add_body_lines(this, [body_line]);
 		}
@@ -52,7 +52,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			return operation;
 		}
 		protected _expected_input_types() {
-			let first_input_type = this.gl_connections_controller.first_input_connection_type();
+			let first_input_type = this.io.connection_points.first_input_connection_type();
 			if (first_input_type && allowed_in_types) {
 				if (!allowed_in_types.includes(first_input_type)) {
 					// if the first input type is not allowed, either leave the connection point as is,
@@ -104,14 +104,14 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 	static type() {
 		return 'mult';
 	}
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return 1;
 	}
 
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}
 	protected _expected_output_type() {
 		const input_types = this._expected_input_types();

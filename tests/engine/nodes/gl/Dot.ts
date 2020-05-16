@@ -18,16 +18,25 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 		[GlConnectionPointType.VEC3, GlConnectionPointType.VEC3]
 	);
 	assert.equal(dot1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(dot1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.FLOAT);
+	assert.equal(
+		dot1.io.outputs.named_output_connection_points[0].type,
+		GlConnectionPointType.FLOAT,
+		'first type is float'
+	);
 
 	// plug a constant node with type vec2
 	constant1.p.type.set(3);
-	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(
+		constant1.io.outputs.named_output_connection_points[0].type,
+		GlConnectionPointType.VEC2,
+		'first type is vec2'
+	);
 	dot1.set_input(0, constant1, 'val');
-	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2);
+	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2, '2 inputs');
 	assert.deepEqual(
 		dot1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
-		[GlConnectionPointType.VEC2, GlConnectionPointType.VEC2]
+		[GlConnectionPointType.VEC2, GlConnectionPointType.VEC2],
+		'types are vec2'
 	);
 	assert.equal(dot1.io.outputs.named_output_connection_points.length, 1);
 	assert.equal(dot1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.FLOAT);

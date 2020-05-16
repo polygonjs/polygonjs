@@ -21,7 +21,7 @@ export class MultAddGlNode extends BaseNodeGlMathFunctionArg4GlNode {
 	protected _gl_input_name(index: number) {
 		return [InputName.VALUE, InputName.PRE_ADD, InputName.MULT, InputName.POST_ADD][index];
 	}
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return DefaultValues[name];
 	}
 

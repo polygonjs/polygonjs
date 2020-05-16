@@ -260,23 +260,7 @@ export class CoreGroup {
 		}
 	}
 
-	// reset: ->
-	// 	@_geometries = []
-	// 	@_points = []
 
-	// _find_geometries: ->
-	// 	list = []
-	// 	@_group.traverse (object)=>
-	// 		if (geometry = object.geometry)?
-	// 			list.push new Geometry(geometry)
-	// 	list
-
-	// _find_points: ->
-	// 	lodash_flatten( lodash_map(this.objects(), (g)->g.points()) )
-
-	// bounding_box() {
-	// 	return new Box3().setFromObject(this._group);
-	// }
 	bounding_box(): Box3 {
 		return (this._bounding_box = this._bounding_box || this._compute_bounding_box());
 	}

@@ -7,8 +7,8 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
-import {GlNodeSpareParamsController} from './utils/SpareParamsController';
-import {GlConnectionsController} from './utils/ConnectionsController';
+// import {GlNodeSpareParamsController} from './utils/SpareParamsController';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlParamConfig} from './code/utils/ParamConfig';
 import {ParamType} from '../../poly/ParamType';
 // import {BaseGlConnectionPoint} from '../utils/io/connections/Gl';
@@ -22,16 +22,21 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
-	readonly spare_params_controller: GlNodeSpareParamsController = new GlNodeSpareParamsController(this);
-	public readonly gl_connections_controller: GlConnectionsController | undefined;
+	// readonly spare_params_controller: GlNodeSpareParamsController = new GlNodeSpareParamsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController | undefined;
 
 	initialize_base_node() {
 		// this.io.inputs.set_depends_on_inputs(false);
-		this.io.connections.init_inputs();
 		this.ui_data.set_layout_horizontal();
-		this.io.outputs.set_named_output_connection_points([]);
+		this.io.connections.init_inputs();
 
-		this.spare_params_controller.initialize_node();
+		// this allows node like float_to_vec3 to have inputs connection points
+		// initialized from the params. But it may allocate too much for most nodes.
+		// TODO: try and have this allocate less.
+		this.io.connection_points.spare_params.initialize_node();
+		// this.io.inputs.set_named_input_connection_points([]);
+		// this.io.outputs.set_named_output_connection_points([]);
+		// this.io.connection_points.initialize_node();
 	}
 
 	cook() {
@@ -43,7 +48,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 	get material_node(): AssemblerControllerNode | undefined {
 		if (this.parent) {
-			if (this.parent.type == this.type) {
+			if (this.parent.node_context() == NodeContext.GL) {
 				return (this.parent as BaseGlNodeType)?.material_node;
 			} else {
 				return this.parent as AssemblerControllerNode;
@@ -75,7 +80,12 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				throw 'variable_for_input ERROR';
 			}
 		} else {
-			return ThreeToGl.any(this.params.get(name)?.value);
+			if (this.params.has(name)) {
+				return ThreeToGl.any(this.params.get(name)?.value);
+			} else {
+				const connection_point = this.io.inputs.named_input_connection_points[input_index];
+				return ThreeToGl.any(connection_point.init_value);
+			}
 		}
 	}
 
@@ -120,7 +130,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// INPUT
 	//
 	//
-	gl_input_default_value(name: string): ParamInitValueSerialized {
+	param_default_value(name: string): ParamInitValueSerialized {
 		return null;
 	}
 

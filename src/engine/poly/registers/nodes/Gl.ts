@@ -59,9 +59,11 @@ import {DiskGlNode} from '../../../nodes/gl/Disk';
 import {EasingGlNode} from '../../../nodes/gl/Easing';
 import {FitGlNode} from '../../../nodes/gl/Fit';
 import {Fit01GlNode} from '../../../nodes/gl/Fit01';
+import {ForLoopGlNode} from '../../../nodes/gl/ForLoop';
 import {GlobalsGlNode} from '../../../nodes/gl/Globals';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
 import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
+import {IfThenGlNode} from '../../../nodes/gl/IfThen';
 import {InstanceTransformGlNode} from '../../../nodes/gl/InstanceTransform';
 // import {LabToRgbGlNode} from '../../../nodes/gl/LabToRgb'; // TODO: still need work, not looking good
 // import {LchToRgbGlNode} from '../../../nodes/gl/LchToRgb'; // TODO: still need work, not looking good
@@ -84,6 +86,9 @@ import {RandomGlNode} from '../../../nodes/gl/Random';
 import {RgbToHsvGlNode} from '../../../nodes/gl/RgbToHsv';
 import {RotateGlNode} from '../../../nodes/gl/Rotate';
 import {RoundGlNode} from '../../../nodes/gl/Round';
+import {SubnetGlNode} from '../../../nodes/gl/Subnet';
+import {SubnetInputGlNode} from '../../../nodes/gl/SubnetInput';
+import {SubnetOutputGlNode} from '../../../nodes/gl/SubnetOutput';
 import {TextureGlNode} from '../../../nodes/gl/Texture';
 import {TwoWaySwitchGlNode} from '../../../nodes/gl/TwoWaySwitch';
 import {VectorAlignGlNode} from '../../../nodes/gl/VectorAlign';
@@ -123,9 +128,11 @@ export interface GlNodeChildrenMap {
 	float_to_vec4: FloatToVec4GlNode;
 	floor: FloorGlNode;
 	fract: FractGlNode;
+	for_loop: ForLoopGlNode;
 	globals: GlobalsGlNode;
 	hsluv_to_rgb: HsluvToRgbGlNode;
 	hsv_to_rgb: HsvToRgbGlNode;
+	if_then: IfThenGlNode;
 	int_to_float: FloatToIntGlNode;
 	inverse_sqrt: InverseSqrtGlNode;
 	instance_transform: InstanceTransformGlNode;
@@ -166,6 +173,9 @@ export interface GlNodeChildrenMap {
 	smooth_step: SmoothStepGlNode;
 	sqrt: SqrtGlNode;
 	step: StepGlNode;
+	subnet: SubnetGlNode;
+	subnet_input: SubnetInputGlNode;
+	subnet_output: SubnetOutputGlNode;
 	substract: SubstractGlNode;
 	tan: TanGlNode;
 	texture: TextureGlNode;
@@ -180,6 +190,14 @@ export interface GlNodeChildrenMap {
 
 import {NodeContext} from '../../NodeContext';
 import {Poly} from '../../../Poly';
+
+const SUBNET_CHILD_OPTION = {
+	only: [
+		`${IfThenGlNode.node_context()}/${IfThenGlNode.type()}`,
+		`${SubnetGlNode.node_context()}/${SubnetGlNode.type()}`,
+		`${ForLoopGlNode.node_context()}/${ForLoopGlNode.type()}`,
+	],
+};
 export class GlRegister {
 	static run(poly: Poly) {
 		poly.register_node(AbsGlNode, CATEGORY_GL.MATH);
@@ -215,9 +233,11 @@ export class GlRegister {
 		poly.register_node(FloatToVec4GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(FloorGlNode, CATEGORY_GL.MATH);
 		poly.register_node(FractGlNode, CATEGORY_GL.MATH);
+		poly.register_node(ForLoopGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(GlobalsGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(HsluvToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.register_node(HsvToRgbGlNode, CATEGORY_GL.COLOR);
+		poly.register_node(IfThenGlNode, CATEGORY_GL.LOGIC);
 		poly.register_node(IntToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(InverseSqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(InstanceTransformGlNode, CATEGORY_GL.GEOMETRY);
@@ -258,6 +278,9 @@ export class GlRegister {
 		poly.register_node(SmoothStepGlNode, CATEGORY_GL.MATH);
 		poly.register_node(SqrtGlNode, CATEGORY_GL.MATH);
 		poly.register_node(StepGlNode, CATEGORY_GL.GEOMETRY);
+		poly.register_node(SubnetGlNode, CATEGORY_GL.LOGIC);
+		poly.register_node(SubnetInputGlNode, CATEGORY_GL.LOGIC, SUBNET_CHILD_OPTION);
+		poly.register_node(SubnetOutputGlNode, CATEGORY_GL.LOGIC, SUBNET_CHILD_OPTION);
 		poly.register_node(SubstractGlNode, CATEGORY_GL.MATH);
 		poly.register_node(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(TextureGlNode, CATEGORY_GL.COLOR);

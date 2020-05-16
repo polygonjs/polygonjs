@@ -76,10 +76,12 @@ import './engine/nodes/gl/Add';
 import './engine/nodes/gl/Attribute';
 import './engine/nodes/gl/Constant';
 import './engine/nodes/gl/Dot';
+import './engine/nodes/gl/IfThen';
 import './engine/nodes/gl/Mult';
 import './engine/nodes/gl/MultAdd';
 import './engine/nodes/gl/Noise';
 import './engine/nodes/gl/Param';
+import './engine/nodes/gl/Rotate';
 
 QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';
@@ -96,6 +98,9 @@ import './engine/nodes/obj/_BaseTransformed';
 import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';
 import './engine/nodes/obj/HemisphereLight';
+
+QUnit.module('post');
+import './engine/nodes/post/Base';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Add';
@@ -153,6 +158,7 @@ import './engine/nodes/sop/Shadows';
 import './engine/nodes/sop/Skin';
 import './engine/nodes/sop/Sphere';
 import './engine/nodes/sop/Subdivide';
+import './engine/nodes/sop/Subnet';
 import './engine/nodes/sop/Switch';
 import './engine/nodes/sop/Text';
 import './engine/nodes/sop/Torus';

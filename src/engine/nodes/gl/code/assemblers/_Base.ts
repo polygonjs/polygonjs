@@ -9,7 +9,7 @@ import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../Output';
-import {ParamType} from '../../../../poly/ParamType';
+// import {ParamType} from '../../../../poly/ParamType';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {GlobalsGlNode} from '../../Globals';
 import {AttributeGlNode} from '../../Attribute';
@@ -20,6 +20,8 @@ import {ShadersCollectionController} from '../utils/ShadersCollectionController'
 import {IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
+import {ShaderChunk} from 'three';
+import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -115,114 +117,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 	protected get _template_shader(): ITemplateShader | undefined {
 		return undefined;
-	} //Shader - could not find the import?
-	// abstract _color_declaration(): string
-	// private async _update_material(/*master_assembler?: BaseGlShaderAssembler*/) {
-	// 	if (!this.material || !this._material) {
-	// 		return;
-	// 	}
-	// 	const template_shader = this._template_shader;
-	// 	if (!template_shader) {
-	// 		return;
-	// 	}
-	// 	this._lines = new Map();
-	// 	for (let shader_name of this.shader_names) {
-	// 		const template = this._template_shader_for_shader_name(shader_name);
-	// 		if (template) {
-	// 			this._lines.set(shader_name, template.split('\n'));
-	// 		}
-	// 	}
-	// 	if (this._root_nodes.length > 0) {
-	// 		// this._output_node.set_color_declaration(this._color_declaration())
-	// 		// if(!master_assembler){
-	// 		// this._output_node.set_assembler(this)
-	// 		await this.build_code_from_nodes(this._root_nodes);
-	// 		// }
-
-	// 		(this._material as any).extensions = {derivatives: true};
-	// 		// this._material?.derivatives = true;
-	// 		this._build_lines();
-	// 		// this._lines[ShaderName.FRAGMENT].unshift('#extension GL_OES_standard_derivatives : enable')
-	// 	}
-
-	// 	// TODO: typescript - not sure that is still useful
-	// 	// for (let param_config of this.param_configs()) {
-	// 	// 	param_config.material = this._material;
-	// 	// }
-
-	// 	// instead of replacing fully the uniforms,
-	// 	// I simply add to them the new ones or replace the existing ones
-	// 	// otherwise this would break the particles_system_gpu
-	// 	// which would not reset correctly when going back to first frame.
-	// 	// Not entirely sure why, but this seems to be due to the texture uniforms
-	// 	// which are removed and then readded. This seems to mess up somewhere with how
-	// 	// the material updates itself...
-	// 	// this._material.uniforms = this.build_uniforms(template_shader)
-	// 	const new_uniforms = this.build_uniforms(template_shader.uniforms);
-	// 	this.material.uniforms = this.material.uniforms || {};
-	// 	for (let uniform_name of Object.keys(new_uniforms)) {
-	// 		this.material.uniforms[uniform_name] = new_uniforms[uniform_name];
-	// 	}
-
-	// 	for (let shader_name of this.shader_names) {
-	// 		const lines = this._lines.get(shader_name);
-	// 		if (lines) {
-	// 			const shader = lines.join('\n');
-	// 			switch (shader_name) {
-	// 				case ShaderName.VERTEX: {
-	// 					this._material.vertexShader = shader;
-	// 					break;
-	// 				}
-	// 				case ShaderName.FRAGMENT: {
-	// 					this._material.fragmentShader = shader;
-	// 					break;
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	const scene = this._gl_parent_node.scene;
-	// 	// const id = this._gl_parent_node.graph_node_id()
-	// 	if (this.frame_dependent()) {
-	// 		// make sure not to use this._gl_parent_node.graph_node_id() as the id,
-	// 		// as we need several materials:
-	// 		// - the visible one
-	// 		// - the multiple shadow ones
-	// 		// - and possibly a depth one
-	// 		scene.uniforms_controller.add_frame_dependent_uniform_owner(
-	// 			this._material.uuid,
-	// 			this._material.uniforms as IUniformsWithFrame
-	// 		);
-	// 	} else {
-	// 		scene.uniforms_controller.remove_frame_dependent_uniform_owner(this._material.uuid);
-	// 	}
-
-	// 	if (this.resolution_dependent()) {
-	// 		scene.uniforms_controller.add_resolution_dependent_uniform_owner(
-	// 			this._material.uuid,
-	// 			this._material.uniforms as IUniformsWithResolution
-	// 		);
-	// 	} else {
-	// 		scene.uniforms_controller.remove_resolution_dependent_uniform_owner(this._material.uuid);
-	// 	}
-	// }
+	}
 
 	protected add_uniforms(current_uniforms: IUniforms) {
-		// const new_uniforms = UniformsUtils.clone(template_uniforms);
-
-		// copy the new uniforms onto the old ones, only adding, not removing
-		// for (let uniform_name of Object.keys(new_uniforms)) {
-
-		// }
-
-		// copy the values of the old uniform
-		// for (let uniform_name of Object.keys(old_uniforms)) {
-		// 	const new_uniform = new_uniforms[uniform_name];
-		// 	if (new_uniform) {
-		// 		new_uniform.value = old_uniforms[uniform_name].value;
-		// 	}
-		// }
-
 		for (let param_config of this.param_configs()) {
 			current_uniforms[param_config.uniform_name] = param_config.uniform;
 		}
@@ -238,8 +135,6 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 				value: new Vector2(1000, 1000),
 			};
 		}
-
-		// return new_uniforms;
 	}
 
 	//
@@ -313,7 +208,19 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 	get code_builder() {
-		return (this._code_builder = this._code_builder || new CodeBuilder(this, this._gl_parent_node));
+		return (this._code_builder = this._code_builder || this._create_code_builder());
+	}
+	private _create_code_builder() {
+		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
+			this._gl_parent_node,
+			this.shader_names,
+			(root_node, shader_name) => {
+				return this.input_names_for_shader_name(root_node, shader_name);
+			}
+		);
+		return new CodeBuilder(node_traverser, (shader_name) => {
+			return this.root_nodes_by_shader_name(shader_name);
+		});
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
 		this.code_builder.build_from_nodes(root_nodes);
@@ -351,15 +258,24 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	static add_output_params(output_child: OutputGlNode) {
-		output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		output_child.params.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
+	static output_input_connection_points() {
+		return [
+			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
+			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
+			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+		];
+		// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
+		// output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
+		// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+		// output_child.params.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
+		// output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
-	add_output_params(output_child: OutputGlNode) {
-		BaseGlShaderAssembler.add_output_params(output_child);
+	add_output_inputs(output_child: OutputGlNode) {
+		output_child.io.inputs.set_named_input_connection_points(
+			BaseGlShaderAssembler.output_input_connection_points()
+		);
 	}
 	static create_globals_node_output_connections() {
 		return [
@@ -613,23 +529,23 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
 	}
 
-	// protected expand_shader(shader_string: string) {
-	// 	function parseIncludes(string: string) {
-	// 		var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
-	// 		function replace(match: string, include: string) {
-	// 			var replace = ShaderChunk[include];
+	protected expand_shader(shader_string: string) {
+		function parseIncludes(string: string) {
+			var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
+			function replace(match: string, include: string): string {
+				var replace = ShaderChunk[include];
 
-	// 			if (replace === undefined) {
-	// 				throw new Error('Can not resolve #include <' + include + '>');
-	// 			}
+				if (replace === undefined) {
+					throw new Error('Can not resolve #include <' + include + '>');
+				}
 
-	// 			return parseIncludes(replace);
-	// 		}
+				return parseIncludes(replace);
+			}
 
-	// 		return string.replace(pattern, replace);
-	// 	}
-	// 	return parseIncludes(shader_string);
-	// }
+			return string.replace(pattern, replace);
+		}
+		return parseIncludes(shader_string);
+	}
 
 	//
 	//

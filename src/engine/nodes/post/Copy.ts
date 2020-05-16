@@ -15,6 +15,7 @@ class CopyPostParamsConfig extends NodeParamsConfig {
 		range_locked: [true, true],
 		...PostParamOptions,
 	});
+	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new CopyPostParamsConfig();
 export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParamsConfig> {
@@ -25,11 +26,13 @@ export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParam
 
 	protected _create_pass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(CopyShader) as CopyPassWithUniforms;
+		console.log('copy', pass);
 		this.update_pass(pass);
 
 		return pass;
 	}
 	update_pass(pass: CopyPassWithUniforms) {
 		pass.uniforms.opacity.value = this.pv.opacity;
+		pass.material.transparent = this.pv.transparent;
 	}
 }

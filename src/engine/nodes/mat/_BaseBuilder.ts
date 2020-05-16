@@ -17,7 +17,7 @@ export abstract class TypedBuilderMatNode<
 		super.initialize_base_node();
 
 		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-		this.children_controller?.init();
+		// this.children_controller?.init({dependent: false});
 	}
 
 	//

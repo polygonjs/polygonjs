@@ -56,11 +56,11 @@ export class ObjRegister {
 		poly.register_node(PointLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.register_node(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 
-		poly.register_node(AnimationsObjNode, CATEGORY_OBJ.MANAGER);
-		poly.register_node(EventsObjNode, CATEGORY_OBJ.MANAGER);
-		poly.register_node(MaterialsObjNode, CATEGORY_OBJ.MANAGER);
-		poly.register_node(CopObjNode, CATEGORY_OBJ.MANAGER);
-		poly.register_node(PostProcessObjNode, CATEGORY_OBJ.MANAGER);
+		poly.register_node(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.register_node(EventsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.register_node(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.register_node(CopObjNode, CATEGORY_OBJ.NETWORK);
+		poly.register_node(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
 
 		poly.register_node(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);

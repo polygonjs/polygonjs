@@ -1,7 +1,7 @@
 import {PolyScene} from '../scene/PolyScene';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {UIData} from './utils/UIData';
-import {FlagsController} from './utils/FlagsController';
+import {FlagsController, FlagsControllerD} from './utils/FlagsController';
 import {StatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
 import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController';
@@ -41,6 +41,7 @@ import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
 import {NodeTypeMap} from '../containers/utils/ContainerMap';
+import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
 // import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
@@ -56,10 +57,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _serializer: NodeSerializer | undefined;
 	private _cook_controller: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
-	protected _display_node_controller: DisplayNodeController | undefined;
-	get display_node_controller() {
-		return this._display_node_controller;
-	}
+	public readonly display_node_controller: DisplayNodeController | undefined;
 
 	private _params_controller: ParamsController | undefined;
 	readonly params_config: K | undefined;
@@ -141,9 +139,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _initialized: boolean = false;
 	public initialize_base_and_node() {
 		if (!this._initialized) {
+			this._initialized = true;
+
+			this.display_node_controller?.initialize_node();
+
 			this.initialize_base_node(); // for base classes of Sop, Obj...
 			this.initialize_node(); // for Derivated node clases, like BoxSop, TransformSop...
-			this._initialized = true;
 		} else {
 			console.warn('node already initialized');
 		}
@@ -211,6 +212,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		options?: ParamOptions
 	): ParamConstructorMap[T] | undefined {
 		return this._params_controller?.add_param(type, name, default_value, options);
+	}
+	param_default_value(name: string): ParamInitValueSerialized {
+		return null;
 	}
 
 	// cook
@@ -302,3 +306,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 export type BaseNodeType = TypedNode<any, any>;
 export class BaseNodeClass extends TypedNode<any, any> {}
+
+export class BaseNodeClassWithDisplayFlag extends TypedNode<any, any> {
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+}

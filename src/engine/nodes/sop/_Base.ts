@@ -23,6 +23,19 @@ enum MESSAGE {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
+class BaseNetworkSopParamsConfig extends NodeParamsConfig {}
+export class BaseNetworkSopNode extends TypedNode<NodeContext.SOP, BaseNetworkSopParamsConfig> {
+	static node_context(): NodeContext {
+		return NodeContext.SOP;
+	}
+	// initialize_base_node() {
+	// 	this.children_controller?.init({dependent: false});
+	// }
+	cook() {
+		this.cook_controller.end_cook();
+	}
+}
+
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
@@ -34,17 +47,15 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	initialize_base_node() {
-		if (this.flags.display) {
-			this.flags.display.set(false);
-			this.flags.display.add_hook(() => {
-				if (this.flags.display.active) {
-					const parent = this.parent;
-					if (parent && parent.display_node_controller) {
-						parent.display_node_controller.set_display_node(this);
-					}
+		this.flags.display.set(false);
+		this.flags.display.add_hook(() => {
+			if (this.flags.display.active) {
+				const parent = this.parent;
+				if (parent && parent.display_node_controller) {
+					parent.display_node_controller.set_display_node(this);
 				}
-			});
-		}
+			}
+		});
 		this.io.outputs.set_has_one_output();
 	}
 

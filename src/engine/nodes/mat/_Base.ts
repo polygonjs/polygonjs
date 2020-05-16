@@ -29,9 +29,6 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	}
 
 	private set_material_name() {
-		// ensures the material has a full path set
-		// allowing the render hook to be set
-		//this.set_material(@_material)
 		if (this._material) {
 			this._material.name = this.full_path();
 		}

@@ -7,8 +7,8 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}
 	protected _expected_input_types() {
 		return [GlConnectionPointType.BOOL, GlConnectionPointType.BOOL];
@@ -27,7 +27,7 @@ export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGl
 		});
 		const joined_args = args.join(` ${this.boolean_operation()} `);
 
-		const sum = this.gl_var_name(this.gl_connections_controller.output_name(0));
+		const sum = this.gl_var_name(this.io.connection_points.output_name(0));
 		const body_line = `bool ${sum} = ${joined_args}`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 	}

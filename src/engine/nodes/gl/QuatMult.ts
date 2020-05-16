@@ -10,12 +10,12 @@ export class QuatMultGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	initialize_node() {
 		super.initialize_node();
 
-		this.gl_connections_controller.set_input_name_function((index: number) => ['quat0', 'quat1'][index]);
-		this.gl_connections_controller.set_expected_input_types_function(() => [
+		this.io.connection_points.set_input_name_function((index: number) => ['quat0', 'quat1'][index]);
+		this.io.connection_points.set_expected_input_types_function(() => [
 			GlConnectionPointType.VEC4,
 			GlConnectionPointType.VEC4,
 		]);
-		this.gl_connections_controller.set_expected_output_types_function(() => [GlConnectionPointType.VEC4]);
+		this.io.connection_points.set_expected_output_types_function(() => [GlConnectionPointType.VEC4]);
 	}
 
 	// protected _gl_input_name(index: number) {

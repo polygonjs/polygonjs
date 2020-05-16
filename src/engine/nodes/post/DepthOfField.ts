@@ -104,28 +104,30 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		const camera = context.camera;
 		if ((camera as PerspectiveCamera).isPerspectiveCamera) {
 			const camera_node = context.camera_node as PerspectiveCameraObjNode;
-			const pass = new BokehPass2(this, context.scene, camera_node, context.resolution);
+			if (camera_node) {
+				const pass = new BokehPass2(this, context.scene, camera_node.object, context.resolution);
 
-			this.update_pass(pass);
+				this.update_pass(pass);
 
-			// TODO: add a dispose to get rid of those connections when the node is deleted
-			// or when the camera is deleted
-			// and maybe the graph node should be on the pass itself?
-			// so that it can be called when we call .dispose() on it?
-			const core_graph_node = new CoreGraphNode(this.scene, 'DOF');
-			core_graph_node.add_graph_input(camera_node.p.near);
-			core_graph_node.add_graph_input(camera_node.p.far);
-			core_graph_node.add_graph_input(camera_node.p.fov);
-			core_graph_node.add_graph_input(this.p.focal_depth);
-			core_graph_node.add_post_dirty_hook('post/DOF', () => {
-				this.update_pass_from_camera_node(pass, camera_node);
-			});
+				// TODO: add a dispose to get rid of those connections when the node is deleted
+				// or when the camera is deleted
+				// and maybe the graph node should be on the pass itself?
+				// so that it can be called when we call .dispose() on it?
+				const core_graph_node = new CoreGraphNode(this.scene, 'DOF');
+				core_graph_node.add_graph_input(camera_node.p.near);
+				core_graph_node.add_graph_input(camera_node.p.far);
+				core_graph_node.add_graph_input(camera_node.p.fov);
+				core_graph_node.add_graph_input(this.p.focal_depth);
+				core_graph_node.add_post_dirty_hook('post/DOF', () => {
+					this.update_pass_from_camera_node(pass, camera_node);
+				});
 
-			return pass;
+				return pass;
+			}
 		}
 	}
-	update_pass_from_camera_node(pass: BokehPass2, camera_node: PerspectiveCameraObjNode) {
-		pass.update_camera_uniforms_with_node(this, camera_node);
+	update_pass_from_camera_node(pass: BokehPass2, camera: PerspectiveCameraObjNode) {
+		pass.update_camera_uniforms_with_node(this, camera.object);
 	}
 	update_pass(pass: BokehPass2) {
 		pass.bokeh_uniforms['fstop'].value = this.pv.f_stop;

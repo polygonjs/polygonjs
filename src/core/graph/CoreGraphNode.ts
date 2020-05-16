@@ -1,17 +1,12 @@
 import {CoreGraph, CoreGraphNodeId} from './CoreGraph';
 import {DirtyController, PostDirtyHook} from './DirtyController';
 import {PolyScene} from '../../engine/scene/PolyScene';
-// import {SceneNodeDirtyable} from './SceneNodeDirtyable';
 
-// type Constructor<T = {}> = new (...args: any[]) => T;
 export class CoreGraphNode {
-	// protected _scene: PolyScene;
 	private _graph: CoreGraph;
 	private _graph_node_id: CoreGraphNodeId;
 	private _dirty_controller: DirtyController = new DirtyController(this);
-	// protected _name: string;
 	constructor(protected _scene: PolyScene, protected _name: string) {
-		// super(...args);
 		this._graph_node_id = _scene.graph.next_id();
 		_scene.graph.setNode(this);
 		this._graph = _scene.graph;
@@ -22,21 +17,7 @@ export class CoreGraphNode {
 	set_name(name: string) {
 		this._name = name;
 	}
-	// set_scene(scene: PolyScene) {
-	// 	this._scene = scene;
-	// 	// this._graph_node = new CoreGraphNode();
-	// 	// this._graph_node.init(this._scene.graph);
-	// 	this._graph = scene.graph;
-	// 	this._graph_node_id = this.graph.next_id();
-	// 	this.graph.setNode(this);
-	// }
-	// init(graph: CoreGraph) {
-	// 	this._graph = graph;
-	// 	this._id = this.graph.next_id();
-	// 	this.graph.setNode(this);
-	// }
-	// full_path: ->
-	// 	"node with unknown path #{this.graph_node_id}"
+
 	get scene() {
 		return this._scene;
 	}
@@ -78,23 +59,16 @@ export class CoreGraphNode {
 	//
 	//
 
-	// private graph_add() {
-	// }
 	graph_remove() {
 		this.graph.removeNode(this);
 	}
 
-	// _graph_connect: (src, dest)->
-	// 	this.graph().connect(src, dest)
 	add_graph_input(src: CoreGraphNode): boolean {
 		return this.graph.connect(src, this);
 	}
 	remove_graph_input(src: CoreGraphNode) {
 		this.graph.disconnect(src, this);
 	}
-
-	// graph_disconnect: (src, dest)->
-	// 	this.graph().disconnect(src, dest)
 
 	graph_disconnect_predecessors() {
 		this.graph.disconnect_predecessors(this);

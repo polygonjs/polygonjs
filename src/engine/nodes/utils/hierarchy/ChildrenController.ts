@@ -1,8 +1,5 @@
 import {CoreString} from '../../../../core/String';
-
 import {BaseNodeType} from '../../_Base';
-import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
-
 import lodash_includes from 'lodash/includes';
 import lodash_keys from 'lodash/keys';
 import lodash_sortBy from 'lodash/sortBy';
@@ -11,25 +8,14 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
-
 import {Poly} from '../../../Poly';
-// import {NameController} from '../NameController';
 
-// interface HierarchyOptions {
-// 	context: NodeContext
-// 	dependent?: boolean;
-// }
-const NODE_SIMPLE_NAME = 'children';
+type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
 export class HierarchyChildrenController {
-	// private _context: NodeContext | undefined;
-	// private _children_allowed: boolean = false;
 	private _children: Dictionary<BaseNodeType> = {};
 	private _children_by_type: Dictionary<string[]> = {};
 	private _children_and_grandchildren_by_context: Dictionary<string[]> = {};
-
-	private _is_dependent_on_children: boolean = false;
-	private _children_node: CoreGraphNode | undefined;
 
 	private _selection: CoreNodeSelection | undefined;
 	get selection(): CoreNodeSelection {
@@ -39,26 +25,27 @@ export class HierarchyChildrenController {
 	get context() {
 		return this._context;
 	}
-	init(dependent: boolean = false) {
-		// const context = this.node.children_context();
-		// if (context) {
-		// this._available_children_classes = options['children'] || {};
-		// this._available_children_classes = window.POLY.registered_nodes(context, this.self.type())
 
-		// this._children_allowed = true;
-		this._children = {};
-
-		// const is_dependent = options['dependent'];
-		if (dependent) {
-			this._is_dependent_on_children = dependent;
-			if (this._is_dependent_on_children) {
-				this._children_node = new CoreGraphNode(this.node.scene, NODE_SIMPLE_NAME);
-				// this._children_node.set_scene(this.node.scene);
-				this.node.add_graph_input(this._children_node);
-			}
-		}
-		// }
+	//
+	//
+	// OUTPUT NODE
+	//
+	//
+	private _output_node_find_method: (() => BaseNodeType) | undefined;
+	set_output_node_find_method(method: OutputNodeFindMethod) {
+		this._output_node_find_method = method;
 	}
+	output_node() {
+		if (this._output_node_find_method) {
+			return this._output_node_find_method();
+		}
+	}
+
+	//
+	//
+	//
+	//
+	//
 
 	// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
 	set_child_name(node: BaseNodeType, new_name: string): void {
@@ -102,12 +89,6 @@ export class HierarchyChildrenController {
 	available_children_classes() {
 		return Poly.instance().registered_nodes(this._context, this.node.type);
 	}
-	// children_allowed(): boolean {
-	// 	// return (this.self.available_children_classes != null) &&
-	// 	// (Object.keys(this.self.available_children_classes()).length > 0);
-	// 	const available_classes = this.available_children_classes();
-	// 	return available_classes && Object.keys(available_classes).length > 0;
-	// }
 
 	is_valid_child_type(node_type: string): boolean {
 		const node_class = this.available_children_classes()[node_type];
@@ -154,11 +135,7 @@ export class HierarchyChildrenController {
 		child_node.lifecycle.run_on_add_hooks();
 		this.set_child_name(child_node, NameController.base_name(child_node));
 		this.node.lifecycle.run_on_child_add_hooks(child_node);
-		// this.post_add_node(child_node);
 
-		if (this._is_dependent_on_children && this._children_node) {
-			this._children_node.add_graph_input(child_node);
-		}
 		if (child_node.require_webgl2()) {
 			this.node.scene.webgl_controller.set_require_webgl2();
 		}
@@ -167,18 +144,11 @@ export class HierarchyChildrenController {
 
 		return child_node;
 	}
-	// that's redondant with the lifecycle on_child_add and on_child_remove
-	// post_add_node(node: BaseNode) {}
-	// post_remove_node(node: BaseNode) {}
 
 	remove_node(child_node: BaseNodeType): void {
 		if (child_node.parent != this.node) {
 			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
 		} else {
-			if (this._is_dependent_on_children && this._children_node) {
-				this._children_node.remove_graph_input(child_node);
-			}
-
 			if (this.selection.contains(child_node)) {
 				this.selection.remove([child_node]);
 			}
@@ -211,9 +181,9 @@ export class HierarchyChildrenController {
 			// set other dependencies dirty
 			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input
 			// but that prevented the obj/geo node to properly clear its sop_group if this was the last node
-			if (this._is_dependent_on_children && this._children_node) {
-				this._children_node.set_successors_dirty(this.node);
-			}
+			// if (this._is_dependent_on_children && this._children_node) {
+			// 	this._children_node.set_successors_dirty(this.node);
+			// }
 			child_node.set_successors_dirty(this.node);
 			// disconnect successors
 			child_node.graph_disconnect_successors();
@@ -290,16 +260,10 @@ export class HierarchyChildrenController {
 	child_by_name(name: string) {
 		return this._children[name];
 	}
-	// children_and_grandchildren_by_context(context: NodeContext): BaseNode[]{
-	// 	const node_ids = this._children_and_grandchildren_by_context[context] || []
-	// 	const graph = this.self.scene().graph()
-	// 	return node_ids.map(node_id=>graph.node_from_id(node_id))
-	// }
+
 	has_children_and_grandchildren_with_context(context: NodeContext) {
 		return this._children_and_grandchildren_by_context[context] != null;
 	}
-	//lodash_filter this.children(), (child)=>
-	//	child.type() == type
 
 	children(): BaseNodeType[] {
 		return lodash_values(this._children);
@@ -307,8 +271,6 @@ export class HierarchyChildrenController {
 	children_names() {
 		return lodash_sortBy(lodash_keys(this._children));
 	}
-	// children_map: ->
-	// 	@_children
 
 	traverse_children(callback: (arg0: BaseNodeType) => void) {
 		for (let child of this.children()) {

@@ -27,18 +27,18 @@ export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	initialize_node() {
 		super.initialize_node();
 
-		this.gl_connections_controller.set_input_name_function((index: number) => InputNames[index]);
-		this.gl_connections_controller.set_expected_input_types_function(() => [
+		this.io.connection_points.set_input_name_function((index: number) => InputNames[index]);
+		this.io.connection_points.set_expected_input_types_function(() => [
 			GlConnectionPointType.VEC3,
 			GlConnectionPointType.FLOAT,
 		]);
-		this.gl_connections_controller.set_expected_output_types_function(() => [GlConnectionPointType.VEC4]);
+		this.io.connection_points.set_expected_output_types_function(() => [GlConnectionPointType.VEC4]);
 	}
 
 	// protected _gl_input_name(index: number) {
 	// 	return InputNames[index];
 	// }
-	gl_input_default_value(name: string) {
+	param_default_value(name: string) {
 		return DefaultValues[name as InputName];
 	}
 	gl_method_name(): string {

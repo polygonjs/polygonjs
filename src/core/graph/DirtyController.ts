@@ -60,20 +60,13 @@ export class DirtyController {
 		}
 		return false;
 	}
-	// using a dirty block doesn't quite work, as I would need to be able
-	// to fetch the graph for all successors that haven't been blocked
-	// block_dirty_propagation: ->
-	// 	@_dirty_propagation_allowed = false
-	// unblock_dirty_propagation: ->
-	// 	@_dirty_propagation_allowed = true
+
 	remove_dirty_state(): void {
 		this._dirty = false;
 	}
 	set_forbidden_trigger_nodes(nodes: CoreGraphNode[]) {
 		this._forbidden_trigger_nodes = nodes.map((n) => n.graph_node_id);
 	}
-	//@_clean_for_frame = this.context().frame()
-	//this.post_remove_dirty_state(message)
 
 	set_dirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
 		if (propagate == null) {
@@ -91,30 +84,13 @@ export class DirtyController {
 			original_trigger_graph_node = this.node;
 		}
 
-		//return if this.set_dirty_allowed? && !this.set_dirty_allowed(original_trigger_graph_node)
-
-		// if (this.scene && this.scene() != null && this.scene().loaded()){
-		// 	let id = null
-		// 	if (this.full_path){id = this.full_path()} else {id = this}
-		// 	console.log("set dirty", id)
-		// }
-
-		// TODO: why can't I not propagate if the node is already dirty?
-		// one possible reason is that node might be cooking, and this would not update the dirty_timestamp correctly?
-		//return if this.is_dirty()
-		// if(!this.scene().is_loading()){
-		// 	console.log("set dirty", (this.full_path ? this.full_path() : this))
-		// }
-
 		this._dirty = true;
 		this._dirty_timestamp = performance.now();
 		this._dirty_count += 1;
 
 		this.run_post_dirty_hooks(original_trigger_graph_node);
-		// this.post_set_dirty(original_trigger_graph_node);
 
 		if (propagate === true) {
-			//&& @_dirty #&& window.scene.auto_updating()
 			this.set_successors_dirty(original_trigger_graph_node);
 		}
 	}
@@ -145,7 +121,6 @@ export class DirtyController {
 		// successors = successors.filter(n=>!n.is_dirty())
 		for (let successor of this._cached_successors) {
 			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);
-			// console.log(successor);
 		}
 
 		// cooker.unblock();

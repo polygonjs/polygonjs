@@ -47,32 +47,6 @@ export class CoreTextureLoader {
 		ogv: 'video/ogg; codecs="theora, vorbis"',
 		mp4: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 	};
-	// static SCRIPT_URL_BY_EXT: ImageScriptUrlByExt = {
-	// 	exr: 'EXRLoader',
-	// 	basis: 'BasisTextureLoader',
-	// };
-	// static THREE_LOADER_BY_EXT: ThreeLoaderByExt = {
-	// 	exr: 'EXRLoader',
-	// 	basis: 'BasisTextureLoader',
-	// };
-	// @load_texture: (url, callback)->
-	// 	if url
-	// 		loader = this._texture_loader(url)
-
-	// 		loader.load(
-	// 			url,
-	// 			callback,
-	// 			null,
-	// 			(error)=>
-	// 				this.set_error("could not load texture #{url}")
-	// 				#this._on_error(error)
-	// 			)
-	// 	else
-	// 		this.set_error("not url given to Mat/Base._load_texture")
-	// _on_error: (error)->
-	// 	console.log("ERROR")
-	// 	console.log(error)
-	// 	this.set_error_message()
 
 	constructor(private _node: BaseNodeType, private _param: BaseParamType) {}
 

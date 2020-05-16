@@ -13,6 +13,7 @@ import {ShadersCollectionController} from '../../utils/ShadersCollectionControll
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {GlNodeFinder} from '../../utils/NodeFinder';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
+import {BaseGlNodeType} from '../../../_Base';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
 
@@ -114,11 +115,11 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			return;
 		}
 
-		const output_nodes = GlNodeFinder.find_output_nodes(this._gl_parent_node);
+		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this._gl_parent_node);
 		if (output_nodes.length > 1) {
 			this._gl_parent_node.states.error.set('only one output node allowed');
 		}
-		const param_nodes = GlNodeFinder.find_param_nodes(this._gl_parent_node);
+		const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
 		const root_nodes = output_nodes.concat(param_nodes);
 		this.set_root_nodes(root_nodes);
 		this._update_shaders();
@@ -128,9 +129,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
 			material.fragmentShader = new_fragment_shader;
-			// if (this._template_shader && this._template_shader.uniforms) {
 			this.add_uniforms(material.uniforms);
-			// }
 			material.needsUpdate = true;
 		}
 

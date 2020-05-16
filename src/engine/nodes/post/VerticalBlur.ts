@@ -18,6 +18,7 @@ class VerticalBlurPostParamsConfig extends NodeParamsConfig {
 		step: 0.01,
 		...PostParamOptions,
 	});
+	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new VerticalBlurPostParamsConfig();
 export class VerticalBlurPostNode extends TypedPostProcessNode<ShaderPass, VerticalBlurPostParamsConfig> {
@@ -35,5 +36,6 @@ export class VerticalBlurPostNode extends TypedPostProcessNode<ShaderPass, Verti
 	}
 	update_pass(pass: VerticalBlurPassWithUniforms) {
 		pass.uniforms.v.value = this.pv.amount / (pass.resolution_y * window.devicePixelRatio);
+		pass.material.transparent = this.pv.transparent;
 	}
 }

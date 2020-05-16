@@ -1,28 +1,45 @@
 import {CoreString} from './String';
-import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+import {Color} from 'three/src/math/Color';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isString from 'lodash/isString';
+import lodash_isArray from 'lodash/isArray';
 
 export class ThreeToGl {
-	static any(value: any) {
+	static any(value: any): string {
 		if (lodash_isString(value)) {
 			return value;
 		}
 		if (lodash_isBoolean(value)) {
 			return `${value}`;
 		}
-
 		if (lodash_isNumber(value)) {
 			return `${CoreString.ensure_float(value)}`;
-		} else {
-			const values = value.toArray().map((v: number) => {
-				return `${CoreString.ensure_float(v)}`;
-			});
-			const gl_type = `vec${values.length}`;
-			return `${gl_type}(${values.join(', ')})`;
 		}
+		if (lodash_isArray(value)) {
+			return this.numeric_array(value);
+		}
+		// and if it is a vector
+		if (
+			value instanceof Vector2 ||
+			value instanceof Vector3 ||
+			value instanceof Vector4 ||
+			value instanceof Color
+		) {
+			return this.numeric_array(value.toArray());
+		}
+		return `ThreeToGl error: unknown value type '${value}'`;
+	}
+	static numeric_array(values: number[]): string {
+		const values_str = new Array(values.length);
+		for (let i = 0; i < values.length; i++) {
+			values_str[i] = `${CoreString.ensure_float(values[i])}`;
+		}
+		const gl_type = `vec${values.length}`;
+		return `${gl_type}(${values_str.join(', ')})`;
 	}
 
 	static vector3(vec: Vector3 | string): string {

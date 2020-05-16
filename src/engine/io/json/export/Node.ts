@@ -1,13 +1,17 @@
-import {BaseNodeType} from '../../../nodes/_Base';
+import {TypedNode} from '../../../nodes/_Base';
 import {SceneJsonExporter} from './Scene';
 // import {JsonExporterVisitor} from './Visitor';
 import {NodeContext} from '../../../poly/NodeContext';
 import {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from './Param';
 import {ParamType} from '../../../poly/ParamType';
+import {BaseConnectionPointData} from '../../../nodes/utils/io/connections/_Base';
 
+// revert to using index instead of name
+// for gl nodes such as the if node, whose input names
+// changes depending on the input
 interface NamedInputData {
-	name: string;
+	index: number;
 	node: string;
 	output: string;
 }
@@ -18,6 +22,10 @@ interface FlagsData {
 	bypass?: boolean;
 	display?: boolean;
 }
+export interface IoConnectionPointsData {
+	in?: BaseConnectionPointData[];
+	out?: BaseConnectionPointData[];
+}
 
 export interface NodeJsonExporterData {
 	type: string;
@@ -25,6 +33,7 @@ export interface NodeJsonExporterData {
 	children_context: NodeContext;
 	params?: Dictionary<ParamJsonExporterData<ParamType>>;
 	inputs?: InputData[];
+	connection_points?: IoConnectionPointsData;
 	selection?: string[];
 	flags?: FlagsData;
 	cloned_state_overriden: boolean;
@@ -36,7 +45,9 @@ export interface NodeJsonExporterUIData {
 	nodes: Dictionary<NodeJsonExporterUIData>;
 }
 
-export class NodeJsonExporter<T extends BaseNodeType> {
+type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
+
+export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	private _data: NodeJsonExporterData | undefined; // = {} as NodeJsonExporterData;
 	constructor(protected _node: T) {}
 
@@ -75,6 +86,10 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 			if (inputs_data.length > 0) {
 				this._data['inputs'] = inputs_data;
 			}
+			const connection_points_data = this.connection_points_data();
+			if (connection_points_data) {
+				this._data['connection_points'] = connection_points_data;
+			}
 		}
 
 		// TODO: does that create flags automatically? it should not
@@ -94,7 +109,7 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 			const selection = this._node.children_controller?.selection;
 			if (selection && this._node.children().length > 0) {
 				// only save the nodes that are still present, in case the selection just got deleted
-				const selected_children: BaseNodeType[] = [];
+				const selected_children: BaseNodeTypeWithIO[] = [];
 				const selected_ids: Dictionary<boolean> = {};
 				for (let selected_node of selection.nodes()) {
 					selected_ids[selected_node.graph_node_id] = true;
@@ -153,18 +168,20 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 
 	protected inputs_data() {
 		const data: InputData[] = [];
-		// Object.keys(this._node.io.inputs.inputs()).forEach((input_index) => {
 		this._node.io.inputs.inputs().forEach((input, input_index) => {
-			// const input = this._node.io.inputs.input(input_index);
 			if (input) {
-				// const connection_point = this._node.io.inputs.named_input_connection_points;
 				const connection = this._node.io.connections.input_connection(input_index)!;
 				if (this._node.io.inputs.has_named_inputs) {
-					const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
-					// const output_index = input_connections[input_index].output_index();
+					// const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
 					const output_index = connection.output_index;
-					const output_name = input.io.outputs.named_output_connection_points[output_index].name;
-					data[input_index] = {name: input_name, node: input.name, output: output_name};
+					const output_name = input.io.outputs.named_output_connection_points[output_index]?.name;
+					if (output_name) {
+						data[input_index] = {
+							index: input_index,
+							node: input.name,
+							output: output_name,
+						};
+					}
 				} else {
 					data[input_index] = input.name;
 				}
@@ -172,6 +189,36 @@ export class NodeJsonExporter<T extends BaseNodeType> {
 		});
 
 		return data;
+	}
+
+	protected connection_points_data() {
+		if (!this._node.io.has_connection_points_controller) {
+			return;
+		}
+		if (!this._node.io.connection_points.initialized()) {
+			return;
+		}
+
+		if (this._node.io.inputs.has_named_inputs || this._node.io.outputs.has_named_outputs) {
+			const data: IoConnectionPointsData = {};
+			if (this._node.io.inputs.has_named_inputs) {
+				data['in'] = [];
+				for (let cp of this._node.io.inputs.named_input_connection_points) {
+					if (cp) {
+						data['in'].push(cp.to_json());
+					}
+				}
+			}
+			if (this._node.io.outputs.has_named_outputs) {
+				data['out'] = [];
+				for (let cp of this._node.io.outputs.named_output_connection_points) {
+					if (cp) {
+						data['out'].push(cp.to_json());
+					}
+				}
+			}
+			return data;
+		}
 	}
 
 	protected params_data() {

@@ -5,16 +5,17 @@ export const CATEGORY_ANIM = {
 };
 
 export const CATEGORY_OBJ = {
-	LIGHT: 'lights',
-	MANAGER: 'managers',
-	GEOMETRY: 'geometries',
-	CAMERA: 'cameras',
-	TRANSFORM: 'transform',
 	ADVANCED: 'advanced',
+	CAMERA: 'cameras',
+	GEOMETRY: 'geometries',
+	LIGHT: 'lights',
+	NETWORK: 'networks',
+	TRANSFORM: 'transform',
 };
 export const CATEGORY_COP = {
-	INPUT: 'inputs',
 	ADVANCED: 'advanced',
+	FILTER: 'filters',
+	INPUT: 'inputs',
 	MISC: 'misc',
 };
 export const CATEGORY_EVENT = {
@@ -67,6 +68,7 @@ export const CATEGORY_SOP = {
 	MAP: 'maps',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
+	NETWORK: 'networks',
 	PHYSICS: 'physics',
 	PRIMITIVES: 'primitives',
 	RENDER: 'render',

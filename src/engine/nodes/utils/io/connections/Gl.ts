@@ -134,8 +134,8 @@ export const GlConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTyp
 // Map to convert from a ParamType to GL Data type
 //
 //
-type ParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: GlConnectionPointType | undefined};
-export interface IParamTypeToConnectionPointTypeMap extends ParamTypeToConnectionPointTypeMapGeneric {
+type GLParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: GlConnectionPointType | undefined};
+export interface IGLParamTypeToConnectionPointTypeMap extends GLParamTypeToConnectionPointTypeMapGeneric {
 	[ParamType.BOOLEAN]: GlConnectionPointType.BOOL;
 	[ParamType.COLOR]: GlConnectionPointType.VEC3;
 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
@@ -156,7 +156,7 @@ export interface IParamTypeToConnectionPointTypeMap extends ParamTypeToConnectio
 	[ParamType.SEPARATOR]: undefined;
 	[ParamType.STRING]: undefined;
 }
-export const ParamTypeToConnectionPointTypeMap: IParamTypeToConnectionPointTypeMap = {
+export const GLParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointTypeMap = {
 	[ParamType.BOOLEAN]: GlConnectionPointType.BOOL,
 	[ParamType.COLOR]: GlConnectionPointType.VEC3,
 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
@@ -244,15 +244,16 @@ export interface GlConnectionPointData<T extends GlConnectionPointType> {
 import {BaseConnectionPoint} from './_Base';
 export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConnectionPoint {
 	protected _json: GlConnectionPointData<T> | undefined;
-	protected _init_value: any;
+	// protected _init_value: any;
 
 	constructor(
 		protected _name: string,
-		protected _type: T // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
+		protected _type: T,
+		protected _init_value?: ConnectionPointInitValueMapGeneric[T]
 	) {
 		super(_name, _type);
 		// if (this._init_value === undefined) {
-		this._init_value = GlConnectionPointInitValueMap[this._type];
+		this._init_value = this._init_value || GlConnectionPointInitValueMap[this._type];
 		// }
 	}
 	get type() {

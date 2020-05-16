@@ -26,12 +26,8 @@ export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
 	private _points: CorePoint[] | undefined;
 
-	// @INDEX_MODE_POINTS = 'INDEX_MODE_POINTS'
-	// @INDEX_MODE_FACES = 'INDEX_MODE_FACES'
-	// @INDEX_MODE_LINES = 'INDEX_MODE_LINES'
 
 	constructor(private _geometry: BufferGeometry) {}
-	//
 
 	geometry() {
 		return this._geometry;
@@ -314,29 +310,6 @@ export class CoreGeometry {
 			const points_count = position_attrib.array.length / 3;
 			for (let point_index = 0; point_index < points_count; point_index++) {
 				const point = new CorePoint(this, point_index);
-
-				// lodash_each lodash_keys(@_geometry.attributes), (attrib_name) =>
-
-				// 	attribute = @_geometry.getAttribute(attrib_name)
-				// 	item_size = attribute.itemSize
-				// 	current_index = point_index  *item_size
-
-				// 	attrib_value = switch item_size
-				// 		when 1
-				// 			attribute.array[current_index]
-				// 		when 2
-				// 			new Vector2(
-				// 				attribute.array[current_index + 0]
-				// 				attribute.array[current_index + 1]
-				// 				)
-				// 		when 3
-				// 			new Vector3(
-				// 				attribute.array[current_index + 0]
-				// 				attribute.array[current_index + 1]
-				// 				attribute.array[current_index + 2]
-				// 				)
-
-				// 	point.add_attribute(attrib_name, item_size, attrib_value)
 
 				points.push(point);
 			}

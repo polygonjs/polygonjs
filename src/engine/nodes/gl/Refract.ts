@@ -9,10 +9,10 @@ export class RefractGlNode extends BaseGlMathFunctionGlNode {
 	initialize_node() {
 		super.initialize_node();
 
-		this.gl_connections_controller.set_input_name_function((index: number) => ['I', 'N', 'eta'][index]);
-		this.gl_connections_controller.set_output_name_function((index: number) => 'refract');
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function((index: number) => ['I', 'N', 'eta'][index]);
+		this.io.connection_points.set_output_name_function((index: number) => 'refract');
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}
 
 	gl_method_name(): string {
@@ -20,7 +20,7 @@ export class RefractGlNode extends BaseGlMathFunctionGlNode {
 	}
 
 	protected _expected_input_types() {
-		const type = this.gl_connections_controller.first_input_connection_type() || GlConnectionPointType.VEC3;
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
 		return [type, type, GlConnectionPointType.FLOAT];
 	}
 

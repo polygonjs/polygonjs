@@ -22,6 +22,7 @@ class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 		range_locked: [false, false],
 		...PostParamOptions,
 	});
+	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new BrightnessContrastPostParamsConfig();
 export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass, BrightnessContrastPostParamsConfig> {
@@ -32,6 +33,12 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass,
 
 	protected _create_pass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(BrightnessContrastShader) as BrightnessContrastPassWithUniforms;
+		// pass.clear = false;
+		// (pass as any).clearAlpha = false;
+		// (pass as any).clearColor = false;
+		// (pass as any).clearDepth = false;
+		console.log('brightness', pass);
+		(pass.fsQuad as any).material.transparent = true;
 		this.update_pass(pass);
 
 		return pass;
@@ -39,5 +46,6 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass,
 	update_pass(pass: BrightnessContrastPassWithUniforms) {
 		pass.uniforms.brightness.value = this.pv.brightness;
 		pass.uniforms.contrast.value = this.pv.contrast;
+		pass.material.transparent = this.pv.transparent;
 	}
 }

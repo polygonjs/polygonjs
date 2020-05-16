@@ -4,11 +4,8 @@ import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-
 import {Vector3} from 'three/src/math/Vector3';
-// import {TubeBufferGeometry} from 'three/src/geometries/TubeGeometry';
 import {LineSegments} from 'three/src/objects/LineSegments';
-// import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
@@ -59,8 +56,6 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			}
 		}
 
-		//if @_param_merge
-		//geometries = lodash_map @_geometries, (object)->object.geometry
 		const merged_geometry = CoreGeometry.merge_geometries(this._geometries);
 		for (let geometry of this._geometries) {
 			geometry.dispose();
@@ -73,8 +68,6 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			this.set_objects([]);
 		}
 	}
-	//else
-	//	this.set_objects( @_objects )
 
 	_create_tube(line_segment: LineSegments) {
 		const geometry = line_segment.geometry as BufferGeometry;
@@ -120,21 +113,6 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 		}
 	}
 
-	//this.set_geometries(circles, Core.Geometry.Constant.OBJECT_TYPE.LINE_SEGMENTS)
-
-	// curve = new CatmullRomCurve3(positions)
-	// segments_count = positions.length-1
-
-	// geometry = new TubeBufferGeometry(
-	// 	curve,
-	// 	segments_count,
-	// 	@_param_radius,
-	// 	@_param_segments_radial,
-	// 	@_param_closed
-	// 	)
-
-	// object = this.create_object(geometry)
-	// @_objects.push(object)
 	_skin(geometry1: BufferGeometry, geometry0: BufferGeometry) {
 		const geometry = new BufferGeometry();
 

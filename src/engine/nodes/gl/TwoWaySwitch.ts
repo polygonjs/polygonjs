@@ -1,6 +1,6 @@
 import {ParamlessTypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import {GlConnectionsController} from './utils/ConnectionsController';
+// import {GlConnectionsController} from './utils/GLConnectionsController';
 
 const OUTPUT_NAME = 'val';
 enum InputName {
@@ -17,15 +17,15 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		return 'two_way_switch';
 	}
 
-	public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
+	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
 		super.initialize_node();
-		this.gl_connections_controller.initialize_node();
+		this.io.connection_points.initialize_node();
 
-		this.gl_connections_controller.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.gl_connections_controller.set_expected_output_types_function(this._expected_output_types.bind(this));
-		this.gl_connections_controller.set_input_name_function(this._gl_input_name.bind(this));
-		this.gl_connections_controller.set_output_name_function(this._gl_output_name.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 	}
 
 	protected _gl_input_name(index: number) {
@@ -38,7 +38,7 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		const second_or_third_connection =
 			this.io.connections.input_connection(1) || this.io.connections.input_connection(2);
 		const type: GlConnectionPointType = second_or_third_connection
-			? this.gl_connections_controller.connection_type_from_connection(second_or_third_connection)
+			? second_or_third_connection.src_connection_point().type
 			: GlConnectionPointType.FLOAT;
 		return [GlConnectionPointType.BOOL, type, type];
 	}
