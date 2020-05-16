@@ -112,21 +112,10 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				const param_name = connection_point.name;
 				const param_type: ParamType = connection_point.param_type;
 				let init_value = connection_point.init_value;
-				// let raw_input: ParamInitValueSerialized= null
 
-				// const raw_input = raw_input_serialized_by_param_name.get(param_name);
 				const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
-				// if (last_param_raw_input != null && last_param_init_value != null) {
-				// init_value = ParamValueToDefaultConverter.from_value(param_type, last_param_raw_input);
-				// if (init_value == null) {
-				const default_value_from_name = this.node.param_default_value(param_name);
+				let default_value_from_name = this.node.param_default_value(param_name);
 
-				// TODO: this should really store the largest set value
-				// (as in the ones with the most components)
-				// so that for an Add Gl Node, if I set a vec4 to [1,2,3,4]
-				// and then set an input type, which will transform the param to a float
-				// it will have a value of 1.
-				// But if I then set it to a vec4 again, it will remember [1,2,3,4]
 				if (default_value_from_name != null) {
 					init_value = default_value_from_name;
 				} else {
@@ -146,12 +135,14 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 					// if we need to use an init_value from a array to an array, we need to check their length.
 					// if they are different, we need to match them.
 					else if (lodash_isArray(init_value)) {
-						if (init_value.length < connection_point.init_value.length) {
-						}
-						if (init_value.length > connection_point.init_value.length) {
-						}
+						// if (init_value.length < connection_point.init_value.length) {
+						// }
+						// if (init_value.length > connection_point.init_value.length) {
+						// }
 						if (init_value.length == connection_point.init_value.length) {
-							init_value = connection_point.init_value;
+							if (last_param_init_value != null) {
+								init_value = connection_point.init_value;
+							}
 						}
 					}
 				}

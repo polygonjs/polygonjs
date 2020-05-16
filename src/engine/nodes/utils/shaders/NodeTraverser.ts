@@ -4,7 +4,7 @@ import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
 import {TypedNode} from '../../_Base';
-import {NodeContext} from '../../../poly/NodeContext';
+import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
 type NumberByString = Map<string, number>;
@@ -210,17 +210,17 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private _find_inputs_or_children(node: NodeTypeMap[NC]) {
-		return node.io.inputs.inputs();
-		// if (node.type == NetworkChildNodeType.INPUT) {
-		// 	return node.parent?.io.inputs.inputs() || [];
-		// } else {
-		// 	if (node.children_allowed()) {
-		// 		const output_node = node.children_controller?.output_node();
-		// 		return [output_node];
-		// 	} else {
-		// 		return node.io.inputs.inputs();
-		// 	}
-		// }
+		// return node.io.inputs.inputs();
+		if (node.type == NetworkChildNodeType.INPUT) {
+			return node.parent?.io.inputs.inputs() || [];
+		} else {
+			if (node.children_allowed()) {
+				const output_node = node.children_controller?.output_node();
+				return [output_node];
+			} else {
+				return node.io.inputs.inputs();
+			}
+		}
 	}
 
 	private set_nodes_depth() {

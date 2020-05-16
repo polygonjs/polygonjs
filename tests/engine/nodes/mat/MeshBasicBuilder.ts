@@ -23,9 +23,15 @@ import BasicAttribInFragmentVertex from './templates/mesh_basic_builder/Basic.at
 import BasicAttribInFragmentFragment from './templates/mesh_basic_builder/Basic.attribInFragment.frag.glsl';
 import BasicAttribInFragmentOnlyVertex from './templates/mesh_basic_builder/Basic.attribInFragmentOnly.vert.glsl';
 import BasicAttribInFragmentOnlyFragment from './templates/mesh_basic_builder/Basic.attribInFragmentOnly.frag.glsl';
+import BasicIfThenVertex from './templates/mesh_basic_builder/Basic.IfThen.vert.glsl';
+import BasicIfThenFragment from './templates/mesh_basic_builder/Basic.IfThen.frag.glsl';
+import BasicIfThenRotateFragment from './templates/mesh_basic_builder/Basic.IfThenRotate.frag.glsl';
+import BasicForLoopFragment from './templates/mesh_basic_builder/Basic.ForLoop.frag.glsl';
+
 import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
 import {Vec4ToVectorGlNode} from '../../../../src/engine/nodes/gl/_ConversionVecTo';
 import {TextureGlNode} from '../../../../src/engine/nodes/gl/Texture';
+import {GlCompareTestName} from '../../../../src/engine/nodes/gl/Compare';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -35,6 +41,9 @@ const TEST_SHADER_LIB = {
 	attribInVertex: {vert: BasicAttribInVertexVertex, frag: BasicAttribInVertexFragment},
 	attribInFragment: {vert: BasicAttribInFragmentVertex, frag: BasicAttribInFragmentFragment},
 	attribInFragmentOnly: {vert: BasicAttribInFragmentOnlyVertex, frag: BasicAttribInFragmentOnlyFragment},
+	IfThen: {vert: BasicIfThenVertex, frag: BasicIfThenFragment},
+	IfThenRotate: {vert: BasicIfThenVertex, frag: BasicIfThenRotateFragment},
+	ForLoop: {vert: BasicIfThenVertex, frag: BasicForLoopFragment},
 };
 
 const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.basic.uniforms);
@@ -146,7 +155,6 @@ QUnit.test(
 		vec2_to_float1.set_input(0, attribute1);
 		float_to_vec31.set_input('x', vec2_to_float1, 'x');
 		float_to_vec31.set_input('z', vec2_to_float1, 'y');
-		console.log('set input');
 		output1.set_input('position', float_to_vec31);
 
 		assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
@@ -167,6 +175,70 @@ QUnit.test(
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInFragmentOnly.frag);
 	}
 );
+
+QUnit.test('mesh basic builder with if_then', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const material = mesh_basic1.material;
+	const output1 = mesh_basic1.nodes_by_type('output')[0];
+	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
+	const vec3_to_float1 = mesh_basic1.create_node('vec3_to_float');
+	const compare1 = mesh_basic1.create_node('compare');
+	const if_then1 = mesh_basic1.create_node('if_then');
+	const if_then_subnet_input1 = if_then1.nodes_by_type('subnet_input')[0];
+	const if_then_subnet_output1 = if_then1.nodes_by_type('subnet_output')[0];
+	const mult_add1 = if_then1.create_node('mult_add');
+
+	vec3_to_float1.set_input(0, globals1, 'position');
+	compare1.set_input(0, vec3_to_float1, 1);
+	compare1.set_test_name(GlCompareTestName.LESS_THAN);
+	if_then1.set_input(0, compare1);
+	if_then1.set_input(1, globals1, 'position');
+	output1.set_input('color', if_then1, 'position');
+	mult_add1.set_input(0, if_then_subnet_input1);
+	mult_add1.params.get('mult')!.set([2, 2, 2]);
+	if_then_subnet_output1.set_input(0, mult_add1);
+
+	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	await mesh_basic1.request_container();
+	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert);
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag);
+
+	// now add a node that would create a function
+	const rotate1 = if_then1.create_node('rotate');
+	rotate1.set_input(0, if_then_subnet_input1);
+	if_then_subnet_output1.set_input(0, rotate1);
+	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	await mesh_basic1.request_container();
+	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert);
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag);
+});
+
+QUnit.test('mesh basic builder with for_loop', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const material = mesh_basic1.material;
+	const output1 = mesh_basic1.nodes_by_type('output')[0];
+	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
+	const for_loop1 = mesh_basic1.create_node('for_loop');
+	const for_loop_subnet_input1 = for_loop1.nodes_by_type('subnet_input')[0];
+	const for_loop_subnet_output1 = for_loop1.nodes_by_type('subnet_output')[0];
+	const add1 = for_loop1.create_node('add');
+
+	for_loop1.set_input(0, globals1, 'position');
+	output1.set_input('color', for_loop1);
+	for_loop_subnet_output1.set_input(0, add1);
+	add1.set_input(0, for_loop_subnet_input1);
+	add1.params.get('add1')!.set([0.1, 0.1, 0.1]);
+
+	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	await mesh_basic1.request_container();
+	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
+});
 
 QUnit.skip('mesh basic builder frame dependent', (assert) => {});
 

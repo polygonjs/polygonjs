@@ -101,6 +101,10 @@ export class CodeBuilder {
 		this.set_code_lines(sorted_nodes);
 	}
 
+	shaders_collection_controller() {
+		return this._shaders_collection_controller;
+	}
+
 	disallow_new_param_configs() {
 		this._param_configs_set_allowed = false;
 	}
@@ -206,7 +210,7 @@ export class CodeBuilder {
 						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
 
 						for (let definition of definitions) {
-							const line = CodeFormatter.line_wrap(definition.line, line_type);
+							const line = CodeFormatter.line_wrap(first_definition.node, definition.line, line_type);
 							MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
 						}
 						const separator = CodeFormatter.post_line_separator(line_type);
@@ -246,7 +250,7 @@ export class CodeBuilder {
 			const comment = CodeFormatter.node_comment(node, line_type);
 			MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
 			lodash_uniq(lines).forEach((line) => {
-				line = CodeFormatter.line_wrap(line, line_type);
+				line = CodeFormatter.line_wrap(node, line, line_type);
 				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
 			});
 			if (!(line_type == LineType.BODY && is_last)) {

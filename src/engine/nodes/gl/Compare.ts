@@ -7,8 +7,39 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {GlConnectionPointType, GlConnectionPointComponentsCountMap} from '../utils/io/connections/Gl';
 // import {GlConnectionsController} from './utils/GLConnectionsController';
 
-const TEST_NAMES = ['Equal', 'Less Than', 'Greater Than', 'Less Than Or Equal', 'Greater Than Or Equal', 'Not Equal'];
-const TEST_OPERATIONS_FLOAT = ['==', '<', '>', '<=', '>=', '!='];
+export enum GlCompareTestName {
+	EQUAL = 'Equal',
+	LESS_THAN = 'Less Than',
+	GREATER_THAN = 'Greater Than',
+	LESS_THAN_OR_EQUAL = 'Less Than Or Equal',
+	GREATER_THAN_OR_EQUAL = 'Greater Than Or Equal',
+	NOT_EQUAL = 'Not Equal',
+}
+enum TestOperation {
+	EQUAL = '==',
+	LESS_THAN = '<',
+	GREATER_THAN = '>',
+	LESS_THAN_OR_EQUAL = '<=',
+	GREATER_THAN_OR_EQUAL = '>=',
+	NOT_EQUAL = '!=',
+}
+
+const TEST_NAMES: GlCompareTestName[] = [
+	GlCompareTestName.EQUAL,
+	GlCompareTestName.LESS_THAN,
+	GlCompareTestName.GREATER_THAN,
+	GlCompareTestName.LESS_THAN_OR_EQUAL,
+	GlCompareTestName.GREATER_THAN_OR_EQUAL,
+	GlCompareTestName.NOT_EQUAL,
+];
+const TEST_OPERATIONS_FLOAT: TestOperation[] = [
+	TestOperation.EQUAL,
+	TestOperation.LESS_THAN,
+	TestOperation.GREATER_THAN,
+	TestOperation.LESS_THAN_OR_EQUAL,
+	TestOperation.GREATER_THAN_OR_EQUAL,
+	TestOperation.NOT_EQUAL,
+];
 const AND_SEPARATOR = ' && ';
 // const VECTOR_COMPARISON_METHODS = {
 // 	"==": 'equal',
@@ -34,8 +65,8 @@ class CompareGlParamsConfig extends NodeParamsConfig {
 		menu: {
 			entries: TEST_NAMES.map((name, i) => {
 				const operator = TEST_OPERATIONS_FLOAT[i];
-				name = `${lodash_padEnd(operator, 2, ' ')} (${name})`;
-				return {name: name, value: i};
+				const label = `${lodash_padEnd(operator, 2, ' ')} (${name})`;
+				return {name: label, value: i};
 			}),
 		},
 	});
@@ -58,6 +89,10 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_type.bind(this));
 		this.io.connection_points.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
 	}
+	set_test_name(test: GlCompareTestName) {
+		this.p.test.set(TEST_NAMES.indexOf(test));
+	}
+
 	protected _gl_input_name(index: number) {
 		return ['value0', 'value1'][index];
 	}

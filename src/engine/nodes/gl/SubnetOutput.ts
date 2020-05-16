@@ -1,10 +1,9 @@
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlConnectionPointType} from '../utils/io/connections/Gl';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
 import {ThreeToGl} from '../../../core/ThreeToGl';
+import {SubnetGlNode} from './Subnet';
 class SubnetOutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputGlParamsConfig();
 
@@ -19,44 +18,23 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		this.io.connection_points.set_expected_output_types_function(() => []);
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_create_spare_params_from_inputs(false);
+
+		this.add_post_dirty_hook('set_parent_dirty', () => {
+			this.parent?.set_dirty(this);
+		});
+	}
+	get parent() {
+		return super.parent as SubnetGlNode | null;
 	}
 
 	protected _expected_input_name(index: number) {
-		const connection = this.io.connections.input_connection(index);
-		if (connection) {
-			const name = connection.src_connection_point().name;
-			return name;
-		} else {
-			return `in${index}`;
-		}
-	}
-
-	private _expected_inputs_count() {
-		const current_connections = this.io.connections.input_connections();
-		return current_connections ? Math.max(current_connections.length + 1, 1) : 1;
+		const parent = this.parent;
+		return parent?.child_expected_output_connection_point_name(index) || `in${index}`;
 	}
 
 	protected _expected_input_types() {
-		const types: GlConnectionPointType[] = [];
-
-		const default_type = GlConnectionPointType.FLOAT;
-		const current_connections = this.io.connections.input_connections();
-
-		const expected_count = this._expected_inputs_count();
-		for (let i = 0; i < expected_count; i++) {
-			if (current_connections) {
-				const connection = current_connections[i];
-				if (connection) {
-					const type = connection.src_connection_point().type;
-					types.push(type);
-				} else {
-					types.push(default_type);
-				}
-			} else {
-				types.push(default_type);
-			}
-		}
-		return types;
+		const parent = this.parent;
+		return parent?.child_expected_output_connection_point_types() || [];
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
@@ -76,12 +54,14 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 					const out = (this.parent as BaseGlNodeType).gl_var_name(connection_point.name);
 					// const body_line = `${gl_type} ${out} = ${in_value}`;
 					// do not use the type, to avoid re-defining a variable that should be defined in the parent node
-					const body_line = `${out} = ${in_value}`;
+					const body_line = `	${out} = ${in_value}`;
 					body_lines.push(body_line);
 				}
 			}
 		}
 
 		shaders_collection_controller.add_body_lines(this, body_lines);
+
+		this.parent.set_lines_block_end(shaders_collection_controller, this);
 	}
 }

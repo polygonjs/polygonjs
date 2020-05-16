@@ -21,6 +21,14 @@ export class LinesController {
 	definitions(node: BaseGlNodeType): BaseGLDefinition[] | undefined {
 		return this._definitions_by_node_id.get(node.graph_node_id);
 	}
+	// all_definition_nodes(scene: PolyScene) {
+	// 	const nodes: BaseGlNodeType[] = [];
+	// 	this._definitions_by_node_id.forEach((lines, node_id) => {
+	// 		const node = scene.graph.node_from_id(node_id) as BaseGlNodeType;
+	// 		nodes.push(node);
+	// 	});
+	// 	return nodes;
+	// }
 
 	add_body_lines(node: BaseGlNodeType, lines: string[]) {
 		for (let line of lines) {
@@ -30,4 +38,12 @@ export class LinesController {
 	body_lines(node: BaseGlNodeType): string[] | undefined {
 		return this._body_lines_by_node_id.get(node.graph_node_id);
 	}
+	// all_body_line_nodes(scene: PolyScene) {
+	// 	const nodes: BaseGlNodeType[] = [];
+	// 	this._body_lines_by_node_id.forEach((lines, node_id) => {
+	// 		const node = scene.graph.node_from_id(node_id) as BaseGlNodeType;
+	// 		nodes.push(node);
+	// 	});
+	// 	return nodes;
+	// }
 }

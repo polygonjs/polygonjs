@@ -1,34 +1,59 @@
-import {SubnetGlNode} from './Subnet';
+import {TypedSubnetGlNode} from './Subnet';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
 
-const CONDITION_INPUT_NAME = 'condition';
+enum ForLoopInput {
+	START_INDEX = 'i',
+	MAX = 'max',
+	STEP = 'step',
+}
+const DEFAULT_VALUES: Dictionary<number> = {
+	[ForLoopInput.START_INDEX]: 0,
+	[ForLoopInput.MAX]: 10,
+	[ForLoopInput.STEP]: 1,
+};
+const OFFSET = 0;
 
-class IfThenGlParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new IfThenGlParamsConfig();
+class ForLoopGlParamsConfig extends NodeParamsConfig {
+	start = ParamConfig.FLOAT(0);
+	max = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		range_locked: [false, false],
+	});
+	step = ParamConfig.FLOAT(1);
+}
+const ParamsConfig = new ForLoopGlParamsConfig();
 
-export class IfThenGlNode extends SubnetGlNode {
+export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'if_then';
+		return 'for_loop';
+	}
+
+	param_default_value(name: string) {
+		return DEFAULT_VALUES[name];
 	}
 
 	protected _expected_inputs_count() {
 		const current_connections = this.io.connections.input_connections();
-		return current_connections ? Math.max(current_connections.length + 1, 2) : 2;
+		return current_connections ? current_connections.length + 1 : 1;
 	}
 
 	protected _expected_input_types(): GlConnectionPointType[] {
-		const types: GlConnectionPointType[] = [GlConnectionPointType.BOOL];
+		const types: GlConnectionPointType[] = [
+			// GlConnectionPointType.FLOAT,
+			// GlConnectionPointType.FLOAT,
+			// GlConnectionPointType.FLOAT,
+		];
 
 		const default_type = GlConnectionPointType.FLOAT;
 		const current_connections = this.io.connections.input_connections();
 
 		const expected_count = this._expected_inputs_count();
-		for (let i = 1; i < expected_count; i++) {
+		for (let i = OFFSET; i < expected_count; i++) {
 			if (current_connections) {
 				const connection = current_connections[i];
 				if (connection) {
@@ -41,32 +66,39 @@ export class IfThenGlNode extends SubnetGlNode {
 				types.push(default_type);
 			}
 		}
+		console.log('expected input types', types);
 		return types;
 	}
 
 	protected _expected_output_types() {
 		const types: GlConnectionPointType[] = [];
 		const input_types = this._expected_input_types();
-		for (let i = 1; i < input_types.length; i++) {
+		for (let i = OFFSET; i < input_types.length; i++) {
 			types.push(input_types[i]);
 		}
 		return types;
 	}
 	protected _expected_input_name(index: number) {
-		if (index == 0) {
-			return CONDITION_INPUT_NAME;
+		// switch (index) {
+		// 	case 0:
+		// 		return ForLoopInput.START_INDEX;
+		// 	case 1:
+		// 		return ForLoopInput.MAX;
+		// 	case 2:
+		// 		return ForLoopInput.STEP;
+		// 	default: {
+		const connection = this.io.connections.input_connection(index);
+		if (connection) {
+			const name = connection.src_connection_point().name;
+			return name;
 		} else {
-			const connection = this.io.connections.input_connection(index);
-			if (connection) {
-				const name = connection.src_connection_point().name;
-				return name;
-			} else {
-				return `in${index}`;
-			}
+			return `in${index}`;
 		}
+		// }
+		// }
 	}
 	protected _expected_output_name(index: number) {
-		return this._expected_input_name(index + 1);
+		return this._expected_input_name(index + OFFSET);
 	}
 	//
 	//
@@ -74,10 +106,10 @@ export class IfThenGlNode extends SubnetGlNode {
 	//
 	//
 	child_expected_input_connection_point_types() {
-		return this._expected_output_types();
+		return this._expected_input_types();
 	}
 	child_expected_input_connection_point_name(index: number) {
-		return this._expected_output_name(index);
+		return this._expected_input_name(index);
 	}
 	child_expected_output_connection_point_types() {
 		return this._expected_output_types();
@@ -94,7 +126,7 @@ export class IfThenGlNode extends SubnetGlNode {
 	set_lines_block_start(shaders_collection_controller: ShadersCollectionController, child_node: SubnetInputGlNode) {
 		const body_lines: string[] = [];
 		const connection_points = this.io.inputs.named_input_connection_points;
-		for (let i = 1; i < connection_points.length; i++) {
+		for (let i = OFFSET; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type;
 			const out = this.gl_var_name(connection_point.name);
@@ -102,18 +134,43 @@ export class IfThenGlNode extends SubnetGlNode {
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
 		}
-		const condition_value = ThreeToGl.any(this.variable_for_input(CONDITION_INPUT_NAME));
-		const open_if_line = `if(${condition_value}){`;
-		body_lines.push(open_if_line);
-
 		const connections = this.io.connections.input_connections();
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {
-					// if under an if_then node
-					if (connection.input_index != 0) {
+					if (connection.input_index >= OFFSET) {
 						const connection_point = connection.dest_connection_point();
 						const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name));
+						const gl_type = connection_point.type;
+						const out = this.gl_var_name(connection_point.name);
+						const body_line = `${gl_type} ${out} = ${in_value}`;
+						body_lines.push(body_line);
+					}
+				}
+			}
+		}
+
+		const start: number = this.pv.start;
+		const max: number = this.pv.max;
+		const step: number = this.pv.step;
+		const start_str = ThreeToGl.float(start);
+		const max_str = ThreeToGl.float(max);
+		const step_str = ThreeToGl.float(step);
+		const iterator_name = this.gl_var_name('i');
+		const open_for_loop_line = `for(float ${iterator_name} = ${start_str}; ${iterator_name} < ${max_str}; ${iterator_name}+= ${step_str}){`;
+		body_lines.push(open_for_loop_line);
+
+		// i
+		const out = child_node.gl_var_name(ForLoopInput.START_INDEX);
+		const body_line = `	float ${out} = ${iterator_name}`;
+		body_lines.push(body_line);
+
+		if (connections) {
+			for (let connection of connections) {
+				if (connection) {
+					if (connection.input_index >= OFFSET) {
+						const connection_point = connection.dest_connection_point();
+						const in_value = this.gl_var_name(connection_point.name);
 						const gl_type = connection_point.type;
 						const out = child_node.gl_var_name(connection_point.name);
 						const body_line = `	${gl_type} ${out} = ${in_value}`;

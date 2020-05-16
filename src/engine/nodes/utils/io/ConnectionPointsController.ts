@@ -136,7 +136,19 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
 	private make_successors_update_signatures() {
-		for (let graph_node of this.node.graph_all_successors()) {
+		const successors = this.node.graph_all_successors();
+		if (this.node.children_allowed()) {
+			const subnet_inputs = this.node.nodes_by_type(NetworkChildNodeType.INPUT);
+			const subnet_outputs = this.node.nodes_by_type(NetworkChildNodeType.OUTPUT);
+			for (let subnet_input of subnet_inputs) {
+				successors.push(subnet_input);
+			}
+			for (let subnet_output of subnet_outputs) {
+				successors.push(subnet_output);
+			}
+		}
+
+		for (let graph_node of successors) {
 			const node = graph_node as TypedNode<NC, any>;
 			// we need to check if node.io exists to be sure it is a node, not just a graph_node
 			if (node.io && node.io.has_connection_points_controller && node.io.connection_points.initialized()) {
@@ -144,9 +156,9 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			}
 		}
 		// we also need to have subnet_output nodes update their parents
-		if (this.node.type == NetworkChildNodeType.OUTPUT) {
-			// this.node.parent?.io.connection_points.update_signature_if_required(this.node);
-		}
+		// if (this.node.type == NetworkChildNodeType.OUTPUT) {
+		// this.node.parent?.io.connection_points.update_signature_if_required(this.node);
+		// }
 	}
 
 	update_connection_types() {
