@@ -66,7 +66,6 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 				types.push(default_type);
 			}
 		}
-		console.log('expected input types', types);
 		return types;
 	}
 

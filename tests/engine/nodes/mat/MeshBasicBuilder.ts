@@ -27,6 +27,7 @@ import BasicIfThenVertex from './templates/mesh_basic_builder/Basic.IfThen.vert.
 import BasicIfThenFragment from './templates/mesh_basic_builder/Basic.IfThen.frag.glsl';
 import BasicIfThenRotateFragment from './templates/mesh_basic_builder/Basic.IfThenRotate.frag.glsl';
 import BasicForLoopFragment from './templates/mesh_basic_builder/Basic.ForLoop.frag.glsl';
+import BasicSubnetFragment from './templates/mesh_basic_builder/Basic.Subnet.frag.glsl';
 
 import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
 import {Vec4ToVectorGlNode} from '../../../../src/engine/nodes/gl/_ConversionVecTo';
@@ -44,6 +45,7 @@ const TEST_SHADER_LIB = {
 	IfThen: {vert: BasicIfThenVertex, frag: BasicIfThenFragment},
 	IfThenRotate: {vert: BasicIfThenVertex, frag: BasicIfThenRotateFragment},
 	ForLoop: {vert: BasicIfThenVertex, frag: BasicForLoopFragment},
+	Subnet: {vert: BasicIfThenVertex, frag: BasicSubnetFragment},
 };
 
 const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.basic.uniforms);
@@ -238,6 +240,30 @@ QUnit.test('mesh basic builder with for_loop', async (assert) => {
 	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
+});
+
+QUnit.test('mesh basic builder with subnet', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const material = mesh_basic1.material;
+	const output1 = mesh_basic1.nodes_by_type('output')[0];
+	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
+	const subnet1 = mesh_basic1.create_node('subnet');
+	const subnet_subnet_input1 = subnet1.nodes_by_type('subnet_input')[0];
+	const subnet_subnet_output1 = subnet1.nodes_by_type('subnet_output')[0];
+	const add1 = subnet1.create_node('add');
+
+	subnet1.set_input(0, globals1, 'position');
+	output1.set_input('color', subnet1);
+	subnet_subnet_output1.set_input(0, add1);
+	add1.set_input(0, subnet_subnet_input1);
+	add1.params.get('add1')!.set([1.0, 0.5, 0.25]);
+
+	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	await mesh_basic1.request_container();
+	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
 });
 
 QUnit.skip('mesh basic builder frame dependent', (assert) => {});

@@ -9,11 +9,9 @@ const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth],
 	// [CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF],
 ]);
-if (false) {
-	ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance);
-	ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth);
-	ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF);
-}
+ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance);
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth);
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF);
 
 export abstract class ShaderAssemblerMesh extends ShaderAssemblerMaterial {
 	// TODO: I've noticed a case where instances would not display when those shadow shaders were exported

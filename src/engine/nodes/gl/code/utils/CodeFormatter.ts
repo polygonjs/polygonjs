@@ -14,6 +14,8 @@ const LINE_PREFIXES = {
 	[LineType.DEFINE]: '',
 	[LineType.BODY]: '	',
 };
+const BLOCK_START_LAST_CHAR = '{';
+const BLOCK_END_LAST_CHAR = '}';
 
 export class CodeFormatter {
 	static node_comment(node: BaseGlNodeType, line_type: LineType): string {
@@ -45,7 +47,7 @@ export class CodeFormatter {
 		if (add_suffix) {
 			const last_char = line[line.length - 1];
 			const suffix = LINE_SUFFIXES[line_type];
-			if (last_char != suffix) {
+			if (last_char != suffix && last_char != BLOCK_START_LAST_CHAR && last_char != BLOCK_END_LAST_CHAR) {
 				line += suffix;
 			}
 		}

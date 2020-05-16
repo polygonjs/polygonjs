@@ -42,22 +42,21 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/for_loop1/subnet_input1
-	vec3 v_POLY_for_loop1_position = v_POLY_globals1_position;
-	float v_POLY_for_loop1_in1 = 0.0;
-	for(float v_POLY_for_loop1_i = 0.0; v_POLY_for_loop1_i < 10.0; v_POLY_for_loop1_i+= 1.0){
-		float v_POLY_subnet_input1_i = v_POLY_for_loop1_i;
-		vec3 v_POLY_subnet_input1_position = v_POLY_for_loop1_position;
+	// /MAT/mesh_basic_builder1/subnet1/subnet_input1
+	vec3 v_POLY_subnet1_position = v_POLY_globals1_position;
+	float v_POLY_subnet1_in1 = 0.0;
+	if(true){
+		vec3 v_POLY_subnet_input1_position = v_POLY_globals1_position;
 	
-		// /MAT/mesh_basic_builder1/for_loop1/add1
-		vec3 v_POLY_add1_sum = (v_POLY_subnet_input1_position + vec3(0.1, 0.1, 0.1));
+		// /MAT/mesh_basic_builder1/subnet1/add1
+		vec3 v_POLY_add1_sum = (v_POLY_subnet_input1_position + vec3(1.0, 0.5, 0.25));
 	
-		// /MAT/mesh_basic_builder1/for_loop1/subnet_output1
-		v_POLY_for_loop1_position = v_POLY_add1_sum;
+		// /MAT/mesh_basic_builder1/subnet1/subnet_output1
+		v_POLY_subnet1_position = v_POLY_add1_sum;
 	}
 	
 	// /MAT/mesh_basic_builder1/output1
-	diffuseColor.xyz = v_POLY_for_loop1_position;
+	diffuseColor.xyz = v_POLY_subnet1_position;
 
 
 
