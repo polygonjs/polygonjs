@@ -1,5 +1,5 @@
 import {TypedEventNode} from './_Base';
-import {AsyncFunction} from '../../../core/AsyncFunction';
+// import {AsyncFunction} from '../../../core/AsyncFunction';
 const DEFAULT_FUNCTION_CODE = `
 import {BaseCodeEventProcessor, EventContext} from 'polygonjs-engine'
 export class EventProcessor extends BaseCodeEventProcessor {
@@ -53,10 +53,10 @@ export class BaseCodeEventProcessor {
 	}
 }
 
-type EvaluatedFunction = (
-	base_event_processor_class: typeof BaseCodeEventProcessor,
-	THREE: any
-) => typeof BaseCodeEventProcessor | undefined;
+// type EvaluatedFunction = (
+// 	base_event_processor_class: typeof BaseCodeEventProcessor,
+// 	THREE: any
+// ) => typeof BaseCodeEventProcessor | undefined;
 
 class CodeEventParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
@@ -103,14 +103,15 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 			}`;
 			console.log('function_body');
 			console.log(function_body);
-			const processor_creator_function: EvaluatedFunction = new AsyncFunction(
-				'BaseCodeEventProcessor',
-				'THREE',
-				function_body
+			const processor_creator_function: Function = new Function('BaseCodeEventProcessor', 'THREE', function_body);
+			const processor_class: typeof BaseCodeEventProcessor | undefined = processor_creator_function(
+				BaseCodeEventProcessor,
+				THREE
 			);
-			const processor_class = processor_creator_function(BaseCodeEventProcessor, THREE);
+			console.log('processor_class 2', processor_class);
 			if (processor_class) {
 				this._processor = new processor_class(this);
+				console.log('this._processor', this._processor);
 				this._last_compiled_code = this.pv.code_javascript;
 			} else {
 				this.states.error.set(`cannot generate function`);

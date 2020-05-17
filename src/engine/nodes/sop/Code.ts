@@ -2,7 +2,6 @@ import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
-import {AsyncFunction} from '../../../core/AsyncFunction';
 
 const DEFAULT_FUNCTION_CODE = `import {BaseCodeSopProcessor, CoreGroup} from 'polygonjs-engine'
 export class CodeSopProcessor extends BaseCodeSopProcessor {
@@ -36,7 +35,7 @@ export class BaseCodeSopProcessor {
 	}
 }
 
-type EvaluatedFunction = (base_processor_class: typeof BaseCodeSopProcessor) => typeof BaseCodeSopProcessor | undefined;
+// type EvaluatedFunction = (base_processor_class: typeof BaseCodeSopProcessor) => typeof BaseCodeSopProcessor | undefined;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
@@ -95,11 +94,10 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			}`;
 			console.log('function_body');
 			console.log(function_body);
-			const processor_creator_function: EvaluatedFunction = new AsyncFunction(
-				'BaseCodeSopProcessor',
-				function_body
+			const processor_creator_function = new Function('BaseCodeSopProcessor', function_body);
+			const processor_class: typeof BaseCodeSopProcessor | undefined = processor_creator_function(
+				BaseCodeSopProcessor
 			);
-			const processor_class = processor_creator_function(BaseCodeSopProcessor);
 			if (processor_class) {
 				this._processor = new processor_class();
 				this._processor.set_node(this);
