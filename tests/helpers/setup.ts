@@ -9,6 +9,10 @@ import {CopObjNode} from '../../src/engine/nodes/obj/Cop';
 
 import {Poly} from '../../src/engine/Poly';
 
+// register
+import {AllRegister} from '../../src/engine/poly/registers/All';
+AllRegister.run();
+
 // window.create_renderer_if_none = () => {
 // 	const first_renderer = POLY.renderers_controller.first_renderer();
 // 	if (!first_renderer) {

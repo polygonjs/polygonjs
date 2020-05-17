@@ -35,7 +35,7 @@
 		"@mapbox/mapbox-sdk": "^0.10.0",
 		"@types/mapbox-gl": "^1.10.1",
 		"ammojs-typed": "^1.0.2",
-		"esbuild": "^0.2.6",
+		"esbuild": "^0.3.2",
 		"fork-ts-checker-webpack-plugin": "^4.1.2",
 		"geo-ambient-occlusion": "^3.0.4",
 		"jsep": "^0.3.4",
