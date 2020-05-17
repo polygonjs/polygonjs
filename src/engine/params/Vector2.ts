@@ -7,7 +7,7 @@ import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-const COMPONENT_NAMES_VECTOR2 = ['x', 'y'];
+const COMPONENT_NAMES_VECTOR2: Readonly<string[]> = ['x', 'y'];
 export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 	protected _value = new Vector2();
 	x!: FloatParam;
@@ -16,7 +16,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		return ParamType.VECTOR2;
 	}
 
-	static get component_names() {
+	get component_names(): Readonly<string[]> {
 		return COMPONENT_NAMES_VECTOR2;
 	}
 	get default_value_serialized() {

@@ -9,7 +9,7 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
-const COMPONENT_NAMES_COLOR = ['r', 'g', 'b'];
+const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	protected _value = new Color();
 	r!: FloatParam;
@@ -18,7 +18,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	static type() {
 		return ParamType.COLOR;
 	}
-	static get component_names() {
+	get component_names(): Readonly<string[]> {
 		return COMPONENT_NAMES_COLOR;
 	}
 	get default_value_serialized() {

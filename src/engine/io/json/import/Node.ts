@@ -11,7 +11,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
-import {SceneJsonImporter} from '../../..';
+import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
 // import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;

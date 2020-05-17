@@ -1,5 +1,5 @@
 import {BaseViewerType} from '../../viewers/_Base';
-import {PolyScene} from '../..';
+import {PolyScene} from '../../scene/PolyScene';
 
 export class ViewersRegister {
 	private _viewers_by_id: Map<number, BaseViewerType> = new Map();

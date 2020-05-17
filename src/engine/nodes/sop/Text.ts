@@ -14,10 +14,9 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
+// import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
+import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
-// import {opentype} from 'opentype.js'
-// var opentype = require('opentype.js');
 const DEFAULT_URL = '/fonts/droid_sans_regular.typeface.json';
 
 declare global {
@@ -291,7 +290,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private async _load_ttf_loader(): Promise<TTFLoader> {
-		const {TTFLoader} = await import(`../../../../modules/three/examples/jsm/loaders/TTFLoader`);
+		const {TTFLoader} = await import(`../../../../modules/core/loaders/TTFLoader`);
 		const loader_constructor = (<unknown>TTFLoader) as typeof TTFLoader;
 		return new loader_constructor();
 	}

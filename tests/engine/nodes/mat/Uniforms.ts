@@ -3,7 +3,7 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RampParam} from '../../../../src/engine/params/Ramp';
 import {OperatorPathParam} from '../../../../src/engine/params/OperatorPath';
 import {FloatParam} from '../../../../src/engine/params/Float';
-import {SceneJsonImporter} from '../../../../src/engine';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {FileCopNode} from '../../../../src/engine/nodes/cop/File';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';

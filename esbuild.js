@@ -10,7 +10,8 @@ var options = {
     minify: true,
     bundle: true,
     define: {
-        'process.env.NODE_ENV': '"development"'
+        'process.env.NODE_ENV': '"development"',
+        POLYGONJS_VERSION: '"1.0.23"'
     },
     external: ['require', 'fs', 'path'],
     loader: {

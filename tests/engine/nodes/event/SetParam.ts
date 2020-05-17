@@ -1,5 +1,5 @@
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
-import {SceneJsonImporter} from '../../../../src/engine';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SwitchSopNode} from '../../../../src/engine/nodes/sop/Switch';
 
 QUnit.test('event set_param simple', async (assert) => {

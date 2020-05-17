@@ -44,7 +44,7 @@ QUnit.skip('merge geos with different attributes', async (assert) => {
 import {Points} from 'three/src/objects/Points';
 import {Mesh} from 'three/src/objects/Mesh';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
-import {SceneJsonImporter} from '../../../../src/engine';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 import {AddSopNode} from '../../../../src/engine/nodes/sop/Add';
 import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';

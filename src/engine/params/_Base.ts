@@ -18,6 +18,7 @@ import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedT
 
 // type ParamTypeElem = ParamType;
 type ComputeCallback = (value: void) => void;
+const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
 
 export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// protected _raw_input: ParamInitValuesTypeMap[T];
@@ -237,12 +238,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get components() {
 		return this._components;
 	}
-	static get component_names(): string[] {
-		return [];
-	}
-	get component_names(): string[] {
-		const c = (<unknown>this.constructor) as TypedParam<T>;
-		return c.component_names;
+	get component_names(): Readonly<string[]> {
+		return TYPED_PARAM_DEFAULT_COMPONENT_NAMES;
 	}
 	get is_multiple(): boolean {
 		return this.component_names.length > 0;
