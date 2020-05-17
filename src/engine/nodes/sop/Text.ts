@@ -17,7 +17,8 @@ import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/
 // import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
-const DEFAULT_URL = '/fonts/droid_sans_regular.typeface.json';
+
+const DEFAULT_FONT_URL = '/fonts/droid_sans_regular.typeface.json';
 
 declare global {
 	interface Window {
@@ -41,7 +42,9 @@ const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove som
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TextSopParamsConfig extends NodeParamsConfig {
-	font = ParamConfig.STRING('');
+	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
+		asset_reference: true,
+	});
 	text = ParamConfig.STRING('polygonjs', {multiline: true});
 	type = ParamConfig.INTEGER(0, {
 		menu: {
@@ -235,9 +238,6 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private _load_url(url: string) {
-		if (url === '') {
-			url = DEFAULT_URL;
-		}
 		const elements1 = url.split('?')[0];
 		const elements2 = elements1.split('.');
 		const ext = elements2[elements2.length - 1];

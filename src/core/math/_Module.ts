@@ -88,12 +88,13 @@ export class CoreMath {
 	// https://www.movable-type.co.uk/scripts/latlong.html
 	static geodesic_distance(lnglat1: LngLatLike, lnglat2: LngLatLike): number {
 		var R = 6371e3; // metres
-		var φ1 = this.deg2rad(lnglat1.lat);
-		var φ2 = this.deg2rad(lnglat2.lat);
-		var Δφ = this.deg2rad(lnglat2.lat - lnglat1.lat);
-		var Δλ = this.deg2rad(lnglat2.lng - lnglat1.lng);
+		var d1 = this.deg2rad(lnglat1.lat);
+		var d2 = this.deg2rad(lnglat2.lat);
+		var ad1 = this.deg2rad(lnglat2.lat - lnglat1.lat);
+		var ad2 = this.deg2rad(lnglat2.lng - lnglat1.lng);
 
-		var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+		var a =
+			Math.sin(ad1 / 2) * Math.sin(ad1 / 2) + Math.cos(d1) * Math.cos(d2) * Math.sin(ad2 / 2) * Math.sin(ad2 / 2);
 		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
 		var d = R * c;
