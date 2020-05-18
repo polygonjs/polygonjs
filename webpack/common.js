@@ -34,7 +34,9 @@ const plugins = [
 ];
 
 if (TYPESCRIPT_TRANSPILE_ONLY) {
-	plugins.push(new ForkTsCheckerWebpackPlugin());
+	// no need for this for now, since I only do transpile_only when doing quick test
+	// and the point is to build fast
+	// plugins.push(new ForkTsCheckerWebpackPlugin());
 }
 
 module.exports = (env = {}) => {
