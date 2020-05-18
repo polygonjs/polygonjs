@@ -1,4 +1,6 @@
-const TYPESCRIPT_TRANSPILE_ONLY = false;
+const argv = require('yargs').argv;
+const TYPESCRIPT_TRANSPILE_ONLY = argv.env.TRANSPILE_ONLY || false;
+console.log('TYPESCRIPT_TRANSPILE_ONLY', TYPESCRIPT_TRANSPILE_ONLY);
 
 // IN CASE OF CRASHES WHEN BUILDING
 // - try and deactivate experimentalWatchApi in ts-loader
