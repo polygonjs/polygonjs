@@ -105,7 +105,7 @@ import {AttributeRequirementsController} from '../AttributeRequirementsControlle
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 
-import {AsyncFunction} from '../../../core/AsyncFunction';
+// import {AsyncFunction} from '../../../core/AsyncFunction';
 import {Poly} from '../../Poly';
 
 export class FunctionGenerator extends BaseTraverser {
@@ -149,7 +149,8 @@ export class FunctionGenerator extends BaseTraverser {
 
 			if (this.function_main_string) {
 				try {
-					this.function = new AsyncFunction(
+					// not sure why I needed AsyncFunction
+					this.function = new Function(
 						'Core',
 						'param',
 						'methods',
