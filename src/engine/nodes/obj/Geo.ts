@@ -75,7 +75,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	//
 	//
 	_on_create() {
-		this.create_node('text');
+		this.create_node('box');
 	}
 	_on_child_add(node: BaseNodeType) {
 		if (this.scene.loading_controller.loaded) {
