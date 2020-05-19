@@ -1,19 +1,20 @@
+const argv = require('yargs').argv;
+const FAST_COMPILE = argv.env.FAST_COMPILE || false;
+const path = require('path');
+const LOGO_PATH = path.resolve(__dirname, '../public/images/logo.256.png');
+
 const merge = require('webpack-merge');
 const common = require('./common.js');
 const TerserPlugin = require('terser-webpack-plugin');
-const path = require('path');
 const CompressionPlugin = require('compression-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 var {AggressiveMergingPlugin} = require('webpack').optimize;
-
-const LOGO_PATH = path.resolve(__dirname, '../public/images/logo.256.png');
 
 module.exports = (env) => {
 	const common_options = common(env);
 
 	// common_options.plugins.push(new UglifyJsWebpackPlugin()); //minify everything // no need, terser (below is better)
-	const optimize_compile = true; // to test faster
-	if (optimize_compile) {
+	if (!FAST_COMPILE) {
 		common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
 		common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));
 		common_options.plugins.push(new CompressionPlugin()); // gs by default
@@ -39,7 +40,7 @@ module.exports = (env) => {
 		devtool: 'source-map',
 		optimization: {
 			chunkIds: 'named',
-			minimize: true,
+			minimize: !FAST_COMPILE,
 			minimizer: [
 				new TerserPlugin({
 					extractComments: true,
