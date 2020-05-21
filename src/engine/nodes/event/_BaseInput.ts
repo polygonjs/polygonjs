@@ -22,7 +22,7 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 			this.scene.events_dispatcher.unregister_event_node(this);
 		});
 
-		this.params.set_post_create_params_hook(() => {
+		this.params.on_params_created(() => {
 			this._update_register();
 		});
 	}

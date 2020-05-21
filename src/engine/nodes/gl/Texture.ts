@@ -30,6 +30,12 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
+
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created(() => {
+				this.params.label.init([this.p.param_name]);
+			});
+		});
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {

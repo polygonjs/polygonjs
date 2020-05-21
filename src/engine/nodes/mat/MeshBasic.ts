@@ -32,7 +32,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 		direct_params: true,
 	});
 	initialize_node() {
-		this.params.set_post_create_params_hook(() => {
+		this.params.on_params_created(() => {
 			this.texture_map_controller.initialize_node();
 			this.texture_alpha_map_controller.initialize_node();
 		});

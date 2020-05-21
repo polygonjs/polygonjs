@@ -15,9 +15,12 @@ export class AnyEventNode extends TypedEventNode<PassEventParamsConfig> {
 		return 'any';
 	}
 	initialize_node() {
-		this.io.inputs.set_named_input_connection_points(
-			[0, 1, 2, 3].map((i) => new EventConnectionPoint(`trigger${i}`, EventConnectionPointType.BASE))
-		);
+		const count = 10;
+		const list: EventConnectionPoint<EventConnectionPointType>[] = new Array(count);
+		for (let i = 0; i < count; i++) {
+			list[i] = new EventConnectionPoint(`trigger${i}`, EventConnectionPointType.BASE);
+		}
+		this.io.inputs.set_named_input_connection_points(list);
 		this.io.outputs.set_named_output_connection_points([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
@@ -25,11 +28,5 @@ export class AnyEventNode extends TypedEventNode<PassEventParamsConfig> {
 
 	process_event(event_context: EventContext<Event>) {
 		this.dispatch_event_to_output(OUTPUT_NAME, event_context);
-
-		// const connections = this.io.connections.output_connections();
-		// const nodes: BaseEventNodeType[] = connections.map((connection) => connection.node_dest) as BaseEventNodeType[];
-		// for (let node of nodes) {
-		// 	node.process_event(event_context);
-		// }
 	}
 }

@@ -58,6 +58,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 
 	create_light() {
 		const light = new DirectionalLight();
+		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;
 		light.shadow.bias = -0.001;

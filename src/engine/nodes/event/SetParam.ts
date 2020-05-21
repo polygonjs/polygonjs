@@ -13,6 +13,7 @@ import {BaseNodeType} from '../_Base';
 
 enum SetParamParamType {
 	BOOLEAN = 'boolean',
+	BUTTON = 'button',
 	NUMBER = 'number',
 	VECTOR2 = 'vector2',
 	VECTOR3 = 'vector3',
@@ -21,6 +22,7 @@ enum SetParamParamType {
 }
 const SET_PARAM_PARAM_TYPE: Array<SetParamParamType> = [
 	SetParamParamType.BOOLEAN,
+	SetParamParamType.BUTTON,
 	SetParamParamType.NUMBER,
 	SetParamParamType.VECTOR2,
 	SetParamParamType.VECTOR3,
@@ -28,12 +30,14 @@ const SET_PARAM_PARAM_TYPE: Array<SetParamParamType> = [
 	SetParamParamType.STRING,
 ];
 const TYPE_BOOLEAN = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.BOOLEAN);
+// const TYPE_BUTTON = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.BUTTON);
 const TYPE_NUMBER = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.NUMBER);
 const TYPE_VECTOR2 = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.VECTOR2);
 const TYPE_VECTOR3 = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.VECTOR3);
 const TYPE_VECTOR4 = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.VECTOR4);
 const TYPE_STRING = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.STRING);
 
+const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
 	node = ParamConfig.OPERATOR_PATH('/geo1');
 	param = ParamConfig.STRING('display');
@@ -88,6 +92,9 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
+		this.io.outputs.set_named_output_connection_points([
+			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
+		]);
 	}
 	async process_event(event_context: EventContext<Event>) {
 		if (this.p.node.is_dirty) {
@@ -98,9 +105,13 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			const param = node.params.get(this.pv.param);
 			if (param) {
 				const new_value = this._new_param_value(param);
-				param.set(new_value);
+				if (new_value != null) {
+					param.set(new_value);
+				}
 			}
 		}
+
+		this.dispatch_event_to_output(OUTPUT_NAME, event_context);
 	}
 
 	private _new_param_value(param: BaseParamType) {
@@ -112,6 +123,9 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				} else {
 					return this.pv.boolean;
 				}
+			}
+			case SetParamParamType.BUTTON: {
+				return param.options.execute_callback();
 			}
 			case SetParamParamType.NUMBER: {
 				if (this.pv.increment) {

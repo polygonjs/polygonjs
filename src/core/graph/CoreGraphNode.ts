@@ -63,8 +63,8 @@ export class CoreGraphNode {
 		this.graph.removeNode(this);
 	}
 
-	add_graph_input(src: CoreGraphNode): boolean {
-		return this.graph.connect(src, this);
+	add_graph_input(src: CoreGraphNode, check_if_graph_has_cycle = true): boolean {
+		return this.graph.connect(src, this, check_if_graph_has_cycle);
 	}
 	remove_graph_input(src: CoreGraphNode) {
 		this.graph.disconnect(src, this);

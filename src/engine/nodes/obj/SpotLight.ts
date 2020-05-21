@@ -53,6 +53,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 
 	create_light() {
 		const light = new SpotLight();
+		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;
 		light.shadow.bias = -0.001;

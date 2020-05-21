@@ -100,7 +100,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			'_reset_if_resolution_changed',
 			this._reset_if_resolution_changed.bind(this)
 		);
-		this.params.set_post_create_params_hook(() => {
+		this.params.on_params_created(() => {
 			this._reset();
 		});
 	}

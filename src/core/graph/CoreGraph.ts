@@ -56,15 +56,20 @@ export class CoreGraph {
 		return this._graph.node(id);
 	}
 
-	connect(src: CoreGraphNode, dest: CoreGraphNode): boolean {
+	connect(src: CoreGraphNode, dest: CoreGraphNode, check_if_graph_has_cycle = true): boolean {
 		const src_id = src.graph_node_id;
 		const dest_id = dest.graph_node_id;
 
 		if (this._graph.hasNode(src_id) && this._graph.hasNode(dest_id)) {
 			this._graph.setEdge(src_id, dest_id);
 
-			const scene_loading = this._scene ? this._scene.loading_controller.is_loading : true;
-			const check_if_graph_has_cycle = !scene_loading;
+			// if check_if_graph_has_cycle is passed as false, that means we never check.
+			// this can be useful when we know that the connection will not create a cycle,
+			// such as when connecting params or inputs to a node
+			if (check_if_graph_has_cycle) {
+				const scene_loading = this._scene ? this._scene.loading_controller.is_loading : true;
+				check_if_graph_has_cycle = !scene_loading;
+			}
 			let graph_has_cycle = false;
 			if (check_if_graph_has_cycle) {
 				graph_has_cycle = !alg.isAcyclic(this._graph);

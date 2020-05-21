@@ -32,10 +32,10 @@ QUnit.test('geo obj creates a first sop on create', async (assert) => {
 	const geo2 = scene.root.create_node('geo');
 	assert.equal(geo2.children().length, 1);
 	const child = geo2.children()[0];
-	assert.equal(child.type, 'text');
+	assert.equal(child.type, 'box');
 	assert.ok(child.flags.display.active);
 	assert.deepEqual(
-		geo2.nodes_by_type('text').map((n) => n.graph_node_id),
+		geo2.nodes_by_type('box').map((n) => n.graph_node_id),
 		[child.graph_node_id]
 	);
 });

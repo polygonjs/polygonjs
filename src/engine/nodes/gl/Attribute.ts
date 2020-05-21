@@ -49,6 +49,11 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created(() => {
+				this.params.label.init([this.p.name]);
+			});
+		});
 	}
 	create_params() {
 		if (this.material_node?.assembler_controller.allow_attribute_exports()) {

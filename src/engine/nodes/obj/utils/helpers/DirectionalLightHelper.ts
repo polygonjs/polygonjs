@@ -24,6 +24,8 @@ export class DirectionalLightHelper extends BaseLightHelper<DirectionalLight, Di
 		this._square.geometry = geometry;
 		this._square.material = this._line_material;
 		this._square.rotateX(Math.PI * 0.5);
+		this._square.updateMatrix();
+		this._square.matrixAutoUpdate = false;
 
 		this.object.add(this._square);
 	}
@@ -40,6 +42,7 @@ export class DirectionalLightHelper extends BaseLightHelper<DirectionalLight, Di
 		// this._quat.setFromUnitVectors(this._default_position, this.node.pv.position);
 		// this._object.setRotationFromQuaternion(this._quat);
 		this._object.scale.setScalar(this.node.pv.helper_size);
+		this._object.updateMatrix();
 
 		this._line_material.color.copy(this.node.light.color);
 	}

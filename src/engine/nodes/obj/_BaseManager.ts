@@ -7,7 +7,9 @@ export class BaseManagerObjNode extends TypedObjNode<Group, BaseManagerObjParams
 	protected _attachable_to_hierarchy: boolean = false;
 
 	create_object() {
-		return new Group();
+		const group = new Group();
+		group.matrixAutoUpdate = false;
+		return group;
 	}
 
 	cook() {

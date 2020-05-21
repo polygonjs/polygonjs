@@ -17,7 +17,9 @@ export class ChildrenDisplayController {
 	constructor(private node: BaseObjNodeClassWithDisplayNode) {}
 
 	private _create_sop_group() {
-		return new Mesh();
+		const mesh = new Mesh();
+		mesh.matrixAutoUpdate = false;
+		return mesh;
 	}
 	get sop_group() {
 		return this._sop_group;

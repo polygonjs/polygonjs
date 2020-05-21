@@ -31,9 +31,9 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 	// }
 
 	create_light() {
-		const object = new RectAreaLight(0xffffff, 1, 1, 1);
-
-		return object;
+		const light = new RectAreaLight(0xffffff, 1, 1, 1);
+		light.matrixAutoUpdate = false;
+		return light;
 	}
 
 	// create_light_params() {

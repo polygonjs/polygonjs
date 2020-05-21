@@ -30,6 +30,13 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 
 		this.ui_data.set_width(100);
 		// this.ui_data.set_icon('compress-arrows-alt');
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created(() => {
+				this.params.label.init([this.p.compact], () => {
+					return this.pv.compact ? 'compact' : 'separate objects';
+				});
+			});
+		});
 	}
 
 	cook(input_contents: CoreGroup[]) {

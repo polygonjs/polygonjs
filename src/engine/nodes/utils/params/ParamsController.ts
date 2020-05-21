@@ -16,6 +16,7 @@ import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeM
 import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
+import {ParamsLabelController} from './ParamsLabelController';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -36,6 +37,7 @@ export interface ParamsUpdateOptions {
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
+	private _params_created: boolean = false;
 	private _params_by_name: Dictionary<BaseParamType> = {};
 	// caches
 	private _params_list: BaseParamType[] = [];
@@ -55,7 +57,16 @@ export class ParamsController {
 	private _on_scene_load_hooks: OnSceneLoadHook[] | undefined;
 	private _on_scene_load_hook_names: string[] | undefined;
 
-	constructor(protected node: BaseNodeType) {}
+	// labels
+	private _label_controller: ParamsLabelController | undefined;
+	get label(): ParamsLabelController {
+		return (this._label_controller = this._label_controller || new ParamsLabelController());
+	}
+	has_label_controller(): boolean {
+		return this._label_controller != null;
+	}
+
+	constructor(public readonly node: BaseNodeType) {}
 
 	private init_dependency_node() {
 		if (!this._params_node) {
@@ -80,6 +91,7 @@ export class ParamsController {
 		// this._create_params_ui_data_dependencies();
 		this.init_param_accessors();
 		this._param_create_mode = false;
+		this._params_created = true;
 
 		this.run_post_create_params_hook();
 
@@ -459,8 +471,12 @@ export class ParamsController {
 	// HOOKS
 	//
 	//
-	set_post_create_params_hook(hook: PostCreateParamsHook) {
-		this._post_create_params_hook = hook;
+	on_params_created(hook: PostCreateParamsHook) {
+		if (this._params_created) {
+			hook();
+		} else {
+			this._post_create_params_hook = hook;
+		}
 	}
 	add_on_scene_load_hook(name: string, method: OnSceneLoadHook) {
 		this._on_scene_load_hook_names = this._on_scene_load_hook_names || [];
@@ -473,7 +489,7 @@ export class ParamsController {
 			console.warn(`hook with name ${name} already exists`, this.node);
 		}
 	}
-	run_post_create_params_hook() {
+	private run_post_create_params_hook() {
 		if (this._post_create_params_hook) {
 			this._post_create_params_hook();
 		}

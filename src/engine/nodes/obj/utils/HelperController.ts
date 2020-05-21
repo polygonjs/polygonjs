@@ -48,6 +48,7 @@ export class HelperController<L extends Light> {
 
 	private _create_helper(): BaseLightHelper<L, BaseLightHelperObjNode<L>> {
 		const helper = new this._helper_constructor(this.node, this._name);
+		helper.object.matrixAutoUpdate = false;
 		helper.build();
 		this.node.light.add(helper.object);
 		return helper;

@@ -10,6 +10,7 @@ import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
+import {SequenceEventNode} from '../../../nodes/event/Sequence';
 
 export interface EventNodeChildrenMap {
 	animation_multi_cache: AnimationMultiCacheEventNode;
@@ -22,6 +23,7 @@ export interface EventNodeChildrenMap {
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
 	set_param: SetParamEventNode;
+	sequence: SequenceEventNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -37,5 +39,6 @@ export class EventRegister {
 		poly.register_node(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SceneEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(SetParamEventNode, CATEGORY_EVENT.MISC);
+		poly.register_node(SequenceEventNode, CATEGORY_EVENT.MISC);
 	}
 }

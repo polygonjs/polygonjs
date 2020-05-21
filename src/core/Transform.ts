@@ -12,19 +12,19 @@ import {BaseNodeType} from '../engine/nodes/_Base';
 
 export enum RotationOrder {
 	XYZ = 'XYZ',
-	YXZ = 'YXZ',
-	ZXY = 'ZXY',
-	ZYX = 'ZYX',
-	YZX = 'YZX',
 	XZY = 'XZY',
+	YXZ = 'YXZ',
+	YZX = 'YZX',
+	ZYX = 'ZYX',
+	ZXY = 'ZXY',
 }
 export const ROTATION_ORDERS: RotationOrder[] = [
 	RotationOrder.XYZ,
-	RotationOrder.YXZ,
-	RotationOrder.ZXY,
-	RotationOrder.ZYX,
-	RotationOrder.YZX,
 	RotationOrder.XZY,
+	RotationOrder.YXZ,
+	RotationOrder.YZX,
+	RotationOrder.ZYX,
+	RotationOrder.ZXY,
 ];
 export const DEFAULT_ROTATION_ORDER = RotationOrder.XYZ;
 
@@ -91,13 +91,20 @@ export class CoreTransform {
 	// this.object().quaternion.copy(quaternion)
 	// this.object().scale.copy(scale)
 
+	static set_params_from_object_position_array: Number3 = [0, 0, 0];
+	static set_params_from_object_rotation_deg = new Vector3();
+	static set_params_from_object_rotation_array: Number3 = [0, 0, 0];
 	static set_params_from_object(object: Object3D, node: BaseNodeType) {
-		const position = object.position.toArray() as Number3;
-		const rotation = object.rotation.toArray().map((c) => c * (180 / Math.PI)) as Number3;
+		object.position.toArray(this.set_params_from_object_position_array);
+
+		object.rotation.toArray(this.set_params_from_object_rotation_array);
+		this.set_params_from_object_rotation_deg.fromArray(this.set_params_from_object_rotation_array);
+		this.set_params_from_object_rotation_deg.multiplyScalar(180 / Math.PI);
+		this.set_params_from_object_rotation_deg.toArray(this.set_params_from_object_rotation_array);
 
 		node.scene.batch_update(() => {
-			node.params.set_vector3('t', position);
-			node.params.set_vector3('r', rotation);
+			node.params.set_vector3('t', this.set_params_from_object_position_array);
+			node.params.set_vector3('r', this.set_params_from_object_rotation_array);
 		});
 	}
 

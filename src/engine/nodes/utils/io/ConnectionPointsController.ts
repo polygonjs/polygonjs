@@ -105,7 +105,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			'_update_signature_if_required',
 			this._update_signature_if_required_bound
 		);
-		this.node.params.set_post_create_params_hook(this._update_signature_if_required_bound);
+		this.node.params.on_params_created(this._update_signature_if_required_bound);
 		this.node.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 
 		if (!this._spare_params_controller.initialized()) {

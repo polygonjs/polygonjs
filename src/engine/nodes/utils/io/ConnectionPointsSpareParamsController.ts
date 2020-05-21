@@ -37,7 +37,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			return;
 		}
 		this._initialized = true;
-		this.node.params.set_post_create_params_hook(this.create_inputs_from_params.bind(this));
+		this.node.params.on_params_created(this.create_inputs_from_params.bind(this));
 	}
 	initialized() {
 		return this._initialized;

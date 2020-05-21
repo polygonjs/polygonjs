@@ -20,7 +20,9 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	private _helper = new AxesHelper(1);
 
 	create_object() {
-		return new Group();
+		const group = new Group();
+		group.matrixAutoUpdate = false;
+		return group;
 	}
 	initialize_node() {
 		this.hierarchy_controller.initialize_node();

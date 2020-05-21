@@ -100,7 +100,9 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	private _fog_exp2: FogExp2 | undefined;
 
 	create_object() {
-		return new Scene();
+		const scene = new Scene();
+		scene.matrixAutoUpdate = false;
+		return scene;
 	}
 
 	initialize_node() {

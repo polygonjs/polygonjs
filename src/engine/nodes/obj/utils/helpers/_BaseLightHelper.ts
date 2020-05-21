@@ -26,6 +26,7 @@ export abstract class BaseLightHelper<L extends Light, N extends BaseLightHelper
 	constructor(protected node: N, private _name: string) {}
 
 	build() {
+		this._object.matrixAutoUpdate = false;
 		this._object.name = this._name;
 		this.build_helper();
 	}

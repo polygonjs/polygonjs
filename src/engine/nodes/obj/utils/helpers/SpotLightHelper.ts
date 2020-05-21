@@ -7,6 +7,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {LineSegments} from 'three/src/objects/LineSegments';
+import {Vector3} from 'three/src/math/Vector3';
 
 export class SpotLightHelper extends BaseLightHelper<SpotLight, SpotLightObjNode> {
 	private _cone = new LineSegments();
@@ -27,16 +28,23 @@ export class SpotLightHelper extends BaseLightHelper<SpotLight, SpotLightObjNode
 		this._cone.geometry = geometry;
 
 		this._cone.material = this._line_material;
-		this._cone.rotateX(Math.PI * 0.5);
+		// this._cone.rotateX(Math.PI * 0.5);
+		// this._cone.updateMatrix()
+		this._cone.matrixAutoUpdate = false;
 
 		this.object.add(this._cone);
 	}
 
+	private _matrix_scale = new Vector3();
 	update() {
 		const coneLength = (this.node.light.distance ? this.node.light.distance : 1000) * this.node.pv.helper_size;
 		const coneWidth = coneLength * Math.tan(this.node.light.angle);
 
-		this._cone.scale.set(coneWidth, coneWidth, coneLength);
+		this._matrix_scale.set(coneWidth, coneWidth, coneLength);
+		this._cone.matrix.identity();
+		this._cone.matrix.makeRotationX(Math.PI * 0.5);
+		this._cone.matrix.scale(this._matrix_scale);
+		// this._cone.scale.set(coneWidth, coneWidth, coneLength);
 
 		this._line_material.color.copy(this.node.light.color);
 	}

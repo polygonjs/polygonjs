@@ -17,13 +17,19 @@ import {Material} from 'three/src/materials/Material';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Vector3} from 'three/src/math/Vector3';
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
+import {RenderHook} from '../../../core/geometry/Material';
+import {TypeAssert} from '../../poly/Assert';
 
 // import {Object3DWithGeometry} from '../../../core/geometry/Group';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 // import {BaseParamType} from '../../params/_Base';
 
-import {RenderHook} from '../../../core/geometry/Material';
+enum RivetUpdateMode {
+	ON_RENDER = 'On Every Render',
+	MANUAL = 'Manual',
+}
+const UPDATE_MODES: RivetUpdateMode[] = [RivetUpdateMode.ON_RENDER, RivetUpdateMode.MANUAL];
 
 class RivetObjParamConfig extends NodeParamsConfig {
 	object = ParamConfig.OPERATOR_PATH('', {
@@ -42,10 +48,27 @@ class RivetObjParamConfig extends NodeParamsConfig {
 		// 	RivetObjNode.PARAM_CALLBACK_update_object_position(node as RivetObjNode);
 		// },
 	});
-	active = ParamConfig.BOOLEAN(true, {
+	// active = ParamConfig.BOOLEAN(true, {
+	// 	callback: (node: BaseNodeType) => {
+	// 		RivetObjNode.PARAM_CALLBACK_update_active_state(node as RivetObjNode);
+	// 	},
+	// });
+	update_mode = ParamConfig.INTEGER(UPDATE_MODES.indexOf(RivetUpdateMode.ON_RENDER), {
 		callback: (node: BaseNodeType) => {
-			RivetObjNode.PARAM_CALLBACK_update_active_state(node as RivetObjNode);
+			RivetObjNode.PARAM_CALLBACK_update_update_mode(node as RivetObjNode);
 		},
+		menu: {
+			entries: UPDATE_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+		// visible_if: {active: true},
+	});
+	update = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			RivetObjNode.PARAM_CALLBACK_update(node as RivetObjNode);
+		},
+		visible_if: {update_mode: UPDATE_MODES.indexOf(RivetUpdateMode.MANUAL)},
 	});
 	// update = ParamConfig.BUTTON(null, {
 	// 	callback: (node: BaseNodeType) => {
@@ -65,10 +88,13 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	private _helper = new AxesHelper(1);
 	// private _time_graph_node = new CoreGraphNode(this.scene, 'time');
 	private _resolved_sop_group: Mesh | undefined;
+	// private _resolved_sop_group_child: Object3DWithGeometry | undefined;
 	private _found_point_post = new Vector3();
 
 	create_object() {
-		return new Mesh();
+		const mesh = new Mesh();
+		mesh.matrixAutoUpdate = false;
+		return mesh;
 	}
 	initialize_node() {
 		this.hierarchy_controller.initialize_node();
@@ -76,7 +102,6 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// 	this.update_object_position();
 		// });
 
-		this._add_render_hook();
 		// register hooks
 		// this.lifecycle.add_on_add_hook(() => {
 		// 	this._add_render_hook();
@@ -96,8 +121,11 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// 		this.update_object_position();
 		// 	}, 0);
 		// });
+		this.add_post_dirty_hook('rivet_on_dirty', () => {
+			this.cook_controller.cook_main_without_inputs();
+		});
 		// this.params.set_post_create_params_hook(() => {
-		// 	this._update_active_state();
+		// 	this._update_render_hook();
 		// });
 
 		// helper
@@ -107,8 +135,10 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		});
 	}
 	async cook() {
+		console.log('rivet cook');
 		await this._update_resolved_object();
-		// this._update_active_state();
+		this._update_render_hook();
+		// this._update_update_mode();
 		this.cook_controller.end_cook();
 	}
 	// private _remove_render_hook() {
@@ -116,6 +146,48 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	// 		this.object.onBeforeRender = this._previous_on_before_render;
 	// 	}
 	// }
+
+	// private _update_update_mode(){
+	// The problem with a frame dependency is that if there is a hierarchy
+	// of rivets, the update chain will be in the wrong order, and therefore wrong.
+	// It is then better to update it via a code node.
+	// 	const mode = UPDATE_MODES[this.pv.mode]
+	// 	switch(mode){
+	// 		case RivetUpdateMode.ON_RENDER: {
+	// 			this._remove_frame_dependency()
+	// 			return this._add_render_hook()
+	// 		}
+	// 		case RivetUpdateMode.ON_FRAME_CHANGE: {
+	// 			this._remove_render_hook()
+	// 			return this._add_frame_depedency()
+	// 		}
+	// 	}
+	// 	TypeAssert.unreachable(mode)
+	// }
+
+	// private _remove_frame_dependency(){
+	// 	const frame_graph_node = this.scene.time_controller.graph_node
+	// 	this.remove_graph_input(frame_graph_node)
+	// }
+	// private _add_frame_depedency(){
+	// 	const frame_graph_node = this.scene.time_controller.graph_node
+	// 	this.add_graph_input(frame_graph_node)
+	// }
+
+	private _update_render_hook() {
+		const mode = UPDATE_MODES[this.pv.update_mode];
+		console.log(mode);
+		switch (mode) {
+			case RivetUpdateMode.ON_RENDER: {
+				return this._add_render_hook();
+			}
+			case RivetUpdateMode.MANUAL: {
+				return this._remove_render_hook();
+			}
+		}
+		TypeAssert.unreachable(mode);
+	}
+
 	private _add_render_hook() {
 		// check if the new hook is different than the current one
 		// because if we were to add it 2x, previous hook would not be valid anymore
@@ -125,29 +197,45 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// not being frustumCulled ensures that the render hook is still used even though when the object is not on screen (as the children might very well be)
 		this.object.frustumCulled = false;
 	}
-	private _on_object_before_render_bound: RenderHook = this._on_object_before_render.bind(this);
+	private _remove_render_hook() {
+		this.object.onBeforeRender = () => {};
+	}
+	private _on_object_before_render_bound: RenderHook = this._update.bind(this);
 	// private _previous_on_before_render: RenderHook | undefined;
-	private _on_object_before_render(
-		renderer: WebGLRenderer,
-		scene: Scene,
-		camera: Camera,
-		geometry: BufferGeometry | Geometry,
-		material: Material,
-		group: Group | null
+	private _update(
+		renderer?: WebGLRenderer,
+		scene?: Scene,
+		camera?: Camera,
+		geometry?: BufferGeometry | Geometry,
+		material?: Material,
+		group?: Group | null
 	) {
-		if (!this.pv.active) {
-			return;
-		}
+		// if (!this.pv.active) {
+		// 	return;
+		// }
 		const resolved_object = this._resolved_object();
 		if (resolved_object) {
 			const geometry = resolved_object.geometry;
 			if (geometry) {
-				const position_array = geometry.attributes['position'].array;
-				if (position_array) {
+				const position_attrib = geometry.attributes['position'];
+				if (position_attrib) {
+					const position_array = position_attrib.array;
 					this._found_point_post.fromArray(position_array, this.pv.point_index * 3);
 					resolved_object.localToWorld(this._found_point_post);
-					this.object.position.copy(this._found_point_post);
+					// this.object.position.copy(this._found_point_post);
 					// this.object.updateMatrix();
+					this.object.matrix.makeTranslation(
+						this._found_point_post.x,
+						this._found_point_post.y,
+						this._found_point_post.z
+					);
+					// console.log(
+					// 	'rivet update',
+					// 	this.full_path(),
+					// 	this._found_point_post.x,
+					// 	this._found_point_post.y,
+					// 	this._found_point_post.z
+					// );
 					// this.object.updateWorldMatrix(true, true);
 				}
 			}
@@ -173,6 +261,9 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 				const geo_node = node as GeoObjNode;
 				// this._remove_render_hook();
 				this._resolved_sop_group = geo_node.children_display_controller.sop_group;
+				// I can't really use _resolved_sop_group_child
+				// because it may not exist when this method is execute
+				// this._resolved_sop_group_child = this._resolved_sop_group.children[0] as Object3DWithGeometry;
 			} else {
 				this.states.error.set('found node is not a geo node');
 			}
@@ -186,21 +277,32 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		if (object) {
 			return object as Object3DWithGeometry;
 		}
+		// return this._resolved_sop_group_child;
 	}
 	//
 	//
 	// ACTIVE
 	//
 	//
-	static PARAM_CALLBACK_update_active_state(node: RivetObjNode) {
-		node._update_active_state();
+	static PARAM_CALLBACK_update_update_mode(node: RivetObjNode) {
+		node._update_render_hook();
 	}
-	private _update_active_state() {
-		this.p.active.compute();
-		// if (this.pv.active == true) {
-		// 	this._add_render_hook();
-		// } else {
-		// 	this._remove_render_hook();
-		// }
+	// private async _update_active_state() {
+	// 	// await this.p.active.compute();
+	// 	this._update_render_hook();
+	// }
+
+	//
+	//
+	// UPDATE
+	//
+	//
+	static PARAM_CALLBACK_update(node: RivetObjNode) {
+		node._update();
 	}
+	// private _reset() {
+	// 	this._resolved_sop_group = undefined;
+	// 	// this._resolved_sop_group_child = undefined;
+	// 	this._update_resolved_object();
+	// }
 }

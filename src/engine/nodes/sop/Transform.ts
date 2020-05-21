@@ -59,6 +59,14 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		// this.ui_data.set_param_label(this.p.apply_on, (v)=>TARGET_TYPES[v])
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created(() => {
+				this.params.label.init([this.p.apply_on], () => {
+					return TRANSFORM_SOP_TARGET_TYPES[this.pv.apply_on];
+				});
+			});
+		});
 	}
 
 	private _core_transform = new CoreTransform();

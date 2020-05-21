@@ -42,6 +42,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 
 	create_light() {
 		const light = new PointLight();
+		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;
 		light.shadow.bias = -0.001;

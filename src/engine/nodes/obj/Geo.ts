@@ -24,7 +24,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	readonly transform_controller: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	create_object() {
-		return new Group();
+		const group = new Group();
+		group.matrixAutoUpdate = false;
+		return group;
 	}
 
 	// display_node and children_display controllers

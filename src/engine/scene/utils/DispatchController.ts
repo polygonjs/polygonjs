@@ -11,15 +11,41 @@ import {ParamEvent} from '../../poly/ParamEvent';
 interface EventsListener {
 	process_events: (emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
 }
+type OnAddListenerCallback = () => void;
 
 export class DispatchController {
+	private _on_add_listener_callbacks: OnAddListenerCallback[] | undefined;
 	constructor(private scene: PolyScene) {}
 
 	private _events_listener: EventsListener | undefined;
 
 	set_listener(events_listener: EventsListener) {
-		this._events_listener = events_listener;
+		// let's have a single listener for now
+		// which is a constraint I've added when adding on_add_listener
+		if (!this._events_listener) {
+			this._events_listener = events_listener;
+			this.run_on_add_listener_callbacks();
+		} else {
+			console.warn('scene already has a listener');
+		}
 		// this._store.scene = this;
+	}
+	on_add_listener(callback: OnAddListenerCallback) {
+		if (this._events_listener) {
+			callback();
+		} else {
+			this._on_add_listener_callbacks = this._on_add_listener_callbacks || [];
+			this._on_add_listener_callbacks.push(callback);
+		}
+	}
+	private run_on_add_listener_callbacks() {
+		if (this._on_add_listener_callbacks) {
+			let callback: OnAddListenerCallback | undefined;
+			while ((callback = this._on_add_listener_callbacks.pop())) {
+				callback();
+			}
+			this._on_add_listener_callbacks = undefined;
+		}
 	}
 	get events_listener() {
 		return this._events_listener;

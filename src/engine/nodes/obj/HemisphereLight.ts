@@ -27,7 +27,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 
 	create_light() {
 		const light = new HemisphereLight();
-
+		light.matrixAutoUpdate = false;
 		return light;
 	}
 	initialize_node() {

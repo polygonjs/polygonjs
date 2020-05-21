@@ -16,7 +16,9 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 	}
 
 	create_light() {
-		return new AmbientLight();
+		const light = new AmbientLight();
+		light.matrixAutoUpdate = false;
+		return light;
 	}
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);

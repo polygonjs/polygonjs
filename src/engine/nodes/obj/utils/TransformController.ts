@@ -51,8 +51,8 @@ export class TransformController {
 		if (matrix != null && !matrix.equals(object.matrix)) {
 			// do not apply to cameras with control
 
-			object.matrixAutoUpdate = false;
-			object.matrix = matrix;
+			// object.matrixAutoUpdate = false;
+			object.matrix.copy(matrix);
 
 			object.dispatchEvent({type: 'change'});
 		} else {
@@ -94,7 +94,11 @@ export class TransformController {
 	private _core_transform = new CoreTransform();
 	private _update_matrix_from_params_with_core_transform() {
 		const object = this.node.object;
-		object.matrixAutoUpdate = false;
+
+		let prev_auto_update = object.matrixAutoUpdate;
+		if (prev_auto_update) {
+			object.matrixAutoUpdate = false;
+		}
 		const matrix = this._core_transform.matrix(
 			this.node.pv.t,
 			this.node.pv.r,
@@ -104,7 +108,9 @@ export class TransformController {
 		);
 		object.matrix.identity();
 		object.applyMatrix4(matrix);
-		object.matrixAutoUpdate = true;
+		if (prev_auto_update) {
+			object.matrixAutoUpdate = true;
+		}
 
 		object.dispatchEvent({type: 'change'});
 	}
