@@ -12,6 +12,7 @@ import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
+import {TimerEventNode} from '../../../nodes/event/Timer';
 
 export interface EventNodeChildrenMap {
 	animation_multi_cache: AnimationMultiCacheEventNode;
@@ -26,6 +27,7 @@ export interface EventNodeChildrenMap {
 	scene: SceneEventNode;
 	set_param: SetParamEventNode;
 	sequence: SequenceEventNode;
+	timer: TimerEventNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -43,5 +45,6 @@ export class EventRegister {
 		poly.register_node(SceneEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(SetParamEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SequenceEventNode, CATEGORY_EVENT.MISC);
+		poly.register_node(TimerEventNode, CATEGORY_EVENT.MISC);
 	}
 }

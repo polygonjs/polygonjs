@@ -220,20 +220,11 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 					const position_array = position_attrib.array;
 					this._found_point_post.fromArray(position_array, this.pv.point_index * 3);
 					resolved_object.localToWorld(this._found_point_post);
-					// this.object.position.copy(this._found_point_post);
-					// this.object.updateMatrix();
 					this.object.matrix.makeTranslation(
 						this._found_point_post.x,
 						this._found_point_post.y,
 						this._found_point_post.z
 					);
-					// console.log(
-					// 	'rivet update',
-					// 	this.full_path(),
-					// 	this._found_point_post.x,
-					// 	this._found_point_post.y,
-					// 	this._found_point_post.z
-					// );
 					// this.object.updateWorldMatrix(true, true);
 				}
 			}

@@ -42,6 +42,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		for (let object of objects) {
 			object.traverse((child) => {
 				this._ensure_geometry_has_index(child);
+				child.matrixAutoUpdate = false;
 			});
 		}
 		this.set_objects(objects);

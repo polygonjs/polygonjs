@@ -115,6 +115,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		object.castShadow = true;
 		object.receiveShadow = true;
 		object.frustumCulled = false;
+		object.matrixAutoUpdate = false;
 
 		return object as ObjectByObjectType[OT];
 		// }

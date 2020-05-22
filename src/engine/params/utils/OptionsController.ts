@@ -564,6 +564,7 @@ export class OptionsController {
 	private _visibility_graph_node: CoreGraphNode | undefined;
 	private _ui_data_dependency_set: boolean = false;
 	set_ui_data_dependency() {
+		// currently this is only called on request on a per-param and therefore per-node basis, not on scene load for the whole scene
 		if (this._ui_data_dependency_set) {
 			return;
 		}

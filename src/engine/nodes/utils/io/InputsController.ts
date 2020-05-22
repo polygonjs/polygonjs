@@ -120,10 +120,10 @@ export class InputsController<NC extends NodeContext> {
 		// graph_input_node.set_scene(this.node.scene);
 		if (!this._graph_node) {
 			this._graph_node = new CoreGraphNode(this.node.scene, 'inputs');
-			this.node.add_graph_input(this._graph_node);
+			this.node.add_graph_input(this._graph_node, false);
 		}
 
-		this._graph_node.add_graph_input(graph_input_node);
+		this._graph_node.add_graph_input(graph_input_node, false);
 		return graph_input_node;
 	}
 

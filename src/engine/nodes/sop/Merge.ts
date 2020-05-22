@@ -54,6 +54,11 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 		if (this.pv.compact) {
 			all_objects = this._make_compact(all_objects);
 		}
+		for (let object of all_objects) {
+			object.traverse((o) => {
+				o.matrixAutoUpdate = false;
+			});
+		}
 		this.set_objects(all_objects);
 	}
 

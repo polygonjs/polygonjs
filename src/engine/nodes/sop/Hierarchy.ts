@@ -70,6 +70,7 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 	}
 	private _add_parent_to_object(object: THREE.Object3D): THREE.Object3D {
 		let new_parent = new THREE.Group();
+		new_parent.matrixAutoUpdate = false;
 
 		// while(child = object.children[0]){
 		new_parent.add(object);
@@ -87,6 +88,7 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 
 	private _add_new_parent(object: THREE.Object3D): THREE.Group {
 		const new_parent2 = new THREE.Group();
+		new_parent2.matrixAutoUpdate = false;
 		new_parent2.add(object);
 		return new_parent2;
 	}

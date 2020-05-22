@@ -191,7 +191,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		} else {
 			this._node = node;
 			if (this.options.makes_node_dirty_when_dirty() && !this.parent_param) {
-				node.params.params_node?.add_graph_input(this);
+				node.params.params_node?.add_graph_input(this, false);
 			}
 		}
 
@@ -210,7 +210,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 	// hierarchy
 	set_parent_param(param: TypedMultipleParam<any>) {
-		param.add_graph_input(this);
+		param.add_graph_input(this, false);
 		this._parent_param = param;
 	}
 	get parent_param(): TypedMultipleParam<any> | undefined {

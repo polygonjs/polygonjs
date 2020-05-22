@@ -18,31 +18,29 @@ export class TimerEventNode extends TypedEventNode<TimerEventParamsConfig> {
 	}
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
-			new EventConnectionPoint(INPUT_START_NAME, EventConnectionPointType.BASE),
-			new EventConnectionPoint(INPUT_END_NAME, EventConnectionPointType.BASE),
+			new EventConnectionPoint(INPUT_START_NAME, EventConnectionPointType.BASE, this._start_timer.bind(this)),
+			new EventConnectionPoint(INPUT_END_NAME, EventConnectionPointType.BASE, this._stop_timer.bind(this)),
 		]);
 		this.io.outputs.set_named_output_connection_points([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}
 
-	process_event() {
-		console.log('timer start');
-		this._start_timer();
-	}
-
 	private _timer_active = false;
 	private _start_timer() {
-		this._timer_active = true;
+		if (!this._timer_active) {
+			this._timer_active = true;
+			this._run_timer();
+		}
 	}
 	protected _stop_timer() {
 		this._timer_active = false;
 	}
 
 	private _run_timer() {
-		this.dispatch_event_to_output(OUTPUT_NAME, {});
 		setTimeout(() => {
 			if (this._timer_active) {
+				this.dispatch_event_to_output(OUTPUT_NAME, {});
 				this._run_timer();
 			}
 		}, this.pv.period);
