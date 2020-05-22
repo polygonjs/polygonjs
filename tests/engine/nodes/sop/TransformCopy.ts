@@ -1,4 +1,4 @@
-import {TRANSFORM_SOP_TARGET_TYPES, TransformSopTargetType} from '../../../../src/engine/nodes/sop/Transform';
+import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/Transform';
 
 QUnit.test('transform copy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -12,7 +12,7 @@ QUnit.test('transform copy simple', async (assert) => {
 	transform_copy1.set_input(0, box1);
 	transform_copy1.set_input(1, transform1);
 
-	transform1.p.apply_on.set(TRANSFORM_SOP_TARGET_TYPES.indexOf(TransformSopTargetType.OBJECTS));
+	transform1.p.apply_on.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 

@@ -1,5 +1,12 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
+
+export enum Attribute {
+	POSITION = 'position',
+	NORMAL = 'normal',
+	TANGENT = 'tangent',
+}
 
 const ATTRIB_NAME_MAP: Dictionary<string> = {
 	P: 'position',
@@ -51,6 +58,21 @@ export class CoreAttribute {
 				return new Vector3(0, 0, 0);
 			default:
 				throw `size ${size} not yet implemented`;
+		}
+	}
+
+	static copy(src: BufferAttribute, dest: BufferAttribute, mark_as_needs_update = true) {
+		const src_array = src?.array as number[] | undefined;
+		const dest_array = dest?.array as number[] | undefined;
+		if (src_array && dest_array) {
+			const min_length = Math.min(src_array.length, dest_array.length);
+			for (let i = 0; i < min_length; i++) {
+				dest_array[i] = src_array[i];
+			}
+
+			if (mark_as_needs_update) {
+				dest.needsUpdate = true;
+			}
 		}
 	}
 }

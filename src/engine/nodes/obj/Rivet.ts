@@ -135,7 +135,6 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		});
 	}
 	async cook() {
-		console.log('rivet cook');
 		await this._update_resolved_object();
 		this._update_render_hook();
 		// this._update_update_mode();
@@ -176,7 +175,6 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 
 	private _update_render_hook() {
 		const mode = UPDATE_MODES[this.pv.update_mode];
-		console.log(mode);
 		switch (mode) {
 			case RivetUpdateMode.ON_RENDER: {
 				return this._add_render_hook();

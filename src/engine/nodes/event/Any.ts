@@ -5,10 +5,10 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 
 const OUTPUT_NAME = 'event';
 
-class PassEventParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new PassEventParamsConfig();
+class AnyEventParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new AnyEventParamsConfig();
 
-export class AnyEventNode extends TypedEventNode<PassEventParamsConfig> {
+export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 	params_config = ParamsConfig;
 
 	static type() {

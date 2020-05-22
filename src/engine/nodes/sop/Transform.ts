@@ -1,30 +1,28 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {CoreTransform, ROTATION_ORDERS, RotationOrder} from '../../../core/Transform';
+import {
+	CoreTransform,
+	ROTATION_ORDERS,
+	RotationOrder,
+	TransformTargetType,
+	TRANSFORM_TARGET_TYPES,
+} from '../../../core/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
 import {Matrix4} from 'three/src/math/Matrix4';
 
-export enum TransformSopTargetType {
-	OBJECTS = 'objects',
-	GEOMETRIES = 'geometries',
-}
-export const TRANSFORM_SOP_TARGET_TYPES: Array<TransformSopTargetType> = [
-	TransformSopTargetType.GEOMETRIES,
-	TransformSopTargetType.OBJECTS,
-];
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TypeAssert} from '../../poly/Assert';
 class TransformSopParamConfig extends NodeParamsConfig {
-	apply_on = ParamConfig.INTEGER(TRANSFORM_SOP_TARGET_TYPES.indexOf(TransformSopTargetType.GEOMETRIES), {
+	apply_on = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
 		menu: {
-			entries: TRANSFORM_SOP_TARGET_TYPES.map((target_type, i) => {
+			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
 				return {name: target_type, value: i};
 			}),
 		},
 	});
 	group = ParamConfig.STRING('', {
-		visible_if: {apply_on: TRANSFORM_SOP_TARGET_TYPES.indexOf(TransformSopTargetType.GEOMETRIES)},
+		visible_if: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 
 	// transform
@@ -63,7 +61,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created(() => {
 				this.params.label.init([this.p.apply_on], () => {
-					return TRANSFORM_SOP_TARGET_TYPES[this.pv.apply_on];
+					return TRANSFORM_TARGET_TYPES[this.pv.apply_on];
 				});
 			});
 		});
@@ -80,18 +78,22 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 			ROTATION_ORDERS[this.pv.rotation_order]
 		);
 
-		switch (TRANSFORM_SOP_TARGET_TYPES[this.pv.apply_on]) {
-			case TransformSopTargetType.GEOMETRIES: {
-				this._apply_matrix_to_geometries(objects, matrix);
-				break;
-			}
-			case TransformSopTargetType.OBJECTS: {
-				this._apply_matrix_to_objects(objects, matrix);
-				break;
-			}
-		}
+		this._apply_transform(objects, matrix);
 
 		this.set_objects(objects);
+	}
+
+	private _apply_transform(objects: Object3DWithGeometry[], matrix: Matrix4) {
+		const mode = TRANSFORM_TARGET_TYPES[this.pv.apply_on];
+		switch (mode) {
+			case TransformTargetType.GEOMETRIES: {
+				return this._apply_matrix_to_geometries(objects, matrix);
+			}
+			case TransformTargetType.OBJECTS: {
+				return this._apply_matrix_to_objects(objects, matrix);
+			}
+		}
+		TypeAssert.unreachable(mode);
 	}
 
 	private _apply_matrix_to_geometries(objects: Object3DWithGeometry[], matrix: Matrix4) {

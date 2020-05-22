@@ -7,6 +7,7 @@ import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitCont
 import {CodeEventNode} from '../../../nodes/event/Code';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
+import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
@@ -20,6 +21,7 @@ export interface EventNodeChildrenMap {
 	code: CodeEventNode;
 	keyboard: KeyboardEventNode;
 	mouse: MouseEventNode;
+	node_cook: NodeCookEventNode;
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
 	set_param: SetParamEventNode;
@@ -36,6 +38,7 @@ export class EventRegister {
 		poly.register_node(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.register_node(KeyboardEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(MouseEventNode, CATEGORY_EVENT.INPUT);
+		poly.register_node(NodeCookEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SceneEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(SetParamEventNode, CATEGORY_EVENT.MISC);

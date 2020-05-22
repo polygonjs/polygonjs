@@ -10,6 +10,15 @@ import {MathUtils} from 'three/src/math/MathUtils';
 
 import {BaseNodeType} from '../engine/nodes/_Base';
 
+export enum TransformTargetType {
+	OBJECTS = 'objects',
+	GEOMETRIES = 'geometries',
+}
+export const TRANSFORM_TARGET_TYPES: Array<TransformTargetType> = [
+	TransformTargetType.GEOMETRIES,
+	TransformTargetType.OBJECTS,
+];
+
 export enum RotationOrder {
 	XYZ = 'XYZ',
 	XZY = 'XZY',
@@ -23,8 +32,8 @@ export const ROTATION_ORDERS: RotationOrder[] = [
 	RotationOrder.XZY,
 	RotationOrder.YXZ,
 	RotationOrder.YZX,
-	RotationOrder.ZYX,
 	RotationOrder.ZXY,
+	RotationOrder.ZYX,
 ];
 export const DEFAULT_ROTATION_ORDER = RotationOrder.XYZ;
 
