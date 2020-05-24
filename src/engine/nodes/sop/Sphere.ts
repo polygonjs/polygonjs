@@ -28,7 +28,7 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR2([30, 30], {visible_if: {type: SPHERE_TYPE.default}});
 	open = ParamConfig.BOOLEAN(0, {visible_if: {type: SPHERE_TYPE.default}});
 	angle_range_x = ParamConfig.VECTOR2([0, '$PI*2'], {visible_if: {type: SPHERE_TYPE.default, open: true}});
-	angle_range_y = ParamConfig.VECTOR2([0, '$PI*2'], {visible_if: {type: SPHERE_TYPE.default, open: true}});
+	angle_range_y = ParamConfig.VECTOR2([0, '$PI'], {visible_if: {type: SPHERE_TYPE.default, open: true}});
 	detail = ParamConfig.INTEGER(1, {
 		range: [0, 5],
 		range_locked: [true, false],
