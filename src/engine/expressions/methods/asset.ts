@@ -10,8 +10,9 @@ interface AssetUrlResolverArgs {
 type AssetUrlResolver = (args: AssetUrlResolverArgs) => Promise<string>;
 
 const DEFAULT_RESOLVER: AssetUrlResolver = async (args: AssetUrlResolverArgs) => {
-	const encoded_asset_name = encodeURIComponent(args.asset_name);
-	return `/assets/${encoded_asset_name}`;
+	return args.asset_name;
+	// const encoded_asset_name = encodeURIComponent(args.asset_name);
+	// return `/assets/${encoded_asset_name}`;
 };
 
 export class AssetExpression extends BaseMethod {
@@ -44,8 +45,10 @@ export class AssetExpression extends BaseMethod {
 			scene_uuid: scene_uuid,
 		});
 
-		const response = await fetch(url);
-		const data = await response.json();
-		return data['url'] || '';
+		return url;
+		// console.log("url from resolver:", url)
+		// const response = await fetch(url);
+		// const data = await response.json();
+		// return data['url'] || '';
 	}
 }

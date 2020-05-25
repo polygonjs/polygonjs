@@ -412,9 +412,9 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		node.param_callback_reload();
 	}
 	private param_callback_reload() {
-		// set the param dirty is preferable, in case this is used to refresh a local asset
-		this.p.url.set_successors_dirty();
-		// this.set_dirty()
+		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
+		// this.p.url.set_successors_dirty();
+		this.p.url.set_dirty();
 	}
 
 	private async _load_texture(url: string) {
