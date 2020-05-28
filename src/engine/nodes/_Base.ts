@@ -42,6 +42,7 @@ import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
 import {NodeTypeMap} from '../containers/utils/ContainerMap';
 import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
+import {DynamicModuleName} from '../poly/registers/dynamic_modules/_BaseRegister';
 // import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
@@ -68,7 +69,6 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	// private _processing_context: ProcessingContext | undefined;
 	private _name_controller: NameController | undefined;
-
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
@@ -302,6 +302,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	to_json(include_param_components: boolean = false) {
 		return this.serializer.to_json(include_param_components);
 	}
+
+	// modules
+	public required_modules(): DynamicModuleName[] | void {}
 }
 
 export type BaseNodeType = TypedNode<any, any>;

@@ -1,7 +1,6 @@
 const argv = require('yargs').argv;
 const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const TYPESCRIPT_TRANSPILE_ONLY = FAST_COMPILE;
-console.log('FAST_COMPILE', FAST_COMPILE);
 
 // IN CASE OF CRASHES WHEN BUILDING
 // - try and deactivate experimentalWatchApi in ts-loader

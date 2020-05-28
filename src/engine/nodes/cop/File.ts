@@ -298,6 +298,10 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	static type() {
 		return 'file';
 	}
+	required_modules() {
+		const ext = CoreTextureLoader.get_extension(this.pv.url);
+		return CoreTextureLoader.module_names(ext);
+	}
 
 	private _video: HTMLVideoElement | undefined;
 	// private _data_texture_controller: DataTextureController | undefined;

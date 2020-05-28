@@ -14,17 +14,8 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-// import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
-import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
-import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
 
 const DEFAULT_FONT_URL = '/fonts/droid_sans_regular.typeface.json';
-
-declare global {
-	interface Window {
-		opentype: any;
-	}
-}
 
 export enum TEXT_TYPE {
 	MESH = 'mesh',
@@ -41,6 +32,8 @@ interface FontByUrl {
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {DynamicModuleName} from '../../poly/registers/dynamic_modules/_BaseRegister';
+import {Poly} from '../../Poly';
 class TextSopParamsConfig extends NodeParamsConfig {
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
 		asset_reference: true,
@@ -86,20 +79,15 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	static type() {
 		return 'text';
 	}
-	// static required_three_imports() {
-	// 	return ['loaders/TTFLoader', 'loaders/SVGLoader'];
-	// }
 
 	private _font_loader: FontLoader = new FontLoader();
-	private _ttf_loader: TTFLoader | undefined;
-	private _svg_loader: typeof SVGLoader | undefined;
 	private _loaded_fonts: FontByUrl = {};
 
 	initialize_node() {}
 
 	async cook() {
 		try {
-			this._loaded_fonts[this.pv.font] = this._loaded_fonts[this.pv.font] || (await this._load_url(this.pv.font));
+			this._loaded_fonts[this.pv.font] = this._loaded_fonts[this.pv.font] || (await this._load_url());
 		} catch (err) {
 			this.states.error.set(`count not load font (${this.pv.font})`);
 			return;
@@ -181,9 +169,12 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private async _create_geometry_from_type_stroke(font: Font) {
 		const shapes = this.shapes_from_font(font);
 		if (shapes) {
-			this._svg_loader = this._svg_loader || (await this._load_svg_loader());
+			const loader = await this._load_svg_loader();
+			if (!loader) {
+				return;
+			}
 			// TODO: typescript: correct definition for last 3 optional args
-			var style = this._svg_loader.getStrokeStyle(this.pv.stroke_width, 'white', 'miter', 'butt', 4);
+			var style = loader.getStrokeStyle(this.pv.stroke_width, 'white', 'miter', 'butt', 4);
 			const geometries = [];
 
 			for (let i = 0; i < shapes.length; i++) {
@@ -192,7 +183,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				// TODO: typescript: correct definition for points, arcDivisions, and minDistance
 				const arcDivisions = 12;
 				const minDistance = 0.001;
-				const geometry = this._svg_loader.pointsToStroke(
+				const geometry = loader.pointsToStroke(
 					(<unknown>points) as Vector3[],
 					style,
 					arcDivisions,
@@ -237,11 +228,9 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		return this.pv.text || '';
 	}
 
-	private _load_url(url: string) {
-		const elements1 = url.split('?')[0];
-		const elements2 = elements1.split('.');
-		const ext = elements2[elements2.length - 1];
-		url = `${url}?${Date.now()}`;
+	private _load_url() {
+		const url = `${this.pv.font}?${Date.now()}`;
+		const ext = this.get_extension();
 		switch (ext) {
 			case 'ttf': {
 				return this._load_ttf(url);
@@ -254,17 +243,34 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			}
 		}
 	}
+	required_modules() {
+		const ext = this.get_extension();
+		switch (ext) {
+			case 'ttf': {
+				return [DynamicModuleName.TTFLoader];
+			}
+			case 'json': {
+				return [DynamicModuleName.SVGLoader];
+			}
+		}
+	}
+	private get_extension() {
+		const url = this.pv.font;
+		const elements1 = url.split('?')[0];
+		const elements2 = elements1.split('.');
+		return elements2[elements2.length - 1];
+	}
 
 	private _load_ttf(url: string): Promise<Font> {
 		return new Promise(async (resolve, reject) => {
-			this._ttf_loader = this._ttf_loader || (await this._load_ttf_loader());
-			// window.opentype = opentype;
-			this._ttf_loader.load(
+			const loaded_module = await this._load_ttf_loader();
+			if (!loaded_module) {
+				return;
+			}
+			loaded_module.load(
 				url,
 				(fnt: object) => {
 					const parsed = this._font_loader.parse(fnt);
-					// make sure not to delete opentype from window, as it may be required by other nodes
-					// delete window.opentype;
 					resolve(parsed);
 				},
 				undefined,
@@ -289,13 +295,16 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		});
 	}
 
-	private async _load_ttf_loader(): Promise<TTFLoader> {
-		const {TTFLoader} = await import(`../../../../modules/core/loaders/TTFLoader`);
-		const loader_constructor = (<unknown>TTFLoader) as typeof TTFLoader;
-		return new loader_constructor();
+	private async _load_ttf_loader() {
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.TTFLoader);
+		if (module) {
+			return new module.TTFLoader();
+		}
 	}
-	private async _load_svg_loader(): Promise<typeof SVGLoader> {
-		const {SVGLoader} = await import(`../../../../modules/three/examples/jsm/loaders/SVGLoader`);
-		return (<unknown>SVGLoader) as typeof SVGLoader;
+	private async _load_svg_loader() {
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.SVGLoader);
+		if (module) {
+			return module.SVGLoader;
+		}
 	}
 }

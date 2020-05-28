@@ -1,31 +1,37 @@
-const THREE_LOADERS_ROOT = 'three/examples/jsm/loaders';
+export enum DynamicModuleName {
+	BasisTextureLoader = 'BasisTextureLoader',
+	DRACOLoader = 'DRACOLoader',
+	EXRLoader = 'EXRLoader',
+	FBXLoader = 'FBXLoader',
+	GLTFLoader = 'GLTFLoader',
+	OBJLoader2 = 'OBJLoader2',
+	RGBELoader = 'RGBELoader',
+	TTFLoader = 'TTFLoader',
+	SVGLoader = 'SVGLoader',
+}
 
 export class BaseDynamicModulesRegister {
-	private _modules_path_by_name: Map<string, string> = new Map();
-	private _loaded_module_by_name: Map<string, any> = new Map();
+	private _loaded_module_by_name: Map<DynamicModuleName, any> = new Map();
+	private _promise_by_name: Map<DynamicModuleName, Promise<object>> = new Map();
 
-	register_module_path(path: string, name: string) {
-		this._modules_path_by_name.set(name, path);
-	}
-	register_three_loader(path: string, name: string) {
-		this._modules_path_by_name.set(name, `${THREE_LOADERS_ROOT}/${path}`);
-	}
-	get_module_path(name: string) {
-		return this._modules_path_by_name.get(name);
+	register_module(name: DynamicModuleName, promise: Promise<object>) {
+		this._promise_by_name.set(name, promise);
 	}
 
-	async load(name: string) {
+	async module(name: DynamicModuleName) {
 		const loaded_module = this._loaded_module_by_name.get(name);
 		if (loaded_module) {
 			return loaded_module;
 		} else {
-			const module_path = this.get_module_path(name);
-			if (module_path) {
-				const new_loaded_module = await import(`../../../../../modules/${module_path}`);
+			const promise = this._promise_by_name.get(name);
+			if (promise) {
+				const new_loaded_module = await promise;
 				if (new_loaded_module) {
 					this._loaded_module_by_name.set(name, new_loaded_module);
 					return new_loaded_module;
 				}
+			} else {
+				console.warn(`module ${name} not registered`);
 			}
 		}
 	}

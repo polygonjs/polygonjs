@@ -1,5 +1,7 @@
 import {Color} from 'three/src/math/Color';
-import {DefaultLoadingManager} from 'three/src/DefaultLoadingManager';
+
+import {LoadingManager} from "three/src/loaders/LoadingManager";
+const DefaultLoadingManager = new LoadingManager();
 import {FileLoader} from 'three/src/loaders/FileLoader';
 import {FrontSide} from 'three/src/constants';
 import {Loader} from 'three/src/loaders/Loader';

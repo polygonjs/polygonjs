@@ -4,61 +4,35 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {Poly} from '../../engine/Poly';
-
-// import {DDSLoader} from '../../../modules/three/examples/jsm/loaders/DDSLoader';
-// import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
-// import {GLTFLoader} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
-// import {OBJLoader} from '../../../modules/three/examples/jsm/loaders/OBJLoader';
-
-// const GLTFLoaders = ['DDSLoader', 'DRACOLoader', 'GLTFLoader'];
-// const SCRIPT_URLS_BY_EXT = {
-// 	gltf: GLTFLoaders,
-// 	glb: GLTFLoaders,
-// 	obj: 'OBJLoader',
-// };
-// const THREE_LOADER_BY_EXT = {
-// 	gltf: 'GLTFLoader',
-// 	glb: 'GLTFLoader',
-// 	obj: 'OBJLoader',
-// };
-// const DRACO_EXTENSIONS = ['gltf', 'glb']
-// const DRACO_EXTENSIONS = ['drc'];
-
-// export enum LoaderType {
-// 	AUTO = 'auto',
-// 	JSON_DATA = 'json_data',
-// 	// THREEJS_JSON = 'threejs_json',
-// }
-// export const LOADER_TYPES = [
-// 	LoaderType.AUTO,
-// 	LoaderType.JSON_DATA,
-// 	// LoaderType.THREEJS_JSON,
-// ];
+import {DynamicModuleName} from '../../engine/poly/registers/dynamic_modules/_BaseRegister';
 
 export class CoreLoaderGeometry {
-	private ext: string;
+	public readonly ext: string;
 
 	constructor(private url: string) {
+		this.ext = CoreLoaderGeometry.get_extension(url);
+	}
+
+	static get_extension(url: string) {
 		let _url: URL;
 		let ext: string | null = null;
 		try {
-			_url = new URL(this.url);
+			_url = new URL(url);
 			ext = _url.searchParams.get('ext');
 		} catch (e) {}
 		// the loader checks first an 'ext' in the query params
 		// for urls such as http://domain.com/file?path=geometry.obj&t=aaa&ext=obj
 		// to know what extension it is, since it may not be before the '?'.
 		// But if there is not, the part before the '?' is used
-		if (ext) {
-			this.ext = ext;
-		} else {
-			const url_without_params = this.url.split('?')[0];
+		if (!ext) {
+			const url_without_params = url.split('?')[0];
 			const elements = url_without_params.split('.');
-			this.ext = elements[elements.length - 1].toLowerCase();
-			if (this.ext === 'zip') {
-				this.ext = elements[elements.length - 2];
-			}
+			ext = elements[elements.length - 1].toLowerCase();
+			// if (this.ext === 'zip') {
+			// 	this.ext = elements[elements.length - 2];
+			// }
 		}
+		return ext;
 	}
 
 	load(on_success: (objects: Object3D[]) => void, on_error: (error: string) => void) {
@@ -185,6 +159,21 @@ export class CoreLoaderGeometry {
 		return [mesh]; //.children
 	}
 
+	static module_names(ext: string): DynamicModuleName[] | void {
+		switch (ext) {
+			case 'gltf':
+				return [DynamicModuleName.GLTFLoader];
+			case 'glb':
+				return [DynamicModuleName.GLTFLoader, DynamicModuleName.DRACOLoader];
+			case 'drc':
+				return [DynamicModuleName.DRACOLoader];
+			case 'obj':
+				return [DynamicModuleName.OBJLoader2];
+			case 'fbx':
+				return [DynamicModuleName.FBXLoader];
+		}
+	}
+
 	async loader_for_ext() {
 		switch (this.ext.toLowerCase()) {
 			case 'gltf':
@@ -201,53 +190,71 @@ export class CoreLoaderGeometry {
 	}
 
 	async loader_for_gltf() {
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.GLTFLoader);
+		if (module) {
+			return new module.GLTFLoader();
+		}
+
 		// 'DDSLoader', 'DRACOLoader', 'GLTFLoader'
 		// const {DDSLoader} = await import(`modules/three/examples/jsm/loaders/DDSLoader`);
 		// const {DRACOLoader} = await import(`modules/three/examples/jsm/loaders/DRACOLoader`);
-		const {GLTFLoader} = await import(`../../../modules/three/examples/jsm/loaders/GLTFLoader`);
-		return new GLTFLoader();
+		// const {GLTFLoader} = await import(`../../../modules/three/examples/jsm/loaders/GLTFLoader`);
+		// return new GLTFLoader();
 	}
 	async loader_for_glb() {
-		const {GLTFLoader} = await import(`../../../modules/three/examples/jsm/loaders/GLTFLoader`);
-		const {DRACOLoader} = await import(`../../../modules/three/examples/jsm/loaders/DRACOLoader`);
+		const gltf_module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.GLTFLoader);
+		const draco_module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.DRACOLoader);
+		if (gltf_module && draco_module) {
+			const loader = new gltf_module.GLTFLoader();
+			const draco_loader = new draco_module.DRACOLoader();
+			const decoder_path = '/three/js/libs/draco/gltf/';
+			draco_loader.setDecoderPath(decoder_path);
+			draco_loader.setDecoderConfig({type: 'js'});
+			loader.setDRACOLoader(draco_loader);
+			return loader;
+		}
 
-		const loader = new GLTFLoader();
-		const draco_loader = new DRACOLoader();
-		const decoder_path = '/three/js/libs/draco/gltf/';
-		// DRACOLoader.setDecoderPath( decoder_path );
-		draco_loader.setDecoderPath(decoder_path);
-		draco_loader.setDecoderConfig({type: 'js'});
-		loader.setDRACOLoader(draco_loader);
+		// const {GLTFLoader} = await import(`../../../modules/three/examples/jsm/loaders/GLTFLoader`);
+		// const {DRACOLoader} = await import(`../../../modules/three/examples/jsm/loaders/DRACOLoader`);
+		// const loader = new GLTFLoader();
+		// const draco_loader = new DRACOLoader();
+		// const decoder_path = '/three/js/libs/draco/gltf/';
+		// draco_loader.setDecoderPath(decoder_path);
+		// draco_loader.setDecoderConfig({type: 'js'});
+		// loader.setDRACOLoader(draco_loader);
 
-		return loader;
+		// return loader;
 	}
 	async loader_for_drc() {
-		// const {DDSLoader} = await import(`modules/three/examples/jsm/loaders/DDSLoader`);
-		const {DRACOLoader} = await import(`../../../modules/three/examples/jsm/loaders/DRACOLoader`);
-		// const {GLTFLoader} = await import(`modules/three/examples/jsm/loaders/GLTFLoader`);
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.DRACOLoader);
+		if (module) {
+			const draco_loader = new module.DRACOLoader();
+			const decoder_path = '/three/js/libs/draco/';
+			draco_loader.setDecoderPath(decoder_path);
+			draco_loader.setDecoderConfig({type: 'js'});
+			return draco_loader;
+		}
 
-		// const loader = new GLTFLoader();
-		const draco_loader = new DRACOLoader();
-		const decoder_path = '/three/js/libs/draco/';
-		// DRACOLoader.setDecoderPath( decoder_path );
-		draco_loader.setDecoderPath(decoder_path);
-		draco_loader.setDecoderConfig({type: 'js'});
-		// loader.setDRACOLoader(draco_loader);
-		return draco_loader;
+		// const {DRACOLoader} = await import(`../../../modules/three/examples/jsm/loaders/DRACOLoader`);
+		// const draco_loader = new DRACOLoader();
+		// const decoder_path = '/three/js/libs/draco/';
+		// draco_loader.setDecoderPath(decoder_path);
+		// draco_loader.setDecoderConfig({type: 'js'});
+		// return draco_loader;
 	}
 	async loader_for_obj() {
-		// const {OBJLoader2} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader2`);
-		const module = await Poly.instance().dynamic_modules_register.load('obj_loader2');
-		console.log(module);
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.OBJLoader2);
 		if (module) {
 			return new module.OBJLoader2();
-		} else {
-			console.warn('OBJLoader2 not registered');
 		}
 	}
 	async loader_for_fbx() {
-		const {FBXLoader} = await import(`../../../modules/three/examples/jsm/loaders/FBXLoader`);
-		return new FBXLoader();
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.FBXLoader);
+		if (module) {
+			return new module.FBXLoader();
+		}
+		// const {FBXLoader} = await import(`../../../modules/three/examples/jsm/loaders/FBXLoader`);
+		// return new FBXLoader();
 	}
 
 	// 	const ext_lowercase = this.ext.toLowerCase();

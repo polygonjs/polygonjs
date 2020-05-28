@@ -14,6 +14,7 @@ import {BaseParamType} from '../../engine/params/_Base';
 import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
 import {TextureContainer} from '../../engine/containers/Texture';
 import {Poly} from '../../engine/Poly';
+import {DynamicModuleName} from '../../engine/poly/registers/dynamic_modules/_BaseRegister';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -97,77 +98,80 @@ export class CoreTextureLoader {
 	async load_url(url: string): Promise<Texture> {
 		return new Promise(async (resolve, reject) => {
 			// url = this._resolve_url(url)
-			const ext = CoreTextureLoader._ext(url);
+			const ext = CoreTextureLoader.get_extension(url);
 
 			if (CoreTextureLoader.VIDEO_EXTENSIONS.includes(ext)) {
 				const texture: VideoTexture = await this._load_as_video(url);
 				resolve(texture);
 			} else {
 				this.loader_for_ext(ext).then((loader) => {
-					loader.load(url, resolve, undefined, (error: any) => {
-						console.warn('error', error);
+					if (loader) {
+						loader.load(url, resolve, undefined, (error: any) => {
+							console.warn('error', error);
+							reject();
+						});
+					} else {
 						reject();
-					});
+					}
 				});
 			}
 		});
 	}
 
+	static module_names(ext: string): DynamicModuleName[] | void {
+		switch (ext) {
+			case Extension.EXR:
+				return [DynamicModuleName.EXRLoader];
+			case Extension.HDR:
+				return [DynamicModuleName.RGBELoader];
+			case Extension.BASIS:
+				return [DynamicModuleName.BasisTextureLoader];
+		}
+	}
+
 	async loader_for_ext(ext: string) {
 		const ext_lowercase = ext.toLowerCase() as keyof ThreeLoaderByExt;
-		// const script_name = CoreTextureLoader.SCRIPT_URL_BY_EXT[ext_lowercase];
-		// var loader;
-
 		switch (ext_lowercase) {
 			case Extension.EXR: {
-				const {EXRLoader} = await import('../../../modules/three/examples/jsm/loaders/EXRLoader');
-				return new EXRLoader();
+				return await this._exr_loader();
 			}
 			case Extension.HDR: {
-				const {RGBELoader} = await import('../../../modules/three/examples/jsm/loaders/RGBELoader');
-				const loader = new RGBELoader();
-				loader.setDataType(UnsignedByteType); // FloatType,HalfFloatType
-				// loader.setPath('/examples/textures/equirectangular/');
-				return loader;
+				return await this._hdr_loader();
 			}
 			case Extension.BASIS: {
-				const {BasisTextureLoader} = await import(
-					'../../../modules/three/examples/jsm/loaders/BasisTextureLoader'
-				);
-				const loader = new BasisTextureLoader();
-				loader.setTranscoderPath('/three/js/libs/basis/');
-				const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
-				if (renderer) {
-					loader.detectSupport(renderer);
-				} else {
-					console.warn('texture loader found no renderer for basis texture loader');
-				}
-				return loader;
+				return await this._basic_loader();
 			}
 		}
-
-		// if (script_name) {
-		// const imported_classes = await CoreScriptLoader.load_module_three_loader(script_name)
-		// const imported_classes = await CoreScriptLoader.three_module(`loaders/${script_name}`);
-		// const imported_classes = await import(`modules/three/examples/jsm/loaders/${script_name}`);
-		// const loader_class_name = CoreTextureLoader.THREE_LOADER_BY_EXT[ext_lowercase];
-		// const loader_class = imported_classes[loader_class_name];
-		// if (loader_class) {
-		// 	loader = new loader_class();
-		// 	if (ext == 'basis') {
-		// 		loader.setTranscoderPath('/three/js/libs/basis/');
-		// 		const renderer = POLY.renderers_controller.first_renderer();
-		// 		loader.detectSupport(renderer);
-		// 	}
-		// }
-		// }
 		return new TextureLoader();
+	}
 
-		// const constructor = (() => { switch (ext) {
-		// 	case 'exr': return EXRLoader;
-		// 	default: return TextureLoader;
-		// } })();
-		// return new constructor();
+	private async _exr_loader() {
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.EXRLoader);
+		if (module) {
+			return new module.EXRLoader();
+		}
+	}
+	private async _hdr_loader() {
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.RGBELoader);
+		if (module) {
+			const loader = new module.RGBELoader();
+			loader.setDataType(UnsignedByteType);
+			return loader;
+		}
+	}
+	private async _basic_loader() {
+		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.BasisTextureLoader);
+		if (module) {
+			const loader = new module.BasisTextureLoader();
+			loader.setTranscoderPath('/three/js/libs/basis/');
+			const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+			if (renderer) {
+				loader.detectSupport(renderer);
+			} else {
+				console.warn('texture loader found no renderer for basis texture loader');
+			}
+			return loader;
+		}
 	}
 
 	_load_as_video(url: string): Promise<VideoTexture> {
@@ -189,7 +193,7 @@ export class CoreTextureLoader {
 			// video.setAttribute('controls', true)
 			// video.style="display:none"
 			const source = document.createElement('source');
-			const ext = CoreTextureLoader._ext(url) as keyof VideoSourceTypeByExt;
+			const ext = CoreTextureLoader.get_extension(url) as keyof VideoSourceTypeByExt;
 			let type: string = CoreTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[ext];
 			type = type || CoreTextureLoader._default_video_source_type(url);
 			source.setAttribute('type', type);
@@ -199,7 +203,7 @@ export class CoreTextureLoader {
 		});
 	}
 	static _default_video_source_type(url: string) {
-		const ext = this._ext(url);
+		const ext = this.get_extension(url);
 		return `video/${ext}`;
 	}
 
@@ -268,7 +272,7 @@ export class CoreTextureLoader {
 	// 	attrib.needsUpdate = true;
 	// }
 
-	static _ext(url: string) {
+	static get_extension(url: string) {
 		const elements = url.split('.');
 		return elements[elements.length - 1].toLowerCase();
 	}

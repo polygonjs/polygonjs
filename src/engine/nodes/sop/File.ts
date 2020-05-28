@@ -29,6 +29,10 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	static type() {
 		return 'file';
 	}
+	required_modules() {
+		const ext = CoreLoaderGeometry.get_extension(this.pv.url);
+		return CoreLoaderGeometry.module_names(ext);
+	}
 
 	// TODO: no error when trying to load a non existing zip file??
 	cook() {
