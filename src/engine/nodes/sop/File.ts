@@ -10,7 +10,8 @@ import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {DesktopFileType} from '../../params/utils/OptionsController';
-import {Mesh, BufferGeometry} from 'three';
+import {Mesh} from 'three/src/objects/Mesh';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 class FileSopParamsConfig extends NodeParamsConfig {
 	url = ParamConfig.STRING('/examples/models/wolf.obj', {
 		desktop_browse: {file_type: DesktopFileType.GEOMETRY},

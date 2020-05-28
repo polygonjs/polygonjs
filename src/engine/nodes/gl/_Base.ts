@@ -44,7 +44,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 
 	protected _set_mat_to_recompile() {
-		this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
+		this.material_node?.assembler_controller?.set_compilation_required_and_dirty(this);
 	}
 	get material_node(): AssemblerControllerNode | undefined {
 		if (this.parent) {

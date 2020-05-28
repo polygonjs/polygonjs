@@ -1,5 +1,6 @@
 import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/nodes/sop/Hierarchy';
-import {Mesh, BufferGeometry} from 'three';
+import {Mesh} from 'three/src/objects/Mesh';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 async function with_file(path: string) {
 	const geo1 = window.geo1;

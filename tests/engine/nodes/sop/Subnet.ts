@@ -1,4 +1,4 @@
-import {Vector3} from 'three';
+import {Vector3} from 'three/src/math/Vector3';
 import {CoreSleep} from '../../../../src/core/Sleep';
 
 QUnit.test('subnet simple', async (assert) => {

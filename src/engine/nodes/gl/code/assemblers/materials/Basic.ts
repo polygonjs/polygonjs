@@ -18,18 +18,12 @@ export class ShaderAssemblerBasic extends ShaderAssemblerMesh {
 		const template_shader = this._template_shader;
 
 		const material = new ShaderMaterial({
-			// vertexColors: VertexColors,
-			// side: FrontSide,
-			// transparent: true,
-			// fog: true,
 			lights: false,
-			// depthTest: true,
-			// alphaTest: 0.5,
-
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		});
+
 		this._add_custom_materials(material);
 		return material;
 	}

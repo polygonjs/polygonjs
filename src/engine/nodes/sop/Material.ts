@@ -52,10 +52,9 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		const material_node = this.p.material.found_node_with_context(NodeContext.MAT);
 		if (material_node) {
 			const material = material_node.material;
-			if ((material_node as BaseBuilderMatNodeType).assembler_controller != null) {
-				(material_node as BaseBuilderMatNodeType).assembler_controller.set_assembler_globals_handler(
-					this._globals_handler
-				);
+			const assembler_controller = (material_node as BaseBuilderMatNodeType).assembler_controller;
+			if (assembler_controller) {
+				assembler_controller.set_assembler_globals_handler(this._globals_handler);
 			}
 
 			await material_node.request_container();

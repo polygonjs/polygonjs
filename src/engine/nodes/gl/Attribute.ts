@@ -56,7 +56,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		});
 	}
 	create_params() {
-		if (this.material_node?.assembler_controller.allow_attribute_exports()) {
+		if (this.material_node?.assembler_controller?.allow_attribute_exports()) {
 			this.add_param(ParamType.BOOLEAN, 'export_when_connected', 0);
 		}
 	}
@@ -83,7 +83,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		// if (lines_controller.shader_name) {
-		this.material_node?.assembler_controller.assembler.set_node_lines_attribute(
+		this.material_node?.assembler_controller?.assembler.set_node_lines_attribute(
 			this,
 			shaders_collection_controller
 		);

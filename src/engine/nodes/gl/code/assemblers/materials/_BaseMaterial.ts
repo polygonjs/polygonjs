@@ -348,8 +348,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// 	body_lines_by_shader_name[dependency] = [];
 		// }
 
-		let definition;
-		let body_line;
+		let definition: UniformGLDefinition;
+		let body_line: string;
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
 			const var_name = globals_node.gl_var_name(output_name);
 			const globals_shader_name = shaders_collection_controller.current_shader_name;

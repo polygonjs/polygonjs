@@ -36,7 +36,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {IntegerParam} from '../../params/Integer';
 import {Vector3Param} from '../../params/Vector3';
 import {TypeAssert} from '../../poly/Assert';
-import {Object3D, BufferAttribute} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CoreAttribute, Attribute} from '../../../core/geometry/Attribute';
 class TransformMultiSopParamConfig extends NodeParamsConfig {
 	apply_on = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {

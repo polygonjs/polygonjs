@@ -20,7 +20,7 @@ import {ShadersCollectionController} from '../utils/ShadersCollectionController'
 import {IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {ShaderChunk} from 'three';
+import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
@@ -86,10 +86,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 
 	get globals_handler(): GlobalsBaseController | undefined {
-		return this._gl_parent_node.assembler_controller.globals_handler;
+		return this._gl_parent_node.assembler_controller?.globals_handler;
 	}
 	compile_allowed(): boolean {
-		return this._gl_parent_node.assembler_controller.globals_handler != null;
+		return this._gl_parent_node.assembler_controller?.globals_handler != null;
 	}
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -266,11 +266,6 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
 		];
-		// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-		// output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
-		// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		// output_child.params.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
-		// output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
 	add_output_inputs(output_child: OutputGlNode) {
 		output_child.io.inputs.set_named_input_connection_points(

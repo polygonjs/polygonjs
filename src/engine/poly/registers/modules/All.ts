@@ -1,4 +1,4 @@
-import {DynamicModuleName} from './_BaseRegister';
+import {ModuleName} from './_BaseRegister';
 
 import {BasisTextureLoader} from '../../../../../modules/three/examples/jsm/loaders/BasisTextureLoader';
 import {DRACOLoader} from '../../../../../modules/three/examples/jsm/loaders/DRACOLoader';
@@ -10,56 +10,56 @@ import {RGBELoader} from '../../../../../modules/three/examples/jsm/loaders/RGBE
 import {TTFLoader} from '../../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {SVGLoader} from '../../../../../modules/three/examples/jsm/loaders/SVGLoader';
 
-export interface DynamicModulesMap extends Dictionary<any> {
-	[DynamicModuleName.BasisTextureLoader]: {BasisTextureLoader: typeof BasisTextureLoader};
-	[DynamicModuleName.DRACOLoader]: {DRACOLoader: typeof DRACOLoader};
-	[DynamicModuleName.EXRLoader]: {EXRLoader: typeof EXRLoader};
-	[DynamicModuleName.FBXLoader]: {FBXLoader: typeof FBXLoader};
-	[DynamicModuleName.GLTFLoader]: {GLTFLoader: typeof GLTFLoader};
-	[DynamicModuleName.OBJLoader2]: {OBJLoader2: typeof OBJLoader2};
-	[DynamicModuleName.RGBELoader]: {RGBELoader: typeof RGBELoader};
-	[DynamicModuleName.TTFLoader]: {TTFLoader: typeof TTFLoader};
-	[DynamicModuleName.SVGLoader]: {SVGLoader: typeof SVGLoader};
+export interface ModulesMap extends Dictionary<any> {
+	[ModuleName.BasisTextureLoader]: {BasisTextureLoader: typeof BasisTextureLoader};
+	[ModuleName.DRACOLoader]: {DRACOLoader: typeof DRACOLoader};
+	[ModuleName.EXRLoader]: {EXRLoader: typeof EXRLoader};
+	[ModuleName.FBXLoader]: {FBXLoader: typeof FBXLoader};
+	[ModuleName.GLTFLoader]: {GLTFLoader: typeof GLTFLoader};
+	[ModuleName.OBJLoader2]: {OBJLoader2: typeof OBJLoader2};
+	[ModuleName.RGBELoader]: {RGBELoader: typeof RGBELoader};
+	[ModuleName.TTFLoader]: {TTFLoader: typeof TTFLoader};
+	[ModuleName.SVGLoader]: {SVGLoader: typeof SVGLoader};
 }
 
 import {Poly} from '../../../Poly';
-export class AllDynamicModulesRegister {
+export class AllModulesRegister {
 	// paths are not dynamic for esbuild
 	static run(poly: Poly) {
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.BasisTextureLoader,
+		poly.modules_register.register_module(
+			ModuleName.BasisTextureLoader,
 			import('../../../../../modules/three/examples/jsm/loaders/BasisTextureLoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.DRACOLoader,
+		poly.modules_register.register_module(
+			ModuleName.DRACOLoader,
 			import('../../../../../modules/three/examples/jsm/loaders/DRACOLoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.EXRLoader,
+		poly.modules_register.register_module(
+			ModuleName.EXRLoader,
 			import('../../../../../modules/three/examples/jsm/loaders/EXRLoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.FBXLoader,
+		poly.modules_register.register_module(
+			ModuleName.FBXLoader,
 			import('../../../../../modules/three/examples/jsm/loaders/FBXLoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.GLTFLoader,
+		poly.modules_register.register_module(
+			ModuleName.GLTFLoader,
 			import('../../../../../modules/three/examples/jsm/loaders/GLTFLoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.OBJLoader2,
+		poly.modules_register.register_module(
+			ModuleName.OBJLoader2,
 			import('../../../../../modules/three/examples/jsm/loaders/OBJLoader2')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.RGBELoader,
+		poly.modules_register.register_module(
+			ModuleName.RGBELoader,
 			import('../../../../../modules/three/examples/jsm/loaders/RGBELoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.TTFLoader,
+		poly.modules_register.register_module(
+			ModuleName.TTFLoader,
 			import('../../../../../modules/core/loaders/TTFLoader')
 		);
-		poly.dynamic_modules_register.register_module(
-			DynamicModuleName.SVGLoader,
+		poly.modules_register.register_module(
+			ModuleName.SVGLoader,
 			import('../../../../../modules/three/examples/jsm/loaders/SVGLoader')
 		);
 	}

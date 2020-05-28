@@ -20,7 +20,7 @@ export class BaseGlParentNode extends TypedNode<any, any> {
 	}
 }
 export class AssemblerControllerNode extends BaseGlParentNode {
-	assembler_controller!: GlAssemblerController<BaseGlShaderAssembler>;
+	assembler_controller: GlAssemblerController<BaseGlShaderAssembler> | undefined;
 }
 
 type BaseGlShaderAssemblerConstructor<A extends BaseGlShaderAssembler> = new (...args: any[]) => A;

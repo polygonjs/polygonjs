@@ -6,7 +6,8 @@ import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapCon
 import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
 import {TypedBuilderMatNode} from './_BaseBuilder';
-import {GlAssemblerController} from '../gl/code/Controller';
+import {Poly} from '../../Poly';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 class MeshBasicMatParamsConfig extends TextureAlphaMapParamConfig(
 	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
 ) {}
@@ -16,6 +17,12 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	params_config = ParamsConfig;
 	static type() {
 		return 'mesh_basic_builder';
+	}
+	public used_assembler() {
+		return AssemblerName.GL_MESH_BASIC;
+	}
+	protected _create_assembler_controller() {
+		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
 	}
 
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {uniforms: true});
@@ -27,10 +34,6 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 			this.texture_map_controller.initialize_node();
 			this.texture_alpha_map_controller.initialize_node();
 		});
-	}
-
-	protected _create_assembler_controller() {
-		return new GlAssemblerController<ShaderAssemblerBasic>(this, ShaderAssemblerBasic);
 	}
 
 	async cook() {

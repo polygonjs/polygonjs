@@ -1,6 +1,7 @@
 import {Vector4} from 'three/src/math/Vector4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
+import {Color} from 'three/src/math/Color';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {BaseNodeType} from '../../../_Base';
@@ -10,7 +11,6 @@ import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {RampParam} from '../../../../params/Ramp';
 import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {ParamConfig} from '../../../utils/code/configs/ParamConfig';
-import {Color} from 'three/src/math/Color';
 
 export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	private _uniform: IUniform | undefined;
@@ -36,15 +36,29 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	}
 
 	protected _callback(node: BaseNodeType, param: BaseParamType) {
+		GlParamConfig.callback(param, this.uniform);
+		// switch (param.type) {
+		// 	case ParamType.RAMP:
+		// 		this.uniform.value = (param as RampParam).ramp_texture();
+		// 		return;
+		// 	case ParamType.OPERATOR_PATH:
+		// 		GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, this.uniform);
+		// 		return;
+		// 	default:
+		// 		this.uniform.value = param.value;
+		// }
+	}
+
+	static callback(param: BaseParamType, uniform: IUniform) {
 		switch (param.type) {
 			case ParamType.RAMP:
-				this.uniform.value = (param as RampParam).ramp_texture();
+				uniform.value = (param as RampParam).ramp_texture();
 				return;
 			case ParamType.OPERATOR_PATH:
-				this._set_uniform_value_from_texture(param as OperatorPathParam, this.uniform);
+				GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
 				return;
 			default:
-				this.uniform.value = param.value;
+				uniform.value = param.value;
 		}
 	}
 
@@ -82,7 +96,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		TypeAssert.unreachable(type);
 	}
 
-	private _set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
+	static set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
 		const found_node = param.found_node();
 		if (found_node) {
 			if (found_node.is_dirty) {

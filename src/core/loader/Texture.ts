@@ -14,7 +14,7 @@ import {BaseParamType} from '../../engine/params/_Base';
 import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
 import {TextureContainer} from '../../engine/containers/Texture';
 import {Poly} from '../../engine/Poly';
-import {DynamicModuleName} from '../../engine/poly/registers/dynamic_modules/_BaseRegister';
+import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
 // import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface VideoSourceTypeByExt {
@@ -118,14 +118,14 @@ export class CoreTextureLoader {
 		});
 	}
 
-	static module_names(ext: string): DynamicModuleName[] | void {
+	static module_names(ext: string): ModuleName[] | void {
 		switch (ext) {
 			case Extension.EXR:
-				return [DynamicModuleName.EXRLoader];
+				return [ModuleName.EXRLoader];
 			case Extension.HDR:
-				return [DynamicModuleName.RGBELoader];
+				return [ModuleName.RGBELoader];
 			case Extension.BASIS:
-				return [DynamicModuleName.BasisTextureLoader];
+				return [ModuleName.BasisTextureLoader];
 		}
 	}
 
@@ -146,13 +146,13 @@ export class CoreTextureLoader {
 	}
 
 	private async _exr_loader() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.EXRLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.EXRLoader);
 		if (module) {
 			return new module.EXRLoader();
 		}
 	}
 	private async _hdr_loader() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.RGBELoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.RGBELoader);
 		if (module) {
 			const loader = new module.RGBELoader();
 			loader.setDataType(UnsignedByteType);
@@ -160,7 +160,7 @@ export class CoreTextureLoader {
 		}
 	}
 	private async _basic_loader() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.BasisTextureLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.BasisTextureLoader);
 		if (module) {
 			const loader = new module.BasisTextureLoader();
 			loader.setTranscoderPath('/three/js/libs/basis/');

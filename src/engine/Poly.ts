@@ -4,7 +4,8 @@ import {RenderersController} from './poly/RenderersController';
 import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/registers/nodes/NodesRegister';
 import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
 import {NodeContext} from './poly/NodeContext';
-import {DynamicModulesRegister} from './poly/registers/dynamic_modules/DynamicModulesRegister';
+import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
+import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 // import {ViewerLoadersManager} from '/viewers/LoadersManager';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
@@ -17,11 +18,13 @@ export class Poly {
 	public readonly renderers_controller: RenderersController = new RenderersController();
 	public readonly nodes_register: NodesRegister = new NodesRegister();
 	public readonly expressions_register: ExpressionRegister = new ExpressionRegister();
-	public readonly dynamic_modules_register: DynamicModulesRegister = new DynamicModulesRegister();
+	public readonly modules_register: DynamicModulesRegister = new DynamicModulesRegister();
+	public readonly assemblers_register: AssemblersRegister = new AssemblersRegister();
 	// public readonly js_version: string = '0';
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _version: Readonly<string> = _POLYGONJS_VERSION;
+	private _player_mode: boolean = true;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	static instance() {
@@ -35,6 +38,13 @@ export class Poly {
 		return this._version;
 	}
 
+	set_player_mode(mode: boolean) {
+		this._player_mode = mode;
+	}
+	player_mode() {
+		return this._player_mode;
+	}
+
 	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		this.nodes_register.register_node(node, tab_menu_category, options);
 	}
@@ -46,10 +56,6 @@ export class Poly {
 	}
 	desktop_controller(): any {}
 	// notify_scene_loaded(scene: PolyScene) {}
-
-	player_mode(): boolean {
-		return false;
-	}
 
 	log(...args: any[]) {
 		console.log(...args);

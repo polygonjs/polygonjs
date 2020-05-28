@@ -1,5 +1,5 @@
 import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/Transform';
-import {Matrix4} from 'three';
+import {Matrix4} from 'three/src/math/Matrix4';
 
 QUnit.test('transform reset simple', async (assert) => {
 	const geo1 = window.geo1;

@@ -107,7 +107,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	await mesh_basic1.request_container();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-	assert.notOk(mesh_basic1.assembler_controller.compile_required());
+	assert.notOk(mesh_basic1.assembler_controller?.compile_required());
 
 	const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 	const attribute1 = mesh_basic1.create_node('attribute');
@@ -121,9 +121,9 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	// await CoreSleep.sleep(50);
 
-	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	await mesh_basic1.request_container();
-	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	// mesh_basic1.param_names();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
 	assert.equal(mesh_basic1.p.texture_map.value, '/COP/file_uv', 'texture_map value is "/COP/file_uv"');
@@ -137,7 +137,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	const new_mesh_basic1 = scene2.node('/MAT/mesh_basic_builder1') as BaseBuilderMatNodeType;
 	await new_mesh_basic1.request_container();
-	assert.notOk(new_mesh_basic1.assembler_controller.compile_required(), 'compile is not required');
+	assert.notOk(new_mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
 	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
 	assert.equal(new_mesh_basic1.params.get('texture_map')?.value, '/COP/file2', 'texture_map value is "/COP/file_uv"');
 });
@@ -159,9 +159,9 @@ QUnit.test(
 		float_to_vec31.set_input('z', vec2_to_float1, 'y');
 		output1.set_input('position', float_to_vec31);
 
-		assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 		await mesh_basic1.request_container();
-		assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert);
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInVertex.frag);
 
@@ -201,9 +201,9 @@ QUnit.test('mesh basic builder with if_then', async (assert) => {
 	mult_add1.params.get('mult')!.set([2, 2, 2]);
 	if_then_subnet_output1.set_input(0, mult_add1);
 
-	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	await mesh_basic1.request_container();
-	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag);
 
@@ -211,9 +211,9 @@ QUnit.test('mesh basic builder with if_then', async (assert) => {
 	const rotate1 = if_then1.create_node('rotate');
 	rotate1.set_input(0, if_then_subnet_input1);
 	if_then_subnet_output1.set_input(0, rotate1);
-	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	await mesh_basic1.request_container();
-	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag);
 });
@@ -235,9 +235,9 @@ QUnit.test('mesh basic builder with for_loop', async (assert) => {
 	add1.set_input(0, for_loop_subnet_input1);
 	add1.params.get('add1')!.set([0.1, 0.1, 0.1]);
 
-	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	await mesh_basic1.request_container();
-	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
 });
@@ -259,9 +259,9 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	add1.set_input(0, subnet_subnet_input1);
 	add1.params.get('add1')!.set([1.0, 0.5, 0.25]);
 
-	assert.ok(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	await mesh_basic1.request_container();
-	assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
 });

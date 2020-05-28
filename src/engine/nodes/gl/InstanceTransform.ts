@@ -96,7 +96,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		return VARS.normal;
 	}
 	private _default_instance_position(shaders_collection_controller: ShadersCollectionController): string | undefined {
-		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
+		return this.material_node?.assembler_controller?.assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC3,
 			VARS.instance_position,
@@ -107,7 +107,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.read_attribute(this, 'vec3', VARS.instance_position, this._shader_name);
 	}
 	private _default_input_instance_orientation(shaders_collection_controller: ShadersCollectionController) {
-		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
+		return this.material_node?.assembler_controller?.assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC4,
 			VARS.instance_orientation,
@@ -118,7 +118,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.read_attribute(this, 'vec4', VARS.instance_orientation, this._shader_name);
 	}
 	private _default_input_instance_scale(shaders_collection_controller: ShadersCollectionController) {
-		return this.material_node?.assembler_controller.assembler.globals_handler?.read_attribute(
+		return this.material_node?.assembler_controller?.assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC3,
 			VARS.instance_scale,

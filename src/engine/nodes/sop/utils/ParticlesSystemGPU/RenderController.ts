@@ -128,7 +128,7 @@ export class ParticlesSystemGpuRenderController {
 			globals_handler.set_texture_allocations_controller(
 				this.node.assembler_controller.assembler.texture_allocations_controller
 			);
-			mat_node.assembler_controller.set_assembler_globals_handler(globals_handler);
+			mat_node.assembler_controller?.set_assembler_globals_handler(globals_handler);
 			if (
 				!this._texture_allocations_json ||
 				JSON.stringify(this._texture_allocations_json) != JSON.stringify(new_texture_allocations_json)

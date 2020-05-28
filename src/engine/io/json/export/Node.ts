@@ -37,6 +37,7 @@ export interface NodeJsonExporterData {
 	selection?: string[];
 	flags?: FlagsData;
 	cloned_state_overriden: boolean;
+	persisted_config?: object;
 }
 
 export interface NodeJsonExporterUIData {
@@ -131,6 +132,14 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			const overriden = this._node.io.inputs.cloned_state_overriden();
 			if (overriden) {
 				this._data['cloned_state_overriden'] = overriden;
+			}
+		}
+
+		// persisted config
+		if (this._node.persisted_config) {
+			const persisted_config_data = this._node.persisted_config.to_json();
+			if (persisted_config_data) {
+				this._data.persisted_config = persisted_config_data;
 			}
 		}
 

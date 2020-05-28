@@ -1,4 +1,4 @@
-export enum DynamicModuleName {
+export enum ModuleName {
 	BasisTextureLoader = 'BasisTextureLoader',
 	DRACOLoader = 'DRACOLoader',
 	EXRLoader = 'EXRLoader',
@@ -10,15 +10,15 @@ export enum DynamicModuleName {
 	SVGLoader = 'SVGLoader',
 }
 
-export class BaseDynamicModulesRegister {
-	private _loaded_module_by_name: Map<DynamicModuleName, any> = new Map();
-	private _promise_by_name: Map<DynamicModuleName, Promise<object>> = new Map();
+export class BaseModulesRegister {
+	private _loaded_module_by_name: Map<ModuleName, any> = new Map();
+	private _promise_by_name: Map<ModuleName, Promise<object>> = new Map();
 
-	register_module(name: DynamicModuleName, promise: Promise<object>) {
+	register_module(name: ModuleName, promise: Promise<object>) {
 		this._promise_by_name.set(name, promise);
 	}
 
-	async module(name: DynamicModuleName) {
+	async module(name: ModuleName) {
 		const loaded_module = this._loaded_module_by_name.get(name);
 		if (loaded_module) {
 			return loaded_module;

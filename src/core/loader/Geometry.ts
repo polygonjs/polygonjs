@@ -4,7 +4,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {Poly} from '../../engine/Poly';
-import {DynamicModuleName} from '../../engine/poly/registers/dynamic_modules/_BaseRegister';
+import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
 
 export class CoreLoaderGeometry {
 	public readonly ext: string;
@@ -159,18 +159,18 @@ export class CoreLoaderGeometry {
 		return [mesh]; //.children
 	}
 
-	static module_names(ext: string): DynamicModuleName[] | void {
+	static module_names(ext: string): ModuleName[] | void {
 		switch (ext) {
 			case 'gltf':
-				return [DynamicModuleName.GLTFLoader];
+				return [ModuleName.GLTFLoader];
 			case 'glb':
-				return [DynamicModuleName.GLTFLoader, DynamicModuleName.DRACOLoader];
+				return [ModuleName.GLTFLoader, ModuleName.DRACOLoader];
 			case 'drc':
-				return [DynamicModuleName.DRACOLoader];
+				return [ModuleName.DRACOLoader];
 			case 'obj':
-				return [DynamicModuleName.OBJLoader2];
+				return [ModuleName.OBJLoader2];
 			case 'fbx':
-				return [DynamicModuleName.FBXLoader];
+				return [ModuleName.FBXLoader];
 		}
 	}
 
@@ -190,7 +190,7 @@ export class CoreLoaderGeometry {
 	}
 
 	async loader_for_gltf() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.GLTFLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.GLTFLoader);
 		if (module) {
 			return new module.GLTFLoader();
 		}
@@ -202,8 +202,8 @@ export class CoreLoaderGeometry {
 		// return new GLTFLoader();
 	}
 	async loader_for_glb() {
-		const gltf_module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.GLTFLoader);
-		const draco_module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.DRACOLoader);
+		const gltf_module = await Poly.instance().modules_register.module(ModuleName.GLTFLoader);
+		const draco_module = await Poly.instance().modules_register.module(ModuleName.DRACOLoader);
 		if (gltf_module && draco_module) {
 			const loader = new gltf_module.GLTFLoader();
 			const draco_loader = new draco_module.DRACOLoader();
@@ -226,7 +226,7 @@ export class CoreLoaderGeometry {
 		// return loader;
 	}
 	async loader_for_drc() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.DRACOLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.DRACOLoader);
 		if (module) {
 			const draco_loader = new module.DRACOLoader();
 			const decoder_path = '/three/js/libs/draco/';
@@ -243,13 +243,13 @@ export class CoreLoaderGeometry {
 		// return draco_loader;
 	}
 	async loader_for_obj() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.OBJLoader2);
+		const module = await Poly.instance().modules_register.module(ModuleName.OBJLoader2);
 		if (module) {
 			return new module.OBJLoader2();
 		}
 	}
 	async loader_for_fbx() {
-		const module = await Poly.instance().dynamic_modules_register.module(DynamicModuleName.FBXLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.FBXLoader);
 		if (module) {
 			return new module.FBXLoader();
 		}

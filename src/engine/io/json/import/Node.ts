@@ -13,6 +13,7 @@ import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
+import {Poly} from '../../../Poly';
 // import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -20,7 +21,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
 		this.set_connection_points(data['connection_points']);
-		this.create_nodes(scene_importer, data['nodes']);
+
+		const skip_create_children = Poly.instance().player_mode() && data.persisted_config;
+		if (!skip_create_children) {
+			this.create_nodes(scene_importer, data['nodes']);
+		}
 		this.set_selection(data['selection']);
 
 		// inputs clone
@@ -33,6 +38,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		this.set_flags(data);
 		this.set_params(data['params']);
+
+		if (data.persisted_config) {
+			this.set_persisted_config(data.persisted_config);
+		}
 
 		this.from_data_custom(data);
 
@@ -341,6 +350,12 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		return false;
+	}
+
+	set_persisted_config(persisted_config_data: object) {
+		if (this._node.persisted_config) {
+			this._node.persisted_config.load(persisted_config_data);
+		}
 	}
 
 	from_data_custom(data: NodeJsonExporterData) {}
