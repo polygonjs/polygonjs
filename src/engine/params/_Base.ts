@@ -129,7 +129,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this._default_value;
 	}
 	get is_default(): boolean {
-		return true;
+		return this._raw_input == this.default_value;
 	}
 	get raw_input() {
 		return this._raw_input;

@@ -1,5 +1,6 @@
 import {AllNodesRegister} from './nodes/All';
 import {AllExpressionsRegister} from './expressions/All';
+import {AllDynamicModulesRegister} from './dynamic_modules/All';
 
 import {Poly} from '../../Poly';
 export class AllRegister {
@@ -11,5 +12,6 @@ export class AllRegister {
 		this._started = true;
 		AllNodesRegister.run(Poly.instance());
 		AllExpressionsRegister.run(Poly.instance());
+		AllDynamicModulesRegister.run(Poly.instance());
 	}
 }

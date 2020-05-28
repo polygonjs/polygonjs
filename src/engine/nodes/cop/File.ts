@@ -1,3 +1,4 @@
+import lodash_isNumber from 'lodash/isNumber';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {
 	UVMapping,
@@ -105,14 +106,14 @@ const MIN_FILTERS: Dictionary<number>[] = [
 // ];
 
 // const FORMATS = [
-// 	"AlphaFormat",
-// 	"RGBFormat",
-// 	"RGBAFormat",
-// 	"LuminanceFormat",
-// 	"LuminanceAlphaFormat",
-// 	"RGBEFormat",
-// 	"DepthFormat",
-// 	"DepthStencilFormat"
+// 	'AlphaFormat',
+// 	'RGBFormat',
+// 	'RGBAFormat',
+// 	'LuminanceFormat',
+// 	'LuminanceAlphaFormat',
+// 	'RGBEFormat',
+// 	'DepthFormat',
+// 	'DepthStencilFormat',
 // ];
 
 // const ENCODINGS = [
@@ -151,15 +152,21 @@ const ATTRIB_MAPPING: AttribMapping = {
 	wrapT: 'wrap_t',
 	minFilter: 'min_filter',
 	magFilter: 'mag_filter',
+
 	// type: 'type',
 	// encoding: 'encoding'
 	// format: 'format',
 };
 
+interface TextureWithUpdateMatrix extends Texture {
+	updateMatrix(): void;
+}
+
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {DesktopFileType} from '../../params/utils/OptionsController';
+// import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 class FileCopParamsConfig extends NodeParamsConfig {
 	//
 	url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
@@ -232,6 +239,15 @@ class FileCopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	flip_y = ParamConfig.BOOLEAN(0);
+	offset = ParamConfig.VECTOR2([0, 0]);
+	repeat = ParamConfig.VECTOR2([1, 1]);
+	rotation = ParamConfig.FLOAT(0, {
+		range: [-1, 1],
+	});
+	center = ParamConfig.VECTOR2([0, 0]);
+	// use_data_texture = ParamConfig.BOOLEAN(0, {
+	// 	visible_if: {is_video: 0},
+	// });
 	is_video = ParamConfig.BOOLEAN(0, {
 		hidden: true,
 		cook: false,
@@ -279,12 +295,12 @@ const ParamsConfig = new FileCopParamsConfig();
 
 export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	params_config = ParamsConfig;
-	private _video: HTMLVideoElement | undefined;
-
 	static type() {
 		return 'file';
 	}
 
+	private _video: HTMLVideoElement | undefined;
+	// private _data_texture_controller: DataTextureController | undefined;
 	private _texture_loader: CoreTextureLoader | undefined;
 
 	static readonly VIDEO_TIME_PARAM_NAME = 'video_time';
@@ -315,7 +331,16 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 
 		if (texture) {
 			this._update_texture_params(texture);
+			// if (this.pv.use_data_texture) {
+			// 	this._data_texture_controller =
+			// 		this._data_texture_controller ||
+			// 		new DataTextureController(DataTextureControllerBufferType.Uint8ClampedArray);
+			// 	const data_texture = this._data_texture_controller.from_texture(texture);
+			// 	this._update_texture_params(data_texture);
+			// 	this.set_texture(data_texture);
+			// } else {
 			this.set_texture(texture);
+			// }
 		} else {
 			this.clear_texture();
 		}
@@ -346,16 +371,28 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	private _update_texture_params(texture: Texture) {
 		for (let texture_attrib of ATTRIB_MAPPING_KEYS) {
 			const param_name = ATTRIB_MAPPING[texture_attrib];
-			const param_value = this.params.float(param_name);
+			const param = this.params.param(param_name);
 
-			if (param_value != null && texture) {
-				if (texture[texture_attrib] != param_value) {
-					texture[texture_attrib] = param_value;
-					texture.needsUpdate = true;
+			if (param && texture) {
+				const param_value = param.value;
+				if (param_value != null && lodash_isNumber(param_value)) {
+					if (texture[texture_attrib] != param_value) {
+						texture[texture_attrib] = param_value;
+						texture.needsUpdate = true;
+					}
 				}
 			}
 		}
 		texture.flipY = this.pv.flip_y;
+		this._update_texture_transform(texture);
+	}
+	private _update_texture_transform(texture: Texture) {
+		texture.offset.copy(this.pv.offset);
+		texture.repeat.copy(this.pv.repeat);
+		texture.rotation = this.pv.rotation;
+		texture.center.copy(this.pv.center);
+
+		(texture as TextureWithUpdateMatrix).updateMatrix();
 	}
 	//
 	//
@@ -423,6 +460,9 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		this._texture_loader = this._texture_loader || new CoreTextureLoader(this, param);
 		try {
 			texture = await this._texture_loader.load_texture_from_url_or_op(url);
+			if (texture) {
+				texture.matrixAutoUpdate = false;
+			}
 		} catch (e) {}
 		if (!texture) {
 			this.states.error.set(`could not load texture '${url}'`);

@@ -1,15 +1,9 @@
 import {ObjectLoader} from 'three/src/loaders/ObjectLoader';
 import {Object3D} from 'three/src/core/Object3D';
-// import lodash_isArray from 'lodash/isArray';
-// import {CoreString} from '../String';
-
-// import {GeometryLoaderModule} from './Geometry/_Module';
-// import {DRACOLoader} from './Geometry/DRACOLoader';
-// import {JsonData} from './Geometry/JsonData'
-// import {CoreScriptLoader} from './Script';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {Poly} from '../../engine/Poly';
 
 // import {DDSLoader} from '../../../modules/three/examples/jsm/loaders/DDSLoader';
 // import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
@@ -242,8 +236,14 @@ export class CoreLoaderGeometry {
 		return draco_loader;
 	}
 	async loader_for_obj() {
-		const {OBJLoader2} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader2`);
-		return new OBJLoader2();
+		// const {OBJLoader2} = await import(`../../../modules/three/examples/jsm/loaders/OBJLoader2`);
+		const module = await Poly.instance().dynamic_modules_register.load('obj_loader2');
+		console.log(module);
+		if (module) {
+			return new module.OBJLoader2();
+		} else {
+			console.warn('OBJLoader2 not registered');
+		}
 	}
 	async loader_for_fbx() {
 		const {FBXLoader} = await import(`../../../modules/three/examples/jsm/loaders/FBXLoader`);

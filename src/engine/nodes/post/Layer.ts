@@ -47,7 +47,7 @@ class LayerPass extends Pass {
 
 		this.uniforms = UniformsUtils.clone(SHADER.uniforms);
 		this.material = new ShaderMaterial({
-			uniforms: this.uniforms,
+			uniforms: this.uniforms as any,
 			vertexShader: SHADER.vertexShader,
 			fragmentShader: SHADER.fragmentShader,
 			transparent: true,

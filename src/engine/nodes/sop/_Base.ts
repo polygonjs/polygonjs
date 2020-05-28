@@ -10,6 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDB} from '../utils/FlagsController';
 import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
+import {Mesh} from 'three/src/objects/Mesh';
 
 enum MESSAGE {
 	FROM_SET_CORE_GROUP = 'from set_core_group',
@@ -109,9 +110,9 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		// ensure it has an index
 		this._create_index_if_none(geometry);
 
-		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type]; //THREE[type];
+		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type] as any; //THREE[type];
 		material = material || CoreConstant.MATERIALS[type].clone();
-		const object = new object_constructor(geometry, material);
+		const object: Mesh = new object_constructor(geometry, material);
 		object.castShadow = true;
 		object.receiveShadow = true;
 		object.frustumCulled = false;

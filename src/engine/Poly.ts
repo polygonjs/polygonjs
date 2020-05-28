@@ -4,6 +4,7 @@ import {RenderersController} from './poly/RenderersController';
 import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/registers/nodes/NodesRegister';
 import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
 import {NodeContext} from './poly/NodeContext';
+import {DynamicModulesRegister} from './poly/registers/dynamic_modules/DynamicModulesRegister';
 // import {ViewerLoadersManager} from '/viewers/LoadersManager';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
@@ -13,9 +14,10 @@ const _POLYGONJS_VERSION = POLYGONJS_VERSION;
 
 export class Poly {
 	static _instance: Poly | undefined;
-	renderers_controller: RenderersController = new RenderersController();
-	nodes_register: NodesRegister = new NodesRegister();
-	expressions_register: ExpressionRegister = new ExpressionRegister();
+	public readonly renderers_controller: RenderersController = new RenderersController();
+	public readonly nodes_register: NodesRegister = new NodesRegister();
+	public readonly expressions_register: ExpressionRegister = new ExpressionRegister();
+	public readonly dynamic_modules_register: DynamicModulesRegister = new DynamicModulesRegister();
 	// public readonly js_version: string = '0';
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
