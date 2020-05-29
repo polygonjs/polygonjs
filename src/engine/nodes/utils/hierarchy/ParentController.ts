@@ -49,9 +49,6 @@ export class HierarchyParentController {
 		}
 	}
 	find_node(path: string): BaseNodeType | null {
-		// if (!this._children_allowed) {
-		// 	return null;
-		// }
 		if (path == null) {
 			return null;
 		}

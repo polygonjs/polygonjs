@@ -4,17 +4,15 @@ import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isObject from 'lodash/isObject';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_isArray from 'lodash/isArray';
-
-import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
-import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
-import {Poly} from '../../../Poly';
-// import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
+import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
+import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
+
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T) {}
@@ -22,8 +20,9 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
 		this.set_connection_points(data['connection_points']);
 
-		const skip_create_children = Poly.instance().player_mode() && data.persisted_config;
-		if (!skip_create_children) {
+		// rather than having the children creation dependent on the persisted config and player mode, use the children_allowed() method
+		// const skip_create_children = Poly.instance().player_mode() && data.persisted_config;
+		if (this._node.children_allowed()) {
 			this.create_nodes(scene_importer, data['nodes']);
 		}
 		this.set_selection(data['selection']);

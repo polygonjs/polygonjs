@@ -32,7 +32,7 @@ interface FontByUrl {
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {DynamicModuleName} from '../../poly/registers/modules/_BaseRegister';
+import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
 import {Poly} from '../../Poly';
 class TextSopParamsConfig extends NodeParamsConfig {
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
@@ -247,10 +247,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		const ext = this.get_extension();
 		switch (ext) {
 			case 'ttf': {
-				return [DynamicModuleName.TTFLoader];
+				return [ModuleName.TTFLoader];
 			}
 			case 'json': {
-				return [DynamicModuleName.SVGLoader];
+				return [ModuleName.SVGLoader];
 			}
 		}
 	}
@@ -296,13 +296,13 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private async _load_ttf_loader() {
-		const module = await Poly.instance().modules_register.module(DynamicModuleName.TTFLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.TTFLoader);
 		if (module) {
 			return new module.TTFLoader();
 		}
 	}
 	private async _load_svg_loader() {
-		const module = await Poly.instance().modules_register.module(DynamicModuleName.SVGLoader);
+		const module = await Poly.instance().modules_register.module(ModuleName.SVGLoader);
 		if (module) {
 			return module.SVGLoader;
 		}

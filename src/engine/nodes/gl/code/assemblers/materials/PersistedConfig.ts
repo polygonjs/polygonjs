@@ -7,7 +7,7 @@ import {IUniformsWithTime, IUniformsWithResolution} from '../../../../../scene/u
 import {GlParamConfig} from '../../utils/ParamConfig';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {Texture} from 'three/src/textures/Texture';
-import {Material} from 'three/src/materials/Material';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Matrix3} from 'three/src/math/Matrix3';
 
 export interface PersistedConfigBaseMaterialData {
@@ -17,6 +17,9 @@ export interface PersistedConfigBaseMaterialData {
 	uniforms_resolution_dependent?: boolean;
 	custom_materials?: Dictionary<object>;
 }
+
+// potential bug with Material Loader
+// - 1. a uniform with a mat3, such as uvTransform, will be reloaded with a mat4
 export class BaseMaterialPersistedConfig extends PersistedConfig {
 	private _material: ShaderMaterialWithCustomMaterials | undefined;
 	constructor(protected node: BaseBuilderMatNodeType) {
@@ -101,17 +104,17 @@ export class BaseMaterialPersistedConfig extends PersistedConfig {
 		}
 	}
 
-	private _material_to_json(material: Material): object {
-		this._unassign_textures(this.node.material.uniforms);
-		const material_data = this.node.material.toJSON({});
-		this._reassign_textures(this.node.material.uniforms);
+	private _material_to_json(material: ShaderMaterial): object {
+		this._unassign_textures(material.uniforms);
+		const material_data = material.toJSON({});
+		this._reassign_textures(material.uniforms);
 		return material_data;
 	}
 
 	private _load_material(data: object): ShaderMaterialWithCustomMaterials | undefined {
 		const loader = new MaterialLoader();
 		const res = loader.parse(data) as ShaderMaterialWithCustomMaterials;
-		console.log('loaded', res);
+
 		// fix matrix that may be a mat4 instead of mat3
 		const uv2Transform = res.uniforms.uv2Transform;
 		if (uv2Transform) {

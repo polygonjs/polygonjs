@@ -115,10 +115,6 @@ export class HierarchyChildrenController {
 	}
 
 	add_node(child_node: BaseNodeType) {
-		// if (!this._children_allowed) {
-		// 	throw `node ${this.node.full_path()} cannot have children`;
-		// }
-
 		child_node.set_parent(this.node);
 		child_node.params.init();
 		child_node.parent_controller.on_set_parent();

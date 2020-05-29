@@ -8,8 +8,6 @@ import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../poly/NodeContext';
 
-const COMPILE = true;
-
 export abstract class TypedBuilderMatNode<
 	A extends ShaderAssemblerMaterial,
 	K extends NodeParamsConfig
@@ -34,10 +32,7 @@ export abstract class TypedBuilderMatNode<
 	create_material() {
 		let material: ShaderMaterialWithCustomMaterials | undefined;
 		if (this.persisted_config) {
-			// if (!COMPILE) {
 			material = this.persisted_config.material();
-			console.log('material from config', material);
-			// }
 		}
 		if (!material) {
 			material = this.assembler_controller?.assembler.create_material() as ShaderMaterialWithCustomMaterials;
@@ -63,6 +58,12 @@ export abstract class TypedBuilderMatNode<
 	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
 	}
+	children_allowed() {
+		if (this.assembler_controller) {
+			return super.children_allowed();
+		}
+		return false;
+	}
 
 	//
 	//
@@ -70,18 +71,23 @@ export abstract class TypedBuilderMatNode<
 	//
 	//
 	compile_if_required() {
+		/* if we recompile while in player mode, there will not be any children gl node created.
+		So any recompilation will be flawed. A quick way to realise this is with a time dependent material.
+		And while a scene export would not have an assembler and therefore not recompile,
+		a temporary display of a scene will the whole engine player will have an assembler and will therefore recompile.
+		UPDATE: the creation of children is not tied to the player mode anymore, only to the presence of the assembler.
+		*/
+		// if (Poly.instance().player_mode()) {
+		// 	return;
+		// }
 		if (this.assembler_controller?.compile_required()) {
-			if (COMPILE) {
-				this._compile();
-			} else {
-				console.log('compilation temporarily bypassed');
-			}
+			this._compile();
 		}
 	}
 	protected _compile() {
-		if (this.material) {
-			this.assembler_controller?.assembler.compile_material(this.material);
-			this.assembler_controller?.post_compile();
+		if (this.material && this.assembler_controller) {
+			this.assembler_controller.assembler.compile_material(this.material);
+			this.assembler_controller.post_compile();
 		}
 	}
 }
