@@ -33,6 +33,7 @@ export const CATEGORY_GL = {
 	GLOBALS: 'globals',
 	LOGIC: 'logic',
 	MATH: 'math',
+	PHYSICS: 'physics',
 	QUAT: 'quat',
 	TRIGO: 'trigo',
 	UTIL: 'util',

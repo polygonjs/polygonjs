@@ -48,6 +48,7 @@ import {ClampGlNode, FaceforwardGlNode, SmoothStepGlNode} from '../../../nodes/g
 import {AddGlNode, DivideGlNode, MultGlNode, SubstractGlNode} from '../../../nodes/gl/_Math_Arg2Operation';
 
 import {AndGlNode, OrGlNode} from '../../../nodes/gl/_Math_Arg2Boolean';
+import {AccelerationGlNode} from '../../../nodes/gl/Acceleration';
 import {AlignGlNode} from '../../../nodes/gl/Align';
 import {AttributeGlNode} from '../../../nodes/gl/Attribute';
 import {ConstantGlNode} from '../../../nodes/gl/Constant';
@@ -96,6 +97,7 @@ import {VectorAngleGlNode} from '../../../nodes/gl/VectorAngle';
 
 export interface GlNodeChildrenMap {
 	abs: AbsGlNode;
+	acceleration: AccelerationGlNode;
 	acos: AcosGlNode;
 	add: AddGlNode;
 	align: AlignGlNode;
@@ -201,6 +203,7 @@ const SUBNET_CHILD_OPTION = {
 export class GlRegister {
 	static run(poly: Poly) {
 		poly.register_node(AbsGlNode, CATEGORY_GL.MATH);
+		poly.register_node(AccelerationGlNode, CATEGORY_GL.PHYSICS);
 		poly.register_node(AcosGlNode, CATEGORY_GL.TRIGO);
 		poly.register_node(AddGlNode, CATEGORY_GL.MATH);
 		poly.register_node(AlignGlNode, CATEGORY_GL.TRIGO);

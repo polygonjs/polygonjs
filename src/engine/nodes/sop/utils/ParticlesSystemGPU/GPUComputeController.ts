@@ -1,5 +1,4 @@
 import {Vector2} from 'three/src/math/Vector2';
-
 import {MathUtils} from 'three/src/math/MathUtils';
 import {InstancedBufferAttribute} from 'three/src/core/InstancedBufferAttribute';
 import {DataTexture} from 'three/src/textures/DataTexture';
@@ -10,6 +9,7 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 // import {CoreConstant} from '../../../../../Core/Geometry/Constant'
 
 import {CoreGroup} from '../../../../../core/geometry/Group';
+import {GlConstant} from '../../../../../core/geometry/GlConstant';
 import {CoreMath} from '../../../../../core/math/_Module';
 
 // import computeShaderPosition from 'src/Engine/Node/Gl/Assembler/Template/Particle/Position.glsl'
@@ -38,6 +38,8 @@ export class ParticlesSystemGpuComputeController {
 	private _created_textures_by_name: Map<ShaderName, DataTexture> = new Map();
 	private _shaders_by_name: Map<ShaderName, string> | undefined;
 	protected _last_simulated_frame: number | undefined;
+	protected _last_simulated_time: number | undefined;
+	protected _delta_time: number = 0;
 	// private _use_instancing: boolean = false
 
 	// private _param_auto_textures_size: boolean;
@@ -110,24 +112,31 @@ export class ParticlesSystemGpuComputeController {
 			if (this._last_simulated_frame == null) {
 				this._last_simulated_frame = start_frame - 1;
 			}
+			if (this._last_simulated_time == null) {
+				this._last_simulated_time = this.node.scene.time;
+			}
 			if (frame > this._last_simulated_frame) {
 				this._compute_simulation(frame - this._last_simulated_frame);
 			}
 		}
 	}
 
-	private _compute_simulation(count = 1) {
-		if (!this._gpu_compute) {
+	private _compute_simulation(iterations_count = 1) {
+		if (!this._gpu_compute || this._last_simulated_time == null) {
 			return;
 		}
 
 		this.update_simulation_material_uniforms();
 
-		for (let i = 0; i < count; i++) {
+		for (let i = 0; i < iterations_count; i++) {
 			this._gpu_compute.compute();
 		}
 		this.node.render_controller.update_render_material_uniforms();
 		this._last_simulated_frame = this.node.scene.frame;
+
+		const time = this.node.scene.time;
+		this._delta_time = time - this._last_simulated_time;
+		this._last_simulated_time = time;
 
 		// this._renderer.render(this._gpu_scene, this._gpu_camera)
 	}
@@ -173,7 +182,6 @@ export class ParticlesSystemGpuComputeController {
 		if (!this._renderer) {
 			return;
 		}
-		// console.log(this._renderer.extensions, this._renderer.capabilities)
 		// if(!this._renderer.extensions.get( 'WEBGL_draw_buffers' )){
 		// 	this.self.set_error("this operator requires the browser extension WEBGL_draw_buffers")
 		// 	alert("no extension found")
@@ -245,18 +253,24 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private create_simulation_material_uniforms() {
+		const assembler = this.node.assembler_controller?.assembler;
+		if (!assembler) {
+			return;
+		}
 		this.variables_by_name.forEach((variable, shader_name) => {
 			const uniforms = variable.material.uniforms;
-			uniforms['frame'] = {value: this.node.scene.frame};
+			uniforms[GlConstant.TIME] = {value: this.node.scene.time};
+			uniforms[GlConstant.DELTA_TIME] = {value: this.node.scene.time};
 
-			for (let param_config of this.node.assembler_controller.assembler.param_configs()) {
+			for (let param_config of assembler.param_configs()) {
 				uniforms[param_config.uniform_name] = param_config.uniform;
 			}
 		});
 	}
 	private update_simulation_material_uniforms() {
 		this.variables_by_name.forEach((variable, shader_name) => {
-			variable.material.uniforms['frame'].value = this.node.scene.frame;
+			variable.material.uniforms[GlConstant.TIME].value = this.node.scene.time;
+			variable.material.uniforms[GlConstant.DELTA_TIME].value = this._delta_time;
 		});
 	}
 
@@ -301,10 +315,12 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private _fill_textures() {
+		const assembler = this.node.assembler_controller?.assembler;
+		const texture_allocations_controller = assembler?.texture_allocations_controller;
+		if (!texture_allocations_controller) {
+			return;
+		}
 		this._created_textures_by_name.forEach((texture, shader_name) => {
-			const assembler = this.node.assembler_controller.assembler;
-			const texture_allocations_controller = assembler.texture_allocations_controller;
-
 			const texture_allocation = texture_allocations_controller.allocation_for_shader_name(shader_name);
 			if (!texture_allocation) {
 				return;
@@ -395,7 +411,7 @@ export class ParticlesSystemGpuComputeController {
 		}
 	}
 	private _restart_simulation() {
-		this._last_simulated_frame = undefined;
+		this._last_simulated_time = undefined;
 
 		this._create_texture_render_targets();
 		const points = this._get_points(); // TODO: typescript - not sure that's right

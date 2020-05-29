@@ -30,9 +30,9 @@ export class LoadingController {
 
 	private async _set_loading_state(state: boolean) {
 		this._loading_state = state;
-		if (this._loading_state == false) {
-			console.log('*** scene loaded');
-		}
+		// if (this._loading_state == false) {
+		// 	console.log('POLYGONJS SCENE LOADED');
+		// }
 		await this.set_auto_update(!this._loading_state);
 	}
 	get is_loading() {

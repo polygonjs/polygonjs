@@ -178,6 +178,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 				// const particles_sim_uv_definition = new Definition.Attribute(globals_node, 'vec2', 'particles_sim_uv')
 				// definitions_by_shader_name['vertex'].push(particles_sim_uv_definition)
+
 				const body_line = `texture2D( ${var_name_texture}, ${this._uv_name} ).${component}`;
 				return body_line;
 			}

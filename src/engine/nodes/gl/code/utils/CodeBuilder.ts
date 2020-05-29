@@ -127,7 +127,7 @@ export class CodeBuilder {
 		return this._param_configs_controller.list || [];
 	}
 	lines(shader_name: ShaderName, line_type: LineType) {
-		return this._lines.get(shader_name)!.get(line_type);
+		return this._lines.get(shader_name)?.get(line_type) || [];
 	}
 	all_lines() {
 		return this._lines;

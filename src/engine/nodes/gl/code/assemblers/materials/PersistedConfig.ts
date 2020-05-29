@@ -17,9 +17,16 @@ export interface PersistedConfigBaseMaterialData {
 	uniforms_resolution_dependent?: boolean;
 	custom_materials?: Dictionary<object>;
 }
+interface MaterialData {
+	color?: boolean;
+	lights?: boolean;
+}
 
 // potential bug with Material Loader
 // - 1. a uniform with a mat3, such as uvTransform, will be reloaded with a mat4
+// - 2. the boolean lights property is not saved
+// - 3. if a color property is added on the material itself, it should not be saved
+// - 4. for the volume shader, a uniform with an array of vector can be saved, but not loaded again as a vector (but only as an {x,y,z} object)
 export class BaseMaterialPersistedConfig extends PersistedConfig {
 	private _material: ShaderMaterialWithCustomMaterials | undefined;
 	constructor(protected node: BaseBuilderMatNodeType) {
@@ -64,6 +71,7 @@ export class BaseMaterialPersistedConfig extends PersistedConfig {
 		if (!this._material) {
 			return;
 		}
+		if (2 > 1) return;
 
 		this._material.custom_materials = this._material.custom_materials || {};
 		if (data.custom_materials) {
@@ -107,30 +115,42 @@ export class BaseMaterialPersistedConfig extends PersistedConfig {
 	private _material_to_json(material: ShaderMaterial): object {
 		this._unassign_textures(material.uniforms);
 		const material_data = material.toJSON({});
+		if (material.lights != null) {
+			material_data.lights = material.lights;
+		}
+
 		this._reassign_textures(material.uniforms);
 		return material_data;
 	}
 
-	private _load_material(data: object): ShaderMaterialWithCustomMaterials | undefined {
-		const loader = new MaterialLoader();
-		const res = loader.parse(data) as ShaderMaterialWithCustomMaterials;
+	private _load_material(data: MaterialData): ShaderMaterialWithCustomMaterials | undefined {
+		// if (2 > 1) {
+		// 	return;
+		// }
 
-		// fix matrix that may be a mat4 instead of mat3
-		const uv2Transform = res.uniforms.uv2Transform;
+		// hack fix for properties that are assumed to be on normal materials
+		// but are not on ShaderMaterial
+		data.color = undefined;
+
+		const loader = new MaterialLoader();
+		const material = loader.parse(data) as ShaderMaterialWithCustomMaterials;
+
+		// compensates for lights not being saved (and therefore cannot be loaded correctly)
+		if (data.lights != null) {
+			material.lights = data.lights;
+		}
+
+		// fix matrix that may be loaded as a mat4 instead of a mat3
+		const uv2Transform = material.uniforms.uv2Transform;
 		if (uv2Transform) {
 			this.mat4_to_mat3(uv2Transform);
 		}
-		const uvTransform = res.uniforms.uvTransform;
+		const uvTransform = material.uniforms.uvTransform;
 		if (uvTransform) {
 			this.mat4_to_mat3(uvTransform);
 		}
 
-		return res as ShaderMaterialWithCustomMaterials;
-		// const names = Object.keys(res);
-		// const first_name = names[0];
-		// if (first_name) {
-		// 	return res[first_name];
-		// }
+		return material as ShaderMaterialWithCustomMaterials;
 	}
 
 	material(): ShaderMaterialWithCustomMaterials | undefined {

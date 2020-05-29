@@ -12,7 +12,7 @@ export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
 	}
 
 	create_params() {
-		this.function_node?.assembler_controller.add_globals_params(this);
+		this.function_node?.assembler_controller.add_globals_outputs(this);
 	}
 
 	set_lines(lines_controller: LinesController) {

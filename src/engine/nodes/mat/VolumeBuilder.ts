@@ -2,8 +2,9 @@ import {TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerVolume} from '../gl/code/assemblers/materials/Volume';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {GlAssemblerController} from '../gl/code/Controller';
 import {VolumeController} from './utils/VolumeController';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
+import {Poly} from '../../Poly';
 class VolumeMatParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
 	step_size = ParamConfig.FLOAT(0.01);
@@ -18,11 +19,15 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVol
 	static type() {
 		return 'volume_builder';
 	}
+	public used_assembler(): Readonly<AssemblerName.GL_VOLUME> {
+		return AssemblerName.GL_VOLUME;
+	}
+	protected _create_assembler_controller() {
+		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
+	}
+
 	private _volume_controller = new VolumeController(this);
 
-	protected _create_assembler_controller() {
-		return new GlAssemblerController<ShaderAssemblerVolume>(this, ShaderAssemblerVolume);
-	}
 	initialize_node() {}
 	async cook() {
 		this.compile_if_required();

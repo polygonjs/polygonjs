@@ -64,7 +64,9 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (comment) {
 			ui_data.set_comment(comment);
 		}
-		this.process_nodes_ui_data(scene_importer, data['nodes']);
+		if (this._node.children_allowed()) {
+			this.process_nodes_ui_data(scene_importer, data['nodes']);
+		}
 	}
 
 	create_nodes(scene_importer: SceneJsonImporter, data?: Dictionary<NodeJsonExporterData>) {
@@ -166,11 +168,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 				} else {
 					const input_node = this._node.node_sibbling(input_data['node']);
 					const input_index = input_data['index'];
-					// if (this._node.io.inputs.has_named_input(input_index)) {
 					this._node.set_input(input_index, input_node, input_data['output']);
-					// } else {
-					// 	console.warn(`${this._node.full_path()} has no input named ${input_name}`);
-					// }
 				}
 			}
 		}

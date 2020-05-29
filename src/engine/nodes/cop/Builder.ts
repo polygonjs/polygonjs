@@ -13,8 +13,6 @@ import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCopNode} from './_Base';
-import {GlAssemblerController} from '../gl/code/Controller';
-import {ShaderAssemblerTexture} from '../gl/code/assemblers/textures/Texture';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
@@ -36,6 +34,10 @@ const RESOLUTION_DEFAULT: Number2 = [256, 256];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {CopRendererController} from './utils/RendererController';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
+import {Poly} from '../../Poly';
+import {BaseTexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
+import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
@@ -49,15 +51,19 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	static type() {
 		return 'builder';
 	}
-	protected _assembler_controller: GlAssemblerController<
-		ShaderAssemblerTexture
-	> = this._create_assembler_controller();
+	readonly persisted_config: BaseTexturePersistedConfig = new BaseTexturePersistedConfig(this);
+	protected _assembler_controller = this._create_assembler_controller();
 
-	private _create_assembler_controller() {
-		const globals_handler = new GlobalsGeometryHandler();
-		const assembler_controller = new GlAssemblerController<ShaderAssemblerTexture>(this, ShaderAssemblerTexture);
-		assembler_controller.set_assembler_globals_handler(globals_handler);
-		return assembler_controller;
+	public used_assembler(): Readonly<AssemblerName.GL_TEXTURE> {
+		return AssemblerName.GL_TEXTURE;
+	}
+	protected _create_assembler_controller() {
+		const assembler_controller = Poly.instance().assemblers_register.assembler(this, this.used_assembler());
+		if (assembler_controller) {
+			const globals_handler = new GlobalsGeometryHandler();
+			assembler_controller.set_assembler_globals_handler(globals_handler);
+			return assembler_controller;
+		}
 	}
 
 	get assembler_controller() {
@@ -67,7 +73,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _texture_mesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
 	private _fragment_shader: string | undefined;
 	private _uniforms: IUniforms | undefined;
-	private _texture_material: ShaderMaterial = new ShaderMaterial({
+	public readonly texture_material: ShaderMaterial = new ShaderMaterial({
 		uniforms: {},
 		vertexShader: VERTEX_SHADER,
 		fragmentShader: '',
@@ -83,9 +89,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
-		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		if (this.assembler_controller) {
+			this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		}
 		// this.children_controller?.init({dependent: false});
-		this._texture_mesh.material = this._texture_material;
+		this._texture_mesh.material = this.texture_material;
 		this._texture_mesh.scale.multiplyScalar(0.25);
 		this._texture_scene.add(this._texture_mesh);
 		this._texture_camera.position.z = 1;
@@ -113,6 +121,12 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	}
+	children_allowed() {
+		if (this.assembler_controller) {
+			return super.children_allowed();
+		}
+		return false;
 	}
 
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
@@ -142,12 +156,15 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	compile_if_required() {
-		if (this.assembler_controller.compile_required()) {
+		if (this.assembler_controller?.compile_required()) {
 			this.run_assembler();
-			this.assembler_controller.post_compile();
+			this.assembler_controller?.post_compile();
 		}
 	}
 	private run_assembler() {
+		if (!this.assembler_controller) {
+			return;
+		}
 		const output_nodes = GlNodeFinder.find_output_nodes(this);
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node allowed');
@@ -168,22 +185,33 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				this._uniforms = uniforms;
 			}
 
-			// TODO: remove this once the scene knows how to re-render
-			// the render target if it is .uniforms_time_dependent()
-			if (this.assembler_controller.assembler.uniforms_time_dependent()) {
-				this.states.time_dependent.force_time_dependent();
-			} else {
-				this.states.time_dependent.unforce_time_dependent();
-			}
+			BuilderCopNode.handle_dependencies(this, this.assembler_controller.assembler.uniforms_time_dependent());
 		}
 
 		if (this._fragment_shader && this._uniforms) {
-			this._texture_material.fragmentShader = this._fragment_shader;
-			this._texture_material.uniforms = this._uniforms;
-			this._texture_material.needsUpdate = true;
-			this._texture_material.uniforms.resolution = {
+			this.texture_material.fragmentShader = this._fragment_shader;
+			this.texture_material.uniforms = this._uniforms;
+			this.texture_material.needsUpdate = true;
+			this.texture_material.uniforms.resolution = {
 				value: this.pv.resolution,
 			};
+		}
+	}
+
+	static handle_dependencies(node: BuilderCopNode, time_dependent: boolean, uniforms?: IUniformsWithTime) {
+		// That's actually useless, since this doesn't make the texture recook
+		const scene = node.scene;
+		const id = node.graph_node_id;
+		if (time_dependent) {
+			// TODO: remove this once the scene knows how to re-render
+			// the render target if it is .uniforms_time_dependent()
+			node.states.time_dependent.force_time_dependent();
+			if (uniforms) {
+				scene.uniforms_controller.add_time_dependent_uniform_owner(id, uniforms);
+			}
+		} else {
+			node.states.time_dependent.unforce_time_dependent();
+			scene.uniforms_controller.remove_time_dependent_uniform_owner(id);
 		}
 	}
 

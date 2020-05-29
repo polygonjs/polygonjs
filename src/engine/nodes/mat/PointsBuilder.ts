@@ -6,7 +6,8 @@ import {TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode} from './_BaseBuilder';
-import {GlAssemblerController} from '../gl/code/Controller';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
+import {Poly} from '../../Poly';
 class PointsMatParamsConfig extends TextureAlphaMapParamConfig(
 	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
 ) {}
@@ -17,12 +18,14 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	static type() {
 		return 'points_builder';
 	}
+	public used_assembler(): Readonly<AssemblerName.GL_POINTS> {
+		return AssemblerName.GL_POINTS;
+	}
+	protected _create_assembler_controller() {
+		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
+	}
 
 	initialize_node() {}
-
-	protected _create_assembler_controller() {
-		return new GlAssemblerController<ShaderAssemblerPoints>(this, ShaderAssemblerPoints);
-	}
 
 	async cook() {
 		this.compile_if_required();

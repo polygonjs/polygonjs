@@ -1,6 +1,5 @@
 import {TypedSopNode} from './_Base';
 import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
-import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -86,12 +85,10 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	async run_assembler() {
 		const root_nodes = this._find_root_nodes();
 		if (root_nodes.length > 0) {
-			const globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
-			this.assembler_controller.set_assembler_globals_handler(globals_handler);
-			this.assembler_controller.assembler.set_root_nodes(root_nodes);
-
-			await this.assembler_controller.assembler.compile();
-			await this.assembler_controller.post_compile();
+			// this.assembler_controller.set_assembler_globals_handler(globals_handler);
+			// this.assembler_controller.assembler.set_root_nodes(root_nodes);
+			// await this.assembler_controller.assembler.compile();
+			// await this.assembler_controller.post_compile();
 		}
 
 		// const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();

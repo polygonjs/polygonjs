@@ -2,6 +2,12 @@
 
 export enum AssemblerName {
 	GL_MESH_BASIC = 'GL_MESH_BASIC',
+	GL_MESH_LAMBERT = 'GL_MESH_LAMBERT',
+	GL_MESH_STANDARD = 'GL_MESH_STANDARD',
+	GL_PARTICLES = 'GL_PARTICLES',
+	GL_POINTS = 'GL_POINTS',
+	GL_TEXTURE = 'GL_TEXTURE',
+	GL_VOLUME = 'GL_VOLUME',
 }
 
 export interface ControllerAssemblerPair {
@@ -18,14 +24,4 @@ export class BaseAssemblersRegister {
 			assembler: assembler,
 		});
 	}
-
-	// assembler(node: BaseNodeType, name: AssemblerName) {
-	// 	const pair = this._controller_assembler_by_name.get(name);
-	// 	if (pair) {
-	// 		const controller = pair.controller;
-	// 		const assembler = pair.assembler;
-	// 		return new controller(node, assembler);
-	// 	}
-	// 	return pair;
-	// }
 }

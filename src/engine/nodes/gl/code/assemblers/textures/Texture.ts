@@ -1,19 +1,17 @@
 import {BaseGlShaderAssembler} from '../_Base';
 import {IUniforms} from '../../../../../../core/geometry/Material';
-// import {GlobalsTextureHandler} from '../../../../../Engine/Node/Gl/Assembler/Globals/Texture'
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 import TemplateDefault from '../../templates/textures/Default.frag.glsl';
-
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
-import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {OutputGlNode} from '../../../Output';
 import {GlobalsGlNode} from '../../../Globals';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {UniformGLDefinition} from '../../../utils/GLDefinition';
-// import {BaseGlNodeType} from '../../../_Base';
+import {BuilderCopNode} from '../../../../cop/Builder';
+import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 
 export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	private _uniforms: IUniforms | undefined;
@@ -58,16 +56,11 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			}
 		}
 
-		// That's actually useless, since this doesn't make the texture recook
-		const scene = this._gl_parent_node.scene;
-		const id = this._gl_parent_node.graph_node_id;
-		if (this.uniforms_time_dependent()) {
-			if (this._uniforms) {
-				scene.uniforms_controller.add_time_dependent_uniform_owner(id, this._uniforms as IUniformsWithTime);
-			}
-		} else {
-			scene.uniforms_controller.remove_time_dependent_uniform_owner(id);
-		}
+		BuilderCopNode.handle_dependencies(
+			this._gl_parent_node as BuilderCopNode,
+			this.uniforms_time_dependent(),
+			this._uniforms as IUniformsWithTime
+		);
 	}
 
 	//
@@ -83,7 +76,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
 		]);
 	}
-	add_globals_params(globals_node: GlobalsGlNode) {
+	add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),

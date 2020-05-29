@@ -13,8 +13,10 @@ import {PolyScene} from '../../../../scene/PolyScene';
 import {GlConnectionPointComponentsCountMap, BaseGlConnectionPoint} from '../../../utils/io/connections/Gl';
 import {AttributeGlNode} from '../../Attribute';
 import {GlobalsGlNode} from '../../Globals';
+import {OutputGlNode} from '../../Output';
 
 export type TextureAllocationsControllerData = Dictionary<TextureVariableData[] | undefined>[];
+const OUTPUT_NAME_ATTRIBUTES = ['position', 'normal', 'color', 'uv'];
 
 export class TextureAllocationsController {
 	private _allocations: TextureAllocation[] = [];
@@ -29,7 +31,7 @@ export class TextureAllocationsController {
 		for (let node of root_nodes) {
 			const node_id = node.graph_node_id;
 			switch (node.type) {
-				case 'output': {
+				case OutputGlNode.type(): {
 					for (let connection_point of node.io.inputs.named_input_connection_points) {
 						const input = node.io.inputs.named_input(connection_point.name);
 						if (input) {
@@ -45,7 +47,7 @@ export class TextureAllocationsController {
 					}
 					break;
 				}
-				case 'attribute': {
+				case AttributeGlNode.type(): {
 					const attrib_node = node as AttributeGlNode;
 					const named_input: BaseGlNodeType | null = attrib_node.connected_input_node();
 					const connection_point:
@@ -68,15 +70,14 @@ export class TextureAllocationsController {
 		for (let node of leaf_nodes) {
 			const node_id = node.graph_node_id;
 			switch (node.type) {
-				case 'globals': {
+				case GlobalsGlNode.type(): {
 					const globals_node = node as GlobalsGlNode;
-					const output_names_attributes = ['position', 'normal', 'color', 'uv'];
 					// const output_names_not_attributes = ['frame', 'gl_FragCoord', 'gl_PointCoord'];
 					for (let output_name of globals_node.io.outputs.used_output_names()) {
 						// const is_attribute = !lodash_includes(output_names_not_attributes, output_name)
 
 						// is_attribute, as opposed to frame, gl_FragCoord and gl_PointCoord which are either uniforms or provided by the renderer
-						const is_attribute = output_names_attributes.includes(output_name);
+						const is_attribute = OUTPUT_NAME_ATTRIBUTES.includes(output_name);
 
 						if (is_attribute) {
 							const connection_point = globals_node.io.outputs.named_output_connection_points_by_name(
@@ -95,7 +96,7 @@ export class TextureAllocationsController {
 					}
 					break;
 				}
-				case 'attribute': {
+				case AttributeGlNode.type(): {
 					const attribute_node = node as AttributeGlNode;
 					const connection_point = attribute_node.output_connection_point();
 					if (connection_point) {

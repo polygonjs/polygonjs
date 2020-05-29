@@ -288,7 +288,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	create_globals_node_output_connections() {
 		return BaseGlShaderAssembler.create_globals_node_output_connections();
 	}
-	add_globals_params(globals_node: GlobalsGlNode) {
+	add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points(this.create_globals_node_output_connections());
 	}
 	allow_attribute_exports() {

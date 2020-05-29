@@ -8,7 +8,8 @@ export const VOLUME_UNIFORMS = {
 	u_StepSize: {value: 0.01},
 	u_BoundingBoxMin: {value: new Vector3(-1, -1, -1)}, // geometry.boundingBox.min
 	u_BoundingBoxMax: {value: new Vector3(1, 1, 1)}, //geometry.boundingBox.max
-	u_DirectionalLightsDirection: {
-		value: [new Vector3(-1, -1, -1)],
+	u_DirectionalLightDirection: {
+		// do not use an array, as currently loading and saving a uniform with an array does not work via the MaterialLoader
+		value: new Vector3(-1, -1, -1),
 	},
 };

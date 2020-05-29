@@ -1,12 +1,4 @@
 import {TypedSopNode} from './_Base';
-// import {ParamType} from '../../../Engine/Param/_Module'
-
-// import {Lifespan} from './Concerns/ParticlesSystemGPU/Lifespan';
-// import {GPUCompute} from './Concerns/ParticlesSystemGPU/GPUCompute';
-// import {RenderMaterial} from './Concerns/ParticlesSystemGPU/RenderMaterial';
-// import {ParticleShaderBuilder} from './Concerns/ParticlesSystemGPU/ParticleShaderBuilder'
-// import {AssemblerOwner} from '../../../Engine/Node/Gl/Assembler/Owner';
-import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
 import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 
 // SPECS:
@@ -14,27 +6,24 @@ import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 // - render material should update at any frame, without having to resimulate
 // - changing the input will recompute, when on first frame only (otherwise an animated geo could make it recompute all the time)
 
-// AssemblerOwner(
-// 	RenderMaterial(
-// 	Lifespan(
-// 	GPUCompute(
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {GlAssemblerController} from '../gl/code/Controller';
 import {MaterialsObjNode} from '../obj/Materials';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/RenderController';
 import {ParticlesSystemGpuComputeController} from './utils/ParticlesSystemGPU/GPUComputeController';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {PointsBuilderMatNode} from '../mat/PointsBuilder';
 import {ConstantGlNode} from '../gl/Constant';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
+import {Poly} from '../../Poly';
+
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	// gpu compute
 	start_frame = ParamConfig.FLOAT(1, {range: [1, 100]});
@@ -62,12 +51,18 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	static type() {
 		return 'particles_system_gpu';
 	}
-	protected _assembler_controller: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
-		ShaderAssemblerParticles
-	>(this, ShaderAssemblerParticles);
 	get assembler_controller() {
 		return this._assembler_controller;
 	}
+	public used_assembler(): Readonly<AssemblerName.GL_PARTICLES> {
+		return AssemblerName.GL_PARTICLES;
+	}
+	protected _assembler_controller = this._create_assembler_controller();
+	private _create_assembler_controller() {
+		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
+		// return new GlAssemblerController<ShaderAssemblerParticles>(this, ShaderAssemblerParticles);
+	}
+	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
 
 	public readonly gpu_controller = new ParticlesSystemGpuComputeController(this);
 	public readonly render_controller = new ParticlesSystemGpuRenderController(this);
@@ -90,11 +85,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	protected _children_controller_context = NodeContext.GL;
 	private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
 	initialize_node() {
-		// this._init_common_shader_builder(ShaderAssemblerParticles, {
-		// 	has_display_flag: true,
-		// 	update_on_dirty: false,
-		// });
-
 		this.io.inputs.set_count(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
@@ -102,9 +92,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
-		this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		if (this.assembler_controller) {
+			this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		}
 		this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
-		// this.children_controller?.init({dependent: false});
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
@@ -115,6 +106,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	}
+	children_allowed() {
+		if (this.assembler_controller) {
+			return super.children_allowed();
+		}
+		return false;
 	}
 
 	async _reset_material_if_dirty() {
@@ -143,7 +140,14 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this.scene.frame == this.pv.start_frame;
 	}
 
+	// private _debug_cooks_count = 0;
 	async cook(input_contents: CoreGroup[]) {
+		// this._debug_cooks_count++;
+		// if (this._debug_cooks_count > 100) {
+		// 	console.log('************ REACHED MAX DEBUG ***************');
+		// 	return;
+		// }
+
 		this.gpu_controller.set_restart_not_required();
 		const core_group = input_contents[0];
 		// this._simulation_restart_required = false;
@@ -188,20 +192,21 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 	}
 	async compile_if_required() {
-		if (this.assembler_controller.compile_required()) {
+		if (this.assembler_controller?.compile_required()) {
 			await this.run_assembler();
 		}
 	}
 	async run_assembler() {
+		if (!this.assembler_controller) {
+			return;
+		}
 		const root_nodes = this._find_root_nodes();
-		console.log('root_nodes', root_nodes);
 		if (root_nodes.length > 0) {
-			const globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
-			this.assembler_controller.set_assembler_globals_handler(globals_handler);
+			this.assembler_controller.set_assembler_globals_handler(this.globals_handler);
 			this.assembler_controller.assembler.set_root_nodes(root_nodes);
 
-			await this.assembler_controller.assembler.compile();
-			await this.assembler_controller.post_compile();
+			this.assembler_controller.assembler.compile();
+			this.assembler_controller.post_compile();
 		}
 
 		const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();

@@ -53,6 +53,17 @@ export class VolumeController {
 		uniforms.u_StepSize.value = this.node.pv.step_size;
 		uniforms.u_VolumeDensity.value = this.node.pv.density;
 		uniforms.u_ShadowDensity.value = this.node.pv.shadow_density;
-		uniforms.u_DirectionalLightsDirection.value[0].copy(this.node.pv.light_dir);
+
+		const dir_light = uniforms.u_DirectionalLightDirection.value; //[0];
+		const pv_dir_light = this.node.pv.light_dir;
+		if (dir_light) {
+			/*
+			do not use Vector3.copy, as it fails when the volume material is loaded again after
+			being persisted in the persisted config, as the MaterialLoader fails to load a vector array in the uniforms
+			*/
+			dir_light.x = pv_dir_light.x;
+			dir_light.y = pv_dir_light.y;
+			dir_light.z = pv_dir_light.z;
+		}
 	}
 }

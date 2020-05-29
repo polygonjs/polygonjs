@@ -21,7 +21,7 @@ export class OutputJsNode extends TypedJsNode<OutputJsParamsConfig> {
 	}
 
 	create_params() {
-		this.function_node?.assembler_controller.add_output_params(this);
+		this.function_node?.assembler_controller.add_output_inputs(this);
 	}
 
 	set_lines(lines_controller: LinesController) {

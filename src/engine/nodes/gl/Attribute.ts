@@ -42,7 +42,13 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initialize_node();
 
-		this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_input_types_function(() => {
+			if (this.material_node?.assembler_controller?.allow_attribute_exports()) {
+				return [ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type]];
+			} else {
+				return [];
+			}
+		});
 		this.io.connection_points.set_expected_output_types_function(() => [
 			ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
@@ -130,7 +136,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 	output_connection_point(): BaseGlConnectionPoint | undefined {
 		// if (this.io.inputs.has_named_inputs) {
-		return this.io.outputs.named_output_connection_points_by_name(this.input_name);
+		return this.io.outputs.named_output_connection_points_by_name(this.output_name);
 		// }
 	}
 	// connected_output(): NamedConnection {

@@ -4,7 +4,6 @@ import {BaseJsNodeType} from '../../_Base';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {OutputJsNode} from '../../Output';
-import {ParamType} from '../../../../poly/ParamType';
 import {GlobalsJsNode} from '../../Globals';
 import {AttributeJsNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
@@ -171,14 +170,14 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	static add_output_params(output_child: OutputJsNode) {
-		output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
+	static add_output_inputs(output_child: OutputJsNode) {
+		// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
+		// output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
+		// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+		// output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
-	add_output_params(output_child: OutputJsNode) {
-		BaseJsFunctionAssembler.add_output_params(output_child);
+	add_output_inputs(output_child: OutputJsNode) {
+		BaseJsFunctionAssembler.add_output_inputs(output_child);
 	}
 	static create_globals_node_output_connections() {
 		return [
@@ -192,7 +191,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	create_globals_node_output_connections() {
 		return BaseJsFunctionAssembler.create_globals_node_output_connections();
 	}
-	add_globals_params(globals_node: GlobalsJsNode) {
+	add_globals_outputs(globals_node: GlobalsJsNode) {
 		globals_node.io.outputs.set_named_output_connection_points(this.create_globals_node_output_connections());
 	}
 	allow_attribute_exports() {

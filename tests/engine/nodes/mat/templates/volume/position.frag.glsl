@@ -17,7 +17,7 @@ uniform vec3 u_BoundingBoxMax;
 uniform sampler2D u_Map;
 
 //const int u_DirectionalLightsCount = 1;
-uniform vec3 u_DirectionalLightsDirection[DIR_LIGHTS_COUNT];
+uniform vec3 u_DirectionalLightDirection; //[DIR_LIGHTS_COUNT];
 
 varying vec3 vPw;
 // varying vec3 vN;
@@ -128,11 +128,11 @@ vec4 raymarch_bbox(vec3 start_pos, vec3 ray_dir){
 			opacity += density_to_opacity(density, step_size);
 
 			vec4 light_color = vec4(0.0,0.0,0.0,1.0); //vec4(1.0,1.0,1.0,1.0);
-			vec3 directional_light_direction;
-			for ( int l = 0; l < DIR_LIGHTS_COUNT; l++ ) {
-				directional_light_direction = u_DirectionalLightsDirection[ l ];
-				light_color += raymarch_light(-directional_light_direction, current_pos);
-			}
+			// vec3 directional_light_direction;
+			// for ( int l = 0; l < DIR_LIGHTS_COUNT; l++ ) {
+			// directional_light_direction = u_DirectionalLightsDirection[ l ];
+			light_color += raymarch_light(-u_DirectionalLightDirection, current_pos);
+			// }
 			float blend = 1.0-opacity;
 			color = mix( color.xyz, light_color.xyz, vec3(blend, blend, blend) );
 			steps_count += 1.0;

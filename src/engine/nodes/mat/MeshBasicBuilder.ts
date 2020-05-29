@@ -18,7 +18,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	static type() {
 		return 'mesh_basic_builder';
 	}
-	public used_assembler() {
+	public used_assembler(): Readonly<AssemblerName.GL_MESH_BASIC> {
 		return AssemblerName.GL_MESH_BASIC;
 	}
 	protected _create_assembler_controller() {

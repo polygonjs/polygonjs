@@ -8,7 +8,6 @@ import {BaseBuilderMatNodeType} from '../../../mat/_BaseBuilder';
 // import computeShaderVelocity from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.v.glsl'
 // import particleVertexShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.vert.glsl'
 // import particleFragmentShader from 'src/Engine/Node/Gl/Assembler/Template/Particle/Particle.frag.glsl'
-import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
@@ -16,12 +15,14 @@ import {CoreGroup} from '../../../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from '../../../gl/code/utils/TextureAllocationsController';
+import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 
 export class ParticlesSystemGpuRenderController {
 	private _render_material: ShaderMaterial | undefined;
 	protected _particles_group_objects: Object3D[] = [];
 	private _shaders_by_name: Map<ShaderName, string> | undefined;
 	private _texture_allocations_json: TextureAllocationsControllerData | undefined;
+	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.UV_VARYING);
 
 	constructor(private node: ParticlesSystemGpuSopNode) {}
 
@@ -98,6 +99,10 @@ export class ParticlesSystemGpuRenderController {
 		}
 	}
 	async init_render_material() {
+		const assembler = this.node.assembler_controller?.assembler;
+		if (!assembler) {
+			return;
+		}
 		// if (this.self.compile_required()) {
 		// 	return;
 		// }
@@ -117,18 +122,19 @@ export class ParticlesSystemGpuRenderController {
 		if (this.node.p.material.is_dirty) {
 			await this.node.p.material.compute();
 		}
-		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType; // TODO: typescript - ensure node selection is safe, as it would currently crash with a non builder mat selected
+		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType;
+		if (!mat_node.assembler_controller) {
+			return;
+		}
 
 		if (mat_node) {
-			const new_texture_allocations_json: TextureAllocationsControllerData = this.node.assembler_controller.assembler.texture_allocations_controller.to_json(
+			const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.to_json(
 				this.node.scene
 			);
 
-			const globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.UV_VARYING);
-			globals_handler.set_texture_allocations_controller(
-				this.node.assembler_controller.assembler.texture_allocations_controller
-			);
-			mat_node.assembler_controller?.set_assembler_globals_handler(globals_handler);
+			this.globals_handler.set_texture_allocations_controller(assembler.texture_allocations_controller);
+			mat_node.assembler_controller.set_assembler_globals_handler(this.globals_handler);
+
 			if (
 				!this._texture_allocations_json ||
 				JSON.stringify(this._texture_allocations_json) != JSON.stringify(new_texture_allocations_json)
@@ -138,7 +144,9 @@ export class ParticlesSystemGpuRenderController {
 				// but we also need to check if the texture_allocation has changed,
 				// otherwise we'll have an infinite loop
 				this._texture_allocations_json = lodash_cloneDeep(new_texture_allocations_json);
-				mat_node.set_dirty();
+				// setting the material to dirty is not enough. We need to make it clear a recompile is required.
+				// This is necessary since if inputs of output or any export note are changed, the texture allocation will change. If the mat node was to not recompile, it would fetch attributes such as position from an incorrect or non existing texture.
+				mat_node.assembler_controller.set_compilation_required_and_dirty();
 			}
 			// set compilation required in case the texture allocation has changed
 			// but not needed as it is done by set_assembler_globals_handler

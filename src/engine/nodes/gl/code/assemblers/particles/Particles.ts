@@ -156,7 +156,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			new GlConnectionPoint('velocity', GlConnectionPointType.VEC3),
 		]);
 	}
-	add_globals_params(globals_node: GlobalsGlNode) {
+	add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('velocity', GlConnectionPointType.VEC3),
@@ -364,9 +364,11 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				output_name,
 				shaders_collection_controller
 			);
-			const var_name = globals_node.gl_var_name(output_name);
-			const body_line = `${gl_type} ${var_name} = ${attrib_read}`;
-			shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+			if (attrib_read) {
+				const var_name = globals_node.gl_var_name(output_name);
+				const body_line = `${gl_type} ${var_name} = ${attrib_read}`;
+				shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+			}
 		}
 	}
 }
