@@ -28,8 +28,14 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 
-	protected _children_group = new Group();
+	protected _children_group = this._create_children_group();
 	protected _object!: O;
+
+	private _create_children_group() {
+		const group = new Group();
+		group.matrixAutoUpdate = false;
+		return group;
+	}
 
 	protected _attachable_to_hierarchy: boolean = true;
 	get attachable_to_hierarchy() {
@@ -92,7 +98,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 
 	create_object(): Object3D {
-		return new Object3D();
+		const object = new Object3D();
+		object.matrixAutoUpdate = false;
+		return object;
 	}
 
 	is_display_node_cooking(): boolean {

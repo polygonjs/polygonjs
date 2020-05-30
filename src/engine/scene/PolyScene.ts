@@ -18,6 +18,7 @@ import {WebGLController} from './utils/WebGLController';
 
 import {Scene} from 'three/src/scenes/Scene';
 import {SceneAssetsController} from './utils/AssetsController';
+import {BaseNodeType} from '../nodes/_Base';
 
 export class PolyScene {
 	protected _default_scene = new Scene();
@@ -150,6 +151,21 @@ export class PolyScene {
 	}
 	to_json() {
 		return this.serializer.to_json();
+	}
+	private _read_only = false;
+	private _read_only_requester: BaseNodeType | undefined;
+	mark_as_read_only(requester: BaseNodeType) {
+		if (this._read_only) {
+			return;
+		}
+		this._read_only_requester = requester;
+		this._read_only = true;
+	}
+	read_only() {
+		return this._read_only;
+	}
+	read_only_requester() {
+		return this._read_only_requester;
 	}
 
 	//

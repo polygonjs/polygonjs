@@ -13,7 +13,7 @@
 		// output & paths
 		"outDir": "./dist/",
 		"module": "ESNext", // changed from commonjs to ESNext to ensure typescript outputs code that can be split by webpack (with commonjs, the dynamic imports were removed)
-		"target": "ES2015",
+		"target": "ES2019",
 		"removeComments": false, // to be sure comments required by webpack to split are still present
 		"moduleResolution": "node", // https://vuejs.org/v2/guide/typescript.html
 		"allowSyntheticDefaultImports": true,

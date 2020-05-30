@@ -13,6 +13,7 @@ import {OrthographicCameraObjNode} from '../../../obj/OrthographicCamera';
 import {TypeAssert} from '../../../../poly/Assert';
 import {Plane} from 'three/src/math/Plane';
 import {Vector3} from 'three/src/math/Vector3';
+import {ParamType} from '../../../../poly/ParamType';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -64,7 +65,20 @@ export class RaycastCPUController {
 		this._plane.constant = this._node.pv.plane_offset;
 		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
 		this._plane_intersect_target.toArray(this._plane_intersect_target_array);
-		this._node.p.position.set(this._plane_intersect_target_array);
+
+		if (this._node.pv.tposition_target) {
+			const target_param = this._node.p.position_target;
+			// Do not cache the param in here, but fetch it directly from the operator_path.
+			// The reason is that params are very prone to disappear and be re-generated,
+			// Such as spare params created by Gl Builders
+			const found_param = target_param.found_param_with_type(ParamType.VECTOR3);
+			if (found_param) {
+				found_param.set(this._plane_intersect_target_array);
+			}
+		} else {
+			this._node.p.position.set(this._plane_intersect_target_array);
+		}
+
 		this._node.trigger_hit();
 	}
 
@@ -138,7 +152,16 @@ export class RaycastCPUController {
 		}
 	}
 
+	async update_position_target() {
+		if (this._node.p.position_target.is_dirty) {
+			await this._node.p.position_target.compute();
+		}
+	}
+
 	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {
 		node.cpu_controller.update_target();
+	}
+	static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
+		node.cpu_controller.update_position_target();
 	}
 }

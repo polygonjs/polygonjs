@@ -43,7 +43,7 @@ import {DisplayNodeController} from './utils/DisplayNodeController';
 import {NodeTypeMap} from '../containers/utils/ContainerMap';
 import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
 import {ModuleName} from '../poly/registers/modules/_BaseRegister';
-import {PersistedConfig} from './utils/PersistedConfig';
+import {BasePersistedConfig} from './utils/PersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 // import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
@@ -61,7 +61,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _cook_controller: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
 	public readonly display_node_controller: DisplayNodeController | undefined;
-	public readonly persisted_config: PersistedConfig | undefined;
+	public readonly persisted_config: BasePersistedConfig | undefined;
 
 	private _params_controller: ParamsController | undefined;
 	readonly params_config: K | undefined;

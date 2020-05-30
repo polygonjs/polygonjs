@@ -2,11 +2,11 @@ import lodash_flatten from 'lodash/flatten';
 import lodash_uniq from 'lodash/uniq';
 import lodash_sortBy from 'lodash/sortBy';
 import lodash_includes from 'lodash/includes';
-import {TextureAllocation} from './TextureAllocation';
+import {TextureAllocation, TextureAllocationData} from './TextureAllocation';
 import {BaseGlNodeType} from '../../_Base';
 
 // import {TypedConnection, COMPONENTS_COUNT_BY_TYPE} from '../../../../../Engine/Node/Gl/GlData';
-import {TextureVariable, TextureVariableData} from './TextureVariable';
+import {TextureVariable} from './TextureVariable';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {ShaderName, ParticleShaderNames} from '../../../utils/shaders/ShaderName';
 import {PolyScene} from '../../../../scene/PolyScene';
@@ -15,7 +15,7 @@ import {AttributeGlNode} from '../../Attribute';
 import {GlobalsGlNode} from '../../Globals';
 import {OutputGlNode} from '../../Output';
 
-export type TextureAllocationsControllerData = Dictionary<TextureVariableData[] | undefined>[];
+export type TextureAllocationsControllerData = Dictionary<TextureAllocationData>[];
 const OUTPUT_NAME_ATTRIBUTES = ['position', 'normal', 'color', 'uv'];
 
 export class TextureAllocationsController {
@@ -147,6 +147,9 @@ export class TextureAllocationsController {
 			}
 		}
 	}
+	private add_allocation(allocation: TextureAllocation) {
+		this._allocations.push(allocation);
+	}
 
 	next_allocation_name(): ShaderName {
 		const name = ParticleShaderNames[this._next_allocation_index];
@@ -214,10 +217,20 @@ export class TextureAllocationsController {
 	// 		}
 	// 	}
 	// }
+	static from_json(data: TextureAllocationsControllerData): TextureAllocationsController {
+		const controller = new TextureAllocationsController();
+		for (let datum of data) {
+			const shader_name = Object.keys(datum)[0] as ShaderName;
+			const allocation_data = datum[shader_name];
+			const new_allocation = TextureAllocation.from_json(allocation_data, shader_name);
+			controller.add_allocation(new_allocation);
+		}
+		return controller;
+	}
 	to_json(scene: PolyScene): TextureAllocationsControllerData {
 		return this._allocations.map((allocation: TextureAllocation) => {
 			const data = {
-				[allocation.texture_name]: allocation.to_json(scene),
+				[allocation.shader_name]: allocation.to_json(scene),
 			};
 			return data;
 		});

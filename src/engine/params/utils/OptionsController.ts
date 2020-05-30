@@ -33,6 +33,8 @@ const LANGUAGE_OPTION = 'language';
 const NODE_SELECTION = 'node_selection';
 const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPE = 'type';
+const PARAM_SELECTION = 'param_selection';
+const PARAM_SELECTION_TYPE = 'type';
 const DEPENDENT_ON_FOUND_NODE = 'dependent_on_found_node';
 const RANGE_OPTION = 'range';
 const RANGE_LOCKED_OPTION = 'range_locked';
@@ -141,6 +143,9 @@ export interface OperatorPathParamOptions
 		type?: string;
 	};
 	dependent_on_found_node?: boolean;
+	param_selection?: {
+		type: ParamType;
+	};
 }
 export interface RampParamOptions extends BaseParamOptions {}
 export interface SeparatorParamOptions extends BaseParamOptions {}
@@ -229,8 +234,13 @@ export class OptionsController {
 		this._options = lodash_cloneDeep(options_controller.current);
 		this.post_set_options();
 	}
-	set_option(name: keyof ParamOptions, value: any) {
-		return Object.assign(this._options, name, value);
+	set_option<K extends keyof ParamOptions>(name: K, value: ParamOptions[K]) {
+		this._options[name] = value;
+		if (this._param.components) {
+			for (let component of this._param.components) {
+				component.options.set_option(name, value);
+			}
+		}
 	}
 	private post_set_options() {
 		this._handle_compute_on_dirty();
@@ -447,6 +457,16 @@ export class OptionsController {
 			return this._options[DEPENDENT_ON_FOUND_NODE];
 		} else {
 			return true;
+		}
+	}
+
+	// param selection
+	get param_selection_options() {
+		return this._options[PARAM_SELECTION];
+	}
+	get param_selection_type() {
+		if (this.param_selection_options) {
+			return this.param_selection_options[PARAM_SELECTION_TYPE];
 		}
 	}
 

@@ -2,6 +2,9 @@ import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {BaseGlNodeType} from '../../_Base';
 import {PolyScene} from '../../../../scene/PolyScene';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
+export type TextureAllocationData = TextureVariableData[];
+
+const TEXTURE_PREFIX = 'texture_';
 
 export class TextureAllocation {
 	private _variables: TextureVariable[] | undefined;
@@ -20,11 +23,14 @@ export class TextureAllocation {
 	has_space_for_variable(variable: TextureVariable): boolean {
 		return this._size + variable.size <= 4;
 	}
+	get size() {
+		return this._size;
+	}
 	get shader_name() {
 		return this._shader_name; //this._variables[0].name()
 	}
 	get texture_name(): string {
-		return `texture_${this._shader_name}`;
+		return `${TEXTURE_PREFIX}${this._shader_name}`;
 	}
 
 	get variables(): TextureVariable[] | undefined {
@@ -52,8 +58,21 @@ export class TextureAllocation {
 		}
 	}
 
-	to_json(scene: PolyScene): TextureVariableData[] | undefined {
-		return this._variables?.map((v) => v.to_json(scene));
+	static from_json(data: TextureAllocationData, shader_name: ShaderName): TextureAllocation {
+		const texture_allocation = new TextureAllocation(shader_name);
+		for (let datum of data) {
+			const texture_variable = TextureVariable.from_json(datum);
+			texture_allocation.add_variable(texture_variable);
+		}
+		return texture_allocation;
+	}
+
+	to_json(scene: PolyScene): TextureAllocationData {
+		if (this._variables) {
+			return this._variables.map((v) => v.to_json(scene));
+		} else {
+			return [];
+		}
 		// for(let variable of this._variables){
 		// 	data[variable.name()] = variable.to_json(scene)
 		// }

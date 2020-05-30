@@ -26,16 +26,6 @@ export class ParticlesSystemGpuRenderController {
 
 	constructor(private node: ParticlesSystemGpuSopNode) {}
 
-	// _create_render_params() {
-	// 	this.self.within_param_folder("setup", () => {
-	// 		this.self.add_param(ParamType.OPERATOR_PATH, "material", "", {
-	// 			node_selection: {
-	// 				context: NodeContext.MAT
-	// 			},
-	// 			dependent_on_found_node: false
-	// 		});
-	// 	});
-	// }
 	set_shaders_by_name(shaders_by_name: Map<ShaderName, string>) {
 		this._shaders_by_name = shaders_by_name;
 		this.reset_render_material();
@@ -43,7 +33,6 @@ export class ParticlesSystemGpuRenderController {
 
 	assign_render_material() {
 		if (!this._render_material) {
-			// throw 'cannot assign non existing material';
 			return;
 		}
 		for (let object3d of this._particles_group_objects) {
@@ -66,11 +55,6 @@ export class ParticlesSystemGpuRenderController {
 		if (!this._render_material) {
 			return;
 		}
-		// if (!this.self._gpu_compute) {
-		// 	return;
-		// }
-
-		// for (let shader_name of Object.keys(this._shaders_by_name)) {
 		this._shaders_by_name?.forEach((string, shader_name) => {
 			const texture = this.node.gpu_controller.getCurrentRenderTarget(shader_name)?.texture;
 			if (texture) {
@@ -81,13 +65,11 @@ export class ParticlesSystemGpuRenderController {
 				}
 			}
 		});
-		// console.log(this._render_material.vertexShader);
-		// console.log(this._render_material.fragmentShader);
 	}
 
 	reset_render_material() {
 		this._render_material = undefined;
-		this._particles_group_objects = []; //this._particles_core_group.objects()
+		this._particles_group_objects = [];
 	}
 	get initialized(): boolean {
 		return this._render_material != null;
@@ -100,75 +82,52 @@ export class ParticlesSystemGpuRenderController {
 	}
 	async init_render_material() {
 		const assembler = this.node.assembler_controller?.assembler;
-		if (!assembler) {
-			return;
-		}
-		// if (this.self.compile_required()) {
-		// 	return;
-		// }
+
 		if (this._render_material) {
 			return;
 		}
 
-		// const uniforms_particles = {
-		// 	"texture_position": { value: null },
-		// 	// "debugX": { value: 0 },
-		// 	// "textureVelocity": { value: null },
-		// 	// "cameraConstant": { value: 1 }, //( camera ) },
-		// 	// "density": { value: 1.0 }
-		// };
-
-		// ShaderMaterial
 		if (this.node.p.material.is_dirty) {
 			await this.node.p.material.compute();
 		}
 		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType;
-		if (!mat_node.assembler_controller) {
-			return;
-		}
 
 		if (mat_node) {
-			const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.to_json(
-				this.node.scene
-			);
+			if (assembler) {
+				const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.to_json(
+					this.node.scene
+				);
 
-			this.globals_handler.set_texture_allocations_controller(assembler.texture_allocations_controller);
-			mat_node.assembler_controller.set_assembler_globals_handler(this.globals_handler);
+				if (mat_node.assembler_controller) {
+					this.globals_handler.set_texture_allocations_controller(assembler.texture_allocations_controller);
+					mat_node.assembler_controller.set_assembler_globals_handler(this.globals_handler);
+				}
 
-			if (
-				!this._texture_allocations_json ||
-				JSON.stringify(this._texture_allocations_json) != JSON.stringify(new_texture_allocations_json)
-			) {
-				// we need to set the node to dirty if a recompile is needed
-				// otherwise it won't cook
-				// but we also need to check if the texture_allocation has changed,
-				// otherwise we'll have an infinite loop
-				this._texture_allocations_json = lodash_cloneDeep(new_texture_allocations_json);
-				// setting the material to dirty is not enough. We need to make it clear a recompile is required.
-				// This is necessary since if inputs of output or any export note are changed, the texture allocation will change. If the mat node was to not recompile, it would fetch attributes such as position from an incorrect or non existing texture.
-				mat_node.assembler_controller.set_compilation_required_and_dirty();
+				if (
+					!this._texture_allocations_json ||
+					JSON.stringify(this._texture_allocations_json) != JSON.stringify(new_texture_allocations_json)
+				) {
+					// we need to set the node to dirty if a recompile is needed
+					// otherwise it won't cook
+					// but we also need to check if the texture_allocation has changed,
+					// otherwise we'll have an infinite loop
+					this._texture_allocations_json = lodash_cloneDeep(new_texture_allocations_json);
+					// setting the material to dirty is not enough. We need to make it clear a recompile is required.
+					// This is necessary since if inputs of output or any export note are changed, the texture allocation will change. If the mat node was to not recompile, it would fetch attributes such as position from an incorrect or non existing texture.
+					if (mat_node.assembler_controller) {
+						mat_node.assembler_controller.set_compilation_required_and_dirty();
+					}
+				}
 			}
-			// set compilation required in case the texture allocation has changed
-			// but not needed as it is done by set_assembler_globals_handler
-			//found_node.set_compilation_required() //_and_dirty()
 			const container = await mat_node.request_container();
-			this._render_material = container.material() as ShaderMaterial; //.clone()
-			// this._render_material.needsUpdate = true
-			// this.self._assembler.texture_allocations_controller().print()
-			// throw "DEBUGGIN..."
+			this._render_material = container.material() as ShaderMaterial;
 		} else {
 			this.node.states.error.set('render material not valid');
-			// this._render_material = this._render_material || new ShaderMaterial( {
-			// 	uniforms: {},
-			// 	vertexShader: particleVertexShader,
-			// 	fragmentShader: particleFragmentShader
-			// } );
 		}
 
 		// add uniforms
 		if (this._render_material) {
 			const uniforms = this._render_material.uniforms;
-			// for (let shader_name of Object.keys(this._shaders_by_name)) {
 			this._shaders_by_name?.forEach((shader, shader_name) => {
 				const uniform_name = `texture_${shader_name}`;
 				const uniform_value = {value: null};
@@ -179,7 +138,6 @@ export class ParticlesSystemGpuRenderController {
 			});
 		}
 
-		// this._render_material.extensions.drawBuffers = true;
 		this.assign_render_material();
 	}
 }

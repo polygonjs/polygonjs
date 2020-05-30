@@ -1,5 +1,5 @@
 // import {TypedParamVisitor} from './_Base';
-import {TypedParam} from './_Base';
+import {TypedParam, BaseParamType} from './_Base';
 import {CoreWalker} from '../../core/Walker';
 
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
@@ -10,10 +10,18 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
+import {ParamConstructorMap} from './types/ParamConstructorMap';
+
+enum OperatorPathMode {
+	NODE = 'NODE',
+	PARAM = 'PARAM',
+}
 
 export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;
 	private _found_node_with_expected_type: BaseNodeType | null = null;
+	private _found_param: BaseParamType | null = null;
+	private _found_param_with_expected_type: BaseParamType | null = null;
 
 	static type() {
 		return ParamType.OPERATOR_PATH;
@@ -50,11 +58,19 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 
 	protected async process_computation() {
 		const path = this._value;
-		let node = null;
+		let node: BaseNodeType | null = null;
+		let param: BaseParamType | null = null;
 		const path_non_empty = path != null && path !== '';
+		const mode: OperatorPathMode = this.options.param_selection_options
+			? OperatorPathMode.PARAM
+			: OperatorPathMode.NODE;
 
 		if (path_non_empty) {
-			node = CoreWalker.find_node(this.node, path);
+			if (mode == OperatorPathMode.PARAM) {
+				param = CoreWalker.find_param(this.node, path);
+			} else {
+				node = CoreWalker.find_node(this.node, path);
+			}
 			// not sure I want the param to be errored,
 			// as it may block the node, even if the param is not necessary
 			// if (!node) {
@@ -62,7 +78,9 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			// }
 		}
 
-		if (this._found_node !== node) {
+		const current_found_entity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
+		const newly_found_entity = mode == OperatorPathMode.PARAM ? param : node;
+		if (current_found_entity !== newly_found_entity) {
 			const dependent_on_found_node = this.options.dependent_on_found_node();
 
 			if (this._found_node) {
@@ -72,37 +90,58 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
 				}
 			}
-			this._found_node = node;
+			if (mode == OperatorPathMode.PARAM) {
+				this._found_param = param;
+			} else {
+				this._found_node = node;
+			}
+
 			if (node) {
-				if (this._is_node_expected_context(node)) {
-					if (this._is_node_expected_type(node)) {
-						this._found_node_with_expected_type = node;
-						if (dependent_on_found_node) {
-							this.add_graph_input(node);
-						}
-						// this._found_node.add_param_referree(this) // TODO: typescript
-					} else {
-						this.states.error.set(
-							`node type is ${node.type} but the params expects a ${this._expected_type()}`
-						);
-					}
-				} else {
-					this.states.error.set(
-						`node context is ${node.node_context()} but the params expects a ${this._expected_context()}`
-					);
-				}
-			} // else {
-			// 	if (path_non_empty) {
-			// 		this.states.error.set('node not found');
-			// 	}
-			// }
+				this._assign_found_node(node);
+			}
+			if (param) {
+				this._assign_found_param(param);
+			}
+
 			this.options.execute_callback();
 		}
 		this.remove_dirty_state();
 	}
 
+	private _assign_found_node(node: BaseNodeType) {
+		const dependent_on_found_node = this.options.dependent_on_found_node();
+		if (this._is_node_expected_context(node)) {
+			if (this._is_node_expected_type(node)) {
+				this._found_node_with_expected_type = node;
+				if (dependent_on_found_node) {
+					this.add_graph_input(node);
+				}
+			} else {
+				this.states.error.set(
+					`node type is ${node.type} but the params expects a ${this._expected_node_type()}`
+				);
+			}
+		} else {
+			this.states.error.set(
+				`node context is ${node.node_context()} but the params expects a ${this._expected_context()}`
+			);
+		}
+	}
+	private _assign_found_param(param: BaseParamType) {
+		if (this._is_param_expected_type(param)) {
+			this._found_param_with_expected_type = param;
+		} else {
+			this.states.error.set(
+				`param type is ${param.type} but the params expects a ${this._expected_param_type()}`
+			);
+		}
+	}
+
 	found_node() {
 		return this._found_node;
+	}
+	found_param() {
+		return this._found_param;
 	}
 	found_node_with_context<N extends NodeContext>(context: N): BaseNodeByContextMap[N] | undefined {
 		return this._found_node_with_expected_type as BaseNodeByContextMap[N];
@@ -133,6 +172,11 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			}
 		}
 	}
+	found_param_with_type<T extends ParamType>(type: T): ParamConstructorMap[T] | undefined {
+		if (this._found_param_with_expected_type) {
+			return this._found_param_with_expected_type as ParamConstructorMap[T];
+		}
+	}
 
 	found_node_with_expected_type() {
 		return this._found_node_with_expected_type;
@@ -148,15 +192,24 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 		const node_context = node.parent?.children_controller?.context;
 		return expected_context == node_context;
 	}
-	private _expected_type() {
+	private _expected_node_type() {
 		return this.options.node_selection_type;
 	}
+	private _expected_param_type() {
+		return this.options.param_selection_type;
+	}
 	private _is_node_expected_type(node: BaseNodeType) {
-		const expected_type = this._expected_type();
+		const expected_type = this._expected_node_type();
 		if (expected_type == null) {
 			return true;
 		}
-		const node_type = node.type;
-		return expected_type == node_type;
+		return expected_type == node.type;
+	}
+	private _is_param_expected_type(param: BaseParamType) {
+		const expected_type = this._expected_node_type();
+		if (expected_type == null) {
+			return true;
+		}
+		return expected_type == param.type;
 	}
 }

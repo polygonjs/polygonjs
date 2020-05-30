@@ -3,6 +3,7 @@ import {PolyScene} from '../../../../scene/PolyScene';
 
 export interface TextureVariableData {
 	name: string;
+	size: number;
 	nodes: string[];
 }
 
@@ -46,11 +47,13 @@ export class TextureVariable {
 		return this._position;
 	}
 	get component(): string {
-		return 'xyzw'
-			.split('')
-			.splice(this._position, this._size)
-			.join('');
+		return 'xyzw'.split('').splice(this._position, this._size).join('');
 	}
+
+	static from_json(data: TextureVariableData): TextureVariable {
+		return new TextureVariable(data.name, data.size);
+	}
+
 	to_json(scene: PolyScene): TextureVariableData {
 		const names: string[] = [];
 		if (this._graph_node_ids) {
@@ -62,6 +65,7 @@ export class TextureVariable {
 
 		return {
 			name: this.name,
+			size: this.size,
 			nodes: names.sort(),
 		};
 	}

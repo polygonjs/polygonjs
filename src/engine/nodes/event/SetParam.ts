@@ -10,6 +10,9 @@ import {Vector3Param} from '../../params/Vector3';
 import {Vector4Param} from '../../params/Vector4';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
 
 enum SetParamParamType {
 	BOOLEAN = 'boolean',
@@ -114,6 +117,12 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		this.dispatch_event_to_output(OUTPUT_NAME, event_context);
 	}
 
+	private _tmp_vector2 = new Vector2();
+	private _tmp_vector3 = new Vector3();
+	private _tmp_vector4 = new Vector4();
+	private _tmp_array2: Number2 = [0, 0];
+	private _tmp_array3: Number3 = [0, 0, 0];
+	private _tmp_array4: Number4 = [0, 0, 0, 0];
 	private _new_param_value(param: BaseParamType) {
 		const type = SET_PARAM_PARAM_TYPE[this.pv.type];
 		switch (type) {
@@ -141,35 +150,44 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			case SetParamParamType.VECTOR2: {
 				if (this.pv.increment) {
 					if (param.type == ParamType.VECTOR2) {
-						return (param as Vector2Param).value.clone().add(this.pv.vector2);
+						this._tmp_vector2.copy((param as Vector2Param).value);
+						this._tmp_vector2.add(this.pv.vector2);
+						this._tmp_vector2.toArray(this._tmp_array2);
 					} else {
-						return param.value;
+						(param as Vector2Param).value.toArray(this._tmp_array2);
 					}
 				} else {
-					return this.pv.vector2;
+					this.pv.vector2.toArray(this._tmp_array2);
 				}
+				return this._tmp_array2;
 			}
 			case SetParamParamType.VECTOR3: {
 				if (this.pv.increment) {
 					if (param.type == ParamType.VECTOR3) {
-						return (param as Vector3Param).value.clone().add(this.pv.vector3);
+						this._tmp_vector3.copy((param as Vector3Param).value);
+						this._tmp_vector3.add(this.pv.vector3);
+						this._tmp_vector3.toArray(this._tmp_array3);
 					} else {
-						return param.value;
+						(param as Vector3Param).value.toArray(this._tmp_array3);
 					}
 				} else {
-					return this.pv.vector3;
+					this.pv.vector3.toArray(this._tmp_array3);
 				}
+				return this._tmp_array3;
 			}
 			case SetParamParamType.VECTOR4: {
 				if (this.pv.increment) {
 					if (param.type == ParamType.VECTOR4) {
-						return (param as Vector4Param).value.clone().add(this.pv.vector4);
+						this._tmp_vector4.copy((param as Vector4Param).value);
+						this._tmp_vector4.add(this.pv.vector4);
+						this._tmp_vector4.toArray(this._tmp_array4);
 					} else {
-						return param.value;
+						(param as Vector4Param).value.toArray(this._tmp_array4);
 					}
 				} else {
-					return this.pv.vector4;
+					this.pv.vector4.toArray(this._tmp_array4);
 				}
+				return this._tmp_array4;
 			}
 			case SetParamParamType.STRING: {
 				return this.pv.string;

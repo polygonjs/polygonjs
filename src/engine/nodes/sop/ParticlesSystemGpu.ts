@@ -23,6 +23,7 @@ import {PointsBuilderMatNode} from '../mat/PointsBuilder';
 import {ConstantGlNode} from '../gl/Constant';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
+import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/PersistedConfig';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	// gpu compute
@@ -60,9 +61,13 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	protected _assembler_controller = this._create_assembler_controller();
 	private _create_assembler_controller() {
 		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
-		// return new GlAssemblerController<ShaderAssemblerParticles>(this, ShaderAssemblerParticles);
 	}
+	public readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);
 	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
+	private _shaders_by_name: Map<ShaderName, string> = new Map();
+	shaders_by_name() {
+		return this._shaders_by_name;
+	}
 
 	public readonly gpu_controller = new ParticlesSystemGpuComputeController(this);
 	public readonly render_controller = new ParticlesSystemGpuRenderController(this);
@@ -111,48 +116,27 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (this.assembler_controller) {
 			return super.children_allowed();
 		}
+		this.scene.mark_as_read_only(this);
 		return false;
 	}
 
 	async _reset_material_if_dirty() {
-		// if(
-		// 	dirty_trigger.graph_node_id &&
-		// 	this._render_material_node &&
-		// 	dirty_trigger.graph_node_id() == this._render_material_node.graph_node_id()
-		// ){
-		// 	this.remove_dirty_state()
-		// } else {
 		if (this.p.material.is_dirty) {
 			this.render_controller.reset_render_material();
 			if (!this.is_on_frame_start()) {
 				await this.render_controller.init_render_material();
 			}
 		}
-		// }
-		// that seems to create an infinite loop
-		// maybe only check if the type of geo has changed?
-		// if(this.input_graph_node(0).is_dirty()){
-		// 	this.set_compilation_required()
-		// }
 	}
 
 	is_on_frame_start(): boolean {
 		return this.scene.frame == this.pv.start_frame;
 	}
 
-	// private _debug_cooks_count = 0;
 	async cook(input_contents: CoreGroup[]) {
-		// this._debug_cooks_count++;
-		// if (this._debug_cooks_count > 100) {
-		// 	console.log('************ REACHED MAX DEBUG ***************');
-		// 	return;
-		// }
-
 		this.gpu_controller.set_restart_not_required();
 		const core_group = input_contents[0];
-		// this._simulation_restart_required = false;
-		// let set_group_required = false;
-		// let points:CorePoint[] = [];
+
 		this.compile_if_required();
 
 		if (this.is_on_frame_start()) {
@@ -161,14 +145,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		if (!this.gpu_controller.initialized) {
 			await this.gpu_controller.init(core_group);
-			// this.gpu_controller.init_particle_group_points(core_group)
-			// await this.gpu_controller.create_gpu_compute();
 		}
 
-		// if (!this._gpu_compute) {
-		// 	await this.gpu_controller.create_gpu_compute(points);
-		// 	// set_group_required = true
-		// }
 		if (!this.render_controller.initialized) {
 			this.render_controller.init_core_group(core_group);
 			await this.render_controller.init_render_material();
@@ -176,14 +154,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		this.gpu_controller.restart_simulation_if_required();
 		this.gpu_controller.compute_similation_if_required();
-		// if (frame >= this.pv.start_frame) {
-		// 	if (this._last_simulated_frame == null) {
-		// 		this._last_simulated_frame = this._param_start_frame - 1;
-		// 	}
-		// 	if (frame > this._last_simulated_frame) {
-		// 		this._compute_simulation(frame - this._last_simulated_frame);
-		// 	}
-		// }
 
 		if (this.is_on_frame_start()) {
 			this.set_core_group(core_group);
@@ -209,26 +179,27 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			this.assembler_controller.post_compile();
 		}
 
-		const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();
-		this.gpu_controller.set_shaders_by_name(shaders_by_name);
-		this.render_controller.set_shaders_by_name(shaders_by_name);
-		// if (shaders_by_name) {
-		// 	await this.eval_params(this._new_params);
-		// 	this._shaders_by_name = lodash_cloneDeep(shaders_by_name);
-		// } else {
-		// 	console.warn('no shaders by name from assembler');
-		// }
-		this.gpu_controller.reset_gpu_compute();
-		this.gpu_controller.reset_particle_groups(); // this
-
-		// await this.assembler_controller.assign_uniform_values(); // TODO: needed?
+		const shaders_by_name = this.assembler_controller.assembler.shaders_by_name();
+		this._set_shader_names(shaders_by_name);
 	}
-	// shaders_by_name() {
-	// 	return this._shaders_by_name;
-	// }
-	// shaders(): string[] {
-	// 	return Object.keys(this._shaders_by_name).map((k) => this._shaders_by_name[k]);
-	// }
+
+	private _set_shader_names(shaders_by_name: Map<ShaderName, string>) {
+		this._shaders_by_name = shaders_by_name;
+		this.gpu_controller.set_shaders_by_name(this._shaders_by_name);
+		this.render_controller.set_shaders_by_name(this._shaders_by_name);
+
+		this.gpu_controller.reset_gpu_compute();
+		this.gpu_controller.reset_particle_groups();
+	}
+
+	init_with_persisted_config() {
+		const shaders_by_name = this.persisted_config.shaders_by_name();
+		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
+		if (shaders_by_name && texture_allocations_controller) {
+			this._set_shader_names(shaders_by_name);
+			this.gpu_controller.set_persisted_texture_allocation_controller(texture_allocations_controller);
+		}
+	}
 
 	private _find_root_nodes() {
 		const nodes: BaseGlNodeType[] = GlNodeFinder.find_attribute_export_nodes(this);
@@ -243,9 +214,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 		return nodes;
 	}
-	// set_compilation_required_and_dirty() {
-	// 	this.assembler_controller.set_compilation_required_and_dirty();
-	// }
 
 	private _on_create_prepare_material() {
 		// that's mostly to have the default shader work when creating the node

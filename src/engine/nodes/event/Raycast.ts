@@ -34,6 +34,7 @@ function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import {ParamType} from '../../poly/ParamType';
 
 const OUTPUT_HIT = 'hit';
 const OUTPUT_MISS = 'miss';
@@ -159,7 +160,32 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_cpu_geometry(),
 	});
 
-	position = ParamConfig.VECTOR3([0, 0, 0], {cook: false, ...visible_for_cpu()});
+	//
+	//
+	// POSITION (common between plane and geo intersection)
+	//
+	//
+	tposition_target = ParamConfig.BOOLEAN(0, {
+		cook: false,
+		...visible_for_cpu(),
+	});
+	position = ParamConfig.VECTOR3([0, 0, 0], {
+		cook: false,
+		...visible_for_cpu({tposition_target: 0}),
+	});
+	position_target = ParamConfig.OPERATOR_PATH('', {
+		cook: false,
+		...visible_for_cpu({tposition_target: 1}),
+		param_selection: {
+			type: ParamType.VECTOR3,
+		},
+		compute_on_dirty: true,
+	});
+	//
+	//
+	// GEO ATTRIB
+	//
+	//
 	geo_attribute = ParamConfig.BOOLEAN(0, visible_for_cpu_geometry());
 	geo_attribute_name = ParamConfig.STRING('id', {
 		cook: false,

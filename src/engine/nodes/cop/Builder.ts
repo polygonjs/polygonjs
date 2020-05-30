@@ -36,7 +36,7 @@ import {DataTextureController, DataTextureControllerBufferType} from './utils/Da
 import {CopRendererController} from './utils/RendererController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {BaseTexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
+import {TexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
@@ -51,7 +51,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	static type() {
 		return 'builder';
 	}
-	readonly persisted_config: BaseTexturePersistedConfig = new BaseTexturePersistedConfig(this);
+	readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
 	protected _assembler_controller = this._create_assembler_controller();
 
 	public used_assembler(): Readonly<AssemblerName.GL_TEXTURE> {
@@ -126,6 +126,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (this.assembler_controller) {
 			return super.children_allowed();
 		}
+		this.scene.mark_as_read_only(this);
 		return false;
 	}
 

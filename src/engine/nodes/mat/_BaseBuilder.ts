@@ -2,7 +2,7 @@ import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMaterial';
-import {BaseMaterialPersistedConfig} from '../gl/code/assemblers/materials/PersistedConfig';
+import {MaterialPersistedConfig} from '../gl/code/assemblers/materials/PersistedConfig';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
@@ -14,7 +14,7 @@ export abstract class TypedBuilderMatNode<
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
 	protected _children_controller_context = NodeContext.GL;
-	readonly persisted_config: BaseMaterialPersistedConfig = new BaseMaterialPersistedConfig(this);
+	readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
 
 	initialize_base_node() {
 		super.initialize_base_node();
@@ -62,6 +62,7 @@ export abstract class TypedBuilderMatNode<
 		if (this.assembler_controller) {
 			return super.children_allowed();
 		}
+		this.scene.mark_as_read_only(this);
 		return false;
 	}
 

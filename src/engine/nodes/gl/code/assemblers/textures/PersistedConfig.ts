@@ -1,4 +1,4 @@
-import {PersistedConfig} from '../../../../utils/PersistedConfig';
+import {BasePersistedConfig} from '../../../../utils/PersistedConfig';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {BuilderCopNode} from '../../../../cop/Builder';
 import {GlParamConfig} from '../../utils/ParamConfig';
@@ -14,7 +14,7 @@ export interface PersistedConfigBaseTextureData {
 	uniforms_resolution_dependent?: boolean;
 }
 
-export class BaseTexturePersistedConfig extends PersistedConfig {
+export class TexturePersistedConfig extends BasePersistedConfig {
 	constructor(protected node: BuilderCopNode) {
 		super(node);
 	}
