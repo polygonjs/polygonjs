@@ -21,6 +21,8 @@ export class ParticlesSystemGpuRenderController {
 	private _render_material: ShaderMaterial | undefined;
 	protected _particles_group_objects: Object3D[] = [];
 	private _shaders_by_name: Map<ShaderName, string> | undefined;
+	private _all_shader_names: ShaderName[] = [];
+	private _all_uniform_names: string[] = [];
 	private _texture_allocations_json: TextureAllocationsControllerData | undefined;
 	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.UV_VARYING);
 
@@ -28,6 +30,13 @@ export class ParticlesSystemGpuRenderController {
 
 	set_shaders_by_name(shaders_by_name: Map<ShaderName, string>) {
 		this._shaders_by_name = shaders_by_name;
+		this._all_shader_names = [];
+		this._all_uniform_names = [];
+		this._shaders_by_name.forEach((shader, name) => {
+			this._all_shader_names.push(name);
+			this._all_uniform_names.push(`texture_${name}`);
+		});
+
 		this.reset_render_material();
 	}
 
@@ -55,21 +64,28 @@ export class ParticlesSystemGpuRenderController {
 		if (!this._render_material) {
 			return;
 		}
-		this._shaders_by_name?.forEach((string, shader_name) => {
+
+		let uniform_name: string;
+		let shader_name: ShaderName;
+		for (let i = 0; i < this._all_shader_names.length; i++) {
+			shader_name = this._all_shader_names[i];
+			uniform_name = this._all_uniform_names[i];
 			const texture = this.node.gpu_controller.getCurrentRenderTarget(shader_name)?.texture;
 			if (texture) {
-				const uniform_name = `texture_${shader_name}`;
 				if (this._render_material) {
 					this._render_material.uniforms[uniform_name].value = texture;
 					CoreMaterial.assign_custom_uniforms(this._render_material, uniform_name, texture);
 				}
 			}
-		});
+		}
 	}
 
 	reset_render_material() {
 		this._render_material = undefined;
 		this._particles_group_objects = [];
+	}
+	render_material() {
+		return this._render_material;
 	}
 	get initialized(): boolean {
 		return this._render_material != null;
@@ -128,14 +144,13 @@ export class ParticlesSystemGpuRenderController {
 		// add uniforms
 		if (this._render_material) {
 			const uniforms = this._render_material.uniforms;
-			this._shaders_by_name?.forEach((shader, shader_name) => {
-				const uniform_name = `texture_${shader_name}`;
+			for (let uniform_name of this._all_uniform_names) {
 				const uniform_value = {value: null};
 				uniforms[uniform_name] = uniform_value;
 				if (this._render_material) {
 					CoreMaterial.init_custom_material_uniforms(this._render_material, uniform_name, uniform_value);
 				}
-			});
+			}
 		}
 
 		this.assign_render_material();

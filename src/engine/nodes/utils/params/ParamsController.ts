@@ -137,6 +137,7 @@ export class ParamsController {
 			this._update_caches();
 			this.init_param_accessors();
 			// param.emit(ParamEvent.DELETED);
+			this.node.scene.references_controller.notify_params_updated(this.node);
 			this.node.emit(NodeEvent.PARAMS_UPDATED);
 		}
 	}

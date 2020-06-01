@@ -170,8 +170,11 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (!this.assembler_controller) {
 			return;
 		}
-		const root_nodes = this._find_root_nodes();
-		if (root_nodes.length > 0) {
+		const export_nodes = this._find_export_nodes();
+		if (export_nodes.length > 0) {
+			const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
+			const root_nodes = export_nodes.concat(param_nodes);
+			console.log(root_nodes);
 			this.assembler_controller.set_assembler_globals_handler(this.globals_handler);
 			this.assembler_controller.assembler.set_root_nodes(root_nodes);
 
@@ -201,7 +204,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 	}
 
-	private _find_root_nodes() {
+	private _find_export_nodes() {
 		const nodes: BaseGlNodeType[] = GlNodeFinder.find_attribute_export_nodes(this);
 		const output_nodes = GlNodeFinder.find_output_nodes(this);
 		if (output_nodes.length > 1) {

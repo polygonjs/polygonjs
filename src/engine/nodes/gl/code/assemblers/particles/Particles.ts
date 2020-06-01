@@ -47,11 +47,11 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		const list = [];
 		for (let node of this._root_nodes) {
 			switch (node.type) {
-				case 'output': {
+				case OutputGlNode.type(): {
 					list.push(node);
 					break;
 				}
-				case 'attribute': {
+				case AttributeGlNode.type(): {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
 					const attrib_name = (node as AttributeGlNode).attribute_name;
 					const variable = this._texture_allocations_controller?.variable(attrib_name);
@@ -71,11 +71,11 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		const list = [];
 		for (let node of this._leaf_nodes) {
 			switch (node.type) {
-				case 'globals': {
+				case GlobalsGlNode.type(): {
 					list.push(node);
 					break;
 				}
-				case 'attribute': {
+				case AttributeGlNode.type(): {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler? AND especially since there is no way to assign it?
 					const attrib_name: string = (node as AttributeGlNode).attribute_name;
 					const variable = this._texture_allocations_controller?.variable(attrib_name);

@@ -43,17 +43,21 @@ export class NameController {
 	update_name_from_parent(new_name: string) {
 		this.node._set_core_name(new_name);
 		this.post_set_name();
-		this.post_set_full_path();
+		this.run_post_set_full_path_hooks();
 		if (this.node.children_allowed()) {
-			this.node.children_controller?.children().forEach((child_node) => {
-				child_node.name_controller.post_set_full_path(); // TODO: typescript: replace post_set_full_path with execute_on_update_full_path_hooks or on_update_full_path
-			});
+			const children = this.node.children_controller?.children();
+			if (children) {
+				for (let child_node of children) {
+					child_node.name_controller.run_post_set_full_path_hooks();
+				}
+			}
 		}
 
 		if (this.node.lifecycle.creation_completed) {
 			this.node.scene.missing_expression_references_controller.check_for_missing_references(this.node);
 			this.node.scene.expressions_controller.regenerate_referring_expressions(this.node);
 		}
+		this.node.scene.references_controller.notify_name_updated(this.node);
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 
@@ -73,7 +77,7 @@ export class NameController {
 			}
 		}
 	}
-	post_set_full_path() {
+	run_post_set_full_path_hooks() {
 		if (this._on_set_full_path_hooks) {
 			for (let hook of this._on_set_full_path_hooks) {
 				hook();

@@ -46,11 +46,11 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.equal(container.total_points_count(), 36);
 
 	// set error state
-	file1.p.url.set('/file_sop_doesnotexist.obj');
+	file1.p.url.set('/test/file_sop_doesnotexist.obj');
 	assert.ok(file1.is_dirty);
 	container = await file1.request_container();
 	assert.ok(!file1.is_dirty);
-	assert.ok(file1.states.error.active, 'file sop is errored');
+	assert.ok(file1.states.error.active, 'file sop to file_sop_doesnotexist is errored');
 
 	// this only works if I have a path catch all in routes.db
 	// get '*path' => 'errors#route_not_found'

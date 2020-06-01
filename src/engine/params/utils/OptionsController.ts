@@ -1,14 +1,15 @@
-import {BaseParamType} from '../_Base';
-import {BaseNodeType} from '../../nodes/_Base';
 import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
+import lodash_isArray from 'lodash/isArray';
+import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isEqual from 'lodash/isEqual';
+import lodash_flatten from 'lodash/flatten';
+import {BaseParamType} from '../_Base';
+import {BaseNodeType} from '../../nodes/_Base';
 import {ParamType} from '../../poly/ParamType';
 import {ParamEvent} from '../../poly/ParamEvent';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
-import lodash_isArray from 'lodash/isArray';
-import lodash_flatten from 'lodash/flatten';
 import {StringParam} from '../String';
 
 const ASSET_REFERENCE_OPTION = 'asset_reference';
@@ -34,7 +35,6 @@ const NODE_SELECTION = 'node_selection';
 const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPE = 'type';
 const PARAM_SELECTION = 'param_selection';
-const PARAM_SELECTION_TYPE = 'type';
 const DEPENDENT_ON_FOUND_NODE = 'dependent_on_found_node';
 const RANGE_OPTION = 'range';
 const RANGE_LOCKED_OPTION = 'range_locked';
@@ -143,9 +143,7 @@ export interface OperatorPathParamOptions
 		type?: string;
 	};
 	dependent_on_found_node?: boolean;
-	param_selection?: {
-		type: ParamType;
-	};
+	param_selection?: ParamType | boolean;
 }
 export interface RampParamOptions extends BaseParamOptions {}
 export interface SeparatorParamOptions extends BaseParamOptions {}
@@ -292,13 +290,13 @@ export class OptionsController {
 	private _handle_compute_on_dirty() {
 		if (this.compute_on_dirty) {
 			if (!this._compute_on_dirty_callback_added) {
-				this.param.add_post_dirty_hook('compute_on_dirty', () => {
-					this.param.compute();
-				});
-
+				this.param.add_post_dirty_hook('compute_on_dirty', this._compute_param.bind(this));
 				this._compute_on_dirty_callback_added = true;
 			}
 		}
+	}
+	private async _compute_param() {
+		await this.param.compute();
 	}
 
 	// callback
@@ -461,12 +459,18 @@ export class OptionsController {
 	}
 
 	// param selection
+	is_selecting_param() {
+		return this.param_selection_options != null;
+	}
 	get param_selection_options() {
 		return this._options[PARAM_SELECTION];
 	}
 	get param_selection_type() {
 		if (this.param_selection_options) {
-			return this.param_selection_options[PARAM_SELECTION_TYPE];
+			const type_or_boolean = this.param_selection_options;
+			if (!lodash_isBoolean(type_or_boolean)) {
+				return type_or_boolean;
+			}
 		}
 	}
 

@@ -88,6 +88,9 @@ import './engine/nodes/manager/ObjectsManager';
 
 QUnit.module('mat');
 import './engine/nodes/mat/MeshBasicBuilder';
+import './engine/nodes/mat/MeshLambertBuilder';
+import './engine/nodes/mat/MeshStandardBuilder';
+import './engine/nodes/mat/PointsBuilder';
 import './engine/nodes/mat/SpareParams';
 import './engine/nodes/mat/Uniforms';
 import './engine/nodes/mat/VolumeBuilder';
@@ -147,6 +150,7 @@ import './engine/nodes/sop/Normals';
 import './engine/nodes/sop/Null';
 import './engine/nodes/sop/ObjectMerge';
 import './engine/nodes/sop/Occlusion';
+import './engine/nodes/sop/ParticlesSystemGpu';
 import './engine/nodes/sop/Peak';
 import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/Point';

@@ -11,6 +11,7 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
 import {ParamConstructorMap} from './types/ParamConstructorMap';
+import {DecomposedPath} from '../../core/DecomposedPath';
 
 enum OperatorPathMode {
 	NODE = 'NODE',
@@ -22,6 +23,7 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	private _found_node_with_expected_type: BaseNodeType | null = null;
 	private _found_param: BaseParamType | null = null;
 	private _found_param_with_expected_type: BaseParamType | null = null;
+	public readonly decomposed_path = new DecomposedPath();
 
 	static type() {
 		return ParamType.OPERATOR_PATH;
@@ -51,12 +53,17 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 		return this._value == this.default_value;
 	}
 	protected process_raw_input() {
-		this._value = this._raw_input;
-		this.set_dirty();
-		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+		if (this._value != this._raw_input) {
+			this._value = this._raw_input;
+			this.set_dirty();
+			this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+		}
 	}
 
 	protected async process_computation() {
+		if (!this.node) {
+			return;
+		}
 		const path = this._value;
 		let node: BaseNodeType | null = null;
 		let param: BaseParamType | null = null;
@@ -65,22 +72,25 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			? OperatorPathMode.PARAM
 			: OperatorPathMode.NODE;
 
+		this.scene.references_controller.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.decomposed_path.reset();
 		if (path_non_empty) {
 			if (mode == OperatorPathMode.PARAM) {
-				param = CoreWalker.find_param(this.node, path);
+				param = CoreWalker.find_param(this.node, path, this.decomposed_path);
 			} else {
-				node = CoreWalker.find_node(this.node, path);
+				node = CoreWalker.find_node(this.node, path, this.decomposed_path);
 			}
-			// not sure I want the param to be errored,
-			// as it may block the node, even if the param is not necessary
-			// if (!node) {
-			// 	this.states.error.set('node not found');
-			// }
 		}
 
 		const current_found_entity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
 		const newly_found_entity = mode == OperatorPathMode.PARAM ? param : node;
-		if (current_found_entity !== newly_found_entity) {
+
+		this.scene.references_controller.set_named_nodes_from_param(this);
+		if (node) {
+			this.scene.references_controller.set_reference_from_param(this, node);
+		}
+
+		if (current_found_entity?.graph_node_id !== newly_found_entity?.graph_node_id) {
 			const dependent_on_found_node = this.options.dependent_on_found_node();
 
 			if (this._found_node) {
@@ -92,8 +102,10 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			}
 			if (mode == OperatorPathMode.PARAM) {
 				this._found_param = param;
+				this._found_node = null;
 			} else {
 				this._found_node = node;
+				this._found_param = null;
 			}
 
 			if (node) {
@@ -211,5 +223,14 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 			return true;
 		}
 		return expected_type == param.type;
+	}
+
+	notify_path_rebuild_required(node: BaseNodeType) {
+		this.decomposed_path.update_from_name_change(node);
+		const new_path = this.decomposed_path.to_path();
+		this.set(new_path);
+	}
+	notify_target_param_owner_params_updated(node: BaseNodeType) {
+		this.set_dirty();
 	}
 }

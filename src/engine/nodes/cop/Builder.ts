@@ -158,22 +158,23 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	compile_if_required() {
 		if (this.assembler_controller?.compile_required()) {
-			this.run_assembler();
-			this.assembler_controller?.post_compile();
+			this.compile();
 		}
 	}
-	private run_assembler() {
+	private compile() {
 		if (!this.assembler_controller) {
 			return;
 		}
-		const output_nodes = GlNodeFinder.find_output_nodes(this);
+		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this);
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node allowed');
 			return;
 		}
 		const output_node = output_nodes[0];
 		if (output_node) {
-			this.assembler_controller.assembler.set_root_nodes([output_node]);
+			const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
+			const root_nodes = output_nodes.concat(param_nodes);
+			this.assembler_controller.assembler.set_root_nodes(root_nodes);
 
 			// main compilation
 			this.assembler_controller.assembler.update_fragment_shader();
@@ -197,6 +198,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				value: this.pv.resolution,
 			};
 		}
+		this.assembler_controller?.post_compile();
 	}
 
 	static handle_dependencies(node: BuilderCopNode, time_dependent: boolean, uniforms?: IUniformsWithTime) {

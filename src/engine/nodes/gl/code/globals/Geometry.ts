@@ -51,8 +51,6 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 			return;
 		}
 
-		console.error('should not', output_name);
-
 		const var_name = globals_node.gl_var_name(output_name);
 		const gl_type = connection_point.type;
 		const definition = new VaryingGLDefinition(globals_node, gl_type, var_name);

@@ -42,8 +42,11 @@ const TYPE_STRING = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.STRING);
 
 const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
-	node = ParamConfig.OPERATOR_PATH('/geo1');
-	param = ParamConfig.STRING('display');
+	param = ParamConfig.OPERATOR_PATH('/geo1/display', {
+		param_selection: true,
+		compute_on_dirty: true,
+	});
+	// param = ParamConfig.STRING('display');
 	type = ParamConfig.INTEGER(TYPE_NUMBER, {
 		menu: {
 			entries: SET_PARAM_PARAM_TYPE.map((name, value) => {
@@ -100,17 +103,14 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		]);
 	}
 	async process_event(event_context: EventContext<Event>) {
-		if (this.p.node.is_dirty) {
-			await this.p.node.compute();
+		if (this.p.param.is_dirty) {
+			await this.p.param.compute();
 		}
-		const node = this.p.node.found_node();
-		if (node) {
-			const param = node.params.get(this.pv.param);
-			if (param) {
-				const new_value = this._new_param_value(param);
-				if (new_value != null) {
-					param.set(new_value);
-				}
+		const param = this.p.param.found_param();
+		if (param) {
+			const new_value = this._new_param_value(param);
+			if (new_value != null) {
+				param.set(new_value);
 			}
 		}
 

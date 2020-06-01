@@ -28,7 +28,7 @@ export class ParticlesSystemGpuComputeController {
 	protected _points: CorePoint[] = [];
 
 	private variables_by_name: Map<ShaderName, GPUComputationRendererVariable> = new Map();
-	private all_variables: GPUComputationRendererVariable[] = [];
+	private _all_variables: GPUComputationRendererVariable[] = [];
 	private _created_textures_by_name: Map<ShaderName, DataTexture> = new Map();
 	private _shaders_by_name: Map<ShaderName, string> | undefined;
 	protected _last_simulated_frame: number | undefined;
@@ -47,6 +47,10 @@ export class ParticlesSystemGpuComputeController {
 		this._shaders_by_name = shaders_by_name;
 		this.reset_gpu_compute();
 	}
+	all_variables() {
+		return this._all_variables;
+	}
+
 	async init(core_group: CoreGroup) {
 		this.init_particle_group_points(core_group);
 		await this.create_gpu_compute();
@@ -135,9 +139,8 @@ export class ParticlesSystemGpuComputeController {
 		this._init_particles_uvs();
 		// we need to recreate the material if the texture allocation changes
 		this.node.render_controller.reset_render_material();
-		// await this.node.render_controller.init_render_material();
 
-		const renderer = await Poly.instance().renderers_controller.wait_for_renderer(); //new WebGLRenderer();
+		const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
 		if (renderer) {
 			this._renderer = renderer;
 		} else {
@@ -170,7 +173,7 @@ export class ParticlesSystemGpuComputeController {
 			this.variables_by_name.delete(shader_name);
 		});
 		// for (let shader_name of Object.keys(this._shaders_by_name)) {
-		this.all_variables = [];
+		this._all_variables = [];
 		this._shaders_by_name?.forEach((shader, shader_name) => {
 			if (this._gpu_compute) {
 				const variable = this._gpu_compute.addVariable(
@@ -179,7 +182,7 @@ export class ParticlesSystemGpuComputeController {
 					this._created_textures_by_name.get(shader_name)!
 				);
 				this.variables_by_name.set(shader_name, variable);
-				this.all_variables.push(variable);
+				this._all_variables.push(variable);
 			}
 		});
 
@@ -187,7 +190,7 @@ export class ParticlesSystemGpuComputeController {
 			if (this._gpu_compute) {
 				this._gpu_compute.setVariableDependencies(
 					variable,
-					this.all_variables // currently all depend on all
+					this._all_variables // currently all depend on all
 				);
 			}
 		});
@@ -274,7 +277,7 @@ export class ParticlesSystemGpuComputeController {
 		}
 	}
 	private update_simulation_material_uniforms() {
-		for (let variable of this.all_variables) {
+		for (let variable of this._all_variables) {
 			variable.material.uniforms[GlConstant.TIME].value = this.node.scene.time;
 			variable.material.uniforms[GlConstant.DELTA_TIME].value = this._delta_time;
 		}

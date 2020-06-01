@@ -1,5 +1,4 @@
-import {Vector2} from 'three/src/math/Vector2';
-import {Poly} from '../../../../src/engine/Poly';
+import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('COP file simple default', async (assert) => {
 	const COP = window.COP;
@@ -49,11 +48,7 @@ QUnit.test('COP file simple basis', async (assert) => {
 	const COP = window.COP;
 
 	// create renderer for basis loader
-	const canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	const size = new Vector2(canvas.width, canvas.height);
-	window.perspective_camera1.render_controller.create_renderer(canvas, size);
-	const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+	const {renderer} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer);
 
 	const file1 = COP.create_node('file');
@@ -67,7 +62,7 @@ QUnit.test('COP file simple basis', async (assert) => {
 	assert.equal(texture.image.width, 2048);
 	assert.equal(texture.image.height, 2048);
 
-	document.body.removeChild(canvas);
+	RendererUtils.dispose();
 });
 
 QUnit.test('COP file simple hdr', async (assert) => {

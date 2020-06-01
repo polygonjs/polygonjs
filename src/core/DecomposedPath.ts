@@ -1,9 +1,6 @@
 import {BaseNodeType} from '../engine/nodes/_Base';
 import {BaseParamType} from '../engine/params/_Base';
 import {CoreWalker} from './Walker';
-// import {NodeSimple} from '/Graph/NodeSimple'
-
-// import {NamedGraphNodeClass} from './graph/NamedGraphNode'
 type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class DecomposedPath {
@@ -11,43 +8,64 @@ export class DecomposedPath {
 	private path_elements: (string | null)[] = [];
 	private _named_nodes: (NodeOrParam | null)[] = [];
 	private graph_node_ids: string[] = [];
-	private node_element_by_graph_node_id: Dictionary<string> = {};
+	private node_element_by_graph_node_id: Map<string, string> = new Map();
 
-	constructor() {
-		// console.warn('create decomposed path');
+	constructor() {}
+	reset() {
+		this.index = -1;
+		this.path_elements = [];
+		this._named_nodes = [];
+		this.graph_node_ids = [];
+		this.node_element_by_graph_node_id.clear();
 	}
+
 	add_node(name: string, node: NodeOrParam) {
 		this.index += 1;
 		if (name == node.name) {
-			this.named_nodes[this.index] = node;
+			this._named_nodes[this.index] = node;
 		}
 
 		this.graph_node_ids[this.index] = node.graph_node_id;
-		this.node_element_by_graph_node_id[node.graph_node_id] = name;
+		this.node_element_by_graph_node_id.set(node.graph_node_id, name);
 	}
 	add_path_element(path_element: string) {
 		this.index += 1;
 		this.path_elements[this.index] = path_element;
 	}
 
-	get named_nodes() {
+	named_graph_nodes() {
 		return this._named_nodes;
+	}
+	named_nodes() {
+		const nodes: BaseNodeType[] = [];
+		for (let graph_node of this._named_nodes) {
+			if (graph_node) {
+				const node = graph_node as BaseNodeType;
+				if (node.name_controller) {
+					nodes.push(node);
+				}
+			}
+		}
+		return nodes;
 	}
 
 	update_from_name_change(node: NodeOrParam) {
-		const named_graph_node_ids = this.named_nodes.map((n) => n?.graph_node_id);
+		const named_graph_node_ids = this._named_nodes.map((n) => n?.graph_node_id);
 
 		if (named_graph_node_ids.includes(node.graph_node_id)) {
-			this.node_element_by_graph_node_id[node.graph_node_id] = node.name;
+			this.node_element_by_graph_node_id.set(node.graph_node_id, node.name);
 		}
 	}
 
 	to_path(): string {
 		const elements = new Array<string>(this.index);
 		for (let i = 0; i <= this.index; i++) {
-			const node = this.named_nodes[i];
+			const node = this._named_nodes[i];
 			if (node) {
-				elements[i] = this.node_element_by_graph_node_id[node.graph_node_id];
+				const node_name = this.node_element_by_graph_node_id.get(node.graph_node_id);
+				if (node_name) {
+					elements[i] = node_name;
+				}
 			} else {
 				const path_element = this.path_elements[i];
 				if (path_element) {
@@ -64,7 +82,6 @@ export class DecomposedPath {
 				joined_path = `${CoreWalker.SEPARATOR}${joined_path}`;
 			}
 		}
-
 		return joined_path;
 	}
 }

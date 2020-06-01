@@ -180,6 +180,10 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		}
 	}
 
+	set_class(attrib_class: AttribClass) {
+		this.p.class.set(attrib_class);
+	}
+
 	private async _eval_for_objects(core_group: CoreGroup) {
 		const core_objects = core_group.core_objects();
 		this.entity_selection_helper.init(core_objects);

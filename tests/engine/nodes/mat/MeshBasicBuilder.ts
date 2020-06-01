@@ -33,6 +33,9 @@ import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuil
 import {Vec4ToVectorGlNode} from '../../../../src/engine/nodes/gl/_ConversionVecTo';
 import {TextureGlNode} from '../../../../src/engine/nodes/gl/Texture';
 import {GlCompareTestName} from '../../../../src/engine/nodes/gl/Compare';
+import {FloatParam} from '../../../../src/engine/params/Float';
+import {Vector3Param} from '../../../../src/engine/params/Vector3';
+import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -264,6 +267,57 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
+});
+
+QUnit.test('mesh basic builder persisted_config', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const output1 = mesh_basic1.nodes_by_type('output')[0];
+	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
+	const param1 = mesh_basic1.create_node('param');
+	param1.p.name.set('float_param');
+	const param2 = mesh_basic1.create_node('param');
+	param2.set_gl_type(GlConnectionPointType.VEC3);
+	param2.p.name.set('vec3_param');
+	const float_to_vec31 = mesh_basic1.create_node('float_to_vec3');
+	float_to_vec31.set_input(0, param1);
+	float_to_vec31.set_input(1, globals1, 'time');
+	output1.set_input('color', float_to_vec31);
+	output1.set_input('position', param2);
+	await mesh_basic1.request_container();
+
+	const scene = window.scene;
+	const data = new SceneJsonExporter(scene).data();
+	await AssemblersUtils.with_unregistered_assembler(mesh_basic1.used_assembler(), async () => {
+		console.log('************ LOAD **************');
+		const scene2 = await SceneJsonImporter.load_data(data);
+		await scene2.wait_for_cooks_completed();
+
+		const new_mesh_basic1 = scene2.node('/MAT/mesh_basic_builder1') as BaseBuilderMatNodeType;
+		assert.notOk(new_mesh_basic1.assembler_controller);
+		assert.ok(new_mesh_basic1.persisted_config);
+		const float_param = new_mesh_basic1.params.get('float_param') as FloatParam;
+		const vec3_param = new_mesh_basic1.params.get('vec3_param') as Vector3Param;
+		assert.ok(float_param);
+		assert.ok(vec3_param);
+		const material = new_mesh_basic1.material;
+		assert.equal(material.fragmentShader, mesh_basic1.material.fragmentShader);
+		assert.equal(material.vertexShader, mesh_basic1.material.vertexShader);
+
+		// float param callback
+		assert.equal(material.uniforms.v_POLY_param1_val.value, 0);
+		float_param.set(2);
+		assert.equal(material.uniforms.v_POLY_param1_val.value, 2);
+		float_param.set(4);
+		assert.equal(material.uniforms.v_POLY_param1_val.value, 4);
+
+		// vector3 param callback
+		assert.deepEqual(material.uniforms.v_POLY_param2_val.value.toArray(), [0, 0, 0]);
+		vec3_param.set([1, 2, 3]);
+		assert.deepEqual(material.uniforms.v_POLY_param2_val.value.toArray(), [1, 2, 3]);
+		vec3_param.set([5, 6, 7]);
+		assert.deepEqual(material.uniforms.v_POLY_param2_val.value.toArray(), [5, 6, 7]);
+	});
 });
 
 QUnit.skip('mesh basic builder frame dependent', (assert) => {});

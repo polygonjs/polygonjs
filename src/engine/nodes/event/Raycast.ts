@@ -176,9 +176,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	position_target = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
 		...visible_for_cpu({tposition_target: 1}),
-		param_selection: {
-			type: ParamType.VECTOR3,
-		},
+		param_selection: ParamType.VECTOR3,
 		compute_on_dirty: true,
 	});
 	//

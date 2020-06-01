@@ -1,13 +1,7 @@
-import {Poly} from '../../../../src/engine/Poly';
-import {Vector2} from 'three/src/math/Vector2';
+import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('COP env_map simple', async (assert) => {
-	// create a renderer first
-	const canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	const size = new Vector2(canvas.width, canvas.height);
-	const viewer = window.perspective_camera1.render_controller.create_renderer(canvas, size);
-	const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+	const {renderer} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer);
 
 	// start test
@@ -25,8 +19,5 @@ QUnit.test('COP env_map simple', async (assert) => {
 	assert.equal(texture.image.width, 768);
 	assert.equal(texture.image.height, 768);
 
-
-	// remove viewer
-	viewer.dispose()
-	document.body.removeChild(canvas);
+	RendererUtils.dispose();
 });

@@ -62,7 +62,6 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		if (!this._material) {
 			return;
 		}
-		if (2 > 1) return;
 
 		this._material.custom_materials = this._material.custom_materials || {};
 		if (data.custom_materials) {
@@ -93,10 +92,8 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 				const param = this.node.params.get(pair[0]);
 				const uniform = this._material.uniforms[pair[1]];
 				if (param && uniform) {
-					param.options.set({
-						callback: () => {
-							GlParamConfig.callback(param, uniform);
-						},
+					param.options.set_option('callback', () => {
+						GlParamConfig.callback(param, uniform);
 					});
 				}
 			}

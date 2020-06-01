@@ -1,9 +1,7 @@
 import lodash_isNumber from 'lodash/isNumber';
-// import BaseNode from 'src/engine/nodes/_Base'
 import {DecomposedPath} from '../../core/DecomposedPath';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
-// import {CoreObject} from '../../core/Object';
 import {BaseNodeType} from '../nodes/_Base';
 import jsep from 'jsep';
 
@@ -19,8 +17,6 @@ export class MethodDependency extends CoreGraphNode {
 		public decomposed_path?: DecomposedPath
 	) {
 		super(param.scene, 'MethodDependency');
-
-		// this.set_scene(this.param.scene);
 
 		this.add_post_dirty_hook('_update_from_name_change', this._update_from_name_change_bound);
 	}
@@ -46,14 +42,14 @@ export class MethodDependency extends CoreGraphNode {
 
 	listen_for_name_changes() {
 		if (this.jsep_node && this.decomposed_path) {
-			this.decomposed_path.named_nodes.forEach((node_in_path) => {
+			for (let node_in_path of this.decomposed_path.named_nodes()) {
 				if (node_in_path) {
 					const node = node_in_path as BaseNodeType;
 					if (node.name_controller) {
 						this.add_graph_input(node.name_controller.graph_node);
 					}
 				}
-			});
+			}
 		}
 	}
 

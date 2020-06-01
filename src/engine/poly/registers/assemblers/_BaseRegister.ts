@@ -24,4 +24,8 @@ export class BaseAssemblersRegister {
 			assembler: assembler,
 		});
 	}
+
+	unregister_assembler(name: AssemblerName) {
+		this._controller_assembler_by_name.delete(name);
+	}
 }

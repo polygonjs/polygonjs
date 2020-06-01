@@ -118,10 +118,10 @@ export class HierarchyChildrenController {
 		child_node.set_parent(this.node);
 		child_node.params.init();
 		child_node.parent_controller.on_set_parent();
-		child_node.name_controller.post_set_full_path();
+		child_node.name_controller.run_post_set_full_path_hooks();
 		if (child_node.children_allowed() && child_node.children_controller) {
 			for (let child of child_node.children_controller.children()) {
-				child.name_controller.post_set_full_path();
+				child.name_controller.run_post_set_full_path_hooks();
 			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.to_json()});
@@ -150,23 +150,29 @@ export class HierarchyChildrenController {
 			}
 
 			const first_connection = child_node.io.connections.first_input_connection();
-			child_node.io.connections.input_connections()?.forEach((input_connection) => {
-				if (input_connection) {
-					input_connection.disconnect({set_input: true});
-				}
-			});
-			child_node.io.connections.output_connections()?.forEach((output_connection) => {
-				if (output_connection) {
-					output_connection.disconnect({set_input: true});
-					if (first_connection) {
-						const old_src = first_connection.node_src;
-						const old_output_index = output_connection.output_index;
-						const old_dest = output_connection.node_dest;
-						const old_input_index = output_connection.input_index;
-						old_dest.io.inputs.set_input(old_input_index, old_src, old_output_index);
+			const input_connections = child_node.io.connections.input_connections();
+			const output_connections = child_node.io.connections.output_connections();
+			if (input_connections) {
+				for (let input_connection of input_connections) {
+					if (input_connection) {
+						input_connection.disconnect({set_input: true});
 					}
 				}
-			});
+			}
+			if (output_connections) {
+				for (let output_connection of output_connections) {
+					if (output_connection) {
+						output_connection.disconnect({set_input: true});
+						if (first_connection) {
+							const old_src = first_connection.node_src;
+							const old_output_index = output_connection.output_index;
+							const old_dest = output_connection.node_dest;
+							const old_input_index = output_connection.input_index;
+							old_dest.io.inputs.set_input(old_input_index, old_src, old_output_index);
+						}
+					}
+				}
+			}
 
 			// remove from children
 			child_node.set_parent(null);
@@ -245,12 +251,12 @@ export class HierarchyChildrenController {
 		const node_ids = this._children_by_type[type] || [];
 		const graph = this.node.scene.graph;
 		const nodes: BaseNodeType[] = [];
-		node_ids.forEach((node_id) => {
+		for (let node_id of node_ids) {
 			const node = graph.node_from_id(node_id) as BaseNodeType;
 			if (node) {
 				nodes.push(node);
 			}
-		});
+		}
 		return nodes;
 	}
 	child_by_name(name: string) {

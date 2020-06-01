@@ -8,7 +8,6 @@ import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController'
 import {LifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
 import {NodeCookController} from './utils/CookController';
-import {DependenciesController} from './utils/DependenciesController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
 import {ParamsController} from './utils/params/ParamsController';
@@ -54,7 +53,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _ui_data: UIData | undefined;
 
-	private _dependencies_controller: DependenciesController | undefined;
+	// private _dependencies_controller: DependenciesController | undefined;
 	private _states: StatesController | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
@@ -99,9 +98,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get ui_data(): UIData {
 		return (this._ui_data = this._ui_data || new UIData(this));
 	}
-	get dependencies_controller(): DependenciesController {
-		return (this._dependencies_controller = this._dependencies_controller || new DependenciesController(this));
-	}
+	// get dependencies_controller(): DependenciesController {
+	// 	return (this._dependencies_controller = this._dependencies_controller || new DependenciesController(this));
+	// }
 	get states(): StatesController {
 		return (this._states = this._states || new StatesController(this));
 	}
