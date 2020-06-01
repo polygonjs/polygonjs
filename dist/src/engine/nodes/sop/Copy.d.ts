@@ -26,7 +26,7 @@ export declare class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
     private _copy_moved_objects_for_instance;
     private cook_without_template;
     private _copy_attributes_from_template;
-    stamp_value(attrib_name?: string): string | number | boolean | Number3 | Number2 | Number4 | Vector2Like | ColorLike;
+    stamp_value(attrib_name?: string): string | number | boolean | Number2 | Number3 | Number4 | Vector2Like | ColorLike;
     get stamp_node(): CopyStamp;
     private create_stamp_node;
 }

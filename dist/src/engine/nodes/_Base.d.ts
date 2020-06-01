@@ -33,6 +33,10 @@ export interface EmitDataByNodeEventMap extends EmitDataByNodeEventMapGeneric {
     [NodeEvent.DELETED]: NodeDeletedEmitData;
     [NodeEvent.ERROR_UPDATED]: undefined;
 }
+export interface IntegrationData {
+    name: string;
+    data: Dictionary<string>;
+}
 import { ContainableMap } from '../containers/utils/ContainableMap';
 import { ParamOptions } from '../params/utils/OptionsController';
 import { ParamType } from '../poly/ParamType';
@@ -122,6 +126,7 @@ export declare class TypedNode<NC extends NodeContext, K extends NodeParamsConfi
     to_json(include_param_components?: boolean): NodeSerializerData;
     required_modules(): ModuleName[] | void;
     used_assembler(): AssemblerName | void;
+    integration_data(): IntegrationData | void;
 }
 export declare type BaseNodeType = TypedNode<any, any>;
 export declare class BaseNodeClass extends TypedNode<any, any> {

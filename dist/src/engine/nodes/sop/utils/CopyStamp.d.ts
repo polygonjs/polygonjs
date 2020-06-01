@@ -7,5 +7,5 @@ export declare class CopyStamp extends CoreGraphNode {
     constructor(scene: PolyScene);
     set_point(point: CorePoint): void;
     set_global_index(index: number): void;
-    value(attrib_name?: string): string | number | boolean | Number3 | Number2 | Number4 | Vector2Like | ColorLike;
+    value(attrib_name?: string): string | number | boolean | Number2 | Number3 | Number4 | Vector2Like | ColorLike;
 }

@@ -72,6 +72,9 @@ export class MapboxCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, M
 	static type(): Readonly<'mapbox_camera'> {
 		return 'mapbox_camera';
 	}
+	public integration_data() {
+		return CoreMapboxClient.integration_data();
+	}
 
 	private _maps_by_container_id: Map<string, mapboxgl.Map> = new Map();
 	private _map_containers_by_container_id: Map<string, HTMLElement> = new Map();

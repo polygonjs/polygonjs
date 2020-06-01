@@ -33,6 +33,10 @@ export interface EmitDataByNodeEventMap extends EmitDataByNodeEventMapGeneric {
 	[NodeEvent.DELETED]: NodeDeletedEmitData;
 	[NodeEvent.ERROR_UPDATED]: undefined;
 }
+export interface IntegrationData {
+	name: string;
+	data: Dictionary<string>;
+}
 
 // import {ContainerMap, ContainerType} from '../containers/utils/ContainerMap';
 import {ContainableMap} from '../containers/utils/ContainableMap';
@@ -308,6 +312,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// modules
 	public required_modules(): ModuleName[] | void {}
 	public used_assembler(): AssemblerName | void {}
+	public integration_data(): IntegrationData | void {}
 }
 
 export type BaseNodeType = TypedNode<any, any>;

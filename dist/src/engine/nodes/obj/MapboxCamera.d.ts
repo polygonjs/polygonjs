@@ -22,6 +22,7 @@ declare class MapboxCameraObjParamConfig extends MapboxCameraObjParamConfig_base
 export declare class MapboxCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, MapboxCameraObjParamConfig> {
     params_config: MapboxCameraObjParamConfig;
     static type(): Readonly<'mapbox_camera'>;
+    integration_data(): void | import("../_Base").IntegrationData;
     private _maps_by_container_id;
     private _map_containers_by_container_id;
     private _canvases_by_container_id;

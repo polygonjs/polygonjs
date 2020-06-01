@@ -37,10 +37,12 @@ export class MapboxTransformSopNode extends MapboxListenerSopNode<MapboxTransfor
 			}
 		}
 
-		if (!this._camera_node.first_map()) {
-			this.states.error.set('mapbox not yet loaded');
-			return;
-		}
+		// No need to error here, as it would prevent scene.wait_all_cooks()
+		// to complete in the export
+		// if (!this._camera_node.first_map()) {
+		// 	this.states.error.set('mapbox not yet loaded');
+		// 	return;
+		// }
 
 		const core_group = input_contents[0];
 		this.transform_input(core_group);

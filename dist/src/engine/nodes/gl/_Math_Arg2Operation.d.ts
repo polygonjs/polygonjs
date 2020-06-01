@@ -93,6 +93,7 @@ declare const AddGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -219,6 +220,7 @@ declare const DivideGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -345,6 +347,7 @@ declare const SubstractGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -471,6 +474,7 @@ declare const MultGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;

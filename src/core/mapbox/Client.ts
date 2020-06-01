@@ -1,9 +1,9 @@
-import mapboxgl from "mapbox-gl";
-
+import mapboxgl from 'mapbox-gl';
+import {IntegrationData} from '../../engine/nodes/_Base';
 export class CoreMapboxClient {
 	// static JS_URL =
 	// "https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js";
-	static CSS_URL = "https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css";
+	static CSS_URL = 'https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css';
 	static _token: string;
 
 	static ensure_token_is_set() {
@@ -33,34 +33,23 @@ export class CoreMapboxClient {
 				this.set_token(token);
 				return;
 			}
-			// token = await this._fetch_token_from_api(scene);
-			// if (token) {
-			// 	this.set_token(token);
-			// 	return;
-			// }
 		}
 	}
 
 	private static _read_token_from_html(): string | undefined {
-		const element = document.getElementById("mapbox-data");
-		if (!element) {
-			console.error("mapbox element not found");
+		const integrations_element = document.getElementById('integrations-data');
+		if (!integrations_element) {
+			console.error('mapbox element not found');
 		}
-		return element?.dataset["token"];
+		return integrations_element?.dataset['mapboxToken'];
 	}
-	// private static async _fetch_token_from_api(scene: PolyScene) {
-	// 	const scene_uuid = scene.uuid;
-
-	// 	let url;
-	// 	if (scene_uuid) {
-	// 		url = `/api/scenes/${scene_uuid}/mapbox`;
-	// 	} else {
-	// 		// in case the scene has not been saved yet
-	// 		url = `/api/account/mapbox_token`;
-	// 	}
-
-	// 	const response = await fetch(url);
-	// 	const token = (await response.json()).token;
-	// 	return token;
-	// }
+	static integration_data(): IntegrationData | void {
+		const token = this._read_token_from_html();
+		if (token) {
+			return {
+				name: 'mapbox',
+				data: {token},
+			};
+		}
+	}
 }

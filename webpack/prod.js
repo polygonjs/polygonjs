@@ -17,7 +17,11 @@ module.exports = (env) => {
 	if (!FAST_COMPILE) {
 		common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
 		common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));
-		common_options.plugins.push(new CompressionPlugin()); // gs by default
+		common_options.plugins.push(
+			new CompressionPlugin({
+				test: /\.(js)$/,
+			})
+		); // gs by default
 		common_options.plugins.push(
 			new CompressionPlugin({
 				filename: '[path].br[query]',

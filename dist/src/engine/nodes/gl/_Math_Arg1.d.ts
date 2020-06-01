@@ -90,6 +90,7 @@ declare const AbsGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -215,6 +216,7 @@ declare const AcosGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -340,6 +342,7 @@ declare const AsinGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -465,6 +468,7 @@ declare const AtanGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -590,6 +594,7 @@ declare const CeilGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -715,6 +720,7 @@ declare const CosGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -840,6 +846,7 @@ declare const DegreesGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -965,6 +972,7 @@ declare const ExpGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1090,6 +1098,7 @@ declare const Exp2GlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1215,6 +1224,7 @@ declare const FloorGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1340,6 +1350,7 @@ declare const FractGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1465,6 +1476,7 @@ declare const InverseSqrtGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1590,6 +1602,7 @@ declare const LogGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1715,6 +1728,7 @@ declare const Log2GlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1840,6 +1854,7 @@ declare const NormalizeGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1965,6 +1980,7 @@ declare const RadiansGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2090,6 +2106,7 @@ declare const SignGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2215,6 +2232,7 @@ declare const SinGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2340,6 +2358,7 @@ declare const SqrtGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2465,6 +2484,7 @@ declare const TanGlNode_base: {
         to_json(include_param_components?: boolean): import("../utils/Serializer").NodeSerializerData;
         required_modules(): void | import("../../poly/registers/modules/_BaseRegister").ModuleName[];
         used_assembler(): void | import("../../poly/registers/assemblers/_BaseRegister").AssemblerName;
+        integration_data(): void | import("../_Base").IntegrationData;
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: string;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
