@@ -314,6 +314,21 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	};
 	static readonly VIDEO_EXTENSIONS = ['mp4', 'ogv'];
 
+	initialize_node() {
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created(() => {
+				this.params.label.init([this.p.url], () => {
+					const url = this.pv.url;
+					if (url) {
+						const elements = url.split('/');
+						return elements[elements.length - 1];
+					} else {
+						return '';
+					}
+				});
+			});
+		});
+	}
 	async cook() {
 		if (this._is_static_image_url(this.pv.url)) {
 			await this.cook_for_image();
