@@ -9,6 +9,7 @@ import {BaseManagerNodeType} from '../nodes/manager/_Base';
 import {BaseMatNodeType} from '../nodes/mat/_Base';
 import {BaseObjNodeType} from '../nodes/obj/_Base';
 import {BasePostProcessNodeType} from '../nodes/post/_Base';
+import {BaseRopNodeType} from '../nodes/rop/_Base';
 // registers
 import {GeoNodeChildrenMap} from './registers/nodes/Sop';
 import {GlNodeChildrenMap} from './registers/nodes/Gl';
@@ -16,8 +17,9 @@ import {EventNodeChildrenMap} from './registers/nodes/Event';
 import {CopNodeChildrenMap} from './registers/nodes/Cop';
 import {AnimNodeChildrenMap} from './registers/nodes/Anim';
 import {MatNodeChildrenMap} from './registers/nodes/Mat';
-import {PostNodeChildrenMap} from './registers/nodes/Post';
 import {ObjNodeChildrenMap} from './registers/nodes/Obj';
+import {PostNodeChildrenMap} from './registers/nodes/Post';
+import {RopNodeChildrenMap} from './registers/nodes/Rop';
 
 export enum NodeContext {
 	ANIM = 'anim',
@@ -29,6 +31,7 @@ export enum NodeContext {
 	MAT = 'mat',
 	OBJ = 'obj',
 	POST = 'post',
+	ROP = 'rop',
 	SOP = 'sop',
 }
 
@@ -42,6 +45,7 @@ export type NodeContextUnion =
 	| NodeContext.MAT
 	| NodeContext.OBJ
 	| NodeContext.POST
+	| NodeContext.ROP
 	| NodeContext.SOP;
 
 export enum NetworkNodeType {
@@ -50,6 +54,7 @@ export enum NetworkNodeType {
 	EVENT = 'events',
 	MAT = 'materials',
 	POST = 'post_process',
+	ROP = 'renderers',
 }
 export enum NetworkChildNodeType {
 	INPUT = 'subnet_input',
@@ -67,6 +72,7 @@ export interface BaseNodeByContextMap {
 	[NodeContext.OBJ]: BaseObjNodeType;
 	[NodeContext.POST]: BasePostProcessNodeType;
 	[NodeContext.SOP]: BaseSopNodeType;
+	[NodeContext.ROP]: BaseRopNodeType;
 }
 export interface ChildrenNodeMapByContextMap {
 	[NodeContext.ANIM]: AnimNodeChildrenMap;
@@ -79,6 +85,7 @@ export interface ChildrenNodeMapByContextMap {
 	[NodeContext.OBJ]: ObjNodeChildrenMap;
 	[NodeContext.POST]: PostNodeChildrenMap;
 	[NodeContext.SOP]: GeoNodeChildrenMap;
+	[NodeContext.ROP]: RopNodeChildrenMap;
 }
 
 export interface NodeContextAndType {

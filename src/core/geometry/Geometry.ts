@@ -3,7 +3,7 @@ import {Int32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Box3} from 'three/src/math/Box3';
-import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
+// import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
 import lodash_range from 'lodash/range';
 import lodash_chunk from 'lodash/chunk';
 import lodash_cloneDeep from 'lodash/cloneDeep';
@@ -14,7 +14,7 @@ import {CorePoint} from './Point';
 import {CoreFace} from './Face';
 import {ObjectType, AttribType, AttribSize} from './Constant';
 import {CoreAttribute} from './Attribute';
-import {MonkeyPatcher} from './MonkeyPatcher';
+// import {MonkeyPatcher} from './MonkeyPatcher';
 import {CoreAttributeData} from './AttributeData';
 import {CoreGeometryBuilderPoints} from './builders/Points';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
@@ -25,7 +25,6 @@ import {TypeAssert} from '../../engine/poly/Assert';
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
 	private _points: CorePoint[] | undefined;
-
 
 	constructor(private _geometry: BufferGeometry) {}
 
@@ -257,12 +256,12 @@ export class CoreGeometry {
 		let src_userData;
 
 		// monkey path
-		for (let attribute_name of Object.keys(src_geometry.attributes)) {
-			const attribute = src_geometry.getAttribute(attribute_name);
-			if (attribute.constructor.name == InterleavedBufferAttribute.name) {
-				MonkeyPatcher.patch(attribute as InterleavedBufferAttribute);
-			}
-		}
+		// for (let attribute_name of Object.keys(src_geometry.attributes)) {
+		// 	const attribute = src_geometry.getAttribute(attribute_name);
+		// 	if (attribute.constructor.name == InterleavedBufferAttribute.name) {
+		// 		MonkeyPatcher.patch(attribute as InterleavedBufferAttribute);
+		// 	}
+		// }
 
 		const new_geometry = src_geometry.clone();
 		if ((src_userData = src_geometry.userData) != null) {

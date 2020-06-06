@@ -252,7 +252,7 @@ export class TypedThreejsCameraObjNode<
 
 		this.update_near_far();
 
-		this.render_controller.update_scene();
+		this.render_controller.update();
 		this.update_camera();
 		this.controls_controller.update_controls();
 

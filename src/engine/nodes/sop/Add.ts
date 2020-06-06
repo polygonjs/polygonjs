@@ -1,15 +1,10 @@
-// import lodash_flatten from 'lodash/flatten';
-// import lodash_last from 'lodash/last';
 import lodash_times from 'lodash/times';
 import {Object3D} from 'three/src/core/Object3D';
-// import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {TypedSopNode} from './_Base';
-// import {Core} from '../../../Core/_Module';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
-// import {CoreGeometryUtilShape} from '../../../core/geometry/util/Shape';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AddSopParamsConfig extends NodeParamsConfig {

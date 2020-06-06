@@ -28,6 +28,7 @@ import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
 import {CopSopNode} from '../../../nodes/sop/Cop';
 import {CopySopNode} from '../../../nodes/sop/Copy';
+import {Css2DObjectSopNode} from '../../../nodes/sop/Css2DObject';
 import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
@@ -66,6 +67,7 @@ import {PointSopNode} from '../../../nodes/sop/Point';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
 import {PostProcessSopNode} from '../../../nodes/sop/PostProcess';
 import {RaySopNode} from '../../../nodes/sop/Ray';
+import {RenderersSopNode} from '../../../nodes/sop/Renderers';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {ShadowsSopNode} from '../../../nodes/sop/Shadows';
@@ -110,6 +112,7 @@ export interface GeoNodeChildrenMap {
 	color: ColorSopNode;
 	cop: CopSopNode;
 	copy: CopySopNode;
+	css2d_object: Css2DObjectSopNode;
 	data: DataSopNode;
 	data_url: DataUrlSopNode;
 	delay: DelaySopNode;
@@ -148,6 +151,7 @@ export interface GeoNodeChildrenMap {
 	point: PointSopNode;
 	polywire: PolywireSopNode;
 	ray: RaySopNode;
+	renderers: RenderersSopNode;
 	resample: ResampleSopNode;
 	scatter: ScatterSopNode;
 	shadows: ShadowsSopNode;
@@ -196,6 +200,7 @@ export class SopRegister {
 		poly.register_node(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(CopSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(CopySopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(Css2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(DelaySopNode, CATEGORY_SOP.MISC);
@@ -234,6 +239,7 @@ export class SopRegister {
 		poly.register_node(PolywireSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PostProcessSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(RaySopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(RenderersSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(ResampleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SkinSopNode, CATEGORY_SOP.MODIFIER);

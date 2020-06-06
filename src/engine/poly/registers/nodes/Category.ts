@@ -4,14 +4,6 @@ export const CATEGORY_ANIM = {
 	MODIFIER: 'modifiers',
 };
 
-export const CATEGORY_OBJ = {
-	ADVANCED: 'advanced',
-	CAMERA: 'cameras',
-	GEOMETRY: 'geometries',
-	LIGHT: 'lights',
-	NETWORK: 'networks',
-	TRANSFORM: 'transform',
-};
 export const CATEGORY_COP = {
 	ADVANCED: 'advanced',
 	FILTER: 'filters',
@@ -60,6 +52,18 @@ export const CATEGORY_MAT = {
 	VOLUME: 'volumes',
 	INSTANCE: 'instances',
 };
+export const CATEGORY_OBJ = {
+	ADVANCED: 'advanced',
+	CAMERA: 'cameras',
+	GEOMETRY: 'geometries',
+	LIGHT: 'lights',
+	NETWORK: 'networks',
+	TRANSFORM: 'transform',
+};
+export const CATEGORY_ROP = {
+	RENDERER: 'renderers',
+};
+
 export const CATEGORY_SOP = {
 	ADVANCED: 'advanced',
 	ANIMATION: 'animation',

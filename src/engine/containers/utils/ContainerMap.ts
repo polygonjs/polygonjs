@@ -10,6 +10,7 @@ import {MaterialContainer} from '../Material';
 import {ObjectContainer} from '../Object';
 import {TextureContainer} from '../Texture';
 import {PostProcessContainer} from '../PostProcess';
+import {RopContainer} from '../Rop';
 import {TypedNode} from '../../nodes/_Base';
 import {BaseAnimNodeType} from '../../nodes/anim/_Base';
 import {BaseEventNodeType} from '../../nodes/event/_Base';
@@ -21,6 +22,7 @@ import {BaseMatNodeType} from '../../nodes/mat/_Base';
 import {BaseObjNodeType} from '../../nodes/obj/_Base';
 import {BaseCopNodeType} from '../../nodes/cop/_Base';
 import {BasePostProcessNodeType} from '../../nodes/post/_Base';
+import {BaseRopNodeType} from '../../nodes/rop/_Base';
 
 // export enum ContainerType {
 // 	ANIMATION = 'ANIMATION',
@@ -44,6 +46,7 @@ export const ContainerClassMap = {
 	[NodeContext.MAT]: MaterialContainer,
 	[NodeContext.OBJ]: ObjectContainer,
 	[NodeContext.POST]: PostProcessContainer,
+	[NodeContext.ROP]: RopContainer,
 	[NodeContext.SOP]: GeometryContainer,
 	// JS: JsContainer;
 };
@@ -62,21 +65,23 @@ export interface ContainerMap extends ContainerMapGeneric {
 	[NodeContext.MAT]: MaterialContainer;
 	[NodeContext.OBJ]: ObjectContainer;
 	[NodeContext.POST]: PostProcessContainer;
+	[NodeContext.ROP]: RopContainer;
 	[NodeContext.SOP]: GeometryContainer;
 }
 
 export type NodeTypeMapGeneric = {[key in NodeContext]: TypedNode<key, any>};
 export interface NodeTypeMap extends NodeTypeMapGeneric {
 	[NodeContext.ANIM]: BaseAnimNodeType;
+	[NodeContext.COP]: BaseCopNodeType;
 	[NodeContext.EVENT]: BaseEventNodeType;
-	[NodeContext.SOP]: BaseSopNodeType;
 	[NodeContext.GL]: BaseGlNodeType;
 	[NodeContext.JS]: BaseJsNodeType;
 	[NodeContext.MANAGER]: BaseManagerNodeType;
 	[NodeContext.MAT]: BaseMatNodeType;
 	[NodeContext.OBJ]: BaseObjNodeType;
-	[NodeContext.COP]: BaseCopNodeType;
 	[NodeContext.POST]: BasePostProcessNodeType;
+	[NodeContext.ROP]: BaseRopNodeType;
+	[NodeContext.SOP]: BaseSopNodeType;
 	// JS: JsContainer;
 }
 // export const NodeTypeMap: NodeTypeMapGeneric = {

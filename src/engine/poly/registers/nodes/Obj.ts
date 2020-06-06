@@ -8,10 +8,11 @@ import {PointLightObjNode} from '../../../nodes/obj/PointLight';
 import {SpotLightObjNode} from '../../../nodes/obj/SpotLight';
 
 import {AnimationsObjNode} from '../../../nodes/obj/Animations';
+import {CopObjNode} from '../../../nodes/obj/Cop';
 import {EventsObjNode} from '../../../nodes/obj/Events';
 import {MaterialsObjNode} from '../../../nodes/obj/Materials';
-import {CopObjNode} from '../../../nodes/obj/Cop';
 import {PostProcessObjNode} from '../../../nodes/obj/PostProcess';
+import {RenderersObjNode} from '../../../nodes/obj/Renderers';
 
 import {BlendObjNode} from '../../../nodes/obj/Blend';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
@@ -41,6 +42,7 @@ export interface ObjNodeChildrenMap {
 	perspective_camera: PerspectiveCameraObjNode;
 	point_light: PointLightObjNode;
 	post_process: PostProcessObjNode;
+	renderers: RenderersObjNode;
 	rivet: RivetObjNode;
 	scene: SceneObjNode;
 	spot_light: SpotLightObjNode;
@@ -57,10 +59,11 @@ export class ObjRegister {
 		poly.register_node(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 
 		poly.register_node(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.register_node(CopObjNode, CATEGORY_OBJ.NETWORK);
 		poly.register_node(EventsObjNode, CATEGORY_OBJ.NETWORK);
 		poly.register_node(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.register_node(CopObjNode, CATEGORY_OBJ.NETWORK);
 		poly.register_node(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
+		poly.register_node(RenderersObjNode, CATEGORY_OBJ.NETWORK);
 
 		poly.register_node(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);

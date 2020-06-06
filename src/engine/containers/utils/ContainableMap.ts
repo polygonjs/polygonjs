@@ -13,7 +13,8 @@ export interface ContainableMap {
 	[NodeContext.JS]: string;
 	[NodeContext.MANAGER]: boolean;
 	[NodeContext.MAT]: Material;
-	[NodeContext.OBJ]: Object3D;
 	[NodeContext.COP]: Texture;
+	[NodeContext.OBJ]: Object3D;
+	[NodeContext.ROP]: any;
 	[NodeContext.POST]: number;
 }

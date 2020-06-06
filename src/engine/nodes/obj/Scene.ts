@@ -91,7 +91,7 @@ const ParamsConfig = new SceneObjParamConfig();
 
 export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	params_config = ParamsConfig;
-	static type() {
+	static type(): Readonly<'scene'> {
 		return 'scene';
 	}
 	protected _attachable_to_hierarchy: boolean = false;

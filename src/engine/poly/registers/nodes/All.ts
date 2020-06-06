@@ -6,6 +6,7 @@ import {JsRegister} from './Js';
 import {MatRegister} from './Mat';
 import {ObjRegister} from './Obj';
 import {PostRegister} from './Post';
+import {RopRegister} from './Rop';
 import {SopRegister} from './Sop';
 
 import {Poly} from '../../../Poly';
@@ -20,6 +21,7 @@ export class AllNodesRegister {
 		MatRegister.run(poly);
 		ObjRegister.run(poly);
 		PostRegister.run(poly);
+		RopRegister.run(poly);
 		SopRegister.run(poly);
 	}
 }

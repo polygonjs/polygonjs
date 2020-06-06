@@ -27,6 +27,7 @@ export interface ConnectionPointTypeMap extends ConnectionPointTypeMapGeneric {
 	[NodeContext.MAT]: undefined;
 	[NodeContext.OBJ]: undefined;
 	[NodeContext.POST]: undefined;
+	[NodeContext.ROP]: undefined;
 	[NodeContext.SOP]: undefined;
 }
 type ConnectionPointEnumMapGeneric = {
@@ -43,6 +44,7 @@ export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
 	[NodeContext.MAT]: undefined;
 	[NodeContext.OBJ]: undefined;
 	[NodeContext.POST]: undefined;
+	[NodeContext.ROP]: undefined;
 	[NodeContext.SOP]: undefined;
 }
 
@@ -58,6 +60,7 @@ export const DEFAULT_CONNECTION_POINT_ENUM_MAP: IConnectionPointEnumMap = {
 	[NodeContext.MAT]: undefined,
 	[NodeContext.OBJ]: undefined,
 	[NodeContext.POST]: undefined,
+	[NodeContext.ROP]: undefined,
 	[NodeContext.SOP]: undefined,
 };
 
