@@ -21,6 +21,7 @@ import './engine/expressions/methods/ch';
 import './engine/expressions/methods/cos';
 import './engine/expressions/methods/floor';
 import './engine/expressions/methods/if';
+import './engine/expressions/methods/js';
 import './engine/expressions/methods/max';
 import './engine/expressions/methods/min';
 import './engine/expressions/methods/opdigits';
