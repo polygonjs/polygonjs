@@ -1,6 +1,6 @@
 import lodash_range from 'lodash/range';
 import lodash_compact from 'lodash/compact';
-import {BaseAdaptiveGlNode} from './_BaseAdaptive';
+import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
@@ -9,7 +9,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 export class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseGlMathFunctionParamsConfig();
-export abstract class BaseGlMathFunctionGlNode extends BaseAdaptiveGlNode<BaseGlMathFunctionParamsConfig> {
+export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFunctionParamsConfig> {
 	params_config = ParamsConfig;
 	protected gl_method_name() {
 		return ''; // leave blank to allow nodes such as mult, add, substract to work

@@ -1,12 +1,9 @@
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-
-import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
-
+import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName, GlobalsOutput} from './_BaseMaterial';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
-
 import {BaseGlShaderAssembler} from '../_Base';
 import {ShaderAssemblerCustomPointsDepth} from './CustomPointsDepth';
 import {ShaderAssemblerCustomPointsDistance} from './CustomPointsDistance';
@@ -29,7 +26,6 @@ if (false) {
 }
 
 export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
-	// _color_declaration() { return 'diffuseColor' }
 	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
 		return CUSTOM_ASSEMBLER_MAP;
 	}
@@ -37,8 +33,8 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	get _template_shader() {
 		const template = ShaderLib.points;
 		return {
-			vertexShader: template.vertexShader, //TemplateVertex,
-			fragmentShader: template.fragmentShader, //TemplateFragment,
+			vertexShader: template.vertexShader,
+			fragmentShader: template.fragmentShader,
 			uniforms: template.uniforms,
 		};
 	}
@@ -85,22 +81,10 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	}
 	create_globals_node_output_connections() {
 		return BaseGlShaderAssembler.create_globals_node_output_connections().concat([
-			new GlConnectionPoint('gl_PointCoord', GlConnectionPointType.VEC2),
+			new GlConnectionPoint(GlobalsOutput.GL_POINTCOORD, GlConnectionPointType.VEC2),
 		]);
 	}
 
-	// add_globals_params(globals_node){
-	// 	BaseShaderAssembler.add_globals_params(globals_node)
-	// 	globals_node.set_named_outputs([
-	// 		new Connection.Vec3('position'),
-	// 		new Connection.Vec3('color'),
-	// 		new Connection.Vec3('normal'),
-	// 		new Connection.Vec4('gl_FragCoord'),
-	// 		new Connection.Vec2('gl_PointCoord'),
-	// 		// new TypedConnectionVec2('uv'),
-	// 		new Connection.Float('frame')
-	// 	])
-	// }
 	create_shader_configs() {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv', 'gl_PointSize'], []),
@@ -115,32 +99,6 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 				suffix: ' * size * 10.0', // currently using 10 as 1 seems really small
 			}),
 		]);
-		// 	new VariableConfig('position', {
-		// 		default_from_attribute: true,
-		// 		// default: this.globals_handler().variable_config_default('position'),
-		// 		// required_definitions: this.globals_handler().variable_config_required_definitions('position'),
-		// 		prefix: 'vec3 transformed = '
-		// 	}),
-		// 	new VariableConfig('normal', {
-		// 		prefix: 'objectNormal = '
-		// 	}),
-		// 	new VariableConfig('color', {
-		// 		prefix: 'diffuseColor.xyz = '
-		// 	}),
-		// 	new VariableConfig('alpha', {
-		// 		prefix: 'diffuseColor.w = '
-		// 	}),
-		// 	new VariableConfig('uv', {
-		// 		default_from_attribute: true,
-		// 		prefix: 'vUv = ',
-		// 		if: 'defined( USE_MAP ) || defined( USE_BUMPMAP ) || defined( USE_NORMALMAP ) || defined( USE_SPECULARMAP ) || defined( USE_ALPHAMAP ) || defined( USE_EMISSIVEMAP ) || defined( USE_ROUGHNESSMAP ) || defined( USE_METALNESSMAP )'
-		// 	}),
-		// 	new VariableConfig('gl_PointSize', {
-		// 		default: '1.0',
-		// 		prefix: 'gl_PointSize = ',
-		// 		suffix: ' * size',
-		// 	}),
-		// ]
 	}
 	protected lines_to_remove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);

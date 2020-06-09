@@ -108,7 +108,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			'_reset_if_resolution_changed',
 			this._reset_if_resolution_changed.bind(this)
 		);
-		this.params.on_params_created(() => {
+		this.params.on_params_created('reset', () => {
 			this._reset();
 		});
 	}
@@ -172,8 +172,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 		const output_node = output_nodes[0];
 		if (output_node) {
-			const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
-			const root_nodes = output_nodes.concat(param_nodes);
+			//const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
+			const root_nodes = output_nodes; //.concat(param_nodes);
 			this.assembler_controller.assembler.set_root_nodes(root_nodes);
 
 			// main compilation

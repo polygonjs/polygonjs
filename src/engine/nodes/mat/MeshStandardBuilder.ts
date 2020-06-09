@@ -57,7 +57,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		define: false,
 	});
 	initialize_node() {
-		this.params.on_params_created(() => {
+		this.params.on_params_created('init controllers', () => {
 			this.texture_map_controller.initialize_node();
 			this.texture_alpha_map_controller.initialize_node();
 			this.texture_env_map_controller.initialize_node();

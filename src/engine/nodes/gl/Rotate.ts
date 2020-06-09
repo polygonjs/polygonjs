@@ -1,4 +1,4 @@
-import {BaseAdaptiveGlNode} from './_BaseAdaptive';
+import {TypedGlNode} from './_Base';
 import Quaternion from './gl/quaternion.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
@@ -50,7 +50,7 @@ class RotateParamsConfig extends NodeParamsConfig {
 }
 
 const ParamsConfig = new RotateParamsConfig();
-export class RotateGlNode extends BaseAdaptiveGlNode<RotateParamsConfig> {
+export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'rotate';

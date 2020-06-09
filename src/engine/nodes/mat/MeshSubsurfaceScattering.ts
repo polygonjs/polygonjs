@@ -136,7 +136,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		define_uv: false,
 	});
 	initialize_node() {
-		this.params.on_params_created(() => {
+		this.params.on_params_created('init controllers', () => {
 			this.texture_map_controller.initialize_node();
 			this.texture_alpha_map_controller.initialize_node();
 		});

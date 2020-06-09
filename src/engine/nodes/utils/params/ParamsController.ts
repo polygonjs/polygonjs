@@ -53,7 +53,8 @@ export class ParamsController {
 	// private _current_param_folder_name: string | undefined;
 
 	// hooks
-	private _post_create_params_hook: PostCreateParamsHook | undefined;
+	private _post_create_params_hook_names: string[] | undefined;
+	private _post_create_params_hooks: PostCreateParamsHook[] | undefined;
 	private _on_scene_load_hooks: OnSceneLoadHook[] | undefined;
 	private _on_scene_load_hook_names: string[] | undefined;
 
@@ -93,7 +94,7 @@ export class ParamsController {
 		this._param_create_mode = false;
 		this._params_created = true;
 
-		this.run_post_create_params_hook();
+		this.run_post_create_params_hooks();
 
 		// This was to debug a weird bug where I was adding nodes to the list
 		// of params, from the DependenciesController
@@ -472,11 +473,18 @@ export class ParamsController {
 	// HOOKS
 	//
 	//
-	on_params_created(hook: PostCreateParamsHook) {
+	on_params_created(hook_name: string, hook: PostCreateParamsHook) {
 		if (this._params_created) {
 			hook();
 		} else {
-			this._post_create_params_hook = hook;
+			if (this._post_create_params_hook_names && this._post_create_params_hook_names.includes(hook_name)) {
+				console.error(`hook name ${hook_name} already exists`);
+				return;
+			}
+			this._post_create_params_hook_names = this._post_create_params_hook_names || [];
+			this._post_create_params_hook_names.push(hook_name);
+			this._post_create_params_hooks = this._post_create_params_hooks || [];
+			this._post_create_params_hooks.push(hook);
 		}
 	}
 	add_on_scene_load_hook(name: string, method: OnSceneLoadHook) {
@@ -490,9 +498,11 @@ export class ParamsController {
 			console.warn(`hook with name ${name} already exists`, this.node);
 		}
 	}
-	private run_post_create_params_hook() {
-		if (this._post_create_params_hook) {
-			this._post_create_params_hook();
+	private run_post_create_params_hooks() {
+		if (this._post_create_params_hooks) {
+			for (let hook of this._post_create_params_hooks) {
+				hook();
+			}
 		}
 	}
 	run_on_scene_load_hooks() {

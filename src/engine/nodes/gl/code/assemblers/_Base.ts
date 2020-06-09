@@ -22,6 +22,7 @@ import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
+import {GlNodeFinder} from '../utils/NodeFinder';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -223,7 +224,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		});
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
-		this.code_builder.build_from_nodes(root_nodes);
+		const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
+		console.log('param_nodes', param_nodes);
+		this.code_builder.build_from_nodes(root_nodes, param_nodes);
 	}
 	allow_new_param_configs() {
 		this.code_builder.allow_new_param_configs();
@@ -279,6 +282,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
+			new GlConnectionPoint('cameraPosition', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
 			// new Connection.Vec2('gl_PointCoord'),
 			// new TypedConnectionVec2('uv'),

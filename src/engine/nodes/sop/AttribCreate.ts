@@ -93,7 +93,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		// this.ui_data.set_param_label(this.p.name)
 
 		this.scene.dispatch_controller.on_add_listener(() => {
-			this.params.on_params_created(() => {
+			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
 		});

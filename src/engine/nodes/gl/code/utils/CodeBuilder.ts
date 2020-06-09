@@ -30,7 +30,7 @@ export class CodeBuilder {
 	shader_names() {
 		return this._node_traverser.shader_names();
 	}
-	build_from_nodes(root_nodes: BaseGlNodeType[]) {
+	build_from_nodes(root_nodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
 		this._node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
@@ -60,7 +60,9 @@ export class CodeBuilder {
 			}
 		}
 		for (let node of sorted_nodes) {
-			// node.set_assembler(this._assembler);
+			node.reset_code();
+		}
+		for (let node of param_nodes) {
 			node.reset_code();
 		}
 		// for (let node of sorted_nodes) {
@@ -82,22 +84,19 @@ export class CodeBuilder {
 			this._shaders_collection_controller.set_current_shader_name(shader_name);
 			if (nodes) {
 				for (let node of nodes) {
-					// node.set_shader_name(shader_name);
-					if (this._param_configs_set_allowed) {
-						node.set_param_configs();
-					}
 					node.set_lines(this._shaders_collection_controller);
 				}
 			}
 		}
-		// fragment_nodes.forEach(node=>{
-		// 	node.set_shader_name(ShaderName.FRAGMENT)
-		// 	node.set_param_configs()
-		// 	node.set_lines()
-		// })
+		// set param configs
 		if (this._param_configs_set_allowed) {
-			this.set_param_configs(sorted_nodes);
+			for (let param_node of param_nodes) {
+				param_node.set_param_configs();
+			}
+			this.set_param_configs(param_nodes);
 		}
+
+		// finalize
 		this.set_code_lines(sorted_nodes);
 	}
 

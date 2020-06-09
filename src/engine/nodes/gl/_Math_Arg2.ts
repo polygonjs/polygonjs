@@ -45,13 +45,13 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 			return gl_method_name;
 		}
 		gl_function_definitions(): FunctionGLDefinition[] {
-			if (out_type) {
+			if (functions) {
 				return functions.map((f) => new FunctionGLDefinition(this, f));
 			} else {
 				return [];
 			}
 		}
-		protected _expected_input_types() {
+		_expected_input_types() {
 			let first_input_type = this.io.connection_points.first_input_connection_type();
 			if (first_input_type && allowed_in_types) {
 				if (!allowed_in_types.includes(first_input_type)) {

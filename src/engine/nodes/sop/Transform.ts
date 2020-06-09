@@ -59,7 +59,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 
 		this.scene.dispatch_controller.on_add_listener(() => {
-			this.params.on_params_created(() => {
+			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.apply_on], () => {
 					return TRANSFORM_TARGET_TYPES[this.pv.apply_on];
 				});

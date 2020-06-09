@@ -12,11 +12,11 @@ export class VectorAngleGlNode extends MathFunctionArg2Factory('vector_angle', {
 	method: 'vector_angle',
 	functions: [Quaternion],
 }) {
-	protected _expected_input_types() {
+	_expected_input_types() {
 		const type = GlConnectionPointType.VEC3;
 		return [type, type];
 	}
-	protected _expected_output_types() {
+	_expected_output_types() {
 		return [GlConnectionPointType.FLOAT];
 	}
 	param_default_value(name: string) {

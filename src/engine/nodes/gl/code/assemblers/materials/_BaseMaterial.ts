@@ -26,6 +26,27 @@ export enum CustomMaterialName {
 // type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;
 export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerMaterial>;
 
+export enum GlobalsOutput {
+	TIME = 'time',
+	RESOLUTION = 'resolution',
+	GL_FRAGCOORD = 'gl_FragCoord',
+	GL_POINTCOORD = 'gl_PointCoord',
+}
+const FRAGMENT_GLOBALS_OUTPUT = [GlobalsOutput.GL_FRAGCOORD, GlobalsOutput.GL_POINTCOORD];
+
+interface HandleGlobalsOutputOptions {
+	globals_node: GlobalsGlNode;
+	shaders_collection_controller: ShadersCollectionController;
+	output_name: string;
+	globals_shader_name: ShaderName;
+	definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>;
+	body_lines: string[];
+	var_name: string;
+	shader_name: ShaderName;
+	dependencies: ShaderName[];
+	body_lines_by_shader_name: Map<ShaderName, string[]>;
+}
+
 export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
 
@@ -119,8 +140,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (output_nodes.length > 1) {
 			this._gl_parent_node.states.error.set('only one output node allowed');
 		}
-		const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
-		const root_nodes = output_nodes.concat(param_nodes);
+		//const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
+		const root_nodes = output_nodes; //.concat(param_nodes);
 		this.set_root_nodes(root_nodes);
 		this._update_shaders();
 
@@ -311,136 +332,147 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// attribute_node.add_body_lines(vertex_body_lines, 'vertex')
 	}
 
-	handle_gl_FragCoord(body_lines: string[], shader_name: ShaderName, var_name: string) {
-		if (shader_name == ShaderName.FRAGMENT) {
-			body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
+	handle_globals_output_name(options: HandleGlobalsOutputOptions) {
+		switch (options.output_name) {
+			case GlobalsOutput.TIME:
+				this.handle_time(options);
+				return;
+
+			case GlobalsOutput.RESOLUTION:
+				this.handle_resolution(options);
+				return;
+
+			case GlobalsOutput.GL_FRAGCOORD:
+				this.handle_gl_FragCoord(options);
+				return;
+			case GlobalsOutput.GL_POINTCOORD:
+				this.handle_gl_PointCoord(options);
+				return;
+			default:
+				this.globals_handler?.handle_globals_node(
+					options.globals_node,
+					options.output_name,
+					options.shaders_collection_controller
+					// definitions_by_shader_name,
+					// body_lines_by_shader_name,
+					// body_lines,
+					// dependencies,
+					// shader_name
+				);
 		}
 	}
-	handle_resolution(body_lines: string[], shader_name: ShaderName, var_name: string) {
-		if (shader_name == ShaderName.FRAGMENT) {
-			body_lines.push(`vec2 ${var_name} = resolution`);
+	handle_time(options: HandleGlobalsOutputOptions) {
+		const definition = new UniformGLDefinition(
+			options.globals_node,
+			GlConnectionPointType.FLOAT,
+			options.output_name
+		);
+		if (options.globals_shader_name) {
+			MapUtils.push_on_array_at_entry(
+				options.definitions_by_shader_name,
+				options.globals_shader_name,
+				definition
+			);
+		}
+
+		const body_line = `float ${options.var_name} = ${options.output_name}`;
+		for (let dependency of options.dependencies) {
+			MapUtils.push_on_array_at_entry(options.definitions_by_shader_name, dependency, definition);
+			MapUtils.push_on_array_at_entry(options.body_lines_by_shader_name, dependency, body_line);
+		}
+
+		options.body_lines.push(body_line);
+		this.set_uniforms_time_dependent();
+	}
+	handle_resolution(options: HandleGlobalsOutputOptions) {
+		if (options.shader_name == ShaderName.FRAGMENT) {
+			options.body_lines.push(`vec2 ${options.var_name} = resolution`);
+		}
+		const definition = new UniformGLDefinition(
+			options.globals_node,
+			GlConnectionPointType.VEC2,
+			options.output_name
+		);
+		if (options.globals_shader_name) {
+			MapUtils.push_on_array_at_entry(
+				options.definitions_by_shader_name,
+				options.globals_shader_name,
+				definition
+			);
+		}
+		for (let dependency of options.dependencies) {
+			MapUtils.push_on_array_at_entry(options.definitions_by_shader_name, dependency, definition);
+		}
+
+		this.set_resolution_dependent();
+	}
+	handle_gl_FragCoord(options: HandleGlobalsOutputOptions) {
+		if (options.shader_name == ShaderName.FRAGMENT) {
+			options.body_lines.push(`vec4 ${options.var_name} = gl_FragCoord`);
+		}
+	}
+	handle_gl_PointCoord(options: HandleGlobalsOutputOptions) {
+		if (options.shader_name == ShaderName.FRAGMENT) {
+			options.body_lines.push(`vec2 ${options.var_name} = gl_PointCoord`);
+		} else {
+			options.body_lines.push(`vec2 ${options.var_name} = vec2(0.0, 0.0)`);
 		}
 	}
 
 	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
-		// const vertex_definitions = [];
-		// const fragment_definitions = [];
-		// const definitions = [];
-		// const vertex_body_lines = []
-		// const fragment_body_lines = [];
-		const body_lines = [];
+		const body_lines: string[] = [];
 		const shader_name = shaders_collection_controller.current_shader_name;
 		const shader_config = this.shader_config(shader_name);
 		if (!shader_config) {
 			return;
 		}
 		const dependencies = shader_config.dependencies();
-
 		const definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]> = new Map();
-		// definitions_by_shader_nameshader_name] = [];
-		// for (let dependency of dependencies) {
-		// 	definitions_by_shader_name[dependency] = [];
-		// }
-
 		const body_lines_by_shader_name: Map<ShaderName, string[]> = new Map();
-		// body_lines_by_shader_name[shader_name] = [];
-		// for (let dependency of dependencies) {
-		// 	body_lines_by_shader_name[dependency] = [];
-		// }
 
-		let definition: UniformGLDefinition;
-		let body_line: string;
-		for (let output_name of globals_node.io.outputs.used_output_names()) {
+		const used_output_names = this.used_output_names_for_shader(globals_node, shader_name);
+
+		for (let output_name of used_output_names) {
 			const var_name = globals_node.gl_var_name(output_name);
 			const globals_shader_name = shaders_collection_controller.current_shader_name;
 
-			switch (output_name) {
-				case 'time':
-					definition = new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name);
-					if (globals_shader_name) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_shader_name, definition);
-					}
+			const options: HandleGlobalsOutputOptions = {
+				globals_node,
+				shaders_collection_controller,
+				output_name,
+				globals_shader_name,
+				definitions_by_shader_name,
+				body_lines,
+				var_name,
+				shader_name,
+				dependencies,
+				body_lines_by_shader_name,
+			};
 
-					body_line = `float ${var_name} = ${output_name}`;
-					for (let dependency of dependencies) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, definition);
-						MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, body_line);
-					}
-
-					// vertex_body_lines.push(`float ${var_name} = ${output_name}`)
-					body_lines.push(body_line);
-					this.set_uniforms_time_dependent();
-					break;
-				case 'gl_FragCoord':
-					this.handle_gl_FragCoord(body_lines, shader_name, var_name);
-					break;
-
-				case 'resolution':
-					this.handle_resolution(body_lines, shader_name, var_name);
-					definition = new UniformGLDefinition(globals_node, GlConnectionPointType.VEC2, output_name);
-					if (globals_shader_name) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_shader_name, definition);
-					}
-					for (let dependency of dependencies) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, definition);
-					}
-
-					this.set_resolution_dependent();
-					break;
-
-				case 'gl_PointCoord':
-					if (shader_name == ShaderName.FRAGMENT) {
-						body_lines.push(`vec2 ${var_name} = gl_PointCoord`);
-					}
-					break;
-				default:
-					// const named_output = globals_node.named_output_by_name(output_name)
-					// const gl_type = named_output.gl_type()
-					// const new_var = this.globals_handler().read_attribute(
-					// 	globals_node,
-					// 	gl_type,
-					// 	output_name
-					// )
-					// const body_line = `${var_name} = ${new_var}`
-					// globals_node.add_body_lines([body_line])
-					this.globals_handler?.handle_globals_node(
-						globals_node,
-						output_name,
-						shaders_collection_controller
-						// definitions_by_shader_name,
-						// body_lines_by_shader_name,
-						// body_lines,
-						// dependencies,
-						// shader_name
-					);
-				// const named_output = globals_node.named_output_by_name(output_name)
-				// const gl_type = named_output.gl_type()
-				// definition = new Definition.Varying(globals_node, gl_type, var_name)
-				// definitions_by_shader_name[shader_name].push(definition)
-				// throw "debug"
-
-				// body_line = `${var_name} = vec3(${output_name})`
-				// for(let dependency of dependencies){
-				// 	definitions_by_shader_name[dependency].push(definition)
-				// 	body_lines_by_shader_name[dependency].push(body_line)
-				// }
-				// if(dependencies.length == 0){
-				// 	body_lines.push(body_line)
-				// }
-			}
+			this.handle_globals_output_name(options);
 		}
-		// this.set_vertex_definitions(vertex_definitions)
-		// this.set_fragment_definitions(fragment_definitions)
 		definitions_by_shader_name.forEach((definitions, shader_name) => {
 			shaders_collection_controller.add_definitions(globals_node, definitions, shader_name);
 		});
 		body_lines_by_shader_name.forEach((body_lines, shader_name) => {
 			shaders_collection_controller.add_body_lines(globals_node, body_lines, shader_name);
 		});
-		// this.add_definitions(definitions)
-		// this.set_vertex_body_lines(vertex_body_lines)
-		// this.set_fragment_body_lines(fragment_body_lines)
 
 		shaders_collection_controller.add_body_lines(globals_node, body_lines);
+	}
+
+	private used_output_names_for_shader(globals_node: GlobalsGlNode, shader_name: ShaderName) {
+		const used_output_names = globals_node.io.outputs.used_output_names();
+		const filtered_names: string[] = [];
+		for (let name of used_output_names) {
+			if (shader_name == ShaderName.VERTEX) {
+				if (!FRAGMENT_GLOBALS_OUTPUT.includes(name as GlobalsOutput)) {
+					filtered_names.push(name);
+				}
+			} else {
+				filtered_names.push(name);
+			}
+		}
+		return filtered_names;
 	}
 }
