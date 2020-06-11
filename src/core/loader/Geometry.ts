@@ -65,10 +65,19 @@ export class CoreLoaderGeometry {
 			} else {
 				const loader = await this.loader_for_ext();
 				if (loader) {
+					const start_time = performance.now();
+					console.log(`GEO LOAD START ${this.url} at ${Math.floor(start_time)}`);
 					loader.load(
 						url,
 						(object: any) => {
 							this.on_load_success(object).then((object2) => {
+								const end_time = performance.now();
+								const total_time = end_time - start_time;
+								console.log(
+									`GEO LOAD COMPLETED ${this.url} at ${Math.floor(end_time)} (duration: ${Math.floor(
+										total_time
+									)})`
+								);
 								resolve(object2);
 							});
 						},
@@ -209,7 +218,8 @@ export class CoreLoaderGeometry {
 			const draco_loader = new draco_module.DRACOLoader();
 			const decoder_path = '/three/js/libs/draco/gltf/';
 			draco_loader.setDecoderPath(decoder_path);
-			draco_loader.setDecoderConfig({type: 'js'});
+			// not having this uses wasm if the relevant libraries are found
+			// draco_loader.setDecoderConfig({type: 'js'});
 			loader.setDRACOLoader(draco_loader);
 			return loader;
 		}

@@ -104,12 +104,28 @@ export class CoreTextureLoader {
 				const texture: VideoTexture = await this._load_as_video(url);
 				resolve(texture);
 			} else {
+				const start_time = performance.now();
+				console.log(`TEX LOAD START ${url} at ${Math.floor(start_time)}`);
 				this.loader_for_ext(ext).then((loader) => {
 					if (loader) {
-						loader.load(url, resolve, undefined, (error: any) => {
-							console.warn('error', error);
-							reject();
-						});
+						loader.load(
+							url,
+							(texture: Texture) => {
+								const end_time = performance.now();
+								const total_time = end_time - start_time;
+								console.log(
+									`TEX LOAD COMPLETED ${url} at ${Math.floor(end_time)} (duration: ${Math.floor(
+										total_time
+									)})`
+								);
+								resolve(texture);
+							},
+							undefined,
+							(error: any) => {
+								console.warn('error', error);
+								reject();
+							}
+						);
 					} else {
 						reject();
 					}
@@ -139,7 +155,7 @@ export class CoreTextureLoader {
 				return await this._hdr_loader();
 			}
 			case Extension.BASIS: {
-				return await this._basic_loader();
+				return await this._basis_loader();
 			}
 		}
 		return new TextureLoader();
@@ -159,7 +175,7 @@ export class CoreTextureLoader {
 			return loader;
 		}
 	}
-	private async _basic_loader() {
+	private async _basis_loader() {
 		const module = await Poly.instance().modules_register.module(ModuleName.BasisTextureLoader);
 		if (module) {
 			const loader = new module.BasisTextureLoader();

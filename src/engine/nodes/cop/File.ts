@@ -228,7 +228,7 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	min_filter = ParamConfig.INTEGER(Object.values(MIN_FILTERS[0])[0], {
+	min_filter = ParamConfig.INTEGER(Object.values(MIN_FILTERS[5])[0], {
 		menu: {
 			entries: MIN_FILTERS.map((m) => {
 				return {

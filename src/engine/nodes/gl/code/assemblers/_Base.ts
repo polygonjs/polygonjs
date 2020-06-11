@@ -225,7 +225,6 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
 		const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
-		console.log('param_nodes', param_nodes);
 		this.code_builder.build_from_nodes(root_nodes, param_nodes);
 	}
 	allow_new_param_configs() {

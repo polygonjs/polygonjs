@@ -76,6 +76,9 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		this._expected_output_types_function = func;
 	}
 
+	input_name(index: number) {
+		return this._wrapped_input_name_function(index);
+	}
 	output_name(index: number) {
 		return this._wrapped_output_name_function(index);
 	}
@@ -272,11 +275,14 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	// }
 
 	first_input_connection_type(): ConnectionPointEnumMap[NC] | undefined {
+		return this.input_connection_type(0);
+	}
+	input_connection_type(index: number): ConnectionPointEnumMap[NC] | undefined {
 		const connections = this.node.io.connections.input_connections();
 		if (connections) {
-			const first_connection = connections[0];
-			if (first_connection) {
-				return first_connection.src_connection_point()!.type as ConnectionPointEnumMap[NC];
+			const connection = connections[index];
+			if (connection) {
+				return connection.src_connection_point()!.type as ConnectionPointEnumMap[NC];
 			}
 		}
 	}
