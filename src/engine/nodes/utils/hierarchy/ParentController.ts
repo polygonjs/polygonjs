@@ -48,14 +48,14 @@ export class HierarchyParentController {
 			}
 		}
 	}
-	find_node(path: string): BaseNodeType | null {
+	find_node(path: string | null): BaseNodeType | null {
 		if (path == null) {
 			return null;
 		}
-		if (path === CoreWalker.CURRENT || path === CoreWalker.CURRENT_WITH_SLASH) {
+		if (path == CoreWalker.CURRENT || path == CoreWalker.CURRENT_WITH_SLASH) {
 			return this.node;
 		}
-		if (path === CoreWalker.PARENT || path === CoreWalker.PARENT_WITH_SLASH) {
+		if (path == CoreWalker.PARENT || path == CoreWalker.PARENT_WITH_SLASH) {
 			return this.node.parent;
 		}
 
@@ -64,16 +64,22 @@ export class HierarchyParentController {
 			path = path.substring(1, path.length);
 		}
 
-		const elements = path.split(separator);
-		if (elements.length === 1) {
-			const name = elements[0];
-			if (this.node.children_controller) {
-				return this.node.children_controller.child_by_name(name);
+		// check that path is a string, since there has been errors where it wasn't the case
+		if (path.split) {
+			const elements = path.split(separator);
+			if (elements.length === 1) {
+				const name = elements[0];
+				if (this.node.children_controller) {
+					return this.node.children_controller.child_by_name(name);
+				} else {
+					return null;
+				}
 			} else {
-				return null;
+				return CoreWalker.find_node(this.node, path);
 			}
 		} else {
-			return CoreWalker.find_node(this.node, path);
+			console.error('unexpected path given:', path);
+			return null;
 		}
 	}
 }
