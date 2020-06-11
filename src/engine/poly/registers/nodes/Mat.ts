@@ -9,6 +9,7 @@ import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder
 import {MeshSubsurfaceScatteringMatNode} from '../../../nodes/mat/MeshSubsurfaceScattering';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
+import {SkyMatNode} from '../../../nodes/mat/Sky';
 import {VolumeMatNode} from '../../../nodes/mat/Volume';
 import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
 
@@ -22,6 +23,7 @@ export interface MatNodeChildrenMap {
 	mesh_subsurface_scattering: MeshSubsurfaceScatteringMatNode;
 	points: PointsMatNode;
 	points_builder: PointsBuilderMatNode;
+	sky: SkyMatNode;
 	volume: VolumeMatNode;
 	volume_builder: VolumeBuilderMatNode;
 }
@@ -38,6 +40,7 @@ export class MatRegister {
 		poly.register_node(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.register_node(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.register_node(SkyMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(VolumeMatNode, CATEGORY_MAT.VOLUME);
 		poly.register_node(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 	}
