@@ -3,7 +3,10 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {CoreMath} from '../../../core/math/_Module';
 
+// force MAX_INPUTS_COUNT to 16 to encourage limiting number of textures per draw call
+const MAX_INPUTS_COUNT = 16;
 class SwitchParamsConfig extends NodeParamsConfig {}
 
 const ParamsConfig = new SwitchParamsConfig();
@@ -34,7 +37,9 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 		const type = second_input_type || GlConnectionPointType.FLOAT;
 
 		const current_connections = this.io.connections.input_connections();
-		const expected_count = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
+		const expected_count = current_connections
+			? CoreMath.clamp(current_connections.length, 2, MAX_INPUTS_COUNT)
+			: 2;
 		const expected_input_types = [GlConnectionPointType.INT];
 		for (let i = 0; i < expected_count; i++) {
 			expected_input_types.push(type);
