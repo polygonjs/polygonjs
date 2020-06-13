@@ -35,10 +35,12 @@ export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>
 
 class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
-		TransformedParamConfig(
-			LayerParamConfig(
-				OrthographicCameraObjParamConfigMixin(
-					ThreejsCameraTransformParamConfig(CameraMasterCameraParamConfig(NodeParamsConfig))
+		LayerParamConfig(
+			OrthographicCameraObjParamConfigMixin(
+				CameraMasterCameraParamConfig(
+					ThreejsCameraTransformParamConfig(
+						TransformedParamConfig(NodeParamsConfig, {matrix_auto_update: true})
+					)
 				)
 			)
 		)
@@ -56,7 +58,7 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	// 	return OrthographicCameraBackgroundController;
 	// }
 
-	static type() {
+	static type(): Readonly<'orthographic_camera'> {
 		return 'orthographic_camera';
 	}
 

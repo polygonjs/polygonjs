@@ -8,18 +8,24 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		return NodeContext.EVENT;
 	}
 
-	private _eval_all_params_on_dirty_bound = this._eval_all_params_on_dirty.bind(this);
 	initialize_base_node() {
 		this.ui_data.set_layout_horizontal();
-		this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
+		// this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
+		// cook is required for some nodes like event/animation
+		this.add_post_dirty_hook('cook_without_inputs_on_dirty', this._cook_without_inputs_bound);
 
 		this.io.connections.init_inputs();
 		this.io.connection_points.spare_params.initialize_node();
 	}
 
 	// ensures that event nodes are cooked when scene is loaded
-	_eval_all_params_on_dirty() {
-		this.params.eval_all();
+	// private _eval_all_params_on_dirty_bound = this._eval_all_params_on_dirty.bind(this);
+	// _eval_all_params_on_dirty() {
+	// 	this.params.eval_all();
+	// }
+	private _cook_without_inputs_bound = this._cook_without_inputs.bind(this);
+	_cook_without_inputs() {
+		this.cook_controller.cook_main_without_inputs();
 	}
 	// eval_params_and_process_event(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
 	// 	// not evaluation params now, since we are evaluating them on dirty

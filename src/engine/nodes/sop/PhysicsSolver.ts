@@ -62,7 +62,6 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 
 	initialize_node() {
 		this.io.inputs.set_count(1, 3);
-		this.ui_data.set_width(100);
 
 		// this has to clone for now, to allow for reposition the input core_objects
 		// when re-initializing the sim. If we do not clone, the objects will be modified,

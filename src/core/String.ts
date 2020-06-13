@@ -18,6 +18,7 @@ const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 // const ALL = LETTERS + LETTERS_UPPERCASE + NUMBERS
 
 const TAIL_DIGIT_MATCH_REGEXP = /\d+$/;
+const LEADING_ZEROS_MATCH_REGEXP = /^0+/;
 // const DIGIT_PREDEDED_BY_UNDERSCOPE = /_\d$/
 const INDICES_LIST_SEPARATOR = /,| /;
 
@@ -53,11 +54,18 @@ export class CoreString {
 	}
 
 	static increment(word: string): string {
-		let match;
-		if ((match = word.match(TAIL_DIGIT_MATCH_REGEXP))) {
-			const digits = parseInt(match[0]);
+		const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
+		if (match) {
+			let numbers_as_str = match[0];
+			let zeros_prefix: string = '';
+			const leading_zeros_match = numbers_as_str.match(LEADING_ZEROS_MATCH_REGEXP);
+			if (leading_zeros_match) {
+				zeros_prefix = leading_zeros_match[0];
+			}
+
+			const digits = parseInt(numbers_as_str);
 			const prefix = word.substring(0, word.length - match[0].length);
-			return `${prefix}${digits + 1}`;
+			return `${prefix}${zeros_prefix}${digits + 1}`;
 		} else {
 			return `${word}1`;
 		}

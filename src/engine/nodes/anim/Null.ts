@@ -17,6 +17,10 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 	}
 
 	cook(input_clips: AnimationClip[]) {
-		this.set_clip(input_clips[0]);
+		const input_clip = input_clips[0];
+		this._clip.name = input_clip.name;
+		this._clip.duration = input_clip.duration;
+		this._clip.tracks = input_clip.tracks;
+		this.set_clip(this._clip);
 	}
 }

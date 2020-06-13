@@ -25,8 +25,10 @@ export class DeleteAnimNode extends TypedAnimNode<DeleteAnimParamsConfig> {
 			return this.pv.invert ? match : !match;
 		});
 
-		const clip = new AnimationClip(this.name, -1, kept_tracks);
+		this._clip.name = this.name;
+		this._clip.duration = -1;
+		this._clip.tracks = kept_tracks;
 
-		this.set_clip(clip);
+		this.set_clip(this._clip);
 	}
 }

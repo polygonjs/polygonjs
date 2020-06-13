@@ -8,11 +8,11 @@ export interface NodeUIDataJson {
 	y: number;
 	comment?: string;
 }
-
+const NODE_WIDTH_UNIT = 50;
 export class UIData {
 	private _position: Vector2 = new Vector2();
-	private _width: number = 50;
-	private _border_radius: number = 3;
+	protected _width: number = 50;
+	// private _border_radius: number = 3;
 	private _color: Color = new Color(0.75, 0.75, 0.75);
 	// private _icon: string | null = null;
 	private _layout_vertical: boolean = true;
@@ -27,17 +27,20 @@ export class UIData {
 		this._position.y = y;
 	}
 
-	set_border_radius(radius: number) {
-		this._border_radius = radius;
-	}
-	border_radius() {
-		return this._border_radius;
-	}
-	set_width(width: number) {
-		this._width = width;
-	}
+	// set_border_radius(radius: number) {
+	// 	this._border_radius = radius;
+	// }
+	// border_radius() {
+	// 	return this._border_radius;
+	// }
+
 	width() {
-		return this._width;
+		if (this._layout_vertical) {
+			const available_inputs = this.node.io.inputs.max_inputs_count || 0;
+			return Math.max(NODE_WIDTH_UNIT, NODE_WIDTH_UNIT * Math.ceil(available_inputs / 2));
+		} else {
+			return NODE_WIDTH_UNIT;
+		}
 	}
 	set_comment(comment: string | undefined) {
 		this._comment = comment;

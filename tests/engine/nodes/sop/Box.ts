@@ -1,5 +1,3 @@
-// import 'tests/helpers/assertions';
-
 QUnit.test('box simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller

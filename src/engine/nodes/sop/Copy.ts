@@ -171,8 +171,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 				// duplicate or select from instance children
 				const moved_objects = this.pv.transform_only
 					? // TODO: why is doing a transform slower than cloning the input??
-					  lodash_compact([instance_core_group.objects()[point_index]])
-					: instance_core_group.clone().objects();
+					  lodash_compact([instance_core_group.objects_with_geo()[point_index]])
+					: instance_core_group.clone().objects_with_geo();
 
 				resolve(moved_objects);
 			} else {

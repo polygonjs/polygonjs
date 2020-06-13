@@ -3,13 +3,14 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
 import {ObjectType, object_type_from_constructor} from '../../../core/geometry/Constant';
+import {MapUtils} from '../../../core/MapUtils';
+import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three/src/objects/Mesh';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const INPUT_NAME = 'geometry to merge';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {MapUtils} from '../../../core/MapUtils';
-import {Material} from 'three/src/materials/Material';
-import {Mesh} from 'three/src/objects/Mesh';
 class MergeSopParamsConfig extends NodeParamsConfig {
 	compact = ParamConfig.BOOLEAN(1);
 }
@@ -27,8 +28,8 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1, 4);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 
-		this.ui_data.set_width(100);
 		// this.ui_data.set_icon('compress-arrows-alt');
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
@@ -40,7 +41,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		let all_objects: Object3DWithGeometry[] = []; //new Group()
+		let all_objects: Object3DWithGeometry[] = [];
 		for (let input_core_group of input_contents) {
 			if (input_core_group) {
 				const objects = input_core_group.objects();

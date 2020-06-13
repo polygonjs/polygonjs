@@ -6,7 +6,7 @@ import {BaseMatNodeType} from '../mat/_Base';
 
 export class MaterialsObjNode extends BaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
-	static type() {
+	static type(): Readonly<NetworkNodeType.MAT> {
 		return NetworkNodeType.MAT;
 	}
 

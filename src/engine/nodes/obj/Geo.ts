@@ -42,7 +42,6 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	private _on_create_bound = this._on_create.bind(this);
 	private _on_child_add_bound = this._on_child_add.bind(this);
 	initialize_node() {
-		// this.children_controller?.init({dependent:false});
 		this.lifecycle.add_on_create_hook(this._on_create_bound);
 		this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
 

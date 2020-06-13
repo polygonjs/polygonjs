@@ -19,7 +19,6 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1, 4);
-		this.ui_data.set_width(100);
 	}
 
 	private _merged_names: Map<string, boolean> = new Map();
@@ -47,8 +46,10 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 			}
 		}
 
-		const clip = new AnimationClip(this.name, max_duration, merged_tracks);
+		this._clip.name = this.name;
+		this._clip.duration = max_duration;
+		this._clip.tracks = merged_tracks;
 
-		this.set_clip(clip);
+		this.set_clip(this._clip);
 	}
 }

@@ -1,10 +1,8 @@
 import {Object3D} from 'three/src/core/Object3D';
 import {Group} from 'three/src/objects/Group';
-const THREE = {Group, Object3D};
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-// import {CoreGroup} from '../../../Core/Geometry/Group';
-// import {CoreConstant} from '../../../Core/Geometry/Constant'
 
 export enum HierarchyMode {
 	ADD_PARENT = 'add_parent',
@@ -37,11 +35,11 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
+		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
-		// const group_wrapper = new CoreGroup(group);
 
 		if (HIERARCHY_MODES[this.pv.mode] == HierarchyMode.ADD_PARENT) {
 			const objects = this._add_parent_to_core_group(core_group);
@@ -69,16 +67,13 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 		}
 	}
 	private _add_parent_to_object(object: THREE.Object3D): THREE.Object3D {
-		let new_parent = new THREE.Group();
+		let new_parent = new Group();
 		new_parent.matrixAutoUpdate = false;
 
-		// while(child = object.children[0]){
 		new_parent.add(object);
-		// }
 
 		if (this.pv.levels > 0) {
 			for (let i = 0; i < this.pv.levels - 1; i++) {
-				// for (let i of lodash_range(this.pv.levels - 1)) {
 				new_parent = this._add_new_parent(new_parent);
 			}
 		}
@@ -87,7 +82,7 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 	}
 
 	private _add_new_parent(object: THREE.Object3D): THREE.Group {
-		const new_parent2 = new THREE.Group();
+		const new_parent2 = new Group();
 		new_parent2.matrixAutoUpdate = false;
 		new_parent2.add(object);
 		return new_parent2;

@@ -191,4 +191,8 @@ export class CoreTransform {
 		this._rotate_geometry_m.makeRotationFromQuaternion(this._rotate_geometry_q);
 		geometry.applyMatrix4(this._rotate_geometry_m);
 	}
+
+	static decompose_matrix(object: Object3D) {
+		object.matrix.decompose(object.position, object.quaternion, object.scale);
+	}
 }

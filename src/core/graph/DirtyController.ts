@@ -1,13 +1,7 @@
-// import lodash_filter from 'lodash/filter';
-// import lodash_uniq from 'lodash/uniq';
-// import lodash_flatten from 'lodash/flatten';
-// import {Cooker} from './Cooker';
 import {CoreGraphNode} from './CoreGraphNode';
 
-// not sure how I can have caller: DirtyableMixin if DirtyableMixin is not yet defined
 export type PostDirtyHook = (caller?: CoreGraphNode) => void;
 
-// type Constructor<T = {}> = new (...args: any[]) => T;
 export class DirtyController {
 	_dirty_count: number = 0;
 	_dirty: boolean = true;
@@ -21,10 +15,6 @@ export class DirtyController {
 
 	constructor(private node: CoreGraphNode) {}
 
-	// _init_dirtyable(): void {
-	// 	this._dirty_count = 0;
-	// 	this._dirty = true;
-	// }
 	get is_dirty(): boolean {
 		return this._dirty === true;
 	}
@@ -108,41 +98,14 @@ export class DirtyController {
 		}
 	}
 
-	// cooker(): Cooker {
-	// 	throw 'Dirtyable.cooker requires implementation';
-	// }
 	set_successors_dirty(original_trigger_graph_node?: CoreGraphNode): void {
-		// const cooker = this.node.scene.cooker;
-		// cooker.block();
-
 		const propagate = false;
 		this._cached_successors = this._cached_successors || this.node.graph_all_successors();
 
-		// successors = successors.filter(n=>!n.is_dirty())
 		for (let successor of this._cached_successors) {
 			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);
 		}
-
-		// cooker.unblock();
 	}
-
-	// _dirtyable_all_successors(original_trigger_graph_node: CoreGraphNode): CoreGraphNode[] {
-	// 	return this.graph_all_predecessors()
-	// 	// const successors = [];
-	// 	// let newly_added_successors = this._dirtyable_direct_successors(original_trigger_graph_node);
-	// 	// successors.push(newly_added_successors);
-
-	// 	// while (newly_added_successors.length > 0) {
-	// 	// 	newly_added_successors = lodash_flatten(
-	// 	// 		newly_added_successors.map((newly_added_successor) => {
-	// 	// 			return newly_added_successor._dirtyable_direct_successors(original_trigger_graph_node);
-	// 	// 		})
-	// 	// 	);
-	// 	// 	successors.push(newly_added_successors);
-	// 	// }
-
-	// 	// return lodash_uniq(lodash_flatten(successors));
-	// }
 
 	clear_successors_cache() {
 		this._cached_successors = undefined;
@@ -153,33 +116,4 @@ export class DirtyController {
 			predecessor.dirty_controller.clear_successors_cache();
 		}
 	}
-	// graph_all_predecessors(): CoreGraphNode[] {
-	// 	return this.node.graph_all_predecessors()
-	// 	// console.log('dirtyable graph_all_predecessors should be overwritten');
-	// 	// return [];
-	// }
-
-	// dirty_successors(): Array<CoreGraphNode> {
-	// 	throw 'Dirtyable.dirty_successors requires implementation';
-	// }
-	// set_dirty_allowed(original_trigger_graph_node: CoreGraphNode): boolean {
-	// 	throw 'Dirtyable.set_dirty_allowed requires implementation';
-	// }
-	// _dirtyable_direct_successors(original_trigger_graph_node: CoreGraphNode): Array<CoreGraphNode> {
-	// 	return this.dirty_successors().filter((successor) => {
-	// 		return successor.set_dirty_allowed == null || successor.set_dirty_allowed(original_trigger_graph_node);
-	// 	});
-	// }
-
-	// set_graph_successors_dirty_via_graph: (original_trigger_graph_node)->
-	// 	cooker = this.scene().cooker()
-	// 	cooker.block()
-
-	// 	make_successors_dirty = false
-	// 	lodash_each lodash_flatten(this.graph_all_successors()), (successor)=>
-	// 		successor.set_dirty(original_trigger_graph_node, this, false)
-
-	// 	cooker.unblock()
-
-	// post_set_dirty(original_trigger_graph_node?: Dirtyable, direct_trigger_graph_node?: Dirtyable): void{}
 }

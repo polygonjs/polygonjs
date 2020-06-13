@@ -1,9 +1,7 @@
 import {BaseMethod} from './_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
-// import Walker from 'src/core/Walker';
 import {CoreString} from '../../../core/String';
-// import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 export class OpdigitsExpression extends BaseMethod {
 	static required_arguments() {
@@ -20,16 +18,7 @@ export class OpdigitsExpression extends BaseMethod {
 			}
 		}
 		return null;
-		// return [this.create_dependency_from_index_or_path(index_or_path)]
 	}
-	// find_dependencies(index_or_path: number|string): ReferenceSearchResult{
-
-	// 	// TODO: ensure the dependency update works for space params when they get renamed
-	// 	console.log(node)
-	// 	const name_node = node.name_graph_node()
-	// 	return this.create_search_result(name_node, index_or_path)
-	// 	// return this.create_reference_search_result_from_index_or_path(index_or_path)
-	// }
 
 	process_arguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {

@@ -1,6 +1,7 @@
 import {CATEGORY_EVENT} from './Category';
 
 import {AnimationMultiCacheEventNode} from '../../../nodes/event/AnimationMultiCache';
+import {AnimationEventNode} from '../../../nodes/event/Animation';
 import {AnyEventNode} from '../../../nodes/event/Any';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
@@ -16,6 +17,7 @@ import {TimerEventNode} from '../../../nodes/event/Timer';
 
 export interface EventNodeChildrenMap {
 	animation_multi_cache: AnimationMultiCacheEventNode;
+	animation: AnimationEventNode;
 	any: AnyEventNode;
 	camera_orbit_controls: CameraMapControlsEventNode;
 	camera_map_controls: CameraOrbitControlsEventNode;
@@ -34,6 +36,7 @@ import {Poly} from '../../../Poly';
 export class EventRegister {
 	static run(poly: Poly) {
 		poly.register_node(AnimationMultiCacheEventNode, CATEGORY_EVENT.ANIMATION);
+		poly.register_node(AnimationEventNode, CATEGORY_EVENT.ANIMATION);
 		poly.register_node(AnyEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.register_node(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);

@@ -92,7 +92,7 @@ export class ParticlesSystemGpuRenderController {
 	}
 
 	init_core_group(core_group: CoreGroup) {
-		for (let child of core_group.objects()) {
+		for (let child of core_group.objects_with_geo()) {
 			this._particles_group_objects.push(child);
 		}
 	}

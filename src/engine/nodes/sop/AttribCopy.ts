@@ -56,8 +56,8 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		core_group_src: CoreGroup,
 		attrib_name: string
 	) {
-		const src_objects = core_group_src.objects();
-		const dest_objects = core_group_dest.objects();
+		const src_objects = core_group_src.objects_with_geo();
+		const dest_objects = core_group_dest.objects_with_geo();
 
 		if (dest_objects.length > src_objects.length) {
 			this.states.error.set('second input does not have enough objects to copy attributes from');

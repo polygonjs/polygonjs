@@ -18,10 +18,16 @@ export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeCon
 		return DEFAULT_INPUT_NAMES;
 	}
 
+	protected _clip = new AnimationClip('tmp', -1, []);
+	get clip() {
+		return this._clip;
+	}
+
 	initialize_base_node() {
 		this.io.outputs.set_has_one_output();
 	}
 	set_clip(clip: AnimationClip) {
+		clip.resetDuration();
 		this.set_container(clip);
 	}
 }

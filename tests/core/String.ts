@@ -98,6 +98,8 @@ QUnit.test('string increment name', (assert) => {
 	assert.equal(CoreString.increment('attrib_create30'), 'attrib_create31');
 	assert.equal(CoreString.increment('attrib_create31'), 'attrib_create32');
 	assert.equal(CoreString.increment('attrib_create32'), 'attrib_create33');
+
+	assert.equal(CoreString.increment('attrib_create_01'), 'attrib_create_02');
 });
 
 QUnit.test('indices', (assert) => {

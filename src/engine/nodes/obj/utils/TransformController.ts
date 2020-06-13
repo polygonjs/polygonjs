@@ -3,7 +3,16 @@ import {Matrix4} from 'three/src/math/Matrix4';
 import {CoreTransform, SetParamsFromMatrixOptions, ROTATION_ORDERS, RotationOrder} from '../../../../core/Transform';
 import {Object3D} from 'three/src/core/Object3D';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-export function TransformedParamConfig<TBase extends Constructor>(Base: TBase) {
+
+interface TransformedParamConfigDefaultParams {
+	matrix_auto_update?: boolean;
+}
+
+export function TransformedParamConfig<TBase extends Constructor>(
+	Base: TBase,
+	default_params?: TransformedParamConfigDefaultParams
+) {
+	const matrix_auto_update = default_params?.matrix_auto_update || false;
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
 		rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
@@ -17,6 +26,7 @@ export function TransformedParamConfig<TBase extends Constructor>(Base: TBase) {
 		r = ParamConfig.VECTOR3([0, 0, 0]);
 		s = ParamConfig.VECTOR3([1, 1, 1]);
 		scale = ParamConfig.FLOAT(1);
+		matrix_auto_update = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
 		// look_at = ParamConfig.OPERATOR_PATH('', {node_selection: {context: NodeContext.OBJ}});
 		// up = ParamConfig.VECTOR3([0, 1, 0]);
 		// pivot = ParamConfig.VECTOR3([0, 0, 0]);
@@ -44,6 +54,8 @@ export class TransformController {
 
 	update(matrix?: Matrix4) {
 		this.update_transform_with_matrix(matrix);
+		const object = this.node.object;
+		object.matrixAutoUpdate = this.node.pv.matrix_auto_update;
 	}
 
 	update_transform_with_matrix(matrix?: Matrix4) {

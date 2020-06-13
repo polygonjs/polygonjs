@@ -32,7 +32,8 @@ export class CoreGroup {
 	// _group: Group
 	private _timestamp: number | undefined;
 	// _core_objects:
-	private _objects: Object3D[] | undefined;
+	private _objects: Object3D[] = [];
+	private _objects_with_geo: Object3DWithGeometry[] = [];
 	private _core_objects: CoreObject[] | undefined;
 
 	// _geometries: BufferGeometry[];
@@ -89,10 +90,14 @@ export class CoreGroup {
 	//
 	set_objects(objects: Object3D[]) {
 		this._objects = objects;
+		this._objects_with_geo = objects.filter((obj) => (obj as Mesh).geometry != null) as Object3DWithGeometry[];
 		this.touch();
 	}
 	objects() {
-		return this._objects as Object3DWithGeometry[];
+		return this._objects;
+	}
+	objects_with_geo() {
+		return this._objects_with_geo;
 	}
 	core_objects() {
 		return (this._core_objects = this._core_objects || this._create_core_objects());
@@ -259,7 +264,6 @@ export class CoreGroup {
 			return this.core_objects();
 		}
 	}
-
 
 	bounding_box(): Box3 {
 		return (this._bounding_box = this._bounding_box || this._compute_bounding_box());

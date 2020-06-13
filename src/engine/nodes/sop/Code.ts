@@ -60,7 +60,6 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 4);
-		this.ui_data.set_width(100);
 		this.io.inputs.init_inputs_cloned_state([
 			InputCloneMode.FROM_NODE,
 			InputCloneMode.NEVER,

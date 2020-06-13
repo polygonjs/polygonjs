@@ -55,7 +55,7 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 		const core_group_to_instance = input_contents[0];
 		this._geometry = undefined;
 
-		const object_to_instance = core_group_to_instance.objects()[0];
+		const object_to_instance = core_group_to_instance.objects_with_geo()[0];
 		if (object_to_instance) {
 			const geometry_to_instance = object_to_instance.geometry;
 			if (geometry_to_instance) {

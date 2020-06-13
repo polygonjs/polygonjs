@@ -10,28 +10,12 @@ import {
 	ATTRIBUTE_TYPES,
 } from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-// import {CoreGeometry} from '../../../core/geometry/Geometry'
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
-
-// import {Vector3} from 'three/src/math/Vector3';
-// import {Vector2} from 'three/src/math/Vector2';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
-// const VALUE_PARAM = {
-// 	VALUEX: 'valuex',
-// 	VALUE: 'value',
-// 	STRING: 'string',
-// };
-// const DEFAULT_VALUE = {
-// 	valuex: 0,
-// 	value: [0, 0, 0],
-// 	string: '',
-// };
-// type COMPONENT_INDEX = keyof Vector4Like;
-// const COMPONENT_INDEX: Array<COMPONENT_INDEX> = ['x', 'y', 'z', 'w'];
 type ValueArrayByName = Dictionary<number[]>;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -90,7 +74,6 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
-		// this.ui_data.set_param_label(this.p.name)
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
@@ -314,7 +297,10 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		}
 
 		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
-		core_object.core_geometry()?.set_indexed_attribute(this.pv.name, index_data['values'], index_data['indices']);
+		const geometry = core_object.core_geometry();
+		if (geometry) {
+			geometry.set_indexed_attribute(this.pv.name, index_data['values'], index_data['indices']);
+		}
 	}
 
 	async add_string_attribute_to_object(core_objects: CoreObject[]) {

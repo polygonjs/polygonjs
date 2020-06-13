@@ -81,7 +81,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return this._children_group;
 	}
 	get object() {
-		return this._object; //= this._object || this._create_object_with_attributes()
+		return this._object;
 	}
 
 	_create_object_with_attributes(): O {

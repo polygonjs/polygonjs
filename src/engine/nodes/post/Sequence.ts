@@ -14,7 +14,6 @@ export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostPar
 	initialize_node() {
 		super.initialize_node();
 		this.io.inputs.set_count(0, 4);
-		this.ui_data.set_width(100);
 	}
 
 	setup_composer(context: TypedPostNodeContext): void {

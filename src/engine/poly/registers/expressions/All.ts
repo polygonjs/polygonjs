@@ -7,6 +7,7 @@ import {CopResExpression} from '../../../expressions/methods/cop_res';
 import {JsExpression} from '../../../expressions/methods/js';
 import {ObjectsCountExpression} from '../../../expressions/methods/objects_count';
 import {OpdigitsExpression} from '../../../expressions/methods/opdigits';
+import {PadzeroExpression} from '../../../expressions/methods/padzero';
 import {PointExpression} from '../../../expressions/methods/point';
 import {PointsCountExpression} from '../../../expressions/methods/points_count';
 import {StrCharsCountExpression} from '../../../expressions/methods/str_chars_count';
@@ -25,6 +26,7 @@ export interface ExpressionMap extends Dictionary<typeof BaseMethod> {
 	js: typeof JsExpression;
 	objects_count: typeof ObjectsCountExpression;
 	opdigits: typeof OpdigitsExpression;
+	padzero: typeof PadzeroExpression;
 	point: typeof PointExpression;
 	points_count: typeof PointsCountExpression;
 	str_chars_count: typeof StrCharsCountExpression;
@@ -45,6 +47,7 @@ export class AllExpressionsRegister {
 		poly.expressions_register.register_expression(JsExpression, 'js');
 		poly.expressions_register.register_expression(ObjectsCountExpression, 'objects_count');
 		poly.expressions_register.register_expression(OpdigitsExpression, 'opdigits');
+		poly.expressions_register.register_expression(PadzeroExpression, 'padzero');
 		poly.expressions_register.register_expression(PointExpression, 'point');
 		poly.expressions_register.register_expression(PointsCountExpression, 'points_count');
 		poly.expressions_register.register_expression(StrCharsCountExpression, 'str_chars_count');

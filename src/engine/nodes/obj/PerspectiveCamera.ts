@@ -30,10 +30,12 @@ export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(
 }
 class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
-		TransformedParamConfig(
-			LayerParamConfig(
+		LayerParamConfig(
+			CameraMasterCameraParamConfig(
 				PerspectiveCameraObjParamConfigMixin(
-					ThreejsCameraTransformParamConfig(CameraMasterCameraParamConfig(NodeParamsConfig))
+					ThreejsCameraTransformParamConfig(
+						TransformedParamConfig(NodeParamsConfig, {matrix_auto_update: true})
+					)
 				)
 			)
 		)
@@ -46,7 +48,7 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 	PerspectiveCameraObjParamConfig
 > {
 	params_config = ParamsConfig;
-	static type() {
+	static type(): Readonly<'perspective_camera'> {
 		return 'perspective_camera';
 	}
 

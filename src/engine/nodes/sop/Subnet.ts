@@ -29,8 +29,6 @@ export class SubnetSopNode extends TypedSopNode<SubnetSopParamsConfig> {
 		this.io.inputs.set_count(0, 4);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 
-		this.ui_data.set_width(100);
-
 		this.children_display_controller.initialize_node();
 
 		// the inputs will be evaluated by the child input nodes

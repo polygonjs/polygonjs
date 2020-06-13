@@ -238,6 +238,10 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	anisotropy = ParamConfig.INTEGER(1, {
+		range: [0, 32],
+		range_locked: [true, false],
+	});
 	flip_y = ParamConfig.BOOLEAN(0);
 	offset = ParamConfig.VECTOR2([0, 0]);
 	repeat = ParamConfig.VECTOR2([1, 1]);
@@ -402,6 +406,7 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 				}
 			}
 		}
+		texture.anisotropy = this.pv.anisotropy;
 		texture.flipY = this.pv.flip_y;
 		this._update_texture_transform(texture);
 	}

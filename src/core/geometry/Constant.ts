@@ -1,9 +1,6 @@
 import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
 import {Scene} from 'three/src/scenes/Scene';
 import {Points} from 'three/src/objects/Points';
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
-import {LineSegments} from 'three/src/objects/LineSegments';
 import {Group} from 'three/src/objects/Group';
 import {FrontSide} from 'three/src/constants';
 import {Color} from 'three/src/math/Color';
@@ -13,6 +10,11 @@ import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
+// object types
+import {Object3D} from 'three/src/core/Object3D';
+import {Mesh} from 'three/src/objects/Mesh';
+import {LineSegments} from 'three/src/objects/LineSegments';
+import {LOD} from 'three/src/objects/LOD';
 
 interface MaterialsByString {
 	[propName: string]: Material;
@@ -23,6 +25,7 @@ export enum ObjectType {
 	MESH = 'Mesh',
 	POINTS = 'Points',
 	LINE_SEGMENTS = 'LineSegments',
+	LOD = 'LOD',
 }
 
 export interface ObjectData {
@@ -36,18 +39,21 @@ export interface ObjectByObjectType {
 	[ObjectType.POINTS]: Points;
 	[ObjectType.LINE_SEGMENTS]: LineSegments;
 	[ObjectType.OBJECT3D]: Object3D;
+	[ObjectType.LOD]: LOD;
 }
 export interface ObjectConstructorByObjectType {
 	[ObjectType.MESH]: typeof Mesh;
 	[ObjectType.POINTS]: typeof Points;
 	[ObjectType.LINE_SEGMENTS]: typeof LineSegments;
 	[ObjectType.OBJECT3D]: typeof Object3D;
+	[ObjectType.LOD]: typeof LOD;
 }
 export const OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE: ObjectConstructorByObjectType = {
 	[ObjectType.MESH]: Mesh,
 	[ObjectType.POINTS]: Points,
 	[ObjectType.LINE_SEGMENTS]: LineSegments,
 	[ObjectType.OBJECT3D]: Object3D,
+	[ObjectType.LOD]: LOD,
 };
 export function object_type_from_constructor(constructor: Function) {
 	switch (constructor) {
@@ -59,6 +65,8 @@ export function object_type_from_constructor(constructor: Function) {
 			return ObjectType.POINTS;
 		case LineSegments:
 			return ObjectType.LINE_SEGMENTS;
+		case LOD:
+			return ObjectType.LOD;
 		default:
 			console.warn('object type not supported', constructor);
 			return ObjectType.MESH;
@@ -67,16 +75,16 @@ export function object_type_from_constructor(constructor: Function) {
 export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
 	if (object instanceof Mesh) {
 		return ObjectType.MESH;
-	}
-	if (object instanceof LineSegments) {
+	} else if (object instanceof LineSegments) {
 		return ObjectType.LINE_SEGMENTS;
-	}
-	if (object instanceof Points) {
+	} else if (object instanceof Points) {
 		return ObjectType.POINTS;
-	}
-	if (object instanceof Object3D) {
+	} else if (object instanceof Object3D) {
 		return ObjectType.OBJECT3D;
 	}
+	// else if (object instanceof LOD) {
+	// 	return ObjectType.LOD;
+	// }
 	console.warn('ObjectTypeByObject received an unknown object type', object);
 }
 export const ObjectTypes = [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS];

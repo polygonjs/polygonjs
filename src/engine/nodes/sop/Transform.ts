@@ -37,8 +37,8 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	r = ParamConfig.VECTOR3([0, 0, 0]);
 	s = ParamConfig.VECTOR3([1, 1, 1]);
 	scale = ParamConfig.FLOAT(1, {range: [0, 10]});
-	look_at = ParamConfig.OPERATOR_PATH('');
-	up = ParamConfig.VECTOR3([0, 1, 0]);
+	// look_at = ParamConfig.OPERATOR_PATH('');
+	// up = ParamConfig.VECTOR3([0, 1, 0]);
 	pivot = ParamConfig.VECTOR3([0, 0, 0]);
 }
 const ParamsConfig = new TransformSopParamConfig();
@@ -69,7 +69,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[]) {
-		const objects = input_contents[0].objects();
+		const objects = input_contents[0].objects_with_geo();
 		const matrix = this._core_transform.matrix(
 			this.pv.t,
 			this.pv.r,
