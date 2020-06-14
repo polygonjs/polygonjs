@@ -1,10 +1,14 @@
 import {ObjectLoader} from 'three/src/loaders/ObjectLoader';
 import {Object3D} from 'three/src/core/Object3D';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {Poly} from '../../engine/Poly';
 import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
+import {LineSegments} from 'three/src/objects/LineSegments';
+import {Mesh} from 'three/src/objects/Mesh';
+import {Points} from 'three/src/objects/Points';
+import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -12,11 +16,20 @@ enum GeometryExtension {
 	GLTF = 'gltf',
 	GLB = 'glb',
 	OBJ = 'obj',
+	PDB = 'pdb',
 	PLY = 'ply',
+}
+interface PdbObject {
+	geometryAtoms: BufferGeometry;
+	geometryBonds: BufferGeometry;
 }
 
 export class CoreLoaderGeometry {
 	public readonly ext: string;
+
+	private static _default_mat_mesh = new MeshLambertMaterial();
+	private static _default_mat_point = new PointsMaterial();
+	private static _default_mat_line = new LineBasicMaterial();
 
 	constructor(private url: string) {
 		this.ext = CoreLoaderGeometry.get_extension(url);
@@ -132,29 +145,36 @@ export class CoreLoaderGeometry {
 			}
 		}
 
-		// if it's an object, such as returned by glb
+		// if it's an object, such as returned by glb or pdb
 		switch (this.ext) {
 			case GeometryExtension.GLTF:
 				return this.on_load_succes_gltf(object);
 			case GeometryExtension.GLB:
 				return this.on_load_succes_gltf(object);
+			case GeometryExtension.PDB:
+				return this.on_load_succes_pdb(object as PdbObject);
 			default:
 				return [];
 		}
 		return [];
 	}
 
+	private on_load_succes_drc(geometry: BufferGeometry): Object3D[] {
+		const mesh = new Mesh(geometry, CoreLoaderGeometry._default_mat_mesh);
+
+		return [mesh];
+	}
 	private on_load_succes_gltf(gltf: any): Object3D[] {
 		const scene = gltf['scene'];
 		scene.animations = gltf.animations;
 
-		return [scene]; //.children
+		return [scene];
 	}
-	private on_load_succes_drc(geometry: BufferGeometry): Object3D[] {
-		const mat = new MeshLambertMaterial();
-		const mesh = new Mesh(geometry, mat);
+	private on_load_succes_pdb(pdb_object: PdbObject): Object3D[] {
+		const atoms = new Points(pdb_object.geometryAtoms, CoreLoaderGeometry._default_mat_point);
+		const bonds = new LineSegments(pdb_object.geometryBonds, CoreLoaderGeometry._default_mat_line);
 
-		return [mesh]; //.children
+		return [atoms, bonds];
 	}
 
 	static module_names(ext: string): ModuleName[] | void {
@@ -169,6 +189,8 @@ export class CoreLoaderGeometry {
 				return [ModuleName.GLTFLoader, ModuleName.DRACOLoader];
 			case GeometryExtension.OBJ:
 				return [ModuleName.OBJLoader2];
+			case GeometryExtension.PDB:
+				return [ModuleName.PDBLoader];
 			case GeometryExtension.PLY:
 				return [ModuleName.PLYLoader];
 		}
@@ -186,6 +208,8 @@ export class CoreLoaderGeometry {
 				return this.loader_for_glb();
 			case GeometryExtension.OBJ:
 				return this.loader_for_obj();
+			case GeometryExtension.PDB:
+				return this.loader_for_pdb();
 			case GeometryExtension.PLY:
 				return this.loader_for_ply();
 		}
@@ -231,6 +255,12 @@ export class CoreLoaderGeometry {
 		const module = await Poly.instance().modules_register.module(ModuleName.OBJLoader2);
 		if (module) {
 			return new module.OBJLoader2();
+		}
+	}
+	async loader_for_pdb() {
+		const module = await Poly.instance().modules_register.module(ModuleName.PDBLoader);
+		if (module) {
+			return new module.PDBLoader();
 		}
 	}
 	async loader_for_ply() {
