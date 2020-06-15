@@ -122,3 +122,11 @@ QUnit.test('SOP file draco bunny', async (assert) => {
 	const container = await with_file('/examples/models/bunny.drc');
 	assert.equal(container.points_count(), 34834);
 });
+QUnit.test('SOP file format pdb', async (assert) => {
+	const container = await with_file('/examples/models/ethanol.pdb');
+	assert.equal(container.points_count(), 25);
+});
+QUnit.test('SOP file format ply', async (assert) => {
+	const container = await with_file('/examples/models/dolphins_be.ply');
+	assert.equal(container.points_count(), 855);
+});

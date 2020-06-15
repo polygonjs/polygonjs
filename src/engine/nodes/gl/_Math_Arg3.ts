@@ -47,6 +47,10 @@ export function MathFunctionArg3Factory(type: string, options: MathArg3Options =
 		}
 	};
 }
-export class ClampGlNode extends MathFunctionArg3Factory('clamp', {in: ['value', 'min', 'max'], default: {max: 1}}) {}
+export class ClampGlNode extends MathFunctionArg3Factory('clamp', {in: ['value', 'min', 'max'], default: {max: 1}}) {
+	protected _expected_output_types() {
+		return [this._expected_input_types()[0]];
+	}
+}
 export class FaceforwardGlNode extends MathFunctionArg3Factory('face_forward', {in: ['N', 'I', 'Nref']}) {}
 export class SmoothStepGlNode extends MathFunctionArg3Factory('smoothstep', {in: ['edge0', 'edge1', 'x']}) {}

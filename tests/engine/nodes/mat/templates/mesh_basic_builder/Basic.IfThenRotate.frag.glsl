@@ -248,13 +248,13 @@ void main() {
 	vec3 v_POLY_if_then1_position = v_POLY_globals1_position;
 	float v_POLY_if_then1_in2 = 0.0;
 	if(v_POLY_compare1_val){
-		vec3 v_POLY_subnet_input1_position = v_POLY_globals1_position;
+		vec3 v_POLY_if_then1_subnet_input1_position = v_POLY_globals1_position;
 	
 		// /MAT/mesh_basic_builder1/if_then1/rotate1
-		vec3 v_POLY_rotate1_val = rotate_with_axis_angle(v_POLY_subnet_input1_position, vec3(0.0, 1.0, 0.0), 0.0);
+		vec3 v_POLY_if_then1_rotate1_val = rotate_with_axis_angle(v_POLY_if_then1_subnet_input1_position, vec3(0.0, 1.0, 0.0), 0.0);
 	
 		// /MAT/mesh_basic_builder1/if_then1/subnet_output1
-		v_POLY_if_then1_position = v_POLY_rotate1_val;
+		v_POLY_if_then1_position = v_POLY_if_then1_rotate1_val;
 	}
 	
 	// /MAT/mesh_basic_builder1/output1

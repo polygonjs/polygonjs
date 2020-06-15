@@ -77,9 +77,11 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 
 				this.set_object(object);
 			} else {
+				console.log('end');
 				this.cook_controller.end_cook();
 			}
 		} else {
+			console.log('end 2');
 			this.cook_controller.end_cook();
 		}
 	}

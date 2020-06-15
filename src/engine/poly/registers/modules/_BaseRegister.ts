@@ -5,6 +5,8 @@ export enum ModuleName {
 	FBXLoader = 'FBXLoader',
 	GLTFLoader = 'GLTFLoader',
 	OBJLoader2 = 'OBJLoader2',
+	PDBLoader = 'PDBLoader',
+	PLYLoader = 'PLYLoader',
 	RGBELoader = 'RGBELoader',
 	TTFLoader = 'TTFLoader',
 	SVGLoader = 'SVGLoader',

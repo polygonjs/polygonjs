@@ -42,6 +42,7 @@ import {HexagonsSopNode} from '../../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
+import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
 import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
@@ -127,6 +128,7 @@ export interface GeoNodeChildrenMap {
 	hexagons: HexagonsSopNode;
 	hierarchy: HierarchySopNode;
 	instance: InstanceSopNode;
+	instances_count: InstancesCountSopNode;
 	jitter: JitterSopNode;
 	js_point: JsPointSopNode;
 	layer: LayerSopNode;
@@ -216,6 +218,7 @@ export class SopRegister {
 		poly.register_node(HeightMapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.register_node(InstanceSopNode, CATEGORY_SOP.RENDER);
+		poly.register_node(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(JitterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(JsPointSopNode, CATEGORY_SOP.ADVANCED);
 		poly.register_node(LayerSopNode, CATEGORY_SOP.MODIFIER);

@@ -12,6 +12,10 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
+	render_order = ParamConfig.INTEGER(0, {
+		range: [0, 10],
+		range_locked: [true, false],
+	});
 }
 const ParamsConfig = new GeoObjParamConfig();
 
@@ -94,6 +98,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	cook() {
 		this.transform_controller.update();
 		this.object.visible = this.pv.display;
+		this.object.renderOrder = this.pv.render_order;
 		this.cook_controller.end_cook();
 	}
 }

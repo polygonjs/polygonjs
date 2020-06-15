@@ -46,13 +46,13 @@ void main() {
 	vec3 v_POLY_subnet1_position = v_POLY_globals1_position;
 	float v_POLY_subnet1_in1 = 0.0;
 	if(true){
-		vec3 v_POLY_subnet_input1_position = v_POLY_globals1_position;
+		vec3 v_POLY_subnet1_subnet_input1_position = v_POLY_globals1_position;
 	
 		// /MAT/mesh_basic_builder1/subnet1/add1
-		vec3 v_POLY_add1_sum = (v_POLY_subnet_input1_position + vec3(1.0, 0.5, 0.25));
+		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_subnet_input1_position + vec3(1.0, 0.5, 0.25));
 	
 		// /MAT/mesh_basic_builder1/subnet1/subnet_output1
-		v_POLY_subnet1_position = v_POLY_add1_sum;
+		v_POLY_subnet1_position = v_POLY_subnet1_add1_sum;
 	}
 	
 	// /MAT/mesh_basic_builder1/output1
