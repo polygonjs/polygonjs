@@ -138,6 +138,7 @@ import './engine/nodes/sop/HeightMap';
 import './engine/nodes/sop/Hexagons';
 import './engine/nodes/sop/Hierarchy';
 import './engine/nodes/sop/Instance';
+import './engine/nodes/sop/InstancesCount';
 import './engine/nodes/sop/Jitter';
 import './engine/nodes/sop/Layer';
 import './engine/nodes/sop/Line';

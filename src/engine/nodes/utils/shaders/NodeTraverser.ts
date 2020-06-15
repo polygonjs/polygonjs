@@ -3,11 +3,12 @@ import lodash_uniq from 'lodash/uniq';
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
-import {TypedNode} from '../../_Base';
+import {TypedNode, BaseNodeType} from '../../_Base';
 import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
 type NumberByString = Map<string, number>;
+// type BaseNodeTypeByString = Map<string, BaseNodeType>;
 type BooleanByString = Map<string, boolean>;
 type BooleanByStringByShaderName = Map<ShaderName, BooleanByString>;
 type StringArrayByString = Map<string, string[]>;
@@ -23,13 +24,14 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private _graph_id_by_depth: Map<number, string[]> = new Map();
 	private _graph: CoreGraph;
 	private _shader_name!: ShaderName;
+	// private _subnets_by_id: BaseNodeTypeByString = new Map();
 
 	constructor(
-		private _gl_parent_node: TypedNode<NC, any>,
+		private _parent_node: TypedNode<NC, any>,
 		private _shader_names: ShaderName[],
 		private _input_names_for_shader_name_method: InputNamesByShaderNameMethod<NC>
 	) {
-		this._graph = this._gl_parent_node.scene.graph;
+		this._graph = this._parent_node.scene.graph;
 	}
 
 	private reset() {
@@ -38,6 +40,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._outputs_by_graph_id.clear();
 		this._depth_by_graph_id.clear();
 		this._graph_id_by_depth.clear();
+		// this._subnets_by_id.clear();
 
 		this._shader_names.forEach((shader_name) => {
 			this._graph_ids_by_shader_name.set(shader_name, new Map());
@@ -98,6 +101,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 		depths.sort((a, b) => a - b);
 		const nodes: NodeTypeMap[NC][] = [];
+		const node_id_used_state: Map<string, boolean> = new Map();
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
@@ -105,12 +109,12 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 					const is_present = this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id);
 					if (is_present) {
 						const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
-						nodes.push(node);
+
+						this.add_nodes_with_children(node, node_id_used_state, nodes, shader_name);
 					}
 				});
 			}
 		});
-
 		return nodes;
 	}
 	sorted_nodes() {
@@ -120,13 +124,14 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 		depths.sort((a, b) => a - b);
 		const nodes: NodeTypeMap[NC][] = [];
+		const node_id_used_state: Map<string, boolean> = new Map();
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
 				for (let graph_id of graph_ids_for_depth) {
 					const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
 					if (node) {
-						nodes.push(node);
+						this.add_nodes_with_children(node, node_id_used_state, nodes);
 					}
 				}
 			}
@@ -134,15 +139,69 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 
 		return nodes;
 	}
+	add_nodes_with_children(
+		node: NodeTypeMap[NC],
+		node_id_used_state: Map<string, boolean>,
+		accumulated_nodes: NodeTypeMap[NC][],
+		shader_name?: ShaderName
+	) {
+		if (!node_id_used_state.get(node.graph_node_id)) {
+			accumulated_nodes.push(node);
+			node_id_used_state.set(node.graph_node_id, true);
+		}
+
+		if (node.type == NetworkChildNodeType.INPUT) {
+			if (node.parent) {
+				const nodes_with_same_parent_as_subnet_input = this.sorted_nodes_for_shader_name_for_parent(
+					node.parent,
+					shader_name
+				);
+				for (let child_node of nodes_with_same_parent_as_subnet_input) {
+					if (child_node.graph_node_id != node.graph_node_id) {
+						this.add_nodes_with_children(child_node, node_id_used_state, accumulated_nodes, shader_name);
+					}
+				}
+			}
+		}
+	}
+
+	sorted_nodes_for_shader_name_for_parent(parent: BaseNodeType, shader_name?: ShaderName) {
+		const depths: number[] = [];
+		this._graph_id_by_depth.forEach((value: string[], key: number) => {
+			depths.push(key);
+		});
+		depths.sort((a, b) => a - b);
+		const nodes: NodeTypeMap[NC][] = [];
+		depths.forEach((depth) => {
+			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
+			if (graph_ids_for_depth) {
+				graph_ids_for_depth.forEach((graph_id: string) => {
+					const is_present = shader_name
+						? this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id)
+						: true;
+					if (is_present) {
+						const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
+						if (node.parent == parent) {
+							nodes.push(node);
+						}
+					}
+				});
+			}
+		});
+		const first_node = nodes[0];
+		if (parent.node_context() == first_node.node_context()) {
+			nodes.push(parent as NodeTypeMap[NC]);
+		}
+
+		return nodes;
+	}
+
 	private find_leaves_from_root_node(root_node: NodeTypeMap[NC]) {
-		// if(this._shader_name == ShaderName.VERTEX){
-		// this._leaves_graph_id[this._shader_name] = {}
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graph_node_id, true);
 
 		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
 		if (input_names) {
 			for (let input_name of input_names) {
-				// if (root_node.type == 'output') {
 				const input = root_node.io.inputs.named_input(input_name) as NodeTypeMap[NC];
 				if (input) {
 					MapUtils.push_on_array_at_entry(
@@ -152,36 +211,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 					);
 					this.find_leaves(input);
 				}
-				// TODO: typescript - GL - check that I dont need to consider the Attrib as a special case
-				// } else {
-				// 	// if attribute
-				// 	const input = root_node.io.inputs.connected_named_input();
-				// 	if (input) {
-				// 		this.find_leaves(input);
-				// 	}
-				// }
 			}
 		}
-		// const position_input = this._output.named_input('position')
-		// const normal_input = this._output.named_input('normal')
-		// const instancePosition_input = this._output.named_input('instancePosition')
-		// if(position_input){ this.find_leaves(position_input) }
-		// if(normal_input){ this.find_leaves(normal_input) }
-		// if(instancePosition_input){ this.find_leaves(instancePosition_input) }
-		// }
-		// if(this._shader_name == ShaderName.FRAGMENT){
-		// 	this._leaves_graph_id[this._shader_name] = {}
-		// 	FRAGMENT_INPUT_NAMES.forEach(name=>{
-		// 		const input = this._output.named_input(name)
-		// 		if(input){
-		// 			this.find_leaves(input)
-		// 		}
-		// 	})
-		// 	// const color_input = this._output.named_input('color')
-		// 	// const alpha_input = this._output.named_input('alpha')
-		// 	// if(color_input){ this.find_leaves(color_input) }
-		// 	// if(alpha_input){ this.find_leaves(alpha_input) }
-		// }
 
 		this._outputs_by_graph_id.forEach((outputs: string[], graph_id: string) => {
 			this._outputs_by_graph_id.set(graph_id, lodash_uniq(outputs));
@@ -191,7 +222,6 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private find_leaves(node: NodeTypeMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graph_node_id, true);
 
-		// const inputs = node.io.inputs.inputs() as (NodeTypeMap[NC] | null)[];
 		const inputs = this._find_inputs_or_children(node) as NodeTypeMap[NC][];
 		const compact_inputs: NodeTypeMap[NC][] = lodash_compact(inputs);
 		const input_graph_ids = lodash_uniq(compact_inputs.map((n) => n.graph_node_id));
@@ -210,11 +240,11 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private _find_inputs_or_children(node: NodeTypeMap[NC]) {
-		// return node.io.inputs.inputs();
 		if (node.type == NetworkChildNodeType.INPUT) {
 			return node.parent?.io.inputs.inputs() || [];
 		} else {
 			if (node.children_allowed()) {
+				// this._subnets_by_id.set(node.graph_node_id, node);
 				const output_node = node.children_controller?.output_node();
 				return [output_node];
 			} else {
@@ -229,21 +259,33 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 				this.set_node_depth(graph_id);
 			});
 		});
-		// const leave_ids = Object.keys(this._leaves_graph_id[this._shader_name]);
-		// leave_ids.forEach((graph_id) => {
-		// 	this.set_node_depth(graph_id);
-		// });
 	}
 
 	private set_node_depth(graph_id: string, depth: number = 0) {
+		/*
+		adjust graph depth by hierarchical depth
+		meaning that nodes inside a subnet should add their depth to the parent (and a multiplier)
+		so that nodes outside of a subnet do not have a depth that ends up between the depths of 2 subnet children.
+		*/
+		// let depth_offset = 0;
+		// const node = this._graph.node_from_id(graph_id) as BaseNodeType;
+		// if (node.type == NetworkChildNodeType.INPUT) {
+		// 	const parent = node.parent;
+		// 	if (parent) {
+		// 		depth_offset = parent.children().length * 10;
+		// 	}
+		// }
+		// depth += depth_offset;
+		/*
+		end hierarchical depth adjustment
+		*/
+
 		const current_depth = this._depth_by_graph_id.get(graph_id);
 		if (current_depth != null) {
 			this._depth_by_graph_id.set(graph_id, Math.max(current_depth, depth));
 		} else {
 			this._depth_by_graph_id.set(graph_id, depth);
 		}
-
-		// const node = this._graph.node_from_id(graph_id);
 
 		const output_ids = this._outputs_by_graph_id.get(graph_id);
 		if (output_ids) {

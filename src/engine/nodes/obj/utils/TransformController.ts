@@ -108,6 +108,7 @@ export class TransformController {
 		);
 		object.matrix.identity();
 		object.applyMatrix4(matrix);
+		object.updateMatrix();
 		if (prev_auto_update) {
 			object.matrixAutoUpdate = true;
 		}

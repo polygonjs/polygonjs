@@ -8,6 +8,7 @@ import {MapboxTileCopNode} from '../../../nodes/cop/MapboxTile';
 import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
+import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 
 export interface CopNodeChildrenMap {
 	builder: BuilderCopNode;
@@ -18,6 +19,7 @@ export interface CopNodeChildrenMap {
 	Post: PostCopNode;
 	null: NullCopNode;
 	switch: SwitchCopNode;
+	texture_properties: TexturePropertiesCopNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -31,5 +33,6 @@ export class CopRegister {
 		poly.register_node(NullCopNode, CATEGORY_COP.MISC);
 		poly.register_node(PostCopNode, CATEGORY_COP.FILTER);
 		poly.register_node(SwitchCopNode, CATEGORY_COP.MISC);
+		poly.register_node(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
 	}
 }

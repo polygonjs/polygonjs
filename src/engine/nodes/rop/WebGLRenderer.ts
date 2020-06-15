@@ -210,6 +210,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	sort_objects = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new WebGlRendererRopParamsConfig();
 
@@ -260,7 +261,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		renderer.shadowMap.needsUpdate = true;
 		renderer.shadowMap.type = this.pv.shadow_map_type;
 
-		renderer.sortObjects = true;
+		renderer.sortObjects = this.pv.sort_objects;
 	}
 
 	private _traverse_scene_and_update_materials() {

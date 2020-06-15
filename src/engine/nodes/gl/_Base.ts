@@ -7,12 +7,10 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
-// import {GlNodeSpareParamsController} from './utils/SpareParamsController';
-// import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlParamConfig} from './code/utils/ParamConfig';
 import {ParamType} from '../../poly/ParamType';
-// import {BaseGlConnectionPoint} from '../utils/io/connections/Gl';
-// import {IOController} from '../utils/io/IOController';
+
+const REGEX_PATH_SANITIZE = /\/+/g;
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {
 	static node_context(): NodeContext {
@@ -22,21 +20,11 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
-	// readonly spare_params_controller: GlNodeSpareParamsController = new GlNodeSpareParamsController(this);
-	// public readonly gl_connections_controller: GlConnectionsController | undefined;
-
 	initialize_base_node() {
-		// this.io.inputs.set_depends_on_inputs(false);
 		this.ui_data.set_layout_horizontal();
 		this.io.connections.init_inputs();
 
-		// this allows node like float_to_vec3 to have inputs connection points
-		// initialized from the params. But it may allocate too much for most nodes.
-		// TODO: try and have this allocate less.
 		this.io.connection_points.spare_params.initialize_node();
-		// this.io.inputs.set_named_input_connection_points([]);
-		// this.io.outputs.set_named_output_connection_points([]);
-		// this.io.connection_points.initialize_node();
 	}
 
 	cook() {
@@ -62,7 +50,8 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	//
 	//
 	gl_var_name(name: string) {
-		return `v_POLY_${this.name}_${name}`;
+		const path_sanitized = this.full_path(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
+		return `v_POLY_${path_sanitized}_${name}`;
 	}
 
 	variable_for_input(name: string): string {
@@ -110,21 +99,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	param_configs() {
 		return this._param_configs_controller?.list;
 	}
-	// private reset_param_configs() {
-	// 	this._param_configs = [];
-	// }
-	// add_param_config<T extends ParamType>(
-	// 	type: T,
-	// 	name: string,
-	// 	default_value: ParamInitValuesTypeMap[T],
-	// 	uniform_name: string
-	// ) {
-	// 	const param_config = new ParamConfig(type, name, default_value, uniform_name);
-	// 	this._param_configs.push(param_config);
-	// }
-	// param_configs() {
-	// 	return this._param_configs;
-	// }
+
 	//
 	//
 	// INPUT
@@ -133,34 +108,6 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	param_default_value(name: string): ParamInitValueSerialized {
 		return null;
 	}
-
-	//
-	//
-	// MISC
-	//
-	//
-
-	//
-	//
-	// NEEDED?
-	//
-	//
-	// set_assembler(assembler: BaseGlShaderAssembler) {
-	// 	this._assembler = assembler;
-	// }
-	// get assembler(): BaseGlShaderAssembler | undefined {
-	// 	return this._assembler;
-	// }
-
-	// shader_configs() {
-	// 	return this.assembler?.shader_configs || [];
-	// }
-	// shader_config(name: string) {
-	// 	return this.assembler?.shader_config(name);
-	// }
-	// shader_names() {
-	// 	return this.assembler?.shader_names || [];
-	// }
 }
 
 export type BaseGlNodeType = TypedGlNode<NodeParamsConfig>;

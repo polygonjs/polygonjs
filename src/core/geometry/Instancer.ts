@@ -128,6 +128,7 @@ export class CoreInstancer {
 
 		const geometry = new InstancedBufferGeometry();
 		geometry.copy(geometry_to_instance);
+		geometry.instanceCount = Infinity;
 
 		const instances_count = instance_pts.length;
 		const positions = new Float32Array(instances_count * 3);
@@ -195,8 +196,8 @@ export class CoreInstancer {
 			geometry.setAttribute(attrib_name, new InstancedBufferAttribute(values, attrib_size));
 		});
 
-		const geometry_wrapper = new CoreGeometry(geometry);
-		geometry_wrapper.mark_as_instance();
+		const core_geometry = new CoreGeometry(geometry);
+		core_geometry.mark_as_instance();
 
 		return geometry;
 	}

@@ -205,8 +205,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get root() {
 		return this._scene.root;
 	}
-	full_path(): string {
-		return this.parent_controller.full_path();
+	full_path(relative_to_parent?: BaseNodeType): string {
+		return this.parent_controller.full_path(relative_to_parent);
 	}
 
 	// params
