@@ -26,7 +26,7 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
-		const objects = core_group.objects();
+		const objects = core_group.objects_with_geo();
 		for (let object of objects) {
 			const geometry = object.geometry;
 			if (geometry) {

@@ -305,15 +305,18 @@ export class OptionsController {
 	}
 
 	execute_callback() {
+		if (!this.node) {
+			return;
+		}
 		// we only allow execution when scene is loaded
 		// to avoid errors such as an operator_path param
 		// executing its callback before the node it points to is created
-		if (!(this.node && this.node.scene.loading_controller.loaded)) {
+		if (!this.node.scene.loading_controller.loaded) {
 			return;
 		}
 		const callback = this.get_callback();
 		if (callback != null) {
-			if (this.node && !this.node.cook_controller.is_cooking) {
+			if (!this.node.cook_controller.is_cooking) {
 				if (this.param.parent_param) {
 					// if the param is a component of a MultipleParam,
 					// we let the parent handle the callback.

@@ -269,10 +269,13 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 
 	private _point_object(core_object: CoreObject) {
 		const core_points = core_object.points();
+		console.log(core_points);
 		const geometry = CoreGeometry.geometry_from_points(
 			core_points,
-			object_type_from_constructor(core_object.object().constructor)
+			ObjectType.POINTS
+			// object_type_from_constructor(core_object.object().constructor)
 		);
+		console.log(core_points, geometry);
 		if (geometry) return this.create_object(geometry, ObjectType.POINTS);
 	}
 }

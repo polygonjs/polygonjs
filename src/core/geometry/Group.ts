@@ -12,16 +12,11 @@ import {LineSegments} from 'three/src/objects/LineSegments';
 import {Group} from 'three/src/objects/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Box3} from 'three/src/math/Box3';
-// const THREE = {Box3, BufferGeometry, Group, LineSegments, Mesh, Object3D, Points, Vector3}
 import {CoreObject} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
-// import {Core} from '../_Module'
 import {CoreString} from '../String';
 import {CoreConstant, AttribClass, AttribSize, ObjectData, object_type_from_constructor} from './Constant';
-
-// import './MonkeyPatch'
-
 export type GroupString = string;
 
 export interface Object3DWithGeometry extends Object3D {

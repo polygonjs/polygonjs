@@ -29,8 +29,9 @@ export class ViewerEventsController {
 		}
 		map.forEach((listener, event_type) => {
 			this.canvas?.removeEventListener(event_type, listener);
-			map?.delete(event_type);
+			// map?.delete(event_type);
 		});
+		map.clear();
 
 		const listener = (event: Event) => {
 			this.process_event(event, events_controller);

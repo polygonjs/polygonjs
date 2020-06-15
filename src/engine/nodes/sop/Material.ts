@@ -9,6 +9,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {Object3D} from 'three/src/core/Object3D';
 import {BaseBuilderMatNodeType} from '../mat/_BaseBuilder';
+import {Texture} from 'three/src/textures/Texture';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class MaterialSopParamsConfig extends NodeParamsConfig {
@@ -20,6 +21,9 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 		dependent_on_found_node: false,
 	});
 	apply_to_children = ParamConfig.BOOLEAN(1);
+	swap_current_tex = ParamConfig.BOOLEAN(0);
+	tex_src0 = ParamConfig.STRING('emissiveMap', {visible_if: {swap_current_tex: 1}});
+	tex_dest0 = ParamConfig.STRING('map', {visible_if: {swap_current_tex: 1}});
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 
@@ -79,14 +83,21 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 
 	apply_material(object: Object3D, material: Material) {
 		const object_with_material = object as Mesh;
-		// if (object.material != null) {
-		// 	object.material.dispose();
-		// }
-		// TODO: do I really need to clone this material?
-		// does it get cloned when a node fetches the container?
-		// I may only need to clone it for the copy SOP
+		const current_mat = object_with_material.material as Material;
 		object_with_material.material = material;
+		if (this.pv.swap_current_tex) {
+			this._swap_textures(material, current_mat);
+		}
+
 		CoreMaterial.apply_render_hook(object, material);
 		CoreMaterial.apply_custom_materials(object, material);
+	}
+
+	private _swap_textures(target_mat: Material, src_mat: Material) {
+		if (this.pv.tex_src0 == '' || this.pv.tex_dest0 == '') {
+			return;
+		}
+		const src_tex: Texture | null = (src_mat as any)[this.pv.tex_src0];
+		(target_mat as any)[this.pv.tex_dest0] = src_tex;
 	}
 }

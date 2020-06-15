@@ -4,7 +4,7 @@ import {InstancesCountSopNode} from '../../../../src/engine/nodes/sop/InstancesC
 async function get_first_geo(instances_count_node: InstancesCountSopNode) {
 	const container = await instances_count_node.request_container();
 	const core_group = container.core_content()!;
-	const objects = core_group.objects();
+	const objects = core_group.objects_with_geo();
 	const first_object = objects[0];
 	const first_geo = first_object.geometry as InstancedBufferGeometry;
 	return first_geo;

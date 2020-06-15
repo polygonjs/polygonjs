@@ -1,20 +1,32 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {OutlinePass} from '../../../../modules/three/examples/jsm/postprocessing/OutlinePass';
+import {Object3D} from 'three/src/core/Object3D';
+import {CoreString} from '../../../core/String';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class OutlinePostParamsConfig extends NodeParamsConfig {
+	objects_mask = ParamConfig.STRING('*outlined*', {
+		...PostParamOptions,
+	});
+	refresh_objects = ParamConfig.BUTTON(null, {
+		...PostParamOptions,
+	});
 	edge_strength = ParamConfig.FLOAT(3, {
 		range: [0, 10],
 		range_locked: [true, false],
 		...PostParamOptions,
 	});
-	// no edge glow, since I haven't found a way to make it pretty
-	// edge_glow = ParamConfig.FLOAT(0, {
-	// 	range: [0, 1],
-	// 	range_locked: [true, false],
-	// 	...PostParamOptions,
-	// });
+	edge_thickness = ParamConfig.FLOAT(0, {
+		range: [0, 4],
+		range_locked: [true, false],
+		...PostParamOptions,
+	});
+	edge_glow = ParamConfig.FLOAT(0, {
+		range: [0, 1],
+		range_locked: [true, false],
+		...PostParamOptions,
+	});
 	pulse_period = ParamConfig.FLOAT(0, {
 		range: [0, 5],
 		range_locked: [true, false],
@@ -41,12 +53,28 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 			context.camera,
 			context.scene.children
 		);
+		this.update_pass(pass);
 		return pass;
 	}
 	update_pass(pass: OutlinePass) {
 		pass.edgeStrength = this.pv.edge_strength;
+		pass.edgeThickness = this.pv.edge_thickness;
+		pass.edgeGlow = this.pv.edge_glow;
 		pass.pulsePeriod = this.pv.pulse_period;
 		pass.visibleEdgeColor = this.pv.visible_edge_color;
 		pass.hiddenEdgeColor = this.pv.hidden_edge_color;
+
+		this._set_selected_objects(pass);
+	}
+	private _set_selected_objects(pass: OutlinePass) {
+		const objects: Object3D[] = [];
+		const mask = this.pv.objects_mask;
+		this.scene.default_scene.traverse((object) => {
+			if (CoreString.match_mask(object.name, mask)) {
+				objects.push(object);
+			}
+		});
+
+		pass.selectedObjects = objects;
 	}
 }

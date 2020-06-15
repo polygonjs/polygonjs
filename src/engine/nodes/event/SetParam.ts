@@ -112,6 +112,8 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			if (new_value != null) {
 				param.set(new_value);
 			}
+		} else {
+			this.states.error.set('target param not found');
 		}
 
 		this.dispatch_event_to_output(OUTPUT_NAME, event_context);

@@ -1,5 +1,6 @@
 import {CATEGORY_POST} from './Category';
 
+import {AdaptiveToneMappingPostNode} from '../../../nodes/post/AdaptiveToneMapping';
 import {AfterImagePostNode} from '../../../nodes/post/AfterImage';
 import {BleachPostNode} from '../../../nodes/post/Bleach';
 import {BrightnessContrastPostNode} from '../../../nodes/post/BrightnessContrast';
@@ -29,6 +30,7 @@ import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
 
 export interface PostNodeChildrenMap {
+	adaptive_post_mapping: AdaptiveToneMappingPostNode;
 	after_image: AfterImagePostNode;
 	bleach: BleachPostNode;
 	brightness_contrast: BrightnessContrastPostNode;
@@ -61,6 +63,7 @@ export interface PostNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class PostRegister {
 	static run(poly: Poly) {
+		poly.register_node(AdaptiveToneMappingPostNode, CATEGORY_POST.EFFECT);
 		poly.register_node(AfterImagePostNode, CATEGORY_POST.EFFECT);
 		poly.register_node(BleachPostNode, CATEGORY_POST.COLOR);
 		poly.register_node(BrightnessContrastPostNode, CATEGORY_POST.COLOR);

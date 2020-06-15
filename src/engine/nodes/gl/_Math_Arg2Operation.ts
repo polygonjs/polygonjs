@@ -89,7 +89,11 @@ export class DivideGlNode extends MathFunctionArg2OperationFactory('divide', {
 	in_prefix: 'div',
 	out: 'divide',
 	operation: '/',
-}) {}
+}) {
+	param_default_value(name: string) {
+		return 1;
+	}
+}
 export class SubstractGlNode extends MathFunctionArg2OperationFactory('substract', {
 	in_prefix: 'sub',
 	out: 'substract',
