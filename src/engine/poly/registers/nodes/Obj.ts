@@ -17,6 +17,7 @@ import {RenderersObjNode} from '../../../nodes/obj/Renderers';
 import {BlendObjNode} from '../../../nodes/obj/Blend';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
 import {NullObjNode} from '../../../nodes/obj/Null';
+import {PolyObjNode} from '../../../nodes/obj/Poly';
 import {RivetObjNode} from '../../../nodes/obj/Rivet';
 import {SceneObjNode} from '../../../nodes/obj/Scene';
 
@@ -41,6 +42,7 @@ export interface ObjNodeChildrenMap {
 	orthographic_camera: OrthographicCameraObjNode;
 	perspective_camera: PerspectiveCameraObjNode;
 	point_light: PointLightObjNode;
+	poly: PolyObjNode;
 	post_process: PostProcessObjNode;
 	renderers: RenderersObjNode;
 	rivet: RivetObjNode;
@@ -68,6 +70,7 @@ export class ObjRegister {
 		poly.register_node(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
 		poly.register_node(NullObjNode, CATEGORY_OBJ.TRANSFORM);
+		poly.register_node(PolyObjNode, CATEGORY_OBJ.ADVANCED);
 		poly.register_node(RivetObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.register_node(SceneObjNode, CATEGORY_OBJ.ADVANCED);
 

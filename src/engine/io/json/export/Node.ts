@@ -29,14 +29,14 @@ export interface IoConnectionPointsData {
 
 export interface NodeJsonExporterData {
 	type: string;
-	nodes: Dictionary<NodeJsonExporterData>;
-	children_context: NodeContext;
+	nodes?: Dictionary<NodeJsonExporterData>;
+	children_context?: NodeContext;
 	params?: Dictionary<ParamJsonExporterData<ParamType>>;
 	inputs?: InputData[];
 	connection_points?: IoConnectionPointsData;
 	selection?: string[];
 	flags?: FlagsData;
-	cloned_state_overriden: boolean;
+	cloned_state_overriden?: boolean;
 	persisted_config?: object;
 }
 

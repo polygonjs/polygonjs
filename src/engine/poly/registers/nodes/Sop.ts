@@ -67,6 +67,7 @@ import {PhysicsForceAttributesSopNode} from '../../../nodes/sop/PhysicsForceAttr
 import {PhysicsSolverSopNode} from '../../../nodes/sop/PhysicsSolver';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
 import {PointSopNode} from '../../../nodes/sop/Point';
+import {PolySopNode} from '../../../nodes/sop/Poly';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
 import {PostProcessSopNode} from '../../../nodes/sop/PostProcess';
 import {RaySopNode} from '../../../nodes/sop/Ray';
@@ -154,6 +155,7 @@ export interface GeoNodeChildrenMap {
 	physics_solver: PhysicsSolverSopNode;
 	plane: PlaneSopNode;
 	point: PointSopNode;
+	poly: PolySopNode;
 	polywire: PolywireSopNode;
 	ray: RaySopNode;
 	renderers: RenderersSopNode;
@@ -243,6 +245,7 @@ export class SopRegister {
 		poly.register_node(PhysicsSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(PointSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(PolySopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PolywireSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PostProcessSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(RaySopNode, CATEGORY_SOP.MODIFIER);
@@ -255,10 +258,16 @@ export class SopRegister {
 		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubnetSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(SubnetInputSopNode, CATEGORY_SOP.MISC, {
-			only: [`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`],
+			only: [
+				`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`,
+				`${PolySopNode.node_context()}/${PolySopNode.type()}`,
+			],
 		});
 		poly.register_node(SubnetOutputSopNode, CATEGORY_SOP.MISC, {
-			only: [`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`],
+			only: [
+				`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`,
+				`${PolySopNode.node_context()}/${PolySopNode.type()}`,
+			],
 		});
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -1,13 +1,68 @@
-import {SubnetSopNode} from '../../Subnet';
-import {DisplayNodeControllerCallbacks} from '../../../utils/DisplayNodeController';
+import {DisplayNodeControllerCallbacks, DisplayNodeController} from '../../../utils/DisplayNodeController';
 import {SubnetOutputSopNode} from '../../SubnetOutput';
 import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
+import {TypedSopNode, BaseSopNodeType} from '../../_Base';
+import {NodeContext} from '../../../../poly/NodeContext';
+import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
+
+import {NodeParamsConfig} from '../../../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../../../core/geometry/Group';
+
+export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
+	initialize_base_node() {
+		super.initialize_base_node();
+		this.children_display_controller.initialize_node();
+		// the inputs will be evaluated by the child input nodes
+		this.cook_controller.disallow_inputs_evaluation();
+	}
+
+	// display_node and children_display controllers
+	public readonly children_display_controller: SopSubnetChildrenDisplayController = new SopSubnetChildrenDisplayController(
+		this
+	);
+	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+		this,
+		this.children_display_controller.display_node_controller_callbacks()
+	);
+	//
+
+	protected _children_controller_context = NodeContext.SOP;
+
+	create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
+		return super.create_node(type) as GeoNodeChildrenMap[K];
+	}
+	children() {
+		return super.children() as BaseSopNodeType[];
+	}
+	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	}
+
+	async cook(input_contents: CoreGroup[]) {
+		const child_output_node = this.children_display_controller.output_node();
+		if (child_output_node) {
+			const container = await child_output_node.request_container();
+			const core_content = container.core_content();
+			if (core_content) {
+				this.set_core_group(core_content);
+			} else {
+				if (child_output_node.states.error.active) {
+					this.states.error.set(child_output_node.states.error.message);
+				} else {
+					this.set_objects([]);
+				}
+			}
+		} else {
+			this.states.error.set('no output node found inside subnet');
+		}
+	}
+}
 
 export class SopSubnetChildrenDisplayController {
 	private _output_node_needs_update: boolean = true;
 	private _output_node: SubnetOutputSopNode | undefined;
 	private _graph_node: CoreGraphNode | undefined;
-	constructor(private node: SubnetSopNode) {}
+	constructor(private node: SubnetSopNodeLike<any>) {}
 
 	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
 		return {
@@ -40,8 +95,6 @@ export class SopSubnetChildrenDisplayController {
 			});
 		}
 
-		this.node.lifecycle.add_on_create_hook(this._on_create_bound);
-
 		this.node.lifecycle.add_on_child_add_hook(() => {
 			this._output_node_needs_update = true;
 			this.node.set_dirty();
@@ -71,15 +124,6 @@ export class SopSubnetChildrenDisplayController {
 				this._graph_node.add_graph_input(this._output_node);
 			}
 		}
-	}
-
-	private _on_create_bound = this._on_create.bind(this);
-	private _on_create() {
-		const subnet_input1 = this.node.create_node('subnet_input');
-		const subnet_output1 = this.node.create_node('subnet_output');
-
-		subnet_input1.ui_data.set_position(0, -100);
-		subnet_output1.ui_data.set_position(0, +100);
 	}
 
 	private _create_graph_node() {

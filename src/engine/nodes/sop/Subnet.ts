@@ -1,66 +1,27 @@
-import {TypedSopNode, BaseSopNodeType} from './_Base';
-import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-import {CoreGroup} from '../../../core/geometry/Group';
-import {NodeContext} from '../../poly/NodeContext';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {SopSubnetChildrenDisplayController} from './utils/subnet/ChildrenDisplayController';
-import {DisplayNodeController} from '../utils/DisplayNodeController';
+import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class SubnetSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetSopParamsConfig();
 
-export class SubnetSopNode extends TypedSopNode<SubnetSopParamsConfig> {
+export class SubnetSopNode extends SubnetSopNodeLike<SubnetSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'subnet';
 	}
-	// display_node and children_display controllers
-	public readonly children_display_controller: SopSubnetChildrenDisplayController = new SopSubnetChildrenDisplayController(
-		this
-	);
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
-		this,
-		this.children_display_controller.display_node_controller_callbacks()
-	);
-	//
-	protected _children_controller_context = NodeContext.SOP;
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 4);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
-
-		this.children_display_controller.initialize_node();
-
-		// the inputs will be evaluated by the child input nodes
-		this.cook_controller.disallow_inputs_evaluation();
+		this.lifecycle.add_on_create_hook(this._on_create_bound);
 	}
 
-	create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
-		return super.create_node(type) as GeoNodeChildrenMap[K];
-	}
-	children() {
-		return super.children() as BaseSopNodeType[];
-	}
-	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
-	}
+	private _on_create_bound = this._on_create.bind(this);
+	private _on_create() {
+		const subnet_input1 = this.create_node('subnet_input');
+		const subnet_output1 = this.create_node('subnet_output');
 
-	async cook(input_contents: CoreGroup[]) {
-		const child_output_node = this.children_display_controller.output_node();
-		if (child_output_node) {
-			const container = await child_output_node.request_container();
-			const core_content = container.core_content();
-			if (core_content) {
-				this.set_core_group(core_content);
-			} else {
-				if (child_output_node.states.error.active) {
-					this.states.error.set(child_output_node.states.error.message);
-				} else {
-					this.set_objects([]);
-				}
-			}
-		} else {
-			this.states.error.set('no output node found inside subnet');
-		}
+		subnet_input1.ui_data.set_position(0, -100);
+		subnet_output1.ui_data.set_position(0, +100);
 	}
 }

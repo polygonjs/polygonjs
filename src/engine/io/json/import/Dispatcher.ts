@@ -13,12 +13,15 @@ import {ParamRampJsonImporter} from './param/Ramp';
 import {TypedMultipleParam} from '../../../params/_Multiple';
 import {StringParam} from '../../../params/String';
 import {RampParam} from '../../../params/Ramp';
+import {PolySopNode} from '../../../nodes/sop/Poly';
+import {PolyObjNode} from '../../../nodes/obj/Poly';
+import {PolyNodeJsonImporter} from './nodes/Poly';
 
 export class JsonImportDispatcher {
 	static dispatch_node(node: BaseNodeType) {
-		// if (node instanceof TypedObjNode) {
-		// 	return new BaseNodeObjJsonImporter(node);
-		// }
+		if (node instanceof PolySopNode || node instanceof PolyObjNode) {
+			return new PolyNodeJsonImporter(node);
+		}
 		return new NodeJsonImporter(node);
 	}
 
