@@ -102,6 +102,7 @@ import './engine/nodes/obj/_BaseTransformed';
 import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Geo';
 import './engine/nodes/obj/HemisphereLight';
+import './engine/nodes/obj/Poly';
 
 QUnit.module('post');
 import './engine/nodes/post/Base';
@@ -158,6 +159,7 @@ import './engine/nodes/sop/ParticlesSystemGpu';
 import './engine/nodes/sop/Peak';
 import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/Point';
+import './engine/nodes/sop/Poly';
 import './engine/nodes/sop/Polywire';
 import './engine/nodes/sop/Ray';
 import './engine/nodes/sop/Resample';

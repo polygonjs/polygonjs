@@ -13,13 +13,15 @@ import {ParamRampJsonImporter} from './param/Ramp';
 import {TypedMultipleParam} from '../../../params/_Multiple';
 import {StringParam} from '../../../params/String';
 import {RampParam} from '../../../params/Ramp';
-import {PolySopNode} from '../../../nodes/sop/Poly';
-import {PolyObjNode} from '../../../nodes/obj/Poly';
+// import {PolySopNode} from '../../../nodes/sop/Poly';
+// import {PolyObjNode} from '../../../nodes/obj/Poly';
 import {PolyNodeJsonImporter} from './nodes/Poly';
 
 export class JsonImportDispatcher {
 	static dispatch_node(node: BaseNodeType) {
-		if (node instanceof PolySopNode || node instanceof PolyObjNode) {
+		// using PolySopNode and PolyObjNode seem to create circular dependency with webpack
+		// if (node instanceof PolySopNode || node instanceof PolyObjNode)
+		if (node.poly_node_controller) {
 			return new PolyNodeJsonImporter(node);
 		}
 		return new NodeJsonImporter(node);

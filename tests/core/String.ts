@@ -99,7 +99,16 @@ QUnit.test('string increment name', (assert) => {
 	assert.equal(CoreString.increment('attrib_create31'), 'attrib_create32');
 	assert.equal(CoreString.increment('attrib_create32'), 'attrib_create33');
 
+	// do not remove the zero on the left
 	assert.equal(CoreString.increment('attrib_create_01'), 'attrib_create_02');
+
+	// do not add a number if we have only zeros
+	assert.equal(CoreString.increment('attrib_create_000'), 'attrib_create_001');
+	assert.equal(CoreString.increment('attrib_create_001'), 'attrib_create_002');
+	assert.equal(CoreString.increment('attrib_create_00'), 'attrib_create_01');
+	assert.equal(CoreString.increment('attrib_create_01'), 'attrib_create_02');
+	assert.equal(CoreString.increment('attrib_create_0000'), 'attrib_create_0001');
+	assert.equal(CoreString.increment('attrib_create_0001'), 'attrib_create_0002');
 });
 
 QUnit.test('indices', (assert) => {

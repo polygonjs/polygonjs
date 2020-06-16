@@ -245,7 +245,7 @@ export class SopRegister {
 		poly.register_node(PhysicsSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.register_node(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(PointSopNode, CATEGORY_SOP.MODIFIER);
-		poly.register_node(PolySopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(PolySopNode, CATEGORY_SOP.ADVANCED);
 		poly.register_node(PolywireSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PostProcessSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(RaySopNode, CATEGORY_SOP.MODIFIER);
@@ -257,18 +257,19 @@ export class SopRegister {
 		poly.register_node(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SubnetSopNode, CATEGORY_SOP.MISC);
-		poly.register_node(SubnetInputSopNode, CATEGORY_SOP.MISC, {
-			only: [
-				`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`,
-				`${PolySopNode.node_context()}/${PolySopNode.type()}`,
-			],
-		});
-		poly.register_node(SubnetOutputSopNode, CATEGORY_SOP.MISC, {
-			only: [
-				`${SubnetSopNode.node_context()}/${SubnetSopNode.type()}`,
-				`${PolySopNode.node_context()}/${PolySopNode.type()}`,
-			],
-		});
+		poly.register_node(
+			SubnetInputSopNode,
+			CATEGORY_SOP.MISC /*{
+			// TODO: use "except" so that it works inside PolyNodes
+			// only: [`${NodeContext.SOP}/${SubnetSopNode.type()}`, `${NodeContext.SOP}/poly`],
+		}*/
+		);
+		poly.register_node(
+			SubnetOutputSopNode,
+			CATEGORY_SOP.MISC /*{
+			// only: [`${NodeContext.SOP}/${SubnetSopNode.type()}`, `${NodeContext.SOP}/poly`],
+		}*/
+		);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);

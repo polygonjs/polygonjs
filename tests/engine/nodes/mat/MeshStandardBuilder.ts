@@ -1,6 +1,6 @@
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
-import {SceneJsonImporter} from '../../../../src/engine';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';

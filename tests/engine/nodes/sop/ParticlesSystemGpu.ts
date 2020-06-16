@@ -4,7 +4,7 @@ import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
-import {SceneJsonImporter} from '../../../../src/engine';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {ParticlesSystemGpuSopNode} from '../../../../src/engine/nodes/sop/ParticlesSystemGpu';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssertUtils} from '../../../helpers/AssertUtils';

@@ -10,7 +10,7 @@ import BasicMinimalFragment from './templates/volume/minimal.frag.glsl';
 import BasicPositionVertex from './templates/volume/position.vert.glsl';
 import BasicPositionFragment from './templates/volume/position.frag.glsl';
 import {VOLUME_UNIFORMS} from '../../../../src/engine/nodes/gl/gl/volume/uniforms';
-import {SceneJsonImporter} from '../../../../src/engine';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {VolumeBuilderMatNode} from '../../../../src/engine/nodes/mat/VolumeBuilder';
 import {FloatParam} from '../../../../src/engine/params/Float';

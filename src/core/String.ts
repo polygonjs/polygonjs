@@ -21,6 +21,7 @@ const TAIL_DIGIT_MATCH_REGEXP = /\d+$/;
 const LEADING_ZEROS_MATCH_REGEXP = /^0+/;
 // const DIGIT_PREDEDED_BY_UNDERSCOPE = /_\d$/
 const INDICES_LIST_SEPARATOR = /,| /;
+const ZERO = '0';
 
 // https://stackoverflow.com/questions/41856126/regexp-optional-dot-in-a-decimal-number
 const NUM_REGEXP = /^-?\d+\.?\d*$/;
@@ -64,6 +65,14 @@ export class CoreString {
 			}
 
 			const digits = parseInt(numbers_as_str);
+			if (digits == 0) {
+				if (zeros_prefix.length > 0) {
+					if (zeros_prefix[zeros_prefix.length - 1] == ZERO) {
+						zeros_prefix = zeros_prefix.slice(0, -1);
+					}
+				}
+			}
+
 			const prefix = word.substring(0, word.length - match[0].length);
 			return `${prefix}${zeros_prefix}${digits + 1}`;
 		} else {

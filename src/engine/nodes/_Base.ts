@@ -48,6 +48,7 @@ import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized
 import {ModuleName} from '../poly/registers/modules/_BaseRegister';
 import {BasePersistedConfig} from './utils/PersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
+import {PolyNodeController} from './utils/poly/PolyNodeController';
 // import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
@@ -151,6 +152,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 			this.initialize_base_node(); // for base classes of Sop, Obj...
 			this.initialize_node(); // for Derivated node clases, like BoxSop, TransformSop...
+			if (this.poly_node_controller) {
+				this.poly_node_controller.initialize_node();
+			}
 		} else {
 			console.warn('node already initialized');
 		}
@@ -313,6 +317,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	public required_modules(): ModuleName[] | void {}
 	public used_assembler(): AssemblerName | void {}
 	public integration_data(): IntegrationData | void {}
+
+	// poly nodes
+	public readonly poly_node_controller: PolyNodeController | undefined;
 }
 
 export type BaseNodeType = TypedNode<any, any>;

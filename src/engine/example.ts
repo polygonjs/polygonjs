@@ -1,21 +1,23 @@
-import {SceneJsonImporter} from './io/json/import/Scene';
-import {PolyScene} from './scene/PolyScene';
+// BE CAREFUL WHEN DOING AUTO IMPORTS, as importing from this file creates circular dependencies
 
-import {AllRegister} from './poly/registers/All';
-AllRegister.run();
+// import {SceneJsonImporter} from './io/json/import/Scene';
+// import {PolyScene} from './scene/PolyScene';
 
-export {PolyScene, SceneJsonImporter};
+// import {AllRegister} from './poly/registers/All';
+// AllRegister.run();
 
-const scene_url = '/examples/scenes/mesh_lambert_builder.json';
-async function load_scene() {
-	const response = await fetch(scene_url);
-	const json = await response.json();
-	const scene = await SceneJsonImporter.load_data(json);
-	const camera_node = scene.cameras_controller.master_camera_node;
-	const element = document.getElementById('app');
-	if (camera_node && element) {
-		camera_node.create_viewer(element);
-	}
-}
+// export {PolyScene, SceneJsonImporter};
 
-load_scene();
+// const scene_url = '/examples/scenes/mesh_lambert_builder.json';
+// async function load_scene() {
+// 	const response = await fetch(scene_url);
+// 	const json = await response.json();
+// 	const scene = await SceneJsonImporter.load_data(json);
+// 	const camera_node = scene.cameras_controller.master_camera_node;
+// 	const element = document.getElementById('app');
+// 	if (camera_node && element) {
+// 		camera_node.create_viewer(element);
+// 	}
+// }
+
+// load_scene();

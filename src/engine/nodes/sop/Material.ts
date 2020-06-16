@@ -98,6 +98,8 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 			return;
 		}
 		const src_tex: Texture | null = (src_mat as any)[this.pv.tex_src0];
-		(target_mat as any)[this.pv.tex_dest0] = src_tex;
+		if (src_tex) {
+			(target_mat as any)[this.pv.tex_dest0] = src_tex;
+		}
 	}
 }

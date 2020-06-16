@@ -89,6 +89,9 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 			const geometry = object.geometry;
 			const ref_geometry = ref_object.geometry;
 			if (geometry && ref_geometry) {
+				// TODO: this current does not take into account the object transform,
+				// and it's possible that it has been, especially if we used another transform_reset
+				// just before
 				ref_geometry.computeBoundingBox();
 				const bbox = ref_geometry.boundingBox;
 				if (bbox) {

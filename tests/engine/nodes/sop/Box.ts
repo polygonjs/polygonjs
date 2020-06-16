@@ -6,7 +6,7 @@ QUnit.test('box simple', async (assert) => {
 
 	let container = await box1.request_container();
 	const core_group = container.core_content();
-	const geometry = core_group?.objects()[0].geometry;
+	const geometry = core_group?.objects_with_geo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 72);
 	assert.equal(container.bounding_box().min.y, -0.5);
 	assert.notOk(box1.is_dirty, 'box is dirty');

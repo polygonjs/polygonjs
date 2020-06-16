@@ -17,13 +17,15 @@ import {TypedNumericParam} from '../../../params/_Numeric';
 import {OperatorPathParam} from '../../../params/OperatorPath';
 import {StringParam} from '../../../params/String';
 import {RampParam} from '../../../params/Ramp';
-import {PolySopNode} from '../../../nodes/sop/Poly';
-import {PolyObjNode} from '../../../nodes/obj/Poly';
+// import {PolySopNode} from '../../../nodes/sop/Poly';
+// import {PolyObjNode} from '../../../nodes/obj/Poly';
 import {PolyNodeJsonExporter} from './nodes/Poly';
 
 export class JsonExportDispatcher {
 	static dispatch_node(node: BaseNodeType) {
-		if (node instanceof PolySopNode || node instanceof PolyObjNode) {
+		// using PolySopNode and PolyObjNode seem to create circular dependency with webpack
+		// if (node instanceof PolySopNode || node instanceof PolyObjNode)
+		if (node.poly_node_controller) {
 			return new PolyNodeJsonExporter(node);
 		}
 		return new NodeJsonExporter(node);

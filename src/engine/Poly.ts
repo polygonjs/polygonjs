@@ -6,6 +6,9 @@ import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegiste
 import {NodeContext} from './poly/NodeContext';
 import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
+// import {SceneJsonImporter} from './io/json/import/Scene';
+// import {SceneJsonExporterData} from './io/json/export/Scene';
+// import {NodeJsonImporter} from './io/json/import/Node';
 // import {ViewerLoadersManager} from '/viewers/LoadersManager';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
@@ -66,6 +69,13 @@ export class Poly {
 	get env() {
 		return this._env;
 	}
+
+	// create_scene_importer(data: SceneJsonExporterData) {
+	// 	return new SceneJsonImporter(data);
+	// }
+	// create_nodes_importer(node: BaseNodeType) {
+	// 	return new NodeJsonImporter(node as TypedNode<NodeContext, any>);
+	// }
 }
 
 // declare global {

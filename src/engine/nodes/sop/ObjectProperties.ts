@@ -7,6 +7,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	apply_to_children = ParamConfig.BOOLEAN(0);
 	separator = ParamConfig.SEPARATOR();
+	frustrum_culled = ParamConfig.BOOLEAN(1);
 	matrix_auto_update = ParamConfig.BOOLEAN(0);
 	visible = ParamConfig.BOOLEAN(1);
 	cast_shadow = ParamConfig.BOOLEAN(1);
@@ -42,13 +43,13 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 			}
 		}
 
-		console.log(core_group.objects());
 		this.set_core_group(core_group);
 	}
 
 	private _update_object(object: Object3D) {
-		object.visible = this.pv.visible;
+		object.frustumCulled = this.pv.frustrum_culled;
 		object.matrixAutoUpdate = this.pv.matrix_auto_update;
+		object.visible = this.pv.visible;
 		object.castShadow = this.pv.cast_shadow;
 		object.receiveShadow = this.pv.receive_shadow;
 	}
