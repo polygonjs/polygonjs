@@ -31,13 +31,14 @@ export class CoreLoaderGeometry {
 	private static _default_mat_point = new PointsMaterial();
 	private static _default_mat_line = new LineBasicMaterial();
 
-	constructor(private url: string) {
+	constructor(private url: string, private assets_root: string | null) {
 		this.ext = CoreLoaderGeometry.get_extension(url);
 	}
 
 	static get_extension(url: string) {
 		let _url: URL;
 		let ext: string | null = null;
+
 		try {
 			_url = new URL(url);
 			ext = _url.searchParams.get('ext');
@@ -70,7 +71,12 @@ export class CoreLoaderGeometry {
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			// do not add '?' here. Let the requester do it if necessary
-			const url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			if (url[0] != 'h') {
+				if (this.assets_root) {
+					url = `${this.assets_root}${url}`;
+				}
+			}
 
 			if (this.ext == 'json') {
 				fetch(url)
@@ -88,7 +94,7 @@ export class CoreLoaderGeometry {
 				const loader = await this.loader_for_ext();
 				if (loader) {
 					const start_time = performance.now();
-					console.log(`GEO LOAD START ${this.url} at ${Math.floor(start_time)}`);
+					console.log(`GEO LOAD START ${url} at ${Math.floor(start_time)}`);
 					loader.load(
 						url,
 						(object: any) => {
@@ -96,7 +102,7 @@ export class CoreLoaderGeometry {
 								const end_time = performance.now();
 								const total_time = end_time - start_time;
 								console.log(
-									`GEO LOAD COMPLETED ${this.url} at ${Math.floor(end_time)} (duration: ${Math.floor(
+									`GEO LOAD COMPLETED ${url} at ${Math.floor(end_time)} (duration: ${Math.floor(
 										total_time
 									)})`
 								);

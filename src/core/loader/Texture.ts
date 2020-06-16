@@ -108,6 +108,12 @@ export class CoreTextureLoader {
 				console.log(`TEX LOAD START ${url} at ${Math.floor(start_time)}`);
 				this.loader_for_ext(ext).then((loader) => {
 					if (loader) {
+						if (url[0] != 'h') {
+							const assets_root = this._node.scene.assets_controller.assets_root();
+							if (assets_root) {
+								url = `${assets_root}${url}`;
+							}
+						}
 						loader.load(
 							url,
 							(texture: Texture) => {
