@@ -275,16 +275,16 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		);
 	}
 	static create_globals_node_output_connections() {
+		// TODO: move this in material only, to use the enum GlobalsOutput
 		return [
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('gl_Position', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('cameraPosition', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
-			// new Connection.Vec2('gl_PointCoord'),
-			// new TypedConnectionVec2('uv'),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		];
 	}

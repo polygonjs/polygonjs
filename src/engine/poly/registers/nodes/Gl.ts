@@ -7,7 +7,8 @@ import {
 	Vec2ToFloatGlNode,
 	Vec3ToFloatGlNode,
 	Vec4ToFloatGlNode,
-	Vec4ToVectorGlNode,
+	Vec4ToVec3GlNode,
+	Vec3ToVec4GlNode,
 } from '../../../nodes/gl/_ConversionVecTo';
 
 import {
@@ -194,7 +195,8 @@ export interface GlNodeChildrenMap {
 	vec2_to_float: Vec2ToFloatGlNode;
 	vec3_to_float: Vec3ToFloatGlNode;
 	vec4_to_float: Vec4ToFloatGlNode;
-	vec4_to_vector: Vec4ToVectorGlNode;
+	vec4_to_vec3: Vec4ToVec3GlNode;
+	vec3_to_vec4: Vec3ToVec4GlNode;
 	vector_align: VectorAlignGlNode;
 	vector_angle: VectorAngleGlNode;
 }
@@ -306,7 +308,8 @@ export class GlRegister {
 		poly.register_node(Vec2ToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec3ToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec4ToFloatGlNode, CATEGORY_GL.CONVERSION);
-		poly.register_node(Vec4ToVectorGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec4ToVec3GlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec3ToVec4GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(VectorAlignGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(VectorAngleGlNode, CATEGORY_GL.GEOMETRY);
 	}

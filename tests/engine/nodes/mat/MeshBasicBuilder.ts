@@ -30,7 +30,7 @@ import BasicForLoopFragment from './templates/mesh_basic_builder/Basic.ForLoop.f
 import BasicSubnetFragment from './templates/mesh_basic_builder/Basic.Subnet.frag.glsl';
 
 import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
-import {Vec4ToVectorGlNode} from '../../../../src/engine/nodes/gl/_ConversionVecTo';
+import {Vec4ToVec3GlNode} from '../../../../src/engine/nodes/gl/_ConversionVecTo';
 import {TextureGlNode} from '../../../../src/engine/nodes/gl/Texture';
 import {GlCompareTestName} from '../../../../src/engine/nodes/gl/Compare';
 import {FloatParam} from '../../../../src/engine/params/Float';
@@ -115,8 +115,8 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 	const attribute1 = mesh_basic1.create_node('attribute');
 	const texture1 = mesh_basic1.create_node('texture');
-	const vec4_to_vector1 = mesh_basic1.create_node('vec4_to_vector');
-	output1.set_input('color', vec4_to_vector1, Vec4ToVectorGlNode.OUTPUT_NAME_VEC3);
+	const vec4_to_vector1 = mesh_basic1.create_node('vec4_to_vec3');
+	output1.set_input('color', vec4_to_vector1, Vec4ToVec3GlNode.OUTPUT_NAME_VEC3);
 	vec4_to_vector1.set_input('vec4', texture1, TextureGlNode.OUTPUT_NAME);
 	texture1.set_input('uv', attribute1);
 	attribute1.p.name.set('uv');

@@ -29,10 +29,14 @@ export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerM
 export enum GlobalsOutput {
 	TIME = 'time',
 	RESOLUTION = 'resolution',
+	// GL_POSITION = 'gl_Position', // not giving good results yet
 	GL_FRAGCOORD = 'gl_FragCoord',
 	GL_POINTCOORD = 'gl_PointCoord',
 }
-const FRAGMENT_GLOBALS_OUTPUT = [GlobalsOutput.GL_FRAGCOORD, GlobalsOutput.GL_POINTCOORD];
+const FRAGMENT_GLOBALS_OUTPUT = [
+	/*GlobalsOutput.GL_POSITION, */ GlobalsOutput.GL_FRAGCOORD,
+	GlobalsOutput.GL_POINTCOORD,
+];
 
 interface HandleGlobalsOutputOptions {
 	globals_node: GlobalsGlNode;
@@ -337,11 +341,12 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			case GlobalsOutput.TIME:
 				this.handle_time(options);
 				return;
-
 			case GlobalsOutput.RESOLUTION:
 				this.handle_resolution(options);
 				return;
-
+			// case GlobalsOutput.GL_POSITION:
+			// 	this.handle_gl_Position(options);
+			// 	return;
 			case GlobalsOutput.GL_FRAGCOORD:
 				this.handle_gl_FragCoord(options);
 				return;
@@ -406,6 +411,13 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		this.set_resolution_dependent();
 	}
+	// handle_gl_Position(options: HandleGlobalsOutputOptions) {
+	// 	if (options.shader_name == ShaderName.VERTEX) {
+	// 		options.body_lines.push(
+	// 			`vec4 ${options.var_name} = projectionMatrix * modelViewMatrix * vec4(position, 1.0)`
+	// 		);
+	// 	}
+	// }
 	handle_gl_FragCoord(options: HandleGlobalsOutputOptions) {
 		if (options.shader_name == ShaderName.FRAGMENT) {
 			options.body_lines.push(`vec4 ${options.var_name} = gl_FragCoord`);
