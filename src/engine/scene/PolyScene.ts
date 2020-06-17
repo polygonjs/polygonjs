@@ -88,7 +88,9 @@ export class PolyScene {
 		return (this._loading_controller = this._loading_controller || new LoadingController(this));
 	}
 
-	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController();
+	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController(
+		this
+	);
 	get missing_expression_references_controller() {
 		return this._missing_expression_references_controller;
 	}

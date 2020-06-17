@@ -3,13 +3,15 @@ import {BaseParamType} from '../params/_Base';
 import {CoreWalker} from '../../core/Walker';
 
 export class MissingExpressionReference {
-	constructor(private param: BaseParamType /*, private jsep_node: jsep.Expression*/, public path: string) {
+	constructor(private param: BaseParamType /*, private jsep_node: jsep.Expression*/, public readonly path: string) {
 		// console.log(this.jsep_node, this.param); // TODO: typescript, to not have the missing ref
 	}
 
+	absolute_path() {
+		return CoreWalker.make_absolute_path(this.param.node, this.path);
+	}
 	matches_path(path: string): boolean {
-		const absolute = CoreWalker.make_absolute_path(this.param.node, this.path);
-		return absolute == path;
+		return this.absolute_path() == path;
 	}
 
 	update_from_method_dependency_name_change() {

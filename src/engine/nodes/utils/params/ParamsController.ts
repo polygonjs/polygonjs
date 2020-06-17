@@ -17,6 +17,7 @@ import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 import {ParamsLabelController} from './ParamsLabelController';
+import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -148,12 +149,25 @@ export class ParamsController {
 
 	private init_from_params_config() {
 		const params_config = this.node.params_config as NodeParamsConfig;
+		let init_values_used = false;
 		if (params_config) {
 			for (let name of Object.keys(params_config)) {
 				const config = params_config[name];
-				this.add_param(config.type, name, config.init_value, config.options);
+				let init_value: ParamInitValueSerialized | undefined;
+				if (this.node.params_init_value_overrides) {
+					init_value = this.node.params_init_value_overrides[name];
+					init_values_used = true;
+				}
+				this.add_param(config.type, name, config.init_value, config.options, init_value);
 			}
 		}
+		// this set dirty may not be necessary, but when starting a scene with a spotlight
+		// with a non default t (ie: [2,2,0]), it would not be positionned correctly and would require
+		// a cook
+		if (init_values_used) {
+			this.node.set_dirty();
+		}
+		this.node.params_init_value_overrides = undefined;
 	}
 	private init_param_accessors() {
 		let current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
@@ -357,8 +371,9 @@ export class ParamsController {
 	add_param<T extends ParamType>(
 		type: T,
 		name: string,
-		init_value: ParamInitValuesTypeMap[T],
-		options: ParamOptions = {}
+		default_value: ParamInitValuesTypeMap[T],
+		options: ParamOptions = {},
+		init_value?: ParamInitValuesTypeMap[T]
 	): ParamConstructorMap[T] | undefined {
 		const is_spare = options['spare'] || false;
 		if (this._param_create_mode === false && !is_spare) {
@@ -391,9 +406,19 @@ export class ParamsController {
 			param.options.set(options);
 
 			param.set_name(name);
-			param.set_init_value(init_value as never);
+			param.set_init_value(default_value as never);
 			param.init_components();
-			param.set(init_value as never);
+			if (init_value == null) {
+				param.set(default_value as never);
+			} else {
+				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
+				// Otherwise, as it would fail if the attribute was a vector
+				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
+				if (param.options.is_expression_for_entities) {
+					param.set(default_value as never);
+				}
+				param.set(init_value as never);
+			}
 			param.set_node(this.node);
 
 			this._params_by_name[param.name] = param as BaseParamType;

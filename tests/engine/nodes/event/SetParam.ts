@@ -46,6 +46,7 @@ QUnit.test('event set_param simple', async (assert) => {
 	set_param1.set_input(0, scene1, 0);
 
 	const data = new SceneJsonExporter(scene).data();
+	console.log('loading...', data);
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
 

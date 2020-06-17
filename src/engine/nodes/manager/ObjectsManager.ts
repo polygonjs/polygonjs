@@ -7,6 +7,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -39,8 +40,11 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	object() {
 		return this._object;
 	}
-	create_node<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K] {
-		return super.create_node(type) as ObjNodeChildrenMap[K];
+	create_node<K extends keyof ObjNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): ObjNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as ObjNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseObjNodeType[];

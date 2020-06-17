@@ -1,4 +1,7 @@
 import {CoreConstant, AttribType} from '../../../../src/core/geometry/Constant';
+import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
+import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
 
 QUnit.test('attrib create simple float vertex', async (assert) => {
 	const geo1 = window.geo1;
@@ -12,7 +15,7 @@ QUnit.test('attrib create simple float vertex', async (assert) => {
 
 	let container = await attrib_create1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -38,7 +41,7 @@ QUnit.test('attrib create expression float vertex', async (assert) => {
 
 	const container = await attrib_create1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -61,7 +64,7 @@ QUnit.test('attrib create expression float vertex from position', async (assert)
 
 	const container = await attrib_create1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -105,7 +108,7 @@ QUnit.test('attrib create simple vector2 vertex', async (assert) => {
 
 	const container = await attrib_create1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -132,7 +135,7 @@ QUnit.test('attrib create simple vector vertex', async (assert) => {
 
 	const container = await attrib_create1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -156,13 +159,34 @@ QUnit.test('attrib create expression vector vertex', async (assert) => {
 	attrib_create1.p.value3.x.set('@ptnum');
 	attrib_create1.set_input(0, plane1);
 
-	const container = await attrib_create1.request_container();
-	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	let container = await attrib_create1.request_container();
+	let core_group = container.core_content()!;
+	let geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	let array = geometry.getAttribute('test').array;
+
+	assert.equal(array.length, container.points_count() * 3);
+	assert.equal(array[0], 0);
+	assert.equal(array[3], 1);
+	assert.equal(array[6], 2);
+	assert.equal(array[9], 3);
+
+	// test to make sure it can reload with an expression on a vector
+	const scene = window.scene;
+	const data = new SceneJsonExporter(scene).data();
+	console.log('************ LOAD **************');
+	const scene2 = await SceneJsonImporter.load_data(data);
+	await scene2.wait_for_cooks_completed();
+	const attrib_create2 = scene2.node(attrib_create1.full_path()) as AttribCreateSopNode;
+	container = await attrib_create2.request_container();
+	core_group = container.core_content()!;
+	geometry = core_group.objects_with_geo()[0].geometry;
+	assert.ok(core_group);
+	assert.ok(geometry);
+
+	array = geometry.getAttribute('test').array;
 
 	assert.equal(array.length, container.points_count() * 3);
 	assert.equal(array[0], 0);
@@ -185,7 +209,7 @@ QUnit.test('attrib create on existing attrib vector2 uv', async (assert) => {
 	let container, core_group, geometry, array;
 	container = await attrib_create1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	array = geometry.getAttribute('uv').array as number[];
 	assert.ok(core_group);
 	assert.ok(geometry);
@@ -197,7 +221,7 @@ QUnit.test('attrib create on existing attrib vector2 uv', async (assert) => {
 	attrib_create1.p.value2.y.set('@uv.x');
 	container = await attrib_create1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	array = geometry.getAttribute('uv').array as number[];
 	assert.equal(array.join(','), [1, 0, 1, 1, 0, 0, 0, 1].join(','));
 });
@@ -343,6 +367,17 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	assert.less_than(attrib_create1.cook_controller.cook_time, 80);
 
 	window.scene.performance.stop();
+
+	// test to make sure it can reload with an expression
+	const scene = window.scene;
+	const data = new SceneJsonExporter(scene).data();
+	console.log('************ LOAD **************');
+	const scene2 = await SceneJsonImporter.load_data(data);
+	await scene2.wait_for_cooks_completed();
+	const attrib_create2 = scene2.node(attrib_create1.full_path()) as AttribCreateSopNode;
+	container = await attrib_create2.request_container();
+	core_group = container.core_content()!;
+	assert.equal(core_group.points().length, 1000);
 });
 
 QUnit.test('attrib create for string on vertices', async (assert) => {

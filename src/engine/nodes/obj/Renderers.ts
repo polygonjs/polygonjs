@@ -3,6 +3,7 @@ import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
 import {RopNodeChildrenMap} from '../../poly/registers/nodes/Rop';
 import {BaseRopNodeType} from '../rop/_Base';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 
 export class RenderersObjNode extends BaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
@@ -12,8 +13,11 @@ export class RenderersObjNode extends BaseManagerObjNode {
 
 	protected _children_controller_context = NodeContext.ROP;
 
-	create_node<K extends keyof RopNodeChildrenMap>(type: K): RopNodeChildrenMap[K] {
-		return super.create_node(type) as RopNodeChildrenMap[K];
+	create_node<K extends keyof RopNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): RopNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as RopNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseRopNodeType[];

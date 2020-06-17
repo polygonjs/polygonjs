@@ -101,7 +101,6 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		]);
 	}
 	cook() {
-		console.warn('cook');
 		this._update_object_node();
 		this._update_animation_node();
 		this._prepare_animation_mixer();

@@ -15,12 +15,15 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 	initialize_base_node() {
 		super.initialize_base_node();
 
-		this.lifecycle.add_on_add_hook(() => {
+		const register = () => {
 			this.scene.events_dispatcher.register_event_node(this);
-		});
-		this.lifecycle.add_delete_hook(() => {
+		};
+		const unregister = () => {
 			this.scene.events_dispatcher.unregister_event_node(this);
-		});
+		};
+		this.lifecycle.add_on_add_hook(register);
+		// this.lifecycle.add_on_creation_completed_hook(register);
+		this.lifecycle.add_delete_hook(unregister);
 
 		this.params.on_params_created('update_register', () => {
 			this._update_register();

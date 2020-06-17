@@ -303,7 +303,7 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		return 'file';
 	}
 	required_modules() {
-		const ext = CoreTextureLoader.get_extension(this.pv.url);
+		const ext = CoreTextureLoader.get_extension(this.pv.url || '');
 		return CoreTextureLoader.module_names(ext);
 	}
 

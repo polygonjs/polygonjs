@@ -14,7 +14,11 @@ import {NodeContext} from '../../poly/NodeContext';
 // type NodeOrParam = BaseNode | BaseParam;
 
 export class BaseMethod {
-	public node: BaseNodeType;
+	public readonly node: BaseNodeType;
+	protected _require_dependency = false;
+	require_dependency() {
+		return this._require_dependency;
+	}
 
 	constructor(public readonly param: BaseParamType) {
 		// this._init_update_dependencies_mode();

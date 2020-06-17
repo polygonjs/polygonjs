@@ -9,6 +9,7 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
+import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
@@ -95,7 +96,7 @@ export class HierarchyChildrenController {
 		return node_class != null;
 	}
 
-	create_node(node_type: string): BaseNodeType {
+	create_node(node_type: string, params_init_value_overrides?: Dictionary<ParamInitValueSerialized>): BaseNodeType {
 		const node_class = this.available_children_classes()[node_type];
 
 		if (node_class == null) {
@@ -105,9 +106,8 @@ export class HierarchyChildrenController {
 			console.error(message);
 			throw message;
 		} else {
-			const child_node = new node_class(this.node.scene, `child_node_${node_type}`);
+			const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
 			child_node.initialize_base_and_node();
-			// child_node.set_scene(this.node.scene);
 			this.add_node(child_node);
 			child_node.lifecycle.set_creation_completed();
 			return child_node;

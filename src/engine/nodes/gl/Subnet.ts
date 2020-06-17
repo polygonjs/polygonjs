@@ -7,6 +7,7 @@ import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 
 export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
 	protected _children_controller_context = NodeContext.GL;
@@ -95,8 +96,11 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	// CHILDREN
 	//
 	//
-	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
-		return super.create_node(type) as GlNodeChildrenMap[K];
+	create_node<K extends keyof GlNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): GlNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

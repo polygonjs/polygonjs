@@ -49,7 +49,6 @@ import {ModuleName} from '../poly/registers/modules/_BaseRegister';
 import {BasePersistedConfig} from './utils/PersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 import {PolyNodeController} from './utils/poly/PolyNodeController';
-// import {NodeTypeMap} from '../containers/utils/ContainerMap';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
 	container_controller: TypedContainerController<NC> = new TypedContainerController<NC>(this);
@@ -58,7 +57,6 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _ui_data: UIData | undefined;
 
-	// private _dependencies_controller: DependenciesController | undefined;
 	private _states: StatesController | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
@@ -139,7 +137,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// 	return (this._processing_context = this._processing_context || new ProcessingContext(this));
 	// }
 
-	constructor(scene: PolyScene, name: string = 'BaseNode') {
+	constructor(
+		scene: PolyScene,
+		name: string = 'BaseNode',
+		public params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	) {
 		super(scene, name);
 	}
 
@@ -177,21 +179,6 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return c.node_context();
 	}
 
-	// static required_three_imports(): string[] {
-	// 	return [];
-	// }
-	// static required_imports() {
-	// 	let three_imports = this.required_three_imports();
-	// 	if (three_imports) {
-	// 		return three_imports.map((e) => `three/examples/jsm/${e}`);
-	// 	} else {
-	// 		return [];
-	// 	}
-	// }
-	// required_imports() {
-	// 	const c = this.constructor as typeof BaseNodeClass;
-	// 	return c.required_imports();
-	// }
 	static require_webgl2(): boolean {
 		return false;
 	}
@@ -255,8 +242,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// hierarchy
-	create_node(type: string) {
-		return this.children_controller?.create_node(type);
+	create_node(type: string, params_init_value_overrides?: Dictionary<ParamInitValueSerialized>) {
+		return this.children_controller?.create_node(type, params_init_value_overrides);
 	}
 	remove_node(node: BaseNodeType) {
 		this.children_controller?.remove_node(node);

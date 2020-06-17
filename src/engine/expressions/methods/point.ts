@@ -4,6 +4,7 @@ import {GeometryContainer} from '../../containers/Geometry';
 // import {CoreGroup} from '../../../core/Geometry/Group'
 
 export class PointExpression extends BaseMethod {
+	protected _require_dependency = true;
 	static required_arguments() {
 		return [
 			['string', 'path to node'],

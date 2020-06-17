@@ -3,6 +3,7 @@ import {MethodDependency} from '../MethodDependency';
 import {TextureContainer} from '../../containers/Texture';
 
 export class CopResExpression extends BaseMethod {
+	protected _require_dependency = true;
 	// cop_res(0, 'x')
 	// cop_res('../REF_bbox', 'x')
 	static required_arguments() {

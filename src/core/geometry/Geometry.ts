@@ -201,7 +201,8 @@ export class CoreGeometry {
 		if (attribute_added) {
 			this._geometry.setAttribute(name, new Float32BufferAttribute(values, size));
 		} else {
-			throw 'no other default value allowed for now in add_numeric_attrib';
+			console.warn(default_value);
+			throw `CoreGeometry.add_numeric_attrib error: no other default value allowed for now in add_numeric_attrib (default given: ${default_value})`;
 		}
 	}
 

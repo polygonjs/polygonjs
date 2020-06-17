@@ -104,8 +104,6 @@ export class CoreTextureLoader {
 				const texture: VideoTexture = await this._load_as_video(url);
 				resolve(texture);
 			} else {
-				const start_time = performance.now();
-				console.log(`TEX LOAD START ${url} at ${Math.floor(start_time)}`);
 				this.loader_for_ext(ext).then((loader) => {
 					if (loader) {
 						if (url[0] != 'h') {
@@ -117,13 +115,6 @@ export class CoreTextureLoader {
 						loader.load(
 							url,
 							(texture: Texture) => {
-								const end_time = performance.now();
-								const total_time = end_time - start_time;
-								console.log(
-									`TEX LOAD COMPLETED ${url} at ${Math.floor(end_time)} (duration: ${Math.floor(
-										total_time
-									)})`
-								);
 								resolve(texture);
 							},
 							undefined,

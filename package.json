@@ -39,6 +39,7 @@
 		"esbuild": "^0.4.9",
 		"fork-ts-checker-webpack-plugin": "^5.0.1",
 		"geo-ambient-occlusion": "^3.0.4",
+		"gsap": "^3.3.3",
 		"jsep": "^0.3.4",
 		"lodash": "^4.17.15",
 		"mapbox-gl": "1.11.0",

@@ -9,6 +9,7 @@ import {BaseGlNodeType} from '../gl/_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 class JsPointSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new JsPointSopParamsConfig();
 export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
@@ -46,8 +47,11 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.children_controller?.init({dependent: false});
 	}
 
-	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
-		return super.create_node(type) as GlNodeChildrenMap[K];
+	create_node<K extends keyof GlNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): GlNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

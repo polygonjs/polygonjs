@@ -6,9 +6,7 @@ import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 
 export class ChExpression extends BaseMethod {
-	// constructor() {
-	// 	super();
-	// }
+	protected _require_dependency = true;
 
 	static required_arguments() {
 		return [['string', 'path to param']];
@@ -23,8 +21,6 @@ export class ChExpression extends BaseMethod {
 		const param = this.get_referenced_param(index_or_path as string, decomposed_path);
 		if (param) {
 			return this.create_dependency(param, index_or_path, decomposed_path);
-		} else {
-			console.warn('could not find param');
 		}
 		return null;
 		// const reference_search_result = new ReferenceSearchResult()

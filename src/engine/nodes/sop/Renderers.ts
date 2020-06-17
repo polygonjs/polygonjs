@@ -2,6 +2,7 @@ import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {RopNodeChildrenMap} from '../../poly/registers/nodes/Rop';
 import {BaseRopNodeType} from '../rop/_Base';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 
 export class RenderersSopNode extends BaseNetworkSopNode {
 	static type() {
@@ -10,8 +11,11 @@ export class RenderersSopNode extends BaseNetworkSopNode {
 
 	protected _children_controller_context = NodeContext.ROP;
 
-	create_node<K extends keyof RopNodeChildrenMap>(type: K): RopNodeChildrenMap[K] {
-		return super.create_node(type) as RopNodeChildrenMap[K];
+	create_node<K extends keyof RopNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): RopNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as RopNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseRopNodeType[];

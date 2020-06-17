@@ -28,7 +28,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		return 'file';
 	}
 	required_modules() {
-		const ext = CoreLoaderGeometry.get_extension(this.pv.url);
+		const ext = CoreLoaderGeometry.get_extension(this.pv.url || '');
 		return CoreLoaderGeometry.module_names(ext);
 	}
 

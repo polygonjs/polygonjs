@@ -16,6 +16,7 @@ const VECTOR_NAMES: Array<keyof BoxComponents> = ['min', 'max', 'size', 'center'
 const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 export class BboxExpression extends BaseMethod {
+	protected _require_dependency = true;
 	// bbox(0).min.x
 	// bbox('../REF_bbox').min.x
 	static required_arguments() {

@@ -83,6 +83,7 @@ const OPTION_SET = OPTION_SETS.data2;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CopRendererController} from './utils/RendererController';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 class PostCopParamsConfig extends NodeParamsConfig {
 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 }
@@ -144,8 +145,11 @@ export class PostCopNode extends TypedCopNode<PostCopParamsConfig> {
 		});
 	}
 
-	create_node<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K] {
-		return super.create_node(type) as PostNodeChildrenMap[K];
+	create_node<K extends keyof PostNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): PostNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as PostNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BasePostProcessNodeType[];

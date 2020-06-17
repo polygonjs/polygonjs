@@ -12,6 +12,7 @@ import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
 import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
+import {ParamJsonImporter} from './Param';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -36,6 +37,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		this.set_flags(data);
+
+		// params
+		// const spare_params_data = ParamJsonImporter.spare_params_data(data['params']);
+		// this.set_params(spare_params_data);
 		this.set_params(data['params']);
 
 		if (data.persisted_config) {
@@ -44,7 +49,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		this.from_data_custom(data);
 
-		this._node.lifecycle.set_creation_completed();
+		// already called in create_node()
+		// this._node.lifecycle.set_creation_completed();
 	}
 	process_inputs_data(data: NodeJsonExporterData) {
 		this.set_inputs(data['inputs']);
@@ -81,7 +87,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			const node_type = node_data['type'];
 			if (this._node.children_allowed() && this._node.children_controller) {
 				try {
-					const node = this._node.create_node(node_type);
+					const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
+					const node = this._node.create_node(node_type, non_spare_params_data);
 					if (node) {
 						node.set_name(node_name);
 						nodes.push(node);

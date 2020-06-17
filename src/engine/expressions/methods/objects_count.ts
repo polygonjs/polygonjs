@@ -4,6 +4,7 @@ import {GeometryContainer} from '../../containers/Geometry';
 // import {CoreGroup} from '../../../core/Geometry/Group';
 
 export class ObjectsCountExpression extends BaseMethod {
+	protected _require_dependency = true;
 	// npoints(0)
 	// npoints('../REF_bbox')
 	static required_arguments() {

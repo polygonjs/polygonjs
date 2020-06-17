@@ -329,7 +329,9 @@ export class OptionsController {
 				} else {
 					callback(this.node, this.param);
 				}
-			}
+			} // else {
+			//	console.warn('node cooking, not running callback', this.param.name);
+			//}
 		}
 	}
 	private get_callback() {

@@ -4,6 +4,7 @@ import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {EffectsComposerController} from '../post/utils/EffectsComposerController';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 export class PostProcessObjNode extends BaseManagerObjNode {
 	static type() {
 		return 'post_process';
@@ -17,8 +18,11 @@ export class PostProcessObjNode extends BaseManagerObjNode {
 
 	protected _children_controller_context = NodeContext.POST;
 
-	create_node<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K] {
-		return super.create_node(type) as PostNodeChildrenMap[K];
+	create_node<K extends keyof PostNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): PostNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as PostNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BasePostProcessNodeType[];

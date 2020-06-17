@@ -4,6 +4,7 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
 export class CentroidExpression extends BaseMethod {
+	protected _require_dependency = true;
 	// bbox(0).min.x
 	// bbox('../REF_bbox').min.x
 	static required_arguments() {

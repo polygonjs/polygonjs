@@ -7,6 +7,7 @@ import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../poly/NodeContext';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 
 export abstract class TypedBuilderMatNode<
 	A extends ShaderAssemblerMaterial,
@@ -49,8 +50,11 @@ export abstract class TypedBuilderMatNode<
 	}
 	protected abstract _create_assembler_controller(): GlAssemblerController<A> | undefined;
 
-	create_node<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K] {
-		return super.create_node(type) as GlNodeChildrenMap[K];
+	create_node<K extends keyof GlNodeChildrenMap>(
+		type: K,
+		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+	): GlNodeChildrenMap[K] {
+		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

@@ -93,19 +93,10 @@ export class CoreLoaderGeometry {
 			} else {
 				const loader = await this.loader_for_ext();
 				if (loader) {
-					const start_time = performance.now();
-					console.log(`GEO LOAD START ${url} at ${Math.floor(start_time)}`);
 					loader.load(
 						url,
 						(object: any) => {
 							this.on_load_success(object).then((object2) => {
-								const end_time = performance.now();
-								const total_time = end_time - start_time;
-								console.log(
-									`GEO LOAD COMPLETED ${url} at ${Math.floor(end_time)} (duration: ${Math.floor(
-										total_time
-									)})`
-								);
 								resolve(object2);
 							});
 						},

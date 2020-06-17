@@ -449,19 +449,21 @@ export class FunctionGenerator extends BaseTraverser {
 		this.method_index += 1;
 		this.methods[this.method_index] = method;
 
-		const method_dependency = method.find_dependency(path_argument);
-		if (method_dependency) {
-			if (path_node) {
-				method_dependency.set_jsep_node(path_node);
-			}
-			this.method_dependencies.push(method_dependency);
-		} else {
-			if (path_node && lodash_isString(path_argument)) {
-				this.param.scene.missing_expression_references_controller.register(
-					this.param,
-					path_node,
-					path_argument
-				);
+		if (method.require_dependency()) {
+			const method_dependency = method.find_dependency(path_argument);
+			if (method_dependency) {
+				if (path_node) {
+					method_dependency.set_jsep_node(path_node);
+				}
+				this.method_dependencies.push(method_dependency);
+			} else {
+				if (path_node && lodash_isString(path_argument)) {
+					this.param.scene.missing_expression_references_controller.register(
+						this.param,
+						path_node,
+						path_argument
+					);
+				}
 			}
 		}
 		// method_dependencies.resolved_graph_nodes.forEach((graph_node)=>{

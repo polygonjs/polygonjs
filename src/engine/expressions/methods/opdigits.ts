@@ -4,6 +4,7 @@ import {MethodDependency} from '../MethodDependency';
 import {CoreString} from '../../../core/String';
 
 export class OpdigitsExpression extends BaseMethod {
+	protected _require_dependency = true;
 	static required_arguments() {
 		return [['string', 'path to node']];
 	}

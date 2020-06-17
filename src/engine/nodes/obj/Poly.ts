@@ -10,6 +10,7 @@ import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
+import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 
 export function create_poly_obj_node(node_type: string, definition: PolyNodeDefinition) {
 	class PolyObjParamConfig extends NodeParamsConfig {
@@ -60,8 +61,11 @@ export function create_poly_obj_node(node_type: string, definition: PolyNodeDefi
 			}
 		}
 
-		create_node<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K] {
-			return super.create_node(type) as GeoNodeChildrenMap[K];
+		create_node<K extends keyof GeoNodeChildrenMap>(
+			type: K,
+			params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		): GeoNodeChildrenMap[K] {
+			return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
 		}
 		children() {
 			return super.children() as BaseSopNodeType[];

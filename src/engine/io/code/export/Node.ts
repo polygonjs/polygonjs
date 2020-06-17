@@ -30,7 +30,8 @@ export class NodeCodeExporter {
 		this.add_params();
 		this.add_custom();
 
-		this._lines.push(`${this.var_name()}.lifecycle.set_creation_completed();`);
+		// already called in create_node()
+		// this._lines.push(`${this.var_name()}.lifecycle.set_creation_completed();`);
 
 		return this._lines;
 	}

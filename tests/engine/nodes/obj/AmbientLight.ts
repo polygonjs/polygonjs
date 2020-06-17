@@ -2,7 +2,7 @@ QUnit.test('ambient light simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
-	assert.equal(main_group.children.length, 2);
+	assert.equal(main_group.children.length, 2, 'world has 2 children');
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
 	const ambient_light1 = scene.root.create_node('ambient_light');

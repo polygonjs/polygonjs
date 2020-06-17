@@ -14,6 +14,13 @@ export class CoreWalker {
 	public static readonly PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
 	public static readonly NON_LETTER_PREFIXES = [CoreWalker.SEPARATOR, CoreWalker.DOT];
 
+	static split_parent_child(path: string) {
+		const elements: string[] = path.split(CoreWalker.SEPARATOR).filter((e) => e.length > 0);
+		const child_path = elements.pop();
+		const parent_path = elements.join(CoreWalker.SEPARATOR);
+		return {parent: parent_path, child: child_path};
+	}
+
 	static find_node(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseNodeType | null {
 		if (!node_src) {
 			return null;
@@ -166,6 +173,10 @@ export class CoreWalker {
 	}
 
 	static make_absolute_path(node_src: BaseNodeType | BaseParamType, path: string): string | null {
+		if (path[0] == CoreWalker.SEPARATOR) {
+			return path;
+		}
+
 		const path_elements = path.split(CoreWalker.SEPARATOR);
 		const first_element = path_elements.shift();
 

@@ -5,6 +5,7 @@ import {CopySopNode} from '../../nodes/sop/Copy';
 import {BaseNodeType} from '../../nodes/_Base';
 
 export class CopyExpression extends BaseMethod {
+	protected _require_dependency = true;
 	static required_arguments() {
 		return [
 			['string', 'path to copy'],
