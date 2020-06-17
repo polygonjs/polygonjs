@@ -108,6 +108,10 @@ export class ParamsController {
 		// 	return 0;
 		// };
 	}
+	post_create_spare_params() {
+		this._update_caches();
+		this.init_param_accessors();
+	}
 	update_params(options: ParamsUpdateOptions) {
 		let has_created_a_param = false;
 		let has_deleted_a_param = false;
@@ -135,16 +139,11 @@ export class ParamsController {
 		}
 
 		if (has_deleted_a_param || has_created_a_param) {
-			this._update_caches();
-			this.init_param_accessors();
+			this.post_create_spare_params();
 			// param.emit(ParamEvent.DELETED);
 			this.node.scene.references_controller.notify_params_updated(this.node);
 			this.node.emit(NodeEvent.PARAMS_UPDATED);
 		}
-	}
-	post_create_spare_params() {
-		this._update_caches();
-		this.init_param_accessors();
 	}
 
 	private init_from_params_config() {

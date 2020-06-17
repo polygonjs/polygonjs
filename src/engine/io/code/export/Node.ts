@@ -164,6 +164,8 @@ export class NodeCodeExporter {
 			});
 		});
 
+		// to ensure that gl nodes have the spare params up to date
+		this._lines.push(`${this.var_name()}.params._update_caches()`);
 		// to ensure that gl nodes like the constant and attribute have their inputs/outputs updated
 		this._lines.push(`${this.var_name()}.params.run_on_scene_load_hooks()`);
 	}

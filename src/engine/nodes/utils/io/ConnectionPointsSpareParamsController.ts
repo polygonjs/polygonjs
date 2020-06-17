@@ -92,6 +92,10 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 	// Create spare params on gl nodes
 	//
 	create_spare_parameters() {
+		if (this.node.scene.loading_controller.is_loading) {
+			return;
+		}
+
 		const current_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 
@@ -162,17 +166,17 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				}
 			}
 		}
-		if (!this.node.scene.loading_controller.is_loading) {
-			this.node.params.update_params(params_update_options);
+		// if (!this.node.scene.loading_controller.is_loading) {
+		this.node.params.update_params(params_update_options);
 
-			for (let spare_param of this.node.params.spare) {
-				if (!spare_param.parent_param) {
-					const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name);
-					if (raw_input) {
-						spare_param.set(raw_input as any);
-					}
+		for (let spare_param of this.node.params.spare) {
+			if (!spare_param.parent_param) {
+				const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name);
+				if (raw_input) {
+					spare_param.set(raw_input as any);
 				}
 			}
 		}
+		// }
 	}
 }

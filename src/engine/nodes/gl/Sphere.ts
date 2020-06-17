@@ -7,17 +7,17 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class DiskGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR2([0, 0]);
-	center = ParamConfig.VECTOR2([0, 0]);
+class SphereGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR3([0, 0, 0]);
+	center = ParamConfig.VECTOR3([0, 0, 0]);
 	radius = ParamConfig.FLOAT(1);
 	feather = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new DiskGlParamsConfig();
-export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
+const ParamsConfig = new SphereGlParamsConfig();
+export class SphereGlNode extends TypedGlNode<SphereGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'disk';
+		return 'sphere';
 	}
 
 	initialize_node() {
@@ -35,7 +35,7 @@ export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
 		const feather = ThreeToGl.float(this.variable_for_input('feather'));
 
 		const float = this.gl_var_name('float');
-		const body_line = `float ${float} = disk2d(${position}, ${center}, ${radius}, ${feather})`;
+		const body_line = `float ${float} = disk3d(${position}, ${center}, ${radius}, ${feather})`;
 		shaders_collection_controller.add_body_lines(this, [body_line]);
 
 		shaders_collection_controller.add_definitions(this, [new FunctionGLDefinition(this, DiskMethods)]);
