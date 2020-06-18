@@ -1,16 +1,16 @@
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
-import {AnimationClip} from 'three/src/animation/AnimationClip';
+import {TimelineBuilder} from '../../core/animation/TimelineBuilder';
 import {NodeContext} from '../poly/NodeContext';
 
 export class AnimationContainer extends TypedContainer<NodeContext.ANIM> {
 	set_content(content: ContainableMap[NodeContext.ANIM]) {
 		super.set_content(content);
 	}
-	set_animation_clip(clip: AnimationClip) {
-		return this.set_content(clip);
+	set_timeline_builder(timeline_builder: TimelineBuilder) {
+		return this.set_content(timeline_builder);
 	}
-	animation_clip() {
+	timeline_builder() {
 		return this.content();
 	}
 

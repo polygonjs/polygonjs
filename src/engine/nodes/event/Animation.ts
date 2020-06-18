@@ -3,11 +3,6 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
-import {AnimationMixer} from 'three/src/animation/AnimationMixer';
-import {AnimationAction} from 'three/src/animation/AnimationAction';
-import {BaseObjNodeType} from '../obj/_Base';
-import {BaseAnimNodeType} from '../anim/_Base';
-import {LoopOnce, LoopRepeat} from 'three/src/constants';
 
 enum AnimationEventInput {
 	START = 'start',
@@ -18,48 +13,23 @@ enum AnimationEventOutput {
 	START = 'start',
 	STOP = 'stop',
 }
-enum AnimationClipLoopType {
-	REPEAT = 'repeat',
-	// PING_PONG = 'ping pong', // ping pong does not seem to work (it flickers)
-	ONCE = 'once',
-}
-const ANIMATION_CLIP_LOOP_TYPES: AnimationClipLoopType[] = [
-	AnimationClipLoopType.REPEAT,
-	// AnimationClipLoopType.PING_PONG,
-	AnimationClipLoopType.ONCE,
-];
-const THREE_LOOP_TYPES = {
-	[AnimationClipLoopType.REPEAT]: LoopRepeat,
-	// [AnimationClipLoopType.PING_PONG]: LoopPingPong,
-	[AnimationClipLoopType.ONCE]: LoopOnce,
-};
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
+import {AnimationContainer} from '../../containers/Animation';
 class AnimationEventParamsConfig extends NodeParamsConfig {
-	object = ParamConfig.OPERATOR_PATH('/geo1', {
-		node_selection: {context: NodeContext.OBJ},
-		dependent_on_found_node: false,
-	});
-	// time = ParamConfig.FLOAT('$T', {cook: false});
-	start = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			AnimationEventNode.PARAM_CALLBACK_start_animation(node as AnimationEventNode);
-		},
-	});
-	stop = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			AnimationEventNode.PARAM_CALLBACK_stop_animation(node as AnimationEventNode);
-		},
-	});
 	animation = ParamConfig.OPERATOR_PATH('/ANIM/OUT', {
 		node_selection: {context: NodeContext.ANIM},
 		dependent_on_found_node: false,
 	});
-	loop = ParamConfig.INTEGER(ANIMATION_CLIP_LOOP_TYPES.indexOf(AnimationClipLoopType.REPEAT), {
-		menu: {
-			entries: ANIMATION_CLIP_LOOP_TYPES.map((name, value) => {
-				return {name, value};
-			}),
+	play = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			AnimationEventNode.PARAM_CALLBACK_play(node as AnimationEventNode);
+		},
+	});
+	pause = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			AnimationEventNode.PARAM_CALLBACK_pause(node as AnimationEventNode);
 		},
 	});
 }
@@ -68,31 +38,23 @@ const ParamsConfig = new AnimationEventParamsConfig();
 export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'animation';
+		return 'animate';
 	}
 
-	private _resolved_anim_node: BaseAnimNodeType | undefined;
-	private _resolved_object_node: BaseObjNodeType | undefined;
-	private _animation_mixer: AnimationMixer | undefined;
-	private _animation_action: AnimationAction | undefined;
+	private _timeline_builder: TimelineBuilder | undefined;
+
+	// private _resolved_anim_node: BaseAnimNodeType | undefined;
+	// private _resolved_object_node: BaseObjNodeType | undefined;
 
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
-			new EventConnectionPoint(
-				AnimationEventInput.START,
-				EventConnectionPointType.BASE,
-				this._start_animation.bind(this)
-			),
-			new EventConnectionPoint(
-				AnimationEventInput.STOP,
-				EventConnectionPointType.BASE,
-				this._stop_animation.bind(this)
-			),
-			new EventConnectionPoint(
-				AnimationEventInput.UPDATE,
-				EventConnectionPointType.BASE,
-				this._update_animation.bind(this)
-			),
+			new EventConnectionPoint(AnimationEventInput.START, EventConnectionPointType.BASE, this._play.bind(this)),
+			new EventConnectionPoint(AnimationEventInput.STOP, EventConnectionPointType.BASE, this._pause.bind(this)),
+			// new EventConnectionPoint(
+			// 	AnimationEventInput.UPDATE,
+			// 	EventConnectionPointType.BASE,
+			// 	this._update_animation.bind(this)
+			// ),
 		]);
 
 		this.io.outputs.set_named_output_connection_points([
@@ -100,90 +62,108 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 			new EventConnectionPoint(AnimationEventOutput.STOP, EventConnectionPointType.BASE),
 		]);
 	}
-	cook() {
-		this._update_object_node();
-		this._update_animation_node();
-		this._prepare_animation_mixer();
+	// cook() {
+	// 	console.warn('cook');
+	// 	this._update_object_node();
+	// 	this._update_animation_node();
 
-		this.cook_controller.end_cook();
-	}
+	// 	this.cook_controller.end_cook();
+	// }
 
 	process_event(event_context: EventContext<Event>) {
 		// this.dispatch_event_to_output(OUTPUT_NAME, event_context);
 	}
 
-	static PARAM_CALLBACK_start_animation(node: AnimationEventNode) {
-		node._start_animation();
+	static PARAM_CALLBACK_play(node: AnimationEventNode) {
+		node._play();
 	}
-	static PARAM_CALLBACK_stop_animation(node: AnimationEventNode) {
-		node._stop_animation();
-	}
-
-	// static PARAM_CALLBACK_update_animation_node(node: AnimationEventNode) {
-	// 	node._update_animation_node();
-	// }
-	// static PARAM_CALLBACK_update_object_node(node: AnimationEventNode) {
-	// 	node._update_object_node();
-	// }
-
-	private _start_time: number = 0;
-	private _start_animation() {
-		if (this._animation_action) {
-			this._animation_action.play();
-			this._start_time = this.scene.time;
-		}
-	}
-	private _stop_animation() {
-		if (this._animation_action) {
-			this._animation_action.stop();
-		}
-	}
-	private _update_animation() {
-		if (this._animation_mixer) {
-			const elapsed_time = this.scene.time - this._start_time;
-			this._animation_mixer.setTime(elapsed_time);
-		}
+	static PARAM_CALLBACK_pause(node: AnimationEventNode) {
+		node._pause();
 	}
 
-	private async _update_animation_node() {
+	private async _play() {
 		const param = this.p.animation;
 		if (param.is_dirty) {
 			await param.compute();
 		}
-		this._resolved_anim_node = param.found_node_with_context(NodeContext.ANIM);
-	}
-	private async _update_object_node() {
-		const param = this.p.object;
-		if (param.is_dirty) {
-			await param.compute();
-		}
-		this._resolved_object_node = param.found_node_with_context(NodeContext.OBJ);
-	}
-
-	private async _prepare_animation_mixer() {
-		if (!this._resolved_anim_node || !this._resolved_object_node) {
-			this._animation_mixer = undefined;
+		const node = param.found_node_with_context(NodeContext.ANIM);
+		if (!node) {
 			return;
 		}
-
-		const object = this._resolved_object_node.object;
-		const clip = this._resolved_anim_node.clip;
-		if (this._resolved_anim_node.is_dirty) {
-			await this._resolved_anim_node.request_container();
+		let container: AnimationContainer | undefined;
+		if (node.is_dirty) {
+			container = await node.request_container();
 		}
-
-		if (this._animation_mixer) {
-			if (this._animation_mixer.getRoot().uuid != object.uuid) {
-				this._animation_mixer = undefined;
-			}
+		if (!container) {
+			return;
 		}
-		this._animation_mixer = this._animation_mixer || new AnimationMixer(object);
-		this._animation_action = this._animation_mixer.clipAction(clip);
+		this._timeline_builder = container.core_content();
+		if (!this._timeline_builder) {
+			return;
+		}
+		this._timeline_builder.play(this.scene.default_scene);
 
-		const loop = THREE_LOOP_TYPES[ANIMATION_CLIP_LOOP_TYPES[this.pv.loop]];
-		this._animation_action.setLoop(loop, Infinity);
-		this._animation_action.clampWhenFinished = true;
-		// this._animation_action.zeroSlopeAtEnd = true;
-		// this._animation_action.zeroSlopeAtStart = true;
+		// single tween test
+		// const object = this.scene.default_scene.children[0].children[0];
+		// gsap.to(object.position, {
+		// 	duration: 1,
+		// 	x: object.position.x + 1,
+		// 	z: object.position.z + 1,
+		// 	ease: 'power2.out',
+		// });
+		// gsap.to(object.position, {
+		// 	duration: 1,
+		// 	z: object.position.z + 1,
+		// });
+
+		// timeline test
+		// const object = this.scene.default_scene.children[0].children[0];
+		// console.log(object);
+		// const t2 = gsap.timeline();
+		// // t2.pause();
+		// t2.to(object.position, {duration: 1, y: object.position.y + 1, ease: 'power2.out'});
+		// t2.to(object.scale, {duration: 1, z: object.scale.z + 1, ease: 'power2.out'}, 0);
+
+		// const t1 = gsap.timeline();
+		// t1.to(object.position, {duration: 1, x: object.position.x + 1, ease: 'power2.out'});
+		// t1.to(object.rotation, {duration: 1, y: object.rotation.y + Math.PI, ease: 'power2.out'}, 0);
+
+		// const timeline = gsap.timeline({
+		// 	onComplete: () => {
+		// 		console.log('timeline completed');
+		// 	},
+		// });
+		// timeline.add(t1);
+		// timeline.add(t2);
+
+		// stagger test
+		// const objects = this.scene.default_scene.children[0].children[1].children[1].children;
+		// console.log(objects);
+		// gsap.to(
+		// 	objects.map((o) => o.position),
+		// 	{
+		// 		duration: 1,
+		// 		y: objects[0].position.y + 1,
+		// 		stagger: 0.02,
+		// 	}
+		// );
 	}
+	private _pause() {}
+
+	// private async _update_animation_node() {
+	// 	const param = this.p.animation;
+	// 	console.log('param animation', param);
+	// 	if (param.is_dirty) {
+	// 		await param.compute();
+	// 	}
+	// 	this._resolved_anim_node = param.found_node_with_context(NodeContext.ANIM);
+	// }
+	// private async _update_object_node() {
+	// 	const param = this.p.object;
+	// 	console.log('param object', param);
+	// 	if (param.is_dirty) {
+	// 		await param.compute();
+	// 	}
+	// 	this._resolved_object_node = param.found_node_with_context(NodeContext.OBJ);
+	// }
 }

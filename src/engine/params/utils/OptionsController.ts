@@ -156,7 +156,7 @@ export interface StringParamOptions
 	multiline?: boolean;
 	language?: StringParamLanguage;
 }
-interface VectorParamOptions extends BaseParamOptions, ExpressionParamOptions, CallbackParamOptions {}
+interface VectorParamOptions extends BaseParamOptions, ExpressionParamOptions, CallbackParamOptions, ComputeOnDirtyParamOptions {}
 export interface Vector2ParamOptions extends VectorParamOptions {}
 export interface Vector3ParamOptions extends VectorParamOptions {}
 export interface Vector4ParamOptions extends VectorParamOptions {}

@@ -1,6 +1,7 @@
 import {TypedAnimNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {AnimationClip} from 'three/src/animation/AnimationClip';
+import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
+
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class NullAnimParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullAnimParamsConfig();
@@ -16,11 +17,8 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_clips: AnimationClip[]) {
-		const input_clip = input_clips[0];
-		this._clip.name = input_clip.name;
-		this._clip.duration = input_clip.duration;
-		this._clip.tracks = input_clip.tracks;
-		this.set_clip(this._clip);
+	cook(input_contents: TimelineBuilder[]) {
+		const timeline_builder = input_contents[0];
+		this.set_timeline_builder(timeline_builder);
 	}
 }

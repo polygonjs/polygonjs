@@ -8,7 +8,7 @@ QUnit.test('transform simple', async (assert) => {
 	let container, core_group;
 	container = await transform1.request_container();
 	core_group = container.core_content();
-	const geometry = core_group?.objects()[0].geometry;
+	const geometry = core_group?.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	assert.equal(container.points_count(), 24);

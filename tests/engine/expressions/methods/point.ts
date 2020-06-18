@@ -15,7 +15,7 @@ QUnit.test('expression points works with path', async (assert) => {
 	attrib_create2.p.value1.set('point("../attrib_create1", "h", 2)');
 
 	const container = await attrib_create2.request_container();
-	const array = container.core_content()!.objects()[0].geometry.attributes['t'].array as number[];
+	const array = container.core_content()!.objects_with_geo()[0].geometry.attributes['t'].array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -36,6 +36,6 @@ QUnit.test('expression points_count works with input index', async (assert) => {
 	attrib_create2.p.value1.set('point(0, "h", 2)');
 
 	const container = await attrib_create2.request_container();
-	const array = container.core_content()!.objects()[0].geometry.attributes['t'].array as number[];
+	const array = container.core_content()!.objects_with_geo()[0].geometry.attributes['t'].array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });

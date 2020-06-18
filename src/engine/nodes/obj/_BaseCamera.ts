@@ -56,7 +56,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 			},
 		});
 
-		target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
+		// target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
 			range: [0, 100],
 			cook: false,

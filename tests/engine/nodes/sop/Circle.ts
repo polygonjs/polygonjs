@@ -8,7 +8,7 @@ QUnit.test('circle simple', async (assert) => {
 	let container;
 	container = await circle1.request_container();
 	let core_group = container.core_content()!;
-	let geometry = core_group.objects()[0].geometry;
+	let geometry = core_group.objects_with_geo()[0].geometry;
 
 	assert.ok(geometry);
 	assert.equal(container.points_count(), 14);
@@ -21,7 +21,7 @@ QUnit.test('circle simple', async (assert) => {
 
 	container = await circle1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 	assert.equal(container.points_count(), 52);
 	assert.in_delta(container.bounding_box().min.x, -2.0, 0.01);

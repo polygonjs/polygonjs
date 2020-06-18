@@ -66,12 +66,12 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 		}
 		const anim_node = this.p.clip.found_node_with_context(NodeContext.ANIM);
 		if (anim_node) {
-			const container = await anim_node.request_container();
-			const animation_clip = container.animation_clip();
+			// const container = await anim_node.request_container();
+			// const animation_clip = container.animation_clip();
 			const mixer = new AnimationMixer(object);
-			const action = mixer.clipAction(animation_clip);
+			// const action = mixer.clipAction(animation_clip);
 
-			action.play();
+			// action.play();
 			return mixer;
 		}
 	}

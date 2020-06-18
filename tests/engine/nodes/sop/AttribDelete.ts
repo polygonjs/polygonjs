@@ -14,11 +14,11 @@ QUnit.test('attrib_delete simple', async (assert) => {
 	let container, core_group, geometry;
 	container = await attrib_create1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry.getAttribute('test') != null);
 
 	container = await attrib_delete1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.notOk(geometry.getAttribute('test') != null);
 });

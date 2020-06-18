@@ -2,7 +2,7 @@ import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerB} from '../utils/FlagsController';
-import {AnimationClip} from 'three/src/animation/AnimationClip';
+import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 const INPUT_GEOMETRY_NAME = 'input animation clip';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
@@ -18,17 +18,11 @@ export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeCon
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	protected _clip = new AnimationClip('tmp', -1, []);
-	get clip() {
-		return this._clip;
-	}
-
 	initialize_base_node() {
 		this.io.outputs.set_has_one_output();
 	}
-	set_clip(clip: AnimationClip) {
-		clip.resetDuration();
-		this.set_container(clip);
+	set_timeline_builder(timeline_builder: TimelineBuilder) {
+		this.set_container(timeline_builder);
 	}
 }
 

@@ -1,6 +1,8 @@
 import {BaseParamType} from '../../../params/_Base';
 import {ParamType} from '../../../poly/ParamType';
 import {StringParam} from '../../../params/String';
+import {FloatParam} from '../../../params/Float';
+import {IntegerParam} from '../../../params/Integer';
 
 type LabelControllerCallback = () => string;
 
@@ -23,14 +25,27 @@ export class ParamsLabelController {
 			this._callback = callback;
 		} else {
 			const param = this._params[0];
-			if (param.type == ParamType.STRING) {
-				const string_param = param as StringParam;
-				this._callback = () => {
-					return string_param.value;
-				};
+			switch (param.type) {
+				case ParamType.STRING:
+					return this._handle_string_param(param as StringParam);
+				case ParamType.FLOAT:
+					return this._handle_number_param(param as FloatParam);
+				case ParamType.INTEGER:
+					return this._handle_number_param(param as IntegerParam);
 			}
 		}
 		// this.graph_node.add_graph_input(this._param, false);
+	}
+
+	private _handle_string_param(param: StringParam) {
+		this._callback = () => {
+			return param.value;
+		};
+	}
+	private _handle_number_param(param: FloatParam | IntegerParam) {
+		this._callback = () => {
+			return `${param.value}`;
+		};
 	}
 
 	// set_callback(params: BaseParamType[], callback: LabelControllerCallback) {

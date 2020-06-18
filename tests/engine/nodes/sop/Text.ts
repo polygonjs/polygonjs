@@ -7,7 +7,7 @@ QUnit.test('text simple', async (assert) => {
 
 	let container = await text1.request_container();
 	let core_group = container.core_content();
-	let geometry = core_group?.objects()[0]?.geometry;
+	let geometry = core_group?.objects_with_geo()[0]?.geometry;
 
 	assert.ok(geometry);
 	assert.equal(container.points_count(), 3324);
@@ -15,7 +15,7 @@ QUnit.test('text simple', async (assert) => {
 	text1.p.text.set('this is a test');
 	container = await text1.request_container();
 	core_group = container.core_content();
-	geometry = core_group?.objects()[0]?.geometry;
+	geometry = core_group?.objects_with_geo()[0]?.geometry;
 
 	assert.ok(geometry);
 	assert.equal(container.points_count(), 3792);

@@ -66,19 +66,7 @@ export class RaycastCPUController {
 		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
 		this._plane_intersect_target.toArray(this._plane_intersect_target_array);
 
-		if (this._node.pv.tposition_target) {
-			const target_param = this._node.p.position_target;
-			// Do not cache the param in here, but fetch it directly from the operator_path.
-			// The reason is that params are very prone to disappear and be re-generated,
-			// Such as spare params created by Gl Builders
-			const found_param = target_param.found_param_with_type(ParamType.VECTOR3);
-			if (found_param) {
-				found_param.set(this._plane_intersect_target_array);
-			}
-		} else {
-			this._node.p.position.set(this._plane_intersect_target_array);
-		}
-
+		this._set_position_param(this._plane_intersect_target_array);
 		this._node.trigger_hit();
 	}
 
@@ -92,7 +80,7 @@ export class RaycastCPUController {
 			const intersection = intersections[0];
 			if (intersection) {
 				intersection.point.toArray(this._intersection_position);
-				this._node.p.position.set(this._intersection_position);
+				this._set_position_param(this._intersection_position);
 
 				if (this._node.pv.geo_attribute == true) {
 					const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
@@ -112,6 +100,22 @@ export class RaycastCPUController {
 			}
 		}
 	}
+	private _set_position_param(hit_position: Number3) {
+		if (this._node.pv.tposition_target) {
+			const target_param = this._node.p.position_target;
+
+			// Do not cache the param in here, but fetch it directly from the operator_path.
+			// The reason is that params are very prone to disappear and be re-generated,
+			// Such as spare params created by Gl Builders
+			const found_param = target_param.found_param_with_type(ParamType.VECTOR3);
+			if (found_param) {
+				found_param.set(hit_position);
+			}
+		} else {
+			this._node.p.position.set(hit_position);
+		}
+	}
+
 	private _prepare_raycaster(context: EventContext<MouseEvent>) {
 		if (this._node.pv.override_camera) {
 			if (this._node.pv.override_ray) {

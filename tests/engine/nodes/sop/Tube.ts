@@ -5,7 +5,7 @@ QUnit.test('tube simple', async (assert) => {
 
 	let container = await tube1.request_container();
 	const core_group = container.core_content()!;
-	const {geometry} = core_group.objects()[0];
+	const {geometry} = core_group.objects_with_geo()[0];
 
 	assert.ok(geometry);
 	assert.equal(container.points_count(), 76);

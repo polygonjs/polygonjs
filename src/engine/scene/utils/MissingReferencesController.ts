@@ -31,19 +31,25 @@ export class MissingReferencesController {
 	//
 	//
 	resolve_missing_references() {
+		const resolved_references: MissingExpressionReference[] = [];
 		this.references.forEach((references) => {
 			for (let reference of references) {
-				this._resolve_missing_reference(reference);
+				if (this._is_reference_resolvable(reference)) {
+					resolved_references.push(reference);
+				}
 			}
 		});
+		for (let reference of resolved_references) {
+			reference.resolve_missing_dependencies();
+		}
 	}
-	private _resolve_missing_reference(reference: MissingExpressionReference) {
+	private _is_reference_resolvable(reference: MissingExpressionReference) {
 		const absolute_path = reference.absolute_path();
 		if (absolute_path) {
 			const node = this.scene.node(absolute_path);
 			// try and find a node first
 			if (node) {
-				reference.resolve_missing_dependencies();
+				return true;
 			} else {
 				// if no node, try and find a param, via a parent first
 				const paths = CoreWalker.split_parent_child(absolute_path);
@@ -52,7 +58,7 @@ export class MissingReferencesController {
 					if (parent_node) {
 						const param = parent_node.params.get(paths.child);
 						if (param) {
-							reference.resolve_missing_dependencies();
+							return true;
 						}
 					}
 				}

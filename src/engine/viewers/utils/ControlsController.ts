@@ -44,7 +44,7 @@ export class ViewerControlsController {
 	}
 	update() {
 		if (this._controls) {
-			this._controls.update();
+			// this._controls.update();
 		}
 	}
 

@@ -1,0 +1,31 @@
+import { BaseJsNodeType } from '../../_Base';
+import { BaseNodeType } from '../../../_Base';
+import { BaseJsFunctionAssembler } from '../assemblers/_Base';
+import { ParamConfigsController } from '../../../../nodes/utils/code/controllers/ParamConfigsController';
+import { JsLineType } from './LineType';
+import { JsParamConfig } from './ParamConfig';
+import { ParamType } from '../../../../poly/ParamType';
+import { ShaderName } from '../../../utils/shaders/ShaderName';
+export declare class JsCodeBuilder {
+    private _assembler;
+    private _gl_parent_node;
+    _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>>;
+    _param_configs_set_allowed: boolean;
+    private _lines_controller;
+    _lines: Map<ShaderName, Map<JsLineType, string[]>>;
+    constructor(_assembler: BaseJsFunctionAssembler, _gl_parent_node: BaseNodeType);
+    build_from_nodes(root_nodes: BaseJsNodeType[]): Promise<void>;
+    disallow_new_param_configs(): void;
+    allow_new_param_configs(): void;
+    shader_names(): never[];
+    private reset;
+    param_configs(): readonly JsParamConfig<ParamType>[];
+    lines(line_type: JsLineType): string[] | undefined;
+    all_lines(): Map<ShaderName, Map<JsLineType, string[]>>;
+    set_param_configs(nodes: BaseJsNodeType[]): void;
+    set_code_lines(nodes: BaseJsNodeType[]): void;
+    add_code_lines(nodes: BaseJsNodeType[]): void;
+    private add_definitions;
+    add_code_line_for_nodes_and_line_type(nodes: BaseJsNodeType[], line_type: JsLineType): void;
+    add_code_line_for_node_and_line_type(node: BaseJsNodeType, line_type: JsLineType, is_last: boolean): void;
+}

@@ -41,7 +41,7 @@ QUnit.test('box with input', async (assert) => {
 
 	container = await box2.request_container();
 	const group = container.core_content()!;
-	const {geometry} = group.objects()[0];
+	const {geometry} = group.objects_with_geo()[0];
 
 	assert.equal(geometry.getAttribute('position').array.length, 72);
 	assert.equal(container.bounding_box().min.y, -1.5);

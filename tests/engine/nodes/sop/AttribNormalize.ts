@@ -31,7 +31,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 
 	let container = await merge2.request_container();
 	let core_group = container.core_content()!;
-	let geometry = core_group.objects()[0].geometry;
+	let geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	let array = geometry.getAttribute('blend').array as number[];
@@ -44,7 +44,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 
 	container = await attrib_normalize1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	array = geometry.getAttribute('blend').array as number[];
@@ -89,7 +89,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	let container = await merge2.request_container();
 	let core_group = container.core_content()!;
-	let geometry = core_group.objects()[0].geometry;
+	let geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	let array = geometry.getAttribute('blend').array as number[];
@@ -142,7 +142,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	container = await attrib_normalize1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	array = geometry.getAttribute('blend').array as number[];
@@ -195,7 +195,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	container = await attrib_normalize1.request_container();
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	array = geometry.getAttribute('blend').array as number[];

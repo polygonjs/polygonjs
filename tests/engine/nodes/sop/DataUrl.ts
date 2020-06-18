@@ -63,7 +63,7 @@ QUnit.test('data_url csv without reading names from file', async (assert) => {
 	assert.equal(point1.attrib_value('attr1'), 5);
 	assert.equal(point1.attrib_value('attr2'), 6);
 	assert.equal(point1.attrib_value('attr3'), 7);
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.deepEqual(geometry.attributes.position.array.length, 6);
 	assert.deepEqual(geometry.attributes.attr1.array.length, 2);
 	assert.deepEqual(geometry.attributes.attr2.array.length, 2);
@@ -92,7 +92,7 @@ QUnit.test('data_url csv with reading names from file', async (assert) => {
 	assert.equal(point1.attrib_value('scale'), 6);
 	assert.equal(point1.attrib_value('mult'), 7);
 	assert.equal(point1.attrib_value('add'), 8);
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.deepEqual(geometry.attributes.position.array.length, 6);
 	assert.deepEqual(geometry.attributes.rot.array.length, 2);
 	assert.deepEqual(geometry.attributes.scale.array.length, 2);
@@ -112,7 +112,7 @@ QUnit.test('data_url csv with empty line', async (assert) => {
 	assert.ok(!data_url1.is_dirty);
 	assert.equal(container.points_count(), 2);
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.deepEqual(geometry.attributes.position.array.length, 6);
 	assert.deepEqual(geometry.attributes.rot.array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['rot', 'mult', 'add', 'position', 'scale'].sort());

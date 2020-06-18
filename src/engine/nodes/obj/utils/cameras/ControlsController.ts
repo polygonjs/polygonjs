@@ -74,7 +74,7 @@ export class ThreejsCameraControlsController {
 				//controls_node.request_container (controls_container)=>
 				const controls = await controls_node.apply_controls(this.node.object, html_element);
 				const config = new CameraControlsConfig(this.node.graph_node_id, controls_node, controls);
-				controls_node.set_from_camera_node(controls, this.node);
+				// controls_node.set_from_camera_node(controls, this.node);
 				this.set_controls_events(controls);
 				return config;
 			}
@@ -128,10 +128,11 @@ export class ThreejsCameraControlsController {
 	}
 	on_controls_end(controls: CameraControls) {
 		// this.param('is_updating').set(0)
-		if (controls.target) {
-			const val = controls.target.toArray() as [number, number, number];
-			this.node.params.set_vector3('target', val);
-		}
+		// if (controls.target) {
+		// 	const val = controls.target.toArray() as [number, number, number];
+		// 	this.node.params.set_vector3('target', val);
+		// }
+		console.log('camera on_controls_end');
 		this.node.update_transform_params_from_object();
 	}
 }

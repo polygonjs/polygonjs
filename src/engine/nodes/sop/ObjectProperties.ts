@@ -7,6 +7,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	apply_to_children = ParamConfig.BOOLEAN(0);
 	separator = ParamConfig.SEPARATOR();
+	tname = ParamConfig.BOOLEAN(0);
+	name = ParamConfig.STRING('', {visible_if: {tname: true}});
 	frustrum_culled = ParamConfig.BOOLEAN(1);
 	matrix_auto_update = ParamConfig.BOOLEAN(0);
 	visible = ParamConfig.BOOLEAN(1);
@@ -47,6 +49,9 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 	}
 
 	private _update_object(object: Object3D) {
+		if (this.pv.tname) {
+			object.name = this.pv.name;
+		}
 		object.frustumCulled = this.pv.frustrum_culled;
 		object.matrixAutoUpdate = this.pv.matrix_auto_update;
 		object.visible = this.pv.visible;

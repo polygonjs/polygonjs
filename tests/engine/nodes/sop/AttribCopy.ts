@@ -28,7 +28,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	let container = await attrib_copy1.request_container();
 	assert.notOk(attrib_copy1.states.error.message, 'no error');
 	let core_group = container.core_content()!;
-	let geometry = core_group.objects()[0].geometry;
+	let geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group, 'core group exists');
 	assert.ok(geometry, 'geometry exists');
 	console.log('geometry', geometry);
@@ -58,7 +58,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	container = await attrib_copy2.request_container();
 	assert.notOk(attrib_copy2.states.error.message);
 	core_group = container.core_content()!;
-	geometry = core_group.objects()[0].geometry;
+	geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 

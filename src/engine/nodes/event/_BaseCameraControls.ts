@@ -1,7 +1,7 @@
 import {Camera} from 'three/src/cameras/Camera';
 
 import {TypedEventNode} from './_Base';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
+// import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 
 import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -46,7 +46,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 	//
 
 	abstract async create_controls_instance(camera: Camera, element: HTMLElement): Promise<CameraControls>;
-	abstract set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void;
+	// abstract set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void;
 }
 
 export type BaseCameraControlsEventNodeType = TypedCameraControlsEventNode<any>;

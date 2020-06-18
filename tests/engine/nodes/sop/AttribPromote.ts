@@ -20,7 +20,7 @@ QUnit.test('attrib promote vertex to vertex with min', async (assert) => {
 
 	let container = await attrib_promote1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -49,7 +49,7 @@ QUnit.test('attrib promote vertex to vertex with max', async (assert) => {
 
 	let container = await attrib_promote1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -105,7 +105,7 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 
 	let container = await attrib_promote1.request_container();
 	const core_group = container.core_content()!;
-	const geometry = core_group.objects()[0].geometry;
+	const geometry = core_group.objects_with_geo()[0].geometry;
 	assert.ok(geometry);
 
 	const {array} = geometry.getAttribute('test');
