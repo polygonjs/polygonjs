@@ -21,7 +21,6 @@ class PropertyAnimParamsConfig extends NodeParamsConfig {
 	value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		visible_if: {size: 4},
 	});
-	update_matrix = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new PropertyAnimParamsConfig();
 
@@ -47,11 +46,7 @@ export class PropertyAnimNode extends TypedAnimNode<PropertyAnimParamsConfig> {
 		const target_value = [this.pv.value1, this.pv.value2.clone(), this.pv.value3.clone(), this.pv.value4.clone()][
 			this.pv.size - 1
 		];
-		const timeline_builder_property = new TimelineBuilderProperty(
-			this.pv.name,
-			target_value,
-			this.pv.update_matrix
-		);
+		const timeline_builder_property = new TimelineBuilderProperty(this.pv.name, target_value);
 
 		timeline_builder.set_property(timeline_builder_property);
 

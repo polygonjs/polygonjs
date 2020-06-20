@@ -17,8 +17,16 @@ import {TypeAssert} from '../../engine/poly/Assert';
 
 type TargetValue = number | Vector2 | Vector3 | Vector4;
 
+interface Object3DProps {
+	target_property: TargetValue;
+	to_target: object;
+	property_names: string[];
+}
+
+const PROPERTY_SEPARATOR = '.';
+
 export class TimelineBuilderProperty {
-	constructor(private _property_name: string, private _target_value: TargetValue, private _update_matrix: boolean) {}
+	constructor(private _property_name: string, private _target_value: TargetValue) {}
 	name() {
 		return this._property_name;
 	}
@@ -28,7 +36,7 @@ export class TimelineBuilderProperty {
 
 	clone() {
 		const new_target_value = lodash_isNumber(this._target_value) ? this._target_value : this._target_value.clone();
-		return new TimelineBuilderProperty(this._property_name, new_target_value, this._update_matrix);
+		return new TimelineBuilderProperty(this._property_name, new_target_value);
 	}
 
 	add_to_timeline(
@@ -53,48 +61,109 @@ export class TimelineBuilderProperty {
 		timeline: gsap.core.Timeline
 	) {
 		const operation = timeline_builder.operation();
+		const update_callback = timeline_builder.update_callback();
 
 		for (let object3d of objects) {
-			const target_property = (object3d as any)[this._property_name as any] as TargetValue;
-			let to_target: object | null = null;
-			if (target_property) {
+			// const target_property = (object3d as any)[this._property_name as any] as TargetValue;
+			// let to_target: object | null = null;
+			const props = this._scene_graph_props(object3d, this._property_name);
+			if (props) {
+				const target_property = props.target_property;
+				const to_target = props.to_target;
+				const property_names = props.property_names;
 				const vars = this._common_vars(timeline_builder);
 
 				// add update_matrix
-				if (this._update_matrix) {
-					vars.onUpdateParams = [object3d];
-					vars.onUpdate = (object3d: Object3D) => {
-						object3d.updateMatrix();
+				if (update_callback && update_callback.update_matrix()) {
+					const old_matrix_auto_update = object3d.matrixAutoUpdate;
+					vars.onStart = () => {
+						object3d.matrixAutoUpdate = true;
+					};
+					vars.onUpdate = () => {
+						object3d.matrixAutoUpdate = old_matrix_auto_update;
 					};
 				}
 
-				// add update_matrix
 				if (lodash_isNumber(this._target_value)) {
 					if (lodash_isNumber(target_property)) {
-						vars[this._property_name] = this.with_op(target_property, this._target_value, operation);
-						to_target = object3d;
+						for (let property_name of property_names) {
+							vars[property_name] = this.with_op(target_property, this._target_value, operation);
+						}
 					}
 				} else {
 					if (!lodash_isNumber(target_property)) {
-						to_target = target_property;
-						vars['x'] = this.with_op(target_property.x, this._target_value.x, operation);
-						vars['y'] = this.with_op(target_property.x, this._target_value.x, operation);
-						if (this._target_value instanceof Vector3 && target_property instanceof Vector3) {
-							vars['z'] = this.with_op(target_property.z, this._target_value.z, operation);
-						} else {
-							if (this._target_value instanceof Vector4 && target_property instanceof Vector4) {
-								vars['z'] = this.with_op(target_property.z, this._target_value.z, operation);
-								vars['w'] = this.with_op(target_property.w, this._target_value.w, operation);
-							}
+						for (let property_name of property_names) {
+							vars[property_name] = this.with_op(
+								target_property[property_name as 'x'],
+								this._target_value[property_name as 'x'],
+								operation
+							);
 						}
 					}
 				}
+
+				// if (lodash_isNumber(this._target_value)) {
+				// 	if (lodash_isNumber(target_property)) {
+				// 		vars[this._property_name] = this.with_op(target_property, this._target_value, operation);
+				// 		to_target = object3d;
+				// 	}
+				// } else {
+				// 	if (!lodash_isNumber(target_property)) {
+				// 		to_target = target_property;
+				// 		vars['x'] = this.with_op(target_property.x, this._target_value.x, operation);
+				// 		vars['y'] = this.with_op(target_property.y, this._target_value.y, operation);
+				// 		if (this._target_value instanceof Vector3 && target_property instanceof Vector3) {
+				// 			vars['z'] = this.with_op(target_property.z, this._target_value.z, operation);
+				// 		} else {
+				// 			if (this._target_value instanceof Vector4 && target_property instanceof Vector4) {
+				// 				vars['z'] = this.with_op(target_property.z, this._target_value.z, operation);
+				// 				vars['w'] = this.with_op(target_property.w, this._target_value.w, operation);
+				// 			}
+				// 		}
+				// 	}
+				// }
 				if (to_target) {
-					timeline.to(to_target, vars, 0);
+					this._start_timeline(timeline_builder, timeline, vars, to_target);
 				}
 			}
 		}
 	}
+	private _scene_graph_props(object: object, property_name: string): Object3DProps | undefined {
+		const elements = property_name.split(PROPERTY_SEPARATOR);
+		if (elements.length > 1) {
+			const first_element = elements.shift() as string;
+			const sub_object = (object as any)[first_element as any] as object;
+			if (sub_object) {
+				const sub_property_name = elements.join(PROPERTY_SEPARATOR);
+				return this._scene_graph_props(sub_object, sub_property_name);
+			}
+		} else {
+			const target_property = (object as any)[property_name as any] as TargetValue;
+			let to_target: object | null = null;
+			const property_names: string[] = [];
+			if (lodash_isNumber(target_property)) {
+				to_target = object;
+				property_names.push(property_name);
+			} else {
+				to_target = target_property;
+				if (this._target_value instanceof Vector2) {
+					property_names.push('x', 'y');
+				}
+				if (this._target_value instanceof Vector3) {
+					property_names.push('x', 'y', 'z');
+				}
+				if (this._target_value instanceof Vector4) {
+					property_names.push('x', 'y', 'z', 'w');
+				}
+			}
+			return {
+				target_property: target_property,
+				to_target: to_target,
+				property_names: property_names,
+			};
+		}
+	}
+
 	private _populate_with_node(node: BaseNodeType, timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline) {
 		const target_param = node.p[this._property_name as any] as BaseParamType;
 		if (!target_param) {
@@ -140,7 +209,7 @@ export class TimelineBuilderProperty {
 		};
 		const operation = timeline_builder.operation();
 		vars.num = this.with_op(param.value, this._target_value, operation);
-		timeline.to(proxy, vars, 0);
+		this._start_timeline(timeline_builder, timeline, vars, proxy);
 	}
 	private _populate_vars_for_param_vector2(
 		param: Vector2Param,
@@ -160,7 +229,7 @@ export class TimelineBuilderProperty {
 		const operation = timeline_builder.operation();
 		vars.x = this.with_op(param.value.x, this._target_value.x, operation);
 		vars.y = this.with_op(param.value.y, this._target_value.y, operation);
-		timeline.to(proxy, vars, 0);
+		this._start_timeline(timeline_builder, timeline, vars, proxy);
 	}
 	private _populate_vars_for_param_vector3(
 		param: Vector3Param,
@@ -178,12 +247,10 @@ export class TimelineBuilderProperty {
 			param.set(proxy_array);
 		};
 		const operation = timeline_builder.operation();
-		console.log('operation', operation, param.name);
 		vars.x = this.with_op(param.value.x, this._target_value.x, operation);
 		vars.y = this.with_op(param.value.y, this._target_value.y, operation);
 		vars.z = this.with_op(param.value.z, this._target_value.z, operation);
-		console.log(proxy.x, this._target_value.clone().x, vars);
-		timeline.to(proxy, vars, 0);
+		this._start_timeline(timeline_builder, timeline, vars, proxy);
 	}
 
 	private _populate_vars_for_param_vector4(
@@ -206,7 +273,7 @@ export class TimelineBuilderProperty {
 		vars.y = this.with_op(param.value.y, this._target_value.y, operation);
 		vars.z = this.with_op(param.value.z, this._target_value.z, operation);
 		vars.w = this.with_op(param.value.w, this._target_value.w, operation);
-		timeline.to(proxy, vars, 0);
+		this._start_timeline(timeline_builder, timeline, vars, proxy);
 	}
 
 	private with_op(current_value: number, value: number, operation: Operation) {
@@ -222,13 +289,38 @@ export class TimelineBuilderProperty {
 	}
 	private _common_vars(timeline_builder: TimelineBuilder) {
 		const duration = timeline_builder.duration();
-		const easing = timeline_builder.easing();
 		const vars: gsap.TweenVars = {duration: duration};
 
-		// add easing
+		// easing
+		const easing = timeline_builder.easing();
 		if (easing) {
 			vars.ease = easing;
 		}
+
+		// delay
+		const delay = timeline_builder.delay();
+		if (delay != null) {
+			vars.delay = delay;
+		}
+
+		// repeat
+		const repeat_params = timeline_builder.repeat_params();
+		if (repeat_params) {
+			vars.repeat = repeat_params.count;
+			vars.repeatDelay = repeat_params.delay;
+			vars.yoyo = repeat_params.yoyo;
+		}
+
 		return vars;
+	}
+	private _start_timeline(
+		timeline_builder: TimelineBuilder,
+		timeline: gsap.core.Timeline,
+		vars: gsap.TweenVars,
+		target: object
+	) {
+		const position = timeline_builder.position();
+		const position_param = position ? position.to_parameter() : undefined;
+		timeline.to(target, vars, position_param);
 	}
 }

@@ -1,6 +1,8 @@
 import {TimelineBuilderProperty} from './TimelineBuilderProperty';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {PropertyTarget} from './PropertyTarget';
+import {AnimationPosition} from './Position';
+import {AnimationUpdateCallback} from './UpdateCallback';
 
 export enum Operation {
 	SET = 'set',
@@ -9,6 +11,12 @@ export enum Operation {
 }
 export const OPERATIONS: Operation[] = [Operation.SET, Operation.ADD, Operation.SUBSTRACT];
 
+export interface AnimationRepeatParams {
+	count: number;
+	delay: number;
+	yoyo: boolean;
+}
+
 export class TimelineBuilder {
 	private _timeline_builders: TimelineBuilder[] = [];
 	private _parent: TimelineBuilder | undefined;
@@ -16,7 +24,11 @@ export class TimelineBuilder {
 	private _duration: number = 1;
 	private _easing: string | undefined;
 	private _operation: Operation = Operation.SET;
+	private _repeat_params: AnimationRepeatParams | undefined;
+	private _delay: number = 0;
+	private _position: AnimationPosition | undefined;
 	private _property: TimelineBuilderProperty | undefined;
+	private _update_callback: AnimationUpdateCallback | undefined;
 
 	// static __next_id = 0;
 	// private _id: number = (TimelineBuilder.__next_id += 1);
@@ -40,6 +52,9 @@ export class TimelineBuilder {
 
 	set_target(target: PropertyTarget) {
 		this._target = target;
+		for (let builder of this._timeline_builders) {
+			builder.set_target(target);
+		}
 	}
 	target() {
 		return this._target;
@@ -47,6 +62,9 @@ export class TimelineBuilder {
 	set_duration(duration: number) {
 		if (duration >= 0) {
 			this._duration = duration;
+			for (let builder of this._timeline_builders) {
+				builder.set_duration(duration);
+			}
 		}
 	}
 	duration() {
@@ -54,15 +72,54 @@ export class TimelineBuilder {
 	}
 	set_easing(easing: string) {
 		this._easing = easing;
+		for (let builder of this._timeline_builders) {
+			builder.set_easing(easing);
+		}
 	}
 	easing() {
 		return this._easing;
 	}
 	set_operation(operation: Operation) {
 		this._operation = operation;
+		for (let builder of this._timeline_builders) {
+			builder.set_operation(operation);
+		}
 	}
 	operation() {
 		return this._operation;
+	}
+	set_repeat_params(repeat_params: AnimationRepeatParams) {
+		this._repeat_params = repeat_params;
+		for (let builder of this._timeline_builders) {
+			builder.set_repeat_params(repeat_params);
+		}
+	}
+	repeat_params() {
+		return this._repeat_params;
+	}
+	set_delay(delay: number) {
+		this._delay = delay;
+		for (let builder of this._timeline_builders) {
+			builder.set_delay(delay);
+		}
+	}
+	delay() {
+		return this._delay;
+	}
+	set_position(position: AnimationPosition | undefined) {
+		this._position = position;
+		for (let builder of this._timeline_builders) {
+			builder.set_position(position);
+		}
+	}
+	position() {
+		return this._position;
+	}
+	set_update_callback(update_callback: AnimationUpdateCallback) {
+		this._update_callback = update_callback;
+	}
+	update_callback() {
+		return this._update_callback;
 	}
 	// merge(timeline_builder?: TimelineBuilder) {
 	// 	if (!timeline_builder) {
@@ -73,14 +130,32 @@ export class TimelineBuilder {
 		const new_timeline_builder = new TimelineBuilder();
 		new_timeline_builder.set_duration(this._duration);
 		new_timeline_builder.set_operation(this._operation);
+		new_timeline_builder.set_delay(this._delay);
+
 		if (this._target) {
 			new_timeline_builder.set_target(this._target.clone());
 		}
 		if (this._easing) {
 			new_timeline_builder.set_easing(this._easing);
 		}
+		if (this._delay) {
+			new_timeline_builder.set_delay(this._delay);
+		}
+		if (this._update_callback) {
+			new_timeline_builder.set_update_callback(this._update_callback.clone());
+		}
+		if (this._repeat_params) {
+			new_timeline_builder.set_repeat_params({
+				count: this._repeat_params.count,
+				delay: this._repeat_params.delay,
+				yoyo: this._repeat_params.yoyo,
+			});
+		}
 		if (this._property) {
 			new_timeline_builder.set_property(this._property);
+		}
+		if (this._position) {
+			new_timeline_builder.set_position(this._position.clone());
 		}
 		for (let child_timeline_builder of this._timeline_builders) {
 			const new_child_timeline_builder = child_timeline_builder.clone();

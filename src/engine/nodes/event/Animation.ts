@@ -106,6 +106,10 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 
 		this._timeline_builder.populate(timeline, this.scene);
 
+		timeline.vars.onComplete = () => {
+			timeline.kill();
+		};
+
 		// single tween test
 		// const object = this.scene.default_scene.children[0].children[0];
 		// gsap.to(object.position, {

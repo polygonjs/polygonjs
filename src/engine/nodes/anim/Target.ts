@@ -10,6 +10,7 @@ const TARGET_TYPES: TargetType[] = [TargetType.SCENE_GRAPH, TargetType.NODE];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 import {PropertyTarget} from '../../../core/animation/PropertyTarget';
+import {AnimationUpdateCallback} from '../../../core/animation/UpdateCallback';
 class TargetAnimParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {
 		menu: {
@@ -22,6 +23,9 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.NODE)},
 	});
 	object_mask = ParamConfig.STRING('/geo1', {
+		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
+	});
+	update_matrix = ParamConfig.BOOLEAN(0, {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
 }
@@ -57,6 +61,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 
 		const target = this._create_target(timeline_builder);
 		timeline_builder.set_target(target);
+		this._set_update_callback(timeline_builder);
 
 		this.set_timeline_builder(timeline_builder);
 	}
@@ -71,6 +76,24 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 			case TargetType.SCENE_GRAPH: {
 				property_target.set_object_mask(this.pv.object_mask);
 				return property_target;
+			}
+		}
+		TypeAssert.unreachable(type);
+	}
+	private _set_update_callback(timeline_builder: TimelineBuilder) {
+		const type = TARGET_TYPES[this.pv.type];
+		let update_callback = timeline_builder.update_callback();
+		switch (type) {
+			case TargetType.NODE: {
+				return;
+			}
+			case TargetType.SCENE_GRAPH: {
+				if (this.pv.update_matrix) {
+					update_callback = update_callback || new AnimationUpdateCallback();
+					update_callback.set_update_matrix(this.pv.update_matrix);
+					timeline_builder.set_update_callback(update_callback);
+				}
+				return;
 			}
 		}
 		TypeAssert.unreachable(type);
