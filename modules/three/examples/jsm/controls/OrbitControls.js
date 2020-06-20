@@ -118,7 +118,6 @@ var OrbitControls = function (object, domElement) {
 
 	this.reset = function () {
 		scope.target.copy(scope.target0);
-		console.log('target updated at reset', scope.target.toArray());
 		scope.object.position.copy(scope.position0);
 		scope.object.zoom = scope.zoom0;
 
@@ -132,8 +131,6 @@ var OrbitControls = function (object, domElement) {
 
 	// this method is exposed, but perhaps it would be better if we can make it private...
 	this.update = (function () {
-		console.log('update');
-
 		var offset = new Vector3();
 
 		// so camera.up is the orbit axis
@@ -183,10 +180,8 @@ var OrbitControls = function (object, domElement) {
 
 			if (scope.enableDamping === true) {
 				scope.target.addScaledVector(panOffset, scope.dampingFactor);
-				console.log('target updated with damp', scope.target.toArray());
 			} else {
 				scope.target.add(panOffset);
-				console.log('target updated', scope.target.toArray(), panOffset.toArray(), scope.target);
 			}
 
 			offset.setFromSpherical(spherical);

@@ -13,12 +13,12 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 	}
 
 	initialize_node() {
-		this.io.inputs.set_count(1);
+		this.io.inputs.set_count(0, 1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
 	cook(input_contents: TimelineBuilder[]) {
-		const timeline_builder = input_contents[0];
+		const timeline_builder = input_contents[0] || new TimelineBuilder();
 		this.set_timeline_builder(timeline_builder);
 	}
 }

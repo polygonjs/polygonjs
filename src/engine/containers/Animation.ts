@@ -14,6 +14,12 @@ export class AnimationContainer extends TypedContainer<NodeContext.ANIM> {
 		return this.content();
 	}
 
+	core_content_cloned() {
+		if (this._content) {
+			return this._content.clone();
+		}
+	}
+
 	// infos() {
 	// 	const node = this.node()
 	// 	return [

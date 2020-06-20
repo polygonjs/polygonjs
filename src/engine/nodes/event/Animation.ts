@@ -3,6 +3,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
+import gsap from 'gsap';
 
 enum AnimationEventInput {
 	START = 'start',
@@ -101,7 +102,9 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (!this._timeline_builder) {
 			return;
 		}
-		this._timeline_builder.play(this.scene.default_scene);
+		const timeline = gsap.timeline();
+
+		this._timeline_builder.populate(timeline, this.scene);
 
 		// single tween test
 		// const object = this.scene.default_scene.children[0].children[0];

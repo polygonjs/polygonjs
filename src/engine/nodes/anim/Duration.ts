@@ -27,12 +27,9 @@ export class DurationAnimNode extends TypedAnimNode<DurationAnimParamsConfig> {
 	}
 
 	cook(input_contents: TimelineBuilder[]) {
-		const timeline_builder = input_contents[0];
+		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
-		const properties = timeline_builder.properties();
-		for (let property of properties) {
-			property.set_duration(this.pv.duration);
-		}
+		timeline_builder.set_duration(this.pv.duration);
 
 		this.set_timeline_builder(timeline_builder);
 	}

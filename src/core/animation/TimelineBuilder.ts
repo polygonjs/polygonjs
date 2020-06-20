@@ -1,43 +1,161 @@
 import {TimelineBuilderProperty} from './TimelineBuilderProperty';
-import {Scene} from 'three/src/scenes/Scene';
-import gsap from 'gsap';
+import {PolyScene} from '../../engine/scene/PolyScene';
+import {PropertyTarget} from './PropertyTarget';
+
+export enum Operation {
+	SET = 'set',
+	ADD = 'add',
+	SUBSTRACT = 'substract',
+}
+export const OPERATIONS: Operation[] = [Operation.SET, Operation.ADD, Operation.SUBSTRACT];
 
 export class TimelineBuilder {
-	private _properties: TimelineBuilderProperty[] = [];
+	private _timeline_builders: TimelineBuilder[] = [];
+	private _parent: TimelineBuilder | undefined;
+	private _target: PropertyTarget | undefined;
+	private _duration: number = 1;
+	private _easing: string | undefined;
+	private _operation: Operation = Operation.SET;
+	private _property: TimelineBuilderProperty | undefined;
 
-	set_data(object: any) {}
+	// static __next_id = 0;
+	// private _id: number = (TimelineBuilder.__next_id += 1);
+	// constructor() {
+	// 	console.log('new builder', this._id);
+	// }
 
-	merge(timeline_builder?: TimelineBuilder) {
-		if (!timeline_builder) {
-			return;
+	add_timeline_builder(timeline_builder: TimelineBuilder) {
+		this._timeline_builders.push(timeline_builder);
+		timeline_builder.set_parent(this);
+	}
+	timeline_builders() {
+		return this._timeline_builders;
+	}
+	set_parent(parent: TimelineBuilder) {
+		this._parent = parent;
+	}
+	parent() {
+		return this._parent;
+	}
+
+	set_target(target: PropertyTarget) {
+		this._target = target;
+	}
+	target() {
+		return this._target;
+	}
+	set_duration(duration: number) {
+		if (duration >= 0) {
+			this._duration = duration;
 		}
 	}
-	copy(timeline_builder: TimelineBuilder) {
-		let property: TimelineBuilderProperty;
-		while ((property = this._properties[0])) {
-			this._properties.pop();
-		}
-		for (property of timeline_builder.properties()) {
-			const new_property = property.clone();
-			this._properties.push(new_property);
-		}
+	duration() {
+		return this._duration;
 	}
-
-	add_property(property: TimelineBuilderProperty) {
-		this._properties.push(property);
+	set_easing(easing: string) {
+		this._easing = easing;
 	}
-	properties() {
-		return this._properties;
+	easing() {
+		return this._easing;
 	}
-
-	play(scene: Scene) {
-		// const object = scene.children[0].children[0];
-		// console.log(object);
-		const timeline = gsap.timeline();
-
-		for (let property of this._properties) {
-			property.add_to_timeline(timeline, scene);
+	set_operation(operation: Operation) {
+		this._operation = operation;
+	}
+	operation() {
+		return this._operation;
+	}
+	// merge(timeline_builder?: TimelineBuilder) {
+	// 	if (!timeline_builder) {
+	// 		return;
+	// 	}
+	// }
+	clone() {
+		const new_timeline_builder = new TimelineBuilder();
+		new_timeline_builder.set_duration(this._duration);
+		new_timeline_builder.set_operation(this._operation);
+		if (this._target) {
+			new_timeline_builder.set_target(this._target.clone());
 		}
+		if (this._easing) {
+			new_timeline_builder.set_easing(this._easing);
+		}
+		if (this._property) {
+			new_timeline_builder.set_property(this._property);
+		}
+		for (let child_timeline_builder of this._timeline_builders) {
+			const new_child_timeline_builder = child_timeline_builder.clone();
+			new_timeline_builder.add_timeline_builder(new_child_timeline_builder);
+		}
+		return new_timeline_builder;
+	}
+	// debug() {
+	// 	return [
+	// 		this._target_mask,
+	// 		this._property?.name(),
+	// 		this._timeline_builders.length,
+	// 		this._timeline_builders.map((tb) => tb._property?.name()),
+	// 	];
+	// }
+	// copy(timeline_builder: TimelineBuilder) {
+	// 	let property: TimelineBuilderProperty;
+	// 	while ((property = this._properties[0])) {
+	// 		this._properties.pop();
+	// 	}
+	// 	for (property of timeline_builder.properties()) {
+	// 		const new_property = property.clone();
+	// 		this._properties.push(new_property);
+	// 	}
+	// }
+
+	set_property(property: TimelineBuilderProperty) {
+		this._property = property;
+	}
+	// add_property(property: TimelineBuilderProperty) {
+	// 	this._properties.push(property);
+	// }
+	// properties() {
+	// 	return this._properties;
+	// }
+
+	populate(timeline: gsap.core.Timeline, scene: PolyScene) {
+		for (let timeline_builder of this._timeline_builders) {
+			timeline_builder.populate(timeline, scene);
+		}
+
+		if (this._property && this._target) {
+			this._property.add_to_timeline(this, scene, timeline, this._target);
+		}
+
+		// const camera_node = scene.root.nodes_by_type('perspective_camera')[0];
+		// const controls_nodes = scene.nodes_controller.instanciated_nodes(NodeContext.EVENT, 'camera_orbit_controls');
+		// const controls_node = controls_nodes[0];
+		// const camera_proxy = camera_node.pv.t.clone();
+		// const controls_proxy = controls_node.pv.target.clone();
+		// const camera_t_array: Number3 = camera_proxy.toArray() as Number3;
+		// const target_array: Number3 = controls_proxy.toArray() as Number3;
+		// timeline.to(camera_proxy, {
+		// 	duration: 1,
+		// 	x: camera_proxy.x + 1,
+		// 	z: camera_proxy.z + 1,
+		// });
+		// timeline.to(
+		// 	controls_proxy,
+		// 	{
+		// 		duration: 1,
+		// 		x: controls_proxy.x + 1,
+		// 		z: controls_proxy.z + 1,
+		// 		onUpdate: () => {
+		// 			scene.cooker.block();
+		// 			camera_proxy.toArray(camera_t_array);
+		// 			controls_proxy.toArray(target_array);
+		// 			camera_node.p.t.set(camera_t_array);
+		// 			controls_node.p.target.set(target_array);
+		// 			scene.cooker.unblock();
+		// 		},
+		// 	},
+		// 	0
+		// );
+
 		// // t2.pause();
 		// t2.to(object.position, {duration: 1, y: object.position.y + 1, ease: 'power2.out'});
 		// t2.to(object.scale, {duration: 1, z: object.scale.z + 1, ease: 'power2.out'}, 0);

@@ -1,24 +1,13 @@
 import lodash_isString from 'lodash/isString';
 import lodash_isArray from 'lodash/isArray';
-// import lodash_isBoolean from 'lodash/isBoolean';
-// import {TypedParamVisitor} from './_Base';
 import {TypedParam} from './_Base';
 import {ParamType} from '../poly/ParamType';
-// import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
-// import {ParamEvent} from '../poly/ParamEvent';
-// import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
-
-// interface NumericParamVisitor extends TypedParamVisitor {
-// 	visit_numeric_param: (param: TypedNumericParam<any>) => any;
-// }
-
 export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<T> {
-	// private _raw_input: ParamInitValuesTypeMap[T] | undefined;
 	get is_numeric() {
 		return true;
 	}
@@ -26,14 +15,6 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		return this._raw_input == this.default_value;
 	}
 
-	// accepts_visitor(visitor: NumericParamVisitor): any {
-	// 	return visitor.visit_numeric_param(this);
-	// }
-	// init_expression() {
-	// 	if (this.is_value_expression(this._default_value)) {
-	// 		return this.set_expression(this._default_value)
-	// 	}
-	// }
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (lodash_isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[T];

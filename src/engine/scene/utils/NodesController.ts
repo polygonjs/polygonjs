@@ -9,6 +9,7 @@ import {CoreString} from '../../../core/String';
 import {BaseNodeType} from '../../nodes/_Base';
 import {BaseObjNodeType} from '../../nodes/obj/_Base';
 import {NodeContext} from '../../poly/NodeContext';
+import {NodeChildrenMapByContext} from '../../poly/registers/nodes/All';
 
 export class NodesController {
 	constructor(private scene: PolyScene) {}
@@ -103,10 +104,51 @@ export class NodesController {
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];
 	}
 
-	instanciated_nodes(context: NodeContext, node_type: string) {
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.ANIM]>(
+		context: NodeContext.ANIM,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.ANIM][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.COP]>(
+		context: NodeContext.COP,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.COP][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.EVENT]>(
+		context: NodeContext.EVENT,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.EVENT][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.GL]>(
+		context: NodeContext.GL,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.GL][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.JS]>(
+		context: NodeContext.JS,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.JS][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.MAT]>(
+		context: NodeContext.MAT,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.MAT][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.OBJ]>(
+		context: NodeContext.OBJ,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.OBJ][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.POST]>(
+		context: NodeContext.POST,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.POST][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.ROP]>(
+		context: NodeContext.ROP,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.ROP][T][];
+	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.SOP]>(
+		context: NodeContext.SOP,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.SOP][T][];
+	instanciated_nodes<NC extends NodeContext>(context: NC, node_type: string) {
 		const nodes = [];
-		if (this._instanciated_nodes_by_context_and_type[context]) {
-			const nodes_by_ids = this._instanciated_nodes_by_context_and_type[context][node_type];
+		const nodes_for_context = this._instanciated_nodes_by_context_and_type[context];
+		if (nodes_for_context) {
+			const nodes_by_ids = nodes_for_context[node_type];
 			if (nodes_by_ids) {
 				for (let id of Object.keys(nodes_by_ids)) {
 					nodes.push(nodes_by_ids[id]);

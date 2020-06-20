@@ -132,7 +132,6 @@ export class ThreejsCameraControlsController {
 		// 	const val = controls.target.toArray() as [number, number, number];
 		// 	this.node.params.set_vector3('target', val);
 		// }
-		console.log('camera on_controls_end');
 		this.node.update_transform_params_from_object();
 	}
 }
