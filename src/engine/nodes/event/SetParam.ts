@@ -129,10 +129,11 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		const type = SET_PARAM_PARAM_TYPE[this.pv.type];
 		switch (type) {
 			case SetParamParamType.BOOLEAN: {
+				// use 1 and 0, so we can also use it on integer params, such as for a switch node
 				if (this.pv.toggle) {
-					return !param.value;
+					return param.value ? 0 : 1;
 				} else {
-					return this.pv.boolean;
+					return this.pv.boolean ? 1 : 0;
 				}
 			}
 			case SetParamParamType.BUTTON: {

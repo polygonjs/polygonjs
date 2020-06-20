@@ -106,8 +106,12 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 
 		this._timeline_builder.populate(timeline, this.scene);
 
+		timeline.vars.onStart = () => {
+			this.trigger_animation_started();
+		};
 		timeline.vars.onComplete = () => {
 			timeline.kill();
+			this.trigger_animation_completed();
 		};
 
 		// single tween test
@@ -156,6 +160,13 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		// );
 	}
 	private _pause() {}
+
+	trigger_animation_started() {
+		this.dispatch_event_to_output(AnimationEventInput.START, {});
+	}
+	trigger_animation_completed() {
+		this.dispatch_event_to_output(AnimationEventInput.STOP, {});
+	}
 
 	// private async _update_animation_node() {
 	// 	const param = this.p.animation;
