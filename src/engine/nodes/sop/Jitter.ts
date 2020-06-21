@@ -1,5 +1,4 @@
 import {Vector3} from 'three/src/math/Vector3';
-const THREE = {Vector3};
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreMath} from '../../../core/math/_Module';
 import {TypedSopNode} from './_Base';
@@ -37,7 +36,7 @@ export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
 		for (let i = 0; i < points.length; i++) {
 			point = points[i];
 			// TODO: replace by a pseudo random
-			const offset = new THREE.Vector3(
+			const offset = new Vector3(
 				2 * (CoreMath.rand_float(i * 75 + 764 + this.pv.seed) - 0.5),
 				2 * (CoreMath.rand_float(i * 5678 + 3653 + this.pv.seed) - 0.5),
 				2 * (CoreMath.rand_float(i * 657 + 48464 + this.pv.seed) - 0.5)

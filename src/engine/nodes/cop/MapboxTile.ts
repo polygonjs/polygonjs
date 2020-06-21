@@ -1,21 +1,12 @@
 import {
-	NearestFilter,
+	// NearestFilter,
 	LinearFilter,
 	FloatType,
 	RGBFormat,
-	LuminanceFormat,
-	UnsignedByteType,
+	// LuminanceFormat,
+	// UnsignedByteType,
 } from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
-const THREE = {
-	DataTexture,
-	NearestFilter,
-	LinearFilter,
-	FloatType,
-	RGBFormat,
-	LuminanceFormat,
-	UnsignedByteType,
-};
 
 import {TypedCopNode} from './_Base';
 // import {CoreTextureLoader} from '../../../Core/Loader/Texture'
@@ -73,14 +64,14 @@ export class MapboxTileCopNode extends TypedCopNode<MapboxTileCopParamsConfig> {
 		new Float32Array(3 * TileRes.HIGH * TileRes.HIGH),
 		TileRes.HIGH,
 		TileRes.HIGH,
-		THREE.RGBFormat,
-		THREE.FloatType
+		RGBFormat,
+		FloatType
 	);
 
 	initialize_node() {
 		this._texture.image.data.fill(255);
-		this._texture.minFilter = THREE.LinearFilter;
-		this._texture.magFilter = THREE.LinearFilter;
+		this._texture.minFilter = LinearFilter;
+		this._texture.magFilter = LinearFilter;
 		this._texture.flipY = true; // necessary otherwise the texture is misplaced
 	}
 

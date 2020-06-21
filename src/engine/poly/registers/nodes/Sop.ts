@@ -23,6 +23,7 @@ import {BlendSopNode} from '../../../nodes/sop/Blend';
 import {BoxSopNode} from '../../../nodes/sop/Box';
 import {CacheSopNode} from '../../../nodes/sop/Cache';
 import {CircleSopNode} from '../../../nodes/sop/Circle';
+import {Circle3PointsSopNode} from '../../../nodes/sop/Circle3Points';
 import {CodeSopNode} from '../../../nodes/sop/Code';
 import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
@@ -111,6 +112,7 @@ export interface GeoNodeChildrenMap {
 	box: BoxSopNode;
 	cache: CacheSopNode;
 	circle: CircleSopNode;
+	circle3points: Circle3PointsSopNode;
 	code: CodeSopNode;
 	color: ColorSopNode;
 	cop: CopSopNode;
@@ -202,6 +204,7 @@ export class SopRegister {
 		poly.register_node(CacheSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		poly.register_node(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.register_node(Circle3PointsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(CopSopNode, CATEGORY_SOP.NETWORK);

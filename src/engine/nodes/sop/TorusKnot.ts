@@ -1,5 +1,4 @@
 import {TorusKnotBufferGeometry} from 'three/src/geometries/TorusKnotGeometry';
-const THREE = {TorusKnotBufferGeometry};
 import {TypedSopNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -28,7 +27,7 @@ export class TorusKnotSopNode extends TypedSopNode<TorusKnotSopParamsConfig> {
 		const p = this.pv.p;
 		const q = this.pv.q;
 
-		const geometry = new THREE.TorusKnotBufferGeometry(radius, radius_tube, segments_radial, segments_tube, p, q);
+		const geometry = new TorusKnotBufferGeometry(radius, radius_tube, segments_radial, segments_tube, p, q);
 		this.set_geometry(geometry);
 	}
 }

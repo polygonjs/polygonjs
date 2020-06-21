@@ -1,6 +1,5 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-const THREE = {BufferAttribute, BufferGeometry};
 import lodash_range from 'lodash/range';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_sortBy from 'lodash/sortBy';
@@ -26,6 +25,7 @@ class ScatterSopParamsConfig extends NodeParamsConfig {
 		visible_if: {transfer_attributes: 1},
 	});
 	add_id_attribute = ParamConfig.BOOLEAN(1);
+	add_idn_attribute = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new ScatterSopParamsConfig();
 
@@ -148,21 +148,28 @@ export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 		// 	}
 		// }
 
-		const geometry = new THREE.BufferGeometry();
-		geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+		const geometry = new BufferGeometry();
+		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 		for (let attrib_name of attrib_names) {
 			geometry.setAttribute(
 				attrib_name,
-				new THREE.BufferAttribute(
+				new BufferAttribute(
 					new Float32Array(attrib_values_by_name.get(attrib_name)!),
 					attrib_sizes_by_name.get(attrib_name)!
 				)
 			);
 		}
 
-		if (this.pv.add_id_attribute) {
-			const ids = lodash_range(this.pv.points_count);
-			geometry.setAttribute('id', new THREE.BufferAttribute(new Float32Array(ids), 1));
+		if (this.pv.add_id_attribute || this.pv.add_idn_attribute) {
+			const points_count = this.pv.points_count;
+			const ids = lodash_range(points_count);
+			if (this.pv.add_id_attribute) {
+				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
+			}
+			const idns = ids.map((id) => id / (points_count - 1));
+			if (this.pv.add_idn_attribute) {
+				geometry.setAttribute('idn', new BufferAttribute(new Float32Array(idns), 1));
+			}
 		}
 
 		this.set_geometry(geometry, ObjectType.POINTS);
