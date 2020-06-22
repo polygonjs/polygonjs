@@ -13,6 +13,7 @@ import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
 import {TimerEventNode} from '../../../nodes/event/Timer';
+import {ViewerEventNode} from '../../../nodes/event/Viewer';
 
 export interface EventNodeChildrenMap {
 	animation: AnimationEventNode;
@@ -28,6 +29,7 @@ export interface EventNodeChildrenMap {
 	set_param: SetParamEventNode;
 	sequence: SequenceEventNode;
 	timer: TimerEventNode;
+	viewer: ViewerEventNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -46,5 +48,6 @@ export class EventRegister {
 		poly.register_node(SetParamEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SequenceEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(TimerEventNode, CATEGORY_EVENT.MISC);
+		poly.register_node(ViewerEventNode, CATEGORY_EVENT.MISC);
 	}
 }

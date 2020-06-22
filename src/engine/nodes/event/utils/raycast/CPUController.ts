@@ -67,7 +67,7 @@ export class RaycastCPUController {
 		this._plane_intersect_target.toArray(this._plane_intersect_target_array);
 
 		this._set_position_param(this._plane_intersect_target_array);
-		this._node.trigger_hit();
+		this._node.trigger_hit(context);
 	}
 
 	private _intersect_with_geometry(context: EventContext<MouseEvent>) {
@@ -94,9 +94,9 @@ export class RaycastCPUController {
 						}
 					}
 				}
-				this._node.trigger_hit();
+				this._node.trigger_hit(context);
 			} else {
-				this._node.trigger_miss();
+				this._node.trigger_miss(context);
 			}
 		}
 	}

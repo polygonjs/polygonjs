@@ -217,11 +217,11 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		]);
 	}
 
-	trigger_hit() {
-		this.dispatch_event_to_output(OUTPUT_HIT, {});
+	trigger_hit(context: EventContext<MouseEvent>) {
+		this.dispatch_event_to_output(OUTPUT_HIT, context);
 	}
-	trigger_miss() {
-		this.dispatch_event_to_output(OUTPUT_MISS, {});
+	trigger_miss(context: EventContext<MouseEvent>) {
+		this.dispatch_event_to_output(OUTPUT_MISS, context);
 	}
 
 	private _process_mouse_event(context: EventContext<MouseEvent>) {
