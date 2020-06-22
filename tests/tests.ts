@@ -124,6 +124,7 @@ import './engine/nodes/sop/BboxScatter';
 import './engine/nodes/sop/Blend';
 import './engine/nodes/sop/Box';
 import './engine/nodes/sop/Cache';
+import './engine/nodes/sop/Center';
 import './engine/nodes/sop/Circle';
 import './engine/nodes/sop/Circle3Points';
 import './engine/nodes/sop/Color';

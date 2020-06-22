@@ -13,7 +13,7 @@ import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCopNode} from './_Base';
-import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+// import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
@@ -81,10 +81,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	});
 	private _texture_scene: Scene = new Scene();
 	private _texture_camera: Camera = new Camera();
-	private _render_target: WebGLRenderTarget = this._create_render_target(
-		RESOLUTION_DEFAULT[0],
-		RESOLUTION_DEFAULT[1]
-	);
+	private _render_target: WebGLRenderTarget | undefined;
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
@@ -105,13 +102,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
 		});
 
-		this.dirty_controller.add_post_dirty_hook(
-			'_reset_if_resolution_changed',
-			this._reset_if_resolution_changed.bind(this)
-		);
-		this.params.on_params_created('reset', () => {
-			this._reset();
-		});
+		// this.dirty_controller.add_post_dirty_hook(
+		// 	'_reset_if_resolution_changed',
+		// 	this._reset_if_resolution_changed.bind(this)
+		// );
+		// this.params.on_params_created('reset', () => {
+		// 	this._reset();
+		// });
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(
@@ -139,15 +136,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		await this.cook_controller.cook_main_without_inputs();
 	}
 
-	private _reset_if_resolution_changed(trigger?: CoreGraphNode) {
-		if (trigger && trigger.graph_node_id == this.p.resolution.graph_node_id) {
-			this._reset();
-		}
-	}
-	private _reset() {
-		this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
-		this._data_texture_controller?.reset();
-	}
+	// private _reset_if_resolution_changed(trigger?: CoreGraphNode) {
+	// 	if (trigger && trigger.graph_node_id == this.p.resolution.graph_node_id) {
+	// 		this._reset();
+	// 	}
+	// }
 
 	async cook() {
 		this.compile_if_required();
@@ -223,9 +216,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	async render_on_target() {
+		this.create_render_target_if_required();
 		if (!this._render_target) {
 			return;
 		}
+
 		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
 		const renderer = await this._renderer_controller.renderer();
 
@@ -257,7 +252,26 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	render_target() {
-		return this._render_target;
+		return (this._render_target =
+			this._render_target || this._create_render_target(this.pv.resolution.x, this.pv.resolution.y));
+	}
+	private create_render_target_if_required() {
+		if (!this._render_target || !this._render_target_resolution_valid()) {
+			this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
+			this._data_texture_controller?.reset();
+		}
+	}
+	private _render_target_resolution_valid() {
+		if (this._render_target) {
+			const image = this._render_target.texture.image;
+			if (image.width != this.pv.resolution.x || image.height != this.pv.resolution.y) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	private _create_render_target(width: number, height: number) {
@@ -284,6 +298,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
+		console.warn('created render target', this.full_path(), width, height);
 		return renderTarget;
 	}
 }

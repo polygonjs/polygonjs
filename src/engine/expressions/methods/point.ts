@@ -1,8 +1,8 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
-// import {CoreGroup} from '../../../core/Geometry/Group'
 
+const EXPECTED_ARGS_COUNT = 3;
 export class PointExpression extends BaseMethod {
 	protected _require_dependency = true;
 	static required_arguments() {
@@ -18,10 +18,8 @@ export class PointExpression extends BaseMethod {
 	}
 
 	process_arguments(args: any[]): Promise<any> {
-		// const time_start = performance.now();
-		// console.log('point start', args);
 		return new Promise(async (resolve, reject) => {
-			if (args.length == 3) {
+			if (args.length == EXPECTED_ARGS_COUNT) {
 				const index_or_path = args[0];
 				const attrib_name = args[1];
 				const point_index = args[2];
@@ -33,10 +31,10 @@ export class PointExpression extends BaseMethod {
 				}
 				if (container) {
 					const value = this._get_value_from_container(container, attrib_name, point_index);
-					// console.log('point end', args, value, performance.now() - time_start);
 					resolve(value);
 				}
 			} else {
+				console.warn(`${args.length} given when expected ${EXPECTED_ARGS_COUNT}`);
 				resolve(0);
 			}
 		});
@@ -44,7 +42,6 @@ export class PointExpression extends BaseMethod {
 
 	_get_value_from_container(container: GeometryContainer, attrib_name: string, point_index: number) {
 		const core_group = container.core_content();
-		// TODO: optimise and store the group_wrapper in the json_node
 		if (core_group) {
 			const point = core_group.points()[point_index];
 
@@ -57,27 +54,4 @@ export class PointExpression extends BaseMethod {
 			return null;
 		}
 	}
-
-	// _get_param_value(index_or_path, point_index, attrib_name, callback){
-	// 	return this.get_referenced_node_container(index_or_path, container=> {
-	// 		const group = container.group({clone: false});
-	// 		const group_wrapper = new Core.Geometry.Group(group);
-	// 		// TODO: optimise and store the group_wrapper in the json_node
-	// 		const point = group_wrapper.points()[point_index];
-
-	// 		if (point != null) {
-	// 			const value = point.attrib_value(attrib_name);
-	// 			if (value != null) {
-	// 				return callback(value);
-	// 			} else {
-	// 				//throw "no attribute #{attrib_name} found"
-	// 				console.error(`no attribute ${attrib_name} found`);
-	// 				return callback(0);
-	// 			}
-	// 		} else {
-	// 			console.error(`no point found with index ${point_index}`);
-	// 			return callback(0);
-	// 		}
-	// 	});
-	// }
 }

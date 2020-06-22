@@ -2,6 +2,10 @@ import {TypedObjNode} from './_Base';
 import {Scene} from 'three/src/scenes/Scene';
 import {Fog} from 'three/src/scenes/Fog';
 import {FogExp2} from 'three/src/scenes/FogExp2';
+import {NodeContext} from '../../poly/NodeContext';
+import {BaseCopNodeType} from '../cop/_Base';
+import {BaseMatNodeType} from '../mat/_Base';
+import {HierarchyController} from './utils/HierarchyController';
 
 enum BackgroundMode {
 	NONE = 'none',
@@ -17,9 +21,6 @@ enum FogType {
 const FOG_TYPES: FogType[] = [FogType.LINEAR, FogType.EXPONENTIAL];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeContext} from '../../poly/NodeContext';
-import {BaseCopNodeType} from '../cop/_Base';
-import {BaseMatNodeType} from '../mat/_Base';
 class SceneObjParamConfig extends NodeParamsConfig {
 	auto_update = ParamConfig.BOOLEAN(1);
 
@@ -94,7 +95,8 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	static type(): Readonly<'scene'> {
 		return 'scene';
 	}
-	protected _attachable_to_hierarchy: boolean = false;
+	// protected _attachable_to_hierarchy: boolean = false;
+	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
 
 	private _fog: Fog | undefined;
 	private _fog_exp2: FogExp2 | undefined;
@@ -106,21 +108,22 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	}
 
 	initialize_node() {
-		this.dirty_controller.add_post_dirty_hook(
-			'_cook_main_without_inputs_when_dirty',
-			this._cook_main_without_inputs_when_dirty_bound
-		);
+		// this.dirty_controller.add_post_dirty_hook(
+		// 	'_cook_main_without_inputs_when_dirty',
+		// 	this._cook_main_without_inputs_when_dirty_bound
+		// );
 
-		super.initialize_node();
-		this.io.outputs.set_has_one_output();
+		// super.initialize_node();
+		this.hierarchy_controller.initialize_node();
+		// this.io.outputs.set_has_one_output();
 	}
 	// TODO: I may be able to swap those methods to param callbacks for most params
-	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
-	private async _cook_main_without_inputs_when_dirty() {
-		// if (this.used_in_scene) {
-		await this.cook_controller.cook_main_without_inputs();
-		// }
-	}
+	// private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
+	// private async _cook_main_without_inputs_when_dirty() {
+	// 	// if (this.used_in_scene) {
+	// 	await this.cook_controller.cook_main_without_inputs();
+	// 	// }
+	// }
 
 	cook() {
 		if (this.pv.auto_update != this.object.autoUpdate) {

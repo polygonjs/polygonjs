@@ -1,3 +1,5 @@
+import {NormalizeMode} from '../../../../src/engine/nodes/sop/AttribNormalize';
+
 QUnit.test('attrib normalize simple float', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -241,4 +243,25 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 			0,
 		].join(',')
 	);
+});
+
+QUnit.test('attrib normalize vector length', async (assert) => {
+	const geo1 = window.geo1;
+
+	const add1 = geo1.create_node('add');
+	const transform1 = geo1.create_node('transform');
+	const attrib_normalize1 = geo1.create_node('attrib_normalize');
+
+	transform1.set_input(0, add1);
+	attrib_normalize1.set_input(0, transform1);
+
+	add1.p.position.set([2, 0, 0]);
+	transform1.p.scale.set(2);
+	attrib_normalize1.set_mode(NormalizeMode.VECTOR_TO_LENGTH_1);
+
+	let container = await attrib_normalize1.request_container();
+	let geometry = container.core_content()!.objects_with_geo()[0].geometry;
+	let array = geometry.getAttribute('position').array as number[];
+
+	assert.equal(array.join(','), [1, 0, 0]);
 });

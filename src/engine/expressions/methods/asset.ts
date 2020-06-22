@@ -35,17 +35,21 @@ export class AssetExpression extends BaseMethod {
 
 	// TODO: add error management
 	async request_asset_url(asset_name: string): Promise<string> {
-		const scene = this.node.scene;
-		const scene_uuid: string = scene.uuid;
+		if (this.node) {
+			const scene = this.node.scene;
+			const scene_uuid: string = scene.uuid;
 
-		// const encoded_asset_name = encodeURIComponent(asset_name);
-		const url = await AssetExpression._resolver({
-			asset_name: asset_name,
-			param: this.param,
-			scene_uuid: scene_uuid,
-		});
+			// const encoded_asset_name = encodeURIComponent(asset_name);
+			const url = await AssetExpression._resolver({
+				asset_name: asset_name,
+				param: this.param,
+				scene_uuid: scene_uuid,
+			});
+			return url;
+		} else {
+			return 'ERROR: no node assigned';
+		}
 
-		return url;
 		// console.log("url from resolver:", url)
 		// const response = await fetch(url);
 		// const data = await response.json();

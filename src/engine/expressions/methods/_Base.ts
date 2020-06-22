@@ -1,6 +1,5 @@
 import {CoreWalker} from '../../../core/Walker';
 import {DecomposedPath} from '../../../core/DecomposedPath';
-// import {NodeSimple} from '../../../core/graph/NodeSimple'
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
@@ -11,18 +10,19 @@ import {BaseContainer} from '../../containers/_Base';
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 
-// type NodeOrParam = BaseNode | BaseParam;
-
 export class BaseMethod {
-	public readonly node: BaseNodeType;
 	protected _require_dependency = false;
 	require_dependency() {
 		return this._require_dependency;
 	}
 
-	constructor(public readonly param: BaseParamType) {
-		// this._init_update_dependencies_mode();
-		this.node = this.param.node;
+	constructor(public readonly param: BaseParamType) {}
+	// the node is not fetched from the param in the constructor,
+	// since the param may not have a node yet, especially when the param's value
+	// is set on node creation
+	private _node: BaseNodeType | undefined;
+	protected get node(): BaseNodeType | undefined {
+		return (this._node = this._node || this.param.node);
 	}
 
 	static required_arguments(): any[] {
@@ -57,7 +57,6 @@ export class BaseMethod {
 			} else {
 				container = referenced_node.container_controller.container;
 			}
-			// console.log('request container', referenced_node.full_path(), performance.now() - time_start);
 			if (container) {
 				const core_group = container.core_content();
 				if (core_group) {
@@ -71,7 +70,9 @@ export class BaseMethod {
 	}
 
 	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
-		const referenced_param = CoreWalker.find_param(this.node, path, decomposed_path);
+		if (this.node) {
+			return CoreWalker.find_param(this.node, path, decomposed_path);
+		}
 
 		// if (referenced_param != null) {
 
@@ -89,7 +90,7 @@ export class BaseMethod {
 		// 	throw `no param found for argument ${path}`;
 		// }
 
-		return referenced_param || null;
+		return null;
 	}
 
 	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): CoreGraphNode | null {
@@ -97,12 +98,15 @@ export class BaseMethod {
 		// let node
 		if (is_index) {
 			const index = index_or_path as number;
-			const input_graph_node = this.node.io.inputs.input_graph_node(index);
-			return input_graph_node;
+			if (this.node) {
+				const input_graph_node = this.node.io.inputs.input_graph_node(index);
+				return input_graph_node;
+			}
 		} else {
 			const path = index_or_path as string;
 			return this.get_referenced_node(path, decomposed_path);
 		}
+		return null;
 	}
 	// caching the node by path here prevents having expressions such as points_count(0)
 	// evaluate to an error when the input is disconnected
@@ -112,14 +116,17 @@ export class BaseMethod {
 		// if (node) {
 		// 	return node;
 		// } else {
-		let node: BaseNodeType | null;
+		let node: BaseNodeType | null = null;
 		if (lodash_isString(index_or_path)) {
-			const path = index_or_path;
-			node = CoreWalker.find_node(this.node, path, decomposed_path);
+			if (this.node) {
+				const path = index_or_path;
+				node = CoreWalker.find_node(this.node, path, decomposed_path);
+			}
 		} else {
-			const index = index_or_path;
-			this.node.io.inputs.input(index);
-			node = this.node.io.inputs.input(index);
+			if (this.node) {
+				const index = index_or_path;
+				node = this.node.io.inputs.input(index);
+			}
 		}
 		// this._node_by_path.set(index_or_path, node);
 		return node || null;
@@ -131,7 +138,6 @@ export class BaseMethod {
 	}
 
 	protected create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency | null {
-		// console.log("is_index", index_or_path)
 		const decomposed_path = new DecomposedPath();
 		const node = this.find_referenced_graph_node(index_or_path, decomposed_path);
 		if (node) {
@@ -146,28 +152,7 @@ export class BaseMethod {
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
 	): MethodDependency | null {
-		// if (CoreObject.is_a(node, TypedNode) || CoreObject.is_a(node, TypedParam)) {
-		// 	const node_or_param = node as BaseNodeType;
-		// 	return MethodDependency.create(this.param, index_or_path, node_or_param, decomposed_path?.named_nodes);
-		// }
 		const dependency = MethodDependency.create(this.param, index_or_path, node, decomposed_path);
 		return dependency;
 	}
-
-	//
-	//
-	// UPDATE DEPENDENCIES
-	//
-	//
-	// _init_update_dependencies_mode() {
-	// 	return this.set_update_dependencies_mode(false);
-	// }
-	// set_update_dependencies_mode(mode){
-	// 	return this._update_dependencies_mode = mode;
-	// }
-	// update_dependencies_mode() {
-	// 	return this._update_dependencies_mode;
-	// }
-	// update_dependencies() {}
 }
-//

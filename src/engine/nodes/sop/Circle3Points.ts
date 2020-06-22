@@ -155,21 +155,8 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 			this.angle_ab = this.an.angleTo(this.bn);
 			this.angle_ac = this.an.angleTo(this.cn);
 			this.angle_bc = this.bn.angleTo(this.cn);
-			console.log({
-				ab: this.angle_ab,
-				ac: this.angle_ac,
-				bc: this.angle_bc,
-			});
+
 			this._set_angle_from_join_mode();
-			console.log('angle', this.angle);
-			// this.angle_half0 = Math.min(this.angle_ab, this.angle_ac);
-			// if (this.angle_ab < this.angle_ac) {
-			// 	this.angle_half1 = this.bn.angleTo(this.cn);
-			// 	this.angle = this.angle_half0 + this.angle_half1;
-			// } else {
-			// 	this.angle_half1 = this.cn.angleTo(this.cn);
-			// 	this.angle = this.angle_half0 + this.angle_half1;
-			// }
 		}
 	}
 
@@ -279,9 +266,8 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 			case PointsCountMode.SEGMENTS_LENGTH: {
 				let perimeter = Math.PI * this.radius * this.radius;
 				if (!this.pv.full) {
-					perimeter *= this.angle / (Math.PI * 2);
+					perimeter *= Math.abs(this.angle) / (Math.PI * 2);
 				}
-				console.log('perimeter', perimeter);
 				return Math.ceil(perimeter / this.pv.segments_length);
 			}
 		}

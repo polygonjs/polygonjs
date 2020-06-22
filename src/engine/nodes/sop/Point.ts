@@ -1,13 +1,9 @@
-// import lodash_map from 'lodash/map'
-
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BooleanParam} from '../../params/Boolean';

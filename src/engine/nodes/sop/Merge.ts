@@ -102,11 +102,17 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 				}
 
 				// TODO: test that this works with geometries with same attributes
-				const merged_geometry = CoreGeometry.merge_geometries(geometries);
-				if (merged_geometry) {
-					const material = materials_by_object_type.get(object_type);
-					const object = this.create_object(merged_geometry, object_type, material);
-					merged_objects.push(object as Object3DWithGeometry);
+				try {
+					const merged_geometry = CoreGeometry.merge_geometries(geometries);
+					if (merged_geometry) {
+						const material = materials_by_object_type.get(object_type);
+						const object = this.create_object(merged_geometry, object_type, material);
+						merged_objects.push(object as Object3DWithGeometry);
+					} else {
+						this.states.error.set('merge failed, check that input geometries have the same attributes');
+					}
+				} catch (e) {
+					this.states.error.set(e);
 				}
 			}
 		});
