@@ -31,6 +31,17 @@ export const BASE_CAMERA_DEFAULT = {
 	far: 100.0,
 };
 
+export enum UpdateFromControlsMode {
+	ON_END = 'on move end',
+	ALWAYS = 'always',
+	NEVER = 'never',
+}
+export const UPDATE_FROM_CONTROLS_MODES: UpdateFromControlsMode[] = [
+	UpdateFromControlsMode.ON_END,
+	UpdateFromControlsMode.ALWAYS,
+	UpdateFromControlsMode.NEVER,
+];
+
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
@@ -55,6 +66,17 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 				context: NodeContext.EVENT,
 			},
 		});
+		update_from_controls_mode = ParamConfig.INTEGER(
+			UPDATE_FROM_CONTROLS_MODES.indexOf(UpdateFromControlsMode.ON_END),
+			{
+				menu: {
+					entries: UPDATE_FROM_CONTROLS_MODES.map((name, value) => {
+						return {name, value};
+					}),
+				},
+			}
+		);
+		allow_update_from_controls = ParamConfig.BOOLEAN(1);
 
 		// target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {

@@ -123,6 +123,11 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		...visible_for_cpu(),
 	});
+	points_threshold = ParamConfig.FLOAT(1, {
+		range: [0, 100],
+		range_locked: [true, false],
+		...visible_for_cpu(),
+	});
 	//
 	//
 	// CPU PLANE

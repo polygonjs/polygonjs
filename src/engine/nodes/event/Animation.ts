@@ -76,13 +76,13 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 	}
 
 	static PARAM_CALLBACK_play(node: AnimationEventNode) {
-		node._play();
+		node._play({});
 	}
 	static PARAM_CALLBACK_pause(node: AnimationEventNode) {
 		node._pause();
 	}
 
-	private async _play() {
+	private async _play(event_context: EventContext<Event>) {
 		const param = this.p.animation;
 		if (param.is_dirty) {
 			await param.compute();
@@ -107,11 +107,11 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		this._timeline_builder.populate(timeline, this.scene);
 
 		timeline.vars.onStart = () => {
-			this.trigger_animation_started();
+			this.trigger_animation_started(event_context);
 		};
 		timeline.vars.onComplete = () => {
 			timeline.kill();
-			this.trigger_animation_completed();
+			this.trigger_animation_completed(event_context);
 		};
 
 		// single tween test
@@ -161,11 +161,11 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 	}
 	private _pause() {}
 
-	trigger_animation_started() {
-		this.dispatch_event_to_output(AnimationEventInput.START, {});
+	trigger_animation_started(event_context: EventContext<Event>) {
+		this.dispatch_event_to_output(AnimationEventInput.START, event_context);
 	}
-	trigger_animation_completed() {
-		this.dispatch_event_to_output(AnimationEventInput.STOP, {});
+	trigger_animation_completed(event_context: EventContext<Event>) {
+		this.dispatch_event_to_output(AnimationEventInput.STOP, event_context);
 	}
 
 	// private async _update_animation_node() {

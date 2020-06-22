@@ -60,14 +60,21 @@ export class PolyNodeController {
 			return;
 		}
 		// TODO: this is to avoid creating gl globals and output nodes
-		// but there should be a better way, on a per-node basis
-		this.node.scene.loading_controller.mark_as_loading();
+		// but there should be a better way, on a per-node basis.
+		// Especially since it can create problem when loading a scene with gl builders
+		// as those may trigger the creation of globals and output nodes too early, resulting in a broken load
+		const current_scene_loaded_state: boolean = this.node.scene.loading_controller.loaded;
+		if (current_scene_loaded_state) {
+			this.node.scene.loading_controller.mark_as_loading();
+		}
 
 		const scene_importer = new SceneJsonImporter({});
 		const node_importer = new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
 		node_importer.create_nodes(scene_importer, nodes_data);
 
-		this.node.scene.loading_controller.mark_as_loaded();
+		if (current_scene_loaded_state) {
+			this.node.scene.loading_controller.mark_as_loaded();
+		}
 	}
 
 	debug(param: OperatorPathParam) {

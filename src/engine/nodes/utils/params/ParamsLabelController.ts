@@ -1,6 +1,7 @@
 import {BaseParamType} from '../../../params/_Base';
 import {ParamType} from '../../../poly/ParamType';
 import {StringParam} from '../../../params/String';
+import {OperatorPathParam} from '../../../params/OperatorPath';
 import {FloatParam} from '../../../params/Float';
 import {IntegerParam} from '../../../params/Integer';
 
@@ -28,6 +29,8 @@ export class ParamsLabelController {
 			switch (param.type) {
 				case ParamType.STRING:
 					return this._handle_string_param(param as StringParam);
+				case ParamType.OPERATOR_PATH:
+					return this._handle_operator_path_param(param as OperatorPathParam);
 				case ParamType.FLOAT:
 					return this._handle_number_param(param as FloatParam);
 				case ParamType.INTEGER:
@@ -38,6 +41,11 @@ export class ParamsLabelController {
 	}
 
 	private _handle_string_param(param: StringParam) {
+		this._callback = () => {
+			return param.value;
+		};
+	}
+	private _handle_operator_path_param(param: OperatorPathParam) {
 		this._callback = () => {
 			return param.value;
 		};

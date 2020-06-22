@@ -101,6 +101,12 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		this.io.outputs.set_named_output_connection_points([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
+
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created('params_label', () => {
+				this.params.label.init([this.p.param]);
+			});
+		});
 	}
 	async process_event(event_context: EventContext<Event>) {
 		if (this.p.param.is_dirty) {

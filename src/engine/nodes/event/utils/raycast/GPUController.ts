@@ -72,6 +72,7 @@ export class RaycastGPUController {
 				});
 
 			if (!this._resolved_material) {
+				this.update_material();
 				console.warn('no material found');
 				return;
 			}
@@ -90,8 +91,8 @@ export class RaycastGPUController {
 			// read result
 			renderer.readRenderTargetPixels(
 				this._render_target,
-				this._mouse.x * canvas.offsetWidth,
-				this._mouse.y * canvas.offsetHeight,
+				Math.round(this._mouse.x * canvas.offsetWidth),
+				Math.round(this._mouse.y * canvas.offsetHeight),
 				1,
 				1,
 				this._read

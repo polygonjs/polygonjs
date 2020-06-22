@@ -1,4 +1,4 @@
-import {TypedNode} from '../../../nodes/_Base';
+import {TypedNode, BaseNodeType} from '../../../nodes/_Base';
 import lodash_isString from 'lodash/isString';
 import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isObject from 'lodash/isObject';
@@ -13,6 +13,7 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
 import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
 import {ParamJsonImporter} from './Param';
+import {PolyNodeJsonImporter} from './nodes/Poly';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -99,19 +100,22 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 				}
 			}
 		}
-		const importers = [];
-		let index = 0;
+		const importers_by_node_name: Map<string, PolyNodeJsonImporter | NodeJsonImporter<BaseNodeType>> = new Map();
 		for (let node of nodes) {
-			const importer = JsonImportDispatcher.dispatch_node(node); //.visit(JsonImporterVisitor)
-			importers.push(importer);
-			importer.process_data(scene_importer, data[node.name]);
-			index++;
+			const child_data = data[node.name];
+			if (child_data) {
+				const importer = JsonImportDispatcher.dispatch_node(node);
+				importers_by_node_name.set(node.name, importer);
+				importer.process_data(scene_importer, data[node.name]);
+			} else {
+				console.warn(`possible import error for node ${node.name}`);
+			}
 		}
-		index = 0;
 		for (let node of nodes) {
-			const importer = importers[index];
-			importer.process_inputs_data(data[node.name]);
-			index++;
+			const importer = importers_by_node_name.get(node.name);
+			if (importer) {
+				importer.process_inputs_data(data[node.name]);
+			}
 		}
 	}
 	set_selection(data?: string[]) {

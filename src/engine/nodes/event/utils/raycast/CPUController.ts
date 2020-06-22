@@ -2,10 +2,11 @@ import {EventContext} from '../../../../scene/utils/events/_BaseEventsController
 import {RaycastEventNode} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector2} from 'three/src/math/Vector2';
-import {Raycaster} from 'three/src/core/Raycaster';
+import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {Mesh} from 'three/src/objects/Mesh';
+import {Points} from 'three/src/objects/Points';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {GeoObjNode} from '../../../obj/Geo';
 import {PerspectiveCameraObjNode} from '../../../obj/PerspectiveCamera';
@@ -14,6 +15,7 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {Plane} from 'three/src/math/Plane';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../../../../poly/ParamType';
+import {object_type_from_constructor, ObjectType} from '../../../../../core/geometry/Constant';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -83,16 +85,7 @@ export class RaycastCPUController {
 				this._set_position_param(this._intersection_position);
 
 				if (this._node.pv.geo_attribute == true) {
-					const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
-					if (geometry) {
-						const attribute = geometry.getAttribute(this._node.pv.geo_attribute_name);
-						if (attribute) {
-							const val = attribute.array[0];
-							if (val != null) {
-								this._node.p.geo_attribute_value.set(val);
-							}
-						}
-					}
+					this._resolve_geometry_attribute(intersection);
 				}
 				this._node.trigger_hit(context);
 			} else {
@@ -100,6 +93,40 @@ export class RaycastCPUController {
 			}
 		}
 	}
+	private _resolve_geometry_attribute(intersection: Intersection) {
+		const object_type = object_type_from_constructor(intersection.object.constructor);
+		switch (object_type) {
+			case ObjectType.MESH:
+				return this._resolve_geometry_attribute_for_mesh(intersection);
+			case ObjectType.POINTS:
+				return this._resolve_geometry_attribute_for_point(intersection);
+		}
+	}
+	private _resolve_geometry_attribute_for_mesh(intersection: Intersection) {
+		const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
+		if (geometry) {
+			const attribute = geometry.getAttribute(this._node.pv.geo_attribute_name);
+			if (attribute) {
+				const val = attribute.array[0];
+				if (val != null) {
+					this._node.p.geo_attribute_value.set(val);
+				}
+			}
+		}
+	}
+	private _resolve_geometry_attribute_for_point(intersection: Intersection) {
+		const geometry = (intersection.object as Points).geometry as BufferGeometry;
+		if (geometry && intersection.index != null) {
+			const attribute = geometry.getAttribute(this._node.pv.geo_attribute_name);
+			if (attribute) {
+				const val = attribute.array[intersection.index];
+				if (val != null) {
+					this._node.p.geo_attribute_value.set(val);
+				}
+			}
+		}
+	}
+
 	private _set_position_param(hit_position: Number3) {
 		if (this._node.pv.tposition_target) {
 			const target_param = this._node.p.position_target;
@@ -117,6 +144,11 @@ export class RaycastCPUController {
 	}
 
 	private _prepare_raycaster(context: EventContext<MouseEvent>) {
+		const points_param = this._raycaster.params.Points;
+		if (points_param) {
+			points_param.threshold = this._node.pv.points_threshold;
+		}
+
 		if (this._node.pv.override_camera) {
 			if (this._node.pv.override_ray) {
 				this._raycaster.ray.origin.copy(this._node.pv.ray_origin);

@@ -66,6 +66,11 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	}
 
 	on_create() {
+		const current_global = this.node.nodes_by_type('globals')[0];
+		const current_output = this.node.nodes_by_type('output')[0];
+		if (current_global || current_output) {
+			return;
+		}
 		const globals = this.node.create_node('globals');
 		const output = this.node.create_node('output');
 
