@@ -156,7 +156,11 @@ export interface StringParamOptions
 	multiline?: boolean;
 	language?: StringParamLanguage;
 }
-interface VectorParamOptions extends BaseParamOptions, ExpressionParamOptions, CallbackParamOptions, ComputeOnDirtyParamOptions {}
+interface VectorParamOptions
+	extends BaseParamOptions,
+		ExpressionParamOptions,
+		CallbackParamOptions,
+		ComputeOnDirtyParamOptions {}
 export interface Vector2ParamOptions extends VectorParamOptions {}
 export interface Vector3ParamOptions extends VectorParamOptions {}
 export interface Vector4ParamOptions extends VectorParamOptions {}
@@ -316,22 +320,24 @@ export class OptionsController {
 		}
 		const callback = this.get_callback();
 		if (callback != null) {
-			if (!this.node.cook_controller.is_cooking) {
-				if (this.param.parent_param) {
-					// if the param is a component of a MultipleParam,
-					// we let the parent handle the callback.
-					// The main reason is for material builder uniforms.
-					// If the component executes the callback, the uniform that is expecting a vector
-					// will be receiving a float. The reason is that the callback is created by the ParamConfig, and it is then passed down to the component unchanged.
-					// I could maybe find a way so that the param config creates callback for the multiple param
-					// and also for the components. But they would have to be assigned correctly by the multiple param
-					this.param.parent_param.options.execute_callback();
-				} else {
-					callback(this.node, this.param);
-				}
-			} // else {
-			//	console.warn('node cooking, not running callback', this.param.name);
-			//}
+			// not running the callback when a node is cooking prevents some event nodes from behaving as expected.
+			// It may also prevent files such as the sop/file to reload correctly if its reload callback was called while it loads a file
+			// if (!this.node.cook_controller.is_cooking) {
+			if (this.param.parent_param) {
+				// if the param is a component of a MultipleParam,
+				// we let the parent handle the callback.
+				// The main reason is for material builder uniforms.
+				// If the component executes the callback, the uniform that is expecting a vector
+				// will be receiving a float. The reason is that the callback is created by the ParamConfig, and it is then passed down to the component unchanged.
+				// I could maybe find a way so that the param config creates callback for the multiple param
+				// and also for the components. But they would have to be assigned correctly by the multiple param
+				this.param.parent_param.options.execute_callback();
+			} else {
+				callback(this.node, this.param);
+			}
+			// } else {
+			// 	console.warn(`node ${this.node.full_path()} cooking, not running callback`, this.param.name);
+			// }
 		}
 	}
 	private get_callback() {

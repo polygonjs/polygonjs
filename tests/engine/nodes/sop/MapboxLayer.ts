@@ -20,9 +20,10 @@ QUnit.test('mapbox_layer simple', async (assert) => {
 	// await CoreSleep.sleep(5000);
 	let container = await mapbox_layer1.request_container();
 	await CoreSleep.sleep(100);
-	const core_group = container.core_content()!;
-	assert.in_delta(core_group.objects().length, 50, 30);
-	assert.in_delta(core_group.points_count(), 350, 150);
+	const core_group = container.core_content();
+	assert.ok(core_group, 'core_group exists');
+	assert.in_delta(core_group!.objects().length, 50, 30);
+	assert.in_delta(core_group!.points_count(), 350, 150);
 
 	// clear viewer
 	viewer.dispose();

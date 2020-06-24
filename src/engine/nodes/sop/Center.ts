@@ -38,6 +38,8 @@ export class CenterSopNode extends TypedSopNode<CenterSopParamsConfig> {
 		src_geometry.computeBoundingBox();
 		if (src_geometry.boundingBox) {
 			src_geometry.boundingBox?.getCenter(this._geo_center);
+			src_object.updateMatrixWorld();
+			this._geo_center.applyMatrix4(src_object.matrixWorld);
 			const geometry = new BufferGeometry();
 			const positions: number[] = this._geo_center.toArray();
 			geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));

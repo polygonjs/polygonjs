@@ -96,6 +96,9 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 				const bbox = ref_geometry.boundingBox;
 				if (bbox) {
 					bbox.getCenter(this._bbox_center);
+					ref_object.updateMatrixWorld();
+					this._bbox_center.applyMatrix4(ref_object.matrixWorld);
+
 					if (apply_matrix_to_object) {
 						this._translate_matrix.identity();
 						this._translate_matrix.makeTranslation(

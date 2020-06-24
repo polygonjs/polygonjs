@@ -73,6 +73,17 @@ export class NodesController {
 		}
 		return lodash_flatten(nodes);
 	}
+	nodes_from_mask(mask: string) {
+		const nodes = this.all_nodes();
+		const matching_nodes: BaseNodeType[] = [];
+		for (let node of nodes) {
+			const path = node.full_path();
+			if (CoreString.match_mask(path, mask)) {
+				matching_nodes.push(node);
+			}
+		}
+		return matching_nodes;
+	}
 
 	reset_node_context_signatures() {
 		this._node_context_signatures = {};
