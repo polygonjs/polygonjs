@@ -1,7 +1,7 @@
 import {BaseObjNodeClass} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Group} from 'three/src/objects/Group';
 
 const DISPLAY_PARAM_NAME = 'display';
 
@@ -17,9 +17,13 @@ export class ChildrenDisplayController {
 	constructor(private node: BaseObjNodeClassWithDisplayNode) {}
 
 	private _create_sop_group() {
-		const mesh = new Mesh();
-		mesh.matrixAutoUpdate = false;
-		return mesh;
+		// This may need to be a Mesh for the rivet to update correctly
+		// But when it is not used for a rivet, there is a place where a MeshBasicMaterial
+		// is added to it, making it an additional webgl program for the renderer.
+		// const mesh = new Mesh();
+		const group = new Group();
+		group.matrixAutoUpdate = false;
+		return group;
 	}
 	get sop_group() {
 		return this._sop_group;

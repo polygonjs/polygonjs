@@ -6,6 +6,7 @@ const OUTPUT_NAME = 'event';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AnyEventParamsConfig extends NodeParamsConfig {
+	active = ParamConfig.BOOLEAN(1);
 	inputs_count = ParamConfig.INTEGER(5, {
 		range: [1, 10],
 		range_locked: [true, false],
@@ -20,9 +21,6 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 		return 'any';
 	}
 	initialize_node() {
-		// this.io.outputs.set_named_output_connection_points([
-		// 	new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
-		// ]);
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_input_name_function(this._input_name.bind(this));
 		this.io.connection_points.set_output_name_function(() => OUTPUT_NAME);
@@ -37,7 +35,12 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 		return `trigger${index}`;
 	}
 
-	process_event(event_context: EventContext<Event>) {
-		this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+	async process_event(event_context: EventContext<Event>) {
+		if (this.p.active.is_dirty) {
+			await this.p.active.compute();
+		}
+		if (this.pv.active) {
+			this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+		}
 	}
 }

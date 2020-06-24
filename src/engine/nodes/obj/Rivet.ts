@@ -87,7 +87,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 	// private _time_graph_node = new CoreGraphNode(this.scene, 'time');
-	private _resolved_sop_group: Mesh | undefined;
+	private _resolved_sop_group: Group | undefined;
 	// private _resolved_sop_group_child: Object3DWithGeometry | undefined;
 	private _found_point_post = new Vector3();
 

@@ -10,6 +10,7 @@ import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
+import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
 import {TimerEventNode} from '../../../nodes/event/Timer';
@@ -26,6 +27,7 @@ export interface EventNodeChildrenMap {
 	node_cook: NodeCookEventNode;
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
+	set_flag: SetFlagEventNode;
 	set_param: SetParamEventNode;
 	sequence: SequenceEventNode;
 	timer: TimerEventNode;
@@ -45,6 +47,7 @@ export class EventRegister {
 		poly.register_node(NodeCookEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SceneEventNode, CATEGORY_EVENT.INPUT);
+		poly.register_node(SetFlagEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SetParamEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SequenceEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(TimerEventNode, CATEGORY_EVENT.MISC);

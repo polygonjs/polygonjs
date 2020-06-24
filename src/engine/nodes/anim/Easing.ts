@@ -80,6 +80,9 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 
 	private easing_full_name() {
 		const easing = EASINGS[this.pv.name];
+		if (easing == Easing.NONE) {
+			return easing;
+		}
 		const in_out = IN_OUT_MODES[this.pv.in_out];
 		const easing_full_name = `${easing}.${in_out}`;
 		return easing_full_name;

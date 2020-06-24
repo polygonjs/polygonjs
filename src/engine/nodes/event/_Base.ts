@@ -14,6 +14,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		// cook is required for some nodes like event/animation
 		this.add_post_dirty_hook('cook_without_inputs_on_dirty', this._cook_without_inputs_bound);
 
+		this.io.inputs.set_depends_on_inputs(false);
 		this.io.connections.init_inputs();
 		this.io.connection_points.spare_params.initialize_node();
 	}

@@ -63,10 +63,12 @@ export class TimelineBuilderProperty {
 		const operation = timeline_builder.operation();
 		const update_callback = timeline_builder.update_callback();
 
+		console.log(objects);
 		for (let object3d of objects) {
 			// const target_property = (object3d as any)[this._property_name as any] as TargetValue;
 			// let to_target: object | null = null;
 			const props = this._scene_graph_props(object3d, this._property_name);
+			console.log(props);
 			if (props) {
 				const target_property = props.target_property;
 				const to_target = props.to_target;
@@ -321,6 +323,7 @@ export class TimelineBuilderProperty {
 	) {
 		const position = timeline_builder.position();
 		const position_param = position ? position.to_parameter() : undefined;
+		console.log('to', target, vars, position_param);
 		timeline.to(target, vars, position_param);
 	}
 }
