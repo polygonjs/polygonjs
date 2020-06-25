@@ -323,7 +323,6 @@ export class TimelineBuilderProperty {
 	) {
 		const position = timeline_builder.position();
 		const position_param = position ? position.to_parameter() : undefined;
-		console.log('to', target, vars, position_param);
 		timeline.to(target, vars, position_param);
 	}
 }

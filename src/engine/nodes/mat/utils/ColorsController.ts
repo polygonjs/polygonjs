@@ -35,6 +35,7 @@ export class ColorsController extends BaseController {
 	static update(node: ColoredMatNode) {
 		const material = node.material;
 		const pv = node.pv;
+
 		material.color.copy(pv.color);
 		const new_vertex_color = pv.use_vertex_colors; // ? VertexColors : NoColors;
 		if (new_vertex_color != material.vertexColors) {

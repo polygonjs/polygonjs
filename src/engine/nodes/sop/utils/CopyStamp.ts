@@ -1,22 +1,11 @@
+import {BaseCopyStamp} from '../../utils/CopyStamp';
 import {CorePoint} from '../../../../core/geometry/Point';
-import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
-import {PolyScene} from '../../../scene/PolyScene';
 
-export class CopyStamp extends CoreGraphNode {
-	private _global_index: number = 0;
-	private _point: CorePoint | undefined;
-
-	constructor(scene: PolyScene) {
-		super(scene, 'CopyStamp');
-	}
+export class CopyStamp extends BaseCopyStamp {
+	protected _point: CorePoint | undefined;
 
 	set_point(point: CorePoint) {
 		this._point = point;
-		this.set_dirty();
-		this.remove_dirty_state();
-	}
-	set_global_index(index: number) {
-		this._global_index = index;
 		this.set_dirty();
 		this.remove_dirty_state();
 	}

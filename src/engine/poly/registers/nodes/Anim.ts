@@ -1,5 +1,6 @@
 import {CATEGORY_ANIM} from './Category';
 
+import {CopyAnimNode} from '../../../nodes/anim/Copy';
 import {DelayAnimNode} from '../../../nodes/anim/Delay';
 import {DurationAnimNode} from '../../../nodes/anim/Duration';
 import {EasingAnimNode} from '../../../nodes/anim/Easing';
@@ -13,6 +14,7 @@ import {SwitchAnimNode} from '../../../nodes/anim/Switch';
 import {TargetAnimNode} from '../../../nodes/anim/Target';
 
 export interface AnimNodeChildrenMap {
+	copy: CopyAnimNode;
 	delay: DelayAnimNode;
 	duration: DurationAnimNode;
 	easing: EasingAnimNode;
@@ -29,6 +31,7 @@ export interface AnimNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class AnimRegister {
 	static run(poly: Poly) {
+		poly.register_node(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.register_node(DelayAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.register_node(DurationAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.register_node(EasingAnimNode, CATEGORY_ANIM.MODIFIER);

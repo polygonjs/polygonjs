@@ -21,7 +21,4 @@ export class SceneEventsController extends BaseSceneEventsController<Event, Scen
 	accepted_event_types() {
 		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
 	}
-	// accepts_event(event: Event) {
-	// 	return ACCEPTED_SCENE_EVENT_TYPES.includes(event.type as SceneEventType);
-	// }
 }
