@@ -44,7 +44,7 @@
 		"lodash": "^4.17.15",
 		"mapbox-gl": "1.11.0",
 		"opentype.js": "^1.3.3",
-		"three": "^0.117.1"
+		"three": "^0.118.1"
 	},
 	"devDependencies": {
 		"@types/graphlib": "^2.1.6",
@@ -55,7 +55,7 @@
 		"@typescript-eslint/parser": "^3.4.0",
 		"clean-webpack-plugin": "^3.0.0",
 		"compression-webpack-plugin": "^4.0.0",
-		"eslint": "^7.2.0",
+		"eslint": "^7.3.1",
 		"favicons-webpack-plugin": "^3.0.1",
 		"html-webpack-plugin": "^4.3.0",
 		"mini-css-extract-plugin": "^0.9.0",

@@ -12,7 +12,7 @@ var CSS3DObject = function ( element ) {
 
 	Object3D.call( this );
 
-	this.element = element;
+	this.element = element || document.createElement( 'div' );
 	this.element.style.position = 'absolute';
 	this.element.style.pointerEvents = 'auto';
 
@@ -32,8 +32,21 @@ var CSS3DObject = function ( element ) {
 
 };
 
-CSS3DObject.prototype = Object.create( Object3D.prototype );
-CSS3DObject.prototype.constructor = CSS3DObject;
+CSS3DObject.prototype = Object.assign( Object.create( Object3D.prototype ), {
+
+	constructor: CSS3DObject,
+
+	copy: function ( source, recursive ) {
+
+		Object3D.prototype.copy.call( this, source, recursive );
+
+		this.element = source.element.cloneNode( true );
+
+		return this;
+
+	}
+
+} );
 
 var CSS3DSprite = function ( element ) {
 

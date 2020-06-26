@@ -18,7 +18,6 @@ import {
 	NoToneMapping,
 	LinearToneMapping,
 	ReinhardToneMapping,
-	Uncharted2ToneMapping,
 	CineonToneMapping,
 	ACESFilmicToneMapping,
 	// shadow map
@@ -102,7 +101,6 @@ enum ToneMappingValue {
 	No = NoToneMapping as number,
 	Linear = LinearToneMapping as number,
 	Reinhard = ReinhardToneMapping as number,
-	Uncharted2 = Uncharted2ToneMapping as number,
 	Cineon = CineonToneMapping as number,
 	ACESFilmic = ACESFilmicToneMapping as number,
 }
@@ -118,7 +116,6 @@ const TONE_MAPPING_VALUES: ToneMappingValue[] = [
 	ToneMappingValue.No,
 	ToneMappingValue.Linear,
 	ToneMappingValue.Reinhard,
-	ToneMappingValue.Uncharted2,
 	ToneMappingValue.Cineon,
 	ToneMappingValue.ACESFilmic,
 ];
@@ -181,10 +178,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	tone_mapping_exposure = ParamConfig.FLOAT(1, {
 		range: [0, 2],
 	});
-	tone_mapping_white_point = ParamConfig.FLOAT(1, {
-		visible_if: {output_encoding: ToneMappingValue.Uncharted2},
-		range: [0, 2],
-	});
+
 	output_encoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
 		menu: {
 			entries: ENCODING_NAMES.map((name, i) => {
@@ -253,7 +247,6 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		renderer.outputEncoding = this.pv.output_encoding;
 		renderer.toneMapping = this.pv.tone_mapping;
 		renderer.toneMappingExposure = this.pv.tone_mapping_exposure;
-		renderer.toneMappingWhitePoint = this.pv.tone_mapping_white_point;
 
 		// shadows
 		renderer.shadowMap.enabled = true;

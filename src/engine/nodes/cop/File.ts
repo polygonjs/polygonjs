@@ -1,4 +1,3 @@
-import lodash_isNumber from 'lodash/isNumber';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {
 	UVMapping,
@@ -6,7 +5,6 @@ import {
 	CubeRefractionMapping,
 	EquirectangularReflectionMapping,
 	EquirectangularRefractionMapping,
-	SphericalReflectionMapping,
 	CubeUVReflectionMapping,
 	CubeUVRefractionMapping,
 	ClampToEdgeWrapping,
@@ -61,7 +59,6 @@ const MAPPINGS = [
 	{CubeRefractionMapping},
 	{EquirectangularReflectionMapping},
 	{EquirectangularRefractionMapping},
-	{SphericalReflectionMapping},
 	{CubeUVReflectionMapping},
 	{CubeUVRefractionMapping},
 ];
@@ -129,34 +126,34 @@ const MIN_FILTERS: Dictionary<number>[] = [
 // 	"RGBADepthPacking"
 // ];
 
-interface AttribMapping {
-	encoding: string;
-	mapping: string;
-	wrapS: string;
-	wrapT: string;
-	minFilter: string;
-	magFilter: string;
-}
-const ATTRIB_MAPPING_KEYS: Array<keyof AttribMapping> = [
-	'encoding',
-	'mapping',
-	'wrapS',
-	'wrapT',
-	'minFilter',
-	'magFilter',
-];
-const ATTRIB_MAPPING: AttribMapping = {
-	encoding: 'encoding',
-	mapping: 'mapping',
-	wrapS: 'wrap_s',
-	wrapT: 'wrap_t',
-	minFilter: 'min_filter',
-	magFilter: 'mag_filter',
+// interface AttribMapping {
+// 	encoding: string;
+// 	mapping: string;
+// 	wrapS: string;
+// 	wrapT: string;
+// 	minFilter: string;
+// 	magFilter: string;
+// }
+// const ATTRIB_MAPPING_KEYS: Array<keyof AttribMapping> = [
+// 	'encoding',
+// 	'mapping',
+// 	'wrapS',
+// 	'wrapT',
+// 	'minFilter',
+// 	'magFilter',
+// ];
+// const ATTRIB_MAPPING: AttribMapping = {
+// 	encoding: 'encoding',
+// 	mapping: 'mapping',
+// 	wrapS: 'wrap_s',
+// 	wrapT: 'wrap_t',
+// 	minFilter: 'min_filter',
+// 	magFilter: 'mag_filter',
 
-	// type: 'type',
-	// encoding: 'encoding'
-	// format: 'format',
-};
+// 	// type: 'type',
+// 	// encoding: 'encoding'
+// 	// format: 'format',
+// };
 
 interface TextureWithUpdateMatrix extends Texture {
 	updateMatrix(): void;
@@ -178,7 +175,9 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			FileCopNode.PARAM_CALLBACK_reload(node as FileCopNode, param);
 		},
 	});
+	tencoding = ParamConfig.BOOLEAN(0);
 	encoding = ParamConfig.INTEGER(LinearEncoding, {
+		visible_if: {tencoding: 1},
 		menu: {
 			entries: ENCODINGS.map((m) => {
 				return {
@@ -188,7 +187,9 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	tmapping = ParamConfig.BOOLEAN(0);
 	mapping = ParamConfig.INTEGER(UVMapping, {
+		visible_if: {tmapping: 1},
 		menu: {
 			entries: MAPPINGS.map((m) => {
 				return {
@@ -198,7 +199,9 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	twrap = ParamConfig.BOOLEAN(0);
 	wrap_s = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
+		visible_if: {twrap: 1},
 		menu: {
 			entries: WRAPPINGS.map((m) => {
 				return {
@@ -209,6 +212,7 @@ class FileCopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	wrap_t = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
+		visible_if: {twrap: 1},
 		menu: {
 			entries: WRAPPINGS.map((m) => {
 				return {
@@ -218,17 +222,9 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	mag_filter = ParamConfig.INTEGER(Object.values(MAG_FILTERS[0])[0], {
-		menu: {
-			entries: MAG_FILTERS.map((m) => {
-				return {
-					name: Object.keys(m)[0],
-					value: Object.values(m)[0] as number,
-				};
-			}),
-		},
-	});
+	tminfilter = ParamConfig.BOOLEAN(0);
 	min_filter = ParamConfig.INTEGER(Object.values(MIN_FILTERS[5])[0], {
+		visible_if: {tminfilter: 1},
 		menu: {
 			entries: MIN_FILTERS.map((m) => {
 				return {
@@ -238,17 +234,34 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	tmagfilter = ParamConfig.BOOLEAN(0);
+	mag_filter = ParamConfig.INTEGER(Object.values(MAG_FILTERS[0])[0], {
+		visible_if: {tmagfilter: 1},
+		menu: {
+			entries: MAG_FILTERS.map((m) => {
+				return {
+					name: Object.keys(m)[0],
+					value: Object.values(m)[0] as number,
+				};
+			}),
+		},
+	});
+	tanisotropy = ParamConfig.BOOLEAN(0);
 	anisotropy = ParamConfig.INTEGER(1, {
+		visible_if: {tanisotropy: 1},
 		range: [0, 32],
 		range_locked: [true, false],
 	});
-	flip_y = ParamConfig.BOOLEAN(0);
-	offset = ParamConfig.VECTOR2([0, 0]);
-	repeat = ParamConfig.VECTOR2([1, 1]);
+	tflip_y = ParamConfig.BOOLEAN(0);
+	flip_y = ParamConfig.BOOLEAN(0, {visible_if: {tflip_y: 1}});
+	ttransform = ParamConfig.BOOLEAN(0);
+	offset = ParamConfig.VECTOR2([0, 0], {visible_if: {ttransform: 1}});
+	repeat = ParamConfig.VECTOR2([1, 1], {visible_if: {ttransform: 1}});
 	rotation = ParamConfig.FLOAT(0, {
+		visible_if: {ttransform: 1},
 		range: [-1, 1],
 	});
-	center = ParamConfig.VECTOR2([0, 0]);
+	center = ParamConfig.VECTOR2([0, 0], {visible_if: {ttransform: 1}});
 	// use_data_texture = ParamConfig.BOOLEAN(0, {
 	// 	visible_if: {is_video: 0},
 	// });
@@ -392,25 +405,35 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	}
 
 	private _update_texture_params(texture: Texture) {
-		for (let texture_attrib of ATTRIB_MAPPING_KEYS) {
-			const param_name = ATTRIB_MAPPING[texture_attrib];
-			const param = this.params.param(param_name);
-
-			if (param && texture) {
-				const param_value = param.value;
-				if (param_value != null && lodash_isNumber(param_value)) {
-					if (texture[texture_attrib] != param_value) {
-						texture[texture_attrib] = param_value;
-						texture.needsUpdate = true;
-					}
-				}
-			}
+		if (this.pv.tencoding) {
+			texture.encoding = this.pv.encoding;
 		}
-		texture.anisotropy = this.pv.anisotropy;
-		texture.flipY = this.pv.flip_y;
+		if (this.pv.tmapping) {
+			texture.mapping = this.pv.mapping;
+		}
+		if (this.pv.twrap) {
+			texture.wrapS = this.pv.wrap_s;
+			texture.wrapT = this.pv.wrap_t;
+		}
+		if (this.pv.tminfilter) {
+			texture.minFilter = this.pv.min_filter;
+		}
+		if (this.pv.tminfilter) {
+			texture.magFilter = this.pv.mag_filter;
+		}
+
+		if (this.pv.tanisotropy) {
+			texture.anisotropy = this.pv.anisotropy;
+		}
+		if (this.pv.tflip_y) {
+			texture.flipY = this.pv.flip_y;
+		}
 		this._update_texture_transform(texture);
 	}
 	private _update_texture_transform(texture: Texture) {
+		if (!this.pv.ttransform) {
+			return;
+		}
 		texture.offset.copy(this.pv.offset);
 		texture.repeat.copy(this.pv.repeat);
 		texture.rotation = this.pv.rotation;
