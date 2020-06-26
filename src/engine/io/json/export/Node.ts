@@ -93,16 +93,22 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			}
 		}
 
-		// TODO: does that create flags automatically? it should not
 		if (this._node.flags) {
-			this._data['flags'] = {};
-			if (this._node.flags.has_bypass()) {
-				if (this._node.flags.bypass?.active) {
-					this._data['flags']['bypass'] = this._node.flags.bypass.active;
+			const flags_data: FlagsData = {};
+			if (this._node.flags.has_bypass() || this._node.flags.has_display()) {
+				if (this._node.flags.has_bypass()) {
+					if (this._node.flags.bypass?.active) {
+						flags_data['bypass'] = this._node.flags.bypass.active;
+					}
+				}
+				if (this._node.flags.has_display()) {
+					if (this._node.flags.display?.active) {
+						flags_data['display'] = this._node.flags.display?.active;
+					}
 				}
 			}
-			if (this._node.flags.has_display()) {
-				this._data['flags']['display'] = this._node.flags.display?.active;
+			if (Object.keys(flags_data).length > 0) {
+				this._data['flags'] = flags_data;
 			}
 		}
 
