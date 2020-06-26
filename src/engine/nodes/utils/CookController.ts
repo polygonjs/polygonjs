@@ -49,6 +49,7 @@ export class NodeCookController<NC extends NodeContext> {
 				this.node.cook(input_contents);
 			} catch (e) {
 				this.node.states.error.set(`node internal error: '${e}'.`);
+				console.warn(e);
 				this.end_cook();
 			}
 		}

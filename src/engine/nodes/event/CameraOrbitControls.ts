@@ -101,6 +101,9 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		// to prevent moving the camera when using the arrows to change frame
 		controls.enableKeys = false;
 	}
+	update_required() {
+		return this.pv.tdamping;
+	}
 
 	// set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void {
 	// 	const target = camera_node.params.vector3('target');

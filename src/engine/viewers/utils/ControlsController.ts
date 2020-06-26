@@ -1,9 +1,11 @@
 import {ThreejsViewer} from '../Threejs';
 import {CameraControls} from '../../nodes/event/_BaseCameraControls';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {CameraControlsConfig} from '../../nodes/event/utils/CameraControlConfig';
 
 export class ViewerControlsController {
 	protected _active: boolean = false;
+	protected _config: CameraControlsConfig | undefined;
 	protected _controls: CameraControls | null = null;
 	_bound_on_controls_start: () => void = this._on_controls_start.bind(this);
 	_bound_on_controls_end: () => void = this._on_controls_end.bind(this);
@@ -28,9 +30,9 @@ export class ViewerControlsController {
 			return;
 		}
 
-		const config = await this.viewer?.camera_controls_controller?.apply_controls(this.viewer.canvas);
-		if (config) {
-			this._controls = config.controls;
+		this._config = await this.viewer?.camera_controls_controller?.apply_controls(this.viewer.canvas);
+		if (this._config) {
+			this._controls = this._config.controls;
 
 			if (this._controls) {
 				if (this.viewer.active) {
@@ -43,8 +45,10 @@ export class ViewerControlsController {
 		}
 	}
 	update() {
-		if (this._controls) {
-			this._controls.update();
+		if (this._config && this._controls) {
+			if (this._config.update_required()) {
+				this._controls.update();
+			}
 		}
 	}
 

@@ -1,10 +1,17 @@
 import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
 import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
+import {BaseNodeType} from '../../../nodes/_Base';
+
+interface EventContextValue {
+	node?: BaseNodeType;
+}
+
 export interface EventContext<E extends Event> {
 	event?: Readonly<E>;
 	canvas?: Readonly<HTMLCanvasElement>;
 	camera_node?: Readonly<BaseCameraObjNodeType>;
+	value?: EventContextValue;
 }
 
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {

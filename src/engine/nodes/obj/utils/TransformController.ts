@@ -26,10 +26,19 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		r = ParamConfig.VECTOR3([0, 0, 0]);
 		s = ParamConfig.VECTOR3([1, 1, 1]);
 		scale = ParamConfig.FLOAT(1);
-		matrix_auto_update = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
-		// look_at = ParamConfig.OPERATOR_PATH('', {node_selection: {context: NodeContext.OBJ}});
-		// up = ParamConfig.VECTOR3([0, 1, 0]);
 		// pivot = ParamConfig.VECTOR3([0, 0, 0]);
+		matrix_auto_update = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
+		tlook_at = ParamConfig.BOOLEAN(0);
+		look_at_pos = ParamConfig.VECTOR3([0, 0, 0], {
+			visible_if: {tlook_at: 1},
+		});
+		// look_at = ParamConfig.OPERATOR_PATH('', {
+		// 	visible_if: {tlook_at: 1},
+		// 	node_selection: {context: NodeContext.OBJ},
+		// });
+		up = ParamConfig.VECTOR3([0, 1, 0], {
+			visible_if: {tlook_at: 1},
+		});
 	};
 }
 class TransformedParamsConfig extends TransformedParamConfig(NodeParamsConfig) {}
@@ -52,8 +61,8 @@ export class TransformController {
 		await this.node.cook_controller.cook_main_without_inputs();
 	}
 
-	update(matrix?: Matrix4) {
-		this.update_transform_with_matrix(matrix);
+	update() {
+		this.update_transform_with_matrix();
 		const object = this.node.object;
 		object.matrixAutoUpdate = this.node.pv.matrix_auto_update;
 	}
@@ -73,36 +82,6 @@ export class TransformController {
 		}
 	}
 
-	// private _update_transform_from_params_scale = new Vector3();
-	// protected update_transform_from_params() {
-	// 	const object = this.node.object;
-	// 	if (object) {
-	// 		const position: Vector3 = this.node.pv.t;
-	// 		const rotation: Vector3 = this.node.pv.r;
-
-	// 		this._update_transform_from_params_scale.copy(this.node.pv.s).multiplyScalar(this.node.pv.scale);
-
-	// 		object.matrixAutoUpdate = false;
-	// 		object.position.copy(position);
-	// 		const radians = [
-	// 			CoreMath.degrees_to_radians(rotation.x),
-	// 			CoreMath.degrees_to_radians(rotation.y),
-	// 			CoreMath.degrees_to_radians(rotation.z),
-	// 		];
-	// 		const euler = new Euler(
-	// 			radians[0],
-	// 			radians[1],
-	// 			radians[2]
-	// 			//'XYZ'
-	// 		);
-	// 		object.rotation.copy(euler);
-	// 		object.scale.copy(this._update_transform_from_params_scale);
-	// 		object.matrixAutoUpdate = true;
-	// 		object.updateMatrix();
-
-	// 		object.dispatchEvent({type: 'change'});
-	// 	}
-	// }
 	private _core_transform = new CoreTransform();
 	private _update_matrix_from_params_with_core_transform() {
 		const object = this.node.object;
@@ -120,12 +99,34 @@ export class TransformController {
 		);
 		object.matrix.identity();
 		object.applyMatrix4(matrix);
+		this._apply_look_at();
 		object.updateMatrix();
+
 		if (prev_auto_update) {
 			object.matrixAutoUpdate = true;
 		}
 
 		object.dispatchEvent({type: 'change'});
+	}
+
+	// private _look_at_target_t = new Vector3();
+	// private _look_at_target_q = new Quaternion();
+	// private _look_at_target_s = new Vector3();
+	private _apply_look_at() {
+		const pv = this.node.pv;
+		if (!pv.tlook_at) {
+			return;
+		}
+		this.node.object.up.copy(pv.up);
+		this.node.object.lookAt(pv.look_at_pos);
+		// const target_node = this.node.p.look_at.found_node_with_context(NodeContext.OBJ);
+		// if (target_node) {
+		// 	const target_object = target_node.object;
+		// 	target_object.ma.decompose(this._look_at_target_t, this._look_at_target_q, this._look_at_target_s);
+		// 	this.node.object.up.copy(this.node.pv.up);
+		// 	this.node.object.lookAt(this._look_at_target_t);
+		// 	console.log('lookat', this.node.object, target_object, this._look_at_target_t);
+		// }
 	}
 
 	set_params_from_matrix(matrix: Matrix4, options: SetParamsFromMatrixOptions = {}) {

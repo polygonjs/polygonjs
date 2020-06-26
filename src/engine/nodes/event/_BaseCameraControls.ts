@@ -33,6 +33,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 	controls_id() {
 		return JSON.stringify(this.params.all.map((p) => p.value_serialized));
 	}
+	abstract update_required(): boolean;
 	//this.cook()
 
 	// dispose_controls: (controls_instance)->

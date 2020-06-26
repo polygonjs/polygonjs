@@ -114,7 +114,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		}
 		const param = this.p.param.found_param();
 		if (param) {
-			const new_value = this._new_param_value(param);
+			const new_value = await this._new_param_value(param);
 			if (new_value != null) {
 				param.set(new_value);
 			}
@@ -131,10 +131,11 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 	private _tmp_array2: Number2 = [0, 0];
 	private _tmp_array3: Number3 = [0, 0, 0];
 	private _tmp_array4: Number4 = [0, 0, 0, 0];
-	private _new_param_value(param: BaseParamType) {
+	private async _new_param_value(param: BaseParamType) {
 		const type = SET_PARAM_PARAM_TYPE[this.pv.type];
 		switch (type) {
 			case SetParamParamType.BOOLEAN: {
+				await this._compute_params_if_dirty([this.p.toggle]);
 				// use 1 and 0, so we can also use it on integer params, such as for a switch node
 				if (this.pv.toggle) {
 					return param.value ? 0 : 1;
@@ -146,6 +147,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return param.options.execute_callback();
 			}
 			case SetParamParamType.NUMBER: {
+				await this._compute_params_if_dirty([this.p.increment, this.p.number]);
 				if (this.pv.increment) {
 					if (param.type == ParamType.FLOAT) {
 						return (param as FloatParam).value + this.pv.number;
@@ -157,6 +159,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				}
 			}
 			case SetParamParamType.VECTOR2: {
+				await this._compute_params_if_dirty([this.p.increment, this.p.vector2]);
 				if (this.pv.increment) {
 					if (param.type == ParamType.VECTOR2) {
 						this._tmp_vector2.copy((param as Vector2Param).value);
@@ -171,6 +174,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return this._tmp_array2;
 			}
 			case SetParamParamType.VECTOR3: {
+				await this._compute_params_if_dirty([this.p.increment, this.p.vector3]);
 				if (this.pv.increment) {
 					if (param.type == ParamType.VECTOR3) {
 						this._tmp_vector3.copy((param as Vector3Param).value);
@@ -185,6 +189,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return this._tmp_array3;
 			}
 			case SetParamParamType.VECTOR4: {
+				await this._compute_params_if_dirty([this.p.increment, this.p.vector4]);
 				if (this.pv.increment) {
 					if (param.type == ParamType.VECTOR4) {
 						this._tmp_vector4.copy((param as Vector4Param).value);
@@ -199,6 +204,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return this._tmp_array4;
 			}
 			case SetParamParamType.STRING: {
+				await this._compute_params_if_dirty([this.p.string]);
 				return this.pv.string;
 			}
 		}
@@ -207,5 +213,19 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 
 	static PARAM_CALLBACK_execute(node: SetParamEventNode) {
 		node.process_event({});
+	}
+
+	private async _compute_params_if_dirty(params: BaseParamType[]) {
+		const dirty_params = [];
+		for (let param of params) {
+			if (param.is_dirty) {
+				dirty_params.push(param);
+			}
+		}
+		const promises: Promise<void>[] = [];
+		for (let param of dirty_params) {
+			promises.push(param.compute());
+		}
+		return await Promise.all(promises);
 	}
 }

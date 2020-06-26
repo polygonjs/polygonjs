@@ -58,7 +58,17 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		]);
 	}
 	async process_event(event_context: EventContext<Event>) {
-		const nodes = this.scene.nodes_controller.nodes_from_mask(this.pv.mask);
+		let mask = this.pv.mask;
+		if (event_context.value) {
+			const node = event_context.value.node;
+			if (node) {
+				const parent = node.parent;
+				if (parent) {
+					mask = `${parent.full_path()}/${mask}`;
+				}
+			}
+		}
+		const nodes = this.scene.nodes_controller.nodes_from_mask(mask);
 
 		for (let node of nodes) {
 			this._update_node_flags(node);
