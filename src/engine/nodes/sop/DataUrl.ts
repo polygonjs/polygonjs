@@ -6,7 +6,6 @@ import {BaseNodeType} from '../_Base';
 import {CsvLoader} from '../../../core/loader/geometry/Csv';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreLoaderUtils} from '../../../core/loader/Utils';
 
 export enum DataType {
 	JSON = 'json',
@@ -91,6 +90,9 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	// JSON
 	//
 	//
+	private _url() {
+		return `${this.scene.assets_controller.assets_root()}${this.pv.url}`;
+	}
 	private _load_json() {
 		const loader = new JsonDataLoader({
 			data_keys_prefix: this.pv.json_data_keys_prefix,
@@ -98,14 +100,15 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 			do_convert: this.pv.convert,
 			convert_to_numeric: this.pv.convert_to_numeric,
 		});
-		loader.load(this.pv.url, this._on_load.bind(this), undefined, this._on_error.bind(this));
+
+		loader.load(this._url(), this._on_load.bind(this), undefined, this._on_error.bind(this));
 	}
 
 	_on_load(geometry: BufferGeometry) {
 		this.set_geometry(geometry, ObjectType.POINTS);
 	}
 	_on_error(error: ErrorEvent) {
-		this.states.error.set(`could not load geometry from ${this.pv.url} (${error})`);
+		this.states.error.set(`could not load geometry from ${this._url()} (${error})`);
 		this.cook_controller.end_cook();
 	}
 
@@ -117,8 +120,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	async _load_csv() {
 		const attrib_names = this.pv.read_attrib_names_from_file ? undefined : this.pv.attrib_names.split(' ');
 		const loader = new CsvLoader(attrib_names);
-		const url = CoreLoaderUtils.append_timestamp_to_url(this.pv.url);
-		const geometry = await loader.load(url);
+		const geometry = await loader.load(this._url());
 		if (geometry) {
 			this.set_geometry(geometry, ObjectType.POINTS);
 		} else {

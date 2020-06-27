@@ -110,7 +110,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	private _update_resolved_nodes() {
 		this._reset();
 
-		this._resolved_nodes = this.scene.nodes_controller.nodes_from_mask(this.pv.mask);
+		this._resolved_nodes = this.scene.nodes_controller.nodes_from_mask(this.pv.mask || '');
 		for (let node of this._resolved_nodes) {
 			node.cook_controller.add_on_cook_complete_hook(this, this._on_node_cook_complete_bound);
 			this._cook_state_by_node_id.set(node.graph_node_id, false);

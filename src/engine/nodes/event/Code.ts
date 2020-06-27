@@ -1,5 +1,13 @@
 import {TypedEventNode} from './_Base';
-// import {AsyncFunction} from '../../../core/AsyncFunction';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import {Poly} from '../../Poly';
+import {StringParamLanguage} from '../../params/utils/OptionsController';
+import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
+import {Vector2} from 'three/src/math/Vector2';
+import {Raycaster} from 'three/src/core/Raycaster';
+import * as THREE from 'three'; // three import required to give to the function builder
+
 const DEFAULT_FUNCTION_CODE = `
 import {BaseCodeEventProcessor, EventContext} from 'polygonjs-engine'
 export class EventProcessor extends BaseCodeEventProcessor {
@@ -16,16 +24,6 @@ export class EventProcessor extends BaseCodeEventProcessor {
 
 
 `;
-import {StringParamLanguage} from '../../params/utils/OptionsController';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
-
-import {Vector2} from 'three/src/math/Vector2';
-import {Raycaster} from 'three/src/core/Raycaster';
-import * as THREE from 'three';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 export class BaseCodeEventProcessor {
 	// it looks like I still need to import raycaster and vector2 without the three namespace
 	// otherwise they are seen as 'any' in the editor
@@ -57,7 +55,7 @@ export class BaseCodeEventProcessor {
 // 	base_event_processor_class: typeof BaseCodeEventProcessor,
 // 	THREE: any
 // ) => typeof BaseCodeEventProcessor | undefined;
-
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CodeEventParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
 		show_label: false,
@@ -101,24 +99,20 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 			} catch(e) {
 				this.states.error.set(e)
 			}`;
-			console.log('function_body');
-			console.log(function_body);
 			const processor_creator_function: Function = new Function('BaseCodeEventProcessor', 'THREE', function_body);
 			const processor_class: typeof BaseCodeEventProcessor | undefined = processor_creator_function(
 				BaseCodeEventProcessor,
 				THREE
 			);
-			console.log('processor_class 2', processor_class);
 			if (processor_class) {
 				this._processor = new processor_class(this);
-				console.log('this._processor', this._processor);
 				this._last_compiled_code = this.pv.code_javascript;
 			} else {
 				this.states.error.set(`cannot generate function`);
 				this._processor = undefined;
 			}
 		} catch (e) {
-			console.warn(e);
+			Poly.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);
 			this._processor = undefined;
 		}

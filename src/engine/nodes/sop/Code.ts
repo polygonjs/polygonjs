@@ -2,6 +2,9 @@ import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
+import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
+import {Object3D} from 'three/src/core/Object3D';
+import {Poly} from '../../Poly';
 
 const DEFAULT_FUNCTION_CODE = `import {BaseCodeSopProcessor, CoreGroup} from 'polygonjs-engine'
 export class CodeSopProcessor extends BaseCodeSopProcessor {
@@ -38,8 +41,6 @@ export class BaseCodeSopProcessor {
 // type EvaluatedFunction = (base_processor_class: typeof BaseCodeSopProcessor) => typeof BaseCodeSopProcessor | undefined;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
-import {Object3D} from 'three/src/core/Object3D';
 class CodeSopParamsConfig extends NodeParamsConfig {
 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
 		show_label: false,
@@ -91,8 +92,6 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			} catch(e) {
 				this.states.error.set(e)
 			}`;
-			console.log('function_body');
-			console.log(function_body);
 			const processor_creator_function = new Function('BaseCodeSopProcessor', function_body);
 			const processor_class: typeof BaseCodeSopProcessor | undefined = processor_creator_function(
 				BaseCodeSopProcessor
@@ -106,7 +105,7 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 				this._processor = undefined;
 			}
 		} catch (e) {
-			console.warn(e);
+			Poly.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);
 			this._processor = undefined;
 		}

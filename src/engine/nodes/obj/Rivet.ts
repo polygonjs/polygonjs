@@ -20,11 +20,6 @@ import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {RenderHook} from '../../../core/geometry/Material';
 import {TypeAssert} from '../../poly/Assert';
 
-// import {Object3DWithGeometry} from '../../../core/geometry/Group';
-// import {Vector3} from 'three/src/math/Vector3';
-// import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
-// import {BaseParamType} from '../../params/_Base';
-
 enum RivetUpdateMode {
 	ON_RENDER = 'On Every Render',
 	MANUAL = 'Manual',
@@ -86,9 +81,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
-	// private _time_graph_node = new CoreGraphNode(this.scene, 'time');
 	private _resolved_sop_group: Group | undefined;
-	// private _resolved_sop_group_child: Object3DWithGeometry | undefined;
 	private _found_point_post = new Vector3();
 
 	create_object() {
@@ -208,9 +201,6 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		material?: Material,
 		group?: Group | null
 	) {
-		// if (!this.pv.active) {
-		// 	return;
-		// }
 		const resolved_object = this._resolved_object();
 		if (resolved_object) {
 			const geometry = resolved_object.geometry;
@@ -219,13 +209,14 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 				if (position_attrib) {
 					const position_array = position_attrib.array;
 					this._found_point_post.fromArray(position_array, this.pv.point_index * 3);
+					// ensures that parent objects have their matrices up to date
+					resolved_object.updateWorldMatrix(true, false);
 					resolved_object.localToWorld(this._found_point_post);
 					this.object.matrix.makeTranslation(
 						this._found_point_post.x,
 						this._found_point_post.y,
 						this._found_point_post.z
 					);
-					// this.object.updateWorldMatrix(true, true);
 				}
 			}
 		}
