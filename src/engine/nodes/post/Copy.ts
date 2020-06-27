@@ -26,7 +26,6 @@ export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParam
 
 	protected _create_pass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(CopyShader) as CopyPassWithUniforms;
-		console.log('copy', pass);
 		this.update_pass(pass);
 
 		return pass;

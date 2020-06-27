@@ -1,12 +1,13 @@
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {BaseState} from './Base';
+import {Poly} from '../../../Poly';
 
 export class ErrorState extends BaseState {
 	private _message: string | undefined;
 
 	set(message: string | undefined) {
 		if (this._message != message) {
-			console.warn('error', message, this.node.full_path());
+			Poly.warn('error', message, this.node.full_path());
 			this._message = message;
 			this.on_update();
 		}

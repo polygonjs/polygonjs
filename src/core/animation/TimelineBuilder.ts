@@ -30,12 +30,6 @@ export class TimelineBuilder {
 	private _property: TimelineBuilderProperty | undefined;
 	private _update_callback: AnimationUpdateCallback | undefined;
 
-	// static __next_id = 0;
-	// private _id: number = (TimelineBuilder.__next_id += 1);
-	// constructor() {
-	// 	console.log('new builder', this._id);
-	// }
-
 	add_timeline_builder(timeline_builder: TimelineBuilder) {
 		this._timeline_builders.push(timeline_builder);
 		timeline_builder.set_parent(this);
@@ -240,7 +234,6 @@ export class TimelineBuilder {
 		// t1.to(object.rotation, {duration: 1, y: object.rotation.y + Math.PI, ease: 'power2.out'}, 0)
 		// const timeline = gsap.timeline({
 		// 	onComplete: () => {
-		// 		console.log('timeline completed');
 		// 	},
 		// });
 		// timeline.add(t1);

@@ -110,7 +110,6 @@ export class CoreGeometryUtilCurve {
 		const indices = (geometry.getIndex()?.array as number[]) || [];
 
 		const accumulated_curve_point_indices = this.accumulated_curve_point_indices(indices);
-		console.log(indices, accumulated_curve_point_indices);
 
 		if (accumulated_curve_point_indices.length > 0) {
 			const attribute_sizes_by_name = core_geometry.attrib_sizes();

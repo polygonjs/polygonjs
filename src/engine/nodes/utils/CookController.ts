@@ -49,7 +49,7 @@ export class NodeCookController<NC extends NodeContext> {
 				this.node.cook(input_contents);
 			} catch (e) {
 				this.node.states.error.set(`node internal error: '${e}'.`);
-				console.warn(e);
+				Poly.warn(e);
 				this.end_cook();
 			}
 		}
@@ -82,7 +82,7 @@ export class NodeCookController<NC extends NodeContext> {
 			// this seems to happen because when we flush the cooker queue,
 			// some graph nodes will trigger more updates, which will then make dependent nodes
 			// dirty again
-			console.warn('cook_main_without_inputs already cooking', this.node.full_path());
+			Poly.warn('cook_main_without_inputs already cooking', this.node.full_path());
 			return;
 		}
 		this._init_cooking_state();
@@ -102,7 +102,7 @@ export class NodeCookController<NC extends NodeContext> {
 			this.node.remove_dirty_state();
 			this._terminate_cook_process();
 		} else {
-			Poly.instance().log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.full_path());
+			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.full_path());
 			this._cooking = false;
 			this.cook_main();
 		}

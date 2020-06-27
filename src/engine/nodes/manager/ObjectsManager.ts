@@ -8,6 +8,7 @@ import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {HierarchyObjNode} from '../obj/utils/HierarchyController';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -144,7 +145,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	add_to_scene(node: BaseObjNodeType): void {
 		if (node.attachable_to_hierarchy) {
-			const parent_object = this.get_parent_for_node(node);
+			const parent_object = node.root.get_parent_for_node(node);
 			if (parent_object) {
 				// await node.params.eval_all().then((params_eval_key) => {
 				// 	node.request_container();
@@ -205,11 +206,11 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return node_by_id;
 	}
 
-	add_to_parent_transform(node: BaseObjNodeType) {
+	add_to_parent_transform(node: HierarchyObjNode) {
 		this.update_object(node);
 	}
 
-	remove_from_parent_transform(node: BaseObjNodeType) {
+	remove_from_parent_transform(node: HierarchyObjNode) {
 		this.update_object(node);
 	}
 

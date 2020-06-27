@@ -1,13 +1,14 @@
-import {CoreLoggerBase} from './Base';
+import {BaseCoreLogger} from './Base';
 
-export class CoreLoggerTest extends CoreLoggerBase {
+export class TestLogger extends BaseCoreLogger {
 	_lines: any[] = [];
 
-	log(...args: any[]) {
-		if (args.length > 1) {
-			this._lines.push(args);
+	log(message?: any, ...optionalParams: any[]) {
+		this._lines.push(message);
+		if (optionalParams.length > 1) {
+			this._lines.push(message);
 		} else {
-			this._lines.push(args[0]);
+			this._lines.push(optionalParams[0]);
 		}
 	}
 	lines() {

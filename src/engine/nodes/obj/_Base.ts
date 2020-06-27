@@ -5,6 +5,8 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ObjectsManagerNode} from '../manager/ObjectsManager';
 import {Group} from 'three/src/objects/Group';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
+import {TransformController} from './utils/TransformController';
+import {HierarchyController} from './utils/HierarchyController';
 
 const INPUT_OBJECT_NAME = 'parent object';
 const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
@@ -27,6 +29,8 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return DEFAULT_INPUT_NAMES;
 	}
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	readonly transform_controller: TransformController | undefined;
+	readonly hierarchy_controller: HierarchyController | undefined;
 
 	protected _children_group = this._create_children_group();
 	protected _object!: O;

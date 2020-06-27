@@ -6,6 +6,7 @@ import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegiste
 import {NodeContext} from './poly/NodeContext';
 import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
+import {BaseCoreLogger} from '../core/logger/Base';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
 // https://github.com/TypeStrong/ts-loader/issues/37
@@ -24,14 +25,13 @@ export class Poly {
 	_env: string | undefined;
 	private _version: Readonly<string> = _POLYGONJS_VERSION;
 	private _player_mode: boolean = true;
+	private _logger: BaseCoreLogger | undefined;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	static instance() {
 		return (this._instance = this._instance || new Poly());
 	}
-	private constructor() {
-		console.log(`POLYGONJS: '${this._version}'`);
-	}
+	private constructor() {}
 
 	version() {
 		return this._version;
@@ -56,14 +56,41 @@ export class Poly {
 	desktop_controller(): any {}
 	// notify_scene_loaded(scene: PolyScene) {}
 
-	log(...args: any[]) {
-		console.log(...args);
-	}
+	//
+	//
+	// ENV
+	//
+	//
 	set_env(env: string) {
 		this._env = env;
 	}
 	get env() {
 		return this._env;
+	}
+
+	//
+	//
+	// LOGGER
+	//
+	//
+	set_logger(logger: BaseCoreLogger) {
+		this._logger = logger;
+	}
+	get logger() {
+		return this._logger;
+	}
+
+	log_engine_version() {
+		this._logger?.log(`POLYGONJS: '${this._version}'`);
+	}
+	static log(message?: any, ...optionalParams: any[]) {
+		this.instance().logger?.log(...[message, ...optionalParams]);
+	}
+	static warn(message?: any, ...optionalParams: any[]) {
+		this.instance().logger?.warn(...[message, ...optionalParams]);
+	}
+	static error(message?: any, ...optionalParams: any[]) {
+		this.instance().logger?.error(...[message, ...optionalParams]);
 	}
 }
 

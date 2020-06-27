@@ -62,6 +62,5 @@ export class TriangleBlurPostNode extends TypedPostProcessNode<ShaderPass, Trian
 	}
 	update_pass(pass: TriangleBlurPassWithUniforms) {
 		pass.uniforms.delta.value.copy(this.pv.delta).divide(pass.resolution).multiplyScalar(window.devicePixelRatio);
-		console.log('pass.uniforms.delta', pass.uniforms.delta.value);
 	}
 }

@@ -13,6 +13,7 @@ import {CoreGeometry} from '../../geometry/Geometry';
 import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
+import {Poly} from '../../../engine/Poly';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 
@@ -59,7 +60,7 @@ export class JsonDataLoader {
 				success_callback(object);
 			})
 			.catch((error: ErrorEvent) => {
-				console.log('error', error);
+				Poly.error('error', error);
 				error_callback(error);
 			});
 	}

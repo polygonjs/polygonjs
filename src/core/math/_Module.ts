@@ -64,7 +64,6 @@ export class CoreMath {
 	static round(number: number, step_size: number): number {
 		const steps_count = number / step_size;
 		const rounded_steps_count = number < 0 ? Math.ceil(steps_count) : Math.floor(steps_count);
-		console.log('round', step_size, number, steps_count, rounded_steps_count, rounded_steps_count * step_size);
 		return rounded_steps_count * step_size;
 	}
 

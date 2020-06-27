@@ -2,6 +2,8 @@ import {TypedObjNode} from '../_Base';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {CoreTransform, SetParamsFromMatrixOptions, ROTATION_ORDERS, RotationOrder} from '../../../../core/Transform';
 import {Object3D} from 'three/src/core/Object3D';
+// import {Vector3} from 'three/src/math/Vector3';
+// import {Quaternion} from 'three/src/math/Quaternion';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 
 interface TransformedParamConfigDefaultParams {
@@ -15,6 +17,7 @@ export function TransformedParamConfig<TBase extends Constructor>(
 	const matrix_auto_update = default_params?.matrix_auto_update || false;
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
+		keep_pos_when_parenting = ParamConfig.BOOLEAN(0);
 		rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
 			menu: {
 				entries: ROTATION_ORDERS.map((order, v) => {
@@ -46,13 +49,13 @@ export class TransformedObjNode extends TypedObjNode<Object3D, TransformedParams
 	readonly transform_controller: TransformController = new TransformController(this);
 }
 
+const HOOK_NAME = '_cook_main_without_inputs_when_dirty';
 export class TransformController {
 	constructor(private node: TransformedObjNode) {}
 
 	initialize_node() {
-		const hook_name = '_cook_main_without_inputs_when_dirty';
-		if (!this.node.dirty_controller.has_hook(hook_name)) {
-			this.node.dirty_controller.add_post_dirty_hook(hook_name, this._cook_main_without_inputs_when_dirty_bound);
+		if (!this.node.dirty_controller.has_hook(HOOK_NAME)) {
+			this.node.dirty_controller.add_post_dirty_hook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
 		}
 	}
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
@@ -131,5 +134,39 @@ export class TransformController {
 
 	set_params_from_matrix(matrix: Matrix4, options: SetParamsFromMatrixOptions = {}) {
 		CoreTransform.set_params_from_matrix(matrix, this.node, options);
+	}
+
+	//
+	//
+	// KEEP POS WHEN PARENTING
+	//
+	//
+	static update_node_transform_params_if_required(node: TransformedObjNode, new_parent_object: Object3D) {
+		node.transform_controller.update_node_transform_params_if_required(new_parent_object);
+	}
+	// private _keep_pos_when_parenting_t = new Vector3();
+	// private _keep_pos_when_parenting_q = new Quaternion();
+	// private _keep_pos_when_parenting_s = new Vector3();
+	private _keep_pos_when_parenting_m_object = new Matrix4();
+	private _keep_pos_when_parenting_m_new_parent_inv = new Matrix4();
+	update_node_transform_params_if_required(new_parent_object: Object3D) {
+		if (!this.node.pv.keep_pos_when_parenting) {
+			return;
+		}
+		if (!this.node.scene.loading_controller.loaded) {
+			return;
+		}
+		if (new_parent_object == this.node.object.parent) {
+			return;
+		}
+		const object = this.node.object;
+		object.updateMatrixWorld(true);
+		new_parent_object.updateMatrixWorld(true);
+		// compute mat
+		this._keep_pos_when_parenting_m_object.copy(object.matrixWorld);
+		this._keep_pos_when_parenting_m_new_parent_inv.getInverse(new_parent_object.matrixWorld);
+		this._keep_pos_when_parenting_m_object.premultiply(this._keep_pos_when_parenting_m_new_parent_inv);
+		// apply mat
+		CoreTransform.set_params_from_matrix(this._keep_pos_when_parenting_m_object, this.node, {scale: true});
 	}
 }
