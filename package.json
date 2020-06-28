@@ -1,6 +1,6 @@
 {
 	"name": "polygonjs-engine",
-	"version": "1.0.48",
+	"version": "1.0.49",
 	"engines": {
 		"node": "12.16.1",
 		"yarn": "1.22.4"
