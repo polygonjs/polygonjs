@@ -85,14 +85,19 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 				return this._load_csv();
 		}
 	}
+	private _url() {
+		const assets_root = this.scene.assets_controller.assets_root();
+		if (assets_root) {
+			return `${assets_root}${this.pv.url}`;
+		} else {
+			return this.pv.url;
+		}
+	}
 	//
 	//
 	// JSON
 	//
 	//
-	private _url() {
-		return `${this.scene.assets_controller.assets_root()}${this.pv.url}`;
-	}
 	private _load_json() {
 		const loader = new JsonDataLoader({
 			data_keys_prefix: this.pv.json_data_keys_prefix,
