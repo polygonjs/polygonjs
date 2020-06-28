@@ -5,6 +5,7 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import {Object3D} from 'three/src/core/Object3D';
 import {Poly} from '../../Poly';
+import * as THREE from 'three'; // three import required to give to the function builder
 
 const DEFAULT_FUNCTION_CODE = `import {BaseCodeSopProcessor, CoreGroup} from 'polygonjs-engine'
 export class CodeSopProcessor extends BaseCodeSopProcessor {
@@ -94,7 +95,8 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			}`;
 			const processor_creator_function = new Function('BaseCodeSopProcessor', function_body);
 			const processor_class: typeof BaseCodeSopProcessor | undefined = processor_creator_function(
-				BaseCodeSopProcessor
+				BaseCodeSopProcessor,
+				THREE
 			);
 			if (processor_class) {
 				this._processor = new processor_class();
