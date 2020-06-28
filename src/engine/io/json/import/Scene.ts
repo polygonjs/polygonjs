@@ -21,7 +21,6 @@ export class SceneJsonImporter {
 		const properties = this._data['properties'];
 		if (properties) {
 			// scene.set_name(properties['name'])
-			scene.set_frame(properties['frame'] || 1);
 			const frame_range = properties['frame_range'] || [];
 			scene.time_controller.set_frame_range(frame_range[0] || 1, frame_range[1] || 100);
 			const frame_range_locked = properties['frame_range_locked'];
@@ -32,6 +31,8 @@ export class SceneJsonImporter {
 			if (realtime_state != null) {
 				scene.time_controller.set_realtime_state(realtime_state);
 			}
+			// set frame after the range has been set, to avoid clamping
+			scene.set_frame(properties['frame'] || 1);
 
 			// scene.time_controller.set_fps(properties['fps'] || 30);
 			if (properties['master_camera_node_path']) {

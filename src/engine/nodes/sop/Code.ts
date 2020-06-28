@@ -93,7 +93,8 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			} catch(e) {
 				this.states.error.set(e)
 			}`;
-			const processor_creator_function = new Function('BaseCodeSopProcessor', function_body);
+
+			const processor_creator_function = new Function('BaseCodeSopProcessor', 'THREE', function_body);
 			const processor_class: typeof BaseCodeSopProcessor | undefined = processor_creator_function(
 				BaseCodeSopProcessor,
 				THREE
