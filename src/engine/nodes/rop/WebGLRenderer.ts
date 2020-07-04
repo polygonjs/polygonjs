@@ -1,5 +1,6 @@
 import {TypedRopNode} from './_Base';
 import {Mesh} from 'three/src/objects/Mesh';
+import {RopType} from '../../poly/registers/nodes/Rop';
 import lodash_isArray from 'lodash/isArray';
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {
@@ -210,8 +211,8 @@ const ParamsConfig = new WebGlRendererRopParamsConfig();
 
 export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'webgl_renderer'> {
-		return 'webgl_renderer';
+	static type(): Readonly<RopType.WEBGL> {
+		return RopType.WEBGL;
 	}
 
 	private _renderers_by_canvas_id: Dictionary<WebGLRenderer> = {};

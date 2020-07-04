@@ -24,7 +24,7 @@ export function MapboxListenerParamConfig<TBase extends Constructor>(Base: TBase
 		mapbox_camera = ParamConfig.OPERATOR_PATH('/mapbox_camera1', {
 			node_selection: {
 				context: NodeContext.OBJ,
-				type: MapboxCameraObjNode.type(),
+				types: [MapboxCameraObjNode.type()],
 			},
 			callback: (node: BaseNodeType) => {
 				MapboxListenerSopNode.PARAM_CALLBACK_update_mapbox_camera(

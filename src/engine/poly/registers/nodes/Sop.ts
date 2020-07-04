@@ -31,6 +31,7 @@ import {ConeSopNode} from '../../../nodes/sop/Cone';
 import {CopSopNode} from '../../../nodes/sop/Cop';
 import {CopySopNode} from '../../../nodes/sop/Copy';
 import {Css2DObjectSopNode} from '../../../nodes/sop/Css2DObject';
+import {Css3DObjectSopNode} from '../../../nodes/sop/Css3DObject';
 import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
@@ -120,6 +121,7 @@ export interface GeoNodeChildrenMap {
 	cop: CopSopNode;
 	copy: CopySopNode;
 	css2d_object: Css2DObjectSopNode;
+	css3d_object: Css3DObjectSopNode;
 	data: DataSopNode;
 	data_url: DataUrlSopNode;
 	delay: DelaySopNode;
@@ -213,6 +215,7 @@ export class SopRegister {
 		poly.register_node(CopSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(CopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(Css2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
+		// poly.register_node(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
 		poly.register_node(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(DelaySopNode, CATEGORY_SOP.MISC);

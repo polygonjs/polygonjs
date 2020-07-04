@@ -22,7 +22,7 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 		visible_if: {override_scene: 1},
 		node_selection: {
 			context: NodeContext.OBJ,
-			type: SceneObjNode.type(),
+			types: [SceneObjNode.type()],
 		},
 		...PostParamOptions,
 	});

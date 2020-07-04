@@ -1,6 +1,7 @@
 // import {TypedParamVisitor} from './_Base';
 import {TypedParam, BaseParamType} from './_Base';
 import {CoreWalker} from '../../core/Walker';
+import lodash_isArray from 'lodash/isArray';
 
 // import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNodeType} from '../nodes/_Base';
@@ -132,7 +133,9 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 				}
 			} else {
 				this.states.error.set(
-					`node type is ${node.type} but the params expects a ${this._expected_node_type()}`
+					`node type is ${node.type} but the params expects one of ${(this._expected_node_types() || []).join(
+						', '
+					)}`
 				);
 			}
 		} else {
@@ -175,14 +178,26 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	// ): ChildrenNodeMapByContextMap[N][K] | undefined {
 	found_node_with_context_and_type<N extends NodeContext, K extends keyof ChildrenNodeMapByContextMap[N]>(
 		context: N,
-		type: K
+		type_or_types: K | K[]
 	): ChildrenNodeMapByContextMap[N][K] | undefined {
 		const node = this.found_node_with_context(context);
 		if (node) {
-			if (node.type == type) {
-				return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
+			if (lodash_isArray(type_or_types)) {
+				for (let type of type_or_types) {
+					if (node.type == type) {
+						return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
+					}
+				}
+				this.states.error.set(
+					`expected node type to be ${type_or_types.join(', ')}, but was instead ${node.type}`
+				);
 			} else {
-				this.states.error.set(`expected node type to be ${type}, but was instead ${node.type}`);
+				const type = type_or_types;
+				if (node.type == type) {
+					return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
+				} else {
+					this.states.error.set(`expected node type to be ${type}, but was instead ${node.type}`);
+				}
 			}
 		}
 	}
@@ -206,25 +221,25 @@ export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 		const node_context = node.parent?.children_controller?.context;
 		return expected_context == node_context;
 	}
-	private _expected_node_type() {
-		return this.options.node_selection_type;
+	private _expected_node_types() {
+		return this.options.node_selection_types;
 	}
 	private _expected_param_type() {
 		return this.options.param_selection_type;
 	}
 	private _is_node_expected_type(node: BaseNodeType) {
-		const expected_type = this._expected_node_type();
-		if (expected_type == null) {
+		const expected_types = this._expected_node_types();
+		if (expected_types == null) {
 			return true;
 		}
-		return expected_type == node.type;
+		return expected_types?.includes(node.type);
 	}
 	private _is_param_expected_type(param: BaseParamType) {
-		const expected_type = this._expected_node_type();
-		if (expected_type == null) {
+		const expected_types = this._expected_node_types();
+		if (expected_types == null) {
 			return true;
 		}
-		return expected_type == param.type;
+		return expected_types.includes(param.type);
 	}
 
 	notify_path_rebuild_required(node: BaseNodeType) {

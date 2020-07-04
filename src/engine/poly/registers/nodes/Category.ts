@@ -61,7 +61,8 @@ export const CATEGORY_OBJ = {
 	TRANSFORM: 'transform',
 };
 export const CATEGORY_ROP = {
-	RENDERER: 'renderers',
+	WEBGL: 'webgl',
+	CSS: 'css',
 };
 
 export const CATEGORY_SOP = {

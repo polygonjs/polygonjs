@@ -33,7 +33,7 @@ const MULTILINE_OPTION = 'multiline';
 const LANGUAGE_OPTION = 'language';
 const NODE_SELECTION = 'node_selection';
 const NODE_SELECTION_CONTEXT = 'context';
-const NODE_SELECTION_TYPE = 'type';
+const NODE_SELECTION_TYPES = 'types';
 const PARAM_SELECTION = 'param_selection';
 const DEPENDENT_ON_FOUND_NODE = 'dependent_on_found_node';
 const RANGE_OPTION = 'range';
@@ -76,7 +76,6 @@ interface BaseParamOptions {
 }
 export interface MenuParamOptions {
 	menu?: {
-		// type: 'radio';
 		entries: ParamOptionsMenuEntry[];
 	};
 }
@@ -140,7 +139,7 @@ export interface OperatorPathParamOptions
 		CallbackParamOptions {
 	node_selection?: {
 		context?: NodeContext;
-		type?: string;
+		types?: string[];
 	};
 	dependent_on_found_node?: boolean;
 	param_selection?: ParamType | boolean;
@@ -175,47 +174,9 @@ export interface ParamOptions
 		MenuParamOptions,
 		StringParamOptions,
 		OperatorPathParamOptions {
-	// asset refererences
-	// always_reference_asset?: boolean;
-	// callback
-	// callback?: (node: BaseNodeType, param: BaseParamType) => any;
-	// callback_string?: string;
-	// color
-	// color?: [number, number, number] | string;
-	// cook
-	// cook?: boolean;
-	// desktop
-	// desktop_browse?: Dictionary<string>;
-	// expression
-	// expression_only?: boolean;
-	// expression?: {
-	// 	for_entities?: boolean;
-	// };
-	// folder
-	// level?:number
-	// menu
-	// menu?: {
-	// 	// type: 'radio';
-	// 	entries: ParamOptionsMenuEntry[];
-	// };
-	// multiline
-	// multiline?: boolean;
-	// node selection
-	// node_selection?: {
-	// 	context?: NodeContext;
-	// };
-	// dependent_on_found_node?: boolean;
-	// spare
-	// spare?: boolean;
-	// texture
 	texture?: {
 		env?: boolean;
 	};
-	// visible
-	// hidden?: boolean;
-	// label?: boolean;
-	// field?: boolean;
-	// visible_if?: Dictionary<number | boolean>;
 }
 
 export class OptionsController {
@@ -455,9 +416,9 @@ export class OptionsController {
 			return this.node_selection_options[NODE_SELECTION_CONTEXT];
 		}
 	}
-	get node_selection_type() {
+	get node_selection_types() {
 		if (this.node_selection_options) {
-			return this.node_selection_options[NODE_SELECTION_TYPE];
+			return this.node_selection_options[NODE_SELECTION_TYPES];
 		}
 	}
 

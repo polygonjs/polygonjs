@@ -27,7 +27,7 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 				do_post_process: 1,
 			},
 			node_selection: {
-				type: NetworkNodeType.POST,
+				types: [NetworkNodeType.POST],
 			},
 			// cook: false,
 			...POST_PROCESS_PARAM_OPTIONS,

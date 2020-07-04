@@ -11,9 +11,11 @@ import {
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
 } from '../../../../nodes/rop/WebGLRenderer';
+import {Css2DRendererRopNode} from '../../../rop/Css2DRenderer';
+import {Css3DRendererRopNode} from '../../../rop/Css3DRenderer';
+import {RopType} from '../../../../poly/registers/nodes/Rop';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {Css2DRendererRopNode} from '../../../rop/Css2DRenderer';
 export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		render = ParamConfig.FOLDER();
@@ -23,7 +25,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			visible_if: {set_scene: 1},
 			node_selection: {
 				context: NodeContext.OBJ,
-				type: SceneObjNode.type(),
+				types: [SceneObjNode.type()],
 			},
 		});
 
@@ -32,7 +34,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			visible_if: {set_renderer: 1},
 			node_selection: {
 				context: NodeContext.ROP,
-				type: WebGlRendererRopNode.type(),
+				types: [WebGlRendererRopNode.type()],
 			},
 		});
 
@@ -41,7 +43,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			visible_if: {set_css_renderer: 1},
 			node_selection: {
 				context: NodeContext.ROP,
-				type: Css2DRendererRopNode.type(),
+				types: [RopType.CSS2D, RopType.CSS3D],
 			},
 		});
 	};
@@ -52,7 +54,7 @@ export class RenderController {
 	private _resolution_by_canvas_id: Dictionary<Vector2> = {};
 	private _resolved_scene: Scene | undefined;
 	private _resolved_renderer_rop: WebGlRendererRopNode | undefined;
-	private _resolved_css_renderer_rop: Css2DRendererRopNode | undefined;
+	private _resolved_css_renderer_rop: Css2DRendererRopNode | Css3DRendererRopNode | undefined;
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
@@ -129,10 +131,7 @@ export class RenderController {
 			if (param.is_dirty) {
 				param.find_target();
 			}
-			this._resolved_renderer_rop = param.found_node_with_context_and_type(
-				NodeContext.ROP,
-				WebGlRendererRopNode.type()
-			);
+			this._resolved_renderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, RopType.WEBGL);
 		} else {
 			this._resolved_renderer_rop = undefined;
 		}
@@ -143,10 +142,10 @@ export class RenderController {
 			if (param.is_dirty) {
 				param.find_target();
 			}
-			this._resolved_css_renderer_rop = param.found_node_with_context_and_type(
-				NodeContext.ROP,
-				Css2DRendererRopNode.type()
-			);
+			this._resolved_css_renderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, [
+				RopType.CSS2D,
+				RopType.CSS3D,
+			]);
 		} else {
 			if (this._resolved_css_renderer_rop) {
 				// TODO: not yet sure how to remove it so that it can be easily added again

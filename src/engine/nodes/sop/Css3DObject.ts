@@ -1,5 +1,5 @@
 import {TypedSopNode} from './_Base';
-import {CSS2DObject} from '../../../../modules/three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS3DObject} from '../../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 interface Css2DObjectParams {
@@ -16,18 +16,18 @@ const DEFAULT_VALUE = {
 };
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class Css2DObjectSopParamsConfig extends NodeParamsConfig {
+class Css3DObjectSopParamsConfig extends NodeParamsConfig {
 	class_name = ParamConfig.STRING(DEFAULT_VALUE.class_name);
 	text = ParamConfig.STRING(DEFAULT_VALUE.text, {
 		multiline: true,
 	});
 }
-const ParamsConfig = new Css2DObjectSopParamsConfig();
+const ParamsConfig = new Css3DObjectSopParamsConfig();
 
-export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig> {
+export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'css2d_object';
+		return 'css3d_object';
 	}
 
 	initialize_node() {
@@ -45,12 +45,12 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 
 	private _create_objects_from_input_points(core_group: CoreGroup) {
 		const points = core_group.points();
-		const objects: CSS2DObject[] = [];
+		const objects: CSS3DObject[] = [];
 		for (let point of points) {
 			const class_name = (point.attrib_value(ATTRIBUTE_NAME.class_name) as string) || DEFAULT_VALUE.class_name;
 			const text = (point.attrib_value(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
 
-			const object = Css2DObjectSopNode.create_css_object({
+			const object = Css3DObjectSopNode.create_css_object({
 				class_name,
 				text,
 			});
@@ -64,12 +64,12 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 	}
 
 	private _create_object_from_scratch() {
-		const object = Css2DObjectSopNode.create_css_object({
+		const object = Css3DObjectSopNode.create_css_object({
 			class_name: this.pv.class_name,
 			text: this.pv.text,
 		});
 
-		Css2DObjectSopNode._assign_clone_method(object);
+		Css3DObjectSopNode._assign_clone_method(object);
 
 		this.set_objects([object]);
 	}
@@ -78,20 +78,20 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 		const element = document.createElement('div');
 		element.className = params.class_name;
 		element.textContent = params.text;
-		const object = new CSS2DObject(element);
+		const object = new CSS3DObject(element);
 
-		object.matrixAutoUpdate = false;
+		object.matrixAutoUpdate = true;
 
-		Css2DObjectSopNode._assign_clone_method(object);
+		Css3DObjectSopNode._assign_clone_method(object);
 		return object;
 	}
 
-	private static _assign_clone_method(css_object: CSS2DObject) {
-		css_object.clone = () => Css2DObjectSopNode.clone_css_object(css_object);
+	private static _assign_clone_method(css_object: CSS3DObject) {
+		css_object.clone = () => Css3DObjectSopNode.clone_css_object(css_object);
 	}
 
-	static clone_css_object(css_object: CSS2DObject) {
-		const new_object = new CSS2DObject(css_object.element);
+	static clone_css_object(css_object: CSS3DObject) {
+		const new_object = new CSS3DObject(css_object.element);
 		new_object.matrixAutoUpdate = css_object.matrixAutoUpdate;
 		this._assign_clone_method(new_object);
 		return new_object;
