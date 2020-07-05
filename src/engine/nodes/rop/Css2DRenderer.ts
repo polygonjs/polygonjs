@@ -47,6 +47,40 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 	// }
 
 	cook() {
+		this._update_css();
 		this.cook_controller.end_cook();
+	}
+
+	private _update_css() {
+		const element = this.css_element();
+		// console.log(element);
+		// if (element.rules.length > 0) {
+		// 	element.deleteRule(0);
+		// }
+		// element.insertRule(this.pv.css);
+		// console.log('rule inserted', this.pv.css);
+		element.innerHTML = this.pv.css;
+	}
+
+	private _css_element: HTMLElement | undefined; // = new CSSStyleSheet();
+	private css_element() {
+		return (this._css_element = this._css_element || this._find_element() || this._create_element());
+	}
+	private _find_element() {
+		return document.getElementById(this._css_element_id());
+	}
+	private _create_element() {
+		const style = document.createElement('style');
+		// document.body.append(element);
+		// https://davidwalsh.name/add-rules-stylesheets
+		// WebKit hack :(
+		style.appendChild(document.createTextNode(''));
+		document.head.appendChild(style);
+
+		style.id = this._css_element_id();
+		return style;
+	}
+	private _css_element_id() {
+		return `css_2d_renderer-${this.graph_node_id}`;
 	}
 }

@@ -48,6 +48,7 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
 			const class_name = (point.attrib_value(ATTRIBUTE_NAME.class_name) as string) || DEFAULT_VALUE.class_name;
+			console.log('class_name', class_name);
 			const text = (point.attrib_value(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
 
 			const object = Css2DObjectSopNode.create_css_object({

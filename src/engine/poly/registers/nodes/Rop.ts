@@ -20,7 +20,7 @@ import {Poly} from '../../../Poly';
 export class RopRegister {
 	static run(poly: Poly) {
 		poly.register_node(Css2DRendererRopNode, CATEGORY_ROP.CSS);
-		poly.register_node(Css3DRendererRopNode, CATEGORY_ROP.CSS);
+		// poly.register_node(Css3DRendererRopNode, CATEGORY_ROP.CSS); // not registering, since sop/css3d_object is not yet working
 		poly.register_node(WebGlRendererRopNode, CATEGORY_ROP.WEBGL);
 	}
 }

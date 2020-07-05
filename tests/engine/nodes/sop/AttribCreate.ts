@@ -380,7 +380,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	assert.equal(core_group.points().length, 1000);
 });
 
-QUnit.test('attrib create for string on vertices', async (assert) => {
+QUnit.test('attrib create for string on vertices with expr', async (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
@@ -412,4 +412,31 @@ QUnit.test('attrib create for string on vertices', async (assert) => {
 	assert.equal(points[0].attrib_value('ids'), '0');
 	assert.equal(points[1].attrib_value('ids'), '2');
 	assert.equal(points[2].attrib_value('ids'), '4');
+});
+
+QUnit.test('attrib create for string on vertices without expr', async (assert) => {
+	const geo1 = window.geo1;
+
+	window.scene.performance.start();
+
+	const box1 = geo1.create_node('box');
+	const attrib_create1 = geo1.create_node('attrib_create');
+	attrib_create1.set_input(0, box1);
+	attrib_create1.p.name.set('ids');
+	attrib_create1.p.type.set(AttribType.STRING);
+	attrib_create1.p.string.set('test');
+
+	let container = await attrib_create1.request_container();
+	assert.equal(container.points_count(), 24, 'has 24 pts');
+	let points = container.core_content()!.points();
+	assert.equal(points[0].attrib_value('ids'), 'test', 'pt 0 has pt_0');
+	assert.equal(points[1].attrib_value('ids'), 'test', 'pt 1 has pt_2');
+	assert.equal(points[2].attrib_value('ids'), 'test', 'pt 2 has pt_4');
+
+	const geometry = container.core_content()!.objects_with_geo()[0].geometry;
+	const array = geometry.getAttribute('ids').array;
+	assert.equal(array.length, 24);
+	assert.equal(array[0], 0);
+	assert.equal(array[1], 0);
+	assert.equal(array[2], 0);
 });

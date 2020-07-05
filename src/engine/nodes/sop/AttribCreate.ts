@@ -287,13 +287,15 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const points = core_object.points_from_group(this.pv.group);
 		const param = this.p.string;
 
-		const string_values: string[] = [];
+		const string_values: string[] = new Array(points.length);
 		if (param.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
 				string_values[point.index] = value;
 			});
 		} else {
-			string_values.push(param.value);
+			for (let i = 0; i < points.length; i++) {
+				string_values[i] = param.value;
+			}
 		}
 
 		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
