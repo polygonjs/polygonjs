@@ -71,7 +71,7 @@ export interface IntegerParamOptions extends NumberParamOptions, MenuParamOption
 export interface OperatorPathParamOptions extends BaseParamOptions, DesktopParamOptions, ComputeOnDirtyParamOptions, CallbackParamOptions {
     node_selection?: {
         context?: NodeContext;
-        type?: string;
+        types?: string[];
     };
     dependent_on_found_node?: boolean;
     param_selection?: ParamType | boolean;
@@ -140,10 +140,10 @@ export declare class OptionsController {
     get is_code(): boolean;
     get node_selection_options(): {
         context?: NodeContext | undefined;
-        type?: string | undefined;
+        types?: string[] | undefined;
     } | undefined;
     get node_selection_context(): NodeContext | undefined;
-    get node_selection_type(): string | undefined;
+    get node_selection_types(): string[] | undefined;
     dependent_on_found_node(): boolean | undefined;
     is_selecting_param(): boolean;
     get param_selection_options(): boolean | ParamType | undefined;

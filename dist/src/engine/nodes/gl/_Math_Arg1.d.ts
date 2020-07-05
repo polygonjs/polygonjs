@@ -1,5 +1,5 @@
 declare const AbsGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -20,7 +20,7 @@ declare const AbsGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -53,7 +53,7 @@ declare const AbsGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -67,7 +67,7 @@ declare const AbsGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -127,7 +127,7 @@ declare const AbsGlNode_base: {
 export declare class AbsGlNode extends AbsGlNode_base {
 }
 declare const AcosGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -148,7 +148,7 @@ declare const AcosGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -181,7 +181,7 @@ declare const AcosGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -195,7 +195,7 @@ declare const AcosGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -255,7 +255,7 @@ declare const AcosGlNode_base: {
 export declare class AcosGlNode extends AcosGlNode_base {
 }
 declare const AsinGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -276,7 +276,7 @@ declare const AsinGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -309,7 +309,7 @@ declare const AsinGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -323,7 +323,7 @@ declare const AsinGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -383,7 +383,7 @@ declare const AsinGlNode_base: {
 export declare class AsinGlNode extends AsinGlNode_base {
 }
 declare const AtanGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -404,7 +404,7 @@ declare const AtanGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -437,7 +437,7 @@ declare const AtanGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -451,7 +451,7 @@ declare const AtanGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -511,7 +511,7 @@ declare const AtanGlNode_base: {
 export declare class AtanGlNode extends AtanGlNode_base {
 }
 declare const CeilGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -532,7 +532,7 @@ declare const CeilGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -565,7 +565,7 @@ declare const CeilGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -579,7 +579,7 @@ declare const CeilGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -639,7 +639,7 @@ declare const CeilGlNode_base: {
 export declare class CeilGlNode extends CeilGlNode_base {
 }
 declare const CosGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -660,7 +660,7 @@ declare const CosGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -693,7 +693,7 @@ declare const CosGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -707,7 +707,7 @@ declare const CosGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -767,7 +767,7 @@ declare const CosGlNode_base: {
 export declare class CosGlNode extends CosGlNode_base {
 }
 declare const DegreesGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -788,7 +788,7 @@ declare const DegreesGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -821,7 +821,7 @@ declare const DegreesGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -835,7 +835,7 @@ declare const DegreesGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -895,7 +895,7 @@ declare const DegreesGlNode_base: {
 export declare class DegreesGlNode extends DegreesGlNode_base {
 }
 declare const ExpGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -916,7 +916,7 @@ declare const ExpGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -949,7 +949,7 @@ declare const ExpGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -963,7 +963,7 @@ declare const ExpGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1023,7 +1023,7 @@ declare const ExpGlNode_base: {
 export declare class ExpGlNode extends ExpGlNode_base {
 }
 declare const Exp2GlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1044,7 +1044,7 @@ declare const Exp2GlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1077,7 +1077,7 @@ declare const Exp2GlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1091,7 +1091,7 @@ declare const Exp2GlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1151,7 +1151,7 @@ declare const Exp2GlNode_base: {
 export declare class Exp2GlNode extends Exp2GlNode_base {
 }
 declare const FloorGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1172,7 +1172,7 @@ declare const FloorGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1205,7 +1205,7 @@ declare const FloorGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1219,7 +1219,7 @@ declare const FloorGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1279,7 +1279,7 @@ declare const FloorGlNode_base: {
 export declare class FloorGlNode extends FloorGlNode_base {
 }
 declare const FractGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1300,7 +1300,7 @@ declare const FractGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1333,7 +1333,7 @@ declare const FractGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1347,7 +1347,7 @@ declare const FractGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1407,7 +1407,7 @@ declare const FractGlNode_base: {
 export declare class FractGlNode extends FractGlNode_base {
 }
 declare const InverseSqrtGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1428,7 +1428,7 @@ declare const InverseSqrtGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1461,7 +1461,7 @@ declare const InverseSqrtGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1475,7 +1475,7 @@ declare const InverseSqrtGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1535,7 +1535,7 @@ declare const InverseSqrtGlNode_base: {
 export declare class InverseSqrtGlNode extends InverseSqrtGlNode_base {
 }
 declare const LogGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1556,7 +1556,7 @@ declare const LogGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1589,7 +1589,7 @@ declare const LogGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1603,7 +1603,7 @@ declare const LogGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1663,7 +1663,7 @@ declare const LogGlNode_base: {
 export declare class LogGlNode extends LogGlNode_base {
 }
 declare const Log2GlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1684,7 +1684,7 @@ declare const Log2GlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1717,7 +1717,7 @@ declare const Log2GlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1731,7 +1731,7 @@ declare const Log2GlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1791,7 +1791,7 @@ declare const Log2GlNode_base: {
 export declare class Log2GlNode extends Log2GlNode_base {
 }
 declare const NormalizeGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1812,7 +1812,7 @@ declare const NormalizeGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1845,7 +1845,7 @@ declare const NormalizeGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1859,7 +1859,7 @@ declare const NormalizeGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -1919,7 +1919,7 @@ declare const NormalizeGlNode_base: {
 export declare class NormalizeGlNode extends NormalizeGlNode_base {
 }
 declare const RadiansGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1940,7 +1940,7 @@ declare const RadiansGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -1973,7 +1973,7 @@ declare const RadiansGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -1987,7 +1987,7 @@ declare const RadiansGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -2047,7 +2047,7 @@ declare const RadiansGlNode_base: {
 export declare class RadiansGlNode extends RadiansGlNode_base {
 }
 declare const SignGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2068,7 +2068,7 @@ declare const SignGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -2101,7 +2101,7 @@ declare const SignGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -2115,7 +2115,7 @@ declare const SignGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -2175,7 +2175,7 @@ declare const SignGlNode_base: {
 export declare class SignGlNode extends SignGlNode_base {
 }
 declare const SinGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2196,7 +2196,7 @@ declare const SinGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -2229,7 +2229,7 @@ declare const SinGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -2243,7 +2243,7 @@ declare const SinGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -2303,7 +2303,7 @@ declare const SinGlNode_base: {
 export declare class SinGlNode extends SinGlNode_base {
 }
 declare const SqrtGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2324,7 +2324,7 @@ declare const SqrtGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -2357,7 +2357,7 @@ declare const SqrtGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -2371,7 +2371,7 @@ declare const SqrtGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -2431,7 +2431,7 @@ declare const SqrtGlNode_base: {
 export declare class SqrtGlNode extends SqrtGlNode_base {
 }
 declare const TanGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2452,7 +2452,7 @@ declare const TanGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<import("../../poly/ParamType").ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -2485,7 +2485,7 @@ declare const TanGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -2499,7 +2499,7 @@ declare const TanGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;

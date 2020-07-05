@@ -18,7 +18,7 @@ export declare class ParamSerializer {
     protected param: BaseParamType;
     constructor(param: BaseParamType);
     to_json(): ParamSerializerData;
-    raw_input(): string | number | boolean | StringOrNumber3 | import("../ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+    raw_input(): import("../types/ParamInitValueSerialized").ParamInitValueSerialized;
     value(): string | number | boolean | import("../ramp/RampValue").RampValueJson | Number2 | Number3 | Number4 | null;
     expression(): string | undefined;
     error_message(): string | undefined;

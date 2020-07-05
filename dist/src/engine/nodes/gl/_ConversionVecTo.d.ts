@@ -8,7 +8,7 @@ declare class BaseVecToGlNode extends TypedGlNode<VecToParamsConfig> {
     params_config: VecToParamsConfig;
 }
 declare const Vec2ToFloatGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         create_params(): void;
         set_lines(shaders_collection_controller: ShadersCollectionController): void;
@@ -24,7 +24,7 @@ declare const Vec2ToFloatGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -57,7 +57,7 @@ declare const Vec2ToFloatGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -70,7 +70,7 @@ declare const Vec2ToFloatGlNode_base: {
         add_param<T extends ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -130,7 +130,7 @@ declare const Vec2ToFloatGlNode_base: {
 export declare class Vec2ToFloatGlNode extends Vec2ToFloatGlNode_base {
 }
 declare const Vec3ToFloatGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         create_params(): void;
         set_lines(shaders_collection_controller: ShadersCollectionController): void;
@@ -146,7 +146,7 @@ declare const Vec3ToFloatGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -179,7 +179,7 @@ declare const Vec3ToFloatGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -192,7 +192,7 @@ declare const Vec3ToFloatGlNode_base: {
         add_param<T extends ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
@@ -252,7 +252,7 @@ declare const Vec3ToFloatGlNode_base: {
 export declare class Vec3ToFloatGlNode extends Vec3ToFloatGlNode_base {
 }
 declare const Vec4ToFloatGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         create_params(): void;
         set_lines(shaders_collection_controller: ShadersCollectionController): void;
@@ -268,7 +268,7 @@ declare const Vec4ToFloatGlNode_base: {
         reset_code(): void;
         set_param_configs(): void;
         param_configs(): readonly import("./code/utils/ParamConfig").GlParamConfig<ParamType>[] | undefined;
-        param_default_value(name: string): string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null;
+        param_default_value(name: string): import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized;
         container_controller: import("../utils/ContainerController").TypedContainerController<import("../../poly/NodeContext").NodeContext.GL>;
         _parent_controller: import("../utils/hierarchy/ParentController").HierarchyParentController | undefined;
         _ui_data: import("../utils/UIData").UIData | undefined;
@@ -301,7 +301,7 @@ declare const Vec4ToFloatGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -314,7 +314,7 @@ declare const Vec4ToFloatGlNode_base: {
         add_param<T extends ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;

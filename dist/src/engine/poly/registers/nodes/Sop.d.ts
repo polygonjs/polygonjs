@@ -23,6 +23,7 @@ import { ColorSopNode } from '../../../nodes/sop/Color';
 import { CopSopNode } from '../../../nodes/sop/Cop';
 import { CopySopNode } from '../../../nodes/sop/Copy';
 import { Css2DObjectSopNode } from '../../../nodes/sop/Css2DObject';
+import { Css3DObjectSopNode } from '../../../nodes/sop/Css3DObject';
 import { DataSopNode } from '../../../nodes/sop/Data';
 import { DataUrlSopNode } from '../../../nodes/sop/DataUrl';
 import { DelaySopNode } from '../../../nodes/sop/Delay';
@@ -111,6 +112,7 @@ export interface GeoNodeChildrenMap {
     cop: CopSopNode;
     copy: CopySopNode;
     css2d_object: Css2DObjectSopNode;
+    css3d_object: Css3DObjectSopNode;
     data: DataSopNode;
     data_url: DataUrlSopNode;
     delay: DelaySopNode;

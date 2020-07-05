@@ -48,7 +48,7 @@ import { BasePersistedConfig } from './utils/PersistedConfig';
 import { AssemblerName } from '../poly/registers/assemblers/_BaseRegister';
 import { PolyNodeController } from './utils/poly/PolyNodeController';
 export declare class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
-    params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+    params_init_value_overrides?: Dictionary<ParamInitValueSerialized> | undefined;
     container_controller: TypedContainerController<NC>;
     private _parent_controller;
     private _ui_data;
@@ -83,7 +83,7 @@ export declare class TypedNode<NC extends NodeContext, K extends NodeParamsConfi
     set_name(name: string): void;
     _set_core_name(name: string): void;
     get params(): ParamsController;
-    constructor(scene: PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined);
+    constructor(scene: PolyScene, name?: string, params_init_value_overrides?: Dictionary<ParamInitValueSerialized> | undefined);
     private _initialized;
     initialize_base_and_node(): void;
     protected initialize_base_node(): void;

@@ -60,7 +60,8 @@ export declare const CATEGORY_OBJ: {
     TRANSFORM: string;
 };
 export declare const CATEGORY_ROP: {
-    RENDERER: string;
+    WEBGL: string;
+    CSS: string;
 };
 export declare const CATEGORY_SOP: {
     ADVANCED: string;

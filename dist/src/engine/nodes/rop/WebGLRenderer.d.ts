@@ -1,4 +1,5 @@
 import { TypedRopNode } from './_Base';
+import { RopType } from '../../poly/registers/nodes/Rop';
 import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer';
 export declare const DEFAULT_OUTPUT_ENCODING: number;
 export declare const DEFAULT_TONE_MAPPING: number;
@@ -17,7 +18,7 @@ declare class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 }
 export declare class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsConfig> {
     params_config: WebGlRendererRopParamsConfig;
-    static type(): Readonly<'webgl_renderer'>;
+    static type(): Readonly<RopType.WEBGL>;
     private _renderers_by_canvas_id;
     create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer;
     cook(): void;

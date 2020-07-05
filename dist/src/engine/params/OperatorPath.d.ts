@@ -27,12 +27,12 @@ export declare class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PAT
     found_node(): BaseNodeType | null;
     found_param(): BaseParamType | null;
     found_node_with_context<N extends NodeContext>(context: N): BaseNodeByContextMap[N] | undefined;
-    found_node_with_context_and_type<N extends NodeContext, K extends keyof ChildrenNodeMapByContextMap[N]>(context: N, type: K): ChildrenNodeMapByContextMap[N][K] | undefined;
+    found_node_with_context_and_type<N extends NodeContext, K extends keyof ChildrenNodeMapByContextMap[N]>(context: N, type_or_types: K | K[]): ChildrenNodeMapByContextMap[N][K] | undefined;
     found_param_with_type<T extends ParamType>(type: T): ParamConstructorMap[T] | undefined;
     found_node_with_expected_type(): BaseNodeType | null;
     private _expected_context;
     private _is_node_expected_context;
-    private _expected_node_type;
+    private _expected_node_types;
     private _expected_param_type;
     private _is_node_expected_type;
     private _is_param_expected_type;

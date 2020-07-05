@@ -1,5 +1,5 @@
 declare const CycleGlNode_base: {
-    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): {
+    new (scene: import("../../scene/PolyScene").PolyScene, name?: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -53,7 +53,7 @@ declare const CycleGlNode_base: {
         set_name(name: string): void;
         _set_core_name(name: string): void;
         readonly params: import("../utils/params/ParamsController").ParamsController;
-        params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined;
+        params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined;
         _initialized: boolean;
         initialize_base_and_node(): void;
         readonly type: string;
@@ -67,7 +67,7 @@ declare const CycleGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: Dictionary<string | number | boolean | StringOrNumber3 | import("../../params/ramp/RampValue").RampValueJson | StringOrNumber2 | StringOrNumber4 | null> | undefined): import("../_Base").BaseNodeType | undefined;
+        create_node(type: string, params_init_value_overrides?: Dictionary<import("../../params/types/ParamInitValueSerialized").ParamInitValueSerialized> | undefined): import("../_Base").BaseNodeType | undefined;
         remove_node(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;

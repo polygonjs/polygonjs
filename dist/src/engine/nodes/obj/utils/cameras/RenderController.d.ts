@@ -29,7 +29,7 @@ export declare class RenderController {
     private update_renderer;
     private update_css_renderer;
     renderer(canvas: HTMLCanvasElement): WebGLRenderer;
-    css_renderer(canvas: HTMLCanvasElement): import("../../../../../../modules/three/examples/jsm/renderers/CSS2DRenderer").CSS2DRenderer | undefined;
+    css_renderer(canvas: HTMLCanvasElement): import("../../../../../../modules/core/renderers/CSS2DRenderer").CSS2DRenderer | import("../../../../../../modules/three/examples/jsm/renderers/CSS3DRenderer").CSS3DRenderer | undefined;
     create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer;
     delete_renderer(canvas: HTMLCanvasElement): void;
     canvas_resolution(canvas: HTMLCanvasElement): Vector2;
