@@ -1,11 +1,24 @@
 import {TypedRopNode} from './_Base';
-import {CSS2DRenderer} from '../../../../modules/three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS2DRenderer} from '../../../../modules/core/renderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Css2DRendererRopParamsConfig extends NodeParamsConfig {
 	css = ParamConfig.STRING('', {
 		multiline: true,
+	});
+
+	sort_objects = ParamConfig.BOOLEAN(0);
+	use_fog = ParamConfig.BOOLEAN(0);
+	fog_near = ParamConfig.FLOAT(1, {
+		range: [0, 100],
+		range_locked: [true, false],
+		visible_if: {use_fog: 1},
+	});
+	fog_far = ParamConfig.FLOAT(100, {
+		range: [0, 100],
+		range_locked: [true, false],
+		visible_if: {use_fog: 1},
 	});
 }
 const ParamsConfig = new Css2DRendererRopParamsConfig();
@@ -16,10 +29,10 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 		return RopType.CSS2D;
 	}
 
-	private _renderers_by_canvas_id: Dictionary<CSS2DRenderer> = {};
+	private _renderers_by_canvas_id: Map<string, CSS2DRenderer> = new Map();
 	create_renderer(canvas: HTMLCanvasElement) {
 		const renderer = new CSS2DRenderer();
-		this._renderers_by_canvas_id[canvas.id] = renderer;
+		this._renderers_by_canvas_id.set(canvas.id, renderer);
 		const parent = canvas.parentElement;
 		if (parent) {
 			parent.prepend(renderer.domElement);
@@ -30,10 +43,11 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 		renderer.domElement.style.left = '0px';
 		renderer.domElement.style.pointerEvents = 'none';
 		renderer.setSize(canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+		this._update_renderer(renderer);
 		return renderer;
 	}
 	renderer(canvas: HTMLCanvasElement) {
-		return this._renderers_by_canvas_id[canvas.id] || this.create_renderer(canvas);
+		return this._renderers_by_canvas_id.get(canvas.id) || this.create_renderer(canvas);
 	}
 	// remove_renderer_element(canvas: HTMLCanvasElement) {
 	// 	// not ideal, because I could not re-add it back
@@ -48,7 +62,18 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 
 	cook() {
 		this._update_css();
+
+		this._renderers_by_canvas_id.forEach((renderer) => {
+			this._update_renderer(renderer);
+		});
+
 		this.cook_controller.end_cook();
+	}
+
+	private _update_renderer(renderer: CSS2DRenderer) {
+		renderer.set_sorting(this.pv.sort_objects);
+		renderer.set_use_fog(this.pv.use_fog);
+		renderer.set_fog_range(this.pv.fog_near, this.pv.fog_far);
 	}
 
 	private _update_css() {
