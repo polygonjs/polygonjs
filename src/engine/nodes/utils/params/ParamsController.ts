@@ -18,6 +18,7 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 import {ParamsLabelController} from './ParamsLabelController';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
+import {Poly} from '../../../Poly';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -324,7 +325,7 @@ export class ParamsController {
 		if (p != null) {
 			return p;
 		} else {
-			console.warn(
+			Poly.warn(
 				`tried to access param '${name}' in node ${this.node.full_path()}, but existing params are: ${
 					this.names
 				} on node ${this.node.full_path()}`

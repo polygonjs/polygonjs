@@ -4,21 +4,21 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 interface Css2DObjectParams {
 	class_name: string;
-	text: string;
+	html: string;
 }
 const ATTRIBUTE_NAME = {
 	class_name: 'class',
-	text: 'text',
+	html: 'html',
 };
 const DEFAULT_VALUE = {
 	class_name: 'css2d_object',
-	text: 'default text',
+	html: '<div>default html</div>',
 };
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Css2DObjectSopParamsConfig extends NodeParamsConfig {
 	class_name = ParamConfig.STRING(DEFAULT_VALUE.class_name);
-	text = ParamConfig.STRING(DEFAULT_VALUE.text, {
+	html = ParamConfig.STRING(DEFAULT_VALUE.html, {
 		multiline: true,
 	});
 }
@@ -48,11 +48,11 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
 			const class_name = (point.attrib_value(ATTRIBUTE_NAME.class_name) as string) || DEFAULT_VALUE.class_name;
-			const text = (point.attrib_value(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
+			const html = (point.attrib_value(ATTRIBUTE_NAME.html) as string) || DEFAULT_VALUE.html;
 
 			const object = Css2DObjectSopNode.create_css_object({
 				class_name,
-				text,
+				html,
 			});
 
 			object.position.copy(point.position());
@@ -66,7 +66,7 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 	private _create_object_from_scratch() {
 		const object = Css2DObjectSopNode.create_css_object({
 			class_name: this.pv.class_name,
-			text: this.pv.text,
+			html: this.pv.html,
 		});
 
 		this.set_objects([object]);
@@ -75,7 +75,7 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 	private static create_css_object(params: Css2DObjectParams) {
 		const element = document.createElement('div');
 		element.className = params.class_name;
-		element.textContent = params.text;
+		element.innerHTML = params.html;
 		const object = new CSS2DObject(element);
 
 		object.matrixAutoUpdate = false;

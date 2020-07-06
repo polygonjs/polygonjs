@@ -94,7 +94,6 @@ enum ToneMappingName {
 	No = 'No',
 	Linear = 'Linear',
 	Reinhard = 'Reinhard',
-	Uncharted2 = 'Uncharted2',
 	Cineon = 'Cineon',
 	ACESFilmic = 'ACESFilmic',
 }
@@ -109,7 +108,6 @@ const TONE_MAPPING_NAMES: ToneMappingName[] = [
 	ToneMappingName.No,
 	ToneMappingName.Linear,
 	ToneMappingName.Reinhard,
-	ToneMappingName.Uncharted2,
 	ToneMappingName.Cineon,
 	ToneMappingName.ACESFilmic,
 ];
@@ -121,6 +119,12 @@ const TONE_MAPPING_VALUES: ToneMappingValue[] = [
 	ToneMappingValue.ACESFilmic,
 ];
 export const DEFAULT_TONE_MAPPING = ToneMappingValue.ACESFilmic as number;
+const TONE_MAPPING_MENU_ENTRIES = TONE_MAPPING_NAMES.map((name, i) => {
+	return {
+		name: name,
+		value: TONE_MAPPING_VALUES[i],
+	};
+});
 
 enum ShadowMapTypeName {
 	Basic = 'Basic',
@@ -168,12 +172,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	antialias = ParamConfig.BOOLEAN(1);
 	tone_mapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
 		menu: {
-			entries: TONE_MAPPING_NAMES.map((name, i) => {
-				return {
-					name: name,
-					value: TONE_MAPPING_VALUES[i],
-				};
-			}),
+			entries: TONE_MAPPING_MENU_ENTRIES,
 		},
 	});
 	tone_mapping_exposure = ParamConfig.FLOAT(1, {

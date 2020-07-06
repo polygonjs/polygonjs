@@ -9,6 +9,7 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {BaseContainer} from '../../containers/_Base';
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
+import {Poly} from '../../Poly';
 
 export class BaseMethod {
 	protected _require_dependency = false;
@@ -143,7 +144,7 @@ export class BaseMethod {
 		if (node) {
 			return this.create_dependency(node, index_or_path, decomposed_path);
 		} else {
-			console.warn('node not found for path', index_or_path);
+			Poly.warn('node not found for path', index_or_path);
 		}
 		return null;
 	}
