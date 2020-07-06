@@ -38,7 +38,7 @@ const ParamsConfig = new AnimationEventParamsConfig();
 export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'animate';
+		return 'animation';
 	}
 
 	private _timeline_builder: TimelineBuilder | undefined;
