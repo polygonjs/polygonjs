@@ -1,5 +1,5 @@
 {
-  "version": "1.0.50",
+  "version": "1.0.52",
   "name": "polygonjs-engine",
   "description": "node-based webgl 3D engine https://polygonjs.com",
   "icons": {

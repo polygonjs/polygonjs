@@ -3,7 +3,7 @@ import { CoreGroup } from '../../../core/geometry/Group';
 import { NodeParamsConfig } from '../utils/params/ParamsConfig';
 declare class Css2DObjectSopParamsConfig extends NodeParamsConfig {
     class_name: import("../utils/params/ParamsConfig").ParamTemplate<import("../../poly/ParamType").ParamType.STRING>;
-    text: import("../utils/params/ParamsConfig").ParamTemplate<import("../../poly/ParamType").ParamType.STRING>;
+    html: import("../utils/params/ParamsConfig").ParamTemplate<import("../../poly/ParamType").ParamType.STRING>;
 }
 export declare class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig> {
     params_config: Css2DObjectSopParamsConfig;
