@@ -24,7 +24,7 @@ const definition: PolyNodeDefinition = {
 		},
 	},
 };
-const node_class = PolyNodeController.create_node_class('poly_obj_test', definition);
+const node_class = PolyNodeController.create_node_class('poly_obj_test', NodeContext.OBJ, definition);
 if (node_class) {
 	Poly.instance().register_node(node_class);
 }

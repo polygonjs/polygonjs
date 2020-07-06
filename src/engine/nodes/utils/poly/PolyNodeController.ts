@@ -86,8 +86,8 @@ export class PolyNodeController {
 		}
 	}
 
-	static create_node_class(node_type: string, definition: PolyNodeDefinition) {
-		switch (definition.node_context) {
+	static create_node_class(node_type: string, node_context: NodeContext, definition: PolyNodeDefinition) {
+		switch (node_context) {
 			case NodeContext.SOP:
 				return create_poly_sop_node(node_type, definition);
 			case NodeContext.OBJ:
