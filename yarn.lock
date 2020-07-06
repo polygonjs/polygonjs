@@ -881,7 +881,7 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.0, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ammojs-typed@^1.0.2:
+ammojs-typed@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/ammojs-typed/-/ammojs-typed-1.0.2.tgz#9d9aec9148fba1860326b51be1c7c3c5f3166d09"
   integrity sha512-r+bAY2Of6VM1+MCNVsxXzJ0UxlDaKS9TRiUhWKeErzVJduof2BmmQd+fnjKTXw83agRzvZ0viKAos7iDarEuAA==
