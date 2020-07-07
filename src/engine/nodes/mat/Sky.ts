@@ -5,7 +5,6 @@ import {Sky} from '../../../../modules/three/examples/jsm/objects/Sky';
 
 interface ShaderMaterialWithSkyUniforms extends ShaderMaterial {
 	uniforms: {
-		luminance: {value: number};
 		turbidity: {value: number};
 		rayleigh: {value: number};
 		mieCoefficient: {value: number};
@@ -17,9 +16,6 @@ interface ShaderMaterialWithSkyUniforms extends ShaderMaterial {
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 class SkyMatParamsConfig extends NodeParamsConfig {
-	luminance = ParamConfig.FLOAT(1, {
-		range: [0, 2],
-	});
 	turbidity = ParamConfig.FLOAT(2, {
 		range: [0, 20],
 	});
@@ -49,7 +45,6 @@ export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyM
 
 	async cook() {
 		const uniforms = this.material.uniforms;
-		uniforms.luminance.value = 2 - this.pv.luminance;
 		uniforms.turbidity.value = this.pv.turbidity;
 		uniforms.rayleigh.value = this.pv.rayleigh;
 		uniforms.mieCoefficient.value = this.pv.mie_coefficient;

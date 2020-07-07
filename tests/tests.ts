@@ -94,6 +94,7 @@ import './engine/nodes/mat/MeshLambertBuilder';
 import './engine/nodes/mat/MeshStandardBuilder';
 import './engine/nodes/mat/PointsBuilder';
 import './engine/nodes/mat/SpareParams';
+import './engine/nodes/mat/Sky';
 import './engine/nodes/mat/Uniforms';
 import './engine/nodes/mat/VolumeBuilder';
 

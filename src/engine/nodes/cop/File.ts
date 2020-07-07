@@ -425,9 +425,10 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		if (this.pv.tanisotropy) {
 			texture.anisotropy = this.pv.anisotropy;
 		}
-		if (this.pv.tflip_y) {
-			texture.flipY = this.pv.flip_y;
-		}
+		// do not have this in an if block,
+		// as to be sure this is set to false in case it is set to true
+		// by the texture loader
+		texture.flipY = this.pv.tflip_y && this.pv.flip_y;
 		this._update_texture_transform(texture);
 	}
 	private _update_texture_transform(texture: Texture) {
