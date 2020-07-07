@@ -1,5 +1,6 @@
 export const CATEGORY_ANIM = {
-	INPUT: 'inputs',
+	PROP: 'prop',
+	TIMING: 'timing',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
 };

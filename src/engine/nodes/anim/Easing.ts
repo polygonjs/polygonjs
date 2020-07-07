@@ -1,7 +1,7 @@
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
-enum Easing {
+export enum AnimNodeEasing {
 	NONE = 'none',
 	POWER1 = 'power1',
 	POWER2 = 'power2',
@@ -18,21 +18,21 @@ enum Easing {
 	SINE = 'sine',
 	// Custom
 }
-const EASINGS: Easing[] = [
-	Easing.NONE,
-	Easing.POWER1,
-	Easing.POWER2,
-	Easing.POWER3,
-	Easing.POWER4,
-	Easing.BACK,
-	Easing.ELASTIC,
-	Easing.BOUNCE,
+const EASINGS: AnimNodeEasing[] = [
+	AnimNodeEasing.NONE,
+	AnimNodeEasing.POWER1,
+	AnimNodeEasing.POWER2,
+	AnimNodeEasing.POWER3,
+	AnimNodeEasing.POWER4,
+	AnimNodeEasing.BACK,
+	AnimNodeEasing.ELASTIC,
+	AnimNodeEasing.BOUNCE,
 
-	Easing.SLOW,
-	Easing.STEPS,
-	Easing.CIRC,
-	Easing.EXPO,
-	Easing.SINE,
+	AnimNodeEasing.SLOW,
+	AnimNodeEasing.STEPS,
+	AnimNodeEasing.CIRC,
+	AnimNodeEasing.EXPO,
+	AnimNodeEasing.SINE,
 ];
 enum InOutMode {
 	IN = 'in',
@@ -43,7 +43,7 @@ const IN_OUT_MODES: InOutMode[] = [InOutMode.IN, InOutMode.OUT, InOutMode.IN_OUT
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class EasingAnimParamsConfig extends NodeParamsConfig {
-	name = ParamConfig.INTEGER(EASINGS.indexOf(Easing.POWER4), {
+	name = ParamConfig.INTEGER(EASINGS.indexOf(AnimNodeEasing.POWER4), {
 		menu: {
 			entries: EASINGS.map((name, value) => {
 				return {name, value};
@@ -80,7 +80,7 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 
 	private easing_full_name() {
 		const easing = EASINGS[this.pv.name];
-		if (easing == Easing.NONE) {
+		if (easing == AnimNodeEasing.NONE) {
 			return easing;
 		}
 		const in_out = IN_OUT_MODES[this.pv.in_out];

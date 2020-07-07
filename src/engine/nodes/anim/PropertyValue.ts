@@ -2,9 +2,7 @@ import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TimelineBuilderProperty} from '../../../core/animation/TimelineBuilderProperty';
-class PropertyAnimParamsConfig extends NodeParamsConfig {
-	name = ParamConfig.STRING('position');
+class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.INTEGER(3, {
 		range: [1, 4],
 		range_locked: [true, true],
@@ -22,22 +20,16 @@ class PropertyAnimParamsConfig extends NodeParamsConfig {
 		visible_if: {size: 4},
 	});
 }
-const ParamsConfig = new PropertyAnimParamsConfig();
+const ParamsConfig = new PropertyValueAnimParamsConfig();
 
-export class PropertyAnimNode extends TypedAnimNode<PropertyAnimParamsConfig> {
+export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'property';
+		return 'property_value';
 	}
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
-
-		this.scene.dispatch_controller.on_add_listener(() => {
-			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.name]);
-			});
-		});
 	}
 
 	cook(input_contents: TimelineBuilder[]) {
@@ -46,9 +38,8 @@ export class PropertyAnimNode extends TypedAnimNode<PropertyAnimParamsConfig> {
 		const target_value = [this.pv.value1, this.pv.value2.clone(), this.pv.value3.clone(), this.pv.value4.clone()][
 			this.pv.size - 1
 		];
-		const timeline_builder_property = new TimelineBuilderProperty(this.pv.name, target_value);
 
-		timeline_builder.set_property(timeline_builder_property);
+		timeline_builder.set_property_value(target_value);
 
 		this.set_timeline_builder(timeline_builder);
 	}

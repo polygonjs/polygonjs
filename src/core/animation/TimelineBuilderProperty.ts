@@ -14,11 +14,12 @@ import {Vector2Param} from '../../engine/params/Vector2';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {TypeAssert} from '../../engine/poly/Assert';
+import {AnimNodeEasing} from '../../engine/nodes/anim/Easing';
 
-type TargetValue = number | Vector2 | Vector3 | Vector4;
+export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4;
 
 interface Object3DProps {
-	target_property: TargetValue;
+	target_property: AnimPropertyTargetValue;
 	to_target: object;
 	property_names: string[];
 }
@@ -26,7 +27,15 @@ interface Object3DProps {
 const PROPERTY_SEPARATOR = '.';
 
 export class TimelineBuilderProperty {
-	constructor(private _property_name: string, private _target_value: TargetValue) {}
+	private _property_name: string | undefined;
+	private _target_value: AnimPropertyTargetValue | undefined;
+	constructor() {}
+	set_name(name: string) {
+		this._property_name = name;
+	}
+	set_target_value(value: AnimPropertyTargetValue) {
+		this._target_value = value;
+	}
 	name() {
 		return this._property_name;
 	}
@@ -35,8 +44,18 @@ export class TimelineBuilderProperty {
 	}
 
 	clone() {
-		const new_target_value = lodash_isNumber(this._target_value) ? this._target_value : this._target_value.clone();
-		return new TimelineBuilderProperty(this._property_name, new_target_value);
+		const cloned = new TimelineBuilderProperty();
+		if (this._property_name) {
+			cloned.set_name(this._property_name);
+		}
+		if (this._target_value) {
+			const new_target_value = lodash_isNumber(this._target_value)
+				? this._target_value
+				: this._target_value.clone();
+			cloned.set_target_value(new_target_value);
+		}
+
+		return cloned;
 	}
 
 	add_to_timeline(
@@ -60,6 +79,9 @@ export class TimelineBuilderProperty {
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
 	) {
+		if (!(this._property_name && this._target_value)) {
+			return;
+		}
 		const operation = timeline_builder.operation();
 		const update_callback = timeline_builder.update_callback();
 
@@ -79,7 +101,7 @@ export class TimelineBuilderProperty {
 					vars.onStart = () => {
 						object3d.matrixAutoUpdate = true;
 					};
-					vars.onUpdate = () => {
+					vars.onComplete = () => {
 						object3d.matrixAutoUpdate = old_matrix_auto_update;
 					};
 				}
@@ -102,26 +124,6 @@ export class TimelineBuilderProperty {
 					}
 				}
 
-				// if (lodash_isNumber(this._target_value)) {
-				// 	if (lodash_isNumber(target_property)) {
-				// 		vars[this._property_name] = this.with_op(target_property, this._target_value, operation);
-				// 		to_target = object3d;
-				// 	}
-				// } else {
-				// 	if (!lodash_isNumber(target_property)) {
-				// 		to_target = target_property;
-				// 		vars['x'] = this.with_op(target_property.x, this._target_value.x, operation);
-				// 		vars['y'] = this.with_op(target_property.y, this._target_value.y, operation);
-				// 		if (this._target_value instanceof Vector3 && target_property instanceof Vector3) {
-				// 			vars['z'] = this.with_op(target_property.z, this._target_value.z, operation);
-				// 		} else {
-				// 			if (this._target_value instanceof Vector4 && target_property instanceof Vector4) {
-				// 				vars['z'] = this.with_op(target_property.z, this._target_value.z, operation);
-				// 				vars['w'] = this.with_op(target_property.w, this._target_value.w, operation);
-				// 			}
-				// 		}
-				// 	}
-				// }
 				if (to_target) {
 					this._start_timeline(timeline_builder, timeline, vars, to_target);
 				}
@@ -138,7 +140,7 @@ export class TimelineBuilderProperty {
 				return this._scene_graph_props(sub_object, sub_property_name);
 			}
 		} else {
-			const target_property = (object as any)[property_name as any] as TargetValue;
+			const target_property = (object as any)[property_name as any] as AnimPropertyTargetValue;
 			let to_target: object | null = null;
 			const property_names: string[] = [];
 			if (lodash_isNumber(target_property)) {
@@ -292,7 +294,7 @@ export class TimelineBuilderProperty {
 		const vars: gsap.TweenVars = {duration: duration};
 
 		// easing
-		const easing = timeline_builder.easing();
+		const easing = timeline_builder.easing() || AnimNodeEasing.NONE;
 		if (easing) {
 			vars.ease = easing;
 		}

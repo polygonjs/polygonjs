@@ -1,4 +1,4 @@
-import {TimelineBuilderProperty} from './TimelineBuilderProperty';
+import {TimelineBuilderProperty, AnimPropertyTargetValue} from './TimelineBuilderProperty';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {PropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
@@ -146,7 +146,14 @@ export class TimelineBuilder {
 			});
 		}
 		if (this._property) {
-			new_timeline_builder.set_property(this._property);
+			const name = this._property.name();
+			if (name) {
+				new_timeline_builder.set_property_name(name);
+			}
+			const target_value = this._property.target_value();
+			if (target_value) {
+				new_timeline_builder.set_property_value(target_value);
+			}
 		}
 		if (this._position) {
 			new_timeline_builder.set_position(this._position.clone());
@@ -176,8 +183,13 @@ export class TimelineBuilder {
 	// 	}
 	// }
 
-	set_property(property: TimelineBuilderProperty) {
-		this._property = property;
+	set_property_name(name: string) {
+		this._property = this._property || new TimelineBuilderProperty();
+		this._property.set_name(name);
+	}
+	set_property_value(value: AnimPropertyTargetValue) {
+		this._property = this._property || new TimelineBuilderProperty();
+		this._property.set_target_value(value);
 	}
 	// add_property(property: TimelineBuilderProperty) {
 	// 	this._properties.push(property);
