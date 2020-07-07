@@ -9,6 +9,7 @@ import {Points} from 'three/src/objects/Points';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
+import {PolyScene} from '../../engine/scene/PolyScene';
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -31,7 +32,7 @@ export class CoreLoaderGeometry {
 	private static _default_mat_point = new PointsMaterial();
 	private static _default_mat_line = new LineBasicMaterial();
 
-	constructor(private url: string, private assets_root: string | null) {
+	constructor(private url: string, private scene: PolyScene) {
 		this.ext = CoreLoaderGeometry.get_extension(url);
 	}
 
@@ -73,8 +74,9 @@ export class CoreLoaderGeometry {
 			// do not add '?' here. Let the requester do it if necessary
 			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 			if (url[0] != 'h') {
-				if (this.assets_root) {
-					url = `${this.assets_root}${url}`;
+				const assets_root = this.scene.assets_controller.assets_root();
+				if (assets_root) {
+					url = `${assets_root}${url}`;
 				}
 			}
 
@@ -215,7 +217,8 @@ export class CoreLoaderGeometry {
 		const module = await Poly.instance().modules_register.module(ModuleName.DRACOLoader);
 		if (module) {
 			const draco_loader = new module.DRACOLoader();
-			const decoder_path = '/three/js/libs/draco/';
+			const root = this.scene.libs_controller.root();
+			const decoder_path = `${root}/draco/`;
 			draco_loader.setDecoderPath(decoder_path);
 			draco_loader.setDecoderConfig({type: 'js'});
 			return draco_loader;
@@ -239,7 +242,8 @@ export class CoreLoaderGeometry {
 		if (gltf_module && draco_module) {
 			const loader = new gltf_module.GLTFLoader();
 			const draco_loader = new draco_module.DRACOLoader();
-			const decoder_path = '/three/js/libs/draco/gltf/';
+			const root = this.scene.libs_controller.root();
+			const decoder_path = `${root}/draco/gltf/`;
 			draco_loader.setDecoderPath(decoder_path);
 			// not having this uses wasm if the relevant libraries are found
 			// draco_loader.setDecoderConfig({type: 'js'});

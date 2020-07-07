@@ -19,6 +19,7 @@ import {WebGLController} from './utils/WebGLController';
 
 import {Scene} from 'three/src/scenes/Scene';
 import {SceneAssetsController} from './utils/AssetsController';
+import {SceneLibsController} from './utils/LibsController';
 import {BaseNodeType} from '../nodes/_Base';
 
 export class PolyScene {
@@ -58,6 +59,10 @@ export class PolyScene {
 	private _assets_controller: SceneAssetsController | undefined;
 	get assets_controller() {
 		return (this._assets_controller = this._assets_controller || new SceneAssetsController());
+	}
+	private _libs_controller: SceneLibsController | undefined;
+	get libs_controller() {
+		return (this._libs_controller = this._libs_controller || new SceneLibsController());
 	}
 
 	public readonly cook_controller = new CookController();
