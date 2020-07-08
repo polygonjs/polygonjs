@@ -151,7 +151,7 @@ export class TimelineBuilder {
 				new_timeline_builder.set_property_name(name);
 			}
 			const target_value = this._property.target_value();
-			if (target_value) {
+			if (target_value != null) {
 				new_timeline_builder.set_property_value(target_value);
 			}
 		}

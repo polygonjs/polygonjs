@@ -2,17 +2,25 @@ import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {HierarchyController} from './utils/HierarchyController';
+import {Object3D} from 'three/src/core/Object3D';
+import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseNodeType} from '../_Base';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {HierarchyController} from './utils/HierarchyController';
-import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 class BlendObjParamConfig extends NodeParamsConfig {
-	update = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			BlendObjNode.PARAM_CALLBACK_cancel_parent_rotation(node as BlendObjNode);
+	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
+		node_selection: {
+			context: NodeContext.OBJ,
 		},
+	});
+	object1 = ParamConfig.OPERATOR_PATH('/geo2', {
+		node_selection: {
+			context: NodeContext.OBJ,
+		},
+	});
+	blend = ParamConfig.FLOAT(0, {
+		range: [0, 1],
+		range_locked: [false, false],
 	});
 }
 const ParamsConfig = new BlendObjParamConfig();
@@ -33,15 +41,10 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	}
 	initialize_node() {
 		this.hierarchy_controller.initialize_node();
-		this.io.inputs.add_on_set_input_hook('on_input_updated:cancel_parent_rotation', () => {
-			this.cancel_parent_rotation();
-		});
+		this.io.inputs.set_count(0);
 
-		// setup frame dependency to update the matrix
-		const graph_node = new CoreGraphNode(this.scene, 'time');
-		graph_node.add_graph_input(this.scene.time_controller.graph_node);
-		graph_node.add_post_dirty_hook('blend_on_frame_change', () => {
-			this.cancel_parent_rotation();
+		this.add_post_dirty_hook('blend_on_dirty', () => {
+			this.cook_controller.cook_main_without_inputs();
 		});
 
 		// helper
@@ -51,20 +54,21 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		});
 	}
 	cook() {
+		const obj_node0 = this.p.object0.found_node_with_context(NodeContext.OBJ);
+		const obj_node1 = this.p.object1.found_node_with_context(NodeContext.OBJ);
+		console.log(obj_node0?.full_path(), obj_node1?.full_path());
+		if (obj_node0 && obj_node1) {
+			this._blend(obj_node0.object, obj_node1.object);
+		}
+
 		this.cook_controller.end_cook();
 	}
 
-	static PARAM_CALLBACK_cancel_parent_rotation(node: BlendObjNode) {
-		node.cancel_parent_rotation();
-	}
-	private _parent_quat: Quaternion = new Quaternion();
-	cancel_parent_rotation() {
-		const parent = this.object.parent;
-		if (parent) {
-			parent.updateWorldMatrix(true, true);
-			parent.getWorldQuaternion(this._parent_quat);
-			this._parent_quat.inverse();
-			this.object.setRotationFromQuaternion(this._parent_quat);
+	private _blend(object0: Object3D, object1: Object3D) {
+		this._object.position.copy(object0.position).lerp(object1.position, this.pv.blend);
+		this._object.quaternion.copy(object0.quaternion).slerp(object1.quaternion, this.pv.blend);
+		if (!this._object.matrixAutoUpdate) {
+			this._object.updateMatrix();
 		}
 	}
 }

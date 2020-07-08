@@ -102,6 +102,7 @@ QUnit.module('obj');
 import './engine/nodes/obj/utils/DisplayNodeController';
 import './engine/nodes/obj/_BaseTransformed';
 import './engine/nodes/obj/AmbientLight';
+import './engine/nodes/obj/Blend';
 import './engine/nodes/obj/Geo';
 import './engine/nodes/obj/HemisphereLight';
 import './engine/nodes/obj/Poly';

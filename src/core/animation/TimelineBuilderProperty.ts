@@ -48,7 +48,7 @@ export class TimelineBuilderProperty {
 		if (this._property_name) {
 			cloned.set_name(this._property_name);
 		}
-		if (this._target_value) {
+		if (this._target_value != null) {
 			const new_target_value = lodash_isNumber(this._target_value)
 				? this._target_value
 				: this._target_value.clone();
@@ -79,7 +79,7 @@ export class TimelineBuilderProperty {
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
 	) {
-		if (!(this._property_name && this._target_value)) {
+		if (!(this._property_name && this._target_value != null)) {
 			return;
 		}
 		const operation = timeline_builder.operation();
