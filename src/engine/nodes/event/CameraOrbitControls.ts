@@ -30,6 +30,10 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		range_locked: [true, false],
 	});
+	limit_azimuth_angle = ParamConfig.BOOLEAN(0);
+	azimuth_angle_range = ParamConfig.VECTOR2(['-2*$PI', '2*$PI'], {
+		visible_if: {limit_azimuth_angle: 1},
+	});
 	polar_angle_range = ParamConfig.VECTOR2([0, '$PI']);
 	target = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
@@ -93,6 +97,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		controls.minDistance = this.pv.min_distance;
 		controls.maxDistance = this.pv.max_distance;
 
+		this._set_azimuth_angle(controls);
 		controls.minPolarAngle = this.pv.polar_angle_range.x;
 		controls.maxPolarAngle = this.pv.polar_angle_range.y;
 		controls.target.copy(this.pv.target);
@@ -101,6 +106,16 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		// to prevent moving the camera when using the arrows to change frame
 		controls.enableKeys = false;
 	}
+	private _set_azimuth_angle(controls: OrbitControls) {
+		if (this.pv.limit_azimuth_angle) {
+			controls.minAzimuthAngle = this.pv.azimuth_angle_range.x;
+			controls.maxAzimuthAngle = this.pv.azimuth_angle_range.y;
+		} else {
+			controls.minAzimuthAngle = Infinity;
+			controls.minAzimuthAngle = Infinity;
+		}
+	}
+
 	update_required() {
 		return this.pv.tdamping;
 	}
