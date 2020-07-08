@@ -6,7 +6,14 @@ import {HierarchyController} from './utils/HierarchyController';
 import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from '../../poly/NodeContext';
 
+enum BlendMode {
+	TOGETHER = 'translate + rotate together',
+	SEPARATELY = 'translate + rotate separately',
+}
+const BLEND_MODES: BlendMode[] = [BlendMode.TOGETHER, BlendMode.SEPARATELY];
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {TypeAssert} from '../../poly/Assert';
 class BlendObjParamConfig extends NodeParamsConfig {
 	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
 		node_selection: {
@@ -18,7 +25,25 @@ class BlendObjParamConfig extends NodeParamsConfig {
 			context: NodeContext.OBJ,
 		},
 	});
+	mode = ParamConfig.INTEGER(BLEND_MODES.indexOf(BlendMode.TOGETHER), {
+		menu: {
+			entries: BLEND_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
 	blend = ParamConfig.FLOAT(0, {
+		visible_if: {mode: BLEND_MODES.indexOf(BlendMode.TOGETHER)},
+		range: [0, 1],
+		range_locked: [false, false],
+	});
+	blend_t = ParamConfig.FLOAT(0, {
+		visible_if: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
+		range: [0, 1],
+		range_locked: [false, false],
+	});
+	blend_r = ParamConfig.FLOAT(0, {
+		visible_if: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
 		range_locked: [false, false],
 	});
@@ -65,8 +90,25 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	}
 
 	private _blend(object0: Object3D, object1: Object3D) {
+		const mode = BLEND_MODES[this.pv.mode];
+		switch (mode) {
+			case BlendMode.TOGETHER:
+				return this._blend_together(object0, object1);
+			case BlendMode.SEPARATELY:
+				return this._blend_separately(object0, object1);
+		}
+		TypeAssert.unreachable(mode);
+	}
+	private _blend_together(object0: Object3D, object1: Object3D) {
 		this._object.position.copy(object0.position).lerp(object1.position, this.pv.blend);
 		this._object.quaternion.copy(object0.quaternion).slerp(object1.quaternion, this.pv.blend);
+		if (!this._object.matrixAutoUpdate) {
+			this._object.updateMatrix();
+		}
+	}
+	private _blend_separately(object0: Object3D, object1: Object3D) {
+		this._object.position.copy(object0.position).lerp(object1.position, this.pv.blend_t);
+		this._object.quaternion.copy(object0.quaternion).slerp(object1.quaternion, this.pv.blend_r);
 		if (!this._object.matrixAutoUpdate) {
 			this._object.updateMatrix();
 		}
