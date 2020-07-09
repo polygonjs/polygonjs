@@ -56,6 +56,11 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 			new EventConnectionPoint(NodeCookEventNode.OUTPUT_ALL_NODES, EventConnectionPointType.BASE),
 		]);
 	}
+	// for public api
+	// TODO: make it more generic, with input being an enum of input names
+	trigger() {
+		this.process_event_trigger({});
+	}
 
 	cook() {
 		this._update_resolved_nodes();

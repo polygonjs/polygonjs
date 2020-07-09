@@ -87,6 +87,7 @@ export class RaycastCPUController {
 				if (this._node.pv.geo_attribute == true) {
 					this._resolve_geometry_attribute(intersection);
 				}
+				context.value = {intersect: intersection};
 				this._node.trigger_hit(context);
 			} else {
 				this._node.trigger_miss(context);

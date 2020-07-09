@@ -36,9 +36,6 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {ParamType} from '../../poly/ParamType';
 
-const OUTPUT_HIT = 'hit';
-const OUTPUT_MISS = 'miss';
-
 class RaycastParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(RAYCAST_MODES.indexOf(RaycastMode.CPU), {
 		menu: {
@@ -207,6 +204,8 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	static type() {
 		return 'raycast';
 	}
+	static readonly OUTPUT_HIT = 'hit';
+	static readonly OUTPUT_MISS = 'miss';
 
 	public readonly cpu_controller: RaycastCPUController = new RaycastCPUController(this);
 	public readonly gpu_controller: RaycastGPUController = new RaycastGPUController(this);
@@ -217,16 +216,16 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			new EventConnectionPoint(OUTPUT_HIT, EventConnectionPointType.BASE),
-			new EventConnectionPoint(OUTPUT_MISS, EventConnectionPointType.BASE),
+			new EventConnectionPoint(RaycastEventNode.OUTPUT_HIT, EventConnectionPointType.BASE),
+			new EventConnectionPoint(RaycastEventNode.OUTPUT_MISS, EventConnectionPointType.BASE),
 		]);
 	}
 
 	trigger_hit(context: EventContext<MouseEvent>) {
-		this.dispatch_event_to_output(OUTPUT_HIT, context);
+		this.dispatch_event_to_output(RaycastEventNode.OUTPUT_HIT, context);
 	}
 	trigger_miss(context: EventContext<MouseEvent>) {
-		this.dispatch_event_to_output(OUTPUT_MISS, context);
+		this.dispatch_event_to_output(RaycastEventNode.OUTPUT_MISS, context);
 	}
 
 	private _process_mouse_event(context: EventContext<MouseEvent>) {

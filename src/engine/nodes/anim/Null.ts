@@ -37,31 +37,33 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 
 	private _timeline_builder: TimelineBuilder | undefined;
 	private _timeline: gsap.core.Timeline | undefined;
-	private async _play() {
-		const container = await this.request_container();
-		if (!container) {
-			return;
-		}
-		this._timeline_builder = container.core_content();
-		if (!this._timeline_builder) {
-			return;
-		}
-		if (this._timeline) {
-			this._timeline.kill();
-		}
-		this._timeline = gsap.timeline();
+	async play() {
+		return new Promise(async (resolve) => {
+			const container = await this.request_container();
+			if (!container) {
+				return;
+			}
+			this._timeline_builder = container.core_content();
+			if (!this._timeline_builder) {
+				return;
+			}
+			if (this._timeline) {
+				this._timeline.kill();
+			}
+			this._timeline = gsap.timeline({onComplete: resolve});
 
-		this._timeline_builder.populate(this._timeline, this.scene);
+			this._timeline_builder.populate(this._timeline, this.scene);
+		});
 	}
-	private async _pause() {
+	async pause() {
 		if (this._timeline) {
 			this._timeline.pause();
 		}
 	}
 	static PARAM_CALLBACK_play(node: NullAnimNode) {
-		node._play();
+		node.play();
 	}
 	static PARAM_CALLBACK_pause(node: NullAnimNode) {
-		node._pause();
+		node.pause();
 	}
 }

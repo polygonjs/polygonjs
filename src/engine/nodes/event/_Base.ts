@@ -5,7 +5,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {BaseEventConnectionPoint} from '../utils/io/connections/Event';
 import {MapUtils} from '../../../core/MapUtils';
 
-type DispatchHook = () => void;
+type DispatchHook = (event_context: EventContext<Event>) => void;
 export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.EVENT, K> {
 	static node_context(): NodeContext {
 		return NodeContext.EVENT;
@@ -58,7 +58,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	//
 	//
 	protected async dispatch_event_to_output(output_name: string, event_context: EventContext<Event>) {
-		this.run_on_dispatch_hook(output_name);
+		this.run_on_dispatch_hook(output_name, event_context);
 		const index = this.io.outputs.get_output_index(output_name);
 		if (index >= 0) {
 			const connections = this.io.connections.output_connections();
@@ -83,12 +83,12 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		this._on_dispatch_hooks_by_output_name = this._on_dispatch_hooks_by_output_name || new Map();
 		MapUtils.push_on_array_at_entry(this._on_dispatch_hooks_by_output_name, output_name, callback);
 	}
-	private run_on_dispatch_hook(output_name: string) {
+	private run_on_dispatch_hook(output_name: string, event_context: EventContext<Event>) {
 		if (this._on_dispatch_hooks_by_output_name) {
 			const hooks = this._on_dispatch_hooks_by_output_name.get(output_name);
 			if (hooks) {
 				for (let hook of hooks) {
-					hook();
+					hook(event_context);
 				}
 			}
 		}

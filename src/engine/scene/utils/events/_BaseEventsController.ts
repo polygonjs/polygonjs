@@ -2,9 +2,11 @@ import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
 import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
+import {Intersection} from 'three/src/core/Raycaster';
 
 interface EventContextValue {
-	node?: BaseNodeType;
+	node?: BaseNodeType; // for node_cook
+	intersect?: Intersection; // for raycast
 }
 
 export interface EventContext<E extends Event> {

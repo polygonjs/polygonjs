@@ -14,6 +14,7 @@ const BLEND_MODES: BlendMode[] = [BlendMode.TOGETHER, BlendMode.SEPARATELY];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
+import {Vector3, Quaternion} from 'three';
 class BlendObjParamConfig extends NodeParamsConfig {
 	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
 		node_selection: {
@@ -81,7 +82,6 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	cook() {
 		const obj_node0 = this.p.object0.found_node_with_context(NodeContext.OBJ);
 		const obj_node1 = this.p.object1.found_node_with_context(NodeContext.OBJ);
-		console.log(obj_node0?.full_path(), obj_node1?.full_path());
 		if (obj_node0 && obj_node1) {
 			this._blend(obj_node0.object, obj_node1.object);
 		}
@@ -99,18 +99,31 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		}
 		TypeAssert.unreachable(mode);
 	}
+	private _t0 = new Vector3();
+	private _q0 = new Quaternion();
+	private _s0 = new Vector3();
+	private _t1 = new Vector3();
+	private _q1 = new Quaternion();
+	private _s1 = new Vector3();
 	private _blend_together(object0: Object3D, object1: Object3D) {
-		this._object.position.copy(object0.position).lerp(object1.position, this.pv.blend);
-		this._object.quaternion.copy(object0.quaternion).slerp(object1.quaternion, this.pv.blend);
+		this._decompose_matrices(object0, object1);
+
+		this._object.position.copy(this._t0).lerp(this._t1, this.pv.blend);
+		this._object.quaternion.copy(this._q0).slerp(this._q1, this.pv.blend);
 		if (!this._object.matrixAutoUpdate) {
 			this._object.updateMatrix();
 		}
 	}
 	private _blend_separately(object0: Object3D, object1: Object3D) {
-		this._object.position.copy(object0.position).lerp(object1.position, this.pv.blend_t);
-		this._object.quaternion.copy(object0.quaternion).slerp(object1.quaternion, this.pv.blend_r);
+		this._decompose_matrices(object0, object1);
+		this._object.position.copy(this._t0).lerp(this._t1, this.pv.blend_t);
+		this._object.quaternion.copy(this._q0).slerp(this._q1, this.pv.blend_r);
 		if (!this._object.matrixAutoUpdate) {
 			this._object.updateMatrix();
 		}
+	}
+	private _decompose_matrices(object0: Object3D, object1: Object3D) {
+		object0.matrixWorld.decompose(this._t0, this._q0, this._s0);
+		object1.matrixWorld.decompose(this._t1, this._q1, this._s1);
 	}
 }
