@@ -2,15 +2,11 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
 import {SideParamConfig, SideController} from './utils/SideController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
-import {TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-class PointsMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
-) {}
+class PointsMatParamsConfig extends SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoints, PointsMatParamsConfig> {
