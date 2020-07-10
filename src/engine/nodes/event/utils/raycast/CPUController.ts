@@ -1,3 +1,4 @@
+import lodash_isString from 'lodash/isString';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';
@@ -15,7 +16,9 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {Plane} from 'three/src/math/Plane';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../../../../poly/ParamType';
+import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
 import {object_type_from_constructor, ObjectType} from '../../../../../core/geometry/Constant';
+import {CoreGeometry} from '../../../../../core/geometry/Geometry';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -95,36 +98,96 @@ export class RaycastCPUController {
 		}
 	}
 	private _resolve_geometry_attribute(intersection: Intersection) {
+		const attrib_type = ATTRIBUTE_TYPES[this._node.pv.geo_attribute_type];
+		const val = RaycastCPUController.resolve_geometry_attribute(
+			intersection,
+			this._node.pv.geo_attribute_name,
+			attrib_type
+		);
+		if (val != null) {
+			switch (attrib_type) {
+				case AttribType.NUMERIC: {
+					this._node.p.geo_attribute_value1.set(val);
+					return;
+				}
+				case AttribType.STRING: {
+					if (lodash_isString(val)) {
+						this._node.p.geo_attribute_values.set(val);
+					}
+					return;
+				}
+			}
+			TypeAssert.unreachable(attrib_type);
+		}
+	}
+	static resolve_geometry_attribute(intersection: Intersection, attribute_name: string, attrib_type: AttribType) {
 		const object_type = object_type_from_constructor(intersection.object.constructor);
 		switch (object_type) {
 			case ObjectType.MESH:
-				return this._resolve_geometry_attribute_for_mesh(intersection);
+				return this.resolve_geometry_attribute_for_mesh(intersection, attribute_name, attrib_type);
 			case ObjectType.POINTS:
-				return this._resolve_geometry_attribute_for_point(intersection);
+				return this.resolve_geometry_attribute_for_point(intersection, attribute_name, attrib_type);
 		}
+		// TODO: have the raycast cpu controller work with all object types
+		// TypeAssert.unreachable(object_type)
 	}
-	private _resolve_geometry_attribute_for_mesh(intersection: Intersection) {
+
+	static resolve_geometry_attribute_for_mesh(
+		intersection: Intersection,
+		attribute_name: string,
+		attrib_type: AttribType
+	) {
 		const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
-			const attribute = geometry.getAttribute(this._node.pv.geo_attribute_name);
+			const attribute = geometry.getAttribute(attribute_name);
 			if (attribute) {
-				const val = attribute.array[0];
-				if (val != null) {
-					this._node.p.geo_attribute_value.set(val);
+				switch (attrib_type) {
+					case AttribType.NUMERIC: {
+						const attribute = geometry.getAttribute(attribute_name);
+						if (attribute) {
+							return attribute.array[0];
+						}
+						return;
+					}
+					case AttribType.STRING: {
+						const core_geometry = new CoreGeometry(geometry);
+						const core_point = core_geometry.points()[0];
+						if (core_point) {
+							console.log(core_point, geometry);
+							return core_point.string_attrib_value(attribute_name);
+						}
+						return;
+					}
 				}
+				TypeAssert.unreachable(attrib_type);
 			}
 		}
 	}
-	private _resolve_geometry_attribute_for_point(intersection: Intersection) {
+	static resolve_geometry_attribute_for_point(
+		intersection: Intersection,
+		attribute_name: string,
+		attrib_type: AttribType
+	) {
 		const geometry = (intersection.object as Points).geometry as BufferGeometry;
 		if (geometry && intersection.index != null) {
-			const attribute = geometry.getAttribute(this._node.pv.geo_attribute_name);
-			if (attribute) {
-				const val = attribute.array[intersection.index];
-				if (val != null) {
-					this._node.p.geo_attribute_value.set(val);
+			switch (attrib_type) {
+				case AttribType.NUMERIC: {
+					const attribute = geometry.getAttribute(attribute_name);
+					if (attribute) {
+						return attribute.array[intersection.index];
+					}
+					return;
+				}
+				case AttribType.STRING: {
+					const core_geometry = new CoreGeometry(geometry);
+					const core_point = core_geometry.points()[intersection.index];
+					if (core_point) {
+						return core_point.string_attrib_value(attribute_name);
+					}
+					return;
 				}
 			}
+			TypeAssert.unreachable(attrib_type);
 		}
 	}
 

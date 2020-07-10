@@ -6,6 +6,7 @@ import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsCon
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {RaycastCPUController, CPU_INTERSECT_WITH_OPTIONS, CPUIntersectWith} from './utils/raycast/CPUController';
 import {RaycastGPUController} from './utils/raycast/GPUController';
+import {AttribType, ATTRIBUTE_TYPES, AttribTypeMenuEntries} from '../../../core/geometry/Constant';
 
 enum RaycastMode {
 	CPU = 'cpu',
@@ -191,9 +192,18 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		cook: false,
 		...visible_for_cpu_geometry({geo_attribute: 1}),
 	});
-	geo_attribute_value = ParamConfig.FLOAT(0, {
+	geo_attribute_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
+		menu: {
+			entries: AttribTypeMenuEntries,
+		},
+	});
+	geo_attribute_value1 = ParamConfig.FLOAT(0, {
 		cook: false,
+		visible_if: {geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
 		...visible_for_cpu_geometry({geo_attribute: 1}),
+	});
+	geo_attribute_values = ParamConfig.STRING('', {
+		visible_if: {geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
 	});
 }
 const ParamsConfig = new RaycastParamsConfig();
