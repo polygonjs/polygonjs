@@ -67,7 +67,6 @@ export class ParamJsonImporter<T extends BaseParamType> {
 			let param_data: ParamJsonExporterData<ParamType>;
 			for (let param_name of param_names) {
 				param_data = params_data[param_name];
-				console.warn(name, param_data);
 				if (param_data != null) {
 					const options = (param_data as ComplexParamJsonExporterData<ParamType>).options;
 					const overriden_options = (param_data as ComplexParamJsonExporterData<ParamType>).overriden_options;
@@ -78,16 +77,17 @@ export class ParamJsonImporter<T extends BaseParamType> {
 								non_spare_params_data[param_name] = {complex_data: complex_data};
 							}
 						} else {
-							// THIS IS A MESS
+							// TODO: THIS IS A MESS
 							if (overriden_options) {
 								non_spare_params_data[param_name] = {complex_data: complex_data};
 							}
 						}
 					} else {
-						// THIS IS A MESS
-						if (overriden_options) {
+						// TODO: THIS IS A MESS
+						const simple_data = param_data as SimpleParamJsonExporterData<ParamType>;
+						if (overriden_options || simple_data != null) {
 							non_spare_params_data[param_name] = {
-								simple_data: param_data as SimpleParamJsonExporterData<ParamType>,
+								simple_data: simple_data,
 							};
 						}
 					}

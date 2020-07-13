@@ -18,6 +18,7 @@ import {
 } from '../../../nodes/utils/io/IOController';
 import {ParamJsonImporter} from './Param';
 import {PolyNodeJsonImporter} from './nodes/Poly';
+import {Poly} from '../../../Poly';
 
 export const COMPLEX_PARAM_DATA_KEYS = ['overriden_options', 'type'];
 
@@ -95,7 +96,6 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (this._node.children_allowed() && this._node.children_controller) {
 				try {
 					const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
-					console.log('non_spare_params_data', non_spare_params_data);
 					const node = this._node.create_node(node_type, non_spare_params_data);
 					if (node) {
 						node.set_name(node_name);
@@ -103,7 +103,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					}
 				} catch (e) {
 					scene_importer.report.add_warning(`failed to create node with type '${node_type}'`);
-					console.warn('failed to create node with type', node_type, e);
+					Poly.warn('failed to create node with type', node_type, e);
 				}
 			}
 		}
@@ -115,7 +115,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 				importers_by_node_name.set(node.name, importer);
 				importer.process_data(scene_importer, data[node.name]);
 			} else {
-				console.warn(`possible import error for node ${node.name}`);
+				Poly.warn(`possible import error for node ${node.name}`);
 			}
 		}
 		for (let node of nodes) {

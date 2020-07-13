@@ -102,7 +102,7 @@ export class ParamsController {
 		// of params, from the DependenciesController
 		// this._params_list.push = (...items: BaseParamType[]) => {
 		// 	if (items[0] && !items[0].compute) {
-		// 		console.warn('adding params', items);
+		// 		Poly.warn('adding params', items);
 		// 	}
 		// 	for (let i of items) {
 		// 		this._params_list[this._params_list.length] = i;
@@ -118,9 +118,9 @@ export class ParamsController {
 		let has_created_a_param = false;
 		let has_deleted_a_param = false;
 		if (options.names_to_delete) {
-			for (let name of options.names_to_delete) {
-				if (this.has(name)) {
-					this.delete_param(name);
+			for (let param_name of options.names_to_delete) {
+				if (this.has(param_name)) {
+					this.delete_param(param_name);
 					has_deleted_a_param = true;
 				}
 			}
@@ -134,7 +134,9 @@ export class ParamsController {
 					param_data.options
 				);
 				if (param) {
-					param.set(param_data.raw_input as never);
+					if (param_data.raw_input != null) {
+						param.set(param_data.raw_input as never);
+					}
 					has_created_a_param = true;
 				}
 			}
@@ -252,81 +254,81 @@ export class ParamsController {
 	// 	return lodash_values(this._params);
 	// }
 
-	private set_with_type<T extends ParamType>(name: string, value: ParamInitValuesTypeMap[T], type: T) {
-		const param = this.param_with_type(name, type);
+	private set_with_type<T extends ParamType>(param_name: string, value: ParamInitValuesTypeMap[T], type: T) {
+		const param = this.param_with_type(param_name, type);
 		if (param) {
 			param.set(value as never);
 		} else {
-			console.warn(`param ${name} not found with type ${type}`);
+			Poly.warn(`param ${param_name} not found with type ${type}`);
 		}
 	}
-	set_float(name: string, value: ParamInitValuesTypeMap[ParamType.FLOAT]) {
-		this.set_with_type(name, value, ParamType.FLOAT);
+	set_float(param_name: string, value: ParamInitValuesTypeMap[ParamType.FLOAT]) {
+		this.set_with_type(param_name, value, ParamType.FLOAT);
 	}
-	set_vector3(name: string, value: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
-		this.set_with_type(name, value, ParamType.VECTOR3);
+	set_vector3(param_name: string, value: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
+		this.set_with_type(param_name, value, ParamType.VECTOR3);
 	}
 
-	has_param(name: string) {
-		return this._params_by_name[name] != null;
+	has_param(param_name: string) {
+		return this._params_by_name[param_name] != null;
 	}
-	has(name: string) {
-		return this.has_param(name);
+	has(param_name: string) {
+		return this.has_param(param_name);
 	}
-	get(name: string) {
-		return this.param(name);
+	get(param_name: string) {
+		return this.param(param_name);
 	}
-	param_with_type<T extends ParamType>(name: string, type: T): ParamConstructorMap[T] | undefined {
-		const param = this.param(name);
+	param_with_type<T extends ParamType>(param_name: string, type: T): ParamConstructorMap[T] | undefined {
+		const param = this.param(param_name);
 		if (param && param.type == type) {
 			return param as ParamConstructorMap[T];
 		}
 	}
-	get_float(name: string): FloatParam {
-		return this.param_with_type(name, ParamType.FLOAT) as FloatParam;
+	get_float(param_name: string): FloatParam {
+		return this.param_with_type(param_name, ParamType.FLOAT) as FloatParam;
 	}
-	get_operator_path(name: string): OperatorPathParam {
-		return this.param_with_type(name, ParamType.OPERATOR_PATH) as OperatorPathParam;
+	get_operator_path(param_name: string): OperatorPathParam {
+		return this.param_with_type(param_name, ParamType.OPERATOR_PATH) as OperatorPathParam;
 	}
-	value(name: string) {
-		return this.param(name)?.value;
+	value(param_name: string) {
+		return this.param(param_name)?.value;
 	}
-	value_with_type<T extends ParamType>(name: string, type: T): ParamValuesTypeMap[T] {
-		return this.param_with_type(name, type)?.value as ParamValuesTypeMap[T];
+	value_with_type<T extends ParamType>(param_name: string, type: T): ParamValuesTypeMap[T] {
+		return this.param_with_type(param_name, type)?.value as ParamValuesTypeMap[T];
 		// const param = this.param(name);
 		// if (param && param.type() == type) {
 		// 	return param.value();
 		// }
 	}
-	boolean(name: string) {
-		return this.value_with_type(name, ParamType.BOOLEAN);
+	boolean(param_name: string) {
+		return this.value_with_type(param_name, ParamType.BOOLEAN);
 	}
-	float(name: string) {
-		return this.value_with_type(name, ParamType.FLOAT);
+	float(param_name: string) {
+		return this.value_with_type(param_name, ParamType.FLOAT);
 	}
-	integer(name: string) {
-		return this.value_with_type(name, ParamType.INTEGER);
+	integer(param_name: string) {
+		return this.value_with_type(param_name, ParamType.INTEGER);
 	}
-	string(name: string) {
-		return this.value_with_type(name, ParamType.STRING);
+	string(param_name: string) {
+		return this.value_with_type(param_name, ParamType.STRING);
 	}
-	vector2(name: string) {
-		return this.value_with_type(name, ParamType.VECTOR2);
+	vector2(param_name: string) {
+		return this.value_with_type(param_name, ParamType.VECTOR2);
 	}
-	vector3(name: string) {
-		return this.value_with_type(name, ParamType.VECTOR3);
+	vector3(param_name: string) {
+		return this.value_with_type(param_name, ParamType.VECTOR3);
 	}
-	color(name: string) {
-		return this.value_with_type(name, ParamType.COLOR);
+	color(param_name: string) {
+		return this.value_with_type(param_name, ParamType.COLOR);
 	}
 
-	param(name: string) {
-		const p = this._params_by_name[name];
+	param(param_name: string) {
+		const p = this._params_by_name[param_name];
 		if (p != null) {
 			return p;
 		} else {
 			Poly.warn(
-				`tried to access param '${name}' in node ${this.node.full_path()}, but existing params are: ${
+				`tried to access param '${param_name}' in node ${this.node.full_path()}, but existing params are: ${
 					this.names
 				} on node ${this.node.full_path()}`
 			);
@@ -371,27 +373,26 @@ export class ParamsController {
 
 	add_param<T extends ParamType>(
 		type: T,
-		name: string,
+		param_name: string,
 		default_value: ParamInitValuesTypeMap[T],
 		options: ParamOptions = {},
 		init_data?: ParamInitData<T>
 	): ParamConstructorMap[T] | undefined {
 		const is_spare = options['spare'] || false;
-		console.log('init_data', name, init_data, options);
 		if (this._param_create_mode === false && !is_spare) {
-			console.warn(
+			Poly.warn(
 				`node ${this.node.full_path()} (${
 					this.node.type
-				}) param '${name}' cannot be created outside of create_params`
+				}) param '${param_name}' cannot be created outside of create_params`
 			);
 		}
 		if (this.node.scene == null) {
-			console.warn(`node ${this.node.full_path()} (${this.node.type}) has no scene assigned`);
+			Poly.warn(`node ${this.node.full_path()} (${this.node.type}) has no scene assigned`);
 		}
 
 		const constructor = ParamConstructorByType[type];
 		if (constructor != null) {
-			const existing_param = this._params_by_name[name];
+			const existing_param = this._params_by_name[param_name];
 			if (existing_param) {
 				if (is_spare) {
 					// delete the old one, otherwise the gl nodes when saved will attempt to set the value
@@ -401,13 +402,13 @@ export class ParamsController {
 					}
 				} else {
 					// check that the param is spare, so that the ones generated by gl nodes are not generating an exception
-					console.warn(`a param named ${name} already exists`, this.node);
+					Poly.warn(`a param named ${param_name} already exists`, this.node);
 				}
 			}
 			const param: ParamConstructorMap[T] = new constructor(this.node.scene);
 			param.options.set(options);
 
-			param.set_name(name);
+			param.set_name(param_name);
 			param.set_init_value(default_value as never);
 			param.init_components();
 			if (init_data == null) {
@@ -416,17 +417,16 @@ export class ParamsController {
 				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
 				// Otherwise, as it would fail if the attribute was a vector
 				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
-				console.log('initdata', name, init_data);
 				if (param.options.is_expression_for_entities) {
 					param.set(default_value as never);
 				}
-				if (init_data.raw_input) {
+				if (init_data.raw_input != null) {
 					param.set(init_data.raw_input as never);
 				} else {
-					if (init_data.simple_data) {
+					if (init_data.simple_data != null) {
 						param.set(init_data.simple_data as never);
 					} else {
-						if (init_data.complex_data) {
+						if (init_data.complex_data != null) {
 							const raw_input = init_data.complex_data.raw_input;
 							if (raw_input) {
 								param.set(raw_input as never);
@@ -434,7 +434,7 @@ export class ParamsController {
 								param.set(default_value as never);
 							}
 							const overriden_options = init_data.complex_data.overriden_options;
-							if (overriden_options) {
+							if (overriden_options != null) {
 								const keys = Object.keys(overriden_options);
 								for (let key of keys) {
 									param.options.set_option(key as keyof ParamOptions, overriden_options[key]);
@@ -527,7 +527,7 @@ export class ParamsController {
 			hook();
 		} else {
 			if (this._post_create_params_hook_names && this._post_create_params_hook_names.includes(hook_name)) {
-				console.error(`hook name ${hook_name} already exists`);
+				Poly.error(`hook name ${hook_name} already exists`);
 				return;
 			}
 			this._post_create_params_hook_names = this._post_create_params_hook_names || [];
@@ -536,15 +536,15 @@ export class ParamsController {
 			this._post_create_params_hooks.push(hook);
 		}
 	}
-	add_on_scene_load_hook(name: string, method: OnSceneLoadHook) {
+	add_on_scene_load_hook(param_name: string, method: OnSceneLoadHook) {
 		this._on_scene_load_hook_names = this._on_scene_load_hook_names || [];
 		this._on_scene_load_hooks = this._on_scene_load_hooks || [];
 
-		if (!this._on_scene_load_hook_names.includes(name)) {
-			this._on_scene_load_hook_names.push(name);
+		if (!this._on_scene_load_hook_names.includes(param_name)) {
+			this._on_scene_load_hook_names.push(param_name);
 			this._on_scene_load_hooks.push(method);
 		} else {
-			console.warn(`hook with name ${name} already exists`, this.node);
+			Poly.warn(`hook with name ${param_name} already exists`, this.node);
 		}
 	}
 	private run_post_create_params_hooks() {

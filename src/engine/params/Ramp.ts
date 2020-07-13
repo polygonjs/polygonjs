@@ -42,7 +42,6 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		}
 	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
-		console.log('raw_input', raw_input);
 		if (raw_input instanceof RampValue) {
 			return raw_input.clone();
 		} else {
