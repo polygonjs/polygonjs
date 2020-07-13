@@ -46,7 +46,7 @@ import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -260,7 +260,7 @@ export class TypedThreejsCameraObjNode<
 
 	create_node<K extends keyof GeoNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): GeoNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
 	}

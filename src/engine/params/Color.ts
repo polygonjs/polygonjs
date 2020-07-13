@@ -6,12 +6,18 @@ import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import {ColorConversion} from '../../core/Color';
+import {TypeAssert} from '../poly/Assert';
 
 // import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	protected _value = new Color();
+	protected _value_pre_conversion = new Color();
+	private _value_serialized_dirty: boolean = false;
+	private _value_serialized: Number3 = [0, 0, 0];
+	private _value_pre_conversion_serialized: Number3 = [0, 0, 0];
 	r!: FloatParam;
 	g!: FloatParam;
 	b!: FloatParam;
@@ -37,7 +43,12 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// 	}
 	// }
 	get value_serialized() {
-		return this.value.toArray() as Number3;
+		this._update_value_serialized_if_required();
+		return this._value_serialized;
+	}
+	get value_pre_conversion_serialized() {
+		this._update_value_serialized_if_required();
+		return this._value_pre_conversion_serialized;
 	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
 		if (raw_input instanceof Color) {
@@ -75,6 +86,19 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		this.r = this.components[0];
 		this.g = this.components[1];
 		this.b = this.components[2];
+		this._value_serialized_dirty = true;
+	}
+
+	private _update_value_serialized_if_required() {
+		if (!this._value_serialized_dirty) {
+			return;
+		}
+		this._value_serialized[0] = this._value.r;
+		this._value_serialized[1] = this._value.g;
+		this._value_serialized[2] = this._value.b;
+		this._value_pre_conversion_serialized[0] = this._value_pre_conversion.r;
+		this._value_pre_conversion_serialized[1] = this._value_pre_conversion.g;
+		this._value_pre_conversion_serialized[2] = this._value_pre_conversion.b;
 	}
 	// set_raw_input_from_components() {
 	// 	if (this._raw_input instanceof Color) {
@@ -95,10 +119,40 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// 		this._raw_input[2] = this.b.raw_input;
 	// 	}
 	// }
+	get value_pre_conversion() {
+		return this._value_pre_conversion;
+	}
+
 	set_value_from_components() {
-		this._value.r = this.r.value;
-		this._value.g = this.g.value;
-		this._value.b = this.b.value;
+		this._value_pre_conversion.r = this.r.value;
+		this._value_pre_conversion.g = this.g.value;
+		this._value_pre_conversion.b = this.b.value;
+
+		this._value.copy(this._value_pre_conversion);
+
+		const conversion = this.options.color_conversion();
+		if (conversion != null && conversion != ColorConversion.NONE) {
+			switch (conversion) {
+				case ColorConversion.GAMMA_TO_LINEAR: {
+					this._value.convertGammaToLinear();
+					return;
+				}
+				case ColorConversion.LINEAR_TO_GAMMA: {
+					this._value.convertLinearToGamma();
+					return;
+				}
+				case ColorConversion.SRGB_TO_LINEAR: {
+					this._value.convertSRGBToLinear();
+					return;
+				}
+				case ColorConversion.LINEAR_TO_SRGB: {
+					this._value.convertLinearToSRGB();
+					return;
+				}
+			}
+			TypeAssert.unreachable(conversion);
+		}
+		this._value_serialized_dirty = true;
 	}
 	// convert(input: ParamInitValuesTypeMap[ParamType.COLOR]): Color | null {
 	// 	if (lodash_isArray(input)) {

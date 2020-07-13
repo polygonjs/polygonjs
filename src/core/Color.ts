@@ -1,6 +1,20 @@
 import {MathUtils} from 'three/src/math/MathUtils';
 import {Color} from 'three/src/math/Color';
 
+export enum ColorConversion {
+	NONE = 'no conversion',
+	GAMMA_TO_LINEAR = 'gamma -> linear',
+	LINEAR_TO_GAMMA = 'linear -> gamma',
+	SRGB_TO_LINEAR = 'sRGB -> linear',
+	LINEAR_TO_SRGB = 'linear -> sRGB',
+}
+export const COLOR_CONVERSIONS: ColorConversion[] = [
+	ColorConversion.NONE,
+	ColorConversion.GAMMA_TO_LINEAR,
+	ColorConversion.LINEAR_TO_GAMMA,
+	ColorConversion.SRGB_TO_LINEAR,
+	ColorConversion.LINEAR_TO_SRGB,
+];
 export class CoreColor {
 	// use color.toStyle() if needed
 	// static to_css(color: Color): string {

@@ -38,7 +38,7 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {TexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
@@ -113,7 +113,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	create_node<K extends keyof GlNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): GlNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}

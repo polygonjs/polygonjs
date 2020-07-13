@@ -24,7 +24,7 @@ import {ConstantGlNode} from '../gl/Constant';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/PersistedConfig';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	// gpu compute
@@ -106,7 +106,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	create_node<K extends keyof GlNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): GlNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}

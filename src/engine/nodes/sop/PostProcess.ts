@@ -4,7 +4,7 @@ import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {EffectsComposerController} from '../post/utils/EffectsComposerController';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export class PostProcessSopNode extends BaseNetworkSopNode {
 	static type() {
@@ -20,7 +20,7 @@ export class PostProcessSopNode extends BaseNetworkSopNode {
 
 	create_node<K extends keyof PostNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): PostNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as PostNodeChildrenMap[K];
 	}

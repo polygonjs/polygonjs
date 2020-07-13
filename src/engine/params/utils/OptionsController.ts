@@ -11,6 +11,7 @@ import {ParamEvent} from '../../poly/ParamEvent';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {StringParam} from '../String';
+import {ColorConversion} from '../../../core/Color';
 
 const ASSET_REFERENCE_OPTION = 'asset_reference';
 const CALLBACK_OPTION = 'callback';
@@ -46,6 +47,7 @@ const HIDDEN_OPTION = 'hidden';
 const SHOW_LABEL_OPTION = 'show_label';
 const FIELD_OPTION = 'field';
 const VISIBLE_IF_OPTION = 'visible_if';
+const COLOR_CONVERSION = 'conversion';
 
 export interface ParamOptionsMenuEntry {
 	name: string;
@@ -108,6 +110,9 @@ interface CallbackParamOptions {
 interface LabelParamOptions {
 	label?: string;
 }
+interface ColorConversionOptions {
+	conversion?: ColorConversion;
+}
 
 // actual param options
 export interface BooleanParamOptions
@@ -119,6 +124,7 @@ export interface BooleanParamOptions
 export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions, LabelParamOptions {}
 export interface ColorParamOptions
 	extends BaseParamOptions,
+		ColorConversionOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions,
 		ComputeOnDirtyParamOptions {}
@@ -166,6 +172,7 @@ export interface Vector4ParamOptions extends VectorParamOptions {}
 
 export interface ParamOptions
 	extends NumberParamOptions,
+		ColorConversionOptions,
 		ComputeOnDirtyParamOptions,
 		FolderParamOptions,
 		ExpressionParamOptions,
@@ -233,7 +240,8 @@ export class OptionsController {
 		const option_names = Object.keys(this._options) as Array<keyof ParamOptions>;
 		for (let option_name of option_names) {
 			if (!lodash_isEqual(this._options[option_name], this._default_options[option_name])) {
-				Object.assign(overriden, option_name, lodash_cloneDeep(this._options[option_name]));
+				const cloned_option = lodash_cloneDeep(this._options[option_name]);
+				Object.assign(overriden, {[option_name]: cloned_option});
 			}
 		}
 		return overriden;
@@ -318,9 +326,9 @@ export class OptionsController {
 	}
 
 	// color
-	// color() {
-	// 	return this._options[COLOR_OPTION];
-	// }
+	color_conversion() {
+		return this._options[COLOR_CONVERSION];
+	}
 
 	// cook
 	makes_node_dirty_when_dirty() {

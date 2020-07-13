@@ -1,5 +1,8 @@
 import {BaseParamType} from '../_Base';
-import {ParamValueSerializedTypeMap} from '../types/ParamValueSerializedTypeMap';
+import {
+	ParamValueSerializedTypeMap,
+	ParamValuePreConversionSerializedTypeMap,
+} from '../types/ParamValueSerializedTypeMap';
 import {ParamType} from '../../poly/ParamType';
 import {ParamInitValueSerializedTypeMap} from '../types/ParamInitValueSerializedTypeMap';
 
@@ -8,6 +11,7 @@ export interface ParamSerializerData {
 	type: ParamType;
 	raw_input: ParamInitValueSerializedTypeMap[ParamType];
 	value: ParamValueSerializedTypeMap[ParamType];
+	value_pre_conversion: ParamValuePreConversionSerializedTypeMap[ParamType];
 	expression?: string;
 	graph_node_id: string;
 	// is_dirty: boolean;
@@ -26,6 +30,7 @@ export class ParamSerializer {
 			type: this.param.type,
 			raw_input: this.raw_input(),
 			value: this.value(),
+			value_pre_conversion: this.value_pre_conversion(),
 			expression: this.expression(),
 			graph_node_id: this.param.graph_node_id,
 			// is_dirty: this.param.is_dirty,
@@ -47,6 +52,9 @@ export class ParamSerializer {
 	}
 	value() {
 		return this.param.value_serialized;
+	}
+	value_pre_conversion() {
+		return this.param.value_pre_conversion_serialized;
 	}
 	expression() {
 		return this.param.has_expression() ? this.param.expression_controller?.expression : undefined;

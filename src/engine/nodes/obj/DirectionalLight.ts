@@ -8,6 +8,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
+import {ColorConversion} from '../../../core/Color';
 
 export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -18,7 +19,9 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		// lookat = ParamConfig.OPERATOR_PATH('', {dependent_on_found_node: false});
 
 		light = ParamConfig.FOLDER();
-		color = ParamConfig.COLOR([1, 1, 1]);
+		color = ParamConfig.COLOR([1, 1, 1], {
+			conversion: ColorConversion.SRGB_TO_LINEAR,
+		});
 		intensity = ParamConfig.FLOAT(1);
 		distance = ParamConfig.FLOAT(100, {range: [0, 100]});
 		// shadows

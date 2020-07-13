@@ -2,7 +2,7 @@ import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {CopNodeChildrenMap} from '../../poly/registers/nodes/Cop';
 import {BaseCopNodeType} from '../cop/_Base';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export class CopSopNode extends BaseNetworkSopNode {
 	static type() {
@@ -13,7 +13,7 @@ export class CopSopNode extends BaseNetworkSopNode {
 
 	create_node<K extends keyof CopNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): CopNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as CopNodeChildrenMap[K];
 	}

@@ -1,4 +1,9 @@
 import {ParamType} from '../../../src/engine/poly/ParamType';
+import {ColorConversion} from '../../../src/core/Color';
+import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
+import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
+import {ColorSopNode} from '../../../src/engine/nodes/sop/Color';
+import {ColorParam} from '../../../src/engine/params/Color';
 
 QUnit.test('color eval correctly when set to different values', async (assert) => {
 	const scene = window.scene;
@@ -52,3 +57,50 @@ QUnit.test('color is_default', async (assert) => {
 	assert.deepEqual(color.value.toArray(), [1, 1, 3]);
 	assert.equal(color.default_value_serialized.join(':'), '1:1:$F');
 });
+
+QUnit.test(
+	'color conversion option can be changed and this is preserved on scene save/load for a normal param',
+	async (assert) => {
+		const scene = window.scene;
+		const geo1 = window.geo1;
+		const color1 = geo1.create_node('color');
+		const param1 = color1.p.color;
+
+		assert.ok(param1.options.color_conversion() == null);
+		param1.options.set_option('conversion', ColorConversion.LINEAR_TO_GAMMA);
+		assert.ok(param1.options.color_conversion());
+		assert.ok(param1.options.has_options_overridden);
+
+		const data = new SceneJsonExporter(scene).data();
+		console.log('************ LOAD **************');
+		const scene2 = await SceneJsonImporter.load_data(data);
+		await scene2.wait_for_cooks_completed();
+		const color2 = scene2.node(color1.full_path()) as ColorSopNode;
+		const param2 = color2.p.color;
+		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
+	}
+);
+
+QUnit.test(
+	'color conversion option can be changed and this is preserved on scene save/load for a spare param',
+	async (assert) => {
+		const scene = window.scene;
+		const geo1 = window.geo1;
+		const color1 = geo1.create_node('color');
+		const param1 = color1.add_param(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
+		color1.params.post_create_spare_params();
+
+		assert.ok(param1.options.color_conversion() == null);
+		param1.options.set_option('conversion', ColorConversion.LINEAR_TO_GAMMA);
+		assert.ok(param1.options.color_conversion());
+		assert.ok(param1.options.has_options_overridden);
+
+		const data = new SceneJsonExporter(scene).data();
+		console.log('************ LOAD **************');
+		const scene2 = await SceneJsonImporter.load_data(data);
+		await scene2.wait_for_cooks_completed();
+		const color2 = scene2.node(color1.full_path()) as ColorSopNode;
+		const param2 = color2.params.get('color2')! as ColorParam;
+		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
+	}
+);

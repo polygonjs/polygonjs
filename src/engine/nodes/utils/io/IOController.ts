@@ -5,6 +5,36 @@ import {SavedConnectionPointsDataController} from './SavedConnectionPointsDataCo
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
 import {ConnectionPointsController} from './ConnectionPointsController';
+import {ParamType} from '../../../poly/ParamType';
+import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
+import {ParamOptions} from '../../../params/utils/OptionsController';
+
+export type OverridenOptions = Dictionary<string | number>;
+
+export type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerializedTypeMap[T];
+
+export interface ComplexParamJsonExporterData<T extends ParamType> {
+	type?: T;
+	default_value?: ParamInitValueSerializedTypeMap[T];
+	raw_input?: ParamInitValueSerializedTypeMap[T];
+	options?: ParamOptions;
+	overriden_options?: OverridenOptions;
+	// components?: ParamJsonExporterDataByName;
+	// expression?: string;
+}
+export type ParamJsonExporterData<T extends ParamType> =
+	| SimpleParamJsonExporterData<T>
+	| ComplexParamJsonExporterData<T>;
+export type ParamJsonExporterDataByName = Dictionary<ParamJsonExporterData<ParamType>>;
+
+export type ParamsJsonExporterData = Dictionary<ParamJsonExporterData<ParamType>>;
+
+export interface ParamInitData<T extends ParamType> {
+	raw_input?: ParamInitValueSerializedTypeMap[T];
+	simple_data?: SimpleParamJsonExporterData<T>;
+	complex_data?: ComplexParamJsonExporterData<T>;
+}
+export type ParamsInitData = Dictionary<ParamInitData<ParamType>>;
 
 export class IOController<NC extends NodeContext> {
 	protected _inputs: InputsController<NC> | undefined;

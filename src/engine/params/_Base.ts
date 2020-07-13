@@ -13,7 +13,7 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {PolyScene} from '../scene/PolyScene';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from '../params/types/ParamValuesTypeMap';
-import {ParamValueSerializedTypeMap} from '../params/types/ParamValueSerializedTypeMap';
+import {ParamValueSerializedTypeMap, ParamValuePreConversionSerializedTypeMap} from '../params/types/ParamValueSerializedTypeMap';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 
 // type ParamTypeElem = ParamType;
@@ -99,6 +99,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	abstract get default_value_serialized(): ParamInitValueSerializedTypeMap[T];
 	abstract get raw_input_serialized(): ParamInitValueSerializedTypeMap[T];
 	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
+	get value_pre_conversion_serialized(): ParamValuePreConversionSerializedTypeMap[T] {
+		return undefined as never
+	}
 	convert(raw_val: any): ParamValuesTypeMap[T] | null {
 		return null;
 	}

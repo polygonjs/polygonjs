@@ -3,7 +3,7 @@ import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export class AnimationsObjNode extends BaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
@@ -15,7 +15,7 @@ export class AnimationsObjNode extends BaseManagerObjNode {
 
 	create_node<K extends keyof AnimNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): AnimNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as AnimNodeChildrenMap[K];
 	}

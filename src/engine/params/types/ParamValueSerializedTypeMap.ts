@@ -30,3 +30,20 @@ export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMap
 	[ParamType.VECTOR3]: Number3;
 	[ParamType.VECTOR4]: Number4;
 }
+
+type ParamValuePreConversionSerializedTypeMapGeneric = {[key in ParamType]: any};
+export interface ParamValuePreConversionSerializedTypeMap extends ParamValuePreConversionSerializedTypeMapGeneric {
+	[ParamType.BOOLEAN]: undefined;
+	[ParamType.BUTTON]: undefined;
+	[ParamType.COLOR]: Number3;
+	[ParamType.FLOAT]: undefined;
+	[ParamType.FOLDER]: undefined;
+	[ParamType.INTEGER]: undefined;
+	[ParamType.OPERATOR_PATH]: undefined;
+	[ParamType.RAMP]: undefined;
+	[ParamType.SEPARATOR]: undefined;
+	[ParamType.STRING]: undefined;
+	[ParamType.VECTOR2]: undefined;
+	[ParamType.VECTOR3]: undefined;
+	[ParamType.VECTOR4]: undefined;
+}

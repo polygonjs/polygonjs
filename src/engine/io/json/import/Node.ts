@@ -11,9 +11,16 @@ import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController'
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
-import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
+import {
+	ParamJsonExporterData,
+	SimpleParamJsonExporterData,
+	ComplexParamJsonExporterData,
+} from '../../../nodes/utils/io/IOController';
 import {ParamJsonImporter} from './Param';
 import {PolyNodeJsonImporter} from './nodes/Poly';
+import {Poly} from '../../../Poly';
+
+export const COMPLEX_PARAM_DATA_KEYS = ['overriden_options', 'type'];
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -96,7 +103,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					}
 				} catch (e) {
 					scene_importer.report.add_warning(`failed to create node with type '${node_type}'`);
-					console.warn('failed to create node with type', node_type, e);
+					Poly.warn('failed to create node with type', node_type, e);
 				}
 			}
 		}
@@ -108,7 +115,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 				importers_by_node_name.set(node.name, importer);
 				importer.process_data(scene_importer, data[node.name]);
 			} else {
-				console.warn(`possible import error for node ${node.name}`);
+				Poly.warn(`possible import error for node ${node.name}`);
 			}
 		}
 		for (let node of nodes) {
@@ -352,8 +359,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		if (lodash_isObject(param_data)) {
-			if (Object.keys(param_data).includes('type')) {
-				return true;
+			const keys = Object.keys(param_data);
+			for (let complex_key of COMPLEX_PARAM_DATA_KEYS) {
+				if (keys.includes(complex_key)) {
+					return true;
+				}
 			}
 		}
 

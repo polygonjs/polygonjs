@@ -1,28 +1,11 @@
 // import lodash_isArray from 'lodash/isArray'
-// import lodash_isString from 'lodash/isString'
+import lodash_isString from 'lodash/isString';
+import lodash_isNumber from 'lodash/isNumber';
 import {BaseParamType} from '../../../params/_Base';
 import {ParamType} from '../../../poly/ParamType';
-import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 
 import {ParamOptions} from '../../../params/utils/OptionsController';
-
-type OverridenOptions = Dictionary<string>;
-
-export type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerializedTypeMap[T];
-
-export interface ComplexParamJsonExporterData<T extends ParamType> {
-	type?: T;
-	default_value?: ParamInitValueSerializedTypeMap[T];
-	raw_input?: ParamInitValueSerializedTypeMap[T];
-	options?: ParamOptions;
-	overriden_options?: OverridenOptions;
-	// components?: ParamJsonExporterDataByName;
-	// expression?: string;
-}
-export type ParamJsonExporterData<T extends ParamType> =
-	| SimpleParamJsonExporterData<T>
-	| ComplexParamJsonExporterData<T>;
-export type ParamJsonExporterDataByName = Dictionary<ParamJsonExporterData<ParamType>>;
+import {OverridenOptions, ComplexParamJsonExporterData} from '../../../nodes/utils/io/IOController';
 
 export class ParamJsonExporter<T extends BaseParamType> {
 	// protected _simple_data: SimpleParamJsonExporterData<ParamType>=0;
@@ -36,7 +19,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 		// as it could have an expression AND be of default value
 		const value_changed = !this._param.is_default; //|| this._param.has_expression();
 		// const referencing_asset = this._param.is_referencing_asset()
-		return is_spare_and_not_component || value_changed; // || referencing_asset
+		return is_spare_and_not_component || value_changed || this._param.options.has_options_overridden;
 	}
 
 	data() {
@@ -62,12 +45,11 @@ export class ParamJsonExporter<T extends BaseParamType> {
 		if (this._param.options.is_spare && !this._param.parent_param) {
 			this._complex_data['type'] = this._param.type;
 			this._complex_data['default_value'] = this._param.default_value_serialized;
-			this._complex_data['raw_input'] = this._param.raw_input_serialized;
 			this._complex_data['options'] = this._param.options.current;
 		}
 
 		if (!this._param.is_default) {
-			this.add_main();
+			this._complex_data['raw_input'] = this._param.raw_input_serialized;
 		}
 
 		if (this._param.options.has_options_overridden) {
@@ -75,7 +57,11 @@ export class ParamJsonExporter<T extends BaseParamType> {
 			const options_overridden = this._param.options.overridden_options;
 			for (let option_name of Object.keys(options_overridden)) {
 				const option_value = options_overridden[option_name as keyof ParamOptions];
-				overridden_options[option_name] = JSON.stringify(option_value);
+				if (lodash_isString(option_value) || lodash_isNumber(option_value)) {
+					overridden_options[option_name] = option_value;
+				} else {
+					overridden_options[option_name] = JSON.stringify(option_value);
+				}
 			}
 			this._complex_data['overriden_options'] = overridden_options;
 		}
