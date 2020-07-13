@@ -1,6 +1,6 @@
 import {ParamJsonImporter} from '../Param';
 // import {RampValueJson} from '../../../../params/ramp/RampValue';
-import {ComplexParamJsonExporterData} from '../../export/Param';
+import {ComplexParamJsonExporterData} from '../../../../nodes/utils/io/IOController';
 import {RampParam} from '../../../../params/Ramp';
 import {ParamType} from '../../../../poly/ParamType';
 

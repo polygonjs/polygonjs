@@ -3,7 +3,7 @@ import {SceneJsonExporter} from './Scene';
 // import {JsonExporterVisitor} from './Visitor';
 import {NodeContext} from '../../../poly/NodeContext';
 import {JsonExportDispatcher} from './Dispatcher';
-import {ParamJsonExporterData} from './Param';
+import {ParamJsonExporterData} from '../../../nodes/utils/io/IOController';
 import {ParamType} from '../../../poly/ParamType';
 import {BaseConnectionPointData} from '../../../nodes/utils/io/connections/_Base';
 

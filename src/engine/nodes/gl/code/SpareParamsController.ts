@@ -2,7 +2,7 @@ import lodash_intersection from 'lodash/intersection';
 import lodash_clone from 'lodash/clone';
 import lodash_merge from 'lodash/merge';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {ParamJsonExporterData} from '../../../io/json/export/Param';
+import {ParamJsonExporterData} from '../../utils/io/IOController';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';

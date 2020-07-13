@@ -7,10 +7,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {SpotLightHelper} from './utils/helpers/SpotLightHelper';
 import {Object3D} from 'three/src/core/Object3D';
+import {ColorConversion} from '../../../core/Color';
 // import {HelperController} from './utils/HelperController';
 class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
-	color = ParamConfig.COLOR([1, 1, 1]);
+	color = ParamConfig.COLOR([1, 1, 1], {
+		conversion: ColorConversion.SRGB_TO_LINEAR,
+	});
 	intensity = ParamConfig.FLOAT(1);
 	angle = ParamConfig.FLOAT(45, {range: [0, 180]});
 	penumbra = ParamConfig.FLOAT(0.1);

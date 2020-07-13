@@ -1,3 +1,5 @@
+import {Color} from 'three/src/math/Color';
+
 QUnit.test('hemisphere light simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.default_scene.children[0];
@@ -9,8 +11,15 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	assert.equal(hemisphere_light1.name, 'hemisphere_light1');
 	assert.equal(main_group.children.length, 3);
 
-	assert.deepEqual(hemisphere_light1.pv.sky_color.toArray(), [0.2, 0.7, 1]);
-	assert.deepEqual(hemisphere_light1.pv.ground_color.toArray(), [0.1, 0.1, 0.25]);
+	assert.deepEqual(hemisphere_light1.p.sky_color.value_pre_conversion_serialized, [0.2, 0.7, 1]);
+	assert.deepEqual(hemisphere_light1.p.ground_color.value_pre_conversion_serialized, [0.1, 0.1, 0.25]);
+	const tmp = new Color();
+	tmp.copy(hemisphere_light1.p.sky_color.value_pre_conversion);
+	tmp.convertSRGBToLinear();
+	assert.deepEqual(hemisphere_light1.pv.sky_color.toArray(), tmp.toArray());
+	tmp.copy(hemisphere_light1.p.ground_color.value_pre_conversion);
+	tmp.convertSRGBToLinear();
+	assert.deepEqual(hemisphere_light1.pv.ground_color.toArray(), tmp.toArray());
 
 	const hemisphere_light2 = scene.root.create_node('hemisphere_light');
 	assert.equal(hemisphere_light2.name, 'hemisphere_light2');

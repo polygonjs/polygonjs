@@ -1,6 +1,6 @@
 // import lodash_isString from 'lodash/isString';
 import {ParamJsonImporter} from '../Param';
-import {ComplexParamJsonExporterData} from '../../export/Param';
+import {ComplexParamJsonExporterData} from '../../../../nodes/utils/io/IOController';
 import {StringParam} from '../../../../params/String';
 import {ParamType} from '../../../../poly/ParamType';
 

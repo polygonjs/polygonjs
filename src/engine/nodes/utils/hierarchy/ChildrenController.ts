@@ -9,7 +9,7 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
-import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../io/IOController';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
@@ -96,7 +96,7 @@ export class HierarchyChildrenController {
 		return node_class != null;
 	}
 
-	create_node(node_type: string, params_init_value_overrides?: Dictionary<ParamInitValueSerialized>): BaseNodeType {
+	create_node(node_type: string, params_init_value_overrides?: ParamsInitData): BaseNodeType {
 		const node_class = this.available_children_classes()[node_type];
 
 		if (node_class == null) {

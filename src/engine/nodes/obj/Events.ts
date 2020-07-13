@@ -3,7 +3,7 @@ import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export class EventsObjNode extends BaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
@@ -18,7 +18,7 @@ export class EventsObjNode extends BaseManagerObjNode {
 
 	create_node<K extends keyof EventNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): EventNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as EventNodeChildrenMap[K];
 	}

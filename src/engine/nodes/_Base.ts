@@ -16,7 +16,7 @@ import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from './utils/params/ParamsValueAccessor';
 // import {ProcessingContext} from './utils/ProcessingContext';
-import {IOController} from './utils/io/IOController';
+import {IOController, ParamsInitData} from './utils/io/IOController';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
@@ -137,11 +137,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// 	return (this._processing_context = this._processing_context || new ProcessingContext(this));
 	// }
 
-	constructor(
-		scene: PolyScene,
-		name: string = 'BaseNode',
-		public params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
-	) {
+	constructor(scene: PolyScene, name: string = 'BaseNode', public params_init_value_overrides?: ParamsInitData) {
 		super(scene, name);
 	}
 
@@ -242,7 +238,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// hierarchy
-	create_node(type: string, params_init_value_overrides?: Dictionary<ParamInitValueSerialized>) {
+	create_node(type: string, params_init_value_overrides?: ParamsInitData) {
 		return this.children_controller?.create_node(type, params_init_value_overrides);
 	}
 	remove_node(node: BaseNodeType) {

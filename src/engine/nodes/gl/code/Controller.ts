@@ -7,12 +7,12 @@ import {GlobalsGlNode} from '../Globals';
 import {GlNodeChildrenMap} from '../../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../_Base';
 import {AssemblerNodeSpareParamsController} from './SpareParamsController';
-import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../../utils/io/IOController';
 
 export class BaseGlParentNode extends TypedNode<any, any> {
 	create_node<K extends keyof GlNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): GlNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}

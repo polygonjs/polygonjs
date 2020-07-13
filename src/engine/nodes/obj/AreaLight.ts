@@ -6,11 +6,14 @@ import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ColorConversion} from '../../../core/Color';
 // import {HelperController, HelperParamConfig} from './utils/HelperController';
 
 export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		color = ParamConfig.COLOR([1, 1, 1]);
+		color = ParamConfig.COLOR([1, 1, 1], {
+			conversion: ColorConversion.SRGB_TO_LINEAR,
+		});
 		intensity = ParamConfig.FLOAT(1, {range: [0, 10]});
 		width = ParamConfig.FLOAT(1, {range: [0, 10]});
 		height = ParamConfig.FLOAT(1, {range: [0, 10]});

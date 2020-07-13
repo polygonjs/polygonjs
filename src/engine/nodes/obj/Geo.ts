@@ -10,7 +10,7 @@ import {FlagsControllerD} from '../utils/FlagsController';
 import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 	render_order = ParamConfig.INTEGER(0, {
@@ -67,7 +67,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 	create_node<K extends keyof GeoNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): GeoNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
 	}

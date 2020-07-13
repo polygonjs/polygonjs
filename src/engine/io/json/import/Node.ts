@@ -11,9 +11,15 @@ import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController'
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NodeJsonExporterData, NodeJsonExporterUIData, InputData, IoConnectionPointsData} from '../export/Node';
-import {ParamJsonExporterData, SimpleParamJsonExporterData, ComplexParamJsonExporterData} from '../export/Param';
+import {
+	ParamJsonExporterData,
+	SimpleParamJsonExporterData,
+	ComplexParamJsonExporterData,
+} from '../../../nodes/utils/io/IOController';
 import {ParamJsonImporter} from './Param';
 import {PolyNodeJsonImporter} from './nodes/Poly';
+
+export const COMPLEX_PARAM_DATA_KEYS = ['overriden_options', 'type'];
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -89,6 +95,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (this._node.children_allowed() && this._node.children_controller) {
 				try {
 					const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
+					console.log('non_spare_params_data', non_spare_params_data);
 					const node = this._node.create_node(node_type, non_spare_params_data);
 					if (node) {
 						node.set_name(node_name);
@@ -352,8 +359,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		if (lodash_isObject(param_data)) {
-			if (Object.keys(param_data).includes('type')) {
-				return true;
+			const keys = Object.keys(param_data);
+			for (let complex_key of COMPLEX_PARAM_DATA_KEYS) {
+				if (keys.includes(complex_key)) {
+					return true;
+				}
 			}
 		}
 

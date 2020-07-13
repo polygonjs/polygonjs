@@ -17,8 +17,8 @@ import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 import {ParamsLabelController} from './ParamsLabelController';
-import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {Poly} from '../../../Poly';
+import {ParamInitData} from '../io/IOController';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -154,7 +154,7 @@ export class ParamsController {
 		if (params_config) {
 			for (let name of Object.keys(params_config)) {
 				const config = params_config[name];
-				let init_value: ParamInitValueSerialized | undefined;
+				let init_value: ParamInitData<ParamType> | undefined;
 				if (this.node.params_init_value_overrides) {
 					init_value = this.node.params_init_value_overrides[name];
 					init_values_used = true;
@@ -374,9 +374,10 @@ export class ParamsController {
 		name: string,
 		default_value: ParamInitValuesTypeMap[T],
 		options: ParamOptions = {},
-		init_value?: ParamInitValuesTypeMap[T]
+		init_data?: ParamInitData<T>
 	): ParamConstructorMap[T] | undefined {
 		const is_spare = options['spare'] || false;
+		console.log('init_data', name, init_data, options);
 		if (this._param_create_mode === false && !is_spare) {
 			console.warn(
 				`node ${this.node.full_path()} (${
@@ -409,16 +410,39 @@ export class ParamsController {
 			param.set_name(name);
 			param.set_init_value(default_value as never);
 			param.init_components();
-			if (init_value == null) {
+			if (init_data == null) {
 				param.set(default_value as never);
 			} else {
 				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
 				// Otherwise, as it would fail if the attribute was a vector
 				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
+				console.log('initdata', name, init_data);
 				if (param.options.is_expression_for_entities) {
 					param.set(default_value as never);
 				}
-				param.set(init_value as never);
+				if (init_data.raw_input) {
+					param.set(init_data.raw_input as never);
+				} else {
+					if (init_data.simple_data) {
+						param.set(init_data.simple_data as never);
+					} else {
+						if (init_data.complex_data) {
+							const raw_input = init_data.complex_data.raw_input;
+							if (raw_input) {
+								param.set(raw_input as never);
+							} else {
+								param.set(default_value as never);
+							}
+							const overriden_options = init_data.complex_data.overriden_options;
+							if (overriden_options) {
+								const keys = Object.keys(overriden_options);
+								for (let key of keys) {
+									param.options.set_option(key as keyof ParamOptions, overriden_options[key]);
+								}
+							}
+						}
+					}
+				}
 			}
 			param.set_node(this.node);
 

@@ -1,7 +1,12 @@
 import {BaseParamType} from '../../../params/_Base';
-import {ComplexParamJsonExporterData, ParamJsonExporterData, SimpleParamJsonExporterData} from '../export/Param';
+import {
+	ComplexParamJsonExporterData,
+	ParamJsonExporterData,
+	ParamsJsonExporterData,
+	SimpleParamJsonExporterData,
+	ParamsInitData,
+} from '../../../nodes/utils/io/IOController';
 import {ParamType} from '../../../poly/ParamType';
-import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 
 export class ParamJsonImporter<T extends BaseParamType> {
 	constructor(protected _param: T) {}
@@ -27,7 +32,7 @@ export class ParamJsonImporter<T extends BaseParamType> {
 
 	add_main(data: ComplexParamJsonExporterData<ParamType>) {}
 
-	static spare_params_data(params_data?: Dictionary<ParamJsonExporterData<ParamType>>) {
+	static spare_params_data(params_data?: ParamsJsonExporterData) {
 		return this.params_data(true, params_data);
 	}
 	// static non_spare_params_value(params_data?: Dictionary<ParamJsonExporterData<ParamType>>) {
@@ -36,14 +41,11 @@ export class ParamJsonImporter<T extends BaseParamType> {
 	// static spare_params_data_value(params_data?: Dictionary<ParamJsonExporterData<ParamType>>) {
 	// 	return this.params_data_value(true, params_data);
 	// }
-	static non_spare_params_data_value(params_data?: Dictionary<ParamJsonExporterData<ParamType>>) {
+	static non_spare_params_data_value(params_data?: ParamsJsonExporterData): ParamsInitData | undefined {
 		return this.params_data_value(false, params_data);
 	}
-	static params_data(
-		spare: boolean,
-		params_data?: Dictionary<ParamJsonExporterData<ParamType>>
-	): Dictionary<ParamJsonExporterData<ParamType>> | undefined {
-		let non_spare_params_data: Dictionary<ParamJsonExporterData<ParamType>> | undefined;
+	static params_data(spare: boolean, params_data?: ParamsJsonExporterData): ParamsJsonExporterData | undefined {
+		let non_spare_params_data: ParamsJsonExporterData | undefined;
 		if (params_data) {
 			non_spare_params_data = {};
 			const param_names = Object.keys(params_data);
@@ -57,28 +59,37 @@ export class ParamJsonImporter<T extends BaseParamType> {
 		}
 		return non_spare_params_data;
 	}
-	static params_data_value(
-		spare: boolean,
-		params_data?: Dictionary<ParamJsonExporterData<ParamType>>
-	): Dictionary<ParamInitValueSerialized> | undefined {
-		let non_spare_params_data: Dictionary<ParamInitValueSerialized> | undefined;
+	private static params_data_value(spare: boolean, params_data?: ParamsJsonExporterData): ParamsInitData | undefined {
+		let non_spare_params_data: ParamsInitData | undefined;
 		if (params_data) {
 			non_spare_params_data = {};
 			const param_names = Object.keys(params_data);
 			let param_data: ParamJsonExporterData<ParamType>;
 			for (let param_name of param_names) {
 				param_data = params_data[param_name];
+				console.warn(name, param_data);
 				if (param_data != null) {
 					const options = (param_data as ComplexParamJsonExporterData<ParamType>).options;
-					if (options) {
-						const complex_data = params_data as ComplexParamJsonExporterData<ParamType>;
-						if (options.spare == spare) {
+					const overriden_options = (param_data as ComplexParamJsonExporterData<ParamType>).overriden_options;
+					if (options || overriden_options) {
+						const complex_data = param_data as ComplexParamJsonExporterData<ParamType>;
+						if (options && options.spare == spare) {
 							if (complex_data.raw_input != null) {
-								non_spare_params_data[param_name] = complex_data.raw_input;
+								non_spare_params_data[param_name] = {complex_data: complex_data};
+							}
+						} else {
+							// THIS IS A MESS
+							if (overriden_options) {
+								non_spare_params_data[param_name] = {complex_data: complex_data};
 							}
 						}
 					} else {
-						non_spare_params_data[param_name] = param_data as SimpleParamJsonExporterData<ParamType>;
+						// THIS IS A MESS
+						if (overriden_options) {
+							non_spare_params_data[param_name] = {
+								simple_data: param_data as SimpleParamJsonExporterData<ParamType>,
+							};
+						}
 					}
 				}
 			}

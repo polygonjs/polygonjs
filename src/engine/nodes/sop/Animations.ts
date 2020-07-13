@@ -2,7 +2,7 @@ import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export class AnimationsSopNode extends BaseNetworkSopNode {
 	static type() {
@@ -13,7 +13,7 @@ export class AnimationsSopNode extends BaseNetworkSopNode {
 
 	create_node<K extends keyof AnimNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): AnimNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as AnimNodeChildrenMap[K];
 	}

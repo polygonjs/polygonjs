@@ -6,10 +6,13 @@ import {TransformedParamConfig} from './utils/TransformController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
+import {ColorConversion} from '../../../core/Color';
 // import {HelperController} from './utils/HelperController';
 class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
-	color = ParamConfig.COLOR([1, 1, 1]);
+	color = ParamConfig.COLOR([1, 1, 1], {
+		conversion: ColorConversion.SRGB_TO_LINEAR,
+	});
 	intensity = ParamConfig.FLOAT(1);
 	decay = ParamConfig.FLOAT(0.1);
 	distance = ParamConfig.FLOAT(100);

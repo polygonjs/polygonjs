@@ -7,7 +7,7 @@ import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
 
 import {NodeParamsConfig} from '../../../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {ParamInitValueSerialized} from '../../../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../../../utils/io/IOController';
 
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
 	initialize_base_node() {
@@ -31,7 +31,7 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 
 	create_node<K extends keyof GeoNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): GeoNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
 	}

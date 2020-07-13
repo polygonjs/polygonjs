@@ -2,7 +2,7 @@ import {BaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
-import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../utils/io/IOController';
 
 export class MaterialsSopNode extends BaseNetworkSopNode {
 	static type() {
@@ -13,7 +13,7 @@ export class MaterialsSopNode extends BaseNetworkSopNode {
 
 	create_node<K extends keyof MatNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): MatNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as MatNodeChildrenMap[K];
 	}

@@ -5,12 +5,12 @@ import {GlobalsJsNode} from '../Globals';
 import {JsNodeChildrenMap} from '../../../poly/registers/nodes/Js';
 import {BaseJsNodeType} from '../_Base';
 import {JsAssemblerNodeSpareParamsController} from './SpareParamsController';
-import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
+import {ParamsInitData} from '../../utils/io/IOController';
 
 export class AssemblerControllerNode extends TypedNode<any, any> {
 	create_node<K extends keyof JsNodeChildrenMap>(
 		type: K,
-		params_init_value_overrides?: Dictionary<ParamInitValueSerialized>
+		params_init_value_overrides?: ParamsInitData
 	): JsNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as JsNodeChildrenMap[K];
 	}

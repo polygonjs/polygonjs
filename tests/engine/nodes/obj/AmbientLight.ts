@@ -158,7 +158,9 @@ QUnit.test('ambient light cooks only once when multiple params are updated', asy
 	await scene.wait_for_cooks_completed();
 	assert.equal(light_object.uuid, ambient_light_group.children[1].uuid);
 	assert.equal(light_object.intensity, 2, 'intensity should be 2');
-	assert.deepEqual(light_object.color.toArray(), [2, 1, 3], 'color should be 2,1,3');
+	assert.in_delta(light_object.color.r, 5, 1, 'color should be 2,1,3');
+	assert.in_delta(light_object.color.g, 1, 1, 'color should be 2,1,3');
+	assert.in_delta(light_object.color.b, 12.8, 1, 'color should be 2,1,3');
 	assert.equal(ambient_light1.cook_controller.cooks_count, 1, 'cooks count should be 1');
 
 	window.scene.performance.stop();

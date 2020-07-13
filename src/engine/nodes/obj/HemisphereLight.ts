@@ -4,9 +4,14 @@ import {TypedLightObjNode} from './_BaseLight';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
+import {ColorConversion} from '../../../core/Color';
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
-	sky_color = ParamConfig.COLOR([0.2, 0.7, 1]);
-	ground_color = ParamConfig.COLOR([0.1, 0.1, 0.25]);
+	sky_color = ParamConfig.COLOR([0.2, 0.7, 1], {
+		conversion: ColorConversion.SRGB_TO_LINEAR,
+	});
+	ground_color = ParamConfig.COLOR([0.1, 0.1, 0.25], {
+		conversion: ColorConversion.SRGB_TO_LINEAR,
+	});
 	intensity = ParamConfig.FLOAT(1);
 	position = ParamConfig.VECTOR3([0, 1, 0]);
 	show_helper = ParamConfig.BOOLEAN(1);

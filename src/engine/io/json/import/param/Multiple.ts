@@ -1,5 +1,5 @@
 import {ParamJsonImporter} from '../Param';
-import {ComplexParamJsonExporterData} from '../../export/Param';
+import {ComplexParamJsonExporterData} from '../../../../nodes/utils/io/IOController';
 import {TypedMultipleParam} from '../../../../params/_Multiple';
 import {ParamType} from '../../../../poly/ParamType';
 
