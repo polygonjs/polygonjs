@@ -131,7 +131,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 			// apply matrix
 			object.applyMatrix4(matrix);
 			// revert to positoin
-			object.position.copy(this._object_position);
+			object.position.add(this._object_position);
 			object.updateMatrix();
 		}
 	}

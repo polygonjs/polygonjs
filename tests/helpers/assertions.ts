@@ -20,27 +20,27 @@ declare global {
 export {};
 // import * as _ from 'lodash'
 
-QUnit.assert.null = function(val1: number, message: string = 'NOT null') {
+QUnit.assert.null = function (val1: number, message: string = 'NOT null') {
 	const result = val1 == null;
 	const actual = val1;
 	const expected = null;
 	this.pushResult({result, actual, expected, message});
 };
-QUnit.assert.not_null = function(val1: number, message: string = 'IS null') {
+QUnit.assert.not_null = function (val1: number, message: string = 'IS null') {
 	const result = val1 != null;
 	const actual = val1;
 	const expected = !null;
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.includes = function(array: any[], element: any, message: string = 'DOES NOT INCLUDE') {
+QUnit.assert.includes = function (array: any[], element: any, message: string = 'DOES NOT INCLUDE') {
 	const result = array.includes(element);
 	const actual = array;
 	const expected = [element];
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.in_delta = function(
+QUnit.assert.in_delta = function (
 	val1: number,
 	val2: number,
 	max_delta: number = 0.001,
@@ -54,7 +54,7 @@ QUnit.assert.in_delta = function(
 	const expected = max_delta;
 	this.pushResult({result, actual, expected, message});
 };
-QUnit.assert.vector3_in_delta = function(
+QUnit.assert.vector3_in_delta = function (
 	val1: Vector3,
 	val2: Number3,
 	max_delta: number = 0.001,
@@ -77,26 +77,26 @@ QUnit.assert.vector3_in_delta = function(
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.less_than = function(val1: number, max_val: number, message: string = 'NOT less than') {
+QUnit.assert.less_than = function (val1: number, max_val: number, message: string = 'NOT less than') {
 	const result = val1 < max_val;
 	const actual = val1;
 	const expected = max_val;
 	this.pushResult({result, actual, expected, message});
 };
-QUnit.assert.less_than_or_equal = function(val1: number, max_val: number, message: string = 'NOT less than') {
+QUnit.assert.less_than_or_equal = function (val1: number, max_val: number, message: string = 'NOT less than') {
 	const result = val1 <= max_val;
 	const actual = val1;
 	const expected = max_val;
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.more_than = function(val1: number, max_val: number, message: string = 'NOT more than') {
+QUnit.assert.more_than = function (val1: number, max_val: number, message: string = 'NOT more than') {
 	const result = val1 > max_val;
 	const actual = val1;
 	const expected = max_val;
 	this.pushResult({result, actual, expected, message});
 };
-QUnit.assert.more_than_or_equal = function(val1: number, max_val: number, message: string = 'NOT more than') {
+QUnit.assert.more_than_or_equal = function (val1: number, max_val: number, message: string = 'NOT more than') {
 	const result = val1 >= max_val;
 	const actual = val1;
 	const expected = max_val;
