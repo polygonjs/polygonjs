@@ -1,9 +1,14 @@
 import {StringParam} from '../../params/String';
 
 export class SceneAssetsController {
-	private _assets_root: string | null = null;
 	private _params_by_id: Map<string, StringParam> = new Map();
+	private _assets_root: string | null = null;
 
+	//
+	//
+	// REGISTER PARAMS
+	//
+	//
 	register_param(param: StringParam) {
 		this._params_by_id.set(param.graph_node_id, param);
 	}
@@ -18,6 +23,11 @@ export class SceneAssetsController {
 		});
 	}
 
+	//
+	//
+	// ASSETS ROOT
+	//
+	//
 	assets_root() {
 		return this._assets_root;
 	}

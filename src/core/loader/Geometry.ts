@@ -25,6 +25,7 @@ interface PdbObject {
 	geometryBonds: BufferGeometry;
 }
 
+import {UAParser} from 'ua-parser-js';
 export class CoreLoaderGeometry {
 	public readonly ext: string;
 
@@ -81,29 +82,37 @@ export class CoreLoaderGeometry {
 			}
 
 			if (this.ext == 'json') {
+				CoreLoaderGeometry.increment_in_progress_loads_count();
+				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 				fetch(url)
 					.then(async (response) => {
 						const data = await response.json();
 						const obj_loader = new ObjectLoader();
 						obj_loader.parse(data, (obj) => {
+							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							resolve(this.on_load_success(obj.children[0]));
 						});
 					})
 					.catch((error) => {
+						CoreLoaderGeometry.decrement_in_progress_loads_count();
 						reject(error);
 					});
 			} else {
 				const loader = await this.loader_for_ext();
 				if (loader) {
+					CoreLoaderGeometry.increment_in_progress_loads_count();
+					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 					loader.load(
 						url,
 						(object: any) => {
+							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							this.on_load_success(object).then((object2) => {
 								resolve(object2);
 							});
 						},
 						undefined,
 						(error_message: ErrorEvent) => {
+							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							reject(error_message);
 						}
 					);
@@ -268,6 +277,51 @@ export class CoreLoaderGeometry {
 		const module = await Poly.instance().modules_register.module(ModuleName.PLYLoader);
 		if (module) {
 			return new module.PLYLoader();
+		}
+	}
+
+	//
+	//
+	// CONCURRENT LOADS
+	//
+	//
+	private static MAX_CONCURRENT_LOADS_COUNT: number = CoreLoaderGeometry._init_max_concurrent_loads_count();
+	private static in_progress_loads_count: number = 0;
+	private static _queue: Array<() => void> = [];
+	private static _init_max_concurrent_loads_count() {
+		const parser = new UAParser();
+		const name = parser.getBrowser().name;
+		if (name == 'Chrome') {
+			return 10;
+		} else {
+			// limit to 4 for non chrome,
+			// as firefox was seen hanging trying to load multiple glb files
+			return 4;
+		}
+	}
+	public static override_max_concurrent_loads_count(count: number) {
+		this.MAX_CONCURRENT_LOADS_COUNT = count;
+	}
+
+	private static increment_in_progress_loads_count() {
+		this.in_progress_loads_count++;
+	}
+	private static decrement_in_progress_loads_count() {
+		this.in_progress_loads_count--;
+
+		const queued_resolve = this._queue.pop();
+		if (queued_resolve) {
+			queued_resolve();
+		}
+	}
+
+	private static async wait_for_max_concurrent_loads_queue_freed() {
+		if (this.in_progress_loads_count <= this.MAX_CONCURRENT_LOADS_COUNT) {
+			return;
+		} else {
+			return new Promise((resolve) => {
+				this._queue.push(resolve);
+			});
 		}
 	}
 }
