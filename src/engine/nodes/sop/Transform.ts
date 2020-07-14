@@ -13,6 +13,7 @@ import {Matrix4} from 'three/src/math/Matrix4';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
+import {Vector3} from 'three/src/math/Vector3';
 class TransformSopParamConfig extends NodeParamsConfig {
 	apply_on = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
 		menu: {
@@ -39,7 +40,9 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	scale = ParamConfig.FLOAT(1, {range: [0, 10]});
 	// look_at = ParamConfig.OPERATOR_PATH('');
 	// up = ParamConfig.VECTOR3([0, 1, 0]);
-	pivot = ParamConfig.VECTOR3([0, 0, 0]);
+	pivot = ParamConfig.VECTOR3([0, 0, 0], {
+		visible_if: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+	});
 }
 const ParamsConfig = new TransformSopParamConfig();
 
@@ -118,9 +121,18 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 			}
 		}
 	}
+	private _object_position = new Vector3();
 	private _apply_matrix_to_objects(objects: Object3D[], matrix: Matrix4) {
 		for (let object of objects) {
+			// center to origin
+			this._object_position.copy(object.position);
+			object.position.multiplyScalar(0);
+			object.updateMatrix();
+			// apply matrix
 			object.applyMatrix4(matrix);
+			// revert to positoin
+			object.position.copy(this._object_position);
+			object.updateMatrix();
 		}
 	}
 }
