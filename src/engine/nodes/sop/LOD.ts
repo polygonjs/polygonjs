@@ -99,6 +99,10 @@ export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
 		node._update_lod();
 	}
 	private async _update_lod() {
+		if (this.p.auto_update) {
+			return;
+		}
+
 		const camera_param = this.p.camera;
 		if (camera_param.is_dirty) {
 			await camera_param.compute();
