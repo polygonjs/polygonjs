@@ -243,7 +243,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			}
 		}
 	}
-	required_modules() {
+	async required_modules() {
+		if (this.p.font.is_dirty) {
+			await this.p.font.compute();
+		}
 		const ext = this.get_extension();
 		switch (ext) {
 			case 'ttf': {

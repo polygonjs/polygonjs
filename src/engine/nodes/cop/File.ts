@@ -315,7 +315,10 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 	static type() {
 		return 'file';
 	}
-	required_modules() {
+	async required_modules() {
+		if (this.p.url.is_dirty) {
+			await this.p.url.compute();
+		}
 		const ext = CoreTextureLoader.get_extension(this.pv.url || '');
 		return CoreTextureLoader.module_names(ext);
 	}

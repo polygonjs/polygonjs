@@ -27,7 +27,10 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	static type() {
 		return 'file';
 	}
-	required_modules() {
+	async required_modules() {
+		if (this.p.url.is_dirty) {
+			await this.p.url.compute();
+		}
 		const ext = CoreLoaderGeometry.get_extension(this.pv.url || '');
 		return CoreLoaderGeometry.module_names(ext);
 	}

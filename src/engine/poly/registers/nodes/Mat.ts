@@ -4,6 +4,7 @@ import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
 import {MeshBasicBuilderMatNode} from '../../../nodes/mat/MeshBasicBuilder';
 import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
 import {MeshLambertBuilderMatNode} from '../../../nodes/mat/MeshLambertBuilder';
+import {MeshPhongMatNode} from '../../../nodes/mat/MeshPhong';
 import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
 import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
 import {MeshSubsurfaceScatteringMatNode} from '../../../nodes/mat/MeshSubsurfaceScattering';
@@ -18,6 +19,7 @@ export interface MatNodeChildrenMap {
 	mesh_basic_builder: MeshBasicBuilderMatNode;
 	mesh_lambert: MeshLambertMatNode;
 	mesh_lambert_builder: MeshLambertBuilderMatNode;
+	mesh_phong: MeshPhongMatNode;
 	mesh_standard: MeshStandardMatNode;
 	mesh_standard_builder: MeshStandardBuilderMatNode;
 	mesh_subsurface_scattering: MeshSubsurfaceScatteringMatNode;
@@ -35,6 +37,7 @@ export class MatRegister {
 		poly.register_node(MeshBasicBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.register_node(MeshLambertMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.register_node(MeshPhongMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(MeshStandardMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.register_node(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);
