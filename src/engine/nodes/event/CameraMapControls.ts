@@ -1,5 +1,5 @@
 import {Camera} from 'three/src/cameras/Camera';
-import {MapControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
+import {MapControls} from '../../../../modules/core/controls/OrbitControls';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 
 export class CameraMapControlsEventNode extends CameraOrbitControlsEventNode {

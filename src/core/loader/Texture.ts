@@ -1,21 +1,15 @@
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {TextureLoader} from 'three/src/loaders/TextureLoader';
 import {Texture} from 'three/src/textures/Texture';
-// import {RepeatWrapping} from 'three/src/constants';
-// import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-// import lodash_isArray from 'lodash/isArray';
-// import {CoreScriptLoader} from '/Script';
-// import {CoreGeometry} from '../geometry/Geometry';
 import {UnsignedByteType} from 'three/src/constants';
 import {CoreWalker} from '../Walker';
-
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
 import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
 import {TextureContainer} from '../../engine/containers/Texture';
 import {Poly} from '../../engine/Poly';
 import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
-// import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {UAParser} from 'ua-parser-js';
 
 interface VideoSourceTypeByExt {
 	ogg: string;
@@ -104,7 +98,7 @@ export class CoreTextureLoader {
 				const texture: VideoTexture = await this._load_as_video(url);
 				resolve(texture);
 			} else {
-				this.loader_for_ext(ext).then((loader) => {
+				this.loader_for_ext(ext).then(async (loader) => {
 					if (loader) {
 						if (url[0] != 'h') {
 							const assets_root = this._node.scene.assets_controller.assets_root();
@@ -112,14 +106,18 @@ export class CoreTextureLoader {
 								url = `${assets_root}${url}`;
 							}
 						}
+						CoreTextureLoader.increment_in_progress_loads_count();
+						await CoreTextureLoader.wait_for_max_concurrent_loads_queue_freed();
 						loader.load(
 							url,
 							(texture: Texture) => {
+								CoreTextureLoader.decrement_in_progress_loads_count();
 								resolve(texture);
 							},
 							undefined,
 							(error: any) => {
-								console.warn('error', error);
+								CoreTextureLoader.decrement_in_progress_loads_count();
+								Poly.warn('error', error);
 								reject();
 							}
 						);
@@ -181,7 +179,7 @@ export class CoreTextureLoader {
 			if (renderer) {
 				loader.detectSupport(renderer);
 			} else {
-				console.warn('texture loader found no renderer for basis texture loader');
+				Poly.warn('texture loader found no renderer for basis texture loader');
 			}
 			return loader;
 		}
@@ -322,4 +320,76 @@ export class CoreTextureLoader {
 	// 	registerer._registered_env_map = await POLY.renderers_controller.register_env_map(texture);
 	// 	return registerer._registered_env_map;
 	// }
+
+	//
+	//
+	// CONCURRENT LOADS
+	//
+	//
+	private static MAX_CONCURRENT_LOADS_COUNT: number = CoreTextureLoader._init_max_concurrent_loads_count();
+	private static CONCURRENT_LOADS_DELAY: number = CoreTextureLoader._init_concurrent_loads_delay();
+	private static in_progress_loads_count: number = 0;
+	private static _queue: Array<() => void> = [];
+	private static _init_max_concurrent_loads_count(): number {
+		const parser = new UAParser();
+		const name = parser.getBrowser().name;
+		// limit to 4 for non chrome,
+		// as firefox was seen hanging trying to load multiple glb files
+		// limit to 1 for safari,
+		if (name) {
+			const loads_count_by_browser: Dictionary<number> = {
+				Chrome: 10,
+				Firefox: 4,
+			};
+			const loads_count = loads_count_by_browser[name];
+			if (loads_count != null) {
+				return loads_count;
+			}
+		}
+		return 1;
+	}
+	private static _init_concurrent_loads_delay(): number {
+		const parser = new UAParser();
+		const name = parser.getBrowser().name;
+		// add a delay for browsers other than Chrome and Firefox
+		if (name) {
+			const delay_by_browser: Dictionary<number> = {
+				Chrome: 0,
+				Firefox: 10,
+			};
+			const delay = delay_by_browser[name];
+			if (delay != null) {
+				return delay;
+			}
+		}
+		return 100;
+	}
+	public static override_max_concurrent_loads_count(count: number) {
+		this.MAX_CONCURRENT_LOADS_COUNT = count;
+	}
+
+	private static increment_in_progress_loads_count() {
+		this.in_progress_loads_count++;
+	}
+	private static decrement_in_progress_loads_count() {
+		this.in_progress_loads_count--;
+
+		const queued_resolve = this._queue.pop();
+		if (queued_resolve) {
+			const delay = this.CONCURRENT_LOADS_DELAY;
+			setTimeout(() => {
+				queued_resolve();
+			}, delay);
+		}
+	}
+
+	private static async wait_for_max_concurrent_loads_queue_freed() {
+		if (this.in_progress_loads_count <= this.MAX_CONCURRENT_LOADS_COUNT) {
+			return;
+		} else {
+			return new Promise((resolve) => {
+				this._queue.push(resolve);
+			});
+		}
+	}
 }

@@ -10,6 +10,9 @@ import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {PolyScene} from '../../engine/scene/PolyScene';
+import {UAParser} from 'ua-parser-js';
+import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
+import {GLTFLoader} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -25,7 +28,6 @@ interface PdbObject {
 	geometryBonds: BufferGeometry;
 }
 
-import {UAParser} from 'ua-parser-js';
 export class CoreLoaderGeometry {
 	public readonly ext: string;
 
@@ -105,13 +107,14 @@ export class CoreLoaderGeometry {
 					loader.load(
 						url,
 						(object: any) => {
-							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							this.on_load_success(object).then((object2) => {
+								CoreLoaderGeometry.decrement_in_progress_loads_count();
 								resolve(object2);
 							});
 						},
 						undefined,
 						(error_message: ErrorEvent) => {
+							Poly.warn('error loading', url, error_message);
 							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							reject(error_message);
 						}
@@ -245,20 +248,26 @@ export class CoreLoaderGeometry {
 			return new module.GLTFLoader();
 		}
 	}
-	async loader_for_glb() {
+
+	private static gltf_loader: GLTFLoader | undefined;
+	private static draco_loader: DRACOLoader | undefined;
+	static async loader_for_glb(scene: PolyScene) {
 		const gltf_module = await Poly.instance().modules_register.module(ModuleName.GLTFLoader);
 		const draco_module = await Poly.instance().modules_register.module(ModuleName.DRACOLoader);
 		if (gltf_module && draco_module) {
-			const loader = new gltf_module.GLTFLoader();
-			const draco_loader = new draco_module.DRACOLoader();
-			const root = this.scene.libs_controller.root();
+			this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
+			this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
+			const root = scene.libs_controller.root();
 			const decoder_path = `${root}/draco/gltf/`;
-			draco_loader.setDecoderPath(decoder_path);
+			this.draco_loader.setDecoderPath(decoder_path);
 			// not having this uses wasm if the relevant libraries are found
 			// draco_loader.setDecoderConfig({type: 'js'});
-			loader.setDRACOLoader(draco_loader);
-			return loader;
+			this.gltf_loader.setDRACOLoader(this.draco_loader);
+			return this.gltf_loader;
 		}
+	}
+	async loader_for_glb() {
+		return CoreLoaderGeometry.loader_for_glb(this.scene);
 	}
 
 	async loader_for_obj() {
@@ -286,18 +295,43 @@ export class CoreLoaderGeometry {
 	//
 	//
 	private static MAX_CONCURRENT_LOADS_COUNT: number = CoreLoaderGeometry._init_max_concurrent_loads_count();
+	private static CONCURRENT_LOADS_DELAY: number = CoreLoaderGeometry._init_concurrent_loads_delay();
 	private static in_progress_loads_count: number = 0;
 	private static _queue: Array<() => void> = [];
-	private static _init_max_concurrent_loads_count() {
+	private static _init_max_concurrent_loads_count(): number {
 		const parser = new UAParser();
 		const name = parser.getBrowser().name;
-		if (name == 'Chrome') {
-			return 10;
-		} else {
-			// limit to 4 for non chrome,
-			// as firefox was seen hanging trying to load multiple glb files
-			return 4;
+		// limit to 4 for non chrome,
+		// as firefox was seen hanging trying to load multiple glb files
+		// limit to 1 for safari,
+		if (name) {
+			const loads_count_by_browser: Dictionary<number> = {
+				Chrome: 10,
+				Firefox: 4,
+			};
+			const loads_count = loads_count_by_browser[name];
+			if (loads_count != null) {
+				return loads_count;
+			}
 		}
+		return 1;
+	}
+	private static _init_concurrent_loads_delay(): number {
+		const parser = new UAParser();
+		const name = parser.getBrowser().name;
+		// add a delay for browsers other than Chrome and Firefox
+		if (name) {
+			const delay_by_browser: Dictionary<number> = {
+				Chrome: 1,
+				Firefox: 10,
+				Safari: 10,
+			};
+			const delay = delay_by_browser[name];
+			if (delay != null) {
+				return delay;
+			}
+		}
+		return 10;
 	}
 	public static override_max_concurrent_loads_count(count: number) {
 		this.MAX_CONCURRENT_LOADS_COUNT = count;
@@ -311,7 +345,10 @@ export class CoreLoaderGeometry {
 
 		const queued_resolve = this._queue.pop();
 		if (queued_resolve) {
-			queued_resolve();
+			const delay = this.CONCURRENT_LOADS_DELAY;
+			setTimeout(() => {
+				queued_resolve();
+			}, delay);
 		}
 	}
 

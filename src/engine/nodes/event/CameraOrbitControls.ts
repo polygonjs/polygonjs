@@ -1,17 +1,21 @@
 import {Camera} from 'three/src/cameras/Camera';
-
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
-// import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-
-import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
+// import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
+import {OrbitControls} from '../../../../modules/core/controls/OrbitControls';
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
 const OUTPUT_END = 'end';
+
+enum KeysMode {
+	PAN = 'pan',
+	ROTATE = 'rotate',
+}
+const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
+
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	allow_pan = ParamConfig.BOOLEAN(1);
 	allow_rotate = ParamConfig.BOOLEAN(1);
@@ -41,6 +45,31 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType) => {
 			CameraOrbitControlsEventNode.PARAM_CALLBACK_update_target(node as CameraOrbitControlsEventNode);
 		},
+	});
+	// to prevent moving the camera when using the arrows to change frame
+	enable_keys = ParamConfig.BOOLEAN(0);
+	keys_mode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
+		visible_if: {enable_keys: 1},
+		menu: {
+			entries: KEYS_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
+	keys_pan_speed = ParamConfig.FLOAT(7, {
+		range: [0, 10],
+		range_locked: [false, false],
+		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.PAN)},
+	});
+	keys_rotate_speed_vertical = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		range_locked: [false, false],
+		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+	});
+	keys_rotate_speed_horizontal = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		range_locked: [false, false],
+		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
 	});
 }
 const ParamsConfig = new CameraOrbitEventParamsConfig();
@@ -103,8 +132,13 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		controls.target.copy(this.pv.target);
 		controls.update(); // necessary if target is not 0,0,0
 
-		// to prevent moving the camera when using the arrows to change frame
-		controls.enableKeys = false;
+		controls.enableKeys = this.pv.enable_keys;
+		if (controls.enableKeys) {
+			controls.keyMode = KEYS_MODES[this.pv.keys_mode];
+			controls.keyRotateSpeedVertical = this.pv.keys_rotate_speed_vertical;
+			controls.keyRotateSpeedHorizontal = this.pv.keys_rotate_speed_horizontal;
+			controls.keyPanSpeed = this.pv.keys_pan_speed;
+		}
 	}
 	private _set_azimuth_angle(controls: OrbitControls) {
 		if (this.pv.limit_azimuth_angle) {
