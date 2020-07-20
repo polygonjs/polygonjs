@@ -1,7 +1,7 @@
 const CREATE_EXAMPLE_INDEX = true;
 const CREATE_TEST_INDEX = true;
 
-const merge = require('webpack-merge');
+const {merge} = require('webpack-merge');
 const common = require('./common.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
