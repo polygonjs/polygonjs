@@ -31,6 +31,16 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 		range: [-0.01, 0.01],
 		range_locked: [false, false],
 	});
+	// shadow_near = ParamConfig.FLOAT(0.1, {
+	// 	visible_if: {cast_shadows: 1},
+	// 	range: [0, 100],
+	// 	range_locked: [true, false],
+	// });
+	// shadow_far = ParamConfig.FLOAT(100, {
+	// 	visible_if: {cast_shadows: 1},
+	// 	range: [0, 100],
+	// 	range_locked: [true, false],
+	// });
 
 	// helper
 	show_helper = ParamConfig.BOOLEAN(1);
@@ -95,8 +105,9 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 	update_shadow_params() {
 		this.light.castShadow = this.pv.cast_shadows;
 		this.light.shadow.mapSize.copy(this.pv.shadow_res);
-		// object.shadow.camera.near = this.pv.shadow_near
-		// object.shadow.camera.far = this.pv.shadow_far
+		// that doesn't seem to have any effect
+		// this.light.shadow.camera.near = this.pv.shadow_near;
+		// this.light.shadow.camera.far = this.pv.shadow_far;
 		this.light.shadow.bias = this.pv.shadow_bias;
 	}
 }

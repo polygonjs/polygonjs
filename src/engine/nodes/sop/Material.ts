@@ -24,6 +24,8 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 	swap_current_tex = ParamConfig.BOOLEAN(0);
 	tex_src0 = ParamConfig.STRING('emissiveMap', {visible_if: {swap_current_tex: 1}});
 	tex_dest0 = ParamConfig.STRING('map', {visible_if: {swap_current_tex: 1}});
+	// clone_mat is mostly useful when swapping tex for multiple objects which have different textures
+	clone_mat = ParamConfig.BOOLEAN(0, {visible_if: {swap_current_tex: 1}});
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 
@@ -84,10 +86,11 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 	apply_material(object: Object3D, material: Material) {
 		const object_with_material = object as Mesh;
 		const current_mat = object_with_material.material as Material;
-		object_with_material.material = material;
 		if (this.pv.swap_current_tex) {
+			material = this.pv.clone_mat ? material.clone() : material;
 			this._swap_textures(material, current_mat);
 		}
+		object_with_material.material = material;
 
 		CoreMaterial.apply_render_hook(object, material);
 		CoreMaterial.apply_custom_materials(object, material);
