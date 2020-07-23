@@ -60,6 +60,7 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		body_lines.push(`if(${condition}){`);
 		body_lines.push(`${value} = ${if_true}`);
 		body_lines.push(`} else {`);
+		// TODO: why is this second line skipped, if both the true and false lines are the same?
 		body_lines.push(`${value} = ${if_false}`);
 		body_lines.push(`}`);
 		shaders_collection_controller.add_body_lines(this, body_lines);

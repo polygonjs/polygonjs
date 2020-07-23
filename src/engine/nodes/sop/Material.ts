@@ -85,8 +85,8 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 
 	apply_material(object: Object3D, material: Material) {
 		const object_with_material = object as Mesh;
-		const current_mat = object_with_material.material as Material;
-		if (this.pv.swap_current_tex) {
+		const current_mat = object_with_material.material as Material | undefined;
+		if (current_mat && this.pv.swap_current_tex) {
 			material = this.pv.clone_mat ? material.clone() : material;
 			this._swap_textures(material, current_mat);
 		}
