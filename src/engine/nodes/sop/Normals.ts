@@ -1,17 +1,13 @@
-// import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-// import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
+import {Attribute} from '../../../core/geometry/Attribute';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-
-// const DEFAULT_NORMAL = new Vector3(0, 0, 1);
-const NORMAL_ATTRIB_NAME = 'normal';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	edit = ParamConfig.BOOLEAN(0);
 	update_x = ParamConfig.BOOLEAN(0, {
@@ -36,7 +32,7 @@ class NormalsSopParamsConfig extends NodeParamsConfig {
 		expression: {for_entities: true},
 	});
 
-	recompute = ParamConfig.BOOLEAN(0, {
+	recompute = ParamConfig.BOOLEAN(1, {
 		visible_if: {edit: 0},
 	});
 	invert = ParamConfig.BOOLEAN(0);
@@ -63,63 +59,18 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		if (this.pv.edit) {
 			await this._eval_expressions_for_core_group(core_group);
 		} else {
-			core_group.compute_vertex_normals();
+			if (this.pv.recompute) {
+				core_group.compute_vertex_normals();
+			}
 		}
 		if (this.pv.invert) {
 			this._invert_normals(core_group);
 		}
 
-		// add attr if not present
-		// for(let object of core_group.objects()){
-		// 	let geometry;
-		// 	if ((geometry = object.geometry) != null) {
-		// 		if(!geometry.getAttribute('normal')){
-		// 			const position_values = geometry.attributes['position'].array;
-		// 			const normal_values = [];
-		// 			position_values.forEach(p=> normal_values.push(0));
-		// 			geometry.setAttribute('normal', new Float32BufferAttribute(normal_values, 3));
-		// 		}
-		// 	}
-		// }
-
-		// if (this.pv.edit) {
-		// 	this._eval_expressions(core_group);
-		// } else {
-		// 	if(this.pv.recompute){
-		// 		core_group.compute_vertex_normals()
-		// 	}
-		// }
-
-		// for(let object of core_group.objects()){
-		// 	let geometry;
-		// 	if ((geometry = object.geometry) != null) {
-
-		// 		if (this.pv.invert) {
-		// 			this._invert_normals(geometry);
-		// 		}
-
-		// 		if (!this.pv.edit) {
-		// 			geometry.computeVertexNormals();
-		// 		}
-		// 	}
-		// }
-
 		this.set_core_group(core_group);
 	}
 
 	private async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		// const points = core_group.points();
-
-		// const attrib_name = 'normal';
-		// for(let point of points){
-
-		// 	this.context().set_entity(point);
-
-		// 	this.param(attrib_name).eval(val=> {
-		// 		val.normalize();
-		// 		point.set_attrib_value(attrib_name, val);
-		// 	});
-		// }
 		const core_objects = core_group.core_objects();
 		for (let i = 0; i < core_objects.length; i++) {
 			await this._eval_expressions_for_core_object(core_objects[i]);
@@ -130,11 +81,11 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = core_object.points();
 
-		let attrib = geometry.getAttribute(NORMAL_ATTRIB_NAME);
+		let attrib = geometry.getAttribute(Attribute.NORMAL);
 		if (!attrib) {
 			const core_geometry = new CoreGeometry(geometry);
-			core_geometry.add_numeric_attrib(NORMAL_ATTRIB_NAME, 3, 0);
-			attrib = geometry.getAttribute(NORMAL_ATTRIB_NAME);
+			core_geometry.add_numeric_attrib(Attribute.NORMAL, 3, 0);
+			attrib = geometry.getAttribute(Attribute.NORMAL);
 		}
 		const array = attrib.array as number[];
 
@@ -182,19 +133,11 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		}
 	}
 
-	// private _create_init_normal(core_geometry: CoreGeometry) {
-	// 	if (!core_geometry.has_attrib(NORMAL_ATTRIB_NAME)) {
-	// 		core_geometry.add_numeric_attrib(NORMAL_ATTRIB_NAME, 3, DEFAULT_NORMAL);
-	// 	}
-	// }
-
 	private _invert_normals(core_group: CoreGroup) {
-		// this._create_init_normal();
-
 		for (let core_object of core_group.core_objects()) {
 			const geometry = core_object.core_geometry()?.geometry();
 			if (geometry) {
-				const normal_attrib = geometry.attributes[NORMAL_ATTRIB_NAME];
+				const normal_attrib = geometry.attributes[Attribute.NORMAL];
 				if (normal_attrib) {
 					const array = normal_attrib.array as number[];
 					for (let i = 0; i < array.length; i++) {
@@ -203,27 +146,5 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 				}
 			}
 		}
-		// let index_attrib;
-		// if ((index_attrib = geometry.getIndex()) != null) {
-		// 	const { array } = index_attrib;
-
-		// 	const faces_count = array.length / 3;
-		// 	for(let i=0; i<faces_count; i++){
-		// 		const tmp = array[i*3];
-		// 		array[i*3] = array[(i*3)+2];
-		// 		array[(i*3)+2] = tmp;
-		// 	}
-
-		// } else {
-		// 	const geometry_wrapper = new CoreGeometry(geometry);
-		// 	const points = geometry_wrapper.points();
-
-		// 	const attrib_name = 'normal';
-		// 	for(let point of points){
-		// 		const normal = point.normal();
-		// 		normal.multiplyScalar(-1);
-		// 		point.set_attrib_value(attrib_name, normal);
-		// 	}
-		// }
 	}
 }
