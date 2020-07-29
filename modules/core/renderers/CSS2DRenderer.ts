@@ -69,7 +69,8 @@ export class CSS2DRenderer {
 			element.style.transform = style;
 
 			element.style.display = object.visible && this.vector.z >= -1 && this.vector.z <= 1 ? '' : 'none';
-			element.style.opacity = `1`;
+			// opacity was previously set here in case the _use_fog was changed from true to false and opacity had to be reset. But that causes problems for cases where css is app specific and is set in integrations in an app. So for now, for opacity to be updated correctly, a page reload will be needed. (an alternative could be to have a this._use_fog_updated and have an else clause below, but that could have an unwanted performance cost)
+			// element.style.opacity = `1`;
 
 			if (this._sort_objects || this._use_fog) {
 				const dist_to_squared = this.getDistanceToSquared(camera, object);

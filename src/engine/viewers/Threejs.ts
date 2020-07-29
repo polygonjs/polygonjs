@@ -33,7 +33,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 		this._container.appendChild(this._canvas);
 		this._container.classList.add(CSS_CLASS);
-		this._container.style.height = '100%';
+		// this._container.style.height = '100%'; // this should be app specific
 
 		this._build();
 		this._set_events();
