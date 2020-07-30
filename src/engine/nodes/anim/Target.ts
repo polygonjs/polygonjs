@@ -11,6 +11,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 import {PropertyTarget} from '../../../core/animation/PropertyTarget';
 import {AnimationUpdateCallback} from '../../../core/animation/UpdateCallback';
+import {BaseParamType} from '../../params/_Base';
+import {BaseNodeType} from '../_Base';
 class TargetAnimParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(0, {
 		menu: {
@@ -22,11 +24,16 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 	node_path = ParamConfig.OPERATOR_PATH('/geo1', {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.NODE)},
 	});
-	object_mask = ParamConfig.STRING('/geo1', {
+	object_mask = ParamConfig.STRING('/geo*', {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
 	update_matrix = ParamConfig.BOOLEAN(0, {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
+	});
+	print_resolve = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			TargetAnimNode.PARAM_CALLBACK_print_resolve(node as TargetAnimNode);
+		},
 	});
 }
 const ParamsConfig = new TargetAnimParamsConfig();
@@ -97,5 +104,22 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 			}
 		}
 		TypeAssert.unreachable(type);
+	}
+
+	static PARAM_CALLBACK_print_resolve(node: TargetAnimNode) {
+		node.print_resolve();
+	}
+	private print_resolve() {
+		const type = TARGET_TYPES[this.pv.type];
+		const timeline_builder = new TimelineBuilder();
+		const target = this._create_target(timeline_builder);
+		switch (type) {
+			case TargetType.NODE: {
+				return console.log(target.node(this.scene));
+			}
+			case TargetType.SCENE_GRAPH: {
+				return console.log(target.objects(this.scene));
+			}
+		}
 	}
 }

@@ -15,6 +15,7 @@ import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {AnimNodeEasing} from '../../engine/nodes/anim/Easing';
+import {Poly} from '../../engine/Poly';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4;
 
@@ -79,7 +80,12 @@ export class TimelineBuilderProperty {
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
 	) {
-		if (!(this._property_name && this._target_value != null)) {
+		if (!this._property_name) {
+			Poly.warn('no property name given');
+			return;
+		}
+		if (this._target_value == null) {
+			Poly.warn('no target value given');
 			return;
 		}
 		const operation = timeline_builder.operation();
@@ -169,6 +175,7 @@ export class TimelineBuilderProperty {
 	private _populate_with_node(node: BaseNodeType, timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline) {
 		const target_param = node.p[this._property_name as any] as BaseParamType;
 		if (!target_param) {
+			Poly.warn(`${this._property_name} not found on node ${node.full_path()}`);
 			return;
 		}
 
@@ -176,6 +183,7 @@ export class TimelineBuilderProperty {
 			this._populate_vars_for_param(target_param, timeline_builder, timeline);
 		}
 	}
+
 	private _populate_vars_for_param(
 		param: BaseParamType,
 		timeline_builder: TimelineBuilder,
@@ -202,6 +210,7 @@ export class TimelineBuilderProperty {
 		timeline: gsap.core.Timeline
 	) {
 		if (!lodash_isNumber(this._target_value)) {
+			Poly.warn('value is not a numbber', this._target_value);
 			return;
 		}
 		const vars = this._common_vars(timeline_builder);

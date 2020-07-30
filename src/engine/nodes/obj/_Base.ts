@@ -94,7 +94,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		object.add(this._children_group);
 		return object as O;
 	}
-	private set_object_name() {
+	protected set_object_name() {
 		if (this._object) {
 			this._object.name = this.full_path();
 			this._children_group.name = `${this.full_path()}:parented_outputs`;

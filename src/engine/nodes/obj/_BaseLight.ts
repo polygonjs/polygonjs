@@ -35,6 +35,14 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 		await this.cook_controller.cook_main_without_inputs();
 		// }
 	}
+
+	protected set_object_name() {
+		super.set_object_name();
+		if (this._light) {
+			this._light.name = `${this.full_path()}:light`;
+		}
+	}
+
 	private update_light_attachment() {
 		if (this.flags.display.active) {
 			this.object.add(this.light);
