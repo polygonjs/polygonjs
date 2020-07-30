@@ -48,32 +48,19 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
 	}
 
-	async cook() {
-		const container0 = await this.container_controller.request_input_container(0);
-		if (container0) {
-			const core_group0 = container0.core_content();
-			if (core_group0) {
-				if (this.io.inputs.has_input(1)) {
-					const container1 = await this.container_controller.request_input_container(1);
-					if (container1) {
-						const core_group1 = container1.core_content();
-						if (core_group1) {
-							await this.cook_with_template(core_group0, core_group1);
-						} else {
-							this.states.error.set('second input invalid');
-						}
-					} else {
-						this.states.error.set('second input required');
-					}
-				} else {
-					this.cook_without_template(core_group0);
-				}
-			} else {
-				this.states.error.set('first input invalid');
-			}
-		} else {
-			this.states.error.set('first input required');
+	async cook(input_contents: CoreGroup[]) {
+		const core_group0 = input_contents[0];
+		if (!this.io.inputs.has_input(1)) {
+			await this.cook_without_template(core_group0);
+			return;
 		}
+
+		const core_group1 = input_contents[1];
+		if (!core_group1) {
+			this.states.error.set('second input invalid');
+			return;
+		}
+		await this.cook_with_template(core_group0, core_group1);
 	}
 
 	private async cook_with_template(instance_core_group: CoreGroup, template_core_group: CoreGroup) {
@@ -121,20 +108,19 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		// });
 	}
 
-	private _copy_moved_object_on_template_point(
+	private async _copy_moved_object_on_template_point(
 		instance_core_group: CoreGroup,
 		instance_matrices: Matrix4[],
 		template_points: CorePoint[],
 		point_index: number
 	) {
-		return new Promise(async (resolve, reject) => {
 			const matrix = instance_matrices[point_index];
 			const template_point = template_points[point_index];
 			this.stamp_node.set_point(template_point);
 
 			const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
 
-			moved_objects.forEach((moved_object) => {
+			for(let moved_object of moved_objects){
 				if (this.pv.copy_attributes) {
 					this._copy_attributes_from_template(moved_object, template_point);
 				}
@@ -154,18 +140,15 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 					//}
 				}
 
-				return this._objects.push(moved_object);
-			});
+				this._objects.push(moved_object);
+			}
 
-			return resolve();
-		});
 	}
 
-	private _get_moved_objects_for_template_point(
+	private async _get_moved_objects_for_template_point(
 		instance_core_group: CoreGroup,
 		point_index: number
 	): Promise<Object3DWithGeometry[]> {
-		return new Promise(async (resolve, reject) => {
 			const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 			if (stamped_instance_core_group) {
 				// duplicate or select from instance children
@@ -174,74 +157,57 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 					  lodash_compact([instance_core_group.objects_with_geo()[point_index]])
 					: instance_core_group.clone().objects_with_geo();
 
-				resolve(moved_objects);
+				return moved_objects
 			} else {
-				resolve([]);
+				return []
 			}
-		});
 	}
 
-	private _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
-		return new Promise(async (resolve, reject) => {
+	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
 			if (this.pv.use_copy_expr) {
 				const container0 = await this.container_controller.request_input_container(0);
 				if (container0) {
 					const core_group0 = container0.core_content();
 					// this.stamp_node.increment_global_value()
 					if (core_group0) {
-						resolve(core_group0);
+						return core_group0
 					} else {
-						resolve();
+						return
 					}
 				} else {
 					this.states.error.set(`input failed for index ${this.stamp_value()}`);
-					resolve();
+					return
 				}
 			} else {
-				resolve(instance_core_group);
+				return instance_core_group
 			}
-		});
 	}
 
-	// https://stackoverflow.com/questions/24586110/resolve-promises-one-after-another-i-e-in-sequence
 	private async _copy_moved_objects_for_each_instance(instance_core_group: CoreGroup) {
-		// let p = Promise.resolve(); // Q() in q
-
 		for (let i = 0; i < this.pv.count; i++) {
 			await this._copy_moved_objects_for_instance(instance_core_group, i);
 		}
-		// lodash_times(this.pv.count, (i) => {
-		// 	p = p.then(() => {
-		// 		return this._copy_moved_objects_for_instance(instance_core_group, i);
-		// 	});
-		// });
-
-		// return p;
 	}
 
-	private _copy_moved_objects_for_instance(instance_core_group: CoreGroup, i: number) {
-		return new Promise(async (resolve, reject) => {
+	private async _copy_moved_objects_for_instance(instance_core_group: CoreGroup, i: number) {
 			this.stamp_node.set_global_index(i);
 
 			const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 			if (stamped_instance_core_group) {
 				stamped_instance_core_group.objects().forEach((object) => {
-					// TODO: I should use the Group wrapper, to ensure that material.linewidth is properly cloned
+					// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
 					const new_object = CoreObject.clone(object);
 					this._objects.push(new_object);
 				});
 			}
 
-			resolve();
-		});
 	}
 
 	// TODO: what if I combine both param_count and stamping?!
-	private cook_without_template(instance_core_group: CoreGroup) {
+	private async cook_without_template(instance_core_group: CoreGroup) {
 		this._objects = [];
-		this._copy_moved_objects_for_each_instance(instance_core_group).then(() => {
-			this.set_objects(this._objects);
-		});
+		await this._copy_moved_objects_for_each_instance(instance_core_group)
+		this.set_objects(this._objects);
 	}
 
 	private _copy_attributes_from_template(object: Object3D, template_point: CorePoint) {
