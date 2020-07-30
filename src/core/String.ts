@@ -22,6 +22,7 @@ const LEADING_ZEROS_MATCH_REGEXP = /^0+/;
 // const DIGIT_PREDEDED_BY_UNDERSCOPE = /_\d$/
 const INDICES_LIST_SEPARATOR = /,| /;
 const ZERO = '0';
+const SPACE = ' ';
 
 // https://stackoverflow.com/questions/41856126/regexp-optional-dot-in-a-decimal-number
 const NUM_REGEXP = /^-?\d+\.?\d*$/;
@@ -206,20 +207,31 @@ export class CoreString {
 	}
 
 	// https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
-	static match_mask(word: string, rule: string) {
-		if (rule === '*') {
+	static match_mask(word: string, mask: string) {
+		if (mask === '*') {
 			return true;
 		}
+		const elements = mask.split(SPACE);
+		if (elements.length > 1) {
+			for (let element of elements) {
+				const match = this.match_mask(word, element);
+				if (match) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		// "."  => Find a single character, except newline or line terminator
 		// ".*" => Matches any string that contains zero or more characters
-		rule = rule.split('*').join('.*');
+		mask = mask.split('*').join('.*');
 
 		// "^"  => Matches any string with the following at the beginning of it
 		// "$"  => Matches any string with that in front at the end of it
-		rule = `^${rule}$`;
+		mask = `^${mask}$`;
 
 		// Create a regular expression object for matching string
-		const regex = new RegExp(rule);
+		const regex = new RegExp(mask);
 
 		// Returns true if it finds a match, otherwise it returns false
 		return regex.test(word);

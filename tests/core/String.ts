@@ -34,6 +34,9 @@ QUnit.test('string precision', (assert) => {
 QUnit.test('string match_mask', (assert) => {
 	assert.ok(CoreString.match_mask('abc', 'a*'));
 	assert.notOk(CoreString.match_mask('abc', 'e*'));
+
+	assert.ok(CoreString.match_mask('abc', 'a* d*'));
+	assert.notOk(CoreString.match_mask('abc', 'e* d*'));
 });
 
 QUnit.test('string attrib_names', (assert) => {

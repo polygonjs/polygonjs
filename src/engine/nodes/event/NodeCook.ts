@@ -11,6 +11,7 @@ const COOK_MODES: CookMode[] = [CookMode.ALL_TOGETHER, CookMode.BATCH];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
+import {BaseParamType} from '../../params/_Base';
 class NodeCookEventParamsConfig extends NodeParamsConfig {
 	mask = ParamConfig.STRING('/geo*', {
 		callback: (node: BaseNodeType) => {
@@ -26,6 +27,17 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	batch_size = ParamConfig.INTEGER(1, {visible_if: {cook_mode: COOK_MODES.indexOf(CookMode.BATCH)}});
+	sep = ParamConfig.SEPARATOR();
+	update_resolve = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			NodeCookEventNode.PARAM_CALLBACK_update_resolve(node as NodeCookEventNode);
+		},
+	});
+	print_resolve = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			NodeCookEventNode.PARAM_CALLBACK_print_resolve(node as NodeCookEventNode);
+		},
+	});
 }
 const ParamsConfig = new NodeCookEventParamsConfig();
 
@@ -161,5 +173,15 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 				this.dispatch_event_to_output(NodeCookEventNode.OUTPUT_ALL_NODES, {});
 			}
 		}
+	}
+
+	static PARAM_CALLBACK_update_resolve(node: NodeCookEventNode) {
+		node._update_resolved_nodes();
+	}
+	static PARAM_CALLBACK_print_resolve(node: NodeCookEventNode) {
+		node.print_resolve();
+	}
+	private print_resolve() {
+		console.log(this._resolved_nodes);
 	}
 }
