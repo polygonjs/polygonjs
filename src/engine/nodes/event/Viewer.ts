@@ -2,8 +2,10 @@ import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class ViewerParamsConfig extends NodeParamsConfig {}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class ViewerParamsConfig extends NodeParamsConfig {
+	class_name = ParamConfig.STRING('active');
+}
 const ParamsConfig = new ViewerParamsConfig();
 
 export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
@@ -23,14 +25,14 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 	private _process_trigger_set(context: EventContext<MouseEvent>) {
 		const canvas = context.canvas;
 		if (canvas) {
-			canvas.style.cursor = 'pointer';
+			canvas.classList.add(this.pv.class_name);
 		}
 	}
 
 	private _process_trigger_unset(context: EventContext<MouseEvent>) {
 		const canvas = context.canvas;
 		if (canvas) {
-			canvas.style.cursor = 'auto';
+			canvas.classList.remove(this.pv.class_name);
 		}
 	}
 }
