@@ -93,6 +93,12 @@ export class CoreTextureLoader {
 		return new Promise(async (resolve, reject) => {
 			// url = this._resolve_url(url)
 			const ext = CoreTextureLoader.get_extension(url);
+			if (url[0] != 'h') {
+				const assets_root = this._node.scene.assets_controller.assets_root();
+				if (assets_root) {
+					url = `${assets_root}${url}`;
+				}
+			}
 
 			if (CoreTextureLoader.VIDEO_EXTENSIONS.includes(ext)) {
 				const texture: VideoTexture = await this._load_as_video(url);
@@ -100,12 +106,6 @@ export class CoreTextureLoader {
 			} else {
 				this.loader_for_ext(ext).then(async (loader) => {
 					if (loader) {
-						if (url[0] != 'h') {
-							const assets_root = this._node.scene.assets_controller.assets_root();
-							if (assets_root) {
-								url = `${assets_root}${url}`;
-							}
-						}
 						CoreTextureLoader.increment_in_progress_loads_count();
 						await CoreTextureLoader.wait_for_max_concurrent_loads_queue_freed();
 						loader.load(

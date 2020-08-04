@@ -1,3 +1,9 @@
+/*
+TIPS to load videos
+- qt-faststart for faster start
+- have both mp4 and ogv
+*/
+
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {
 	UVMapping,
@@ -507,8 +513,8 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 
 	private async _load_texture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
-		const param = this.p.url;
-		this._texture_loader = this._texture_loader || new CoreTextureLoader(this, param);
+		const url_param = this.p.url;
+		this._texture_loader = this._texture_loader || new CoreTextureLoader(this, url_param);
 		try {
 			texture = await this._texture_loader.load_texture_from_url_or_op(url);
 			if (texture) {
