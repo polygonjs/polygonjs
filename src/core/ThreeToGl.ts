@@ -41,7 +41,15 @@ export class ThreeToGl {
 		const gl_type = `vec${values.length}`;
 		return `${gl_type}(${values_str.join(', ')})`;
 	}
-
+	static vector4(vec: Vector4 | string): string {
+		if (lodash_isString(vec)) {
+			return vec;
+		}
+		const values = vec.toArray().map((v) => {
+			return `${CoreString.ensure_float(v)}`;
+		});
+		return `vec4(${values.join(', ')})`;
+	}
 	static vector3(vec: Vector3 | string): string {
 		if (lodash_isString(vec)) {
 			return vec;

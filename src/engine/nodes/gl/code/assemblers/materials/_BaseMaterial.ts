@@ -145,8 +145,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (output_nodes.length > 1) {
 			this._gl_parent_node.states.error.set('only one output node allowed');
 		}
-		//const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
-		const root_nodes = output_nodes; //.concat(param_nodes);
+		const varying_nodes = GlNodeFinder.find_varying_nodes(this._gl_parent_node);
+		const root_nodes = output_nodes.concat(varying_nodes);
 		this.set_root_nodes(root_nodes);
 		this._update_shaders();
 
@@ -285,7 +285,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (input_names) {
 			// shaders_collection_controller.set_body_lines([], shader_name);
 			for (let input_name of input_names) {
-				this.add_output_body_line(output_node, shaders_collection_controller, input_name);
+				if (output_node.io.inputs.has_named_input(input_name)) {
+					this.add_output_body_line(output_node, shaders_collection_controller, input_name);
+				}
 			}
 		}
 	}
@@ -421,11 +423,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			const shaders_collection_controller = options.shaders_collection_controller;
 			const definition = new VaryingGLDefinition(globals_node, GlConnectionPointType.VEC4, options.var_name);
 			const vertex_body_line = `${options.var_name} = modelViewMatrix * vec4(position, 1.0)`;
-			// const fragment_body_line = `vec4 ${options.var_name} = gl_FragCoord`;
 			shaders_collection_controller.add_definitions(globals_node, [definition], ShaderName.VERTEX);
 			shaders_collection_controller.add_body_lines(globals_node, [vertex_body_line], ShaderName.VERTEX);
 			shaders_collection_controller.add_definitions(globals_node, [definition]);
-			// shaders_collection_controller.add_body_lines(globals_node, [fragment_body_line]);
 		}
 	}
 	handle_gl_Position(options: HandleGlobalsOutputOptions) {

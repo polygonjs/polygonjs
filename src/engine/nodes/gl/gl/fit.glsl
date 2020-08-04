@@ -4,7 +4,7 @@
 //
 //
 float fit(float val, float src_min, float src_max, float dest_min, float dest_max){
-	float  src_range = src_max - src_min;
+	float src_range = src_max - src_min;
 	float dest_range = dest_max - dest_min;
 
 	float r = (val - src_min) / src_range;

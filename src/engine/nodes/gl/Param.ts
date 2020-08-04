@@ -32,7 +32,7 @@ const ParamsConfig = new ParamGlParamsConfig();
 
 export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	params_config = ParamsConfig;
-	static type() {
+	static type(): Readonly<'param'> {
 		return 'param';
 	}
 	protected _allow_inputs_created_from_params: boolean = false;

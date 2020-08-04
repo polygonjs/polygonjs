@@ -23,6 +23,7 @@ import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {GlNodeFinder} from '../utils/NodeFinder';
+import {VaryingWriteGlNode} from '../../VaryingWrite';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -167,6 +168,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 					// 	}
 					// }
 					// break;
+				}
+				case VaryingWriteGlNode.type(): {
+					list.push(node);
+					break;
 				}
 			}
 		}
@@ -325,7 +330,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 	create_shader_configs(): ShaderConfig[] {
 		return [
-			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
+			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv', VaryingWriteGlNode.INPUT_NAME], []),
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}

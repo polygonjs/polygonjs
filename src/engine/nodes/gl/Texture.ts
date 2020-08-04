@@ -18,7 +18,7 @@ class TextureParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TextureParamsConfig();
 export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 	params_config = ParamsConfig;
-	static type() {
+	static type(): Readonly<'texture'> {
 		return 'texture';
 	}
 	static readonly OUTPUT_NAME = 'rgba';

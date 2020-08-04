@@ -12,7 +12,7 @@ const ParamsConfig = new IfThenGlParamsConfig();
 
 export class IfThenGlNode extends SubnetGlNode {
 	params_config = ParamsConfig;
-	static type() {
+	static type(): Readonly<'if_then'> {
 		return 'if_then';
 	}
 

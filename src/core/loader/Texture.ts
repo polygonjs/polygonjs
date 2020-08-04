@@ -203,14 +203,32 @@ export class CoreTextureLoader {
 			};
 			// video.setAttribute('controls', true)
 			// video.style="display:none"
-			const source = document.createElement('source');
-			const ext = CoreTextureLoader.get_extension(url) as keyof VideoSourceTypeByExt;
-			let type: string = CoreTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[ext];
-			type = type || CoreTextureLoader._default_video_source_type(url);
-			source.setAttribute('type', type);
-			source.setAttribute('src', url);
 
-			video.appendChild(source);
+			// add source as is
+			const original_source = document.createElement('source');
+			const original_ext = CoreTextureLoader.get_extension(url) as keyof VideoSourceTypeByExt;
+			let type: string = CoreTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[original_ext];
+			type = type || CoreTextureLoader._default_video_source_type(url);
+			original_source.setAttribute('type', type);
+			original_source.setAttribute('src', url);
+			video.appendChild(original_source);
+
+			// add secondary source, either mp4 or ogv depending on the first url
+			let secondary_url = url;
+			if (original_ext == 'mp4') {
+				// add ogv
+				secondary_url = CoreTextureLoader.replace_extension(url, 'ogv');
+			} else {
+				// add mp4
+				secondary_url = CoreTextureLoader.replace_extension(url, 'mp4');
+			}
+			const secondary_source = document.createElement('source');
+			const secondary_ext = CoreTextureLoader.get_extension(secondary_url) as keyof VideoSourceTypeByExt;
+			type = CoreTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[secondary_ext];
+			type = type || CoreTextureLoader._default_video_source_type(url);
+			secondary_source.setAttribute('type', type);
+			secondary_source.setAttribute('src', url);
+			video.appendChild(secondary_source);
 		});
 	}
 	static _default_video_source_type(url: string) {
@@ -286,6 +304,14 @@ export class CoreTextureLoader {
 	static get_extension(url: string) {
 		const elements = url.split('.');
 		return elements[elements.length - 1].toLowerCase();
+	}
+	static replace_extension(url: string, new_extension: string) {
+		const elements = url.split('?');
+		const url_without_params = elements[0];
+		const url_elements = url_without_params.split('.');
+		url_elements.pop();
+		url_elements.push(new_extension);
+		return [url_elements.join('.'), elements[1]].join('?');
 	}
 	// static private _resolve_url(url: string):string{
 	// 	if(url[0] == '/'){
