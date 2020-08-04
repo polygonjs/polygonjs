@@ -5,7 +5,7 @@ import {OutputGlNode} from '../../../Output';
 import {AttributeGlNode} from '../../../Attribute';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlobalsGlNode} from '../../../Globals';
-import {BaseGLDefinition, UniformGLDefinition} from '../../../utils/GLDefinition';
+import {BaseGLDefinition, UniformGLDefinition, VaryingGLDefinition} from '../../../utils/GLDefinition';
 import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import {MapUtils} from '../../../../../../core/MapUtils';
 import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
@@ -29,12 +29,13 @@ export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerM
 export enum GlobalsOutput {
 	TIME = 'time',
 	RESOLUTION = 'resolution',
-	// GL_POSITION = 'gl_Position', // not giving good results yet
+	MV_POSITION = 'mvPosition',
+	GL_POSITION = 'gl_Position',
 	GL_FRAGCOORD = 'gl_FragCoord',
 	GL_POINTCOORD = 'gl_PointCoord',
 }
 const FRAGMENT_GLOBALS_OUTPUT = [
-	/*GlobalsOutput.GL_POSITION, */ GlobalsOutput.GL_FRAGCOORD,
+	/*GlobalsOutput.GL_POSITION,*/ GlobalsOutput.GL_FRAGCOORD,
 	GlobalsOutput.GL_POINTCOORD,
 ];
 
@@ -344,9 +345,12 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			case GlobalsOutput.RESOLUTION:
 				this.handle_resolution(options);
 				return;
-			// case GlobalsOutput.GL_POSITION:
-			// 	this.handle_gl_Position(options);
-			// 	return;
+			case GlobalsOutput.MV_POSITION:
+				this.handle_mvPosition(options);
+				return;
+			case GlobalsOutput.GL_POSITION:
+				this.handle_gl_Position(options);
+				return;
 			case GlobalsOutput.GL_FRAGCOORD:
 				this.handle_gl_FragCoord(options);
 				return;
@@ -411,13 +415,32 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		this.set_resolution_dependent();
 	}
-	// handle_gl_Position(options: HandleGlobalsOutputOptions) {
-	// 	if (options.shader_name == ShaderName.VERTEX) {
-	// 		options.body_lines.push(
-	// 			`vec4 ${options.var_name} = projectionMatrix * modelViewMatrix * vec4(position, 1.0)`
-	// 		);
-	// 	}
-	// }
+	handle_mvPosition(options: HandleGlobalsOutputOptions) {
+		if (options.shader_name == ShaderName.FRAGMENT) {
+			const globals_node = options.globals_node;
+			const shaders_collection_controller = options.shaders_collection_controller;
+			const definition = new VaryingGLDefinition(globals_node, GlConnectionPointType.VEC4, options.var_name);
+			const vertex_body_line = `${options.var_name} = modelViewMatrix * vec4(position, 1.0)`;
+			// const fragment_body_line = `vec4 ${options.var_name} = gl_FragCoord`;
+			shaders_collection_controller.add_definitions(globals_node, [definition], ShaderName.VERTEX);
+			shaders_collection_controller.add_body_lines(globals_node, [vertex_body_line], ShaderName.VERTEX);
+			shaders_collection_controller.add_definitions(globals_node, [definition]);
+			// shaders_collection_controller.add_body_lines(globals_node, [fragment_body_line]);
+		}
+	}
+	handle_gl_Position(options: HandleGlobalsOutputOptions) {
+		if (options.shader_name == ShaderName.FRAGMENT) {
+			const globals_node = options.globals_node;
+			const shaders_collection_controller = options.shaders_collection_controller;
+			const definition = new VaryingGLDefinition(globals_node, GlConnectionPointType.VEC4, options.var_name);
+			const vertex_body_line = `${options.var_name} = projectionMatrix * modelViewMatrix * vec4(position, 1.0)`;
+			// const fragment_body_line = `vec4 ${options.var_name} = gl_FragCoord`;
+			shaders_collection_controller.add_definitions(globals_node, [definition], ShaderName.VERTEX);
+			shaders_collection_controller.add_body_lines(globals_node, [vertex_body_line], ShaderName.VERTEX);
+			shaders_collection_controller.add_definitions(globals_node, [definition]);
+			// shaders_collection_controller.add_body_lines(globals_node, [fragment_body_line]);
+		}
+	}
 	handle_gl_FragCoord(options: HandleGlobalsOutputOptions) {
 		if (options.shader_name == ShaderName.FRAGMENT) {
 			options.body_lines.push(`vec4 ${options.var_name} = gl_FragCoord`);

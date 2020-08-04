@@ -10,7 +10,7 @@ import {TransformedParamConfig, TransformController} from './utils/TransformCont
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
-import {ThreejsViewer} from '../../viewers/Threejs';
+import {ThreejsViewer, ThreejsViewerProperties} from '../../viewers/Threejs';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
@@ -310,8 +310,8 @@ export class TypedThreejsCameraObjNode<
 			this._update_for_aspect_ratio();
 		}
 	}
-	create_viewer(element: HTMLElement): ThreejsViewer {
-		return new ThreejsViewer(element, this.scene, this);
+	create_viewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
+		return new ThreejsViewer(element, this.scene, this, viewer_properties);
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.post_process_controller.reset();

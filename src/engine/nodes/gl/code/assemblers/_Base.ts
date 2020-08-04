@@ -281,6 +281,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('mvPosition', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('gl_Position', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('cameraPosition', GlConnectionPointType.VEC3),

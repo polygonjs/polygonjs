@@ -13,18 +13,25 @@ declare global {
 	}
 }
 
+export interface ThreejsViewerProperties {
+	auto_render: boolean;
+}
+
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
-	private do_render: boolean = true;
+	private _do_render: boolean = true;
 
 	private _animate_method: () => void = this.animate.bind(this);
 
 	constructor(
 		_container: HTMLElement,
 		protected _scene: PolyScene,
-		protected _camera_node: BaseThreejsCameraObjNodeType
+		protected _camera_node: BaseThreejsCameraObjNodeType,
+		private _properties?: ThreejsViewerProperties
 	) {
 		super(_container, _scene, _camera_node);
+
+		this._do_render = this._properties != null ? this._properties.auto_render : true;
 
 		this._canvas = document.createElement('canvas');
 		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');
@@ -116,8 +123,15 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.animate();
 	}
 
+	set_auto_render() {
+		if (!this._do_render) {
+			this._do_render = true;
+			this.animate();
+		}
+	}
+
 	animate() {
-		if (this.do_render) {
+		if (this._do_render) {
 			this._scene.time_controller.increment_time_if_playing();
 			this.render();
 			this._controls_controller?.update();
@@ -126,7 +140,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 
 	private _cancel_animate() {
-		this.do_render = false;
+		this._do_render = false;
 		if (this._request_animation_frame_id) {
 			cancelAnimationFrame(this._request_animation_frame_id);
 		}
@@ -142,6 +156,12 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			this._camera_node.render_controller.render(this._canvas, size, aspect);
 		} else {
 			console.warn('no camera to render with');
+		}
+	}
+
+	renderer() {
+		if (this._canvas) {
+			return this._camera_node.render_controller.renderer(this._canvas);
 		}
 	}
 }
