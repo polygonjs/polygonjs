@@ -19,24 +19,10 @@ export class HelperController<L extends Light> {
 
 	initialize_node() {
 		this.node.flags.display.add_hook(() => {
-			this.update_helper_attachment();
+			this.update();
 		});
 	}
 
-	private update_helper_attachment() {
-		if (this.node.flags.display.active) {
-			const object = this.helper?.object; // use this.helper to create if needed
-			if (object) {
-				this.node.object.add(object);
-				this._helper?.update();
-			}
-		} else {
-			const object = this._helper?.object; // use this._helper to NOT create if not already existing
-			if (object) {
-				this.node.object.remove(object);
-			}
-		}
-	}
 	get helper() {
 		if (this.node.flags.display.active) {
 			return (this._helper = this._helper || this._create_helper());
@@ -50,7 +36,6 @@ export class HelperController<L extends Light> {
 		const helper = new this._helper_constructor(this.node, this._name);
 		helper.object.matrixAutoUpdate = false;
 		helper.build();
-		this.node.light.add(helper.object);
 		return helper;
 	}
 
@@ -60,12 +45,12 @@ export class HelperController<L extends Light> {
 				this._helper = this._create_helper();
 			}
 			if (this._helper) {
-				this._helper.object.visible = true;
+				this.node.light.add(this._helper.object);
 				this._helper.update();
 			}
 		} else {
 			if (this._helper) {
-				this._helper.object.visible = false;
+				this.node.light.remove(this._helper.object);
 			}
 		}
 	}

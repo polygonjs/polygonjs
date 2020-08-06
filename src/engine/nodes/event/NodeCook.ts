@@ -84,6 +84,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	}
 
 	private _cook_nodes_with_mode() {
+		this._update_resolved_nodes(); // necesarry when triggered on scene load
 		const mode = COOK_MODES[this.pv.cook_mode];
 		switch (mode) {
 			case CookMode.ALL_TOGETHER:
@@ -114,11 +115,11 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		}
 		return await Promise.all(promises);
 	}
-	private async _cook_node(node: BaseNodeType) {
+	private _cook_node(node: BaseNodeType) {
 		if (this.pv.force) {
 			node.set_dirty(this);
 		}
-		return await node.request_container();
+		return node.request_container();
 	}
 
 	static PARAM_CALLBACK_update_resolved_nodes(node: NodeCookEventNode) {
