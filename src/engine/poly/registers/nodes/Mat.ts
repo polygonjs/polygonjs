@@ -1,5 +1,6 @@
 import {CATEGORY_MAT} from './Category';
 
+import {LineBasicMatNode} from '../../../nodes/mat/LineBasic';
 import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
 import {MeshBasicBuilderMatNode} from '../../../nodes/mat/MeshBasicBuilder';
 import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
@@ -15,6 +16,7 @@ import {VolumeMatNode} from '../../../nodes/mat/Volume';
 import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
 
 export interface MatNodeChildrenMap {
+	line_basic: LineBasicMatNode;
 	mesh_basic: MeshBasicMatNode;
 	mesh_basic_builder: MeshBasicBuilderMatNode;
 	mesh_lambert: MeshLambertMatNode;
@@ -33,6 +35,7 @@ export interface MatNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class MatRegister {
 	static run(poly: Poly) {
+		poly.register_node(LineBasicMatNode, CATEGORY_MAT.LINE);
 		poly.register_node(MeshBasicMatNode, CATEGORY_MAT.MESH);
 		poly.register_node(MeshBasicBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.register_node(MeshLambertMatNode, CATEGORY_MAT.MESH);

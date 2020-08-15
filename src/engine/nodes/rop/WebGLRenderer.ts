@@ -166,6 +166,10 @@ const DEFAULT_PARAMS: WebGLRendererParameters = {
 	logarithmicDepthBuffer: false,
 };
 
+export interface WebGLRendererWithSampling extends WebGLRenderer {
+	sampling?: number;
+}
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	alpha = ParamConfig.BOOLEAN(1);
@@ -205,6 +209,10 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	sort_objects = ParamConfig.BOOLEAN(1);
+	sampling = ParamConfig.INTEGER(1, {
+		range: [1, 4],
+		range_locked: [true, false],
+	});
 }
 const ParamsConfig = new WebGlRendererRopParamsConfig();
 
@@ -215,9 +223,11 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 	}
 
 	private _renderers_by_canvas_id: Dictionary<WebGLRenderer> = {};
-	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
+	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRendererWithSampling {
 		const params: WebGLRendererParameters = {};
-		const keys:Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<keyof WebGLRendererParameters>
+		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
+			keyof WebGLRendererParameters
+		>;
 		let k: keyof WebGLRendererParameters;
 		for (k of keys) {
 			(params[k] as any) = DEFAULT_PARAMS[k];
@@ -227,6 +237,9 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		(params as WebGLRendererParameters).canvas = canvas;
 		(params as WebGLRendererParameters).context = gl;
 		const renderer = new WebGLRenderer(params);
+
+		this._update_renderer(renderer);
+
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		return renderer;
 	}
@@ -242,7 +255,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 
 		this.cook_controller.end_cook();
 	}
-	_update_renderer(renderer: WebGLRenderer) {
+	_update_renderer(renderer: WebGLRendererWithSampling) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
 		renderer.gammaFactor = this.pv.gamma_factor;
 		renderer.physicallyCorrectLights = true;
@@ -257,6 +270,8 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		renderer.shadowMap.type = this.pv.shadow_map_type;
 
 		renderer.sortObjects = this.pv.sort_objects;
+
+		renderer.sampling = this.pv.sampling;
 	}
 
 	private _traverse_scene_and_update_materials() {

@@ -7,6 +7,7 @@ import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {Poly} from '../../../../Poly';
 import {
 	WebGlRendererRopNode,
+	WebGLRendererWithSampling,
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
@@ -166,10 +167,11 @@ export class RenderController {
 		}
 	}
 
+	private _super_sampling_size = new Vector2();
 	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer {
 		const gl = Poly.instance().renderers_controller.rendering_context(canvas);
 
-		let renderer: WebGLRenderer | undefined;
+		let renderer: WebGLRendererWithSampling | undefined;
 		if (this.node.pv.set_renderer) {
 			this.update_renderer();
 			if (this._resolved_renderer_rop) {
@@ -177,23 +179,9 @@ export class RenderController {
 			}
 		}
 		if (!renderer) {
-			renderer = new WebGLRenderer({
-				canvas: canvas,
-				antialias: true,
-				alpha: true,
-				context: gl,
-			});
+			console.log('create default renderer');
+			renderer = RenderController._create_default_renderer(canvas, gl);
 		}
-
-		renderer.shadowMap.enabled = true;
-		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
-
-		renderer.physicallyCorrectLights = true;
-
-		// // TODO: find a way to have those accessible via params
-		renderer.toneMapping = DEFAULT_TONE_MAPPING;
-		renderer.toneMappingExposure = 1;
-		renderer.outputEncoding = DEFAULT_OUTPUT_ENCODING;
 
 		// https://github.com/mrdoob/js/issues/15493
 		// This below is an attempt to fix env map not being loaded in firefox, but that doesn't work.
@@ -208,11 +196,34 @@ export class RenderController {
 
 		Poly.instance().renderers_controller.register_renderer(renderer);
 		this._renderers_by_canvas_id[canvas.id] = renderer;
-		this.set_renderer_size(canvas, size);
+		this._super_sampling_size.copy(size);
+		if (renderer.sampling) {
+			this._super_sampling_size.multiplyScalar(renderer.sampling);
+		}
+		this.set_renderer_size(canvas, this._super_sampling_size);
 		renderer.setPixelRatio(window.devicePixelRatio);
 
 		return renderer;
 	}
+	private static _create_default_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
+		const renderer = new WebGLRenderer({
+			canvas: canvas,
+			antialias: true,
+			alpha: true,
+			context: gl,
+		});
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
+
+		renderer.physicallyCorrectLights = true;
+
+		// // TODO: find a way to have those accessible via params
+		renderer.toneMapping = DEFAULT_TONE_MAPPING;
+		renderer.toneMappingExposure = 1;
+		renderer.outputEncoding = DEFAULT_OUTPUT_ENCODING;
+		return renderer;
+	}
+
 	delete_renderer(canvas: HTMLCanvasElement) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
@@ -228,7 +239,8 @@ export class RenderController {
 
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			renderer.setSize(size.x, size.y);
+			const update_style = false;
+			renderer.setSize(size.x, size.y, update_style);
 		}
 
 		if (this._resolved_css_renderer_rop) {
