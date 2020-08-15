@@ -2,8 +2,7 @@ import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class BaseManagerObjParamsConfig extends NodeParamsConfig {}
-export class BaseManagerObjNode extends TypedObjNode<Group, BaseManagerObjParamsConfig> {
+export class BaseManagerObjNode<K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	protected _attachable_to_hierarchy: boolean = false;
 
 	create_object() {
@@ -16,3 +15,6 @@ export class BaseManagerObjNode extends TypedObjNode<Group, BaseManagerObjParams
 		this.cook_controller.end_cook();
 	}
 }
+
+class ParamLessObjParamsConfig extends NodeParamsConfig {}
+export class ParamLessBaseManagerObjNode extends BaseManagerObjNode<ParamLessObjParamsConfig> {}

@@ -3,9 +3,11 @@ import {NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
-import {EffectsComposerController} from '../post/utils/EffectsComposerController';
+import {EffectsComposerController, PostProcessNetworkParamsConfig} from '../post/utils/EffectsComposerController';
 import {ParamsInitData} from '../utils/io/IOController';
-export class PostProcessObjNode extends BaseManagerObjNode {
+
+export class PostProcessObjNode extends BaseManagerObjNode<PostProcessNetworkParamsConfig> {
+	params_config = new PostProcessNetworkParamsConfig();
 	static type() {
 		return 'post_process';
 	}

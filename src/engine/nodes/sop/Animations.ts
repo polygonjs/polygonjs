@@ -1,10 +1,10 @@
-import {BaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class AnimationsSopNode extends BaseNetworkSopNode {
+export class AnimationsSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.ANIM;
 	}

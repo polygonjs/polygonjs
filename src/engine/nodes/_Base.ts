@@ -168,7 +168,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return c.type();
 	}
 	static node_context(): NodeContext {
-		throw 'requires override';
+		console.error('node has no node_context', this);
+		throw 'node_context requires override';
 	}
 	node_context(): NodeContext {
 		const c = this.constructor as typeof BaseNodeClass;

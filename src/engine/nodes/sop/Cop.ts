@@ -1,10 +1,10 @@
-import {BaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {CopNodeChildrenMap} from '../../poly/registers/nodes/Cop';
 import {BaseCopNodeType} from '../cop/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class CopSopNode extends BaseNetworkSopNode {
+export class CopSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.COP;
 	}

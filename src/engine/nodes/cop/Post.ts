@@ -16,7 +16,7 @@ import {TypedCopNode} from './_Base';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {NodeContext} from '../../poly/NodeContext';
-import {EffectsComposerController} from '../post/utils/EffectsComposerController';
+import {EffectsComposerController, PostProcessNetworkParamsConfig} from '../post/utils/EffectsComposerController';
 // import {Poly} from '../../Poly';
 import {Texture} from 'three/src/textures/Texture';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
@@ -81,19 +81,23 @@ const OPTION_SETS = {
 };
 const OPTION_SET = OPTION_SETS.data2;
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ParamConfig} from '../utils/params/ParamsConfig';
 import {CopRendererController} from './utils/RendererController';
 import {ParamsInitData} from '../utils/io/IOController';
-class PostCopParamsConfig extends NodeParamsConfig {
+// class PostCopParamsConfig extends NodeParamsConfig {
+// 	use_camera_renderer = ParamConfig.BOOLEAN(0);
+// }
+
+class PostProcessCopNetworkParamsConfig extends PostProcessNetworkParamsConfig {
 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 }
 
-const ParamsConfig = new PostCopParamsConfig();
+const ParamsConfig = new PostProcessCopNetworkParamsConfig();
 
 // TODO:
 // when the params of the children post nodes are updated,
 // this node currently does not re-render
-export class PostCopNode extends TypedCopNode<PostCopParamsConfig> {
+export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'post';
@@ -252,8 +256,6 @@ export class PostCopNode extends TypedCopNode<PostCopParamsConfig> {
 			camera: this._texture_camera,
 			resolution: this._composer_resolution,
 			requester: this,
-			render_target: this._render_target,
-			prepend_render_pass: true,
 		});
 		composer.renderToScreen = false;
 		return composer;

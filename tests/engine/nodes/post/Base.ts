@@ -24,9 +24,21 @@ QUnit.test('Post nodes simple', async (assert) => {
 	camera.p.post_process_node.set(post_process1.full_path());
 	await CoreSleep.sleep(20);
 
+	// 2 passes by default
 	let composer = camera.post_process_controller.composer(canvas);
 	assert.ok(composer, 'composer exists');
-	assert.equal(composer.passes.length, 1, 'composer has one pass');
+	assert.equal(composer.passes.length, 2, 'composer has two passes');
+	assert.equal(
+		((composer.passes[1] as ShaderPass).material as ShaderMaterial).fragmentShader,
+		HorizontalBlurShader.fragmentShader
+	);
+
+	// 1 pass if no prepend
+	post_process1.p.prepend_render_pass.set(0);
+	await CoreSleep.sleep(20);
+	composer = camera.post_process_controller.composer(canvas);
+	assert.ok(composer, 'composer exists');
+	assert.equal(composer.passes.length, 1, 'composer one pass');
 	assert.equal(
 		((composer.passes[0] as ShaderPass).material as ShaderMaterial).fragmentShader,
 		HorizontalBlurShader.fragmentShader

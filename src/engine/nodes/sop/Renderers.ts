@@ -1,10 +1,10 @@
-import {BaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {RopNodeChildrenMap} from '../../poly/registers/nodes/Rop';
 import {BaseRopNodeType} from '../rop/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class RenderersSopNode extends BaseNetworkSopNode {
+export class RenderersSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.ROP;
 	}

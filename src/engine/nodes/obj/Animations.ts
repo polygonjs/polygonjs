@@ -1,11 +1,11 @@
-import {BaseManagerObjNode} from './_BaseManager';
+import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class AnimationsObjNode extends BaseManagerObjNode {
+export class AnimationsObjNode extends ParamLessBaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 	static type(): Readonly<NetworkNodeType.ANIM> {
 		return NetworkNodeType.ANIM;

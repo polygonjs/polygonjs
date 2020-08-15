@@ -12,12 +12,6 @@ import {
 	ClampToEdgeWrapping,
 	RepeatWrapping,
 	MirroredRepeatWrapping,
-	LinearFilter,
-	NearestFilter,
-	NearestMipMapNearestFilter,
-	NearestMipMapLinearFilter,
-	LinearMipMapNearestFilter,
-	LinearMipMapLinearFilter,
 
 	// encodings
 	LinearEncoding,
@@ -56,15 +50,12 @@ const ENCODINGS = [
 
 const WRAPPINGS: Dictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
 
-const MAG_FILTERS: Dictionary<number>[] = [{LinearFilter}, {NearestFilter}];
-const MIN_FILTERS: Dictionary<number>[] = [
-	{NearestFilter},
-	{NearestMipMapNearestFilter},
-	{NearestMipMapLinearFilter},
-	{LinearFilter},
-	{LinearMipMapNearestFilter},
-	{LinearMipMapLinearFilter},
-];
+import {
+	MAG_FILTER_DEFAULT_VALUE,
+	MAG_FILTER_MENU_ENTRIES,
+	MIN_FILTER_DEFAULT_VALUE,
+	MIN_FILTER_MENU_ENTRIES,
+} from '../../../core/cop/ConstantFilter';
 
 interface TextureWithUpdateMatrix extends Texture {
 	updateMatrix(): void;
@@ -122,27 +113,17 @@ export function TexturePropertiesParamConfig<TBase extends Constructor>(Base: TB
 			},
 		});
 		tmag_filter = ParamConfig.BOOLEAN(0);
-		mag_filter = ParamConfig.INTEGER(Object.values(MAG_FILTERS[0])[0], {
+		mag_filter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
 			visible_if: {tmag_filter: 1},
 			menu: {
-				entries: MAG_FILTERS.map((m) => {
-					return {
-						name: Object.keys(m)[0],
-						value: Object.values(m)[0] as number,
-					};
-				}),
+				entries: MAG_FILTER_MENU_ENTRIES,
 			},
 		});
 		tmin_filter = ParamConfig.BOOLEAN(0);
-		min_filter = ParamConfig.INTEGER(Object.values(MIN_FILTERS[5])[0], {
+		min_filter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
 			visible_if: {tmin_filter: 1},
 			menu: {
-				entries: MIN_FILTERS.map((m) => {
-					return {
-						name: Object.keys(m)[0],
-						value: Object.values(m)[0] as number,
-					};
-				}),
+				entries: MIN_FILTER_MENU_ENTRIES,
 			},
 		});
 		tanisotropy = ParamConfig.BOOLEAN(0);

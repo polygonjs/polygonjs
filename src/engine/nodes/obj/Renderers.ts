@@ -1,11 +1,11 @@
-import {BaseManagerObjNode} from './_BaseManager';
+import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
 import {RopNodeChildrenMap} from '../../poly/registers/nodes/Rop';
 import {BaseRopNodeType} from '../rop/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class RenderersObjNode extends BaseManagerObjNode {
+export class RenderersObjNode extends ParamLessBaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 	static type() {
 		return NetworkNodeType.ROP;

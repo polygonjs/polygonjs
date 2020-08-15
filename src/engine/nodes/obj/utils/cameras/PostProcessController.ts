@@ -5,8 +5,6 @@ import {EffectComposer} from '../../../../../../modules/three/examples/jsm/postp
 import {NetworkNodeType} from '../../../../poly/NodeContext';
 import {BaseNetworkPostProcessNodeType} from '../../../post/utils/EffectsComposerController';
 import {BaseNodeType} from '../../../_Base';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {LinearFilter, RGBFormat} from 'three/src/constants';
 
 // interface DisposablePass extends Pass {
 // 	dispose: () => void;
@@ -18,7 +16,6 @@ const POST_PROCESS_PARAM_OPTIONS = {
 };
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {Poly} from '../../../../Poly';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
@@ -37,12 +34,12 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 		// 		do_post_process: 1,
 		// 	},
 		// });
-		use_render_target = ParamConfig.BOOLEAN(0, {
-			visible_if: {
-				do_post_process: 1,
-			},
-			...POST_PROCESS_PARAM_OPTIONS,
-		});
+		// use_render_target = ParamConfig.BOOLEAN(0, {
+		// 	visible_if: {
+		// 		do_post_process: 1,
+		// 	},
+		// 	...POST_PROCESS_PARAM_OPTIONS,
+		// });
 	};
 }
 
@@ -104,23 +101,6 @@ export class PostProcessController {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;
 					const resolution = this.node.render_controller.canvas_resolution(canvas);
 
-					let render_target: WebGLRenderTarget | undefined;
-					if (this.node.pv.use_render_target) {
-						renderer.autoClear = false;
-						const parameters = {
-							minFilter: LinearFilter,
-							magFilter: LinearFilter,
-							format: RGBFormat,
-							stencilBuffer: true,
-						};
-
-						render_target = Poly.instance().renderers_controller.render_target(
-							renderer.domElement.offsetWidth,
-							renderer.domElement.offsetHeight,
-							parameters
-						);
-					}
-
 					const composer = post_process_network.effects_composer_controller.create_effects_composer({
 						renderer,
 						scene,
@@ -128,7 +108,7 @@ export class PostProcessController {
 						resolution,
 						requester: this.node,
 						camera_node: this.node,
-						render_target: render_target,
+						// render_target: render_target,
 						// prepend_render_pass: this.node.pv.prepend_render_pass,
 					});
 					return composer;

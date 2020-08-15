@@ -144,7 +144,7 @@ export class RenderersController {
 		}
 	}
 
-	render_target(width: number, height: number, parameters: WebGLRenderTargetOptions): WebGLRenderTarget {
+	render_target(width: number, height: number, parameters: WebGLRenderTargetOptions) {
 		if (this.webgl2_available()) {
 			return new WebGLMultisampleRenderTarget(width, height, parameters);
 		} else {

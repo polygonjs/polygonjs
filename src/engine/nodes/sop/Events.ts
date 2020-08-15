@@ -1,10 +1,10 @@
-import {BaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class EventsSopNode extends BaseNetworkSopNode {
+export class EventsSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.EVENT;
 	}

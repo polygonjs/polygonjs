@@ -1,10 +1,10 @@
-import {BaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class MaterialsSopNode extends BaseNetworkSopNode {
+export class MaterialsSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {
 		return NetworkNodeType.MAT;
 	}
