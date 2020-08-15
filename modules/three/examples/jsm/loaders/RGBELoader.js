@@ -8,10 +8,6 @@ import {RGBEEncoding} from 'three/src/constants';
 import {RGBEFormat} from 'three/src/constants';
 import {RGBFormat} from 'three/src/constants';
 import {UnsignedByteType} from 'three/src/constants';
-/**
- * @author Nikos M. / https://github.com/foo123/
- */
-
 
 // https://github.com/mrdoob/three.js/issues/5552
 // http://en.wikipedia.org/wiki/RGBE_image_format

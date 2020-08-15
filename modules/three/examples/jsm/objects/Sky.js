@@ -5,11 +5,9 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector3} from 'three/src/math/Vector3';
 /**
- * @author zz85 / https://github.com/zz85
- *
  * Based on "A Practical Analytic Model for Daylight"
  * aka The Preetham Model, the de facto standard analytic skydome model
- * http://www.cs.utah.edu/~shirley/papers/sunsky/sunsky.pdf
+ * https://www.researchgate.net/publication/220720443_A_Practical_Analytic_Model_for_Daylight
  *
  * First implemented by Simon Wallner
  * http://www.simonwallner.at/projects/atmospheric-scattering
@@ -19,7 +17,6 @@ import {Vector3} from 'three/src/math/Vector3';
  *
  * Three.js integration by zz85 http://twitter.com/blurspline
 */
-
 
 var Sky = function () {
 

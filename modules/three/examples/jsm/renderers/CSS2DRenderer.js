@@ -1,10 +1,6 @@
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
 
 var CSS2DObject = function ( element ) {
 

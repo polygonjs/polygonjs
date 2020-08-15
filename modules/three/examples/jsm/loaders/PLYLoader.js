@@ -4,8 +4,6 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Loader} from 'three/src/loaders/Loader';
 import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
 /**
- * @author Wei Meng / http://about.me/menway
- *
  * Description: A THREE loader for PLY ASCII files (known as the Polygon
  * File Format or the Stanford Triangle Format).
  *
@@ -32,7 +30,6 @@ import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
  */
 
 
-
 var PLYLoader = function ( manager ) {
 
 	Loader.call( this, manager );
@@ -52,6 +49,7 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		var loader = new FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
+		loader.setRequestHeader( this.requestHeader );
 		loader.load( url, function ( text ) {
 
 			try {

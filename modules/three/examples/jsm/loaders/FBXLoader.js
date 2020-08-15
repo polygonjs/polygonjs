@@ -40,11 +40,9 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {VectorKeyframeTrack} from 'three/src/animation/tracks/VectorKeyframeTrack';
 import {sRGBEncoding} from 'three/src/constants';
+import { Inflate } from "../libs/inflate.module.min.js";
+import { NURBSCurve } from "../curves/NURBSCurve.js";
 /**
- * @author Kyle-Larson https://github.com/Kyle-Larson
- * @author Takahiro https://github.com/takahirox
- * @author Lewy Blue https://github.com/looeee
- *
  * Loader loads FBX file and generates Group representing FBX scene.
  * Requires FBX file to be >= 7.0 and in ASCII or >= 6400 in Binary format
  * Versions lower than this may load but will probably have errors
@@ -59,9 +57,6 @@ import {sRGBEncoding} from 'three/src/constants';
  * 	Binary format specification:
  *		https://code.blender.org/2013/08/fbx-binary-file-format-specification/
  */
-
-import { Zlib } from "../libs/inflate.module.min.js";
-import { NURBSCurve } from "../curves/NURBSCurve.js";
 
 
 var FBXLoader = ( function () {
@@ -89,6 +84,7 @@ var FBXLoader = ( function () {
 			var loader = new FileLoader( this.manager );
 			loader.setPath( scope.path );
 			loader.setResponseType( 'arraybuffer' );
+			loader.setRequestHeader( scope.requestHeader );
 
 			loader.load( url, function ( buffer ) {
 
@@ -1770,7 +1766,12 @@ var FBXLoader = ( function () {
 				var i = 0;
 				while ( geoNode.LayerElementUV[ i ] ) {
 
-					geoInfo.uv.push( this.parseUVs( geoNode.LayerElementUV[ i ] ) );
+					if ( geoNode.LayerElementUV[ i ].UV ) {
+
+						geoInfo.uv.push( this.parseUVs( geoNode.LayerElementUV[ i ] ) );
+
+					}
+
 					i ++;
 
 				}
@@ -3307,7 +3308,11 @@ var FBXLoader = ( function () {
 
 			var version = reader.getUint32();
 
-			console.log( 'THREE.FBXLoader: FBX binary version: ' + version );
+			if ( version < 6400 ) {
+
+				throw new Error( 'THREE.FBXLoader: FBX version not supported, FileVersion: ' + version );
+
+			}
 
 			var allNodes = new FBXTree();
 
@@ -3583,13 +3588,13 @@ var FBXLoader = ( function () {
 
 					}
 
-					if ( typeof Zlib === 'undefined' ) {
+					if ( typeof Inflate === 'undefined' ) {
 
 						console.error( 'THREE.FBXLoader: External library Inflate.min.js required, obtain or import from https://github.com/imaya/zlib.js' );
 
 					}
 
-					var inflate = new Zlib.Inflate( new Uint8Array( reader.getArrayBuffer( compressedLength ) ) ); // eslint-disable-line no-undef
+					var inflate = new Inflate( new Uint8Array( reader.getArrayBuffer( compressedLength ) ) ); // eslint-disable-line no-undef
 					var reader2 = new BinaryReader( inflate.decompress().buffer );
 
 					switch ( type ) {

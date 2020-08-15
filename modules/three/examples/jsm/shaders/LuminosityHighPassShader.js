@@ -1,11 +1,8 @@
 import {Color} from 'three/src/math/Color';
 /**
- * @author bhouston / http://clara.io/
- *
  * Luminosity
  * http://en.wikipedia.org/wiki/Luminosity
  */
-
 
 var LuminosityHighPassShader = {
 

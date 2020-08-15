@@ -1,9 +1,5 @@
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-/**
- * @author alteredq / http://alteredqualia.com/
- */
-
 import { Pass } from "../postprocessing/Pass.js";
 
 var ShaderPass = function ( shader, textureID ) {

@@ -9,8 +9,6 @@ import {UVMapping} from 'three/src/constants';
 import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
 /**
  * Uniforms library for RectAreaLight shared webgl shaders
- * @author abelnation
- * @author WestLangley / http://github.com/WestLangley
  *
  * NOTE: This is a temporary location for the BRDF approximation texture data
  *       based off of Eric Heitz's work (see citation below).  BRDF data for
@@ -21,7 +19,6 @@ import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
  *
  * TODO: figure out a way to compress the LTC BRDF data
  */
-
 
 // Real-Time Polygonal-Light Shading with Linearly Transformed Cosines
 // by Eric Heitz, Jonathan Dupuy, Stephen Hill and David Neubelt

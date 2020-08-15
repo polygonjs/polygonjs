@@ -1,10 +1,7 @@
 import {Vector3} from 'three/src/math/Vector3';
 /**
- * @author alteredq / http://alteredqualia.com/
- *
  * Color correction
  */
-
 
 var ColorCorrectionShader = {
 

@@ -4,7 +4,6 @@ import {LineSegments} from 'three/src/objects/LineSegments';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Points} from 'three/src/objects/Points';
 /**
- * @author Kai Salmen / https://kaisalmen.de
  * Development repository: https://github.com/kaisalmen/WWOBJLoader
  */
 

@@ -2,11 +2,6 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {FileLoader} from 'three/src/loaders/FileLoader';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Loader} from 'three/src/loaders/Loader';
-/**
- * @author alteredq / http://alteredqualia.com/
- * @author Mugen87 / https://github.com/Mugen87
- */
-
 
 var PDBLoader = function ( manager ) {
 
@@ -24,6 +19,7 @@ PDBLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
+		loader.setRequestHeader( scope.requestHeader );
 		loader.load( url, function ( text ) {
 
 			try {

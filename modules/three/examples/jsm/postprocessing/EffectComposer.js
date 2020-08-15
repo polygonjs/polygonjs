@@ -6,10 +6,6 @@ import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {RGBAFormat} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-/**
- * @author alteredq / http://alteredqualia.com/
- */
-
 import { CopyShader } from "../shaders/CopyShader.js";
 import { ShaderPass } from "../postprocessing/ShaderPass.js";
 import { MaskPass } from "../postprocessing/MaskPass.js";

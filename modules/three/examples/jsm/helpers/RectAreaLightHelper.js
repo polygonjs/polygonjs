@@ -5,14 +5,10 @@ import {Line} from 'three/src/objects/Line';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+
 /**
- * @author abelnation / http://github.com/abelnation
- * @author Mugen87 / http://github.com/Mugen87
- * @author WestLangley / http://github.com/WestLangley
- *
  *  This helper must be added as a child of the light
  */
-
 
 function RectAreaLightHelper( light, color ) {
 

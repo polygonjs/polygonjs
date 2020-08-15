@@ -106,11 +106,11 @@ QUnit.test('resample a text', async (assert) => {
 	// also vary tension
 	resample1.p.tension.set(0);
 	container = await resample1.request_container();
-	assert.equal(container.points_count(), 329);
+	assert.equal(container.points_count(), 314, 'with tension 0');
 
 	resample1.p.tension.set(0.01);
 	container = await resample1.request_container();
-	assert.equal(container.points_count(), 314);
+	assert.equal(container.points_count(), 314, 'with tension 0.01');
 
 	resample1.p.tension.set(0.5);
 	container = await resample1.request_container();

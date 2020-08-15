@@ -13,10 +13,6 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-/**
- * @author spidersharma / http://eduperiment.com/
- */
-
 import { Pass } from "../postprocessing/Pass.js";
 import { CopyShader } from "../shaders/CopyShader.js";
 

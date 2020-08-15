@@ -4,10 +4,6 @@ import {MathUtils} from 'three/src/math/MathUtils';
 import {RGBFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-/**
- * @author alteredq / http://alteredqualia.com/
- */
-
 import { Pass } from "../postprocessing/Pass.js";
 import { DigitalGlitch } from "../shaders/DigitalGlitch.js";
 

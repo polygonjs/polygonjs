@@ -3,7 +3,6 @@ import {MaterialLoader} from 'three/src/loaders/MaterialLoader';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 /**
- * @author Kai Salmen / https://kaisalmen.de
  * Development repository: https://github.com/kaisalmen/WWOBJLoader
  */
 

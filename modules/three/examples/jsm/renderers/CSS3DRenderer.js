@@ -3,10 +3,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
 /**
  * Based on http://www.emagix.net/academic/mscs-project/item/camera-sync-with-css3-and-webgl-threejs
- * @author mrdoob / http://mrdoob.com/
- * @author yomotsu / https://yomotsu.net/
  */
-
 
 var CSS3DObject = function ( element ) {
 

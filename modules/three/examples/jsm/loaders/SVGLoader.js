@@ -7,12 +7,6 @@ import {Path} from 'three/src/extras/core/Path';
 import {ShapePath} from 'three/src/extras/core/ShapePath';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
-/**
- * @author mrdoob / http://mrdoob.com/
- * @author zz85 / http://joshuakoo.com/
- * @author yomboprime / https://yombo.org
- */
-
 
 var SVGLoader = function ( manager ) {
 
@@ -36,6 +30,7 @@ SVGLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
+		loader.setRequestHeader( scope.requestHeader );
 		loader.load( url, function ( text ) {
 
 			try {

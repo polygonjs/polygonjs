@@ -11,10 +11,6 @@ import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {Points} from 'three/src/objects/Points';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {Vector3} from 'three/src/math/Vector3';
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
 
 var OBJLoader = ( function () {
 
@@ -451,6 +447,7 @@ var OBJLoader = ( function () {
 
 			var loader = new FileLoader( scope.manager );
 			loader.setPath( this.path );
+			loader.setRequestHeader( this.requestHeader );
 			loader.load( url, function ( text ) {
 
 				try {

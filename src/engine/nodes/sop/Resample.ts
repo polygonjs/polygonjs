@@ -64,6 +64,8 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 	});
 	points_count = ParamConfig.INTEGER(100, {
 		visible_if: {method: METHODS.indexOf(METHOD.POINTS_COUNT)},
+		range: [1, 1000],
+		range_locked: [true, false],
 	});
 	segment_length = ParamConfig.FLOAT(1, {
 		visible_if: {method: METHODS.indexOf(METHOD.SEGMENT_LENGTH)},

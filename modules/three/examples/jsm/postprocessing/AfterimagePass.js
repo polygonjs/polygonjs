@@ -5,10 +5,6 @@ import {RGBAFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-/**
- * @author HypnosNova / https://www.threejs.org.cn/gallery/
- */
-
 import { Pass } from "../postprocessing/Pass.js";
 import { AfterimageShader } from "../shaders/AfterimageShader.js";
 

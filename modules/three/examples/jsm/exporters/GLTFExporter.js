@@ -17,12 +17,6 @@ import {RGBAFormat} from 'three/src/constants';
 import {RepeatWrapping} from 'three/src/constants';
 import {Scene} from 'three/src/scenes/Scene';
 import {Vector3} from 'three/src/math/Vector3';
-/**
- * @author fernandojsg / http://fernandojsg.com
- * @author Don McCurdy / https://www.donmccurdy.com
- * @author Takahiro / https://github.com/takahirox
- */
-
 
 //------------------------------------------------------------------------------
 // Constants

@@ -5,10 +5,6 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-/**
- * @author alteredq / http://alteredqualia.com/
- */
-
 import { Pass } from "../postprocessing/Pass.js";
 import { CopyShader } from "../shaders/CopyShader.js";
 import { ConvolutionShader } from "../shaders/ConvolutionShader.js";

@@ -2,7 +2,6 @@ import {FileLoader} from 'three/src/loaders/FileLoader';
 import {Loader} from 'three/src/loaders/Loader';
 import {Object3D} from 'three/src/core/Object3D';
 /**
- * @author Kai Salmen / https://kaisalmen.de
  * Development repository: https://github.com/kaisalmen/WWOBJLoader
  */
 
