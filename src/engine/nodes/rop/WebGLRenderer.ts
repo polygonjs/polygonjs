@@ -216,14 +216,16 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 
 	private _renderers_by_canvas_id: Dictionary<WebGLRenderer> = {};
 	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
-		const params: Dictionary<any> = {};
+		const params: WebGLRendererParameters = {};
+		const keys:Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<keyof WebGLRendererParameters>
 		let k: keyof WebGLRendererParameters;
-		for (k of Object.keys(DEFAULT_PARAMS) as Array<keyof WebGLRendererParameters>) {
-			params[k] = DEFAULT_PARAMS[k];
+		for (k of keys) {
+			(params[k] as any) = DEFAULT_PARAMS[k];
 		}
-		params.alpha = this.pv.alpha;
-		params.canvas = canvas;
-		params.context = gl;
+		(params as WebGLRendererParameters).antialias = this.pv.antialias;
+		(params as WebGLRendererParameters).alpha = this.pv.alpha;
+		(params as WebGLRendererParameters).canvas = canvas;
+		(params as WebGLRendererParameters).context = gl;
 		const renderer = new WebGLRenderer(params);
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		return renderer;
