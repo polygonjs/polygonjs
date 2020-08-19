@@ -190,7 +190,6 @@ export class CoreTextureLoader {
 			const video = document.createElement('video');
 			// document.body.appendChild(video)
 			// video.id = 'video'
-			// console.log("video", video)
 			video.setAttribute('crossOrigin', 'anonymous');
 			video.setAttribute('autoplay', `${true}`); // to ensure it loads
 			video.setAttribute('loop', `${true}`);
@@ -329,13 +328,11 @@ export class CoreTextureLoader {
 		// 	},
 		// 	set (newVal) {
 		// 		val = newVal // Save the newVal
-		// 		console.warn("set", newVal)
 		// 	}
 		// })
 
 		// texture.wrapS = RepeatWrapping
 		// texture.wrapT = RepeatWrapping
-		// console.log("set_texture_for_mapping", RepeatWrapping, texture, texture.wrapS)
 		return texture;
 	}
 

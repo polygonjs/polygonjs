@@ -21,11 +21,12 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 		dependent_on_found_node: false,
 	});
 	apply_to_children = ParamConfig.BOOLEAN(1);
+	clone_mat = ParamConfig.BOOLEAN(0);
 	swap_current_tex = ParamConfig.BOOLEAN(0);
 	tex_src0 = ParamConfig.STRING('emissiveMap', {visible_if: {swap_current_tex: 1}});
 	tex_dest0 = ParamConfig.STRING('map', {visible_if: {swap_current_tex: 1}});
 	// clone_mat is mostly useful when swapping tex for multiple objects which have different textures
-	clone_mat = ParamConfig.BOOLEAN(0, {visible_if: {swap_current_tex: 1}});
+	// but can also be used when requiring a unique material per object, when using a copy SOP
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 
@@ -65,13 +66,15 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 
 			await material_node.request_container();
 			if (material) {
+				const used_material = this.pv.clone_mat ? material.clone() : material;
+
 				for (let object of core_group.objects_from_group(this.pv.group)) {
 					if (this.pv.apply_to_children) {
 						object.traverse((grand_child) => {
-							this.apply_material(grand_child, material);
+							this.apply_material(grand_child, used_material);
 						});
 					} else {
-						this.apply_material(object, material);
+						this.apply_material(object, used_material);
 					}
 				}
 				this.set_core_group(core_group);
@@ -87,7 +90,6 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		const object_with_material = object as Mesh;
 		const current_mat = object_with_material.material as Material | undefined;
 		if (current_mat && this.pv.swap_current_tex) {
-			material = this.pv.clone_mat ? material.clone() : material;
 			this._swap_textures(material, current_mat);
 		}
 		object_with_material.material = material;
