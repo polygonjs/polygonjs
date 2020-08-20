@@ -99,6 +99,7 @@ export class JsonDataLoader {
 
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
+				const geo_attrib_name = CoreAttribute.remap_name(attrib_name);
 				let attrib_values = lodash_flatten(this._attribute_values_for_name(attrib_name));
 
 				const data = this._attribute_datas_by_name[attrib_name];
@@ -121,16 +122,19 @@ export class JsonDataLoader {
 							}
 						});
 						geometry.setAttribute(
-							attrib_name,
+							geo_attrib_name,
 							new THREE.Float32BufferAttribute(numerical_attrib_values, size)
 						);
 					} else {
 						const index_data = CoreAttribute.array_to_indexed_arrays(attrib_values as string[]);
-						core_geo.set_indexed_attribute(attrib_name, index_data['values'], index_data['indices']);
+						core_geo.set_indexed_attribute(geo_attrib_name, index_data['values'], index_data['indices']);
 					}
 				} else {
 					const numerical_attrib_values = attrib_values as number[];
-					geometry.setAttribute(attrib_name, new THREE.Float32BufferAttribute(numerical_attrib_values, size));
+					geometry.setAttribute(
+						geo_attrib_name,
+						new THREE.Float32BufferAttribute(numerical_attrib_values, size)
+					);
 				}
 			}
 		}

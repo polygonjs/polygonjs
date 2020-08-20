@@ -41,10 +41,14 @@ export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 		}
 
 		if (json) {
-			const loader = new JsonDataLoader();
-			loader.set_json(json);
-			const geometry = loader.create_object();
-			this.set_geometry(geometry, ObjectType.POINTS);
+			try {
+				const loader = new JsonDataLoader();
+				loader.set_json(json);
+				const geometry = loader.create_object();
+				this.set_geometry(geometry, ObjectType.POINTS);
+			} catch (e) {
+				this.states.error.set('could not build geometry from json');
+			}
 		} else {
 			this.cook_controller.end_cook();
 		}

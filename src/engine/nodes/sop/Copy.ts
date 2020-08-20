@@ -96,16 +96,6 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 				point_index
 			);
 		}
-		// template_points.forEach((template_point, point_index) => {
-		// 	p = p.then(() => {
-		// 		return this._copy_moved_object_on_template_point(
-		// 			instance_core_group,
-		// 			instance_matrices,
-		// 			template_points,
-		// 			point_index
-		// 		);
-		// 	});
-		// });
 	}
 
 	private async _copy_moved_object_on_template_point(
@@ -114,73 +104,71 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		template_points: CorePoint[],
 		point_index: number
 	) {
-			const matrix = instance_matrices[point_index];
-			const template_point = template_points[point_index];
-			this.stamp_node.set_point(template_point);
+		const matrix = instance_matrices[point_index];
+		const template_point = template_points[point_index];
+		this.stamp_node.set_point(template_point);
 
-			const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
+		const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
 
-			for(let moved_object of moved_objects){
-				if (this.pv.copy_attributes) {
-					this._copy_attributes_from_template(moved_object, template_point);
-				}
-
-				// TODO: that node is getting inconsistent...
-				// should I always only move the object?
-				// and have a toggle to bake back to the geo?
-				// or just enfore the use of a merge?
-				if (this.pv.transform_only) {
-					moved_object.applyMatrix4(matrix);
-				} else {
-					const geometry = moved_object.geometry;
-					if (geometry) {
-						moved_object.geometry.applyMatrix4(matrix);
-					} //else {
-					//moved_object.applyMatrix4(matrix);
-					//}
-				}
-
-				this._objects.push(moved_object);
+		for (let moved_object of moved_objects) {
+			if (this.pv.copy_attributes) {
+				this._copy_attributes_from_template(moved_object, template_point);
 			}
 
+			// TODO: that node is getting inconsistent...
+			// should I always only move the object?
+			// and have a toggle to bake back to the geo?
+			// or just enfore the use of a merge?
+			if (this.pv.transform_only) {
+				moved_object.applyMatrix4(matrix);
+			} else {
+				const geometry = moved_object.geometry;
+				if (geometry) {
+					moved_object.geometry.applyMatrix4(matrix);
+				} //else {
+				//moved_object.applyMatrix4(matrix);
+				//}
+			}
+
+			this._objects.push(moved_object);
+		}
 	}
 
 	private async _get_moved_objects_for_template_point(
 		instance_core_group: CoreGroup,
 		point_index: number
 	): Promise<Object3DWithGeometry[]> {
-			const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
-			if (stamped_instance_core_group) {
-				// duplicate or select from instance children
-				const moved_objects = this.pv.transform_only
-					? // TODO: why is doing a transform slower than cloning the input??
-					  lodash_compact([instance_core_group.objects_with_geo()[point_index]])
-					: instance_core_group.clone().objects_with_geo();
+		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
+		if (stamped_instance_core_group) {
+			// duplicate or select from instance children
+			const moved_objects = this.pv.transform_only
+				? // TODO: why is doing a transform slower than cloning the input??
+				  lodash_compact([stamped_instance_core_group.objects_with_geo()[point_index]])
+				: stamped_instance_core_group.clone().objects_with_geo();
 
-				return moved_objects
-			} else {
-				return []
-			}
+			return moved_objects;
+		} else {
+			return [];
+		}
 	}
 
 	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
-			if (this.pv.use_copy_expr) {
-				const container0 = await this.container_controller.request_input_container(0);
-				if (container0) {
-					const core_group0 = container0.core_content();
-					// this.stamp_node.increment_global_value()
-					if (core_group0) {
-						return core_group0
-					} else {
-						return
-					}
+		if (this.pv.use_copy_expr) {
+			const container0 = await this.container_controller.request_input_container(0);
+			if (container0) {
+				const core_group0 = container0.core_content();
+				if (core_group0) {
+					return core_group0;
 				} else {
-					this.states.error.set(`input failed for index ${this.stamp_value()}`);
-					return
+					return;
 				}
 			} else {
-				return instance_core_group
+				this.states.error.set(`input failed for index ${this.stamp_value()}`);
+				return;
 			}
+		} else {
+			return instance_core_group;
+		}
 	}
 
 	private async _copy_moved_objects_for_each_instance(instance_core_group: CoreGroup) {
@@ -190,23 +178,23 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private async _copy_moved_objects_for_instance(instance_core_group: CoreGroup, i: number) {
-			this.stamp_node.set_global_index(i);
+		this.stamp_node.set_global_index(i);
 
-			const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
-			if (stamped_instance_core_group) {
-				stamped_instance_core_group.objects().forEach((object) => {
-					// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
-					const new_object = CoreObject.clone(object);
-					this._objects.push(new_object);
-				});
-			}
-
+		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
+		if (stamped_instance_core_group) {
+			stamped_instance_core_group.objects().forEach((object) => {
+				// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
+				const new_object = CoreObject.clone(object);
+				this._objects.push(new_object);
+			});
+		}
 	}
 
 	// TODO: what if I combine both param_count and stamping?!
 	private async cook_without_template(instance_core_group: CoreGroup) {
 		this._objects = [];
-		await this._copy_moved_objects_for_each_instance(instance_core_group)
+		await this._copy_moved_objects_for_each_instance(instance_core_group);
+
 		this.set_objects(this._objects);
 	}
 

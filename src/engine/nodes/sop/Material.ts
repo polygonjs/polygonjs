@@ -66,15 +66,13 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 
 			await material_node.request_container();
 			if (material) {
-				const used_material = this.pv.clone_mat ? material.clone() : material;
-
 				for (let object of core_group.objects_from_group(this.pv.group)) {
 					if (this.pv.apply_to_children) {
 						object.traverse((grand_child) => {
-							this.apply_material(grand_child, used_material);
+							this.apply_material(grand_child, material);
 						});
 					} else {
-						this.apply_material(object, used_material);
+						this.apply_material(object, material);
 					}
 				}
 				this.set_core_group(core_group);
@@ -86,16 +84,18 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		}
 	}
 
-	apply_material(object: Object3D, material: Material) {
+	apply_material(object: Object3D, src_material: Material) {
+		const used_material = this.pv.clone_mat ? CoreMaterial.clone(src_material) : src_material;
+
 		const object_with_material = object as Mesh;
 		const current_mat = object_with_material.material as Material | undefined;
 		if (current_mat && this.pv.swap_current_tex) {
-			this._swap_textures(material, current_mat);
+			this._swap_textures(used_material, current_mat);
 		}
-		object_with_material.material = material;
+		object_with_material.material = used_material;
 
-		CoreMaterial.apply_render_hook(object, material);
-		CoreMaterial.apply_custom_materials(object, material);
+		CoreMaterial.apply_render_hook(object, used_material);
+		CoreMaterial.apply_custom_materials(object, used_material);
 	}
 
 	private _swap_textures(target_mat: Material, src_mat: Material) {

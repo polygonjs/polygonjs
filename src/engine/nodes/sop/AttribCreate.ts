@@ -250,10 +250,6 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				}
 			}
 		} else {
-			// let value = await param.eval_p();
-			// if (this.pv.size > 1) {
-			// 	value = this._convert_object_numeric_value(value);
-			// }
 			for (let core_object of core_objects) {
 				core_object.set_attrib_value(this.pv.name, param.value);
 			}

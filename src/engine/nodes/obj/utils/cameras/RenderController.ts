@@ -179,7 +179,6 @@ export class RenderController {
 			}
 		}
 		if (!renderer) {
-			console.log('create default renderer');
 			renderer = RenderController._create_default_renderer(canvas, gl);
 		}
 

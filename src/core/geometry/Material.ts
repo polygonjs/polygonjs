@@ -4,7 +4,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-
+import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 export interface IUniforms {
 	[uniform: string]: IUniform;
 }
@@ -78,15 +78,14 @@ export class CoreMaterial {
 		return scene.node(material.name);
 	}
 
-	// static clone(src_material: Material | Material[]) {
-	// 	if (lodash_isArray(src_material)) {
-	// 		return src_material.map((material) => {
-	// 			return this.clone_single(material);
-	// 		});
-	// 	} else {
-	// 		return this.clone_single(src_material);
-	// 	}
-	// }
+	static clone(src_material: Material | ShaderMaterial) {
+		const cloned_material = src_material.clone();
+		const src_uniforms = (src_material as ShaderMaterial).uniforms;
+		if (src_uniforms) {
+			(cloned_material as ShaderMaterial).uniforms = UniformsUtils.clone(src_uniforms);
+		}
+		return cloned_material;
+	}
 
 	// static clone_single(src_material: Material) {
 	// 	const material = src_material.clone();
