@@ -92,16 +92,16 @@ export class CoreObject extends CoreEntity {
 		this.core_geometry()?.compute_vertex_normals();
 	}
 
-	static add_attribute(object: Object3D, name: string, value: AttribValue) {
+	static add_attribute(object: Object3D, attrib_name: string, value: AttribValue) {
 		let data: ParamInitValueSerialized;
-		if (!lodash_isNumber(value) && !lodash_isArray(value) && !lodash_isString(value)) {
+		if (value != null && !lodash_isNumber(value) && !lodash_isArray(value) && !lodash_isString(value)) {
 			data = (value as Vector3).toArray() as Number3;
 		} else {
 			data = value;
 		}
 		const user_data = object.userData;
 		user_data[ATTRIBUTES] = user_data[ATTRIBUTES] || {};
-		user_data[ATTRIBUTES][name] = data;
+		user_data[ATTRIBUTES][attrib_name] = data;
 	}
 	add_attribute(name: string, value: AttribValue) {
 		CoreObject.add_attribute(this._object, name, value);

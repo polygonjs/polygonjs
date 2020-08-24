@@ -28,7 +28,11 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.old_name, this.p.new_name], () => {
-					return `${this.pv.old_name} -> ${this.pv.new_name}`;
+					if (this.pv.old_name != '' && this.pv.new_name != '') {
+						return `${this.pv.old_name} -> ${this.pv.new_name}`;
+					} else {
+						return '';
+					}
 				});
 			});
 		});

@@ -51,6 +51,21 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 		// this.ui_data.set_icon('sort-amount-up');
+
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created('params_label', () => {
+				this.params.label.init([this.p.name, this.p.class_from, this.p.class_to], () => {
+					if (this.pv.name != '') {
+						const from_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.class_from)[0]
+							.name;
+						const to_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.class_to)[0].name;
+						return `${this.pv.name} (${from_s} -> ${to_s})`;
+					} else {
+						return '';
+					}
+				});
+			});
+		});
 	}
 
 	create_params() {}
