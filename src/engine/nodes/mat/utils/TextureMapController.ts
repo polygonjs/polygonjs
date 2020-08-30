@@ -31,7 +31,7 @@ abstract class TextureMapMatNode extends TypedMatNode<CurrentMaterial, TextureMa
 }
 
 export class TextureMapController extends BaseTextureMapController {
-	constructor(node: TextureMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected node: TextureMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initialize_node() {

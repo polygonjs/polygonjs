@@ -9,6 +9,12 @@ class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	separator = ParamConfig.SEPARATOR();
 	tname = ParamConfig.BOOLEAN(0);
 	name = ParamConfig.STRING('', {visible_if: {tname: true}});
+	trender_order = ParamConfig.BOOLEAN(0);
+	render_order = ParamConfig.INTEGER(0, {
+		visible_if: {trender_order: true},
+		range: [0, 10],
+		range_locked: [false, false],
+	});
 	frustrum_culled = ParamConfig.BOOLEAN(1);
 	matrix_auto_update = ParamConfig.BOOLEAN(0);
 	visible = ParamConfig.BOOLEAN(1);
@@ -51,6 +57,9 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 	private _update_object(object: Object3D) {
 		if (this.pv.tname) {
 			object.name = this.pv.name;
+		}
+		if (this.pv.trender_order) {
+			object.renderOrder = this.pv.render_order;
 		}
 		object.frustumCulled = this.pv.frustrum_culled;
 		object.matrixAutoUpdate = this.pv.matrix_auto_update;

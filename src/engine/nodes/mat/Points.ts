@@ -4,6 +4,7 @@ import {TypedMatNode} from './_Base';
 
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {SideController, SideParamConfig} from './utils/SideController';
+import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 
@@ -16,7 +17,7 @@ export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class PointsMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SideParamConfig(ColorParamConfig(PointsParamConfig(NodeParamsConfig))))
+	TextureMapParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(PointsParamConfig(NodeParamsConfig)))))
 ) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
@@ -38,6 +39,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
 		direct_params: true,
 	});
+	readonly depth_controller: DepthController = new DepthController(this);
 	initialize_node() {
 		this.params.on_params_created('init controllers', () => {
 			this.texture_map_controller.initialize_node();
@@ -50,6 +52,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		SideController.update(this);
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
+		this.depth_controller.update();
 
 		this.material.size = this.pv.size;
 		this.material.sizeAttenuation = this.pv.size_attenuation;

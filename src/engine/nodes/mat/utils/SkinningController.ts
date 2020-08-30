@@ -19,6 +19,9 @@ class SkinningMatNode extends TypedMatNode<SkinnedMaterial, SkinningParamsConfig
 }
 
 export class SkinningController extends BaseController {
+	constructor(protected node: SkinningMatNode) {
+		super(node);
+	}
 	static update(node: SkinningMatNode) {
 		const new_skinning = node.pv.skinning;
 		if (new_skinning != node.material.skinning) {

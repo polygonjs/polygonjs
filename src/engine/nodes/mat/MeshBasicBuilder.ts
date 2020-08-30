@@ -1,6 +1,7 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
 import {SideParamConfig, SideController} from './utils/SideController';
+import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
@@ -9,7 +10,7 @@ import {TypedBuilderMatNode} from './_BaseBuilder';
 import {Poly} from '../../Poly';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 class MeshBasicMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+	TextureMapParamConfig(SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))))
 ) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
@@ -29,6 +30,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
 		uniforms: true,
 	});
+	readonly depth_controller: DepthController = new DepthController(this);
 	initialize_node() {
 		this.params.on_params_created('init controllers', () => {
 			this.texture_map_controller.initialize_node();
@@ -44,6 +46,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		SkinningController.update(this);
 		TextureMapController.update(this);
 		TextureAlphaMapController.update(this);
+		this.depth_controller.update();
 
 		this.set_material(this.material);
 	}

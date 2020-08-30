@@ -9,7 +9,7 @@ import {OBJLoader2} from '../../../../../modules/three/examples/jsm/loaders/OBJL
 import {PDBLoader} from '../../../../../modules/three/examples/jsm/loaders/PDBLoader';
 import {PLYLoader} from '../../../../../modules/three/examples/jsm/loaders/PLYLoader';
 import {RGBELoader} from '../../../../../modules/three/examples/jsm/loaders/RGBELoader';
-import {TTFLoader} from '../../../../../modules/three/examples/jsm/loaders/TTFLoader';
+import {TTFLoader} from '../../../../../modules/core/loaders/TTFLoader';
 import {SVGLoader} from '../../../../../modules/three/examples/jsm/loaders/SVGLoader';
 
 export interface ModulesMap extends Dictionary<any> {

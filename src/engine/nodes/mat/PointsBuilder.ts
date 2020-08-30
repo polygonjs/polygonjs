@@ -1,12 +1,15 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
 import {SideParamConfig, SideController} from './utils/SideController';
+import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-class PointsMatParamsConfig extends SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))) {}
+class PointsMatParamsConfig extends SkinningParamConfig(
+	DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))
+) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoints, PointsMatParamsConfig> {
@@ -21,6 +24,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
 	}
 
+	readonly depth_controller: DepthController = new DepthController(this);
 	initialize_node() {}
 
 	async cook() {
@@ -29,6 +33,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 		ColorsController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
+		this.depth_controller.update();
 
 		this.set_material(this.material);
 	}

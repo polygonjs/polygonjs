@@ -25,6 +25,9 @@ class SideMatNode extends TypedMatNode<SidedMaterial, SideParamsConfig> {
 }
 
 export class SideController extends BaseController {
+	constructor(protected node: SideMatNode) {
+		super(node);
+	}
 	static update(node: SideMatNode) {
 		const single_side = node.pv.front ? FrontSide : BackSide;
 		const new_side = node.pv.double_sided ? DoubleSide : single_side;

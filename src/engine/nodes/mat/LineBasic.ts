@@ -1,9 +1,10 @@
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {TypedMatNode} from './_Base';
 
+import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
-class LineBasicMatParamsConfig extends NodeParamsConfig {
+class LineBasicMatParamsConfig extends DepthParamConfig(NodeParamsConfig) {
 	color = ParamConfig.COLOR([1, 1, 1]);
 	line_width = ParamConfig.FLOAT(1, {
 		range: [1, 10],
@@ -25,10 +26,12 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 		});
 	}
 
+	readonly depth_controller: DepthController = new DepthController(this);
 	initialize_node() {}
 	async cook() {
 		this.material.color.copy(this.pv.color);
 		this.material.linewidth = this.pv.line_width;
+		this.depth_controller.update();
 
 		this.set_material(this.material);
 	}

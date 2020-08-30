@@ -5,6 +5,7 @@ import {TypedMatNode} from './_Base';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {SideController, SideParamConfig} from './utils/SideController';
+import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
@@ -17,7 +18,9 @@ export const SHADER_DEFAULTS = {
 
 class MeshStandardMatParamsConfig extends TextureEnvMapParamConfig(
 	TextureAlphaMapParamConfig(
-		TextureMapParamConfig(SkinningParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+		TextureMapParamConfig(
+			SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+		)
 	)
 ) {
 	metalness = ParamConfig.FLOAT(SHADER_DEFAULTS.metalness);
@@ -59,6 +62,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this, {
 		direct_params: true,
 	});
+	readonly depth_controller: DepthController = new DepthController(this);
 	initialize_node() {
 		this.params.on_params_created('init controllers', () => {
 			this.texture_map_controller.initialize_node();
@@ -80,6 +84,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 			this._material.roughness = this.pv.roughness;
 			this._material.metalness = this.pv.metalness;
 		}
+		this.depth_controller.update();
 
 		this.set_material(this.material);
 	}

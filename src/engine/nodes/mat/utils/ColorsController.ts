@@ -32,6 +32,9 @@ class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
 }
 
 export class ColorsController extends BaseController {
+	constructor(protected node: ColoredMatNode) {
+		super(node);
+	}
 	static update(node: ColoredMatNode) {
 		const material = node.material;
 		const pv = node.pv;
