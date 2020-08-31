@@ -113,7 +113,7 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 	assert.deepEqual(array[0], 12);
 });
 
-QUnit.skip('attrib promote multiple attributes from objects to vertex', async (assert) => {
+QUnit.test('attrib promote multiple attributes from objects to vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.create_node('box');
@@ -145,10 +145,10 @@ QUnit.skip('attrib promote multiple attributes from objects to vertex', async (a
 
 	const array_id = geometry.getAttribute('id').array;
 	assert.equal(array_id.length, container.points_count());
-	assert.deepEqual(array_id[0], 0.1);
+	assert.in_delta(array_id[0], 0.1, 0.001);
 	const array_role = geometry.getAttribute('role').array;
 	assert.equal(array_role.length, container.points_count());
-	assert.deepEqual(array_role[0], 0.2);
+	assert.in_delta(array_role[0], 0.2, 0.001);
 });
 
 QUnit.skip('attrib promote from multiple objects to vertex', () => {});
