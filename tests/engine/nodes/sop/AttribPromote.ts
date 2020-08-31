@@ -113,4 +113,42 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 	assert.deepEqual(array[0], 12);
 });
 
+QUnit.skip('attrib promote multiple attributes from objects to vertex', async (assert) => {
+	const geo1 = window.geo1;
+
+	const box1 = geo1.create_node('box');
+	const attrib_create1 = geo1.create_node('attrib_create');
+	const attrib_create2 = geo1.create_node('attrib_create');
+	const attrib_promote1 = geo1.create_node('attrib_promote');
+	attrib_create1.p.class.set(AttribClass.OBJECT);
+	attrib_create1.p.name.set('id');
+	attrib_create1.p.size.set(1);
+	attrib_create1.p.value1.set(0.1);
+	attrib_create1.set_input(0, box1);
+
+	attrib_create2.p.class.set(AttribClass.OBJECT);
+	attrib_create2.p.name.set('role');
+	attrib_create2.p.size.set(1);
+	attrib_create2.p.value1.set(0.2);
+	attrib_create2.set_input(0, attrib_create1);
+
+	attrib_promote1.set_input(0, attrib_create2);
+	attrib_promote1.p.class_from.set(AttribClass.OBJECT);
+	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
+	attrib_promote1.p.mode.set(1); // max
+	attrib_promote1.p.name.set('id role');
+
+	let container = await attrib_promote1.request_container();
+	const core_group = container.core_content()!;
+	const geometry = core_group.objects_with_geo()[0].geometry;
+	assert.ok(geometry);
+
+	const array_id = geometry.getAttribute('id').array;
+	assert.equal(array_id.length, container.points_count());
+	assert.deepEqual(array_id[0], 0.1);
+	const array_role = geometry.getAttribute('role').array;
+	assert.equal(array_role.length, container.points_count());
+	assert.deepEqual(array_role[0], 0.2);
+});
+
 QUnit.skip('attrib promote from multiple objects to vertex', () => {});

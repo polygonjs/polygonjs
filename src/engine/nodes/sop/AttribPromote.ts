@@ -21,6 +21,7 @@ const PromoteModeMenuEntries = [
 ];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CorePoint} from '../../../core/geometry/Point';
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 	class_from = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {
@@ -92,13 +93,17 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 
 	private find_values() {
 		const attrib_names = CoreString.attrib_names(this.pv.name);
+		console.log(attrib_names);
 		for (let attrib_name of attrib_names) {
-			switch (this.pv.class_from) {
-				case AttribClass.VERTEX:
-					return this.find_values_from_points(attrib_name);
-				case AttribClass.OBJECT:
-					return this.find_values_from_object(attrib_name);
-			}
+			this._find_values_for_attrib_name(attrib_name);
+		}
+	}
+	private _find_values_for_attrib_name(attrib_name: string) {
+		switch (this.pv.class_from) {
+			case AttribClass.VERTEX:
+				return this.find_values_from_points(attrib_name);
+			case AttribClass.OBJECT:
+				return this.find_values_from_object(attrib_name);
 		}
 	}
 
@@ -108,15 +113,20 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 			const first_point = points[0];
 			if (first_point) {
 				if (!first_point.is_attrib_indexed(attrib_name)) {
-					this._values_per_attrib_name[attrib_name] = points.map(
-						(point) => point.attrib_value(attrib_name) as NumericAttribValue
-					);
+					const values: NumericAttribValue[] = new Array(points.length);
+					let point: CorePoint;
+					for (let i = 0; i < points.length; i++) {
+						point = points[i];
+						values[i] = point.attrib_value(attrib_name) as NumericAttribValue;
+					}
+					this._values_per_attrib_name[attrib_name] = values;
 				}
 			}
 		}
 	}
 
 	private find_values_from_object(attrib_name: string) {
+		console.log('find_values_from_object', attrib_name);
 		this._values_per_attrib_name[attrib_name] = [];
 		if (this._core_object) {
 			this._values_per_attrib_name[attrib_name].push(this._core_object.attrib_value(attrib_name) as number);
@@ -125,6 +135,7 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 
 	private filter_values() {
 		const attrib_names = Object.keys(this._values_per_attrib_name);
+		console.log('filter values', attrib_names, this._values_per_attrib_name);
 		for (let attrib_name of attrib_names) {
 			const values = this._values_per_attrib_name[attrib_name];
 			switch (this.pv.mode) {
@@ -170,7 +181,9 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 			}
 
 			const points = this._core_object.points();
-			points.forEach((point) => point.set_attrib_value(attrib_name, new_value));
+			for (let point of points) {
+				point.set_attrib_value(attrib_name, new_value);
+			}
 		}
 	}
 
