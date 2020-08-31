@@ -2,7 +2,8 @@ import {TypedSopNode} from './_Base';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferAttribute, BufferGeometry} from 'three';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

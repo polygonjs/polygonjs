@@ -5,6 +5,8 @@ import {AxesHelper} from 'three/src/helpers/AxesHelper';
 import {HierarchyController} from './utils/HierarchyController';
 import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from '../../poly/NodeContext';
+import {Vector3} from 'three/src/math/Vector3';
+import {Quaternion} from 'three/src/math/Quaternion';
 
 enum BlendMode {
 	TOGETHER = 'translate + rotate together',
@@ -14,7 +16,6 @@ const BLEND_MODES: BlendMode[] = [BlendMode.TOGETHER, BlendMode.SEPARATELY];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
-import {Vector3, Quaternion} from 'three';
 class BlendObjParamConfig extends NodeParamsConfig {
 	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
 		node_selection: {

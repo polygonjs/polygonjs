@@ -3,7 +3,7 @@ const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
 const LOGO_PATH = path.resolve(__dirname, '../public/images/logo.256.png');
 
-const merge = require('webpack-merge');
+const {merge} = require('webpack-merge');
 const common = require('./common.js');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');

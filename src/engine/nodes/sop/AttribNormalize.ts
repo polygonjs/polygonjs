@@ -3,7 +3,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreString} from '../../../core/String';
-import {BufferAttribute} from 'three';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
 
 export enum NormalizeMode {
 	MIN_MAX_TO_01 = 'min/max to 0/1',
