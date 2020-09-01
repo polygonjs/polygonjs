@@ -22,7 +22,7 @@ import {NodeContext} from '../poly/NodeContext';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
 
 export interface NodeDeletedEmitData {
-	parent_id: string;
+	parent_id: CoreGraphNodeId;
 }
 export interface NodeCreatedEmitData {
 	child_node_json: NodeSerializerData;
@@ -49,6 +49,7 @@ import {ModuleName} from '../poly/registers/modules/_BaseRegister';
 import {BasePersistedConfig} from './utils/PersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 import {PolyNodeController} from './utils/poly/PolyNodeController';
+import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
 	container_controller: TypedContainerController<NC> = new TypedContainerController<NC>(this);

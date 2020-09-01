@@ -1,3 +1,4 @@
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {BaseParamType} from '../_Base';
 import {
 	ParamValueSerializedTypeMap,
@@ -13,12 +14,12 @@ export interface ParamSerializerData {
 	value: ParamValueSerializedTypeMap[ParamType];
 	value_pre_conversion: ParamValuePreConversionSerializedTypeMap[ParamType];
 	expression?: string;
-	graph_node_id: string;
+	graph_node_id: CoreGraphNodeId;
 	// is_dirty: boolean;
 	error_message?: string;
 	is_visible: boolean;
 	folder_name?: string;
-	components?: string[];
+	components?: CoreGraphNodeId[];
 }
 
 export class ParamSerializer {

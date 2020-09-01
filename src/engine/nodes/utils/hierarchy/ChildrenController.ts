@@ -1,6 +1,5 @@
 import {CoreString} from '../../../../core/String';
 import {BaseNodeType} from '../../_Base';
-import lodash_includes from 'lodash/includes';
 import lodash_keys from 'lodash/keys';
 import lodash_sortBy from 'lodash/sortBy';
 import lodash_values from 'lodash/values';
@@ -10,13 +9,14 @@ import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
 import {ParamsInitData} from '../io/IOController';
+import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
 export class HierarchyChildrenController {
 	private _children: Dictionary<BaseNodeType> = {};
-	private _children_by_type: Dictionary<string[]> = {};
-	private _children_and_grandchildren_by_context: Dictionary<string[]> = {};
+	private _children_by_type: Dictionary<CoreGraphNodeId[]> = {};
+	private _children_and_grandchildren_by_context: Dictionary<CoreGraphNodeId[]> = {};
 
 	private _selection: CoreNodeSelection | undefined;
 	get selection(): CoreNodeSelection {
@@ -200,7 +200,7 @@ export class HierarchyChildrenController {
 		const node_id = node.graph_node_id;
 		const type = node.type;
 		this._children_by_type[type] = this._children_by_type[type] || [];
-		if (!lodash_includes(this._children_by_type[type], node_id)) {
+		if (!this._children_by_type[type].includes(node_id)) {
 			this._children_by_type[type].push(node_id);
 		}
 		this.add_to_children_and_grandchildren_by_context(node);
@@ -223,7 +223,7 @@ export class HierarchyChildrenController {
 		const node_id = node.graph_node_id;
 		const type = node.node_context();
 		this._children_and_grandchildren_by_context[type] = this._children_and_grandchildren_by_context[type] || [];
-		if (!lodash_includes(this._children_and_grandchildren_by_context[type], node_id)) {
+		if (!this._children_and_grandchildren_by_context[type].includes(node_id)) {
 			this._children_and_grandchildren_by_context[type].push(node_id);
 		}
 		if (this.node.parent && this.node.parent.children_allowed()) {

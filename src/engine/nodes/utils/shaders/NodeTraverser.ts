@@ -6,12 +6,15 @@ import {ShaderName} from './ShaderName';
 import {TypedNode, BaseNodeType} from '../../_Base';
 import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
+import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 
-type NumberByString = Map<string, number>;
+// type NumberByString = Map<string, number>;
+type NumberByCoreGraphNodeId = Map<CoreGraphNodeId, number>;
 // type BaseNodeTypeByString = Map<string, BaseNodeType>;
-type BooleanByString = Map<string, boolean>;
-type BooleanByStringByShaderName = Map<ShaderName, BooleanByString>;
-type StringArrayByString = Map<string, string[]>;
+// type BooleanByString = Map<string, boolean>;
+type BooleanByCoreGraphNodeId = Map<CoreGraphNodeId, boolean>;
+type BooleanByStringByShaderName = Map<ShaderName, BooleanByCoreGraphNodeId>;
+type StringArrayByString = Map<CoreGraphNodeId, CoreGraphNodeId[]>;
 type InputNamesByShaderNameMethod<NC extends NodeContext> = (
 	root_node: NodeTypeMap[NC],
 	shader_name: ShaderName
@@ -20,8 +23,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private _leaves_graph_id: BooleanByStringByShaderName = new Map();
 	private _graph_ids_by_shader_name: BooleanByStringByShaderName = new Map();
 	private _outputs_by_graph_id: StringArrayByString = new Map();
-	private _depth_by_graph_id: NumberByString = new Map();
-	private _graph_id_by_depth: Map<number, string[]> = new Map();
+	private _depth_by_graph_id: NumberByCoreGraphNodeId = new Map();
+	private _graph_id_by_depth: Map<number, CoreGraphNodeId[]> = new Map();
 	private _graph: CoreGraph;
 	private _shader_name!: ShaderName;
 	// private _subnets_by_id: BaseNodeTypeByString = new Map();
@@ -70,7 +73,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		}
 
 		// graph_ids.forEach((graph_id) => {
-		this._depth_by_graph_id.forEach((depth: number, graph_id: string) => {
+		this._depth_by_graph_id.forEach((depth: number, graph_id: CoreGraphNodeId) => {
 			if (depth != null) {
 				// this._graph_id_by_depth.set(depth, this._graph_id_by_depth.get(depth) || []);
 				// this._graph_id_by_depth.get(depth)?.push(graph_id);
@@ -87,8 +90,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			this.find_leaves(node);
 		}
 
-		const node_ids: string[] = [];
-		this._leaves_graph_id.get(this._shader_name)?.forEach((value: boolean, key: string) => {
+		const node_ids: CoreGraphNodeId[] = [];
+		this._leaves_graph_id.get(this._shader_name)?.forEach((value: boolean, key: CoreGraphNodeId) => {
 			node_ids.push(key);
 		});
 		return this._graph.nodes_from_ids(node_ids) as NodeTypeMap[NC][];
@@ -96,16 +99,16 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 
 	nodes_for_shader_name(shader_name: ShaderName) {
 		const depths: number[] = [];
-		this._graph_id_by_depth.forEach((value: string[], key: number) => {
+		this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
 			depths.push(key);
 		});
 		depths.sort((a, b) => a - b);
 		const nodes: NodeTypeMap[NC][] = [];
-		const node_id_used_state: Map<string, boolean> = new Map();
+		const node_id_used_state: Map<CoreGraphNodeId, boolean> = new Map();
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
-				graph_ids_for_depth.forEach((graph_id: string) => {
+				graph_ids_for_depth.forEach((graph_id: CoreGraphNodeId) => {
 					const is_present = this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id);
 					if (is_present) {
 						const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
@@ -119,12 +122,12 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 	sorted_nodes() {
 		const depths: number[] = [];
-		this._graph_id_by_depth.forEach((ids: string[], depth: number) => {
+		this._graph_id_by_depth.forEach((ids: CoreGraphNodeId[], depth: number) => {
 			depths.push(depth);
 		});
 		depths.sort((a, b) => a - b);
 		const nodes: NodeTypeMap[NC][] = [];
-		const node_id_used_state: Map<string, boolean> = new Map();
+		const node_id_used_state: Map<CoreGraphNodeId, boolean> = new Map();
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
@@ -141,7 +144,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 	add_nodes_with_children(
 		node: NodeTypeMap[NC],
-		node_id_used_state: Map<string, boolean>,
+		node_id_used_state: Map<CoreGraphNodeId, boolean>,
 		accumulated_nodes: NodeTypeMap[NC][],
 		shader_name?: ShaderName
 	) {
@@ -167,7 +170,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 
 	sorted_nodes_for_shader_name_for_parent(parent: BaseNodeType, shader_name?: ShaderName) {
 		const depths: number[] = [];
-		this._graph_id_by_depth.forEach((value: string[], key: number) => {
+		this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
 			depths.push(key);
 		});
 		depths.sort((a, b) => a - b);
@@ -175,7 +178,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
-				graph_ids_for_depth.forEach((graph_id: string) => {
+				graph_ids_for_depth.forEach((graph_id: CoreGraphNodeId) => {
 					const is_present = shader_name
 						? this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id)
 						: true;
@@ -214,7 +217,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			}
 		}
 
-		this._outputs_by_graph_id.forEach((outputs: string[], graph_id: string) => {
+		this._outputs_by_graph_id.forEach((outputs: CoreGraphNodeId[], graph_id: CoreGraphNodeId) => {
 			this._outputs_by_graph_id.set(graph_id, lodash_uniq(outputs));
 		});
 	}
@@ -261,7 +264,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 	}
 
-	private set_node_depth(graph_id: string, depth: number = 0) {
+	private set_node_depth(graph_id: CoreGraphNodeId, depth: number = 0) {
 		/*
 		adjust graph depth by hierarchical depth
 		meaning that nodes inside a subnet should add their depth to the parent (and a multiplier)

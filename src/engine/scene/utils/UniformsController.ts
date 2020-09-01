@@ -25,15 +25,27 @@ export class UniformsController {
 	// time
 	add_time_dependent_uniform_owner(id: string, uniforms: IUniformsWithTime) {
 		this._time_dependent_uniform_owners[id] = uniforms;
-		this._update_time_dependent_uniform_owners_ids();
+		// this._update_time_dependent_uniform_owners_ids();
+		if (!this._time_dependent_uniform_owners_ids) {
+			this._time_dependent_uniform_owners_ids = [];
+		}
+		if (!this._time_dependent_uniform_owners_ids.includes(id)) {
+			this._time_dependent_uniform_owners_ids.push(id);
+		}
 	}
 	remove_time_dependent_uniform_owner(id: string) {
 		delete this._time_dependent_uniform_owners[id];
-		this._update_time_dependent_uniform_owners_ids();
+		// this._update_time_dependent_uniform_owners_ids();
+		if (this._time_dependent_uniform_owners_ids) {
+			const index = this._time_dependent_uniform_owners_ids.indexOf(id);
+			if (index >= 0) {
+				this._time_dependent_uniform_owners_ids.splice(index, 1);
+			}
+		}
 	}
-	protected _update_time_dependent_uniform_owners_ids() {
-		this._time_dependent_uniform_owners_ids = Object.keys(this._time_dependent_uniform_owners);
-	}
+	// private _update_time_dependent_uniform_owners_ids() {
+	// 	this._time_dependent_uniform_owners_ids = Object.keys(this._time_dependent_uniform_owners);
+	// }
 	public update_time_dependent_uniform_owners() {
 		const time = this.scene.time;
 		if (this._time_dependent_uniform_owners_ids) {
@@ -47,18 +59,31 @@ export class UniformsController {
 	// resolution
 	add_resolution_dependent_uniform_owner(id: string, uniforms: IUniformsWithResolution) {
 		this._resolution_dependent_uniform_owners[id] = uniforms;
-		this._update_resolution_dependent_uniform_owners_ids();
+		// this._update_resolution_dependent_uniform_owners_ids();
+		if (!this._resolution_dependent_uniform_owners_ids) {
+			this._resolution_dependent_uniform_owners_ids = [];
+		}
+		if (!this._resolution_dependent_uniform_owners_ids.includes(id)) {
+			this._resolution_dependent_uniform_owners_ids.push(id);
+		}
+
 		if (this._resolution) {
 			this.update_resolution_dependent_uniforms(uniforms);
 		}
 	}
 	remove_resolution_dependent_uniform_owner(id: string) {
 		delete this._resolution_dependent_uniform_owners[id];
-		this._update_resolution_dependent_uniform_owners_ids();
+		// this._update_resolution_dependent_uniform_owners_ids();
+		if (this._resolution_dependent_uniform_owners_ids) {
+			const index = this._resolution_dependent_uniform_owners_ids.indexOf(id);
+			if (index >= 0) {
+				this._resolution_dependent_uniform_owners_ids.splice(index, 1);
+			}
+		}
 	}
-	protected _update_resolution_dependent_uniform_owners_ids() {
-		this._resolution_dependent_uniform_owners_ids = Object.keys(this._resolution_dependent_uniform_owners);
-	}
+	// private _update_resolution_dependent_uniform_owners_ids() {
+	// 	this._resolution_dependent_uniform_owners_ids = Object.keys(this._resolution_dependent_uniform_owners);
+	// }
 	update_resolution_dependent_uniform_owners(resolution: Vector2) {
 		this._resolution.copy(resolution);
 		for (let id of this._resolution_dependent_uniform_owners_ids) {

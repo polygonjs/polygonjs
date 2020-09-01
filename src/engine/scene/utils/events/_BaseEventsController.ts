@@ -3,6 +3,7 @@ import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three/src/core/Raycaster';
+import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -17,7 +18,7 @@ export interface EventContext<E extends Event> {
 }
 
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {
-	protected _nodes_by_graph_node_id: Map<string, T> = new Map();
+	protected _nodes_by_graph_node_id: Map<CoreGraphNodeId, T> = new Map();
 	protected _require_canvas_event_listeners: boolean = false;
 	constructor(private dispatcher: SceneEventsDispatcher) {}
 

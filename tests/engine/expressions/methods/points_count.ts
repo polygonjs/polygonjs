@@ -31,6 +31,8 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 
 	const box1 = geo1.create_node('box');
 	const box2 = geo1.create_node('box');
+	const sphere1 = geo1.create_node('sphere');
+	sphere1.flags.display.set(true);
 
 	box1.p.divisions.set(1);
 
@@ -52,14 +54,16 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 	assert.equal(box2.p.size.value, 54);
 
 	// check that bbox2 is NOT set to dirty if box1 changes after the expression is removed
-	assert.equal(box1.graph_successors().length, 2, 'successors');
+	assert.equal(box1.graph_successors().length, 1, 'successors');
+	const graph_successor = box1.graph_successors()[0];
+	assert.equal(graph_successor.graph_node_id, box2.p.size.graph_node_id);
 	box2.p.size.set('1+1');
 	assert.ok(box2.is_dirty);
 	await box2.request_container();
 	assert.ok(!box2.is_dirty);
 	box1.p.divisions.set(3);
 
-	assert.equal(box1.graph_successors().length, 1);
+	assert.equal(box1.graph_successors().length, 0);
 
 	assert.ok(!box2.is_dirty);
 });

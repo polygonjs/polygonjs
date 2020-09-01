@@ -1,7 +1,6 @@
 import lodash_flatten from 'lodash/flatten';
 import lodash_uniq from 'lodash/uniq';
 import lodash_sortBy from 'lodash/sortBy';
-import lodash_includes from 'lodash/includes';
 import {TextureAllocation, TextureAllocationData} from './TextureAllocation';
 import {BaseGlNodeType} from '../../_Base';
 
@@ -128,7 +127,7 @@ export class TextureAllocationsController {
 		let allocated = this.has_variable(new_variable.name);
 		if (allocated) {
 			const allocated_variable = this.variables().filter((v) => v.name == new_variable.name)[0];
-			new_variable.graph_node_ids?.forEach((boolean, graph_node_id: string) => {
+			new_variable.graph_node_ids?.forEach((boolean, graph_node_id) => {
 				allocated_variable.add_graph_node_id(graph_node_id);
 			});
 		} else {
@@ -205,7 +204,7 @@ export class TextureAllocationsController {
 	}
 	has_variable(name: string): boolean {
 		const names = this.variables().map((v) => v.name);
-		return lodash_includes(names, name);
+		return names.includes(name);
 	}
 	// allocation_for_variable(name:string):TextureAllocation{
 	// 	for(let allocation of this._allocations){

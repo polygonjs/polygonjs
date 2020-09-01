@@ -6,6 +6,7 @@ import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainableMap} from '../../containers/utils/ContainableMap';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 export type OnCookCompleteHook = (node: BaseNodeType) => void;
 export class NodeCookController<NC extends NodeContext> {
@@ -184,7 +185,7 @@ export class NodeCookController<NC extends NodeContext> {
 	// HOOK
 	//
 	//
-	private _on_cook_complete_hook_ids: string[] | undefined;
+	private _on_cook_complete_hook_ids: CoreGraphNodeId[] | undefined;
 	private _on_cook_complete_hooks: OnCookCompleteHook[] | undefined;
 	add_on_cook_complete_hook(core_graph_node: CoreGraphNode, callback: OnCookCompleteHook) {
 		this._on_cook_complete_hook_ids = this._on_cook_complete_hook_ids || [];

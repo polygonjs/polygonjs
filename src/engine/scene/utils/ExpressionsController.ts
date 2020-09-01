@@ -1,8 +1,9 @@
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../../nodes/_Base';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 export class ExpressionsController {
-	private _params_by_id: Map<string, BaseParamType> = new Map();
+	private _params_by_id: Map<CoreGraphNodeId, BaseParamType> = new Map();
 	constructor() {}
 
 	register_param(param: BaseParamType) {

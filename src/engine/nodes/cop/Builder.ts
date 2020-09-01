@@ -202,16 +202,17 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		// That's actually useless, since this doesn't make the texture recook
 		const scene = node.scene;
 		const id = node.graph_node_id;
+		const id_s = `${id}`;
 		if (time_dependent) {
 			// TODO: remove this once the scene knows how to re-render
 			// the render target if it is .uniforms_time_dependent()
 			node.states.time_dependent.force_time_dependent();
 			if (uniforms) {
-				scene.uniforms_controller.add_time_dependent_uniform_owner(id, uniforms);
+				scene.uniforms_controller.add_time_dependent_uniform_owner(id_s, uniforms);
 			}
 		} else {
 			node.states.time_dependent.unforce_time_dependent();
-			scene.uniforms_controller.remove_time_dependent_uniform_owner(id);
+			scene.uniforms_controller.remove_time_dependent_uniform_owner(id_s);
 		}
 	}
 

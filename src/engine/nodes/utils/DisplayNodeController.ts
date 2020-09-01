@@ -23,6 +23,7 @@ export class DisplayNodeController {
 	// with children that have a display flag. This would avoid all the flags?.display?... below
 	constructor(protected node: BaseNodeType, callbacks: DisplayNodeControllerCallbacks) {
 		this._graph_node = new CoreGraphNode(node.scene, 'DisplayNodeController');
+		(this._graph_node as any).node = node;
 		this._on_display_node_remove_callback = callbacks.on_display_node_remove;
 		this._on_display_node_set_callback = callbacks.on_display_node_set;
 		this._on_display_node_update_callback = callbacks.on_display_node_update;

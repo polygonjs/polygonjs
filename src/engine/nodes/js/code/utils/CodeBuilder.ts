@@ -15,6 +15,7 @@ import {JsParamConfig} from './ParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export class JsCodeBuilder {
 	_param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> = new ParamConfigsController();
@@ -50,7 +51,7 @@ export class JsCodeBuilder {
 		}
 
 		// ensure nodes are not added if already present
-		const sorted_node_ids: Map<string, boolean> = new Map();
+		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 		for (let node of sorted_nodes) {
 			sorted_node_ids.set(node.graph_node_id, true);
 		}
@@ -174,8 +175,8 @@ export class JsCodeBuilder {
 				throw `code builder error: ${collection.error_message}`;
 			}
 
-			const definitions_by_node_id: Map<string, BaseJsDefinition[]> = new Map();
-			const node_ids: Map<string, boolean> = new Map();
+			const definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
+			const node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 			for (let definition of uniq_definitions) {
 				const node_id = definition.node.graph_node_id;
 				if (!node_ids.has(node_id)) {
@@ -185,7 +186,7 @@ export class JsCodeBuilder {
 			}
 			const shader_name = ShaderName.VERTEX;
 			const lines_for_shader = this._lines.get(shader_name)!;
-			node_ids.forEach((boolean: boolean, node_id: string) => {
+			node_ids.forEach((_, node_id) => {
 				const definitions = definitions_by_node_id.get(node_id);
 				if (definitions) {
 					const first_definition = definitions[0];

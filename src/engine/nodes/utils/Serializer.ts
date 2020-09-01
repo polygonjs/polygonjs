@@ -1,20 +1,21 @@
 import {BaseNodeType} from '../_Base';
 import {NodeUIDataJson} from './UIData';
 import {BaseConnectionPointData} from './io/connections/_Base';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 export interface NodeSerializerData {
 	name: string;
 	type: string;
-	graph_node_id: string;
+	graph_node_id: CoreGraphNodeId;
 	is_dirty: boolean;
 	ui_data_json: NodeUIDataJson;
 	error_message: string | undefined;
-	children: string[];
-	inputs: Array<string | undefined>;
+	children: CoreGraphNodeId[];
+	inputs: Array<CoreGraphNodeId | undefined>;
 	input_connection_output_indices: Array<number | undefined> | undefined;
 	named_input_connection_points: BaseConnectionPointData[];
 	named_output_connection_points: BaseConnectionPointData[];
-	param_ids: string[];
+	param_ids: CoreGraphNodeId[];
 	// spare_params: Dictionary<string>;
 	override_cloned_state_allowed: boolean;
 	inputs_clone_required_states: boolean | boolean[];
@@ -23,7 +24,7 @@ export interface NodeSerializerData {
 		display?: boolean;
 		bypass?: boolean;
 	};
-	selection?: string[];
+	selection?: CoreGraphNodeId[];
 }
 
 export class NodeSerializer {
@@ -62,7 +63,7 @@ export class NodeSerializer {
 				display: this.node.flags?.display?.active,
 				bypass: this.node.flags?.bypass?.active,
 			},
-			selection: undefined as string[] | undefined,
+			selection: undefined as CoreGraphNodeId[] | undefined,
 		};
 
 		if (this.node.children_allowed() && this.node.children_controller) {
@@ -72,11 +73,11 @@ export class NodeSerializer {
 		return data;
 	}
 
-	children_ids(): string[] {
+	children_ids() {
 		return this.node.children().map((node) => node.graph_node_id);
 	}
 
-	input_ids(): (string | undefined)[] {
+	input_ids(): (CoreGraphNodeId | undefined)[] {
 		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graph_node_id : undefined));
 	}
 

@@ -1,5 +1,5 @@
 import {TypedSopNode} from './_Base';
-import {SubdivisionModifier} from 'three/examples/jsm/modifiers/SubdivisionModifier';
+import {SubdivisionModifier} from '../../../../modules/three/examples/jsm/modifiers/SubdivisionModifier';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';

@@ -2,10 +2,11 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGLDefinition} from '../../utils/GLDefinition';
 import {BaseGlNodeType} from '../../_Base';
 import {MapUtils} from '../../../../../core/MapUtils';
+import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export class LinesController {
-	private _definitions_by_node_id: Map<string, BaseGLDefinition[]> = new Map();
-	private _body_lines_by_node_id: Map<string, string[]> = new Map();
+	private _definitions_by_node_id: Map<CoreGraphNodeId, BaseGLDefinition[]> = new Map();
+	private _body_lines_by_node_id: Map<CoreGraphNodeId, string[]> = new Map();
 
 	constructor(private _shader_name: ShaderName) {}
 

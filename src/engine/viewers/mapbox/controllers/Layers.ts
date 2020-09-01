@@ -1,5 +1,3 @@
-import lodash_includes from 'lodash/includes';
-import lodash_map from 'lodash/map';
 import {MapboxViewer} from '../../Mapbox';
 import {ThreejsLayer} from '../layers/Threejs';
 import {BuildingsLayer} from '../layers/Buildings';
@@ -88,8 +86,8 @@ export class MapboxViewerLayersController {
 	_has_layer_id(layer_id: string): boolean {
 		if (this._viewer.map) {
 			const current_style = this._viewer.map.getStyle();
-			const layer_ids = lodash_map(current_style.layers, 'id');
-			return lodash_includes(layer_ids, layer_id);
+			const layer_ids = current_style.layers?.map((l) => l.id) || [];
+			return layer_ids.includes(layer_id);
 		}
 		return false;
 	}

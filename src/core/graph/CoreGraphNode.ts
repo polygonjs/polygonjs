@@ -8,7 +8,7 @@ export class CoreGraphNode {
 	private _dirty_controller: DirtyController = new DirtyController(this);
 	constructor(protected _scene: PolyScene, protected _name: string) {
 		this._graph_node_id = _scene.graph.next_id();
-		_scene.graph.setNode(this);
+		_scene.graph.add_node(this);
 		this._graph = _scene.graph;
 	}
 	get name() {
@@ -60,7 +60,7 @@ export class CoreGraphNode {
 	//
 
 	graph_remove() {
-		this.graph.removeNode(this);
+		this.graph.remove_node(this);
 	}
 
 	add_graph_input(src: CoreGraphNode, check_if_graph_has_cycle = true): boolean {

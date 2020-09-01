@@ -12,6 +12,7 @@ const COOK_MODES: CookMode[] = [CookMode.ALL_TOGETHER, CookMode.BATCH];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 import {BaseParamType} from '../../params/_Base';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 class NodeCookEventParamsConfig extends NodeParamsConfig {
 	mask = ParamConfig.STRING('/geo*', {
 		callback: (node: BaseNodeType) => {
@@ -137,7 +138,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 	private _dispatched_first_node_cooked: boolean = false;
 	private _dispatched_all_nodes_cooked: boolean = false;
-	private _cook_state_by_node_id: Map<string, boolean> = new Map();
+	private _cook_state_by_node_id: Map<CoreGraphNodeId, boolean> = new Map();
 	private _reset() {
 		this._dispatched_first_node_cooked = false;
 		this._cook_state_by_node_id.clear();

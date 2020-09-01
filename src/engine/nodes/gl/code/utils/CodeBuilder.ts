@@ -13,6 +13,7 @@ import {LineType} from './LineType';
 import {GlParamConfig} from './ParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
+import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName) => BaseGlNodeType[];
 export class CodeBuilder {
@@ -48,7 +49,7 @@ export class CodeBuilder {
 		}
 
 		// ensure nodes are not added if already present
-		const sorted_node_ids: Map<string, boolean> = new Map();
+		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 		for (let node of sorted_nodes) {
 			sorted_node_ids.set(node.graph_node_id, true);
 		}
@@ -189,8 +190,8 @@ export class CodeBuilder {
 				throw `code builder error: ${collection.error_message}`;
 			}
 
-			const definitions_by_node_id: Map<string, BaseGLDefinition[]> = new Map();
-			const node_ids: Map<string, boolean> = new Map();
+			const definitions_by_node_id: Map<CoreGraphNodeId, BaseGLDefinition[]> = new Map();
+			const node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 			for (let definition of uniq_definitions) {
 				const node_id = definition.node.graph_node_id;
 				if (!node_ids.has(node_id)) {
@@ -199,7 +200,7 @@ export class CodeBuilder {
 				MapUtils.push_on_array_at_entry(definitions_by_node_id, node_id, definition);
 			}
 			const lines_for_shader = this._lines.get(shader_name)!;
-			node_ids.forEach((boolean: boolean, node_id: string) => {
+			node_ids.forEach((_, node_id) => {
 				const definitions = definitions_by_node_id.get(node_id);
 				if (definitions) {
 					const first_definition = definitions[0];

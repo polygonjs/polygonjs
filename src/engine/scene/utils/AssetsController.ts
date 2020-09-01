@@ -1,7 +1,8 @@
 import {StringParam} from '../../params/String';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 export class SceneAssetsController {
-	private _params_by_id: Map<string, StringParam> = new Map();
+	private _params_by_id: Map<CoreGraphNodeId, StringParam> = new Map();
 	private _assets_root: string | null = null;
 
 	//

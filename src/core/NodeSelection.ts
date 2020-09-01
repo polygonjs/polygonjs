@@ -5,9 +5,10 @@ import lodash_union from 'lodash/union';
 // import lodash_isArray from 'lodash/isArray'
 import lodash_isEqual from 'lodash/isEqual';
 import {NodeEvent} from '../engine/poly/NodeEvent';
+import {CoreGraphNodeId} from './graph/CoreGraph';
 
 export class CoreNodeSelection {
-	_node_ids: string[] = [];
+	_node_ids: CoreGraphNodeId[] = [];
 	constructor(private _node: BaseNodeType) {
 		// super();
 		// this._node_ids = [];
@@ -61,7 +62,7 @@ export class CoreNodeSelection {
 		this._node.emit(NodeEvent.SELECTION_UPDATED);
 	}
 
-	private _json: string[] = [];
+	private _json: CoreGraphNodeId[] = [];
 	to_json() {
 		this._json = this._json || [];
 		this._json = this._node_ids.map((id) => id);

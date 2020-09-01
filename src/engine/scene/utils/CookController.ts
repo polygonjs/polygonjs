@@ -1,9 +1,10 @@
 import {BaseNodeType} from '../../nodes/_Base';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 type Callback = (value: void) => void;
 
 export class CookController {
-	private _cooking_nodes_by_id: Map<string, BaseNodeType> = new Map();
+	private _cooking_nodes_by_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
 	private _resolves: Callback[] = [];
 	constructor() {}
 

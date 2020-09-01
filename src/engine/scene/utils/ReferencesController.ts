@@ -4,11 +4,12 @@ import {OperatorPathParam} from '../../params/OperatorPath';
 import {MapUtils} from '../../../core/MapUtils';
 import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 export class ReferencesController {
-	private _referenced_nodes_by_src_param_id: Map<string, BaseNodeType> = new Map();
-	private _referencing_params_by_referenced_node_id: Map<string, OperatorPathParam[]> = new Map();
-	private _referencing_params_by_all_named_node_ids: Map<string, OperatorPathParam[]> = new Map();
+	private _referenced_nodes_by_src_param_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
+	private _referencing_params_by_referenced_node_id: Map<CoreGraphNodeId, OperatorPathParam[]> = new Map();
+	private _referencing_params_by_all_named_node_ids: Map<CoreGraphNodeId, OperatorPathParam[]> = new Map();
 	constructor(protected scene: PolyScene) {}
 
 	set_reference_from_param(src_param: OperatorPathParam, referenced_node: BaseNodeType) {
@@ -55,7 +56,7 @@ export class ReferencesController {
 	referencing_nodes(node: BaseNodeType) {
 		const params = this._referencing_params_by_referenced_node_id.get(node.graph_node_id);
 		if (params) {
-			const node_by_node_id: Map<string, BaseNodeType> = new Map();
+			const node_by_node_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
 			for (let param of params) {
 				const node = param.node;
 				node_by_node_id.set(node.graph_node_id, node);
@@ -74,7 +75,7 @@ export class ReferencesController {
 				operator_paths.push(param as OperatorPathParam);
 			}
 		}
-		const nodes_by_id: Map<string, BaseNodeType> = new Map();
+		const nodes_by_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
 		const params: BaseParamType[] = [];
 		for (let operator_path of operator_paths) {
 			const found_node = operator_path.found_node();

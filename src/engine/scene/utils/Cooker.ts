@@ -1,5 +1,6 @@
 // import {CoreGraphNode} from './CoreGraphNode';
 // import { CoreGraphNodeScene } from './CoreGraphNodeScene';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {PolyScene} from '../PolyScene';
 
@@ -8,7 +9,7 @@ import {PolyScene} from '../PolyScene';
 // }
 
 export class Cooker {
-	private _queue: Map<string, CoreGraphNode | undefined> = new Map<string, CoreGraphNode | undefined>();
+	private _queue: Map<CoreGraphNodeId, CoreGraphNode | undefined> = new Map();
 	private _block_level: number = 0;
 	private _process_item_bound = this._process_item.bind(this);
 
@@ -53,7 +54,7 @@ export class Cooker {
 		// 	}
 		// }
 	}
-	private _process_item(original_trigger_graph_node: CoreGraphNode | undefined, id: string) {
+	private _process_item(original_trigger_graph_node: CoreGraphNode | undefined, id: CoreGraphNodeId) {
 		const node = this._scene.graph.node_from_id(id);
 		if (node) {
 			this._queue.delete(id);

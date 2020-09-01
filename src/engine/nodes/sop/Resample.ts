@@ -9,7 +9,6 @@ import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
 import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
 import lodash_flatten from 'lodash/flatten';
-import lodash_map from 'lodash/map';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
@@ -140,9 +139,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			return;
 		}
 
-		const old_curve_positions = lodash_map(points, (point) =>
-			point.attrib_value(POSITION_ATTRIBUTE_NAME)
-		) as Vector3[];
+		const old_curve_positions = points.map((point) => point.attrib_value(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 		const closed = false;
 		const curve_type = CURVE_TYPES[this.pv.curve_type];
 		const tension = this.pv.tension;

@@ -10,6 +10,7 @@ import {FlagsControllerDB} from '../utils/FlagsController';
 import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
@@ -38,7 +39,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
-	protected _passes_by_requester_id: Map<string, P> = new Map();
+	protected _passes_by_requester_id: Map<CoreGraphNodeId, P> = new Map();
 
 	static displayed_input_names(): string[] {
 		return DEFAULT_INPUT_NAMES;

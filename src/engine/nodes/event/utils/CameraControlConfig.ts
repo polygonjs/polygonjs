@@ -1,9 +1,10 @@
 import {BaseCameraControlsEventNodeType, CameraControls} from '../_BaseCameraControls';
+import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 
 export class CameraControlsConfig {
 	private _update_required: boolean;
 	constructor(
-		private _camera_node_id: string,
+		private _camera_node_id: CoreGraphNodeId,
 		private _controls_node: BaseCameraControlsEventNodeType,
 		private _controls: CameraControls
 	) {

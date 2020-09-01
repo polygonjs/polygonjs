@@ -1,10 +1,11 @@
 import {BaseJsDefinition} from '../../utils/JsDefinition';
 import {BaseJsNodeType} from '../../_Base';
 import {MapUtils} from '../../../../../core/MapUtils';
+import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export class LinesController {
-	private _definitions_by_node_id: Map<string, BaseJsDefinition[]> = new Map();
-	private _body_lines_by_node_id: Map<string, string[]> = new Map();
+	private _definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
+	private _body_lines_by_node_id: Map<CoreGraphNodeId, string[]> = new Map();
 
 	constructor() {}
 

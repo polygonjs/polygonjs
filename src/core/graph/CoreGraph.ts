@@ -1,27 +1,28 @@
-/// <reference path="./dagre.d.ts" />
-import {Graph, alg} from '@dagrejs/graphlib';
 import {PolyScene} from '../../engine/scene/PolyScene';
-
-// TODO: try using ids with a specific type (https://basarat.gitbook.io/typescript/main-1/nominaltyping)
-export type CoreGraphNodeId = string;
 import {CoreGraphNode} from './CoreGraphNode';
 
+// TODO: try using ids with a specific type (https://basarat.gitbook.io/typescript/main-1/nominaltyping)
+export type CoreGraphNodeId = number;
+
 export class CoreGraph {
-	_graph: Graph;
-	_next_id: number = 0;
-	_scene: PolyScene | undefined;
+	// private _graph: Graph;
+	private _next_id: CoreGraphNodeId = 0;
+	private _scene: PolyScene | undefined;
+	private _successors: Map<CoreGraphNodeId, Map<CoreGraphNodeId, boolean>> = new Map();
+	private _predecessors: Map<CoreGraphNodeId, Map<CoreGraphNodeId, boolean>> = new Map();
+	private _nodes_by_id: Map<number, CoreGraphNode> = new Map();
 
-	constructor() {
-		this._graph = new Graph({
-			directed: true,
-			compound: false,
-			multigraph: true,
-		});
-	}
+	// constructor() {
+	// 	// this._graph = new Graph({
+	// 	// 	directed: true,
+	// 	// 	compound: false,
+	// 	// 	multigraph: true,
+	// 	// });
+	// }
 
-	graph() {
-		return this._graph;
-	}
+	// graph() {
+	// 	return this._graph;
+	// }
 	set_scene(scene: PolyScene) {
 		this._scene = scene;
 	}
@@ -30,18 +31,19 @@ export class CoreGraph {
 	}
 
 	next_id(): CoreGraphNodeId {
-		return (<unknown>`${(this._next_id += 1)}`) as CoreGraphNodeId;
+		this._next_id += 1;
+		return this._next_id;
 	}
 
-	setNode(node: CoreGraphNode) {
-		this._graph.setNode(node.graph_node_id, node);
-	}
+	// setNode(node: CoreGraphNode) {
+	// 	this._graph.setNode(node.graph_node_id, node);
+	// }
 
-	removeNode(node: CoreGraphNode) {
-		this._graph.removeNode(node.graph_node_id);
-	}
+	// removeNode(node: CoreGraphNode) {
+	// 	this._graph.removeNode(node.graph_node_id);
+	// }
 
-	nodes_from_ids(ids: string[]) {
+	nodes_from_ids(ids: number[]) {
 		const nodes: CoreGraphNode[] = [];
 		for (let id of ids) {
 			const node = this.node_from_id(id);
@@ -52,33 +54,39 @@ export class CoreGraph {
 		return nodes;
 	}
 	// TODO: this should return CoreGraphNodeId|null
-	node_from_id(id: string): CoreGraphNode {
-		return this._graph.node(id);
+	node_from_id(id: number): CoreGraphNode | undefined {
+		// return this._graph.node(id);
+		return this._nodes_by_id.get(id);
+	}
+	has_node(node: CoreGraphNode): boolean {
+		return this._nodes_by_id.get(node.graph_node_id) != null;
 	}
 
-	connect(src: CoreGraphNode, dest: CoreGraphNode, check_if_graph_has_cycle = true): boolean {
+	connect(src: CoreGraphNode, dest: CoreGraphNode, check_if_graph_may_have_cycle = true): boolean {
 		const src_id = src.graph_node_id;
 		const dest_id = dest.graph_node_id;
 
-		if (this._graph.hasNode(src_id) && this._graph.hasNode(dest_id)) {
-			this._graph.setEdge(src_id, dest_id);
+		if (this.has_node(src) && this.has_node(dest)) {
+			// this._graph.setEdge(src_id, dest_id);
 
-			// if check_if_graph_has_cycle is passed as false, that means we never check.
+			// if check_if_graph_may_have_cycle is passed as false, that means we never check.
 			// this can be useful when we know that the connection will not create a cycle,
 			// such as when connecting params or inputs to a node
-			if (check_if_graph_has_cycle) {
+			if (check_if_graph_may_have_cycle) {
 				const scene_loading = this._scene ? this._scene.loading_controller.is_loading : true;
-				check_if_graph_has_cycle = !scene_loading;
+				check_if_graph_may_have_cycle = !scene_loading;
 			}
-			let graph_has_cycle = false;
-			if (check_if_graph_has_cycle) {
-				graph_has_cycle = !alg.isAcyclic(this._graph);
+			let graph_would_have_cycle = false;
+			if (check_if_graph_may_have_cycle) {
+				// graph_has_cycle = !alg.isAcyclic(this._graph);
+				graph_would_have_cycle = this._has_predecessor(src_id, dest_id);
 			}
 
-			if (graph_has_cycle) {
-				this._graph.removeEdge(src_id, dest_id);
+			if (graph_would_have_cycle) {
+				// this._graph.removeEdge(src_id, dest_id);
 				return false;
 			} else {
+				this._create_connection(src_id, dest_id);
 				src.dirty_controller.clear_successors_cache_with_predecessors();
 
 				return true;
@@ -89,14 +97,58 @@ export class CoreGraph {
 		}
 	}
 
-	disconnect(src: CoreGraphNode, dest: CoreGraphNode) {
-		if (src && dest) {
-			const src_id_s = src.graph_node_id;
-			const dest_id_s = dest.graph_node_id;
-			this._graph.removeEdge(src_id_s, dest_id_s);
-
-			src.dirty_controller.clear_successors_cache_with_predecessors();
+	private _create_connection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
+		// set successors
+		let node_successors = this._successors.get(src_id);
+		if (!node_successors) {
+			node_successors = new Map();
+			this._successors.set(src_id, node_successors);
 		}
+		node_successors.set(dest_id, true);
+		// set predecessors
+		let node_predecessors = this._predecessors.get(dest_id);
+		if (!node_predecessors) {
+			node_predecessors = new Map();
+			this._predecessors.set(dest_id, node_predecessors);
+		}
+		node_predecessors.set(src_id, true);
+	}
+	private _remove_connection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
+		// remove successors
+		let node_successors = this._successors.get(src_id);
+		if (node_successors) {
+			node_successors.delete(dest_id);
+			if (node_successors.entries.length == 0) {
+				this._successors.delete(src_id);
+			}
+		}
+		// remove predecessors
+		let node_predecessors = this._predecessors.get(dest_id);
+		if (node_predecessors) {
+			node_predecessors.delete(src_id);
+			if (node_predecessors.entries.length == 0) {
+				this._predecessors.delete(dest_id);
+			}
+		}
+	}
+	add_node(node: CoreGraphNode) {
+		this._nodes_by_id.set(node.graph_node_id, node);
+		this._successors.set(node.graph_node_id, new Map());
+		this._predecessors.set(node.graph_node_id, new Map());
+	}
+	remove_node(node: CoreGraphNode) {
+		this._nodes_by_id.delete(node.graph_node_id);
+		this._successors.delete(node.graph_node_id);
+		this._predecessors.delete(node.graph_node_id);
+	}
+
+	disconnect(src: CoreGraphNode, dest: CoreGraphNode) {
+		// const src_id_s = src.graph_node_id;
+		// const dest_id_s = dest.graph_node_id;
+		// this._graph.removeEdge(src_id_s, dest_id_s);
+		this._remove_connection(src.graph_node_id, dest.graph_node_id);
+
+		src.dirty_controller.clear_successors_cache_with_predecessors();
 	}
 	disconnect_predecessors(node: CoreGraphNode) {
 		const predecessors = this.predecessors(node);
@@ -111,15 +163,31 @@ export class CoreGraph {
 		}
 	}
 
-	predecessor_ids(id: CoreGraphNodeId) {
-		return this._graph.predecessors(id) || [];
+	predecessor_ids(id: CoreGraphNodeId): CoreGraphNodeId[] {
+		const map = this._predecessors.get(id);
+		if (map) {
+			const ids: CoreGraphNodeId[] = [];
+			map.forEach((bool, id) => {
+				ids.push(id);
+			});
+			return ids;
+		}
+		return [];
 	}
 	predecessors(node: CoreGraphNode) {
 		const ids = this.predecessor_ids(node.graph_node_id);
 		return this.nodes_from_ids(ids);
 	}
-	successor_ids(id: string): CoreGraphNodeId[] {
-		return this._graph.successors(id) || [];
+	successor_ids(id: CoreGraphNodeId): CoreGraphNodeId[] {
+		const map = this._successors.get(id);
+		if (map) {
+			const ids: CoreGraphNodeId[] = [];
+			map.forEach((bool, id) => {
+				ids.push(id);
+			});
+			return ids;
+		}
+		return [];
 	}
 	successors(node: CoreGraphNode): CoreGraphNode[] {
 		const ids = this.successor_ids(node.graph_node_id) || [];
@@ -166,5 +234,20 @@ export class CoreGraph {
 	all_successors(node: CoreGraphNode): CoreGraphNode[] {
 		const ids = this.all_successor_ids(node);
 		return this.nodes_from_ids(ids);
+	}
+
+	private _has_predecessor(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId): boolean {
+		const ids = this.predecessor_ids(src_id);
+		if (ids) {
+			if (ids.includes(dest_id)) {
+				return true;
+			} else {
+				for (let id of ids) {
+					return this._has_predecessor(id, dest_id);
+				}
+			}
+		}
+
+		return false;
 	}
 }

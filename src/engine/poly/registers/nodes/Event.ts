@@ -5,7 +5,7 @@ import {AnyEventNode} from '../../../nodes/event/Any';
 import {ButtonEventNode} from '../../../nodes/event/Button';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
-import {CodeEventNode} from '../../../nodes/event/Code';
+// import {CodeEventNode} from '../../../nodes/event/Code';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
@@ -25,7 +25,7 @@ export interface EventNodeChildrenMap {
 	button: ButtonEventNode;
 	camera_orbit_controls: CameraMapControlsEventNode;
 	camera_map_controls: CameraOrbitControlsEventNode;
-	code: CodeEventNode;
+	// code: CodeEventNode;
 	keyboard: KeyboardEventNode;
 	limit: LimitEventNode;
 	mouse: MouseEventNode;
@@ -48,7 +48,7 @@ export class EventRegister {
 		poly.register_node(ButtonEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.register_node(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
-		poly.register_node(CodeEventNode, CATEGORY_EVENT.ADVANCED);
+		// poly.register_node(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.register_node(KeyboardEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(LimitEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(MouseEventNode, CATEGORY_EVENT.INPUT);

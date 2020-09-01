@@ -1,14 +1,15 @@
 import {BaseNodeType} from '../engine/nodes/_Base';
 import {BaseParamType} from '../engine/params/_Base';
 import {CoreWalker} from './Walker';
+import {CoreGraphNodeId} from './graph/CoreGraph';
 type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class DecomposedPath {
 	private index = -1;
 	private path_elements: (string | null)[] = [];
 	private _named_nodes: (NodeOrParam | null)[] = [];
-	private graph_node_ids: string[] = [];
-	private node_element_by_graph_node_id: Map<string, string> = new Map();
+	private graph_node_ids: CoreGraphNodeId[] = [];
+	private node_element_by_graph_node_id: Map<CoreGraphNodeId, string> = new Map();
 
 	constructor() {}
 	reset() {

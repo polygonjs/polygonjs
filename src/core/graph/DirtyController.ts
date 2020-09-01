@@ -1,4 +1,5 @@
 import {CoreGraphNode} from './CoreGraphNode';
+import {CoreGraphNodeId} from './CoreGraph';
 
 export type PostDirtyHook = (caller?: CoreGraphNode) => void;
 
@@ -7,7 +8,7 @@ export class DirtyController {
 	_dirty: boolean = true;
 	_dirty_timestamp: number | undefined;
 	_cached_successors: CoreGraphNode[] | undefined;
-	_forbidden_trigger_nodes: string[] | undefined;
+	_forbidden_trigger_nodes: CoreGraphNodeId[] | undefined;
 
 	// hooks
 	_post_dirty_hooks: PostDirtyHook[] | undefined;
