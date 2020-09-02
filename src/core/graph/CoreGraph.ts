@@ -1,7 +1,6 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreGraphNode} from './CoreGraphNode';
 
-// TODO: try using ids with a specific type (https://basarat.gitbook.io/typescript/main-1/nominaltyping)
 export type CoreGraphNodeId = number;
 
 export class CoreGraph {
