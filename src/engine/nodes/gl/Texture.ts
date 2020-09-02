@@ -1,5 +1,4 @@
 import {TypedGlNode} from './_Base';
-import {FileCopNode} from '../cop/File';
 
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';
@@ -10,9 +9,10 @@ import {ParamType} from '../../poly/ParamType';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/ParamConfig';
+import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
 class TextureParamsConfig extends NodeParamsConfig {
 	param_name = ParamConfig.STRING('texture_map');
-	default_value = ParamConfig.STRING(FileCopNode.DEFAULT_NODE_PATH.UV);
+	default_value = ParamConfig.STRING(OPERATOR_PATH_DEFAULT.NODE.UV);
 	uv = ParamConfig.VECTOR2([0, 0]);
 }
 const ParamsConfig = new TextureParamsConfig();

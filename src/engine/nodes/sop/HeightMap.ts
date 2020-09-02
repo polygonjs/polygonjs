@@ -2,7 +2,6 @@ import {DataTexture} from 'three/src/textures/DataTexture';
 import {TypedSopNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {FileCopNode} from '../cop/File';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BaseCopNodeType} from '../cop/_Base';
@@ -10,8 +9,9 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
 import {Texture} from 'three/src/textures/Texture';
 import {CoreImage} from '../../../core/Image';
+import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
-	texture = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
+	texture = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 	});
 	mult = ParamConfig.FLOAT(1);

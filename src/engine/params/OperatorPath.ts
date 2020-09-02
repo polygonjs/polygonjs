@@ -19,6 +19,13 @@ enum OperatorPathMode {
 	PARAM = 'PARAM',
 }
 
+export const OPERATOR_PATH_DEFAULT = {
+	NODE: {
+		UV: '/COP/file_uv',
+		ENV_MAP: '/COP/env_map',
+	},
+};
+
 export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;
 	private _found_node_with_expected_type: BaseNodeType | null = null;

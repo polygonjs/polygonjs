@@ -49,12 +49,11 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {IUniformN, IUniformTexture, IUniformColor} from '../utils/code/gl/Uniforms';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {FileCopNode} from '../cop/File';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseCopNodeType} from '../cop/_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {OperatorPathParam} from '../../params/OperatorPath';
+import {OperatorPathParam, OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
 class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
 	TextureAlphaMapParamConfig(SkinningParamConfig(SideParamConfig(NodeParamsConfig)))
 ) {
@@ -64,7 +63,7 @@ class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
 	shininess = ParamConfig.FLOAT(1, {
 		range: [0, 1000],
 	});
-	thickness_map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
+	thickness_map = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 		...ParamOptionsFactoryTexture('thicknessMap'),
 	});

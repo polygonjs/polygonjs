@@ -1,6 +1,5 @@
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
-import {FileCopNode} from '../../cop/File';
 import {TypedMatNode} from '../_Base';
 import {
 	BaseTextureMapController,
@@ -11,11 +10,12 @@ import {
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		use_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
 		map = ParamConfig.OPERATOR_PATH(
-			FileCopNode.DEFAULT_NODE_PATH.UV,
+			OPERATOR_PATH_DEFAULT.NODE.UV,
 			OperatorPathOptions(TextureMapController, 'use_map')
 		);
 	};

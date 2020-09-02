@@ -6,7 +6,6 @@ import {IUniformN, IUniformTexture} from '../utils/code/gl/Uniforms';
 import VertexShader from './Image/vert.glsl';
 import FragmentShader from './Image/frag.glsl';
 
-import {FileCopNode} from '../cop/File';
 import {NodeContext} from '../../poly/NodeContext';
 
 interface ShaderPassWithRequiredUniforms extends ShaderPass {
@@ -18,8 +17,9 @@ interface ShaderPassWithRequiredUniforms extends ShaderPass {
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseCopNodeType} from '../cop/_Base';
+import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
 class ImagePostParamsConfig extends NodeParamsConfig {
-	map = ParamConfig.OPERATOR_PATH(FileCopNode.DEFAULT_NODE_PATH.UV, {
+	map = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 		...PostParamOptions,
 	});
