@@ -44,6 +44,7 @@ import {FuseSopNode} from '../../../nodes/sop/Fuse';
 import {HexagonsSopNode} from '../../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
+import {IcosahedronSopNode} from '../../../nodes/sop/Icosahedron';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
@@ -85,6 +86,7 @@ import {SubnetSopNode} from '../../../nodes/sop/Subnet';
 import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
 import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
+import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
@@ -134,6 +136,7 @@ export interface GeoNodeChildrenMap {
 	height_map: HeightMapSopNode;
 	hexagons: HexagonsSopNode;
 	hierarchy: HierarchySopNode;
+	icosahedron: IcosahedronSopNode;
 	instance: InstanceSopNode;
 	instances_count: InstancesCountSopNode;
 	jitter: JitterSopNode;
@@ -175,6 +178,7 @@ export interface GeoNodeChildrenMap {
 	subnet_input: SubnetInputSopNode;
 	subnet_output: SubnetOutputSopNode;
 	switch: SwitchSopNode;
+	tetrahedron: TetrahedronSopNode;
 	text: TextSopNode;
 	torus: TorusSopNode;
 	torus_knot: TorusKnotSopNode;
@@ -228,6 +232,7 @@ export class SopRegister {
 		poly.register_node(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(HeightMapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(HierarchySopNode, CATEGORY_SOP.MISC);
+		poly.register_node(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.register_node(JitterSopNode, CATEGORY_SOP.MODIFIER);
@@ -280,6 +285,7 @@ export class SopRegister {
 		}*/
 		);
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
+		poly.register_node(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
