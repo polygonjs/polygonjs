@@ -59,15 +59,16 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 		// build non-indexed geometry
 
 		this.setAttribute('position', new Float32BufferAttribute(vertexBuffer, 3));
-		this.setAttribute('normal', new Float32BufferAttribute(vertexBuffer.slice(), 3));
 		this.setAttribute('uv', new Float32BufferAttribute(uvBuffer, 2));
 
-		if (detail === 0) {
-			this.computeVertexNormals(); // flat normals
-		} else {
-			this.normalizeNormals(); // smooth normals
+		if (!points_only) {
+			this.setAttribute('normal', new Float32BufferAttribute(vertexBuffer.slice(), 3));
+			if (detail === 0) {
+				this.computeVertexNormals(); // flat normals
+			} else {
+				this.normalizeNormals(); // smooth normals
+			}
 		}
-
 		// helper functions
 
 		function subdivide(detail: number) {
