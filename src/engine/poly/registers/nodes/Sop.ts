@@ -13,6 +13,7 @@ import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
 import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
 import {AttribCreateSopNode} from '../../../nodes/sop/AttribCreate';
 import {AttribDeleteSopNode} from '../../../nodes/sop/AttribDelete';
+import {AttribFromTextureSopNode} from '../../../nodes/sop/AttribFromTexture';
 import {AttribNormalizeSopNode} from '../../../nodes/sop/AttribNormalize';
 import {AttribPromoteSopNode} from '../../../nodes/sop/AttribPromote';
 import {AttribRemapSopNode} from '../../../nodes/sop/AttribRemap';
@@ -106,6 +107,7 @@ export interface GeoNodeChildrenMap {
 	attrib_copy: AttribCopySopNode;
 	attrib_create: AttribCreateSopNode;
 	attrib_delete: AttribDeleteSopNode;
+	attrib_from_texture: AttribFromTextureSopNode;
 	attrib_normalize: AttribNormalizeSopNode;
 	attrib_promote: AttribPromoteSopNode;
 	attrib_remap: AttribRemapSopNode;
@@ -201,6 +203,7 @@ export class SopRegister {
 		poly.register_node(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.register_node(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.register_node(AttribDeleteSopNode, CATEGORY_SOP.ATTRIBUTE);
+		poly.register_node(AttribFromTextureSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.register_node(AttribNormalizeSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.register_node(AttribPromoteSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.register_node(AttribRemapSopNode, CATEGORY_SOP.ATTRIBUTE);

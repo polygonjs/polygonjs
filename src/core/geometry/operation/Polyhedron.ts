@@ -1,7 +1,7 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
+// import {Vector2} from 'three/src/math/Vector2';
 
 interface PolyHedronBufferGeometryParameters {
 	vertices: number[];
@@ -167,33 +167,34 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 				uvBuffer.push(u, 1 - v);
 			}
 
-			correctUVs();
-
-			correctSeam();
+			// correctUVs and correctSeam are currently not used
+			// as they seem to create incorrect uvs when using points only
+			// correctUVs();
+			// correctSeam();
 		}
 
-		function correctSeam() {
-			// handle case when face straddles the seam, see #3269
+		// function correctSeam() {
+		// 	// handle case when face straddles the seam, see #3269
 
-			for (let i = 0; i < uvBuffer.length; i += 6) {
-				// uv data of a single face
+		// 	for (let i = 0; i < uvBuffer.length; i += 6) {
+		// 		// uv data of a single face
 
-				const x0 = uvBuffer[i + 0];
-				const x1 = uvBuffer[i + 2];
-				const x2 = uvBuffer[i + 4];
+		// 		const x0 = uvBuffer[i + 0];
+		// 		const x1 = uvBuffer[i + 2];
+		// 		const x2 = uvBuffer[i + 4];
 
-				const max = Math.max(x0, x1, x2);
-				const min = Math.min(x0, x1, x2);
+		// 		const max = Math.max(x0, x1, x2);
+		// 		const min = Math.min(x0, x1, x2);
 
-				// 0.9 is somewhat arbitrary
+		// 		// 0.9 is somewhat arbitrary
 
-				if (max > 0.9 && min < 0.1) {
-					if (x0 < 0.2) uvBuffer[i + 0] += 1;
-					if (x1 < 0.2) uvBuffer[i + 2] += 1;
-					if (x2 < 0.2) uvBuffer[i + 4] += 1;
-				}
-			}
-		}
+		// 		if (max > 0.9 && min < 0.1) {
+		// 			if (x0 < 0.2) uvBuffer[i + 0] += 1;
+		// 			if (x1 < 0.2) uvBuffer[i + 2] += 1;
+		// 			if (x2 < 0.2) uvBuffer[i + 4] += 1;
+		// 		}
+		// 	}
+		// }
 
 		function pushVertex(vertex: Vector3) {
 			if (points_only) {
@@ -226,44 +227,44 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 			vertex.z = vertices[stride + 2];
 		}
 
-		function correctUVs() {
-			const a = new Vector3();
-			const b = new Vector3();
-			const c = new Vector3();
+		// function correctUVs() {
+		// 	const a = new Vector3();
+		// 	const b = new Vector3();
+		// 	const c = new Vector3();
 
-			const centroid = new Vector3();
+		// 	const centroid = new Vector3();
 
-			const uvA = new Vector2();
-			const uvB = new Vector2();
-			const uvC = new Vector2();
+		// 	const uvA = new Vector2();
+		// 	const uvB = new Vector2();
+		// 	const uvC = new Vector2();
 
-			for (let i = 0, j = 0; i < vertexBuffer.length; i += 9, j += 6) {
-				a.set(vertexBuffer[i + 0], vertexBuffer[i + 1], vertexBuffer[i + 2]);
-				b.set(vertexBuffer[i + 3], vertexBuffer[i + 4], vertexBuffer[i + 5]);
-				c.set(vertexBuffer[i + 6], vertexBuffer[i + 7], vertexBuffer[i + 8]);
+		// 	for (let i = 0, j = 0; i < vertexBuffer.length; i += 9, j += 6) {
+		// 		a.set(vertexBuffer[i + 0], vertexBuffer[i + 1], vertexBuffer[i + 2]);
+		// 		b.set(vertexBuffer[i + 3], vertexBuffer[i + 4], vertexBuffer[i + 5]);
+		// 		c.set(vertexBuffer[i + 6], vertexBuffer[i + 7], vertexBuffer[i + 8]);
 
-				uvA.set(uvBuffer[j + 0], uvBuffer[j + 1]);
-				uvB.set(uvBuffer[j + 2], uvBuffer[j + 3]);
-				uvC.set(uvBuffer[j + 4], uvBuffer[j + 5]);
+		// 		uvA.set(uvBuffer[j + 0], uvBuffer[j + 1]);
+		// 		uvB.set(uvBuffer[j + 2], uvBuffer[j + 3]);
+		// 		uvC.set(uvBuffer[j + 4], uvBuffer[j + 5]);
 
-				centroid.copy(a).add(b).add(c).divideScalar(3);
+		// 		centroid.copy(a).add(b).add(c).divideScalar(3);
 
-				const azi = azimuth(centroid);
+		// 		const azi = azimuth(centroid);
 
-				correctUV(uvA, j + 0, a, azi);
-				correctUV(uvB, j + 2, b, azi);
-				correctUV(uvC, j + 4, c, azi);
-			}
-		}
+		// 		correctUV(uvA, j + 0, a, azi);
+		// 		correctUV(uvB, j + 2, b, azi);
+		// 		correctUV(uvC, j + 4, c, azi);
+		// 	}
+		// }
 
-		function correctUV(uv: Vector2, stride: number, vector: Vector3, azimuth: number) {
-			if (azimuth < 0 && uv.x === 1) {
-				uvBuffer[stride] = uv.x - 1;
-			}
+		// function correctUV(uv: Vector2, stride: number, vector: Vector3, azimuth: number) {
+		// 	if (azimuth < 0 && uv.x === 1) {
+		// 		uvBuffer[stride] = uv.x - 1;
+		// 	}
 
-			if (vector.x === 0 && vector.z === 0) {
-				uvBuffer[stride] = azimuth / 2 / Math.PI + 0.5;
-			}
-		}
+		// 	if (vector.x === 0 && vector.z === 0) {
+		// 		uvBuffer[stride] = azimuth / 2 / Math.PI + 0.5;
+		// 	}
+		// }
 	}
 }

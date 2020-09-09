@@ -234,6 +234,10 @@ export class CoreImage {
 		canvas.height = img.height;
 		const context = canvas.getContext('2d') as CanvasRenderingContext2D;
 		context.drawImage(img, 0, 0, img.width, img.height);
+		// canvas.style.width = `${img.width}px`;
+		// canvas.style.height = `${img.height}px`;
+		// document.body.appendChild(canvas);
+		// document.body.style.overflow = 'auto';
 		return context.getImageData(0, 0, img.width, img.height);
 	}
 }

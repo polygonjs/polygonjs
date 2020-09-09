@@ -2,6 +2,10 @@
 TIPS to load videos
 - qt-faststart for faster start
 - have both mp4 and ogv
+
+PERFORMANCE:
+https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491
+try to set Texture.minFilter to THREE.LinearFilter in order to avoid the generation of mipmaps
 */
 
 import {VideoTexture} from 'three/src/textures/VideoTexture';
