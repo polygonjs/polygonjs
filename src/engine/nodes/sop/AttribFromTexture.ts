@@ -29,6 +29,12 @@ export class AttribFromTextureSopNode extends TypedSopNode<AttribFromTextureSopP
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created('params_label', () => {
+				this.params.label.init([this.p.attrib]);
+			});
+		});
 	}
 
 	async cook(input_contents: CoreGroup[]) {
