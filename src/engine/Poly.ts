@@ -1,12 +1,18 @@
 import {BaseNodeClass} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
-import {NodesRegister, RegisterOptions, BaseNodeConstructor} from './poly/registers/nodes/NodesRegister';
+import {
+	NodesRegister,
+	RegisterOptions,
+	BaseNodeConstructor,
+	OperationsRegister,
+} from './poly/registers/nodes/NodesRegister';
 import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
 import {NodeContext} from './poly/NodeContext';
 import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
+import {BaseOperation} from '../core/operation/_Base';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
 // https://github.com/TypeStrong/ts-loader/issues/37
@@ -17,6 +23,7 @@ export class Poly {
 	static _instance: Poly | undefined;
 	public readonly renderers_controller: RenderersController = new RenderersController();
 	public readonly nodes_register: NodesRegister = new NodesRegister();
+	public readonly operations_register: OperationsRegister = new OperationsRegister();
 	public readonly expressions_register: ExpressionRegister = new ExpressionRegister();
 	public readonly modules_register: DynamicModulesRegister = new DynamicModulesRegister();
 	public readonly assemblers_register: AssemblersRegister = new AssemblersRegister();
@@ -47,8 +54,14 @@ export class Poly {
 	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		this.nodes_register.register_node(node, tab_menu_category, options);
 	}
+	register_operation(operation: typeof BaseOperation) {
+		this.operations_register.register_operation(operation);
+	}
 	registered_nodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNodeClass> {
 		return this.nodes_register.registered_nodes(parent_context, type);
+	}
+	registered_operation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {
+		return this.operations_register.registered_operation(parent_context, operation_type);
 	}
 	in_worker_thread() {
 		return false;

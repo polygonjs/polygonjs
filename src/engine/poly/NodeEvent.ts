@@ -13,5 +13,6 @@ export enum NodeEvent {
 	ERROR_UPDATED = 'node_error_updated',
 	FLAG_BYPASS_UPDATED = 'bypass_flag_updated',
 	FLAG_DISPLAY_UPDATED = 'display_flag_updated',
+	FLAG_OPTIMIZE_UPDATED = 'optimize_flag_updated',
 	SELECTION_UPDATED = 'selection_updated',
 }

@@ -243,6 +243,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	create_node(type: string, params_init_value_overrides?: ParamsInitData) {
 		return this.children_controller?.create_node(type, params_init_value_overrides);
 	}
+	create_operation_container(type: string, params_init_value_overrides?: ParamsInitData) {
+		return this.children_controller?.create_operation_container(type, params_init_value_overrides);
+	}
 	remove_node(node: BaseNodeType) {
 		this.children_controller?.remove_node(node);
 	}
@@ -288,6 +291,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	emit(event_name: NodeEvent.ERROR_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_BYPASS_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
+	emit(event_name: NodeEvent.FLAG_OPTIMIZE_UPDATED): void;
 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
 		this.scene.dispatch_controller.dispatch(this, event_name, data);

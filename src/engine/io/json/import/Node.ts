@@ -1,4 +1,4 @@
-import {TypedNode, BaseNodeType} from '../../../nodes/_Base';
+import {TypedNode} from '../../../nodes/_Base';
 import lodash_isString from 'lodash/isString';
 import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isObject from 'lodash/isObject';
@@ -16,8 +16,7 @@ import {
 	SimpleParamJsonExporterData,
 	ComplexParamJsonExporterData,
 } from '../../../nodes/utils/io/IOController';
-import {ParamJsonImporter} from './Param';
-import {PolyNodeJsonImporter} from './nodes/Poly';
+import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
 
 export const COMPLEX_PARAM_DATA_KEYS = ['overriden_options', 'type'];
@@ -68,6 +67,9 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
+		if (Poly.instance().player_mode()) {
+			return;
+		}
 		const ui_data = this._node.ui_data;
 		const pos = data['pos'];
 		if (pos) {
@@ -87,43 +89,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-
-		const node_names = Object.keys(data);
-		const nodes: BaseNodeTypeWithIO[] = [];
-		for (let node_name of node_names) {
-			const node_data = data[node_name];
-			const node_type = node_data['type'];
-			if (this._node.children_allowed() && this._node.children_controller) {
-				try {
-					const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
-					const node = this._node.create_node(node_type, non_spare_params_data);
-					if (node) {
-						node.set_name(node_name);
-						nodes.push(node);
-					}
-				} catch (e) {
-					scene_importer.report.add_warning(`failed to create node with type '${node_type}'`);
-					Poly.warn('failed to create node with type', node_type, e);
-				}
-			}
-		}
-		const importers_by_node_name: Map<string, PolyNodeJsonImporter | NodeJsonImporter<BaseNodeType>> = new Map();
-		for (let node of nodes) {
-			const child_data = data[node.name];
-			if (child_data) {
-				const importer = JsonImportDispatcher.dispatch_node(node);
-				importers_by_node_name.set(node.name, importer);
-				importer.process_data(scene_importer, data[node.name]);
-			} else {
-				Poly.warn(`possible import error for node ${node.name}`);
-			}
-		}
-		for (let node of nodes) {
-			const importer = importers_by_node_name.get(node.name);
-			if (importer) {
-				importer.process_inputs_data(data[node.name]);
-			}
-		}
+		const nodes_importer = new NodesJsonImporter(this._node);
+		nodes_importer.process_data(scene_importer, data);
 	}
 	set_selection(data?: string[]) {
 		if (this._node.children_allowed() && this._node.children_controller) {
@@ -150,6 +117,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			const display = flags['display'];
 			if (display != null) {
 				this._node.flags?.display?.set(display);
+			}
+			const optimize = flags['optimize'];
+			if (optimize != null) {
+				this._node.flags?.optimize?.set(optimize);
 			}
 		}
 	}
@@ -194,6 +165,9 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 	process_nodes_ui_data(scene_importer: SceneJsonImporter, data: Dictionary<NodeJsonExporterUIData>) {
 		if (!data) {
+			return;
+		}
+		if (Poly.instance().player_mode()) {
 			return;
 		}
 

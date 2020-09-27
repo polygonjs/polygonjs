@@ -23,6 +23,7 @@ export interface NodeSerializerData {
 		//has_display: this.has_display_flag()
 		display?: boolean;
 		bypass?: boolean;
+		optimize?: boolean;
 	};
 	selection?: CoreGraphNodeId[];
 }
@@ -62,6 +63,7 @@ export class NodeSerializer {
 				//has_display: this.has_display_flag()
 				display: this.node.flags?.display?.active,
 				bypass: this.node.flags?.bypass?.active,
+				optimize: this.node.flags?.optimize?.active,
 			},
 			selection: undefined as CoreGraphNodeId[] | undefined,
 		};

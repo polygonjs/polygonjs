@@ -1,9 +1,11 @@
 import {BaseNodeClass} from '../../../nodes/_Base';
+import {BaseOperation} from '../../../../core/operation/_Base';
 import {NodeContext} from '../../NodeContext';
 
 export interface RegisterOptions {
 	only?: string[];
 	except?: string[];
+	user_allowed?: boolean;
 }
 
 // export interface BaseNodeConstructor {
@@ -15,6 +17,10 @@ type NodeConstructorByType = Map<string, BaseNodeConstructor>;
 type NodeConstructorByTypeByContext = Map<NodeContext, NodeConstructorByType>;
 type TabMenuByTypeByContext = Map<NodeContext, Map<string, string>>;
 type RegisterOptionsByTypeByContext = Map<NodeContext, Map<string, RegisterOptions>>;
+
+export type BaseOperationConstructor = typeof BaseOperation;
+type OperationConstructorByType = Map<string, BaseOperationConstructor>;
+type OperationConstructorByTypeByContext = Map<NodeContext, OperationConstructorByType>;
 
 export class NodesRegister {
 	private _node_register: NodeConstructorByTypeByContext = new Map();
@@ -80,8 +86,8 @@ export class NodesRegister {
 					if (option_except) {
 						return !option_except.includes(context_and_type);
 					}
+					return true;
 				}
-				return !options || options['only']?.includes(parent_node_type);
 			});
 		} else {
 			return [];
@@ -102,5 +108,46 @@ export class NodesRegister {
 
 	map() {
 		return this._node_register;
+	}
+}
+
+export class OperationsRegister {
+	private _operation_register: OperationConstructorByTypeByContext = new Map();
+
+	register_operation(operation: BaseOperationConstructor) {
+		const context = operation.context();
+		let current_operations_for_context = this._operation_register.get(context);
+		if (!current_operations_for_context) {
+			current_operations_for_context = new Map();
+			this._operation_register.set(context, current_operations_for_context);
+		}
+
+		const operation_type = operation.type();
+		const already_registered_operation = current_operations_for_context.get(operation_type);
+		if (already_registered_operation) {
+			const message = `operation ${context}/${operation_type} already registered`;
+			console.error(message);
+			throw new Error(message);
+		}
+		current_operations_for_context.set(operation_type, operation);
+	}
+
+	registered_operations_for_context_and_parent_type(context: NodeContext, parent_node_type: string) {
+		const map = this._operation_register.get(context);
+		if (map) {
+			const nodes_for_context: BaseOperationConstructor[] = [];
+			this._operation_register.get(context)?.forEach((operation, type) => {
+				nodes_for_context.push(operation);
+			});
+			return nodes_for_context;
+		} else {
+			return [];
+		}
+	}
+	registered_operation(context: NodeContext, operation_type: string): BaseOperationConstructor | undefined {
+		const current_operations_for_context = this._operation_register.get(context);
+		if (current_operations_for_context) {
+			return current_operations_for_context.get(operation_type);
+		}
 	}
 }

@@ -1,17 +1,17 @@
 import {TypedSopNode} from './_Base';
-import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {BoxSopOperation} from '../../../core/operation/sop/Box';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = BoxSopOperation.DEFAULT_PARAMS;
 class BoxSopParamsConfig extends NodeParamsConfig {
-	size = ParamConfig.FLOAT(1);
-	divisions = ParamConfig.INTEGER(1, {
+	size = ParamConfig.FLOAT(DEFAULT.size);
+	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});
-	center = ParamConfig.VECTOR3([0, 0, 0]);
+	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new BoxSopParamsConfig();
 
@@ -25,43 +25,14 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 		return ['geometry to create bounding box from (optional)'];
 	}
 
-	private _core_transform = new CoreTransform();
-
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 	}
 
+	private _operation = new BoxSopOperation();
 	cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		if (core_group) {
-			this._cook_with_input(core_group);
-		} else {
-			this._cook_without_input();
-		}
-	}
-
-	private _cook_without_input() {
-		const divisions = this.pv.divisions;
-		const size = this.pv.size;
-		const geometry = new BoxBufferGeometry(size, size, size, divisions, divisions, divisions);
-		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
-		geometry.computeVertexNormals();
-
-		this.set_geometry(geometry);
-	}
-
-	private _cook_with_input(core_group: CoreGroup) {
-		const divisions = this.pv.divisions;
-
-		const bbox = core_group.bounding_box();
-		const size = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
-
-		const geometry = new BoxBufferGeometry(size.x, size.y, size.z, divisions, divisions, divisions);
-		const matrix = this._core_transform.translation_matrix(center);
-		geometry.applyMatrix4(matrix);
-
-		this.set_geometry(geometry);
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.set_core_group(core_group);
 	}
 }

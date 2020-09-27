@@ -10,6 +10,7 @@ import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
 import {ParamsInitData} from '../io/IOController';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
+import {BaseOperationContainer} from '../../../../core/operation/_Base';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
@@ -111,6 +112,22 @@ export class HierarchyChildrenController {
 			this.add_node(child_node);
 			child_node.lifecycle.set_creation_completed();
 			return child_node;
+		}
+	}
+	create_operation_container(
+		operation_type: string,
+		params_init_value_overrides?: ParamsInitData
+	): BaseOperationContainer {
+		const operation_class = Poly.instance().registered_operation(this._context, operation_type);
+
+		if (operation_class == null) {
+			const message = `no operation found with context ${this._context}/${operation_type}`;
+			console.error(message);
+			throw message;
+		} else {
+			const operation = new operation_class();
+			const operation_container = new BaseOperationContainer(operation, params_init_value_overrides || {});
+			return operation_container;
 		}
 	}
 

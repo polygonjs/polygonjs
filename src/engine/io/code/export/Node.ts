@@ -25,8 +25,7 @@ export class NodeCodeExporter {
 		this.add_comment();
 		this.add_position({});
 		this.add_input_clonable_state();
-		this.add_bypass_flag();
-		this.add_display_flag();
+		this.add_flags();
 		this.add_params();
 		this.add_custom();
 
@@ -179,6 +178,11 @@ export class NodeCodeExporter {
 			}
 		}
 	}
+	protected add_flags() {
+		this.add_bypass_flag();
+		this.add_display_flag();
+		this.add_optimize_flag();
+	}
 	protected add_bypass_flag() {
 		if (this._node.flags?.has_bypass()) {
 			if (this._node.flags.bypass?.active) {
@@ -195,6 +199,14 @@ export class NodeCodeExporter {
 				}
 			} else {
 				this._lines.push(`${this.var_name()}.flags.display.set(${active})`);
+			}
+		}
+	}
+	protected add_optimize_flag() {
+		if (this._node.flags?.has_optimize()) {
+			const active = this._node.flags.optimize?.active;
+			if (active) {
+				this._lines.push(`${this.var_name()}.flags.optimize.set(true)`);
 			}
 		}
 	}

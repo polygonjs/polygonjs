@@ -76,6 +76,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 
 		this._target_target = light.target;
 		this._target_target.name = 'SpotLight Default Target';
+		this._target_target.matrixAutoUpdate = false;
 		this.object.add(this._target_target);
 
 		return light;

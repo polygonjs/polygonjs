@@ -6,6 +6,10 @@ import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 import {ParamOptionsByTypeMap} from '../../../params/types/ParamOptionsByTypeMap';
+import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
 
 // function _ParamCheckNameConsistency<T extends BaseNode>(name: string, target: T, key: keyof T, type: ParamType) {
 // 	const key_s = key as string;
@@ -127,6 +131,9 @@ export class ParamConfig {
 		init_value: ParamInitValuesTypeMap[ParamType.COLOR],
 		options?: ParamOptionsByTypeMap[ParamType.COLOR]
 	) {
+		if (init_value instanceof Color) {
+			init_value = init_value.toArray() as Number3;
+		}
 		return new ParamTemplate<ParamType.COLOR>(ParamType.COLOR, init_value, options);
 	}
 	static FLOAT(
@@ -175,18 +182,27 @@ export class ParamConfig {
 		init_value: ParamInitValuesTypeMap[ParamType.VECTOR2],
 		options?: ParamOptionsByTypeMap[ParamType.VECTOR2]
 	) {
+		if (init_value instanceof Vector2) {
+			init_value = init_value.toArray() as Number2;
+		}
 		return new ParamTemplate<ParamType.VECTOR2>(ParamType.VECTOR2, init_value, options);
 	}
 	static VECTOR3(
 		init_value: ParamInitValuesTypeMap[ParamType.VECTOR3],
 		options?: ParamOptionsByTypeMap[ParamType.VECTOR3]
 	) {
+		if (init_value instanceof Vector3) {
+			init_value = init_value.toArray() as Number3;
+		}
 		return new ParamTemplate<ParamType.VECTOR3>(ParamType.VECTOR3, init_value, options);
 	}
 	static VECTOR4(
 		init_value: ParamInitValuesTypeMap[ParamType.VECTOR4],
 		options?: ParamOptionsByTypeMap[ParamType.VECTOR4]
 	) {
+		if (init_value instanceof Vector4) {
+			init_value = init_value.toArray() as Number4;
+		}
 		return new ParamTemplate<ParamType.VECTOR4>(ParamType.VECTOR4, init_value, options);
 	}
 }

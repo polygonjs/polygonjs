@@ -8,7 +8,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {FlagsControllerDB} from '../utils/FlagsController';
+import {FlagsControllerDBO} from '../utils/FlagsController';
 import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
 import {Mesh} from 'three/src/objects/Mesh';
 
@@ -42,7 +42,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	static node_context(): NodeContext {
 		return NodeContext.SOP;
 	}
-	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
+	public readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
 
 	static displayed_input_names(): string[] {
 		return DEFAULT_INPUT_NAMES;
@@ -103,13 +103,13 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.set_container(core_group);
 	}
 
-	create_object<OT extends ObjectType>(
+	static create_object<OT extends ObjectType>(
 		geometry: BufferGeometry,
 		type: OT,
 		material?: Material
 	): ObjectByObjectType[OT] {
 		// ensure it has an index
-		this._create_index_if_none(geometry);
+		this.create_index_if_none(geometry);
 
 		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type] as any; //THREE[type];
 		material = material || CoreConstant.MATERIALS[type].clone();
@@ -120,11 +120,21 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		object.matrixAutoUpdate = false;
 
 		return object as ObjectByObjectType[OT];
-		// }
 	}
 
-	protected _create_index_if_none(geometry: BufferGeometry) {
+	create_object<OT extends ObjectType>(
+		geometry: BufferGeometry,
+		type: OT,
+		material?: Material
+	): ObjectByObjectType[OT] {
+		return TypedSopNode.create_object(geometry, type, material);
+	}
+
+	static create_index_if_none(geometry: BufferGeometry) {
 		CoreGeometryIndexBuilder.create_index_if_none(geometry);
+	}
+	protected _create_index_if_none(geometry: BufferGeometry) {
+		TypedSopNode.create_index_if_none(geometry);
 	}
 
 	// protected _set_object_attributes(object: Object3D) {

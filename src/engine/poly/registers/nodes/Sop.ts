@@ -65,6 +65,7 @@ import {NullSopNode} from '../../../nodes/sop/Null';
 import {ObjectMergeSopNode} from '../../../nodes/sop/ObjectMerge';
 import {ObjectPropertiesSopNode} from '../../../nodes/sop/ObjectProperties';
 import {OcclusionSopNode} from '../../../nodes/sop/Occlusion';
+import {OperationsStackSopNode} from '../../../nodes/sop/OperationsStack';
 import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../../nodes/sop/Peak';
 import {PhysicsRBDAttributesSopNode} from '../../../nodes/sop/PhysicsRBDAttributes';
@@ -159,6 +160,7 @@ export interface GeoNodeChildrenMap {
 	object_merge: ObjectMergeSopNode;
 	object_properties: ObjectPropertiesSopNode;
 	occlusion: OcclusionSopNode;
+	operations_stack: OperationsStackSopNode;
 	particles_system_gpu: ParticlesSystemGpuSopNode;
 	peak: PeakSopNode;
 	physics_rbd_attributes: PhysicsRBDAttributesSopNode;
@@ -192,9 +194,19 @@ export interface GeoNodeChildrenMap {
 	uv_project: UvProjectSopNode;
 }
 
+import {BoxSopOperation} from '../../../../core/operation/sop/Box';
+import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
+import {NullSopOperation} from '../../../../core/operation/sop/Null';
+import {TransformSopOperation} from '../../../../core/operation/sop/Transform';
+
 import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
+		poly.register_operation(BoxSopOperation);
+		poly.register_operation(JitterSopOperation);
+		poly.register_operation(NullSopOperation);
+		poly.register_operation(TransformSopOperation);
+
 		poly.register_node(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		poly.register_node(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
@@ -255,6 +267,7 @@ export class SopRegister {
 		poly.register_node(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(OcclusionSopNode, CATEGORY_SOP.RENDER);
+		poly.register_node(OperationsStackSopNode, CATEGORY_SOP.ADVANCED, {user_allowed: false});
 		poly.register_node(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.register_node(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(PhysicsRBDAttributesSopNode, CATEGORY_SOP.PHYSICS);

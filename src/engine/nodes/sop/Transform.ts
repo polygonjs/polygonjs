@@ -1,46 +1,38 @@
 import {TypedSopNode} from './_Base';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {
-	CoreTransform,
-	ROTATION_ORDERS,
-	RotationOrder,
-	TransformTargetType,
-	TRANSFORM_TARGET_TYPES,
-} from '../../../core/Transform';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {ROTATION_ORDERS, TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
+import {TransformSopOperation} from '../../../core/operation/sop/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D} from 'three/src/core/Object3D';
-import {Matrix4} from 'three/src/math/Matrix4';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TypeAssert} from '../../poly/Assert';
-import {Vector3} from 'three/src/math/Vector3';
+const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;
 class TransformSopParamConfig extends NodeParamsConfig {
-	apply_on = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
+	apply_on = ParamConfig.INTEGER(DEFAULT.apply_on, {
 		menu: {
 			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
 				return {name: target_type, value: i};
 			}),
 		},
 	});
-	group = ParamConfig.STRING('', {
+	group = ParamConfig.STRING(DEFAULT.group, {
 		visible_if: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 
 	// transform
-	rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
+	rotation_order = ParamConfig.INTEGER(DEFAULT.rotation_order, {
 		menu: {
 			entries: ROTATION_ORDERS.map((order, v) => {
 				return {name: order, value: v};
 			}),
 		},
 	});
-	t = ParamConfig.VECTOR3([0, 0, 0]);
-	r = ParamConfig.VECTOR3([0, 0, 0]);
-	s = ParamConfig.VECTOR3([1, 1, 1]);
-	scale = ParamConfig.FLOAT(1, {range: [0, 10]});
+	t = ParamConfig.VECTOR3(DEFAULT.t);
+	r = ParamConfig.VECTOR3(DEFAULT.r);
+	s = ParamConfig.VECTOR3(DEFAULT.s);
+	scale = ParamConfig.FLOAT(DEFAULT.scale, {range: [0, 10]});
 	// look_at = ParamConfig.OPERATOR_PATH('');
 	// up = ParamConfig.VECTOR3([0, 1, 0]);
-	pivot = ParamConfig.VECTOR3([0, 0, 0], {
+	pivot = ParamConfig.VECTOR3(DEFAULT.pivot, {
 		visible_if: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 }
@@ -70,69 +62,9 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		});
 	}
 
-	private _core_transform = new CoreTransform();
+	private _operation = new TransformSopOperation();
 	cook(input_contents: CoreGroup[]) {
-		const objects = input_contents[0].objects_with_geo();
-		const matrix = this._core_transform.matrix(
-			this.pv.t,
-			this.pv.r,
-			this.pv.s,
-			this.pv.scale,
-			ROTATION_ORDERS[this.pv.rotation_order]
-		);
-
-		this._apply_transform(objects, matrix);
-
-		this.set_objects(objects);
-	}
-
-	private _apply_transform(objects: Object3DWithGeometry[], matrix: Matrix4) {
-		const mode = TRANSFORM_TARGET_TYPES[this.pv.apply_on];
-		switch (mode) {
-			case TransformTargetType.GEOMETRIES: {
-				return this._apply_matrix_to_geometries(objects, matrix);
-			}
-			case TransformTargetType.OBJECTS: {
-				return this._apply_matrix_to_objects(objects, matrix);
-			}
-		}
-		TypeAssert.unreachable(mode);
-	}
-
-	private _apply_matrix_to_geometries(objects: Object3DWithGeometry[], matrix: Matrix4) {
-		if (this.pv.group === '') {
-			for (let object of objects) {
-				let geometry;
-				if ((geometry = object.geometry) != null) {
-					geometry.translate(-this.pv.pivot.x, -this.pv.pivot.y, -this.pv.pivot.z);
-					geometry.applyMatrix4(matrix);
-					geometry.translate(this.pv.pivot.x, this.pv.pivot.y, this.pv.pivot.z);
-				} else {
-					object.applyMatrix4(matrix);
-				}
-			}
-		} else {
-			const core_group = CoreGroup.from_objects(objects);
-			const points = core_group.points_from_group(this.pv.group);
-			for (let point of points) {
-				const position = point.position().sub(this.pv.pivot);
-				position.applyMatrix4(matrix);
-				point.set_position(position.add(this.pv.pivot));
-			}
-		}
-	}
-	private _object_position = new Vector3();
-	private _apply_matrix_to_objects(objects: Object3D[], matrix: Matrix4) {
-		for (let object of objects) {
-			// center to origin
-			this._object_position.copy(object.position);
-			object.position.multiplyScalar(0);
-			object.updateMatrix();
-			// apply matrix
-			object.applyMatrix4(matrix);
-			// revert to positoin
-			object.position.add(this._object_position);
-			object.updateMatrix();
-		}
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.set_core_group(core_group);
 	}
 }

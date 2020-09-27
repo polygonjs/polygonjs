@@ -21,6 +21,7 @@ export type InputData = NamedInputData | IndexedInputData;
 interface FlagsData {
 	bypass?: boolean;
 	display?: boolean;
+	optimize?: boolean;
 }
 export interface IoConnectionPointsData {
 	in?: BaseConnectionPointData[];
@@ -95,7 +96,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 
 		if (this._node.flags) {
 			const flags_data: FlagsData = {};
-			if (this._node.flags.has_bypass() || this._node.flags.has_display()) {
+			if (this._node.flags.has_bypass() || this._node.flags.has_display() || this._node.flags.has_optimize()) {
 				if (this._node.flags.has_bypass()) {
 					if (this._node.flags.bypass?.active) {
 						flags_data['bypass'] = this._node.flags.bypass.active;
@@ -107,6 +108,11 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 					// And only if true for SOP
 					if (this._node.flags.display?.active || !this._node.parent?.display_node_controller) {
 						flags_data['display'] = this._node.flags.display?.active;
+					}
+				}
+				if (this._node.flags.has_optimize()) {
+					if (this._node.flags.optimize?.active) {
+						flags_data['optimize'] = this._node.flags.optimize?.active;
 					}
 				}
 			}
