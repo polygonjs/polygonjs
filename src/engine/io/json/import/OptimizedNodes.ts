@@ -1,0 +1,265 @@
+import {TypedNode, BaseNodeType} from '../../../nodes/_Base';
+import {SceneJsonImporter} from '../../../io/json/import/Scene';
+import {NodeContext} from '../../../poly/NodeContext';
+import {NodeJsonExporterData} from '../export/Node';
+import lodash_isString from 'lodash/isString';
+import {ParamJsonImporter} from './Param';
+import {Poly} from '../../../Poly';
+import {OperationsStackSopNode} from '../../../nodes/sop/OperationsStack';
+import {SopOperationContainer} from '../../../../core/operation/sop/_Base';
+import {OPERATIONS_STACK_NODE_TYPE} from '../../../../core/operation/_Base';
+
+type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
+export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
+	constructor(protected _node: T) {}
+
+	private _nodes: BaseNodeTypeWithIO[] = [];
+	private _optimized_root_node_names: Set<string> = new Set();
+	nodes() {
+		return this._nodes;
+	}
+
+	process_data(scene_importer: SceneJsonImporter, data?: Dictionary<NodeJsonExporterData>) {
+		if (!data) {
+			return;
+		}
+		if (!(this._node.children_allowed() && this._node.children_controller)) {
+			return;
+		}
+
+		const {optimized_names} = OptimizedNodesJsonImporter.child_names_by_optimized_state(data);
+
+		this._nodes = [];
+		this._optimized_root_node_names = new Set();
+		for (let node_name of optimized_names) {
+			if (OptimizedNodesJsonImporter.is_optimized_root_node(data, node_name)) {
+				this._optimized_root_node_names.add(node_name);
+			}
+		}
+
+		for (let node_name of this._optimized_root_node_names) {
+			const node_data = data[node_name];
+			// const optimized_node_names = this._optimized_names_for_root(data, node_name, tmp_node_data);
+			// optimized_node_names.reverse();
+			const node = this._node.create_node(OPERATIONS_STACK_NODE_TYPE);
+			if (node) {
+				node.set_name(node_name);
+				this._nodes.push(node);
+			}
+			const operation_container = this._create_operation_container(node_data);
+			(node as OperationsStackSopNode).set_output_operation_container(
+				operation_container as SopOperationContainer
+			);
+
+			// for (let optimized_node_name of optimized_node_names) {
+			// 	const optimized_node_data = data[optimized_node_name];
+			// 	let node_type = optimized_node_data['type'];
+			// 	const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(
+			// 		optimized_node_data['params']
+			// 	);
+
+			// 	if (this._is_node_bypassed(optimized_node_data)) {
+			// 		node_type = 'null';
+			// 	}
+			// 	const operation_container = this._node.create_operation_container(node_type, non_spare_params_data);
+			// 	if (operation_container) {
+			// 		(node as OperationsStackSopNode).set_output_operation_container(
+			// 			operation_container as SopOperationContainer
+			// 		);
+			// 	}
+			// }
+
+			// // TODO: the node inputs are currently set from the last optimized_node_names.
+			// // But this would only work for nodes with only 1 input, not more.
+			// const last_optimized_node_name = optimized_node_names[0];
+			// const last_optimized_node_data = data[last_optimized_node_name];
+
+			// tmp_node_data['inputs'] = last_optimized_node_data['inputs'];
+		}
+
+		for (let node of this._nodes) {
+			const operation_container = (node as OperationsStackSopNode).output_operation_container();
+			if (operation_container) {
+				this._node_inputs = [];
+				this._add_optimized_node_inputs(node as OperationsStackSopNode, data, node.name, operation_container);
+				node.io.inputs.set_count(this._node_inputs.length);
+				for (let i = 0; i < this._node_inputs.length; i++) {
+					node.set_input(i, this._node_inputs[i]);
+				}
+			}
+		}
+	}
+
+	private _node_inputs: BaseNodeType[] = [];
+	private _add_optimized_node_inputs(
+		node: OperationsStackSopNode,
+		data: Dictionary<NodeJsonExporterData>,
+		node_name: string,
+		current_operation_container: SopOperationContainer
+	) {
+		const node_data: NodeJsonExporterData = data[node_name];
+		const inputs_data = node_data['inputs'];
+		if (!inputs_data) {
+			return;
+		}
+		for (let input_data of inputs_data) {
+			if (lodash_isString(input_data)) {
+				const input_node_data = data[input_data];
+				if (input_node_data) {
+					if (
+						OptimizedNodesJsonImporter.is_node_optimized(input_node_data) &&
+						!this._optimized_root_node_names.has(input_data) // ensure it is not a root
+					) {
+						// if the input is an optimized node, we create an operation and go recursive
+						const operation_container = this._create_operation_container(
+							input_node_data
+						) as SopOperationContainer;
+						current_operation_container.add_input(operation_container);
+						this._add_optimized_node_inputs(node, data, input_data, operation_container);
+					} else {
+						// if the input is NOT an optimized node, we set the input to the node
+						const input_node = node.parent?.node(input_data);
+						if (input_node) {
+							this._node_inputs.push(input_node);
+							const node_input_index = this._node_inputs.length - 1;
+							// node.set_input(node_input_index, input_node as BaseSopNodeType);
+							node.add_input_config(current_operation_container, {
+								operation_input_index: current_operation_container.current_input_index(),
+								node_input_index: node_input_index,
+							});
+							current_operation_container.increment_input_index();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	static child_names_by_optimized_state(data: Dictionary<NodeJsonExporterData>) {
+		const node_names = Object.keys(data);
+		const optimized_names: string[] = [];
+		const non_optimized_names: string[] = [];
+		for (let node_name of node_names) {
+			const node_data = data[node_name];
+			const optimized_state = Poly.instance().player_mode() && this.is_node_optimized(node_data);
+			if (optimized_state) {
+				optimized_names.push(node_name);
+			} else {
+				non_optimized_names.push(node_name);
+			}
+		}
+		return {optimized_names, non_optimized_names};
+	}
+
+	// private _optimized_names_for_root(
+	// 	data: Dictionary<NodeJsonExporterData>,
+	// 	current_node_name: string,
+	// 	current_node_data: NodeJsonExporterData,
+	// 	input_names: string[] = []
+	// ) {
+	// 	input_names.push(current_node_name);
+	// 	const inputs = current_node_data['inputs'];
+	// 	if (inputs) {
+	// 		for (let input_data of inputs) {
+	// 			if (lodash_isString(input_data)) {
+	// 				const input_node_name = input_data;
+	// 				// if (input_node_name != current_node_name) {
+	// 				const input_node_data = data[input_node_name];
+
+	// 				if (input_node_data) {
+	// 					if (
+	// 						OptimizedNodesJsonImporter.is_node_optimized(input_node_data) &&
+	// 						!this._is_optimized_root_node(data, input_node_name, input_node_data)
+	// 					) {
+	// 						this._optimized_names_for_root(data, input_node_name, input_node_data, input_names);
+	// 					}
+	// 				}
+	// 				// }
+	// 			}
+	// 		}
+	// 	}
+	// 	return input_names;
+	// }
+
+	// a node will be considered optimized root node if:
+	// - it has no output
+	// - at least one output is not optimized (as it if it has 2 outputs, and only 1 is optimized, it will not be considered root)
+	static is_optimized_root_node(
+		data: Dictionary<NodeJsonExporterData>,
+		current_node_name: string
+		// current_node_data: NodeJsonExporterData
+	) {
+		const output_names = this.node_outputs(data, current_node_name);
+
+		if (output_names.size == 0) {
+			return true;
+		}
+
+		let non_optimized_count = 0;
+		output_names.forEach((node_name) => {
+			const node_data = data[node_name];
+			if (OptimizedNodesJsonImporter.is_node_optimized(node_data)) {
+			} else {
+				non_optimized_count++;
+			}
+		});
+		if (non_optimized_count > 0) {
+			return true;
+		}
+		return false;
+	}
+	static node_outputs(
+		data: Dictionary<NodeJsonExporterData>,
+		current_node_name: string
+		// current_node_data: NodeJsonExporterData
+	) {
+		const node_names = Object.keys(data);
+		const output_node_names: Set<string> = new Set();
+		for (let node_name of node_names) {
+			if (node_name != current_node_name) {
+				const node_data = data[node_name];
+				const inputs = node_data['inputs'];
+				if (inputs) {
+					for (let input_data of inputs) {
+						if (lodash_isString(input_data)) {
+							const input_node_name = input_data;
+							if (input_node_name == current_node_name) {
+								output_node_names.add(node_name);
+							}
+						}
+					}
+				}
+			}
+		}
+		return output_node_names;
+	}
+
+	private _create_operation_container(node_data: NodeJsonExporterData) {
+		const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
+		const operation_type = OptimizedNodesJsonImporter.operation_type(node_data);
+		const operation_container = this._node.create_operation_container(operation_type, non_spare_params_data);
+		return operation_container;
+	}
+
+	static operation_type(node_data: NodeJsonExporterData) {
+		if (OptimizedNodesJsonImporter.is_node_bypassed(node_data)) {
+			return 'null';
+		}
+		return node_data['type'];
+	}
+
+	static is_node_optimized(node_data: NodeJsonExporterData) {
+		const node_flags = node_data['flags'];
+		if (node_flags && node_flags['optimize']) {
+			return true;
+		}
+		return false;
+	}
+	static is_node_bypassed(node_data: NodeJsonExporterData) {
+		const node_flags = node_data['flags'];
+		if (node_flags && node_flags['bypass']) {
+			return true;
+		}
+		return false;
+	}
+}

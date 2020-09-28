@@ -3,14 +3,13 @@ import {Material} from 'three/src/materials/Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
-import {CoreConstant, ObjectByObjectType, OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE} from '../../../core/geometry/Constant';
+import {ObjectByObjectType} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDBO} from '../utils/FlagsController';
-import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
-import {Mesh} from 'three/src/objects/Mesh';
+import {BaseSopOperation} from '../../../core/operation/sop/_Base';
 
 enum MESSAGE {
 	FROM_SET_CORE_GROUP = 'from set_core_group',
@@ -108,18 +107,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		type: OT,
 		material?: Material
 	): ObjectByObjectType[OT] {
-		// ensure it has an index
-		this.create_index_if_none(geometry);
-
-		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type] as any; //THREE[type];
-		material = material || CoreConstant.MATERIALS[type].clone();
-		const object: Mesh = new object_constructor(geometry, material);
-		object.castShadow = true;
-		object.receiveShadow = true;
-		object.frustumCulled = false;
-		object.matrixAutoUpdate = false;
-
-		return object as ObjectByObjectType[OT];
+		return BaseSopOperation.create_object(geometry, type, material);
 	}
 
 	create_object<OT extends ObjectType>(
@@ -131,7 +119,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	static create_index_if_none(geometry: BufferGeometry) {
-		CoreGeometryIndexBuilder.create_index_if_none(geometry);
+		BaseSopOperation.create_index_if_none(geometry);
 	}
 	protected _create_index_if_none(geometry: BufferGeometry) {
 		TypedSopNode.create_index_if_none(geometry);

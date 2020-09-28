@@ -19,7 +19,7 @@ import {
 import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
 
-export const COMPLEX_PARAM_DATA_KEYS = ['overriden_options', 'type'];
+const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {

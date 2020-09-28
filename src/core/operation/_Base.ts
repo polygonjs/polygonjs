@@ -3,6 +3,7 @@ import {ParamsInitData} from '../../engine/nodes/utils/io/IOController';
 import {ParamType} from '../../engine/poly/ParamType';
 import {ParamValuesTypeMap} from '../../engine/params/types/ParamValuesTypeMap';
 import {ParamInitValueSerializedTypeMap} from '../../engine/params/types/ParamInitValueSerializedTypeMap';
+import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isNumber from 'lodash/isNumber';
 import lodash_isString from 'lodash/isString';
 import lodash_isArray from 'lodash/isArray';
@@ -10,6 +11,7 @@ import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
+import {StatesController} from '../../engine/params/utils/StatesController';
 
 type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
 export type DefaultOperationParams = Dictionary<DefaultOperationParam<ParamType>>;
@@ -35,6 +37,8 @@ export class BaseOperation {
 	}
 
 	static readonly DEFAULT_PARAMS: DefaultOperationParams = {};
+
+	constructor(protected states?: StatesController) {}
 
 	cook(input_contents: any[], params: object): any {}
 }
@@ -73,7 +77,7 @@ export class BaseOperationContainer {
 	}
 
 	private _convert_param_data(param_data: DefaultOperationParam<ParamType>) {
-		if (lodash_isNumber(param_data) || lodash_isString(param_data)) {
+		if (lodash_isNumber(param_data) || lodash_isString(param_data) || lodash_isBoolean(param_data)) {
 			return param_data;
 		}
 		if (
@@ -93,6 +97,11 @@ export class BaseOperationContainer {
 		if (lodash_isArray(param_data)) {
 			(this.params[param_name] as Vector3).fromArray(param_data as number[]);
 		}
+	}
+
+	protected _inputs: BaseOperationContainer[] = [];
+	set_input(index: number, input: BaseOperationContainer) {
+		this._inputs[index] = input;
 	}
 
 	cook(input_contents: any[]) {

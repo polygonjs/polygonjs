@@ -4,8 +4,6 @@ import {CoreGroup} from '../../geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreTransform} from '../../Transform';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
-import {TypedSopNode} from '../../../engine/nodes/sop/_Base';
-import {ObjectType} from '../../geometry/Constant';
 
 interface BoxSopParams extends DefaultOperationParams {
 	size: number;
@@ -28,10 +26,8 @@ export class BoxSopOperation extends BaseSopOperation {
 		const geometry = input_core_group
 			? this._cook_with_input(input_core_group, params)
 			: this._cook_without_input(params);
-		const object = TypedSopNode.create_object(geometry, ObjectType.MESH);
-		const core_group = new CoreGroup();
-		core_group.set_objects([object]);
-		return core_group;
+
+		return this.create_core_group_from_geometry(geometry);
 	}
 	private _cook_without_input(params: BoxSopParams) {
 		const divisions = params.divisions;

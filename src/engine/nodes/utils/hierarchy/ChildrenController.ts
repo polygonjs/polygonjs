@@ -11,6 +11,7 @@ import {Poly} from '../../../Poly';
 import {ParamsInitData} from '../io/IOController';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {BaseOperationContainer} from '../../../../core/operation/_Base';
+import {SopOperationContainer, BaseSopOperation} from '../../../../core/operation/sop/_Base';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
@@ -125,8 +126,8 @@ export class HierarchyChildrenController {
 			console.error(message);
 			throw message;
 		} else {
-			const operation = new operation_class();
-			const operation_container = new BaseOperationContainer(operation, params_init_value_overrides || {});
+			const operation = new operation_class() as BaseSopOperation;
+			const operation_container = new SopOperationContainer(operation, params_init_value_overrides || {});
 			return operation_container;
 		}
 	}

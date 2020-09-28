@@ -11,6 +11,7 @@ import './core/geometry/Group';
 
 QUnit.module('scene');
 import './engine/scene/Serializer';
+import './engine/scene/OptimizedNodes';
 
 QUnit.module('expressions');
 import './engine/expressions/methods/abs';
