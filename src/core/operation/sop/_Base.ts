@@ -53,6 +53,9 @@ export class BaseSopOperation extends BaseOperation {
 
 		return object as ObjectByObjectType[OT];
 	}
+	protected create_index_if_none(geometry: BufferGeometry) {
+		BaseSopOperation.create_index_if_none(geometry);
+	}
 	static create_index_if_none(geometry: BufferGeometry) {
 		CoreGeometryIndexBuilder.create_index_if_none(geometry);
 	}

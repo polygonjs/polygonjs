@@ -50,4 +50,5 @@ function Optimize<TBase extends Constructor>(Base: TBase) {
 export class FlagsControllerD extends Display(FlagsController) {}
 export class FlagsControllerB extends Bypass(FlagsController) {}
 export class FlagsControllerDB extends Bypass(Display(FlagsController)) {}
+export class FlagsControllerBO extends Optimize(Bypass(FlagsController)) {}
 export class FlagsControllerDBO extends Optimize(Bypass(Display(FlagsController))) {}

@@ -3,7 +3,7 @@ import {Texture} from 'three/src/textures/Texture';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {PolyScene} from '../../scene/PolyScene';
-import {FlagsControllerB} from '../utils/FlagsController';
+import {FlagsControllerBO} from '../utils/FlagsController';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {LuminanceFormat, HalfFloatType} from 'three/src/constants';
 
@@ -18,7 +18,7 @@ for (var i = 0; i < size; i++) {
 const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfFloatType);
 
 export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.COP, K> {
-	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
+	public readonly flags: FlagsControllerBO = new FlagsControllerBO(this);
 	// private _typed_array = new Uint8ClampedArray(512 * 512 * 4);
 	// protected _texture: Texture = new DataTexture(this._typed_array, 512, 512, RGBFormat);
 	// get texture() {

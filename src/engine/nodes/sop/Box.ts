@@ -30,8 +30,9 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 	}
 
-	private _operation = new BoxSopOperation();
+	private _operation: BoxSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new BoxSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}

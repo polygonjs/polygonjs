@@ -39,8 +39,9 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
-	private _operation = new MaterialSopOperation();
+	private _operation: MaterialSopOperation | undefined;
 	async cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new MaterialSopOperation(this._scene, this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}

@@ -5,6 +5,7 @@ import {FloatParam} from '../Float';
 import {FolderParam} from '../Folder';
 import {IntegerParam} from '../Integer';
 import {OperatorPathParam} from '../OperatorPath';
+import {NodePathParam} from '../NodePath';
 import {RampParam} from '../Ramp';
 import {SeparatorParam} from '../Separator';
 import {StringParam} from '../String';
@@ -23,6 +24,7 @@ export interface ParamConstructorMap extends ParamConstructorMapType {
 	[ParamType.FOLDER]: FolderParam;
 	[ParamType.INTEGER]: IntegerParam;
 	[ParamType.OPERATOR_PATH]: OperatorPathParam;
+	[ParamType.NODE_PATH]: NodePathParam;
 	[ParamType.RAMP]: RampParam;
 	[ParamType.SEPARATOR]: SeparatorParam;
 	[ParamType.STRING]: StringParam;

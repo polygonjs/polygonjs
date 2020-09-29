@@ -14,6 +14,7 @@ import {Vector4} from 'three/src/math/Vector4';
 import {StatesController} from '../../engine/nodes/utils/StatesController';
 import {TypedPathParamValue} from '../Walker';
 import {BaseNodeType} from '../../engine/nodes/_Base';
+import {PolyScene} from '../../engine';
 
 type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
 export type DefaultOperationParams = Dictionary<DefaultOperationParam<ParamType>>;
@@ -40,7 +41,7 @@ export class BaseOperation {
 
 	static readonly DEFAULT_PARAMS: DefaultOperationParams = {};
 
-	constructor(protected states?: StatesController) {}
+	constructor(protected scene: PolyScene, protected states?: StatesController) {}
 
 	cook(input_contents: any[], params: object): any {}
 }

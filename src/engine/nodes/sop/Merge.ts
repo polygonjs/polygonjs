@@ -36,8 +36,9 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 		});
 	}
 
-	private _operation = new MergeSopOperation();
+	private _operation: MergeSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new MergeSopOperation(this.scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}

@@ -85,19 +85,19 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 	path_param.set(material.full_path());
 
 	await path_param.compute();
-	assert.equal(path_param.value, '/MAT/mesh_basic1');
+	assert.equal(path_param.value.path(), '/MAT/mesh_basic1');
 
 	material.set_name('new_name');
 	await path_param.compute();
-	assert.equal(path_param.value, '/MAT/new_name');
+	assert.equal(path_param.value.path(), '/MAT/new_name');
 
 	MAT.set_name('new_MAT');
 	await path_param.compute();
-	assert.equal(path_param.value, '/new_MAT/new_name');
+	assert.equal(path_param.value.path(), '/new_MAT/new_name');
 
 	material.set_name('new_name_again');
 	await path_param.compute();
-	assert.equal(path_param.value, '/new_MAT/new_name_again');
+	assert.equal(path_param.value.path(), '/new_MAT/new_name_again');
 });
 
 QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {

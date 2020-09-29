@@ -126,7 +126,7 @@ export class HierarchyChildrenController {
 			console.error(message);
 			throw message;
 		} else {
-			const operation = new operation_class() as BaseSopOperation;
+			const operation = new operation_class(this.node.scene) as BaseSopOperation;
 			const operation_container = new SopOperationContainer(operation, params_init_value_overrides || {});
 			return operation_container;
 		}

@@ -30,8 +30,9 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 		// this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}
 
-	private _operation = new CircleSopOperation();
+	private _operation: CircleSopOperation | undefined;
 	cook() {
+		this._operation = this._operation || new CircleSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook([], this.pv);
 		this.set_core_group(core_group);
 	}

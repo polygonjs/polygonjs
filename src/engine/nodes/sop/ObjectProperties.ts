@@ -39,8 +39,9 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
-	private _operation = new ObjectPropertiesSopOperation();
+	private _operation: ObjectPropertiesSopOperation | undefined;
 	async cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new ObjectPropertiesSopOperation(this.scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}

@@ -1,8 +1,8 @@
 import {CoreGroup} from '../../../core/geometry/Group';
-import {JitterSopOperation} from '../../../core/operation/sop/Jitter';
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {JitterSopOperation} from '../../../core/operation/sop/Jitter';
 
 const DEFAULT = JitterSopOperation.DEFAULT_PARAMS;
 class JitterSopParamsConfig extends NodeParamsConfig {
@@ -26,8 +26,9 @@ export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE]);
 	}
 
-	private _operation = new JitterSopOperation();
+	private _operation: JitterSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new JitterSopOperation(this.scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}

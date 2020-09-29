@@ -196,6 +196,7 @@ export interface GeoNodeChildrenMap {
 
 import {BoxSopOperation} from '../../../../core/operation/sop/Box';
 import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
+import {FileSopOperation} from '../../../../core/operation/sop/File';
 import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
 import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
 import {MergeSopOperation} from '../../../../core/operation/sop/Merge';
@@ -210,6 +211,7 @@ export class SopRegister {
 	static run(poly: Poly) {
 		poly.register_operation(BoxSopOperation);
 		poly.register_operation(CircleSopOperation);
+		poly.register_operation(FileSopOperation);
 		poly.register_operation(IcosahedronSopOperation);
 		poly.register_operation(JitterSopOperation);
 		poly.register_operation(MergeSopOperation);

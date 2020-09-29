@@ -1,16 +1,15 @@
-import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
-import {Object3D} from 'three/src/core/Object3D';
 import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {DesktopFileType} from '../../params/utils/OptionsController';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {FileSopOperation} from '../../../core/operation/sop/File';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../core/geometry/Group';
+const DEFAULT = FileSopOperation.DEFAULT_PARAMS;
 class FileSopParamsConfig extends NodeParamsConfig {
-	url = ParamConfig.STRING('/examples/models/wolf.obj', {
+	url = ParamConfig.STRING(DEFAULT.url, {
 		desktop_browse: {file_type: DesktopFileType.GEOMETRY},
 		asset_reference: true,
 	});
@@ -52,32 +51,11 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 
 	// TODO: no error when trying to load a non existing zip file??
-	cook() {
-		const loader = new CoreLoaderGeometry(this.pv.url, this.scene);
-		loader.load(this._on_load.bind(this), this._on_error.bind(this));
-	}
-
-	private _on_load(objects: Object3D[]) {
-		objects = lodash_flatten(objects);
-
-		for (let object of objects) {
-			object.traverse((child) => {
-				this._ensure_geometry_has_index(child);
-				child.matrixAutoUpdate = false;
-			});
-		}
-		this.set_objects(objects);
-	}
-	private _on_error(message: string) {
-		this.states.error.set(`could not load geometry from ${this.pv.url} (${message})`);
-	}
-
-	private _ensure_geometry_has_index(object: Object3D) {
-		const mesh = object as Mesh;
-		const geometry = mesh.geometry;
-		if (geometry) {
-			this._create_index_if_none(geometry as BufferGeometry);
-		}
+	private _operation: FileSopOperation | undefined;
+	async cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new FileSopOperation(this.scene, this.states);
+		const core_group = await this._operation.cook(input_contents, this.pv);
+		this.set_core_group(core_group);
 	}
 
 	static PARAM_CALLBACK_reload(node: FileSopNode) {

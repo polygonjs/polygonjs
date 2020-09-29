@@ -38,8 +38,9 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 	}
 
-	private _operation = new SphereSopOperation();
+	private _operation: SphereSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new SphereSopOperation(this.scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}

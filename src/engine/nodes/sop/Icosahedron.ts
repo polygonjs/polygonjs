@@ -20,8 +20,9 @@ export class IcosahedronSopNode extends TypedSopNode<IcosahedronSopParamsConfig>
 		return 'icosahedron';
 	}
 
-	private _operation = new IcosahedronSopOperation();
+	private _operation: IcosahedronSopOperation | undefined;
 	cook() {
+		this._operation = this._operation || new IcosahedronSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook([], this.pv);
 		this.set_core_group(core_group);
 	}
