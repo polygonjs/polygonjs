@@ -1,26 +1,21 @@
-import {Vector3} from 'three/src/math/Vector3';
-import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
 import {TypedSopNode} from './_Base';
-import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
-import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreTransform} from '../../../core/Transform';
-
-const DEFAULT_UP = new Vector3(0, 0, 1);
+import {CircleSopOperation} from '../../../core/operation/sop/Circle';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = CircleSopOperation.DEFAULT_PARAMS;
 class CircleSopParamsConfig extends NodeParamsConfig {
-	radius = ParamConfig.FLOAT(1);
-	segments = ParamConfig.INTEGER(12, {
+	radius = ParamConfig.FLOAT(DEFAULT.radius);
+	segments = ParamConfig.INTEGER(DEFAULT.segments, {
 		range: [1, 50],
 		range_locked: [true, false],
 	});
-	open = ParamConfig.BOOLEAN(1);
-	arc_angle = ParamConfig.FLOAT(360, {
+	open = ParamConfig.BOOLEAN(DEFAULT.open);
+	arc_angle = ParamConfig.FLOAT(DEFAULT.arc_angle, {
 		range: [0, 360],
 		range_locked: [false, false],
 		visible_if: {open: 1},
 	});
-	direction = ParamConfig.VECTOR3([0, 1, 0]);
+	direction = ParamConfig.VECTOR3(DEFAULT.direction);
 }
 const ParamsConfig = new CircleSopParamsConfig();
 
@@ -30,34 +25,14 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 		return 'circle';
 	}
 
-	private _core_transform = new CoreTransform();
-
 	initialize_node() {
 		// this.io.inputs.set_count(0);
 		// this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}
 
+	private _operation = new CircleSopOperation();
 	cook() {
-		if (this.pv.open) {
-			this._create_circle();
-		} else {
-			this._create_disk();
-		}
-	}
-
-	_create_circle() {
-		const geometry = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segments, this.pv.arc_angle);
-
-		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
-
-		this.set_geometry(geometry, ObjectType.LINE_SEGMENTS);
-	}
-
-	_create_disk() {
-		const geometry = new CircleBufferGeometry(this.pv.radius, this.pv.segments);
-
-		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
-
-		this.set_geometry(geometry);
+		const core_group = this._operation.cook([], this.pv);
+		this.set_core_group(core_group);
 	}
 }

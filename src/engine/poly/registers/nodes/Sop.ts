@@ -195,9 +195,12 @@ export interface GeoNodeChildrenMap {
 }
 
 import {BoxSopOperation} from '../../../../core/operation/sop/Box';
+import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
+import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
 import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
 import {MergeSopOperation} from '../../../../core/operation/sop/Merge';
 import {NullSopOperation} from '../../../../core/operation/sop/Null';
+import {ObjectPropertiesSopOperation} from '../../../../core/operation/sop/ObjectProperties';
 import {SphereSopOperation} from '../../../../core/operation/sop/Sphere';
 import {TransformSopOperation} from '../../../../core/operation/sop/Transform';
 
@@ -205,9 +208,12 @@ import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
 		poly.register_operation(BoxSopOperation);
+		poly.register_operation(CircleSopOperation);
+		poly.register_operation(IcosahedronSopOperation);
 		poly.register_operation(JitterSopOperation);
 		poly.register_operation(MergeSopOperation);
 		poly.register_operation(NullSopOperation);
+		poly.register_operation(ObjectPropertiesSopOperation);
 		poly.register_operation(SphereSopOperation);
 		poly.register_operation(TransformSopOperation);
 

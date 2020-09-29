@@ -11,6 +11,11 @@ export class NullSopOperation extends BaseSopOperation {
 	}
 
 	cook(input_contents: CoreGroup[], params: NullSopParams) {
-		return input_contents[0];
+		const core_group = input_contents[0];
+		if (core_group) {
+			return core_group;
+		} else {
+			return this.create_core_group_from_objects([]);
+		}
 	}
 }

@@ -24,8 +24,8 @@ export class BaseSopOperation extends BaseOperation {
 		core_group.set_objects(objects);
 		return core_group;
 	}
-	protected create_core_group_from_geometry(geometry: BufferGeometry) {
-		const object = BaseSopOperation.create_object(geometry, ObjectType.MESH);
+	protected create_core_group_from_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
+		const object = BaseSopOperation.create_object(geometry, type);
 		return this.create_core_group_from_objects([object]);
 	}
 	protected create_object<OT extends ObjectType>(
