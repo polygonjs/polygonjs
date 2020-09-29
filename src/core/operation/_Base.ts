@@ -11,7 +11,9 @@ import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
-import {StatesController} from '../../engine/params/utils/StatesController';
+import {StatesController} from '../../engine/nodes/utils/StatesController';
+import {TypedPathParamValue} from '../Walker';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 
 type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
 export type DefaultOperationParams = Dictionary<DefaultOperationParam<ParamType>>;
@@ -45,9 +47,23 @@ export class BaseOperation {
 
 export class BaseOperationContainer {
 	protected params: DefaultOperationParams = {};
+	private _path_params: TypedPathParamValue[] | undefined;
+
 	constructor(protected operation: BaseOperation, init_params: ParamsInitData) {
 		this._apply_default_params();
 		this._apply_init_params(init_params);
+	}
+
+	path_param_resolve_required() {
+		return this._path_params != null;
+	}
+	resolve_path_params(node_start: BaseNodeType) {
+		if (!this._path_params) {
+			return;
+		}
+		for (let path_param of this._path_params) {
+			path_param.resolve(node_start);
+		}
 	}
 
 	private _apply_default_params() {
@@ -55,7 +71,7 @@ export class BaseOperationContainer {
 		const param_names = Object.keys(default_params);
 		for (let param_name of param_names) {
 			const param_data = default_params[param_name];
-			const clone_param_data = this._convert_param_data(param_data);
+			const clone_param_data = this._convert_param_data(param_name, param_data);
 			if (clone_param_data != undefined) {
 				this.params[param_name] = clone_param_data;
 			}
@@ -76,9 +92,17 @@ export class BaseOperationContainer {
 		}
 	}
 
-	private _convert_param_data(param_data: DefaultOperationParam<ParamType>) {
-		if (lodash_isNumber(param_data) || lodash_isString(param_data) || lodash_isBoolean(param_data)) {
+	private _convert_param_data(param_name: string, param_data: DefaultOperationParam<ParamType>) {
+		if (lodash_isNumber(param_data) || lodash_isBoolean(param_data) || lodash_isString(param_data)) {
 			return param_data;
+		}
+		if (param_data instanceof TypedPathParamValue) {
+			const cloned = param_data.clone();
+			if (!this._path_params) {
+				this._path_params = [];
+			}
+			this._path_params.push(cloned);
+			return cloned;
 		}
 		if (
 			param_data instanceof Color ||
@@ -91,8 +115,16 @@ export class BaseOperationContainer {
 	}
 
 	private _convert_export_param_data(param_name: string, param_data: SimpleParamJsonExporterData<ParamType>) {
-		if (lodash_isNumber(param_data) || lodash_isString(param_data)) {
+		if (lodash_isNumber(param_data) || lodash_isBoolean(param_data)) {
 			return param_data;
+		}
+		if (lodash_isString(param_data)) {
+			const default_param = this.params[param_name];
+			if (default_param && default_param instanceof TypedPathParamValue) {
+				return default_param.set_path(param_data);
+			} else {
+				return param_data;
+			}
 		}
 		if (lodash_isArray(param_data)) {
 			(this.params[param_name] as Vector3).fromArray(param_data as number[]);

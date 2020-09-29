@@ -6,6 +6,7 @@ export enum ParamType {
 	FOLDER = 'folder',
 	INTEGER = 'integer',
 	OPERATOR_PATH = 'operator_path',
+	NODE_PATH = 'node_path',
 	RAMP = 'ramp',
 	SEPARATOR = 'separator',
 	STRING = 'string',

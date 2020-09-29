@@ -1,7 +1,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopOperationContainer, OperationInputsMap} from '../../../core/operation/sop/_Base';
-import {OPERATIONS_STACK_NODE_TYPE} from '../../../core/operation/_Base';
+import {OPERATIONS_STACK_NODE_TYPE, BaseOperationContainer} from '../../../core/operation/_Base';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
@@ -47,9 +47,21 @@ export class OperationsStackSopNode extends TypedSopNode<OperationsStackSopParam
 		existing_map.set(input_config.operation_input_index, input_config.node_input_index);
 	}
 
-	// add_operation(operation_container: SopOperationContainer) {
-	// 	this._operation_containers.push(operation_container);
-	// }
+	private _operation_containers_requiring_resolve: BaseOperationContainer[] | undefined;
+	add_operation_container_with_path_param_resolve_required(operation_container: BaseOperationContainer) {
+		if (!this._operation_containers_requiring_resolve) {
+			this._operation_containers_requiring_resolve = [];
+		}
+		this._operation_containers_requiring_resolve.push(operation_container);
+	}
+	resolve_operation_containers_path_params() {
+		if (!this._operation_containers_requiring_resolve) {
+			return;
+		}
+		for (let operation_container of this._operation_containers_requiring_resolve) {
+			operation_container.resolve_path_params(this);
+		}
+	}
 
 	async cook(input_contents: CoreGroup[]) {
 		if (this._output_operation_container) {

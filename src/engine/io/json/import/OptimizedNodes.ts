@@ -39,49 +39,37 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		for (let node_name of this._optimized_root_node_names) {
 			const node_data = data[node_name];
-			// const optimized_node_names = this._optimized_names_for_root(data, node_name, tmp_node_data);
-			// optimized_node_names.reverse();
 			const node = this._node.create_node(OPERATIONS_STACK_NODE_TYPE);
 			if (node) {
 				node.set_name(node_name);
 				this._nodes.push(node);
+
+				// ensure the display flag is set accordingly
+				if (node_data.flags?.display) {
+					node.flags?.display?.set(true);
+				}
 			}
-			const operation_container = this._create_operation_container(node_data);
+			const operation_container = this._create_operation_container(
+				scene_importer,
+				node as OperationsStackSopNode,
+				node_data
+			);
 			(node as OperationsStackSopNode).set_output_operation_container(
 				operation_container as SopOperationContainer
 			);
-
-			// for (let optimized_node_name of optimized_node_names) {
-			// 	const optimized_node_data = data[optimized_node_name];
-			// 	let node_type = optimized_node_data['type'];
-			// 	const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(
-			// 		optimized_node_data['params']
-			// 	);
-
-			// 	if (this._is_node_bypassed(optimized_node_data)) {
-			// 		node_type = 'null';
-			// 	}
-			// 	const operation_container = this._node.create_operation_container(node_type, non_spare_params_data);
-			// 	if (operation_container) {
-			// 		(node as OperationsStackSopNode).set_output_operation_container(
-			// 			operation_container as SopOperationContainer
-			// 		);
-			// 	}
-			// }
-
-			// // TODO: the node inputs are currently set from the last optimized_node_names.
-			// // But this would only work for nodes with only 1 input, not more.
-			// const last_optimized_node_name = optimized_node_names[0];
-			// const last_optimized_node_data = data[last_optimized_node_name];
-
-			// tmp_node_data['inputs'] = last_optimized_node_data['inputs'];
 		}
 
 		for (let node of this._nodes) {
 			const operation_container = (node as OperationsStackSopNode).output_operation_container();
 			if (operation_container) {
 				this._node_inputs = [];
-				this._add_optimized_node_inputs(node as OperationsStackSopNode, data, node.name, operation_container);
+				this._add_optimized_node_inputs(
+					scene_importer,
+					node as OperationsStackSopNode,
+					data,
+					node.name,
+					operation_container
+				);
 				node.io.inputs.set_count(this._node_inputs.length);
 				for (let i = 0; i < this._node_inputs.length; i++) {
 					node.set_input(i, this._node_inputs[i]);
@@ -92,6 +80,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 	private _node_inputs: BaseNodeType[] = [];
 	private _add_optimized_node_inputs(
+		scene_importer: SceneJsonImporter,
 		node: OperationsStackSopNode,
 		data: Dictionary<NodeJsonExporterData>,
 		node_name: string,
@@ -112,10 +101,13 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					) {
 						// if the input is an optimized node, we create an operation and go recursive
 						const operation_container = this._create_operation_container(
+							scene_importer,
+							node,
 							input_node_data
 						) as SopOperationContainer;
 						current_operation_container.add_input(operation_container);
-						this._add_optimized_node_inputs(node, data, input_data, operation_container);
+
+						this._add_optimized_node_inputs(scene_importer, node, data, input_data, operation_container);
 					} else {
 						// if the input is NOT an optimized node, we set the input to the node
 						const input_node = node.parent?.node(input_data);
@@ -234,10 +226,22 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		return output_node_names;
 	}
 
-	private _create_operation_container(node_data: NodeJsonExporterData) {
+	private _create_operation_container(
+		scene_importer: SceneJsonImporter,
+		node: OperationsStackSopNode,
+		node_data: NodeJsonExporterData
+	) {
 		const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 		const operation_type = OptimizedNodesJsonImporter.operation_type(node_data);
 		const operation_container = this._node.create_operation_container(operation_type, non_spare_params_data);
+
+		if (operation_container) {
+			if (operation_container.path_param_resolve_required()) {
+				node.add_operation_container_with_path_param_resolve_required(operation_container);
+				scene_importer.add_operations_stack_node_with_path_param_resolve_required(node);
+			}
+		}
+
 		return operation_container;
 	}
 

@@ -1,18 +1,22 @@
 import {PolyScene} from '../PolyScene';
 import {BaseNodeType} from '../../nodes/_Base';
-import {OperatorPathParam} from '../../params/OperatorPath';
+import {TypedPathParam} from '../../params/_BasePath';
 import {MapUtils} from '../../../core/MapUtils';
 import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
+import {OperatorPathParam} from '../../params/OperatorPath';
+
+type BasePathParam = TypedPathParam<any>;
+// class BasePathParam extends Typ
 
 export class ReferencesController {
 	private _referenced_nodes_by_src_param_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
-	private _referencing_params_by_referenced_node_id: Map<CoreGraphNodeId, OperatorPathParam[]> = new Map();
-	private _referencing_params_by_all_named_node_ids: Map<CoreGraphNodeId, OperatorPathParam[]> = new Map();
+	private _referencing_params_by_referenced_node_id: Map<CoreGraphNodeId, BasePathParam[]> = new Map();
+	private _referencing_params_by_all_named_node_ids: Map<CoreGraphNodeId, BasePathParam[]> = new Map();
 	constructor(protected scene: PolyScene) {}
 
-	set_reference_from_param(src_param: OperatorPathParam, referenced_node: BaseNodeType) {
+	set_reference_from_param(src_param: BasePathParam, referenced_node: BaseNodeType) {
 		this._referenced_nodes_by_src_param_id.set(src_param.graph_node_id, referenced_node);
 		MapUtils.push_on_array_at_entry(
 			this._referencing_params_by_referenced_node_id,
@@ -20,7 +24,7 @@ export class ReferencesController {
 			src_param
 		);
 	}
-	set_named_nodes_from_param(src_param: OperatorPathParam) {
+	set_named_nodes_from_param(src_param: BasePathParam) {
 		const named_nodes: BaseNodeType[] = src_param.decomposed_path.named_nodes();
 		for (let named_node of named_nodes) {
 			MapUtils.push_on_array_at_entry(
@@ -30,7 +34,7 @@ export class ReferencesController {
 			);
 		}
 	}
-	reset_reference_from_param(src_param: OperatorPathParam) {
+	reset_reference_from_param(src_param: BasePathParam) {
 		const referenced_node = this._referenced_nodes_by_src_param_id.get(src_param.graph_node_id);
 		if (referenced_node) {
 			MapUtils.pop_from_array_at_entry(
@@ -69,23 +73,17 @@ export class ReferencesController {
 		}
 	}
 	nodes_referenced_by(node: BaseNodeType) {
-		const operator_paths: OperatorPathParam[] = [];
+		const path_param_types: Readonly<Set<ParamType>> = new Set([ParamType.OPERATOR_PATH, ParamType.NODE_PATH]);
+		const path_params: BasePathParam[] = [];
 		for (let param of node.params.all) {
-			if (param.type == ParamType.OPERATOR_PATH) {
-				operator_paths.push(param as OperatorPathParam);
+			if (path_param_types.has(param.type)) {
+				path_params.push(param as BasePathParam);
 			}
 		}
 		const nodes_by_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
 		const params: BaseParamType[] = [];
-		for (let operator_path of operator_paths) {
-			const found_node = operator_path.found_node();
-			const found_param = operator_path.found_param();
-			if (found_node) {
-				nodes_by_id.set(found_node.graph_node_id, found_node);
-			}
-			if (found_param) {
-				params.push(found_param);
-			}
+		for (let path_param of path_params) {
+			this._check_param(path_param, nodes_by_id, params);
 		}
 		for (let param of params) {
 			nodes_by_id.set(param.node.graph_node_id, param.node);
@@ -95,6 +93,23 @@ export class ReferencesController {
 			nodes.push(node);
 		});
 		return nodes;
+	}
+	private _check_param(
+		param: BasePathParam,
+		nodes_by_id: Map<CoreGraphNodeId, BaseNodeType>,
+		params: BaseParamType[]
+	) {
+		if (param instanceof OperatorPathParam) {
+			const found_node = param.found_node();
+			const found_param = param.found_param();
+			if (found_node) {
+				nodes_by_id.set(found_node.graph_node_id, found_node);
+			}
+			if (found_param) {
+				params.push(found_param);
+			}
+			return;
+		}
 	}
 
 	//

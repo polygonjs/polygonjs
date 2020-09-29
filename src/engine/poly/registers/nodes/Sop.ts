@@ -199,6 +199,7 @@ import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
 import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
 import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
 import {MergeSopOperation} from '../../../../core/operation/sop/Merge';
+import {MaterialSopOperation} from '../../../../core/operation/sop/Material';
 import {NullSopOperation} from '../../../../core/operation/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../../core/operation/sop/ObjectProperties';
 import {SphereSopOperation} from '../../../../core/operation/sop/Sphere';
@@ -212,6 +213,7 @@ export class SopRegister {
 		poly.register_operation(IcosahedronSopOperation);
 		poly.register_operation(JitterSopOperation);
 		poly.register_operation(MergeSopOperation);
+		poly.register_operation(MaterialSopOperation);
 		poly.register_operation(NullSopOperation);
 		poly.register_operation(ObjectPropertiesSopOperation);
 		poly.register_operation(SphereSopOperation);

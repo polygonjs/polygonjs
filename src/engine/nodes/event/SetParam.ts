@@ -13,6 +13,7 @@ import {BaseNodeType} from '../_Base';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
+import {IntegerParam} from '../../params/Integer';
 
 enum SetParamParamType {
 	BOOLEAN = 'boolean',
@@ -152,7 +153,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 					if (param.type == ParamType.FLOAT) {
 						return (param as FloatParam).value + this.pv.number;
 					} else {
-						return param.value;
+						return (param as IntegerParam).value;
 					}
 				} else {
 					return this.pv.number;

@@ -154,12 +154,6 @@ export class ParamConfig {
 	) {
 		return new ParamTemplate<ParamType.INTEGER>(ParamType.INTEGER, init_value, options);
 	}
-	static OPERATOR_PATH(
-		init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
-		options?: ParamOptionsByTypeMap[ParamType.OPERATOR_PATH]
-	) {
-		return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
-	}
 	static RAMP(
 		init_value: ParamInitValuesTypeMap[ParamType.RAMP] = RampParam.DEFAULT_VALUE,
 		options?: ParamOptionsByTypeMap[ParamType.RAMP]
@@ -204,6 +198,24 @@ export class ParamConfig {
 			init_value = init_value.toArray() as Number4;
 		}
 		return new ParamTemplate<ParamType.VECTOR4>(ParamType.VECTOR4, init_value, options);
+	}
+
+	//
+	//
+	// PATH PARAMS
+	//
+	//
+	static OPERATOR_PATH(
+		init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
+		options?: ParamOptionsByTypeMap[ParamType.OPERATOR_PATH]
+	) {
+		return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
+	}
+	static NODE_PATH(
+		init_value: ParamInitValuesTypeMap[ParamType.NODE_PATH],
+		options?: ParamOptionsByTypeMap[ParamType.NODE_PATH]
+	) {
+		return new ParamTemplate<ParamType.NODE_PATH>(ParamType.NODE_PATH, init_value, options);
 	}
 }
 

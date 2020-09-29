@@ -22,6 +22,7 @@ export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
 	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: StringOrNumber;
 	[ParamType.OPERATOR_PATH]: string;
+	[ParamType.NODE_PATH]: string;
 	[ParamType.RAMP]: RampValue | RampValueJson;
 	[ParamType.SEPARATOR]: null;
 	[ParamType.STRING]: string;

@@ -1,9 +1,60 @@
 import {BaseNodeType} from '../engine/nodes/_Base';
 import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
+import {NodeContext, BaseNodeByContextMap} from '../engine/poly/NodeContext';
+import {ErrorState} from '../engine/nodes/utils/states/Error';
 // import {NodeSimple} from '/graph/NodeSimple'
 
 type NodeOrParam = BaseNodeType | BaseParamType;
+
+export class TypedPathParamValue {
+	static readonly DEFAULT = {
+		UV: new TypedPathParamValue('/COP/file_uv'),
+		ENV_MAP: new TypedPathParamValue('/COP/env_map'),
+	};
+	private _node: BaseNodeType | null = null;
+	constructor(private _path: string = '') {}
+	set_path(path: string) {
+		this._path = path;
+	}
+	set_node(node: BaseNodeType | null) {
+		this._node = node;
+	}
+	path() {
+		return this._path;
+	}
+	node() {
+		return this._node;
+	}
+
+	resolve(node_start: BaseNodeType) {
+		this._node = CoreWalker.find_node(node_start, this._path);
+	}
+
+	clone() {
+		const cloned = new TypedPathParamValue(this._path);
+		cloned.set_node(this._node);
+		return cloned;
+	}
+
+	ensure_node_context<N extends NodeContext>(
+		context: N,
+		error_state?: ErrorState
+	): BaseNodeByContextMap[N] | undefined {
+		const found_node = this.node();
+		if (!found_node) {
+			error_state?.set(`no node found at ${this.path()}`);
+			return;
+		}
+		const node_context = found_node.node_context();
+		if (node_context == context) {
+			return found_node as BaseNodeByContextMap[N];
+		} else {
+			error_state?.set(`expected ${context} node, but got a ${node_context}`);
+			return;
+		}
+	}
+}
 
 export class CoreWalker {
 	public static readonly SEPARATOR = '/';

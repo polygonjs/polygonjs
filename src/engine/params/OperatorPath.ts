@@ -1,5 +1,6 @@
 // import {TypedParamVisitor} from './_Base';
-import {TypedParam, BaseParamType} from './_Base';
+import {BaseParamType} from './_Base';
+import {TypedPathParam} from './_BasePath';
 import {CoreWalker} from '../../core/Walker';
 import lodash_isArray from 'lodash/isArray';
 
@@ -12,7 +13,6 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
 import {ParamConstructorMap} from './types/ParamConstructorMap';
-import {DecomposedPath} from '../../core/DecomposedPath';
 
 enum OperatorPathMode {
 	NODE = 'NODE',
@@ -26,12 +26,11 @@ export const OPERATOR_PATH_DEFAULT = {
 	},
 };
 
-export class OperatorPathParam extends TypedParam<ParamType.OPERATOR_PATH> {
+export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;
 	private _found_node_with_expected_type: BaseNodeType | null = null;
 	private _found_param: BaseParamType | null = null;
 	private _found_param_with_expected_type: BaseParamType | null = null;
-	public readonly decomposed_path = new DecomposedPath();
 
 	static type() {
 		return ParamType.OPERATOR_PATH;
