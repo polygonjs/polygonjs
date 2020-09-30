@@ -64,7 +64,7 @@ export class BaseOperationContainer {
 		const param_names = Object.keys(init_params);
 		for (let param_name of param_names) {
 			const param_data = init_params[param_name];
-			if (param_data.simple_data) {
+			if (param_data.simple_data != null) {
 				const simple_data = param_data.simple_data;
 				const clone_param_data = this._convert_export_param_data(param_name, simple_data);
 				if (clone_param_data != undefined) {
@@ -97,11 +97,20 @@ export class BaseOperationContainer {
 	}
 
 	private _convert_export_param_data(param_name: string, param_data: SimpleParamJsonExporterData<ParamType>) {
-		if (lodash_isNumber(param_data) || lodash_isBoolean(param_data)) {
+		const default_param = this.params[param_name];
+		if (lodash_isBoolean(param_data)) {
 			return param_data;
 		}
+		if (lodash_isNumber(param_data)) {
+			if (lodash_isBoolean(default_param)) {
+				// if we receive 0, it may be for a boolean param,
+				// so if the default is a boolean, we convert
+				return param_data >= 1 ? true : false;
+			} else {
+				return param_data;
+			}
+		}
 		if (lodash_isString(param_data)) {
-			const default_param = this.params[param_name];
 			if (default_param && default_param instanceof TypedPathParamValue) {
 				return default_param.set_path(param_data);
 			} else {

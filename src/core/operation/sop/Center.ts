@@ -4,7 +4,8 @@ import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {ObjectType} from '../../geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {BufferAttribute, BufferGeometry} from 'three';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface CenterSopParams extends DefaultOperationParams {}
 
