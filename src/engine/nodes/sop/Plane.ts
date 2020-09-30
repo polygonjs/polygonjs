@@ -1,6 +1,5 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {PlaneSopOperation} from '../../../core/operation/sop/Plane';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -31,7 +30,7 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.init_inputs_cloned_state(PlaneSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: PlaneSopOperation | undefined;

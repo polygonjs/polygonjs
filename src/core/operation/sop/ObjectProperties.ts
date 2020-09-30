@@ -2,6 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
 	apply_to_children: boolean;
@@ -29,6 +30,7 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		cast_shadow: true,
 		receive_shadow: true,
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'object_properties'> {
 		return 'object_properties';
 	}

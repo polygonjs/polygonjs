@@ -1,5 +1,4 @@
 import {TypedSopNode} from './_Base';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ObjectPropertiesSopOperation} from '../../../core/operation/sop/ObjectProperties';
 
@@ -36,7 +35,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+		this.io.inputs.init_inputs_cloned_state(ObjectPropertiesSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: ObjectPropertiesSopOperation | undefined;

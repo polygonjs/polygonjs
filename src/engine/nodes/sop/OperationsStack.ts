@@ -1,7 +1,8 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {SopOperationContainer, OperationInputsMap} from '../../../core/operation/sop/_Base';
-import {OPERATIONS_STACK_NODE_TYPE, BaseOperationContainer} from '../../../core/operation/_Base';
+import {SopOperationContainer, OperationInputsMap} from '../../../core/operation/container/sop';
+import {OPERATIONS_STACK_NODE_TYPE} from '../../../core/operation/_Base';
+import {BaseOperationContainer} from '../../../core/operation/container/_Base';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
@@ -64,8 +65,9 @@ export class OperationsStackSopNode extends TypedSopNode<OperationsStackSopParam
 	}
 
 	async cook(input_contents: CoreGroup[]) {
-		console.log('cook', this.full_path());
 		if (this._output_operation_container) {
+			this._output_operation_container.set_dirty();
+
 			const core_group = await this._output_operation_container.compute(
 				input_contents,
 				this._input_configs_by_operation_container

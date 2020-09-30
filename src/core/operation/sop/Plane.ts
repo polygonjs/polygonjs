@@ -5,6 +5,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface PlaneSopParams extends DefaultOperationParams {
 	size: Vector2;
@@ -27,6 +28,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		direction: new Vector3(0, 1, 0),
 		center: new Vector3(0, 0, 0),
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static type(): Readonly<'plane'> {
 		return 'plane';
 	}

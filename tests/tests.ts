@@ -145,6 +145,7 @@ import './engine/nodes/sop/Fuse';
 import './engine/nodes/sop/HeightMap';
 import './engine/nodes/sop/Hexagons';
 import './engine/nodes/sop/Hierarchy';
+import './engine/nodes/sop/Icosahedron';
 import './engine/nodes/sop/Instance';
 import './engine/nodes/sop/InstancesCount';
 import './engine/nodes/sop/Jitter';

@@ -2,7 +2,6 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ROTATION_ORDERS, TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 import {TransformSopOperation} from '../../../core/operation/sop/Transform';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;
@@ -51,7 +50,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	initialize_node() {
 		// this.ui_data.set_param_label(this.p.apply_on, (v)=>TARGET_TYPES[v])
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+		this.io.inputs.init_inputs_cloned_state(TransformSopOperation.INPUT_CLONED_STATE);
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {

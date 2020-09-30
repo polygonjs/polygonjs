@@ -1,6 +1,5 @@
 import {TypedNode} from '../../../nodes/_Base';
 import {SceneJsonExporter} from './Scene';
-// import {JsonExporterVisitor} from './Visitor';
 import {NodeContext} from '../../../poly/NodeContext';
 import {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from '../../../nodes/utils/io/IOController';
@@ -251,7 +250,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		for (let param_name of this._node.params.names) {
 			const param = this._node.params.get(param_name);
 			if (param && !param.parent_param) {
-				const param_exporter = JsonExportDispatcher.dispatch_param(param); //.visit(JsonExporterVisitor); //.json_exporter()
+				const param_exporter = JsonExportDispatcher.dispatch_param(param);
 				if (param_exporter.required) {
 					const params_data = param_exporter.data();
 					data[param.name] = params_data;

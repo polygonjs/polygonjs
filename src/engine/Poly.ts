@@ -32,7 +32,7 @@ export class Poly {
 	_env: string | undefined;
 	private _version: Readonly<string> = _POLYGONJS_VERSION;
 	private _player_mode: boolean = true;
-	private _logger: BaseCoreLogger | undefined;
+	private _logger: BaseCoreLogger | null = null;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	static instance() {
@@ -86,7 +86,7 @@ export class Poly {
 	// LOGGER
 	//
 	//
-	set_logger(logger: BaseCoreLogger) {
+	set_logger(logger: BaseCoreLogger | null) {
 		this._logger = logger;
 	}
 	get logger() {

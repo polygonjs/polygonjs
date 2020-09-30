@@ -1,6 +1,5 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BoxSopOperation} from '../../../core/operation/sop/Box';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -27,7 +26,7 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.init_inputs_cloned_state(BoxSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: BoxSopOperation | undefined;

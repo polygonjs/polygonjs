@@ -1,6 +1,5 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MergeSopOperation} from '../../../core/operation/sop/Merge';
 
 const INPUT_NAME = 'geometry to merge';
@@ -24,7 +23,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1, 4);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+		this.io.inputs.init_inputs_cloned_state(MergeSopOperation.INPUT_CLONED_STATE);
 
 		// this.ui_data.set_icon('compress-arrows-alt');
 		this.scene.dispatch_controller.on_add_listener(() => {

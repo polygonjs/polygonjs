@@ -4,6 +4,7 @@ import {CoreGroup} from '../../geometry/Group';
 import {CorePoint} from '../../geometry/Point';
 import {CoreMath} from '../../math/_Module';
 import {Vector3} from 'three/src/math/Vector3';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface JitterSopParams extends DefaultOperationParams {
 	amount: number;
@@ -15,6 +16,7 @@ export class JitterSopOperation extends BaseSopOperation {
 		amount: 1,
 		seed: 1,
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'jitter'> {
 		return 'jitter';
 	}

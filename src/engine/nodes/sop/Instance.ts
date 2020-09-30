@@ -1,7 +1,5 @@
 import {TypedSopNode} from './_Base';
-
 import {CoreGroup} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeContext} from '../../poly/NodeContext';
 import {MaterialsObjNode} from '../obj/Materials';
 
@@ -38,7 +36,7 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 		this.lifecycle.add_on_create_hook(this._on_create_bound);
 
 		this.io.inputs.set_count(2);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
+		this.io.inputs.init_inputs_cloned_state(InstanceSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: InstanceSopOperation | undefined;

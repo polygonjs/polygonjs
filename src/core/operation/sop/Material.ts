@@ -10,6 +10,7 @@ import {Material} from 'three/src/materials/Material';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Texture} from 'three/src/textures/Texture';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
@@ -31,6 +32,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		tex_src0: 'emissiveMap',
 		tex_dest0: 'map',
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'material'> {
 		return 'material';
 	}

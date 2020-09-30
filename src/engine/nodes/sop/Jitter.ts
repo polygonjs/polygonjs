@@ -1,6 +1,5 @@
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedSopNode} from './_Base';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {JitterSopOperation} from '../../../core/operation/sop/Jitter';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
@@ -23,7 +22,7 @@ export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE]);
+		this.io.inputs.init_inputs_cloned_state(JitterSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: JitterSopOperation | undefined;

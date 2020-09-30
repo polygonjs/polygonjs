@@ -87,3 +87,17 @@ QUnit.test('integer param can take an expression returning a boolean', async (as
 	await param.compute();
 	assert.equal(param.value, 1);
 });
+
+QUnit.test('serialized value is integer if numerical value entered as a string', async (assert) => {
+	const geo1 = window.geo1;
+
+	const switch1 = geo1.create_node('switch');
+	const param = switch1.p.input;
+
+	param.set('12');
+	// this is important when saving nodes,
+	// as there was an issue with the icosahedron being saved with details='44' as a string
+	// and that created a much larger points count
+	// for optimized nodes, as the string was not converted to an int
+	assert.equal(param.raw_input_serialized, 12);
+});

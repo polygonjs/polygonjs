@@ -10,8 +10,9 @@ import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
 import {ParamsInitData} from '../io/IOController';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
-import {BaseOperationContainer} from '../../../../core/operation/_Base';
-import {SopOperationContainer, BaseSopOperation} from '../../../../core/operation/sop/_Base';
+import {BaseOperationContainer} from '../../../../core/operation/container/_Base';
+import {SopOperationContainer} from '../../../../core/operation/container/sop';
+import {BaseSopOperation} from '../../../../core/operation/sop/_Base';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
@@ -117,6 +118,7 @@ export class HierarchyChildrenController {
 	}
 	create_operation_container(
 		operation_type: string,
+		operation_container_name: string,
 		params_init_value_overrides?: ParamsInitData
 	): BaseOperationContainer {
 		const operation_class = Poly.instance().registered_operation(this._context, operation_type);
@@ -127,7 +129,11 @@ export class HierarchyChildrenController {
 			throw message;
 		} else {
 			const operation = new operation_class(this.node.scene) as BaseSopOperation;
-			const operation_container = new SopOperationContainer(operation, params_init_value_overrides || {});
+			const operation_container = new SopOperationContainer(
+				operation,
+				operation_container_name,
+				params_init_value_overrides || {}
+			);
 			return operation_container;
 		}
 	}

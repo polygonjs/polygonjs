@@ -1,7 +1,6 @@
 import {CoreGroup} from '../../geometry/Group';
-import {BaseOperation, BaseOperationContainer} from '../_Base';
+import {BaseOperation} from '../_Base';
 import {NodeContext} from '../../../engine/poly/NodeContext';
-import {ParamsInitData} from '../../../engine/nodes/utils/io/IOController';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType, ObjectByObjectType, OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE, CoreConstant} from '../../geometry/Constant';
 import {CoreGeometryIndexBuilder} from '../../geometry/util/IndexBuilder';
@@ -58,49 +57,5 @@ export class BaseSopOperation extends BaseOperation {
 	}
 	static create_index_if_none(geometry: BufferGeometry) {
 		CoreGeometryIndexBuilder.create_index_if_none(geometry);
-	}
-}
-
-export type OperationInputsMap = WeakMap<SopOperationContainer, Map<number, number>>;
-
-export class SopOperationContainer extends BaseOperationContainer {
-	constructor(protected operation: BaseSopOperation, protected init_params: ParamsInitData) {
-		super(operation, init_params);
-	}
-
-	// TODO: there may a better to overload add_input
-	protected _inputs: SopOperationContainer[] = [];
-	private _current_input_index: number = 0;
-	add_input(input: SopOperationContainer) {
-		super.set_input(this._current_input_index, input);
-		this.increment_input_index();
-	}
-	increment_input_index() {
-		this._current_input_index++;
-	}
-	current_input_index() {
-		return this._current_input_index;
-	}
-
-	async compute(input_contents: CoreGroup[], operation_inputs_map: OperationInputsMap) {
-		console.log('compute', this.operation.type(), input_contents);
-		const operation_input_contents: CoreGroup[] = [];
-
-		const node_inputs_map = operation_inputs_map.get(this);
-		if (node_inputs_map) {
-			node_inputs_map.forEach((node_input_index: number, operation_input_index: number) => {
-				operation_input_contents[operation_input_index] = input_contents[node_input_index];
-			});
-		}
-
-		for (let i = 0; i < this._inputs.length; i++) {
-			const input_operation = this._inputs[i];
-			const result = await input_operation.compute(input_contents, operation_inputs_map);
-			if (result) {
-				operation_input_contents[i] = result;
-			}
-		}
-
-		return this.operation.cook(operation_input_contents, this.params);
 	}
 }

@@ -6,6 +6,7 @@ import {NodeContext} from '../../../engine/poly/NodeContext';
 import {AttribFromTexture} from '../../geometry/operation/AttribFromTexture';
 import {CoreObject} from '../../geometry/Object';
 import {Texture} from 'three/src/textures/Texture';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface AttribFromTextureSopParams extends DefaultOperationParams {
 	texture: TypedPathParamValue;
@@ -23,6 +24,7 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		add: 0,
 		mult: 1,
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'attrib_from_texture'> {
 		return 'attrib_from_texture';
 	}

@@ -13,6 +13,7 @@ import {
 	TransformTargetType,
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface TransformSopParams extends DefaultOperationParams {
 	apply_on: number;
@@ -36,6 +37,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		scale: 1,
 		pivot: new Vector3(0, 0, 0),
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'transform'> {
 		return 'transform';
 	}

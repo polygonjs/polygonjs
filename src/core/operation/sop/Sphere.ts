@@ -5,6 +5,7 @@ import {SphereBufferGeometry} from 'three/src/geometries/SphereGeometry';
 import {IcosahedronBufferGeometry} from 'three/src/geometries/IcosahedronGeometry';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface SphereSopParams extends DefaultOperationParams {
 	type: number;
@@ -39,6 +40,7 @@ export class SphereSopOperation extends BaseSopOperation {
 		detail: 1,
 		center: new Vector3(0, 0, 0),
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'sphere'> {
 		return 'sphere';
 	}

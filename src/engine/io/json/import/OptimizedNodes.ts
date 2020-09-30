@@ -6,7 +6,7 @@ import lodash_isString from 'lodash/isString';
 import {ParamJsonImporter} from './Param';
 import {Poly} from '../../../Poly';
 import {OperationsStackSopNode} from '../../../nodes/sop/OperationsStack';
-import {SopOperationContainer} from '../../../../core/operation/sop/_Base';
+import {SopOperationContainer} from '../../../../core/operation/container/sop';
 import {OPERATIONS_STACK_NODE_TYPE} from '../../../../core/operation/_Base';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
@@ -15,6 +15,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 	private _nodes: BaseNodeTypeWithIO[] = [];
 	private _optimized_root_node_names: Set<string> = new Set();
+	private _operation_containers_by_name: Map<string, SopOperationContainer> = new Map();
 	nodes() {
 		return this._nodes;
 	}
@@ -48,15 +49,16 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				if (node_data.flags?.display) {
 					node.flags?.display?.set(true);
 				}
+				const operation_container = this._create_operation_container(
+					scene_importer,
+					node as OperationsStackSopNode,
+					node_data,
+					node.name
+				);
+				(node as OperationsStackSopNode).set_output_operation_container(
+					operation_container as SopOperationContainer
+				);
 			}
-			const operation_container = this._create_operation_container(
-				scene_importer,
-				node as OperationsStackSopNode,
-				node_data
-			);
-			(node as OperationsStackSopNode).set_output_operation_container(
-				operation_container as SopOperationContainer
-			);
 		}
 
 		for (let node of this._nodes) {
@@ -99,15 +101,27 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 						OptimizedNodesJsonImporter.is_node_optimized(input_node_data) &&
 						!this._optimized_root_node_names.has(input_data) // ensure it is not a root
 					) {
-						// if the input is an optimized node, we create an operation and go recursive
-						const operation_container = this._create_operation_container(
-							scene_importer,
-							node,
-							input_node_data
-						) as SopOperationContainer;
+						// ensure we do not create multiple operation containers from the same node
+						let operation_container = this._operation_containers_by_name.get(input_data);
+						if (!operation_container) {
+							// if the input is an optimized node, we create an operation and go recursive
+							operation_container = this._create_operation_container(
+								scene_importer,
+								node,
+								input_node_data,
+								input_data
+							) as SopOperationContainer;
+							if (operation_container) {
+								this._add_optimized_node_inputs(
+									scene_importer,
+									node,
+									data,
+									input_data,
+									operation_container
+								);
+							}
+						}
 						current_operation_container.add_input(operation_container);
-
-						this._add_optimized_node_inputs(scene_importer, node, data, input_data, operation_container);
 					} else {
 						// if the input is NOT an optimized node, we set the input to the node
 						const input_node = node.parent?.node(input_data);
@@ -124,6 +138,11 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					}
 				}
 			}
+		}
+
+		// once the inputs have been set, we can initialize the inputs_clone_state
+		if (node_data.cloned_state_overriden == true) {
+			current_operation_container.override_input_clone_state(node_data.cloned_state_overriden);
 		}
 	}
 
@@ -229,13 +248,21 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	private _create_operation_container(
 		scene_importer: SceneJsonImporter,
 		node: OperationsStackSopNode,
-		node_data: NodeJsonExporterData
+		node_data: NodeJsonExporterData,
+		node_name: string
 	) {
 		const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 		const operation_type = OptimizedNodesJsonImporter.operation_type(node_data);
-		const operation_container = this._node.create_operation_container(operation_type, non_spare_params_data);
-
+		const operation_container = this._node.create_operation_container(
+			operation_type,
+			node_name,
+			non_spare_params_data
+		) as SopOperationContainer;
 		if (operation_container) {
+			// ensure we do not create another operation container from the same node
+			this._operation_containers_by_name.set(node_name, operation_container);
+
+			// store for path_param resolve when all nodes are created
 			if (operation_container.path_param_resolve_required()) {
 				node.add_operation_container_with_path_param_resolve_required(operation_container);
 				scene_importer.add_operations_stack_node_with_path_param_resolve_required(node);

@@ -1,6 +1,5 @@
 import {TypedSopNode} from './_Base';
 import {SphereSopOperation, SPHERE_TYPES, SPHERE_TYPE} from '../../../core/operation/sop/Sphere';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -35,7 +34,7 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.init_inputs_cloned_state(SphereSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: SphereSopOperation | undefined;

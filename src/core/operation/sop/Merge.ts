@@ -7,6 +7,7 @@ import {MapUtils} from '../../MapUtils';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;
@@ -16,6 +17,7 @@ export class MergeSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MergeSopParams = {
 		compact: true,
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'merge'> {
 		return 'merge';
 	}

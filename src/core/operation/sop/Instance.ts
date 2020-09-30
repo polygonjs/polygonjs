@@ -11,6 +11,7 @@ import {CoreInstancer} from '../../geometry/Instancer';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface InstanceSopParams extends DefaultOperationParams {
 	attributes_to_copy: string;
@@ -24,9 +25,11 @@ export class InstanceSopOperation extends BaseSopOperation {
 		apply_material: true,
 		material: new TypedPathParamValue(''),
 	};
+	static readonly INPUT_CLONED_STATE = [InputCloneMode.ALWAYS, InputCloneMode.NEVER];
 	static type(): Readonly<'instance'> {
 		return 'instance';
 	}
+
 	private _globals_handler: GlobalsGeometryHandler | undefined;
 	private _geometry: BufferGeometry | undefined;
 

@@ -4,6 +4,7 @@ import {CoreGroup} from '../../geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreTransform} from '../../Transform';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
+import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface BoxSopParams extends DefaultOperationParams {
 	size: number;
@@ -17,6 +18,7 @@ export class BoxSopOperation extends BaseSopOperation {
 		divisions: 1,
 		center: new Vector3(0, 0, 0),
 	};
+	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static type(): Readonly<'box'> {
 		return 'box';
 	}
