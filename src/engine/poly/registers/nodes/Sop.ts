@@ -194,30 +194,38 @@ export interface GeoNodeChildrenMap {
 	uv_project: UvProjectSopNode;
 }
 
+import {AddSopOperation} from '../../../../core/operation/sop/Add';
+import {AttribFromTextureSopOperation} from '../../../../core/operation/sop/AttribFromTexture';
 import {BoxSopOperation} from '../../../../core/operation/sop/Box';
 import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
 import {FileSopOperation} from '../../../../core/operation/sop/File';
 import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
+import {InstanceSopOperation} from '../../../../core/operation/sop/Instance';
 import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
 import {MergeSopOperation} from '../../../../core/operation/sop/Merge';
 import {MaterialSopOperation} from '../../../../core/operation/sop/Material';
 import {NullSopOperation} from '../../../../core/operation/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../../core/operation/sop/ObjectProperties';
+import {PlaneSopOperation} from '../../../../core/operation/sop/Plane';
 import {SphereSopOperation} from '../../../../core/operation/sop/Sphere';
 import {TransformSopOperation} from '../../../../core/operation/sop/Transform';
 
 import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
+		poly.register_operation(AddSopOperation);
+		poly.register_operation(AttribFromTextureSopOperation);
 		poly.register_operation(BoxSopOperation);
 		poly.register_operation(CircleSopOperation);
 		poly.register_operation(FileSopOperation);
 		poly.register_operation(IcosahedronSopOperation);
+		poly.register_operation(InstanceSopOperation);
 		poly.register_operation(JitterSopOperation);
 		poly.register_operation(MergeSopOperation);
 		poly.register_operation(MaterialSopOperation);
 		poly.register_operation(NullSopOperation);
 		poly.register_operation(ObjectPropertiesSopOperation);
+		poly.register_operation(PlaneSopOperation);
 		poly.register_operation(SphereSopOperation);
 		poly.register_operation(TransformSopOperation);
 

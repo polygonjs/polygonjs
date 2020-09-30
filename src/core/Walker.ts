@@ -9,8 +9,8 @@ type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class TypedPathParamValue {
 	static readonly DEFAULT = {
-		UV: new TypedPathParamValue('/COP/file_uv'),
-		ENV_MAP: new TypedPathParamValue('/COP/env_map'),
+		UV: '/COP/file_uv',
+		ENV_MAP: '/COP/env_map',
 	};
 	private _node: BaseNodeType | null = null;
 	constructor(private _path: string = '') {}

@@ -64,6 +64,7 @@ export class OperationsStackSopNode extends TypedSopNode<OperationsStackSopParam
 	}
 
 	async cook(input_contents: CoreGroup[]) {
+		console.log('cook', this.full_path());
 		if (this._output_operation_container) {
 			const core_group = await this._output_operation_container.compute(
 				input_contents,
@@ -73,17 +74,5 @@ export class OperationsStackSopNode extends TypedSopNode<OperationsStackSopParam
 				this.set_core_group(core_group);
 			}
 		}
-		// let core_groups = input_contents;
-		// for (let operation_container of this._operation_containers) {
-		// 	const result = operation_container.cook(core_groups);
-		// 	if (result) {
-		// 		if (result instanceof Promise) {
-		// 			core_groups = [await result];
-		// 		} else {
-		// 			core_groups = [result];
-		// 		}
-		// 	}
-		// }
-		// this.set_core_group(core_groups[0]);
 	}
 }
