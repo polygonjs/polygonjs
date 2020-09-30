@@ -7,7 +7,8 @@ import {ParamType} from '../poly/ParamType';
 import {CoreString} from '../../core/String';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-
+import lodash_isString from 'lodash/isString';
+import lodash_isArray from 'lodash/isArray';
 export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	static type() {
 		return ParamType.FLOAT;
@@ -21,6 +22,17 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	get value_serialized() {
 		return this.value;
 	}
+
+	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
+		if (lodash_isArray(raw_input)) {
+			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
+		}
+		if (lodash_isString(raw_input) && CoreString.is_number(raw_input)) {
+			return parseFloat(raw_input);
+		}
+		return raw_input;
+	}
+
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.FLOAT],
 		raw_input2: ParamInitValuesTypeMap[ParamType.FLOAT]

@@ -1,18 +1,6 @@
-import lodash_max from 'lodash/max';
-import lodash_min from 'lodash/min';
-
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypedSopNode} from './_Base';
-import {AttribClass, AttribClassMenuEntries} from '../../../core/geometry/Constant';
-import {CoreObject} from '../../../core/geometry/Object';
+import {AttribClassMenuEntries} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CoreString} from '../../../core/String';
-
-export enum AttribPromoteMode {
-	MIN = 0,
-	MAX = 1,
-	FIRST_FOUND = 2,
-}
 
 const PromoteModeMenuEntries = [
 	{name: 'min', value: AttribPromoteMode.MIN},
@@ -20,25 +8,26 @@ const PromoteModeMenuEntries = [
 	{name: 'first_found', value: AttribPromoteMode.FIRST_FOUND},
 ];
 
+import {AttribPromoteSopOperation, AttribPromoteMode} from '../../../core/operation/sop/AttribPromote';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CorePoint} from '../../../core/geometry/Point';
+const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {
-	class_from = ParamConfig.INTEGER(AttribClass.VERTEX, {
+	class_from = ParamConfig.INTEGER(DEFAULT.class_from, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
-	class_to = ParamConfig.INTEGER(AttribClass.OBJECT, {
+	class_to = ParamConfig.INTEGER(DEFAULT.class_to, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
-	mode = ParamConfig.INTEGER(AttribPromoteMode.FIRST_FOUND, {
+	mode = ParamConfig.INTEGER(DEFAULT.mode, {
 		menu: {
 			entries: PromoteModeMenuEntries,
 		},
 	});
-	name = ParamConfig.STRING('');
+	name = ParamConfig.STRING(DEFAULT.name);
 }
 const ParamsConfig = new AttribPromoteSopParamsConfig();
 
@@ -50,7 +39,7 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+		this.io.inputs.init_inputs_cloned_state(AttribPromoteSopOperation.INPUT_CLONED_STATE);
 		// this.ui_data.set_icon('sort-amount-up');
 
 		this.scene.dispatch_controller.on_add_listener(() => {
@@ -69,122 +58,10 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 		});
 	}
 
-	create_params() {}
-
-	private _core_group: CoreGroup | undefined;
-	private _core_object: CoreObject | undefined;
-	private _values_per_attrib_name: Dictionary<NumericAttribValue[]> = {};
-	private _filtered_values_per_attrib_name: Dictionary<NumericAttribValue | undefined> = {};
+	private _operation: AttribPromoteSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._core_group = input_contents[0];
-
-		this._values_per_attrib_name = {};
-		this._filtered_values_per_attrib_name = {};
-
-		for (let core_object of this._core_group.core_objects()) {
-			this._core_object = core_object;
-			this.find_values();
-			this.filter_values();
-			this.set_values();
-		}
-
-		this.set_core_group(this._core_group);
-	}
-
-	private find_values() {
-		const attrib_names = CoreString.attrib_names(this.pv.name);
-		for (let attrib_name of attrib_names) {
-			this._find_values_for_attrib_name(attrib_name);
-		}
-	}
-	private _find_values_for_attrib_name(attrib_name: string) {
-		switch (this.pv.class_from) {
-			case AttribClass.VERTEX:
-				return this.find_values_from_points(attrib_name);
-			case AttribClass.OBJECT:
-				return this.find_values_from_object(attrib_name);
-		}
-	}
-
-	private find_values_from_points(attrib_name: string) {
-		if (this._core_object) {
-			const points = this._core_object.points();
-			const first_point = points[0];
-			if (first_point) {
-				if (!first_point.is_attrib_indexed(attrib_name)) {
-					const values: NumericAttribValue[] = new Array(points.length);
-					let point: CorePoint;
-					for (let i = 0; i < points.length; i++) {
-						point = points[i];
-						values[i] = point.attrib_value(attrib_name) as NumericAttribValue;
-					}
-					this._values_per_attrib_name[attrib_name] = values;
-				}
-			}
-		}
-	}
-
-	private find_values_from_object(attrib_name: string) {
-		this._values_per_attrib_name[attrib_name] = [];
-		if (this._core_object) {
-			this._values_per_attrib_name[attrib_name].push(this._core_object.attrib_value(attrib_name) as number);
-		}
-	}
-
-	private filter_values() {
-		const attrib_names = Object.keys(this._values_per_attrib_name);
-		for (let attrib_name of attrib_names) {
-			const values = this._values_per_attrib_name[attrib_name];
-			switch (this.pv.mode) {
-				case AttribPromoteMode.MIN:
-					this._filtered_values_per_attrib_name[attrib_name] = lodash_min(values);
-					break;
-				case AttribPromoteMode.MAX:
-					this._filtered_values_per_attrib_name[attrib_name] = lodash_max(values);
-					break;
-				// case PROMOTE_MODE.AVERAGE: return lodash_average(values);
-				case AttribPromoteMode.FIRST_FOUND:
-					this._filtered_values_per_attrib_name[attrib_name] = values[0];
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	private set_values() {
-		const attrib_names = Object.keys(this._filtered_values_per_attrib_name);
-		for (let attrib_name of attrib_names) {
-			const new_value = this._filtered_values_per_attrib_name[attrib_name];
-			if (new_value != null) {
-				switch (this.pv.class_to) {
-					case AttribClass.VERTEX:
-						this.set_values_to_points(attrib_name, new_value);
-						break;
-					case AttribClass.OBJECT:
-						this.set_values_to_object(attrib_name, new_value);
-						break;
-				}
-			}
-		}
-	}
-
-	private set_values_to_points(attrib_name: string, new_value: NumericAttribValue) {
-		if (this._core_group && this._core_object) {
-			const attribute_exists = this._core_group.has_attrib(attrib_name);
-			if (!attribute_exists) {
-				const param_size = 1; // TODO: allow size with larger params
-				this._core_group.add_numeric_vertex_attrib(attrib_name, param_size, new_value);
-			}
-
-			const points = this._core_object.points();
-			for (let point of points) {
-				point.set_attrib_value(attrib_name, new_value);
-			}
-		}
-	}
-
-	private set_values_to_object(attrib_name: string, new_value: NumericAttribValue) {
-		this._core_object?.set_attrib_value(attrib_name, new_value);
+		this._operation = this._operation || new AttribPromoteSopOperation(this.scene, this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.set_core_group(core_group);
 	}
 }

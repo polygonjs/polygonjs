@@ -1,11 +1,7 @@
 import {TypedSopNode} from './_Base';
-import {Vector3} from 'three/src/math/Vector3';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {ObjectType} from '../../../core/geometry/Constant';
+import {CoreGroup} from '../../../core/geometry/Group';
 
+import {CenterSopOperation} from '../../../core/operation/sop/Center';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class CenterSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CenterSopParamsConfig();
@@ -18,33 +14,13 @@ export class CenterSopNode extends TypedSopNode<CenterSopParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.init_inputs_cloned_state(CenterSopOperation.INPUT_CLONED_STATE);
 	}
 
-	private _geo_center: Vector3 = new Vector3();
+	private _operation: CenterSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		const src_object = core_group.objects_with_geo()[0];
-
-		const new_object = this._create_object(src_object);
-		if (new_object) {
-			this.set_object(new_object);
-		} else {
-			this.set_objects([]);
-		}
-	}
-
-	private _create_object(src_object: Object3DWithGeometry) {
-		const src_geometry = src_object.geometry;
-		src_geometry.computeBoundingBox();
-		if (src_geometry.boundingBox) {
-			src_geometry.boundingBox?.getCenter(this._geo_center);
-			src_object.updateMatrixWorld();
-			this._geo_center.applyMatrix4(src_object.matrixWorld);
-			const geometry = new BufferGeometry();
-			const positions: number[] = this._geo_center.toArray();
-			geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-			return this.create_object(geometry, ObjectType.POINTS);
-		}
+		this._operation = this._operation || new CenterSopOperation(this.scene, this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.set_core_group(core_group);
 	}
 }

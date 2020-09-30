@@ -29,7 +29,6 @@ export class IcosahedronSopOperation extends BaseSopOperation {
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		if (points_only) {
 			const object = this.create_object(geometry, ObjectType.POINTS);
-			console.log(this.create_core_group_from_objects([object]).points_count());
 			return this.create_core_group_from_objects([object]);
 		} else {
 			geometry.computeVertexNormals();

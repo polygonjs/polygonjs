@@ -1,5 +1,5 @@
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {AttribPromoteMode} from '../../../../src/engine/nodes/sop/AttribPromote';
+import {AttribPromoteMode} from '../../../../src/core/operation/sop/AttribPromote';
 
 QUnit.test('attrib promote vertex to vertex with min', async (assert) => {
 	const geo1 = window.geo1;

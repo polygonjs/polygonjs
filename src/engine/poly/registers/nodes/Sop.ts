@@ -195,9 +195,16 @@ export interface GeoNodeChildrenMap {
 }
 
 import {AddSopOperation} from '../../../../core/operation/sop/Add';
+import {AttribAddMultSopOperation} from '../../../../core/operation/sop/AttribAddMult';
+import {AttribCopySopOperation} from '../../../../core/operation/sop/AttribCopy';
+import {AttribCreateSopOperation} from '../../../../core/operation/sop/AttribCreate';
+import {AttribNormalizeSopOperation} from '../../../../core/operation/sop/AttribNormalize';
 import {AttribFromTextureSopOperation} from '../../../../core/operation/sop/AttribFromTexture';
+import {AttribPromoteSopOperation} from '../../../../core/operation/sop/AttribPromote';
 import {BoxSopOperation} from '../../../../core/operation/sop/Box';
+import {CenterSopOperation} from '../../../../core/operation/sop/Center';
 import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
+import {Css2DObjectSopOperation} from '../../../../core/operation/sop/Css2DObject';
 import {FileSopOperation} from '../../../../core/operation/sop/File';
 import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../../core/operation/sop/Instance';
@@ -214,9 +221,16 @@ import {Poly} from '../../../Poly';
 export class SopRegister {
 	static run(poly: Poly) {
 		poly.register_operation(AddSopOperation);
+		poly.register_operation(AttribAddMultSopOperation);
+		poly.register_operation(AttribCopySopOperation);
+		poly.register_operation(AttribCreateSopOperation);
+		poly.register_operation(AttribNormalizeSopOperation);
 		poly.register_operation(AttribFromTextureSopOperation);
+		poly.register_operation(AttribPromoteSopOperation);
 		poly.register_operation(BoxSopOperation);
+		poly.register_operation(CenterSopOperation);
 		poly.register_operation(CircleSopOperation);
+		poly.register_operation(Css2DObjectSopOperation);
 		poly.register_operation(FileSopOperation);
 		poly.register_operation(IcosahedronSopOperation);
 		poly.register_operation(InstanceSopOperation);

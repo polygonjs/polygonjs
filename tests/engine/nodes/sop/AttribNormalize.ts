@@ -1,4 +1,4 @@
-import {NormalizeMode} from '../../../../src/engine/nodes/sop/AttribNormalize';
+import {NormalizeMode} from '../../../../src/core/operation/sop/AttribNormalize';
 
 QUnit.test('attrib normalize simple float', async (assert) => {
 	const geo1 = window.geo1;

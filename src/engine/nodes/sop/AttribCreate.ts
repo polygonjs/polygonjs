@@ -12,49 +12,49 @@ import {
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
-
-import {InputCloneMode} from '../../poly/InputCloneMode';
+import {TypeAssert} from '../../poly/Assert';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 type ValueArrayByName = Dictionary<number[]>;
 
+import {AttribCreateSopOperation} from '../../../core/operation/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TypeAssert} from '../../poly/Assert';
+const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
-	group = ParamConfig.STRING('');
-	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
+	group = ParamConfig.STRING(DEFAULT.group);
+	class = ParamConfig.INTEGER(DEFAULT.class, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
-	type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
+	type = ParamConfig.INTEGER(DEFAULT.type, {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
 	});
-	name = ParamConfig.STRING('new_attrib');
-	size = ParamConfig.INTEGER(1, {
+	name = ParamConfig.STRING(DEFAULT.name);
+	size = ParamConfig.INTEGER(DEFAULT.size, {
 		range: [1, 4],
 		range_locked: [true, true],
 		visible_if: {type: AttribType.NUMERIC},
 	});
-	value1 = ParamConfig.FLOAT(0, {
+	value1 = ParamConfig.FLOAT(DEFAULT.value1, {
 		visible_if: {type: AttribType.NUMERIC, size: 1},
 		expression: {for_entities: true},
 	});
-	value2 = ParamConfig.VECTOR2([0, 0], {
+	value2 = ParamConfig.VECTOR2(DEFAULT.value2, {
 		visible_if: {type: AttribType.NUMERIC, size: 2},
 		expression: {for_entities: true},
 	});
-	value3 = ParamConfig.VECTOR3([0, 0, 0], {
+	value3 = ParamConfig.VECTOR3(DEFAULT.value3, {
 		visible_if: {type: AttribType.NUMERIC, size: 3},
 		expression: {for_entities: true},
 	});
-	value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
+	value4 = ParamConfig.VECTOR4(DEFAULT.value4, {
 		visible_if: {type: AttribType.NUMERIC, size: 4},
 		expression: {for_entities: true},
 	});
-	string = ParamConfig.STRING('', {
+	string = ParamConfig.STRING(DEFAULT.string, {
 		visible_if: {type: AttribType.STRING},
 		expression: {for_entities: true},
 	});
@@ -73,7 +73,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+		this.io.inputs.init_inputs_cloned_state(AttribCreateSopOperation.INPUT_CLONED_STATE);
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
@@ -82,11 +82,21 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		});
 	}
 
+	private _operation: AttribCreateSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		if (this.pv.name && lodash_trim(this.pv.name) != '') {
-			this._add_attribute(ATTRIBUTE_CLASSES[this.pv.class], input_contents[0]);
+		// cannot yet convert to an operation, as expressions may be used in this node
+		// but we can still use one when no expression is required
+
+		if (this._is_using_expression()) {
+			if (this.pv.name && lodash_trim(this.pv.name) != '') {
+				this._add_attribute(ATTRIBUTE_CLASSES[this.pv.class], input_contents[0]);
+			} else {
+				this.states.error.set('attribute name is not valid');
+			}
 		} else {
-			this.states.error.set('attribute name is not valid');
+			this._operation = this._operation || new AttribCreateSopOperation(this.scene, this.states);
+			const core_group = this._operation.cook(input_contents, this.pv);
+			this.set_core_group(core_group);
 		}
 	}
 	private async _add_attribute(attrib_class: AttribClass, core_group: CoreGroup) {
@@ -201,8 +211,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				}
 			}
 		} else {
-			// const value = await param.eval_p();
-			core_object.add_numeric_vertex_attrib(this.pv.name, this.pv.size, param.value);
+			// no need to do work here, as this will be done in the operation
 		}
 	}
 
@@ -250,9 +259,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				}
 			}
 		} else {
-			for (let core_object of core_objects) {
-				core_object.set_attrib_value(this.pv.name, param.value);
-			}
+			// no need to do work here, as this will be done in the operation
 		}
 	}
 
@@ -289,9 +296,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				string_values[point.index] = value;
 			});
 		} else {
-			for (let i = 0; i < points.length; i++) {
-				string_values[i] = param.value;
-			}
+			// no need to do work here, as this will be done in the operation
 		}
 
 		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
@@ -308,9 +313,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				core_object.set_attrib_value(this.pv.name, value);
 			});
 		} else {
-			for (let core_object of core_objects) {
-				core_object.set_attrib_value(this.pv.name, param.value);
-			}
+			// no need to do work here, as this will be done in the operation
 		}
 		// this.context().set_entity(object);
 
@@ -320,76 +323,6 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		// 	core_object.add_attribute(this.pv.name, val);
 		// });
 	}
-
-	//
-	//
-	// PRIVATE
-	//
-	//
-
-	// https://stackoverflow.com/questions/24586110/resolve-promises-one-after-another-i-e-in-sequence
-	// async _eval_params_for_entities(entities){
-	// 	// let p = Promise.resolve(); // Q() in q
-
-	// 	const param = this._value_param();
-
-	// 	if (param.has_expression()) {
-	// 		// const iterator = new CoreIterator()
-	// 		// await iterator.start_with_array(entities, (element, index)=>{
-
-	// 		// })
-	// 		for(let entity of entities){
-	// 			await this._eval_param_for_entity(param, entity);
-	// 		}
-
-	// 		// entities.forEach((entity, index)=> {
-	// 		// 	p = p.then(() => {
-	// 		// 		return this._eval_param_for_entity(param, entity);
-	// 		// 	});
-	// 		// });
-	// 	} else {
-	// 		const val = await param.eval_p();
-	// 		for(let entity of entities){
-	// 			this._values.push(val);
-	// 		}
-	// 		// entities.forEach(entity=> {
-	// 		// 	return this._values.push(val);
-	// 		// });
-	// 	}
-
-	// 	// return p;
-	// }
-
-	// async _eval_param_for_entity(value_param, entity){
-	// 	this.context().set_entity(entity);
-
-	// 	let val = await value_param.eval_p()
-
-	// 	 // TODO: optimize. pass directly to the entity instead
-	// 	if(val.clone){
-	// 		val = val.clone()
-	// 	}
-	// 	this._values.push(val);
-	// }
-
-	// private _default_attrib_value() {
-	// 	return DEFAULT_VALUE[this._value_param_name()];
-	// }
-
-	// private _value_param_name() {
-	// 	if (this.pv.type == CoreConstant.ATTRIB_TYPE.NUMERIC) {
-	// 		if (this.pv.size == 1) {
-	// 			return VALUE_PARAM.VALUEX;
-	// 		} else {
-	// 			return VALUE_PARAM.VALUE;
-	// 		}
-	// 	} else {
-	// 		return VALUE_PARAM.STRING;
-	// 	}
-	// }
-	// private _value_param() {
-	// 	return this.params.get(this._value_param_name());
-	// }
 
 	private _init_array_if_required(
 		geometry: BufferGeometry,
@@ -409,9 +342,19 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		return arrays_by_geometry_uuid[uuid];
 	}
 
-	// private _commit_tmp_values(tmp_array: number[], target_array: number[], offset: number) {
-	// 	for (let i = 0; i < tmp_array.length; i++) {
-	// 		target_array[i * 3 + offset] = tmp_array[i];
-	// 	}
-	// }
+	//
+	//
+	// CHECK IF EXPRESSION IS BEING USED, TO ALLOW EASY SWITCH TO OPERATION
+	//
+	//
+	private _is_using_expression(): boolean {
+		const attrib_type = ATTRIBUTE_TYPES[this.pv.type];
+		switch (attrib_type) {
+			case AttribType.NUMERIC:
+				const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
+				return param.has_expression();
+			case AttribType.STRING:
+				return this.p.string.has_expression();
+		}
+	}
 }

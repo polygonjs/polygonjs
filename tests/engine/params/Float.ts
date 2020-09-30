@@ -59,3 +59,17 @@ QUnit.test('float param can take an expression returning a boolean', async (asse
 	await param.compute();
 	assert.equal(param.value, 1);
 });
+
+QUnit.test('serialized value is float if numerical value entered as a string', async (assert) => {
+	const geo1 = window.geo1;
+
+	const attrib_create1 = geo1.create_node('attrib_create');
+	const param = attrib_create1.p.value1;
+
+	param.set('12.5');
+	// this is important when saving nodes,
+	// as there was an issue with the icosahedron being saved with details='44' as a string
+	// and that created a much larger points count
+	// for optimized nodes, as the string was not converted to an int
+	assert.equal(param.raw_input_serialized, 12.5);
+});
