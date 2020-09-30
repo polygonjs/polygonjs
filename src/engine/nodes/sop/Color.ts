@@ -1,15 +1,11 @@
 import {Color} from 'three/src/math/Color';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CoreColor} from '../../../core/Color';
-// import lodash_times from 'lodash/times'
-// import lodash_each from 'lodash/each'
-// import {CoreGroup} from '../../../core/geometry/Group';
-import {TypedSopNode} from './_Base';
 
+import {TypedSopNode} from './_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CorePoint} from '../../../core/geometry/Point';
-
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -20,17 +16,19 @@ const COLOR_ATTRIB_NAME = 'color';
 
 type ValueArrayByName = Dictionary<number[]>;
 
+import {ColorSopOperation} from '../../../core/operation/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
-	from_attribute = ParamConfig.BOOLEAN(0);
-	attrib_name = ParamConfig.STRING('', {
+	from_attribute = ParamConfig.BOOLEAN(DEFAULT.from_attribute);
+	attrib_name = ParamConfig.STRING(DEFAULT.attrib_name, {
 		visible_if: {from_attribute: 1},
 	});
-	color = ParamConfig.COLOR([1, 1, 1], {
+	color = ParamConfig.COLOR(DEFAULT.color, {
 		visible_if: {from_attribute: 0},
 		expression: {for_entities: true},
 	});
-	as_hsv = ParamConfig.BOOLEAN(0, {
+	as_hsv = ParamConfig.BOOLEAN(DEFAULT.as_hsv, {
 		visible_if: {from_attribute: 0},
 	});
 }

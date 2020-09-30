@@ -1,8 +1,8 @@
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedSopNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {JitterSopOperation} from '../../../core/operation/sop/Jitter';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT = JitterSopOperation.DEFAULT_PARAMS;
 class JitterSopParamsConfig extends NodeParamsConfig {
