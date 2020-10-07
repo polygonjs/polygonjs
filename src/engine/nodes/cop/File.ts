@@ -157,14 +157,11 @@ import {
 // 	// format: 'format',
 // };
 
-interface TextureWithUpdateMatrix extends Texture {
-	updateMatrix(): void;
-}
-
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {DesktopFileType} from '../../params/utils/OptionsController';
+import {CopRendererController} from './utils/RendererController';
 // import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 class FileCopParamsConfig extends NodeParamsConfig {
 	//
@@ -239,21 +236,51 @@ class FileCopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	tanisotropy = ParamConfig.BOOLEAN(0);
+	use_renderer_max_anisotropy = ParamConfig.BOOLEAN(1);
 	anisotropy = ParamConfig.INTEGER(1, {
-		visible_if: {tanisotropy: 1},
+		visible_if: {tanisotropy: 1, use_renderer_max_anisotropy: 0},
 		range: [0, 32],
 		range_locked: [true, false],
 	});
+	use_camera_renderer = ParamConfig.BOOLEAN(0, {
+		visible_if: {tanisotropy: 1, use_renderer_max_anisotropy: 1},
+	});
+	anisotropy_sep = ParamConfig.SEPARATOR(null, {
+		visible_if: {tanisotropy: 1},
+	});
+
 	tflip_y = ParamConfig.BOOLEAN(0);
 	flip_y = ParamConfig.BOOLEAN(0, {visible_if: {tflip_y: 1}});
 	ttransform = ParamConfig.BOOLEAN(0);
-	offset = ParamConfig.VECTOR2([0, 0], {visible_if: {ttransform: 1}});
-	repeat = ParamConfig.VECTOR2([1, 1], {visible_if: {ttransform: 1}});
-	rotation = ParamConfig.FLOAT(0, {
+	offset = ParamConfig.VECTOR2([0, 0], {
 		visible_if: {ttransform: 1},
-		range: [-1, 1],
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			FileCopNode.PARAM_CALLBACK_update_offset(node as FileCopNode);
+		},
 	});
-	center = ParamConfig.VECTOR2([0, 0], {visible_if: {ttransform: 1}});
+	repeat = ParamConfig.VECTOR2([1, 1], {
+		visible_if: {ttransform: 1},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			FileCopNode.PARAM_CALLBACK_update_repeat(node as FileCopNode);
+		},
+	});
+	rotation = ParamConfig.FLOAT(0, {
+		range: [-1, 1],
+		visible_if: {ttransform: 1},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			FileCopNode.PARAM_CALLBACK_update_rotation(node as FileCopNode);
+		},
+	});
+	center = ParamConfig.VECTOR2([0, 0], {
+		visible_if: {ttransform: 1},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			FileCopNode.PARAM_CALLBACK_update_center(node as FileCopNode);
+		},
+	});
 	// use_data_texture = ParamConfig.BOOLEAN(0, {
 	// 	visible_if: {is_video: 0},
 	// });
@@ -416,27 +443,80 @@ export class FileCopNode extends TypedCopNode<FileCopParamsConfig> {
 		if (this.pv.tminfilter) {
 			texture.magFilter = this.pv.mag_filter;
 		}
+		this._update_anisotropy(texture);
 
-		if (this.pv.tanisotropy) {
-			texture.anisotropy = this.pv.anisotropy;
-		}
 		// do not have this in an if block,
 		// as to be sure this is set to false in case it is set to true
 		// by the texture loader
 		texture.flipY = this.pv.tflip_y && this.pv.flip_y;
 		this._update_texture_transform(texture);
 	}
+
+	private _renderer_controller: CopRendererController | undefined;
+	private async _update_anisotropy(texture: Texture) {
+		if (!this.pv.tanisotropy) {
+			return;
+		}
+		if (this.pv.use_renderer_max_anisotropy) {
+			this._renderer_controller = this._renderer_controller || new CopRendererController(this);
+			const renderer = await this._renderer_controller.renderer();
+			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+		} else {
+			texture.anisotropy = this.pv.anisotropy;
+		}
+	}
+
 	private _update_texture_transform(texture: Texture) {
 		if (!this.pv.ttransform) {
 			return;
 		}
-		texture.offset.copy(this.pv.offset);
-		texture.repeat.copy(this.pv.repeat);
-		texture.rotation = this.pv.rotation;
-		texture.center.copy(this.pv.center);
-
-		(texture as TextureWithUpdateMatrix).updateMatrix();
+		this._update_offset(texture, false);
+		this._update_repeat(texture, false);
+		this._update_rotation(texture, false);
+		this._update_center(texture, false);
+		texture.updateMatrix();
 	}
+	private _update_offset(texture: Texture, update_matrix: boolean) {
+		texture.offset.copy(this.pv.offset);
+		if (update_matrix) {
+			texture.updateMatrix();
+		}
+	}
+	private _update_repeat(texture: Texture, update_matrix: boolean) {
+		texture.repeat.copy(this.pv.repeat);
+		if (update_matrix) {
+			texture.updateMatrix();
+		}
+	}
+	private _update_rotation(texture: Texture, update_matrix: boolean) {
+		texture.rotation = this.pv.rotation;
+		if (update_matrix) {
+			texture.updateMatrix();
+		}
+	}
+	private _update_center(texture: Texture, update_matrix: boolean) {
+		texture.center.copy(this.pv.center);
+		if (update_matrix) {
+			texture.updateMatrix();
+		}
+	}
+	static PARAM_CALLBACK_update_offset(node: FileCopNode) {
+		const texture = node.container_controller.container.texture();
+		node._update_offset(texture, true);
+	}
+	static PARAM_CALLBACK_update_repeat(node: FileCopNode) {
+		const texture = node.container_controller.container.texture();
+		node._update_repeat(texture, true);
+	}
+	static PARAM_CALLBACK_update_rotation(node: FileCopNode) {
+		const texture = node.container_controller.container.texture();
+		node._update_rotation(texture, true);
+	}
+	static PARAM_CALLBACK_update_center(node: FileCopNode) {
+		const texture = node.container_controller.container.texture();
+		node._update_center(texture, true);
+	}
+
 	//
 	//
 	// VIDEO
