@@ -221,6 +221,9 @@ class FileCopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	wrap_sep = ParamConfig.SEPARATOR(null, {
+		visible_if: {twrap: 1},
+	});
 	tminfilter = ParamConfig.BOOLEAN(0);
 	min_filter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
 		visible_if: {tminfilter: 1},
@@ -236,7 +239,9 @@ class FileCopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	tanisotropy = ParamConfig.BOOLEAN(0);
-	use_renderer_max_anisotropy = ParamConfig.BOOLEAN(1);
+	use_renderer_max_anisotropy = ParamConfig.BOOLEAN(1, {
+		visible_if: {tanisotropy: 1},
+	});
 	anisotropy = ParamConfig.INTEGER(1, {
 		visible_if: {tanisotropy: 1, use_renderer_max_anisotropy: 0},
 		range: [0, 32],
