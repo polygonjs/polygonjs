@@ -2,7 +2,7 @@ import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {Poly} from '../../../src/engine/Poly';
 import {BoxSopNode} from '../../../src/engine/nodes/sop/Box';
-import {OperationsStackSopNode} from '../../../src/engine/nodes/sop/OperationsStack';
+import {OperationsComposerSopNode} from '../../../src/engine/nodes/sop/OperationsComposer';
 import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
 
 QUnit.test('scene can be imported with a single optimized node', async (assert) => {
@@ -22,7 +22,7 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	assert.equal(scene_player.nodes_controller.all_nodes().length, scene_no_player.nodes_controller.all_nodes().length);
 
 	const box1_player = scene_player.node(box1.full_path()) as BoxSopNode;
-	assert.equal(box1_player.type, OperationsStackSopNode.type());
+	assert.equal(box1_player.type, OperationsComposerSopNode.type());
 
 	let container = await box1_player.request_container();
 	const core_group = container.core_content();
@@ -54,7 +54,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	);
 
 	const transform1_player = scene_player.node(transform1.full_path()) as TransformSopNode;
-	assert.equal(transform1_player.type, OperationsStackSopNode.type());
+	assert.equal(transform1_player.type, OperationsComposerSopNode.type());
 
 	let container = await transform1_player.request_container();
 	const core_group = container.core_content();
@@ -104,7 +104,7 @@ QUnit.test(
 		);
 
 		const merge2_player = scene_player.node(merge2.full_path()) as TransformSopNode;
-		assert.equal(merge2_player.type, OperationsStackSopNode.type());
+		assert.equal(merge2_player.type, OperationsComposerSopNode.type());
 
 		let container = await merge2_player.request_container();
 		const core_group = container.core_content();

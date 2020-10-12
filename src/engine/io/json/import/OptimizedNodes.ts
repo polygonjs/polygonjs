@@ -5,11 +5,18 @@ import {NodeJsonExporterData} from '../export/Node';
 import lodash_isString from 'lodash/isString';
 import {ParamJsonImporter} from './Param';
 import {Poly} from '../../../Poly';
-import {OperationsStackSopNode} from '../../../nodes/sop/OperationsStack';
+import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {SopOperationContainer} from '../../../../core/operation/container/sop';
-import {OPERATIONS_STACK_NODE_TYPE} from '../../../../core/operation/_Base';
+import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operation/_Base';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
+
+interface RootNodeGenericData {
+	outputs_count:number,
+	non_optimized_count:number
+}
+
+
 export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T) {}
 
@@ -40,7 +47,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		for (let node_name of this._optimized_root_node_names) {
 			const node_data = data[node_name];
-			const node = this._node.create_node(OPERATIONS_STACK_NODE_TYPE);
+			const node = this._node.create_node(OPERATIONS_COMPOSER_NODE_TYPE);
 			if (node) {
 				node.set_name(node_name);
 				this._nodes.push(node);
@@ -51,23 +58,23 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				}
 				const operation_container = this._create_operation_container(
 					scene_importer,
-					node as OperationsStackSopNode,
+					node as OperationsComposerSopNode,
 					node_data,
 					node.name
 				);
-				(node as OperationsStackSopNode).set_output_operation_container(
+				(node as OperationsComposerSopNode).set_output_operation_container(
 					operation_container as SopOperationContainer
 				);
 			}
 		}
 
 		for (let node of this._nodes) {
-			const operation_container = (node as OperationsStackSopNode).output_operation_container();
+			const operation_container = (node as OperationsComposerSopNode).output_operation_container();
 			if (operation_container) {
 				this._node_inputs = [];
 				this._add_optimized_node_inputs(
 					scene_importer,
-					node as OperationsStackSopNode,
+					node as OperationsComposerSopNode,
 					data,
 					node.name,
 					operation_container
@@ -83,7 +90,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	private _node_inputs: BaseNodeType[] = [];
 	private _add_optimized_node_inputs(
 		scene_importer: SceneJsonImporter,
-		node: OperationsStackSopNode,
+		node: OperationsComposerSopNode,
 		data: Dictionary<NodeJsonExporterData>,
 		node_name: string,
 		current_operation_container: SopOperationContainer
@@ -195,30 +202,47 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	// a node will be considered optimized root node if:
 	// - it has no output
 	// - at least one output is not optimized (as it if it has 2 outputs, and only 1 is optimized, it will not be considered root)
+	static is_optimized_root_node_generic(data:RootNodeGenericData):boolean{
+		if(data.outputs_count == 0){
+			return true
+		}
+		if(data.non_optimized_count > 0){
+			return true
+		}
+		return false
+	}
 	static is_optimized_root_node(
 		data: Dictionary<NodeJsonExporterData>,
 		current_node_name: string
-		// current_node_data: NodeJsonExporterData
 	) {
 		const output_names = this.node_outputs(data, current_node_name);
-
-		if (output_names.size == 0) {
-			return true;
-		}
 
 		let non_optimized_count = 0;
 		output_names.forEach((node_name) => {
 			const node_data = data[node_name];
-			if (OptimizedNodesJsonImporter.is_node_optimized(node_data)) {
-			} else {
+			if (!this.is_node_optimized(node_data)) {
 				non_optimized_count++;
 			}
 		});
-		if (non_optimized_count > 0) {
-			return true;
-		}
-		return false;
+
+		return this.is_optimized_root_node_generic({outputs_count: output_names.size, non_optimized_count: non_optimized_count})
 	}
+	// same algo as is_optimized_root_node, but for a node
+	static is_optimized_root_node_from_node<NC extends NodeContext>(node: TypedNode<NC, any>){
+		if(!node.flags?.optimize?.active){
+			return false
+		}
+
+		const output_nodes = node.io.connections.output_connections().map(c=>c.node_dest)
+		let non_optimized_count = 0;
+		for(let output_node of output_nodes){
+			if (!output_node.flags?.optimize?.active){
+				non_optimized_count++;
+			}
+		}
+		return this.is_optimized_root_node_generic({outputs_count: output_nodes.length, non_optimized_count: non_optimized_count})
+	}
+
 	static node_outputs(
 		data: Dictionary<NodeJsonExporterData>,
 		current_node_name: string
@@ -247,7 +271,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 	private _create_operation_container(
 		scene_importer: SceneJsonImporter,
-		node: OperationsStackSopNode,
+		node: OperationsComposerSopNode,
 		node_data: NodeJsonExporterData,
 		node_name: string
 	) {
@@ -265,7 +289,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			// store for path_param resolve when all nodes are created
 			if (operation_container.path_param_resolve_required()) {
 				node.add_operation_container_with_path_param_resolve_required(operation_container);
-				scene_importer.add_operations_stack_node_with_path_param_resolve_required(node);
+				scene_importer.add_operations_composer_node_with_path_param_resolve_required(node);
 			}
 		}
 

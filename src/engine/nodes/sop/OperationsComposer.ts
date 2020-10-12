@@ -1,24 +1,24 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopOperationContainer, OperationInputsMap} from '../../../core/operation/container/sop';
-import {OPERATIONS_STACK_NODE_TYPE} from '../../../core/operation/_Base';
+import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../core/operation/_Base';
 import {BaseOperationContainer} from '../../../core/operation/container/_Base';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class OperationsStackSopParamConfig extends NodeParamsConfig {}
-const ParamsConfig = new OperationsStackSopParamConfig();
+class OperationsComposerSopParamConfig extends NodeParamsConfig {}
+const ParamsConfig = new OperationsComposerSopParamConfig();
 
 export interface OperationContainerInputConfig {
 	operation_input_index: number;
 	node_input_index: number;
 }
 
-export class OperationsStackSopNode extends TypedSopNode<OperationsStackSopParamConfig> {
+export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSopParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return OPERATIONS_STACK_NODE_TYPE;
+		return OPERATIONS_COMPOSER_NODE_TYPE;
 	}
 
 	initialize_node() {
