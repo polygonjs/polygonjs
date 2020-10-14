@@ -213,6 +213,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 		range: [1, 4],
 		range_locked: [true, false],
 	});
+	// preserve_drawing_buffer = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new WebGlRendererRopParamsConfig();
 
@@ -236,6 +237,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		(params as WebGLRendererParameters).alpha = this.pv.alpha;
 		(params as WebGLRendererParameters).canvas = canvas;
 		(params as WebGLRendererParameters).context = gl;
+		// (params as WebGLRendererParameters).preserveDrawingBuffer = this.pv.preserve_drawing_buffer;
 		const renderer = new WebGLRenderer(params);
 
 		this._update_renderer(renderer);

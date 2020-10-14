@@ -28,6 +28,7 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
 		this.object.add(this._helper);
+		this._helper.matrixAutoUpdate = false;
 		this.flags.display.add_hook(() => {
 			this._helper.visible = this.flags.display.active;
 		});

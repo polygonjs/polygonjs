@@ -28,7 +28,7 @@ export class CSS2DRenderer {
 	private _fog_far = 100;
 
 	constructor() {
-		this.domElement.style.overflow = 'hidden';
+		this.domElement.classList.add('polygonjs-CSS2DRenderer');
 	}
 
 	getSize() {
