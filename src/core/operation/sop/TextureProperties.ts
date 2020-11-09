@@ -7,19 +7,32 @@ import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Poly} from '../../../engine/Poly';
 
+import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/ConstantFilter';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
 	apply_to_children: boolean;
+	// anisotropy
 	tanisotropy: boolean;
 	use_renderer_max_anisotropy: boolean;
 	anisotropy: number;
+	// filters
+	tmin_filter: boolean;
+	min_filter: number;
+	tmag_filter: boolean;
+	mag_filter: number;
 }
 
 export class TexturePropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
 		apply_to_children: false,
+		// anisotropy
 		tanisotropy: false,
 		use_renderer_max_anisotropy: false,
 		anisotropy: 1,
+		// filters
+		tmin_filter: false,
+		min_filter: MIN_FILTER_DEFAULT_VALUE,
+		tmag_filter: false,
+		mag_filter: MAG_FILTER_DEFAULT_VALUE,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'texture_properties'> {
@@ -59,6 +72,9 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		if (params.tanisotropy) {
 			await this._update_anisotropy(texture, params);
 		}
+		if (params.tminfilter || params.tmaxfilter) {
+			this._update_filter(texture, params);
+		}
 	}
 
 	private async _update_anisotropy(texture: Texture, params: TexturePropertiesSopParams) {
@@ -69,6 +85,14 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 			}
 		} else {
 			texture.anisotropy = params.anisotropy;
+		}
+	}
+	private _update_filter(texture: Texture, params: TexturePropertiesSopParams) {
+		if (params.tminfilter) {
+			texture.minFilter = params.min_filter;
+		}
+		if (params.tmagfilter) {
+			texture.magFilter = params.mag_filter;
 		}
 	}
 }

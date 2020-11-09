@@ -139,15 +139,14 @@ export class CoreObject extends CoreEntity {
 	delete_attribute(name: string) {
 		delete this._object.userData[ATTRIBUTES][name];
 	}
-
-	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
+	static attrib_value(object: Object3D, name: string, index:number=0, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		if (name === PTNUM) {
-			return this.index;
+			return index;
 		} else {
-			let val = this._object.userData[ATTRIBUTES][name] as AttribValue;
+			let val = object.userData[ATTRIBUTES][name] as AttribValue;
 			if (val == null) {
 				if (name == NAME_ATTR) {
-					val = this._object.name;
+					val = object.name;
 				}
 			} else {
 				if (lodash_isArray(val) && target) {
@@ -157,6 +156,10 @@ export class CoreObject extends CoreEntity {
 			}
 			return val;
 		}
+	}
+
+	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
+		return CoreObject.attrib_value(this._object, name, this._index, target);
 	}
 	string_attrib_value(name: string) {
 		const str = this.attrib_value(name);
