@@ -178,6 +178,7 @@ import './engine/nodes/sop/Subdivide';
 import './engine/nodes/sop/Subnet';
 import './engine/nodes/sop/Switch';
 import './engine/nodes/sop/Text';
+import './engine/nodes/sop/TextureProperties';
 import './engine/nodes/sop/Torus';
 import './engine/nodes/sop/TorusKnot';
 import './engine/nodes/sop/Transform';

@@ -90,6 +90,7 @@ import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
 import {TextSopNode} from '../../../nodes/sop/Text';
+import {TexturePropertiesSopNode} from '../../../nodes/sop/TextureProperties';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
@@ -184,6 +185,7 @@ export interface GeoNodeChildrenMap {
 	switch: SwitchSopNode;
 	tetrahedron: TetrahedronSopNode;
 	text: TextSopNode;
+	texture_properties: TexturePropertiesSopNode;
 	torus: TorusSopNode;
 	torus_knot: TorusKnotSopNode;
 	transform: TransformSopNode;
@@ -215,6 +217,7 @@ import {NullSopOperation} from '../../../../core/operation/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../../core/operation/sop/ObjectProperties';
 import {PlaneSopOperation} from '../../../../core/operation/sop/Plane';
 import {SphereSopOperation} from '../../../../core/operation/sop/Sphere';
+import {TexturePropertiesSopOperation} from '../../../../core/operation/sop/TextureProperties';
 import {TransformSopOperation} from '../../../../core/operation/sop/Transform';
 
 import {Poly} from '../../../Poly';
@@ -241,6 +244,7 @@ export class SopRegister {
 		poly.register_operation(ObjectPropertiesSopOperation);
 		poly.register_operation(PlaneSopOperation);
 		poly.register_operation(SphereSopOperation);
+		poly.register_operation(TexturePropertiesSopOperation);
 		poly.register_operation(TransformSopOperation);
 
 		poly.register_node(AddSopNode, CATEGORY_SOP.INPUT);
@@ -339,6 +343,7 @@ export class SopRegister {
 		poly.register_node(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.register_node(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TextSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.register_node(TexturePropertiesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(TorusSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.register_node(TransformSopNode, CATEGORY_SOP.MODIFIER);
