@@ -126,13 +126,13 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	}
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {
 		uniforms: true,
-		define: false,
-		define_uv: false,
+		// define: false,
+		// define_uv: false,
 	});
 	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
 		uniforms: true,
-		define: false,
-		define_uv: false,
+		// define: false,
+		// define_uv: false,
 	});
 	initialize_node() {
 		this.params.on_params_created('init controllers', () => {

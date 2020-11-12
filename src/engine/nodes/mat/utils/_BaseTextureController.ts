@@ -76,18 +76,18 @@ type CurrentMaterial = Material | ShaderMaterial;
 export interface UpdateOptions {
 	direct_params?: boolean;
 	uniforms?: boolean;
-	define?: boolean;
-	define_uv?: boolean;
+	// define?: boolean;
+	// define_uv?: boolean;
 }
 export class BaseTextureMapController extends BaseController {
 	constructor(protected node: BaseMatNodeType, protected _update_options: UpdateOptions) {
 		super(node);
-		if (this._update_options.define == null) {
-			this._update_options.define = true;
-		}
-		if (this._update_options.define_uv == null) {
-			this._update_options.define_uv = true;
-		}
+		// if (this._update_options.define == null) {
+		// 	this._update_options.define = true;
+		// }
+		// if (this._update_options.define_uv == null) {
+		// 	this._update_options.define_uv = true;
+		// }
 	}
 
 	protected add_hooks(use_map_param: BooleanParam, path_param: OperatorPathParam) {
@@ -155,17 +155,21 @@ export class BaseTextureMapController extends BaseController {
 		}
 		if (!has_texture || new_texture_is_different) {
 			uniforms[mat_attrib_name].value = texture as any;
-			if (this._do_update_define()) {
-				if(material.defines){
-					const define_name = this._define_name(`${mat_attrib_name}`);
-					material.defines[define_name] = 1;
-				}
-			}
-			if (this._update_options.define_uv) {
-				if(material.defines){
-					material.defines['USE_UV'] = 1;
-				}
-			}
+			// currently removing the settings of defines USE_MAP or USE_UV
+			// as this seems to conflict with setting .map on the material itself.
+			// ideally I should test if .alphaMap and .envMap still work
+			// if (this._do_update_define()) {
+			// 	if (material.defines) {
+			// 		const define_name = this._define_name(`${mat_attrib_name}`);
+			// 		material.defines[define_name] = 3;
+			// 	}
+			// }
+			// if (this._update_options.define_uv) {
+			// 	if (material.defines) {
+			// 		material.defines['USE_UV'] = 5;
+			// 	}
+			// }
+			this._apply_texture_on_material(material, material, mat_attrib_name as any, texture);
 			material.needsUpdate = true;
 		}
 	}
@@ -176,18 +180,19 @@ export class BaseTextureMapController extends BaseController {
 	) {
 		if (uniforms[mat_attrib_name].value) {
 			uniforms[mat_attrib_name].value = null;
-			if (this._do_update_define()) {
-				if(material.defines){
-					const define_name = this._define_name(`${mat_attrib_name}`);
-					delete material.defines[define_name];
-				}
-			}
+			// if (this._do_update_define()) {
+			// 	if (material.defines) {
+			// 		// const define_name = this._define_name(`${mat_attrib_name}`);
+			// 		// delete material.defines[define_name];
+			// 	}
+			// }
+			this._remove_texture_from_material(material, material, mat_attrib_name as any);
 			material.needsUpdate = true;
 		}
 	}
-	private _define_name(mat_attrib_name: string): string {
-		return 'USE_' + mat_attrib_name.replace('_', '').toUpperCase();
-	}
+	// private _define_name(mat_attrib_name: string): string {
+	// 	return 'USE_' + mat_attrib_name.replace('_', '').toUpperCase();
+	// }
 
 	//
 	//
@@ -290,10 +295,10 @@ export class BaseTextureMapController extends BaseController {
 		remove_callback(material, texture_owner, mat_attrib_name);
 	}
 
-	private _do_update_define(): boolean {
-		if (this._update_options.define == null) {
-			return true;
-		}
-		return this._update_options.define;
-	}
+	// private _do_update_define(): boolean {
+	// 	if (this._update_options.define == null) {
+	// 		return true;
+	// 	}
+	// 	return this._update_options.define;
+	// }
 }

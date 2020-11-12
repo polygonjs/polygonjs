@@ -4,6 +4,7 @@ import {CustomMaterialName} from './_BaseMaterial';
 import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {IUniformsWithTime, IUniformsWithResolution} from '../../../../../scene/utils/UniformsController';
 import {GlParamConfig} from '../../utils/ParamConfig';
+import {Poly} from '../../../../../Poly';
 
 export interface PersistedConfigBaseMaterialData {
 	material: object;
@@ -101,6 +102,8 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 	}
 
 	material(): ShaderMaterialWithCustomMaterials | undefined {
-		return this._material;
+		if (Poly.instance().player_mode()) {
+			return this._material;
+		}
 	}
 }

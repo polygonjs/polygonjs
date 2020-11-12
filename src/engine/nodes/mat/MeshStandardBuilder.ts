@@ -57,7 +57,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this, {
 		uniforms: true,
 		direct_params: true,
-		define: false,
+		// define: false,
 	});
 	readonly depth_controller: DepthController = new DepthController(this);
 	initialize_node() {

@@ -1,8 +1,6 @@
-// import {VertexColors} from 'three/src/constants';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-// import {FrontSide} from 'three/src/constants';
 import {ShaderAssemblerMesh} from './_BaseMesh';
 
 export class ShaderAssemblerBasic extends ShaderAssemblerMesh {
