@@ -11,12 +11,14 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Texture} from 'three/src/textures/Texture';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
 	material: TypedPathParamValue;
 	apply_to_children: boolean;
 	clone_mat: boolean;
+	share_uniforms: boolean;
 	swap_current_tex: boolean;
 	tex_src0: string;
 	tex_dest0: string;
@@ -28,6 +30,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		material: new TypedPathParamValue('/MAT/mesh_standard1'),
 		apply_to_children: true,
 		clone_mat: false,
+		share_uniforms: true,
 		swap_current_tex: false,
 		tex_src0: 'emissiveMap',
 		tex_dest0: 'map',
@@ -77,6 +80,12 @@ export class MaterialSopOperation extends BaseSopOperation {
 	private _apply_material(object: Object3D, src_material: Material, params: MaterialSopParams) {
 		const used_material = params.clone_mat ? CoreMaterial.clone(src_material) : src_material;
 
+		if (src_material instanceof ShaderMaterial && used_material instanceof ShaderMaterial) {
+			for (let uniform_name in src_material.uniforms) {
+				used_material.uniforms[uniform_name] = src_material.uniforms[uniform_name];
+			}
+		}
+
 		const object_with_material = object as Mesh;
 		const current_mat = object_with_material.material as Material | undefined;
 		if (current_mat && params.swap_current_tex) {
@@ -94,7 +103,16 @@ export class MaterialSopOperation extends BaseSopOperation {
 		}
 		const src_tex: Texture | null = (src_mat as any)[params.tex_src0];
 		if (src_tex) {
+			// swap mat param
 			(target_mat as any)[params.tex_dest0] = src_tex;
+			// swap uniforms
+			const uniforms = (target_mat as any).uniforms;
+			if (uniforms) {
+				const uniforms_map = uniforms[params.tex_dest0];
+				if (uniforms_map) {
+					uniforms[params.tex_dest0] = {value: src_tex};
+				}
+			}
 		}
 	}
 }

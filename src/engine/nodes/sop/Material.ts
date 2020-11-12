@@ -15,6 +15,7 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 	});
 	apply_to_children = ParamConfig.BOOLEAN(DEFAULT.apply_to_children);
 	clone_mat = ParamConfig.BOOLEAN(DEFAULT.clone_mat);
+	share_uniforms = ParamConfig.BOOLEAN(DEFAULT.share_uniforms);
 	swap_current_tex = ParamConfig.BOOLEAN(DEFAULT.swap_current_tex);
 	tex_src0 = ParamConfig.STRING(DEFAULT.tex_src0, {visible_if: {swap_current_tex: 1}});
 	tex_dest0 = ParamConfig.STRING(DEFAULT.tex_dest0, {visible_if: {swap_current_tex: 1}});

@@ -9,6 +9,8 @@ interface MaterialData {
 	color?: boolean;
 	lights?: boolean;
 }
+
+const POSSIBLE_MAP_NAMES = ['map', 'alphaMap', 'envMap'];
 export class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
 	to_json(): object | void {}
@@ -20,43 +22,71 @@ export class BasePersistedConfig {
 	//
 	//
 	protected _material_to_json(material: ShaderMaterial): object {
-		this._unassign_textures(material.uniforms);
+		this._unassign_textures(material);
+
 		const material_data = material.toJSON({});
 		if (material.lights != null) {
 			material_data.lights = material.lights;
 		}
 
-		this._reassign_textures(material.uniforms);
+		this._reassign_textures(material);
 		return material_data;
 	}
 
-	private _found_texture_by_id: Map<string, Texture> = new Map();
-	private _found_textures_id_by_uniform_name: Map<string, string> = new Map();
-	private _unassign_textures(uniforms: Dictionary<IUniform>) {
-		this._found_texture_by_id.clear();
-		this._found_textures_id_by_uniform_name.clear();
+	private _found_uniform_texture_by_id: Map<string, Texture> = new Map();
+	private _found_uniform_textures_id_by_uniform_name: Map<string, string> = new Map();
+	private _found_param_texture_by_id: Map<string, Texture> = new Map();
+	private _found_param_textures_id_by_uniform_name: Map<string, string> = new Map();
+	private _unassign_textures(material: ShaderMaterial) {
+		this._found_uniform_texture_by_id.clear();
+		this._found_uniform_textures_id_by_uniform_name.clear();
+		this._found_param_texture_by_id.clear();
+		this._found_param_textures_id_by_uniform_name.clear();
+		const uniforms = material.uniforms;
 		const names = Object.keys(uniforms);
 		for (let name of names) {
 			const value = uniforms[name].value;
 			if (value && value.uuid) {
 				const texture = value as Texture;
-				this._found_texture_by_id.set(texture.uuid, value);
-				this._found_textures_id_by_uniform_name.set(name, texture.uuid);
+				this._found_uniform_texture_by_id.set(texture.uuid, value);
+				this._found_uniform_textures_id_by_uniform_name.set(name, texture.uuid);
 				uniforms[name].value = null;
 			}
 		}
+		for (let name of POSSIBLE_MAP_NAMES) {
+			const texture = (material as any)[name] as Texture;
+			if (texture) {
+				this._found_param_texture_by_id.set(texture.uuid, texture);
+				this._found_param_textures_id_by_uniform_name.set(name, texture.uuid);
+				(material as any)[name] = null;
+			}
+		}
 	}
-	private _reassign_textures(uniforms: Dictionary<IUniform>) {
-		const names_needing_reassignment: string[] = [];
-		this._found_textures_id_by_uniform_name.forEach((texture_id, name) => {
-			names_needing_reassignment.push(name);
+	private _reassign_textures(material: ShaderMaterial) {
+		const uniform_names_needing_reassignment: string[] = [];
+		const param_names_needing_reassignment: string[] = [];
+		this._found_uniform_textures_id_by_uniform_name.forEach((texture_id, name) => {
+			uniform_names_needing_reassignment.push(name);
 		});
-		for (let name of names_needing_reassignment) {
-			const texture_id = this._found_textures_id_by_uniform_name.get(name);
+		this._found_param_textures_id_by_uniform_name.forEach((texture_id, name) => {
+			param_names_needing_reassignment.push(name);
+		});
+		const uniforms = material.uniforms;
+		for (let name of uniform_names_needing_reassignment) {
+			const texture_id = this._found_uniform_textures_id_by_uniform_name.get(name);
 			if (texture_id) {
-				const texture = this._found_texture_by_id.get(texture_id);
+				const texture = this._found_uniform_texture_by_id.get(texture_id);
 				if (texture) {
 					uniforms[name].value = texture;
+				}
+			}
+		}
+		for (let name of param_names_needing_reassignment) {
+			const texture_id = this._found_param_textures_id_by_uniform_name.get(name);
+			if (texture_id) {
+				const texture = this._found_param_texture_by_id.get(texture_id);
+				if (texture) {
+					(material as any)[name] = texture;
 				}
 			}
 		}
