@@ -4,9 +4,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
-import {NodeContext} from '../../poly/NodeContext';
-import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
-import {OrthographicCameraObjNode} from '../obj/OrthographicCamera';
+import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
@@ -108,8 +106,8 @@ export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
 			await camera_param.compute();
 		}
 		let camera_node =
-			camera_param.found_node_with_context_and_type(NodeContext.OBJ, PerspectiveCameraObjNode.type()) ||
-			camera_param.found_node_with_context_and_type(NodeContext.OBJ, OrthographicCameraObjNode.type());
+			camera_param.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE) ||
+			camera_param.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.ORTHOGRAPHIC);
 		if (camera_node) {
 			const object = camera_node.object;
 			this._lod.update(object);

@@ -1,14 +1,16 @@
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {TypedCameraObjNode, CameraMasterCameraParamConfig} from './_BaseCamera';
-
 import mapboxgl from 'mapbox-gl';
-
 import {MapboxViewer} from '../../viewers/Mapbox';
 import {CoreMapboxClient} from '../../../core/mapbox/Client';
-
+import {Raycaster} from 'three/src/core/Raycaster';
+import {Vector2} from 'three/src/math/Vector2';
 import {ParamConfig, NodeParamsConfig} from '..//utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
+import {CameraNodeType} from '../../poly/NodeContext';
+import {Vector3} from 'three/src/math/Vector3';
+import {Matrix4} from 'three/src/math/Matrix4';
 class MapboxCameraObjParamConfig extends CameraMasterCameraParamConfig(NodeParamsConfig) {
 	style = ParamConfig.STRING('mapbox://styles/mapbox/dark-v10', {
 		callback: (node: BaseNodeType) => {
@@ -69,8 +71,8 @@ const ParamsConfig = new MapboxCameraObjParamConfig();
 
 export class MapboxCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, MapboxCameraObjParamConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'mapbox_camera'> {
-		return 'mapbox_camera';
+	static type(): Readonly<CameraNodeType.MAPBOX> {
+		return CameraNodeType.MAPBOX;
 	}
 	public integration_data() {
 		return CoreMapboxClient.integration_data();
@@ -89,6 +91,21 @@ export class MapboxCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, M
 	async cook() {
 		this.update_maps();
 		this.cook_controller.end_cook();
+	}
+
+	private _inverse_proj_mat = new Matrix4();
+	private _cam_pos = new Vector3();
+	private _mouse_pos = new Vector3();
+	private _view_dir = new Vector3();
+	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {
+		// adapted from https://github.com/mapbox/mapbox-gl-js/issues/7395
+		const camInverseProjection = this._inverse_proj_mat.getInverse(this._object.projectionMatrix);
+		this._cam_pos.set(0, 0, 0);
+		this._cam_pos.applyMatrix4(camInverseProjection);
+		this._mouse_pos.set(mouse.x, mouse.y, 1);
+		this._mouse_pos.applyMatrix4(camInverseProjection);
+		this._view_dir.copy(this._mouse_pos).sub(this._cam_pos).normalize();
+		raycaster.set(this._cam_pos, this._view_dir);
 	}
 
 	// prepare_for_viewer: (aspect)->

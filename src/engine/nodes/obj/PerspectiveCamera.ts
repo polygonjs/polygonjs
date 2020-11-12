@@ -20,6 +20,7 @@ import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
+import {CameraNodeType} from '../../poly/NodeContext';
 
 export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -48,8 +49,8 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 	PerspectiveCameraObjParamConfig
 > {
 	params_config = ParamsConfig;
-	static type(): Readonly<'perspective_camera'> {
-		return 'perspective_camera';
+	static type(): Readonly<CameraNodeType.PERSPECTIVE> {
+		return CameraNodeType.PERSPECTIVE;
 	}
 
 	create_object() {

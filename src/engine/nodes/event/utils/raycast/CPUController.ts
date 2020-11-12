@@ -10,8 +10,6 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Points} from 'three/src/objects/Points';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {GeoObjNode} from '../../../obj/Geo';
-import {PerspectiveCameraObjNode} from '../../../obj/PerspectiveCamera';
-import {OrthographicCameraObjNode} from '../../../obj/OrthographicCamera';
 import {TypeAssert} from '../../../../poly/Assert';
 import {Plane} from 'three/src/math/Plane';
 import {Vector3} from 'three/src/math/Vector3';
@@ -19,6 +17,9 @@ import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
 import {object_type_from_constructor, ObjectType} from '../../../../../core/geometry/Constant';
 import {CoreGeometry} from '../../../../../core/geometry/Geometry';
+import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Triangle} from 'three/src/math/Triangle';
+import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -132,6 +133,13 @@ export class RaycastCPUController {
 		// TypeAssert.unreachable(object_type)
 	}
 
+	private static _vA = new Vector3();
+	private static _vB = new Vector3();
+	private static _vC = new Vector3();
+	private static _uvA = new Vector2();
+	private static _uvB = new Vector2();
+	private static _uvC = new Vector2();
+	private static _hitUV = new Vector2();
 	static resolve_geometry_attribute_for_mesh(
 		intersection: Intersection,
 		attribute_name: string,
@@ -139,13 +147,29 @@ export class RaycastCPUController {
 	) {
 		const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
-			const attribute = geometry.getAttribute(attribute_name);
+			const attribute = geometry.getAttribute(attribute_name) as BufferAttribute;
 			if (attribute) {
 				switch (attrib_type) {
 					case AttribType.NUMERIC: {
-						const attribute = geometry.getAttribute(attribute_name);
-						if (attribute) {
-							return attribute.array[0];
+						const position = geometry.getAttribute('position') as BufferAttribute;
+						if (intersection.face) {
+							this._vA.fromBufferAttribute(position, intersection.face.a);
+							this._vB.fromBufferAttribute(position, intersection.face.b);
+							this._vC.fromBufferAttribute(position, intersection.face.c);
+							this._uvA.fromBufferAttribute(attribute, intersection.face.a);
+							this._uvB.fromBufferAttribute(attribute, intersection.face.b);
+							this._uvC.fromBufferAttribute(attribute, intersection.face.c);
+							intersection.uv = Triangle.getUV(
+								intersection.point,
+								this._vA,
+								this._vB,
+								this._vC,
+								this._uvA,
+								this._uvB,
+								this._uvC,
+								this._hitUV
+							);
+							return this._hitUV.x;
 						}
 						return;
 					}
@@ -153,7 +177,6 @@ export class RaycastCPUController {
 						const core_geometry = new CoreGeometry(geometry);
 						const core_point = core_geometry.points()[0];
 						if (core_point) {
-							console.log(core_point, geometry);
 							return core_point.string_attrib_value(attribute_name);
 						}
 						return;
@@ -213,27 +236,23 @@ export class RaycastCPUController {
 			points_param.threshold = this._node.pv.points_threshold;
 		}
 
+		let camera_node: Readonly<BaseCameraObjNodeType> | undefined = context.camera_node;
 		if (this._node.pv.override_camera) {
 			if (this._node.pv.override_ray) {
 				this._raycaster.ray.origin.copy(this._node.pv.ray_origin);
 				this._raycaster.ray.direction.copy(this._node.pv.ray_direction);
 			} else {
-				const obj_node = this._node.p.camera.found_node_with_context(NodeContext.OBJ);
-				if (obj_node) {
-					if (
-						obj_node.type == PerspectiveCameraObjNode.type() ||
-						obj_node.type == OrthographicCameraObjNode.type()
-					) {
-						const camera_node = obj_node as PerspectiveCameraObjNode;
-						this._raycaster.setFromCamera(this._mouse, camera_node.object);
-					}
+				const found_camera_node = this._node.p.camera.found_node_with_context(NodeContext.OBJ);
+				if (found_camera_node) {
+					camera_node = (<unknown>found_camera_node) as Readonly<BaseCameraObjNodeType>;
 				}
 			}
-		} else {
-			// we should not expect a camera node here, as the trigger may happen via any event type
-			// if (context.camera_node) {
-			// 	this._raycaster.setFromCamera(this._mouse, context.camera_node.object);
-			// }
+		}
+
+		if (camera_node && !this._node.pv.override_ray) {
+			if (camera_node) {
+				camera_node.prepare_raycaster(this._mouse, this._raycaster);
+			}
 		}
 	}
 

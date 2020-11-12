@@ -16,7 +16,12 @@ import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {BaseSopNodeType} from '../sop/_Base';
 import {TypedObjNode} from './_Base';
-
+import {BaseViewerType} from '../../viewers/_Base';
+import {HierarchyController} from './utils/HierarchyController';
+import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
+import {ParamsInitData} from '../utils/io/IOController';
+import {Raycaster} from 'three/src/core/Raycaster';
+import {Vector2} from 'three/src/math/Vector2';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -43,10 +48,6 @@ export const UPDATE_FROM_CONTROLS_MODES: UpdateFromControlsMode[] = [
 ];
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {BaseViewerType} from '../../viewers/_Base';
-import {HierarchyController} from './utils/HierarchyController';
-import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-import {ParamsInitData} from '../utils/io/IOController';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -137,50 +138,6 @@ export abstract class TypedCameraObjNode<
 		return this._object;
 	}
 
-	// protected _background_controller: BaseBackgroundController | undefined;
-	// get background_controller(): BaseBackgroundController {
-	// 	return (this._background_controller =
-	// 		this._background_controller || new this.background_controller_constructor(this));
-	// }
-	// protected get background_controller_constructor() {
-	// 	return BaseBackgroundController;
-	// }
-
-	// protected _used_in_scene: boolean = true;
-
-	// create_common_params() {
-	// 	// this.within_param_folder('transform', () => {
-	// 	// 	// this.add_param(ParamType.OPERATOR_PATH, 'controls', '', {
-	// 	// 	// 	node_selection: {
-	// 	// 	// 		context: NodeContext.EVENT,
-	// 	// 	// 	},
-	// 	// 	// });
-	// 	// 	// CoreTransform.create_params(this); // removed since they are now added Persp Camera
-	// 	// 	// this.add_param( ParamType.TOGGLE, 'is_updating', 0, {cook: false, hidden: true}); //, hidden: true} )
-	// 	// 	// this.add_param(ParamType.VECTOR3, 'target', [0, 0, 0], {cook: false}); //, hidden: true} )
-	// 	// });
-	// 	// this.within_param_folder('render', () => {
-	// 	// this.layers_controller.add_params();
-	// 	// this.add_param(ParamType.FLOAT, 'near', BASE_CAMERA_DEFAULT.near, {range: [0, 100]});
-	// 	// this.add_param(ParamType.FLOAT, 'far', BASE_CAMERA_DEFAULT.far, {range: [0, 100]});
-	// 	// this.add_param(ParamType.BOOLEAN, 'lock_width', 1);
-	// 	// });
-	// 	// this.background_controller.add_params();
-	// 	// this.post_process_controller.add_params();
-	// }
-
-	// create_player_camera_params() {
-	// 	this.add_param(ParamType.BUTTON, 'set_master_camera', null, {callback: this.set_as_master_camera.bind(this)});
-	// }
-	// is_updating():boolean{
-	// 	return this.param('is_updating').value()
-	// }
-
-	// as_code_set_up_custom: ->
-	// 	lines = []
-	// 	lines.push "#{this.code_var_name()}.set_display_flag(#{this.display_flag_state()})"
-	// 	lines
-
 	async cook() {
 		this.update_camera();
 		this._object.dispatchEvent(EVENT_CHANGE);
@@ -189,6 +146,8 @@ export abstract class TypedCameraObjNode<
 
 	on_create() {}
 	on_delete() {}
+
+	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {}
 
 	camera() {
 		return this._object;
@@ -269,6 +228,10 @@ export class TypedThreejsCameraObjNode<
 	}
 	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	}
+
+	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {
+		raycaster.setFromCamera(mouse, this._object);
 	}
 
 	async cook() {

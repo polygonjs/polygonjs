@@ -196,14 +196,20 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
+		...visible_for_cpu_geometry({geo_attribute: 1}),
 	});
 	geo_attribute_value1 = ParamConfig.FLOAT(0, {
 		cook: false,
-		visible_if: {geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
-		...visible_for_cpu_geometry({geo_attribute: 1}),
+		...visible_for_cpu_geometry({
+			geo_attribute: 1,
+			geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
+		}),
 	});
 	geo_attribute_values = ParamConfig.STRING('', {
-		visible_if: {geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
+		...visible_for_cpu_geometry({
+			geo_attribute: 1,
+			geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING),
+		}),
 	});
 }
 const ParamsConfig = new RaycastParamsConfig();

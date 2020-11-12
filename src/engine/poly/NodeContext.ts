@@ -60,6 +60,11 @@ export enum NetworkChildNodeType {
 	INPUT = 'subnet_input',
 	OUTPUT = 'subnet_output',
 }
+export enum CameraNodeType {
+	PERSPECTIVE = 'perspective_camera',
+	ORTHOGRAPHIC = 'orthographic_camera',
+	MAPBOX = 'mapbox_camera',
+}
 
 export interface BaseNodeByContextMap {
 	[NodeContext.ANIM]: BaseAnimNodeType;

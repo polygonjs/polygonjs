@@ -1,14 +1,11 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeContext} from '../../poly/NodeContext';
+import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
-import {OrthographicCameraObjNode} from '../obj/OrthographicCamera';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
-// import {Color} from 'three/src/math/Color';
 
 interface RenderPassWithContext extends RenderPass {
 	context: {
@@ -68,10 +65,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 			}
 			const obj_node = this.p.camera.found_node_with_context(NodeContext.OBJ);
 			if (obj_node) {
-				if (
-					obj_node.type == PerspectiveCameraObjNode.type() ||
-					obj_node.type == OrthographicCameraObjNode.type()
-				) {
+				if (obj_node.type == CameraNodeType.PERSPECTIVE || obj_node.type == CameraNodeType.ORTHOGRAPHIC) {
 					const camera = (obj_node as PerspectiveCameraObjNode).object;
 					pass.camera = camera;
 				}

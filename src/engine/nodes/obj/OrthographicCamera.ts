@@ -25,6 +25,7 @@ import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
+import {CameraNodeType} from '../../poly/NodeContext';
 export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1);
@@ -58,8 +59,8 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	// 	return OrthographicCameraBackgroundController;
 	// }
 
-	static type(): Readonly<'orthographic_camera'> {
-		return 'orthographic_camera';
+	static type(): Readonly<CameraNodeType.ORTHOGRAPHIC> {
+		return CameraNodeType.ORTHOGRAPHIC;
 	}
 
 	create_object() {
