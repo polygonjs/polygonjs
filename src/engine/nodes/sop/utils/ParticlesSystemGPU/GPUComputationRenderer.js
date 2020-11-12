@@ -101,7 +101,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {ClampToEdgeWrapping, FloatType, HalfFloatType, NearestFilter, RGBAFormat} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {Mesh} from 'three/src/objects/Mesh';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
 import {Scene} from 'three/src/scenes/Scene';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';

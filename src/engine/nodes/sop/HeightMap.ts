@@ -101,7 +101,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 	private _data_from_texture(texture: Texture) {
 		if (texture.image) {
 			if (texture.image.data) {
-				return this._data_from_data_texture(texture);
+				return this._data_from_data_texture(texture as DataTexture);
 			}
 			return this._data_from_default_texture(texture);
 		}

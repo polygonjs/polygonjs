@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';

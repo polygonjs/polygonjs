@@ -1,4 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
+
 /**
  * Depth-of-field shader with bokeh
  * ported from GLSL shader by Martins Upitis

@@ -1,5 +1,5 @@
 import {CoreGeometryUtilCircle} from './Circle';
-import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
+import {ShapeBufferGeometry} from 'three/src/geometries/ShapeBufferGeometry';
 import {Shape} from 'three/src/extras/core/Shape';
 import {Vector3} from 'three/src/math/Vector3';
 

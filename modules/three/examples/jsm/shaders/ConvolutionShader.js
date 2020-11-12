@@ -1,4 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
+
 /**
  * Convolution shader
  * ported from o3d sample to WebGL / GLSL

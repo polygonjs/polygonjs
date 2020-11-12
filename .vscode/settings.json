@@ -1,0 +1,73 @@
+{
+	"editor.fontSize": 14,
+	"editor.renderWhitespace": "boundary",
+	"editor.insertSpaces": false,
+	"editor.wordWrap": "on",
+	"[plaintext]": {
+		"editor.quickSuggestions": false
+	},
+	"workbench.statusBar.feedback.visible": false,
+	"window.zoomLevel": 0,
+	"editor.acceptSuggestionOnCommitCharacter": false,
+	"workbench.colorTheme": "Monokai",
+	"cSpell.enabledLanguageIds": [
+		"asciidoc",
+		"c",
+		"cpp",
+		"csharp",
+		"css",
+		"go",
+		"handlebars",
+		"html",
+		"jade",
+		"javascriptreact",
+		"json",
+		"latex",
+		"less",
+		"markdown",
+		"php",
+		"plaintext",
+		"pub",
+		"python",
+		"restructuredtext",
+		"rust",
+		"scss",
+		"text",
+		"typescriptreact",
+		"yml"
+	],
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"telemetry.enableCrashReporter": false,
+	"telemetry.enableTelemetry": false,
+	"vetur.useWorkspaceDependencies": true,
+	"vetur.format.defaultFormatter.ts": "prettier",
+	"vetur.format.defaultFormatter.sass": "none",
+	"prettier.packageManager": "yarn",
+	"prettier.tabWidth": 4,
+	"prettier.useTabs": true,
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"sync.gist": "159116325979581e194933d4122b87f6",
+	"typescript.tsserver.maxTsServerMemory": 16384,
+	"todo-tree.tree.showScanModeButton": false,
+	"javascript.preferences.importModuleSpecifier": "relative",
+	"ruby.format": "rubocop",
+	"ruby.codeCompletion": "rcodetools",
+	"ruby.intellisense": "rubyLocate",
+	"ruby.useLanguageServer": true,
+	"ruby.lint": {
+		"rubocop": {
+			"useBundler": true // enable rubocop via bundler
+		},
+		"reek": {
+			"useBundler": true // enable reek via bundler
+		}
+	}
+}

@@ -4,20 +4,15 @@
 // in order to avoid the require calls from the opentype shipped with three.js
 //
 //
+import {FileLoader} from 'three/src/loaders/FileLoader';
+import {Loader} from 'three/src/loaders/Loader';
+import opentype from 'opentype.js/dist/opentype.module';
 
 /**
- * @author gero3 / https://github.com/gero3
- * @author tentone / https://github.com/tentone
- * @author troy351 / https://github.com/troy351
- *
  * Requires opentype.js to be included in the project.
  * Loads TTF files and converts them into typeface JSON that can be used directly
  * to create THREE.Font objects.
  */
-
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Loader} from 'three/src/loaders/Loader';
-import opentype from 'opentype.js/dist/opentype.module';
 
 var TTFLoader = function (manager) {
 	Loader.call(this, manager);
@@ -34,10 +29,22 @@ TTFLoader.prototype = Object.assign(Object.create(Loader.prototype), {
 		var loader = new FileLoader(this.manager);
 		loader.setPath(this.path);
 		loader.setResponseType('arraybuffer');
+		loader.setRequestHeader(this.requestHeader);
+		loader.setWithCredentials(this.withCredentials);
 		loader.load(
 			url,
 			function (buffer) {
-				onLoad(scope.parse(buffer));
+				try {
+					onLoad(scope.parse(buffer));
+				} catch (e) {
+					if (onError) {
+						onError(e);
+					} else {
+						console.error(e);
+					}
+
+					scope.manager.itemError(url);
+				}
 			},
 			onProgress,
 			onError
@@ -166,7 +173,7 @@ TTFLoader.prototype = Object.assign(Object.create(Loader.prototype), {
 			return null;
 		}
 
-		return convert(opentype.parse(arraybuffer), this.reversed);
+		return convert(opentype.parse(arraybuffer), this.reversed); // eslint-disable-line no-undef
 	},
 });
 

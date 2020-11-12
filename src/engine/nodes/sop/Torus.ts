@@ -1,4 +1,4 @@
-import {TorusBufferGeometry} from 'three/src/geometries/TorusGeometry';
+import {TorusBufferGeometry} from 'three/src/geometries/TorusBufferGeometry';
 import {TypedSopNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

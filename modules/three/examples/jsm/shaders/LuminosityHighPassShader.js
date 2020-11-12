@@ -1,4 +1,5 @@
 import {Color} from 'three/src/math/Color';
+
 /**
  * Luminosity
  * http://en.wikipedia.org/wiki/Luminosity

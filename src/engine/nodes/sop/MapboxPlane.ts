@@ -1,6 +1,6 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Box2} from 'three/src/math/Box2';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';

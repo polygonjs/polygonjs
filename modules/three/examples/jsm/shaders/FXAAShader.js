@@ -1,4 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
+
 /**
  * NVIDIA FXAA by Timothy Lottes
  * http://timothylottes.blogspot.com/2011/06/fxaa3-source-released.html

@@ -1,4 +1,5 @@
 import {Vector2} from 'three/src/math/Vector2';
+
 /**
  * Dot screen shader
  * based on glfx.js sepia shader

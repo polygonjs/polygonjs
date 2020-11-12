@@ -156,11 +156,15 @@ export class BaseTextureMapController extends BaseController {
 		if (!has_texture || new_texture_is_different) {
 			uniforms[mat_attrib_name].value = texture as any;
 			if (this._do_update_define()) {
-				const define_name = this._define_name(`${mat_attrib_name}`);
-				material.defines[define_name] = 1;
+				if(material.defines){
+					const define_name = this._define_name(`${mat_attrib_name}`);
+					material.defines[define_name] = 1;
+				}
 			}
 			if (this._update_options.define_uv) {
-				material.defines['USE_UV'] = 1;
+				if(material.defines){
+					material.defines['USE_UV'] = 1;
+				}
 			}
 			material.needsUpdate = true;
 		}
@@ -173,8 +177,10 @@ export class BaseTextureMapController extends BaseController {
 		if (uniforms[mat_attrib_name].value) {
 			uniforms[mat_attrib_name].value = null;
 			if (this._do_update_define()) {
-				const define_name = this._define_name(`${mat_attrib_name}`);
-				delete material.defines[define_name];
+				if(material.defines){
+					const define_name = this._define_name(`${mat_attrib_name}`);
+					delete material.defines[define_name];
+				}
 			}
 			material.needsUpdate = true;
 		}

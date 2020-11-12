@@ -2,6 +2,7 @@ import {Curve} from 'three/src/extras/core/Curve';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import { NURBSUtils } from "../curves/NURBSUtils.js";
+
 /**
  * NURBS curve object
  *

@@ -42,6 +42,7 @@ import {VectorKeyframeTrack} from 'three/src/animation/tracks/VectorKeyframeTrac
 import {sRGBEncoding} from 'three/src/constants';
 import { Inflate } from "../libs/inflate.module.min.js";
 import { NURBSCurve } from "../curves/NURBSCurve.js";
+
 /**
  * Loader loads FBX file and generates Group representing FBX scene.
  * Requires FBX file to be >= 7.0 and in ASCII or >= 6400 in Binary format
@@ -85,6 +86,7 @@ var FBXLoader = ( function () {
 			loader.setPath( scope.path );
 			loader.setResponseType( 'arraybuffer' );
 			loader.setRequestHeader( scope.requestHeader );
+			loader.setWithCredentials( scope.withCredentials );
 
 			loader.load( url, function ( buffer ) {
 

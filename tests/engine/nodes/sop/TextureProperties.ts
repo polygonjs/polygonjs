@@ -5,7 +5,7 @@ import {CoreTextureLoader} from '../../../../src/core/loader/Texture';
 
 QUnit.test('texture_properties simple', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(0);
+	geo1.flags.display.set(false);
 	const COP = window.COP;
 	const MAT = window.MAT;
 	const file1 = COP.create_node('file');

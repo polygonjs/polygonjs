@@ -1,5 +1,5 @@
 import {PointLightObjNode} from '../../PointLight';
-import {SphereBufferGeometry} from 'three/src/geometries/SphereGeometry';
+import {SphereBufferGeometry} from 'three/src/geometries/SphereBufferGeometry';
 import {BaseLightHelper} from './_BaseLightHelper';
 import {PointLight} from 'three/src/lights/PointLight';
 import {Vector3} from 'three/src/math/Vector3';

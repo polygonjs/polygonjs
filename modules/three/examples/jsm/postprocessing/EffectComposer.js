@@ -2,7 +2,7 @@ import {Clock} from 'three/src/core/Clock';
 import {LinearFilter} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
 import {RGBAFormat} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
@@ -20,8 +20,7 @@ var EffectComposer = function ( renderer, renderTarget ) {
 		var parameters = {
 			minFilter: LinearFilter,
 			magFilter: LinearFilter,
-			format: RGBAFormat,
-			stencilBuffer: false
+			format: RGBAFormat
 		};
 
 		var size = renderer.getSize( new Vector2() );

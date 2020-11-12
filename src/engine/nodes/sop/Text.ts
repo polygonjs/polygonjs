@@ -4,9 +4,9 @@ import lodash_range from 'lodash/range';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 
-import {TextBufferGeometry} from 'three/src/geometries/TextGeometry';
+import {TextBufferGeometry} from 'three/src/geometries/TextBufferGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
+import {ShapeBufferGeometry} from 'three/src/geometries/ShapeBufferGeometry';
 import {FontLoader} from 'three/src/loaders/FontLoader';
 import {Font} from 'three/src/extras/core/Font';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';

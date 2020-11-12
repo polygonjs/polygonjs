@@ -2,6 +2,7 @@ import {Color} from 'three/src/math/Color';
 import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+
 /**
  * ------------------------------------------------------------------------------------------
  * Subsurface Scattering shader

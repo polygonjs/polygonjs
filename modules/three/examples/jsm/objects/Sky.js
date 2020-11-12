@@ -1,9 +1,10 @@
 import {BackSide} from 'three/src/constants';
-import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
+import {BoxBufferGeometry} from 'three/src/geometries/BoxBufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector3} from 'three/src/math/Vector3';
+
 /**
  * Based on "A Practical Analytic Model for Daylight"
  * aka The Preetham Model, the de facto standard analytic skydome model

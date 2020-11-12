@@ -10,6 +10,7 @@ import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {RepeatWrapping} from 'three/src/constants';
 import {TextureLoader} from 'three/src/loaders/TextureLoader';
 import {Vector2} from 'three/src/math/Vector2';
+
 /**
  * Loads a Wavefront .mtl file specifying materials
  */
@@ -46,6 +47,7 @@ MTLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		var loader = new FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setRequestHeader( this.requestHeader );
+		loader.setWithCredentials( this.withCredentials );
 		loader.load( url, function ( text ) {
 
 			try {
