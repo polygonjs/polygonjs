@@ -3,6 +3,7 @@ import {CATEGORY_EVENT} from './Category';
 import {AnimationEventNode} from '../../../nodes/event/Animation';
 import {AnyEventNode} from '../../../nodes/event/Any';
 import {ButtonEventNode} from '../../../nodes/event/Button';
+import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
 // import {CodeEventNode} from '../../../nodes/event/Code';
@@ -23,8 +24,9 @@ export interface EventNodeChildrenMap {
 	animation: AnimationEventNode;
 	any: AnyEventNode;
 	button: ButtonEventNode;
-	camera_orbit_controls: CameraMapControlsEventNode;
+	camera_device_orientation_controls: CameraDeviceOrientationControlsEventNode;
 	camera_map_controls: CameraOrbitControlsEventNode;
+	camera_orbit_controls: CameraMapControlsEventNode;
 	// code: CodeEventNode;
 	keyboard: KeyboardEventNode;
 	limit: LimitEventNode;
@@ -46,6 +48,7 @@ export class EventRegister {
 		poly.register_node(AnimationEventNode, CATEGORY_EVENT.ANIMATION);
 		poly.register_node(AnyEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(ButtonEventNode, CATEGORY_EVENT.MISC);
+		poly.register_node(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.register_node(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.register_node(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
 		// poly.register_node(CodeEventNode, CATEGORY_EVENT.ADVANCED);

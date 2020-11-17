@@ -65,6 +65,16 @@ export enum CameraNodeType {
 	ORTHOGRAPHIC = 'orthographic_camera',
 	MAPBOX = 'mapbox_camera',
 }
+export enum CameraControlsNodeType {
+	DEVICE_ORIENTATION = 'camera_device_orientation_controls',
+	MAP = 'camera_map_controls',
+	ORBIT = 'camera_orbit_controls',
+}
+export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
+	CameraControlsNodeType.DEVICE_ORIENTATION,
+	CameraControlsNodeType.MAP,
+	CameraControlsNodeType.ORBIT,
+];
 
 export interface BaseNodeByContextMap {
 	[NodeContext.ANIM]: BaseAnimNodeType;

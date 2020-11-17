@@ -5,6 +5,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {BaseNodeType} from '../_Base';
 // import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {OrbitControls} from '../../../../modules/core/controls/OrbitControls';
+import {CameraControlsNodeType} from '../../poly/NodeContext';
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
@@ -77,7 +78,7 @@ const ParamsConfig = new CameraOrbitEventParamsConfig();
 export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<CameraOrbitEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'camera_orbit_controls';
+		return CameraControlsNodeType.ORBIT;
 	}
 	initialize_node() {
 		this.io.outputs.set_named_output_connection_points([

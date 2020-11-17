@@ -3,14 +3,15 @@ import {Camera} from 'three/src/cameras/Camera';
 import {TypedEventNode} from './_Base';
 // import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 
-import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
+// import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-export interface CameraControls extends OrbitControls {
-	name?: string;
-	// this_is_a_control: any;
-	// name: string;
-}
+export type CameraControls = any;
+// export interface CameraControls extends OrbitControls {
+// 	name?: string;
+// 	// this_is_a_control: any;
+// 	// name: string;
+// }
 
 export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> extends TypedEventNode<K> {
 	// controls() {

@@ -1,10 +1,11 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {MapControls} from '../../../../modules/core/controls/OrbitControls';
+import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 
 export class CameraMapControlsEventNode extends CameraOrbitControlsEventNode {
 	static type() {
-		return 'camera_map_controls';
+		return CameraControlsNodeType.MAP;
 	}
 
 	async create_controls_instance(camera: Camera, element: HTMLElement) {

@@ -2,8 +2,8 @@ import {BaseThreejsCameraObjNodeType, UpdateFromControlsMode, UPDATE_FROM_CONTRO
 import {BaseCameraControlsEventNodeType, CameraControls} from '../../../event/_BaseCameraControls';
 import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
 import {BaseParamType} from '../../../../params/_Base';
-import {CameraOrbitControlsEventNode} from '../../../event/CameraOrbitControls';
 import {TypeAssert} from '../../../../poly/Assert';
+import {CAMERA_CONTROLS_NODE_TYPES} from '../../../../poly/NodeContext';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
@@ -32,8 +32,8 @@ export class ThreejsCameraControlsController {
 			}
 			const node = controls_param.found_node();
 			if (node) {
-				if (node instanceof CameraOrbitControlsEventNode) {
-					return node;
+				if (CAMERA_CONTROLS_NODE_TYPES.includes(node.type)) {
+					return node as BaseCameraControlsEventNodeType;
 				} else {
 					this.node.states.error.set('found node is not of a camera control type');
 				}
