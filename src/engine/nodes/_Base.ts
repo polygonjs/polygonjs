@@ -71,6 +71,15 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>()) as ParamsValueAccessorType<K>;
 	// readonly pv: ParamsValueAccessor<K> = new ParamsValueAccessor<K>(this);
 	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>()) as ParamsAccessorType<K>;
+	copy_param_values(node: TypedNode<NC, K>) {
+		const non_spare = this.params.non_spare;
+		for (let param of non_spare) {
+			const other_param = node.params.get(param.name);
+			if (other_param) {
+				param.copy_value(other_param);
+			}
+		}
+	}
 	// readonly p: ParamsAccessor<K> = new ParamsAccessor<K>(this);
 
 	// private _processing_context: ProcessingContext | undefined;

@@ -29,4 +29,12 @@ export class CameraDeviceOrientationControlsEventNode extends TypedCameraControl
 	update_required() {
 		return true;
 	}
+
+	dispose_controls_for_html_element_id(html_element_id: string) {
+		const controls = this._controls_by_element_id.get(html_element_id);
+		if (controls) {
+			controls.dispose();
+			this._controls_by_element_id.delete(html_element_id);
+		}
+	}
 }

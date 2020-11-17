@@ -16,6 +16,8 @@ export class SeparatorParam extends TypedParam<ParamType.SEPARATOR> {
 	get value_serialized() {
 		return this.value;
 	}
+	protected _copy_value(param: SeparatorParam) {}
+
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.SEPARATOR],
 		raw_input2: ParamInitValuesTypeMap[ParamType.SEPARATOR]

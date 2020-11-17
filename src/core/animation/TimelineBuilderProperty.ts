@@ -14,7 +14,7 @@ import {Vector2Param} from '../../engine/params/Vector2';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {TypeAssert} from '../../engine/poly/Assert';
-import {AnimNodeEasing} from '../../engine/nodes/anim/Easing';
+import {AnimNodeEasing} from './Constant';
 import {Poly} from '../../engine/Poly';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4;

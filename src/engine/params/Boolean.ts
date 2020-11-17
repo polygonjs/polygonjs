@@ -26,6 +26,9 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	get value_serialized() {
 		return this.value;
 	}
+	protected _copy_value(param: BooleanParam) {
+		this.set(param.value);
+	}
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.BOOLEAN],
 		raw_input2: ParamInitValuesTypeMap[ParamType.BOOLEAN]

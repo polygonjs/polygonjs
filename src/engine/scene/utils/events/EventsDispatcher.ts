@@ -1,17 +1,21 @@
 import {PolyScene} from '../../PolyScene';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
+import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {SceneEventNode} from '../../../nodes/event/Scene';
-import {MouseEventsController} from './MouseEventsController';
-import {SceneEventsController} from './SceneEventsController';
-import {BaseSceneEventsController, BaseSceneEventsControllerClass} from './_BaseEventsController';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
-import {KeyboardEventsController} from './KeyboardEventsController';
 import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
+
+import {BaseSceneEventsController, BaseSceneEventsControllerClass} from './_BaseEventsController';
+import {SceneEventsController} from './SceneEventsController';
+import {KeyboardEventsController} from './KeyboardEventsController';
+import {MouseEventsController} from './MouseEventsController';
+import {PointerEventsController} from './PointerEventsController';
 
 export class SceneEventsDispatcher {
 	private _keyboard_events_controller: KeyboardEventsController | undefined;
 	private _mouse_events_controller: MouseEventsController | undefined;
+	private _pointer_events_controller: PointerEventsController | undefined;
 	private _scene_events_controller: SceneEventsController | undefined;
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
@@ -60,6 +64,8 @@ export class SceneEventsDispatcher {
 				return this.keyboard_events_controller;
 			case MouseEventNode.type():
 				return this.mouse_events_controller;
+			case PointerEventNode.type():
+				return this.pointer_events_controller;
 			case SceneEventNode.type():
 				return this.scene_events_controller;
 		}
@@ -72,6 +78,10 @@ export class SceneEventsDispatcher {
 	get mouse_events_controller() {
 		return (this._mouse_events_controller =
 			this._mouse_events_controller || this._create_controller(MouseEventsController));
+	}
+	get pointer_events_controller() {
+		return (this._pointer_events_controller =
+			this._pointer_events_controller || this._create_controller(PointerEventsController));
 	}
 	get scene_events_controller() {
 		return (this._scene_events_controller =

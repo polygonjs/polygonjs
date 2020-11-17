@@ -38,6 +38,12 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	get value_serialized() {
 		return this.value.toArray() as Number3;
 	}
+	private _copied_value: Number3 = [0, 0, 0];
+	protected _copy_value(param: Vector3Param) {
+		param.value.toArray(this._copied_value);
+		this.set(this._copied_value);
+	}
+
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
 		if (raw_input instanceof Vector3) {
 			return raw_input.clone();

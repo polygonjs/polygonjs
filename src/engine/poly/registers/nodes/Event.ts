@@ -5,6 +5,7 @@ import {AnyEventNode} from '../../../nodes/event/Any';
 import {ButtonEventNode} from '../../../nodes/event/Button';
 import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
+import {CameraNavigationBeaconsEventNode} from '../../../nodes/event/CameraNavigationBeacons';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
 // import {CodeEventNode} from '../../../nodes/event/Code';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
@@ -12,6 +13,7 @@ import {LimitEventNode} from '../../../nodes/event/Limit';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {NullEventNode} from '../../../nodes/event/Null';
+import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
@@ -26,6 +28,7 @@ export interface EventNodeChildrenMap {
 	button: ButtonEventNode;
 	camera_device_orientation_controls: CameraDeviceOrientationControlsEventNode;
 	camera_map_controls: CameraOrbitControlsEventNode;
+	camera_navigation_beacons: CameraNavigationBeaconsEventNode;
 	camera_orbit_controls: CameraMapControlsEventNode;
 	// code: CodeEventNode;
 	keyboard: KeyboardEventNode;
@@ -33,6 +36,7 @@ export interface EventNodeChildrenMap {
 	mouse: MouseEventNode;
 	node_cook: NodeCookEventNode;
 	null: NullEventNode;
+	pointer: PointerEventNode;
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
 	set_flag: SetFlagEventNode;
@@ -50,6 +54,7 @@ export class EventRegister {
 		poly.register_node(ButtonEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.register_node(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.register_node(CameraNavigationBeaconsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.register_node(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
 		// poly.register_node(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.register_node(KeyboardEventNode, CATEGORY_EVENT.INPUT);
@@ -57,6 +62,7 @@ export class EventRegister {
 		poly.register_node(MouseEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(NodeCookEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(NullEventNode, CATEGORY_EVENT.INPUT);
+		poly.register_node(PointerEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.register_node(SceneEventNode, CATEGORY_EVENT.INPUT);
 		poly.register_node(SetFlagEventNode, CATEGORY_EVENT.MISC);

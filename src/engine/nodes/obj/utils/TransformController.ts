@@ -169,4 +169,11 @@ export class TransformController {
 		// apply mat
 		CoreTransform.set_params_from_matrix(this._keep_pos_when_parenting_m_object, this.node, {scale: true});
 	}
+	update_node_transform_params_from_object(update_matrix = false) {
+		const object = this.node.object;
+		if (update_matrix) {
+			object.updateMatrixWorld(true);
+		}
+		CoreTransform.set_params_from_matrix(object.matrixWorld, this.node, {scale: true});
+	}
 }

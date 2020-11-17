@@ -22,7 +22,9 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	get value_serialized() {
 		return this.value;
 	}
-
+	protected _copy_value(param: IntegerParam) {
+		this.set(param.value_serialized);
+	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
 		if (lodash_isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];

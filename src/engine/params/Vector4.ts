@@ -43,7 +43,11 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	get value_serialized() {
 		return this.value.toArray() as Number4;
 	}
-
+	private _copied_value: Number4 = [0, 0, 0, 0];
+	protected _copy_value(param: Vector4Param) {
+		param.value.toArray(this._copied_value);
+		this.set(this._copied_value);
+	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
 		if (raw_input instanceof Vector4) {
 			return raw_input.clone();

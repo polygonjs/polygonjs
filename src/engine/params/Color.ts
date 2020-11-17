@@ -50,6 +50,11 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		this._update_value_serialized_if_required();
 		return this._value_pre_conversion_serialized;
 	}
+	private _copied_value: Number3 = [0, 0, 0];
+	protected _copy_value(param: ColorParam) {
+		param.value.toArray(this._copied_value);
+		this.set(this._copied_value);
+	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
 		if (raw_input instanceof Color) {
 			return raw_input.clone();

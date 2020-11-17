@@ -16,6 +16,7 @@ export class FolderParam extends TypedParam<ParamType.FOLDER> {
 	get value_serialized() {
 		return this.value;
 	}
+	protected _copy_value(param: FolderParam) {}
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.FOLDER],
 		raw_input2: ParamInitValuesTypeMap[ParamType.FOLDER]

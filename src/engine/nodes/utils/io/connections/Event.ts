@@ -8,6 +8,7 @@ export enum EventConnectionPointType {
 	BASE = 'base',
 	KEYBOARD = 'keyboard',
 	MOUSE = 'mouse',
+	POINTER = 'pointer',
 }
 // interface IEventConnectionPointType {
 // 	[EventConnectionPointType.BASE]: Readonly<'base'>;

@@ -58,6 +58,10 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	get value_serialized() {
 		return this.value.to_json();
 	}
+	protected _copy_value(param: RampParam) {
+		this.set(param.value_serialized);
+	}
+
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.RAMP],
 		raw_input2: ParamInitValuesTypeMap[ParamType.RAMP]

@@ -8,8 +8,8 @@ export class PointExpression extends BaseMethod {
 	static required_arguments() {
 		return [
 			['string', 'path to node'],
-			['index', 'point index'],
 			['string', 'attribute name'],
+			['index', 'point index'],
 		];
 	}
 

@@ -163,6 +163,10 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 
 	private _target_array: Number3 = [0, 0, 0];
 	private _on_controls_end(controls: OrbitControls) {
+		if (!this.pv.allow_pan) {
+			// target should not be updated if pan is not allowed
+			return;
+		}
 		controls.target.toArray(this._target_array);
 		this.p.target.set(this._target_array);
 	}
@@ -179,5 +183,17 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 				control.update();
 			}
 		});
+	}
+
+	dispose_controls_for_html_element_id(html_element_id: string) {
+		// this method is important so that we can do the following steps:
+		// 1. assign an orbit_controls to the camera
+		// 2. remove the controls
+		// 3. update the target param of the controls, and this doesn't affect the camera (nor should it!)
+		const controls = this._controls_by_element_id.get(html_element_id);
+		if (controls) {
+			// controls.dispose(); // no need to dispose here, as it is done by the viewer for now
+			this._controls_by_element_id.delete(html_element_id);
+		}
 	}
 }

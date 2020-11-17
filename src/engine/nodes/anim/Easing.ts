@@ -1,45 +1,6 @@
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-
-export enum AnimNodeEasing {
-	NONE = 'none',
-	POWER1 = 'power1',
-	POWER2 = 'power2',
-	POWER3 = 'power3',
-	POWER4 = 'power4',
-	BACK = 'back',
-	ELASTIC = 'elastic',
-	BOUNCE = 'bounce',
-	// rough
-	SLOW = 'slow',
-	STEPS = 'steps',
-	CIRC = 'circ',
-	EXPO = 'expo',
-	SINE = 'sine',
-	// Custom
-}
-const EASINGS: AnimNodeEasing[] = [
-	AnimNodeEasing.NONE,
-	AnimNodeEasing.POWER1,
-	AnimNodeEasing.POWER2,
-	AnimNodeEasing.POWER3,
-	AnimNodeEasing.POWER4,
-	AnimNodeEasing.BACK,
-	AnimNodeEasing.ELASTIC,
-	AnimNodeEasing.BOUNCE,
-
-	AnimNodeEasing.SLOW,
-	AnimNodeEasing.STEPS,
-	AnimNodeEasing.CIRC,
-	AnimNodeEasing.EXPO,
-	AnimNodeEasing.SINE,
-];
-enum InOutMode {
-	IN = 'in',
-	OUT = 'out',
-	IN_OUT = 'inOut',
-}
-const IN_OUT_MODES: InOutMode[] = [InOutMode.IN, InOutMode.OUT, InOutMode.IN_OUT];
+import {AnimNodeEasing, EASINGS, InOutMode, IN_OUT_MODES} from '../../../core/animation/Constant';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class EasingAnimParamsConfig extends NodeParamsConfig {

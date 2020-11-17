@@ -29,6 +29,13 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	get raw_input_serialized() {
 		return this.raw_input;
 	}
+	protected _copy_value(param: TypedMultipleParam<T>) {
+		for (let i = 0; i < this.components.length; i++) {
+			const component = this.components[i];
+			const src_component = param.components[i];
+			component.copy_value(src_component);
+		}
+	}
 
 	init_components() {
 		if (this._components != null) {
@@ -161,4 +168,4 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	}
 }
 
-// export class BaseMultipleParam extends TypedMultipleParam<Vector> {}
+// class BaseMultipleParam extends TypedMultipleParam<Vector> {}

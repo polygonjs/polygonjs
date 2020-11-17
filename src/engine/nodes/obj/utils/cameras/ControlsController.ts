@@ -3,12 +3,16 @@ import {BaseCameraControlsEventNodeType, CameraControls} from '../../../event/_B
 import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
 import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
-import {CAMERA_CONTROLS_NODE_TYPES} from '../../../../poly/NodeContext';
+import {CAMERA_CONTROLS_NODE_TYPES, NodeContext} from '../../../../poly/NodeContext';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
+type HTMLElementId = string;
+type ControlsId = string;
+type AppliedControls = Map<HTMLElementId, Map<ControlsId, BaseCameraControlsEventNodeType>>;
+
 export class ThreejsCameraControlsController {
-	_applied_controls_by_element_id: Dictionary<Dictionary<boolean>> = {};
+	private _applied_controls_by_element_id: AppliedControls = new Map();
 	private _controls_node: BaseCameraControlsEventNodeType | null = null;
 	// private controls_start_listener: (() => void) | undefined;
 	private controls_change_listener: (() => void) | undefined;
@@ -30,7 +34,7 @@ export class ThreejsCameraControlsController {
 			if (controls_param.is_dirty) {
 				await controls_param.compute();
 			}
-			const node = controls_param.found_node();
+			const node = controls_param.found_node_with_context(NodeContext.EVENT);
 			if (node) {
 				if (CAMERA_CONTROLS_NODE_TYPES.includes(node.type)) {
 					return node as BaseCameraControlsEventNodeType;
@@ -48,7 +52,7 @@ export class ThreejsCameraControlsController {
 		const controls_node = await this.controls_node();
 		if (controls_node) {
 			if (this._controls_node != controls_node) {
-				this.dispose_control_refs();
+				this._dispose_control_refs();
 			}
 		}
 
@@ -60,17 +64,16 @@ export class ThreejsCameraControlsController {
 		if (controls_node) {
 			const controls_id = controls_node.controls_id();
 			let controls_aleady_applied = false;
-			if (
-				this._applied_controls_by_element_id[html_element.id] &&
-				this._applied_controls_by_element_id[html_element.id][controls_id]
-			) {
+
+			let map_for_element = this._applied_controls_by_element_id.get(html_element.id);
+			if (map_for_element && map_for_element.get(controls_id)) {
 				controls_aleady_applied = true;
 			}
 			if (!controls_aleady_applied) {
 				// this._last_control_node_id = controls_id;
-				this._applied_controls_by_element_id[html_element.id] =
-					this._applied_controls_by_element_id[html_element.id] || {};
-				this._applied_controls_by_element_id[html_element.id][controls_id] = true;
+				map_for_element = new Map();
+				this._applied_controls_by_element_id.set(html_element.id, map_for_element);
+				map_for_element.set(controls_id, controls_node);
 
 				// request_container forces a cook
 				//controls_node.request_container (controls_container)=>
@@ -82,15 +85,22 @@ export class ThreejsCameraControlsController {
 			}
 		}
 	}
-	dispose_control_refs() {
-		this._applied_controls_by_element_id = {};
-	}
+	private _dispose_control_refs() {
+		this._applied_controls_by_element_id.forEach((map_for_element, element_id) => {
+			this._dispose_controls_for_element_id(element_id);
+		});
 
-	// calling dispose controls
-	// ensure that we can set the camera menu to camera1, then camera2 and back to camera1
-	// and controls will be cleared each time
-	async dispose_controls(html_element: HTMLElement) {
-		delete this._applied_controls_by_element_id[html_element.id];
+		this._applied_controls_by_element_id.clear();
+	}
+	private _dispose_controls_for_element_id(html_element_id: string) {
+		const map_for_element = this._applied_controls_by_element_id.get(html_element_id);
+		if (map_for_element) {
+			map_for_element.forEach((controls_node, controls_id) => {
+				controls_node.dispose_controls_for_html_element_id(html_element_id);
+			});
+		}
+
+		this._applied_controls_by_element_id.delete(html_element_id);
 		// if (this._applied_controls_by_element_id[html_element.id]) {
 		// 	const controls_node = await this.controls_node();
 		// 	if (controls_node) {
@@ -103,6 +113,13 @@ export class ThreejsCameraControlsController {
 		// 	delete this._applied_controls_by_element_id[html_element.id][controls_id]
 		// }
 		// this._last_control_node_id = null
+	}
+
+	// calling dispose controls
+	// ensure that we can set the camera menu to camera1, then camera2 and back to camera1
+	// and controls will be cleared each time
+	async dispose_controls(html_element: HTMLElement) {
+		this._dispose_controls_for_element_id(html_element.id);
 	}
 	set_controls_events(controls: CameraControls) {
 		// restore target (for orbit controls only for now)

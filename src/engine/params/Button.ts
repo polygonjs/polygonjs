@@ -16,6 +16,7 @@ export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 	get value_serialized() {
 		return this.value;
 	}
+	protected _copy_value(param: ButtonParam) {}
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.BUTTON],
 		raw_input2: ParamInitValuesTypeMap[ParamType.BUTTON]

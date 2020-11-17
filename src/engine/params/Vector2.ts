@@ -37,6 +37,12 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 	get value_serialized() {
 		return this.value.toArray() as Number2;
 	}
+	private _copied_value: Number2 = [0, 0];
+	protected _copy_value(param: Vector2Param) {
+		param.value.toArray(this._copied_value);
+		this.set(this._copied_value);
+	}
+
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR2]) {
 		if (raw_input instanceof Vector2) {
 			return raw_input.clone();

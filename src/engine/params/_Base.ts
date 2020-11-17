@@ -101,6 +101,16 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	abstract get default_value_serialized(): ParamInitValueSerializedTypeMap[T];
 	abstract get raw_input_serialized(): ParamInitValueSerializedTypeMap[T];
 	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
+	copy_value(param: BaseParamType) {
+		if (param.type == this.type) {
+			this._copy_value(param as TypedParam<T>);
+		} else {
+			console.warn(`cannot copy value from ${param.type} to ${this.type}`);
+		}
+	}
+	protected _copy_value(param: TypedParam<T>) {
+		throw 'abstract method param._copy_value';
+	}
 	get value_pre_conversion_serialized(): ParamValuePreConversionSerializedTypeMap[T] {
 		return undefined as never;
 	}

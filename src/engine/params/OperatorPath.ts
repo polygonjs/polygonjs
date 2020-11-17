@@ -44,6 +44,9 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	get value_serialized() {
 		return `${this.value}`;
 	}
+	protected _copy_value(param: OperatorPathParam) {
+		this.set(param.value_serialized);
+	}
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
 		raw_input2: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH]

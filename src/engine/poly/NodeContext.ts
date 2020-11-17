@@ -65,6 +65,7 @@ export enum CameraNodeType {
 	ORTHOGRAPHIC = 'orthographic_camera',
 	MAPBOX = 'mapbox_camera',
 }
+
 export enum CameraControlsNodeType {
 	DEVICE_ORIENTATION = 'camera_device_orientation_controls',
 	MAP = 'camera_map_controls',

@@ -145,7 +145,7 @@ export interface OperatorPathParamOptions
 		CallbackParamOptions {
 	node_selection?: {
 		context?: NodeContext;
-		types?: string[];
+		types?: Readonly<string[]>;
 	};
 	dependent_on_found_node?: boolean;
 	param_selection?: ParamType | boolean;
