@@ -7,20 +7,22 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = MaterialSopOperation.DEFAULT_PARAMS;
 class MaterialSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING(DEFAULT.group);
+	assign_mat = ParamConfig.BOOLEAN(DEFAULT.assign_mat);
 	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
 		node_selection: {
 			context: NodeContext.MAT,
 		},
 		dependent_on_found_node: false,
+		visible_if: {assign_mat: 1},
 	});
-	apply_to_children = ParamConfig.BOOLEAN(DEFAULT.apply_to_children);
-	clone_mat = ParamConfig.BOOLEAN(DEFAULT.clone_mat);
-	share_uniforms = ParamConfig.BOOLEAN(DEFAULT.share_uniforms);
+	apply_to_children = ParamConfig.BOOLEAN(DEFAULT.apply_to_children, {visible_if: {assign_mat: 1}});
+	// clone_mat is mostly useful when swapping tex for multiple objects which have different textures
+	// but can also be used when requiring a unique material per object, when using a copy SOP
+	clone_mat = ParamConfig.BOOLEAN(DEFAULT.clone_mat, {visible_if: {assign_mat: 1}});
+	share_uniforms = ParamConfig.BOOLEAN(DEFAULT.share_uniforms, {visible_if: {assign_mat: 1, clone_mat: 1}});
 	swap_current_tex = ParamConfig.BOOLEAN(DEFAULT.swap_current_tex);
 	tex_src0 = ParamConfig.STRING(DEFAULT.tex_src0, {visible_if: {swap_current_tex: 1}});
 	tex_dest0 = ParamConfig.STRING(DEFAULT.tex_dest0, {visible_if: {swap_current_tex: 1}});
-	// clone_mat is mostly useful when swapping tex for multiple objects which have different textures
-	// but can also be used when requiring a unique material per object, when using a copy SOP
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 

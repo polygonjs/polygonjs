@@ -108,6 +108,8 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 						);
 						object.matrix.multiply(this._translate_matrix);
 						CoreTransform.decompose_matrix(object);
+						object.updateWorldMatrix(false, false);
+						// object.updateMatrixWorld();
 					}
 					this._translate_matrix.identity();
 					this._translate_matrix.makeTranslation(

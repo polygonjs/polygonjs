@@ -1,4 +1,4 @@
-import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/nodes/sop/Hierarchy';
+import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/core/operation/sop/Hierarchy';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 

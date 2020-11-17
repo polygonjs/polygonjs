@@ -208,6 +208,7 @@ import {CenterSopOperation} from '../../../../core/operation/sop/Center';
 import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
 import {Css2DObjectSopOperation} from '../../../../core/operation/sop/Css2DObject';
 import {FileSopOperation} from '../../../../core/operation/sop/File';
+import {HierarchySopOperation} from '../../../../core/operation/sop/Hierarchy';
 import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../../core/operation/sop/Instance';
 import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
@@ -235,6 +236,7 @@ export class SopRegister {
 		poly.register_operation(CircleSopOperation);
 		poly.register_operation(Css2DObjectSopOperation);
 		poly.register_operation(FileSopOperation);
+		poly.register_operation(HierarchySopOperation);
 		poly.register_operation(IcosahedronSopOperation);
 		poly.register_operation(InstanceSopOperation);
 		poly.register_operation(JitterSopOperation);

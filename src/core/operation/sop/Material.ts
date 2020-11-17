@@ -15,6 +15,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
+	assign_mat: boolean;
 	material: TypedPathParamValue;
 	apply_to_children: boolean;
 	clone_mat: boolean;
@@ -27,6 +28,7 @@ interface MaterialSopParams extends DefaultOperationParams {
 export class MaterialSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
+		assign_mat: true,
 		material: new TypedPathParamValue('/MAT/mesh_standard1'),
 		apply_to_children: true,
 		clone_mat: false,
@@ -45,10 +47,19 @@ export class MaterialSopOperation extends BaseSopOperation {
 	async cook(input_contents: CoreGroup[], params: MaterialSopParams) {
 		const core_group = input_contents[0];
 
-		const material_node = params.material.ensure_node_context(NodeContext.MAT, this.states?.error);
-		if (!material_node) {
-			return core_group;
+		this._old_mat_by_old_new_id.clear();
+
+		await this._apply_materials(core_group, params);
+		this._swap_textures(core_group, params);
+		return core_group;
+	}
+
+	private async _apply_materials(core_group: CoreGroup, params: MaterialSopParams) {
+		if (!params.assign_mat) {
+			return;
 		}
+
+		const material_node = params.material.ensure_node_context(NodeContext.MAT, this.states?.error);
 		if (material_node) {
 			const material = material_node.material;
 			const assembler_controller = (material_node as BaseBuilderMatNodeType).assembler_controller;
@@ -74,7 +85,32 @@ export class MaterialSopOperation extends BaseSopOperation {
 		} else {
 			this.states?.error.set(`no material node found`);
 		}
-		return core_group;
+	}
+
+	private _old_mat_by_old_new_id: Map<string, Material> = new Map();
+	private _materials_by_uuid: Map<string, Material> = new Map();
+	private _swap_textures(core_group: CoreGroup, params: MaterialSopParams) {
+		if (!params.swap_current_tex) {
+			return;
+		}
+
+		this._materials_by_uuid.clear();
+
+		for (let object of core_group.objects_from_group(params.group)) {
+			if (params.apply_to_children) {
+				object.traverse((child) => {
+					const mat = (object as Mesh).material as Material;
+					this._materials_by_uuid.set(mat.uuid, mat);
+				});
+			} else {
+				const mat = (object as Mesh).material as Material;
+				this._materials_by_uuid.set(mat.uuid, mat);
+			}
+		}
+
+		this._materials_by_uuid.forEach((mat, mat_uuid) => {
+			this._swap_texture(mat, params);
+		});
 	}
 
 	private _apply_material(object: Object3D, src_material: Material, params: MaterialSopParams) {
@@ -87,30 +123,36 @@ export class MaterialSopOperation extends BaseSopOperation {
 		}
 
 		const object_with_material = object as Mesh;
-		const current_mat = object_with_material.material as Material | undefined;
-		if (current_mat && params.swap_current_tex) {
-			this._swap_textures(used_material, current_mat, params);
-		}
+		// const current_mat = object_with_material.material as Material | undefined;
+		// if (current_mat && params.swap_current_tex) {
+		// 	this._swap_texture(used_material, current_mat, params);
+		// }
+		this._old_mat_by_old_new_id.set(used_material.uuid, object_with_material.material as Material);
 		object_with_material.material = used_material;
 
 		CoreMaterial.apply_render_hook(object, used_material);
 		CoreMaterial.apply_custom_materials(object, used_material);
 	}
 
-	private _swap_textures(target_mat: Material, src_mat: Material, params: MaterialSopParams) {
+	private _swap_texture(target_mat: Material, params: MaterialSopParams) {
 		if (params.tex_src0 == '' || params.tex_dest0 == '') {
 			return;
 		}
+		let src_mat = this._old_mat_by_old_new_id.get(target_mat.uuid);
+		src_mat = src_mat || target_mat;
+
 		const src_tex: Texture | null = (src_mat as any)[params.tex_src0];
 		if (src_tex) {
 			// swap mat param
 			(target_mat as any)[params.tex_dest0] = src_tex;
+			(src_mat as any)[params.tex_src0] = null;
 			// swap uniforms
 			const uniforms = (target_mat as any).uniforms;
 			if (uniforms) {
 				const uniforms_map = uniforms[params.tex_dest0];
 				if (uniforms_map) {
 					uniforms[params.tex_dest0] = {value: src_tex};
+					uniforms[params.tex_src0] = {value: null};
 				}
 			}
 		}
