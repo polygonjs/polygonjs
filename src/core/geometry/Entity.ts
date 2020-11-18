@@ -7,6 +7,6 @@ export abstract class CoreEntity {
 		return this._index;
 	}
 
-	abstract attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue;
-	abstract string_attrib_value(name: string): string;
+	abstract attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;
+	abstract string_attrib_value(name: string): string | undefined;
 }

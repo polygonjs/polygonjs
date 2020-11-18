@@ -10,6 +10,9 @@ import gsap from 'gsap/gsap-core';
 import {CoreObject} from '../../../core/geometry/Object';
 import {AnimNodeEasing, InOutMode} from '../../../core/animation/Constant';
 import {BaseCameraControlsEventNodeType} from '../event/_BaseCameraControls';
+import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
+import {Object3D} from 'three/src/core/Object3D';
+import {CoreMath} from '../../../core/math/_Module';
 
 enum CameraNavigationBeaconsEventInput {
 	TRIGGER = 'trigger',
@@ -25,6 +28,8 @@ interface CamData {
 	q: Quaternion;
 	s: Vector3;
 	fov: number;
+	near: number;
+	far: number;
 	controls: {
 		node?: BaseCameraControlsEventNodeType;
 	};
@@ -35,14 +40,23 @@ function init_cam_data(): CamData {
 		q: new Quaternion(),
 		s: new Vector3(),
 		fov: 0,
+		near: 0,
+		far: 0,
 		controls: {},
 	};
 }
+interface ObjectScaleProxy {
+	val: number;
+}
+interface NavBeaconProxy {
+	prev: ObjectScaleProxy;
+	current: ObjectScaleProxy;
+}
+const ATTRIB_NAME = {CAMERA: 'camera'};
 
 const EASING = `${AnimNodeEasing.POWER2}.${InOutMode.IN_OUT}`;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 		node_selection: {
@@ -52,8 +66,9 @@ class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	});
 	duration = ParamConfig.FLOAT(2);
 	rotation_delay = ParamConfig.FLOAT(1);
-	fov_delay = ParamConfig.FLOAT(0);
+	projection_matrix_delay = ParamConfig.FLOAT(0);
 	to_neares_pos = ParamConfig.BOOLEAN(0);
+	hide_current_beacon = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new CameraNavigationBeaconsEventParamsConfig();
 
@@ -65,7 +80,17 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 
 	private _src_data: CamData = init_cam_data();
 	private _dest_data: CamData = init_cam_data();
-
+	private _prev_nav_beacons: Object3D[] = [];
+	private _current_nav_beacons: Object3D[] = [];
+	private _cam_proxy = {
+		t: 0,
+		q: 0,
+		fov: 0,
+	};
+	private _nav_beacon_proxy: NavBeaconProxy = {
+		prev: {val: 0},
+		current: {val: 0},
+	};
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
@@ -81,13 +106,28 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 	}
 
 	private async _process_trigger_event(context: EventContext<MouseEvent>) {
-		const target_camera = this._get_target_camera(context);
-		if (!target_camera) {
+		const clicked_object = this._get_clicked_camera(context);
+		if (!clicked_object) {
 			return;
 		}
+		const camera_path = CoreObject.string_attrib_value(clicked_object, ATTRIB_NAME.CAMERA, 0);
+		if (!camera_path) {
+			return;
+		}
+
+		const target_camera = this.scene.node(camera_path) as PerspectiveCameraObjNode;
+		if (!target_camera) {
+			console.warn(`no camera found with path ${camera_path}`);
+			return;
+		}
+
 		const src_camera = this._get_src_camera();
 		if (!src_camera) {
 			return src_camera;
+		}
+		if (this.pv.hide_current_beacon) {
+			this._prev_nav_beacons = this._current_nav_beacons;
+			this._current_nav_beacons = this._get_all_nav_beacon_objects(camera_path);
 		}
 
 		CameraNavigationBeaconsEventNode._store_cam_data(src_camera, this._src_data);
@@ -101,21 +141,42 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 	}
 
 	private async _start(src_camera: PerspectiveCameraObjNode, target_camera: PerspectiveCameraObjNode) {
+		if (this.pv.hide_current_beacon) {
+			this._animate_objects(this._current_nav_beacons, this._nav_beacon_proxy.current, 0);
+		}
 		await this._remove_current_camera_controls(src_camera);
-		await this._start_animation(src_camera);
+		await this._animate_camera(src_camera);
 		await this._restore_camera_controls(src_camera, target_camera);
+		if (this.pv.hide_current_beacon) {
+			this._animate_objects(this._prev_nav_beacons, this._nav_beacon_proxy.prev, 1);
+		}
 	}
 
-	private _proxy = {
-		t: 0,
-		q: 0,
-		fov: 0,
-	};
-	private async _start_animation(src_camera: PerspectiveCameraObjNode) {
+	private async _animate_objects(objects: Object3D[], proxy: ObjectScaleProxy, target_scale: number) {
+		const first_object = objects[0];
+		if (!first_object) {
+			return;
+		}
+		proxy.val = first_object.scale.x;
+		gsap.to(proxy, {
+			duration: 1,
+			ease: EASING,
+			val: target_scale,
+			onUpdate: () => {
+				for (let object of objects) {
+					const s = proxy.val;
+					object.scale.set(s, s, s);
+					object.updateMatrix();
+				}
+			},
+		});
+	}
+
+	private async _animate_camera(src_camera: PerspectiveCameraObjNode) {
 		const src_camera_object = src_camera.camera();
-		this._proxy.t = 0;
-		this._proxy.q = 0;
-		this._proxy.fov = 0;
+		this._cam_proxy.t = 0;
+		this._cam_proxy.q = 0;
+		this._cam_proxy.fov = 0;
 
 		const duration = this.pv.duration;
 		return new Promise((resolve) => {
@@ -129,41 +190,43 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 			});
 
 			// translation timeline
-			timeline.to(this._proxy, {
+			timeline.to(this._cam_proxy, {
 				duration: duration,
 				t: 1,
 				ease: EASING,
 				onUpdate: () => {
-					src_camera_object.position.copy(this._src_data.t).lerp(this._dest_data.t, this._proxy.t);
+					src_camera_object.position.copy(this._src_data.t).lerp(this._dest_data.t, this._cam_proxy.t);
 				},
 			});
 			// quaternion timeline
 			timeline.to(
-				this._proxy,
+				this._cam_proxy,
 				{
 					duration: duration,
 					q: 1,
 					ease: EASING,
 					onUpdate: () => {
-						src_camera_object.quaternion.copy(this._src_data.q).slerp(this._dest_data.q, this._proxy.q);
+						src_camera_object.quaternion.copy(this._src_data.q).slerp(this._dest_data.q, this._cam_proxy.q);
 					},
 				},
 				this.pv.rotation_delay
 			);
 			// fov timeline
 			timeline.to(
-				this._proxy,
+				this._cam_proxy,
 				{
 					duration: duration,
 					fov: 1,
 					ease: EASING,
 					onUpdate: () => {
-						const blend = this._proxy.fov;
-						src_camera_object.fov = (1 - blend) * this._src_data.fov + blend * this._dest_data.fov;
+						const blend = this._cam_proxy.fov;
+						src_camera_object.fov = CoreMath.blend(this._src_data.fov, this._dest_data.fov, blend);
+						src_camera_object.near = CoreMath.blend(this._src_data.near, this._dest_data.near, blend);
+						src_camera_object.far = CoreMath.blend(this._src_data.far, this._dest_data.far, blend);
 						src_camera_object.updateProjectionMatrix();
 					},
 				},
-				this.pv.fov_delay
+				this.pv.projection_matrix_delay
 			);
 		});
 	}
@@ -172,7 +235,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		return this.p.camera.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE);
 	}
 
-	private _get_target_camera(context: EventContext<MouseEvent>) {
+	private _get_clicked_camera(context: EventContext<MouseEvent>) {
 		const value = context.value;
 		if (!value) {
 			return;
@@ -181,14 +244,18 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		if (!intersect) {
 			return;
 		}
-
-		const core_object = new CoreObject(intersect.object, 0);
-		const camera = core_object.string_attrib_value('camera');
-		const camera_node = this.scene.node(camera) as PerspectiveCameraObjNode;
-		if (!camera_node) {
-			console.warn(`no camera found with name ${camera_node}`);
-		}
-		return camera_node;
+		return intersect.object;
+	}
+	private _get_all_nav_beacon_objects(camera_path_attrib_value: string): Object3D[] {
+		// find all other objects with same camera attribute
+		const objects: Object3D[] = [];
+		this.scene.default_scene.traverse((child) => {
+			const obj_camera_path = CoreObject.string_attrib_value(child, ATTRIB_NAME.CAMERA, 0);
+			if (obj_camera_path && obj_camera_path == camera_path_attrib_value) {
+				objects.push(child);
+			}
+		});
+		return objects;
 	}
 
 	private async _remove_current_camera_controls(camera_node: PerspectiveCameraObjNode) {
@@ -207,6 +274,8 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		this.scene.batch_update(() => {
 			src_camera_node.transform_controller.update_node_transform_params_from_object();
 			src_camera_node.p.fov.set(this._dest_data.fov);
+			src_camera_node.p.near.set(this._dest_data.near);
+			src_camera_node.p.far.set(this._dest_data.far);
 			const node = this._dest_data.controls.node;
 			if (node) {
 				src_camera_node.p.controls.set(node.full_path());
@@ -219,6 +288,8 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		camera_object.updateMatrixWorld(false);
 		camera_object.matrixWorld.decompose(data.t, data.q, data.s);
 		data.fov = camera_object.fov;
+		data.near = camera_object.near;
+		data.far = camera_object.far;
 
 		data.controls.node = camera_node.p.controls.found_node_with_context(
 			NodeContext.EVENT

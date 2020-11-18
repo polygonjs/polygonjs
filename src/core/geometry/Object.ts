@@ -132,42 +132,58 @@ export class CoreObject extends CoreEntity {
 	}
 
 	rename_attribute(old_name: string, new_name: string) {
-		this.add_attribute(new_name, this.attrib_value(old_name));
-		this.delete_attribute(old_name);
+		const current_value = this.attrib_value(old_name);
+		if (current_value != null) {
+			this.add_attribute(new_name, current_value);
+			this.delete_attribute(old_name);
+		} else {
+			console.warn(`attribute ${old_name} not found`);
+		}
 	}
 
 	delete_attribute(name: string) {
 		delete this._object.userData[ATTRIBUTES][name];
 	}
-	static attrib_value(object: Object3D, name: string, index:number=0, target?: Vector2 | Vector3 | Vector4): AttribValue {
+	static attrib_value(
+		object: Object3D,
+		name: string,
+		index: number = 0,
+		target?: Vector2 | Vector3 | Vector4
+	): AttribValue | undefined {
 		if (name === PTNUM) {
 			return index;
 		} else {
-			let val = object.userData[ATTRIBUTES][name] as AttribValue;
-			if (val == null) {
-				if (name == NAME_ATTR) {
-					val = object.name;
+			if (object.userData && object.userData[ATTRIBUTES]) {
+				const val = object.userData[ATTRIBUTES][name] as AttribValue;
+				if (val == null) {
+					if (name == NAME_ATTR) {
+						return object.name;
+					}
+				} else {
+					if (lodash_isArray(val) && target) {
+						target.fromArray(val);
+						return target;
+					}
 				}
-			} else {
-				if (lodash_isArray(val) && target) {
-					target.fromArray(val);
-					return target;
-				}
+				return val;
 			}
-			return val;
 		}
 	}
-
-	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
+	static string_attrib_value(object: Object3D, name: string, index: number = 0): string | undefined {
+		const str = this.attrib_value(object, name, index);
+		if (str != null) {
+			if (lodash_isString(str)) {
+				return str;
+			} else {
+				return `${str}`;
+			}
+		}
+	}
+	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
 		return CoreObject.attrib_value(this._object, name, this._index, target);
 	}
 	string_attrib_value(name: string) {
-		const str = this.attrib_value(name);
-		if (lodash_isString(str)) {
-			return str;
-		} else {
-			return `${str}`;
-		}
+		return CoreObject.string_attrib_value(this._object, name, this._index);
 	}
 	name(): string {
 		return this.attrib_value(NAME_ATTR) as string;

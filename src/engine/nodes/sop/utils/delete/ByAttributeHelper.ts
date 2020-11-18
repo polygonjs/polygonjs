@@ -67,7 +67,7 @@ export class ByAttributeHelper {
 		TypeAssert.unreachable(attrib_type);
 	}
 	private _eval_for_string(entities: CoreEntity[]) {
-		let value: string;
+		let value: string | undefined;
 		for (let entity of entities) {
 			value = entity.string_attrib_value(this.node.pv.attrib_name);
 			if (value == this.node.pv.attrib_string) {

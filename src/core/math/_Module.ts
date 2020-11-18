@@ -36,6 +36,9 @@ export class CoreMath {
 		const r = (val - src_min) / src_range;
 		return r * dest_range + dest_min;
 	}
+	static blend(num0: number, num1: number, blend: number) {
+		return (1 - blend) * num0 + blend * num1;
+	}
 
 	static degrees_to_radians(degrees: number): number {
 		return degrees * RAD_DEG_RATIO;
