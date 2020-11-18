@@ -15,11 +15,12 @@ import {Object3D} from 'three/src/core/Object3D';
 import {CoreMath} from '../../../core/math/_Module';
 
 enum CameraNavigationBeaconsEventInput {
+	INIT = 'init',
 	TRIGGER = 'trigger',
 }
 
 enum CameraNavigationBeaconsEventOutput {
-	// BEFORE_ANIM = 'before_anim',
+	AFTER_INIT = 'after_init',
 	AFTER_ANIM = 'after_anim',
 }
 
@@ -57,12 +58,21 @@ const ATTRIB_NAME = {CAMERA: 'camera'};
 const EASING = `${AnimNodeEasing.POWER2}.${InOutMode.IN_OUT}`;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreSleep} from '../../../core/Sleep';
 class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
-	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
+	camera = ParamConfig.OPERATOR_PATH('/perspective_camera_MASTER', {
 		node_selection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
 		},
+	});
+	init = ParamConfig.BOOLEAN(0);
+	init_camera = ParamConfig.OPERATOR_PATH('/perspective_camera_0', {
+		node_selection: {
+			context: NodeContext.OBJ,
+			types: [CameraNodeType.PERSPECTIVE],
+		},
+		visible_if: {init: 1},
 	});
 	duration = ParamConfig.FLOAT(2);
 	rotation_delay = ParamConfig.FLOAT(1);
@@ -94,6 +104,11 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
+				CameraNavigationBeaconsEventInput.INIT,
+				EventConnectionPointType.BASE,
+				this._process_init_event.bind(this)
+			),
+			new EventConnectionPoint(
 				CameraNavigationBeaconsEventInput.TRIGGER,
 				EventConnectionPointType.BASE,
 				this._process_trigger_event.bind(this)
@@ -105,6 +120,65 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		]);
 	}
 
+	//
+	//
+	// INIT
+	//
+	//
+	private async _process_init_event(context: EventContext<MouseEvent>) {
+		if (!this.pv.init) {
+			return;
+		}
+		const src_camera = this._get_src_camera();
+		if (!src_camera) {
+			return src_camera;
+		}
+		const target_camera = this._get_init_camera();
+		if (!target_camera) {
+			return;
+		}
+
+		CameraNavigationBeaconsEventNode._store_cam_data(target_camera, this._dest_data);
+
+		await this._remove_current_camera_controls(src_camera);
+
+		await CoreSleep.sleep(100);
+
+		// place camera
+		const src_camera_object = src_camera.camera();
+		src_camera_object.position.copy(this._dest_data.t);
+		src_camera_object.quaternion.copy(this._dest_data.q);
+		src_camera_object.fov = this._dest_data.fov;
+		src_camera_object.near = this._dest_data.near;
+		src_camera_object.far = this._dest_data.far;
+		src_camera_object.updateMatrix();
+		src_camera_object.updateProjectionMatrix();
+
+		// toggle objects scales
+		if (this.pv.hide_current_beacon) {
+			this._prev_nav_beacons = this._current_nav_beacons;
+			this._current_nav_beacons = this._get_all_nav_beacon_objects(target_camera.name);
+			for (let object of this._prev_nav_beacons) {
+				object.scale.set(1, 1, 1);
+				object.updateMatrix();
+			}
+			for (let object of this._current_nav_beacons) {
+				object.scale.set(0, 0, 0);
+				object.updateMatrix();
+			}
+		}
+
+		await CoreSleep.sleep(100);
+
+		await this._restore_camera_controls(src_camera, target_camera);
+		this.dispatch_event_to_output(CameraNavigationBeaconsEventOutput.AFTER_INIT, context);
+	}
+
+	//
+	//
+	// TRIGGER
+	//
+	//
 	private async _process_trigger_event(context: EventContext<MouseEvent>) {
 		const clicked_object = this._get_clicked_camera(context);
 		if (!clicked_object) {
@@ -125,6 +199,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		if (!src_camera) {
 			return src_camera;
 		}
+
 		if (this.pv.hide_current_beacon) {
 			this._prev_nav_beacons = this._current_nav_beacons;
 			this._current_nav_beacons = this._get_all_nav_beacon_objects(camera_path);
@@ -234,6 +309,9 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 	private _get_src_camera() {
 		return this.p.camera.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE);
 	}
+	private _get_init_camera() {
+		return this.p.init_camera.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE);
+	}
 
 	private _get_clicked_camera(context: EventContext<MouseEvent>) {
 		const value = context.value;
@@ -294,12 +372,6 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		data.controls.node = camera_node.p.controls.found_node_with_context(
 			NodeContext.EVENT
 		) as BaseCameraControlsEventNodeType;
-
-		// if (data.controls.node) {
-		// 	if (data.controls.node instanceof CameraOrbitControlsEventNode) {
-		// 		data.controls.target.copy(data.controls.node.pv.target);
-		// 	}
-		// }
 	}
 
 	private _dest_delta = new Vector3();
