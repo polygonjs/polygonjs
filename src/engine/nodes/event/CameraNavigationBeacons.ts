@@ -115,7 +115,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 			),
 		]);
 		this.io.outputs.set_named_output_connection_points([
-			// new EventConnectionPoint(CameraNavigationBeaconsEventOutput.BEFORE_ANIM, EventConnectionPointType.BASE),
+			new EventConnectionPoint(CameraNavigationBeaconsEventOutput.AFTER_INIT, EventConnectionPointType.BASE),
 			new EventConnectionPoint(CameraNavigationBeaconsEventOutput.AFTER_ANIM, EventConnectionPointType.BASE),
 		]);
 	}

@@ -145,14 +145,14 @@ export class MaterialSopOperation extends BaseSopOperation {
 		if (src_tex) {
 			// swap mat param
 			(target_mat as any)[params.tex_dest0] = src_tex;
-			(src_mat as any)[params.tex_src0] = null;
+			// (src_mat as any)[params.tex_src0] = null;
 			// swap uniforms
 			const uniforms = (target_mat as any).uniforms;
 			if (uniforms) {
 				const uniforms_map = uniforms[params.tex_dest0];
 				if (uniforms_map) {
 					uniforms[params.tex_dest0] = {value: src_tex};
-					uniforms[params.tex_src0] = {value: null};
+					// uniforms[params.tex_src0] = {value: null};
 				}
 			}
 		}
