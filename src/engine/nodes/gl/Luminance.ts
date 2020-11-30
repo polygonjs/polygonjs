@@ -6,7 +6,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 const OUTPUT_NAME = 'lum';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class LuminanceGlParamsConfig extends NodeParamsConfig {
-	hsv = ParamConfig.VECTOR3([1, 1, 1]);
+	color = ParamConfig.VECTOR3([1, 1, 1]);
 }
 const ParamsConfig = new LuminanceGlParamsConfig();
 export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
