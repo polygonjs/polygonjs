@@ -9,6 +9,7 @@ import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
+import {WebCamCopNode} from '../../../nodes/cop/WebCam';
 
 export interface CopNodeChildrenMap {
 	builder: BuilderCopNode;
@@ -20,6 +21,7 @@ export interface CopNodeChildrenMap {
 	null: NullCopNode;
 	switch: SwitchCopNode;
 	texture_properties: TexturePropertiesCopNode;
+	web_cam: WebCamCopNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -34,5 +36,6 @@ export class CopRegister {
 		poly.register_node(PostCopNode, CATEGORY_COP.FILTER);
 		poly.register_node(SwitchCopNode, CATEGORY_COP.MISC);
 		poly.register_node(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
+		poly.register_node(WebCamCopNode, CATEGORY_COP.ADVANCED);
 	}
 }
