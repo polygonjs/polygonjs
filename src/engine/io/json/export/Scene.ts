@@ -4,15 +4,16 @@ import {CoreString} from '../../../../core/String';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
 
+export interface SceneJsonExporterDataProperties {
+	frame: number;
+	frame_range: Number2;
+	frame_range_locked: Boolean2;
+	realtime_state: boolean;
+	// fps: number;
+	master_camera_node_path: string | null;
+}
 export interface SceneJsonExporterData {
-	properties?: {
-		frame: number;
-		frame_range: Number2;
-		frame_range_locked: Boolean2;
-		realtime_state: boolean;
-		// fps: number;
-		master_camera_node_path: string | null;
-	};
+	properties?: SceneJsonExporterDataProperties;
 	root?: NodeJsonExporterData;
 	ui?: NodeJsonExporterUIData;
 }
