@@ -2,6 +2,8 @@ import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {BaseGlNodeType} from '../../_Base';
 import {PolyScene} from '../../../../scene/PolyScene';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {AttributeGlNode} from '../../Attribute';
+import {GlNodeType} from '../../../../poly/NodeContext';
 export type TextureAllocationData = TextureVariableData[];
 
 const TEXTURE_PREFIX = 'texture_';
@@ -40,7 +42,19 @@ export class TextureAllocation {
 		return this._variables?.filter((variable) => variable.graph_node_ids?.has(root_node.graph_node_id) || false);
 	}
 	input_names_for_node(root_node: BaseGlNodeType): string[] | undefined {
-		return this.variables_for_input_node(root_node)?.map((v) => v.name);
+		const variables = this.variables_for_input_node(root_node);
+		if (variables) {
+			if (root_node.type == GlNodeType.ATTRIBUTE) {
+				// if the AttributeGlNode exports an attribute called restP,
+				// the variable will be named also restP.
+				// And the input of the AttributeGlNode will not be called restP,
+				// so I need to make sure I only return the actual name of its input here
+				return [AttributeGlNode.INPUT_NAME];
+			} else {
+				return variables.map((v) => v.name);
+			}
+		}
+		// return ?.map((v) => v.name);
 	}
 	// find_variable_with_node(root_node: BaseNodeGl, input_name: string): TextureVariable{
 	// 	return this.variables_for_input_node(root_node).filter(v=>v.name() == input_name)[0]

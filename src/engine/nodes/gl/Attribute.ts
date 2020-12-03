@@ -1,9 +1,6 @@
 import lodash_trim from 'lodash/trim';
-
 import {TypedGlNode, BaseGlNodeType} from './_Base';
-// import {BaseNodeGlMathFunctionArg1} from './_BaseMathFunctionArg1';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
-import {ParamType} from '../../poly/ParamType';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
@@ -14,6 +11,7 @@ const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 ];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {GlNodeType} from '../../poly/NodeContext';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -23,15 +21,17 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	texport_when_connected = ParamConfig.BOOLEAN(0, {hidden: true});
+	export_when_connected = ParamConfig.BOOLEAN(0, {visible_if: {texport_when_connected: 1}});
 }
 const ParamsConfig = new AttributeGlParamsConfig();
 
 export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'attribute'> {
-		return 'attribute';
+	static type(): Readonly<GlNodeType.ATTRIBUTE> {
+		return GlNodeType.ATTRIBUTE;
 	}
-	static readonly INPUT_NAME = 'export';
+	static readonly INPUT_NAME = 'in';
 	static readonly OUTPUT_NAME = 'val';
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
@@ -49,6 +49,9 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 				return [];
 			}
 		});
+		this.io.connection_points.set_input_name_function((index: number) => {
+			return AttributeGlNode.INPUT_NAME;
+		});
 		this.io.connection_points.set_expected_output_types_function(() => [
 			ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
@@ -57,15 +60,18 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.name]);
+				this.params.label.init([this.p.name, this.p.export_when_connected], () => {
+					return this.pv.export_when_connected ? `${this.pv.name} (EXPORTED)` : this.pv.name;
+				});
 			});
 		});
+		this.params.add_on_scene_load_hook('prepare params', () => {
+			if (this.material_node?.assembler_controller?.allow_attribute_exports()) {
+				this.p.texport_when_connected.set(1);
+			}
+		});
 	}
-	create_params() {
-		if (this.material_node?.assembler_controller?.allow_attribute_exports()) {
-			this.add_param(ParamType.BOOLEAN, 'export_when_connected', 0);
-		}
-	}
+	// create_params() {}
 	// inputless_params_names(): string[] {
 	// 	return ['type'];
 	// }
@@ -88,12 +94,10 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		// if (lines_controller.shader_name) {
 		this.material_node?.assembler_controller?.assembler.set_node_lines_attribute(
 			this,
 			shaders_collection_controller
 		);
-		// }
 	}
 
 	// update_output_type(constructor) {

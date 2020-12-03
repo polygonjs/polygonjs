@@ -3,6 +3,7 @@ import {ParticlesSystemGpuSopNode} from '../../../../sop/ParticlesSystemGpu';
 import {TextureAllocationsController, TextureAllocationsControllerData} from '../../utils/TextureAllocationsController';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Poly} from '../../../../../Poly';
 
 export interface PersistedConfigBaseParticlesData {
 	shaders_by_name: Dictionary<string>;
@@ -48,6 +49,9 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		};
 	}
 	load(data: PersistedConfigBaseParticlesData) {
+		if (!Poly.instance().player_mode()) {
+			return;
+		}
 		this._loaded_data = data;
 		this.node.init_with_persisted_config();
 	}

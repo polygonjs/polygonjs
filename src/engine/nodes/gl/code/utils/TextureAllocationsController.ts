@@ -23,7 +23,6 @@ export class TextureAllocationsController {
 
 	constructor() {}
 	allocate_connections_from_root_nodes(root_nodes: BaseGlNodeType[], leaf_nodes: BaseGlNodeType[]) {
-		// const connections_by_node_id = {}
 		const variables = [];
 
 		// TODO: let's go through the output node first, in case there is a name conflict, it will have priority
@@ -115,7 +114,7 @@ export class TextureAllocationsController {
 
 		this.allocate_variables(variables);
 	}
-	allocate_variables(variables: TextureVariable[]) {
+	private allocate_variables(variables: TextureVariable[]) {
 		const variables_by_size_inverse = lodash_sortBy(variables, (variable) => {
 			return -variable.size;
 		});
@@ -123,7 +122,7 @@ export class TextureAllocationsController {
 			this.allocate_variable(variable);
 		}
 	}
-	allocate_variable(new_variable: TextureVariable) {
+	private allocate_variable(new_variable: TextureVariable) {
 		let allocated = this.has_variable(new_variable.name);
 		if (allocated) {
 			const allocated_variable = this.variables().filter((v) => v.name == new_variable.name)[0];
