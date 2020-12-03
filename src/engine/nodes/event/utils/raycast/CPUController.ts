@@ -20,6 +20,9 @@ import {CoreGeometry} from '../../../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Triangle} from 'three/src/math/Triangle';
 import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
+import {Vector3Param} from '../../../../params/Vector3';
+import {Poly} from '../../../../Poly';
+import {RaycastCPUVelocityController} from './VelocityController';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -32,8 +35,11 @@ export class RaycastCPUController {
 	private _mouse_array: Number2 = [0, 0];
 	private _raycaster = new Raycaster();
 	private _resolved_target: Object3D | undefined;
-	private _intersection_position: Number3 = [0, 0, 0];
-	constructor(private _node: RaycastEventNode) {}
+
+	public readonly velocity_controller: RaycastCPUVelocityController;
+	constructor(private _node: RaycastEventNode) {
+		this.velocity_controller = new RaycastCPUVelocityController(this._node);
+	}
 
 	update_mouse(context: EventContext<MouseEvent>) {
 		if (!(context.canvas && context.camera_node)) {
@@ -65,14 +71,12 @@ export class RaycastCPUController {
 
 	private _plane = new Plane();
 	private _plane_intersect_target = new Vector3();
-	private _plane_intersect_target_array: Number3 = [0, 0, 0];
 	private _intersect_with_plane(context: EventContext<MouseEvent>) {
 		this._plane.normal.copy(this._node.pv.plane_direction);
 		this._plane.constant = this._node.pv.plane_offset;
 		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
-		this._plane_intersect_target.toArray(this._plane_intersect_target_array);
 
-		this._set_position_param(this._plane_intersect_target_array);
+		this._set_position_param(this._plane_intersect_target);
 		this._node.trigger_hit(context);
 	}
 
@@ -85,8 +89,7 @@ export class RaycastCPUController {
 			const intersections = this._raycaster.intersectObject(this._resolved_target, true);
 			const intersection = intersections[0];
 			if (intersection) {
-				intersection.point.toArray(this._intersection_position);
-				this._set_position_param(this._intersection_position);
+				this._set_position_param(intersection.point);
 
 				if (this._node.pv.geo_attribute == true) {
 					this._resolve_geometry_attribute(intersection);
@@ -214,21 +217,81 @@ export class RaycastCPUController {
 		}
 	}
 
-	private _set_position_param(hit_position: Number3) {
+	private _found_position_target_param: Vector3Param | undefined;
+	// private _hit_position: Vector3 = new Vector3(0, 0, 0);
+	private _hit_position_array: Number3 = [0, 0, 0];
+	private _set_position_param(hit_position: Vector3) {
+		// this._hit_position.copy(hit_position);
+		hit_position.toArray(this._hit_position_array);
 		if (this._node.pv.tposition_target) {
-			const target_param = this._node.p.position_target;
-
-			// Do not cache the param in here, but fetch it directly from the operator_path.
-			// The reason is that params are very prone to disappear and be re-generated,
-			// Such as spare params created by Gl Builders
-			const found_param = target_param.found_param_with_type(ParamType.VECTOR3);
-			if (found_param) {
-				found_param.set(hit_position);
+			if (Poly.instance().player_mode()) {
+				this._found_position_target_param =
+					this._found_position_target_param ||
+					this._node.p.position_target.found_param_with_type(ParamType.VECTOR3);
+			} else {
+				// Do not cache the param in the editor, but fetch it directly from the operator_path.
+				// The reason is that params are very prone to disappear and be re-generated,
+				// Such as spare params created by Gl Builders
+				const target_param = this._node.p.position_target;
+				this._found_position_target_param = target_param.found_param_with_type(ParamType.VECTOR3);
+			}
+			if (this._found_position_target_param) {
+				this._found_position_target_param.set(this._hit_position_array);
 			}
 		} else {
-			this._node.p.position.set(hit_position);
+			this._node.p.position.set(this._hit_position_array);
 		}
+
+		this.velocity_controller.process(hit_position);
+		// this._set_velocity_param(hit_position);
 	}
+	// hit_position() {
+	// 	return this._hit_position;
+	// }
+	// private _prev_position: Vector3 | undefined;
+	// private _set_pos_timestamp = performance.now();
+	// private _found_velocity_target_param: Vector3Param | undefined;
+	// private _hit_velocity: Vector3 = new Vector3(0, 0, 0);
+	// private _hit_velocity_array: Number3 = [0, 0, 0];
+	// private _set_velocity_param(hit_position: Vector3) {
+	// 	if (!this._node.pv.tvelocity) {
+	// 		return;
+	// 	}
+
+	// 	if (!this._prev_position) {
+	// 		this._prev_position = this._prev_position || new Vector3();
+	// 		this._prev_position.copy(hit_position);
+	// 		return;
+	// 	}
+
+	// 	const now = performance.now();
+	// 	const delta = now - this._set_pos_timestamp;
+	// 	this._set_pos_timestamp = now;
+	// 	// multiply by 1000 since delta is in ms
+	// 	this._hit_velocity.copy(hit_position).sub(this._prev_position).divideScalar(delta).multiplyScalar(1000);
+	// 	this._hit_velocity.toArray(this._hit_velocity_array);
+
+	// 	if (this._node.pv.tvelocity_target) {
+	// 		if (Poly.instance().player_mode()) {
+	// 			this._found_velocity_target_param =
+	// 				this._found_velocity_target_param ||
+	// 				this._node.p.velocity_target.found_param_with_type(ParamType.VECTOR3);
+	// 		} else {
+	// 			// Do not cache the param in the editor, but fetch it directly from the operator_path.
+	// 			// The reason is that params are very prone to disappear and be re-generated,
+	// 			// Such as spare params created by Gl Builders
+	// 			const target_param = this._node.p.velocity_target;
+	// 			this._found_velocity_target_param = target_param.found_param_with_type(ParamType.VECTOR3);
+	// 		}
+	// 		if (this._found_velocity_target_param) {
+	// 			this._found_velocity_target_param.set(this._hit_velocity_array);
+	// 		}
+	// 	} else {
+	// 		this._node.p.velocity.set(this._hit_velocity_array);
+	// 	}
+
+	// 	this._prev_position.copy(hit_position);
+	// }
 
 	private _prepare_raycaster(context: EventContext<MouseEvent>) {
 		const points_param = this._raycaster.params.Points;
@@ -276,11 +339,10 @@ export class RaycastCPUController {
 			await this._node.p.position_target.compute();
 		}
 	}
-
 	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {
 		node.cpu_controller.update_target();
 	}
-	static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
-		node.cpu_controller.update_position_target();
-	}
+	// static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
+	// 	node.cpu_controller.update_position_target();
+	// }
 }

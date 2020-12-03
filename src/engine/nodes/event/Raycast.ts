@@ -7,6 +7,10 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {RaycastCPUController, CPU_INTERSECT_WITH_OPTIONS, CPUIntersectWith} from './utils/raycast/CPUController';
 import {RaycastGPUController} from './utils/raycast/GPUController';
 import {AttribType, ATTRIBUTE_TYPES, AttribTypeMenuEntries} from '../../../core/geometry/Constant';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import {ParamType} from '../../poly/ParamType';
+
+const TIMESTAMP = 1000.0 / 60.0;
 
 enum RaycastMode {
 	CPU = 'cpu',
@@ -34,8 +38,6 @@ function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {ParamType} from '../../poly/ParamType';
 
 class RaycastParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(RAYCAST_MODES.indexOf(RaycastMode.CPU), {
@@ -182,6 +184,26 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		param_selection: ParamType.VECTOR3,
 		compute_on_dirty: true,
 	});
+	tvelocity = ParamConfig.BOOLEAN(0, {
+		cook: false,
+		// callback: (node: BaseNodeType, param: BaseParamType) => {
+		// 	RaycastCPUVelocityController.PARAM_CALLBACK_update_timer(node as RaycastEventNode);
+		// },
+	});
+	tvelocity_target = ParamConfig.BOOLEAN(0, {
+		cook: false,
+		...visible_for_cpu({tvelocity: 1}),
+	});
+	velocity = ParamConfig.VECTOR3([0, 0, 0], {
+		cook: false,
+		...visible_for_cpu({tvelocity: 1, tvelocity_target: 0}),
+	});
+	velocity_target = ParamConfig.OPERATOR_PATH('', {
+		cook: false,
+		...visible_for_cpu({tvelocity: 1, tvelocity_target: 1}),
+		param_selection: ParamType.VECTOR3,
+		compute_on_dirty: true,
+	});
 	//
 	//
 	// GEO ATTRIB
@@ -228,7 +250,11 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
-			new EventConnectionPoint('trigger', EventConnectionPointType.BASE, this._process_trigger_event.bind(this)),
+			new EventConnectionPoint(
+				'trigger',
+				EventConnectionPointType.BASE,
+				this._process_trigger_event_throttled.bind(this)
+			),
 			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
 		]);
 		this.io.outputs.set_named_output_connection_points([
@@ -252,6 +278,20 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		}
 	}
 
+	private _last_event_processed_at = performance.now();
+	private _process_trigger_event_throttled(context: EventContext<MouseEvent>) {
+		const previous = this._last_event_processed_at;
+		const now = performance.now();
+		this._last_event_processed_at = now;
+		const delta = now - previous;
+		if (delta < TIMESTAMP) {
+			setTimeout(() => {
+				this._process_trigger_event(context);
+			}, TIMESTAMP - delta);
+		} else {
+			this._process_trigger_event(context);
+		}
+	}
 	private _process_trigger_event(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
 			this.cpu_controller.process_event(context);

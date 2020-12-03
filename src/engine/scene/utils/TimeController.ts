@@ -35,7 +35,6 @@ export class TimeController {
 
 	constructor(private scene: PolyScene) {
 		this._graph_node = new CoreGraphNode(scene, 'time controller');
-		// this._graph_node.set_scene(this.scene);
 	}
 	get graph_node() {
 		return this._graph_node;
