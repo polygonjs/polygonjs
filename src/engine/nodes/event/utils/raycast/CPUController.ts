@@ -218,10 +218,8 @@ export class RaycastCPUController {
 	}
 
 	private _found_position_target_param: Vector3Param | undefined;
-	// private _hit_position: Vector3 = new Vector3(0, 0, 0);
 	private _hit_position_array: Number3 = [0, 0, 0];
 	private _set_position_param(hit_position: Vector3) {
-		// this._hit_position.copy(hit_position);
 		hit_position.toArray(this._hit_position_array);
 		if (this._node.pv.tposition_target) {
 			if (Poly.instance().player_mode()) {
@@ -243,55 +241,7 @@ export class RaycastCPUController {
 		}
 
 		this.velocity_controller.process(hit_position);
-		// this._set_velocity_param(hit_position);
 	}
-	// hit_position() {
-	// 	return this._hit_position;
-	// }
-	// private _prev_position: Vector3 | undefined;
-	// private _set_pos_timestamp = performance.now();
-	// private _found_velocity_target_param: Vector3Param | undefined;
-	// private _hit_velocity: Vector3 = new Vector3(0, 0, 0);
-	// private _hit_velocity_array: Number3 = [0, 0, 0];
-	// private _set_velocity_param(hit_position: Vector3) {
-	// 	if (!this._node.pv.tvelocity) {
-	// 		return;
-	// 	}
-
-	// 	if (!this._prev_position) {
-	// 		this._prev_position = this._prev_position || new Vector3();
-	// 		this._prev_position.copy(hit_position);
-	// 		return;
-	// 	}
-
-	// 	const now = performance.now();
-	// 	const delta = now - this._set_pos_timestamp;
-	// 	this._set_pos_timestamp = now;
-	// 	// multiply by 1000 since delta is in ms
-	// 	this._hit_velocity.copy(hit_position).sub(this._prev_position).divideScalar(delta).multiplyScalar(1000);
-	// 	this._hit_velocity.toArray(this._hit_velocity_array);
-
-	// 	if (this._node.pv.tvelocity_target) {
-	// 		if (Poly.instance().player_mode()) {
-	// 			this._found_velocity_target_param =
-	// 				this._found_velocity_target_param ||
-	// 				this._node.p.velocity_target.found_param_with_type(ParamType.VECTOR3);
-	// 		} else {
-	// 			// Do not cache the param in the editor, but fetch it directly from the operator_path.
-	// 			// The reason is that params are very prone to disappear and be re-generated,
-	// 			// Such as spare params created by Gl Builders
-	// 			const target_param = this._node.p.velocity_target;
-	// 			this._found_velocity_target_param = target_param.found_param_with_type(ParamType.VECTOR3);
-	// 		}
-	// 		if (this._found_velocity_target_param) {
-	// 			this._found_velocity_target_param.set(this._hit_velocity_array);
-	// 		}
-	// 	} else {
-	// 		this._node.p.velocity.set(this._hit_velocity_array);
-	// 	}
-
-	// 	this._prev_position.copy(hit_position);
-	// }
 
 	private _prepare_raycaster(context: EventContext<MouseEvent>) {
 		const points_param = this._raycaster.params.Points;
