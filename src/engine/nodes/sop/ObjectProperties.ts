@@ -1,6 +1,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {ObjectPropertiesSopOperation} from '../../../core/operation/sop/ObjectProperties';
+import {ObjectPropertiesSopOperation} from '../../../core/operations/sop/ObjectProperties';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;

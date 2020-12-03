@@ -1,6 +1,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BoxSopOperation} from '../../../core/operation/sop/Box';
+import {BoxSopOperation} from '../../../core/operations/sop/Box';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = BoxSopOperation.DEFAULT_PARAMS;

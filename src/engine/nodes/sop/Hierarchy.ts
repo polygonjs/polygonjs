@@ -1,6 +1,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {HierarchySopOperation, HIERARCHY_MODES} from '../../../core/operation/sop/Hierarchy';
+import {HierarchySopOperation, HIERARCHY_MODES} from '../../../core/operations/sop/Hierarchy';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = HierarchySopOperation.DEFAULT_PARAMS;

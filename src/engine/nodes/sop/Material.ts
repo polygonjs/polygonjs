@@ -1,7 +1,7 @@
 import {TypedSopNode} from './_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {MaterialSopOperation} from '../../../core/operation/sop/Material';
+import {MaterialSopOperation} from '../../../core/operations/sop/Material';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = MaterialSopOperation.DEFAULT_PARAMS;

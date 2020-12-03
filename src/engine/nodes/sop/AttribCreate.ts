@@ -17,7 +17,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 type ValueArrayByName = Dictionary<number[]>;
 
-import {AttribCreateSopOperation} from '../../../core/operation/sop/AttribCreate';
+import {AttribCreateSopOperation} from '../../../core/operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {

@@ -6,16 +6,15 @@ import lodash_isString from 'lodash/isString';
 import {ParamJsonImporter} from './Param';
 import {Poly} from '../../../Poly';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
-import {SopOperationContainer} from '../../../../core/operation/container/sop';
-import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operation/_Base';
+import {SopOperationContainer} from '../../../../core/operations/container/sop';
+import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operations/_Base';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
 interface RootNodeGenericData {
-	outputs_count:number,
-	non_optimized_count:number
+	outputs_count: number;
+	non_optimized_count: number;
 }
-
 
 export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T) {}
@@ -202,19 +201,16 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	// a node will be considered optimized root node if:
 	// - it has no output
 	// - at least one output is not optimized (as it if it has 2 outputs, and only 1 is optimized, it will not be considered root)
-	static is_optimized_root_node_generic(data:RootNodeGenericData):boolean{
-		if(data.outputs_count == 0){
-			return true
+	static is_optimized_root_node_generic(data: RootNodeGenericData): boolean {
+		if (data.outputs_count == 0) {
+			return true;
 		}
-		if(data.non_optimized_count > 0){
-			return true
+		if (data.non_optimized_count > 0) {
+			return true;
 		}
-		return false
+		return false;
 	}
-	static is_optimized_root_node(
-		data: Dictionary<NodeJsonExporterData>,
-		current_node_name: string
-	) {
+	static is_optimized_root_node(data: Dictionary<NodeJsonExporterData>, current_node_name: string) {
 		const output_names = this.node_outputs(data, current_node_name);
 
 		let non_optimized_count = 0;
@@ -225,22 +221,28 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			}
 		});
 
-		return this.is_optimized_root_node_generic({outputs_count: output_names.size, non_optimized_count: non_optimized_count})
+		return this.is_optimized_root_node_generic({
+			outputs_count: output_names.size,
+			non_optimized_count: non_optimized_count,
+		});
 	}
 	// same algo as is_optimized_root_node, but for a node
-	static is_optimized_root_node_from_node<NC extends NodeContext>(node: TypedNode<NC, any>){
-		if(!node.flags?.optimize?.active){
-			return false
+	static is_optimized_root_node_from_node<NC extends NodeContext>(node: TypedNode<NC, any>) {
+		if (!node.flags?.optimize?.active) {
+			return false;
 		}
 
-		const output_nodes = node.io.connections.output_connections().map(c=>c.node_dest)
+		const output_nodes = node.io.connections.output_connections().map((c) => c.node_dest);
 		let non_optimized_count = 0;
-		for(let output_node of output_nodes){
-			if (!output_node.flags?.optimize?.active){
+		for (let output_node of output_nodes) {
+			if (!output_node.flags?.optimize?.active) {
 				non_optimized_count++;
 			}
 		}
-		return this.is_optimized_root_node_generic({outputs_count: output_nodes.length, non_optimized_count: non_optimized_count})
+		return this.is_optimized_root_node_generic({
+			outputs_count: output_nodes.length,
+			non_optimized_count: non_optimized_count,
+		});
 	}
 
 	static node_outputs(

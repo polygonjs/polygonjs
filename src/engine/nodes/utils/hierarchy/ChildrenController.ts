@@ -10,9 +10,9 @@ import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
 import {ParamsInitData} from '../io/IOController';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
-import {BaseOperationContainer} from '../../../../core/operation/container/_Base';
-import {SopOperationContainer} from '../../../../core/operation/container/sop';
-import {BaseSopOperation} from '../../../../core/operation/sop/_Base';
+import {BaseOperationContainer} from '../../../../core/operations/container/_Base';
+import {SopOperationContainer} from '../../../../core/operations/container/sop';
+import {BaseSopOperation} from '../../../../core/operations/sop/_Base';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 

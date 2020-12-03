@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeContext} from '../../poly/NodeContext';
 import {MaterialsObjNode} from '../obj/Materials';
 
-import {InstanceSopOperation} from '../../../core/operation/sop/Instance';
+import {InstanceSopOperation} from '../../../core/operations/sop/Instance';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = InstanceSopOperation.DEFAULT_PARAMS;
 class InstanceSopParamsConfig extends NodeParamsConfig {

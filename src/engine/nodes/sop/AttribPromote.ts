@@ -8,7 +8,7 @@ const PromoteModeMenuEntries = [
 	{name: 'first_found', value: AttribPromoteMode.FIRST_FOUND},
 ];
 
-import {AttribPromoteSopOperation, AttribPromoteMode} from '../../../core/operation/sop/AttribPromote';
+import {AttribPromoteSopOperation, AttribPromoteMode} from '../../../core/operations/sop/AttribPromote';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {

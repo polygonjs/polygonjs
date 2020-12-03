@@ -1,6 +1,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {TexturePropertiesSopOperation} from '../../../core/operation/sop/TextureProperties';
+import {TexturePropertiesSopOperation} from '../../../core/operations/sop/TextureProperties';
 
 import {MAG_FILTER_MENU_ENTRIES, MIN_FILTER_MENU_ENTRIES} from '../../../core/cop/ConstantFilter';
 

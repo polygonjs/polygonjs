@@ -1,7 +1,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {PlaneSopOperation} from '../../../core/operation/sop/Plane';
+import {PlaneSopOperation} from '../../../core/operations/sop/Plane';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = PlaneSopOperation.DEFAULT_PARAMS;
 class PlaneSopParamsConfig extends NodeParamsConfig {

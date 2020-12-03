@@ -1,5 +1,5 @@
 import {BaseNodeClass} from '../../../nodes/_Base';
-import {BaseOperation} from '../../../../core/operation/_Base';
+import {BaseOperation} from '../../../../core/operations/_Base';
 import {NodeContext} from '../../NodeContext';
 
 export interface RegisterOptions {

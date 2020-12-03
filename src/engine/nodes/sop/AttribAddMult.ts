@@ -1,7 +1,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {AttribAddMultSopOperation} from '../../../core/operation/sop/AttribAddMult';
+import {AttribAddMultSopOperation} from '../../../core/operations/sop/AttribAddMult';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribAddMultSopOperation.DEFAULT_PARAMS;
 class AttribAddMultSopParamsConfig extends NodeParamsConfig {

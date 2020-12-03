@@ -1,6 +1,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {MergeSopOperation} from '../../../core/operation/sop/Merge';
+import {MergeSopOperation} from '../../../core/operations/sop/Merge';
 
 const INPUT_NAME = 'geometry to merge';
 

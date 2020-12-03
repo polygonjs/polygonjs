@@ -1,7 +1,11 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {AttribNormalizeSopOperation, NORMALIZE_MODES, NormalizeMode} from '../../../core/operation/sop/AttribNormalize';
+import {
+	AttribNormalizeSopOperation,
+	NORMALIZE_MODES,
+	NormalizeMode,
+} from '../../../core/operations/sop/AttribNormalize';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribNormalizeSopOperation.DEFAULT_PARAMS;
 class AttribNormalizeSopParamsConfig extends NodeParamsConfig {

@@ -16,7 +16,7 @@ const COLOR_ATTRIB_NAME = 'color';
 
 type ValueArrayByName = Dictionary<number[]>;
 
-import {ColorSopOperation} from '../../../core/operation/sop/Color';
+import {ColorSopOperation} from '../../../core/operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {

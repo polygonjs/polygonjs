@@ -12,7 +12,7 @@ import {NodeContext} from './poly/NodeContext';
 import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
-import {BaseOperation} from '../core/operation/_Base';
+import {BaseOperation} from '../core/operations/_Base';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
 // https://github.com/TypeStrong/ts-loader/issues/37

@@ -196,30 +196,30 @@ export interface GeoNodeChildrenMap {
 	uv_project: UvProjectSopNode;
 }
 
-import {AddSopOperation} from '../../../../core/operation/sop/Add';
-import {AttribAddMultSopOperation} from '../../../../core/operation/sop/AttribAddMult';
-import {AttribCopySopOperation} from '../../../../core/operation/sop/AttribCopy';
-import {AttribCreateSopOperation} from '../../../../core/operation/sop/AttribCreate';
-import {AttribNormalizeSopOperation} from '../../../../core/operation/sop/AttribNormalize';
-import {AttribFromTextureSopOperation} from '../../../../core/operation/sop/AttribFromTexture';
-import {AttribPromoteSopOperation} from '../../../../core/operation/sop/AttribPromote';
-import {BoxSopOperation} from '../../../../core/operation/sop/Box';
-import {CenterSopOperation} from '../../../../core/operation/sop/Center';
-import {CircleSopOperation} from '../../../../core/operation/sop/Circle';
-import {Css2DObjectSopOperation} from '../../../../core/operation/sop/Css2DObject';
-import {FileSopOperation} from '../../../../core/operation/sop/File';
-import {HierarchySopOperation} from '../../../../core/operation/sop/Hierarchy';
-import {IcosahedronSopOperation} from '../../../../core/operation/sop/Icosahedron';
-import {InstanceSopOperation} from '../../../../core/operation/sop/Instance';
-import {JitterSopOperation} from '../../../../core/operation/sop/Jitter';
-import {MergeSopOperation} from '../../../../core/operation/sop/Merge';
-import {MaterialSopOperation} from '../../../../core/operation/sop/Material';
-import {NullSopOperation} from '../../../../core/operation/sop/Null';
-import {ObjectPropertiesSopOperation} from '../../../../core/operation/sop/ObjectProperties';
-import {PlaneSopOperation} from '../../../../core/operation/sop/Plane';
-import {SphereSopOperation} from '../../../../core/operation/sop/Sphere';
-import {TexturePropertiesSopOperation} from '../../../../core/operation/sop/TextureProperties';
-import {TransformSopOperation} from '../../../../core/operation/sop/Transform';
+import {AddSopOperation} from '../../../../core/operations/sop/Add';
+import {AttribAddMultSopOperation} from '../../../../core/operations/sop/AttribAddMult';
+import {AttribCopySopOperation} from '../../../../core/operations/sop/AttribCopy';
+import {AttribCreateSopOperation} from '../../../../core/operations/sop/AttribCreate';
+import {AttribNormalizeSopOperation} from '../../../../core/operations/sop/AttribNormalize';
+import {AttribFromTextureSopOperation} from '../../../../core/operations/sop/AttribFromTexture';
+import {AttribPromoteSopOperation} from '../../../../core/operations/sop/AttribPromote';
+import {BoxSopOperation} from '../../../../core/operations/sop/Box';
+import {CenterSopOperation} from '../../../../core/operations/sop/Center';
+import {CircleSopOperation} from '../../../../core/operations/sop/Circle';
+import {Css2DObjectSopOperation} from '../../../../core/operations/sop/Css2DObject';
+import {FileSopOperation} from '../../../../core/operations/sop/File';
+import {HierarchySopOperation} from '../../../../core/operations/sop/Hierarchy';
+import {IcosahedronSopOperation} from '../../../../core/operations/sop/Icosahedron';
+import {InstanceSopOperation} from '../../../../core/operations/sop/Instance';
+import {JitterSopOperation} from '../../../../core/operations/sop/Jitter';
+import {MergeSopOperation} from '../../../../core/operations/sop/Merge';
+import {MaterialSopOperation} from '../../../../core/operations/sop/Material';
+import {NullSopOperation} from '../../../../core/operations/sop/Null';
+import {ObjectPropertiesSopOperation} from '../../../../core/operations/sop/ObjectProperties';
+import {PlaneSopOperation} from '../../../../core/operations/sop/Plane';
+import {SphereSopOperation} from '../../../../core/operations/sop/Sphere';
+import {TexturePropertiesSopOperation} from '../../../../core/operations/sop/TextureProperties';
+import {TransformSopOperation} from '../../../../core/operations/sop/Transform';
 
 import {Poly} from '../../../Poly';
 export class SopRegister {
