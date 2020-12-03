@@ -34,6 +34,14 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(2);
 		this.io.inputs.init_inputs_cloned_state(AttribCopySopOperation.INPUT_CLONED_STATE);
+
+		this.scene.dispatch_controller.on_add_listener(() => {
+			this.params.on_params_created('params_label', () => {
+				this.params.label.init([this.p.name, this.p.tnew_name, this.p.new_name], () => {
+					return this.pv.tnew_name ? `${this.pv.name} -> ${this.pv.new_name}` : this.pv.name;
+				});
+			});
+		});
 	}
 
 	private _operation: AttribCopySopOperation | undefined;
