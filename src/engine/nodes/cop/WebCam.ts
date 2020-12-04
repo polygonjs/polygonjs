@@ -1,7 +1,9 @@
 import {TypedCopNode} from './_Base';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class WebCamCopParamsConfig extends NodeParamsConfig {}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class WebCamCopParamsConfig extends NodeParamsConfig {
+	res = ParamConfig.VECTOR2([1024, 1024]);
+}
 
 const ParamsConfig = new WebCamCopParamsConfig();
 
@@ -24,7 +26,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		const texture = new VideoTexture(this._video);
 
 		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			const constraints = {video: {width: 1280, height: 720, facingMode: 'user'}};
+			const constraints = {video: {width: this.pv.res.x, height: this.pv.res.y, facingMode: 'user'}};
 
 			navigator.mediaDevices
 				.getUserMedia(constraints)
