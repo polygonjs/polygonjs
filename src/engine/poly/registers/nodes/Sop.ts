@@ -217,6 +217,7 @@ import {MaterialSopOperation} from '../../../../core/operations/sop/Material';
 import {NullSopOperation} from '../../../../core/operations/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../../core/operations/sop/ObjectProperties';
 import {PlaneSopOperation} from '../../../../core/operations/sop/Plane';
+import {ScatterSopOperation} from '../../../../core/operations/sop/Scatter';
 import {SphereSopOperation} from '../../../../core/operations/sop/Sphere';
 import {TexturePropertiesSopOperation} from '../../../../core/operations/sop/TextureProperties';
 import {TransformSopOperation} from '../../../../core/operations/sop/Transform';
@@ -245,6 +246,7 @@ export class SopRegister {
 		poly.register_operation(NullSopOperation);
 		poly.register_operation(ObjectPropertiesSopOperation);
 		poly.register_operation(PlaneSopOperation);
+		poly.register_operation(ScatterSopOperation);
 		poly.register_operation(SphereSopOperation);
 		poly.register_operation(TexturePropertiesSopOperation);
 		poly.register_operation(TransformSopOperation);
