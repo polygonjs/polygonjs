@@ -193,12 +193,17 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	gamma_factor = ParamConfig.FLOAT(2, {
-		visible_if: {output_encoding: EncodingValue.Gamma},
-		range: [0, 5],
-		range_locked: [true, true],
+	physically_correct_lights = ParamConfig.BOOLEAN(1);
+	sort_objects = ParamConfig.BOOLEAN(1);
+	sampling = ParamConfig.INTEGER(1, {
+		range: [1, 4],
+		range_locked: [true, false],
 	});
+	tshadow_map = ParamConfig.BOOLEAN(1);
+	shadow_map_auto_update = ParamConfig.BOOLEAN(1, {visible_if: {tshadow_map: 1}});
+	shadow_map_needs_update = ParamConfig.BOOLEAN(0, {visible_if: {tshadow_map: 1}});
 	shadow_map_type = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
+		visible_if: {tshadow_map: 1},
 		menu: {
 			entries: SHADOW_MAP_TYPE_NAMES.map((name, i) => {
 				return {
@@ -208,11 +213,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	sort_objects = ParamConfig.BOOLEAN(1);
-	sampling = ParamConfig.INTEGER(1, {
-		range: [1, 4],
-		range_locked: [true, false],
-	});
+
 	// preserve_drawing_buffer = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new WebGlRendererRopParamsConfig();
@@ -259,8 +260,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 	}
 	_update_renderer(renderer: WebGLRendererWithSampling) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
-		renderer.gammaFactor = this.pv.gamma_factor;
-		renderer.physicallyCorrectLights = true;
+		renderer.physicallyCorrectLights = this.pv.physically_correct_lights;
 		renderer.outputEncoding = this.pv.output_encoding;
 		renderer.toneMapping = this.pv.tone_mapping;
 		renderer.toneMappingExposure = this.pv.tone_mapping_exposure;

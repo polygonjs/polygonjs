@@ -55,10 +55,13 @@ export class RenderersController {
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
 	}
 
-	rendering_context(canvas: HTMLCanvasElement): WebGLRenderingContext {
+	rendering_context(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
 		let gl: WebGLRenderingContext | null = null;
 		if (this._require_webgl2) {
 			gl = this._rendering_context_webgl(canvas, true);
+			if (!gl) {
+				console.warn('failed to create webgl2 context');
+			}
 		}
 		if (!gl) {
 			gl = this._rendering_context_webgl(canvas, false);
@@ -71,7 +74,7 @@ export class RenderersController {
 
 		return gl;
 	}
-	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext {
+	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | null {
 		let context_name: WebGLContext;
 		if (this.webgl2_available()) {
 			context_name = WebGLContext.WEBGL2;
@@ -83,7 +86,7 @@ export class RenderersController {
 			context_name = webgl2 ? WebGLContext.EXPERIMENTAL_WEBGL2 : WebGLContext.EXPERIMENTAL_WEBGL;
 			gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
 		}
-		return gl as WebGLRenderingContext;
+		return gl as WebGLRenderingContext | null;
 	}
 
 	register_renderer(renderer: WebGLRenderer) {

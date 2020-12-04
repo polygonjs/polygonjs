@@ -2,7 +2,7 @@ import {CATEGORY_ROP} from './Category';
 
 import {Css2DRendererRopNode} from '../../../nodes/rop/Css2DRenderer';
 import {Css3DRendererRopNode} from '../../../nodes/rop/Css3DRenderer';
-import {WebGlRendererRopNode} from '../../../nodes/rop/WebGLRenderer';
+import {WebGlRendererRopNode} from '../../../nodes/rop/WebglRenderer';
 
 export enum RopType {
 	CSS2D = 'css2d_renderer',

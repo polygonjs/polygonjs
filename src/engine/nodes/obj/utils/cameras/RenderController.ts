@@ -11,7 +11,7 @@ import {
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
-} from '../../../../nodes/rop/WebGLRenderer';
+} from '../../../rop/WebglRenderer';
 import {Css2DRendererRopNode} from '../../../rop/Css2DRenderer';
 import {Css3DRendererRopNode} from '../../../rop/Css3DRenderer';
 import {RopType} from '../../../../poly/registers/nodes/Rop';
@@ -168,8 +168,12 @@ export class RenderController {
 	}
 
 	private _super_sampling_size = new Vector2();
-	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer {
+	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | null {
 		const gl = Poly.instance().renderers_controller.rendering_context(canvas);
+		if (!gl) {
+			console.error('failed to create webgl context');
+			return null;
+		}
 
 		let renderer: WebGLRendererWithSampling | undefined;
 		if (this.node.pv.set_renderer) {
@@ -202,7 +206,8 @@ export class RenderController {
 		this.set_renderer_size(canvas, this._super_sampling_size);
 		// remove devicePixelRatio for now, as this seems to double the size
 		// of the canvas on high dpi screens
-		//renderer.setPixelRatio(window.devicePixelRatio);
+		// or if this is used, make sure to have the canvas at 100% width and height
+		// renderer.setPixelRatio(window.devicePixelRatio);
 
 		return renderer;
 	}
