@@ -200,7 +200,9 @@ export class RenderController {
 			this._super_sampling_size.multiplyScalar(renderer.sampling);
 		}
 		this.set_renderer_size(canvas, this._super_sampling_size);
-		renderer.setPixelRatio(window.devicePixelRatio);
+		// remove devicePixelRatio for now, as this seems to double the size
+		// of the canvas on high dpi screens
+		//renderer.setPixelRatio(window.devicePixelRatio);
 
 		return renderer;
 	}
