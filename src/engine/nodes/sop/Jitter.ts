@@ -6,6 +6,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = JitterSopOperation.DEFAULT_PARAMS;
 class JitterSopParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(DEFAULT.amount);
+	mult = ParamConfig.VECTOR3(DEFAULT.mult);
 	seed = ParamConfig.INTEGER(DEFAULT.seed, {range: [0, 100]});
 }
 const ParamsConfig = new JitterSopParamsConfig();
