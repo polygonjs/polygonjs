@@ -168,11 +168,11 @@ export class RenderController {
 	}
 
 	private _super_sampling_size = new Vector2();
-	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | null {
+	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | undefined {
 		const gl = Poly.instance().renderers_controller.rendering_context(canvas);
 		if (!gl) {
 			console.error('failed to create webgl context');
-			return null;
+			return;
 		}
 
 		let renderer: WebGLRendererWithSampling | undefined;

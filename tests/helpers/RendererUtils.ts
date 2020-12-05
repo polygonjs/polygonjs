@@ -5,7 +5,7 @@ import {Poly} from '../../src/engine/Poly';
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
 	renderer: WebGLRenderer;
-	viewer: WebGLRenderer;
+	viewer?: WebGLRenderer;
 }
 export class RendererUtils {
 	private static _configs: RendererConfig[] = [];
@@ -26,7 +26,7 @@ export class RendererUtils {
 	static dispose() {
 		let config: RendererConfig | undefined;
 		while ((config = this._configs.pop())) {
-			config.viewer.dispose();
+			config.viewer?.dispose();
 			document.body.removeChild(config.canvas);
 		}
 	}

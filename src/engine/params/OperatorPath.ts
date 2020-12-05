@@ -21,7 +21,7 @@ enum OperatorPathMode {
 
 export const OPERATOR_PATH_DEFAULT = {
 	NODE: {
-		UV: '/COP/file_uv',
+		UV: '/COP/image_uv',
 		ENV_MAP: '/COP/env_map',
 	},
 };

@@ -8,7 +8,7 @@ QUnit.test('texture_properties simple', async (assert) => {
 	geo1.flags.display.set(false);
 	const COP = window.COP;
 	const MAT = window.MAT;
-	const file1 = COP.create_node('file');
+	const file1 = COP.create_node('image');
 	const basic_material1 = MAT.create_node('mesh_basic');
 	const plane1 = geo1.create_node('plane');
 	const material1 = geo1.create_node('material');

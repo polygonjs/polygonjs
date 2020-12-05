@@ -1,9 +1,14 @@
 import {TypedCopNode} from './_Base';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class WebCamCopParamsConfig extends NodeParamsConfig {
-	res = ParamConfig.VECTOR2([1024, 1024]);
+import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
+
+export function WebcamCopParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		res = ParamConfig.VECTOR2([1024, 1024]);
+	};
 }
+class WebCamCopParamsConfig extends TextureParamConfig(WebcamCopParamConfig(NodeParamsConfig)) {}
 
 const ParamsConfig = new WebCamCopParamsConfig();
 
@@ -14,7 +19,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	}
 
 	private _video: HTMLVideoElement | undefined;
-
+	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
 	async cook() {
 		if (this._video) {
 			document.body.removeChild(this._video);

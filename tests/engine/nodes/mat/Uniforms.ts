@@ -5,14 +5,14 @@ import {OperatorPathParam} from '../../../../src/engine/params/OperatorPath';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
-import {FileCopNode} from '../../../../src/engine/nodes/cop/File';
+import {ImageCopNode} from '../../../../src/engine/nodes/cop/Image';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 
 QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const COP = window.COP;
-	const file1 = COP.create_node('file');
+	const file1 = COP.create_node('image');
 	const cop_file_name = 'file_uv';
 	file1.set_name(cop_file_name);
 	const container = await file1.request_container();
@@ -82,7 +82,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	await scene2.wait_for_cooks_completed();
 	await CoreSleep.sleep(500);
 
-	const file2 = scene2.node(file1.full_path()) as FileCopNode;
+	const file2 = scene2.node(file1.full_path()) as ImageCopNode;
 	const container2 = await file2.request_container();
 	const file2_texture = container2.texture();
 	const mesh_basic2 = scene2.node(mesh_basic1.full_path()) as MeshBasicBuilderMatNode;

@@ -65,7 +65,7 @@ import './engine/nodes/anim/Null';
 QUnit.module('cop');
 import './engine/nodes/cop/Builder';
 import './engine/nodes/cop/EnvMap';
-import './engine/nodes/cop/File';
+import './engine/nodes/cop/Image';
 import './engine/nodes/cop/MapboxTile';
 import './engine/nodes/cop/Switch';
 

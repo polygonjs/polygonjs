@@ -10,10 +10,10 @@ QUnit.test('COP switch simple', async (assert) => {
 
 	await scene.wait_for_cooks_completed();
 
-	const file_diffuse1 = COP.create_node('file');
-	const file_diffuse2 = COP.create_node('file');
-	const file_env1 = COP.create_node('file');
-	const file_env2 = COP.create_node('file');
+	const file_diffuse1 = COP.create_node('image');
+	const file_diffuse2 = COP.create_node('image');
+	const file_env1 = COP.create_node('image');
+	const file_env2 = COP.create_node('image');
 
 	file_diffuse1.p.url.set('/examples/textures/uv.jpg');
 	file_diffuse2.p.url.set('/examples/textures/hardwood2_diffuse.jpg');
