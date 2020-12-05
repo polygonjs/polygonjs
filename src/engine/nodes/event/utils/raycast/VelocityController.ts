@@ -57,4 +57,8 @@ export class RaycastCPUVelocityController {
 
 		this._prev_position.copy(hit_position);
 	}
+
+	reset() {
+		this._prev_position = undefined;
+	}
 }

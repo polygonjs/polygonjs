@@ -256,6 +256,11 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 				this._process_trigger_event_throttled.bind(this)
 			),
 			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
+			new EventConnectionPoint(
+				'trigger_vel_reset',
+				EventConnectionPointType.BASE,
+				this._process_trigger_vel_reset.bind(this)
+			),
 		]);
 		this.io.outputs.set_named_output_connection_points([
 			new EventConnectionPoint(RaycastEventNode.OUTPUT_HIT, EventConnectionPointType.BASE),
@@ -297,6 +302,12 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			this.cpu_controller.process_event(context);
 		} else {
 			this.gpu_controller.process_event(context);
+		}
+	}
+
+	private _process_trigger_vel_reset(context: EventContext<MouseEvent>) {
+		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
+			this.cpu_controller.velocity_controller.reset();
 		}
 	}
 }
