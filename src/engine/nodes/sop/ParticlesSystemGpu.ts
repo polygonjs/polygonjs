@@ -15,7 +15,10 @@ import {MaterialsObjNode} from '../obj/Materials';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/RenderController';
-import {ParticlesSystemGpuComputeController} from './utils/ParticlesSystemGPU/GPUComputeController';
+import {
+	ParticlesSystemGpuComputeController,
+	PARTICLE_DATA_TYPES,
+} from './utils/ParticlesSystemGPU/GPUComputeController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
@@ -32,6 +35,13 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	auto_textures_size = ParamConfig.BOOLEAN(1);
 	max_textures_size = ParamConfig.VECTOR2([1024, 1024], {visible_if: {auto_textures_size: 1}});
 	textures_size = ParamConfig.VECTOR2([64, 64], {visible_if: {auto_textures_size: 0}});
+	data_type = ParamConfig.INTEGER(0, {
+		menu: {
+			entries: PARTICLE_DATA_TYPES.map((value, index) => {
+				return {value: index, name: value};
+			}),
+		},
+	});
 	reset = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			ParticlesSystemGpuSopNode.PARAM_CALLBACK_reset(node as ParticlesSystemGpuSopNode);

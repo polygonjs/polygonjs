@@ -17,7 +17,16 @@ import {TextureAllocationsController} from '../../../gl/code/utils/TextureAlloca
 import {GlParamConfig} from '../../../gl/code/utils/ParamConfig';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
-
+import {FloatType, HalfFloatType} from 'three/src/constants';
+export enum ParticlesDataType {
+	FLOAT = 'float',
+	HALF_FLOAT = 'half',
+}
+export const PARTICLE_DATA_TYPES: ParticlesDataType[] = [ParticlesDataType.FLOAT, ParticlesDataType.HALF_FLOAT];
+const DATA_TYPE_BY_ENUM = {
+	[ParticlesDataType.FLOAT]: FloatType,
+	[ParticlesDataType.HALF_FLOAT]: HalfFloatType,
+};
 export class ParticlesSystemGpuComputeController {
 	protected _gpu_compute: GPUComputationRenderer | undefined;
 	protected _simulation_restart_required: boolean = false;
@@ -109,6 +118,11 @@ export class ParticlesSystemGpuComputeController {
 		this._last_simulated_time = time;
 	}
 
+	private _data_type() {
+		const data_type_name = PARTICLE_DATA_TYPES[this.node.pv.data_type];
+		return DATA_TYPE_BY_ENUM[data_type_name];
+	}
+
 	async create_gpu_compute() {
 		if (this.node.pv.auto_textures_size) {
 			const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(this._points.length));
@@ -155,6 +169,8 @@ export class ParticlesSystemGpuComputeController {
 			this._used_textures_size.y,
 			this._renderer
 		);
+
+		compute.setDataType(this._data_type());
 		this._gpu_compute = (<unknown>compute) as GPUComputationRenderer;
 
 		if (!this._gpu_compute) {
