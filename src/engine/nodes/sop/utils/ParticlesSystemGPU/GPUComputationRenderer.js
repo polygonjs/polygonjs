@@ -1,6 +1,4 @@
 /**
- * @author yomboprime https://github.com/yomboprime
- *
  * GPUComputationRenderer, based on SimulationRenderer by zz85
  *
  * The GPUComputationRenderer uses the concept of variables. These variables are RGBA float textures that hold 4 floats
@@ -112,6 +110,8 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 
 	this.currentTextureIndex = 0;
 
+	var dataType = FloatType;
+
 	var scene = new Scene();
 	scene.matrixAutoUpdate = false;
 
@@ -130,6 +130,11 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 	mesh.matrixAutoUpdate = false;
 	mesh.updateMatrix();
 	scene.add(mesh);
+
+	this.setDataType = function (type) {
+		dataType = type;
+		return this;
+	};
 
 	this.addVariable = function (variableName, computeFragmentShader, initialValueTexture) {
 		var material = this.createShaderMaterial(computeFragmentShader);
@@ -156,7 +161,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 	};
 
 	this.init = function () {
-		if (!renderer.capabilities.isWebGL2 && !renderer.extensions.get('OES_texture_float')) {
+		if (renderer.capabilities.isWebGL2 === false && renderer.extensions.has('OES_texture_float') === false) {
 			return 'No OES_texture_float support for float textures.';
 		}
 
@@ -190,6 +195,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 			// Adds dependencies uniforms to the ShaderMaterial
 			var material = variable.material;
 			var uniforms = material.uniforms;
+
 			if (variable.dependencies !== null) {
 				for (var d = 0; d < variable.dependencies.length; d++) {
 					var depVar = variable.dependencies[d];
@@ -203,6 +209,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 								break;
 							}
 						}
+
 						if (!found) {
 							return (
 								'Variable dependency not found. Variable=' +
@@ -215,7 +222,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 
 					uniforms[depVar.name] = {value: null};
 
-					// material.fragmentShader = "\nuniform sampler2D " + depVar.name + ";\n" + material.fragmentShader;
+					// material.fragmentShader = '\nuniform sampler2D ' + depVar.name + ';\n' + material.fragmentShader;
 				}
 			}
 		}
@@ -260,6 +267,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 	function addResolutionDefine(materialShader) {
 		materialShader.defines.resolution = 'vec2( ' + sizeX.toFixed(1) + ', ' + sizeY.toFixed(1) + ' )';
 	}
+
 	this.addResolutionDefine = addResolutionDefine;
 
 	// The following functions can be used to compute things manually
@@ -296,8 +304,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 			minFilter: minFilter,
 			magFilter: magFilter,
 			format: RGBAFormat,
-			type: /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType,
-			stencilBuffer: false,
+			type: dataType,
 			depthBuffer: false,
 		});
 
