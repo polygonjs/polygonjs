@@ -17,12 +17,26 @@ enum AccelerationGlOutput {
 	VELOCITY = 'velocity',
 }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const INPUT_NAMES: AccelerationGlInput[] = [
+	AccelerationGlInput.POSITION,
+	AccelerationGlInput.VELOCITY,
+	AccelerationGlInput.MASS,
+	AccelerationGlInput.FORCE,
+];
+const OUTPUT_NAMES: AccelerationGlOutput[] = [AccelerationGlOutput.POSITION, AccelerationGlOutput.VELOCITY];
+const INPUT_DEFAULT_VALUE: Dictionary<AttribValue> = {
+	[AccelerationGlInput.POSITION]: [0, 0, 0],
+	[AccelerationGlInput.VELOCITY]: [0, 0, 0],
+	[AccelerationGlInput.MASS]: 1,
+	[AccelerationGlInput.FORCE]: [0, -9.8, 0],
+};
+
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class AccelerationGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR3([0, 0, 0]);
-	velocity = ParamConfig.VECTOR3([0, 0, 0]);
-	mass = ParamConfig.FLOAT(1);
-	force = ParamConfig.VECTOR3([0, -9.8, 0]);
+	// position = ParamConfig.VECTOR3([0, 0, 0]);
+	// velocity = ParamConfig.VECTOR3([0, 0, 0]);
+	// mass = ParamConfig.FLOAT(1);
+	// force = ParamConfig.VECTOR3([0, -9.8, 0]);
 }
 const ParamsConfig = new AccelerationGlParamsConfig();
 
@@ -31,43 +45,57 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 	static type() {
 		return 'acceleration';
 	}
-	static readonly INPUT_NAME = 'export';
-	// static readonly OUTPUT_NAMES = [AccelerationGlOutput.POSITION, AccelerationGlOutput.VELOCITY];
 
 	initialize_node() {
 		super.initialize_node();
 
-		// this.io.inputs.set_named_input_connection_points([
-		// 	new GlConnectionPoint(AccelerationGlInput.POSITION, GlConnectionPointType.VEC3),
-		// 	new GlConnectionPoint(AccelerationGlInput.VELOCITY, GlConnectionPointType.VEC3),
-		// 	new GlConnectionPoint(AccelerationGlInput.MASS, GlConnectionPointType.FLOAT),
-		// 	new GlConnectionPoint(AccelerationGlInput.FORCE, GlConnectionPointType.VEC3),
-		// ]);
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(AccelerationGlOutput.POSITION, GlConnectionPointType.VEC3),
 			new GlConnectionPoint(AccelerationGlOutput.VELOCITY, GlConnectionPointType.VEC3),
 		]);
+
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 	}
 
+	protected _expected_input_types(): GlConnectionPointType[] {
+		const type: GlConnectionPointType =
+			this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
+		return [type, type, GlConnectionPointType.FLOAT, type];
+	}
+	private _expected_output_types(): GlConnectionPointType[] {
+		const in_type = this._expected_input_types()[0];
+		return [in_type, in_type];
+	}
+	protected _gl_input_name(index: number) {
+		return INPUT_NAMES[index];
+	}
+	protected _gl_output_name(index: number) {
+		return OUTPUT_NAMES[index];
+	}
+	param_default_value(name: string) {
+		return INPUT_DEFAULT_VALUE[name];
+	}
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
+		const var_type = this.io.outputs.named_output_connection_points[0].type;
 		const delta_definition = new UniformGLDefinition(this, GlConnectionPointType.FLOAT, GlConstant.DELTA_TIME);
 		const function_definition = new FunctionGLDefinition(this, Physics);
 		shaders_collection_controller.add_definitions(this, [delta_definition, function_definition]);
 
-		const input_position = ThreeToGl.vector3(this.variable_for_input(AccelerationGlInput.POSITION));
-		const input_velocity = ThreeToGl.vector3(this.variable_for_input(AccelerationGlInput.VELOCITY));
+		const input_position = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.POSITION));
+		const input_velocity = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.VELOCITY));
 		const input_mass = ThreeToGl.float(this.variable_for_input(AccelerationGlInput.MASS));
-		const input_force = ThreeToGl.vector3(this.variable_for_input(AccelerationGlInput.FORCE));
+		const input_force = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.FORCE));
 		const position_result = this.gl_var_name(AccelerationGlOutput.POSITION);
 		const velocity_result = this.gl_var_name(AccelerationGlOutput.VELOCITY);
 
-		// args: vec3 vel, vec3 force, float mass, float time_delta
 		const velocity_args = [input_velocity, input_force, input_mass, GlConstant.DELTA_TIME].join(', ');
-		const velocity_body_line = `vec3 ${velocity_result} = compute_velocity_from_acceleration(${velocity_args})`;
-		// vec3 position, vec3 velocity, float time_delta
+		const velocity_body_line = `${var_type} ${velocity_result} = compute_velocity_from_acceleration(${velocity_args})`;
 
 		const position_args = [input_position, velocity_result, GlConstant.DELTA_TIME].join(', ');
-		const position_body_line = `vec3 ${position_result} = compute_position_from_velocity(${position_args})`;
+		const position_body_line = `${var_type} ${position_result} = compute_position_from_velocity(${position_args})`;
 
 		shaders_collection_controller.add_body_lines(this, [velocity_body_line, position_body_line]);
 	}
