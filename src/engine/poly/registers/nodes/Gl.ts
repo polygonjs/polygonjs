@@ -9,6 +9,8 @@ import {
 	Vec4ToFloatGlNode,
 	Vec4ToVec3GlNode,
 	Vec3ToVec4GlNode,
+	Vec3ToVec2GlNode,
+	Vec2ToVec3GlNode,
 } from '../../../nodes/gl/_ConversionVecTo';
 
 import {
@@ -73,6 +75,7 @@ import {InstanceTransformGlNode} from '../../../nodes/gl/InstanceTransform';
 // import {LchToRgbGlNode} from '../../../nodes/gl/LchToRgb'; // TODO: still need work, not looking good
 import {LengthGlNode} from '../../../nodes/gl/Length';
 import {LuminanceGlNode} from '../../../nodes/gl/Luminance';
+import {MaxLengthGlNode} from '../../../nodes/gl/MaxLength';
 import {MixGlNode} from '../../../nodes/gl/Mix';
 import {ModelViewMatrixMultGlNode} from '../../../nodes/gl/ModelViewMatrixMult';
 import {MultAddGlNode} from '../../../nodes/gl/MultAdd';
@@ -158,6 +161,7 @@ export interface GlNodeChildrenMap {
 	log2: Log2GlNode;
 	luminance: LuminanceGlNode;
 	max: MaxGlNode;
+	max_length: MaxLengthGlNode;
 	min: MinGlNode;
 	mix: MixGlNode;
 	mod: ModGlNode;
@@ -201,10 +205,12 @@ export interface GlNodeChildrenMap {
 	varying_write: VaryingWriteGlNode;
 	varying_read: VaryingReadGlNode;
 	vec2_to_float: Vec2ToFloatGlNode;
+	vec2_to_vec3: Vec2ToVec3GlNode;
 	vec3_to_float: Vec3ToFloatGlNode;
+	vec3_to_vec2: Vec3ToVec2GlNode;
+	vec3_to_vec4: Vec3ToVec4GlNode;
 	vec4_to_float: Vec4ToFloatGlNode;
 	vec4_to_vec3: Vec4ToVec3GlNode;
-	vec3_to_vec4: Vec3ToVec4GlNode;
 	vector_align: VectorAlignGlNode;
 	vector_angle: VectorAngleGlNode;
 }
@@ -275,6 +281,7 @@ export class GlRegister {
 		poly.register_node(LogGlNode, CATEGORY_GL.MATH);
 		poly.register_node(Log2GlNode, CATEGORY_GL.MATH);
 		poly.register_node(MaxGlNode, CATEGORY_GL.MATH);
+		poly.register_node(MaxLengthGlNode, CATEGORY_GL.MATH);
 		poly.register_node(MinGlNode, CATEGORY_GL.MATH);
 		poly.register_node(ModGlNode, CATEGORY_GL.MATH);
 		poly.register_node(ModelViewMatrixMultGlNode, CATEGORY_GL.MATH);
@@ -318,10 +325,12 @@ export class GlRegister {
 		poly.register_node(VaryingWriteGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(VaryingReadGlNode, CATEGORY_GL.GLOBALS);
 		poly.register_node(Vec2ToFloatGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec2ToVec3GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec3ToFloatGlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec3ToVec2GlNode, CATEGORY_GL.CONVERSION);
+		poly.register_node(Vec3ToVec4GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec4ToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(Vec4ToVec3GlNode, CATEGORY_GL.CONVERSION);
-		poly.register_node(Vec3ToVec4GlNode, CATEGORY_GL.CONVERSION);
 		poly.register_node(VectorAlignGlNode, CATEGORY_GL.GEOMETRY);
 		poly.register_node(VectorAngleGlNode, CATEGORY_GL.GEOMETRY);
 	}
