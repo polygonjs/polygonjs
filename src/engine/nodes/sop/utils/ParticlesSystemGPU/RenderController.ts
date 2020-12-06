@@ -65,10 +65,13 @@ export class ParticlesSystemGpuRenderController {
 			uniform_name = this._all_uniform_names[i];
 			const texture = this.node.gpu_controller.getCurrentRenderTarget(shader_name)?.texture;
 			if (texture) {
-				if (this._render_material) {
-					this._render_material.uniforms[uniform_name].value = texture;
-					CoreMaterial.assign_custom_uniforms(this._render_material, uniform_name, texture);
-				}
+				// Setting needsUpdate to true was an attempt at fixing the bug
+				// where a particle system with no output on scene load
+				// fails to render when adding outputs later.
+				// At least until the scene is fully reloaded
+				// texture.needsUpdate = true;
+				this._render_material.uniforms[uniform_name].value = texture;
+				CoreMaterial.assign_custom_uniforms(this._render_material, uniform_name, texture);
 			}
 		}
 	}

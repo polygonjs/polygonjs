@@ -99,7 +99,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	protected _children_controller_context = NodeContext.GL;
-	private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
+	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		// set to never at the moment
@@ -108,10 +108,32 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
-		if (this.assembler_controller) {
-			this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		// if (this.assembler_controller) {
+		// we use the method _on_create here, to link the global to the output on create,
+		// as this seems to prevent a bug when the particle system is created
+		// without exported textures
+		// and the object fails to render until a full page reload.
+		this.lifecycle.add_on_create_hook(this._on_create.bind(this));
+		// this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
+		// }
+		// this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
+	}
+
+	private _on_create() {
+		const current_global = this.nodes_by_type('globals')[0];
+		const current_output = this.nodes_by_type('output')[0];
+		if (current_global || current_output) {
+			return;
 		}
-		this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
+		const globals = this.create_node('globals');
+		const output = this.create_node('output');
+
+		output.set_input('position', globals, 'position');
+
+		globals.ui_data.set_position(-200, 0);
+		output.ui_data.set_position(200, 0);
+
+		this._on_create_prepare_material();
 	}
 
 	create_node<K extends keyof GlNodeChildrenMap>(
