@@ -116,6 +116,17 @@ export class HierarchyChildrenController {
 			return child_node;
 		}
 	}
+	createNode<K extends typeof BaseNodeClass>(
+		node_class: K,
+		params_init_value_overrides?: ParamsInitData,
+		node_type = ''
+	): InstanceType<K> {
+		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
+		child_node.initialize_base_and_node();
+		this.add_node(child_node);
+		child_node.lifecycle.set_creation_completed();
+		return child_node;
+	}
 	create_operation_container(
 		operation_type: string,
 		operation_container_name: string,

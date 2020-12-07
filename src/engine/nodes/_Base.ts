@@ -252,6 +252,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	create_node(type: string, params_init_value_overrides?: ParamsInitData) {
 		return this.children_controller?.create_node(type, params_init_value_overrides);
 	}
+	createNode(type: string, params_init_value_overrides?: ParamsInitData) {
+		return this.children_controller?.create_node(type, params_init_value_overrides);
+	}
 	create_operation_container(
 		type: string,
 		operation_container_name: string,
