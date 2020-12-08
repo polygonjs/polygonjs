@@ -14,6 +14,12 @@ export class AssemblerControllerNode extends TypedNode<any, any> {
 	): JsNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as JsNodeChildrenMap[K];
 	}
+	createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K {
+		return super.createNode(node_class, params_init_value_overrides) as K;
+	}
 	children() {
 		return super.children() as BaseJsNodeType[];
 	}

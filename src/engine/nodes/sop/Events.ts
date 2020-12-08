@@ -17,6 +17,12 @@ export class EventsSopNode extends ParamLessBaseNetworkSopNode {
 	): EventNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as EventNodeChildrenMap[K];
 	}
+	createNode<K extends valueof<EventNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K {
+		return super.createNode(node_class, params_init_value_overrides) as K;
+	}
 	children() {
 		return super.children() as BaseEventNodeType[];
 	}

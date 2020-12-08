@@ -116,11 +116,11 @@ export class HierarchyChildrenController {
 			return child_node;
 		}
 	}
-	createNode<K extends typeof BaseNodeClass>(
-		node_class: K,
+	createNode<K extends BaseNodeType>(
+		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData,
 		node_type = ''
-	): InstanceType<K> {
+	): K {
 		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
 		child_node.initialize_base_and_node();
 		this.add_node(child_node);

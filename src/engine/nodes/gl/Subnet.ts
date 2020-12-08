@@ -102,6 +102,12 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	): GlNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
 	}
+	createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K {
+		return super.createNode(node_class, params_init_value_overrides) as K;
+	}
 	children() {
 		return super.children() as BaseGlNodeType[];
 	}

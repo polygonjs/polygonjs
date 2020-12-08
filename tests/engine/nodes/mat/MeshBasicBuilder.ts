@@ -129,7 +129,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	// mesh_basic1.param_names();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
-	assert.equal(mesh_basic1.p.texture_map.value, '/COP/file_uv', 'texture_map value is "/COP/file_uv"');
+	assert.equal(mesh_basic1.p.texture_map.value, '/COP/image_uv', 'texture_map value is "/COP/image_uv"');
 	mesh_basic1.params.get('texture_map')!.set('/COP/file2');
 
 	const data = new SceneJsonExporter(scene).data();

@@ -155,6 +155,12 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	): PostNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as PostNodeChildrenMap[K];
 	}
+	createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K {
+		return super.createNode(node_class, params_init_value_overrides) as K;
+	}
 	children() {
 		return super.children() as BasePostProcessNodeType[];
 	}

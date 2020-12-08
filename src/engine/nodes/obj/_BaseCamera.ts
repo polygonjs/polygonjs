@@ -223,6 +223,12 @@ export class TypedThreejsCameraObjNode<
 	): GeoNodeChildrenMap[K] {
 		return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
 	}
+	createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K {
+		return super.createNode(node_class, params_init_value_overrides) as K;
+	}
 	children() {
 		return super.children() as BaseSopNodeType[];
 	}
@@ -275,6 +281,9 @@ export class TypedThreejsCameraObjNode<
 	}
 	create_viewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
 		return new ThreejsViewer(element, this.scene, this, viewer_properties);
+	}
+	createViewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
+		return this.create_viewer(element, viewer_properties);
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.post_process_controller.reset();
