@@ -1,3 +1,4 @@
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Face3} from 'three/src/core/Face3';
 import {Geometry} from 'three/src/core/Geometry';
 import {Vector2} from 'three/src/math/Vector2';
@@ -25,7 +26,9 @@ var SubdivisionModifier = function ( subdivisions ) {
 // Applies the "modify" pattern
 SubdivisionModifier.prototype.modify = function ( geometry ) {
 
-	if ( geometry.isBufferGeometry ) {
+	var isBufferGeometry = geometry.isBufferGeometry;
+
+	if ( isBufferGeometry ) {
 
 		geometry = new Geometry().fromBufferGeometry( geometry );
 
@@ -35,7 +38,7 @@ SubdivisionModifier.prototype.modify = function ( geometry ) {
 
 	}
 
-	geometry.mergeVertices();
+	geometry.mergeVertices( 6 );
 
 	var repeats = this.subdivisions;
 
@@ -48,7 +51,15 @@ SubdivisionModifier.prototype.modify = function ( geometry ) {
 	geometry.computeFaceNormals();
 	geometry.computeVertexNormals();
 
-	return geometry;
+	if ( isBufferGeometry ) {
+
+		return new BufferGeometry().fromGeometry( geometry );
+
+	} else {
+
+		return geometry;
+
+	}
 
 };
 

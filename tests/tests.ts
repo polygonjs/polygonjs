@@ -171,6 +171,7 @@ import './engine/nodes/sop/Poly';
 import './engine/nodes/sop/Polywire';
 import './engine/nodes/sop/Ray';
 import './engine/nodes/sop/Resample';
+import './engine/nodes/sop/RoundedBox';
 import './engine/nodes/sop/Scatter';
 import './engine/nodes/sop/Skin';
 import './engine/nodes/sop/Sphere';

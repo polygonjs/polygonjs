@@ -164,7 +164,8 @@ export class TransformController {
 		new_parent_object.updateMatrixWorld(true);
 		// compute mat
 		this._keep_pos_when_parenting_m_object.copy(object.matrixWorld);
-		this._keep_pos_when_parenting_m_new_parent_inv.getInverse(new_parent_object.matrixWorld);
+		this._keep_pos_when_parenting_m_new_parent_inv.copy(new_parent_object.matrixWorld);
+		this._keep_pos_when_parenting_m_new_parent_inv.invert();
 		this._keep_pos_when_parenting_m_object.premultiply(this._keep_pos_when_parenting_m_new_parent_inv);
 		// apply mat
 		CoreTransform.set_params_from_matrix(this._keep_pos_when_parenting_m_object, this.node, {scale: true});

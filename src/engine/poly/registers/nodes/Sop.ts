@@ -79,6 +79,7 @@ import {PostProcessSopNode} from '../../../nodes/sop/PostProcess';
 import {RaySopNode} from '../../../nodes/sop/Ray';
 import {RenderersSopNode} from '../../../nodes/sop/Renderers';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
+import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
@@ -174,6 +175,7 @@ export interface GeoNodeChildrenMap {
 	ray: RaySopNode;
 	renderers: RenderersSopNode;
 	resample: ResampleSopNode;
+	rounded_box: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
 	skin: SkinSopNode;
 	sphere: SphereSopNode;
@@ -216,9 +218,12 @@ import {MergeSopOperation} from '../../../../core/operations/sop/Merge';
 import {MaterialSopOperation} from '../../../../core/operations/sop/Material';
 import {NullSopOperation} from '../../../../core/operations/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../../core/operations/sop/ObjectProperties';
+import {PeakSopOperation} from '../../../../core/operations/sop/Peak';
 import {PlaneSopOperation} from '../../../../core/operations/sop/Plane';
+import {RoundedBoxSopOperation} from '../../../../core/operations/sop/RoundedBox';
 import {ScatterSopOperation} from '../../../../core/operations/sop/Scatter';
 import {SphereSopOperation} from '../../../../core/operations/sop/Sphere';
+import {SubdivideSopOperation} from '../../../../core/operations/sop/Subdivide';
 import {TexturePropertiesSopOperation} from '../../../../core/operations/sop/TextureProperties';
 import {TransformSopOperation} from '../../../../core/operations/sop/Transform';
 
@@ -245,9 +250,12 @@ export class SopRegister {
 		poly.register_operation(MaterialSopOperation);
 		poly.register_operation(NullSopOperation);
 		poly.register_operation(ObjectPropertiesSopOperation);
+		poly.register_operation(PeakSopOperation);
 		poly.register_operation(PlaneSopOperation);
+		poly.register_operation(RoundedBoxSopOperation);
 		poly.register_operation(ScatterSopOperation);
 		poly.register_operation(SphereSopOperation);
+		poly.register_operation(SubdivideSopOperation);
 		poly.register_operation(TexturePropertiesSopOperation);
 		poly.register_operation(TransformSopOperation);
 
@@ -325,6 +333,7 @@ export class SopRegister {
 		poly.register_node(RaySopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(RenderersSopNode, CATEGORY_SOP.NETWORK);
 		poly.register_node(ResampleSopNode, CATEGORY_SOP.MODIFIER);
+		poly.register_node(RoundedBoxSopNode, CATEGORY_SOP.INPUT);
 		poly.register_node(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.register_node(SphereSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -40,7 +40,7 @@ export class CoreIterator {
 		if (this._resolve) {
 			throw 'an iterator cannot be started twice';
 		}
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve: () => void, reject) => {
 			this._resolve = resolve;
 			this.next_with_count();
 		});
@@ -84,7 +84,7 @@ export class CoreIterator {
 		if (this._resolve) {
 			throw 'an iterator cannot be started twice';
 		}
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve: () => void, reject) => {
 			this._resolve = resolve;
 			this.next_with_array();
 		});

@@ -62,7 +62,7 @@ export class ExpressionManager {
 				// if (this.function_generator.is_errored && this.function_generator.error_message) {
 				// 	this.set_error(this.function_generator.error_message);
 				// }
-				return new Promise((resolve, reject) => resolve());
+				return; // new Promise((resolve, reject) => resolve());
 			}
 		} else {
 			return new Promise((resolve, reject) => {

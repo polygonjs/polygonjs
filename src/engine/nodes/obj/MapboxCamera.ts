@@ -99,11 +99,19 @@ export class MapboxCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, M
 	private _view_dir = new Vector3();
 	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {
 		// adapted from https://github.com/mapbox/mapbox-gl-js/issues/7395
-		const camInverseProjection = this._inverse_proj_mat.getInverse(this._object.projectionMatrix);
+		// const camInverseProjection = this._inverse_proj_mat.getInverse(this._object.projectionMatrix);
+		// this._cam_pos.set(0, 0, 0);
+		// this._cam_pos.applyMatrix4(camInverseProjection);
+		// this._mouse_pos.set(mouse.x, mouse.y, 1);
+		// this._mouse_pos.applyMatrix4(camInverseProjection);
+		// this._view_dir.copy(this._mouse_pos).sub(this._cam_pos).normalize();
+		// raycaster.set(this._cam_pos, this._view_dir);
+		this._inverse_proj_mat.copy(this._object.projectionMatrix);
+		this._inverse_proj_mat.invert();
 		this._cam_pos.set(0, 0, 0);
-		this._cam_pos.applyMatrix4(camInverseProjection);
+		this._cam_pos.applyMatrix4(this._inverse_proj_mat);
 		this._mouse_pos.set(mouse.x, mouse.y, 1);
-		this._mouse_pos.applyMatrix4(camInverseProjection);
+		this._mouse_pos.applyMatrix4(this._inverse_proj_mat);
 		this._view_dir.copy(this._mouse_pos).sub(this._cam_pos).normalize();
 		raycaster.set(this._cam_pos, this._view_dir);
 	}

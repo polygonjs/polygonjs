@@ -1,16 +1,13 @@
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
 
-const POSITION = 'position';
-
+import {PeakSopOperation} from '../../../core/operations/sop/Peak';
+const DEFAULT = PeakSopOperation.DEFAULT_PARAMS;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+
 class PeakSopParamsConfig extends NodeParamsConfig {
-	amount = ParamConfig.FLOAT(1, {range: [-1, 1]});
+	amount = ParamConfig.FLOAT(DEFAULT.amount, {range: [-1, 1]});
 }
 const ParamsConfig = new PeakSopParamsConfig();
 
@@ -25,29 +22,10 @@ export class PeakSopNode extends TypedSopNode<PeakSopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
+	private _operation: PeakSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-
-		let core_geometry, point;
-		for (let object of core_group.objects()) {
-			object.traverse((child_object) => {
-				let geometry;
-				if ((geometry = (child_object as Mesh).geometry as BufferGeometry) != null) {
-					core_geometry = new CoreGeometry(geometry);
-					for (point of core_geometry.points()) {
-						const normal = point.normal();
-						const position = point.position();
-						const new_position = position.clone().add(normal.multiplyScalar(this.pv.amount));
-						point.set_position(new_position);
-					}
-
-					if (!this.io.inputs.clone_required(0)) {
-						const attrib = core_geometry.geometry().getAttribute(POSITION) as BufferAttribute;
-						attrib.needsUpdate = true;
-					}
-				}
-			});
-		}
+		this._operation = this._operation || new PeakSopOperation(this.scene, this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
 		this.set_core_group(core_group);
 	}
 }
