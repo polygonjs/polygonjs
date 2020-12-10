@@ -24,10 +24,16 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		if (this._video) {
 			document.body.removeChild(this._video);
 		}
-		this._video = document.createElement('video');
-		this._video.autoplay = true;
-		this._video.setAttribute('playsinline', 'true');
-		this._video.style.display = 'none';
+		const video_element = '<video style="display:none" autoplay muted playsinline></video>';
+		const video_container = document.createElement('div');
+		video_container.innerHTML = video_element;
+		this._video = video_container.children[0] as HTMLVideoElement;
+		// this._video = document.createElement('video');
+		// this._video.autoplay = true;
+		// this._video.setAttribute('playsinline', 'true');
+		// this._video.setAttribute('muted', 'true');
+		// this._video.style.display = 'none';
+		document.body.appendChild(video_container);
 		const texture = new VideoTexture(this._video);
 
 		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
