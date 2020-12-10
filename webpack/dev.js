@@ -1,6 +1,7 @@
 const CREATE_EXAMPLE_INDEX = true;
 const CREATE_TEST_INDEX = true;
 
+const fs = require('fs');
 const {merge} = require('webpack-merge');
 const common = require('./common.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -34,7 +35,7 @@ module.exports = (env) => {
 		);
 	}
 
-	return merge(common_options, {
+	const config = merge(common_options, {
 		mode: 'development',
 		devtool: 'inline-source-map', // 'cheap-module-eval-source-map',
 		devServer: {
@@ -42,4 +43,10 @@ module.exports = (env) => {
 			hot: true,
 		},
 	});
+
+	console.log('write debug');
+	const debug_config_path = path.resolve(__dirname, './debug_dev_config.json');
+	fs.writeFileSync(debug_config_path, JSON.stringify(config, null, 4));
+
+	return config;
 };

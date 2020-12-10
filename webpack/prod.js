@@ -3,6 +3,7 @@ const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
 const LOGO_PATH = path.resolve(__dirname, '../public/images/logo.256.png');
 
+const fs = require('fs');
 const {merge} = require('webpack-merge');
 const common = require('./common.js');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -22,16 +23,17 @@ module.exports = (env) => {
 				test: /\.(js)$/,
 			})
 		); // gs by default
-		common_options.plugins.push(
-			new CompressionPlugin({
-				filename: '[path].br[query]',
-				algorithm: 'brotliCompress',
-				test: /\.(js|css|html|svg)$/,
-				compressionOptions: {level: 11},
-				threshold: 10240,
-				minRatio: 0.8,
-			})
-		);
+		// temporary remove this as there are multiple assets being written to a strange nameless '.br' file
+		// common_options.plugins.push(
+		// 	new CompressionPlugin({
+		// 		filename: '[path].br[query]',
+		// 		algorithm: 'brotliCompress',
+		// 		test: /\.(js|css|html|svg)$/,
+		// 		compressionOptions: {level: 11},
+		// 		threshold: 10240,
+		// 		minRatio: 0.8,
+		// 	})
+		// );
 	}
 
 	common_options.output.chunkFilename = '[name].bundle.js';
@@ -39,7 +41,7 @@ module.exports = (env) => {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}
 
-	return merge(common_options, {
+	const config = merge(common_options, {
 		mode: 'production',
 		devtool: 'source-map',
 		optimization: {
@@ -53,4 +55,10 @@ module.exports = (env) => {
 			],
 		},
 	});
+
+	// console.log('write debug');
+	// const debug_config_path = path.resolve(__dirname, './debug_prod_config.json');
+	// fs.writeFileSync(debug_config_path, JSON.stringify(config, null, 4));
+
+	return config;
 };

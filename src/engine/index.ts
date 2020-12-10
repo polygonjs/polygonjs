@@ -1,3 +1,8 @@
+// import {CoreGraphNode} from '../core/graph/CoreGraphNode';
+// import {CoreGraph} from '../core/graph/CoreGraph';
+
+// console.log(CoreGraphNode, CoreGraph);
+
 import {SceneJsonImporter} from './io/json/import/Scene';
 import {PolyScene} from './scene/PolyScene';
 import {Poly} from './Poly';

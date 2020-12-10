@@ -2,7 +2,7 @@ import {NodeContext} from '../../engine/poly/NodeContext';
 import {ParamType} from '../../engine/poly/ParamType';
 import {ParamValuesTypeMap} from '../../engine/params/types/ParamValuesTypeMap';
 import {StatesController} from '../../engine/nodes/utils/StatesController';
-import {PolyScene} from '../../engine';
+import {PolyScene} from '../../engine/scene/PolyScene';
 import {InputCloneMode} from '../../engine/poly/InputCloneMode';
 
 export type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
