@@ -16,8 +16,6 @@ const webpack = require('webpack');
 const glsl = require('./loaders/glsl');
 const ts = require('./loaders/ts');
 
-const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
-
 const plugins = [
 	new CleanWebpackPlugin(),
 	new HtmlWebpackPlugin({
@@ -27,9 +25,6 @@ const plugins = [
 	}),
 	new MiniCssExtractPlugin({
 		filename: '[name].css',
-	}),
-	new webpack.DefinePlugin({
-		POLYGONJS_VERSION: POLYGONJS_VERSION,
 	}),
 ];
 
