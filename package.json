@@ -22,15 +22,18 @@
 	"main": "./dist/polygonjs-engine.js",
 	"scripts": {
 		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config config/webpack/dev.js",
-		"build": "webpack --env.NODE_ENV=production --env.production --progress --config config/webpack/prod.js",
-		"build_fast": "webpack --env.NODE_ENV=production --env.production --progress --env.FAST_COMPILE=true --config config/webpack/prod.js",
+		"build": "yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded",
+		"build_with_webpack": "webpack --env.NODE_ENV=production --env.production --progress --config config/webpack/prod.js",
+		"build_with_webpack_fast": "webpack --env.NODE_ENV=production --env.production --progress --env.FAST_COMPILE=true --config config/webpack/prod.js",
 		"build_unpkg": "webpack --env.NODE_ENV=production --env.production --env.PUBLIC_PATH='./' --progress --config config/webpack/prod.js",
 		"build_verbose": "webpack --env.NODE_ENV=production --env.production --progress --display-reasons --display-used-exports --display-provided-exports --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --config config/webpack/prod.js",
 		"build_custom_paths_verbose": "webpack --env.NODE_ENV=production --env.production --env.PUBLIC_PATH=/packs-engine/ --env.DIST_PATH=../dist --progress --display-reasons --display-used-exports --display-provided-exports --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --config config/webpack/prod.js",
 		"analyze": "webpack --env.NODE_ENV=production --env.production --config config/webpack/prod.js --profile --json > config/webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer config/webpack/stats.json",
 		"concat_dts": "./node_modules/typescript/bin/tsc --allowSyntheticDefaultImports --esModuleInterop --moduleResolution node config/webpack/dts_concat.ts; node config/webpack/dts_concat.js",
 		"tsc_esbuild": "./node_modules/typescript/bin/tsc config/esbuild/esbuild.ts --moduleResolution node",
-		"build_with_esbuild": "yarn config/esbuild/esbuild.ts"
+		"build_with_esbuild": "yarn tsc_esbuild && node config/esbuild/esbuild.js",
+		"build_folder_delete": "rm -rf dist/*",
+		"build_folder_remove_unneeded": "rm -rf dist/config && rm -rf dist/tests"
 	},
 	"dependencies": {
 		"@mapbox/mapbox-sdk": "0.11.0",

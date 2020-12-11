@@ -4,7 +4,7 @@ node_modules/
 public/
 tests/
 dist/tests
-webpack/
+config/
 .eslintignore
 .eslintrc.js
 .prettierrc.json

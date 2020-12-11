@@ -23,20 +23,19 @@ module.exports = (env) => {
 				test: /\.(js)$/,
 			})
 		); // gs by default
-		// temporary remove this as there are multiple assets being written to a strange nameless '.br' file
-		// common_options.plugins.push(
-		// 	new CompressionPlugin({
-		// 		filename: '[path].br[query]',
-		// 		algorithm: 'brotliCompress',
-		// 		test: /\.(js|css|html|svg)$/,
-		// 		compressionOptions: {level: 11},
-		// 		threshold: 10240,
-		// 		minRatio: 0.8,
-		// 	})
-		// );
+		common_options.plugins.push(
+			new CompressionPlugin({
+				filename: '[name].br[query]',
+				algorithm: 'brotliCompress',
+				test: /\.(js|css|html|svg)$/,
+				compressionOptions: {level: 11},
+				threshold: 10240,
+				minRatio: 0.8,
+			})
+		);
 	}
 
-	common_options.output.chunkFilename = '[name].bundle.js';
+	common_options.output.chunkFilename = '[name].[contenthash].js';
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}

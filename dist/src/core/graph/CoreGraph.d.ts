@@ -1,0 +1,34 @@
+import { PolyScene } from '../../engine/scene/PolyScene';
+import { CoreGraphNode } from './CoreGraphNode';
+export declare type CoreGraphNodeId = number;
+export declare class CoreGraph {
+    private _next_id;
+    private _scene;
+    private _successors;
+    private _predecessors;
+    private _nodes_by_id;
+    set_scene(scene: PolyScene): void;
+    scene(): PolyScene | undefined;
+    next_id(): CoreGraphNodeId;
+    nodes_from_ids(ids: number[]): CoreGraphNode[];
+    node_from_id(id: number): CoreGraphNode | undefined;
+    has_node(node: CoreGraphNode): boolean;
+    add_node(node: CoreGraphNode): void;
+    remove_node(node: CoreGraphNode): void;
+    connect(src: CoreGraphNode, dest: CoreGraphNode, check_if_graph_may_have_cycle?: boolean): boolean;
+    disconnect(src: CoreGraphNode, dest: CoreGraphNode): void;
+    disconnect_predecessors(node: CoreGraphNode): void;
+    disconnect_successors(node: CoreGraphNode): void;
+    predecessor_ids(id: CoreGraphNodeId): CoreGraphNodeId[];
+    predecessors(node: CoreGraphNode): CoreGraphNode[];
+    successor_ids(id: CoreGraphNodeId): CoreGraphNodeId[];
+    successors(node: CoreGraphNode): CoreGraphNode[];
+    all_predecessor_ids(node: CoreGraphNode): CoreGraphNodeId[];
+    all_successor_ids(node: CoreGraphNode): CoreGraphNodeId[];
+    all_predecessors(node: CoreGraphNode): CoreGraphNode[];
+    all_successors(node: CoreGraphNode): CoreGraphNode[];
+    private _create_connection;
+    private _remove_connection;
+    private all_next_ids;
+    private _has_predecessor;
+}
