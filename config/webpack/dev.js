@@ -10,7 +10,7 @@ const path = require('path');
 module.exports = (env) => {
 	const common_options = common(env);
 
-	if (CREATE_TEST_INDEX) {
+	if (CREATE_EXAMPLE_INDEX) {
 		common_options.entry.example = './src/engine/example.ts';
 		common_options.plugins.push(
 			new HtmlWebpackPlugin({

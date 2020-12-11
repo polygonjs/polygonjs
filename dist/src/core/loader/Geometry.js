@@ -9,7 +9,7 @@ import {Points as Points2} from "three/src/objects/Points";
 import {LineBasicMaterial as LineBasicMaterial2} from "three/src/materials/LineBasicMaterial";
 import {MeshLambertMaterial as MeshLambertMaterial2} from "three/src/materials/MeshLambertMaterial";
 import {PointsMaterial as PointsMaterial2} from "three/src/materials/PointsMaterial";
-import {UAParser} from "ua-parser-js";
+import {CoreUserAgent} from "../UserAgent";
 var GeometryExtension;
 (function(GeometryExtension2) {
   GeometryExtension2["DRC"] = "drc";
@@ -179,7 +179,7 @@ const CoreLoaderGeometry2 = class {
     }
   }
   async loader_for_drc() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.DRACOLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.DRACOLoader);
     if (module) {
       const draco_loader = new module.DRACOLoader();
       const root = this.scene.libs_controller.root();
@@ -190,20 +190,20 @@ const CoreLoaderGeometry2 = class {
     }
   }
   async loader_for_fbx() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.FBXLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.FBXLoader);
     if (module) {
       return new module.FBXLoader();
     }
   }
   async loader_for_gltf() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.GLTFLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.GLTFLoader);
     if (module) {
       return new module.GLTFLoader();
     }
   }
   static async loader_for_glb(scene) {
-    const gltf_module = await Poly2.instance().modules_register.module(ModuleName.GLTFLoader);
-    const draco_module = await Poly2.instance().modules_register.module(ModuleName.DRACOLoader);
+    const gltf_module = await Poly2.instance().modulesRegister.module(ModuleName.GLTFLoader);
+    const draco_module = await Poly2.instance().modulesRegister.module(ModuleName.DRACOLoader);
     if (gltf_module && draco_module) {
       this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
       this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
@@ -218,53 +218,28 @@ const CoreLoaderGeometry2 = class {
     return CoreLoaderGeometry2.loader_for_glb(this.scene);
   }
   async loader_for_obj() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.OBJLoader2);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.OBJLoader2);
     if (module) {
       return new module.OBJLoader2();
     }
   }
   async loader_for_pdb() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.PDBLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.PDBLoader);
     if (module) {
       return new module.PDBLoader();
     }
   }
   async loader_for_ply() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.PLYLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.PLYLoader);
     if (module) {
       return new module.PLYLoader();
     }
   }
   static _init_max_concurrent_loads_count() {
-    const parser = new UAParser();
-    const name = parser.getBrowser().name;
-    if (name) {
-      const loads_count_by_browser = {
-        Chrome: 10,
-        Firefox: 4
-      };
-      const loads_count = loads_count_by_browser[name];
-      if (loads_count != null) {
-        return loads_count;
-      }
-    }
-    return 1;
+    return CoreUserAgent.is_chrome() ? 4 : 1;
   }
   static _init_concurrent_loads_delay() {
-    const parser = new UAParser();
-    const name = parser.getBrowser().name;
-    if (name) {
-      const delay_by_browser = {
-        Chrome: 1,
-        Firefox: 10,
-        Safari: 10
-      };
-      const delay = delay_by_browser[name];
-      if (delay != null) {
-        return delay;
-      }
-    }
-    return 10;
+    return CoreUserAgent.is_chrome() ? 1 : 10;
   }
   static override_max_concurrent_loads_count(count) {
     this.MAX_CONCURRENT_LOADS_COUNT = count;

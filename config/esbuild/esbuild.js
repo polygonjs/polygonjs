@@ -32,9 +32,10 @@ function walk(dir) {
     return accepted_file_list;
 }
 var files_list = walk(path.resolve(__dirname, '../../src'));
-console.log("transpiling " + files_list.length + " files");
+console.log("esbuild: transpiling " + files_list.length + " files");
 // // const out = './dist/out.js';
 var outdir = './dist/src';
+var POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 var options = {
     // entryPoints: ['./src/engine/index.ts'],
     entryPoints: files_list,
@@ -46,6 +47,7 @@ var options = {
     // minifySyntax: false,
     // bundle: true,
     // external: ['require', 'fs', 'path'],
+    define: { __POLYGONJS_VERSION__: POLYGONJS_VERSION },
     loader: {
         '.glsl': 'text'
     }

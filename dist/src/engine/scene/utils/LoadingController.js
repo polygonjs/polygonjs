@@ -2,7 +2,7 @@ import {SceneEventType} from "./events/SceneEventsController";
 export class LoadingController {
   constructor(scene) {
     this.scene = scene;
-    this._loading_state = true;
+    this._loading_state = false;
     this._auto_updating = true;
     this._first_object_loaded = false;
   }

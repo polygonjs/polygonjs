@@ -65,7 +65,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode {
     return AssemblerName.GL_PARTICLES;
   }
   _create_assembler_controller() {
-    return Poly2.instance().assemblers_register.assembler(this, this.used_assembler());
+    return Poly2.instance().assemblersRegister.assembler(this, this.used_assembler());
   }
   shaders_by_name() {
     return this._shaders_by_name;

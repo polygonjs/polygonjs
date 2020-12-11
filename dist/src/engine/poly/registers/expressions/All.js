@@ -16,21 +16,21 @@ import {StrIndexExpression} from "../../../expressions/methods/str_index";
 import {StrSubExpression} from "../../../expressions/methods/str_sub";
 export class AllExpressionsRegister {
   static run(poly) {
-    poly.expressions_register.register_expression(AssetExpression, "asset");
-    poly.expressions_register.register_expression(BboxExpression, "bbox");
-    poly.expressions_register.register_expression(CentroidExpression, "centroid");
-    poly.expressions_register.register_expression(ChExpression, "ch");
-    poly.expressions_register.register_expression(CopyExpression, "copy");
-    poly.expressions_register.register_expression(CopResExpression, "cop_res");
-    poly.expressions_register.register_expression(JsExpression, "js");
-    poly.expressions_register.register_expression(ObjectsCountExpression, "objects_count");
-    poly.expressions_register.register_expression(OpdigitsExpression, "opdigits");
-    poly.expressions_register.register_expression(PadzeroExpression, "padzero");
-    poly.expressions_register.register_expression(PointExpression, "point");
-    poly.expressions_register.register_expression(PointsCountExpression, "points_count");
-    poly.expressions_register.register_expression(StrCharsCountExpression, "str_chars_count");
-    poly.expressions_register.register_expression(StrConcatExpression, "str_concat");
-    poly.expressions_register.register_expression(StrIndexExpression, "str_index");
-    poly.expressions_register.register_expression(StrSubExpression, "str_sub");
+    poly.expressionsRegister.register(AssetExpression, "asset");
+    poly.expressionsRegister.register(BboxExpression, "bbox");
+    poly.expressionsRegister.register(CentroidExpression, "centroid");
+    poly.expressionsRegister.register(ChExpression, "ch");
+    poly.expressionsRegister.register(CopyExpression, "copy");
+    poly.expressionsRegister.register(CopResExpression, "cop_res");
+    poly.expressionsRegister.register(JsExpression, "js");
+    poly.expressionsRegister.register(ObjectsCountExpression, "objects_count");
+    poly.expressionsRegister.register(OpdigitsExpression, "opdigits");
+    poly.expressionsRegister.register(PadzeroExpression, "padzero");
+    poly.expressionsRegister.register(PointExpression, "point");
+    poly.expressionsRegister.register(PointsCountExpression, "points_count");
+    poly.expressionsRegister.register(StrCharsCountExpression, "str_chars_count");
+    poly.expressionsRegister.register(StrConcatExpression, "str_concat");
+    poly.expressionsRegister.register(StrIndexExpression, "str_index");
+    poly.expressionsRegister.register(StrSubExpression, "str_sub");
   }
 }

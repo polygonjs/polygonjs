@@ -11,6 +11,7 @@ import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Poly} from '../../Poly';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 	render_order = ParamConfig.INTEGER(0, {
@@ -90,6 +91,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	//
 	//
 	_on_create() {
+		if (!Poly.instance().nodesRegister.is_registered(NodeContext.SOP, 'box')) {
+			return;
+		}
 		this.create_node('box');
 	}
 	_on_child_add(node: BaseNodeType) {

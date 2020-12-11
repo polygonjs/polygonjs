@@ -9,9 +9,9 @@ export class AssemblersRegister extends BaseAssemblersRegister {
     }
     return pair;
   }
-  unregister_assembler(name) {
+  unregister(name) {
     const pair = this._controller_assembler_by_name.get(name);
-    super.unregister_assembler(name);
+    super.unregister(name);
     return pair;
   }
 }

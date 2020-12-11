@@ -45,7 +45,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode {
     return AssemblerName.GL_MESH_STANDARD;
   }
   _create_assembler_controller() {
-    return Poly2.instance().assemblers_register.assembler(this, this.used_assembler());
+    return Poly2.instance().assemblersRegister.assembler(this, this.used_assembler());
   }
   initialize_node() {
     this.params.on_params_created("init controllers", () => {

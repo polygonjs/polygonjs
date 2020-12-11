@@ -7,6 +7,7 @@ import {FlagsControllerD} from "../utils/FlagsController";
 import {HierarchyController as HierarchyController2} from "./utils/HierarchyController";
 import {NodeParamsConfig, ParamConfig} from "../utils/params/ParamsConfig";
 import {ChildrenDisplayController as ChildrenDisplayController2} from "./utils/ChildrenDisplayController";
+import {Poly as Poly2} from "../../Poly";
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
   constructor() {
     super(...arguments);
@@ -67,6 +68,9 @@ export class GeoObjNode extends TypedObjNode {
     return super.nodes_by_type(type);
   }
   _on_create() {
+    if (!Poly2.instance().nodesRegister.is_registered(NodeContext2.SOP, "box")) {
+      return;
+    }
     this.create_node("box");
   }
   _on_child_add(node) {

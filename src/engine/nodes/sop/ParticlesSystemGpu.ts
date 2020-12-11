@@ -71,7 +71,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 	protected _assembler_controller = this._create_assembler_controller();
 	private _create_assembler_controller() {
-		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
+		return Poly.instance().assemblersRegister.assembler(this, this.used_assembler());
 	}
 	public readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);
 	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);

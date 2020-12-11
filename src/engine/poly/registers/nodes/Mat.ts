@@ -37,20 +37,20 @@ export interface MatNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class MatRegister {
 	static run(poly: Poly) {
-		poly.register_node(LineBasicMatNode, CATEGORY_MAT.LINE);
-		poly.register_node(MeshBasicMatNode, CATEGORY_MAT.MESH);
-		poly.register_node(MeshBasicBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		poly.register_node(MeshLambertMatNode, CATEGORY_MAT.MESH);
-		poly.register_node(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		poly.register_node(MeshPhongMatNode, CATEGORY_MAT.MESH);
-		poly.register_node(MeshStandardMatNode, CATEGORY_MAT.MESH);
-		poly.register_node(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		poly.register_node(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);
-		poly.register_node(PointsMatNode, CATEGORY_MAT.POINTS);
-		poly.register_node(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		poly.register_node(ShadowMatNode, CATEGORY_MAT.ADVANCED);
-		poly.register_node(SkyMatNode, CATEGORY_MAT.MESH);
-		poly.register_node(VolumeMatNode, CATEGORY_MAT.VOLUME);
-		poly.register_node(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
+		poly.registerNode(LineBasicMatNode, CATEGORY_MAT.LINE);
+		poly.registerNode(MeshBasicMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshBasicBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(MeshLambertMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(MeshPhongMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshStandardMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(PointsMatNode, CATEGORY_MAT.POINTS);
+		poly.registerNode(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(ShadowMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(SkyMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(VolumeMatNode, CATEGORY_MAT.VOLUME);
+		poly.registerNode(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 	}
 }

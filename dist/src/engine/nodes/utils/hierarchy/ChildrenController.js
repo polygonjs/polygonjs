@@ -55,7 +55,7 @@ export class HierarchyChildrenController {
     return `${this.node.node_context()}/${this.node.type}`;
   }
   available_children_classes() {
-    return Poly2.instance().registered_nodes(this._context, this.node.type);
+    return Poly2.instance().registeredNodes(this._context, this.node.type);
   }
   is_valid_child_type(node_type) {
     const node_class = this.available_children_classes()[node_type];
@@ -83,7 +83,7 @@ export class HierarchyChildrenController {
     return child_node;
   }
   create_operation_container(operation_type, operation_container_name, params_init_value_overrides) {
-    const operation_class = Poly2.instance().registered_operation(this._context, operation_type);
+    const operation_class = Poly2.instance().registeredOperation(this._context, operation_type);
     if (operation_class == null) {
       const message = `no operation found with context ${this._context}/${operation_type}`;
       console.error(message);

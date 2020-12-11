@@ -27,7 +27,7 @@ export class NodesRegister {
 	private _node_register_categories: TabMenuByTypeByContext = new Map();
 	private _node_register_options: RegisterOptionsByTypeByContext = new Map();
 
-	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
+	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		const context = node.node_context();
 		const node_type = node.type();
 		let current_nodes_for_context = this._node_register.get(context);
@@ -60,10 +60,17 @@ export class NodesRegister {
 			current_options.set(node_type, options);
 		}
 	}
-	deregister_node(context: NodeContext, node_type: string) {
+	deregister(context: NodeContext, node_type: string) {
 		this._node_register.get(context)?.delete(node_type);
 		this._node_register_categories.get(context)?.delete(node_type);
 		this._node_register_options.get(context)?.delete(node_type);
+	}
+	is_registered(context: NodeContext, type: string): boolean {
+		const nodes_for_context = this._node_register.get(context);
+		if (!nodes_for_context) {
+			return false;
+		}
+		return nodes_for_context.get(type) != null;
 	}
 	registered_nodes_for_context_and_parent_type(context: NodeContext, parent_node_type: string) {
 		const map = this._node_register.get(context);
@@ -93,7 +100,7 @@ export class NodesRegister {
 			return [];
 		}
 	}
-	registered_nodes(context: NodeContext, parent_node_type: string): Dictionary<BaseNodeConstructor> {
+	registeredNodes(context: NodeContext, parent_node_type: string): Dictionary<BaseNodeConstructor> {
 		const nodes_by_type: Dictionary<BaseNodeConstructor> = {};
 		const nodes = this.registered_nodes_for_context_and_parent_type(context, parent_node_type);
 		for (let node of nodes) {
@@ -114,7 +121,7 @@ export class NodesRegister {
 export class OperationsRegister {
 	private _operation_register: OperationConstructorByTypeByContext = new Map();
 
-	register_operation(operation: BaseOperationConstructor) {
+	register(operation: BaseOperationConstructor) {
 		const context = operation.context();
 		let current_operations_for_context = this._operation_register.get(context);
 		if (!current_operations_for_context) {
@@ -144,7 +151,7 @@ export class OperationsRegister {
 			return [];
 		}
 	}
-	registered_operation(context: NodeContext, operation_type: string): BaseOperationConstructor | undefined {
+	registeredOperation(context: NodeContext, operation_type: string): BaseOperationConstructor | undefined {
 		const current_operations_for_context = this._operation_register.get(context);
 		if (current_operations_for_context) {
 			return current_operations_for_context.get(operation_type);

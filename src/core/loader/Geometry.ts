@@ -10,9 +10,9 @@ import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {UAParser} from 'ua-parser-js';
 import {DRACOLoader} from '../../modules/three/examples/jsm/loaders/DRACOLoader';
 import {GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {CoreUserAgent} from '../UserAgent';
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -226,7 +226,7 @@ export class CoreLoaderGeometry {
 		}
 	}
 	async loader_for_drc() {
-		const module = await Poly.instance().modules_register.module(ModuleName.DRACOLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.DRACOLoader);
 		if (module) {
 			const draco_loader = new module.DRACOLoader();
 			const root = this.scene.libs_controller.root();
@@ -237,13 +237,13 @@ export class CoreLoaderGeometry {
 		}
 	}
 	async loader_for_fbx() {
-		const module = await Poly.instance().modules_register.module(ModuleName.FBXLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.FBXLoader);
 		if (module) {
 			return new module.FBXLoader();
 		}
 	}
 	async loader_for_gltf() {
-		const module = await Poly.instance().modules_register.module(ModuleName.GLTFLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.GLTFLoader);
 		if (module) {
 			return new module.GLTFLoader();
 		}
@@ -252,8 +252,8 @@ export class CoreLoaderGeometry {
 	private static gltf_loader: GLTFLoader | undefined;
 	private static draco_loader: DRACOLoader | undefined;
 	static async loader_for_glb(scene: PolyScene) {
-		const gltf_module = await Poly.instance().modules_register.module(ModuleName.GLTFLoader);
-		const draco_module = await Poly.instance().modules_register.module(ModuleName.DRACOLoader);
+		const gltf_module = await Poly.instance().modulesRegister.module(ModuleName.GLTFLoader);
+		const draco_module = await Poly.instance().modulesRegister.module(ModuleName.DRACOLoader);
 		if (gltf_module && draco_module) {
 			this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
 			this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
@@ -271,19 +271,19 @@ export class CoreLoaderGeometry {
 	}
 
 	async loader_for_obj() {
-		const module = await Poly.instance().modules_register.module(ModuleName.OBJLoader2);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.OBJLoader2);
 		if (module) {
 			return new module.OBJLoader2();
 		}
 	}
 	async loader_for_pdb() {
-		const module = await Poly.instance().modules_register.module(ModuleName.PDBLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.PDBLoader);
 		if (module) {
 			return new module.PDBLoader();
 		}
 	}
 	async loader_for_ply() {
-		const module = await Poly.instance().modules_register.module(ModuleName.PLYLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.PLYLoader);
 		if (module) {
 			return new module.PLYLoader();
 		}
@@ -299,39 +299,41 @@ export class CoreLoaderGeometry {
 	private static in_progress_loads_count: number = 0;
 	private static _queue: Array<() => void> = [];
 	private static _init_max_concurrent_loads_count(): number {
-		const parser = new UAParser();
-		const name = parser.getBrowser().name;
-		// limit to 4 for non chrome,
-		// as firefox was seen hanging trying to load multiple glb files
-		// limit to 1 for safari,
-		if (name) {
-			const loads_count_by_browser: Dictionary<number> = {
-				Chrome: 10,
-				Firefox: 4,
-			};
-			const loads_count = loads_count_by_browser[name];
-			if (loads_count != null) {
-				return loads_count;
-			}
-		}
-		return 1;
+		return CoreUserAgent.is_chrome() ? 4 : 1;
+		// const parser = new UAParser();
+		// const name = parser.getBrowser().name;
+		// // limit to 4 for non chrome,
+		// // as firefox was seen hanging trying to load multiple glb files
+		// // limit to 1 for safari,
+		// if (name) {
+		// 	const loads_count_by_browser: Dictionary<number> = {
+		// 		Chrome: 10,
+		// 		Firefox: 4,
+		// 	};
+		// 	const loads_count = loads_count_by_browser[name];
+		// 	if (loads_count != null) {
+		// 		return loads_count;
+		// 	}
+		// }
+		// return 1;
 	}
 	private static _init_concurrent_loads_delay(): number {
-		const parser = new UAParser();
-		const name = parser.getBrowser().name;
-		// add a delay for browsers other than Chrome and Firefox
-		if (name) {
-			const delay_by_browser: Dictionary<number> = {
-				Chrome: 1,
-				Firefox: 10,
-				Safari: 10,
-			};
-			const delay = delay_by_browser[name];
-			if (delay != null) {
-				return delay;
-			}
-		}
-		return 10;
+		return CoreUserAgent.is_chrome() ? 1 : 10;
+		// const parser = new UAParser();
+		// const name = parser.getBrowser().name;
+		// // add a delay for browsers other than Chrome and Firefox
+		// if (name) {
+		// 	const delay_by_browser: Dictionary<number> = {
+		// 		Chrome: 1,
+		// 		Firefox: 10,
+		// 		Safari: 10,
+		// 	};
+		// 	const delay = delay_by_browser[name];
+		// 	if (delay != null) {
+		// 		return delay;
+		// 	}
+		// }
+		// return 10;
 	}
 	public static override_max_concurrent_loads_count(count: number) {
 		this.MAX_CONCURRENT_LOADS_COUNT = count;

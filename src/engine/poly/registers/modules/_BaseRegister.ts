@@ -16,7 +16,7 @@ export class BaseModulesRegister {
 	private _loaded_module_by_name: Map<ModuleName, any> = new Map();
 	private _promise_by_name: Map<ModuleName, Promise<object>> = new Map();
 
-	register_module(name: ModuleName, promise: Promise<object>) {
+	register(name: ModuleName, promise: Promise<object>) {
 		this._promise_by_name.set(name, promise);
 	}
 

@@ -91,7 +91,7 @@ export class HierarchyChildrenController {
 	}
 
 	available_children_classes() {
-		return Poly.instance().registered_nodes(this._context, this.node.type);
+		return Poly.instance().registeredNodes(this._context, this.node.type);
 	}
 
 	is_valid_child_type(node_type: string): boolean {
@@ -132,7 +132,7 @@ export class HierarchyChildrenController {
 		operation_container_name: string,
 		params_init_value_overrides?: ParamsInitData
 	): BaseOperationContainer {
-		const operation_class = Poly.instance().registered_operation(this._context, operation_type);
+		const operation_class = Poly.instance().registeredOperation(this._context, operation_type);
 
 		if (operation_class == null) {
 			const message = `no operation found with context ${this._context}/${operation_type}`;

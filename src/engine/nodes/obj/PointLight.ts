@@ -24,7 +24,7 @@ class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig)
 	shadow_far = ParamConfig.FLOAT(100, {visible_if: {cast_shadows: 1}});
 
 	// helper
-	show_helper = ParamConfig.BOOLEAN(1);
+	show_helper = ParamConfig.BOOLEAN(0);
 	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 }
 const ParamsConfig = new PointLightObjParamsConfig();

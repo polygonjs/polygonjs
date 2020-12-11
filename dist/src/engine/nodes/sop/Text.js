@@ -258,13 +258,13 @@ export class TextSopNode extends TypedSopNode {
     });
   }
   async _load_ttf_loader() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.TTFLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.TTFLoader);
     if (module) {
       return new module.TTFLoader();
     }
   }
   async _load_svg_loader() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.SVGLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.SVGLoader);
     if (module) {
       return module.SVGLoader;
     }

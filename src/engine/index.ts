@@ -1,37 +1,31 @@
-// import {CoreGraphNode} from '../core/graph/CoreGraphNode';
-// import {CoreGraph} from '../core/graph/CoreGraph';
-
-// console.log(CoreGraphNode, CoreGraph);
-
 import {SceneJsonImporter} from './io/json/import/Scene';
 import {PolyScene} from './scene/PolyScene';
 import {Poly} from './Poly';
 import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
 import {NodesRegister} from './poly/registers/nodes/NodesRegister';
-const expressions_register = Poly.instance().expressions_register;
-const nodes_register = Poly.instance().nodes_register;
+const expressionsRegister = Poly.instance().expressionsRegister;
+const nodesRegister = Poly.instance().nodesRegister;
 // register
 import {AllRegister} from './poly/registers/All';
 AllRegister.run();
 
 // for webpack export
-export {PolyScene, SceneJsonImporter, expressions_register, nodes_register};
+export {PolyScene, SceneJsonImporter, expressionsRegister, nodesRegister};
 
-// for esbuild export
 // for esbuild export
 declare global {
 	interface Window {
 		POLY: {
 			PolyScene: typeof PolyScene;
 			SceneJsonImporter: typeof SceneJsonImporter;
-			expressions_register: ExpressionRegister;
-			nodes_register: NodesRegister;
+			expressionsRegister: ExpressionRegister;
+			nodesRegister: NodesRegister;
 		};
 	}
 }
 window.POLY = {
 	PolyScene,
 	SceneJsonImporter,
-	expressions_register,
-	nodes_register,
+	expressionsRegister,
+	nodesRegister,
 };

@@ -21,18 +21,16 @@ declare const __POLYGONJS_VERSION__: string;
 export class Poly {
 	static _instance: Poly | undefined;
 	public readonly renderers_controller: RenderersController = new RenderersController();
-	public readonly nodes_register: NodesRegister = new NodesRegister();
-	public readonly operations_register: OperationsRegister = new OperationsRegister();
-	public readonly expressions_register: ExpressionRegister = new ExpressionRegister();
-	public readonly modules_register: DynamicModulesRegister = new DynamicModulesRegister();
-	public readonly assemblers_register: AssemblersRegister = new AssemblersRegister();
-	// public readonly js_version: string = '0';
+	public readonly nodesRegister: NodesRegister = new NodesRegister();
+	public readonly operationsRegister: OperationsRegister = new OperationsRegister();
+	public readonly expressionsRegister: ExpressionRegister = new ExpressionRegister();
+	public readonly modulesRegister: DynamicModulesRegister = new DynamicModulesRegister();
+	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _version: Readonly<string> = __POLYGONJS_VERSION__;
 	private _player_mode: boolean = true;
 	private _logger: BaseCoreLogger | null = null;
-	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
 
 	static instance() {
 		return (this._instance = this._instance || new Poly());
@@ -50,23 +48,23 @@ export class Poly {
 		return this._player_mode;
 	}
 
-	register_node(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
-		this.nodes_register.register_node(node, tab_menu_category, options);
+	registerNode(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
+		this.nodesRegister.register(node, tab_menu_category, options);
 	}
-	register_operation(operation: typeof BaseOperation) {
-		this.operations_register.register_operation(operation);
+	registerOperation(operation: typeof BaseOperation) {
+		this.operationsRegister.register(operation);
 	}
-	registered_nodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNodeClass> {
-		return this.nodes_register.registered_nodes(parent_context, type);
+	registeredNodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNodeClass> {
+		return this.nodesRegister.registeredNodes(parent_context, type);
 	}
-	registered_operation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {
-		return this.operations_register.registered_operation(parent_context, operation_type);
+	registeredOperation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {
+		return this.operationsRegister.registeredOperation(parent_context, operation_type);
 	}
+
 	in_worker_thread() {
 		return false;
 	}
 	desktop_controller(): any {}
-	// notify_scene_loaded(scene: PolyScene) {}
 
 	//
 	//
@@ -105,15 +103,3 @@ export class Poly {
 		this.instance().logger?.error(...[message, ...optionalParams]);
 	}
 }
-
-// declare global {
-// 	const POLY: Poly;
-// }
-
-// declare global {
-// 	interface Window {
-// 		POLY: Poly;
-// 	}
-// }
-// make sure not to have library: 'POLY' in webpack for this to work
-// export const POLY = Poly.instance();

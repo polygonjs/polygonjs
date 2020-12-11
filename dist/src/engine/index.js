@@ -1,14 +1,14 @@
 import {SceneJsonImporter} from "./io/json/import/Scene";
 import {PolyScene as PolyScene2} from "./scene/PolyScene";
 import {Poly as Poly2} from "./Poly";
-const expressions_register = Poly2.instance().expressions_register;
-const nodes_register = Poly2.instance().nodes_register;
+const expressionsRegister = Poly2.instance().expressionsRegister;
+const nodesRegister = Poly2.instance().nodesRegister;
 import {AllRegister} from "./poly/registers/All";
 AllRegister.run();
-export {PolyScene2 as PolyScene, SceneJsonImporter, expressions_register, nodes_register};
+export {PolyScene2 as PolyScene, SceneJsonImporter, expressionsRegister, nodesRegister};
 window.POLY = {
   PolyScene: PolyScene2,
   SceneJsonImporter,
-  expressions_register,
-  nodes_register
+  expressionsRegister,
+  nodesRegister
 };

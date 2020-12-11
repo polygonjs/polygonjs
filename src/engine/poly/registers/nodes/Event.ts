@@ -51,27 +51,27 @@ export interface EventNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class EventRegister {
 	static run(poly: Poly) {
-		poly.register_node(AnimationEventNode, CATEGORY_EVENT.ANIMATION);
-		poly.register_node(AnyEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(ButtonEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
-		poly.register_node(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
-		poly.register_node(CameraNavigationBeaconsEventNode, CATEGORY_EVENT.CAMERA);
-		poly.register_node(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
-		// poly.register_node(CodeEventNode, CATEGORY_EVENT.ADVANCED);
-		poly.register_node(KeyboardEventNode, CATEGORY_EVENT.INPUT);
-		poly.register_node(LimitEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(MessageEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(MouseEventNode, CATEGORY_EVENT.INPUT);
-		poly.register_node(NodeCookEventNode, CATEGORY_EVENT.INPUT);
-		poly.register_node(NullEventNode, CATEGORY_EVENT.INPUT);
-		poly.register_node(PointerEventNode, CATEGORY_EVENT.INPUT);
-		poly.register_node(RaycastEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(SceneEventNode, CATEGORY_EVENT.INPUT);
-		poly.register_node(SetFlagEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(SetParamEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(SequenceEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(TimerEventNode, CATEGORY_EVENT.MISC);
-		poly.register_node(ViewerEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.ANIMATION);
+		poly.registerNode(AnyEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(ButtonEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(CameraNavigationBeaconsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
+		// poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
+		poly.registerNode(KeyboardEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(LimitEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(MessageEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(MouseEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(NodeCookEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(NullEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(PointerEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(RaycastEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(SceneEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(SetFlagEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(SetParamEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
 	}
 }

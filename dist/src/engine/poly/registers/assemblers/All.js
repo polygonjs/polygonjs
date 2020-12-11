@@ -9,12 +9,12 @@ import {ShaderAssemblerTexture} from "../../../nodes/gl/code/assemblers/textures
 import {ShaderAssemblerVolume} from "../../../nodes/gl/code/assemblers/materials/Volume";
 export class AllAssemblersRegister {
   static run(poly) {
-    poly.assemblers_register.register_assembler(AssemblerName.GL_MESH_BASIC, GlAssemblerController, ShaderAssemblerBasic);
-    poly.assemblers_register.register_assembler(AssemblerName.GL_MESH_LAMBERT, GlAssemblerController, ShaderAssemblerLambert);
-    poly.assemblers_register.register_assembler(AssemblerName.GL_MESH_STANDARD, GlAssemblerController, ShaderAssemblerStandard);
-    poly.assemblers_register.register_assembler(AssemblerName.GL_PARTICLES, GlAssemblerController, ShaderAssemblerParticles);
-    poly.assemblers_register.register_assembler(AssemblerName.GL_POINTS, GlAssemblerController, ShaderAssemblerPoints);
-    poly.assemblers_register.register_assembler(AssemblerName.GL_TEXTURE, GlAssemblerController, ShaderAssemblerTexture);
-    poly.assemblers_register.register_assembler(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
+    poly.assemblersRegister.register(AssemblerName.GL_MESH_BASIC, GlAssemblerController, ShaderAssemblerBasic);
+    poly.assemblersRegister.register(AssemblerName.GL_MESH_LAMBERT, GlAssemblerController, ShaderAssemblerLambert);
+    poly.assemblersRegister.register(AssemblerName.GL_MESH_STANDARD, GlAssemblerController, ShaderAssemblerStandard);
+    poly.assemblersRegister.register(AssemblerName.GL_PARTICLES, GlAssemblerController, ShaderAssemblerParticles);
+    poly.assemblersRegister.register(AssemblerName.GL_POINTS, GlAssemblerController, ShaderAssemblerPoints);
+    poly.assemblersRegister.register(AssemblerName.GL_TEXTURE, GlAssemblerController, ShaderAssemblerTexture);
+    poly.assemblersRegister.register(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
   }
 }

@@ -18,14 +18,14 @@ export interface ControllerAssemblerPair {
 export class BaseAssemblersRegister {
 	protected _controller_assembler_by_name: Map<AssemblerName, ControllerAssemblerPair> = new Map();
 
-	register_assembler(name: AssemblerName, controller: any, assembler: any) {
+	register(name: AssemblerName, controller: any, assembler: any) {
 		this._controller_assembler_by_name.set(name, {
 			controller: controller,
 			assembler: assembler,
 		});
 	}
 
-	unregister_assembler(name: AssemblerName) {
+	unregister(name: AssemblerName) {
 		this._controller_assembler_by_name.delete(name);
 	}
 }

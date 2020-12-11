@@ -43,7 +43,7 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	// });
 
 	// helper
-	show_helper = ParamConfig.BOOLEAN(1);
+	show_helper = ParamConfig.BOOLEAN(0);
 	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();

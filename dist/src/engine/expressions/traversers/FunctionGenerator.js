@@ -210,7 +210,7 @@ export class FunctionGenerator extends BaseTraverser {
       if (direct_function_name) {
         return `${direct_function_name}(${arguments_joined})`;
       }
-      const indirect_method = Poly2.instance().expressions_register.get_method(method_name);
+      const indirect_method = Poly2.instance().expressionsRegister.get_method(method_name);
       if (indirect_method) {
         const path_node = node.arguments[0];
         const function_string = `return ${method_arguments[0]}`;
@@ -332,7 +332,7 @@ export class FunctionGenerator extends BaseTraverser {
     return `(await methods[${this.method_index}].process_arguments([${arguments_joined}]))`;
   }
   _create_method_and_dependencies(method_name, path_argument, path_node) {
-    const method_constructor = Poly2.instance().expressions_register.get_method(method_name);
+    const method_constructor = Poly2.instance().expressionsRegister.get_method(method_name);
     if (!method_constructor) {
       this.set_error(`method not found (${method_name})`);
       return;

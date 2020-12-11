@@ -9,13 +9,13 @@ import {AssemblersRegister} from "./poly/registers/assemblers/AssemblersRegistry
 export class Poly {
   constructor() {
     this.renderers_controller = new RenderersController2();
-    this.nodes_register = new NodesRegister2();
-    this.operations_register = new OperationsRegister();
-    this.expressions_register = new ExpressionRegister2();
-    this.modules_register = new DynamicModulesRegister2();
-    this.assemblers_register = new AssemblersRegister();
+    this.nodesRegister = new NodesRegister2();
+    this.operationsRegister = new OperationsRegister();
+    this.expressionsRegister = new ExpressionRegister2();
+    this.modulesRegister = new DynamicModulesRegister2();
+    this.assemblersRegister = new AssemblersRegister();
     this.scenes_by_uuid = {};
-    this._version = __POLYGONJS_VERSION__;
+    this._version = "1.1.25";
     this._player_mode = true;
     this._logger = null;
   }
@@ -31,17 +31,17 @@ export class Poly {
   player_mode() {
     return this._player_mode;
   }
-  register_node(node, tab_menu_category, options) {
-    this.nodes_register.register_node(node, tab_menu_category, options);
+  registerNode(node, tab_menu_category, options) {
+    this.nodesRegister.register(node, tab_menu_category, options);
   }
-  register_operation(operation) {
-    this.operations_register.register_operation(operation);
+  registerOperation(operation) {
+    this.operationsRegister.register(operation);
   }
-  registered_nodes(parent_context, type) {
-    return this.nodes_register.registered_nodes(parent_context, type);
+  registeredNodes(parent_context, type) {
+    return this.nodesRegister.registeredNodes(parent_context, type);
   }
-  registered_operation(parent_context, operation_type) {
-    return this.operations_register.registered_operation(parent_context, operation_type);
+  registeredOperation(parent_context, operation_type) {
+    return this.operationsRegister.registeredOperation(parent_context, operation_type);
   }
   in_worker_thread() {
     return false;

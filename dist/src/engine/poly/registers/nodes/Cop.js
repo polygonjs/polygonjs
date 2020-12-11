@@ -12,16 +12,16 @@ import {VideoCopNode} from "../../../nodes/cop/Video";
 import {WebCamCopNode} from "../../../nodes/cop/WebCam";
 export class CopRegister {
   static run(poly) {
-    poly.register_node(BuilderCopNode, CATEGORY_COP.ADVANCED);
-    poly.register_node(ColorCopNode, CATEGORY_COP.INPUT);
-    poly.register_node(EnvMapCopNode, CATEGORY_COP.INPUT);
-    poly.register_node(ImageCopNode, CATEGORY_COP.INPUT);
-    poly.register_node(MapboxTileCopNode, CATEGORY_COP.INPUT);
-    poly.register_node(NullCopNode, CATEGORY_COP.MISC);
-    poly.register_node(PostCopNode, CATEGORY_COP.FILTER);
-    poly.register_node(SwitchCopNode, CATEGORY_COP.MISC);
-    poly.register_node(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
-    poly.register_node(VideoCopNode, CATEGORY_COP.INPUT);
-    poly.register_node(WebCamCopNode, CATEGORY_COP.ADVANCED);
+    poly.registerNode(BuilderCopNode, CATEGORY_COP.ADVANCED);
+    poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
+    poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
+    poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
+    poly.registerNode(MapboxTileCopNode, CATEGORY_COP.INPUT);
+    poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
+    poly.registerNode(PostCopNode, CATEGORY_COP.FILTER);
+    poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
+    poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
+    poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
+    poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
   }
 }

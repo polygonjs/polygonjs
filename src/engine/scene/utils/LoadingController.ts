@@ -10,7 +10,7 @@ export class LoadingController {
 		return (this._LOADED_EVENT_CONTEXT = this._LOADED_EVENT_CONTEXT || {event: new Event(SceneEventType.LOADED)});
 	}
 
-	_loading_state: boolean = true;
+	_loading_state: boolean = false;
 	_auto_updating: boolean = true;
 	_first_object_loaded: boolean = false;
 

@@ -9,7 +9,7 @@ export var RopType;
 })(RopType || (RopType = {}));
 export class RopRegister {
   static run(poly) {
-    poly.register_node(Css2DRendererRopNode, CATEGORY_ROP.CSS);
-    poly.register_node(WebGlRendererRopNode, CATEGORY_ROP.WEBGL);
+    poly.registerNode(Css2DRendererRopNode, CATEGORY_ROP.CSS);
+    poly.registerNode(WebGlRendererRopNode, CATEGORY_ROP.WEBGL);
   }
 }

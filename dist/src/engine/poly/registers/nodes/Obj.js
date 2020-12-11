@@ -22,26 +22,26 @@ import {PerspectiveCameraObjNode} from "../../../nodes/obj/PerspectiveCamera";
 import {MapboxCameraObjNode} from "../../../nodes/obj/MapboxCamera";
 export class ObjRegister {
   static run(poly) {
-    poly.register_node(AmbientLightObjNode, CATEGORY_OBJ.LIGHT);
-    poly.register_node(AreaLightObjNode, CATEGORY_OBJ.LIGHT);
-    poly.register_node(DirectionalLightObjNode, CATEGORY_OBJ.LIGHT);
-    poly.register_node(HemisphereLightObjNode, CATEGORY_OBJ.LIGHT);
-    poly.register_node(PointLightObjNode, CATEGORY_OBJ.LIGHT);
-    poly.register_node(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
-    poly.register_node(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
-    poly.register_node(CopObjNode, CATEGORY_OBJ.NETWORK);
-    poly.register_node(EventsObjNode, CATEGORY_OBJ.NETWORK);
-    poly.register_node(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
-    poly.register_node(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
-    poly.register_node(RenderersObjNode, CATEGORY_OBJ.NETWORK);
-    poly.register_node(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
-    poly.register_node(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
-    poly.register_node(NullObjNode, CATEGORY_OBJ.TRANSFORM);
-    poly.register_node(PolyObjNode, CATEGORY_OBJ.ADVANCED);
-    poly.register_node(RivetObjNode, CATEGORY_OBJ.TRANSFORM);
-    poly.register_node(SceneObjNode, CATEGORY_OBJ.ADVANCED);
-    poly.register_node(MapboxCameraObjNode, CATEGORY_OBJ.CAMERA);
-    poly.register_node(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
-    poly.register_node(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
+    poly.registerNode(AmbientLightObjNode, CATEGORY_OBJ.LIGHT);
+    poly.registerNode(AreaLightObjNode, CATEGORY_OBJ.LIGHT);
+    poly.registerNode(DirectionalLightObjNode, CATEGORY_OBJ.LIGHT);
+    poly.registerNode(HemisphereLightObjNode, CATEGORY_OBJ.LIGHT);
+    poly.registerNode(PointLightObjNode, CATEGORY_OBJ.LIGHT);
+    poly.registerNode(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
+    poly.registerNode(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
+    poly.registerNode(CopObjNode, CATEGORY_OBJ.NETWORK);
+    poly.registerNode(EventsObjNode, CATEGORY_OBJ.NETWORK);
+    poly.registerNode(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
+    poly.registerNode(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
+    poly.registerNode(RenderersObjNode, CATEGORY_OBJ.NETWORK);
+    poly.registerNode(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
+    poly.registerNode(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
+    poly.registerNode(NullObjNode, CATEGORY_OBJ.TRANSFORM);
+    poly.registerNode(PolyObjNode, CATEGORY_OBJ.ADVANCED);
+    poly.registerNode(RivetObjNode, CATEGORY_OBJ.TRANSFORM);
+    poly.registerNode(SceneObjNode, CATEGORY_OBJ.ADVANCED);
+    poly.registerNode(MapboxCameraObjNode, CATEGORY_OBJ.CAMERA);
+    poly.registerNode(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
+    poly.registerNode(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
   }
 }

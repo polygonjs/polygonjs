@@ -13,9 +13,9 @@ export class AssemblersRegister extends BaseAssemblersRegister {
 		return pair;
 	}
 
-	unregister_assembler<K extends keyof AssemblersMap>(name: K) {
+	unregister<K extends keyof AssemblersMap>(name: K) {
 		const pair = this._controller_assembler_by_name.get(name as AssemblerName);
-		super.unregister_assembler(name as AssemblerName);
+		super.unregister(name as AssemblerName);
 		return pair;
 	}
 }

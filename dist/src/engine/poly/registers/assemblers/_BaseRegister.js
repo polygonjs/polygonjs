@@ -12,13 +12,13 @@ export class BaseAssemblersRegister {
   constructor() {
     this._controller_assembler_by_name = new Map();
   }
-  register_assembler(name, controller, assembler) {
+  register(name, controller, assembler) {
     this._controller_assembler_by_name.set(name, {
       controller,
       assembler
     });
   }
-  unregister_assembler(name) {
+  unregister(name) {
     this._controller_assembler_by_name.delete(name);
   }
 }

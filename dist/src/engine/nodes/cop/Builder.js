@@ -60,7 +60,7 @@ export class BuilderCopNode extends TypedCopNode {
     return AssemblerName.GL_TEXTURE;
   }
   _create_assembler_controller() {
-    const assembler_controller = Poly2.instance().assemblers_register.assembler(this, this.used_assembler());
+    const assembler_controller = Poly2.instance().assemblersRegister.assembler(this, this.used_assembler());
     if (assembler_controller) {
       const globals_handler = new GlobalsGeometryHandler();
       assembler_controller.set_assembler_globals_handler(globals_handler);

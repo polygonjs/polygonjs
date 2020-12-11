@@ -9,7 +9,7 @@ import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
 import {TextureContainer} from '../../engine/containers/Texture';
 import {Poly} from '../../engine/Poly';
 import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
-import {UAParser} from 'ua-parser-js';
+import {CoreUserAgent} from '../UserAgent';
 
 interface VideoSourceTypeByExt {
 	ogg: string;
@@ -157,13 +157,13 @@ export class CoreTextureLoader {
 	}
 
 	private async _exr_loader() {
-		const module = await Poly.instance().modules_register.module(ModuleName.EXRLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.EXRLoader);
 		if (module) {
 			return new module.EXRLoader();
 		}
 	}
 	private async _hdr_loader() {
-		const module = await Poly.instance().modules_register.module(ModuleName.RGBELoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.RGBELoader);
 		if (module) {
 			const loader = new module.RGBELoader();
 			loader.setDataType(UnsignedByteType);
@@ -171,7 +171,7 @@ export class CoreTextureLoader {
 		}
 	}
 	private async _basis_loader() {
-		const module = await Poly.instance().modules_register.module(ModuleName.BasisTextureLoader);
+		const module = await Poly.instance().modulesRegister.module(ModuleName.BasisTextureLoader);
 		if (module) {
 			const loader = new module.BasisTextureLoader();
 			loader.setTranscoderPath('/three/js/libs/basis/');
@@ -354,38 +354,40 @@ export class CoreTextureLoader {
 	private static in_progress_loads_count: number = 0;
 	private static _queue: Array<() => void> = [];
 	private static _init_max_concurrent_loads_count(): number {
-		const parser = new UAParser();
-		const name = parser.getBrowser().name;
-		// limit to 4 for non chrome,
-		// as firefox was seen hanging trying to load multiple glb files
-		// limit to 1 for safari,
-		if (name) {
-			const loads_count_by_browser: Dictionary<number> = {
-				Chrome: 10,
-				Firefox: 4,
-			};
-			const loads_count = loads_count_by_browser[name];
-			if (loads_count != null) {
-				return loads_count;
-			}
-		}
-		return 1;
+		return CoreUserAgent.is_chrome() ? 10 : 4;
+		// const parser = new UAParser();
+		// const name = parser.getBrowser().name;
+		// // limit to 4 for non chrome,
+		// // as firefox was seen hanging trying to load multiple glb files
+		// // limit to 1 for safari,
+		// if (name) {
+		// 	const loads_count_by_browser: Dictionary<number> = {
+		// 		Chrome: 10,
+		// 		Firefox: 4,
+		// 	};
+		// 	const loads_count = loads_count_by_browser[name];
+		// 	if (loads_count != null) {
+		// 		return loads_count;
+		// 	}
+		// }
+		// return 1;
 	}
 	private static _init_concurrent_loads_delay(): number {
-		const parser = new UAParser();
-		const name = parser.getBrowser().name;
-		// add a delay for browsers other than Chrome and Firefox
-		if (name) {
-			const delay_by_browser: Dictionary<number> = {
-				Chrome: 0,
-				Firefox: 10,
-			};
-			const delay = delay_by_browser[name];
-			if (delay != null) {
-				return delay;
-			}
-		}
-		return 100;
+		return CoreUserAgent.is_chrome() ? 0 : 10;
+		// const parser = new UAParser();
+		// const name = parser.getBrowser().name;
+		// // add a delay for browsers other than Chrome and Firefox
+		// if (name) {
+		// 	const delay_by_browser: Dictionary<number> = {
+		// 		Chrome: 0,
+		// 		Firefox: 10,
+		// 	};
+		// 	const delay = delay_by_browser[name];
+		// 	if (delay != null) {
+		// 		return delay;
+		// 	}
+		// }
+		// return 100;
 	}
 	public static override_max_concurrent_loads_count(count: number) {
 		this.MAX_CONCURRENT_LOADS_COUNT = count;

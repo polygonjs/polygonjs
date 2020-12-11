@@ -4,7 +4,7 @@ export class NodesRegister {
     this._node_register_categories = new Map();
     this._node_register_options = new Map();
   }
-  register_node(node, tab_menu_category, options) {
+  register(node, tab_menu_category, options) {
     const context = node.node_context();
     const node_type = node.type();
     let current_nodes_for_context = this._node_register.get(context);
@@ -34,10 +34,17 @@ export class NodesRegister {
       current_options.set(node_type, options);
     }
   }
-  deregister_node(context, node_type) {
+  deregister(context, node_type) {
     this._node_register.get(context)?.delete(node_type);
     this._node_register_categories.get(context)?.delete(node_type);
     this._node_register_options.get(context)?.delete(node_type);
+  }
+  is_registered(context, type) {
+    const nodes_for_context = this._node_register.get(context);
+    if (!nodes_for_context) {
+      return false;
+    }
+    return nodes_for_context.get(type) != null;
   }
   registered_nodes_for_context_and_parent_type(context, parent_node_type) {
     const map = this._node_register.get(context);
@@ -67,7 +74,7 @@ export class NodesRegister {
       return [];
     }
   }
-  registered_nodes(context, parent_node_type) {
+  registeredNodes(context, parent_node_type) {
     const nodes_by_type = {};
     const nodes = this.registered_nodes_for_context_and_parent_type(context, parent_node_type);
     for (let node of nodes) {
@@ -87,7 +94,7 @@ export class OperationsRegister {
   constructor() {
     this._operation_register = new Map();
   }
-  register_operation(operation) {
+  register(operation) {
     const context = operation.context();
     let current_operations_for_context = this._operation_register.get(context);
     if (!current_operations_for_context) {
@@ -115,7 +122,7 @@ export class OperationsRegister {
       return [];
     }
   }
-  registered_operation(context, operation_type) {
+  registeredOperation(context, operation_type) {
     const current_operations_for_context = this._operation_register.get(context);
     if (current_operations_for_context) {
       return current_operations_for_context.get(operation_type);

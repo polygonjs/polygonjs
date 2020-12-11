@@ -33,18 +33,18 @@ export interface AnimNodeChildrenMap {
 import {Poly} from '../../../Poly';
 export class AnimRegister {
 	static run(poly: Poly) {
-		poly.register_node(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.register_node(DelayAnimNode, CATEGORY_ANIM.TIMING);
-		poly.register_node(DurationAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.register_node(EasingAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.register_node(MergeAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.register_node(NullAnimNode, CATEGORY_ANIM.MISC);
-		poly.register_node(OperationAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.register_node(PositionAnimNode, CATEGORY_ANIM.TIMING);
-		poly.register_node(PropertyNameAnimNode, CATEGORY_ANIM.PROP);
-		poly.register_node(PropertyValueAnimNode, CATEGORY_ANIM.PROP);
-		poly.register_node(RepeatAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.register_node(SwitchAnimNode, CATEGORY_ANIM.MISC);
-		poly.register_node(TargetAnimNode, CATEGORY_ANIM.PROP);
+		poly.registerNode(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(DelayAnimNode, CATEGORY_ANIM.TIMING);
+		poly.registerNode(DurationAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(EasingAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(MergeAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(NullAnimNode, CATEGORY_ANIM.MISC);
+		poly.registerNode(OperationAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(PositionAnimNode, CATEGORY_ANIM.TIMING);
+		poly.registerNode(PropertyNameAnimNode, CATEGORY_ANIM.PROP);
+		poly.registerNode(PropertyValueAnimNode, CATEGORY_ANIM.PROP);
+		poly.registerNode(RepeatAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(SwitchAnimNode, CATEGORY_ANIM.MISC);
+		poly.registerNode(TargetAnimNode, CATEGORY_ANIM.PROP);
 	}
 }

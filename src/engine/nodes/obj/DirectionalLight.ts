@@ -30,7 +30,7 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		shadow_bias = ParamConfig.FLOAT(0.001);
 
 		// helper
-		show_helper = ParamConfig.BOOLEAN(1);
+		show_helper = ParamConfig.BOOLEAN(0);
 		helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 	};
 }

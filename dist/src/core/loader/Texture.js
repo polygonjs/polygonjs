@@ -5,7 +5,7 @@ import {CoreWalker} from "../Walker";
 import {BaseCopNodeClass} from "../../engine/nodes/cop/_Base";
 import {Poly as Poly2} from "../../engine/Poly";
 import {ModuleName} from "../../engine/poly/registers/modules/_BaseRegister";
-import {UAParser} from "ua-parser-js";
+import {CoreUserAgent} from "../UserAgent";
 var Extension;
 (function(Extension2) {
   Extension2["EXR"] = "exr";
@@ -108,13 +108,13 @@ const CoreTextureLoader2 = class {
     return new TextureLoader2();
   }
   async _exr_loader() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.EXRLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.EXRLoader);
     if (module) {
       return new module.EXRLoader();
     }
   }
   async _hdr_loader() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.RGBELoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.RGBELoader);
     if (module) {
       const loader = new module.RGBELoader();
       loader.setDataType(UnsignedByteType);
@@ -122,7 +122,7 @@ const CoreTextureLoader2 = class {
     }
   }
   async _basis_loader() {
-    const module = await Poly2.instance().modules_register.module(ModuleName.BasisTextureLoader);
+    const module = await Poly2.instance().modulesRegister.module(ModuleName.BasisTextureLoader);
     if (module) {
       const loader = new module.BasisTextureLoader();
       loader.setTranscoderPath("/three/js/libs/basis/");
@@ -199,34 +199,10 @@ const CoreTextureLoader2 = class {
     return texture;
   }
   static _init_max_concurrent_loads_count() {
-    const parser = new UAParser();
-    const name = parser.getBrowser().name;
-    if (name) {
-      const loads_count_by_browser = {
-        Chrome: 10,
-        Firefox: 4
-      };
-      const loads_count = loads_count_by_browser[name];
-      if (loads_count != null) {
-        return loads_count;
-      }
-    }
-    return 1;
+    return CoreUserAgent.is_chrome() ? 10 : 4;
   }
   static _init_concurrent_loads_delay() {
-    const parser = new UAParser();
-    const name = parser.getBrowser().name;
-    if (name) {
-      const delay_by_browser = {
-        Chrome: 0,
-        Firefox: 10
-      };
-      const delay = delay_by_browser[name];
-      if (delay != null) {
-        return delay;
-      }
-    }
-    return 100;
+    return CoreUserAgent.is_chrome() ? 0 : 10;
   }
   static override_max_concurrent_loads_count(count) {
     this.MAX_CONCURRENT_LOADS_COUNT = count;

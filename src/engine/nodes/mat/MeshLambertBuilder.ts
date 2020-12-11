@@ -24,7 +24,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		return AssemblerName.GL_MESH_LAMBERT;
 	}
 	protected _create_assembler_controller() {
-		return Poly.instance().assemblers_register.assembler(this, this.used_assembler());
+		return Poly.instance().assemblersRegister.assembler(this, this.used_assembler());
 	}
 
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {uniforms: true});

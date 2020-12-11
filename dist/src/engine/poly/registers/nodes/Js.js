@@ -5,9 +5,9 @@ import {OutputJsNode} from "../../../nodes/js/Output";
 import {ParamJsNode} from "../../../nodes/js/Param";
 export class JsRegister {
   static run(poly) {
-    poly.register_node(AttributeJsNode, CATEGORY_JS.GLOBALS);
-    poly.register_node(GlobalsJsNode, CATEGORY_JS.GLOBALS);
-    poly.register_node(OutputJsNode, CATEGORY_JS.GLOBALS);
-    poly.register_node(ParamJsNode, CATEGORY_JS.GLOBALS);
+    poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
+    poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS);
+    poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS);
+    poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
   }
 }
