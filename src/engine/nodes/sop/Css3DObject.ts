@@ -1,5 +1,5 @@
 import {TypedSopNode} from './_Base';
-import {CSS3DObject} from '../../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
+import {CSS3DObject} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 interface Css2DObjectParams {

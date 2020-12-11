@@ -3,7 +3,7 @@ import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import lodash_isString from 'lodash/isString';
 import lodash_isNumber from 'lodash/isNumber';
-import {CSS2DObject} from '../../../../modules/core/objects/CSS2DObject';
+import {CSS2DObject} from '../../../modules/core/objects/CSS2DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../geometry/Group';
 

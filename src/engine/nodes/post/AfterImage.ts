@@ -1,5 +1,5 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {AfterimagePass} from '../../../../modules/three/examples/jsm/postprocessing/AfterimagePass';
+import {AfterimagePass} from '../../../modules/three/examples/jsm/postprocessing/AfterimagePass';
 import {IUniformN} from '../utils/code/gl/Uniforms';
 interface AfterImagePassWithUniforms extends AfterimagePass {
 	uniforms: {

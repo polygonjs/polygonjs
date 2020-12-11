@@ -1,5 +1,5 @@
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
-import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
+import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 

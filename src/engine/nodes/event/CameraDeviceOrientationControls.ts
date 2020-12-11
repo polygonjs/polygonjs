@@ -1,15 +1,13 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
-import {DeviceOrientationControls} from '../../../../modules/three/examples/jsm/controls/DeviceOrientationControls';
+import {DeviceOrientationControls} from '../../../modules/three/examples/jsm/controls/DeviceOrientationControls';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 class CameraDeviceOrientationControlsEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CameraDeviceOrientationControlsEventParamsConfig();
 
-export class CameraDeviceOrientationControlsEventNode extends TypedCameraControlsEventNode<
-	CameraDeviceOrientationControlsEventParamsConfig
-> {
+export class CameraDeviceOrientationControlsEventNode extends TypedCameraControlsEventNode<CameraDeviceOrientationControlsEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return CameraControlsNodeType.DEVICE_ORIENTATION;

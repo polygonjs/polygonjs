@@ -10,15 +10,15 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {LinearFilter} from 'three/src/constants';
 import {BokehShader, BokehDepthShader} from '../../three/examples/jsm/shaders/BokehShader2';
 
-import {CoreScene} from '../../../src/core/geometry/Scene';
+import {CoreScene} from '../../../core/geometry/Scene';
 
 import DepthInstanceVertex from './gl/DepthInstance.vert.glsl';
-import {IUniformN, IUniformTexture, IUniformV2} from '../../../src/engine/nodes/utils/code/gl/Uniforms';
+import {IUniformN, IUniformTexture, IUniformV2} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {DepthOfFieldPostNode} from '../../../src/engine/nodes/post/DepthOfField';
+import {DepthOfFieldPostNode} from '../../../engine/nodes/post/DepthOfField';
 
 interface BokehUniforms {
 	tColor: IUniformTexture;

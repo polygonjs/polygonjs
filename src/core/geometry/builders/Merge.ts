@@ -1,6 +1,6 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
-import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
 
 export class CoreGeometryBuilderMerge {

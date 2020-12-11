@@ -1,5 +1,5 @@
 import {TypedPostProcessNode} from './_Base';
-import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
+import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class NullPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullPostParamsConfig();

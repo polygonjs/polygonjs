@@ -9,7 +9,7 @@ import {CoreMath} from '../../../core/math/_Module';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {SimplexNoise} from '../../../../modules/three/examples/jsm/math/SimplexNoise';
+import {SimplexNoise} from '../../../modules/three/examples/jsm/math/SimplexNoise';
 
 enum Operation {
 	ADD = 'add',

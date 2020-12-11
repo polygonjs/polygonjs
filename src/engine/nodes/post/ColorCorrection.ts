@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {ColorCorrectionShader} from '../../../../modules/three/examples/jsm/shaders/ColorCorrectionShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {ColorCorrectionShader} from '../../../modules/three/examples/jsm/shaders/ColorCorrectionShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformV3} from '../utils/code/gl/Uniforms';
 
 interface ColorCorrectionPassWithUniforms extends ShaderPass {

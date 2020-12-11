@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {BrightnessContrastShader} from '../../../../modules/three/examples/jsm/shaders/BrightnessContrastShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {BrightnessContrastShader} from '../../../modules/three/examples/jsm/shaders/BrightnessContrastShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface BrightnessContrastPassWithUniforms extends ShaderPass {

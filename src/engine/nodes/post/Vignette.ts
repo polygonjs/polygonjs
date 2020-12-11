@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {VignetteShader} from '../../../../modules/three/examples/jsm/shaders/VignetteShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {VignetteShader} from '../../../modules/three/examples/jsm/shaders/VignetteShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface VignettePassWithUniforms extends ShaderPass {

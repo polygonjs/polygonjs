@@ -1,5 +1,5 @@
 import {Camera} from 'three/src/cameras/Camera';
-import {MapControls} from '../../../../modules/core/controls/OrbitControls';
+import {MapControls} from '../../../modules/core/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 

@@ -1,7 +1,7 @@
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
-import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
+import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {EffectComposer} from '../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {LinearFilter, RGBAFormat} from 'three/src/constants';

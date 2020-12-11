@@ -1,6 +1,6 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {UnrealBloomPass} from '../../../../modules/three/examples/jsm/postprocessing/UnrealBloomPass';
+import {UnrealBloomPass} from '../../../modules/three/examples/jsm/postprocessing/UnrealBloomPass';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class UnrealBloomPostParamsConfig extends NodeParamsConfig {

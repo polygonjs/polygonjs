@@ -1,13 +1,13 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode, BaseNodeType} from '../_Base';
-import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {EffectComposer} from '../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three/src/scenes/Scene';
 import {FlagsControllerDB} from '../utils/FlagsController';
-import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/Pass';
+import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';

@@ -1,7 +1,7 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
-import {EffectComposer} from '../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
-import {RenderPass} from '../../../../../modules/three/examples/jsm/postprocessing/RenderPass';
+import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {PostNodeChildrenMap} from '../../../poly/registers/nodes/Post';
 import {TypedNode, BaseNodeType} from '../../_Base';

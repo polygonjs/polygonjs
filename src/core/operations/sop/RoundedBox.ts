@@ -3,7 +3,7 @@ import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreTransform} from '../../Transform';
-import {RoundedBoxBufferGeometry} from '../../../../modules/three/examples/jsm/geometries/RoundedBoxBufferGeometry';
+import {RoundedBoxBufferGeometry} from '../../../modules/three/examples/jsm/geometries/RoundedBoxBufferGeometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface RoundedBoxSopParams extends DefaultOperationParams {

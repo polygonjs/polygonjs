@@ -7,7 +7,6 @@ module.exports = (env, transpile_only) => {
 				loader: 'ts-loader',
 				options: {
 					transpileOnly: transpile_only,
-					appendTsSuffixTo: [/\.vue$/],
 					// experimentalWatchApi: true, // This seems to cause crashes when using many files
 				},
 			},

@@ -1,5 +1,5 @@
 import {TypedRopNode} from './_Base';
-import {CSS2DRenderer} from '../../../../modules/core/renderers/CSS2DRenderer';
+import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

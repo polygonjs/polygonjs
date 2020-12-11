@@ -22,7 +22,7 @@ import {Texture} from 'three/src/textures/Texture';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Vector2} from 'three/src/math/Vector2';
-import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {EffectComposer} from '../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 export interface IUniforms {

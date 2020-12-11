@@ -1,9 +1,9 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {ShaderPass} from '../../../../src/modules/three/examples/jsm/postprocessing/ShaderPass';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {HorizontalBlurShader} from '../../../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
-import {VerticalBlurShader} from '../../../../modules/three/examples/jsm/shaders/VerticalBlurShader';
-import {UnrealBloomPass} from '../../../../modules/three/examples/jsm/postprocessing/UnrealBloomPass';
+import {HorizontalBlurShader} from '../../../../src/modules/three/examples/jsm/shaders/HorizontalBlurShader';
+import {VerticalBlurShader} from '../../../../src/modules/three/examples/jsm/shaders/VerticalBlurShader';
+import {UnrealBloomPass} from '../../../../src/modules/three/examples/jsm/postprocessing/UnrealBloomPass';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('Post nodes simple', async (assert) => {

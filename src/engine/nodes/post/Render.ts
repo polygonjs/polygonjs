@@ -1,5 +1,5 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
+import {RenderPass} from '../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';

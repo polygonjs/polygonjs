@@ -13,7 +13,7 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
-import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
 const DEFAULT_FONT_URL = '/fonts/droid_sans_regular.typeface.json';
 

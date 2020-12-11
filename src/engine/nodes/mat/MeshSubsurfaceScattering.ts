@@ -1,7 +1,7 @@
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {TypedMatNode} from './_Base';
 
-import {SubsurfaceScatteringShader} from '../../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
+import {SubsurfaceScatteringShader} from '../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
 import {SideController, SideParamConfig} from './utils/SideController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';

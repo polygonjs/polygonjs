@@ -5,7 +5,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {CSS2DObject} from '../objects/CSS2DObject';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
-import {CoreMath} from '../../../src/core/math/_Module';
+import {CoreMath} from '../../../core/math/_Module';
 
 // converted from threejs CSS2Drenderer https://github.com/mrdoob/three.js/blob/dev/examples/jsm/renderers/CSS2DRenderer.js
 // original @author mrdoob / http://mrdoob.com/

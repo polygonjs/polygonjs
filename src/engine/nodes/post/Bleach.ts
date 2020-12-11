@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
-import {BleachBypassShader} from '../../../../modules/three/examples/jsm/shaders/BleachBypassShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {BleachBypassShader} from '../../../modules/three/examples/jsm/shaders/BleachBypassShader';
 
 import {IUniformN} from '../utils/code/gl/Uniforms';
 

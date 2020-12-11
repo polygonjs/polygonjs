@@ -16,7 +16,7 @@ const webpack = require('webpack');
 const glsl = require('./loaders/glsl');
 const ts = require('./loaders/ts');
 
-const POLYGONJS_VERSION = JSON.stringify(require('../package.json').version);
+const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 
 const plugins = [
 	new CleanWebpackPlugin(),
@@ -43,7 +43,7 @@ module.exports = (env = {}) => {
 	const dist_path = path.resolve(__dirname, env.DIST_PATH ? env.DIST_PATH : '../dist');
 
 	return {
-		context: path.resolve(__dirname, '../'), // to automatically find tsconfig.json
+		context: path.resolve(__dirname, '../../'), // to automatically find tsconfig.json
 		entry: {
 			'polygonjs-engine': './src/engine/index.ts',
 		},
@@ -64,7 +64,7 @@ module.exports = (env = {}) => {
 			// library: 'POLY',
 		},
 		resolve: {
-			// modules: [path.resolve(__dirname, '../node_modules')],
+			// modules: [path.resolve(__dirname, '../../node_modules')],
 			extensions: ['.ts', '.js'],
 		},
 		module: {

@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {VerticalBlurShader} from '../../../../modules/three/examples/jsm/shaders/VerticalBlurShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {VerticalBlurShader} from '../../../modules/three/examples/jsm/shaders/VerticalBlurShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface VerticalBlurPassWithUniforms extends ShaderPass {

@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {PixelShader} from '../../../../modules/three/examples/jsm/shaders/PixelShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {PixelShader} from '../../../modules/three/examples/jsm/shaders/PixelShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN, IUniformV2} from '../utils/code/gl/Uniforms';
 
 interface PixelPassWithUniforms extends ShaderPass {

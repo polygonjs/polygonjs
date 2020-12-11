@@ -1,0 +1,166 @@
+{
+    "context": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine",
+    "entry": {
+        "polygonjs-engine": "./src/engine/index.ts",
+        "example": "./src/engine/example.ts",
+        "test": "./tests/index.ts"
+    },
+    "node": {
+        "fs": "empty"
+    },
+    "plugins": [
+        {
+            "dangerouslyAllowCleanPatternsOutsideProject": false,
+            "dry": false,
+            "verbose": false,
+            "cleanStaleWebpackAssets": true,
+            "protectWebpackAssets": true,
+            "cleanAfterEveryBuildPatterns": [],
+            "cleanOnceBeforeBuildPatterns": [
+                "**/*"
+            ],
+            "currentAssets": [],
+            "initialClean": false,
+            "outputPath": ""
+        },
+        {
+            "options": {
+                "template": "auto",
+                "templateContent": false,
+                "filename": "index.html",
+                "publicPath": "auto",
+                "hash": false,
+                "inject": "body",
+                "scriptLoading": "blocking",
+                "compile": true,
+                "favicon": false,
+                "minify": "auto",
+                "cache": true,
+                "showErrors": true,
+                "chunks": [
+                    "polygonjs-engine"
+                ],
+                "excludeChunks": [],
+                "chunksSortMode": "auto",
+                "meta": {
+                    "viewport": "width=device-width, initial-scale=1"
+                },
+                "base": false,
+                "title": "Index",
+                "xhtml": false
+            },
+            "version": 4
+        },
+        {
+            "options": {
+                "filename": "[name].css",
+                "ignoreOrder": false,
+                "chunkFilename": "[name].css"
+            },
+            "runtimeOptions": {
+                "insert": "document.head.appendChild(linkTag);",
+                "linkType": "text/css",
+                "attributes": ""
+            }
+        },
+        {
+            "definitions": {
+                "POLYGONJS_VERSION": "\"1.1.21\""
+            }
+        },
+        {
+            "options": {
+                "template": "./src/engine/example.html",
+                "templateContent": false,
+                "filename": "example",
+                "publicPath": "auto",
+                "hash": false,
+                "inject": "body",
+                "scriptLoading": "blocking",
+                "compile": true,
+                "favicon": false,
+                "minify": "auto",
+                "cache": true,
+                "showErrors": true,
+                "chunks": [
+                    "example"
+                ],
+                "excludeChunks": [],
+                "chunksSortMode": "auto",
+                "meta": {},
+                "base": false,
+                "title": "Example",
+                "xhtml": false
+            },
+            "version": 4
+        },
+        {
+            "options": {
+                "template": "tests/index.html",
+                "templateContent": false,
+                "filename": "test",
+                "publicPath": "auto",
+                "hash": false,
+                "inject": "body",
+                "scriptLoading": "blocking",
+                "compile": true,
+                "favicon": false,
+                "minify": "auto",
+                "cache": true,
+                "showErrors": true,
+                "chunks": [
+                    "test"
+                ],
+                "excludeChunks": [],
+                "chunksSortMode": "auto",
+                "meta": {},
+                "base": false,
+                "title": "Test",
+                "xhtml": false
+            },
+            "version": 4
+        }
+    ],
+    "output": {
+        "library": "POLY",
+        "libraryTarget": "window",
+        "filename": "[name].js",
+        "path": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine/config/dist"
+    },
+    "resolve": {
+        "extensions": [
+            ".ts",
+            ".js"
+        ]
+    },
+    "module": {
+        "rules": [
+            {
+                "test": {},
+                "exclude": {},
+                "use": [
+                    {
+                        "loader": "ts-loader",
+                        "options": {
+                            "transpileOnly": false
+                        }
+                    }
+                ]
+            },
+            {
+                "test": {},
+                "use": [
+                    {
+                        "loader": "ts-shader-loader"
+                    }
+                ]
+            }
+        ]
+    },
+    "mode": "development",
+    "devtool": "inline-source-map",
+    "devServer": {
+        "contentBase": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine/config/public",
+        "hot": true
+    }
+}

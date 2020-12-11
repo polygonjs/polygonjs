@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {HorizontalBlurShader} from '../../../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {HorizontalBlurShader} from '../../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformV2, IUniformN} from '../utils/code/gl/Uniforms';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector2} from 'three/src/math/Vector2';

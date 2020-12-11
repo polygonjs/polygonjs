@@ -6,7 +6,7 @@ import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
 // import {CubicBezierCurve3} from 'three/src/extras/curves/CubicBezierCurve3';
 // import {LineCurve3} from 'three/src/extras/curves/LineCurve3';
 // import {QuadraticBezierCurve3} from 'three/src/extras/curves/QuadraticBezierCurve3';
-import {BufferGeometryUtils} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
 import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';

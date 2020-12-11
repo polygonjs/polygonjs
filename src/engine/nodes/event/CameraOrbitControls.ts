@@ -4,7 +4,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 // import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
-import {OrbitControls} from '../../../../modules/core/controls/OrbitControls';
+import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 
 const OUTPUT_START = 'start';

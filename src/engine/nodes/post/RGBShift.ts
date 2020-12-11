@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {RGBShiftShader} from '../../../../modules/three/examples/jsm/shaders/RGBShiftShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {RGBShiftShader} from '../../../modules/three/examples/jsm/shaders/RGBShiftShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN} from '../utils/code/gl/Uniforms';
 
 interface RGBShiftPassWithUniforms extends ShaderPass {

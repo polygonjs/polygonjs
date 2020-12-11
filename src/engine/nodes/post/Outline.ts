@@ -1,6 +1,6 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {OutlinePass} from '../../../../modules/three/examples/jsm/postprocessing/OutlinePass';
+import {OutlinePass} from '../../../modules/three/examples/jsm/postprocessing/OutlinePass';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreString} from '../../../core/String';
 

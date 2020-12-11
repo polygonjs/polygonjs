@@ -11,8 +11,8 @@ import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {UAParser} from 'ua-parser-js';
-import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
-import {GLTFLoader} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {DRACOLoader} from '../../modules/three/examples/jsm/loaders/DRACOLoader';
+import {GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
 
 enum GeometryExtension {
 	DRC = 'drc',

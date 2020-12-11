@@ -1,7 +1,7 @@
 const argv = require('yargs').argv;
 const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
-const LOGO_PATH = path.resolve(__dirname, '../public/images/logo.256.png');
+const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
 
 const fs = require('fs');
 const {merge} = require('webpack-merge');

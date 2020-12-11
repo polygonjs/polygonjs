@@ -1,6 +1,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {FXAAShader} from '../../../../modules/three/examples/jsm/shaders/FXAAShader';
-import {ShaderPass} from '../../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+import {FXAAShader} from '../../../modules/three/examples/jsm/shaders/FXAAShader';
+import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformV2} from '../utils/code/gl/Uniforms';
 
 interface FXAAPassWithUniforms extends ShaderPass {

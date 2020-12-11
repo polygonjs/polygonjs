@@ -2544,10 +2544,10 @@ es6-promise@^3.0.2:
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"
   integrity sha1-oIzd6EzNvzTQJ6FFG8kdS80ophM=
 
-esbuild@0.4.9:
-  version "0.4.9"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.4.9.tgz#495a52c9248ca75736dd8a73992de23761238101"
-  integrity sha512-wRbpL5zO4AYAZMcNbJ3ghxX/cQ972FnZGdLV6xNXeDo4HIIgV/BeO606zhefT+XxbOb3KrbwEv1THgbeeL7zBg==
+esbuild@0.8.21:
+  version "0.8.21"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.8.21.tgz#c431f8af457795c2fecb1b2873cb8eaef4e5b53c"
+  integrity sha512-vRRx5MZmiekw2R7jK5BppvBUFCJA0Zkl0wYxrDmyUvMPBcQC/xJvxJUM4R+Hgjgb3gp5P1W655AsuoqDeQQDVw==
 
 escape-html@~1.0.3:
   version "1.0.3"
