@@ -25,7 +25,7 @@ module.exports = (env) => {
 		); // gs by default
 		common_options.plugins.push(
 			new CompressionPlugin({
-				filename: '[name].br[query]',
+				filename: '[name].js.br[query]',
 				algorithm: 'brotliCompress',
 				test: /\.(js|css|html|svg)$/,
 				compressionOptions: {level: 11},

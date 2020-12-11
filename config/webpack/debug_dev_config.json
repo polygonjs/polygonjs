@@ -65,7 +65,7 @@
         },
         {
             "definitions": {
-                "POLYGONJS_VERSION": "\"1.1.21\""
+                "__POLYGONJS_VERSION__": "\"1.1.23\""
             }
         },
         {
@@ -125,7 +125,7 @@
         "library": "POLY",
         "libraryTarget": "window",
         "filename": "[name].js",
-        "path": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine/config/dist"
+        "path": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine/dist"
     },
     "resolve": {
         "extensions": [

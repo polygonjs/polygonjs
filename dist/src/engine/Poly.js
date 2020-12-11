@@ -6,8 +6,6 @@ import {
 import {ExpressionRegister as ExpressionRegister2} from "./poly/registers/expressions/ExpressionRegister";
 import {DynamicModulesRegister as DynamicModulesRegister2} from "./poly/registers/modules/DynamicModulesRegister";
 import {AssemblersRegister} from "./poly/registers/assemblers/AssemblersRegistry";
-import config from "../../package.json";
-const POLYGONJS_VERSION = config.version;
 export class Poly {
   constructor() {
     this.renderers_controller = new RenderersController2();
@@ -17,7 +15,7 @@ export class Poly {
     this.modules_register = new DynamicModulesRegister2();
     this.assemblers_register = new AssemblersRegister();
     this.scenes_by_uuid = {};
-    this._version = POLYGONJS_VERSION;
+    this._version = __POLYGONJS_VERSION__;
     this._player_mode = true;
     this._logger = null;
   }

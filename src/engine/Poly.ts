@@ -16,15 +16,7 @@ import {BaseOperation} from '../core/operations/_Base';
 
 // declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
 // https://github.com/TypeStrong/ts-loader/issues/37
-// declare const POLYGONJS_VERSION: string;
-// const _POLYGONJS_VERSION = POLYGONJS_VERSION;
-import config from '../../package.json';
-interface PackageConfig {
-	version: string;
-	name: string;
-}
-
-const POLYGONJS_VERSION = (config as PackageConfig).version;
+declare const __POLYGONJS_VERSION__: string;
 
 export class Poly {
 	static _instance: Poly | undefined;
@@ -37,7 +29,7 @@ export class Poly {
 	// public readonly js_version: string = '0';
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
-	private _version: Readonly<string> = POLYGONJS_VERSION;
+	private _version: Readonly<string> = __POLYGONJS_VERSION__;
 	private _player_mode: boolean = true;
 	private _logger: BaseCoreLogger | null = null;
 	// public viewer_loaders_manager: ViewerLoadersManager = new ViewerLoadersManager();
