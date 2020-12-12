@@ -1,31 +1,38 @@
-import {SceneJsonImporter} from './io/json/import/Scene';
 import {PolyScene} from './scene/PolyScene';
-import {Poly} from './Poly';
-import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
-import {NodesRegister} from './poly/registers/nodes/NodesRegister';
-const expressionsRegister = Poly.instance().expressionsRegister;
-const nodesRegister = Poly.instance().nodesRegister;
-// register
 import {AllRegister} from './poly/registers/All';
 AllRegister.run();
 
-// for webpack export
-export {PolyScene, SceneJsonImporter, expressionsRegister, nodesRegister};
+// console.log('importing lib', PolyScene);
+// // for webpack export
+// export {PolyScene};
 
-// for esbuild export
-declare global {
-	interface Window {
-		POLY: {
-			PolyScene: typeof PolyScene;
-			SceneJsonImporter: typeof SceneJsonImporter;
-			expressionsRegister: ExpressionRegister;
-			nodesRegister: NodesRegister;
-		};
-	}
-}
-window.POLY = {
-	PolyScene,
-	SceneJsonImporter,
-	expressionsRegister,
-	nodesRegister,
-};
+// // for esbuild export
+// declare global {
+// 	interface Window {
+// 		POLY: {
+// 			PolyScene: typeof PolyScene;
+// 		};
+// 	}
+// }
+// window.POLY = {
+// 	PolyScene,
+// };
+// console.log(window.POLY);
+
+// // for esbuild export
+// declare global {
+// 	interface Window {
+// 		POLY: {
+// 			// PolyScene: typeof PolyScene;
+// 			TestClass: typeof TestClass;
+// 			// TestClass2: typeof TestClass;
+// 		};
+// 	}
+// }
+export {PolyScene};
+// (window as any).POLY = {
+// 	PolyScene,
+// 	TestClass,
+// 	TestClass2,
+// };
+// console.log((window as any).POLY);

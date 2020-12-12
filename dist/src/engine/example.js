@@ -1,1 +1,1 @@
-console.log("example loading...");
+import "../../examples/engine/nodes/sop/Sphere";

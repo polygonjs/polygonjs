@@ -18,7 +18,7 @@ export function DirectionalLightParamConfig(Base) {
       this.cast_shadows = ParamConfig.BOOLEAN(1);
       this.shadow_res = ParamConfig.VECTOR2([1024, 1024]);
       this.shadow_bias = ParamConfig.FLOAT(1e-3);
-      this.show_helper = ParamConfig.BOOLEAN(1);
+      this.show_helper = ParamConfig.BOOLEAN(0);
       this.helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
     }
   };

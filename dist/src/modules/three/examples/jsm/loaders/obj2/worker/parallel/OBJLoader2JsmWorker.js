@@ -1,6 +1,12 @@
-import {OBJLoader2Parser as OBJLoader2Parser2} from "../../OBJLoader2Parser.js";
+/**
+ * Development repository: https://github.com/kaisalmen/WWOBJLoader
+ */
+
+import { OBJLoader2Parser } from "../../OBJLoader2Parser.js";
+
 import {
-  WorkerRunner as WorkerRunner2,
-  DefaultWorkerPayloadHandler
+	WorkerRunner,
+	DefaultWorkerPayloadHandler
 } from "./WorkerRunner.js";
-new WorkerRunner2(new DefaultWorkerPayloadHandler(new OBJLoader2Parser2()));
+
+new WorkerRunner( new DefaultWorkerPayloadHandler( new OBJLoader2Parser() ) );

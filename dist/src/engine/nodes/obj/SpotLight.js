@@ -26,7 +26,7 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
       range: [-0.01, 0.01],
       range_locked: [false, false]
     });
-    this.show_helper = ParamConfig.BOOLEAN(1);
+    this.show_helper = ParamConfig.BOOLEAN(0);
     this.helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
   }
 }

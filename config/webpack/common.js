@@ -52,16 +52,26 @@ module.exports = (env = {}) => {
 		},
 		plugins: plugins,
 		output: {
-			library: 'POLY',
+			// library: 'POLY',
 			// libraryTarget: 'umd',
+
+			// libraryTarget: 'window',
+			// globalObject: 'this',
+
+			// // filename: '[name].bundle.js'
+			filename: '[name].js',
+			// path: dist_path,
+			// library: 'POLY',
+
+			// 			path: dist_path,
+			// filename: "POLY.[name].js",
+			// library: ["POLY", "[name]"],
+			// libraryTarget: "umd"
 
 			libraryTarget: 'window',
 			// globalObject: 'this',
-
-			// filename: '[name].bundle.js'
-			filename: '[name].js',
-			path: dist_path,
-			// library: 'POLY',
+			// libraryExport: 'default',
+			library: 'POLY',
 		},
 		resolve: {
 			// modules: [path.resolve(__dirname, '../../node_modules')],

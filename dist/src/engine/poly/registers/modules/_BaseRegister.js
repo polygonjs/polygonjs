@@ -19,7 +19,6 @@ export class BaseModulesRegister {
   }
   register(name, promise) {
     this._promise_by_name.set(name, promise);
-    console.log(this._promise_by_name);
   }
   async module(name) {
     const loaded_module = this._loaded_module_by_name.get(name);
@@ -27,7 +26,6 @@ export class BaseModulesRegister {
       return loaded_module;
     } else {
       const promise = this._promise_by_name.get(name);
-      console.log(promise, this._promise_by_name);
       if (promise) {
         const new_loaded_module = await promise;
         if (new_loaded_module) {

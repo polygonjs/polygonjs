@@ -20,7 +20,7 @@ class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig)
     this.shadow_bias = ParamConfig.FLOAT(1e-3, {visible_if: {cast_shadows: 1}});
     this.shadow_near = ParamConfig.FLOAT(1, {visible_if: {cast_shadows: 1}});
     this.shadow_far = ParamConfig.FLOAT(100, {visible_if: {cast_shadows: 1}});
-    this.show_helper = ParamConfig.BOOLEAN(1);
+    this.show_helper = ParamConfig.BOOLEAN(0);
     this.helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
   }
 }

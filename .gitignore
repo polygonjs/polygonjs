@@ -1,6 +1,6 @@
 yarn-error.log
 node_modules/
 coverage
-webpack/stats.json
-webpack/dts_concat.js
-dist/out.js
+config/webpack/stats.json
+config/webpack/dts_concat.js
+public/dist

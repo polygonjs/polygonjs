@@ -31,10 +31,18 @@ export class ObjectsManagerNode extends TypedBaseManagerNode {
     return this._object;
   }
   create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
+    const node = super.create_node(type, params_init_value_overrides);
+    if (node.dirty_controller.is_dirty) {
+      node.request_container();
+    }
+    return node;
   }
   createNode(node_class, params_init_value_overrides) {
-    return super.createNode(node_class, params_init_value_overrides);
+    const node = super.createNode(node_class, params_init_value_overrides);
+    if (node.dirty_controller.is_dirty) {
+      node.request_container();
+    }
+    return node;
   }
   children() {
     return super.children();

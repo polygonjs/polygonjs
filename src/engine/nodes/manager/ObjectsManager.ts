@@ -45,7 +45,12 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		type: K,
 		params_init_value_overrides?: ParamsInitData
 	): ObjNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as ObjNodeChildrenMap[K];
+		const node = super.create_node(type, params_init_value_overrides) as ObjNodeChildrenMap[K];
+		if (node.dirty_controller.is_dirty) {
+			// ensure that objects such as light have their parameters set in examples
+			node.request_container();
+		}
+		return node;
 	}
 	createNode<K extends valueof<ObjNodeChildrenMap>>(
 		node_class: Constructor<K>,

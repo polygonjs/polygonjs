@@ -7,7 +7,7 @@ export function BaseLightHelperParamConfig(Base2) {
   return class Mixin extends Base2 {
     constructor() {
       super(...arguments);
-      this.show_helper = ParamConfig.BOOLEAN(1);
+      this.show_helper = ParamConfig.BOOLEAN(0);
       this.helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
     }
   };

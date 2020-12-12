@@ -7,15 +7,15 @@ import {ColorConversion} from "../../../core/Color";
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
   constructor() {
     super(...arguments);
-    this.sky_color = ParamConfig.COLOR([0.2, 0.7, 1], {
+    this.sky_color = ParamConfig.COLOR([0.5, 0.9, 1], {
       conversion: ColorConversion.SRGB_TO_LINEAR
     });
-    this.ground_color = ParamConfig.COLOR([0.1, 0.1, 0.25], {
+    this.ground_color = ParamConfig.COLOR([0.1, 0.15, 0.1], {
       conversion: ColorConversion.SRGB_TO_LINEAR
     });
     this.intensity = ParamConfig.FLOAT(1);
     this.position = ParamConfig.VECTOR3([0, 1, 0]);
-    this.show_helper = ParamConfig.BOOLEAN(1);
+    this.show_helper = ParamConfig.BOOLEAN(0);
     this.helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
   }
 }
