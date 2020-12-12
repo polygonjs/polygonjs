@@ -1,7 +1,7 @@
 QUnit.test('an expression refers to a node that is later added', async (assert) => {
 	const geo1 = window.geo1;
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
 	transform1.set_input(0, box1);
 	const param = transform1.p.t.x;
 	param.set("ch('../transform2/tx')");
@@ -11,7 +11,7 @@ QUnit.test('an expression refers to a node that is later added', async (assert) 
 	assert.equal(param.value, 0);
 
 	assert.ok(!param.is_dirty);
-	const transform2 = geo1.create_node('transform');
+	const transform2 = geo1.createNode('transform');
 	assert.equal(transform2.name, 'transform2');
 	assert.ok(param.is_dirty, 'param is now dirty');
 	transform2.p.t.x.set(5);
@@ -22,11 +22,11 @@ QUnit.test('an expression refers to a node that is later added', async (assert) 
 
 QUnit.test('a node referenced in an expression gets renamed involves updating the expression', async (assert) => {
 	const geo1 = window.geo1;
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
 	transform1.set_input(0, box1);
 
-	const transform2 = geo1.create_node('transform');
+	const transform2 = geo1.createNode('transform');
 	assert.equal(transform2.name, 'transform2');
 
 	transform1.p.t.x.set("ch('../transform2/tx')");
@@ -50,11 +50,11 @@ QUnit.test('a top node referenced in an expression gets renamed involves updatin
 	const root = scene.root;
 	const geo1 = window.geo1;
 
-	const camera = root.create_node('perspective_camera');
+	const camera = root.createNode('perspective_camera');
 	camera.p.t.x.set(1);
 
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
 	transform1.set_input(0, box1);
 	const param = transform1.p.t.x;
 	param.set(`ch('/${camera.name}/tx')`);
@@ -79,8 +79,8 @@ QUnit.test('a top node referenced in an expression gets renamed involves updatin
 QUnit.test('a relative path in a operator path param gets updated when ref changes name', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
-	const material_sop = geo1.create_node('material');
-	const material = MAT.create_node('mesh_basic');
+	const material_sop = geo1.createNode('material');
+	const material = MAT.createNode('mesh_basic');
 	const path_param = material_sop.p.material;
 	path_param.set(material.full_path());
 
@@ -103,9 +103,9 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root;
-	const event = root.create_node('events');
-	const orbit = event.create_node('camera_orbit_controls');
-	const camera = root.create_node('perspective_camera');
+	const event = root.createNode('events');
+	const orbit = event.createNode('camera_orbit_controls');
+	const camera = root.createNode('perspective_camera');
 	const controls_param = camera.p.controls;
 
 	await scene.wait_for_cooks_completed();
@@ -146,10 +146,12 @@ QUnit.test(
 		const scene = window.scene;
 		const root = scene.root;
 		const MAT = window.MAT;
-		const event = root.create_node('events');
-		const set_param1 = event.create_node('set_param');
+		const event = root.createNode('events');
+		const set_param1 = event.createNode('set_param');
 		const param_operator_path_param = set_param1.p.param;
-		const mesh_basic_builder1 = MAT.create_node('mesh_basic_builder');
+		const mesh_basic_builder1 = MAT.createNode('mesh_basic_builder');
+		mesh_basic_builder1.createNode('output');
+		mesh_basic_builder1.createNode('globals');
 
 		await scene.wait_for_cooks_completed();
 
@@ -159,7 +161,7 @@ QUnit.test(
 
 		const init_params_count = mesh_basic_builder1.params.all.length;
 		assert.equal(init_params_count, 13);
-		const param1 = mesh_basic_builder1.create_node('param');
+		const param1 = mesh_basic_builder1.createNode('param');
 		await mesh_basic_builder1.request_container();
 		assert.equal(mesh_basic_builder1.params.all.length, 14);
 		assert.equal(mesh_basic_builder1.params.all[13].name, 'param1');

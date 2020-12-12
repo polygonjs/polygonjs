@@ -104,7 +104,7 @@ const materials: MaterialsByString = {
 	}),
 	[ObjectType.MESH]: new MeshLambertMaterial({
 		// MeshStandardMaterial
-		color: new Color(0.5, 0.5, 1),
+		color: new Color(1, 1, 1),
 		side: FrontSide,
 		vertexColors: false,
 		transparent: true,

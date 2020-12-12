@@ -1,9 +1,6 @@
 import {TypedNode} from "../../_Base";
 import {JsAssemblerNodeSpareParamsController} from "./SpareParamsController";
 export class AssemblerControllerNode extends TypedNode {
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }
@@ -34,8 +31,8 @@ export class JsAssemblerController {
     return this._assembler.allow_attribute_exports();
   }
   on_create() {
-    const globals = this.node.create_node("globals");
-    const output = this.node.create_node("output");
+    const globals = this.node.createNode("globals");
+    const output = this.node.createNode("output");
     globals.ui_data.set_position(-200, 0);
     output.ui_data.set_position(200, 0);
   }

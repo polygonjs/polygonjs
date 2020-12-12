@@ -61,26 +61,29 @@ export class HierarchyChildrenController {
     const node_class = this.available_children_classes()[node_type];
     return node_class != null;
   }
-  create_node(node_type, params_init_value_overrides) {
-    const node_class = this.available_children_classes()[node_type];
-    if (node_class == null) {
-      const message = `child node type '${node_type}' not found for node '${this.node.full_path()}'. Available types are: ${Object.keys(this.available_children_classes()).join(", ")}, ${this._context}, ${this.node.type}`;
-      console.error(message);
-      throw message;
+  createNode(node_class_or_string, params_init_value_overrides, node_type = "") {
+    if (typeof node_class_or_string == "string") {
+      const node_class = this._find_node_class(node_class_or_string);
+      return this._create_and_init_node(node_class, params_init_value_overrides, node_type);
     } else {
-      const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
-      child_node.initialize_base_and_node();
-      this.add_node(child_node);
-      child_node.lifecycle.set_creation_completed();
-      return child_node;
+      return this._create_and_init_node(node_class_or_string, params_init_value_overrides, node_type);
     }
   }
-  createNode(node_class, params_init_value_overrides, node_type = "") {
+  _create_and_init_node(node_class, params_init_value_overrides, node_type = "") {
     const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
     child_node.initialize_base_and_node();
     this.add_node(child_node);
     child_node.lifecycle.set_creation_completed();
     return child_node;
+  }
+  _find_node_class(node_type) {
+    const node_class = this.available_children_classes()[node_type];
+    if (node_class == null) {
+      const message = `child node type '${node_type}' not found for node '${this.node.full_path()}'. Available types are: ${Object.keys(this.available_children_classes()).join(", ")}, ${this._context}, ${this.node.type}`;
+      console.error(message);
+      throw message;
+    }
+    return node_class;
   }
   create_operation_container(operation_type, operation_container_name, params_init_value_overrides) {
     const operation_class = Poly2.instance().registeredOperation(this._context, operation_type);
@@ -117,7 +120,7 @@ export class HierarchyChildrenController {
     this.node.scene.missing_expression_references_controller.check_for_missing_references(child_node);
     return child_node;
   }
-  remove_node(child_node) {
+  removeNode(child_node) {
     if (child_node.parent != this.node) {
       return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
     } else {

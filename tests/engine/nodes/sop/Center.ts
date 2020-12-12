@@ -1,9 +1,9 @@
 QUnit.test('center simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
-	const center1 = geo1.create_node('center');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+	const center1 = geo1.createNode('center');
 
 	transform1.set_input(0, box1);
 	transform1.p.t.set([1, 3, 4]);

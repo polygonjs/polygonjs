@@ -2,7 +2,7 @@ QUnit.test('sphere simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 
-	const sphere1 = geo1.create_node('sphere');
+	const sphere1 = geo1.createNode('sphere');
 
 	let container = await sphere1.request_container();
 	let core_group = container.core_content()!;

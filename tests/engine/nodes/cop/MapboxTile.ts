@@ -2,9 +2,9 @@ QUnit.test('height map from mapbox', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 
-	const mapbox_tile1 = COP.create_node('mapbox_tile');
-	const plane1 = geo1.create_node('plane');
-	const height_map1 = geo1.create_node('height_map');
+	const mapbox_tile1 = COP.createNode('mapbox_tile');
+	const plane1 = geo1.createNode('plane');
+	const height_map1 = geo1.createNode('height_map');
 
 	height_map1.set_input(0, plane1);
 	height_map1.p.texture.set(mapbox_tile1.full_path());

@@ -32,7 +32,7 @@ export declare class PostCopNode extends TypedCopNode<PostProcessCopNetworkParam
     readonly display_node_controller: DisplayNodeController;
     protected _children_controller_context: NodeContext;
     initialize_node(): void;
-    create_node<K extends keyof PostNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): PostNodeChildrenMap[K];
+    createNode<S extends keyof PostNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): PostNodeChildrenMap[S];
     createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BasePostProcessNodeType[];
     nodes_by_type<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];
@@ -45,6 +45,5 @@ export declare class PostCopNode extends TypedCopNode<PostProcessCopNetworkParam
     private _create_render_target;
     protected _create_composer(renderer: WebGLRenderer, render_target: WebGLRenderTarget): EffectComposer;
     reset(): void;
-    private _create_start_nodes;
 }
 export {};

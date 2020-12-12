@@ -27,7 +27,7 @@ export class NodesController {
   clear() {
     const children = this.root.children();
     for (let child of children) {
-      this.root.children_controller?.remove_node(child);
+      this.root.children_controller?.removeNode(child);
     }
   }
   node(path) {

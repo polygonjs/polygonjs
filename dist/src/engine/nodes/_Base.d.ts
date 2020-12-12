@@ -106,10 +106,9 @@ export declare class TypedNode<NC extends NodeContext, K extends NodeParamsConfi
     cook(input_contents: any[]): any;
     request_container(): Promise<import("../containers/utils/ContainerMap").ContainerMap[NC]>;
     set_container(content: ContainableMap[NC], message?: string | null): void;
-    create_node(type: string, params_init_value_overrides?: ParamsInitData): BaseNodeType | undefined;
     createNode(node_class: any, params_init_value_overrides?: ParamsInitData): BaseNodeType | undefined;
     create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: ParamsInitData): import("../../core/operations/container/_Base").BaseOperationContainer | undefined;
-    remove_node(node: BaseNodeType): void;
+    removeNode(node: BaseNodeType): void;
     children(): BaseNodeType[];
     node(path: string): BaseNodeType | null;
     node_sibbling(name: string): NodeTypeMap[NC] | null;

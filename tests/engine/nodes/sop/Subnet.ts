@@ -1,22 +1,29 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {SubnetSopNode} from '../../../../src/engine/nodes/sop/Subnet';
+
+function create_required_nodes(node: SubnetSopNode) {
+	const subnet_input1 = node.createNode('subnet_input');
+	const subnet_output1 = node.createNode('subnet_output');
+	return {subnet_input1, subnet_output1};
+}
 
 QUnit.test('subnet simple', async (assert) => {
 	await window.scene.wait_for_cooks_completed();
 	const geo1 = window.geo1;
-	const box1 = geo1.create_node('box');
-	const subnet1 = geo1.create_node('subnet');
+	const box1 = geo1.createNode('box');
+	const subnet1 = geo1.createNode('subnet');
 
+	assert.equal(subnet1.children().length, 0);
+	const {subnet_input1, subnet_output1} = create_required_nodes(subnet1);
 	assert.equal(subnet1.children().length, 2);
-	const subnet_input1 = subnet1.nodes_by_type('subnet_input')[0];
-	const subnet_output1 = subnet1.nodes_by_type('subnet_output')[0];
 
 	// if nothing inside yet
 	let container = await subnet1.request_container();
 	let core_group = container.core_content();
 	assert.notOk(core_group);
 
-	const scatter1 = subnet1.create_node('scatter');
+	const scatter1 = subnet1.createNode('scatter');
 	scatter1.set_input(0, subnet_input1);
 	subnet_output1.set_input(0, scatter1);
 
@@ -52,22 +59,24 @@ QUnit.test('subnet simple', async (assert) => {
 QUnit.test('subnet errors without subnet_output child node', async (assert) => {
 	const geo1 = window.geo1;
 	await window.scene.wait_for_cooks_completed();
-	const subnet1 = geo1.create_node('subnet');
+	const subnet1 = geo1.createNode('subnet');
 
-	const subnet_output1 = subnet1.nodes_by_type('subnet_output')[0];
-	subnet1.remove_node(subnet_output1);
+	assert.equal(subnet1.children().length, 0);
+	const {subnet_output1} = create_required_nodes(subnet1);
+	assert.equal(subnet1.children().length, 2);
+	subnet1.removeNode(subnet_output1);
 
 	await subnet1.request_container();
 	assert.equal(subnet1.states.error.message, 'no output node found inside subnet');
 
 	// and we add a subnet_output again
 	await CoreSleep.sleep(10);
-	const subnet_output2 = subnet1.create_node('subnet_output');
+	const subnet_output2 = subnet1.createNode('subnet_output');
 	await subnet1.request_container();
 	assert.equal(subnet1.states.error.message, 'inputs are missing');
 
 	// and we add a box
-	const box1 = subnet1.create_node('box');
+	const box1 = subnet1.createNode('box');
 	await CoreSleep.sleep(10);
 	subnet_output2.set_input(0, box1);
 	let container = await subnet1.request_container();
@@ -78,11 +87,13 @@ QUnit.test('subnet errors without subnet_output child node', async (assert) => {
 
 QUnit.test('subnet works without inputs', async (assert) => {
 	const geo1 = window.geo1;
-	const subnet1 = geo1.create_node('subnet');
+	const subnet1 = geo1.createNode('subnet');
 
-	const subnet_output1 = subnet1.nodes_by_type('subnet_output')[0];
+	assert.equal(subnet1.children().length, 0);
+	const {subnet_output1} = create_required_nodes(subnet1);
+	assert.equal(subnet1.children().length, 2);
 
-	const box1 = subnet1.create_node('box');
+	const box1 = subnet1.createNode('box');
 	subnet_output1.set_input(0, box1);
 
 	let container = await subnet1.request_container();

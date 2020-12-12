@@ -7,7 +7,6 @@ import {FlagsControllerD} from "../utils/FlagsController";
 import {HierarchyController as HierarchyController2} from "./utils/HierarchyController";
 import {NodeParamsConfig, ParamConfig} from "../utils/params/ParamsConfig";
 import {ChildrenDisplayController as ChildrenDisplayController2} from "./utils/ChildrenDisplayController";
-import {Poly as Poly2} from "../../Poly";
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
   constructor() {
     super(...arguments);
@@ -29,7 +28,6 @@ export class GeoObjNode extends TypedObjNode {
     this.children_display_controller = new ChildrenDisplayController2(this);
     this.display_node_controller = new DisplayNodeController2(this, this.children_display_controller.display_node_controller_callbacks());
     this._children_controller_context = NodeContext2.SOP;
-    this._on_create_bound = this._on_create.bind(this);
     this._on_child_add_bound = this._on_child_add.bind(this);
   }
   static type() {
@@ -41,7 +39,6 @@ export class GeoObjNode extends TypedObjNode {
     return group;
   }
   initialize_node() {
-    this.lifecycle.add_on_create_hook(this._on_create_bound);
     this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
     this.hierarchy_controller.initialize_node();
     this.transform_controller.initialize_node();
@@ -55,9 +52,6 @@ export class GeoObjNode extends TypedObjNode {
       return false;
     }
   }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }
@@ -66,12 +60,6 @@ export class GeoObjNode extends TypedObjNode {
   }
   nodes_by_type(type) {
     return super.nodes_by_type(type);
-  }
-  _on_create() {
-    if (!Poly2.instance().nodesRegister.is_registered(NodeContext2.SOP, "box")) {
-      return;
-    }
-    this.create_node("box");
   }
   _on_child_add(node) {
     if (this.scene.loading_controller.loaded) {

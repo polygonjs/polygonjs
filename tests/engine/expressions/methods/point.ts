@@ -5,9 +5,9 @@ import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
 QUnit.test('expression points works with path', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const attrib_create2 = geo1.create_node('attrib_create');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create2 = geo1.createNode('attrib_create');
 
 	attrib_create1.set_input(0, plane1);
 	attrib_create2.set_input(0, attrib_create1);
@@ -26,9 +26,9 @@ QUnit.test('expression points works with path', async (assert) => {
 QUnit.test('expression points works with input index', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const attrib_create2 = geo1.create_node('attrib_create');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create2 = geo1.createNode('attrib_create');
 
 	attrib_create1.set_input(0, plane1);
 	attrib_create2.set_input(0, attrib_create1);
@@ -48,8 +48,8 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const line1 = geo1.create_node('line');
-	const point1 = geo1.create_node('point');
+	const line1 = geo1.createNode('line');
+	const point1 = geo1.createNode('point');
 
 	point1.set_input(0, line1);
 

@@ -16,12 +16,14 @@ export class EventsObjNode extends ParamLessBaseManagerObjNode {
 	// 	this.children_controller?.init({dependent: false});
 	// }
 
-	create_node<K extends keyof EventNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof EventNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): EventNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as EventNodeChildrenMap[K];
-	}
+	): EventNodeChildrenMap[S];
+	createNode<K extends valueof<EventNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<EventNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

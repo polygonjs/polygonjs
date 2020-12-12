@@ -131,10 +131,6 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	initialize_node() {
 		this.io.inputs.set_count(1);
 
-		this.lifecycle.add_on_create_hook(() => {
-			this._create_start_nodes();
-		});
-
 		// init scene
 		this._texture_mesh.name = 'cop/post';
 		this._texture_scene.name = 'cop/post';
@@ -149,12 +145,14 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		});
 	}
 
-	create_node<K extends keyof PostNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof PostNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): PostNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as PostNodeChildrenMap[K];
-	}
+	): PostNodeChildrenMap[S];
+	createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<PostNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
@@ -269,22 +267,5 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 
 	reset() {
 		this._composer = undefined;
-	}
-
-	//
-	//
-	// START NODES
-	//
-	//
-	private _create_start_nodes() {
-		const null1 = this.create_node('null');
-		const unreal_bloom1 = this.create_node('unreal_bloom');
-
-		null1.set_name('OUT');
-		null1.set_input(0, unreal_bloom1);
-		null1.ui_data.set_position(0, 200);
-		unreal_bloom1.ui_data.set_position(0, -200);
-
-		null1.flags.display.set(true);
 	}
 }

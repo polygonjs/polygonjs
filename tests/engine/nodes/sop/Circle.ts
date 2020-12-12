@@ -2,7 +2,7 @@ QUnit.test('circle simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const circle1 = geo1.create_node('circle');
+	const circle1 = geo1.createNode('circle');
 	circle1.p.open.set(0);
 
 	let container;

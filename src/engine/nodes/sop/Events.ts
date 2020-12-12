@@ -11,12 +11,14 @@ export class EventsSopNode extends ParamLessBaseNetworkSopNode {
 
 	protected _children_controller_context = NodeContext.EVENT;
 
-	create_node<K extends keyof EventNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof EventNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): EventNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as EventNodeChildrenMap[K];
-	}
+	): EventNodeChildrenMap[S];
+	createNode<K extends valueof<EventNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<EventNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

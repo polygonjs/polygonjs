@@ -4,13 +4,13 @@ import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 QUnit.test('resample a line', async (assert) => {
 	const geo1 = window.geo1;
 
-	const line1 = geo1.create_node('line');
+	const line1 = geo1.createNode('line');
 	let container;
 
 	container = await line1.request_container();
 	assert.equal(container.points_count(), 2);
 
-	const resample1 = geo1.create_node('resample');
+	const resample1 = geo1.createNode('resample');
 	resample1.set_input(0, line1);
 
 	// try all curve types for method points_count
@@ -48,7 +48,7 @@ QUnit.test('resample a line', async (assert) => {
 QUnit.test('resample a text', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	text1.p.text.set('flat');
 	let container;
 
@@ -56,7 +56,7 @@ QUnit.test('resample a text', async (assert) => {
 	container = await text1.request_container();
 	assert.equal(container.points_count(), 738);
 
-	const resample1 = geo1.create_node('resample');
+	const resample1 = geo1.createNode('resample');
 	resample1.set_input(0, text1);
 
 	// try all curve types for method points_count

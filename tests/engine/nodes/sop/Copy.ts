@@ -3,9 +3,9 @@ import {AttribClass, ATTRIBUTE_CLASSES} from '../../../../src/core/geometry/Cons
 QUnit.test('copy sop simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const plane1 = geo1.create_node('plane');
-	const copy1 = geo1.create_node('copy');
+	const box1 = geo1.createNode('box');
+	const plane1 = geo1.createNode('plane');
+	const copy1 = geo1.createNode('copy');
 	copy1.set_input(0, box1);
 	copy1.set_input(1, plane1);
 	plane1.p.direction.set([0, 0, 1]);
@@ -31,16 +31,16 @@ QUnit.test('copy sop simple', async (assert) => {
 QUnit.test('copy sop with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const plane1 = geo1.create_node('plane');
-	const line1 = geo1.create_node('line');
-	const switch1 = geo1.create_node('switch');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const plane1 = geo1.createNode('plane');
+	const line1 = geo1.createNode('line');
+	const switch1 = geo1.createNode('switch');
 	switch1.set_input(0, plane1);
 	switch1.set_input(1, box1);
 	attrib_create1.set_input(0, switch1);
 
-	const copy1 = geo1.create_node('copy');
+	const copy1 = geo1.createNode('copy');
 	copy1.set_input(0, attrib_create1);
 	copy1.set_input(1, line1);
 
@@ -70,13 +70,13 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 QUnit.test('copy sop without template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const plane1 = geo1.create_node('plane');
-	const switch1 = geo1.create_node('switch');
+	const box1 = geo1.createNode('box');
+	const plane1 = geo1.createNode('plane');
+	const switch1 = geo1.createNode('switch');
 	switch1.set_input(0, plane1);
 	switch1.set_input(1, box1);
 
-	const copy1 = geo1.create_node('copy');
+	const copy1 = geo1.createNode('copy');
 	copy1.set_input(0, switch1);
 	copy1.p.count.set(3);
 
@@ -99,11 +99,11 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const plane1 = geo1.create_node('plane');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const plane1 = geo1.createNode('plane');
 
-	const copy1 = geo1.create_node('copy');
+	const copy1 = geo1.createNode('copy');
 	attrib_create1.p.class.set(ATTRIBUTE_CLASSES[AttribClass.OBJECT]);
 	attrib_create1.set_input(0, box1);
 	copy1.set_input(0, attrib_create1);

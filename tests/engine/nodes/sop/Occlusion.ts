@@ -1,10 +1,10 @@
 QUnit.test('occlusion simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
-	const merge1 = geo1.create_node('merge');
-	const occlusion1 = geo1.create_node('occlusion');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const merge1 = geo1.createNode('merge');
+	const occlusion1 = geo1.createNode('occlusion');
 	occlusion1.p.samples.set(1024);
 
 	box1.p.center.x.set(0.6);

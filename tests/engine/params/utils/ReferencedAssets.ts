@@ -9,17 +9,17 @@
 // 	const MAT = window.MAT
 
 // 	const root = scene.root()
-// 	const camera1 = root.create_node('perspective_camera')
+// 	const camera1 = root.createNode('perspective_camera')
 // 	camera1.set_as_master_camera()
 
-// 	const mesh_basic1 = MAT.create_node('mesh_basic')
+// 	const mesh_basic1 = MAT.createNode('mesh_basic')
 // 	mesh_basic1.param('use_texture_map').set(1)
 
-// 	const mesh_basic2 = MAT.create_node('mesh_basic')
+// 	const mesh_basic2 = MAT.createNode('mesh_basic')
 // 	mesh_basic2.param('texture_map').set('/textures/red.png')
 
-// 	const box1 = geo1.create_node('box')
-// 	const material1 = geo1.create_node('material')
+// 	const box1 = geo1.createNode('box')
+// 	const material1 = geo1.createNode('material')
 // 	material1.set_input(0, box1)
 // 	material1.set_display_flag()
 // 	material1.param('material').set(mesh_basic1.full_path())

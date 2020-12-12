@@ -11,7 +11,6 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {MaterialsObjNode} from '../obj/Materials';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/RenderController';
@@ -22,8 +21,6 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
-import {PointsBuilderMatNode} from '../mat/PointsBuilder';
-import {ConstantGlNode} from '../gl/Constant';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/PersistedConfig';
@@ -99,7 +96,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	protected _children_controller_context = NodeContext.GL;
-	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		// set to never at the moment
@@ -107,41 +103,16 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 
 		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
-
-		// if (this.assembler_controller) {
-		// we use the method _on_create here, to link the global to the output on create,
-		// as this seems to prevent a bug when the particle system is created
-		// without exported textures
-		// and the object fails to render until a full page reload.
-		this.lifecycle.add_on_create_hook(this._on_create.bind(this));
-		// this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-		// }
-		// this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
 	}
 
-	private _on_create() {
-		const current_global = this.nodes_by_type('globals')[0];
-		const current_output = this.nodes_by_type('output')[0];
-		if (current_global || current_output) {
-			return;
-		}
-		const globals = this.create_node('globals');
-		const output = this.create_node('output');
-
-		output.set_input('position', globals, 'position');
-
-		globals.ui_data.set_position(-200, 0);
-		output.ui_data.set_position(200, 0);
-
-		this._on_create_prepare_material();
-	}
-
-	create_node<K extends keyof GlNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
-	}
+	): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<GlNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
@@ -257,47 +228,5 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			nodes.push(output_node);
 		}
 		return nodes;
-	}
-
-	private _on_create_prepare_material() {
-		// that's mostly to have the default shader work when creating the node
-		// output.set_input('position', globals, 'position')
-		// or instead we could create the default shader
-		const root = this.scene.root;
-		const mat_name = 'MAT';
-		const particles_mat_name = 'points_particles';
-		const MAT: MaterialsObjNode = root.nodes_by_type('materials')[0] || this.scene.root.create_node('materials');
-		MAT.set_name(mat_name);
-
-		const create_points_mat = (MAT: MaterialsObjNode, name: string) => {
-			let points_mat = MAT.node('points_builder1') as PointsBuilderMatNode;
-			if (!(points_mat && points_mat.type == PointsBuilderMatNode.type())) {
-				points_mat = MAT.create_node('points_builder');
-			}
-			points_mat.set_name(name);
-
-			let points_mat_constant_point_size = points_mat.node('constant') as ConstantGlNode;
-			if (!(points_mat_constant_point_size && points_mat_constant_point_size.type == ConstantGlNode.type())) {
-				points_mat_constant_point_size = points_mat.create_node('constant');
-				points_mat_constant_point_size.set_name('constant_point_size');
-			}
-			points_mat_constant_point_size.p.float.set(4); // to match the default point material
-			const points_mat_output1 = points_mat.node('output1');
-			if (points_mat_output1) {
-				points_mat_output1.set_input(
-					'gl_PointSize',
-					points_mat_constant_point_size,
-					ConstantGlNode.OUTPUT_NAME
-				);
-			}
-			return points_mat;
-		};
-		const points_mat = MAT.node(particles_mat_name) || create_points_mat(MAT, particles_mat_name);
-		if (points_mat) {
-			const new_path = points_mat.full_path();
-			if (this.p.material.raw_input != new_path) {
-				this.p.material.set(new_path);
-			}
-		}
 	}
 }

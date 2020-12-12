@@ -12,7 +12,7 @@ export declare class TimelineBuilderProperty {
     set_name(name: string): void;
     set_target_value(value: AnimPropertyTargetValue): void;
     name(): string | undefined;
-    target_value(): number | Vector3 | Vector2 | Vector4 | undefined;
+    target_value(): number | Vector4 | Vector3 | Vector2 | undefined;
     clone(): TimelineBuilderProperty;
     add_to_timeline(timeline_builder: TimelineBuilder, scene: PolyScene, timeline: gsap.core.Timeline, target: PropertyTarget): void;
     private _populate_with_objects;

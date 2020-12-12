@@ -8,7 +8,6 @@ export class TypedSubnetGlNode extends TypedGlNode {
   constructor() {
     super(...arguments);
     this._children_controller_context = NodeContext2.GL;
-    this._on_create_bound = this._on_create.bind(this);
   }
   initialize_node() {
     this.children_controller?.set_output_node_find_method(() => {
@@ -18,7 +17,6 @@ export class TypedSubnetGlNode extends TypedGlNode {
     this.io.connection_points.set_output_name_function(this._expected_output_name.bind(this));
     this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
     this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
-    this.lifecycle.add_on_create_hook(this._on_create_bound);
   }
   _expected_inputs_count() {
     const current_connections = this.io.connections.input_connections();
@@ -76,9 +74,6 @@ export class TypedSubnetGlNode extends TypedGlNode {
   child_expected_output_connection_point_name(index) {
     return this._expected_output_name(index);
   }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }
@@ -87,13 +82,6 @@ export class TypedSubnetGlNode extends TypedGlNode {
   }
   nodes_by_type(type) {
     return super.nodes_by_type(type);
-  }
-  _on_create() {
-    const subnet_input1 = this.create_node("subnet_input");
-    const subnet_output1 = this.create_node("subnet_output");
-    subnet_output1.set_input(0, subnet_input1);
-    subnet_input1.ui_data.set_position(-100, 0);
-    subnet_output1.ui_data.set_position(100, 0);
   }
   set_lines_block_start(shaders_collection_controller, child_node) {
     const body_lines = [];

@@ -41,7 +41,7 @@ if (node_class) {
 
 QUnit.test('poly sop simple', async (assert) => {
 	const geo1 = window.geo1;
-	const poly1 = geo1.create_node('poly_sop_test' as keyof GeoNodeChildrenMap);
+	const poly1 = geo1.createNode('poly_sop_test' as keyof GeoNodeChildrenMap);
 	assert.equal(poly1.children().length, 4);
 	assert.ok(poly1.params.has('id'));
 	assert.equal(poly1.params.get('id')!.type, ParamType.INTEGER);

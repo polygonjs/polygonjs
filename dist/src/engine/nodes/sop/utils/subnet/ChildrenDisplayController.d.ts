@@ -11,7 +11,7 @@ export declare class SubnetSopNodeLike<T extends NodeParamsConfig> extends Typed
     readonly children_display_controller: SopSubnetChildrenDisplayController;
     readonly display_node_controller: DisplayNodeController;
     protected _children_controller_context: NodeContext;
-    create_node<K extends keyof GeoNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): GeoNodeChildrenMap[K];
+    createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): GeoNodeChildrenMap[S];
     createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseSopNodeType[];
     nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][];

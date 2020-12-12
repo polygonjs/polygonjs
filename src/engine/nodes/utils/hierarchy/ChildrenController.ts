@@ -99,7 +99,47 @@ export class HierarchyChildrenController {
 		return node_class != null;
 	}
 
-	create_node(node_type: string, params_init_value_overrides?: ParamsInitData): BaseNodeType {
+	// create_node(node_type: string, params_init_value_overrides?: ParamsInitData): BaseNodeType {
+	// 	const node_class = this.available_children_classes()[node_type];
+
+	// 	if (node_class == null) {
+	// 		const message = `child node type '${node_type}' not found for node '${this.node.full_path()}'. Available types are: ${Object.keys(
+	// 			this.available_children_classes()
+	// 		).join(', ')}, ${this._context}, ${this.node.type}`;
+	// 		console.error(message);
+	// 		throw message;
+	// 	} else {
+	// 		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
+	// 		child_node.initialize_base_and_node();
+	// 		this.add_node(child_node);
+	// 		child_node.lifecycle.set_creation_completed();
+	// 		return child_node;
+	// 	}
+	// }
+	createNode<K extends BaseNodeType>(
+		node_class_or_string: string | Constructor<K>,
+		params_init_value_overrides?: ParamsInitData,
+		node_type = ''
+	): K {
+		if (typeof node_class_or_string == 'string') {
+			const node_class = this._find_node_class(node_class_or_string);
+			return this._create_and_init_node(node_class, params_init_value_overrides, node_type) as K;
+		} else {
+			return this._create_and_init_node(node_class_or_string, params_init_value_overrides, node_type);
+		}
+	}
+	private _create_and_init_node<K extends BaseNodeType>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData,
+		node_type = ''
+	) {
+		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
+		child_node.initialize_base_and_node();
+		this.add_node(child_node);
+		child_node.lifecycle.set_creation_completed();
+		return child_node;
+	}
+	private _find_node_class(node_type: string) {
 		const node_class = this.available_children_classes()[node_type];
 
 		if (node_class == null) {
@@ -108,24 +148,8 @@ export class HierarchyChildrenController {
 			).join(', ')}, ${this._context}, ${this.node.type}`;
 			console.error(message);
 			throw message;
-		} else {
-			const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
-			child_node.initialize_base_and_node();
-			this.add_node(child_node);
-			child_node.lifecycle.set_creation_completed();
-			return child_node;
 		}
-	}
-	createNode<K extends BaseNodeType>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData,
-		node_type = ''
-	): K {
-		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
-		child_node.initialize_base_and_node();
-		this.add_node(child_node);
-		child_node.lifecycle.set_creation_completed();
-		return child_node;
+		return node_class;
 	}
 	create_operation_container(
 		operation_type: string,
@@ -176,7 +200,7 @@ export class HierarchyChildrenController {
 		return child_node;
 	}
 
-	remove_node(child_node: BaseNodeType): void {
+	removeNode(child_node: BaseNodeType): void {
 		if (child_node.parent != this.node) {
 			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
 		} else {

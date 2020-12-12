@@ -5,9 +5,9 @@ QUnit.test('materials simple', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
-	const plane1 = geo1.create_node('plane');
-	const material1 = geo1.create_node('material');
-	const lambert1 = MAT.create_node('mesh_lambert');
+	const plane1 = geo1.createNode('plane');
+	const material1 = geo1.createNode('material');
+	const lambert1 = MAT.createNode('mesh_lambert');
 
 	material1.set_input(0, plane1);
 	material1.p.material.set(lambert1.full_path());
@@ -24,11 +24,11 @@ QUnit.test('materials clone', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
-	const lambert1 = MAT.create_node('mesh_lambert');
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const material1 = geo1.create_node('material');
-	const copy1 = geo1.create_node('copy');
+	const lambert1 = MAT.createNode('mesh_lambert');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const material1 = geo1.createNode('material');
+	const copy1 = geo1.createNode('copy');
 
 	attrib_create1.set_input(0, plane1);
 	material1.set_input(0, attrib_create1);

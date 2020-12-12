@@ -4,8 +4,8 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 QUnit.test('expression ch works in relative', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box1.p.size.set(2);
 	box2.p.size.set("ch('../box1/size')");
@@ -25,8 +25,8 @@ QUnit.test('expression ch works in relative', async (assert) => {
 QUnit.test('expression ch works in absolute', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box1.p.size.set(2);
 	box2.p.size.set("ch('/geo1/box1/size')");
@@ -46,14 +46,14 @@ QUnit.test('expression ch works in absolute', async (assert) => {
 QUnit.test('expression ch can be resolved if no node exist at first with absolute path', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 
 	box1.p.size.set("ch('/geo1/box2/size')");
 	await box1.p.size.compute();
 	assert.equal(box1.p.size.value, 0);
 
 	// create box2 after setting the expression
-	const box2 = geo1.create_node('box');
+	const box2 = geo1.createNode('box');
 	await box1.p.size.compute();
 	assert.equal(box1.p.size.value, 1);
 
@@ -65,14 +65,14 @@ QUnit.test('expression ch can be resolved if no node exist at first with absolut
 QUnit.test('expression ch can be resolved if no node exist at first with relative path', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 
 	box1.p.size.set("ch('../box2/size')");
 	await box1.p.size.compute();
 	assert.equal(box1.p.size.value, 0);
 
 	// create box2 after setting the expression
-	const box2 = geo1.create_node('box');
+	const box2 = geo1.createNode('box');
 	await box1.p.size.compute();
 	assert.equal(box1.p.size.value, 1);
 
@@ -84,7 +84,7 @@ QUnit.test('expression ch can be resolved if no node exist at first with relativ
 QUnit.test('expression ch can be resolved if on scene load', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 
 	box1.p.size.set("-ch('../ty')");
 	await box1.p.size.compute();

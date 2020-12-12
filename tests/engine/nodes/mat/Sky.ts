@@ -4,9 +4,9 @@ import {Material} from 'three/src/materials/Material';
 QUnit.test('mat sky simple', async (assert) => {
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
-	const sky1 = MAT.create_node('sky');
-	const sphere1 = geo1.create_node('sphere');
-	const material1 = geo1.create_node('material');
+	const sky1 = MAT.createNode('sky');
+	const sphere1 = geo1.createNode('sphere');
+	const material1 = geo1.createNode('material');
 
 	material1.set_input(0, sphere1);
 

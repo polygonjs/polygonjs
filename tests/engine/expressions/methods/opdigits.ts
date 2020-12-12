@@ -3,8 +3,8 @@ import {CorePoint} from '../../../../src/core/geometry/Point';
 QUnit.test('expression opdigits works', async (assert) => {
 	const geo1 = window.geo1;
 
-	const line1 = geo1.create_node('line');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const line1 = geo1.createNode('line');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('ptid');
 	attrib_create1.p.value1.set('opdigits(".")');
 	attrib_create1.set_input(0, line1);

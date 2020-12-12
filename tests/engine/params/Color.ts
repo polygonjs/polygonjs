@@ -63,7 +63,7 @@ QUnit.test(
 	async (assert) => {
 		const scene = window.scene;
 		const geo1 = window.geo1;
-		const color1 = geo1.create_node('color');
+		const color1 = geo1.createNode('color');
 		const param1 = color1.p.color;
 
 		assert.ok(param1.options.color_conversion() == null);
@@ -86,7 +86,7 @@ QUnit.test(
 	async (assert) => {
 		const scene = window.scene;
 		const geo1 = window.geo1;
-		const color1 = geo1.create_node('color');
+		const color1 = geo1.createNode('color');
 		const param1 = color1.add_param(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
 		color1.params.post_create_spare_params();
 

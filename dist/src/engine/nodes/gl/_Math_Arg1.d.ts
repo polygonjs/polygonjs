@@ -1,5 +1,5 @@
 declare const AbsGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -68,10 +68,9 @@ declare const AbsGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -100,10 +99,10 @@ declare const AbsGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -131,7 +130,7 @@ declare const AbsGlNode_base: {
 export declare class AbsGlNode extends AbsGlNode_base {
 }
 declare const AcosGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -200,10 +199,9 @@ declare const AcosGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -232,10 +230,10 @@ declare const AcosGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -263,7 +261,7 @@ declare const AcosGlNode_base: {
 export declare class AcosGlNode extends AcosGlNode_base {
 }
 declare const AsinGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -332,10 +330,9 @@ declare const AsinGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -364,10 +361,10 @@ declare const AsinGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -395,7 +392,7 @@ declare const AsinGlNode_base: {
 export declare class AsinGlNode extends AsinGlNode_base {
 }
 declare const AtanGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -464,10 +461,9 @@ declare const AtanGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -496,10 +492,10 @@ declare const AtanGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -527,7 +523,7 @@ declare const AtanGlNode_base: {
 export declare class AtanGlNode extends AtanGlNode_base {
 }
 declare const CeilGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -596,10 +592,9 @@ declare const CeilGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -628,10 +623,10 @@ declare const CeilGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -659,7 +654,7 @@ declare const CeilGlNode_base: {
 export declare class CeilGlNode extends CeilGlNode_base {
 }
 declare const CosGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -728,10 +723,9 @@ declare const CosGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -760,10 +754,10 @@ declare const CosGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -791,7 +785,7 @@ declare const CosGlNode_base: {
 export declare class CosGlNode extends CosGlNode_base {
 }
 declare const DegreesGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -860,10 +854,9 @@ declare const DegreesGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -892,10 +885,10 @@ declare const DegreesGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -923,7 +916,7 @@ declare const DegreesGlNode_base: {
 export declare class DegreesGlNode extends DegreesGlNode_base {
 }
 declare const ExpGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -992,10 +985,9 @@ declare const ExpGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1024,10 +1016,10 @@ declare const ExpGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1055,7 +1047,7 @@ declare const ExpGlNode_base: {
 export declare class ExpGlNode extends ExpGlNode_base {
 }
 declare const Exp2GlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1124,10 +1116,9 @@ declare const Exp2GlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1156,10 +1147,10 @@ declare const Exp2GlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1187,7 +1178,7 @@ declare const Exp2GlNode_base: {
 export declare class Exp2GlNode extends Exp2GlNode_base {
 }
 declare const FloorGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1256,10 +1247,9 @@ declare const FloorGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1288,10 +1278,10 @@ declare const FloorGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1319,7 +1309,7 @@ declare const FloorGlNode_base: {
 export declare class FloorGlNode extends FloorGlNode_base {
 }
 declare const FractGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1388,10 +1378,9 @@ declare const FractGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1420,10 +1409,10 @@ declare const FractGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1451,7 +1440,7 @@ declare const FractGlNode_base: {
 export declare class FractGlNode extends FractGlNode_base {
 }
 declare const InverseSqrtGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1520,10 +1509,9 @@ declare const InverseSqrtGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1552,10 +1540,10 @@ declare const InverseSqrtGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1583,7 +1571,7 @@ declare const InverseSqrtGlNode_base: {
 export declare class InverseSqrtGlNode extends InverseSqrtGlNode_base {
 }
 declare const LogGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1652,10 +1640,9 @@ declare const LogGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1684,10 +1671,10 @@ declare const LogGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1715,7 +1702,7 @@ declare const LogGlNode_base: {
 export declare class LogGlNode extends LogGlNode_base {
 }
 declare const Log2GlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1784,10 +1771,9 @@ declare const Log2GlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1816,10 +1802,10 @@ declare const Log2GlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1847,7 +1833,7 @@ declare const Log2GlNode_base: {
 export declare class Log2GlNode extends Log2GlNode_base {
 }
 declare const NormalizeGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -1916,10 +1902,9 @@ declare const NormalizeGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -1948,10 +1933,10 @@ declare const NormalizeGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -1979,7 +1964,7 @@ declare const NormalizeGlNode_base: {
 export declare class NormalizeGlNode extends NormalizeGlNode_base {
 }
 declare const RadiansGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2048,10 +2033,9 @@ declare const RadiansGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -2080,10 +2064,10 @@ declare const RadiansGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2111,7 +2095,7 @@ declare const RadiansGlNode_base: {
 export declare class RadiansGlNode extends RadiansGlNode_base {
 }
 declare const SignGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2180,10 +2164,9 @@ declare const SignGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -2212,10 +2195,10 @@ declare const SignGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2243,7 +2226,7 @@ declare const SignGlNode_base: {
 export declare class SignGlNode extends SignGlNode_base {
 }
 declare const SinGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2312,10 +2295,9 @@ declare const SinGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -2344,10 +2326,10 @@ declare const SinGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2375,7 +2357,7 @@ declare const SinGlNode_base: {
 export declare class SinGlNode extends SinGlNode_base {
 }
 declare const SqrtGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2444,10 +2426,9 @@ declare const SqrtGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -2476,10 +2457,10 @@ declare const SqrtGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
@@ -2507,7 +2488,7 @@ declare const SqrtGlNode_base: {
 export declare class SqrtGlNode extends SqrtGlNode_base {
 }
 declare const TanGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -2576,10 +2557,9 @@ declare const TanGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -2608,10 +2588,10 @@ declare const TanGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;

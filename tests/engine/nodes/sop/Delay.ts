@@ -2,8 +2,8 @@ QUnit.test('delay simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const delay1 = geo1.create_node('delay');
+	const box1 = geo1.createNode('box');
+	const delay1 = geo1.createNode('delay');
 
 	await scene.root.process_queue();
 

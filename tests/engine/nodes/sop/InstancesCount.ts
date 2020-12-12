@@ -1,5 +1,6 @@
 import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
 import {InstancesCountSopNode} from '../../../../src/engine/nodes/sop/InstancesCount';
+import {create_required_nodes} from './Instance';
 
 async function get_first_geo(instances_count_node: InstancesCountSopNode) {
 	const container = await instances_count_node.request_container();
@@ -13,10 +14,12 @@ async function get_first_geo(instances_count_node: InstancesCountSopNode) {
 QUnit.test('instances_count simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const box1 = geo1.create_node('box');
-	const instance1 = geo1.create_node('instance');
-	const instances_count1 = geo1.create_node('instances_count');
+	const plane1 = geo1.createNode('plane');
+	const box1 = geo1.createNode('box');
+	const instance1 = geo1.createNode('instance');
+	create_required_nodes(instance1);
+
+	const instances_count1 = geo1.createNode('instances_count');
 
 	instance1.set_input(0, box1);
 	instance1.set_input(1, plane1);

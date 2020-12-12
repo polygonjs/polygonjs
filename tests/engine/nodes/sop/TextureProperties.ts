@@ -8,10 +8,10 @@ QUnit.test('texture_properties simple', async (assert) => {
 	geo1.flags.display.set(false);
 	const COP = window.COP;
 	const MAT = window.MAT;
-	const file1 = COP.create_node('image');
-	const basic_material1 = MAT.create_node('mesh_basic');
-	const plane1 = geo1.create_node('plane');
-	const material1 = geo1.create_node('material');
+	const file1 = COP.createNode('image');
+	const basic_material1 = MAT.createNode('mesh_basic');
+	const plane1 = geo1.createNode('plane');
+	const material1 = geo1.createNode('material');
 
 	// setup scene
 	file1.p.url.set(CoreTextureLoader.PARAM_DEFAULT);
@@ -28,7 +28,7 @@ QUnit.test('texture_properties simple', async (assert) => {
 	assert.equal(texture.anisotropy, 1);
 
 	// test
-	const texture_properties1 = geo1.create_node('texture_properties');
+	const texture_properties1 = geo1.createNode('texture_properties');
 	texture_properties1.set_input(0, material1);
 
 	container = await texture_properties1.request_container();

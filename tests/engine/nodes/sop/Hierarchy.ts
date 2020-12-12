@@ -3,9 +3,9 @@ import {HIERARCHY_MODES, HierarchyMode} from '../../../../src/core/operations/so
 QUnit.test('hierarchy simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const file1 = geo1.create_node('file');
-	const hierarchy1 = geo1.create_node('hierarchy');
-	const hierarchy2 = geo1.create_node('hierarchy');
+	const file1 = geo1.createNode('file');
+	const hierarchy1 = geo1.createNode('hierarchy');
+	const hierarchy2 = geo1.createNode('hierarchy');
 
 	hierarchy1.set_input(0, file1);
 	hierarchy2.set_input(0, hierarchy1);

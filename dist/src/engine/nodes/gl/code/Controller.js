@@ -2,9 +2,6 @@ import {TypedNode} from "../../_Base";
 import {GlobalsGeometryHandler} from "./globals/Geometry";
 import {AssemblerNodeSpareParamsController} from "./SpareParamsController";
 export class BaseGlParentNode extends TypedNode {
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }
@@ -48,17 +45,6 @@ export class GlAssemblerController {
   }
   allow_attribute_exports() {
     return this._assembler.allow_attribute_exports();
-  }
-  on_create() {
-    const current_global = this.node.nodes_by_type("globals")[0];
-    const current_output = this.node.nodes_by_type("output")[0];
-    if (current_global || current_output) {
-      return;
-    }
-    const globals = this.node.create_node("globals");
-    const output = this.node.create_node("output");
-    globals.ui_data.set_position(-200, 0);
-    output.ui_data.set_position(200, 0);
   }
   set_compilation_required(new_state = true) {
     this._compile_required = new_state;

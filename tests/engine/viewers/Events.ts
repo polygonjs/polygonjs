@@ -14,8 +14,8 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), [], 'no events registered yet');
 
-	const events = scene.root.create_node('events');
-	const mouse1 = events.create_node('mouse');
+	const events = scene.root.createNode('events');
+	const mouse1 = events.createNode('mouse');
 	await mouse1.request_container();
 	CoreSleep.sleep(100);
 
@@ -50,7 +50,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 	await mouse1.request_container();
 	assert.deepEqual(viewer.events_controller.registered_event_types(), ['mousedown'], '1 event is registered');
 
-	events.remove_node(mouse1);
+	events.removeNode(mouse1);
 	assert.deepEqual(viewer.events_controller.registered_event_types(), [], 'events are removed if node is removed');
 
 	mouse1.p.active.set(1);
@@ -61,7 +61,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 		'setting a deleted node to active does not update the register'
 	);
 
-	const mouse2 = events.create_node('mouse');
+	const mouse2 = events.createNode('mouse');
 	await mouse2.request_container();
 	mouse2.p.mousemove.set(0);
 	await mouse2.request_container();
@@ -96,8 +96,8 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), [], 'no events registered yet');
 
-	const events = scene.root.create_node('events');
-	const mouse1 = events.create_node('mouse');
+	const events = scene.root.createNode('events');
+	const mouse1 = events.createNode('mouse');
 	await mouse1.request_container();
 	CoreSleep.sleep(100);
 	// TODO: those 3 request_container should not be necessary
@@ -159,8 +159,8 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), []);
 
-	const events = scene.root.create_node('events');
-	const keyboard1 = events.create_node('keyboard');
+	const events = scene.root.createNode('events');
+	const keyboard1 = events.createNode('keyboard');
 	await keyboard1.request_container();
 	assert.deepEqual(viewer.events_controller.registered_event_types(), ['keydown']);
 
@@ -180,7 +180,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 	await keyboard1.request_container();
 	assert.deepEqual(viewer.events_controller.registered_event_types(), ['keyup']);
 
-	events.remove_node(keyboard1);
+	events.removeNode(keyboard1);
 	await keyboard1.request_container();
 	assert.deepEqual(viewer.events_controller.registered_event_types(), []);
 
@@ -192,7 +192,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 		'setting a deleted node to active does not update the register'
 	);
 
-	const keyboard2 = events.create_node('keyboard');
+	const keyboard2 = events.createNode('keyboard');
 	await keyboard2.request_container();
 	keyboard2.p.keydown.set(0);
 	await keyboard2.request_container();
@@ -223,8 +223,8 @@ QUnit.test('scene event nodes do not add events to the viewer', async (assert) =
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), []);
 
-	const events = scene.root.create_node('events');
-	const scene1 = events.create_node('scene');
+	const events = scene.root.createNode('events');
+	const scene1 = events.createNode('scene');
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), []);
 

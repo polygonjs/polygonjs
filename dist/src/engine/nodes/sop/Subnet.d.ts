@@ -6,7 +6,5 @@ export declare class SubnetSopNode extends SubnetSopNodeLike<SubnetSopParamsConf
     params_config: SubnetSopParamsConfig;
     static type(): string;
     initialize_node(): void;
-    private _on_create_bound;
-    private _on_create;
 }
 export {};

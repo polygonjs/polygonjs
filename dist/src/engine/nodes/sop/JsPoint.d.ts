@@ -12,7 +12,7 @@ export declare class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig>
     static type(): string;
     protected _children_controller_context: NodeContext;
     initialize_node(): void;
-    create_node<K extends keyof JsNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): JsNodeChildrenMap[K];
+    createNode<S extends keyof JsNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): JsNodeChildrenMap[S];
     createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseJsNodeType[];
     nodes_by_type<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][];

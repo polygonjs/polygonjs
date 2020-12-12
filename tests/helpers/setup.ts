@@ -43,13 +43,13 @@ QUnit.testStart(async () => {
 	window.scene.cooker.block();
 	const root = window.scene.root;
 	window.root = root;
-	window.perspective_camera1 = root.create_node('perspective_camera');
-	window.geo1 = root.create_node('geo');
-	window.MAT = root.create_node('materials');
+	window.perspective_camera1 = root.createNode('perspective_camera');
+	window.geo1 = root.createNode('geo');
+	window.MAT = root.createNode('materials');
 	window.MAT.set_name('MAT');
-	window.POST = root.create_node('post_process');
+	window.POST = root.createNode('post_process');
 	window.POST.set_name('POST');
-	window.COP = root.create_node('cop');
+	window.COP = root.createNode('cop');
 	window.COP.set_name('COP');
 
 	window.scene.loading_controller.set_auto_update(true);

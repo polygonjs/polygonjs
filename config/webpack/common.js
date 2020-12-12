@@ -23,7 +23,7 @@ const plugins = [
 	new HtmlWebpackPlugin({
 		title: 'Index',
 		// filename: 'index.html',
-		chunks: ['polygonjs-engine'],
+		chunks: ['all'],
 	}),
 	new MiniCssExtractPlugin({
 		filename: '[name].css',
@@ -45,7 +45,7 @@ module.exports = (env = {}) => {
 	return {
 		context: path.resolve(__dirname, '../../'), // to automatically find tsconfig.json
 		entry: {
-			'polygonjs-engine': './src/engine/index.ts',
+			all: './src/engine/index_all.ts',
 		},
 		node: {
 			fs: 'empty', // to attempt bundling ammo-typed without error in prod

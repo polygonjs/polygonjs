@@ -2,10 +2,12 @@ import {NOISE_NAMES, NoiseName} from '../../../../src/engine/nodes/gl/Noise';
 
 QUnit.test('gl noise params update as type changes', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.create_node('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	material_basic_builder1.createNode('output');
+	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
 
-	const noise1 = material_basic_builder1.create_node('noise');
+	const noise1 = material_basic_builder1.createNode('noise');
 
 	// start with type as vec3
 	assert.deepEqual(noise1.params.get('amp')?.value_serialized, [1, 1, 1]);

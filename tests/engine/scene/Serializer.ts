@@ -5,17 +5,17 @@ import {PerspectiveCameraObjNode} from '../../../src/engine/nodes/obj/Perspectiv
 
 QUnit.test('scene save simple', async (assert) => {
 	const scene = new PolyScene();
-	scene.root.create_node('ambient_light');
+	scene.root.createNode('ambient_light');
 
 	scene.loading_controller.mark_as_loaded();
 
-	const perspective_camera1 = scene.root.create_node('perspective_camera');
+	const perspective_camera1 = scene.root.createNode('perspective_camera');
 	scene.cameras_controller.set_master_camera_node_path(perspective_camera1.full_path());
 	perspective_camera1.p.t.z.set(10);
 
-	const geo1 = scene.root.create_node('geo');
+	const geo1 = scene.root.createNode('geo');
 	geo1.flags.display.set(true);
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	box1.flags.display.set(true);
 	geo1.p.r.y.set('$F+20');
 

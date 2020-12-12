@@ -71,7 +71,7 @@ const materials = {
     roughness: 0.9
   }),
   [ObjectType.MESH]: new MeshLambertMaterial2({
-    color: new Color2(0.5, 0.5, 1),
+    color: new Color2(1, 1, 1),
     side: FrontSide,
     vertexColors: false,
     transparent: true,

@@ -8,10 +8,10 @@ QUnit.test('LOD simple', async (assert) => {
 	const camera_object = camera_node.object;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const box0 = geo1.create_node('box');
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
-	const LOD1 = geo1.create_node('lod');
+	const box0 = geo1.createNode('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const LOD1 = geo1.createNode('lod');
 
 	box0.p.divisions.set(10);
 	box1.p.divisions.set(5);

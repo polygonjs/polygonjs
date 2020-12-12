@@ -87,10 +87,6 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
-		if (this.assembler_controller) {
-			this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-		}
-		// this.children_controller?.init({dependent: false});
 		this._texture_mesh.material = this.texture_material;
 		this._texture_mesh.scale.multiplyScalar(0.25);
 		this._texture_scene.add(this._texture_mesh);
@@ -111,12 +107,14 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		// });
 	}
 
-	create_node<K extends keyof GlNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
-	}
+	): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<GlNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

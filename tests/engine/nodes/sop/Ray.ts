@@ -1,10 +1,10 @@
 QUnit.test('ray from normal', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const sphere1 = geo1.create_node('sphere');
-	const transform1 = geo1.create_node('transform');
-	const ray1 = geo1.create_node('ray');
+	const box1 = geo1.createNode('box');
+	const sphere1 = geo1.createNode('sphere');
+	const transform1 = geo1.createNode('transform');
+	const ray1 = geo1.createNode('ray');
 
 	transform1.p.scale.set(0.2);
 
@@ -24,11 +24,11 @@ QUnit.test('ray from normal', async (assert) => {
 QUnit.test('ray from dir', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const sphere1 = geo1.create_node('sphere');
-	const transform1 = geo1.create_node('transform');
-	const transform2 = geo1.create_node('transform');
-	const ray1 = geo1.create_node('ray');
+	const plane1 = geo1.createNode('plane');
+	const sphere1 = geo1.createNode('sphere');
+	const transform1 = geo1.createNode('transform');
+	const transform2 = geo1.createNode('transform');
+	const ray1 = geo1.createNode('ray');
 
 	transform1.p.t.y.set(2);
 	transform2.p.scale.set(5);

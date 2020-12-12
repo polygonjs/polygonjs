@@ -13,12 +13,14 @@ export class MaterialsObjNode extends ParamLessBaseManagerObjNode {
 
 	protected _children_controller_context = NodeContext.MAT;
 
-	create_node<K extends keyof MatNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof MatNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): MatNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as MatNodeChildrenMap[K];
-	}
+	): MatNodeChildrenMap[S];
+	createNode<K extends valueof<MatNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<MatNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

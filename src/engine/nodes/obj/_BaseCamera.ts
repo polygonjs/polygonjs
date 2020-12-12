@@ -217,12 +217,14 @@ export class TypedThreejsCameraObjNode<
 		this.children_display_controller.initialize_node();
 	}
 
-	create_node<K extends keyof GeoNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof GeoNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): GeoNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
-	}
+	): GeoNodeChildrenMap[S];
+	createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<GeoNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

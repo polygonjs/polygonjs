@@ -3,9 +3,9 @@ import {Vector3} from 'three/src/math/Vector3';
 QUnit.test('face simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const sphere1 = geo1.create_node('sphere');
+	const sphere1 = geo1.createNode('sphere');
 	sphere1.p.resolution.set([8, 6]);
-	const face1 = geo1.create_node('face');
+	const face1 = geo1.createNode('face');
 	face1.set_input(0, sphere1);
 	face1.p.make_faces_unique.set(0);
 

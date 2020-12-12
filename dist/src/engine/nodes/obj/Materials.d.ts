@@ -7,7 +7,7 @@ export declare class MaterialsObjNode extends ParamLessBaseManagerObjNode {
     readonly render_order: number;
     static type(): Readonly<NetworkNodeType.MAT>;
     protected _children_controller_context: NodeContext;
-    create_node<K extends keyof MatNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): MatNodeChildrenMap[K];
+    createNode<S extends keyof MatNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): MatNodeChildrenMap[S];
     createNode<K extends valueof<MatNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseMatNodeType[];
     nodes_by_type<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K][];

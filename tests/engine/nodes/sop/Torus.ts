@@ -1,7 +1,7 @@
 QUnit.test('torus simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const torus1 = geo1.create_node('torus');
+	const torus1 = geo1.createNode('torus');
 
 	let container = await torus1.request_container();
 	const core_group = container.core_content()!;

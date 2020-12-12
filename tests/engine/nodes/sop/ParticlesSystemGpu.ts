@@ -9,6 +9,19 @@ import {ParticlesSystemGpuSopNode} from '../../../../src/engine/nodes/sop/Partic
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssertUtils} from '../../../helpers/AssertUtils';
 
+function create_required_nodes(particles1: ParticlesSystemGpuSopNode) {
+	// create output and globals
+	const output1 = particles1.createNode('output');
+	const globals1 = particles1.createNode('globals');
+	// create material
+	const MAT = window.MAT;
+	const mat_node = MAT.createNode('points_builder');
+	mat_node.createNode('output');
+	particles1.p.material.set(mat_node.full_path());
+
+	return {output1, globals1};
+}
+
 QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
@@ -17,12 +30,14 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const {renderer} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer, 'renderer created');
 
-	const plane1 = geo1.create_node('plane');
-	const delete1 = geo1.create_node('delete');
-	const particles1 = geo1.create_node('particles_system_gpu');
-	const output1 = particles1.nodes_by_type('output')[0];
-	const globals1 = particles1.nodes_by_type('globals')[0];
-	const add1 = particles1.create_node('add');
+	const plane1 = geo1.createNode('plane');
+	const delete1 = geo1.createNode('delete');
+	const particles1 = geo1.createNode('particles_system_gpu');
+	assert.equal(particles1.children().length, 0);
+	const {output1, globals1} = create_required_nodes(particles1);
+	assert.equal(particles1.children().length, 2);
+
+	const add1 = particles1.createNode('add');
 	add1.set_input(0, globals1, 'position');
 	output1.set_input('position', add1);
 	add1.params.get('add1')!.set([0, 1, 0]);
@@ -39,6 +54,7 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	await particles1.request_container();
 	const render_material = particles1.render_controller.render_material()!;
 	const uniform = render_material.uniforms.texture_particles_0;
+
 	assert.ok(render_material, 'material ok');
 	assert.ok(uniform, 'uniform ok');
 
@@ -78,13 +94,14 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const {renderer} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer, 'renderer created');
 
-	const plane1 = geo1.create_node('plane');
-	const delete1 = geo1.create_node('delete');
-	const particles1 = geo1.create_node('particles_system_gpu');
-	const output1 = particles1.nodes_by_type('output')[0];
-	const globals1 = particles1.nodes_by_type('globals')[0];
-	const add1 = particles1.create_node('add');
-	const param1 = particles1.create_node('param');
+	const plane1 = geo1.createNode('plane');
+	const delete1 = geo1.createNode('delete');
+	const particles1 = geo1.createNode('particles_system_gpu');
+	assert.equal(particles1.children().length, 0);
+	const {output1, globals1} = create_required_nodes(particles1);
+	assert.equal(particles1.children().length, 2);
+	const add1 = particles1.createNode('add');
+	const param1 = particles1.createNode('param');
 	param1.set_gl_type(GlConnectionPointType.VEC3);
 	param1.p.name.set('test_param');
 	add1.set_input(0, globals1, 'position');
@@ -114,7 +131,6 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const all_variables = particles1.gpu_controller.all_variables();
 	assert.equal(all_variables.length, 1);
 	const variable = all_variables[0];
-	console.log(variable.material.uniforms);
 	const param_uniform = variable.material.uniforms.v_POLY_param1_val;
 	assert.deepEqual(param_uniform.value.toArray(), [0, 1, 0], 'param uniform set to the expected value');
 

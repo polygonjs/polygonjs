@@ -6,7 +6,7 @@ import { JsNodeChildrenMap } from '../../../poly/registers/nodes/Js';
 import { BaseJsNodeType } from '../_Base';
 import { ParamsInitData } from '../../utils/io/IOController';
 export declare class AssemblerControllerNode extends TypedNode<any, any> {
-    create_node<K extends keyof JsNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): JsNodeChildrenMap[K];
+    createNode<S extends keyof JsNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): JsNodeChildrenMap[S];
     createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseJsNodeType[];
     nodes_by_type<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][];

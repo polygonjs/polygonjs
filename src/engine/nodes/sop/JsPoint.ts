@@ -46,12 +46,14 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.children_controller?.init({dependent: false});
 	}
 
-	create_node<K extends keyof JsNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof JsNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): JsNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as JsNodeChildrenMap[K];
-	}
+	): JsNodeChildrenMap[S];
+	createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<JsNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

@@ -1,8 +1,8 @@
 QUnit.test('color simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const color1 = geo1.create_node('color');
+	const box1 = geo1.createNode('box');
+	const color1 = geo1.createNode('color');
 	color1.set_input(0, box1);
 	color1.p.color.set([0.4, 0.5, 0.6]);
 
@@ -34,8 +34,8 @@ QUnit.test('color simple', async (assert) => {
 QUnit.test('color with expression', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const color1 = geo1.create_node('color');
+	const box1 = geo1.createNode('box');
+	const color1 = geo1.createNode('color');
 	color1.set_input(0, box1);
 
 	color1.p.color.r.set('@ptnum+1');
@@ -127,9 +127,9 @@ QUnit.test('color with expression', async (assert) => {
 QUnit.test('color with position', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	box1.p.center.set([0.5, 0.5, 0.5]);
-	const color1 = geo1.create_node('color');
+	const color1 = geo1.createNode('color');
 	color1.set_input(0, box1);
 
 	color1.p.color.r.set('@P.x');

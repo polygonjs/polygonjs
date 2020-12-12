@@ -19,12 +19,10 @@ export declare class TypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
     child_expected_output_connection_point_types(): GlConnectionPointType[];
     child_expected_input_connection_point_name(index: number): string;
     child_expected_output_connection_point_name(index: number): string;
-    create_node<K extends keyof GlNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): GlNodeChildrenMap[K];
+    createNode<S extends keyof GlNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): GlNodeChildrenMap[S];
     createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseGlNodeType[];
     nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][];
-    private _on_create_bound;
-    private _on_create;
     set_lines_block_start(shaders_collection_controller: ShadersCollectionController, child_node: SubnetInputGlNode): void;
     set_lines_block_end(shaders_collection_controller: ShadersCollectionController, child_node: SubnetOutputGlNode): void;
     set_lines(shaders_collection_controller: ShadersCollectionController): void;

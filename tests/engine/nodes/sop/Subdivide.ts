@@ -1,8 +1,8 @@
 QUnit.test('subdivide simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const subdivide1 = geo1.create_node('subdivide');
+	const box1 = geo1.createNode('box');
+	const subdivide1 = geo1.createNode('subdivide');
 
 	subdivide1.set_input(0, box1);
 

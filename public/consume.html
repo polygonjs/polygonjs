@@ -19,7 +19,7 @@
 	<body>
 		<div id="app"></div>
 	</body>
-	<script src="/dist/polygonjs-engine.js"></script>
+	<script src="/dist/all.js"></script>
 	<script>
 		// import '/dist/polygonjs-engine.js';
 		// console.log('test', POLY);
@@ -32,25 +32,18 @@
 
 		// // create a scene
 		const scene = new POLY.PolyScene();
-		console.log(scene);
 
 		// // create a Box
-		const geo = scene.root.create_node('geo');
-		const sphere = geo.create_node('sphere');
-		sphere.p.radius.set(0.5);
-		sphere.p.center.set([0, 0.5, 0]);
-		sphere.flags.display.set(true);
-		console.log(sphere, sphere.type, sphere.p.radius);
+		const geo = scene.root.createNode('geo');
+		const sphere = geo.createNode('sphere');
 
 		// // add a light
-		const hemisphere = scene.root.create_node('hemisphere_light');
-		// hemisphere.p.sky_color.set([1, 1, 1]);
-		// hemisphere.p.ground_color.set([0, 0, 0]);
+		const hemisphere = scene.root.createNode('hemisphere_light');
 
 		// // create a camera, add orbit_controls and mount the viewer
-		const perspective_camera1 = scene.root.create_node('perspective_camera');
-		const events1 = perspective_camera1.create_node('events');
-		const orbits_controls = events1.create_node('camera_orbit_controls');
+		const perspective_camera1 = scene.root.createNode('perspective_camera');
+		const events1 = perspective_camera1.createNode('events');
+		const orbits_controls = events1.createNode('camera_orbit_controls');
 		perspective_camera1.p.controls.set(orbits_controls.full_path());
 		perspective_camera1.p.t.set([5, 5, 5]);
 		const element = document.getElementById('app');

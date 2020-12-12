@@ -4,9 +4,9 @@ QUnit.test('transform copy simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
-	const transform_copy1 = geo1.create_node('transform_copy');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+	const transform_copy1 = geo1.createNode('transform_copy');
 
 	transform1.set_input(0, box1);
 	transform_copy1.set_input(0, box1);

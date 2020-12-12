@@ -8,7 +8,7 @@ import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
 QUnit.test('scene can be imported with a single optimized node', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	box1.flags.optimize.set(true);
 
 	const data = new SceneJsonExporter(scene).data();
@@ -33,8 +33,8 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 QUnit.test('scene can be imported with a 2 optimized nodes plugged into each other', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
 	transform1.set_input(0, box1);
 	box1.flags.optimize.set(true);
 	transform1.flags.optimize.set(true);
@@ -67,14 +67,14 @@ QUnit.test(
 	async (assert) => {
 		const scene = window.scene;
 		const geo1 = window.geo1;
-		const box1 = geo1.create_node('box');
-		const sphere1 = geo1.create_node('sphere');
-		const add1 = geo1.create_node('add');
-		const jitter1 = geo1.create_node('jitter');
-		const transform1 = geo1.create_node('transform');
-		const transform2 = geo1.create_node('transform');
-		const merge1 = geo1.create_node('merge');
-		const merge2 = geo1.create_node('merge');
+		const box1 = geo1.createNode('box');
+		const sphere1 = geo1.createNode('sphere');
+		const add1 = geo1.createNode('add');
+		const jitter1 = geo1.createNode('jitter');
+		const transform1 = geo1.createNode('transform');
+		const transform2 = geo1.createNode('transform');
+		const merge1 = geo1.createNode('merge');
+		const merge2 = geo1.createNode('merge');
 		transform1.set_input(0, box1);
 		jitter1.set_input(0, transform1);
 		transform2.set_input(0, sphere1);

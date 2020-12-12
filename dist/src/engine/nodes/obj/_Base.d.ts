@@ -24,7 +24,6 @@ export declare class TypedObjNode<O extends Object3D, K extends NodeParamsConfig
     get attachable_to_hierarchy(): boolean;
     protected _used_in_scene: boolean;
     get used_in_scene(): boolean;
-    set_used_in_scene(state: boolean): void;
     add_object_to_parent(parent: Object3D): void;
     remove_object_from_parent(): void;
     readonly children_display_controller: ChildrenDisplayController | undefined;

@@ -8,7 +8,7 @@ QUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const param = box1.p.size;
 	assert.ok(box1.is_dirty);
 
@@ -33,7 +33,7 @@ QUnit.test('sets the node to recook if set expression', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const param = box1.p.size;
 	assert.ok(box1.is_dirty);
 

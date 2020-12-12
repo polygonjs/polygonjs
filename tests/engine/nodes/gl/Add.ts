@@ -4,12 +4,15 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 
 QUnit.test('gl add updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.create_node('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	material_basic_builder1.createNode('output');
+	material_basic_builder1.createNode('globals');
+
 	assert.equal(material_basic_builder1.children().length, 2);
 
-	const add1 = material_basic_builder1.create_node('add');
-	const constant1 = material_basic_builder1.create_node('constant');
-	const constant2 = material_basic_builder1.create_node('constant');
+	const add1 = material_basic_builder1.createNode('add');
+	const constant1 = material_basic_builder1.createNode('constant');
+	const constant2 = material_basic_builder1.createNode('constant');
 	constant1.set_gl_type(GlConnectionPointType.VEC2);
 	constant2.set_gl_type(GlConnectionPointType.VEC2);
 
@@ -51,11 +54,13 @@ QUnit.test('gl add updates its output type correctly when created', async (asser
 QUnit.test('gl add updates its output type correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.create_node('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	material_basic_builder1.createNode('output');
+	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
 
-	const add1 = material_basic_builder1.create_node('add');
-	const constant1 = material_basic_builder1.create_node('constant');
+	const add1 = material_basic_builder1.createNode('add');
+	const constant1 = material_basic_builder1.createNode('constant');
 	constant1.set_gl_type(GlConnectionPointType.VEC2);
 	add1.set_input(0, constant1);
 	assert.ok(add1.lifecycle.creation_completed);

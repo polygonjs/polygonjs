@@ -1,9 +1,9 @@
 QUnit.test('attrib_delete simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const attrib_delete1 = geo1.create_node('attrib_delete');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_delete1 = geo1.createNode('attrib_delete');
 	attrib_create1.set_input(0, plane1);
 	attrib_delete1.set_input(0, attrib_create1);
 

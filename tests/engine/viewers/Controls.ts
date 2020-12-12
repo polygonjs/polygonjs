@@ -6,9 +6,9 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	assert.ok(!scene.loading_controller.is_loading);
 
 	const perspective_camera1 = window.perspective_camera1;
-	const events = scene.root.create_node('events');
-	const camera_orbit_controls1 = events.create_node('camera_orbit_controls');
-	const camera_orbit_controls2 = events.create_node('camera_orbit_controls');
+	const events = scene.root.createNode('events');
+	const camera_orbit_controls1 = events.createNode('camera_orbit_controls');
+	const camera_orbit_controls2 = events.createNode('camera_orbit_controls');
 
 	camera_orbit_controls1.p.tdamping.set(1);
 	camera_orbit_controls2.p.tdamping.set(0);

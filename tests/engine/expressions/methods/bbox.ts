@@ -1,9 +1,9 @@
 QUnit.test('expression bbox works with path', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	assert.equal(box1.name, 'box1');
-	const box2 = geo1.create_node('box');
+	const box2 = geo1.createNode('box');
 
 	box2.p.size.set(`bbox('../${box1.name}', 'min', 'x')`);
 
@@ -12,8 +12,8 @@ QUnit.test('expression bbox works with path', async (assert) => {
 });
 
 // test "expression bbox works with input index", ->
-// 	box1 = geo1.create_node('box')
-// 	box2 = geo1.create_node('box')
+// 	box1 = geo1.createNode('box')
+// 	box2 = geo1.createNode('box')
 
 // 	box2.set_input(0, box1)
 
@@ -25,8 +25,8 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 		done()
 
 // test "expression bbox fails with bad path", ->
-// 	box1 = geo1.create_node('box')
-// 	box2 = geo1.create_node('box')
+// 	box1 = geo1.createNode('box')
+// 	box2 = geo1.createNode('box')
 
 // 	box2.set_input(0, box1)
 
@@ -38,8 +38,8 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 		done()
 
 // test "expression bbox fails with bad input index 1", ->
-// 	box1 = geo1.create_node('box')
-// 	box2 = geo1.create_node('box')
+// 	box1 = geo1.createNode('box')
+// 	box2 = geo1.createNode('box')
 
 // 	box2.set_input(0, box1)
 
@@ -51,8 +51,8 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 		done()
 
 // test "expression bbox fails with bad input index 0", ->
-// 	box1 = geo1.create_node('box')
-// 	box2 = geo1.create_node('box')
+// 	box1 = geo1.createNode('box')
+// 	box2 = geo1.createNode('box')
 
 // 	box2.param('size').set_expression("npoints(0)")
 

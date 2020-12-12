@@ -4,9 +4,9 @@ import {RampPoint, RampValue, RampInterpolation} from '../../../../src/engine/pa
 QUnit.test('attrib_remap simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const attrib_remap1 = geo1.create_node('attrib_remap');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_remap1 = geo1.createNode('attrib_remap');
 	attrib_create1.set_input(0, plane1);
 	attrib_remap1.set_input(0, attrib_create1);
 

@@ -52,9 +52,6 @@ export function create_poly_obj_node(node_type, definition) {
         return false;
       }
     }
-    create_node(type, params_init_value_overrides) {
-      return super.create_node(type, params_init_value_overrides);
-    }
     createNode(node_class, params_init_value_overrides) {
       return super.createNode(node_class, params_init_value_overrides);
     }

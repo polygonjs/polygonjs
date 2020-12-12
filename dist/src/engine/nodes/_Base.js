@@ -162,17 +162,14 @@ export class TypedNode extends CoreGraphNode2 {
     }
     this.cook_controller.end_cook(message);
   }
-  create_node(type, params_init_value_overrides) {
-    return this.children_controller?.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return this.children_controller?.createNode(node_class, params_init_value_overrides);
   }
   create_operation_container(type, operation_container_name, params_init_value_overrides) {
     return this.children_controller?.create_operation_container(type, operation_container_name, params_init_value_overrides);
   }
-  remove_node(node) {
-    this.children_controller?.remove_node(node);
+  removeNode(node) {
+    this.children_controller?.removeNode(node);
   }
   children() {
     return this.children_controller?.children() || [];

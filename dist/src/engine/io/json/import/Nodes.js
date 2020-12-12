@@ -20,7 +20,7 @@ export class NodesJsonImporter {
       let node_type = node_data["type"];
       const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data["params"]);
       try {
-        const node = this._node.create_node(node_type, non_spare_params_data);
+        const node = this._node.createNode(node_type, non_spare_params_data);
         if (node) {
           node.set_name(node_name);
           nodes.push(node);

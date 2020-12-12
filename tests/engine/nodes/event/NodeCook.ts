@@ -9,21 +9,21 @@ import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 QUnit.test('event node_cook simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
-	const events = scene.root.create_node('events');
+	const events = scene.root.createNode('events');
 
-	const box1 = geo1.create_node('box');
-	const scatter1 = geo1.create_node('scatter');
-	const scatter2 = geo1.create_node('scatter');
-	const scatter3 = geo1.create_node('scatter');
-	const merge1 = geo1.create_node('merge');
-	const switch1 = geo1.create_node('switch');
-	const switch2 = geo1.create_node('switch');
+	const box1 = geo1.createNode('box');
+	const scatter1 = geo1.createNode('scatter');
+	const scatter2 = geo1.createNode('scatter');
+	const scatter3 = geo1.createNode('scatter');
+	const merge1 = geo1.createNode('merge');
+	const switch1 = geo1.createNode('switch');
+	const switch2 = geo1.createNode('switch');
 
 	await scene.wait_for_cooks_completed();
 
-	const node_cook1 = events.create_node('node_cook');
-	const set_param1 = events.create_node('set_param');
-	const set_param2 = events.create_node('set_param');
+	const node_cook1 = events.createNode('node_cook');
+	const set_param1 = events.createNode('set_param');
+	const set_param2 = events.createNode('set_param');
 
 	scatter1.set_input(0, box1);
 	scatter2.set_input(0, box1);

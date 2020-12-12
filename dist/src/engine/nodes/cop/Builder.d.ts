@@ -36,7 +36,7 @@ export declare class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig>
     private _renderer_controller;
     protected _children_controller_context: NodeContext;
     initialize_node(): void;
-    create_node<K extends keyof GlNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): GlNodeChildrenMap[K];
+    createNode<S extends keyof GlNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): GlNodeChildrenMap[S];
     createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseGlNodeType[];
     nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][];

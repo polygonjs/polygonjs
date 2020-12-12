@@ -1,7 +1,7 @@
 QUnit.test('expression precision works on a float', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 
 	box1.p.size.set('precision(-5.12657, 2)');
 
@@ -20,9 +20,9 @@ QUnit.test('expression precision works on a float', async (assert) => {
 QUnit.test('expression precision works on a string', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
-	const attribtransfer1 = geo1.create_node('attrib_transfer');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const attribtransfer1 = geo1.createNode('attrib_transfer');
 	attribtransfer1.set_input(0, box1);
 	attribtransfer1.set_input(0, box2);
 

@@ -30,5 +30,5 @@ if (element) {
 }
 
 // EXPORT
-const nodes = [sphere];
+const nodes: any[] = [sphere];
 export {scene, nodes};

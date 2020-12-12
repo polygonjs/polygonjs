@@ -5,7 +5,7 @@ QUnit.test('spot light helper does not get shown when turning light on and off',
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
-	const spot_light1 = scene.root.create_node('spot_light');
+	const spot_light1 = scene.root.createNode('spot_light');
 	assert.equal(spot_light1.name, 'spot_light1');
 	assert.equal(main_group.children.length, 3);
 	assert.equal(spot_light1.object.children.length, 3, '3 children');

@@ -8,9 +8,6 @@ export class MaterialsSopNode extends ParamLessBaseNetworkSopNode {
   static type() {
     return NetworkNodeType.MAT;
   }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }

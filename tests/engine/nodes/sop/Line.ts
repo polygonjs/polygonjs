@@ -1,7 +1,7 @@
 QUnit.test('line simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const line1 = geo1.create_node('line');
+	const line1 = geo1.createNode('line');
 
 	let container;
 

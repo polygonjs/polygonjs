@@ -1,14 +1,14 @@
 QUnit.test('skin simple with 2 curves', async (assert) => {
 	const geo1 = window.geo1;
 
-	const line1 = geo1.create_node('line');
-	const line2 = geo1.create_node('line');
-	const transform1 = geo1.create_node('transform');
-	const transform2 = geo1.create_node('transform');
-	const merge1 = geo1.create_node('merge');
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const skin1 = geo1.create_node('skin');
-	const attrib_copy1 = geo1.create_node('attrib_copy');
+	const line1 = geo1.createNode('line');
+	const line2 = geo1.createNode('line');
+	const transform1 = geo1.createNode('transform');
+	const transform2 = geo1.createNode('transform');
+	const merge1 = geo1.createNode('merge');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const skin1 = geo1.createNode('skin');
+	const attrib_copy1 = geo1.createNode('attrib_copy');
 
 	transform1.set_input(0, line1);
 	transform2.set_input(0, line2);
@@ -59,11 +59,11 @@ QUnit.test('skin simple with 2 curves', async (assert) => {
 QUnit.skip('skin simple with 3 curves', async (assert) => {
 	const geo1 = window.geo1;
 
-	const line1 = geo1.create_node('line');
-	const line2 = geo1.create_node('line');
-	const line3 = geo1.create_node('line');
-	const merge1 = geo1.create_node('merge');
-	const skin1 = geo1.create_node('skin');
+	const line1 = geo1.createNode('line');
+	const line2 = geo1.createNode('line');
+	const line3 = geo1.createNode('line');
+	const merge1 = geo1.createNode('merge');
+	const skin1 = geo1.createNode('skin');
 
 	merge1.set_input(0, line1);
 	merge1.set_input(1, line2);

@@ -16,12 +16,14 @@ export class CopObjNode extends ParamLessBaseManagerObjNode {
 	// 	// this._init_manager();
 	// }
 
-	create_node<K extends keyof CopNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof CopNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): CopNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as CopNodeChildrenMap[K];
-	}
+	): CopNodeChildrenMap[S];
+	createNode<K extends valueof<CopNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<CopNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

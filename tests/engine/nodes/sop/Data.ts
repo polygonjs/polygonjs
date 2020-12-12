@@ -1,6 +1,6 @@
 async function with_data(data_json?: object) {
 	const geo1 = window.geo1;
-	const data1 = geo1.create_node('data');
+	const data1 = geo1.createNode('data');
 	if (data_json) {
 		data1.p.data.set(JSON.stringify(data_json));
 	}

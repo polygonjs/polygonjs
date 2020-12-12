@@ -49,7 +49,7 @@
 // 	assert.ok(CoreObject.is_a(geo1, GeoObjNode));
 // 	assert.ok(CoreObject.is_a(geo1, TypedObjNode));
 // 	assert.ok(CoreObject.is_a(geo1, TypedNode));
-// 	const camera = scene.root.create_node('perspective_camera');
+// 	const camera = scene.root.createNode('perspective_camera');
 // 	assert.ok(CoreObject.is_a(camera, TypedNode));
 // 	assert.ok(CoreObject.is_a(camera, TypedObjNode));
 // 	assert.ok(CoreObject.is_a(camera, TypedCameraObjNode));

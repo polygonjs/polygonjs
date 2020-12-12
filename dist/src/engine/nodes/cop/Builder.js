@@ -71,9 +71,6 @@ export class BuilderCopNode extends TypedCopNode {
     return this._assembler_controller;
   }
   initialize_node() {
-    if (this.assembler_controller) {
-      this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-    }
     this._texture_mesh.material = this.texture_material;
     this._texture_mesh.scale.multiplyScalar(0.25);
     this._texture_scene.add(this._texture_mesh);
@@ -81,9 +78,6 @@ export class BuilderCopNode extends TypedCopNode {
     this.add_post_dirty_hook("_cook_main_without_inputs_when_dirty", () => {
       setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
     });
-  }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
   }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);

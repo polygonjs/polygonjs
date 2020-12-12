@@ -7,7 +7,7 @@ import { GlNodeChildrenMap } from '../../../poly/registers/nodes/Gl';
 import { BaseGlNodeType } from '../_Base';
 import { ParamsInitData } from '../../utils/io/IOController';
 export declare class BaseGlParentNode extends TypedNode<any, any> {
-    create_node<K extends keyof GlNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): GlNodeChildrenMap[K];
+    createNode<S extends keyof GlNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): GlNodeChildrenMap[S];
     createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseGlNodeType[];
     nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][];
@@ -29,7 +29,6 @@ export declare class GlAssemblerController<A extends BaseGlShaderAssembler> {
     add_output_inputs(output_child: OutputGlNode): void;
     add_globals_outputs(globals_node: GlobalsGlNode): void;
     allow_attribute_exports(): boolean;
-    on_create(): void;
     set_compilation_required(new_state?: boolean): void;
     set_compilation_required_and_dirty(trigger_node?: BaseGlNodeType): void;
     compile_required(): boolean;

@@ -15,8 +15,8 @@ QUnit.test('Post nodes simple', async (assert) => {
 
 	// start test
 	const camera = scene.root.nodes_by_type('perspective_camera')[0];
-	const post_process1 = camera.create_node('post_process');
-	const horizontal_blur1 = post_process1.create_node('horizontal_blur');
+	const post_process1 = camera.createNode('post_process');
+	const horizontal_blur1 = post_process1.createNode('horizontal_blur');
 
 	assert.ok(horizontal_blur1.flags?.display?.active, 'first node created has display flag on');
 
@@ -45,7 +45,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	);
 
 	// add another pass and add as input to the first one
-	const vertical_blur1 = post_process1.create_node('vertical_blur');
+	const vertical_blur1 = post_process1.createNode('vertical_blur');
 	horizontal_blur1.set_input(0, vertical_blur1);
 	await CoreSleep.sleep(20);
 	composer = camera.post_process_controller.composer(canvas);
@@ -60,7 +60,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	);
 
 	// add another and set the display flag to it
-	const unreal_bloom1 = post_process1.create_node('unreal_bloom');
+	const unreal_bloom1 = post_process1.createNode('unreal_bloom');
 	unreal_bloom1.flags.display.set(true);
 	composer = camera.post_process_controller.composer(canvas);
 	assert.equal(composer.passes.length, 1, 'composer has one pass');

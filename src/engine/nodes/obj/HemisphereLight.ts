@@ -6,10 +6,10 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
-	sky_color = ParamConfig.COLOR([0.5, 0.9, 1], {
+	sky_color = ParamConfig.COLOR([1, 1, 1], {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
-	ground_color = ParamConfig.COLOR([0.1, 0.15, 0.1], {
+	ground_color = ParamConfig.COLOR([0, 0, 0], {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	intensity = ParamConfig.FLOAT(1);

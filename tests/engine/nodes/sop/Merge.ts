@@ -1,9 +1,9 @@
 QUnit.test('merge simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const tube1 = geo1.create_node('tube');
-	const box1 = geo1.create_node('box');
-	const merge1 = geo1.create_node('merge');
+	const tube1 = geo1.createNode('tube');
+	const box1 = geo1.createNode('box');
+	const merge1 = geo1.createNode('merge');
 	merge1.set_input(0, box1);
 
 	let container = await merge1.request_container();
@@ -17,22 +17,22 @@ QUnit.test('merge simple', async (assert) => {
 QUnit.skip('merge geos with different attributes', async (assert) => {
 	const geo1 = window.geo1;
 
-	const sphere1 = geo1.create_node('sphere');
-	const box1 = geo1.create_node('box');
+	const sphere1 = geo1.createNode('sphere');
+	const box1 = geo1.createNode('box');
 
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.set_input(0, box1);
 	attrib_create1.p.name.set('blend');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(2);
 
-	const attrib_create2 = geo1.create_node('attrib_create');
+	const attrib_create2 = geo1.createNode('attrib_create');
 	attrib_create2.set_input(0, sphere1);
 	attrib_create2.p.name.set('selected');
 	attrib_create2.p.size.set(1);
 	attrib_create2.p.value1.set(1);
 
-	const merge1 = geo1.create_node('merge');
+	const merge1 = geo1.createNode('merge');
 	merge1.set_input(0, attrib_create1);
 	merge1.set_input(1, attrib_create2);
 
@@ -51,10 +51,10 @@ import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';
 QUnit.test('sop merge has predictable order in assembled objects', async (assert) => {
 	const geo1 = window.geo1;
 
-	const add1 = geo1.create_node('add');
-	const plane1 = geo1.create_node('plane');
+	const add1 = geo1.createNode('add');
+	const plane1 = geo1.createNode('plane');
 
-	const merge1 = geo1.create_node('merge');
+	const merge1 = geo1.createNode('merge');
 	merge1.set_input(0, add1);
 	merge1.set_input(1, plane1);
 
@@ -69,10 +69,10 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const add1 = geo1.create_node('add');
-	const plane1 = geo1.create_node('plane');
+	const add1 = geo1.createNode('add');
+	const plane1 = geo1.createNode('plane');
 
-	const merge1 = geo1.create_node('merge');
+	const merge1 = geo1.createNode('merge');
 	merge1.set_input(0, add1);
 	merge1.set_input(2, plane1);
 

@@ -19,7 +19,7 @@ QUnit.test('float eval correctly when set to different values', async (assert) =
 QUnit.test('float has_expression() returns false when removing the expression', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const param = box1.p.size;
 
 	param.set(2);
@@ -43,7 +43,7 @@ QUnit.test('float param can take an expression returning a boolean', async (asse
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const param = box1.p.size;
 
 	param.set('1+1');
@@ -63,7 +63,7 @@ QUnit.test('float param can take an expression returning a boolean', async (asse
 QUnit.test('serialized value is float if numerical value entered as a string', async (assert) => {
 	const geo1 = window.geo1;
 
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	const param = attrib_create1.p.value1;
 
 	param.set('12.5');

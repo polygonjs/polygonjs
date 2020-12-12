@@ -7,9 +7,9 @@ QUnit.test('event set_param simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const box1 = geo1.create_node('box');
-	const sphere1 = geo1.create_node('sphere');
-	const switch1 = geo1.create_node('switch');
+	const box1 = geo1.createNode('box');
+	const sphere1 = geo1.createNode('sphere');
+	const switch1 = geo1.createNode('switch');
 	switch1.set_input(0, box1);
 	switch1.set_input(1, sphere1);
 
@@ -19,8 +19,8 @@ QUnit.test('event set_param simple', async (assert) => {
 	let container = await switch1.request_container();
 	assert.equal(container.points_count(), 24);
 
-	const events1 = scene.root.create_node('events');
-	const set_param1 = events1.create_node('set_param');
+	const events1 = scene.root.createNode('events');
+	const set_param1 = events1.createNode('set_param');
 	set_param1.p.param.set(switch1.p.input.full_path());
 	await set_param1.p.param.compute();
 	set_param1.p.number.set(1);
@@ -42,7 +42,7 @@ QUnit.test('event set_param simple', async (assert) => {
 	// then setup on scene load
 	set_param1.p.number.set(1);
 	switch1.p.input.set(0); // make sure to save with input as 0
-	const scene1 = events1.create_node('scene');
+	const scene1 = events1.createNode('scene');
 	set_param1.set_input(0, scene1, 0);
 
 	const data = new SceneJsonExporter(scene).data();

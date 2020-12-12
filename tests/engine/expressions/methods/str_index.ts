@@ -1,7 +1,7 @@
 QUnit.test('expression str_index simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
+	const plane1 = geo1.createNode('plane');
 	const param = plane1.p.size.x;
 
 	param.set('str_index()');

@@ -10,9 +10,6 @@ export class EventsObjNode extends ParamLessBaseManagerObjNode {
   static type() {
     return NetworkNodeType.EVENT;
   }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }

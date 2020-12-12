@@ -1,7 +1,7 @@
 QUnit.test('expression str_sub simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	const text_param = text1.p.text;
 
 	text_param.set('`str_sub()`');
@@ -25,7 +25,7 @@ QUnit.test('expression str_sub simple', async (assert) => {
 	assert.equal(text_param.value, 't t');
 
 	// create a text and apply expression to it's text attribute
-	const text2 = geo1.create_node('text');
+	const text2 = geo1.createNode('text');
 	text2.set_name('text2');
 	const text_param2 = text2.p.text;
 	assert.equal(text2.name, 'text2');

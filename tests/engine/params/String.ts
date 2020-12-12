@@ -1,8 +1,8 @@
 QUnit.test('a string is set dirty if it refers another param with ch and it changes', async (assert) => {
 	const geo1 = window.geo1;
-	const text1 = geo1.create_node('text');
-	const text2 = geo1.create_node('text');
-	const text3 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
+	const text2 = geo1.createNode('text');
+	const text3 = geo1.createNode('text');
 	const text1_param = text1.p.text;
 	const text2_param = text2.p.text;
 	const text3_param = text3.p.text;
@@ -28,7 +28,7 @@ QUnit.test('a string is set dirty if it refers another param with ch and it chan
 QUnit.test('a string of `$F` will make the param frame dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	const text = geo1.create_node('text');
+	const text = geo1.createNode('text');
 	const text_param = text.p.text;
 	text_param.set('`$F*2+1`');
 	await text_param.compute();
@@ -44,8 +44,8 @@ QUnit.test('a string of `$F` will make the param frame dependent', async (assert
 QUnit.test('set as a number will convert to string', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
 	transform1.set_input(0, box1);
 
 	transform1.p.group.set((<unknown>12) as string);
@@ -55,8 +55,8 @@ QUnit.test('set as a number will convert to string', async (assert) => {
 QUnit.test('a string can have multiple expression and maintain dependencies', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	const text1 = geo1.create_node('text');
-	const text2 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
+	const text2 = geo1.createNode('text');
 	const text1_param = text1.p.text;
 	const text2_param = text2.p.text;
 	const text1_name = text1.name;
@@ -73,7 +73,7 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	assert.equal(text2_param.graph_predecessors().length, 2);
 
 	// test updating the string param
-	const text3 = geo1.create_node('text');
+	const text3 = geo1.createNode('text');
 	text3.p.text.set(' - this is text3 - ');
 	const text3_name = text3.name;
 	text2_param.set('text3: `ch("../' + text3_name + '/text")` middle `$F*3` end');

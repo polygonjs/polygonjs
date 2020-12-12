@@ -13,12 +13,14 @@ export class RenderersObjNode extends ParamLessBaseManagerObjNode {
 
 	protected _children_controller_context = NodeContext.ROP;
 
-	create_node<K extends keyof RopNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof RopNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): RopNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as RopNodeChildrenMap[K];
-	}
+	): RopNodeChildrenMap[S];
+	createNode<K extends valueof<RopNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<RopNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

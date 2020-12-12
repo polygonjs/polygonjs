@@ -1,5 +1,5 @@
 declare const CycleGlNode_base: {
-    new (scene: import("../..").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
+    new (scene: import("../../index_all").PolyScene, name?: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): {
         initialize_node(): void;
         _gl_input_name(index: number): string;
         _gl_output_name(index: number): string;
@@ -68,10 +68,9 @@ declare const CycleGlNode_base: {
         add_param<T extends import("../../poly/ParamType").ParamType>(type: T, name: string, default_value: import("../../params/types/ParamInitValuesTypeMap").ParamInitValuesTypeMap[T], options?: import("../../params/utils/OptionsController").ParamOptions | undefined): import("../../params/types/ParamConstructorMap").ParamConstructorMap[T] | undefined;
         request_container(): Promise<import("../../containers/Gl").GlContainer>;
         set_container(content: string, message?: string | null): void;
-        create_node(type: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         createNode(node_class: any, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../_Base").BaseNodeType | undefined;
         create_operation_container(type: string, operation_container_name: string, params_init_value_overrides?: import("../utils/io/IOController").ParamsInitData | undefined): import("../../../core/operations/container/_Base").BaseOperationContainer | undefined;
-        remove_node(node: import("../_Base").BaseNodeType): void;
+        removeNode(node: import("../_Base").BaseNodeType): void;
         children(): import("../_Base").BaseNodeType[];
         node(path: string): import("../_Base").BaseNodeType | null;
         node_sibbling(name: string): import("./_Base").BaseGlNodeType | null;
@@ -100,10 +99,10 @@ declare const CycleGlNode_base: {
         _graph: import("../../../core/graph/CoreGraph").CoreGraph;
         _graph_node_id: number;
         _dirty_controller: import("../../../core/graph/DirtyController").DirtyController;
-        _scene: import("../..").PolyScene;
+        _scene: import("../../index_all").PolyScene;
         _name: string;
         readonly name: string;
-        readonly scene: import("../..").PolyScene;
+        readonly scene: import("../../index_all").PolyScene;
         readonly graph: import("../../../core/graph/CoreGraph").CoreGraph;
         readonly graph_node_id: number;
         readonly dirty_controller: import("../../../core/graph/DirtyController").DirtyController;

@@ -11,7 +11,7 @@ export declare class PostProcessObjNode extends BaseManagerObjNode<PostProcessNe
     readonly effects_composer_controller: EffectsComposerController;
     readonly display_node_controller: DisplayNodeController;
     protected _children_controller_context: NodeContext;
-    create_node<K extends keyof PostNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): PostNodeChildrenMap[K];
+    createNode<S extends keyof PostNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): PostNodeChildrenMap[S];
     createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BasePostProcessNodeType[];
     nodes_by_type<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];

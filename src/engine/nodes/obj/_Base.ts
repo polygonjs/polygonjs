@@ -2,7 +2,6 @@ import {Object3D} from 'three/src/core/Object3D';
 import {TypedNode, BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ObjectsManagerNode} from '../manager/ObjectsManager';
 import {Group} from 'three/src/objects/Group';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {TransformController} from './utils/TransformController';
@@ -50,15 +49,15 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return this._used_in_scene;
 	}
 	// TODO call set_used_in_scene(false) when node is deleted
-	set_used_in_scene(state: boolean) {
-		this._used_in_scene = state;
-		if (!this.scene.loading_controller.is_loading) {
-			const root = this.parent as ObjectsManagerNode;
-			if (root) {
-				root.update_object(this);
-			}
-		}
-	}
+	// set_used_in_scene(state: boolean) {
+	// 	this._used_in_scene = state;
+	// 	if (!this.scene.loading_controller.is_loading) {
+	// 		const root = this.parent as ObjectsManagerNode;
+	// 		if (root) {
+	// 			root.update_object(this);
+	// 		}
+	// 	}
+	// }
 	add_object_to_parent(parent: Object3D) {
 		if (this.attachable_to_hierarchy) {
 			parent.add(this.object);

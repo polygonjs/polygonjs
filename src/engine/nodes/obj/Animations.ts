@@ -13,17 +13,19 @@ export class AnimationsObjNode extends ParamLessBaseManagerObjNode {
 
 	protected _children_controller_context = NodeContext.ANIM;
 
-	create_node<K extends keyof AnimNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof AnimNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): AnimNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as AnimNodeChildrenMap[K];
-	}
+	): AnimNodeChildrenMap[S];
 	createNode<K extends valueof<AnimNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	): K;
+	createNode<S extends keyof AnimNodeChildrenMap, K extends valueof<AnimNodeChildrenMap>>(
+		node_class: S | Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K | AnimNodeChildrenMap[S] {
+		return super.createNode(node_class, params_init_value_overrides) as K | AnimNodeChildrenMap[S];
 	}
 	children() {
 		return super.children() as BaseAnimNodeType[];

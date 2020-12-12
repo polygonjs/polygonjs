@@ -1,7 +1,7 @@
 // QUnit.test('anim null simple', async (assert) => {
-// 	const ANIM = window.scene.root.create_node('animations');
-// 	const track1 = ANIM.create_node('track');
-// 	const null1 = ANIM.create_node('null');
+// 	const ANIM = window.scene.root.createNode('animations');
+// 	const track1 = ANIM.createNode('track');
+// 	const null1 = ANIM.createNode('null');
 
 // 	track1.p.name.set('test1');
 // 	null1.set_input(0, track1);

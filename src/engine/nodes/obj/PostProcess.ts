@@ -20,12 +20,14 @@ export class PostProcessObjNode extends BaseManagerObjNode<PostProcessNetworkPar
 
 	protected _children_controller_context = NodeContext.POST;
 
-	create_node<K extends keyof PostNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof PostNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): PostNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as PostNodeChildrenMap[K];
-	}
+	): PostNodeChildrenMap[S];
+	createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<PostNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

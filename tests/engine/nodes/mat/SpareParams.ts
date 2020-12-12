@@ -17,7 +17,9 @@ QUnit.test(
 		const MAT = window.MAT;
 		await scene.wait_for_cooks_completed();
 
-		const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+		const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+		mesh_basic1.createNode('output');
+		mesh_basic1.createNode('globals');
 		assert.ok(mesh_basic1.assembler_controller, 'assembler controller is present');
 		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 
@@ -26,7 +28,7 @@ QUnit.test(
 		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
 
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
-		const param1 = mesh_basic1.create_node('param');
+		const param1 = mesh_basic1.createNode('param');
 		CoreSleep.sleep(10);
 		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 		const param_name = param1.p.name.value;
@@ -156,7 +158,9 @@ QUnit.test(
 QUnit.test('MAT spare params:creating a spare param as vector, saving and load back', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 
 	await scene.wait_for_cooks_completed();
 
@@ -168,7 +172,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 
-	const param1 = mesh_basic1.create_node('param');
+	const param1 = mesh_basic1.createNode('param');
 	const param_name = param1.p.name.value;
 	const uniform_name = param1.uniform_name();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
@@ -231,7 +235,9 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 QUnit.test('MAT spare params: creating a spare param as color, saving and load back', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compile required');
 
 	await scene.wait_for_cooks_completed();
@@ -243,7 +249,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 
 	// assert.notOk(mesh_basic1.assembler_controller.compile_required(), 'compile is required');
 
-	const param1 = mesh_basic1.create_node('param');
+	const param1 = mesh_basic1.createNode('param');
 	const param_name = param1.p.name.value;
 	const uniform_name = param1.uniform_name();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay

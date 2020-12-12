@@ -39,10 +39,10 @@ export class NodesController {
 	clear() {
 		const children = this.root.children();
 		for (let child of children) {
-			this.root.children_controller?.remove_node(child);
+			this.root.children_controller?.removeNode(child);
 		}
 		// return children.forEach(child=> {
-		// 	return this.root().remove_node(child);
+		// 	return this.root().removeNode(child);
 		// });
 	}
 

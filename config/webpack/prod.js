@@ -2,8 +2,13 @@ const argv = require('yargs').argv;
 const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
 const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
-const ONE_ENTRY_PER_NODE = false;
 const MINIFY = true;
+// having one entry per node is very hard to generate with terser and no crash
+// (or it takes forever when increasing available ram for node,
+// last test at a whooping 804.15s (or 329.12s without compression)
+// so not exacly reasonable)
+// At the moment loading multiple entry points override the POLY lib
+const ONE_ENTRY_PER_NODE = false;
 
 const fs = require('fs');
 const {merge} = require('webpack-merge');
@@ -17,6 +22,8 @@ module.exports = (env) => {
 	const common_options = common(env);
 
 	if (ONE_ENTRY_PER_NODE) {
+		delete common_options.entry['all'];
+		common_options.entry['engine/Poly'] = './src/engine/Poly.ts';
 		common_options.entry['engine/scene/PolyScene'] = './src/engine/scene/PolyScene.ts';
 
 		contexts = ['anim', 'cop', 'event', 'gl', 'js', 'manager', 'mat', 'obj', 'post', 'rop', 'sop'];

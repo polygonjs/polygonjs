@@ -2,11 +2,11 @@ QUnit.test('mapbox_transform simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const mapbox_camera1 = scene.root.create_node('mapbox_camera');
-	const add1 = geo1.create_node('add');
-	const transform1 = geo1.create_node('transform');
+	const mapbox_camera1 = scene.root.createNode('mapbox_camera');
+	const add1 = geo1.createNode('add');
+	const transform1 = geo1.createNode('transform');
 	transform1.p.t.set([-0.07956000001661323, 0, 51.514600000018646]);
-	const mapbox_transform1 = geo1.create_node('mapbox_transform');
+	const mapbox_transform1 = geo1.createNode('mapbox_transform');
 	transform1.set_input(0, add1);
 	mapbox_transform1.set_input(0, transform1);
 

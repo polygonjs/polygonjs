@@ -6,12 +6,14 @@ import {
 
 QUnit.test('gl mult default connections', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.create_node('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	material_basic_builder1.createNode('output');
+	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
 
-	const mult1 = material_basic_builder1.create_node('mult');
-	const constant1 = material_basic_builder1.create_node('constant');
-	const constant2 = material_basic_builder1.create_node('constant');
+	const mult1 = material_basic_builder1.createNode('mult');
+	const constant1 = material_basic_builder1.createNode('constant');
+	const constant2 = material_basic_builder1.createNode('constant');
 
 	assert.deepEqual(
 		mult1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
@@ -57,12 +59,14 @@ QUnit.test('gl mult default connections', async (assert) => {
 
 QUnit.test('gl mult with empty input', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.create_node('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	material_basic_builder1.createNode('output');
+	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
 
-	const mult1 = material_basic_builder1.create_node('mult');
-	const constant1 = material_basic_builder1.create_node('constant');
-	const constant2 = material_basic_builder1.create_node('constant');
+	const mult1 = material_basic_builder1.createNode('mult');
+	const constant1 = material_basic_builder1.createNode('constant');
+	const constant2 = material_basic_builder1.createNode('constant');
 
 	assert.deepEqual(
 		mult1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),

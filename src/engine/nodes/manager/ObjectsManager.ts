@@ -1,8 +1,6 @@
 import {Group} from 'three/src/objects/Group';
 import {TypedBaseManagerNode} from './_Base';
 import {BaseObjNodeType} from '../obj/_Base';
-import {GeoObjNode} from '../obj/Geo';
-// import {Poly} from '../../Poly';
 import {NodeContext} from '../../poly/NodeContext';
 import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -19,9 +17,8 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	private _object: Group = new Group();
-	private _queued_nodes_by_id: Dictionary<BaseObjNodeType> = {};
-	private _queued_nodes_by_path: Dictionary<BaseObjNodeType> = {};
-	private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
+	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
+	// private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
 
 	protected _children_controller_context = NodeContext.OBJ;
@@ -41,26 +38,23 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	object() {
 		return this._object;
 	}
-	create_node<K extends keyof ObjNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof ObjNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): ObjNodeChildrenMap[K] {
-		const node = super.create_node(type, params_init_value_overrides) as ObjNodeChildrenMap[K];
-		if (node.dirty_controller.is_dirty) {
-			// ensure that objects such as light have their parameters set in examples
-			node.request_container();
-		}
-		return node;
-	}
+	): ObjNodeChildrenMap[S];
+	createNode<K extends valueof<ObjNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<ObjNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
 	): K {
 		const node = super.createNode(node_class, params_init_value_overrides) as K;
-		if (node.dirty_controller.is_dirty) {
-			// ensure that objects such as light have their parameters set in examples
-			node.request_container();
-		}
+		// if (node.dirty_controller.is_dirty) {
+		// 	// ensure that objects such as light have their parameters set in examples
+		// 	node.request_container();
+		// }
 		return node;
 	}
 	children() {
@@ -74,57 +68,55 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return true;
 	}
 
-	add_to_queue(node: BaseObjNodeType) {
+	private _add_to_queue(node: BaseObjNodeType) {
+		console.warn('_add_to_queue', node.full_path());
 		const id = node.graph_node_id;
-		if (this._queued_nodes_by_id[id] == null) {
-			return (this._queued_nodes_by_id[id] = node);
+		if (!this._queued_nodes_by_id.has(id)) {
+			this._queued_nodes_by_id.set(id, node);
 		}
+		return node;
 	}
 
 	async process_queue() {
-		this._queued_nodes_by_path = {};
-		const ids = Object.keys(this._queued_nodes_by_id);
-		for (let id of ids) {
-			const node = this._queued_nodes_by_id[id];
-			delete this._queued_nodes_by_id[id];
-
+		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
+		const paths: string[] = [];
+		this._queued_nodes_by_id.forEach((node, id) => {
 			const full_path = `_____${node.render_order}__${node.full_path()}`;
+			paths.push(full_path);
+			queued_nodes_by_path.set(full_path, node);
+		});
+		this._queued_nodes_by_id.clear();
 
-			this._queued_nodes_by_path[full_path] = node;
+		// const promises = [];
+		for (let path_id of paths) {
+			const node = queued_nodes_by_path.get(path_id);
+			if (node) {
+				queued_nodes_by_path.delete(path_id);
+				this._add_to_scene(node);
+				// promises.push();
+			}
 		}
 
-		const promises = Object.keys(this._queued_nodes_by_path)
-			.sort()
-			.map((path_id) => {
-				const node = this._queued_nodes_by_path[path_id];
-				return this.update_object(node);
-			});
-
-		this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
+		// this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
 
 		// this._process_queue_start = performance.now();
-		Promise.all(promises).then(() => {
-			// Poly.instance().log(`SCENE LOADED '${this.scene.name}`);
-			// `SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
-			// this.scene().performance().print()
-			// do the update here if there are no objects to load
-			// otherwise an empty scene will have a loader that never gets removed
-			// if (Object.keys(this._expected_geo_nodes).length == 0) {
-			// 	this.update_on_all_objects_loaded();
-			// }
-		});
+		// Promise.all(promises).then(() => {
+		// 	// Poly.instance().log(`SCENE LOADED '${this.scene.name}`);
+		// 	// `SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
+		// 	// this.scene().performance().print()
+		// 	// do the update here if there are no objects to load
+		// 	// otherwise an empty scene will have a loader that never gets removed
+		// 	// if (Object.keys(this._expected_geo_nodes).length == 0) {
+		// 	// 	this.update_on_all_objects_loaded();
+		// 	// }
+		// });
 	}
 
-	update_object(node: BaseObjNodeType) {
+	private _update_object(node: BaseObjNodeType) {
 		if (!this.scene.loading_controller.auto_updating) {
-			this.add_to_queue(node);
+			return this._add_to_queue(node);
 		} else {
-			// if (node.object) {
-			this.add_to_scene(node);
-			// } else {
-			// 	//if POLY.env != 'test'
-			// 	// console.warn(`no object from ${node.full_path()} (error:${node.error_message()}) (${POLY.env})`);
-			// }
+			return this._add_to_scene(node);
 		}
 	}
 
@@ -133,33 +125,20 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// OBJ PARENTING
 	//
 	//
-
-	// TODO:
-	// a OBJ node should be able to submit its group for transform
-	// apart from the geometry. This would allow parenting to function
-	// regardless if the underlying geo is valid or not
 	get_parent_for_node(node: BaseObjNodeType) {
-		// if (this._is_node_event(node) || this._is_node_mat(node)) {
-		// 	return null;
 		if (node.attachable_to_hierarchy) {
-			// if (this._is_node_camera(node)) {
-			// 	return this.scene.display_scene;
-			// } else {
 			const node_input = node.io.inputs.input(0);
 			if (node_input) {
-				//node_input.request_container (container)=>
-				//	callback(container.object() || @_object)
 				return node_input.children_group;
 			} else {
 				return this._object;
 			}
-			// }
 		} else {
 			return null;
 		}
 	}
 
-	add_to_scene(node: BaseObjNodeType): void {
+	private _add_to_scene(node: BaseObjNodeType): void {
 		if (node.attachable_to_hierarchy) {
 			const parent_object = node.root.get_parent_for_node(node);
 			if (parent_object) {
@@ -175,6 +154,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 					// TODO: investigate if it has a performance cost, or if it could be done
 					// only when scene loads. Or if the display_node_controller itself could be improved
 					// to take care of it itself.
+					node.request_container();
 					node.children_display_controller?.request_display_node_container();
 					node.add_object_to_parent(parent_object);
 				} else {
@@ -210,29 +190,29 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return false;
 	}
 
-	async expected_loading_geo_nodes_by_id() {
-		const geo_nodes = this.nodes_by_type('geo');
-		const node_by_id: Dictionary<GeoObjNode> = {};
-		for (let geo_node of geo_nodes) {
-			const is_displayed = await geo_node.is_displayed();
-			if (is_displayed) {
-				node_by_id[geo_node.graph_node_id] = geo_node;
-			}
-		}
-		return node_by_id;
-	}
+	// private async expected_loading_geo_nodes_by_id() {
+	// 	const geo_nodes = this.nodes_by_type('geo');
+	// 	const node_by_id: Dictionary<GeoObjNode> = {};
+	// 	for (let geo_node of geo_nodes) {
+	// 		const is_displayed = await geo_node.is_displayed();
+	// 		if (is_displayed) {
+	// 			node_by_id[geo_node.graph_node_id] = geo_node;
+	// 		}
+	// 	}
+	// 	return node_by_id;
+	// }
 
 	add_to_parent_transform(node: HierarchyObjNode) {
-		this.update_object(node);
+		this._update_object(node);
 	}
 
 	remove_from_parent_transform(node: HierarchyObjNode) {
-		this.update_object(node);
+		this._update_object(node);
 	}
 
 	private _on_child_add(node?: BaseNodeType) {
 		if (node) {
-			this.update_object(node as BaseObjNodeType);
+			this._update_object(node as BaseObjNodeType);
 		}
 	}
 	private _on_child_remove(node?: BaseNodeType) {

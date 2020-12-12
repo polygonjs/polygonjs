@@ -3,7 +3,7 @@ import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 QUnit.test('text simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 
 	let container = await text1.request_container();
 	let core_group = container.core_content();
@@ -24,7 +24,7 @@ QUnit.test('text simple', async (assert) => {
 QUnit.test('text with json font', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	text1.p.font.set('/fonts/droid_sans_regular.typeface.json');
 
 	let container = await text1.request_container();
@@ -34,7 +34,7 @@ QUnit.test('text with json font', async (assert) => {
 QUnit.test('text with ttf font', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	text1.p.font.set('/fonts/SourceCodePro-Regular.ttf');
 
 	let container = await text1.request_container();
@@ -44,7 +44,7 @@ QUnit.test('text with ttf font', async (assert) => {
 QUnit.test('text with a non existing font', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	text1.p.font.set('/fonts/doesnotexist.ttf');
 
 	let container = await text1.request_container();
@@ -56,7 +56,7 @@ QUnit.test('text with a non existing font', async (assert) => {
 QUnit.test('text with multiline', async (assert) => {
 	const geo1 = window.geo1;
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	text1.p.text.set('line1line2');
 
 	let container = await text1.request_container();
@@ -75,7 +75,7 @@ QUnit.test('text as different types', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	text1.p.text.set('some text to test');
 	await scene.root.process_queue();
 	let container;
@@ -110,7 +110,7 @@ QUnit.test('text can recover from generation errors', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const text1 = geo1.create_node('text');
+	const text1 = geo1.createNode('text');
 	await scene.root.process_queue();
 	let container;
 

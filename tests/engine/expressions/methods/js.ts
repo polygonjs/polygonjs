@@ -4,7 +4,7 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 QUnit.test('expression js simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 
 	box1.p.size.set("js('1+1')");
 

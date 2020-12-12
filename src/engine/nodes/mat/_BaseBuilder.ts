@@ -17,14 +17,6 @@ export abstract class TypedBuilderMatNode<
 	protected _children_controller_context = NodeContext.GL;
 	readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
 
-	initialize_base_node() {
-		super.initialize_base_node();
-
-		if (this.assembler_controller) {
-			this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-		}
-	}
-
 	//
 	//
 	// MATERIAL
@@ -50,12 +42,14 @@ export abstract class TypedBuilderMatNode<
 	}
 	protected abstract _create_assembler_controller(): GlAssemblerController<A> | undefined;
 
-	create_node<K extends keyof GlNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
-	}
+	): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<GlNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData

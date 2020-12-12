@@ -1,10 +1,10 @@
 QUnit.test('cache static', async (assert) => {
 	let container;
 	const geo1 = window.geo1;
-	const sphere1 = geo1.create_node('sphere');
+	const sphere1 = geo1.createNode('sphere');
 	sphere1.p.resolution.set([8, 6]);
-	const plane1 = geo1.create_node('plane');
-	const cache1 = geo1.create_node('cache');
+	const plane1 = geo1.createNode('plane');
+	const cache1 = geo1.createNode('cache');
 
 	cache1.set_input(0, sphere1);
 	container = await cache1.request_container();
@@ -28,12 +28,12 @@ QUnit.test('cache static', async (assert) => {
 	// assert.equal(JSON.stringify(json).length, 1345); // not same length anymore
 });
 
-// box1 = geo1.create_node('box')
-// transform1 = geo1.create_node('transform')
+// box1 = geo1.createNode('box')
+// transform1 = geo1.createNode('transform')
 // transform1.set_input(0, box1)
 // transform1.param('ty').set_expression("$F")
 
-// cache1 = geo1.create_node('cache')
+// cache1 = geo1.createNode('cache')
 // cache1.set_input(0, transform1)
 // cache1.param('animated').set(0)
 // cache1._clear_cache()
@@ -64,12 +64,12 @@ QUnit.test('cache static', async (assert) => {
 
 QUnit.skip('cache animated', () => {});
 
-// box1 = geo1.create_node('box')
-// transform1 = geo1.create_node('transform')
+// box1 = geo1.createNode('box')
+// transform1 = geo1.createNode('transform')
 // transform1.set_input(0, box1)
 // transform1.param('ty').set_expression("$F")
 
-// cache1 = geo1.create_node('cache')
+// cache1 = geo1.createNode('cache')
 // cache1.set_input(0, transform1)
 // cache1.param('animated').set(1)
 // cache1._clear_cache()

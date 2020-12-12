@@ -40,15 +40,13 @@ export declare class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
     readonly children_display_controller: ChildrenDisplayController;
     readonly display_node_controller: DisplayNodeController;
     protected _children_controller_context: NodeContext;
-    private _on_create_bound;
     private _on_child_add_bound;
     initialize_node(): void;
     is_display_node_cooking(): boolean;
-    create_node<K extends keyof GeoNodeChildrenMap>(type: K, params_init_value_overrides?: ParamsInitData): GeoNodeChildrenMap[K];
+    createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, params_init_value_overrides?: ParamsInitData): GeoNodeChildrenMap[S];
     createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData): K;
     children(): BaseSopNodeType[];
     nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][];
-    _on_create(): void;
     _on_child_add(node: BaseNodeType): void;
     cook(): void;
 }

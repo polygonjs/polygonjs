@@ -3,7 +3,7 @@ import {ParamType} from '../../../src/engine/poly/ParamType';
 QUnit.test('int eval correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const param = box1.p.divisions;
 
 	param.set(2);
@@ -22,7 +22,7 @@ QUnit.test('int eval correctly when set to different values', async (assert) => 
 QUnit.test('int has_expression() returns false when removing the expression', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const param = box1.p.divisions;
 	assert.equal(param.type, ParamType.INTEGER);
 
@@ -44,7 +44,7 @@ QUnit.test('a range will limit the result of an expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const switch1 = geo1.create_node('switch');
+	const switch1 = geo1.createNode('switch');
 	const param = switch1.p.input;
 
 	param.set(1);
@@ -71,7 +71,7 @@ QUnit.test('integer param can take an expression returning a boolean', async (as
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const switch1 = geo1.create_node('switch');
+	const switch1 = geo1.createNode('switch');
 	const param = switch1.p.input;
 
 	param.set('1+1');
@@ -91,7 +91,7 @@ QUnit.test('integer param can take an expression returning a boolean', async (as
 QUnit.test('serialized value is integer if numerical value entered as a string', async (assert) => {
 	const geo1 = window.geo1;
 
-	const switch1 = geo1.create_node('switch');
+	const switch1 = geo1.createNode('switch');
 	const param = switch1.p.input;
 
 	param.set('12');

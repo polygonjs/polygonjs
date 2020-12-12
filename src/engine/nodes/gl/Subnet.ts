@@ -20,8 +20,6 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 		this.io.connection_points.set_output_name_function(this._expected_output_name.bind(this));
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
-
-		this.lifecycle.add_on_create_hook(this._on_create_bound);
 	}
 
 	protected _expected_inputs_count() {
@@ -96,12 +94,14 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	// CHILDREN
 	//
 	//
-	create_node<K extends keyof GlNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as GlNodeChildrenMap[K];
-	}
+	): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<GlNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
@@ -113,17 +113,6 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	}
 	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
-	}
-
-	private _on_create_bound = this._on_create.bind(this);
-	private _on_create() {
-		const subnet_input1 = this.create_node('subnet_input');
-		const subnet_output1 = this.create_node('subnet_output');
-
-		subnet_output1.set_input(0, subnet_input1);
-
-		subnet_input1.ui_data.set_position(-100, 0);
-		subnet_output1.ui_data.set_position(+100, 0);
 	}
 
 	//

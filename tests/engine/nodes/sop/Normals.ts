@@ -1,10 +1,10 @@
 QUnit.test('normals simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const sphere1 = geo1.create_node('sphere');
+	const sphere1 = geo1.createNode('sphere');
 	sphere1.p.resolution.set([8, 6]);
-	const noise1 = geo1.create_node('noise');
-	const normals1 = geo1.create_node('normals');
+	const noise1 = geo1.createNode('noise');
+	const normals1 = geo1.createNode('normals');
 
 	noise1.set_input(0, sphere1);
 	normals1.set_input(0, noise1);

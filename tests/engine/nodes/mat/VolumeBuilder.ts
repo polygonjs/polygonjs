@@ -25,8 +25,10 @@ const TEST_SHADER_LIB = {
 
 QUnit.test('volume builder simple', async (assert) => {
 	const MAT = window.MAT;
-	// const debug = MAT.create_node('test')
-	const volume_builder1 = MAT.create_node('volume_builder');
+	// const debug = MAT.createNode('test')
+	const volume_builder1 = MAT.createNode('volume_builder');
+	volume_builder1.createNode('output');
+	volume_builder1.createNode('globals');
 	const material = volume_builder1.material;
 	const globals1: GlobalsGlNode = volume_builder1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = volume_builder1.node('output1')! as OutputGlNode;
@@ -36,7 +38,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(VOLUME_UNIFORMS).sort());
 
-	const constant1 = volume_builder1.create_node('constant');
+	const constant1 = volume_builder1.createNode('constant');
 	constant1.set_gl_type(GlConnectionPointType.FLOAT);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.set_input('density', constant1, ConstantGlNode.OUTPUT_NAME);
@@ -45,7 +47,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
 
-	const vec3_to_float1 = volume_builder1.create_node('vec3_to_float');
+	const vec3_to_float1 = volume_builder1.createNode('vec3_to_float');
 	output1.set_input('density', vec3_to_float1, 'y');
 	vec3_to_float1.set_input(0, globals1, 'position');
 
@@ -56,15 +58,17 @@ QUnit.test('volume builder simple', async (assert) => {
 
 QUnit.test('volume builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
-	const volume1 = MAT.create_node('volume_builder');
+	const volume1 = MAT.createNode('volume_builder');
+	volume1.createNode('output');
+	volume1.createNode('globals');
 	const output1 = volume1.nodes_by_type('output')[0];
 	const globals1 = volume1.nodes_by_type('globals')[0];
-	const param1 = volume1.create_node('param');
+	const param1 = volume1.createNode('param');
 	param1.p.name.set('float_param');
-	const param2 = volume1.create_node('param');
+	const param2 = volume1.createNode('param');
 	param2.set_gl_type(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
-	const float_to_vec31 = volume1.create_node('float_to_vec3');
+	const float_to_vec31 = volume1.createNode('float_to_vec3');
 	float_to_vec31.set_input(0, param1);
 	float_to_vec31.set_input(1, globals1, 'time');
 	output1.set_input(0, param2);

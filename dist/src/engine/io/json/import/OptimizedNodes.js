@@ -30,7 +30,7 @@ export class OptimizedNodesJsonImporter {
     }
     for (let node_name of this._optimized_root_node_names) {
       const node_data = data[node_name];
-      const node = this._node.create_node(OPERATIONS_COMPOSER_NODE_TYPE);
+      const node = this._node.createNode(OPERATIONS_COMPOSER_NODE_TYPE);
       if (node) {
         node.set_name(node_name);
         this._nodes.push(node);

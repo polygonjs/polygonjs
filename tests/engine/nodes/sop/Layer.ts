@@ -3,8 +3,8 @@ import {Layers} from 'three/src/core/Layers';
 QUnit.test('layer simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const layer1 = geo1.create_node('layer');
+	const plane1 = geo1.createNode('plane');
+	const layer1 = geo1.createNode('layer');
 
 	layer1.set_input(0, plane1);
 

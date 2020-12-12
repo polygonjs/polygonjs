@@ -8,15 +8,17 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 
 QUnit.test('points builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
-	const points1 = MAT.create_node('points_builder');
+	const points1 = MAT.createNode('points_builder');
+	points1.createNode('output');
+	points1.createNode('globals');
 	const output1 = points1.nodes_by_type('output')[0];
 	const globals1 = points1.nodes_by_type('globals')[0];
-	const param1 = points1.create_node('param');
+	const param1 = points1.createNode('param');
 	param1.p.name.set('float_param');
-	const param2 = points1.create_node('param');
+	const param2 = points1.createNode('param');
 	param2.set_gl_type(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
-	const float_to_vec31 = points1.create_node('float_to_vec3');
+	const float_to_vec31 = points1.createNode('float_to_vec3');
 	float_to_vec31.set_input(0, param1);
 	float_to_vec31.set_input(1, globals1, 'time');
 	output1.set_input('color', float_to_vec31);

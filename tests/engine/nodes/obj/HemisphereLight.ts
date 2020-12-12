@@ -7,7 +7,7 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
 
-	const hemisphere_light1 = scene.root.create_node('hemisphere_light');
+	const hemisphere_light1 = scene.root.createNode('hemisphere_light');
 	assert.equal(hemisphere_light1.name, 'hemisphere_light1');
 	assert.equal(main_group.children.length, 3);
 
@@ -21,7 +21,7 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	tmp.convertSRGBToLinear();
 	assert.deepEqual(hemisphere_light1.pv.ground_color.toArray(), tmp.toArray());
 
-	const hemisphere_light2 = scene.root.create_node('hemisphere_light');
+	const hemisphere_light2 = scene.root.createNode('hemisphere_light');
 	assert.equal(hemisphere_light2.name, 'hemisphere_light2');
 	assert.equal(main_group.children.length, 4);
 

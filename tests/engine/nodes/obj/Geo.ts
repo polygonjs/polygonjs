@@ -27,17 +27,10 @@ QUnit.test('geo obj simple', async (assert) => {
 	window.scene.performance.stop();
 });
 
-QUnit.test('geo obj creates a first sop on create', async (assert) => {
+QUnit.test('geo obj creates node sop on create', async (assert) => {
 	const scene = window.scene;
-	const geo2 = scene.root.create_node('geo');
-	assert.equal(geo2.children().length, 1);
-	const child = geo2.children()[0];
-	assert.equal(child.type, 'box');
-	assert.ok(child.flags.display.active);
-	assert.deepEqual(
-		geo2.nodes_by_type('box').map((n) => n.graph_node_id),
-		[child.graph_node_id]
-	);
+	const geo2 = scene.root.createNode('geo');
+	assert.equal(geo2.children().length, 0);
 });
 
 QUnit.test('geo obj is removed from scene when node is deleted', async (assert) => {
@@ -55,7 +48,7 @@ QUnit.test('geo obj is removed from scene when node is deleted', async (assert) 
 
 	const geo1 = window.geo1;
 
-	scene.root.remove_node(geo1);
+	scene.root.removeNode(geo1);
 	assert.equal(main_group.children.length, 1);
 	assert.equal(
 		main_group.children
@@ -105,7 +98,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	const geo1 = window.geo1;
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	assert.equal(obj.uuid, geo1.object.uuid);
-	const file1 = geo1.create_node('file');
+	const file1 = geo1.createNode('file');
 	file1.p.url.set('/examples/models/wolf.obj');
 
 	file1.flags.display.set(true);

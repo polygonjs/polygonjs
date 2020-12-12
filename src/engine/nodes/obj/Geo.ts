@@ -11,7 +11,6 @@ import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {ParamsInitData} from '../utils/io/IOController';
-import {Poly} from '../../Poly';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	display = ParamConfig.BOOLEAN(1);
 	render_order = ParamConfig.INTEGER(0, {
@@ -45,10 +44,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 	protected _children_controller_context = NodeContext.SOP;
 
-	private _on_create_bound = this._on_create.bind(this);
 	private _on_child_add_bound = this._on_child_add.bind(this);
 	initialize_node() {
-		this.lifecycle.add_on_create_hook(this._on_create_bound);
+		// this.lifecycle.add_on_create_hook(this._on_create_bound);
 		this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
 
 		this.hierarchy_controller.initialize_node();
@@ -66,12 +64,14 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		}
 	}
 
-	create_node<K extends keyof GeoNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof GeoNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): GeoNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as GeoNodeChildrenMap[K];
-	}
+	): GeoNodeChildrenMap[S];
+	createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<GeoNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
@@ -90,12 +90,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	// HOOK
 	//
 	//
-	_on_create() {
-		if (!Poly.instance().nodesRegister.is_registered(NodeContext.SOP, 'box')) {
-			return;
-		}
-		this.create_node('box');
-	}
+
 	_on_child_add(node: BaseNodeType) {
 		if (this.scene.loading_controller.loaded) {
 			if (this.children().length == 1) {

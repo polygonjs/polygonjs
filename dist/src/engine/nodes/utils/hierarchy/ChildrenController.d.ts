@@ -21,11 +21,12 @@ export declare class HierarchyChildrenController {
     node_context_signature(): string;
     available_children_classes(): Dictionary<typeof import("../../_Base").BaseNodeClass>;
     is_valid_child_type(node_type: string): boolean;
-    create_node(node_type: string, params_init_value_overrides?: ParamsInitData): BaseNodeType;
-    createNode<K extends BaseNodeType>(node_class: Constructor<K>, params_init_value_overrides?: ParamsInitData, node_type?: string): K;
+    createNode<K extends BaseNodeType>(node_class_or_string: string | Constructor<K>, params_init_value_overrides?: ParamsInitData, node_type?: string): K;
+    private _create_and_init_node;
+    private _find_node_class;
     create_operation_container(operation_type: string, operation_container_name: string, params_init_value_overrides?: ParamsInitData): BaseOperationContainer;
     add_node(child_node: BaseNodeType): BaseNodeType;
-    remove_node(child_node: BaseNodeType): void;
+    removeNode(child_node: BaseNodeType): void;
     _add_to_nodes_by_type(node: BaseNodeType): void;
     _remove_from_nodes_by_type(node: BaseNodeType): void;
     add_to_children_and_grandchildren_by_context(node: BaseNodeType): void;

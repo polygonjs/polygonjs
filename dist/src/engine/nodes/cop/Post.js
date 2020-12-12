@@ -99,9 +99,6 @@ export class PostCopNode extends TypedCopNode {
   }
   initialize_node() {
     this.io.inputs.set_count(1);
-    this.lifecycle.add_on_create_hook(() => {
-      this._create_start_nodes();
-    });
     this._texture_mesh.name = "cop/post";
     this._texture_scene.name = "cop/post";
     this._texture_camera.name = "cop/post";
@@ -111,9 +108,6 @@ export class PostCopNode extends TypedCopNode {
     this.dirty_controller.add_post_dirty_hook("reset", () => {
       this.reset();
     });
-  }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
   }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
@@ -188,14 +182,5 @@ export class PostCopNode extends TypedCopNode {
   }
   reset() {
     this._composer = void 0;
-  }
-  _create_start_nodes() {
-    const null1 = this.create_node("null");
-    const unreal_bloom1 = this.create_node("unreal_bloom");
-    null1.set_name("OUT");
-    null1.set_input(0, unreal_bloom1);
-    null1.ui_data.set_position(0, 200);
-    unreal_bloom1.ui_data.set_position(0, -200);
-    null1.flags.display.set(true);
   }
 }

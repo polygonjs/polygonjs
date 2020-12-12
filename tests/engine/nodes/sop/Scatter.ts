@@ -1,8 +1,8 @@
 QUnit.test('scatter simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const scatter1 = geo1.create_node('scatter');
+	const plane1 = geo1.createNode('plane');
+	const scatter1 = geo1.createNode('scatter');
 
 	scatter1.set_input(0, plane1);
 

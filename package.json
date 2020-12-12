@@ -22,7 +22,7 @@
 	"main": "./dist/polygonjs-engine.js",
 	"scripts": {
 		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config config/webpack/dev.js",
-		"build": "yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
+		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
 		"build_with_webpack": "webpack --env.NODE_ENV=production --env.production --progress --config config/webpack/prod.js",
 		"build_with_webpack_fast": "webpack --env.NODE_ENV=production --env.production --progress --env.FAST_COMPILE=true --config config/webpack/prod.js",
 		"build_unpkg": "webpack --env.NODE_ENV=production --env.production --env.PUBLIC_PATH='./' --progress --config config/webpack/prod.js",

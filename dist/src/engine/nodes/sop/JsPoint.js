@@ -18,9 +18,6 @@ export class JsPointSopNode extends TypedSopNode {
     this.io.inputs.set_count(1);
     this.io.inputs.init_inputs_cloned_state(InputCloneMode2.NEVER);
   }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }

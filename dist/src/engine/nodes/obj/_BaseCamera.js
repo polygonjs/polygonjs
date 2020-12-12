@@ -155,9 +155,6 @@ export class TypedThreejsCameraObjNode extends TypedCameraObjNode {
     this.transform_controller.initialize_node();
     this.children_display_controller.initialize_node();
   }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
-  }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);
   }

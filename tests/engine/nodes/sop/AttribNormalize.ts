@@ -3,13 +3,13 @@ import {NormalizeMode} from '../../../../src/core/operations/sop/AttribNormalize
 QUnit.test('attrib normalize simple float', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const plane2 = geo1.create_node('plane');
-	const plane3 = geo1.create_node('plane');
+	const plane1 = geo1.createNode('plane');
+	const plane2 = geo1.createNode('plane');
+	const plane3 = geo1.createNode('plane');
 
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const attrib_create2 = geo1.create_node('attrib_create');
-	const attrib_create3 = geo1.create_node('attrib_create');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create2 = geo1.createNode('attrib_create');
+	const attrib_create3 = geo1.createNode('attrib_create');
 	attrib_create1.set_input(0, plane1);
 	attrib_create2.set_input(0, plane2);
 	attrib_create3.set_input(0, plane3);
@@ -22,8 +22,8 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	attrib_create2.p.value1.set(2);
 	attrib_create3.p.value1.set(3);
 
-	const merge1 = geo1.create_node('merge');
-	const merge2 = geo1.create_node('merge');
+	const merge1 = geo1.createNode('merge');
+	const merge2 = geo1.createNode('merge');
 
 	merge1.set_input(0, attrib_create1);
 	merge1.set_input(1, attrib_create2);
@@ -40,7 +40,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	assert.equal(array.length, 12);
 	assert.equal(array.join(','), [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3].join(','));
 
-	const attrib_normalize1 = geo1.create_node('attrib_normalize');
+	const attrib_normalize1 = geo1.createNode('attrib_normalize');
 	attrib_normalize1.set_input(0, merge2);
 	attrib_normalize1.p.name.set('blend');
 
@@ -59,13 +59,13 @@ QUnit.skip('attrib normalize simple float when all points have same value', (ass
 QUnit.test('attrib normalize simple vector', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const plane2 = geo1.create_node('plane');
-	const plane3 = geo1.create_node('plane');
+	const plane1 = geo1.createNode('plane');
+	const plane2 = geo1.createNode('plane');
+	const plane3 = geo1.createNode('plane');
 
-	const attrib_create1 = geo1.create_node('attrib_create');
-	const attrib_create2 = geo1.create_node('attrib_create');
-	const attrib_create3 = geo1.create_node('attrib_create');
+	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create2 = geo1.createNode('attrib_create');
+	const attrib_create3 = geo1.createNode('attrib_create');
 	attrib_create1.set_input(0, plane1);
 	attrib_create2.set_input(0, plane2);
 	attrib_create3.set_input(0, plane3);
@@ -80,8 +80,8 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	attrib_create2.p.value3.set([2, 3, 4]);
 	attrib_create3.p.value3.set([3, 4, 5]);
 
-	const merge1 = geo1.create_node('merge');
-	const merge2 = geo1.create_node('merge');
+	const merge1 = geo1.createNode('merge');
+	const merge2 = geo1.createNode('merge');
 
 	merge1.set_input(0, attrib_create1);
 	merge1.set_input(1, attrib_create2);
@@ -138,7 +138,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 		].join(',')
 	);
 
-	const attrib_normalize1 = geo1.create_node('attrib_normalize');
+	const attrib_normalize1 = geo1.createNode('attrib_normalize');
 	attrib_normalize1.set_input(0, merge2);
 	attrib_normalize1.p.name.set('blend');
 
@@ -248,9 +248,9 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 QUnit.test('attrib normalize vector length', async (assert) => {
 	const geo1 = window.geo1;
 
-	const add1 = geo1.create_node('add');
-	const transform1 = geo1.create_node('transform');
-	const attrib_normalize1 = geo1.create_node('attrib_normalize');
+	const add1 = geo1.createNode('add');
+	const transform1 = geo1.createNode('transform');
+	const attrib_normalize1 = geo1.createNode('attrib_normalize');
 
 	transform1.set_input(0, add1);
 	attrib_normalize1.set_input(0, transform1);

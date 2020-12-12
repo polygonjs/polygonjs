@@ -35,15 +35,6 @@ export class TypedObjNode extends TypedNode {
   get used_in_scene() {
     return this._used_in_scene;
   }
-  set_used_in_scene(state) {
-    this._used_in_scene = state;
-    if (!this.scene.loading_controller.is_loading) {
-      const root = this.parent;
-      if (root) {
-        root.update_object(this);
-      }
-    }
-  }
   add_object_to_parent(parent) {
     if (this.attachable_to_hierarchy) {
       parent.add(this.object);

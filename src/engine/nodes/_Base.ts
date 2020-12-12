@@ -249,9 +249,6 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// hierarchy
-	create_node(type: string, params_init_value_overrides?: ParamsInitData) {
-		return this.children_controller?.create_node(type, params_init_value_overrides);
-	}
 	createNode(node_class: any, params_init_value_overrides?: ParamsInitData) {
 		return this.children_controller?.createNode(node_class, params_init_value_overrides);
 	}
@@ -266,8 +263,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 			params_init_value_overrides
 		);
 	}
-	remove_node(node: BaseNodeType) {
-		this.children_controller?.remove_node(node);
+	removeNode(node: BaseNodeType) {
+		this.children_controller?.removeNode(node);
 	}
 	children() {
 		return this.children_controller?.children() || [];

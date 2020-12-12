@@ -8,12 +8,14 @@ import {JsAssemblerNodeSpareParamsController} from './SpareParamsController';
 import {ParamsInitData} from '../../utils/io/IOController';
 
 export class AssemblerControllerNode extends TypedNode<any, any> {
-	create_node<K extends keyof JsNodeChildrenMap>(
-		type: K,
+	createNode<S extends keyof JsNodeChildrenMap>(
+		node_class: S,
 		params_init_value_overrides?: ParamsInitData
-	): JsNodeChildrenMap[K] {
-		return super.create_node(type, params_init_value_overrides) as JsNodeChildrenMap[K];
-	}
+	): JsNodeChildrenMap[S];
+	createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
 	createNode<K extends valueof<JsNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
@@ -56,8 +58,8 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 	}
 
 	on_create() {
-		const globals = this.node.create_node('globals');
-		const output = this.node.create_node('output');
+		const globals = this.node.createNode('globals');
+		const output = this.node.createNode('output');
 
 		globals.ui_data.set_position(-200, 0);
 		output.ui_data.set_position(200, 0);

@@ -71,7 +71,7 @@ export class NodeCodeExporter {
         parent_var_name = parent_exporter.var_name();
       }
     }
-    const create_node_line = `var ${this.var_name()} = ${parent_var_name}.create_node('${this._node.type}')`;
+    const create_node_line = `var ${this.var_name()} = ${parent_var_name}.createNode('${this._node.type}')`;
     this._lines.push(create_node_line);
   }
   add_name() {

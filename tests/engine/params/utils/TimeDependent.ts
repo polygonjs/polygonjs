@@ -48,7 +48,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 
 	const size = box1.p.size;
 	assert.ok(!size.states.time_dependent.active);
@@ -83,7 +83,7 @@ QUnit.test('a param value is updated is it is time dependent', async (assert) =>
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const box1 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
 	const size = box1.p.size;
 
 	size.set('2*$T');

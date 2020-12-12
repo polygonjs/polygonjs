@@ -3,8 +3,8 @@ import {ObjectType, object_type_from_constructor, AttribClass} from '../../../..
 QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const delete1 = geo1.create_node('delete');
+	const plane1 = geo1.createNode('plane');
+	const delete1 = geo1.createNode('delete');
 	delete1.set_input(0, plane1);
 	delete1.p.by_expression.set(1);
 
@@ -25,8 +25,8 @@ QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 QUnit.test('SOP delete: (class=points) simple box', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const delete1 = geo1.create_node('delete');
+	const box1 = geo1.createNode('box');
+	const delete1 = geo1.createNode('delete');
 	delete1.set_input(0, box1);
 	delete1.p.by_expression.set(1);
 
@@ -44,10 +44,10 @@ QUnit.test('SOP delete: (class=points) simple box', async (assert) => {
 
 QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	const geo1 = window.geo1;
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
-	const merge1 = geo1.create_node('merge');
-	const delete1 = geo1.create_node('delete');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const merge1 = geo1.createNode('merge');
+	const delete1 = geo1.createNode('delete');
 
 	merge1.set_input(0, box1);
 	merge1.set_input(1, box2);

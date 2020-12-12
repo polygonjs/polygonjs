@@ -8,15 +8,17 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 
 QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
-	const mesh_lambert1 = MAT.create_node('mesh_lambert_builder');
+	const mesh_lambert1 = MAT.createNode('mesh_lambert_builder');
+	mesh_lambert1.createNode('output');
+	mesh_lambert1.createNode('globals');
 	const output1 = mesh_lambert1.nodes_by_type('output')[0];
 	const globals1 = mesh_lambert1.nodes_by_type('globals')[0];
-	const param1 = mesh_lambert1.create_node('param');
+	const param1 = mesh_lambert1.createNode('param');
 	param1.p.name.set('float_param');
-	const param2 = mesh_lambert1.create_node('param');
+	const param2 = mesh_lambert1.createNode('param');
 	param2.set_gl_type(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
-	const float_to_vec31 = mesh_lambert1.create_node('float_to_vec3');
+	const float_to_vec31 = mesh_lambert1.createNode('float_to_vec3');
 	float_to_vec31.set_input(0, param1);
 	float_to_vec31.set_input(1, globals1, 'time');
 	output1.set_input('color', float_to_vec31);

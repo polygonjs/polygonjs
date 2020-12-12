@@ -4,14 +4,14 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 async function with_file(path: string) {
 	const geo1 = window.geo1;
-	const file1 = geo1.create_node('file');
+	const file1 = geo1.createNode('file');
 	file1.p.url.set(path);
 
 	const container = await file1.request_container();
 	return container;
 }
 async function with_hierarchy() {
-	const hierarchy1 = window.geo1.create_node('hierarchy');
+	const hierarchy1 = window.geo1.createNode('hierarchy');
 	const file1 = window.geo1.nodes_by_type('file')[0];
 	hierarchy1.set_input(0, file1);
 	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
@@ -22,11 +22,11 @@ async function with_hierarchy() {
 QUnit.test('SOP file simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const file1 = geo1.create_node('file');
+	const file1 = geo1.createNode('file');
 	file1.p.url.set('/examples/models/male03.obj');
 	assert.ok(file1.is_dirty);
 
-	// const merge1 = geo1.create_node('merge');
+	// const merge1 = geo1.createNode('merge');
 	// merge1.set_input(0, file1);
 
 	let container;

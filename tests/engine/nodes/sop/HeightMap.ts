@@ -2,10 +2,10 @@ QUnit.test('height map simple', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 
-	const file1 = COP.create_node('image');
+	const file1 = COP.createNode('image');
 
-	const plane1 = geo1.create_node('plane');
-	const height_map1 = geo1.create_node('height_map');
+	const plane1 = geo1.createNode('plane');
+	const height_map1 = geo1.createNode('height_map');
 
 	height_map1.set_input(0, plane1);
 	height_map1.p.texture.set(file1.full_path());

@@ -6,8 +6,8 @@ import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate
 QUnit.test('attrib create simple float vertex', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(3.5);
@@ -32,8 +32,8 @@ QUnit.test('attrib create simple float vertex', async (assert) => {
 QUnit.test('attrib create expression float vertex', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('(@ptnum+1)*3');
@@ -55,8 +55,8 @@ QUnit.test('attrib create expression float vertex', async (assert) => {
 QUnit.test('attrib create expression float vertex from position', async (assert) => {
 	const geo1 = window.geo1;
 
-	const sphere1 = geo1.create_node('sphere');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const sphere1 = geo1.createNode('sphere');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@P.y > 0');
@@ -80,8 +80,8 @@ QUnit.test('attrib create expression float vertex from position', async (assert)
 QUnit.test('attrib create expression from a non existing attribute', async (assert) => {
 	const geo1 = window.geo1;
 
-	const sphere1 = geo1.create_node('sphere');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const sphere1 = geo1.createNode('sphere');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@doesnotexist > 0');
@@ -99,8 +99,8 @@ QUnit.test('attrib create expression from a non existing attribute', async (asse
 QUnit.test('attrib create simple vector2 vertex', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(2);
 	attrib_create1.p.value2.set([3.5, 5]);
@@ -126,8 +126,8 @@ QUnit.test('attrib create simple vector2 vertex', async (assert) => {
 QUnit.test('attrib create simple vector vertex', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(3);
 	attrib_create1.p.value3.set([3.5, 5, 8]);
@@ -151,8 +151,8 @@ QUnit.test('attrib create simple vector vertex', async (assert) => {
 QUnit.test('attrib create expression vector vertex', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(3);
 	attrib_create1.p.value3.set([1, 2, 3]);
@@ -198,8 +198,8 @@ QUnit.test('attrib create expression vector vertex', async (assert) => {
 QUnit.test('attrib create on existing attrib vector2 uv', async (assert) => {
 	const geo1 = window.geo1;
 
-	const plane1 = geo1.create_node('plane');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const plane1 = geo1.createNode('plane');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('uv');
 	attrib_create1.p.size.set(2);
 	attrib_create1.p.value2.x.set('@uv.x*2');
@@ -229,8 +229,8 @@ QUnit.test('attrib create on existing attrib vector2 uv', async (assert) => {
 QUnit.test('attrib create simple float object', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(1);
@@ -249,8 +249,8 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(2);
@@ -279,8 +279,8 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 QUnit.test('attrib create simple vector object', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(3);
@@ -300,8 +300,8 @@ QUnit.test('attrib create simple string object', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.p.name.set('test_string');
 	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(1);
@@ -335,11 +335,11 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 
 	window.scene.performance.start();
 
-	const box1 = geo1.create_node('box');
-	const bbox_scatter1 = geo1.create_node('bbox_scatter');
+	const box1 = geo1.createNode('box');
+	const bbox_scatter1 = geo1.createNode('bbox_scatter');
 	bbox_scatter1.set_input(0, box1);
 	bbox_scatter1.p.step_size.set(0.5);
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.set_input(0, bbox_scatter1);
 
 	attrib_create1.p.name.set('ptid');
@@ -385,8 +385,8 @@ QUnit.test('attrib create for string on vertices with expr', async (assert) => {
 
 	window.scene.performance.start();
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.set_input(0, box1);
 	attrib_create1.p.name.set('ids');
 	attrib_create1.p.type.set(AttribType.STRING);
@@ -419,8 +419,8 @@ QUnit.test('attrib create for string on vertices without expr', async (assert) =
 
 	window.scene.performance.start();
 
-	const box1 = geo1.create_node('box');
-	const attrib_create1 = geo1.create_node('attrib_create');
+	const box1 = geo1.createNode('box');
+	const attrib_create1 = geo1.createNode('attrib_create');
 	attrib_create1.set_input(0, box1);
 	attrib_create1.p.name.set('ids');
 	attrib_create1.p.type.set(AttribType.STRING);

@@ -7,12 +7,6 @@ export class TypedBuilderMatNode extends TypedMatNode {
     this._children_controller_context = NodeContext2.GL;
     this.persisted_config = new MaterialPersistedConfig(this);
   }
-  initialize_base_node() {
-    super.initialize_base_node();
-    if (this.assembler_controller) {
-      this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-    }
-  }
   create_material() {
     let material;
     if (this.persisted_config) {
@@ -25,9 +19,6 @@ export class TypedBuilderMatNode extends TypedMatNode {
   }
   get assembler_controller() {
     return this._assembler_controller = this._assembler_controller || this._create_assembler_controller();
-  }
-  create_node(type, params_init_value_overrides) {
-    return super.create_node(type, params_init_value_overrides);
   }
   createNode(node_class, params_init_value_overrides) {
     return super.createNode(node_class, params_init_value_overrides);

@@ -5,9 +5,9 @@ QUnit.test('transform reset simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 
-	const box1 = geo1.create_node('box');
-	const transform1 = geo1.create_node('transform');
-	const transform_reset1 = geo1.create_node('transform_reset');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+	const transform_reset1 = geo1.createNode('transform_reset');
 
 	transform1.set_input(0, box1);
 	transform_reset1.set_input(0, transform1);

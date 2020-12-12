@@ -10,10 +10,8 @@ export declare class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfi
     params_config: InstanceSopParamsConfig;
     static type(): string;
     static displayed_input_names(): string[];
-    private _on_create_bound;
     initialize_node(): void;
     private _operation;
     cook(input_contents: CoreGroup[]): Promise<void>;
-    private _on_create;
 }
 export {};

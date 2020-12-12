@@ -1,7 +1,7 @@
 {
     "context": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine",
     "entry": {
-        "polygonjs-engine": "./src/engine/index.ts",
+        "polygonjs-engine": "./src/engine/index_all.ts",
         "example": "./src/engine/example.ts",
         "test": "./tests/index.ts"
     },
@@ -122,10 +122,9 @@
         }
     ],
     "output": {
-        "library": "POLY",
-        "libraryTarget": "window",
         "filename": "[name].js",
-        "path": "/home/gui/work/web/polygonjs/dev/polygonjs-editor/app/javascript/polygonjs-editor/polygonjs-engine/dist"
+        "libraryTarget": "window",
+        "library": "POLY"
     },
     "resolve": {
         "extensions": [

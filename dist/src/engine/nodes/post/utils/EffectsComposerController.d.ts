@@ -21,7 +21,7 @@ export declare class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 }
 export interface BaseNetworkPostProcessNodeType extends TypedNode<any, PostProcessNetworkParamsConfig> {
     readonly display_node_controller: DisplayNodeController;
-    create_node<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K];
+    createNode<S extends keyof PostNodeChildrenMap>(node_class: S): PostNodeChildrenMap[S];
     createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>): K;
     children(): BasePostProcessNodeType[];
     nodes_by_type<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];

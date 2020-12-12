@@ -36,6 +36,9 @@ import {GlCompareTestName} from '../../../../src/engine/nodes/gl/Compare';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
+import {create_required_nodes_for_subnet_gl_node} from '../gl/Subnet';
+import {create_required_nodes_for_if_then_gl_node} from '../gl/IfThen';
+import {create_required_nodes_for_for_loop_gl_node} from '../gl/ForLoop';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -55,8 +58,10 @@ const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.basic.uniforms);
 
 QUnit.test('mesh basic builder simple', async (assert) => {
 	const MAT = window.MAT;
-	// const debug = MAT.create_node('test')
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	// const debug = MAT.createNode('test')
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	const material = mesh_basic1.material;
 	const globals1: GlobalsGlNode = mesh_basic1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = mesh_basic1.node('output1')! as OutputGlNode;
@@ -66,7 +71,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).sort());
 
-	const constant1 = mesh_basic1.create_node('constant');
+	const constant1 = mesh_basic1.createNode('constant');
 	constant1.set_gl_type(GlConnectionPointType.VEC3);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.set_input('color', constant1, ConstantGlNode.OUTPUT_NAME);
@@ -80,8 +85,8 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
 
-	const vec3_to_float1 = mesh_basic1.create_node('vec3_to_float');
-	const float_to_vec3_1 = mesh_basic1.create_node('float_to_vec3');
+	const vec3_to_float1 = mesh_basic1.createNode('vec3_to_float');
+	const float_to_vec3_1 = mesh_basic1.createNode('float_to_vec3');
 	float_to_vec3_1.set_input('x', vec3_to_float1, 'x');
 	float_to_vec3_1.set_input('z', vec3_to_float1, 'y');
 	vec3_to_float1.set_input('vec', globals1, 'position');
@@ -94,7 +99,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.positionXZ.frag);
 
 	// add frame dependency
-	const float_to_vec3_2 = mesh_basic1.create_node('float_to_vec3');
+	const float_to_vec3_2 = mesh_basic1.createNode('float_to_vec3');
 	float_to_vec3_2.set_input('z', globals1, 'time');
 	output1.set_input('position', float_to_vec3_2, 'vec3');
 	await mesh_basic1.request_container();
@@ -104,8 +109,9 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 QUnit.test('mesh basic builder can save and load param configs', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
-
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	await scene.wait_for_cooks_completed();
 
 	await mesh_basic1.request_container();
@@ -113,9 +119,9 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required());
 
 	const output1 = mesh_basic1.node('output1')! as OutputGlNode;
-	const attribute1 = mesh_basic1.create_node('attribute');
-	const texture1 = mesh_basic1.create_node('texture');
-	const vec4_to_vector1 = mesh_basic1.create_node('vec4_to_vec3');
+	const attribute1 = mesh_basic1.createNode('attribute');
+	const texture1 = mesh_basic1.createNode('texture');
+	const vec4_to_vector1 = mesh_basic1.createNode('vec4_to_vec3');
 	output1.set_input('color', vec4_to_vector1, Vec4ToVec3GlNode.OUTPUT_NAME_VEC3);
 	vec4_to_vector1.set_input('vec4', texture1, TextureGlNode.OUTPUT_NAME);
 	texture1.set_input('uv', attribute1);
@@ -149,14 +155,16 @@ QUnit.test(
 	'mesh basic builder: attrib is declared accordingly and uses varying if used in fragment',
 	async (assert) => {
 		const MAT = window.MAT;
-		const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+		const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+		mesh_basic1.createNode('output');
+		mesh_basic1.createNode('globals');
 		const material = mesh_basic1.material;
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
-		const attribute1 = mesh_basic1.create_node('attribute');
+		const attribute1 = mesh_basic1.createNode('attribute');
 		attribute1.p.name.set('uv');
 		attribute1.set_gl_type(GlConnectionPointType.VEC2);
-		const vec2_to_float1 = mesh_basic1.create_node('vec2_to_float');
-		const float_to_vec31 = mesh_basic1.create_node('float_to_vec3');
+		const vec2_to_float1 = mesh_basic1.createNode('vec2_to_float');
+		const float_to_vec31 = mesh_basic1.createNode('float_to_vec3');
 		vec2_to_float1.set_input(0, attribute1);
 		float_to_vec31.set_input('x', vec2_to_float1, 'x');
 		float_to_vec31.set_input('z', vec2_to_float1, 'y');
@@ -183,16 +191,19 @@ QUnit.test(
 
 QUnit.test('mesh basic builder with if_then', async (assert) => {
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	const material = mesh_basic1.material;
 	const output1 = mesh_basic1.nodes_by_type('output')[0];
 	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
-	const vec3_to_float1 = mesh_basic1.create_node('vec3_to_float');
-	const compare1 = mesh_basic1.create_node('compare');
-	const if_then1 = mesh_basic1.create_node('if_then');
-	const if_then_subnet_input1 = if_then1.nodes_by_type('subnet_input')[0];
-	const if_then_subnet_output1 = if_then1.nodes_by_type('subnet_output')[0];
-	const mult_add1 = if_then1.create_node('mult_add');
+	const vec3_to_float1 = mesh_basic1.createNode('vec3_to_float');
+	const compare1 = mesh_basic1.createNode('compare');
+	const if_then1 = mesh_basic1.createNode('if_then');
+	const {subnet_input1, subnet_output1} = create_required_nodes_for_if_then_gl_node(if_then1);
+	const if_then_subnet_input1 = subnet_input1;
+	const if_then_subnet_output1 = subnet_output1;
+	const mult_add1 = if_then1.createNode('mult_add');
 
 	vec3_to_float1.set_input(0, globals1, 'position');
 	compare1.set_input(0, vec3_to_float1, 1);
@@ -211,7 +222,7 @@ QUnit.test('mesh basic builder with if_then', async (assert) => {
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag);
 
 	// now add a node that would create a function
-	const rotate1 = if_then1.create_node('rotate');
+	const rotate1 = if_then1.createNode('rotate');
 	rotate1.set_input(0, if_then_subnet_input1);
 	if_then_subnet_output1.set_input(0, rotate1);
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
@@ -223,14 +234,17 @@ QUnit.test('mesh basic builder with if_then', async (assert) => {
 
 QUnit.test('mesh basic builder with for_loop', async (assert) => {
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	const material = mesh_basic1.material;
 	const output1 = mesh_basic1.nodes_by_type('output')[0];
 	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
-	const for_loop1 = mesh_basic1.create_node('for_loop');
-	const for_loop_subnet_input1 = for_loop1.nodes_by_type('subnet_input')[0];
-	const for_loop_subnet_output1 = for_loop1.nodes_by_type('subnet_output')[0];
-	const add1 = for_loop1.create_node('add');
+	const for_loop1 = mesh_basic1.createNode('for_loop');
+	const {subnet_input1, subnet_output1} = create_required_nodes_for_for_loop_gl_node(for_loop1);
+	const for_loop_subnet_input1 = subnet_input1;
+	const for_loop_subnet_output1 = subnet_output1;
+	const add1 = for_loop1.createNode('add');
 
 	for_loop1.set_input(0, globals1, 'position');
 	output1.set_input('color', for_loop1);
@@ -247,14 +261,17 @@ QUnit.test('mesh basic builder with for_loop', async (assert) => {
 
 QUnit.test('mesh basic builder with subnet', async (assert) => {
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	const material = mesh_basic1.material;
 	const output1 = mesh_basic1.nodes_by_type('output')[0];
 	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
-	const subnet1 = mesh_basic1.create_node('subnet');
-	const subnet_subnet_input1 = subnet1.nodes_by_type('subnet_input')[0];
-	const subnet_subnet_output1 = subnet1.nodes_by_type('subnet_output')[0];
-	const add1 = subnet1.create_node('add');
+	const subnet1 = mesh_basic1.createNode('subnet');
+	const {subnet_input1, subnet_output1} = create_required_nodes_for_subnet_gl_node(subnet1);
+	const subnet_subnet_input1 = subnet_input1;
+	const subnet_subnet_output1 = subnet_output1;
+	const add1 = subnet1.createNode('add');
 
 	subnet1.set_input(0, globals1, 'position');
 	output1.set_input('color', subnet1);
@@ -271,15 +288,17 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 
 QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.create_node('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
 	const output1 = mesh_basic1.nodes_by_type('output')[0];
 	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
-	const param1 = mesh_basic1.create_node('param');
+	const param1 = mesh_basic1.createNode('param');
 	param1.p.name.set('float_param');
-	const param2 = mesh_basic1.create_node('param');
+	const param2 = mesh_basic1.createNode('param');
 	param2.set_gl_type(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
-	const float_to_vec31 = mesh_basic1.create_node('float_to_vec3');
+	const float_to_vec31 = mesh_basic1.createNode('float_to_vec3');
 	float_to_vec31.set_input(0, param1);
 	float_to_vec31.set_input(1, globals1, 'time');
 	output1.set_input('color', float_to_vec31);

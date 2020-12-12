@@ -3,8 +3,8 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 QUnit.test('expression points_count works with path', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box2.p.size.set(`points_count('../${box1.name}')`);
 
@@ -15,8 +15,8 @@ QUnit.test('expression points_count works with path', async (assert) => {
 QUnit.test('expression points_count works with input index', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box2.set_input(0, box1);
 
@@ -29,9 +29,9 @@ QUnit.test('expression points_count works with input index', async (assert) => {
 QUnit.test('expression points_count updates when dependency changes', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
-	const sphere1 = geo1.create_node('sphere');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const sphere1 = geo1.createNode('sphere');
 	sphere1.flags.display.set(true);
 
 	box1.p.divisions.set(1);
@@ -71,8 +71,8 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 QUnit.skip('expression points_count cannot create infinite loop if scene is loaded', async (assert) => {
 	// const geo1 = window.geo1
 	// window.scene.mark_as_loaded();
-	// const box1 = geo1.create_node('box');
-	// const box2 = geo1.create_node('box');
+	// const box1 = geo1.createNode('box');
+	// const box2 = geo1.createNode('box');
 	// box1.p.divisions.set(1);
 	// box2.p.size.set("points_count('../box1')");
 	// box2.request_container_p().then(() => {
@@ -94,8 +94,8 @@ QUnit.skip('expression points_count cannot create infinite loop if scene is load
 QUnit.test('expression points_count fails with bad path', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box2.set_input(0, box1);
 
@@ -113,8 +113,8 @@ QUnit.test('expression points_count fails with bad path', async (assert) => {
 QUnit.test('expression points_count fails with bad input index 1', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box2.set_input(0, box1);
 
@@ -131,13 +131,13 @@ QUnit.test('expression points_count fails with bad input index 1', async (assert
 
 QUnit.test('expression points_count fails with bad input index 0', async (assert) => {
 	const geo1 = window.geo1;
-	const dummy = geo1.create_node('plane');
+	const dummy = geo1.createNode('plane');
 	dummy.flags.display.set(true);
 
 	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, dummy.graph_node_id);
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box2.p.size.set('points_count(0)');
 
@@ -164,8 +164,8 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 	assert.ok(!box2.states.error.message, 'box has no error');
 });
 
-// box1 = geo1.create_node('box')
-// box2 = geo1.create_node('box')
+// box1 = geo1.createNode('box')
+// box2 = geo1.createNode('box')
 // console.log(box1.full_path(), box2.full_path())
 
 // box2.p.size.set("points_count(0)")
@@ -194,8 +194,8 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	box2.p.size.set("points_count('../box1')");
 
@@ -210,7 +210,7 @@ QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (a
 	assert.equal(box2.p.size.graph_predecessors().length, 1);
 	assert.equal(box2.p.size.graph_predecessors()[0].name, 'box1');
 
-	geo1.remove_node(box1);
+	geo1.removeNode(box1);
 	assert.ok(box2.p.size.is_dirty);
 	assert.ok(box2.is_dirty);
 
@@ -244,12 +244,12 @@ QUnit.test('points_count: if the points count of input changes, the param gets u
 	// create a sphere that would have the display flag
 	// so that the cooking process is not confused by the geo node
 	// requesting it
-	const sphere = geo1.create_node('sphere');
+	const sphere = geo1.createNode('sphere');
 	sphere.flags.display.set(true);
 
 	// create the boxes we need for this test
-	const box1 = geo1.create_node('box');
-	const box2 = geo1.create_node('box');
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
 
 	const param = box2.p.size;
 	param.set('points_count(0)');

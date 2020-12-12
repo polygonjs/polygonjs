@@ -1,6 +1,6 @@
 // QUnit.test('anim track simple', async (assert) => {
-// 	const ANIM = window.scene.root.create_node('animations');
-// 	const track1 = ANIM.create_node('track');
+// 	const ANIM = window.scene.root.createNode('animations');
+// 	const track1 = ANIM.createNode('track');
 
 // 	const container = await track1.request_container();
 // 	const core_group = container.core_content()!;

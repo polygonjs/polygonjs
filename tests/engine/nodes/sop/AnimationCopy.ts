@@ -1,10 +1,10 @@
 QUnit.test('animation_copy simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const file1 = geo1.create_node('file');
-	const hierarchy1 = geo1.create_node('hierarchy');
-	const animation_copy1 = geo1.create_node('animation_copy');
-	// const animation_mixer1 = geo1.create_node('animation_mixer');
+	const file1 = geo1.createNode('file');
+	const hierarchy1 = geo1.createNode('hierarchy');
+	const animation_copy1 = geo1.createNode('animation_copy');
+	// const animation_mixer1 = geo1.createNode('animation_mixer');
 
 	hierarchy1.set_input(0, file1);
 	animation_copy1.set_input(0, hierarchy1);

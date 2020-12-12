@@ -1,8 +1,8 @@
 QUnit.test('object_properties simple', async (assert) => {
 	let container;
 	const geo1 = window.geo1;
-	const plane1 = geo1.create_node('plane');
-	const object_properties1 = geo1.create_node('object_properties');
+	const plane1 = geo1.createNode('plane');
+	const object_properties1 = geo1.createNode('object_properties');
 	object_properties1.set_input(0, plane1);
 
 	container = await object_properties1.request_container();
