@@ -15,7 +15,9 @@ import {OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
 // import {BaseCopNodeType} from '../../cop/_Base';
 export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param toggle if you want to use an alpha map */
 		use_alpha_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAlphaMapController));
+		/** @param specify the alpha map COP node */
 		alpha_map = ParamConfig.OPERATOR_PATH(
 			OPERATOR_PATH_DEFAULT.NODE.UV,
 			OperatorPathOptions(TextureAlphaMapController, 'use_alpha_map')

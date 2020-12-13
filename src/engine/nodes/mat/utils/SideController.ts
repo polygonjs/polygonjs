@@ -9,7 +9,9 @@ import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function SideParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param defines if the material is double sided or not */
 		double_sided = ParamConfig.BOOLEAN(0);
+		/** @param if the material is not double sided, it can be front sided, or back sided */
 		front = ParamConfig.BOOLEAN(1, {visible_if: {double_sided: false}});
 	};
 }

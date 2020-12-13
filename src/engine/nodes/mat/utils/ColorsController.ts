@@ -7,11 +7,17 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param material color */
 		color = ParamConfig.COLOR([1, 1, 1]);
+		/** @param defines if the color attribute on the geometry is used */
 		use_vertex_colors = ParamConfig.BOOLEAN(0);
+		/** @param sets the material to transparent */
 		transparent = ParamConfig.BOOLEAN(0);
+		/** @param sets the material opacity */
 		opacity = ParamConfig.FLOAT(1);
+		/** @param sets the min alpha below which the material is invisible */
 		alpha_test = ParamConfig.FLOAT(0);
+		/** @param toggle on if you have a fog in the scene and the material should be affected by it */
 		use_fog = ParamConfig.BOOLEAN(0);
 	};
 }

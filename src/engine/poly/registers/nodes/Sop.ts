@@ -225,6 +225,8 @@ import {ScatterSopOperation} from '../../../../core/operations/sop/Scatter';
 import {SphereSopOperation} from '../../../../core/operations/sop/Sphere';
 import {SubdivideSopOperation} from '../../../../core/operations/sop/Subdivide';
 import {TexturePropertiesSopOperation} from '../../../../core/operations/sop/TextureProperties';
+import {TorusSopOperation} from '../../../../core/operations/sop/Torus';
+import {TorusKnotSopOperation} from '../../../../core/operations/sop/TorusKnot';
 import {TransformSopOperation} from '../../../../core/operations/sop/Transform';
 
 import {Poly} from '../../../Poly';
@@ -257,6 +259,8 @@ export class SopRegister {
 		poly.registerOperation(SphereSopOperation);
 		poly.registerOperation(SubdivideSopOperation);
 		poly.registerOperation(TexturePropertiesSopOperation);
+		poly.registerOperation(TorusSopOperation);
+		poly.registerOperation(TorusKnotSopOperation);
 		poly.registerOperation(TransformSopOperation);
 
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);

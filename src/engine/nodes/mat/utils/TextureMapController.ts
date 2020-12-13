@@ -13,7 +13,9 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param toggle on to use a map affecting color */
 		use_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
+		/** @param texture map affecting color */
 		map = ParamConfig.OPERATOR_PATH(
 			OPERATOR_PATH_DEFAULT.NODE.UV,
 			OperatorPathOptions(TextureMapController, 'use_map')

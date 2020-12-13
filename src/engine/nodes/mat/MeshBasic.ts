@@ -1,3 +1,11 @@
+/**
+ * Creates a Mesh Basic Material
+ *
+ * @remarks
+ * This material only emits a color and does not react to light. It is therefore the less resource intensive material.
+ *
+ */
+
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

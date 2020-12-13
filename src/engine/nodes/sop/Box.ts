@@ -1,3 +1,7 @@
+/*
+Creates a box. If the node has no input, you can control the size and center of the box. If the node has an input, it will create a box that encompasses the input geometry.
+*/
+
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BoxSopOperation} from '../../../core/operations/sop/Box';
