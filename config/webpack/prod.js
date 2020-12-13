@@ -10,6 +10,8 @@ const MINIFY = true;
 // At the moment loading multiple entry points override the POLY lib
 const ONE_ENTRY_PER_NODE = false;
 
+const POLYGONJS_VERSION = require('../../package.json').version;
+
 const fs = require('fs');
 const {merge} = require('webpack-merge');
 const common = require('./common.js');
@@ -83,7 +85,7 @@ module.exports = (env) => {
 	// currently not using contenthash since we will fetch the generated file with a version anyway
 	// ie: https://unpkg.com/polygonjs-engine@1.1.23/dist/polygonjs-engine.js
 	common_options.output.chunkFilename = '[name].js'; //'[name].[contenthash].js';
-	common_options.output.publicPath = '/dist/'; // a default is needed
+	common_options.output.publicPath = `https://unpkg.com/polygonjs-engine@${POLYGONJS_VERSION}/dist/`; // a default is needed
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}

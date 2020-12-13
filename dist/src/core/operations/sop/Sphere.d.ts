@@ -10,8 +10,10 @@ interface SphereSopParams extends DefaultOperationParams {
     radius: number;
     resolution: Vector2;
     open: boolean;
-    angle_range_x: Vector2;
-    angle_range_y: Vector2;
+    phi_start: number;
+    phi_length: number;
+    theta_start: number;
+    theta_length: number;
     detail: number;
     center: Vector3;
 }

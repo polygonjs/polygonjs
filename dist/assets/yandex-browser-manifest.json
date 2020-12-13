@@ -1,8 +1,8 @@
 {
-  "version": "1.1.25",
+  "version": "1.1.28",
   "api_version": 1,
   "layout": {
-    "logo": "/dist/assets/yandex-browser-50x50.png",
+    "logo": "https://unpkg.com/polygonjs-engine@1.1.28/dist/assets/yandex-browser-50x50.png",
     "color": "#fff",
     "show_title": true
   }

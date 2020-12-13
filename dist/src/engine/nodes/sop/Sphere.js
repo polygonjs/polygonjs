@@ -15,8 +15,22 @@ class SphereSopParamsConfig extends NodeParamsConfig {
     this.radius = ParamConfig.FLOAT(DEFAULT.radius, {visible_if: {type: SPHERE_TYPE.default}});
     this.resolution = ParamConfig.VECTOR2(DEFAULT.resolution, {visible_if: {type: SPHERE_TYPE.default}});
     this.open = ParamConfig.BOOLEAN(DEFAULT.open, {visible_if: {type: SPHERE_TYPE.default}});
-    this.angle_range_x = ParamConfig.VECTOR2([0, "$PI*2"], {visible_if: {type: SPHERE_TYPE.default, open: true}});
-    this.angle_range_y = ParamConfig.VECTOR2([0, "$PI"], {visible_if: {type: SPHERE_TYPE.default, open: true}});
+    this.phi_start = ParamConfig.FLOAT(DEFAULT.phi_start, {
+      range: [0, Math.PI * 2],
+      visible_if: {type: SPHERE_TYPE.default, open: true}
+    });
+    this.phi_length = ParamConfig.FLOAT("$PI*2", {
+      range: [0, Math.PI * 2],
+      visible_if: {type: SPHERE_TYPE.default, open: true}
+    });
+    this.theta_start = ParamConfig.FLOAT(DEFAULT.theta_start, {
+      range: [0, Math.PI],
+      visible_if: {type: SPHERE_TYPE.default, open: true}
+    });
+    this.theta_length = ParamConfig.FLOAT("$PI", {
+      range: [0, Math.PI],
+      visible_if: {type: SPHERE_TYPE.default, open: true}
+    });
     this.detail = ParamConfig.INTEGER(DEFAULT.detail, {
       range: [0, 5],
       range_locked: [true, false],

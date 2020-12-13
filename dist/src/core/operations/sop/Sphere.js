@@ -50,7 +50,7 @@ export class SphereSopOperation extends BaseSopOperation {
   }
   _create_default_sphere(params) {
     if (params.open) {
-      return new SphereBufferGeometry2(params.radius, params.resolution.x, params.resolution.y, params.angle_range_x.x, params.angle_range_x.y, params.angle_range_y.x, params.angle_range_y.y);
+      return new SphereBufferGeometry2(params.radius, params.resolution.x, params.resolution.y, params.phi_start, params.phi_length, params.theta_start, params.theta_length);
     } else {
       return new SphereBufferGeometry2(params.radius, params.resolution.x, params.resolution.y);
     }
@@ -64,8 +64,10 @@ SphereSopOperation.DEFAULT_PARAMS = {
   radius: 1,
   resolution: new Vector22(30, 30),
   open: false,
-  angle_range_x: new Vector22(0, Math.PI * 2),
-  angle_range_y: new Vector22(0, Math.PI),
+  phi_start: 0,
+  phi_length: Math.PI * 2,
+  theta_start: 0,
+  theta_length: Math.PI,
   detail: 1,
   center: new Vector32(0, 0, 0)
 };

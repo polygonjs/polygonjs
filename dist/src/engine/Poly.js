@@ -15,7 +15,7 @@ export class Poly {
     this.modulesRegister = new DynamicModulesRegister2();
     this.assemblersRegister = new AssemblersRegister();
     this.scenes_by_uuid = {};
-    this._version = "1.1.25";
+    this._version = "1.1.28";
     this._player_mode = true;
     this._logger = null;
   }
