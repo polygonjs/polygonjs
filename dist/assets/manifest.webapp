@@ -1,11 +1,11 @@
 {
-  "version": "1.1.29",
+  "version": "1.1.30",
   "name": "polygonjs-engine",
   "description": "node-based webgl 3D engine https://polygonjs.com",
   "icons": {
-    "60": "https://unpkg.com/polygonjs-engine@1.1.29/dist/assets/firefox_app_60x60.png",
-    "128": "https://unpkg.com/polygonjs-engine@1.1.29/dist/assets/firefox_app_128x128.png",
-    "512": "https://unpkg.com/polygonjs-engine@1.1.29/dist/assets/firefox_app_512x512.png"
+    "60": "https://unpkg.com/polygonjs-engine@1.1.30/dist/assets/firefox_app_60x60.png",
+    "128": "https://unpkg.com/polygonjs-engine@1.1.30/dist/assets/firefox_app_128x128.png",
+    "512": "https://unpkg.com/polygonjs-engine@1.1.30/dist/assets/firefox_app_512x512.png"
   },
   "developer": {
     "name": "Guillaume Fradin",
