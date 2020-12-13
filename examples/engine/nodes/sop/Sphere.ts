@@ -19,16 +19,6 @@ const orbits_controls = events1.createNode('camera_orbit_controls');
 perspective_camera1.p.controls.set(orbits_controls.full_path());
 
 // EXPORT
-const nodes: any[] = [sphere];
+const nodes = [sphere];
 const camera = perspective_camera1;
 export {scene, camera, nodes};
-
-// mount the viewer
-// const element = document.getElementById('app');
-// if (element) {
-// 	perspective_camera1.createViewer(element);
-// } else {
-// 	console.error('element #app not found');
-// }
-
-// const nodes: any[] = [sphere];
