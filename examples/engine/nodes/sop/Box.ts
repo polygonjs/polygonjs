@@ -1,30 +1,26 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
-import {PerspectiveCameraObjNode} from '../../../../src/engine/nodes/obj/PerspectiveCamera';
-import {HemisphereLightObjNode} from '../../../../src/engine/nodes/obj/HemisphereLight';
-import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
-import {BoxSopNode} from '../../../../src/engine/nodes/sop/Box';
-import {EventsSopNode} from '../../../../src/engine/nodes/sop/Events';
-import {CameraOrbitControlsEventNode} from '../../../../src/engine/nodes/event/CameraOrbitControls';
 
-// create a scene
-const scene = new PolyScene();
+export function SopBox() {
+	// create a scene
+	const scene = new PolyScene();
 
-// create a Box
-const geo = scene.root.createNode(GeoObjNode);
-geo.createNode(BoxSopNode);
+	// create a box
+	const geo = scene.root.createNode('geo');
+	const box = geo.createNode('box');
 
-// add a light
-scene.root.createNode(HemisphereLightObjNode);
+	// add a light
+	scene.root.createNode('hemisphere_light');
 
-// create and mount the viewer
-const perspective_camera1 = scene.root.createNode(PerspectiveCameraObjNode);
-const events1 = perspective_camera1.createNode(EventsSopNode);
-const orbits_controls = events1.createNode(CameraOrbitControlsEventNode);
-perspective_camera1.p.controls.set(orbits_controls.full_path());
-perspective_camera1.p.t.set([3, 3, 3]);
-const element = document.getElementById('app');
-if (element) {
-	perspective_camera1.createViewer(element);
-} else {
-	console.error('element not found');
+	// create a camera
+	const perspective_camera1 = scene.root.createNode('perspective_camera');
+	perspective_camera1.p.t.set([5, 5, 5]);
+	// add orbit_controls
+	const events1 = perspective_camera1.createNode('events');
+	const orbits_controls = events1.createNode('camera_orbit_controls');
+	perspective_camera1.p.controls.set(orbits_controls.full_path());
+
+	// EXPORT
+	const nodes = [box];
+	const camera = perspective_camera1;
+	return {scene, camera, nodes};
 }

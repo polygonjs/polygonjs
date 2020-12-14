@@ -1,6 +1,6 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-export function MatMeshBasic() {
+export function MatMeshLambert() {
 	// create a scene
 	const scene = new PolyScene();
 
@@ -24,7 +24,7 @@ export function MatMeshBasic() {
 
 	// create the material
 	const materials = scene.root.createNode('materials');
-	const mesh_basic = materials.createNode('mesh_basic');
+	const mesh_basic = materials.createNode('mesh_lambert');
 	mesh_basic.p.color.set([0, 0.5, 1]);
 
 	// assign the material
@@ -34,8 +34,8 @@ export function MatMeshBasic() {
 	// set the display flag on the material node
 	material.flags.display.set(true);
 
-	// no need to add a light for mesh_basic material
-	// scene.root.createNode('hemisphere_light');
+	// add a light
+	scene.root.createNode('hemisphere_light');
 
 	// create a camera
 	const perspective_camera1 = scene.root.createNode('perspective_camera');

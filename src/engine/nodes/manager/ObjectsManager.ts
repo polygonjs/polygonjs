@@ -69,7 +69,6 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	private _add_to_queue(node: BaseObjNodeType) {
-		console.warn('_add_to_queue', node.full_path());
 		const id = node.graph_node_id;
 		if (!this._queued_nodes_by_id.has(id)) {
 			this._queued_nodes_by_id.set(id, node);

@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title><%= htmlWebpackPlugin.options.title %></title>
-		<style>
-			html,
-			body,
-			#app {
-				margin: 0px;
-				height: 100%;
-			}
-			canvas {
-				display: block;
-				height: 100%;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="app"></div>
-	</body>
+
+<head>
+	<meta charset="utf-8" />
+	<title><%= htmlWebpackPlugin.options.title %></title>
+	<style>
+		html,
+		body,
+		#app {
+			margin: 0px;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		canvas {
+			display: block;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div style='position:absolute; border: 1px solid gray; margin: 10px; padding: 10px'>
+		<p><label>Pre Add</label><input type='range' min=0 max=1 step=0.01
+				oninput='scene.node("/geo1/attrib_add_mult1").p.pre_add.set(event.target.value)'></input></p>
+		<p><label>Mult</label><input type='range' min=0 max=1 step=0.01
+				oninput='console.log(event.target.value)'></input></p>
+		<p><label>Post Add</label><input type='range' min=0 max=1 step=0.01
+				oninput='scene.node("/geo1/attrib_add_mult1").p.post_add.set(event.target.value)'></input></p>
+	</div>
+
+	<div id="app"></div>
+</body>
+
 </html>

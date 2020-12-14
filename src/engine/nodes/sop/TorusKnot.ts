@@ -1,15 +1,30 @@
+/**
+ * Creates a Torus Knot.
+ *
+ * @remarks
+ * The Torus Knot is akin to the Torus, except that you can create more complex shapes by using the `p` and `q` paramters.
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {TorusKnotSopOperation} from '../../../core/operations/sop/TorusKnot';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TorusKnotSopOperation.DEFAULT_PARAMS;
 class TorusKnotSopParamsConfig extends NodeParamsConfig {
+	/** @param large radius */
 	radius = ParamConfig.FLOAT(DEFAULT.radius);
+	/** @param radius of the tube */
 	radius_tube = ParamConfig.FLOAT(DEFAULT.radius_tube);
+	/** @param number of segments along the length of the torus */
 	segments_radial = ParamConfig.INTEGER(DEFAULT.segments_radial, {range: [1, 128]});
+	/** @param number of segments along the tube */
 	segments_tube = ParamConfig.INTEGER(DEFAULT.segments_tube, {range: [1, 32]});
+	/** @param change this to create more interesting shapes. Don't ask me what it is exactly, I don't know! */
 	p = ParamConfig.INTEGER(DEFAULT.p, {range: [1, 10]});
+	/** @param change this to create more interesting shapes. Don't ask me what it is exactly, I don't know! */
 	q = ParamConfig.INTEGER(DEFAULT.q, {range: [1, 10]});
+	/** @param center of the torus knot */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new TorusKnotSopParamsConfig();

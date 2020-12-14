@@ -1,19 +1,30 @@
+/**
+ * Creates a torus.
+ *
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {TorusSopOperation} from '../../../core/operations/sop/Torus';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TorusSopOperation.DEFAULT_PARAMS;
 class TorusSopParamsConfig extends NodeParamsConfig {
+	/** @param large radius */
 	radius = ParamConfig.FLOAT(DEFAULT.radius, {range: [0, 1]});
+	/** @param radius of the tube */
 	radius_tube = ParamConfig.FLOAT(DEFAULT.radius_tube, {range: [0, 1]});
+	/** @param number of segments along the length of the torus */
 	segments_radial = ParamConfig.INTEGER(DEFAULT.segments_radial, {
 		range: [1, 50],
 		range_locked: [true, false],
 	});
+	/** @param number of segments along the tube */
 	segments_tube = ParamConfig.INTEGER(DEFAULT.segments_tube, {
 		range: [1, 50],
 		range_locked: [true, false],
 	});
+	/** @param center of the torus */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new TorusSopParamsConfig();

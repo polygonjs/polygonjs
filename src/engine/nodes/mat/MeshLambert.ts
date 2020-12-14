@@ -1,3 +1,11 @@
+/**
+ * Creates a Mesh lambert Material
+ *
+ * @remarks
+ * This material needs lights to be visible. While not as photorealistic as the MeshStandardMaterial, it is very cheap to process.
+ *
+ */
+
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

@@ -1,3 +1,8 @@
+/**
+ * A subnet to create animation nodes
+ *
+ */
+
 import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';

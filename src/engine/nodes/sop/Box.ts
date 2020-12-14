@@ -1,6 +1,10 @@
-/*
-Creates a box. If the node has no input, you can control the size and center of the box. If the node has an input, it will create a box that encompasses the input geometry.
-*/
+/**
+ * Creates a box.
+ *
+ * @remarks
+ * If the node has no input, you can control the radius and center of the box. If the node has an input, it will create a box that encompasses the input geometry.
+ *
+ */
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -9,11 +13,14 @@ import {BoxSopOperation} from '../../../core/operations/sop/Box';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = BoxSopOperation.DEFAULT_PARAMS;
 class BoxSopParamsConfig extends NodeParamsConfig {
+	/** @param size of the box */
 	size = ParamConfig.FLOAT(DEFAULT.size);
+	/** @param number of segments on each axis */
 	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});
+	/** @param center of the geometry */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new BoxSopParamsConfig();

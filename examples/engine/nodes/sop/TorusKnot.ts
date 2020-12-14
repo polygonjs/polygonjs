@@ -1,13 +1,12 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-export function SopFile() {
+export function SopTorusKnot() {
 	// create a scene
 	const scene = new PolyScene();
 
-	// create a file node
+	// create a torus
 	const geo = scene.root.createNode('geo');
-	const file = geo.createNode('file');
-	file.p.url.set('https://polygonjs.com/examples/models/wolf.obj');
+	const torus_knot = geo.createNode('torus_knot');
 
 	// add a light
 	scene.root.createNode('hemisphere_light');
@@ -21,7 +20,7 @@ export function SopFile() {
 	perspective_camera1.p.controls.set(orbits_controls.full_path());
 
 	// EXPORT
-	const nodes = [file];
+	const nodes = [torus_knot];
 	const camera = perspective_camera1;
 	return {scene, camera, nodes};
 }

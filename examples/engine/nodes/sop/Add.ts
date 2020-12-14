@@ -1,16 +1,22 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-export function SopFile() {
+export function SopAdd() {
 	// create a scene
 	const scene = new PolyScene();
 
-	// create a file node
+	// create an add node
 	const geo = scene.root.createNode('geo');
-	const file = geo.createNode('file');
-	file.p.url.set('https://polygonjs.com/examples/models/wolf.obj');
+	const add = geo.createNode('add');
 
-	// add a light
-	scene.root.createNode('hemisphere_light');
+	// let's add a material so we can actually see the point
+	const materials = scene.root.createNode('materials');
+	const points = materials.createNode('points');
+	points.p.color.set([0, 0, 1]);
+	// assign the material
+	const material = geo.createNode('material');
+	material.set_input(0, add);
+	material.p.material.set(points.full_path());
+	material.flags.display.set(true);
 
 	// create a camera
 	const perspective_camera1 = scene.root.createNode('perspective_camera');
@@ -21,7 +27,7 @@ export function SopFile() {
 	perspective_camera1.p.controls.set(orbits_controls.full_path());
 
 	// EXPORT
-	const nodes = [file];
+	const nodes = [add];
 	const camera = perspective_camera1;
 	return {scene, camera, nodes};
 }
