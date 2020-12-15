@@ -48,5 +48,6 @@ export function SopAttribAddMult() {
 	// EXPORT
 	const nodes = [attrib_add_mult];
 	const camera = perspective_camera1;
-	return {scene, camera, nodes};
+	const html_nodes = {attrib_add_mult};
+	return {scene, camera, nodes, html_nodes};
 }

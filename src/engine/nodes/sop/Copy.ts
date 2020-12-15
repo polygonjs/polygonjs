@@ -1,3 +1,12 @@
+/**
+ * Copies a geometry onto every point from the right input.
+ *
+ * @remarks
+ * This is different than the instance SOP, as the operation here is more expensive, but allows for more flexibility.
+ *
+ *
+ */
+
 import lodash_compact from 'lodash/compact';
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';

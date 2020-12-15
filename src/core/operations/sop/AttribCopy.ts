@@ -28,7 +28,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 
 	cook(input_contents: CoreGroup[], params: AttribCopySopParams) {
 		const core_group_dest = input_contents[0];
-		const core_group_src = input_contents[1];
+		const core_group_src = input_contents[1] || core_group_dest;
 
 		const attrib_names = core_group_src.attrib_names_matching_mask(params.name);
 		for (let attrib_name of attrib_names) {

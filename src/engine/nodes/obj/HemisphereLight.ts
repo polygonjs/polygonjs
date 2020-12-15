@@ -5,11 +5,17 @@ import {TypedLightObjNode} from './_BaseLight';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
+import {Color} from 'three/src/math/Color';
+
+const DEFAULT = {
+	sky_color: new Color(1, 1, 1),
+	ground_color: new Color(0, 0, 0),
+};
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
-	sky_color = ParamConfig.COLOR([1, 1, 1], {
+	sky_color = ParamConfig.COLOR(DEFAULT.sky_color, {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
-	ground_color = ParamConfig.COLOR([0, 0, 0], {
+	ground_color = ParamConfig.COLOR(DEFAULT.ground_color, {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	intensity = ParamConfig.FLOAT(1);
@@ -33,6 +39,9 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 	create_light() {
 		const light = new HemisphereLight();
 		light.matrixAutoUpdate = false;
+		// make sure the light is initialized with same defaults as the node parameters
+		light.color.copy(DEFAULT.sky_color);
+		light.groundColor.copy(DEFAULT.ground_color);
 		return light;
 	}
 	initialize_node() {

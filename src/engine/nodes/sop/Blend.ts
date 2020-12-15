@@ -9,7 +9,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 
 class BlendSopParamsConfig extends NodeParamsConfig {
-	attrib_name = ParamConfig.STRING();
+	attrib_name = ParamConfig.STRING('position');
 	blend = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
 		range_locked: [true, true],

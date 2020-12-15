@@ -22,5 +22,6 @@ export function SopTorusKnot() {
 	// EXPORT
 	const nodes = [torus_knot];
 	const camera = perspective_camera1;
-	return {scene, camera, nodes};
+	const html_nodes = {torus_knot};
+	return {scene, camera, nodes, html_nodes};
 }

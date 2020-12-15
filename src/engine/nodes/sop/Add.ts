@@ -24,9 +24,8 @@ class AddSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param the position of the created points */
 	position = ParamConfig.VECTOR3(DEFAULT.position, {visible_if: {create_point: true}});
-	// create_polygon = ParamConfig.BOOLEAN(0);
-	/** @param if the node has points as input, it will create a line. This define if the line is closed or open. */
-	open = ParamConfig.BOOLEAN(DEFAULT.open);
+	/** @param toggle on to connect the points from the input geometry */
+	connect_input_points = ParamConfig.BOOLEAN(0);
 	/** @param check if the last point is connected */
 	connect_to_last_point = ParamConfig.BOOLEAN(DEFAULT.connect_to_last_point);
 }

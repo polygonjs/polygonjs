@@ -11,6 +11,11 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	assert.equal(hemisphere_light1.name, 'hemisphere_light1');
 	assert.equal(main_group.children.length, 3);
 
+	assert.deepEqual(hemisphere_light1.p.sky_color.value_pre_conversion_serialized, [1, 1, 1]);
+	assert.deepEqual(hemisphere_light1.p.ground_color.value_pre_conversion_serialized, [0, 0, 0]);
+
+	hemisphere_light1.p.sky_color.set([0.2, 0.7, 1]);
+	hemisphere_light1.p.ground_color.set([0.1, 0.1, 0.25]);
 	assert.deepEqual(hemisphere_light1.p.sky_color.value_pre_conversion_serialized, [0.2, 0.7, 1]);
 	assert.deepEqual(hemisphere_light1.p.ground_color.value_pre_conversion_serialized, [0.1, 0.1, 0.25]);
 	const tmp = new Color();
@@ -39,7 +44,17 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	await scene.wait_for_cooks_completed();
 	assert.equal(light_from_light_object1.uuid, hemisphere_light1.light.uuid);
 	assert.equal(hemisphere_light1.light.intensity, 2, 'intensity should be 2');
-	assert.equal(hemisphere_light1.cook_controller.cooks_count, 1, 'cooks count should be 1');
+	assert.equal(hemisphere_light1.cook_controller.cooks_count, 2, 'cooks count should be 2');
 
 	window.scene.performance.stop();
+});
+
+QUnit.test('hemisphere light params update as expected', async (assert) => {
+	const scene = window.scene;
+	const root = scene.root;
+	const hemisphere_light = root.createNode('hemisphere_light');
+	assert.equal(hemisphere_light.light.color.r, 1);
+	hemisphere_light.p.sky_color.r.set(0.5);
+	await scene.wait_for_cooks_completed();
+	assert.in_delta(hemisphere_light.light.color.r, 0.21, 0.05);
 });

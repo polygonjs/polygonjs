@@ -1,3 +1,8 @@
+/**
+ * Deletes an attribute from the geometry or object.
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -11,11 +16,13 @@ import {Mesh} from 'three/src/objects/Mesh';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
+	/** @param attribute class (geometry or object) */
 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
+	/** @param attribute name to delete */
 	name = ParamConfig.STRING('');
 }
 const ParamsConfig = new AttribDeleteSopParamsConfig();

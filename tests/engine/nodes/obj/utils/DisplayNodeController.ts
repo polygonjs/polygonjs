@@ -43,7 +43,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 
 	assert.equal(main_group.children.length, 2);
 
-	assert.equal(geo1.cook_controller.cooks_count, 0);
+	assert.equal(geo1.cook_controller.cooks_count, 0, 'cooks count is 0');
 	geo1.p.t.x.set(2);
 	await scene.wait_for_cooks_completed();
 	assert.deepEqual(

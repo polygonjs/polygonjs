@@ -31,8 +31,13 @@ QUnit.test('a param can access another with its component full path', async (ass
 	assert.equal(tz.value, 1);
 	assert.deepEqual(t.value.toArray(), [0, 1, 1]);
 
+	assert.ok(!tz.is_dirty);
 	ty.set(2.5);
+	assert.ok(tz.is_dirty);
+	await tz.compute();
+	assert.equal(tz.value, 2.5);
 	tz.set('ch("ty")*2');
+	assert.ok(tz.is_dirty);
 	await tz.compute();
 	assert.equal(tz.value, 5);
 	assert.deepEqual(t.value.toArray(), [0, 2.5, 5]);

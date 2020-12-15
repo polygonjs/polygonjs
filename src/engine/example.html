@@ -21,13 +21,35 @@
 </head>
 
 <body>
-	<div style='position:absolute; border: 1px solid gray; margin: 10px; padding: 10px'>
-		<p><label>Pre Add</label><input type='range' min=0 max=1 step=0.01
-				oninput='scene.node("/geo1/attrib_add_mult1").p.pre_add.set(event.target.value)'></input></p>
-		<p><label>Mult</label><input type='range' min=0 max=1 step=0.01
-				oninput='console.log(event.target.value)'></input></p>
-		<p><label>Post Add</label><input type='range' min=0 max=1 step=0.01
-				oninput='scene.node("/geo1/attrib_add_mult1").p.post_add.set(event.target.value)'></input></p>
+	<div style='position:absolute; border: 1px solid lightgray; margin: 10px; padding: 10px;'>
+		<p>
+			<label>radius</label>
+			<input type='range' min=0 max=1 step=0.01 oninput='torus_knot.p.radius.set(event.target.value)'></input>
+		</p>
+		<p>
+			<label>radius_tube</label>
+			<input type='range' min=0 max=1 step=0.01
+				oninput='torus_knot.p.radius_tube.set(event.target.value)'></input>
+		</p>
+		<p>
+			<label>segments_radial</label>
+			<input type='range' min=1 max=512 step=1
+				oninput='torus_knot.p.segments_radial.set(event.target.value)'></input>
+		</p>
+		<p>
+			<label>segments_tube</label>
+			<input type='range' min=1 max=32 step=0.01
+				oninput='torus_knot.p.segments_tube.set(event.target.value)'></input>
+		</p>
+		<p>
+			<label>p</label>
+			<input type='range' min=1 max=10 step=1 oninput='torus_knot.p.p.set(event.target.value)'></input>
+		</p>
+		<p>
+			<label>q</label>
+			<input type='range' min=0 max=10 step=1 oninput='torus_knot.p.q.set(event.target.value)'></input>
+		</p>
+
 	</div>
 
 	<div id="app"></div>

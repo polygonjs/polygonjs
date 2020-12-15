@@ -1,3 +1,12 @@
+/**
+ * Allows to switch between different inputs.
+ *
+ * @remarks
+ * TBD
+ *
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 
 const INPUT_NAME = 'geometry to switch to';

@@ -1,3 +1,12 @@
+/**
+ * Copies a geometry onto every point from the right input.
+ *
+ * @remarks
+ * Creates an instance geometry, but instancing the geometry in the left input onto every point from the right input. This is a great way to display a lot of geometries on screen with little performance penalty.
+ *
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeContext} from '../../poly/NodeContext';

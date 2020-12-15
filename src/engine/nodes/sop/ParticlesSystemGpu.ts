@@ -1,3 +1,12 @@
+/**
+ * Allows to create particle systems that will run on the GPU using gl nodes.
+ *
+ * @remarks
+ * TBD
+ *
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 
