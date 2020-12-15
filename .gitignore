@@ -4,3 +4,4 @@ coverage
 config/webpack/stats.json
 config/webpack/dts_concat.js
 public/dist
+dist/
