@@ -1,3 +1,8 @@
+/**
+ * Creates an environment map
+ *
+ *
+ */
 import {Texture} from 'three/src/textures/Texture';
 import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
 import {TypedCopNode} from './_Base';
@@ -6,6 +11,7 @@ import {DataTextureController, DataTextureControllerBufferType} from './utils/Da
 import {CopRendererController} from './utils/RendererController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class EnvMapCopParamsConfig extends NodeParamsConfig {
+	/** @param defines if the shader is rendered via the same camera used to render the scene */
 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new EnvMapCopParamsConfig();

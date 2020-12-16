@@ -1,14 +1,21 @@
+/**
+ * Generates a color
+ *
+ *
+ */
 import {TypedCopNode} from './_Base';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 
 class ColorCopParamsConfig extends NodeParamsConfig {
+	/** @param texture resolution */
 	resolution = ParamConfig.VECTOR2([256, 256], {
 		callback: (node: BaseNodeType) => {
 			ColorCopNode.PARAM_CALLBACK_reset(node as ColorCopNode);
 		},
 	});
+	/** @param color to generate */
 	color = ParamConfig.COLOR([1, 1, 1]);
 }
 const ParamsConfig = new ColorCopParamsConfig();

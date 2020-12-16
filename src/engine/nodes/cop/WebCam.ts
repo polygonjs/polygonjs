@@ -1,3 +1,7 @@
+/**
+ * Imports a video from your webcam
+ *
+ */
 import {TypedCopNode} from './_Base';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -5,6 +9,7 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 
 export function WebcamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param texture resolution */
 		res = ParamConfig.VECTOR2([1024, 1024]);
 	};
 }

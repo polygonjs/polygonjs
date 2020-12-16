@@ -1,3 +1,7 @@
+/**
+ * Texture properties
+ *
+ */
 import {Texture} from 'three/src/textures/Texture';
 import {TypedCopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';

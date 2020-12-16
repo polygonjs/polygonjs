@@ -43,7 +43,7 @@ export function AnimPosition() {
 	const property_value = animations.createNode('property_value');
 	property_value.set_input(0, property_name);
 	property_value.p.size.set(1);
-	property_value.p.value1.set(1 * Math.PI);
+	property_value.p.value1.set(0.5 * Math.PI);
 	// sets the duration
 	const duration = animations.createNode('duration');
 	duration.set_input(0, property_value);

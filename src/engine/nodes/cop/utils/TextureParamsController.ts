@@ -81,7 +81,9 @@ import {BaseNodeType} from '../../_Base';
 
 export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param toggle on to allow updating the texture encoding */
 		tencoding = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture encoding */
 		encoding = ParamConfig.INTEGER(LinearEncoding, {
 			visible_if: {tencoding: 1},
 			menu: {
@@ -93,7 +95,9 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				}),
 			},
 		});
+		/** @param toggle on to allow updating the texture mapping */
 		tmapping = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture mapping */
 		mapping = ParamConfig.INTEGER(UVMapping, {
 			visible_if: {tmapping: 1},
 			menu: {
@@ -105,7 +109,9 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				}),
 			},
 		});
+		/** @param toggle on to allow updating the texture wrap */
 		twrap = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture wrapS */
 		wrap_s = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
 			visible_if: {twrap: 1},
 			menu: {
@@ -117,6 +123,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				}),
 			},
 		});
+		/** @param sets the texture wrapT */
 		wrap_t = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
 			visible_if: {twrap: 1},
 			menu: {
@@ -131,38 +138,50 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		wrap_sep = ParamConfig.SEPARATOR(null, {
 			visible_if: {twrap: 1},
 		});
+		/** @param toggle on to allow updating the texture min filter */
 		tminfilter = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture min filter */
 		min_filter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
 			visible_if: {tminfilter: 1},
 			menu: {
 				entries: MIN_FILTER_MENU_ENTRIES,
 			},
 		});
+		/** @param toggle on to allow updating the texture mag filter */
 		tmagfilter = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture mag filter */
 		mag_filter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
 			visible_if: {tmagfilter: 1},
 			menu: {
 				entries: MAG_FILTER_MENU_ENTRIES,
 			},
 		});
+		/** @param toggle on to allow updating the texture anisotropy */
 		tanisotropy = ParamConfig.BOOLEAN(0);
+		/** @param sets the anisotropy from the max value allowed by the renderer */
 		use_renderer_max_anisotropy = ParamConfig.BOOLEAN(1, {
 			visible_if: {tanisotropy: 1},
 		});
+		/** @param sets the anisotropy manually */
 		anisotropy = ParamConfig.INTEGER(1, {
 			visible_if: {tanisotropy: 1, use_renderer_max_anisotropy: 0},
 			range: [0, 32],
 			range_locked: [true, false],
 		});
+		/** @param TBD */
 		use_camera_renderer = ParamConfig.BOOLEAN(0, {
 			visible_if: {tanisotropy: 1, use_renderer_max_anisotropy: 1},
 		});
 		anisotropy_sep = ParamConfig.SEPARATOR(null, {
 			visible_if: {tanisotropy: 1},
 		});
+		/** @param Toggle on to update the flipY */
 		tflip_y = ParamConfig.BOOLEAN(0);
+		/** @param sets the flipY */
 		flip_y = ParamConfig.BOOLEAN(0, {visible_if: {tflip_y: 1}});
+		/** @param toggle on to update the texture transform */
 		ttransform = ParamConfig.BOOLEAN(0);
+		/** @param updates the texture offset */
 		offset = ParamConfig.VECTOR2([0, 0], {
 			visible_if: {ttransform: 1},
 			cook: false,
@@ -170,6 +189,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				TextureParamsController.PARAM_CALLBACK_update_offset(node as TextureCopNode);
 			},
 		});
+		/** @param updates the texture repeat */
 		repeat = ParamConfig.VECTOR2([1, 1], {
 			visible_if: {ttransform: 1},
 			cook: false,
@@ -177,6 +197,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				TextureParamsController.PARAM_CALLBACK_update_repeat(node as TextureCopNode);
 			},
 		});
+		/** @param updates the texture rotation */
 		rotation = ParamConfig.FLOAT(0, {
 			range: [-1, 1],
 			visible_if: {ttransform: 1},
@@ -185,6 +206,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				TextureParamsController.PARAM_CALLBACK_update_rotation(node as TextureCopNode);
 			},
 		});
+		/** @param updates the texture center */
 		center = ParamConfig.VECTOR2([0, 0], {
 			visible_if: {ttransform: 1},
 			cook: false,

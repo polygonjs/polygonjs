@@ -1,3 +1,10 @@
+/**
+ * Imports a mapbox tile.
+ *
+ * @remarks
+ * Note that this node requires a mapbox account.
+ */
+
 import {
 	// NearestFilter,
 	LinearFilter,
@@ -35,11 +42,14 @@ class MapboxTileCopParamsConfig extends NodeParamsConfig {
 	// london [-0.07956, 51.5146]
 	// mt fuji 35.3547 138.725
 	// el cap: -119.63, 37.7331199, zoom 13
+	/** @param Longitude and latitude for the tile */
 	lng_lat = ParamConfig.VECTOR2([-119.63, 37.73311]);
+	/** @param zoom value */
 	zoom = ParamConfig.INTEGER(12, {
 		range: [1, 24],
 		range_locked: [true, true],
 	});
+	/** @param type of tile (elevation or satellite) */
 	type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: TILE_TYPES.map((m) => ({

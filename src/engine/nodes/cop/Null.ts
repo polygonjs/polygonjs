@@ -1,3 +1,8 @@
+/**
+ * Simply makes a copy of the texture
+ *
+ */
+
 import {Texture} from 'three/src/textures/Texture';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

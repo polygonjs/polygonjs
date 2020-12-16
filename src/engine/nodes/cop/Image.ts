@@ -1,8 +1,10 @@
-/*
-PERFORMANCE:
-https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491
-try to set Texture.minFilter to THREE.LinearFilter in order to avoid the generation of mipmaps
-*/
+/**
+ * Imports an image file.
+ *
+ * @remarks
+ * Performance tip: If possible, try to set min filter to LinearFilter in order to avoid the generation of mipmaps.
+ * [https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491](https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491)
+ */
 
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {Texture} from 'three/src/textures/Texture';
@@ -17,10 +19,12 @@ import {CopFileTypeController} from './utils/FileTypeController';
 
 export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param url to fetch the image from */
 		url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
 			desktop_browse: {file_type: DesktopFileType.TEXTURE},
 			asset_reference: true,
 		});
+		/** @param reload the image */
 		reload = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				ImageCopNode.PARAM_CALLBACK_reload(node as ImageCopNode, param);

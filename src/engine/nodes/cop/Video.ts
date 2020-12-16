@@ -1,12 +1,17 @@
-/*
-TIPS to load videos
-- qt-faststart for faster start
-- have both mp4 and ogv
+/**
+ * Imports a video
+ *
+ * @remarks
+ * TIP: to ensure that your video starts as soon as possible, make sure to pre-process it with a tool like qt-faststart. There are many places where you can find it, but here are some suggestions:
+ * 
+ * - download it from [https://pypi.org/project/qtfaststart/](https://pypi.org/project/qtfaststart/)
+ * - download it from [https://manpages.debian.org/stretch/ffmpeg/qt-faststart.1.en.html](https://manpages.debian.org/stretch/ffmpeg/qt-faststart.1.en.html)
+ * - with ffmpeg, you can use the following command line: `ffmpeg -i in.mp4 -c copy -map 0 -movflags +faststart out.mp4
+`
 
-PERFORMANCE:
-https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491
-try to set Texture.minFilter to THREE.LinearFilter in order to avoid the generation of mipmaps
-*/
+In a future version of this node, it will also be possible to link it to a video tag that could already be in your html DOM. This way, you could sets multiple source tags (one with mp4 and one with ogv) instead of a single url.
+
+ */
 
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {Texture} from 'three/src/textures/Texture';
@@ -22,37 +27,44 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 
 export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param url to fetch the video from */
 		url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
 			desktop_browse: {file_type: DesktopFileType.TEXTURE},
 			asset_reference: true,
 		});
+		/** @param reload the video */
 		reload = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				VideoCopNode.PARAM_CALLBACK_reload(node as VideoCopNode, param);
 			},
 		});
+		/** @param play the video */
 		play = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
 				VideoCopNode.PARAM_CALLBACK_video_update_play(node as VideoCopNode);
 			},
 		});
+		/** @param set the video muted attribute */
 		muted = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
 				VideoCopNode.PARAM_CALLBACK_video_update_muted(node as VideoCopNode);
 			},
 		});
+		/** @param set the video loop attribute */
 		loop = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
 				VideoCopNode.PARAM_CALLBACK_video_update_loop(node as VideoCopNode);
 			},
 		});
+		/** @param set the video time */
 		video_time = ParamConfig.FLOAT(0, {
 			cook: false,
 			// do not use video_time, as calling "this._video.currentTime =" every frame is really expensive
 		});
+		/** @param seek the video at the time specified in vide_time */
 		set_video_time = ParamConfig.BUTTON(null, {
 			cook: false,
 			callback: (node: BaseNodeType) => {

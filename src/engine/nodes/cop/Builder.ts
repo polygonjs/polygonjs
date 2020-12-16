@@ -1,3 +1,8 @@
+/**
+ * Allows to create a shader with GLSL nodes to create the texture values.
+ *
+ *
+ */
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Scene} from 'three/src/scenes/Scene';
@@ -41,7 +46,9 @@ import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {ParamsInitData} from '../utils/io/IOController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
+	/** @param texture resolution */
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
+	/** @param defines if the shader is rendered via the same camera used to render the scene */
 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 }
 
