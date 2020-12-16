@@ -1,3 +1,7 @@
+/**
+ * shows controls to play and pause animation properties
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
@@ -6,11 +10,13 @@ import {BaseNodeType} from '../_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class NullAnimParamsConfig extends NodeParamsConfig {
+	/** @param play the animations */
 	play = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			NullAnimNode.PARAM_CALLBACK_play(node as NullAnimNode);
 		},
 	});
+	/** @param pause the animations */
 	pause = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			NullAnimNode.PARAM_CALLBACK_pause(node as NullAnimNode);

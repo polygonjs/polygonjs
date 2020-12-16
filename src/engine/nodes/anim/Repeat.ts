@@ -1,14 +1,23 @@
+/**
+ * Sets if the animation should repeat
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder, AnimationRepeatParams} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RepeatAnimParamsConfig extends NodeParamsConfig {
+	/** @param sets if it should repeat indefinitely */
 	unlimited = ParamConfig.BOOLEAN(0);
+	/** @param number of times the animation should repeat */
 	count = ParamConfig.INTEGER(1, {
 		range: [0, 10],
 		visible_if: {unlimited: 0},
 	});
+	/** @param delay */
 	delay = ParamConfig.FLOAT(0);
+	/** @param sets if the animation should go back and forth at each repeat */
 	yoyo = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new RepeatAnimParamsConfig();

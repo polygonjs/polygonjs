@@ -1,8 +1,14 @@
+/**
+ * Switch between animation properties
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class SwitchAnimParamsConfig extends NodeParamsConfig {
+	/** @param input to process */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
 		range_locked: [true, true],

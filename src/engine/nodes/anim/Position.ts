@@ -1,3 +1,8 @@
+/**
+ * Sets how the position of an animation
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {
@@ -9,6 +14,7 @@ import {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PositionAnimParamsConfig extends NodeParamsConfig {
+	/** @param sets the mode of the position. It can either be relative or absolute */
 	mode = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: ANIMATION_POSITION_MODES.map((name, value) => {
@@ -16,6 +22,7 @@ class PositionAnimParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param if sets to relative, sets if it is relative to the start or end */
 	relative_to = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: ANIMATION_POSITION_RELATIVE_TOS.map((name, value) => {
@@ -23,6 +30,7 @@ class PositionAnimParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param offset */
 	offset = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new PositionAnimParamsConfig();

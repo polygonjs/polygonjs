@@ -1,8 +1,14 @@
+/**
+ * Name of the property the animation will be applied to
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PropertyNameAnimParamsConfig extends NodeParamsConfig {
+	/** @param name */
 	name = ParamConfig.STRING('position');
 }
 const ParamsConfig = new PropertyNameAnimParamsConfig();

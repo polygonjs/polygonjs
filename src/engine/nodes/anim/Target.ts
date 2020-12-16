@@ -1,3 +1,8 @@
+/**
+ * Target of the animation
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
@@ -14,6 +19,7 @@ import {AnimationUpdateCallback} from '../../../core/animation/UpdateCallback';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 class TargetAnimParamsConfig extends NodeParamsConfig {
+	/** @param sets if the target is a Polygonjs node, or a THREE object */
 	type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: TARGET_TYPES.map((name, value) => {
@@ -21,15 +27,19 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param if set to a Polygonjs node, this is the node path */
 	node_path = ParamConfig.OPERATOR_PATH('/geo1', {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.NODE)},
 	});
+	/** @param if set to a THREE object, this is a mask to find the objects */
 	object_mask = ParamConfig.STRING('/geo*', {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
+	/** @param sets if the matrix should be updated as the animation progresses */
 	update_matrix = ParamConfig.BOOLEAN(0, {
 		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
+	/** @param prints which objects are targeted by this node, for debuggin */
 	print_resolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			TargetAnimNode.PARAM_CALLBACK_print_resolve(node as TargetAnimNode);

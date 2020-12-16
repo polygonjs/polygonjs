@@ -1,8 +1,14 @@
+/**
+ * Adds a delay to animation properties
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DelayAnimParamsConfig extends NodeParamsConfig {
+	/** @param delay */
 	delay = ParamConfig.FLOAT(1);
 }
 const ParamsConfig = new DelayAnimParamsConfig();

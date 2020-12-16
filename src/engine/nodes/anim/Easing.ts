@@ -1,9 +1,15 @@
+/**
+ * Sets easing of animation property
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {AnimNodeEasing, EASINGS, InOutMode, IN_OUT_MODES} from '../../../core/animation/Constant';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class EasingAnimParamsConfig extends NodeParamsConfig {
+	/** @param name of easing */
 	name = ParamConfig.INTEGER(EASINGS.indexOf(AnimNodeEasing.POWER4), {
 		menu: {
 			entries: EASINGS.map((name, value) => {
@@ -11,6 +17,7 @@ class EasingAnimParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param defines if the easing is 'in', 'out' or 'in-out' */
 	in_out = ParamConfig.INTEGER(IN_OUT_MODES.indexOf(InOutMode.OUT), {
 		menu: {
 			entries: IN_OUT_MODES.map((name, value) => {

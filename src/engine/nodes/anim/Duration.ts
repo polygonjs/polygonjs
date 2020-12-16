@@ -1,8 +1,14 @@
+/**
+ * Sets the duration of an animation
+ *
+ *
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DurationAnimParamsConfig extends NodeParamsConfig {
+	/** @param duration */
 	duration = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 		range_locked: [true, false],

@@ -1,3 +1,9 @@
+/**
+ * Merge animation properties
+ *
+ * @remarks
+ * Animation properties can be set to either run at the same time, or one after the other.
+ */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {TypeAssert} from '../../poly/Assert';
@@ -10,6 +16,7 @@ enum MergeMode {
 const MERGE_MODES: MergeMode[] = [MergeMode.ALL_TOGETHER, MergeMode.ONE_AT_A_TIME];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class MergeAnimParamsConfig extends NodeParamsConfig {
+	/** @param mode (at the same time or one after the other) */
 	mode = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: MERGE_MODES.map((name, value) => {
@@ -17,9 +24,11 @@ class MergeAnimParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param offset if run one after the other */
 	offset = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
 	});
+	/** @param override the position */
 	override_positions = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new MergeAnimParamsConfig();

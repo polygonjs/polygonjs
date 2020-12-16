@@ -4,7 +4,8 @@ import {PerspectiveCameraObjNode} from './nodes/obj/PerspectiveCamera';
 
 import {AllRegister} from './poly/registers/All';
 AllRegister.run();
-
+// anim
+import {AnimPosition} from '../../examples/engine/nodes/anim/Position';
 // mat
 import {MatMeshBasic} from '../../examples/engine/nodes/mat/MeshBasic';
 import {MatMeshLambert} from '../../examples/engine/nodes/mat/MeshLambert';
@@ -27,6 +28,7 @@ import {SopTetrahedron} from '../../examples/engine/nodes/sop/Tetrahedron';
 import {SopTorus} from '../../examples/engine/nodes/sop/Torus';
 import {SopTorusKnot} from '../../examples/engine/nodes/sop/TorusKnot';
 
+const ANIM = [AnimPosition];
 const MAT = [MatMeshBasic, MatMeshLambert];
 const SOP = [
 	SopAdd,
@@ -47,6 +49,7 @@ const SOP = [
 	SopTorus,
 	SopTorusKnot,
 ];
+console.log('ANIM', ANIM.length);
 console.log('MAT', MAT.length);
 console.log('SOP', SOP.length);
 
@@ -57,7 +60,7 @@ interface SceneBuilderResult {
 	html_nodes?: Dictionary<BaseNodeType>;
 }
 
-const result: SceneBuilderResult = SopNoise();
+const result: SceneBuilderResult = AnimPosition();
 (window as any).scene = result.scene;
 
 const html_nodes = result.html_nodes;
