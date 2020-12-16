@@ -14,10 +14,6 @@ import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from '../core/operations/_Base';
 
-// declaring in 2 lines because of combining ts-loader with webpack.DefinePlugin
-// https://github.com/TypeStrong/ts-loader/issues/37
-declare const __POLYGONJS_VERSION__: string;
-
 export class Poly {
 	static _instance: Poly | undefined;
 	public readonly renderers_controller: RenderersController = new RenderersController();
@@ -28,7 +24,6 @@ export class Poly {
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
-	private _version: Readonly<string> = __POLYGONJS_VERSION__;
 	private _player_mode: boolean = true;
 	private _logger: BaseCoreLogger | null = null;
 
@@ -36,10 +31,6 @@ export class Poly {
 		return (this._instance = this._instance || new Poly());
 	}
 	private constructor() {}
-
-	version() {
-		return this._version;
-	}
 
 	set_player_mode(mode: boolean) {
 		this._player_mode = mode;
@@ -90,9 +81,6 @@ export class Poly {
 		return this._logger;
 	}
 
-	log_engine_version() {
-		this._logger?.log(`POLYGONJS: '${this._version}'`);
-	}
 	static log(message?: any, ...optionalParams: any[]) {
 		this.instance().logger?.log(...[message, ...optionalParams]);
 	}
