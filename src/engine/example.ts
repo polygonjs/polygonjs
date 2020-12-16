@@ -17,8 +17,12 @@ import {SopAttribCreate} from '../../examples/engine/nodes/sop/AttribCreate';
 import {SopBlend} from '../../examples/engine/nodes/sop/Blend';
 import {SopBox} from '../../examples/engine/nodes/sop/Box';
 import {SopFile} from '../../examples/engine/nodes/sop/File';
+import {SopNoise} from '../../examples/engine/nodes/sop/Noise';
+import {SopRoundedBox} from '../../examples/engine/nodes/sop/RoundedBox';
 import {SopSphere} from '../../examples/engine/nodes/sop/Sphere';
+import {SopSphereIcosahedron} from '../../examples/engine/nodes/sop/Sphere.icosahedron';
 import {SopSubdivide} from '../../examples/engine/nodes/sop/Subdivide';
+import {SopSwitch} from '../../examples/engine/nodes/sop/Switch';
 import {SopTetrahedron} from '../../examples/engine/nodes/sop/Tetrahedron';
 import {SopTorus} from '../../examples/engine/nodes/sop/Torus';
 import {SopTorusKnot} from '../../examples/engine/nodes/sop/TorusKnot';
@@ -33,8 +37,12 @@ const SOP = [
 	SopBlend,
 	SopBox,
 	SopFile,
+	SopNoise,
+	SopRoundedBox,
 	SopSphere,
+	SopSphereIcosahedron,
 	SopSubdivide,
+	SopSwitch,
 	SopTetrahedron,
 	SopTorus,
 	SopTorusKnot,
@@ -49,7 +57,7 @@ interface SceneBuilderResult {
 	html_nodes?: Dictionary<BaseNodeType>;
 }
 
-const result: SceneBuilderResult = SopTetrahedron();
+const result: SceneBuilderResult = SopNoise();
 (window as any).scene = result.scene;
 
 const html_nodes = result.html_nodes;

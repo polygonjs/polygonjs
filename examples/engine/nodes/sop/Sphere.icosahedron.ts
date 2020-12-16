@@ -1,12 +1,13 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-export function SopSphere() {
+export function SopSphereIcosahedron() {
 	// create a scene
 	const scene = new PolyScene();
 
 	// create a sphere
 	const geo = scene.root.createNode('geo');
 	const sphere = geo.createNode('sphere');
+	sphere.p.type.set(1);
 
 	// add a light
 	scene.root.createNode('hemisphere_light');

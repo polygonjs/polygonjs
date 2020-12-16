@@ -1,12 +1,12 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-export function SopSphere() {
+export function SopRoundedBox() {
 	// create a scene
 	const scene = new PolyScene();
 
-	// create a sphere
+	// create a box
 	const geo = scene.root.createNode('geo');
-	const sphere = geo.createNode('sphere');
+	const rounded_box = geo.createNode('rounded_box');
 
 	// add a light
 	scene.root.createNode('hemisphere_light');
@@ -20,8 +20,8 @@ export function SopSphere() {
 	perspective_camera1.p.controls.set(orbits_controls.full_path());
 
 	// EXPORT
-	const nodes = [sphere];
-	const html_nodes = {sphere};
+	const nodes = [rounded_box];
+	const html_nodes = {rounded_box};
 	const camera = perspective_camera1;
 	return {scene, camera, nodes, html_nodes};
 }

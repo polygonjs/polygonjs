@@ -3,7 +3,9 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title><%= htmlWebpackPlugin.options.title %></title>
+	<title>
+		<%= htmlWebpackPlugin.options.title %>
+	</title>
 	<style>
 		html,
 		body,
@@ -21,19 +23,29 @@
 </head>
 
 <body>
+
+
 	<div style='position:absolute; border: 1px solid lightgray; margin: 10px; padding: 10px;'>
 		<p>
-			<label>radius</label>
-			<input type='range' min=0 max=1 step=0.01 oninput='tetrahedron.p.radius.set(event.target.value)'></input>
+			<label>Amplitude</label>
+			<input type='range' min=0 max=1 step=0.01 value=0.5
+				oninput='noise.p.amplitude.set(event.target.value)'></input>
 		</p>
 		<p>
-			<label>detail</label>
-			<input type='range' min=0 max=10 step=1 oninput='tetrahedron.p.detail.set(event.target.value)'></input>
+			<label>Noise Offset X</label>
+			<input type='range' min=0 max=10 step=0.01 oninput='noise.p.offset.x.set(event.target.value)'></input>
 		</p>
-
+		<p>
+			<label>Noise Offset Y</label>
+			<input type='range' min=0 max=10 step=0.01 oninput='noise.p.offset.y.set(event.target.value)'></input>
+		</p>
+		<p>
+			<label>Noise Offset Z</label>
+			<input type='range' min=0 max=10 step=0.01 oninput='noise.p.offset.z.set(event.target.value)'></input>
+		</p>
 	</div>
 
-	</div>
+
 	<div id="app"></div>
 </body>
 
