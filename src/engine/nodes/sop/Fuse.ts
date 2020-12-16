@@ -1,3 +1,10 @@
+/**
+ * Snaps points onto one another.
+ *
+ * @remarks
+ * Based on a distance threshold.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -10,6 +17,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
 import {object_type_from_constructor} from '../../../core/geometry/Constant';
 class FuseSopParamsConfig extends NodeParamsConfig {
+	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],
 		range_locked: [true, false],

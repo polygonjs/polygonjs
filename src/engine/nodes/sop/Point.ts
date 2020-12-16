@@ -1,3 +1,10 @@
+/**
+ * Creates a plane.
+ *
+ * @remarks
+ * This node is similar to the Color and Normal SOPs, and can update the vertex positions with expressions
+ *
+ */
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -16,21 +23,28 @@ type ComponentOffset = 0 | 1 | 2;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PointSopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to update the x component */
 	update_x = ParamConfig.BOOLEAN(0);
+	/** @param expression the x component */
 	x = ParamConfig.FLOAT('@P.x', {
 		visible_if: {update_x: 1},
 		expression: {for_entities: true},
 	});
+	/** @param toggle on to update the y component */
 	update_y = ParamConfig.BOOLEAN(0);
+	/** @param expression the y component */
 	y = ParamConfig.FLOAT('@P.y', {
 		visible_if: {update_y: 1},
 		expression: {for_entities: true},
 	});
+	/** @param toggle on to update the z component */
 	update_z = ParamConfig.BOOLEAN(0);
+	/** @param expression the z component */
 	z = ParamConfig.FLOAT('@P.z', {
 		visible_if: {update_z: 1},
 		expression: {for_entities: true},
 	});
+	/** @param toggle on to update the normals */
 	update_normals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new PointSopParamsConfig();

@@ -1,3 +1,10 @@
+/**
+ * Transfers an attribute from right input to left input
+ *
+ * @remarks
+ * This can be useful to create heatmap.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -7,15 +14,20 @@ import {CoreIterator} from '../../../core/Iterator';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
+	/** @param source group to transfer from (right input, or input 1) */
 	src_group = ParamConfig.STRING();
+	/** @param dest group to transfer to (left input, or input 0) */
 	dest_group = ParamConfig.STRING();
+	/** @param name of the attribute to transfer */
 	name = ParamConfig.STRING();
+	/** @param max number of samples to use */
 	max_samples_count = ParamConfig.INTEGER(1, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});
-
+	/** @param max distance to search points to transfer from */
 	distance_threshold = ParamConfig.FLOAT(1);
+	/** @param blend width */
 	blend_width = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new AttribTransferSopParamsConfig();
@@ -106,8 +118,6 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		}
 	}
 
-
-
 	private _interpolate_points(point_dest: CorePoint, src_points: CorePoint[], attrib_name: string) {
 		let new_value: number;
 
@@ -119,10 +129,8 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 			this.pv.blend_width
 		);
 
-
 		if (new_value != null) {
 			point_dest.set_attrib_value(attrib_name, new_value);
 		}
 	}
-
 }

@@ -1,3 +1,9 @@
+/**
+ * Adds or remove parents from the object hierarchy.
+ *
+ * @remarks
+ * This can be useful after importing a geometry from a File SOP, where the part we want to manipulate is under one or several parents. This allows to extract it to make it available for other nodes.
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {HierarchySopOperation, HIERARCHY_MODES} from '../../../core/operations/sop/Hierarchy';
@@ -5,6 +11,7 @@ import {HierarchySopOperation, HIERARCHY_MODES} from '../../../core/operations/s
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = HierarchySopOperation.DEFAULT_PARAMS;
 class HierarchySopParamsConfig extends NodeParamsConfig {
+	/** @param defines if parent objects will be added or removed */
 	mode = ParamConfig.INTEGER(DEFAULT.mode, {
 		menu: {
 			entries: HIERARCHY_MODES.map((m, i) => {
@@ -12,6 +19,7 @@ class HierarchySopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param defines how many parent objects will be added or removed */
 	levels = ParamConfig.INTEGER(DEFAULT.levels, {range: [0, 5]});
 }
 const ParamsConfig = new HierarchySopParamsConfig();

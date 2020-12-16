@@ -1,3 +1,8 @@
+/**
+ * Creates polygons between 2 lines
+ *
+ *
+ */
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';

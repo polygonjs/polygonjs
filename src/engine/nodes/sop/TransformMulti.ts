@@ -1,3 +1,9 @@
+/**
+ * Applies multiple rotations with one node
+ *
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {
@@ -40,6 +46,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CoreAttribute, Attribute} from '../../../core/geometry/Attribute';
 class TransformMultiSopParamConfig extends NodeParamsConfig {
+	/** @param defines if this applies to objects or geometries */
 	apply_on = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
 		menu: {
 			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
@@ -47,51 +54,64 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param number of transformations this can apply */
 	count = ParamConfig.INTEGER(2, {
 		range: [0, max_transform_count],
 		range_locked: [true, true],
 	});
 	// 0
 	sep0 = ParamConfig.SEPARATOR(null, {...visible_for_count(0)});
+	/** @param transform 0 rotation order */
 	rotation_order0 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(0),
 	});
+	/** @param rotation 0 */
 	r0 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(0)});
 	// 1
 	sep1 = ParamConfig.SEPARATOR(null, {...visible_for_count(1)});
+	/** @param transform 1 rotation order */
 	rotation_order1 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(1),
 	});
+	/** @param rotation 1 */
 	r1 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(1)});
 	// 2
 	sep2 = ParamConfig.SEPARATOR(null, {...visible_for_count(2)});
+	/** @param transform 2 rotation order */
 	rotation_order2 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(2),
 	});
+	/** @param rotation 2 */
 	r2 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(2)});
 	// 3
 	sep3 = ParamConfig.SEPARATOR(null, {...visible_for_count(3)});
+	/** @param transform 3 rotation order */
 	rotation_order3 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(3),
 	});
+	/** @param rotation 3 */
 	r3 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(3)});
 	// 4
 	sep4 = ParamConfig.SEPARATOR(null, {...visible_for_count(4)});
+	/** @param transform 4 rotation order */
 	rotation_order4 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(4),
 	});
+	/** @param rotation 4 */
 	r4 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(4)});
 	// 5
 	sep5 = ParamConfig.SEPARATOR(null, {...visible_for_count(5)});
+	/** @param transform 5 rotation order */
 	rotation_order5 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(5),
 	});
+	/** @param rotation 5 */
 	r5 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(5)});
 }
 const ParamsConfig = new TransformMultiSopParamConfig();

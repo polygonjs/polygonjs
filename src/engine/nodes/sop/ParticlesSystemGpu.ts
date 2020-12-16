@@ -36,11 +36,15 @@ import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/Persiste
 import {ParamsInitData} from '../utils/io/IOController';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
-	// gpu compute
+	/** @param frame the particles simulation starts */
 	start_frame = ParamConfig.FLOAT(1, {range: [1, 100]});
+	/** @param auto sets the resolution of the textures used by the GPU shaders */
 	auto_textures_size = ParamConfig.BOOLEAN(1);
+	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
 	max_textures_size = ParamConfig.VECTOR2([1024, 1024], {visible_if: {auto_textures_size: 1}});
+	/** @param sets the texture size manually */
 	textures_size = ParamConfig.VECTOR2([64, 64], {visible_if: {auto_textures_size: 0}});
+	/** @param data type used by the solver */
 	data_type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: PARTICLE_DATA_TYPES.map((value, index) => {
@@ -48,14 +52,14 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param resets the sim */
 	reset = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			ParticlesSystemGpuSopNode.PARAM_CALLBACK_reset(node as ParticlesSystemGpuSopNode);
 		},
 	});
 
-	// render
-	// this.self.within_param_folder("setup", () => {
+	/** @param material used to render the particles */
 	material = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {
 			context: NodeContext.MAT,

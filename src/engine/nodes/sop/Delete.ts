@@ -1,3 +1,10 @@
+/**
+ * Delete parts of the input geometry
+ *
+ * @remarks
+ * This can be used in many ways to delete points or objects from the input.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {
 	AttribClass,
@@ -32,20 +39,24 @@ import {ByBboxHelper} from './utils/delete/ByBboxHelper';
 import {Object3D} from 'three/src/core/Object3D';
 import {ByObjectTypeHelper} from './utils/delete/ByObjectTypeHelper';
 class DeleteSopParamsConfig extends NodeParamsConfig {
+	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
+	/** @param invert the selection created in the parameters below */
 	invert = ParamConfig.BOOLEAN(0);
 	// hide_objects = ParamConfig.BOOLEAN(0, {
 	// 	visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	// });
 
 	// by_object_type
+	/** @param deletes objects by object type */
 	by_object_type = ParamConfig.BOOLEAN(0, {
 		visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
+	/** @param sets which object types should be deleted */
 	object_type = ParamConfig.INTEGER(ObjectTypes.indexOf(ObjectType.MESH), {
 		menu: {
 			entries: ObjectTypeMenuEntries,
@@ -60,7 +71,9 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	});
 
 	// by_expression
+	/** @param deletes objects by an expression */
 	by_expression = ParamConfig.BOOLEAN(0);
+	/** @param sets the expression to select what should be deleted */
 	expression = ParamConfig.BOOLEAN('@ptnum==0', {
 		visible_if: {by_expression: true},
 		expression: {for_entities: true},
@@ -68,21 +81,26 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	separator_expression = ParamConfig.SEPARATOR();
 
 	// by_attrib
+	/** @param deletes objects by an attribute */
 	by_attrib = ParamConfig.BOOLEAN(0);
+	/** @param sets the type of the attribute for which items should be deleted */
 	attrib_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
 		visible_if: {by_attrib: 1},
 	});
+	/** @param name of the attribute used */
 	attrib_name = ParamConfig.STRING('', {
 		visible_if: {by_attrib: 1},
 	});
+	/** @param size of the attribute used */
 	attrib_size = ParamConfig.INTEGER(1, {
 		range: ATTRIBUTE_SIZE_RANGE,
 		range_locked: [true, true],
 		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
 	});
+	/** @param comparison operator */
 	attrib_comparison_operator = ParamConfig.INTEGER(COMPARISON_OPERATORS.indexOf(ComparisonOperator.EQUAL), {
 		menu: {
 			entries: ComparisonOperatorMenuEntries,
@@ -93,35 +111,43 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 			attrib_size: AttribSize.FLOAT,
 		},
 	});
+	/** @param value of the attribute to compare with (when using float attribute) */
 	attrib_value1 = ParamConfig.FLOAT(0, {
 		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 1},
 	});
+	/** @param value of the attribute to compare with (when using vector2 attribute) */
 	attrib_value2 = ParamConfig.VECTOR2([0, 0], {
 		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 2},
 	});
+	/** @param value of the attribute to compare with (when using vector3 attribute) */
 	attrib_value3 = ParamConfig.VECTOR3([0, 0, 0], {
 		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 3},
 	});
+	/** @param value of the attribute to compare with (when using vector4 attribute) */
 	attrib_value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 4},
 	});
+	/** @param value of the attribute to compare with (when using string attribute) */
 	attrib_string = ParamConfig.STRING('', {
 		visible_if: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
 	});
 	separator_attrib = ParamConfig.SEPARATOR();
 
 	// by_bbox
+	/** @param deletes objects that are inside a bounding box */
 	by_bbox = ParamConfig.BOOLEAN(0, {
 		visible_if: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		},
 	});
+	/** @param the bounding box size */
 	bbox_size = ParamConfig.VECTOR3([1, 1, 1], {
 		visible_if: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 			by_bbox: true,
 		},
 	});
+	/** @param the bounding box center */
 	bbox_center = ParamConfig.VECTOR3([0, 0, 0], {
 		visible_if: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
@@ -139,6 +165,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	// by_visible = ParamConfig.BOOLEAN(0, {
 	// 	visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	// });
+	/** @param keeps points */
 	keep_points = ParamConfig.BOOLEAN(0, {
 		visible_if: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});

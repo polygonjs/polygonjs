@@ -1,3 +1,9 @@
+/**
+ * Creates LOD (Level Of Definition)
+ *
+ * @remarks
+ * This nodes takes 1, 2 or 3 inputs. Depending on the distance to this object the camera is, one of those inputs will be displayed. This allows you to have low resolution objects displayed when the camera is far, and high resolution when the camera is close.
+ */
 import {TypedSopNode} from './_Base';
 import {LOD} from 'three/src/objects/LOD';
 import {Object3D} from 'three/src/core/Object3D';
@@ -5,18 +11,22 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
 import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
 class LODSopParamsConfig extends NodeParamsConfig {
+	/** @param distance when switching between high res and mid res (first input and second input) */
 	distance0 = ParamConfig.FLOAT(1);
+	/** @param distance when switching between mid res and low res (second input and third input) */
 	distance1 = ParamConfig.FLOAT(2);
+	/** @param sets if the switch is done automatically */
 	auto_update = ParamConfig.BOOLEAN(1);
+	/** @param updates which object is displayed manually */
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			LODSopNode.PARAM_CALLBACK_update(node as LODSopNode);
 		},
 	});
+	/** @param sets which camera will be used when the switch is to be done manually */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 		visible_if: {auto_update: 0},
 		dependent_on_found_node: false,

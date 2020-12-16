@@ -1,3 +1,7 @@
+/**
+ * Resample input lines
+ *
+ */
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -35,6 +39,7 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three/src/math/Vector3';
 class ResampleSopParamsConfig extends NodeParamsConfig {
+	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
 		menu: {
 			entries: METHODS.map((name, i) => {
@@ -45,6 +50,7 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param type of curve this will generate */
 	curve_type = ParamConfig.INTEGER(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM), {
 		range: [0, 2],
 		range_locked: [true, true],
@@ -57,15 +63,18 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param curve tension */
 	tension = ParamConfig.FLOAT(0.01, {
 		range: [0, 1],
 		range_locked: [true, true],
 	});
+	/** @param points count */
 	points_count = ParamConfig.INTEGER(100, {
 		visible_if: {method: METHODS.indexOf(METHOD.POINTS_COUNT)},
 		range: [1, 1000],
 		range_locked: [true, false],
 	});
+	/** @param segments length */
 	segment_length = ParamConfig.FLOAT(1, {
 		visible_if: {method: METHODS.indexOf(METHOD.SEGMENT_LENGTH)},
 	});

@@ -1,3 +1,8 @@
+/**
+ * Creates or update uv attribute.
+ *
+ *
+ */
 import {Camera} from 'three/src/cameras/Camera';
 import {Object3D} from 'three/src/core/Object3D';
 import {Matrix4} from 'three/src/math/Matrix4';
@@ -15,6 +20,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseObjNodeType} from '../obj/_Base';
 class UvProjectSopParamsConfig extends NodeParamsConfig {
+	/** @param camera node to use as projection */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 		node_selection: {
 			context: NodeContext.OBJ,

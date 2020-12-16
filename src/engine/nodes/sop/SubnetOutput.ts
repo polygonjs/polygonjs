@@ -1,3 +1,10 @@
+/**
+ * Sets which node is used as the output of a parent subnet node.
+ *
+ * @remarks
+ * Can only be created inside a subnet SOP.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

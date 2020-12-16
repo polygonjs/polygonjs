@@ -1,3 +1,10 @@
+/**
+ * Imports an object from another geometry OBJ node.
+ *
+ * @remarks
+ * It can still be used to keep a copy of the input geometry, in case downstream nodes were to process it without cloning.
+ *
+ */
 import {TypedSopNode, BaseSopNodeType} from './_Base';
 import {NodeContext} from '../../poly/NodeContext';
 // import {CoreWalker} from '../../../Core/Walker';
@@ -6,6 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {GeometryContainer} from '../../containers/Geometry';
 class ObjectMergeSopParamsConfig extends NodeParamsConfig {
+	/** @param which SOP node to import from */
 	geometry = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {
 			context: NodeContext.SOP,

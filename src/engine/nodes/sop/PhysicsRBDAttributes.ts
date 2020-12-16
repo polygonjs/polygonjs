@@ -1,3 +1,11 @@
+/**
+ * Create RBD attributes to be used with the Ammo physics solver
+ *
+ * @remarks
+ * TBD
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';

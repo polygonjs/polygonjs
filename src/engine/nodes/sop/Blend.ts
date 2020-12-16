@@ -1,3 +1,10 @@
+/**
+ * blends 2 geometries together.
+ *
+ * @remarks
+ * Note that both geometries must have the same number of points for predictable results
+ *
+ */
 import {TypedSopNode} from './_Base';
 
 import {Object3D} from 'three/src/core/Object3D';
@@ -9,7 +16,9 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 
 class BlendSopParamsConfig extends NodeParamsConfig {
+	/** @param name of the attribute to blend */
 	attrib_name = ParamConfig.STRING('position');
+	/** @param blend value. 0 means the result will equal the left input, 1 will equal the right input, and 0.5 will be an average of both. */
 	blend = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
 		range_locked: [true, true],

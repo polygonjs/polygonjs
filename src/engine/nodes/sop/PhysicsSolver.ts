@@ -1,3 +1,11 @@
+/**
+ * Applies physics with the Ammo physics solver
+ *
+ * @remarks
+ * TBD
+ *
+ *
+ */
 // https://stackblitz.com/edit/ammojs-typed-falling-cubes?file=simulation.ts
 import {TypedSopNode} from './_Base';
 import lodash_isString from 'lodash/isString';

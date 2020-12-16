@@ -1,3 +1,7 @@
+/**
+ * Projects points from the left input geometry onto the faces of the right input geometry.
+ *
+ */
 import {Vector3} from 'three/src/math/Vector3';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {Object3D} from 'three/src/core/Object3D';
@@ -15,10 +19,13 @@ const MAT_DOUBLE_SIDED = new MeshBasicMaterial({
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RaySopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to use the normals as the ray direction */
 	use_normals = ParamConfig.BOOLEAN(1);
+	/** @param if the normals are not used as the ray direction, this define the direction used */
 	direction = ParamConfig.VECTOR3([0, -1, 0], {
 		visible_if: {use_normals: 0},
 	});
+	/** @param copies the normals from the right geometry to the left one */
 	transfer_face_normals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new RaySopParamsConfig();

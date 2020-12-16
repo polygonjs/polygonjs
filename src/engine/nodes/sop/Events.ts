@@ -1,3 +1,7 @@
+/**
+ * A subnet to create EVENT nodes
+ *
+ */
 import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';

@@ -1,6 +1,10 @@
+/**
+ * Creates a heightmap
+ *
+ *
+ */
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {TypedSopNode} from './_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -11,9 +15,11 @@ import {Texture} from 'three/src/textures/Texture';
 import {CoreImage} from '../../../core/Image';
 import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
+	/** @param texture node to load the heightmap from */
 	texture = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 	});
+	/** @param values multiplier */
 	mult = ParamConfig.FLOAT(1);
 }
 const ParamsConfig = new HeightMapSopParamsConfig();

@@ -1,3 +1,10 @@
+/**
+ * Loads a geometry from a url.
+ *
+ * @remarks
+ * Note that this node will automatically use a specific loader depending on the extension of the url.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 import {BaseParamType} from '../../params/_Base';
@@ -9,10 +16,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 const DEFAULT = FileSopOperation.DEFAULT_PARAMS;
 class FileSopParamsConfig extends NodeParamsConfig {
+	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
 		desktop_browse: {file_type: DesktopFileType.GEOMETRY},
 		asset_reference: true,
 	});
+	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			FileSopNode.PARAM_CALLBACK_reload(node as FileSopNode);

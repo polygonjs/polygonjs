@@ -1,18 +1,25 @@
+/**
+ * Creates a line
+ *
+ */
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import lodash_times from 'lodash/times';
-
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class LineSopParamsConfig extends NodeParamsConfig {
+	/** @param length of the line */
 	length = ParamConfig.FLOAT(1, {range: [0, 10]});
+	/** @param number of points */
 	points_count = ParamConfig.INTEGER(1, {
 		range: [2, 100],
 		range_locked: [true, false],
 	});
+	/** @param start position of the line */
 	origin = ParamConfig.VECTOR3([0, 0, 0]);
+	/** @param direction of the line */
 	direction = ParamConfig.VECTOR3([0, 1, 0]);
 }
 const ParamsConfig = new LineSopParamsConfig();

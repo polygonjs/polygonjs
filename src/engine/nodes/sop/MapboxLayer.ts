@@ -1,3 +1,10 @@
+/**
+ * Creates Mapbox layers.
+ *
+ * @remarks
+ * This is best used with the Mapbox camera.
+ * Note that you will need a mapbox key to use this node.
+ */
 import lodash_chunk from 'lodash/chunk';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreString} from '../../../core/String';
@@ -19,6 +26,7 @@ import {MapUtils} from '../../../core/MapUtils';
 // use_bounds: false,
 // update_always_allowed: false
 class MapboxLayerSopParamsConfig extends MapboxListenerParamConfig(NodeParamsConfig) {
+	/** @param names of layers to create */
 	layers = ParamConfig.STRING(DEFAULT_LIST);
 }
 const ParamsConfig = new MapboxLayerSopParamsConfig();

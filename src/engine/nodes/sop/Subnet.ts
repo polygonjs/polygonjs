@@ -1,3 +1,7 @@
+/**
+ * A subnet to create SOP nodes
+ *
+ */
 import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

@@ -1,9 +1,16 @@
+/**
+ * Simple delay
+ *
+ * @remarks
+ * This node outputs the exact same geometry as its input, but does so with a delay. This can be useful when some operations are not meant to run immediately.
+ *
+ */
 import {TypedSopNode} from './_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 class DelaySopParamsConfig extends NodeParamsConfig {
+	/** @param duration in milliseconds */
 	duration = ParamConfig.INTEGER(1000, {
 		range: [0, 1000],
 		range_locked: [true, false],

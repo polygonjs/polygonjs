@@ -1,16 +1,24 @@
+/**
+ * Creates a tetrahedron
+ *
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
-// import {TetrahedronBufferGeometry} from 'three/src/geometries/TetrahedronGeometry';
 import {TetrahedronBufferGeometry} from '../../../core/geometry/operation/Tetrahedron';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ObjectType} from '../../../core/geometry/Constant';
 class TetrahedronSopParamsConfig extends NodeParamsConfig {
+	/** @param radius of the tetrahedron */
 	radius = ParamConfig.FLOAT(1);
+	/** @param resolution of the tetrahedron */
 	detail = ParamConfig.INTEGER(0, {
 		range: [0, 10],
 		range_locked: [true, false],
 	});
+	/** @param sets to create only points */
 	points_only = ParamConfig.BOOLEAN(0);
+	/** @param center of the tetrahedron */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 }
 const ParamsConfig = new TetrahedronSopParamsConfig();

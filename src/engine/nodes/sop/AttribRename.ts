@@ -1,3 +1,8 @@
+/**
+ * Rename an attribute
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
@@ -5,12 +10,15 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AttribClassMenuEntries, AttribClass} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 class AttribRenameSopParamsConfig extends NodeParamsConfig {
+	/** @param class of the attribute to rename (object or geometry) */
 	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
+	/** @param old attribute name */
 	old_name = ParamConfig.STRING();
+	/** @param new attribute name */
 	new_name = ParamConfig.STRING();
 }
 const ParamsConfig = new AttribRenameSopParamsConfig();

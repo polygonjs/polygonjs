@@ -1,3 +1,16 @@
+/**
+ * Resets the center of a geometry.
+ *
+ * @remarks
+ * This can be useful when importing an object whose centroid is not at the center of the geometry. When using this geometry via the LOD SOP, the center of the object will be used to calculate the distance from the object to the camera. It is then necessary to ensure that the center of the object and the center of the geometry are as close to each other as possible.
+ *
+ * This node can operate in one of multiple modes:
+ *
+ * - reset_object: this will set the transform of objects to t=0,0,0, r=0,0,0 and s=0,0,0
+ * - center geometry: TBD
+ * - promote: TBD
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -19,6 +32,7 @@ const TRANSFORM_RESET_MODES: TransformResetMode[] = [
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
 class TransformResetSopParamConfig extends NodeParamsConfig {
+	/** @param mode to reset the geometry and object */
 	mode = ParamConfig.INTEGER(TRANSFORM_RESET_MODES.indexOf(TransformResetMode.RESET_OBJECT), {
 		menu: {
 			entries: TRANSFORM_RESET_MODES.map((target_type, i) => {

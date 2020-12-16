@@ -1,4 +1,16 @@
-// import {Core} from '../../../Core/_Module';
+/**
+ * Create points from a an array of json dictionaries
+ *
+ * @remarks
+ * The number of points created will be equal to the number of elements in the array.
+ * Each element of the array must be a dictionary. It can look like:
+ * `[{position: [1,2,3]}]`
+ * which will create a single point at the position x=1,y=2,z=3.
+ *
+ * In order to create 2 points with attributes `position` and `amp`, you would have:
+ * `[{position: [1,2,3], amp: 1},{position: [7,2,1], amp: 3}]`
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
 
@@ -22,6 +34,7 @@ const DEFAULT_DATA_STR = JSON.stringify(DEFAULT_DATA);
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ObjectType} from '../../../core/geometry/Constant';
 class DataSopParamsConfig extends NodeParamsConfig {
+	/** @param json object used to create the geometry */
 	data = ParamConfig.STRING(DEFAULT_DATA_STR);
 }
 const ParamsConfig = new DataSopParamsConfig();

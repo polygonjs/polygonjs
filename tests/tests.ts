@@ -133,6 +133,7 @@ import './engine/nodes/sop/Center';
 import './engine/nodes/sop/Circle';
 import './engine/nodes/sop/Circle3Points';
 import './engine/nodes/sop/Color';
+import './engine/nodes/sop/Cone';
 import './engine/nodes/sop/Copy';
 import './engine/nodes/sop/Data';
 import './engine/nodes/sop/DataUrl';

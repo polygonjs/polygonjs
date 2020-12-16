@@ -1,3 +1,10 @@
+/**
+ * Updates the normals of the geometry
+ *
+ * @remarks
+ * Just like the Point and Color SOPs, this can take expressions
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -9,32 +16,41 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class NormalsSopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
+	/** @param toggle on to update the x component */
 	update_x = ParamConfig.BOOLEAN(0, {
 		visible_if: {edit: 1},
 	});
+	/** @param expression or value for the x component */
 	x = ParamConfig.FLOAT('@N.x', {
 		visible_if: {update_x: 1, edit: 1},
 		expression: {for_entities: true},
 	});
+	/** @param toggle on to update the y component */
 	update_y = ParamConfig.BOOLEAN(0, {
 		visible_if: {edit: 1},
 	});
+	/** @param expression or value for the y component */
 	y = ParamConfig.FLOAT('@N.y', {
 		visible_if: {update_y: 1, edit: 1},
 		expression: {for_entities: true},
 	});
+	/** @param toggle on to update the z component */
 	update_z = ParamConfig.BOOLEAN(0, {
 		visible_if: {edit: 1},
 	});
+	/** @param expression or value for the z component */
 	z = ParamConfig.FLOAT('@N.z', {
 		visible_if: {update_z: 1, edit: 1},
 		expression: {for_entities: true},
 	});
 
+	/** @param recompute the normals based on the position */
 	recompute = ParamConfig.BOOLEAN(1, {
 		visible_if: {edit: 0},
 	});
+	/** @param invert normals */
 	invert = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new NormalsSopParamsConfig();

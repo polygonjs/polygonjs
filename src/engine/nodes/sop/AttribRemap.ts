@@ -1,3 +1,10 @@
+/**
+ * Remaps an attribute
+ *
+ * @remarks
+ * This is very handy when you have an attribute with values between 0 and 1, and you want to remap those values with a ramp.
+ *
+ */
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
@@ -8,9 +15,13 @@ import {TypeAssert} from '../../poly/Assert';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
+	/** @param name of the attribute to remap */
 	name = ParamConfig.STRING();
+	/** @param ramp used to remap */
 	ramp = ParamConfig.RAMP();
+	/** @param toggle if you want to create a new attribute */
 	change_name = ParamConfig.BOOLEAN(0);
+	/** @param new attribute name */
 	new_name = ParamConfig.STRING('', {visible_if: {change_name: 1}});
 }
 const ParamsConfig = new AttribRemapSopParamsConfig();

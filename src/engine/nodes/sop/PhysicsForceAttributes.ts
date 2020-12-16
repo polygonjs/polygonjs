@@ -1,3 +1,11 @@
+/**
+ * Create Force attributes to be used with the Ammo physics solver
+ *
+ * @remarks
+ * TBD
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import lodash_isArray from 'lodash/isArray';
 import {InputCloneMode} from '../../poly/InputCloneMode';

@@ -1,3 +1,7 @@
+/**
+ * Just like the Box, with rounded bevels.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {RoundedBoxSopOperation} from '../../../core/operations/sop/RoundedBox';
@@ -5,15 +9,19 @@ import {RoundedBoxSopOperation} from '../../../core/operations/sop/RoundedBox';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = RoundedBoxSopOperation.DEFAULT_PARAMS;
 class BoxSopParamsConfig extends NodeParamsConfig {
+	/** @param size of the box */
 	size = ParamConfig.FLOAT(DEFAULT.size);
+	/** @param divisions count */
 	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});
+	/** @param bevel size */
 	bevel = ParamConfig.FLOAT(DEFAULT.bevel, {
 		range: [0, 1],
 		range_locked: [true, false],
 	});
+	/** @param center of the box */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new BoxSopParamsConfig();

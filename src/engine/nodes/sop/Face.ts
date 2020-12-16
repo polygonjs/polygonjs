@@ -1,3 +1,8 @@
+/**
+ * Processes the faces of the input geometry
+ *
+ *
+ */
 import {Vector3} from 'three/src/math/Vector3';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
@@ -13,16 +18,21 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreFace} from '../../../core/geometry/Face';
 class FaceSopParamsConfig extends NodeParamsConfig {
+	/** @param makes faces unique */
 	make_faces_unique = ParamConfig.BOOLEAN(0);
+	/** @param adds a vector3 attribute that represents the center of a face */
 	add_face_center_attribute = ParamConfig.BOOLEAN(0, {
 		visible_if: {make_faces_unique: 1},
 	});
+	/** @param add an id attribute for each face */
 	add_face_id = ParamConfig.BOOLEAN(0, {
 		visible_if: {make_faces_unique: 1},
 	});
+	/** @param allows to transform each face */
 	transform = ParamConfig.BOOLEAN(0, {
 		visible_if: {make_faces_unique: 1},
 	});
+	/** @param scales the faces indepedently */
 	scale = ParamConfig.FLOAT(1, {
 		visible_if: {make_faces_unique: 1, transform: 1},
 	});

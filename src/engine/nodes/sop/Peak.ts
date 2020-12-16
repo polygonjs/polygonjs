@@ -1,3 +1,11 @@
+/**
+ * Moves points alongside the normal.
+ *
+ * @remarks
+ * This can be useful to inflate or deflate quickly some objects.
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -7,6 +15,7 @@ const DEFAULT = PeakSopOperation.DEFAULT_PARAMS;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 class PeakSopParamsConfig extends NodeParamsConfig {
+	/** @param amount the points will be moved */
 	amount = ParamConfig.FLOAT(DEFAULT.amount, {range: [-1, 1]});
 }
 const ParamsConfig = new PeakSopParamsConfig();

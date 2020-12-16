@@ -1,9 +1,12 @@
+/**
+ * Creates text
+ *
+ *
+ *
+ */
 import lodash_range from 'lodash/range';
-
-// import {CoreFont} from '../../../Core/Font'
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-
 import {TextBufferGeometry} from 'three/src/geometries/TextBufferGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ShapeBufferGeometry} from 'three/src/geometries/ShapeBufferGeometry';
@@ -35,10 +38,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
 import {Poly} from '../../Poly';
 class TextSopParamsConfig extends NodeParamsConfig {
+	/** @param font used */
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
 		asset_reference: true,
 	});
+	/** @param text created */
 	text = ParamConfig.STRING('polygonjs', {multiline: true});
+	/** @param type of geometry created */
 	type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: TEXT_TYPES.map((type, i) => {
@@ -49,15 +55,18 @@ class TextSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param font size */
 	size = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		range_locked: [true, false],
 	});
+	/** @param extrude depth */
 	extrude = ParamConfig.FLOAT(0.1, {
 		visible_if: {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.MESH),
 		},
 	});
+	/** @param segments count */
 	segments = ParamConfig.INTEGER(1, {
 		range: [1, 20],
 		range_locked: [true, false],
@@ -65,6 +74,7 @@ class TextSopParamsConfig extends NodeParamsConfig {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.MESH),
 		},
 	});
+	/** @param stroke width */
 	stroke_width = ParamConfig.FLOAT(0.02, {
 		visible_if: {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.STROKE),

@@ -1,27 +1,32 @@
+/**
+ * Creates a point attribute 'occlusion' that can be used in materials for a more realistic look.
+ *
+ * @remarks
+ * This is based on [https://github.com/wwwtyro/geo-ambient-occlusion](https://github.com/wwwtyro/geo-ambient-occlusion)
+ *
+ */
 /// <reference path="./types/occlusion.d.ts" />
 // https://github.com/wwwtyro/geo-ambient-occlusion
 import geoao from 'geo-ambient-occlusion';
-
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {TypedSopNode} from './_Base';
-
-// import {CoreGroup} from '../../../Core/Geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
-// import {CoreGeometry} from '../../../Core/Geometry/Geometry'
-// import {CorePoint} from '../../../Core/Geometry/Point'
-
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class OcclusionSopParamsConfig extends NodeParamsConfig {
+	/** @param name of the occlusion attribute */
 	attrib_name = ParamConfig.STRING('occlusion');
+	/** @param number of samples. The more samples the better the result, but the longer the calculation */
 	samples = ParamConfig.INTEGER(256, {
 		range: [1, 256],
 		range_locked: [true, false],
 	});
 	sep = ParamConfig.SEPARATOR();
+	/** @param size of buffer used in the calculation */
 	buffer_resolution = ParamConfig.INTEGER(512);
+	/** @param you may want to tweak this value if you see light bleeding through the object */
 	bias = ParamConfig.FLOAT(0.01);
 }
 const ParamsConfig = new OcclusionSopParamsConfig();

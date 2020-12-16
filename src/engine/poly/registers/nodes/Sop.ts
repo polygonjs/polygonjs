@@ -79,6 +79,7 @@ import {PostProcessSopNode} from '../../../nodes/sop/PostProcess';
 import {RaySopNode} from '../../../nodes/sop/Ray';
 import {RenderersSopNode} from '../../../nodes/sop/Renderers';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
+import {RestAttributesSopNode} from '../../../nodes/sop/RestAttributes';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
@@ -125,6 +126,7 @@ export interface GeoNodeChildrenMap {
 	circle3points: Circle3PointsSopNode;
 	// code: CodeSopNode;
 	color: ColorSopNode;
+	cone: ConeSopNode;
 	cop: CopSopNode;
 	copy: CopySopNode;
 	css2d_object: Css2DObjectSopNode;
@@ -175,6 +177,7 @@ export interface GeoNodeChildrenMap {
 	ray: RaySopNode;
 	renderers: RenderersSopNode;
 	resample: ResampleSopNode;
+	rest_attributes: RestAttributesSopNode;
 	rounded_box: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
 	skin: SkinSopNode;
@@ -220,6 +223,7 @@ import {NullSopOperation} from '../../../../core/operations/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../../core/operations/sop/ObjectProperties';
 import {PeakSopOperation} from '../../../../core/operations/sop/Peak';
 import {PlaneSopOperation} from '../../../../core/operations/sop/Plane';
+import {RestAttributesSopOperation} from '../../../../core/operations/sop/RestAttributes';
 import {RoundedBoxSopOperation} from '../../../../core/operations/sop/RoundedBox';
 import {ScatterSopOperation} from '../../../../core/operations/sop/Scatter';
 import {SphereSopOperation} from '../../../../core/operations/sop/Sphere';
@@ -254,6 +258,7 @@ export class SopRegister {
 		poly.registerOperation(ObjectPropertiesSopOperation);
 		poly.registerOperation(PeakSopOperation);
 		poly.registerOperation(PlaneSopOperation);
+		poly.registerOperation(RestAttributesSopOperation);
 		poly.registerOperation(RoundedBoxSopOperation);
 		poly.registerOperation(ScatterSopOperation);
 		poly.registerOperation(SphereSopOperation);
@@ -337,6 +342,7 @@ export class SopRegister {
 		poly.registerNode(RaySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(RenderersSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(ResampleSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(RestAttributesSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SkinSopNode, CATEGORY_SOP.MODIFIER);

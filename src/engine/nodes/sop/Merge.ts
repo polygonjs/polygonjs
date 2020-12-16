@@ -1,3 +1,13 @@
+/**
+ * Merge input geometries
+ *
+ * @remarks
+ * This node can take up to 4 inputs. It can operate within 1 of 2 modes:
+ *
+ * - compact ON: all objects will be merged in as few objects as possible. So all meshes will be merged into one, all point objects into one, and all line objects into one. This requires the objects to have the same attributes.
+ * - compact OFF: all objects are simply put under a common parent, but remain distinct objects.
+
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {MergeSopOperation} from '../../../core/operations/sop/Merge';
@@ -7,6 +17,7 @@ const INPUT_NAME = 'geometry to merge';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = MergeSopOperation.DEFAULT_PARAMS;
 class MergeSopParamsConfig extends NodeParamsConfig {
+	/** @param compact mode */
 	compact = ParamConfig.BOOLEAN(DEFAULT.compact);
 }
 const ParamsConfig = new MergeSopParamsConfig();

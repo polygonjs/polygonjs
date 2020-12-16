@@ -1,3 +1,11 @@
+/**
+ * Splits a geometry into multiple objects
+ *
+ * @remarks
+ * This is useful to isolate parts of a geometry that matches a specific attribute.
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {
 	AttribSize,
@@ -16,11 +24,13 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {MapUtils} from '../../../core/MapUtils';
 class DeleteSopParamsConfig extends NodeParamsConfig {
+	/** @param type of attribute to use */
 	attrib_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
 	});
+	/** @param name of the attribute */
 	attrib_name = ParamConfig.STRING('');
 }
 const ParamsConfig = new DeleteSopParamsConfig();

@@ -11,8 +11,9 @@ QUnit.test('noise simple', async (assert) => {
 	// const core_group = container.core_content();
 	// const {geometry} = core_group.objects()[0];
 
+	console.log(container.bounding_box().min.y);
 	assert.in_delta(container.bounding_box().max.y, 1.3, 0.1);
-	assert.in_delta(container.bounding_box().min.y, -1.3, 0.1);
+	assert.in_delta(container.bounding_box().min.y, -1.69, 0.1);
 });
 
 QUnit.skip('noise on flamingo', (assert) => {

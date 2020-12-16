@@ -1,3 +1,9 @@
+/**
+ * Transforms a geometry from the world space to the mapbox space
+ *
+ * @remarks
+ * The mapbox space is very specific to mapbox, as it is very small (several orders of magnitude) compared to the threejs space.
+ */
 import {CoreMapboxTransform} from '../../../core/mapbox/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';

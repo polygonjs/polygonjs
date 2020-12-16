@@ -1,3 +1,9 @@
+/**
+ * Creates a plane visible by a mapbox camera.
+ *
+ * @remarks
+ * Note that you will need a mapbox key to use this node.
+ */
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
@@ -31,6 +37,7 @@ import {MapboxPlaneHexagonsController} from './utils/mapbox/mapbox_plane/Hexagon
 // update_always_allowed: true,
 // use_zoom: true
 class MapboxPlaneSopParamsConfig extends MapboxListenerParamConfig(NodeParamsConfig) {
+	/** @param type of plane (grid or hexagons) */
 	type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: MAPBOX_PLANE_TYPES.map((name, i) => {
@@ -38,21 +45,26 @@ class MapboxPlaneSopParamsConfig extends MapboxListenerParamConfig(NodeParamsCon
 			}),
 		},
 	});
+	/** @param plane resolution */
 	resolution = ParamConfig.INTEGER(10, {
 		range: [1, 20],
 		range_locked: [true, false],
 	});
+	/** @param multiplies the size of the plane. This can be useful to scale down the plane. While it would cover a smaller part of the view, it would be faster to create  */
 	size_mult = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		range_locked: [true, false],
 	});
+	/** @param toggle on to make sure the plane will cover the full view */
 	full_view = ParamConfig.BOOLEAN(1);
 	// delete_out_of_view = ParamConfig.BOOLEAN(1);
+	/** @param do not create polygons, only points */
 	as_points = ParamConfig.BOOLEAN(0, {
 		visible_if: {
 			type: MAPBOX_PLANE_TYPES.indexOf(MapboxPlaneType.PLANE),
 		},
 	});
+	/** @param creates within mapbox camera space */
 	mapbox_transform = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new MapboxPlaneSopParamsConfig();

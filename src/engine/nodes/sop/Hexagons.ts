@@ -1,3 +1,9 @@
+/**
+ * Creates hexagons on a plane.
+ *
+ * @remarks
+ * This is very similar to the plane SOP, but with hexagonal patterns, which can be more visually pleasing.
+ */
 import {Vector3} from 'three/src/math/Vector3';
 import {TypedSopNode} from './_Base';
 import {CoreTransform} from '../../../core/Transform';
@@ -9,12 +15,16 @@ const DEFAULT_UP = new Vector3(0, 1, 0);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class HexagonsSopParamsConfig extends NodeParamsConfig {
+	/** @param plane size */
 	size = ParamConfig.VECTOR2([1, 1]);
+	/** @param hexagons size */
 	hexagon_radius = ParamConfig.FLOAT(0.1, {
 		range: [0.001, 1],
 		range_locked: [false, false],
 	});
+	/** @param axis perpendicular to the plane */
 	direction = ParamConfig.VECTOR3([0, 1, 0]);
+	/** @param do not create polygons, only points */
 	points_only = ParamConfig.BOOLEAN(0);
 	// no need to have centers, as all points are centers anyway
 	//this.add_param( ParamType.TOGGLE, 'centers_only', 0, {visible_if: {points_only: 1}})

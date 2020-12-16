@@ -1,3 +1,12 @@
+/**
+ * Creates CSS3DObjects.
+ *
+ * @remarks
+ * This is very useful to create 2D html labels that would be positioned at specific points in the 3D world.
+ * Note that the camera must be configured to use a CSS3DRenderer to display them
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CSS3DObject} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -17,7 +26,9 @@ const DEFAULT_VALUE = {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Css3DObjectSopParamsConfig extends NodeParamsConfig {
+	/** @param html class */
 	class_name = ParamConfig.STRING(DEFAULT_VALUE.class_name);
+	/** @param text content */
 	text = ParamConfig.STRING(DEFAULT_VALUE.text, {
 		multiline: true,
 	});

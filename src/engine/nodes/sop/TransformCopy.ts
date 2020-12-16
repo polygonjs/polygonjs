@@ -1,3 +1,9 @@
+/**
+ * Copies the transform from one set of objects to another
+ *
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -6,7 +12,9 @@ import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TransformCopySopParamConfig extends NodeParamsConfig {
+	/** @param toggle on if the second input should be used */
 	use_second_input = ParamConfig.BOOLEAN(1);
+	/** @param use a reference object */
 	reference = ParamConfig.OPERATOR_PATH('', {
 		node_selection: {
 			context: NodeContext.SOP,

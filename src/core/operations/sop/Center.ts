@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {ObjectType} from '../../geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -19,26 +19,24 @@ export class CenterSopOperation extends BaseSopOperation {
 	private _geo_center: Vector3 = new Vector3();
 	cook(input_contents: CoreGroup[], params: CenterSopParams) {
 		const core_group = input_contents[0];
-		const src_object = core_group.objects_with_geo()[0];
+		const src_objects = core_group.objects_with_geo();
 
-		const new_object = this._create_object(src_object);
-		if (new_object) {
-			return this.create_core_group_from_objects([new_object]);
-		} else {
-			return this.create_core_group_from_objects([]);
+		const positions = new Array(src_objects.length * 3);
+		positions.fill(0);
+		for (let i = 0; i < src_objects.length; i++) {
+			const src_object = src_objects[i];
+			const src_geometry = src_object.geometry;
+			src_geometry.computeBoundingBox();
+			if (src_geometry.boundingBox) {
+				src_geometry.boundingBox?.getCenter(this._geo_center);
+				src_object.updateMatrixWorld();
+				this._geo_center.applyMatrix4(src_object.matrixWorld);
+				this._geo_center.toArray(positions, i * 3);
+			}
 		}
-	}
-	private _create_object(src_object: Object3DWithGeometry) {
-		const src_geometry = src_object.geometry;
-		src_geometry.computeBoundingBox();
-		if (src_geometry.boundingBox) {
-			src_geometry.boundingBox?.getCenter(this._geo_center);
-			src_object.updateMatrixWorld();
-			this._geo_center.applyMatrix4(src_object.matrixWorld);
-			const geometry = new BufferGeometry();
-			const positions: number[] = this._geo_center.toArray();
-			geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-			return this.create_object(geometry, ObjectType.POINTS);
-		}
+		const geometry = new BufferGeometry();
+		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+		const object = this.create_object(geometry, ObjectType.POINTS);
+		return this.create_core_group_from_objects([object]);
 	}
 }

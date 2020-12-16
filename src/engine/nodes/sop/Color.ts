@@ -1,7 +1,13 @@
+/**
+ * Set a vertex color attribute
+ *
+ * @remarks
+ * Note that just like the attrib_create, it is possible to use an expression to set the attribute value
+ *
+ */
 import {Color} from 'three/src/math/Color';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CoreColor} from '../../../core/Color';
-
 import {TypedSopNode} from './_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
@@ -20,14 +26,18 @@ import {ColorSopOperation} from '../../../core/operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on if the color should be copied from another attribute */
 	from_attribute = ParamConfig.BOOLEAN(DEFAULT.from_attribute);
+	/** @param attribute name to copy value from */
 	attrib_name = ParamConfig.STRING(DEFAULT.attrib_name, {
 		visible_if: {from_attribute: 1},
 	});
+	/** @param color valu */
 	color = ParamConfig.COLOR(DEFAULT.color, {
 		visible_if: {from_attribute: 0},
 		expression: {for_entities: true},
 	});
+	/** @param toggle on if the value should be set with hsv values rather than rgb */
 	as_hsv = ParamConfig.BOOLEAN(DEFAULT.as_hsv, {
 		visible_if: {from_attribute: 0},
 	});

@@ -1,3 +1,9 @@
+/**
+ * Creates a plane.
+ *
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
@@ -5,15 +11,21 @@ import {PlaneSopOperation} from '../../../core/operations/sop/Plane';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = PlaneSopOperation.DEFAULT_PARAMS;
 class PlaneSopParamsConfig extends NodeParamsConfig {
+	/** @param size of the plane */
 	size = ParamConfig.VECTOR2(DEFAULT.size);
+	/** @param defines if the plane resolution is sets via the number of segments or via the step size */
 	use_segments_count = ParamConfig.BOOLEAN(DEFAULT.use_segments_count);
+	/** @param step size */
 	step_size = ParamConfig.FLOAT(DEFAULT.step_size, {
 		range: [0.001, 1],
 		range_locked: [false, false],
 		visible_if: {use_segments_count: 0},
 	});
+	/** @param segments count */
 	segments = ParamConfig.VECTOR2(DEFAULT.segments, {visible_if: {use_segments_count: 1}});
+	/** @param axis perpendicular to the plane */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction);
+	/** @param center of the plane */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new PlaneSopParamsConfig();

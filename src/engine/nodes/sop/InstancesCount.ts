@@ -1,3 +1,9 @@
+/**
+ * Updates the instance count
+ *
+ * @remarks
+ * This is similar to the draw_range SOP node, but for instances. This allows to define how many instances will be visible with very little performance cost.
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -5,7 +11,9 @@ import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class InstancesCountSopParamsConfig extends NodeParamsConfig {
+	/** @param sets if max is used */
 	use_max = ParamConfig.BOOLEAN(0);
+	/** @param max number of instances to display */
 	max = ParamConfig.INTEGER(1, {
 		range: [0, 100],
 		range_locked: [true, false],

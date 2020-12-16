@@ -1,3 +1,8 @@
+/**
+ * Creates a circle from 3 points.
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -16,7 +21,9 @@ import {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Circle3PointsSopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to create the arc */
 	arc = ParamConfig.BOOLEAN(1);
+	/** @param sets the mode how the points count is computed */
 	points_count_mode = ParamConfig.INTEGER(POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT), {
 		visible_if: {arc: 1},
 		menu: {
@@ -25,19 +32,23 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param length of each segment */
 	segments_length = ParamConfig.FLOAT(0.1, {
 		visible_if: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_LENGTH)},
 		range: [0, 1],
 		range_locked: [true, false],
 	});
+	/** @param count of the number of segments */
 	segments_count = ParamConfig.INTEGER(100, {
 		visible_if: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT)},
 		range: [1, 100],
 		range_locked: [true, false],
 	});
+	/** @param toggle on to create a full circle */
 	full = ParamConfig.BOOLEAN(1, {
 		visible_if: {arc: 1},
 	});
+	/** @param TBD */
 	join_mode = ParamConfig.INTEGER(JOIN_MODES.indexOf(JoinMode.ABC), {
 		visible_if: {arc: 1, full: 0},
 		menu: {
@@ -46,8 +57,11 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param add an id attribute for the generated points */
 	add_id_attribute = ParamConfig.BOOLEAN(1);
+	/** @param add an idn attribute (same as id attribute, but normalized between 0 and 1) */
 	add_idn_attribute = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to create a point in the center */
 	center = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new Circle3PointsSopParamsConfig();

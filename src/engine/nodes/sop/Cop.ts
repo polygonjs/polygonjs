@@ -1,3 +1,8 @@
+/**
+ * A subnet to create COP nodes
+ *
+ */
+
 import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {CopNodeChildrenMap} from '../../poly/registers/nodes/Cop';

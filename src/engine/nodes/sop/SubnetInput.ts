@@ -1,9 +1,17 @@
+/**
+ * Fetches the input from a parent subnet node.
+ *
+ * @remarks
+ * Can only be created inside a subnet SOP.
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
 class SubnetInputSopParamsConfig extends NodeParamsConfig {
+	/** @param sets which input of the parent subnet node is used */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
 		range_locked: [true, true],

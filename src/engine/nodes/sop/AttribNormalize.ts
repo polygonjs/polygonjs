@@ -1,3 +1,12 @@
+/**
+ * Normalizes an attribute.
+ *
+ * @remarks
+ * Finds the min and max of an attribute and normalizes its value between 0 and 1.
+ * For vector attributes, it can also set them to a length of 1.
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
@@ -9,6 +18,7 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribNormalizeSopOperation.DEFAULT_PARAMS;
 class AttribNormalizeSopParamsConfig extends NodeParamsConfig {
+	/** @param defines if the value should be normalized between 0 and 1, or for vectors if the length should be 1 */
 	mode = ParamConfig.INTEGER(DEFAULT.mode, {
 		menu: {
 			entries: NORMALIZE_MODES.map((name, value) => {
@@ -16,8 +26,11 @@ class AttribNormalizeSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param attribute to normalize */
 	name = ParamConfig.STRING(DEFAULT.name);
+	/** @param toggle to change the name of the attribute */
 	change_name = ParamConfig.BOOLEAN(DEFAULT.change_name);
+	/** @param new attribute name */
 	new_name = ParamConfig.STRING(DEFAULT.new_name, {visible_if: {change_name: 1}});
 }
 const ParamsConfig = new AttribNormalizeSopParamsConfig();

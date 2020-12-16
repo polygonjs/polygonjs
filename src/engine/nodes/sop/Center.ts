@@ -1,3 +1,9 @@
+/**
+ * Creates a point at the center of each input objects
+ *
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 

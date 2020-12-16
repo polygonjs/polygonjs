@@ -1,3 +1,8 @@
+/**
+ * Creates a tube-like geometry around a line.
+ *
+ *
+ */
 import {TypedSopNode} from './_Base';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
@@ -18,11 +23,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
 import {ObjectType} from '../../../core/geometry/Constant';
 class PolywireSopParamsConfig extends NodeParamsConfig {
+	/** @param radius */
 	radius = ParamConfig.FLOAT(1);
+	/** @param segments count on the circle used */
 	segments_radial = ParamConfig.INTEGER(8, {
 		range: [3, 20],
 		range_locked: [true, false],
 	});
+	/** @param toggle on for the geometry to close back on itself */
 	closed = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new PolywireSopParamsConfig();
