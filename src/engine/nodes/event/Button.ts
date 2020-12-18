@@ -1,3 +1,10 @@
+/**
+ * Displays a button to send a trigger
+ *
+ * @remarks
+ * This is useful when you want to manually test a series of events
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
@@ -9,6 +16,7 @@ enum ButtonEventOutput {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ButtonEventParamsConfig extends NodeParamsConfig {
+	/** @param button to presse to trigger the event */
 	dispatch = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			ButtonEventNode.PARAM_CALLBACK_execute(node as ButtonEventNode);

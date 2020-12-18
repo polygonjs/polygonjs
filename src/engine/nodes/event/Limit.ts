@@ -1,3 +1,8 @@
+/**
+ * Sets a limit to how many events can be processed.
+ *
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
@@ -14,10 +19,12 @@ enum LimitEventOutput {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class LimitEventParamsConfig extends NodeParamsConfig {
+	/** @param max number of events that can be processed */
 	max_count = ParamConfig.INTEGER(5, {
 		range: [0, 10],
 		range_locked: [true, false],
 	});
+	/** @param resets the count */
 	reset = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			LimitEventNode.PARAM_CALLBACK_reset(node as LimitEventNode);

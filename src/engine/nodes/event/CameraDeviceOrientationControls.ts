@@ -1,3 +1,10 @@
+/**
+ * Creates a THREE DevideOrientationControls
+ *
+ * @remarks
+ * This can be linked to a camera's controls parameter
+ *
+ */
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
 import {DeviceOrientationControls} from '../../../modules/three/examples/jsm/controls/DeviceOrientationControls';

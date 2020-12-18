@@ -1,3 +1,10 @@
+/**
+ * Allows to move the camera between different points
+ *
+ * @remarks
+ * This node is still experimental.
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
@@ -60,13 +67,16 @@ const EASING = `${AnimNodeEasing.POWER2}.${InOutMode.IN_OUT}`;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreSleep} from '../../../core/Sleep';
 class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
+	/** @param sets the camera */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera_MASTER', {
 		node_selection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
 		},
 	});
+	/** @param toogle on to initialize to a specific camera */
 	init = ParamConfig.BOOLEAN(0);
+	/** @param the camera to initialize to */
 	init_camera = ParamConfig.OPERATOR_PATH('/perspective_camera_0', {
 		node_selection: {
 			context: NodeContext.OBJ,
@@ -74,10 +84,15 @@ class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 		},
 		visible_if: {init: 1},
 	});
+	/** @param duration of movement from one navigation point to another */
 	duration = ParamConfig.FLOAT(2);
+	/** @param time for the camera rotation animation to start, relative to translation animation */
 	rotation_delay = ParamConfig.FLOAT(1);
+	/** @param time for the camera projection matrix animation to start, relative to translation animation */
 	projection_matrix_delay = ParamConfig.FLOAT(0);
+	/** @param toggle on if the camera should move to the nearest position. Toggle off if the camera should move to the current target camera position */
 	to_neares_pos = ParamConfig.BOOLEAN(0);
+	/** @param toggle on to hide the current beacon and ensure it does not block the view */
 	hide_current_beacon = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new CameraNavigationBeaconsEventParamsConfig();

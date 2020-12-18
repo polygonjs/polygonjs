@@ -1,3 +1,8 @@
+/**
+ * Starts and pauses animations
+ *
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
@@ -18,15 +23,18 @@ enum AnimationEventOutput {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AnimationEventParamsConfig extends NodeParamsConfig {
+	/** @parm animation node */
 	animation = ParamConfig.OPERATOR_PATH('/ANIM/OUT', {
 		node_selection: {context: NodeContext.ANIM},
 		dependent_on_found_node: false,
 	});
+	/** @parm presses to play the animation */
 	play = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			AnimationEventNode.PARAM_CALLBACK_play(node as AnimationEventNode);
 		},
 	});
+	/** @parm presses to pause the animation */
 	pause = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			AnimationEventNode.PARAM_CALLBACK_pause(node as AnimationEventNode);

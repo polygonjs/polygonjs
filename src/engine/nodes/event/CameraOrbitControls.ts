@@ -1,3 +1,10 @@
+/**
+ * Creates a THREE OrbitControls
+ *
+ * @remarks
+ * This can be linked to a camera's controls parameter
+ *
+ */
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -18,28 +25,41 @@ enum KeysMode {
 const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
 
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to allow pan */
 	allow_pan = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to allow rotate */
 	allow_rotate = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to allow zoom */
 	allow_zoom = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to have damping */
 	tdamping = ParamConfig.BOOLEAN(1);
+	/** @param damping value */
 	damping = ParamConfig.FLOAT(0.1, {
 		visible_if: {tdamping: true},
 	});
+	/** @param toggle on to have the pan in screen space */
 	screen_space_panning = ParamConfig.BOOLEAN(1);
+	/** @param rotation speed */
 	rotate_speed = ParamConfig.FLOAT(0.5);
+	/** @param smallest distance the camera can go to the target */
 	min_distance = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		range_locked: [true, false],
 	});
+	/** @param max distance the camera can go away the target */
 	max_distance = ParamConfig.FLOAT(50, {
 		range: [0, 100],
 		range_locked: [true, false],
 	});
+	/** @param toggle on to limit the azimuth (up-down) angle */
 	limit_azimuth_angle = ParamConfig.BOOLEAN(0);
+	/** @param azimuth angle range */
 	azimuth_angle_range = ParamConfig.VECTOR2(['-2*$PI', '2*$PI'], {
 		visible_if: {limit_azimuth_angle: 1},
 	});
+	/** @param polar (left-right) angle range */
 	polar_angle_range = ParamConfig.VECTOR2([0, '$PI']);
+	/** @param target position. This is updated automatically as the camera is controlled by user events */
 	target = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
 		compute_on_dirty: true,
@@ -47,8 +67,9 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 			CameraOrbitControlsEventNode.PARAM_CALLBACK_update_target(node as CameraOrbitControlsEventNode);
 		},
 	});
-	// to prevent moving the camera when using the arrows to change frame
+	/** @param toggle on to enable keys */
 	enable_keys = ParamConfig.BOOLEAN(0);
+	/** @param key modes (pan or rotate) */
 	keys_mode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
 		visible_if: {enable_keys: 1},
 		menu: {
@@ -57,16 +78,19 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param keys pan speed */
 	keys_pan_speed = ParamConfig.FLOAT(7, {
 		range: [0, 10],
 		range_locked: [false, false],
 		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.PAN)},
 	});
+	/** @param keys rotate speed vertical */
 	keys_rotate_speed_vertical = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		range_locked: [false, false],
 		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
 	});
+	/** @param keys rotate speed horizontal */
 	keys_rotate_speed_horizontal = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		range_locked: [false, false],

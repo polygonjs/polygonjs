@@ -1,3 +1,9 @@
+/**
+ * Timer to trigger events at certain intervals
+ *
+ *
+ *
+ */
 import {TypedEventNode} from './_Base';
 
 const INPUT_START_NAME = 'start';
@@ -8,7 +14,9 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 class TimerEventParamsConfig extends NodeParamsConfig {
+	/** @param period between each interval */
 	period = ParamConfig.INTEGER(1000);
+	/** @param number of times the timer should repeat. Set to -1 to never stop */
 	count = ParamConfig.INTEGER(-1);
 }
 const ParamsConfig = new TimerEventParamsConfig();

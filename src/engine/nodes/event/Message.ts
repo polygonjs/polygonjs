@@ -1,10 +1,20 @@
+/**
+ * Prints a message to the console or a popup.
+ *
+ * @remarks
+ * This can be useful to debug events
+ *
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 class MessageParamsConfig extends NodeParamsConfig {
+	/** @param toggle on for the message to be displayed in a popup */
 	alert = ParamConfig.BOOLEAN(0);
+	/** @param toggle on for the message to be printed in the console */
 	console = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new MessageParamsConfig();

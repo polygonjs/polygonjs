@@ -1,3 +1,8 @@
+/**
+ * Sends events related to the scene
+ *
+ *
+ */
 import {ACCEPTED_SCENE_EVENT_TYPES} from '../../scene/utils/events/SceneEventsController';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
@@ -14,30 +19,39 @@ enum SceneNodeOutput {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 class SceneEventParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			SceneEventNode.PARAM_CALLBACK_update_register(node as SceneEventNode);
 		},
 	});
 	sep = ParamConfig.SEPARATOR(null, {visible_if: {active: true}});
+	/** @param toggle on to trigger an event when the scene has loaded. This can be useful to initialize other nodes */
 	scene_loaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	/** @param toggle on to trigger an event when the scene starts playing */
 	play = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	/** @param toggle on to trigger an event when the scene pauses */
 	pause = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	/** @param toggle on to trigger an event on every tick */
 	tick = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	sep0 = ParamConfig.SEPARATOR();
+	/** @param toggle on to trigger an event on every tick */
 	treached_time = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType) => {
 			SceneEventNode.PARAM_CALLBACK_update_time_dependency(node as SceneEventNode);
 		},
 	});
+	/** @param time to trigger an event */
 	reached_time = ParamConfig.INTEGER(10, {
 		visible_if: {treached_time: 1},
 		range: [0, 100],
 	});
 	sep1 = ParamConfig.SEPARATOR();
+	/** @param frame to set */
 	set_frame_value = ParamConfig.INTEGER(1, {
 		range: [0, 100],
 	});
+	/** @param button to set a specific frame */
 	set_frame = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			SceneEventNode.PARAM_CALLBACK_set_frame(node as SceneEventNode);

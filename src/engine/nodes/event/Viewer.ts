@@ -1,9 +1,17 @@
+/**
+ * Activates events for the viewer
+ *
+ * @param
+ * For instance, this can be useful after a raycast node to set an 'active' class on the html canvas, so that the cursor reflect what the mouse is hovering over.
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ViewerParamsConfig extends NodeParamsConfig {
+	/** @param sets the class of the viewer */
 	class_name = ParamConfig.STRING('active');
 }
 const ParamsConfig = new ViewerParamsConfig();

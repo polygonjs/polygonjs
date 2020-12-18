@@ -1,3 +1,8 @@
+/**
+ * Can be triggered when nodes have cooked or to cook specific nodes.
+ *
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
@@ -14,12 +19,15 @@ import {TypeAssert} from '../../poly/Assert';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 class NodeCookEventParamsConfig extends NodeParamsConfig {
+	/** @param mask to select which nodes this will cook or listen to */
 	mask = ParamConfig.STRING('/geo*', {
 		callback: (node: BaseNodeType) => {
 			NodeCookEventNode.PARAM_CALLBACK_update_resolved_nodes(node as NodeCookEventNode);
 		},
 	});
+	/** @param forces cook of nodes mentioned in the mask param */
 	force = ParamConfig.BOOLEAN(0);
+	/** @param defines if the nodes should cook one after the other or in parallel */
 	cook_mode = ParamConfig.INTEGER(COOK_MODES.indexOf(CookMode.ALL_TOGETHER), {
 		menu: {
 			entries: COOK_MODES.map((name, value) => {
@@ -27,13 +35,16 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param batch size */
 	batch_size = ParamConfig.INTEGER(1, {visible_if: {cook_mode: COOK_MODES.indexOf(CookMode.BATCH)}});
 	sep = ParamConfig.SEPARATOR();
+	/** @param updates the list of nodes from the mask parameter. This can be useful if nodes are added or removed from the scene */
 	update_resolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			NodeCookEventNode.PARAM_CALLBACK_update_resolve(node as NodeCookEventNode);
 		},
 	});
+	/** @param prints the list of nodes the mask resolves to to the console. Useful for debugging */
 	print_resolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			NodeCookEventNode.PARAM_CALLBACK_print_resolve(node as NodeCookEventNode);

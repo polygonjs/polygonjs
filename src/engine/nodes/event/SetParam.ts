@@ -1,3 +1,9 @@
+/**
+ * Updates the param of specific node
+ *
+ *
+ *
+ */
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
@@ -43,11 +49,13 @@ const TYPE_STRING = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.STRING);
 
 const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
+	/** @param the parameter to update */
 	param = ParamConfig.OPERATOR_PATH('/geo1/display', {
 		param_selection: true,
 		compute_on_dirty: true,
 	});
 	// param = ParamConfig.STRING('display');
+	/** @param type of the parameter to update */
 	type = ParamConfig.INTEGER(TYPE_NUMBER, {
 		menu: {
 			entries: SET_PARAM_PARAM_TYPE.map((name, value) => {
@@ -55,33 +63,42 @@ class SetParamParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param for a boolean parameter, sets to toggle its value */
 	toggle = ParamConfig.BOOLEAN(0, {
 		visible_if: {type: TYPE_BOOLEAN},
 	});
+	/** @param if toggle is set to off, this will set the value of the parameter */
 	boolean = ParamConfig.BOOLEAN(0, {
 		visible_if: {
 			type: TYPE_BOOLEAN,
 			toggle: 0,
 		},
 	});
+	/** @param param value for a float parameter */
 	number = ParamConfig.FLOAT(0, {
 		visible_if: {type: TYPE_NUMBER},
 	});
+	/** @param param value for a vector2 parameter */
 	vector2 = ParamConfig.VECTOR2([0, 0], {
 		visible_if: {type: TYPE_VECTOR2},
 	});
+	/** @param param value for a vector3 parameter */
 	vector3 = ParamConfig.VECTOR3([0, 0, 0], {
 		visible_if: {type: TYPE_VECTOR3},
 	});
+	/** @param param value for a vector4 parameter */
 	vector4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		visible_if: {type: TYPE_VECTOR4},
 	});
+	/** @param if on, the value will be incremented by the value, as opposed to be set to the value */
 	increment = ParamConfig.BOOLEAN(0, {
 		visible_if: [{type: TYPE_NUMBER}, {type: TYPE_VECTOR2}, {type: TYPE_VECTOR3}, {type: TYPE_VECTOR4}],
 	});
+	/** @param param value for a string parameter */
 	string = ParamConfig.STRING('', {
 		visible_if: {type: TYPE_STRING},
 	});
+	/** @param execute button to test the node */
 	execute = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			SetParamEventNode.PARAM_CALLBACK_execute(node as SetParamEventNode);

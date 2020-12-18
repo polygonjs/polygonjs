@@ -1,3 +1,11 @@
+/**
+ * Sequences output nodes one after the other.
+ *
+ * @remarks
+ * This can be useful to ensure a specific order of events.
+ *
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPointType} from '../utils/io/connections/Event';
@@ -7,6 +15,7 @@ const INPUT_NAME = 'trigger';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PassEventParamsConfig extends NodeParamsConfig {
+	/** @param number of possible outputs */
 	outputs_count = ParamConfig.INTEGER(5, {
 		range: [1, 10],
 		range_locked: [true, false],

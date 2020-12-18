@@ -1,3 +1,7 @@
+/**
+ * Allows to detect when the mouse hovers over an object
+ *
+ */
 import {TypedEventNode} from './_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
@@ -40,6 +44,7 @@ function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 class RaycastParamsConfig extends NodeParamsConfig {
+	/** @param defines if the ray detection is done on the CPU or GPU (GPU being currently experimental) */
 	mode = ParamConfig.INTEGER(RAYCAST_MODES.indexOf(RaycastMode.CPU), {
 		menu: {
 			entries: RAYCAST_MODES.map((name, value) => {
@@ -55,14 +60,18 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// COMMON
 	//
 	//
+	/** @param mouse coordinates (0,0) being the center of the screen, (-1,-1) being the bottom left corner and (1,1) being the top right corner */
 	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
+	/** @param by default the ray is sent from the current camera, but this allows to set another camera */
 	override_camera = ParamConfig.BOOLEAN(0);
+	/** @param by default the ray is sent from the current camera, but this allows to set a custom ray */
 	override_ray = ParamConfig.BOOLEAN(0, {
 		visible_if: {
 			mode: RAYCAST_MODES.indexOf(RaycastMode.CPU),
 			override_camera: 1,
 		},
 	});
+	/** @param the camera to override to */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 		node_selection: {
 			context: NodeContext.OBJ,
@@ -73,12 +82,14 @@ class RaycastParamsConfig extends NodeParamsConfig {
 			override_ray: 0,
 		},
 	});
+	/** @param the ray origin */
 	ray_origin = ParamConfig.VECTOR3([0, 0, 0], {
 		visible_if: {
 			override_camera: 1,
 			override_ray: 1,
 		},
 	});
+	/** @param the ray direction */
 	ray_direction = ParamConfig.VECTOR3([0, 0, 1], {
 		visible_if: {
 			override_camera: 1,
@@ -91,6 +102,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// GPU
 	//
 	//
+	/** @param the material to use on the scene for GPU detection */
 	material = ParamConfig.OPERATOR_PATH('/MAT/mesh_basic_builder1', {
 		node_selection: {
 			context: NodeContext.MAT,
@@ -101,10 +113,12 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		...visible_for_gpu(),
 	});
+	/** @param the current pixel value being read */
 	pixel_value = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		cook: false,
 		...visible_for_gpu(),
 	});
+	/** @param the value threshold for which a hit is detected */
 	hit_threshold = ParamConfig.FLOAT(0.5, {
 		cook: false,
 		...visible_for_gpu(),
@@ -115,6 +129,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// CPU
 	//
 	//
+	/** @param defines the hit it tested against geometry or just a plane */
 	intersect_with = ParamConfig.INTEGER(CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY), {
 		menu: {
 			entries: CPU_INTERSECT_WITH_OPTIONS.map((name, value) => {
@@ -123,6 +138,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		...visible_for_cpu(),
 	});
+	/** @param threshold used to test hit with points */
 	points_threshold = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		range_locked: [true, false],
@@ -133,9 +149,11 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// CPU PLANE
 	//
 	//
+	/** @param plane direction if the hit is tested against a plane */
 	plane_direction = ParamConfig.VECTOR3([0, 1, 0], {
 		...visible_for_cpu_plane(),
 	});
+	/** @param plane offset if the hit is tested against a plane */
 	plane_offset = ParamConfig.FLOAT(0, {
 		...visible_for_cpu_plane(),
 	});
@@ -145,6 +163,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// CPU GEOMETRY
 	//
 	//
+	/** @param objects to test hit against, when testing against geometries */
 	target = ParamConfig.OPERATOR_PATH('/geo1', {
 		node_selection: {
 			context: NodeContext.OBJ,
@@ -155,6 +174,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		...visible_for_cpu_geometry(),
 	});
+	/** @param toggle to hit is tested against children */
 	traverse_children = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
@@ -170,34 +190,41 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// POSITION (common between plane and geo intersection)
 	//
 	//
+	/** @param toggle on to set the param to the hit position */
 	tposition_target = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		...visible_for_cpu(),
 	});
+	/** @param this will be set to the hit position */
 	position = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
 		...visible_for_cpu({tposition_target: 0}),
 	});
+	/** @param this parameter will be set to the hit position */
 	position_target = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
 		...visible_for_cpu({tposition_target: 1}),
 		param_selection: ParamType.VECTOR3,
 		compute_on_dirty: true,
 	});
+	/** @param toggle on to set the param to the mouse velocity (experimental) */
 	tvelocity = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		// callback: (node: BaseNodeType, param: BaseParamType) => {
 		// 	RaycastCPUVelocityController.PARAM_CALLBACK_update_timer(node as RaycastEventNode);
 		// },
 	});
+	/** @param toggle on to set the param to the mouse velocity */
 	tvelocity_target = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		...visible_for_cpu({tvelocity: 1}),
 	});
+	/** @param this will be set to the mouse velocity */
 	velocity = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
 		...visible_for_cpu({tvelocity: 1, tvelocity_target: 0}),
 	});
+	/** @param this will be set to the mouse velocity */
 	velocity_target = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
 		...visible_for_cpu({tvelocity: 1, tvelocity_target: 1}),
@@ -209,17 +236,21 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// GEO ATTRIB
 	//
 	//
+	/** @param for geometry hit tests, a vertex attribute can be read */
 	geo_attribute = ParamConfig.BOOLEAN(0, visible_for_cpu_geometry());
+	/** @param geometry vertex attribute to read */
 	geo_attribute_name = ParamConfig.STRING('id', {
 		cook: false,
 		...visible_for_cpu_geometry({geo_attribute: 1}),
 	});
+	/** @param type of attribute */
 	geo_attribute_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
 		...visible_for_cpu_geometry({geo_attribute: 1}),
 	});
+	/** @param attribute value for float */
 	geo_attribute_value1 = ParamConfig.FLOAT(0, {
 		cook: false,
 		...visible_for_cpu_geometry({
@@ -227,6 +258,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 			geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
 		}),
 	});
+	/** @param attribute value for string */
 	geo_attribute_values = ParamConfig.STRING('', {
 		...visible_for_cpu_geometry({
 			geo_attribute: 1,
