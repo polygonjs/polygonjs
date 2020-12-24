@@ -1,6 +1,3 @@
-import lodash_uniq from 'lodash/uniq';
-import lodash_compact from 'lodash/compact';
-import lodash_flatten from 'lodash/flatten';
 import lodash_capitalize from 'lodash/capitalize';
 import lodash_snakeCase from 'lodash/snakeCase';
 import lodash_upperFirst from 'lodash/upperFirst';
@@ -211,13 +208,20 @@ export class CoreString {
 
 	static attrib_names(word: string): string[] {
 		const elements = word.split(ATTRIB_NAMES_SEPARATOR);
-		const trimed_elements = lodash_compact(
-			elements.map((e) => {
-				return e.trim();
-			})
-		);
-		const uniq = lodash_uniq(trimed_elements);
-		return uniq;
+		const names_set:Set<string> = new Set();
+		for(let element of elements){
+			element = element.trim()
+			if(element.length > 0){
+				names_set.add(element);
+			}
+		}
+		const names:string[] = new Array(names_set.size);
+		let i=0;
+		names_set.forEach((name)=>{
+			names[i] = name;
+			i++;
+		})
+		return names
 	}
 	static to_id(val: string): number {
 		if (val == null) {
@@ -242,7 +246,9 @@ export class CoreString {
 	static indices(indices_string: string): number[] {
 		const elements = indices_string.split(INDICES_LIST_SEPARATOR);
 		if (elements.length > 1) {
-			return lodash_uniq(lodash_flatten(elements.map((element) => this.indices(element)))).sort((a, b) => a - b);
+			const indices:number[] = elements.flatMap((element) => this.indices(element))
+			return ArrayUtils.uniq(indices).sort((a, b) => a - b);
+				
 		} else {
 			const element = elements[0];
 			if (element) {

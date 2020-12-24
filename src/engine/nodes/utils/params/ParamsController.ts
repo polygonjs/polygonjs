@@ -246,13 +246,7 @@ export class ParamsController {
 	get spare_names(): string[] {
 		return this._spare_param_names;
 	}
-	// get params_by_name() {
-	// 	return this._params_by_name;
-	// }
-	// get all_params() {
-	// 	// return lodash_concat(lodash_values(this._params), lodash_values(this._spare_params));
-	// 	return lodash_values(this._params);
-	// }
+
 
 	private set_with_type<T extends ParamType>(param_name: string, value: ParamInitValuesTypeMap[T], type: T) {
 		const param = this.param_with_type(param_name, type);

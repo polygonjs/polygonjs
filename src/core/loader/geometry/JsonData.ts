@@ -1,6 +1,5 @@
 // import {Core} from '../../_Module';
 import lodash_isObject from 'lodash/isObject';
-import lodash_flatten from 'lodash/flatten';
 import {Points} from 'three/src/objects/Points';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -99,7 +98,7 @@ export class JsonDataLoader {
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
 				const geo_attrib_name = CoreAttribute.remap_name(attrib_name);
-				let attrib_values = lodash_flatten(this._attribute_values_for_name(attrib_name));
+				let attrib_values = this._attribute_values_for_name(attrib_name).flat();
 
 				const data = this._attribute_datas_by_name[attrib_name];
 				const size = data.size();

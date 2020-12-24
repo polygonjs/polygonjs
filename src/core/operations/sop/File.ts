@@ -3,7 +3,6 @@ import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import lodash_flatten from 'lodash/flatten';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreLoaderGeometry} from '../../loader/Geometry';
 
@@ -36,7 +35,7 @@ export class FileSopOperation extends BaseSopOperation {
 	}
 
 	private _on_load(objects: Object3D[]) {
-		objects = lodash_flatten(objects);
+		objects = objects.flat();
 
 		for (let object of objects) {
 			object.traverse((child) => {

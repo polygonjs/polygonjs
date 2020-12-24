@@ -1,4 +1,3 @@
-import lodash_compact from 'lodash/compact';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -28,8 +27,13 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 		const type: GlConnectionPointType =
 			this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		if (this.io.connections.first_input_connection()) {
-			let count = Math.max(lodash_compact(this.io.connections.input_connections()).length + 1, 2);
-			return ArrayUtils.range(count).map((i) => type);
+			const connections = this.io.connections.input_connections()
+			if(connections){
+				let count = Math.max(ArrayUtils.compact(connections).length + 1, 2);
+				return ArrayUtils.range(count).map((i) => type);
+			} else {
+				return []
+			}
 		} else {
 			return ArrayUtils.range(2).map((i) => type);
 		}

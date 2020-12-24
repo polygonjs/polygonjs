@@ -1,7 +1,6 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Sphere} from 'three/src/math/Sphere';
 import {Box3} from 'three/src/math/Box3';
-import lodash_flatten from 'lodash/flatten';
 import {CorePoint} from '../../geometry/Point';
 
 export type OctreeNodeTraverseCallback = (node: OctreeNode) => void;
@@ -43,7 +42,7 @@ export class OctreeNode {
 
 	points_in_sphere(sphere: Sphere, accumulated_points: CorePoint[]): void {
 		if (this._leaves.length == 0) {
-			const found_points = lodash_flatten(Object.values(this._points_by_octant_id));
+			const found_points = Object.values(this._points_by_octant_id).flat();
 			const selected_points = found_points.filter((point) => sphere.containsPoint(point.position()));
 			selected_points.forEach((point) => {
 				accumulated_points.push(point);

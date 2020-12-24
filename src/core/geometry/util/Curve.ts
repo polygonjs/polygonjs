@@ -86,7 +86,6 @@ export class CoreGeometryUtilCurve {
 			}
 		});
 
-		// new_positions = lodash_flatten(new_positions)
 		const geometry = new BufferGeometry();
 
 		attrib_names.forEach((attrib_name) => {

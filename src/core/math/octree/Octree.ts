@@ -1,11 +1,9 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Sphere} from 'three/src/math/Sphere';
 import {Box3} from 'three/src/math/Box3';
-import lodash_sortBy from 'lodash/sortBy';
 import {CorePoint} from '../../geometry/Point';
-// import {CoreMath} from './_Module'
-// import OctreeModule from './Octree/_Module';
 import {OctreeNode, OctreeNodeTraverseCallback} from './Node';
+import {ArrayUtils} from '../../ArrayUtils';
 
 export class CoreOctree {
 	private _root: OctreeNode;
@@ -42,7 +40,7 @@ export class CoreOctree {
 			return found_points;
 		} else {
 			if (found_points.length > max_points_count) {
-				found_points = lodash_sortBy(found_points, (point) => {
+				found_points = ArrayUtils.sortBy(found_points, (point) => {
 					return point.position().distanceTo(position);
 				});
 				// const lng_lat = {lng: position.x, lat: position.z}

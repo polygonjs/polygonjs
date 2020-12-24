@@ -1,7 +1,5 @@
-import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_isEqual from 'lodash/isEqual';
-import lodash_flatten from 'lodash/flatten';
 import {BaseParamType} from '../_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {ParamType} from '../../poly/ParamType';
@@ -11,6 +9,7 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {StringParam} from '../String';
 import {ColorConversion} from '../../../core/Color';
 import { CoreType } from '../../../core/Type';
+import { ArrayUtils } from '../../../core/ArrayUtils';
 
 const ASSET_REFERENCE_OPTION = 'asset_reference';
 const CALLBACK_OPTION = 'callback';
@@ -544,12 +543,12 @@ export class OptionsController {
 		}
 		let predecessor_names: string[] = [];
 		if (CoreType.isArray(visibility_options)) {
-			predecessor_names = lodash_flatten(visibility_options.map((options) => Object.keys(options)));
+			predecessor_names = visibility_options.map((options) => Object.keys(options)).flat();
 		} else {
 			predecessor_names = Object.keys(visibility_options);
 		}
 		const node = this.param.node;
-		return lodash_compact(
+		return ArrayUtils.compact(
 			predecessor_names.map((name) => {
 				const param = node.params.get(name);
 				if (param) {

@@ -1,18 +1,15 @@
 import {Vector2} from 'three/src/math/Vector2'
 import {BufferGeometry} from 'three/src/core/BufferGeometry'
 import {BufferAttribute} from 'three/src/core/BufferAttribute'
-const THREE = {BufferAttribute, BufferGeometry, Vector2}
-import lodash_flatten from 'lodash/flatten'
-// import {CoreGeometry} from '../Geometry';
 
 export class CoreGeometryOperationHexagon {
 	constructor(
-		private _param_size: THREE.Vector2,
+		private _param_size: Vector2,
 		private _param_hexagon_radius: number,
 		private _param_points_only: boolean
 	) {}
 
-	process(): THREE.BufferGeometry {
+	process(): BufferGeometry {
 		const side_length = this._param_hexagon_radius
 		const half_side_length = side_length * 0.5
 		const step_size = {
@@ -23,8 +20,8 @@ export class CoreGeometryOperationHexagon {
 			x: Math.floor(this._param_size.x / step_size.x),
 			y: Math.floor(this._param_size.y / step_size.y),
 		}
-		let positions = []
-		let indices = []
+		let positions:number[][] = []
+		let indices:number[][] = []
 		for (let y = 0; y < steps_count.y; y++) {
 			for (let x = 0; x < steps_count.x; x++) {
 				positions.push([
@@ -67,18 +64,16 @@ export class CoreGeometryOperationHexagon {
 				}
 			}
 		}
-		positions = lodash_flatten(positions)
 
-		const geometry = new THREE.BufferGeometry()
+		const geometry = new BufferGeometry()
 		geometry.setAttribute(
 			'position',
-			new THREE.BufferAttribute(new Float32Array(positions), 3)
-		)
+			new BufferAttribute(new Float32Array(positions.flat()), 3)
+		);
 
 		if (!this._param_points_only) {
-			indices = lodash_flatten(indices)
-			geometry.setIndex(indices)
-			geometry.computeVertexNormals()
+			geometry.setIndex(indices.flat());
+			geometry.computeVertexNormals();
 		}
 
 		return geometry

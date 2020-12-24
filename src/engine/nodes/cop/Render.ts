@@ -1,4 +1,3 @@
-// import lodash_uniq from "lodash/uniq";
 // import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 // import { Vector2 } from "three/src/math/Vector2";
 // import { Texture } from "three/src/textures/Texture";

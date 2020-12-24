@@ -1,9 +1,8 @@
-import lodash_uniq from 'lodash/uniq';
 import lodash_clone from 'lodash/clone';
-import lodash_sortBy from 'lodash/sortBy';
 import {PerformanceNode} from './PerformanceNode';
 import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 import {BaseNodeType} from '../../engine/nodes/_Base';
+import {ArrayUtils} from '../ArrayUtils';
 
 export class CorePerformance {
 	private _started: boolean = false;
@@ -86,14 +85,17 @@ export class CorePerformance {
 
 	print_node_cook_data() {
 		let performance_nodes = Object.values(this._nodes_cook_data);
-		performance_nodes = lodash_sortBy(performance_nodes, (performance_node) => performance_node.total_cook_time);
+		performance_nodes = ArrayUtils.sortBy(
+			performance_nodes,
+			(performance_node) => performance_node.total_cook_time
+		);
 
 		const print_objects = performance_nodes.map((performance_node) => performance_node.print_object());
 
 		console.log('--------------- NODES COOK TIME -----------');
 
 		const table_entries = [];
-		const sorted_print_objects = lodash_sortBy(print_objects, (print_object) => -print_object.total_cook_time);
+		const sorted_print_objects = ArrayUtils.sortBy(print_objects, (print_object) => -print_object.total_cook_time);
 		for (let print_object of sorted_print_objects) {
 			table_entries.push(print_object);
 		}
@@ -125,7 +127,7 @@ export class CorePerformance {
 		}
 
 		durations.sort((a, b) => a - b);
-		const sorted_durations = lodash_uniq(durations);
+		const sorted_durations = ArrayUtils.uniq(durations);
 
 		console.log('--------------- PERF RECORDINGS -----------');
 		//console.log("sorted_durations", sorted_durations)

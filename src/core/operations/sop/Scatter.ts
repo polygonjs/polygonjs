@@ -3,13 +3,12 @@ import {CoreGroup} from '../../geometry/Group';
 import {DefaultOperationParams} from '../_Base';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import lodash_sortBy from 'lodash/sortBy';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {CoreIterator} from '../../Iterator';
 import {CoreMath} from '../../math/_Module';
-import { CoreType } from '../../Type';
-import { ArrayUtils } from '../../ArrayUtils';
+import {CoreType} from '../../Type';
+import {ArrayUtils} from '../../ArrayUtils';
 
 interface ScatterSopParams extends DefaultOperationParams {
 	points_count: number;
@@ -45,8 +44,8 @@ export class ScatterSopOperation extends BaseSopOperation {
 			const area = face.area;
 			area_by_face_index.set(face.index, area);
 		}
-		const sorted_faces = lodash_sortBy(faces, (f) => {
-			return area_by_face_index.get(f.index);
+		const sorted_faces = ArrayUtils.sortBy(faces, (f) => {
+			return area_by_face_index.get(f.index) || -1;
 		});
 
 		let i = 0;

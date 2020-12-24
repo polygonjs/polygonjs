@@ -1,9 +1,9 @@
 import {CorePoint} from '../Point';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
-import lodash_uniq from 'lodash/uniq';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
+import { ArrayUtils } from '../../ArrayUtils';
 
 export abstract class CoreGeometryBuilderBase {
 	from_points(points: CorePoint[]) {
@@ -35,7 +35,7 @@ export abstract class CoreGeometryBuilderBase {
 				const is_attrib_indexed = attrib_values != null;
 
 				if (is_attrib_indexed) {
-					const new_values: string[] = lodash_uniq(
+					const new_values: string[] = ArrayUtils.uniq(
 						points.map((point) => point.indexed_attrib_value(attribute_name))
 					);
 					const new_index_by_value: Dictionary<number> = {};

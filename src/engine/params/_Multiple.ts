@@ -84,28 +84,14 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 	private async compute_components() {
 		const components = this.components;
-		// const component_evaluation_states = lodash_map(components, ()=> false);
-		// const expected_values_count = components.length;
-		// const component_values = [];
-		// let component;
-		// return lodash_each(this.components(), (component, index)=> {
 		const promises = [];
 		for (let c of components) {
 			if (c.is_dirty) {
-				promises.push(c.compute()); //component_value=> {
+				promises.push(c.compute());
 			}
 		}
 		await Promise.all(promises);
-		// component_values[index] = component_value;
-		// component_evaluation_states[index] = true;
-		// const evaluated_values_count = lodash_compact(component_evaluation_states).length;
-		// check if all components have been evaluated succesfully
-		// if (evaluated_values_count === expected_values_count) {
 		this.remove_dirty_state();
-		// return component_values;
-		// }
-		// });
-		// }
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {

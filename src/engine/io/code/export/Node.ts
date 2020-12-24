@@ -1,8 +1,8 @@
-import lodash_sortBy from 'lodash/sortBy';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {SceneCodeExporter} from './Scene';
 import {NodesCodeExporter} from './Nodes';
 import {CodeExporterDispatcher} from './Dispatcher';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 interface PositionData {
 	position_x_offset?: number;
@@ -212,7 +212,7 @@ export class NodeCodeExporter {
 	}
 
 	protected add_children() {
-		const children = lodash_sortBy(this._node.children(), (child) => child.name);
+		const children = ArrayUtils.sortBy(this._node.children(), (child) => child.name);
 		const nodes_exporter = new NodesCodeExporter(children);
 		nodes_exporter.process(this.var_name()).forEach((child_line) => {
 			this._lines.push(child_line);

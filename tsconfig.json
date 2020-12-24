@@ -24,7 +24,8 @@
 		"declaration": true, // be careful as this makes many classes invalid, such as the ones in gl/_ConversionVecTo.ts
 		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
-		"importHelpers": true
+		"importHelpers": true,
+		"lib": ["dom", "es2019.array"]
 		// "typeRoots": []
 	},
 	// "include": ["./**/*.ts", "./**/*.vue"],

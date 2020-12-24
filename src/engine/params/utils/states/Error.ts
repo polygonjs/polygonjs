@@ -1,7 +1,5 @@
 import {BaseParamType} from '../../_Base';
 import {ParamEvent} from '../../../poly/ParamEvent';
-// import lodash_includes from 'lodash/includes';
-// import lodash_values from 'lodash/values';
 
 export class ErrorState {
 	private _message: string | undefined;

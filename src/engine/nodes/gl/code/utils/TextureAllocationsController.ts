@@ -1,6 +1,3 @@
-import lodash_flatten from 'lodash/flatten';
-import lodash_uniq from 'lodash/uniq';
-import lodash_sortBy from 'lodash/sortBy';
 import {TextureAllocation, TextureAllocationData} from './TextureAllocation';
 import {BaseGlNodeType} from '../../_Base';
 
@@ -13,6 +10,7 @@ import {GlConnectionPointComponentsCountMap, BaseGlConnectionPoint} from '../../
 import {AttributeGlNode} from '../../Attribute';
 import {GlobalsGlNode} from '../../Globals';
 import {OutputGlNode} from '../../Output';
+import {ArrayUtils} from '../../../../../core/ArrayUtils';
 
 export type TextureAllocationsControllerData = Dictionary<TextureAllocationData>[];
 const OUTPUT_NAME_ATTRIBUTES = ['position', 'normal', 'color', 'uv'];
@@ -115,7 +113,7 @@ export class TextureAllocationsController {
 		this.allocate_variables(variables);
 	}
 	private allocate_variables(variables: TextureVariable[]) {
-		const variables_by_size_inverse = lodash_sortBy(variables, (variable) => {
+		const variables_by_size_inverse = ArrayUtils.sortBy(variables, (variable) => {
 			return -variable.size;
 		});
 		for (let variable of variables_by_size_inverse) {
@@ -167,7 +165,7 @@ export class TextureAllocationsController {
 		// 	explicit_shader_names.push('position');
 		// }
 
-		return lodash_uniq(explicit_shader_names);
+		return ArrayUtils.uniq(explicit_shader_names);
 	}
 	create_shader_configs(): ShaderConfig[] {
 		return [
@@ -199,7 +197,7 @@ export class TextureAllocationsController {
 		}
 	}
 	variables(): TextureVariable[] {
-		return lodash_flatten(this._allocations.map((a) => a.variables || []));
+		return this._allocations.map((a) => a.variables || []).flat();
 	}
 	has_variable(name: string): boolean {
 		const names = this.variables().map((v) => v.name);

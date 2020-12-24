@@ -6,7 +6,7 @@ import {AttribClass} from '../../geometry/Constant';
 import {CoreObject} from '../../geometry/Object';
 import {CorePoint} from '../../geometry/Point';
 import {CoreString} from '../../String';
-import { ArrayUtils } from '../../ArrayUtils';
+import {ArrayUtils} from '../../ArrayUtils';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	class_from: number;
 	class_to: number;
@@ -102,7 +102,6 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 				case AttribPromoteMode.MAX:
 					this._filtered_values_per_attrib_name[attrib_name] = ArrayUtils.max(values);
 					break;
-				// case PROMOTE_MODE.AVERAGE: return lodash_average(values);
 				case AttribPromoteMode.FIRST_FOUND:
 					this._filtered_values_per_attrib_name[attrib_name] = values[0];
 					break;

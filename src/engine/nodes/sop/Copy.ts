@@ -7,7 +7,6 @@
  *
  */
 
-import lodash_compact from 'lodash/compact';
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -21,6 +20,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
+import { ArrayUtils } from '../../../core/ArrayUtils';
 class CopySopParamsConfig extends NodeParamsConfig {
 	/** @param copies count, used when the second input is not given */
 	count = ParamConfig.INTEGER(1, {
@@ -154,7 +154,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			// duplicate or select from instance children
 			const moved_objects = this.pv.transform_only
 				? // TODO: why is doing a transform slower than cloning the input??
-				  lodash_compact([stamped_instance_core_group.objects_with_geo()[point_index]])
+				  ArrayUtils.compact([stamped_instance_core_group.objects_with_geo()[point_index]])
 				: stamped_instance_core_group.clone().objects_with_geo();
 
 			return moved_objects;

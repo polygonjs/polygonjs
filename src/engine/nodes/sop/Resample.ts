@@ -5,14 +5,8 @@
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-
 import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
-// import {CubicBezierCurve3} from 'three/src/extras/curves/CubicBezierCurve3';
-// import {LineCurve3} from 'three/src/extras/curves/LineCurve3';
-// import {QuadraticBezierCurve3} from 'three/src/extras/curves/QuadraticBezierCurve3';
 import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-
-import lodash_flatten from 'lodash/flatten';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
@@ -161,8 +155,8 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		// and prevent a curve to go too far
 		const new_curve_points = this._get_points_from_curve(curve);
 
-		let positions = [];
-		const indices = [];
+		let positions:number[][] = [];
+		const indices:number[] = [];
 
 		for (let i = 0; i < new_curve_points.length; i++) {
 			const point_position = new_curve_points[i];
@@ -176,9 +170,8 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			}
 		}
 
-		positions = lodash_flatten(positions);
 		const geometry = new BufferGeometry();
-		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+		geometry.setAttribute('position', new Float32BufferAttribute(positions.flat(), 3));
 		geometry.setIndex(indices);
 
 		return geometry;

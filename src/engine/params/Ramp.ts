@@ -1,4 +1,3 @@
-import lodash_sortBy from 'lodash/sortBy';
 import {RGBFormat} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
@@ -8,6 +7,7 @@ import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
+import {ArrayUtils} from '../../core/ArrayUtils';
 
 // interface RampParamVisitor extends TypedParamVisitor {
 // 	visit_ramp_param: (param: RampParam) => any;
@@ -179,7 +179,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	}
 	_create_interpolant() {
 		const points = this.value.points;
-		const sorted_points = lodash_sortBy(points, (point) => point.position);
+		const sorted_points = ArrayUtils.sortBy(points, (point) => point.position);
 		const positions = new Float32Array(sorted_points.length);
 		const values = new Float32Array(sorted_points.length);
 

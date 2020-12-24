@@ -1,9 +1,7 @@
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
-import lodash_flatten from 'lodash/flatten';
 import lodash_intersection from 'lodash/intersection';
-import lodash_concat from 'lodash/concat';
 import {Vector2} from 'three/src/math/Vector2';
 
 export class CoreGeometryOperationSkin {
@@ -38,7 +36,7 @@ export class CoreGeometryOperationSkin {
 		const largest_points = largest_geometry.points();
 		const smallest_points_count = smallest_points.length;
 		// const largest_points_count = largest_points.length;
-		const all_points = lodash_concat(smallest_points, largest_points);
+		const all_points = smallest_points.concat(largest_points);
 
 		// const half_faces_count = smallest_segments.length;
 		const points_indices: number[] = [];
@@ -66,7 +64,7 @@ export class CoreGeometryOperationSkin {
 			if (attrib_size == 1) {
 				float_values = attrib_values as number[];
 			} else {
-				float_values = lodash_flatten(attrib_values.map((v) => (v as Vector2).toArray()));
+				float_values = attrib_values.map((v) => (v as Vector2).toArray()).flat();
 			}
 			this.geometry.setAttribute(attrib_name, new Float32BufferAttribute(float_values, attrib_size));
 		});

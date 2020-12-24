@@ -6,16 +6,13 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
-import lodash_sortBy from 'lodash/sortBy';
-import lodash_reverse from 'lodash/reverse';
-import lodash_compact from 'lodash/compact';
 import {TypedSopNode} from './_Base';
-
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 class SkinSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SkinSopParamsConfig();
 
@@ -34,7 +31,8 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		switch (lodash_compact(this.io.inputs.inputs()).length) {
+		const inputs_count = ArrayUtils.compact(this.io.inputs.inputs()).length;
+		switch (inputs_count) {
 			case 1:
 				return this.process_one_input(input_contents);
 			case 2:
@@ -74,7 +72,7 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		const core_group1 = input_contents[1];
 		const line_segments0 = this._get_line_segments(core_group0);
 		const line_segments1 = this._get_line_segments(core_group1);
-		const line_segments = lodash_reverse(lodash_sortBy([line_segments0, line_segments1], (array) => array.length));
+		const line_segments = ArrayUtils.sortBy([line_segments0, line_segments1], (array) => -array.length);
 		const smallest_array = line_segments[0];
 		const largest_array = line_segments[1];
 

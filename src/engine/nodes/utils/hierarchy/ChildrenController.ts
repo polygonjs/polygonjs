@@ -1,8 +1,5 @@
 import {CoreString} from '../../../../core/String';
 import {BaseNodeType} from '../../_Base';
-import lodash_keys from 'lodash/keys';
-import lodash_sortBy from 'lodash/sortBy';
-import lodash_values from 'lodash/values';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NameController} from '../NameController';
@@ -324,10 +321,10 @@ export class HierarchyChildrenController {
 	}
 
 	children(): BaseNodeType[] {
-		return lodash_values(this._children);
+		return Object.values(this._children);
 	}
 	children_names() {
-		return lodash_sortBy(lodash_keys(this._children));
+		return Object.keys(this._children).sort();
 	}
 
 	traverse_children(callback: (arg0: BaseNodeType) => void) {

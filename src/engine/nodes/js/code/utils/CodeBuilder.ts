@@ -1,4 +1,3 @@
-import lodash_uniq from 'lodash/uniq';
 import {BaseJsNodeType} from '../../_Base';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {BaseNodeType} from '../../../_Base';
@@ -16,6 +15,7 @@ import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
+import { ArrayUtils } from '../../../../../core/ArrayUtils';
 
 export class JsCodeBuilder {
 	_param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> = new ParamConfigsController();
@@ -73,7 +73,7 @@ export class JsCodeBuilder {
 		this._lines_controller = new LinesController();
 		this.reset();
 		for (let shader_name of this.shader_names()) {
-			const nodes = lodash_uniq(nodes_by_shader_name.get(shader_name));
+			const nodes = ArrayUtils.uniq(nodes_by_shader_name.get(shader_name)||[]);
 			if (nodes) {
 				for (let node of nodes) {
 					// node.set_shader_name(shader_name);
@@ -231,7 +231,7 @@ export class JsCodeBuilder {
 			const lines_for_shader = this._lines.get(shader_name)!;
 			const comment = JsCodeFormatter.node_comment(node, line_type);
 			MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
-			lodash_uniq(lines).forEach((line) => {
+			ArrayUtils.uniq(lines).forEach((line) => {
 				line = JsCodeFormatter.line_wrap(line, line_type);
 				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
 			});

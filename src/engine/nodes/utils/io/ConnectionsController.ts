@@ -1,7 +1,7 @@
-import lodash_compact from 'lodash/compact';
 import {TypedNodeConnection} from './NodeConnection';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
+import { ArrayUtils } from '../../../../core/ArrayUtils';
 
 export class ConnectionsController<NC extends NodeContext> {
 	private _input_connections: Array<TypedNodeConnection<NC> | undefined> | undefined;
@@ -56,13 +56,13 @@ export class ConnectionsController<NC extends NodeContext> {
 			return this._input_connections[index];
 		}
 	}
-	first_input_connection(): TypedNodeConnection<NC> {
-		return lodash_compact(this._input_connections)[0];
+	first_input_connection(): TypedNodeConnection<NC>|null {
+		if(this._input_connections){
+			return ArrayUtils.compact(this._input_connections)[0];
+		} else {
+			return null
+		}
 	}
-	// last_input_connection(): NodeConnection {
-	// 	const connections = lodash_compact(this._input_connections);
-	// 	return connections[connections.length - 1];
-	// }
 	input_connections() {
 		return this._input_connections;
 	}

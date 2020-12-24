@@ -1,6 +1,3 @@
-import lodash_uniq from 'lodash/uniq';
-import lodash_compact from 'lodash/compact';
-import lodash_flatten from 'lodash/flatten';
 import {Vector3} from 'three/src/math/Vector3';
 import {Points} from 'three/src/objects/Points';
 import {Object3D} from 'three/src/core/Object3D';
@@ -192,10 +189,10 @@ export class CoreGroup {
 		return null;
 	}
 	faces() {
-		return lodash_flatten(this.core_geometries().map((g) => g.faces()));
+		return this.core_geometries().map((g) => g.faces()).flat();
 	}
 	points() {
-		return lodash_flatten(this.core_geometries().map((g) => g.points()));
+		return this.core_geometries().map((g) => g.points()).flat()
 	}
 	points_count() {
 		return ArrayUtils.sum(this.core_geometries().map((g) => g.points_count()));
@@ -220,7 +217,7 @@ export class CoreGroup {
 		if (group) {
 			const indices = CoreString.indices(group);
 			const points = this.points();
-			return lodash_compact(indices.map((i) => points[i]));
+			return ArrayUtils.compact(indices.map((i) => points[i]));
 		} else {
 			return this.points();
 		}
@@ -248,7 +245,7 @@ export class CoreGroup {
 		if (group_name !== '') {
 			const index = parseInt(group_name);
 			if (!CoreType.isNaN(index)) {
-				return lodash_compact([this.core_objects()[index]]);
+				return ArrayUtils.compact([this.core_objects()[index]]);
 			} else {
 				return this.core_objects().filter((core_object) => {
 					return CoreString.match_mask(group_name, core_object.name());
@@ -396,7 +393,7 @@ export class CoreGroup {
 	attrib_names_matching_mask(masks_string: GroupString) {
 		const masks = CoreString.attrib_names(masks_string);
 
-		const matching_attrib_names = [];
+		const matching_attrib_names:string[] = [];
 		for (let attrib_name of this.attrib_names()) {
 			for (let mask of masks) {
 				if (CoreString.match_mask(attrib_name, mask)) {
@@ -405,7 +402,7 @@ export class CoreGroup {
 			}
 		}
 
-		return lodash_uniq(matching_attrib_names);
+		return ArrayUtils.uniq(matching_attrib_names);
 	}
 
 	attrib_sizes() {

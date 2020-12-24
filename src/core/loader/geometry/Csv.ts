@@ -1,5 +1,3 @@
-import lodash_last from 'lodash/last';
-import lodash_flatten from 'lodash/flatten';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreAttributeData} from '../../geometry/AttributeData';
@@ -74,7 +72,7 @@ export class CsvLoader {
 		if (CoreType.isString(attribute_value)) {
 			if (`${parseFloat(attribute_value)}` === attribute_value) {
 				return parseFloat(attribute_value);
-			} else if (attribute_value[0] === '[' && lodash_last(attribute_value) === ']') {
+			} else if (attribute_value[0] === '[' && attribute_value[attribute_value.length-1] === ']') {
 				const attribute_value_within_brackets = attribute_value.substring(1, attribute_value.length - 1);
 				const elements_s = attribute_value_within_brackets.split(CsvLoader.VECTOR_SEPARATOR);
 				return elements_s.map((element_s) => parseFloat(element_s));
@@ -126,7 +124,7 @@ export class CsvLoader {
 		const geometry = new BufferGeometry();
 		const core_geometry = new CoreGeometry(geometry);
 		for (let attribute_name of this.attribute_names) {
-			const attribute_values = lodash_flatten(this.attribute_values_by_name[attribute_name]);
+			const attribute_values = this.attribute_values_by_name[attribute_name].flat();
 			const size = this.attribute_data_by_name[attribute_name].size();
 			const type = this.attribute_data_by_name[attribute_name].type();
 			if (type == AttribType.STRING) {

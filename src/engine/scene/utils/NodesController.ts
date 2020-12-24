@@ -1,9 +1,5 @@
 import {PolyScene} from '../PolyScene';
-
 import {Object3D} from 'three/src/core/Object3D';
-import lodash_concat from 'lodash/concat';
-import lodash_flatten from 'lodash/flatten';
-import lodash_compact from 'lodash/compact';
 import {ObjectsManagerNode} from '../../nodes/manager/ObjectsManager';
 import {CoreString} from '../../../core/String';
 import {BaseNodeType} from '../../nodes/_Base';
@@ -30,11 +26,16 @@ export class NodesController {
 	}
 	objects_from_mask(mask: string): Object3D[] {
 		const masks = mask.split(' ');
-		// let geos = this.root().nodes_by_type('geo') as BaseNodeObj[];
-		let nodes = this.root.children() as BaseObjNodeType[];
-		nodes = nodes.filter((node) => CoreString.matches_one_mask(node.name, masks));
-		const objects = nodes.map((geo) => geo.object);
-		return lodash_compact(objects);
+		const child_nodes = this.root.children() as BaseObjNodeType[];
+		const objects: Object3D[] = []
+		for(let child_node of child_nodes){
+			if(CoreString.matches_one_mask(child_node.name, masks)){
+				if(child_node.object){
+					objects.push(child_node.object)
+				}
+			}
+		}
+		return objects
 	}
 	clear() {
 		const children = this.root.children();
@@ -58,20 +59,18 @@ export class NodesController {
 		let current_parents: BaseNodeType[] = [this.root];
 		let cmptr = 0;
 		while (current_parents.length > 0 && cmptr < 10) {
-			const children = lodash_flatten(
-				current_parents.map((current_parent) => {
-					if (current_parent.children_allowed()) {
-						return current_parent.children();
-					} else {
-						return [];
-					}
-				})
-			);
-			nodes = lodash_concat(nodes, children);
+			const children = current_parents.map((current_parent) => {
+				if (current_parent.children_allowed()) {
+					return current_parent.children();
+				} else {
+					return [];
+				}
+			}).flat();
+			nodes = nodes.concat(children);
 			current_parents = children;
 			cmptr += 1;
 		}
-		return lodash_flatten(nodes);
+		return nodes.flat();
 	}
 	nodes_from_mask(mask: string) {
 		const nodes = this.all_nodes();

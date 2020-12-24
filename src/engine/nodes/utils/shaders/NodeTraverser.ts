@@ -1,5 +1,3 @@
-import lodash_compact from 'lodash/compact';
-import lodash_uniq from 'lodash/uniq';
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
@@ -7,6 +5,7 @@ import {TypedNode, BaseNodeType} from '../../_Base';
 import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
+import { ArrayUtils } from '../../../../core/ArrayUtils';
 
 // type NumberByString = Map<string, number>;
 type NumberByCoreGraphNodeId = Map<CoreGraphNodeId, number>;
@@ -218,7 +217,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		}
 
 		this._outputs_by_graph_id.forEach((outputs: CoreGraphNodeId[], graph_id: CoreGraphNodeId) => {
-			this._outputs_by_graph_id.set(graph_id, lodash_uniq(outputs));
+			this._outputs_by_graph_id.set(graph_id, ArrayUtils.uniq(outputs));
 		});
 	}
 
@@ -226,8 +225,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graph_node_id, true);
 
 		const inputs = this._find_inputs_or_children(node) as NodeTypeMap[NC][];
-		const compact_inputs: NodeTypeMap[NC][] = lodash_compact(inputs);
-		const input_graph_ids = lodash_uniq(compact_inputs.map((n) => n.graph_node_id));
+		const compact_inputs: NodeTypeMap[NC][] = ArrayUtils.compact(inputs);
+		const input_graph_ids = ArrayUtils.uniq(compact_inputs.map((n) => n.graph_node_id));
 		const unique_inputs = input_graph_ids.map((graph_id) =>
 			this._graph.node_from_id(graph_id)
 		) as NodeTypeMap[NC][];
