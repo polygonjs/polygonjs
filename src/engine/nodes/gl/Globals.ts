@@ -1,3 +1,8 @@
+/**
+ * Allows to access global variables
+ *
+ *
+ */
 import {TypedGlNode} from './_Base';
 // import {ParamType} from '../../../Engine/Param/_Module';
 // import {Connection} from './GlData';

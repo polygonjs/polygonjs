@@ -1,17 +1,15 @@
-// import {Vector2} from 'three/src/math/Vector2';
+/**
+ * Creates an orthographic camera.
+ *
+ *
+ */
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-// import {Group} from 'three/src/objects/Group';
-// import {CameraHelper} from 'three/src/helpers/CameraHelper';
-// import lodash_clamp from 'lodash/clamp';
 import {
 	TypedThreejsCameraObjNode,
 	BASE_CAMERA_DEFAULT,
 	ThreejsCameraTransformParamConfig,
 	CameraMasterCameraParamConfig,
 } from './_BaseCamera';
-
-// import {OrthographicCameraBackgroundController} from './utils/cameras/background/OrthographicCameraController';
-// import {ParamType} from '../../poly/ParamType';
 
 const DEFAULT = {
 	left: -0.5,

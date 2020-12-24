@@ -1,9 +1,11 @@
+/**
+ * Creates a directional light.
+ *
+ *
+ */
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {DirectionalLightHelper} from './utils/helpers/DirectionalLightHelper';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {NodeContext} from '../../poly/NodeContext';
-// import {BaseObjNodeType} from './_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
@@ -19,18 +21,26 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		// lookat = ParamConfig.OPERATOR_PATH('', {dependent_on_found_node: false});
 
 		light = ParamConfig.FOLDER();
+		/** @param light color */
 		color = ParamConfig.COLOR([1, 1, 1], {
 			conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
+		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(1);
+		/** @param light distance */
 		distance = ParamConfig.FLOAT(100, {range: [0, 100]});
 		// shadows
+		/** @param toggle on to cast shadows */
 		cast_shadows = ParamConfig.BOOLEAN(1);
+		/** @param shadow resolution */
 		shadow_res = ParamConfig.VECTOR2([1024, 1024]);
+		/** @param shadow bias */
 		shadow_bias = ParamConfig.FLOAT(0.001);
 
 		// helper
+		/** @param toggle to show helper */
 		show_helper = ParamConfig.BOOLEAN(0);
+		/** @param helper size */
 		helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 	};
 }

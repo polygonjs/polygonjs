@@ -1,3 +1,10 @@
+/**
+ * Creates a WebGLRenderer
+ *
+ * @param
+ * By default, a camera will create its own renderer, with sensible defaults. But there may be cases where you want to override those defaults. In those situation, simply create this node, and set the camera renderer param to it.
+ *
+ */
 import {TypedRopNode} from './_Base';
 import {Mesh} from 'three/src/objects/Mesh';
 import {RopType} from '../../poly/registers/nodes/Rop';
@@ -170,7 +177,7 @@ export interface WebGLRendererWithSampling extends WebGLRenderer {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	alpha = ParamConfig.BOOLEAN(1);
 	antialias = ParamConfig.BOOLEAN(1);

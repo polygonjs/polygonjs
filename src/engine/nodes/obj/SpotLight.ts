@@ -1,31 +1,42 @@
+/**
+ * Creates a spot light.
+ *
+ *
+ */
 import {SpotLight} from 'three/src/lights/SpotLight';
-// import {SpotLightHelper} from 'three/src/helpers/SpotLightHelper';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {SpotLightHelper} from './utils/helpers/SpotLightHelper';
 import {Object3D} from 'three/src/core/Object3D';
 import {ColorConversion} from '../../../core/Color';
-// import {HelperController} from './utils/HelperController';
 class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
+	/** @param light color */
 	color = ParamConfig.COLOR([1, 1, 1], {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
+	/** @param light intensity */
 	intensity = ParamConfig.FLOAT(1);
+	/** @param angle */
 	angle = ParamConfig.FLOAT(45, {range: [0, 180]});
+	/** @param penumbra */
 	penumbra = ParamConfig.FLOAT(0.1);
+	/** @param decay */
 	decay = ParamConfig.FLOAT(0.1, {range: [0, 1]});
+	/** @param distance */
 	distance = ParamConfig.FLOAT(100, {range: [0, 100]});
 	// target = ParamConfig.OPERATOR_PATH('');
 
 	// shadows
+	/** @param toggle on to cast shadows */
 	cast_shadows = ParamConfig.BOOLEAN(1);
+	/** @param shadows res */
 	shadow_res = ParamConfig.VECTOR2([1024, 1024], {
 		visible_if: {cast_shadows: 1},
 	});
+	/** @param shadows bias */
 	shadow_bias = ParamConfig.FLOAT(0.001, {
 		visible_if: {cast_shadows: 1},
 		range: [-0.01, 0.01],
@@ -43,7 +54,9 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	// });
 
 	// helper
+	/** @param toggle on to show helper */
 	show_helper = ParamConfig.BOOLEAN(0);
+	/** @param helper size */
 	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();

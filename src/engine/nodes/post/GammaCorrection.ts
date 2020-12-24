@@ -1,3 +1,8 @@
+/**
+ * Adds a GammaCorrection effect
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
 import {GammaCorrectionShader} from '../../../modules/three/examples/jsm/shaders/GammaCorrectionShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';

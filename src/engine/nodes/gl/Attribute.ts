@@ -1,3 +1,8 @@
+/**
+ * Allows to feed a vertex attribute into the shader
+ *
+ *
+ */
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -12,7 +17,9 @@ const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlNodeType} from '../../poly/NodeContext';
 class AttributeGlParamsConfig extends NodeParamsConfig {
+	/** @param attribute name */
 	name = ParamConfig.STRING('');
+	/** @param attribute type (float, vec2, vec3, vec4) */
 	type = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.map((name, i) => {
@@ -20,7 +27,9 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param allows to export the attribute to a material (when used inside a particles system) */
 	texport_when_connected = ParamConfig.BOOLEAN(0, {hidden: true});
+	/** @param allows to export the attribute to a material (when used inside a particles system) */
 	export_when_connected = ParamConfig.BOOLEAN(0, {visible_if: {texport_when_connected: 1}});
 }
 const ParamsConfig = new AttributeGlParamsConfig();
@@ -110,7 +119,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	get attribute_name(): string {
-		return this.pv.name.trim()
+		return this.pv.name.trim();
 	}
 	gl_type(): GlConnectionPointType {
 		return this.io.outputs.named_output_connection_points[0].type;

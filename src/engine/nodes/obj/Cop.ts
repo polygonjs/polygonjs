@@ -1,3 +1,8 @@
+/**
+ * Parent for COP nodes
+ *
+ *
+ */
 import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {CopNodeChildrenMap} from '../../poly/registers/nodes/Cop';

@@ -1,3 +1,8 @@
+/**
+ * Pixelize the render.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {PixelShader} from '../../../modules/three/examples/jsm/shaders/PixelShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';

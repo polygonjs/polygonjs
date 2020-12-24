@@ -1,3 +1,10 @@
+/**
+ * Creates a CSS2DRenderer
+ *
+ * @param
+ * If you want to display HTML elements that follow the 3D objects, you will need to create this node, and set the camera css renderer to it. If you can CSSObjects in your scene, they will then be displayed.
+ *
+ */
 import {TypedRopNode} from './_Base';
 import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/Rop';

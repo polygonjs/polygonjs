@@ -1,3 +1,8 @@
+/**
+ * Creates a bleach effect
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {BleachBypassShader} from '../../../modules/three/examples/jsm/shaders/BleachBypassShader';
@@ -9,14 +14,6 @@ interface BleachPassWithUniforms extends ShaderPass {
 		opacity: IUniformN;
 	};
 }
-
-// export function ParamF(name: string) {
-// 	return function(target: any, propertyKey: string, descriptor: any) {
-// 		console.log("A")
-// 		// descriptor.get;
-// 		return "a"
-// 	};
-// }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BleachPostParamsConfig extends NodeParamsConfig {

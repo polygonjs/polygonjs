@@ -22,6 +22,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		render = ParamConfig.FOLDER();
 
 		set_scene = ParamConfig.BOOLEAN(0);
+		/** @param override rendered scene */
 		scene = ParamConfig.OPERATOR_PATH('/scene1', {
 			visible_if: {set_scene: 1},
 			node_selection: {
@@ -31,6 +32,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		});
 
 		set_renderer = ParamConfig.BOOLEAN(0);
+		/** @param override renderer used */
 		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webgl_renderer1', {
 			visible_if: {set_renderer: 1},
 			node_selection: {
@@ -40,6 +42,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		});
 
 		set_css_renderer = ParamConfig.BOOLEAN(0);
+		/** @param add a css renderer */
 		css_renderer = ParamConfig.OPERATOR_PATH('./renderers1/css2d_renderer1', {
 			visible_if: {set_css_renderer: 1},
 			node_selection: {

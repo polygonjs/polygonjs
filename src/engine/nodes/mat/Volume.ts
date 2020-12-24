@@ -1,3 +1,10 @@
+/**
+ * Creates a Volume Material
+ *
+ * @remarks
+ * This is experimental
+ *
+ */
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

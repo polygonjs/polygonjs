@@ -1,8 +1,12 @@
+/**
+ * Sets its transform based on the point position in a referenced object.
+ *
+ *
+ */
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {GeoObjNode} from './Geo';

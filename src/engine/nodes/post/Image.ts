@@ -1,11 +1,13 @@
+/**
+ * Adds an image effect.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN, IUniformTexture} from '../utils/code/gl/Uniforms';
-
 import VertexShader from './Image/vert.glsl';
 import FragmentShader from './Image/frag.glsl';
-
 import {NodeContext} from '../../poly/NodeContext';
 
 interface ShaderPassWithRequiredUniforms extends ShaderPass {

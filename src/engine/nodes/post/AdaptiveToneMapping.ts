@@ -1,3 +1,8 @@
+/**
+ * Adds An AdaptativeToneMapping effect
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postprocessing/AdaptiveToneMappingPass';
 

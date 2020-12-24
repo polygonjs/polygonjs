@@ -1,3 +1,8 @@
+/**
+ * Allows to set the result of the shader
+ *
+ *
+ */
 import {TypedGlNode} from './_Base';
 // import {ThreeToGl} from '../../../Core/ThreeToGl';
 // import {CodeBuilder} from './Util/CodeBuilder'

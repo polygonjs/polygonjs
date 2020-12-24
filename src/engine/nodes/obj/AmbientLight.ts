@@ -1,12 +1,21 @@
+/**
+ * Creates an ambient light.
+ *
+ * @remarks
+ * An ambient light will add a uniform light to every object. This can be useful to elevate the shadows slightly.
+ *
+ */
 import {AmbientLight} from 'three/src/lights/AmbientLight';
 import {TypedLightObjNode} from './_BaseLight';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ColorConversion} from '../../../core/Color';
 class AmbientLightObjParamsConfig extends NodeParamsConfig {
+	/** @param light color */
 	color = ParamConfig.COLOR([1, 1, 1], {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
+	/** @param light intensity */
 	intensity = ParamConfig.FLOAT(1);
 }
 const ParamsConfig = new AmbientLightObjParamsConfig();

@@ -1,3 +1,10 @@
+/**
+ * Creates a Mesh Standard Material
+ *
+ * @remarks
+ * This material needs lights to be visible.
+ *
+ */
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

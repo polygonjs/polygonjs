@@ -1,3 +1,8 @@
+/**
+ * Parent for Event nodes
+ *
+ *
+ */
 import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';

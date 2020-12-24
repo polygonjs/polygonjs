@@ -17,7 +17,9 @@ export function TransformedParamConfig<TBase extends Constructor>(
 	const matrix_auto_update = default_params?.matrix_auto_update || false;
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
+		/** @param toggle on to keep world position when adding a parent or removing from one */
 		keep_pos_when_parenting = ParamConfig.BOOLEAN(0);
+		/** @param rotation order */
 		rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
 			menu: {
 				entries: ROTATION_ORDERS.map((order, v) => {
@@ -25,11 +27,16 @@ export function TransformedParamConfig<TBase extends Constructor>(
 				}),
 			},
 		});
+		/** @param translate */
 		t = ParamConfig.VECTOR3([0, 0, 0]);
+		/** @param rotation */
 		r = ParamConfig.VECTOR3([0, 0, 0]);
+		/** @param scale */
 		s = ParamConfig.VECTOR3([1, 1, 1]);
+		/** @param scale */
 		scale = ParamConfig.FLOAT(1);
 		// pivot = ParamConfig.VECTOR3([0, 0, 0]);
+		/** @param set for the matrix to be updated every frame */
 		matrix_auto_update = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
 		tlook_at = ParamConfig.BOOLEAN(0);
 		look_at_pos = ParamConfig.VECTOR3([0, 0, 0], {

@@ -1,3 +1,8 @@
+/**
+ * Allows to render with a mask.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {MaskPass} from '../../../modules/three/examples/jsm/postprocessing/MaskPass';
 import {NodeContext} from '../../poly/NodeContext';

@@ -1,3 +1,8 @@
+/**
+ * Adds a vignette.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {VignetteShader} from '../../../modules/three/examples/jsm/shaders/VignetteShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
@@ -11,11 +16,13 @@ interface VignettePassWithUniforms extends ShaderPass {
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class VignettePostParamsConfig extends NodeParamsConfig {
+	/** @param offset */
 	offset = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		range_locked: [false, false],
 		...PostParamOptions,
 	});
+	/** @param darkness */
 	darkness = ParamConfig.FLOAT(1, {
 		range: [0, 2],
 		range_locked: [true, false],

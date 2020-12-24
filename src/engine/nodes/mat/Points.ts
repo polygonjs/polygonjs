@@ -1,3 +1,10 @@
+/**
+ * Creates a Points Material
+ *
+ * @remarks
+ * This material only emits a color and does not react to light. It is therefore the less resource intensive material.
+ *
+ */
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

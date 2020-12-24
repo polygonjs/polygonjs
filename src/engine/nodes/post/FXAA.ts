@@ -1,3 +1,8 @@
+/**
+ * Adds a FXAA effect
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {FXAAShader} from '../../../modules/three/examples/jsm/shaders/FXAAShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';

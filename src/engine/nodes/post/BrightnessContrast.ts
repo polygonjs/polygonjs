@@ -1,3 +1,8 @@
+/**
+ * Adds a brightness/contrast
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {BrightnessContrastShader} from '../../../modules/three/examples/jsm/shaders/BrightnessContrastShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';

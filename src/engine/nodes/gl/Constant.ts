@@ -1,3 +1,8 @@
+/**
+ * Creates a constant
+ *
+ *
+ */
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 

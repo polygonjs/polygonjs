@@ -1,3 +1,8 @@
+/**
+ * Creates a Shadow Material
+ *
+ *
+ */
 import {ShadowMaterial} from 'three/src/materials/ShadowMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

@@ -1,3 +1,8 @@
+/**
+ * Adds a vertical blur effect.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {VerticalBlurShader} from '../../../modules/three/examples/jsm/shaders/VerticalBlurShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';

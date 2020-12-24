@@ -1,3 +1,8 @@
+/**
+ * Allows to create a uniform which can be modified from the material params panel
+ *
+ *
+ */
 import {TypedGlNode} from './_Base';
 import {
 	GL_CONNECTION_POINT_TYPES,
@@ -14,7 +19,7 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 // import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlParamConfig} from './code/utils/ParamConfig';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {

@@ -1,9 +1,15 @@
+/**
+ * Creates an empty group.
+ *
+ * @remarks
+ * This node also has its own transforms. And if it is set as input of other nodes, their objects will be added as children to the object of this node.
+ *
+ */
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
 class NullObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}

@@ -1,20 +1,28 @@
+/**
+ * Creates an area light.
+ *
+ * @remarks
+ * An area light can be expensive to compute but can give a good result.
+ *
+ */
 import {RectAreaLight} from 'three/src/lights/RectAreaLight';
-// import {RectAreaLightHelper} from '../../../../modules/three/examples/jsm/helpers/RectAreaLightHelper';
 import {RectAreaLightUniformsLib} from '../../../modules/three/examples/jsm/lights/RectAreaLightUniformsLib';
-
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ColorConversion} from '../../../core/Color';
 
 export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param light color */
 		color = ParamConfig.COLOR([1, 1, 1], {
 			conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
+		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(1, {range: [0, 10]});
+		/** @param grid width */
 		width = ParamConfig.FLOAT(1, {range: [0, 10]});
+		/** @param grid height */
 		height = ParamConfig.FLOAT(1, {range: [0, 10]});
 	};
 }

@@ -1,3 +1,8 @@
+/**
+ * Adds color correction
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {ColorCorrectionShader} from '../../../modules/three/examples/jsm/shaders/ColorCorrectionShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';

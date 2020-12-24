@@ -1,3 +1,8 @@
+/**
+ * Parent for Material nodes
+ *
+ *
+ */
 import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';

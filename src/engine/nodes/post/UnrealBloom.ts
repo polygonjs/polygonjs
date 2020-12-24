@@ -1,17 +1,25 @@
+/**
+ * Adds an Unreal Bloom effect.
+ *
+ *
+ */
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {UnrealBloomPass} from '../../../modules/three/examples/jsm/postprocessing/UnrealBloomPass';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class UnrealBloomPostParamsConfig extends NodeParamsConfig {
+	/** @param effect strength */
 	strength = ParamConfig.FLOAT(1.5, {
 		range: [0, 3],
 		range_locked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param effect radius */
 	radius = ParamConfig.FLOAT(1, {
 		...PostParamOptions,
 	});
+	/** @param effect threshold */
 	threshold = ParamConfig.FLOAT(0, {
 		...PostParamOptions,
 	});

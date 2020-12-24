@@ -1,3 +1,8 @@
+/**
+ * Creates a Sky Material
+ *
+ *
+ */
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {TypedMatNode} from './_Base';
 import {Vector3} from 'three/src/math/Vector3';

@@ -1,3 +1,8 @@
+/**
+ * Parent for Post processing nodes
+ *
+ *
+ */
 import {BaseManagerObjNode} from './_BaseManager';
 import {NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';

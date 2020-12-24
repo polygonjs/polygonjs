@@ -1,3 +1,8 @@
+/**
+ * Adds a depth of field effect
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {BokehPass2} from '../../../modules/core/post_process/BokehPass2';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

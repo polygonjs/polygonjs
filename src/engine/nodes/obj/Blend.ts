@@ -1,3 +1,8 @@
+/**
+ * Can blend between 2 other OBJ nodes.
+ *
+ *
+ */
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {FlagsControllerD} from '../utils/FlagsController';

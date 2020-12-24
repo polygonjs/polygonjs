@@ -1,3 +1,10 @@
+/**
+ * Parent for SOP nodes
+ *
+ * @remarks
+ * This node also has its own transforms. And if it is set as input of other nodes, their objects will be added as children to the object of this node.
+ *
+ */
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
 import {BaseNodeType} from '../_Base';
@@ -12,7 +19,9 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {ParamsInitData} from '../utils/io/IOController';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
+	/** @param toggle off to hide */
 	display = ParamConfig.BOOLEAN(1);
+	/** @param set render order */
 	render_order = ParamConfig.INTEGER(0, {
 		range: [0, 10],
 		range_locked: [true, false],

@@ -1,3 +1,10 @@
+/**
+ * Creates a Mesh Phong Material
+ *
+ * @remarks
+ * This material needs lights to be visible. While not as photorealistic as the MeshStandardMaterial, it is very cheap to process.
+ *
+ */
 import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

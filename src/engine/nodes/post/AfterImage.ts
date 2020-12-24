@@ -1,3 +1,8 @@
+/**
+ * Adds An AfterImage effect, where the previous render remains and only slowly fades away.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {AfterimagePass} from '../../../modules/three/examples/jsm/postprocessing/AfterimagePass';
 import {IUniformN} from '../utils/code/gl/Uniforms';

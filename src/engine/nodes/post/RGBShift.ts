@@ -1,3 +1,8 @@
+/**
+ * Shift the RGB components.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RGBShiftShader} from '../../../modules/three/examples/jsm/shaders/RGBShiftShader';
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
@@ -12,11 +17,13 @@ interface RGBShiftPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RGBShiftPostParamsConfig extends NodeParamsConfig {
+	/** @param effect amount */
 	amount = ParamConfig.FLOAT(0.005, {
 		range: [0, 1],
 		range_locked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param effect angle */
 	angle = ParamConfig.FLOAT(0, {
 		range: [0, 10],
 		range_locked: [true, false],

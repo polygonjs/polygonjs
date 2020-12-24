@@ -1,30 +1,43 @@
+/**
+ * Creates a point light.
+ *
+ *
+ */
 import {PointLight} from 'three/src/lights/PointLight';
 import {PointLightHelper} from './utils/helpers/PointLightHelper';
-
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
-// import {HelperController} from './utils/HelperController';
 class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
+	/** @param light color */
 	color = ParamConfig.COLOR([1, 1, 1], {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
+	/** @param light intensity */
 	intensity = ParamConfig.FLOAT(1);
+	/** @param light decay */
 	decay = ParamConfig.FLOAT(0.1);
+	/** @param light distance */
 	distance = ParamConfig.FLOAT(100);
 	// shadows
+	/** @param toggle to cast shadows */
 	cast_shadows = ParamConfig.BOOLEAN(1);
+	/** @param shadow res */
 	shadow_res = ParamConfig.VECTOR2([1024, 1024], {visible_if: {cast_shadows: 1}});
+	/** @param shadow bias */
 	shadow_bias = ParamConfig.FLOAT(0.001, {visible_if: {cast_shadows: 1}});
+	/** @param shadow camera near */
 	shadow_near = ParamConfig.FLOAT(1, {visible_if: {cast_shadows: 1}});
+	/** @param shadow camera far */
 	shadow_far = ParamConfig.FLOAT(100, {visible_if: {cast_shadows: 1}});
 
 	// helper
+	/** @param toggle to show helper */
 	show_helper = ParamConfig.BOOLEAN(0);
+	/** @param helper size */
 	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 }
 const ParamsConfig = new PointLightObjParamsConfig();

@@ -1,5 +1,5 @@
 /**
- * Creates a Mesh lambert Material
+ * Creates a Mesh Lambert Material
  *
  * @remarks
  * This material needs lights to be visible. While not as photorealistic as the MeshStandardMaterial, it is very cheap to process.

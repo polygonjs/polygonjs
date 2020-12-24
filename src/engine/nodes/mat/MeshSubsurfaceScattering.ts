@@ -1,3 +1,10 @@
+/**
+ * Creates a Mesh Subsurface Scattering Material
+ *
+ * @remarks
+ * This material needs lights to be visible.
+ *
+ */
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {TypedMatNode} from './_Base';
 

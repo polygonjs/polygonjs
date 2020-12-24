@@ -1,7 +1,11 @@
+/**
+ * Creates a hemisphere light.
+ *
+ *
+ */
 import {HemisphereLight} from 'three/src/lights/HemisphereLight';
 import {HemisphereLightHelper} from './utils/helpers/HemisphereLightHelper';
 import {TypedLightObjNode} from './_BaseLight';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
@@ -12,15 +16,21 @@ const DEFAULT = {
 	ground_color: new Color(0, 0, 0),
 };
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
+	/** @param sky color */
 	sky_color = ParamConfig.COLOR(DEFAULT.sky_color, {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
+	/** @param ground color */
 	ground_color = ParamConfig.COLOR(DEFAULT.ground_color, {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
+	/** @param light intensity */
 	intensity = ParamConfig.FLOAT(1);
+	/** @param light position */
 	position = ParamConfig.VECTOR3([0, 1, 0]);
+	/** @param toggle to show helper */
 	show_helper = ParamConfig.BOOLEAN(0);
+	/** @param helper size */
 	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
 }
 const ParamsConfig = new HemisphereLightObjParamsConfig();

@@ -1,3 +1,8 @@
+/**
+ * Clears the previous buffer.
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
 import {ClearPass} from '../../../modules/three/examples/jsm/postprocessing/ClearPass';
 
