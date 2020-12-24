@@ -1,7 +1,6 @@
 import {TypedRopNode} from './_Base';
 import {Mesh} from 'three/src/objects/Mesh';
 import {RopType} from '../../poly/registers/nodes/Rop';
-import lodash_isArray from 'lodash/isArray';
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {
 	// encoding
@@ -171,6 +170,7 @@ export interface WebGLRendererWithSampling extends WebGLRenderer {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import { CoreType } from '../../../core/Type';
 class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	alpha = ParamConfig.BOOLEAN(1);
 	antialias = ParamConfig.BOOLEAN(1);
@@ -280,7 +280,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		this.scene.default_scene.traverse((object) => {
 			const material = (object as Mesh).material;
 			if (material) {
-				if (lodash_isArray(material)) {
+				if (CoreType.isArray(material)) {
 					for (let mat of material) {
 						mat.needsUpdate = true;
 					}

@@ -1,4 +1,3 @@
-import lodash_isNaN from 'lodash/isNaN';
 import {Camera} from 'three/src/cameras/Camera';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
@@ -22,6 +21,7 @@ import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Raycaster} from 'three/src/core/Raycaster';
 import {Vector2} from 'three/src/math/Vector2';
+import {CoreType} from '../../../core/Type'
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -273,7 +273,7 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	setup_for_aspect_ratio(aspect: number) {
-		if (lodash_isNaN(aspect)) {
+		if (CoreType.isNaN(aspect)) {
 			return;
 		}
 		if (aspect && this._aspect != aspect) {

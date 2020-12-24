@@ -2,12 +2,12 @@ import {TypedNode, BaseNodeType} from '../../../nodes/_Base';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
 import {NodeJsonExporterData} from '../export/Node';
-import lodash_isString from 'lodash/isString';
 import {ParamJsonImporter} from './Param';
 import {Poly} from '../../../Poly';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {SopOperationContainer} from '../../../../core/operations/container/sop';
 import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operations/_Base';
+import { CoreType } from '../../../../core/Type';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -100,7 +100,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			return;
 		}
 		for (let input_data of inputs_data) {
-			if (lodash_isString(input_data)) {
+			if (CoreType.isString(input_data)) {
 				const input_node_data = data[input_data];
 				if (input_node_data) {
 					if (
@@ -178,7 +178,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	// 	const inputs = current_node_data['inputs'];
 	// 	if (inputs) {
 	// 		for (let input_data of inputs) {
-	// 			if (lodash_isString(input_data)) {
+	// 			if (CoreType.isString(input_data)) {
 	// 				const input_node_name = input_data;
 	// 				// if (input_node_name != current_node_name) {
 	// 				const input_node_data = data[input_node_name];
@@ -258,7 +258,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				const inputs = node_data['inputs'];
 				if (inputs) {
 					for (let input_data of inputs) {
-						if (lodash_isString(input_data)) {
+						if (CoreType.isString(input_data)) {
 							const input_node_name = input_data;
 							if (input_node_name == current_node_name) {
 								output_node_names.add(node_name);

@@ -8,7 +8,6 @@
  */
 // https://stackblitz.com/edit/ammojs-typed-falling-cubes?file=simulation.ts
 import {TypedSopNode} from './_Base';
-import lodash_isString from 'lodash/isString';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {AmmoRBDBodyHelper, RBDAttribute} from '../../../core/physics/ammo/RBDBodyHelper';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -22,6 +21,7 @@ const NULL_ID = '';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Object3D} from 'three/src/core/Object3D';
+import { CoreType } from '../../../core/Type';
 class AmmoSolverSopParamsConfig extends NodeParamsConfig {
 	start_frame = ParamConfig.INTEGER(1);
 
@@ -222,7 +222,7 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 		}
 		for (let core_object of this._input_attributes_update) {
 			const id = core_object.attrib_value(RBDAttribute.ID);
-			if (lodash_isString(id)) {
+			if (CoreType.isString(id)) {
 				const body = this._bodies_by_id.get(id);
 				if (body) {
 					this._update_active_state(id, body, core_object);
@@ -265,7 +265,7 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 	// 	}
 	// 	for (let core_object of core_group.core_objects()) {
 	// 		const id = core_object.attrib_value(RBDAttribute.ID);
-	// 		if (lodash_isString(id)) {
+	// 		if (CoreType.isString(id)) {
 	// 			const body = this._bodies_by_id.get(id);
 	// 			if (!body) {
 	// 				this._add_rbd_from_object(core_object, this._body_helper, this.world!);

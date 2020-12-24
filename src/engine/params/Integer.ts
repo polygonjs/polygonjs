@@ -1,13 +1,9 @@
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_isBoolean from 'lodash/isBoolean';
-
 import {TypedNumericParam} from './_Numeric';
 import {ParamType} from '../poly/ParamType';
 import {CoreString} from '../../core/String';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-import lodash_isString from 'lodash/isString';
-import lodash_isArray from 'lodash/isArray';
+import { CoreType } from '../../core/Type';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
@@ -26,10 +22,10 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		this.set(param.value_serialized);
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
-		if (lodash_isArray(raw_input)) {
+		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
-		if (lodash_isString(raw_input) && CoreString.is_number(raw_input)) {
+		if (CoreType.isString(raw_input) && CoreString.is_number(raw_input)) {
 			return parseInt(raw_input);
 		}
 		return raw_input;
@@ -45,15 +41,15 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		return val1 == val2;
 	}
 	static convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
-		if (lodash_isNumber(raw_val)) {
+		if (CoreType.isNumber(raw_val)) {
 			return Math.round(raw_val);
 		} else {
-			if (lodash_isBoolean(raw_val)) {
+			if (CoreType.isBoolean(raw_val)) {
 				return raw_val ? 1 : 0;
 			} else {
 				if (CoreString.is_number(raw_val)) {
 					const parsed = parseInt(raw_val);
-					if (lodash_isNumber(parsed)) {
+					if (CoreType.isNumber(parsed)) {
 						return parsed;
 					}
 				}

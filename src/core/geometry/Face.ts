@@ -1,15 +1,12 @@
-import lodash_sum from 'lodash/sum';
-
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {Triangle} from 'three/src/math/Triangle';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-// const THREE = {BufferGeometry, Triangle, Vector2, Vector3}
 import {CorePoint} from './Point';
 import {CoreGeometry} from './Geometry';
 import {CoreMath} from '../math/_Module';
-// import {CoreInterpolate} from '../Math/Interpolate'
+import { ArrayUtils } from '../ArrayUtils';
 
 interface FaceLike {
 	a: number;
@@ -98,7 +95,7 @@ export class CoreFace {
 	// 		CoreMath.rand_float(seed*524),
 	// 		CoreMath.rand_float(seed*4631)
 	// 	]
-	// 	const sum = lodash_sum(weights)
+	// 	const sum = ArrayUtils.sum(weights)
 	// 	weights = weights.map(w=>w/sum)
 	// 	const pos = new Vector3()
 	// 	let positions = this.positions().map((p,i)=> p.multiplyScalar(weights[i]))
@@ -194,7 +191,7 @@ export class CoreFace {
 
 		// https://math.stackexchange.com/questions/1336386/weighted-average-distance-between-3-or-more-points
 		// TODO: replace this with Core.Math.Interpolate
-		const distance_total = lodash_sum([
+		const distance_total = ArrayUtils.sum([
 			dist_to_points[0] * dist_to_points[1],
 			dist_to_points[0] * dist_to_points[2],
 			dist_to_points[1] * dist_to_points[2],
@@ -209,7 +206,7 @@ export class CoreFace {
 		let new_attrib_value;
 		switch (attrib_size) {
 			case 1:
-				new_attrib_value = lodash_sum(
+				new_attrib_value = ArrayUtils.sum(
 					point_indices.map((point_indx, i) => weights[i] * (attrib_values[i] as number))
 				);
 				break;

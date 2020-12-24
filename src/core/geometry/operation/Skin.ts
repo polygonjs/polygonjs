@@ -1,7 +1,6 @@
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
-// import lodash_range from 'lodash/range'
 import lodash_flatten from 'lodash/flatten';
 import lodash_intersection from 'lodash/intersection';
 import lodash_concat from 'lodash/concat';
@@ -72,7 +71,6 @@ export class CoreGeometryOperationSkin {
 			this.geometry.setAttribute(attrib_name, new Float32BufferAttribute(float_values, attrib_size));
 		});
 
-		// const new_indices = lodash_range(points.length);
 		this.geometry.setIndex(points_indices);
 		this.geometry.computeVertexNormals();
 	}

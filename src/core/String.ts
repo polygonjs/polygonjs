@@ -1,14 +1,12 @@
-import lodash_range from 'lodash/range';
 import lodash_uniq from 'lodash/uniq';
-import lodash_trim from 'lodash/trim';
 import lodash_compact from 'lodash/compact';
 import lodash_flatten from 'lodash/flatten';
-import lodash_padEnd from 'lodash/padEnd';
 import lodash_capitalize from 'lodash/capitalize';
 import lodash_snakeCase from 'lodash/snakeCase';
 import lodash_upperFirst from 'lodash/upperFirst';
 import lodash_camelCase from 'lodash/camelCase';
-import lodash_isNumber from 'lodash/isNumber';
+import { CoreType } from './Type';
+import { ArrayUtils } from './ArrayUtils';
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
@@ -136,41 +134,6 @@ export class CoreString {
 	}
 
 	static precision(val: number, decimals: number = 2): string {
-		// if (decimals == null) { decimals = 2; }
-		// const factor = Math.pow(10, decimals);
-		// const num = Math.floor(factor * val) / factor;
-		// let number_s = `${num}`;
-
-		// let elements = number_s.split('.');
-		// if (decimals <= 0){
-		// 	return elements[0];
-		// }
-
-		// if (elements.length === 1) {
-		// 	// number_s = `${number_s}.00`;
-		// 	const string_to_pad = `${number_s}.`
-		// 	const pad = string_to_pad.length + decimals
-		// 	return lodash_padEnd(string_to_pad, pad, '0');
-		// } else {
-		// 	const integer_element = elements[0];
-		// 	let fraction_element = elements[1];
-		// 	if (fraction_element.length === 1) {
-		// 		number_s = `${integer_element}.${fraction_element}0`;
-		// 	} else if (fraction_element.length > 2) {
-		// 		fraction_element = fraction_element.slice(0, 2);
-		// 		number_s = `${integer_element}.${fraction_element}`;
-		// 	}
-		// }
-
-		// elements = number_s.split('.');
-		// console.log("decimals:", decimals, elements[1].length, number_s)
-		// if (elements[1].length < decimals){
-		// 	const string_to_pad = number_s
-		// 	const pad = string_to_pad.length + (decimals - elements[1].length)
-		// 	number_s = lodash_padEnd(string_to_pad, pad, '0');
-		// }
-
-		// return number_s;
 		decimals = Math.max(decimals, 0);
 		const elements = `${val}`.split('.');
 
@@ -184,12 +147,12 @@ export class CoreString {
 				frac = frac.substring(0, decimals);
 			}
 
-			frac = lodash_padEnd(frac, decimals, '0');
+			frac = frac.padEnd(decimals, '0');
 			return `${elements[0]}.${frac}`;
 		} else {
 			const string_to_pad = `${val}.`;
 			const pad = string_to_pad.length + decimals;
-			return lodash_padEnd(string_to_pad, pad, '0');
+			return string_to_pad.padEnd(pad, '0');
 		}
 	}
 
@@ -247,27 +210,13 @@ export class CoreString {
 	}
 
 	static attrib_names(word: string): string[] {
-		// let elements = [word];
-		// lodash_each(ATTRIB_NAMES_SEPARATORS, separator => elements = lodash_flatten(lodash_map(elements, element => element.split(separator))));
 		const elements = word.split(ATTRIB_NAMES_SEPARATOR);
 		const trimed_elements = lodash_compact(
 			elements.map((e) => {
-				return lodash_trim(e);
+				return e.trim();
 			})
 		);
 		const uniq = lodash_uniq(trimed_elements);
-
-		// const names: string[] = []
-		// ATTRIB_NAMES_SEPARATORS.forEach(separator=>{
-		// 	word.split(separator).forEach( element=>{
-		// 		names.push(element.trim())
-		// 	} )
-		// })
-
-		// // elements = lodash_filter(elements, element => (element != null) && (element.length > 0));
-		// return lodash_uniq(names)
-
-		// return lodash_map(elements, attr_name => lodash_trim(attr_name));
 		return uniq;
 	}
 	static to_id(val: string): number {
@@ -300,10 +249,10 @@ export class CoreString {
 				const range_separator = '-';
 				if (element.indexOf(range_separator) > 0) {
 					const range_elements = element.split(range_separator);
-					return lodash_range(parseInt(range_elements[0]), parseInt(range_elements[1]) + 1);
+					return ArrayUtils.range(parseInt(range_elements[0]), parseInt(range_elements[1]) + 1);
 				} else {
 					const parsed = parseInt(element);
-					if (lodash_isNumber(parsed)) {
+					if (CoreType.isNumber(parsed)) {
 						return [parsed];
 					} else {
 						return [];

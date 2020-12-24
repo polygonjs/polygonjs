@@ -1,9 +1,6 @@
 import lodash_uniq from 'lodash/uniq';
 import lodash_compact from 'lodash/compact';
-import lodash_isNaN from 'lodash/isNaN';
-import lodash_trim from 'lodash/trim';
 import lodash_flatten from 'lodash/flatten';
-import lodash_sum from 'lodash/sum';
 import {Vector3} from 'three/src/math/Vector3';
 import {Points} from 'three/src/objects/Points';
 import {Object3D} from 'three/src/core/Object3D';
@@ -17,6 +14,8 @@ import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {CoreConstant, AttribClass, AttribSize, ObjectData, object_type_from_constructor} from './Constant';
+import { CoreType } from '../Type';
+import { ArrayUtils } from '../ArrayUtils';
 export type GroupString = string;
 
 export interface Object3DWithGeometry extends Object3D {
@@ -199,7 +198,7 @@ export class CoreGroup {
 		return lodash_flatten(this.core_geometries().map((g) => g.points()));
 	}
 	points_count() {
-		return lodash_sum(this.core_geometries().map((g) => g.points_count()));
+		return ArrayUtils.sum(this.core_geometries().map((g) => g.points_count()));
 	}
 	total_points_count() {
 		if (this._objects) {
@@ -244,11 +243,11 @@ export class CoreGroup {
 		return this.core_objects_from_group(group_name).map((co) => co.object());
 	}
 	core_objects_from_group(group_name: string): CoreObject[] {
-		group_name = lodash_trim(group_name);
+		group_name = group_name.trim();
 
 		if (group_name !== '') {
 			const index = parseInt(group_name);
-			if (!lodash_isNaN(index)) {
+			if (!CoreType.isNaN(index)) {
 				return lodash_compact([this.core_objects()[index]]);
 			} else {
 				return this.core_objects().filter((core_object) => {

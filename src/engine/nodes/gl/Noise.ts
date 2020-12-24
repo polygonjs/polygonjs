@@ -1,4 +1,4 @@
-import lodash_range from 'lodash/range';
+import {ArrayUtils} from '../../../core/ArrayUtils'
 import {TypedGlNode} from './_Base';
 import {
 	GlConnectionPoint,
@@ -243,7 +243,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 
 			// if(requested_components_count < noise_output_components_count){
 			// 	// not sure we ever go through here with the current noise set
-			// 	let component = lodash_range(requested_components_count).map(i=>ALL_COMPONENTS[i]).join('')
+			// 	let component = ArrayUtils.range(requested_components_count).map(i=>ALL_COMPONENTS[i]).join('')
 			// 	const line = this.single_noise_line('', component)
 			// 	body_lines.push(line)
 			// } else {
@@ -254,12 +254,12 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 				const component = ALL_COMPONENTS[i];
 				assembly_args.push(`${noise}${component}`);
 				const input_type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
-				// if (lodash_isArray(input_constructor)) {
+				// if (CoreType.isArray(input_constructor)) {
 				// TODO: for noise3Dgrad and other noises with 2 inputs
 				// } else {
 				const offset_gl_type = input_type;
 				const offset_components_count = GlConnectionPointComponentsCountMap[offset_gl_type];
-				const offset_values = lodash_range(offset_components_count)
+				const offset_values = ArrayUtils.range(offset_components_count)
 					.map((j) => ThreeToGl.float(1000 * i))
 					.join(', ');
 				const offset2 = `${offset_gl_type}(${offset_values})`;
@@ -334,7 +334,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 
 		// add other args if required
 		// const input_type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
-		// if (lodash_isArray(input_constructor)) {
+		// if (CoreType.isArray(input_constructor)) {
 		// 	const properties = lodash_clone(input_constructor);
 		// 	properties.shift(); // remove position
 		// 	properties.forEach((property) => {

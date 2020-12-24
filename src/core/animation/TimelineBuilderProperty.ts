@@ -1,4 +1,3 @@
-import lodash_isNumber from 'lodash/isNumber';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
@@ -16,6 +15,7 @@ import {Vector4Param} from '../../engine/params/Vector4';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {AnimNodeEasing} from './Constant';
 import {Poly} from '../../engine/Poly';
+import { CoreType } from '../Type';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4;
 
@@ -50,7 +50,7 @@ export class TimelineBuilderProperty {
 			cloned.set_name(this._property_name);
 		}
 		if (this._target_value != null) {
-			const new_target_value = lodash_isNumber(this._target_value)
+			const new_target_value = CoreType.isNumber(this._target_value)
 				? this._target_value
 				: this._target_value.clone();
 			cloned.set_target_value(new_target_value);
@@ -112,14 +112,14 @@ export class TimelineBuilderProperty {
 					};
 				}
 
-				if (lodash_isNumber(this._target_value)) {
-					if (lodash_isNumber(target_property)) {
+				if (CoreType.isNumber(this._target_value)) {
+					if (CoreType.isNumber(target_property)) {
 						for (let property_name of property_names) {
 							vars[property_name] = this.with_op(target_property, this._target_value, operation);
 						}
 					}
 				} else {
-					if (!lodash_isNumber(target_property)) {
+					if (!CoreType.isNumber(target_property)) {
 						for (let property_name of property_names) {
 							vars[property_name] = this.with_op(
 								target_property[property_name as 'x'],
@@ -149,7 +149,7 @@ export class TimelineBuilderProperty {
 			const target_property = (object as any)[property_name as any] as AnimPropertyTargetValue;
 			let to_target: object | null = null;
 			const property_names: string[] = [];
-			if (lodash_isNumber(target_property)) {
+			if (CoreType.isNumber(target_property)) {
 				to_target = object;
 				property_names.push(property_name);
 			} else {
@@ -209,7 +209,7 @@ export class TimelineBuilderProperty {
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
 	) {
-		if (!lodash_isNumber(this._target_value)) {
+		if (!CoreType.isNumber(this._target_value)) {
 			Poly.warn('value is not a numbber', this._target_value);
 			return;
 		}

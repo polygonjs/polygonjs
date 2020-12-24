@@ -7,8 +7,6 @@ import {Vector3} from 'three/src/math/Vector3';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Mesh} from 'three/src/objects/Mesh';
-import lodash_range from 'lodash/range';
-import lodash_times from 'lodash/times';
 import lodash_chunk from 'lodash/chunk';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -17,6 +15,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreFace} from '../../../core/geometry/Face';
+import { ArrayUtils } from '../../../core/ArrayUtils';
 class FaceSopParamsConfig extends NodeParamsConfig {
 	/** @param makes faces unique */
 	make_faces_unique = ParamConfig.BOOLEAN(0);
@@ -86,16 +85,16 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					let new_value_index = 0;
 					faces.forEach((face) => {
 						face.forEach((index) => {
-							lodash_times(attrib_size, (i) => {
+							for(let i=0;i<attrib_size;i++){
 								const current_value = attrib.array[index * attrib_size + i];
 								new_values[new_value_index] = current_value;
 								new_value_index += 1;
-							});
+							}
 						});
 					});
 					geometry.setAttribute(attrib_name, new BufferAttribute(new_values, attrib_size));
 				}
-				const new_indices = lodash_range(points_count);
+				const new_indices = ArrayUtils.range(points_count);
 				geometry.setIndex(new_indices);
 			}
 		}

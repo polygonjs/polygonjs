@@ -1,12 +1,10 @@
 import {TypedMultipleParam} from './_Multiple';
-import lodash_isArray from 'lodash/isArray';
-// import lodash_isNumber from 'lodash/isNumber';
 import {FloatParam} from './Float';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-// import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import { CoreType } from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR3: Readonly<string[]> = ['x', 'y', 'z'];
 export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
@@ -21,7 +19,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		return COMPONENT_NAMES_VECTOR3;
 	}
 	get default_value_serialized() {
-		if (lodash_isArray(this.default_value)) {
+		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
 			return this.default_value.toArray() as Number3;
@@ -86,9 +84,9 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	// set_raw_input_from_components() {
 	// 	if (this._raw_input instanceof Vector3) {
 	// 		if (
-	// 			lodash_isNumber(this.x.raw_input) &&
-	// 			lodash_isNumber(this.y.raw_input) &&
-	// 			lodash_isNumber(this.z.raw_input)
+	// 			CoreType.isNumber(this.x.raw_input) &&
+	// 			CoreType.isNumber(this.y.raw_input) &&
+	// 			CoreType.isNumber(this.z.raw_input)
 	// 		) {
 	// 			this._raw_input.x = this.x.raw_input;
 	// 			this._raw_input.y = this.y.raw_input;
@@ -108,7 +106,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		this._value.z = this.z.value;
 	}
 	// convert(input: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
-	// 	if (lodash_isArray(input)) {
+	// 	if (CoreType.isArray(input)) {
 	// 		return new Vector3().fromArray(input);
 	// 	}
 	// 	return new Vector3();

@@ -1,8 +1,6 @@
-import lodash_isArray from 'lodash/isArray';
-import lodash_isString from 'lodash/isString';
+import { CoreType } from '../../../../core/Type';
 import {BaseParamType} from '../../../params/_Base';
 import {CodeExporterDispatcher} from './Dispatcher';
-// import {ParamOptions} from '../../../params/utils/OptionsController';
 
 export class ParamCodeExporter<T extends BaseParamType> {
 	_lines: string[] = [];
@@ -12,10 +10,10 @@ export class ParamCodeExporter<T extends BaseParamType> {
 		this._lines = [];
 
 		let default_value = this.default_value();
-		if (lodash_isString(default_value)) {
+		if (CoreType.isString(default_value)) {
 			default_value = `'${default_value}'`;
 		}
-		if (lodash_isArray(default_value)) {
+		if (CoreType.isArray(default_value)) {
 			default_value = `[${default_value}]`;
 		}
 

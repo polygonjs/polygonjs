@@ -1,4 +1,3 @@
-import lodash_range from 'lodash/range';
 import lodash_compact from 'lodash/compact';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
@@ -6,6 +5,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import { ArrayUtils } from '../../../core/ArrayUtils';
 
 export class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseGlMathFunctionParamsConfig();
@@ -29,9 +29,9 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 			this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		if (this.io.connections.first_input_connection()) {
 			let count = Math.max(lodash_compact(this.io.connections.input_connections()).length + 1, 2);
-			return lodash_range(count).map((i) => type);
+			return ArrayUtils.range(count).map((i) => type);
 		} else {
-			return lodash_range(2).map((i) => type);
+			return ArrayUtils.range(2).map((i) => type);
 		}
 	}
 	protected _expected_output_types() {

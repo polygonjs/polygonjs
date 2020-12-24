@@ -1,4 +1,3 @@
-import lodash_isString from 'lodash/isString';
 import {TypedNodeConnection} from './NodeConnection';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 import {NodeEvent} from '../../../poly/NodeEvent';
@@ -9,6 +8,7 @@ import {ContainerMap, NodeTypeMap} from '../../../containers/utils/ContainerMap'
 import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
+import { CoreType } from '../../../../core/Type';
 
 type OnUpdateHook = () => void;
 
@@ -246,7 +246,7 @@ export class InputsController<NC extends NodeContext> {
 		return -1;
 	}
 	get_input_index(input_index_or_name: number | string): number {
-		if (lodash_isString(input_index_or_name)) {
+		if (CoreType.isString(input_index_or_name)) {
 			if (this.has_named_inputs) {
 				return this.get_named_input_index(input_index_or_name);
 			} else {

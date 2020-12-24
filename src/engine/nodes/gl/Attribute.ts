@@ -1,4 +1,3 @@
-import lodash_trim from 'lodash/trim';
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -111,7 +110,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	get attribute_name(): string {
-		return lodash_trim(this.pv.name);
+		return this.pv.name.trim()
 	}
 	gl_type(): GlConnectionPointType {
 		return this.io.outputs.named_output_connection_points[0].type;

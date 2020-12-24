@@ -1,19 +1,14 @@
-import lodash_isNumber from 'lodash/isNumber';
-
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
 import {InstancedBufferAttribute} from 'three/src/core/InstancedBufferAttribute';
-// import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry'
-// const THREE = {BoxBufferGeometry, InstancedBufferAttribute, InstancedBufferGeometry, Matrix4, Quaternion, Vector2, Vector3}
-
 import {CorePoint} from './Point';
-// import {Core} from '../_Module';
 import {CoreGroup} from './Group';
 import {CoreGeometry} from './Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import { CoreType } from '../Type';
 
 const DEFAULT = {
 	SCALE: new Vector3(1, 1, 1),
@@ -187,7 +182,7 @@ export class CoreInstancer {
 			const values = new Float32Array(instances_count * attrib_size);
 			instance_pts.forEach((pt, i) => {
 				const value = pt.attrib_value(attrib_name);
-				if (lodash_isNumber(value)) {
+				if (CoreType.isNumber(value)) {
 					values[i] = value;
 				} else {
 					(value as Vector3).toArray(values, i * attrib_size);

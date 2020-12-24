@@ -1,16 +1,11 @@
-// import lodash_each from 'lodash/each'
-import lodash_isString from 'lodash/isString';
-// import lodash_isNumber from 'lodash/isNumber'
 import {TypedParam} from './_Base';
-// import {TypedParamVisitor} from './_Base';
-// import {AsCodeString} from './concerns/visitors/String';
-// import {ExpressionController} from '../expressions/ExpressionController'
 import {ParsedTree} from '../expressions/traversers/ParsedTree';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
+import { CoreType } from '../../core/Type';
 
 export class StringParam extends TypedParam<ParamType.STRING> {
 	static type() {
@@ -46,7 +41,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 	}
 
 	convert(raw_val: any): string {
-		if (lodash_isString(raw_val)) {
+		if (CoreType.isString(raw_val)) {
 			return raw_val;
 		}
 		return `${raw_val}`;

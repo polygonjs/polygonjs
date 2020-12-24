@@ -20,11 +20,9 @@ import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
 
 import lodash_cloneDeep from 'lodash/cloneDeep';
-import lodash_isString from 'lodash/isString';
-import lodash_isArray from 'lodash/isArray';
-import lodash_isNumber from 'lodash/isNumber';
 import {CoreEntity} from './Entity';
 import {ParamInitValueSerialized} from '../../engine/params/types/ParamInitValueSerialized';
+import { CoreType } from '../Type';
 const PTNUM = 'ptnum';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
@@ -94,7 +92,7 @@ export class CoreObject extends CoreEntity {
 
 	static add_attribute(object: Object3D, attrib_name: string, value: AttribValue) {
 		let data: ParamInitValueSerialized;
-		if (value != null && !lodash_isNumber(value) && !lodash_isArray(value) && !lodash_isString(value)) {
+		if (value != null && !CoreType.isNumber(value) && !CoreType.isArray(value) && !CoreType.isString(value)) {
 			data = (value as Vector3).toArray() as Number3;
 		} else {
 			data = value;
@@ -160,7 +158,7 @@ export class CoreObject extends CoreEntity {
 						return object.name;
 					}
 				} else {
-					if (lodash_isArray(val) && target) {
+					if (CoreType.isArray(val) && target) {
 						target.fromArray(val);
 						return target;
 					}
@@ -172,7 +170,7 @@ export class CoreObject extends CoreEntity {
 	static string_attrib_value(object: Object3D, name: string, index: number = 0): string | undefined {
 		const str = this.attrib_value(object, name, index);
 		if (str != null) {
-			if (lodash_isString(str)) {
+			if (CoreType.isString(str)) {
 				return str;
 			} else {
 				return `${str}`;
@@ -203,7 +201,7 @@ export class CoreObject extends CoreEntity {
 	}
 	attrib_type(name: string) {
 		const val = this.attrib_value(name);
-		if (lodash_isString(val)) {
+		if (CoreType.isString(val)) {
 			return AttribType.STRING;
 		} else {
 			return AttribType.NUMERIC;
@@ -225,7 +223,7 @@ export class CoreObject extends CoreEntity {
 			return null;
 		}
 
-		if (lodash_isString(val) || lodash_isNumber(val)) {
+		if (CoreType.isString(val) || CoreType.isNumber(val)) {
 			return AttribSize.FLOAT;
 		} else {
 			switch (val.constructor) {

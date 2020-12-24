@@ -1,18 +1,14 @@
-import lodash_times from 'lodash/times';
 import {Vector2} from 'three/src/math/Vector2';
 import {Object3D} from 'three/src/core/Object3D';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-
 import {CoreGeometry} from '../geometry/Geometry';
 import {ObjectType} from '../geometry/Constant';
 import {CoreString} from '../String';
 import {BaseSopNodeType} from '../../engine/nodes/sop/_Base';
-
-import lodash_sum from 'lodash/sum';
-
 import {CoordinatesCollection} from './CoordinatesCollection';
+import { ArrayUtils } from '../ArrayUtils';
 
 const MULTILINESTRING = 'MultiLineString';
 const LINESTRING = 'LineString';
@@ -23,7 +19,7 @@ export class FeatureConverter {
 
 	create_object(): Object3D | undefined {
 		const coordinates_collections = this._create_all_coordinates_collections();
-		const perimeter: number = lodash_sum(coordinates_collections.map((f) => f.perimeter()));
+		const perimeter: number = ArrayUtils.sum(coordinates_collections.map((f) => f.perimeter()));
 		const sorted_features = CoordinatesCollection.sort(coordinates_collections);
 
 		const lines = sorted_features.map((feature) => {
@@ -60,7 +56,7 @@ export class FeatureConverter {
 
 		const positions: number[] = [];
 		const indices: number[] = [];
-		lodash_times(points_count, (i) => {
+		for(let i=0;i<points_count;i++){
 			const coordinates = coordinates_collection.coordinates[i];
 
 			positions.push(coordinates.x);
@@ -71,7 +67,7 @@ export class FeatureConverter {
 				indices.push(i - 1);
 				indices.push(i);
 			}
-		});
+		}
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 		geometry.setIndex(indices);
@@ -98,10 +94,11 @@ export class FeatureConverter {
 					case MULTILINESTRING:
 						const multi_coordinates = feature_geometry['coordinates'];
 						if (multi_coordinates) {
-							lodash_times(multi_coordinates.length, (i) => {
+							for(let i=0; i<multi_coordinates.length; i++){
 								const coordinates = multi_coordinates[i];
 								coordinates_collections.push(this._create_coordinates(coordinates));
-							});
+
+							}
 						}
 						break;
 					case LINESTRING:

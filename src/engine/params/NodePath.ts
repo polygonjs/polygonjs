@@ -1,12 +1,10 @@
 import {TypedParam} from './_Base';
 import {CoreWalker} from '../../core/Walker';
-// import lodash_isArray from 'lodash/isArray';
 import {BaseNodeType} from '../nodes/_Base';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-// import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
 import {DecomposedPath} from '../../core/DecomposedPath';
 import {TypedPathParamValue} from '../../core/Walker';
 
@@ -155,7 +153,7 @@ export class NodePathParam extends TypedParam<ParamType.NODE_PATH> {
 	// ): ChildrenNodeMapByContextMap[N][K] | undefined {
 	// 	const node = this.found_node_with_context(context);
 	// 	if (node) {
-	// 		if (lodash_isArray(type_or_types)) {
+	// 		if (CoreType.isArray(type_or_types)) {
 	// 			for (let type of type_or_types) {
 	// 				if (node.type == type) {
 	// 					return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];

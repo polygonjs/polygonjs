@@ -3,23 +3,20 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {Color} from 'three/src/math/Color';
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_isBoolean from 'lodash/isBoolean';
-import lodash_isString from 'lodash/isString';
-import lodash_isArray from 'lodash/isArray';
+import { CoreType } from './Type';
 
 export class ThreeToGl {
 	static any(value: any): string {
-		if (lodash_isString(value)) {
+		if (CoreType.isString(value)) {
 			return value;
 		}
-		if (lodash_isBoolean(value)) {
+		if (CoreType.isBoolean(value)) {
 			return `${value}`;
 		}
-		if (lodash_isNumber(value)) {
+		if (CoreType.isNumber(value)) {
 			return `${CoreString.ensure_float(value)}`;
 		}
-		if (lodash_isArray(value)) {
+		if (CoreType.isArray(value)) {
 			return this.numeric_array(value);
 		}
 		// and if it is a vector
@@ -42,7 +39,7 @@ export class ThreeToGl {
 		return `${gl_type}(${values_str.join(', ')})`;
 	}
 	static vector4(vec: Vector4 | string): string {
-		if (lodash_isString(vec)) {
+		if (CoreType.isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
@@ -51,7 +48,7 @@ export class ThreeToGl {
 		return `vec4(${values.join(', ')})`;
 	}
 	static vector3(vec: Vector3 | string): string {
-		if (lodash_isString(vec)) {
+		if (CoreType.isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
@@ -60,7 +57,7 @@ export class ThreeToGl {
 		return `vec3(${values.join(', ')})`;
 	}
 	static vector2(vec: Vector2 | string): string {
-		if (lodash_isString(vec)) {
+		if (CoreType.isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
@@ -70,50 +67,50 @@ export class ThreeToGl {
 	}
 
 	static vector3_float(vec: Vector3 | string, num: number | string): string {
-		if (!lodash_isString(num)) {
+		if (!CoreType.isString(num)) {
 			num = CoreString.ensure_float(num);
 		}
 		return `vec4(${this.vector3(vec)}, ${num})`;
 	}
 
 	static float4(x: number | string, y: number | string, z: number | string, w: number | string) {
-		if (!lodash_isString(x)) {
+		if (!CoreType.isString(x)) {
 			x = CoreString.ensure_float(x);
 		}
-		if (!lodash_isString(y)) {
+		if (!CoreType.isString(y)) {
 			y = CoreString.ensure_float(y);
 		}
-		if (!lodash_isString(z)) {
+		if (!CoreType.isString(z)) {
 			z = CoreString.ensure_float(z);
 		}
-		if (!lodash_isString(w)) {
+		if (!CoreType.isString(w)) {
 			w = CoreString.ensure_float(w);
 		}
 		return `vec4(${x}, ${y}, ${z}, ${w})`;
 	}
 	static float3(x: number | string, y: number | string, z: number | string) {
-		if (!lodash_isString(x)) {
+		if (!CoreType.isString(x)) {
 			x = CoreString.ensure_float(x);
 		}
-		if (!lodash_isString(y)) {
+		if (!CoreType.isString(y)) {
 			y = CoreString.ensure_float(y);
 		}
-		if (!lodash_isString(z)) {
+		if (!CoreType.isString(z)) {
 			z = CoreString.ensure_float(z);
 		}
 		return `vec3(${x}, ${y}, ${z})`;
 	}
 	static float2(x: number | string, y: number | string) {
-		if (!lodash_isString(x)) {
+		if (!CoreType.isString(x)) {
 			x = CoreString.ensure_float(x);
 		}
-		if (!lodash_isString(y)) {
+		if (!CoreType.isString(y)) {
 			y = CoreString.ensure_float(y);
 		}
 		return `vec2(${x}, ${y})`;
 	}
 	static float(x: number | string) {
-		if (!lodash_isString(x)) {
+		if (!CoreType.isString(x)) {
 			x = CoreString.ensure_float(x);
 		}
 		return `${x}`;

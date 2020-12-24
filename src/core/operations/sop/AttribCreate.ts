@@ -7,7 +7,6 @@ import {Vector4} from 'three/src/math/Vector4';
 import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../../geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import lodash_trim from 'lodash/trim';
 import {CoreObject} from '../../geometry/Object';
 import {CoreAttribute} from '../../geometry/Attribute';
 
@@ -44,7 +43,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 
 	cook(input_contents: CoreGroup[], params: AttribCreateSopParams) {
 		const core_group = input_contents[0];
-		if (params.name && lodash_trim(params.name) != '') {
+		if (params.name && params.name.trim() != '') {
 			this._add_attribute(ATTRIBUTE_CLASSES[params.class], core_group, params);
 		} else {
 			this.states?.error.set('attribute name is not valid');

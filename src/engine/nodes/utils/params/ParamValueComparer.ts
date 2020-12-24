@@ -1,6 +1,5 @@
 // import {ParamType} from '../../../poly/ParamType';
 // import {ParamInitValuesTypeMap, ParamValuesTypeMap} from './ParamsController';
-// // import lodash_isString from 'lodash/isString';
 // import {Vector2} from 'three/src/math/Vector2';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Vector4} from 'three/src/math/Vector4';

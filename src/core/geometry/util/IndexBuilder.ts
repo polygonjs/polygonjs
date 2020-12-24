@@ -1,6 +1,5 @@
-import lodash_range from 'lodash/range';
-
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import { ArrayUtils } from '../../ArrayUtils';
 
 const POSITION = 'position';
 export class CoreGeometryIndexBuilder {
@@ -9,7 +8,7 @@ export class CoreGeometryIndexBuilder {
 			const position = geometry.getAttribute(POSITION);
 			if (position) {
 				const position_array = position.array;
-				geometry.setIndex(lodash_range(position_array.length / 3));
+				geometry.setIndex(ArrayUtils.range(position_array.length / 3));
 			}
 		}
 	}

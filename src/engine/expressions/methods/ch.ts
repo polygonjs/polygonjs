@@ -1,4 +1,3 @@
-// import lodash_isNumber from 'lodash/isNumber';
 
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from '../../../core/DecomposedPath';
@@ -47,7 +46,7 @@ export class ChExpression extends BaseMethod {
 				}
 				const result = ref.value;
 				if (result != null) {
-					// if (lodash_isNumber(result)) {
+					// if (CoreType.isNumber(result)) {
 					val = result;
 					// }
 				}

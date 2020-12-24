@@ -4,7 +4,6 @@ import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
 import {BaseMethod} from '../methods/_Base';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-import lodash_isString from 'lodash/isString';
 
 // import {JsepsByString} from '../DependenciesController'
 import jsep from 'jsep';
@@ -107,6 +106,7 @@ import {CoreString} from '../../../core/String';
 
 // import {AsyncFunction} from '../../../core/AsyncFunction';
 import {Poly} from '../../Poly';
+import { CoreType } from '../../../core/Type';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
@@ -457,7 +457,7 @@ export class FunctionGenerator extends BaseTraverser {
 				}
 				this.method_dependencies.push(method_dependency);
 			} else {
-				if (path_node && lodash_isString(path_argument)) {
+				if (path_node && CoreType.isString(path_argument)) {
 					this.param.scene.missing_expression_references_controller.register(
 						this.param,
 						path_node,

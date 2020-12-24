@@ -1,4 +1,3 @@
-import lodash_trim from 'lodash/trim';
 import {TypedJsNode, BaseJsNodeType} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 import {LinesController} from './code/utils/LinesController';
@@ -90,7 +89,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// }
 
 	get attribute_name(): string {
-		return lodash_trim(this.pv.name);
+		return this.pv.name.trim();
 	}
 	gl_type() {
 		return this.io.outputs.named_output_connection_points[0].type;

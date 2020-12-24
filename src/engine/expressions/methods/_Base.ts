@@ -3,13 +3,12 @@ import {DecomposedPath} from '../../../core/DecomposedPath';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
-import lodash_isString from 'lodash/isString';
-import lodash_isNumber from 'lodash/isNumber';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {BaseContainer} from '../../containers/_Base';
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {Poly} from '../../Poly';
+import { CoreType } from '../../../core/Type';
 
 export class BaseMethod {
 	protected _require_dependency = false;
@@ -95,7 +94,7 @@ export class BaseMethod {
 	}
 
 	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): CoreGraphNode | null {
-		const is_index = lodash_isNumber(index_or_path);
+		const is_index = CoreType.isNumber(index_or_path);
 		// let node
 		if (is_index) {
 			const index = index_or_path as number;
@@ -118,7 +117,7 @@ export class BaseMethod {
 		// 	return node;
 		// } else {
 		let node: BaseNodeType | null = null;
-		if (lodash_isString(index_or_path)) {
+		if (CoreType.isString(index_or_path)) {
 			if (this.node) {
 				const path = index_or_path;
 				node = CoreWalker.find_node(this.node, path, decomposed_path);

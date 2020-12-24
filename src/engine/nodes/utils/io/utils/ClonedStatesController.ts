@@ -4,7 +4,7 @@ import {InputsController} from '../InputsController';
 import {TypeAssert} from '../../../../poly/Assert';
 import {NodeEvent} from '../../../../poly/NodeEvent';
 import {TypedNode} from '../../../_Base';
-import lodash_isArray from 'lodash/isArray';
+import { CoreType } from '../../../../../core/Type';
 
 export class ClonedStatesController<NC extends NodeContext> {
 	// private _user_inputs_clonable_states: InputCloneMode[] | undefined;
@@ -21,7 +21,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 		// if (values) {
 		// 	this._user_inputs_clonable_states = values;
 		// }
-		if (lodash_isArray(states)) {
+		if (CoreType.isArray(states)) {
 			this._cloned_states = states; //this._user_inputs_clonable_states || this._default_inputs_clonale_state_values();
 		} else {
 			this._cloned_state = states;

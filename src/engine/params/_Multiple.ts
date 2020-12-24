@@ -1,10 +1,10 @@
-import lodash_isArray from 'lodash/isArray';
 import {TypedParam} from './_Base';
 import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import { CoreType } from '../../core/Type';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
@@ -46,7 +46,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		for (let component_name of this.component_names) {
 			const component = new this._components_contructor(this.scene); //, `${this.name}${name}`);
 			let default_val;
-			if (lodash_isArray(this._default_value)) {
+			if (CoreType.isArray(this._default_value)) {
 				default_val = this._default_value[index];
 			} else {
 				default_val = (this._default_value as any)[component_name];
@@ -108,7 +108,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// }
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
-		if (!lodash_isArray(raw_input)) {
+		if (!CoreType.isArray(raw_input)) {
 			const number_or_string = raw_input as number | string;
 			const raw_input_wrapped_in_array: StringOrNumber[] = this.component_names.map(() => number_or_string);
 			return raw_input_wrapped_in_array as ParamInitValuesTypeMap[T];
@@ -125,10 +125,10 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			c.emit_controller.block_parent_emit();
 		}
 
-		// if (lodash_isArray(values)) {
+		// if (CoreType.isArray(values)) {
 		const value = this._raw_input;
 		let prev_value: number = 0;
-		if (lodash_isArray(value)) {
+		if (CoreType.isArray(value)) {
 			for (let i = 0; i < components.length; i++) {
 				let component_value = (value as any)[i];
 				// use the prev value, in case we give an array that is too short

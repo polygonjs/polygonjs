@@ -1,5 +1,3 @@
-import lodash_times from 'lodash/times';
-import lodash_padEnd from 'lodash/padEnd';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -65,7 +63,7 @@ class CompareGlParamsConfig extends NodeParamsConfig {
 		menu: {
 			entries: TEST_NAMES.map((name, i) => {
 				const operator = TEST_OPERATIONS_FLOAT[i];
-				const label = `${lodash_padEnd(operator, 2, ' ')} (${name})`;
+				const label = `${operator.padEnd(2, ' ')} (${name})`;
 				return {name: label, value: i};
 			}),
 		},
@@ -120,12 +118,13 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 			// body_lines.push(`bool ${value} = (distance(${value0}) ${operator} distance(${value1})`)
 			// instead, comparing components one by one
 			let tmp_values: string[] = [];
-			lodash_times(components_count, (i) => {
+			for(let i=0; i<components_count; i++){
 				const tmp_value = this.gl_var_name(`tmp_value_${i}`);
 				const component = COMPONENTS[i];
 				tmp_values.push(tmp_value);
 				body_lines.push(`bool ${tmp_value} = (${value0}.${component} ${operator} ${value1}.${component})`);
-			});
+
+			}
 			body_lines.push(`bool ${value} = (${tmp_values.join(AND_SEPARATOR)})`);
 		} else {
 			body_lines.push(`bool ${value} = (${value0} ${operator} ${value1})`);

@@ -282,7 +282,7 @@ export class CoreTextureLoader {
 	// 		let index = 0;
 	// 		let is_array = null;
 	// 		for (let value of values) {
-	// 			if (is_array || lodash_isArray(value)) {
+	// 			if (is_array || CoreType.isArray(value)) {
 	// 				is_array = true;
 	// 				let component_index = 0;
 	// 				for (let value_c of value) {

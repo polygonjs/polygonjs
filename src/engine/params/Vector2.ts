@@ -1,11 +1,11 @@
 import {TypedMultipleParam} from './_Multiple';
 
-import lodash_isArray from 'lodash/isArray';
 import {Vector2} from 'three/src/math/Vector2';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
+import { CoreType } from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR2: Readonly<string[]> = ['x', 'y'];
 export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
@@ -20,7 +20,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		return COMPONENT_NAMES_VECTOR2;
 	}
 	get default_value_serialized() {
-		if (lodash_isArray(this.default_value)) {
+		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
 			return this.default_value.toArray() as Number2;
@@ -83,7 +83,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		this._value.y = this.y.value;
 	}
 	// convert(input: any) {
-	// 	if (lodash_isArray(input)) {
+	// 	if (CoreType.isArray(input)) {
 	// 		return new Vector2().fromArray(input);
 	// 	}
 	// 	return new Vector2();

@@ -1,6 +1,4 @@
 import {TypedMultipleParam} from './_Multiple';
-import lodash_isArray from 'lodash/isArray';
-// import lodash_isNumber from 'lodash/isNumber';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
@@ -8,8 +6,7 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ColorConversion} from '../../core/Color';
 import {TypeAssert} from '../poly/Assert';
-
-// import {ParamInitValuesTypeMap} from '../nodes/utils/params/ParamsController';
+import { CoreType } from '../../core/Type';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
@@ -28,7 +25,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		return COMPONENT_NAMES_COLOR;
 	}
 	get default_value_serialized() {
-		if (lodash_isArray(this.default_value)) {
+		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
 			return this.default_value.toArray() as Number3;
@@ -108,9 +105,9 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// set_raw_input_from_components() {
 	// 	if (this._raw_input instanceof Color) {
 	// 		if (
-	// 			lodash_isNumber(this.r.raw_input) &&
-	// 			lodash_isNumber(this.g.raw_input) &&
-	// 			lodash_isNumber(this.b.raw_input)
+	// 			CoreType.isNumber(this.r.raw_input) &&
+	// 			CoreType.isNumber(this.g.raw_input) &&
+	// 			CoreType.isNumber(this.b.raw_input)
 	// 		) {
 	// 			this._raw_input.r = this.r.raw_input;
 	// 			this._raw_input.g = this.g.raw_input;
@@ -160,13 +157,13 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		this._value_serialized_dirty = true;
 	}
 	// convert(input: ParamInitValuesTypeMap[ParamType.COLOR]): Color | null {
-	// 	if (lodash_isArray(input)) {
+	// 	if (CoreType.isArray(input)) {
 	// 		if(input.length == 3){
-	// 			if( input.filter(lodash_isNumber).length > 0 ){
+	// 			if( input.filter(CoreType.isNumber).length > 0 ){
 	// 				return new Color().fromArray(input);
 	// 			}
 	// 			if(first){
-	// 				if(lodash_isNumber(first)){
+	// 				if(CoreType.isNumber(first)){
 	// 					return new Color().fromArray(input);
 	// 				}
 	// 			}

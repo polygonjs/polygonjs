@@ -2,7 +2,6 @@ import {TypedGlNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import lodash_trim from 'lodash/trim';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {VaryingGLDefinition} from './utils/GLDefinition';
 
@@ -70,7 +69,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	}
 
 	get attribute_name(): string {
-		return lodash_trim(this.pv.name);
+		return this.pv.name.trim();
 	}
 	gl_type(): GlConnectionPointType {
 		return this.io.outputs.named_output_connection_points[0].type;

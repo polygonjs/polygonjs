@@ -1,4 +1,3 @@
-import lodash_isString from 'lodash/isString';
 import lodash_last from 'lodash/last';
 import lodash_flatten from 'lodash/flatten';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
@@ -7,6 +6,7 @@ import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
+import { CoreType } from '../../Type';
 
 type CsvValue = string | number | number[];
 const POSITION = 'position';
@@ -71,7 +71,7 @@ export class CsvLoader {
 		}
 	}
 	private _value_from_line_element(attribute_value: number | string) {
-		if (lodash_isString(attribute_value)) {
+		if (CoreType.isString(attribute_value)) {
 			if (`${parseFloat(attribute_value)}` === attribute_value) {
 				return parseFloat(attribute_value);
 			} else if (attribute_value[0] === '[' && lodash_last(attribute_value) === ']') {

@@ -150,7 +150,6 @@ export class CoreWalker {
 			return dest_graph_node.full_path();
 		} else {
 			const distance = this.distance_to_parent(src_graph_node, parent);
-			// const up = lodash_padStart("", (distance-1)*3, "../")
 			let up = '';
 			if (distance - 1 > 0) {
 				let i = 0;

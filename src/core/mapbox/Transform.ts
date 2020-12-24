@@ -143,14 +143,14 @@ export class CoreMapboxTransform {
 	}
 	// transform_positions(positions: Vector3[]){
 	// 	const min = new Vector3(
-	// 		lodash_min(positions.map(v=>v.x)),
-	// 		lodash_min(positions.map(v=>v.y)),
-	// 		lodash_min(positions.map(v=>v.z))
+	// 		ArrayUtils.min(positions.map(v=>v.x)),
+	// 		ArrayUtils.min(positions.map(v=>v.y)),
+	// 		ArrayUtils.min(positions.map(v=>v.z))
 	// 	)
 	// 	const max = new Vector3(
-	// 		lodash_max(positions.map(v=>v.x)),
-	// 		lodash_max(positions.map(v=>v.y)),
-	// 		lodash_max(positions.map(v=>v.z))
+	// 		ArrayUtils.max(positions.map(v=>v.x)),
+	// 		ArrayUtils.max(positions.map(v=>v.y)),
+	// 		ArrayUtils.max(positions.map(v=>v.z))
 	// 	)
 	// 	const bbox = new Box3(min, max)
 	// 	const max_ratio = this.bbox_ratio(bbox)

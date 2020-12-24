@@ -1,10 +1,9 @@
-import lodash_isNumber from 'lodash/isNumber';
 import lodash_uniq from 'lodash/uniq';
-import lodash_isString from 'lodash/isString';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
+import { CoreType } from '../../../../core/Type';
 export class OutputsController<NC extends NodeContext> {
 	private _has_outputs: boolean = false;
 	private _named_output_connection_points: ConnectionPointTypeMap[NC][] | undefined;
@@ -49,7 +48,7 @@ export class OutputsController<NC extends NodeContext> {
 	}
 	get_output_index(output_index_or_name: number | string): number {
 		if (output_index_or_name != null) {
-			if (lodash_isString(output_index_or_name)) {
+			if (CoreType.isString(output_index_or_name)) {
 				if (this.has_named_outputs) {
 					return this.get_named_output_index(output_index_or_name);
 				} else {
@@ -107,7 +106,7 @@ export class OutputsController<NC extends NodeContext> {
 			output_indices = lodash_uniq(output_indices);
 			const used_output_indices: number[] = [];
 			output_indices.forEach((index) => {
-				if (lodash_isNumber(index)) {
+				if (CoreType.isNumber(index)) {
 					used_output_indices.push(index);
 				}
 			});

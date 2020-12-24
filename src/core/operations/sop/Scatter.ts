@@ -1,8 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../geometry/Group';
 import {DefaultOperationParams} from '../_Base';
-import lodash_range from 'lodash/range';
-import lodash_isNumber from 'lodash/isNumber';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import lodash_sortBy from 'lodash/sortBy';
@@ -10,6 +8,8 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {CoreIterator} from '../../Iterator';
 import {CoreMath} from '../../math/_Module';
+import { CoreType } from '../../Type';
+import { ArrayUtils } from '../../ArrayUtils';
 
 interface ScatterSopParams extends DefaultOperationParams {
 	points_count: number;
@@ -85,7 +85,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 					for (let attrib_name of attrib_names) {
 						const attrib_value = face.attrib_value_at_position(attrib_name, position);
 						if (attrib_value) {
-							if (lodash_isNumber(attrib_value)) {
+							if (CoreType.isNumber(attrib_value)) {
 								attrib_values_by_name.get(attrib_name)!.push(attrib_value);
 							} else {
 								attrib_value.toArray(
@@ -116,7 +116,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 
 		// 			for(let attrib_name of attrib_names){
 		// 				const attrib_value = face.attrib_value_at_position(attrib_name, position)
-		// 				if (lodash_isNumber(attrib_value)){
+		// 				if (CoreType.isNumber(attrib_value)){
 		// 					attrib_values_by_name[attrib_name].push(attrib_value)
 		// 				} else {
 		// 					attrib_value.toArray(
@@ -145,7 +145,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 
 		if (params.add_id_attribute || params.add_idn_attribute) {
 			const points_count = params.points_count;
-			const ids = lodash_range(points_count);
+			const ids = ArrayUtils.range(points_count);
 			if (params.add_id_attribute) {
 				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
 			}

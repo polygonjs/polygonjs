@@ -1,7 +1,6 @@
 import {Object3D} from 'three/src/core/Object3D';
 import {Material} from 'three/src/materials/Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import lodash_times from 'lodash/times';
 import {TypedNode} from '../_Base';
 import {ObjectByObjectType} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -143,8 +142,10 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		const position_attrib = geometry.getAttribute('position');
 		const position_array = position_attrib.array;
 		const points_count = position_array.length / 3;
-		const indices: number[] = [];
-		lodash_times(points_count, (i) => indices.push(i));
+		const indices: number[] = new Array(points_count)
+		for(let i=0; i<points_count; i++){
+			indices[i]=i
+		}	
 
 		geometry.setIndex(indices);
 	}

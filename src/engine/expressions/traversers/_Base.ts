@@ -1,6 +1,6 @@
 import {BaseParamType} from '../../params/_Base';
-import lodash_isString from 'lodash/isString';
 import jsep from 'jsep';
+import { CoreType } from '../../../core/Type';
 export const VARIABLE_PREFIX = '$';
 
 export abstract class BaseTraverser {
@@ -16,7 +16,7 @@ export abstract class BaseTraverser {
 	}
 	protected _set_error_from_error_bound = this._set_error_from_error.bind(this);
 	private _set_error_from_error(error: Error | string) {
-		if (lodash_isString(error)) {
+		if (CoreType.isString(error)) {
 			this._error_message = error;
 		} else {
 			this._error_message = error.message;

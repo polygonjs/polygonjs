@@ -1,9 +1,9 @@
-import lodash_isNumber from 'lodash/isNumber';
 import {DecomposedPath} from '../../core/DecomposedPath';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
 import {BaseNodeType} from '../nodes/_Base';
 import jsep from 'jsep';
+import { CoreType } from '../../core/Type';
 
 export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
@@ -69,7 +69,7 @@ export class MethodDependency extends CoreGraphNode {
 		node: CoreGraphNode,
 		decomposed_path?: DecomposedPath
 	) {
-		const is_index = lodash_isNumber(index_or_path);
+		const is_index = CoreType.isNumber(index_or_path);
 
 		// if(!decomposed_path){
 		// 	console.log('nodes_in_path', decomposed_path.named_nodes);

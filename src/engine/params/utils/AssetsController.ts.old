@@ -1,4 +1,3 @@
-// import lodash_isString from 'lodash/isString';
 // import {BaseParamType} from '../_Base';
 
 // export class ParamAssetsController {
@@ -19,7 +18,7 @@
 // 	referenced_asset(): string | null {
 // 		if (this.param.options.asset_reference) {
 // 			const val = this.param.value;
-// 			if (lodash_isString(val)) {
+// 			if (CoreType.isString(val)) {
 // 				return val;
 // 			}
 // 			return null;

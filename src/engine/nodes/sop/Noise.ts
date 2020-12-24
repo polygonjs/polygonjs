@@ -8,7 +8,6 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
-import lodash_isNumber from 'lodash/isNumber';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreMath} from '../../../core/math/_Module';
@@ -37,6 +36,7 @@ const ATTRIB_NORMAL = 'normal';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
+import { CoreType } from '../../../core/Type';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
@@ -140,7 +140,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			const noise_result = this._noise_value(use_normals, simplex, amplitude, current_attrib_value, restN);
 			const noise_value = this._make_noise_value_correct_size(noise_result, target_attrib_size);
 
-			if (lodash_isNumber(current_attrib_value) && lodash_isNumber(noise_value)) {
+			if (CoreType.isNumber(current_attrib_value) && CoreType.isNumber(noise_value)) {
 				const new_attrib_value_f = this._new_attrib_value_from_float(
 					operation,
 					current_attrib_value,
@@ -309,7 +309,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	private _amplitude_from_attrib(point: CorePoint, base_amplitude: number): number {
 		const attrib_value = point.attrib_value(this.pv.amplitude_attrib) as NumericAttribValue;
 
-		if (lodash_isNumber(attrib_value)) {
+		if (CoreType.isNumber(attrib_value)) {
 			return attrib_value * base_amplitude;
 		} else {
 			if (attrib_value instanceof Vector2 || attrib_value instanceof Vector3 || attrib_value instanceof Vector4) {

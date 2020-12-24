@@ -1,4 +1,3 @@
-import lodash_isString from 'lodash/isString';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';
@@ -23,6 +22,7 @@ import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {Vector3Param} from '../../../../params/Vector3';
 import {Poly} from '../../../../Poly';
 import {RaycastCPUVelocityController} from './VelocityController';
+import { CoreType } from '../../../../../core/Type';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -115,7 +115,7 @@ export class RaycastCPUController {
 					return;
 				}
 				case AttribType.STRING: {
-					if (lodash_isString(val)) {
+					if (CoreType.isString(val)) {
 						this._node.p.geo_attribute_values.set(val);
 					}
 					return;

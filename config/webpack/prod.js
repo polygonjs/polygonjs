@@ -89,7 +89,6 @@ module.exports = (env) => {
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}
-	console.log('common_options.output.publicPath', common_options.output.publicPath);
 
 	const config = merge(common_options, {
 		mode: 'production',

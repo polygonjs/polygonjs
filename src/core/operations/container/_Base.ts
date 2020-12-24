@@ -1,9 +1,5 @@
 import {ParamsInitData} from '../../../engine/nodes/utils/io/IOController';
 import {ParamType} from '../../../engine/poly/ParamType';
-import lodash_isBoolean from 'lodash/isBoolean';
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_isString from 'lodash/isString';
-import lodash_isArray from 'lodash/isArray';
 import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
@@ -13,6 +9,7 @@ import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {BaseOperation, DefaultOperationParams, DefaultOperationParam} from '../_Base';
 import {ParamInitValueSerializedTypeMap} from '../../../engine/params/types/ParamInitValueSerializedTypeMap';
 import {InputsController} from './utils/InputsController';
+import { CoreType } from '../../Type';
 
 type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerializedTypeMap[T];
 
@@ -75,7 +72,7 @@ export class BaseOperationContainer {
 	}
 
 	private _convert_param_data(param_name: string, param_data: DefaultOperationParam<ParamType>) {
-		if (lodash_isNumber(param_data) || lodash_isBoolean(param_data) || lodash_isString(param_data)) {
+		if (CoreType.isNumber(param_data) || CoreType.isBoolean(param_data) || CoreType.isString(param_data)) {
 			return param_data;
 		}
 		if (param_data instanceof TypedPathParamValue) {
@@ -98,11 +95,11 @@ export class BaseOperationContainer {
 
 	private _convert_export_param_data(param_name: string, param_data: SimpleParamJsonExporterData<ParamType>) {
 		const default_param = this.params[param_name];
-		if (lodash_isBoolean(param_data)) {
+		if (CoreType.isBoolean(param_data)) {
 			return param_data;
 		}
-		if (lodash_isNumber(param_data)) {
-			if (lodash_isBoolean(default_param)) {
+		if (CoreType.isNumber(param_data)) {
+			if (CoreType.isBoolean(default_param)) {
 				// if we receive 0, it may be for a boolean param,
 				// so if the default is a boolean, we convert
 				return param_data >= 1 ? true : false;
@@ -110,14 +107,14 @@ export class BaseOperationContainer {
 				return param_data;
 			}
 		}
-		if (lodash_isString(param_data)) {
+		if (CoreType.isString(param_data)) {
 			if (default_param && default_param instanceof TypedPathParamValue) {
 				return default_param.set_path(param_data);
 			} else {
 				return param_data;
 			}
 		}
-		if (lodash_isArray(param_data)) {
+		if (CoreType.isArray(param_data)) {
 			(this.params[param_name] as Vector3).fromArray(param_data as number[]);
 		}
 	}

@@ -1,15 +1,9 @@
 import lodash_sortBy from 'lodash/sortBy';
-// import lodash_isArray from 'lodash/isArray'
-// import lodash_isString from 'lodash/isString'
 import {RGBFormat} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
-// import {ClampToEdgeWrapping} from 'three/src/constants'
-// import {TypedParamVisitor} from './_Base';
 import {TypedParam} from './_Base';
 import {RampValue, RampPoint, RampValueJson, RampInterpolation} from './ramp/RampValue';
-
-// import {AsCodeRamp} from './concerns/visitors/Ramp';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
@@ -124,14 +118,14 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// convert_value(v) {
 	// 	let is_json = false
 
-	// 	if (lodash_isString(v)) {
+	// 	if (CoreType.isString(v)) {
 	// 		v = JSON.parse(v)
 	// 		is_json = true
 	// 	}
 
 	// 	if (!is_json) {
 	// 		if (v.interpolation && v.points) {
-	// 			if (lodash_isArray(v.points)) {
+	// 			if (CoreType.isArray(v.points)) {
 	// 				is_json = true
 	// 			}
 	// 		}

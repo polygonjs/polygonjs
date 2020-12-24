@@ -7,7 +7,6 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import lodash_isArray from 'lodash/isArray';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {
 	DirectionalForceAttribute,
@@ -34,6 +33,7 @@ import {ParamOptions, VisibleIfParamOptions} from '../../params/utils/OptionsCon
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
+import { CoreType } from '../../../core/Type';
 class PhysicsForceAttributesSopParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(FORCE_TYPES.indexOf(ForceType.DIRECTIONAL), {
 		menu: {
@@ -119,7 +119,7 @@ export class PhysicsForceAttributesSopNode extends TypedSopNode<PhysicsForceAttr
 			for (let core_geometry of core_geometries) {
 				if (!core_geometry.has_attrib(attribute)) {
 					let size = 1;
-					if (lodash_isArray(default_value)) {
+					if (CoreType.isArray(default_value)) {
 						size = default_value.length;
 					}
 					core_geometry.add_numeric_attrib(attribute, size, default_value);

@@ -18,10 +18,8 @@ export class HierarchyParentController {
 		if (parent != this.node.parent_controller.parent) {
 			this._parent = parent;
 			if (this._parent) {
-				// this.node.set_scene(this._parent.scene);
 				this.node.name_controller.request_name_to_parent(NameController.base_name(this.node));
 			}
-			// this.on_set_parent();
 		}
 	}
 	is_selected(): boolean {

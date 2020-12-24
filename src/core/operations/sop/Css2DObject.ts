@@ -1,11 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import lodash_isString from 'lodash/isString';
-import lodash_isNumber from 'lodash/isNumber';
 import {CSS2DObject} from '../../../modules/core/objects/CSS2DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../geometry/Group';
+import { CoreType } from '../../Type';
 
 interface Css2DObjectParams {
 	id: string;
@@ -75,10 +74,10 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 				const attrib_names = CoreString.attrib_names(params.attributes_to_copy);
 				for (let attrib_name of attrib_names) {
 					const attrib_value = point.attrib_value(attrib_name);
-					if (lodash_isString(attrib_value)) {
+					if (CoreType.isString(attrib_value)) {
 						element.setAttribute(attrib_name, attrib_value);
 					} else {
-						if (lodash_isNumber(attrib_value)) {
+						if (CoreType.isNumber(attrib_value)) {
 							element.setAttribute(attrib_name, `${attrib_value}`);
 						}
 					}

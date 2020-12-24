@@ -1,7 +1,5 @@
 import lodash_compact from 'lodash/compact';
 import lodash_cloneDeep from 'lodash/cloneDeep';
-import lodash_isArray from 'lodash/isArray';
-import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isEqual from 'lodash/isEqual';
 import lodash_flatten from 'lodash/flatten';
 import {BaseParamType} from '../_Base';
@@ -12,6 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {StringParam} from '../String';
 import {ColorConversion} from '../../../core/Color';
+import { CoreType } from '../../../core/Type';
 
 const ASSET_REFERENCE_OPTION = 'asset_reference';
 const CALLBACK_OPTION = 'callback';
@@ -448,7 +447,7 @@ export class OptionsController {
 	get param_selection_type() {
 		if (this.param_selection_options) {
 			const type_or_boolean = this.param_selection_options;
-			if (!lodash_isBoolean(type_or_boolean)) {
+			if (!CoreType.isBoolean(type_or_boolean)) {
 				return type_or_boolean;
 			}
 		}
@@ -544,7 +543,7 @@ export class OptionsController {
 			return [];
 		}
 		let predecessor_names: string[] = [];
-		if (lodash_isArray(visibility_options)) {
+		if (CoreType.isArray(visibility_options)) {
 			predecessor_names = lodash_flatten(visibility_options.map((options) => Object.keys(options)));
 		} else {
 			predecessor_names = Object.keys(visibility_options);
@@ -598,7 +597,7 @@ export class OptionsController {
 			this._programatic_visible_state = false;
 			await Promise.all(promises);
 
-			if (lodash_isArray(options)) {
+			if (CoreType.isArray(options)) {
 				for (let options_set of options) {
 					const satisfied_values = params.filter((param) => param.value == options_set[param.name]);
 					if (satisfied_values.length == params.length) {

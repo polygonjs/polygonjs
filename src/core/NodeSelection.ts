@@ -2,7 +2,6 @@
 import {BaseNodeType} from '../engine/nodes/_Base';
 import lodash_difference from 'lodash/difference';
 import lodash_union from 'lodash/union';
-// import lodash_isArray from 'lodash/isArray'
 import lodash_isEqual from 'lodash/isEqual';
 import {NodeEvent} from '../engine/poly/NodeEvent';
 import {CoreGraphNodeId} from './graph/CoreGraph';
@@ -41,8 +40,6 @@ export class CoreNodeSelection {
 	}
 
 	add(nodes_to_add: BaseNodeType[]) {
-		// if (!lodash_isArray(nodes_to_add)) { nodes_to_add = [nodes_to_add]; }
-
 		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id);
 		this._node_ids = lodash_union(this._node_ids, node_ids_to_add);
 
@@ -50,8 +47,6 @@ export class CoreNodeSelection {
 	}
 
 	remove(nodes_to_remove: BaseNodeType[]) {
-		// if (!lodash_isArray(nodes_to_remove)) { nodes_to_remove = [nodes_to_remove]; }
-
 		const node_ids_to_remove = nodes_to_remove.map((node) => node.graph_node_id);
 		this._node_ids = lodash_difference(this._node_ids, node_ids_to_remove);
 

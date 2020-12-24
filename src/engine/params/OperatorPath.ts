@@ -2,17 +2,14 @@
 import {BaseParamType} from './_Base';
 import {TypedPathParam} from './_BasePath';
 import {CoreWalker} from '../../core/Walker';
-import lodash_isArray from 'lodash/isArray';
-
-// import {AsCodeOperatorPath} from './concerns/visitors/OperatorPath';
 import {BaseNodeType} from '../nodes/_Base';
 import {ParamType} from '../poly/ParamType';
-// import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
 import {ParamConstructorMap} from './types/ParamConstructorMap';
+import { CoreType } from '../../core/Type';
 
 enum OperatorPathMode {
 	NODE = 'NODE',
@@ -191,7 +188,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	): ChildrenNodeMapByContextMap[N][K] | undefined {
 		const node = this.found_node_with_context(context);
 		if (node) {
-			if (lodash_isArray(type_or_types)) {
+			if (CoreType.isArray(type_or_types)) {
 				for (let type of type_or_types) {
 					if (node.type == type) {
 						return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];

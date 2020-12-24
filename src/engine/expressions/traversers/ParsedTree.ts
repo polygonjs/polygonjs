@@ -1,6 +1,6 @@
-import lodash_isString from 'lodash/isString';
 
 import jsep from 'jsep';
+import { CoreType } from '../../../core/Type';
 jsep.addUnaryOp('@');
 // self.jsep = jsep
 let precedence = 10;
@@ -85,7 +85,7 @@ export class ParsedTree {
 
 	static string_value_elements(v: string): string[] {
 		if (v != null) {
-			if (lodash_isString(v)) {
+			if (CoreType.isString(v)) {
 				return v.split(STRING_EXPRESSION_SEPARATOR);
 			} else {
 				return [];

@@ -44,7 +44,7 @@ module.exports = (env) => {
 		},
 	});
 
-	console.log('write debug');
+	// console.log('write debug');
 	const debug_config_path = path.resolve(__dirname, './debug_dev_config.json');
 	fs.writeFileSync(debug_config_path, JSON.stringify(config, null, 4));
 

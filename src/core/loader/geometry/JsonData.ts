@@ -1,7 +1,5 @@
 // import {Core} from '../../_Module';
-import lodash_isArray from 'lodash/isArray';
 import lodash_isObject from 'lodash/isObject';
-import lodash_isString from 'lodash/isString';
 import lodash_flatten from 'lodash/flatten';
 import {Points} from 'three/src/objects/Points';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
@@ -14,6 +12,7 @@ import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {Poly} from '../../../engine/Poly';
+import { CoreType } from '../../Type';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 
@@ -115,7 +114,7 @@ export class JsonDataLoader {
 						CoreString.matches_one_mask(attrib_name, convert_to_numeric_masks)
 					) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
-							if (lodash_isString(v)) {
+							if (CoreType.isString(v)) {
 								return parseFloat(v) || 0;
 							} else {
 								return v;
@@ -191,6 +190,6 @@ export class JsonDataLoader {
 	}
 
 	_value_has_subentries(value: any): boolean {
-		return lodash_isObject(value) && !lodash_isArray(value);
+		return lodash_isObject(value) && !CoreType.isArray(value);
 	}
 }

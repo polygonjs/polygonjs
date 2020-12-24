@@ -1,9 +1,5 @@
 import {TypedNode} from '../../../nodes/_Base';
-import lodash_isString from 'lodash/isString';
-import lodash_isBoolean from 'lodash/isBoolean';
 import lodash_isObject from 'lodash/isObject';
-import lodash_isNumber from 'lodash/isNumber';
-import lodash_isArray from 'lodash/isArray';
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
@@ -18,6 +14,7 @@ import {
 } from '../../../nodes/utils/io/IOController';
 import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
+import { CoreType } from '../../../../core/Type';
 
 const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
 
@@ -150,7 +147,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let i = 0; i < inputs_data.length; i++) {
 			input_data = inputs_data[i];
 			if (input_data && this._node.parent) {
-				if (lodash_isString(input_data)) {
+				if (CoreType.isString(input_data)) {
 					const input_node_name = input_data;
 					const input_node = this._node.node_sibbling(input_node_name);
 					this._node.set_input(i, input_node);
@@ -324,10 +321,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	private _is_param_data_complex(param_data: ParamJsonExporterData<ParamType>): boolean {
 		// we can test here most param value serialized, except for ramp
 		if (
-			lodash_isString(param_data) ||
-			lodash_isNumber(param_data) ||
-			lodash_isArray(param_data) ||
-			lodash_isBoolean(param_data)
+			CoreType.isString(param_data) ||
+			CoreType.isNumber(param_data) ||
+			CoreType.isArray(param_data) ||
+			CoreType.isBoolean(param_data)
 		) {
 			return false;
 		}

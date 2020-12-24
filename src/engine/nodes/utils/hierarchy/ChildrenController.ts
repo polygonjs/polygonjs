@@ -51,9 +51,7 @@ export class HierarchyChildrenController {
 	//
 	//
 
-	// TODO: when copy pasting a node called bla_11, the next one will be renamed bla_110 instead of 12
 	set_child_name(node: BaseNodeType, new_name: string): void {
-		//return if node.name() == new_name
 		let current_child_with_name;
 		new_name = new_name.replace(/[^A-Za-z0-9]/g, '_');
 		new_name = new_name.replace(/^[0-9]/, '_'); // replace first char if not a letter
@@ -69,7 +67,6 @@ export class HierarchyChildrenController {
 
 			return this.set_child_name(node, new_name);
 		} else {
-			// let current_child;
 			const current_name = node.name;
 
 			// delete old entry if node was in _children with old name

@@ -4,8 +4,8 @@
  *
  *
  */
-import lodash_range from 'lodash/range';
 import {TypedSopNode} from './_Base';
+import {ArrayUtils} from '../../../core/ArrayUtils'
 import {ObjectType} from '../../../core/geometry/Constant';
 import {TextBufferGeometry} from 'three/src/geometries/TextBufferGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -133,7 +133,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			const geometry = new TextBufferGeometry(text, parameters);
 			if (!geometry.index) {
 				const position_array = geometry.getAttribute('position').array;
-				geometry.setIndex(lodash_range(position_array.length / 3));
+				geometry.setIndex(ArrayUtils.range(position_array.length / 3));
 			}
 			this.set_geometry(geometry);
 		} catch (err) {

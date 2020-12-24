@@ -6,7 +6,6 @@ import {
 	JsConnectionPointInitValueMap,
 	JsConnectionPointTypeToParamTypeMap,
 } from '../utils/io/connections/Js';
-import lodash_isArray from 'lodash/isArray';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from '../../poly/ParamType';
@@ -14,6 +13,7 @@ import {UniformJsDefinition} from './utils/JsDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {LinesController} from './code/utils/LinesController';
 import {JsParamConfig} from './code/utils/ParamConfig';
+import { CoreType } from '../../../core/Type';
 class ParamJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
@@ -65,7 +65,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		if (
 			param_type == ParamType.VECTOR3 &&
 			this.p.as_color.value &&
-			lodash_isArray(default_value) &&
+			CoreType.isArray(default_value) &&
 			default_value.length == 3
 		) {
 			const param_config = new JsParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniform_name());

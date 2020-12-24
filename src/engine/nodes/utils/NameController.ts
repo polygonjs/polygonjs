@@ -1,7 +1,7 @@
 import {BaseNodeType} from '../_Base';
-import lodash_isNaN from 'lodash/isNaN';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {NodeEvent} from '../../poly/NodeEvent';
+import { CoreType } from '../../../core/Type';
 
 type Callback = () => void;
 
@@ -19,9 +19,9 @@ export class NameController {
 	}
 
 	static base_name(node: BaseNodeType) {
-		let base = node.type; //CoreString.class_name_to_type(this.self.type())
+		let base:string = node.type;
 		const last_char = base[base.length - 1];
-		if (!lodash_isNaN(parseInt(last_char))) {
+		if (!CoreType.isNaN(parseInt(last_char))) {
 			base += '_';
 		}
 		return `${base}1`;

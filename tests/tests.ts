@@ -1,10 +1,11 @@
 import 'qunit';
 
 QUnit.module('core');
+import './core/ArrayUtils';
+import './core/Math';
 import './core/Object';
 import './core/String';
 import './core/Walker';
-import './core/Math';
 QUnit.module('core/geometry');
 import './core/geometry/Attribute';
 import './core/geometry/Group';

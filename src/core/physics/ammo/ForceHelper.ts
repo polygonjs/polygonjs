@@ -1,7 +1,7 @@
 import Ammo from 'ammojs-typed';
-import lodash_isNumber from 'lodash/isNumber';
 import {CorePoint} from '../../geometry/Point';
 import {TypeAssert} from '../../../engine/poly/Assert';
+import { CoreType } from '../../Type';
 
 export enum ForceType {
 	DIRECTIONAL = 'directional',
@@ -67,7 +67,7 @@ export const FORCE_DEFAULT_ATTRIBUTE_VALUES = {
 export class AmmoForceHelper {
 	apply_force(core_point: CorePoint, bodies: Ammo.btRigidBody[]) {
 		const type_index = core_point.attrib_value(FORCE_TYPE_ATTRIBUTE_NAME);
-		if (!lodash_isNumber(type_index)) {
+		if (!CoreType.isNumber(type_index)) {
 			console.warn('force type is not a number:', type_index);
 			return;
 		}
@@ -115,7 +115,7 @@ export class AmmoForceHelper {
 
 		const position = core_point.position();
 		const amount = core_point.attrib_value(RadialForceAttribute.AMOUNT);
-		if (!lodash_isNumber(amount)) {
+		if (!CoreType.isNumber(amount)) {
 			console.warn('force amount is not a number:', amount);
 			return;
 		}

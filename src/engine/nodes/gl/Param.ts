@@ -6,7 +6,6 @@ import {
 	GlConnectionPointInitValueMap,
 	GlConnectionPointTypeToParamTypeMap,
 } from '../utils/io/connections/Gl';
-import lodash_isArray from 'lodash/isArray';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from '../../poly/ParamType';
@@ -15,6 +14,7 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 // import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlParamConfig} from './code/utils/ParamConfig';
+import { CoreType } from '../../../core/Type';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
@@ -83,7 +83,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		if (
 			param_type == ParamType.VECTOR3 &&
 			this.p.as_color.value &&
-			lodash_isArray(default_value) &&
+			CoreType.isArray(default_value) &&
 			default_value.length == 3
 		) {
 			const param_config = new GlParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniform_name());

@@ -47,7 +47,7 @@
 // 		this._animation_target.traverse((object3d: Object3D) => {
 // 			const child = object3d as Mesh;
 // 			if (child.material) {
-// 				if (!lodash_isArray(child.material)) {
+// 				if (!CoreType.isArray(child.material)) {
 // 					materials_by_id[child.material.uuid] = child.material;
 // 				}
 // 			}

@@ -2,8 +2,6 @@
 // import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 // import {ParamValue} from '../../../params/types/ParamValue';
 
-// import lodash_isNumber from 'lodash/isNumber';
-// // import lodash_isString from 'lodash/isString';
 // import {Vector2} from 'three/src/math/Vector2';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Vector4} from 'three/src/math/Vector4';
@@ -63,7 +61,7 @@
 // 	return null;
 // }
 // function convert_color(value: ParamValue): ParamInitValuesTypeMap[ParamType.COLOR] {
-// 	if (lodash_isNumber(value)) {
+// 	if (CoreType.isNumber(value)) {
 // 		return [value, value, value];
 // 	}
 // 	if (value instanceof Vector2) {
@@ -83,7 +81,7 @@
 // 	return [0, 0, 0];
 // }
 // function convert_float(value: ParamValue): ParamInitValuesTypeMap[ParamType.FLOAT] {
-// 	if (lodash_isNumber(value)) {
+// 	if (CoreType.isNumber(value)) {
 // 		return value;
 // 	}
 // 	if (value instanceof Vector2 || value instanceof Vector3 || value instanceof Vector4) {
@@ -95,7 +93,7 @@
 // 	return null;
 // }
 // function convert_integer(value: ParamValue): ParamInitValuesTypeMap[ParamType.INTEGER] {
-// 	if (lodash_isNumber(value)) {
+// 	if (CoreType.isNumber(value)) {
 // 		return Math.floor(value);
 // 	}
 // 	if (value instanceof Vector2 || value instanceof Vector3 || value instanceof Vector4) {
@@ -116,7 +114,7 @@
 // 	return `${value}`;
 // }
 // function convert_vector2(value: ParamValue): ParamInitValuesTypeMap[ParamType.VECTOR2] {
-// 	if (lodash_isNumber(value)) {
+// 	if (CoreType.isNumber(value)) {
 // 		return [value, value];
 // 	}
 // 	if (value instanceof Vector2) {
@@ -137,7 +135,7 @@
 // 	return [0, 0];
 // }
 // function convert_vector3(value: ParamValue): ParamInitValuesTypeMap[ParamType.VECTOR3] {
-// 	if (lodash_isNumber(value)) {
+// 	if (CoreType.isNumber(value)) {
 // 		return [value, value, value];
 // 	}
 // 	if (value instanceof Vector2) {
@@ -157,7 +155,7 @@
 // 	return [0, 0, 0];
 // }
 // function convert_vector4(value: ParamValue): ParamInitValuesTypeMap[ParamType.VECTOR4] {
-// 	if (lodash_isNumber(value)) {
+// 	if (CoreType.isNumber(value)) {
 // 		return [value, value, value, value];
 // 	}
 // 	if (value instanceof Vector2) {

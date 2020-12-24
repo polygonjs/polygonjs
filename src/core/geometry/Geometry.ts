@@ -3,24 +3,21 @@ import {Int32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Box3} from 'three/src/math/Box3';
-// import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
-import lodash_range from 'lodash/range';
 import lodash_chunk from 'lodash/chunk';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_clone from 'lodash/clone';
-import lodash_isArray from 'lodash/isArray';
-import lodash_isNumber from 'lodash/isNumber';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
 import {ObjectType, AttribType, AttribSize} from './Constant';
 import {CoreAttribute} from './Attribute';
-// import {MonkeyPatcher} from './MonkeyPatcher';
 import {CoreAttributeData} from './AttributeData';
 import {CoreGeometryBuilderPoints} from './builders/Points';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
 import {CoreGeometryBuilderMesh} from './builders/Mesh';
 import {CoreGeometryBuilderLineSegments} from './builders/LineSegments';
 import {TypeAssert} from '../../engine/poly/Assert';
+import { CoreType } from '../Type';
+import { ArrayUtils } from '../ArrayUtils';
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -135,7 +132,7 @@ export class CoreGeometry {
 		const values = [];
 
 		let attribute_added = false;
-		if (lodash_isNumber(default_value)) {
+		if (CoreType.isNumber(default_value)) {
 			// adding number
 			for (let i = 0; i < this.points_count(); i++) {
 				for (let j = 0; j < size; j++) {
@@ -145,7 +142,7 @@ export class CoreGeometry {
 			attribute_added = true;
 		} else {
 			if (size > 1) {
-				if (lodash_isArray(default_value)) {
+				if (CoreType.isArray(default_value)) {
 					// adding array
 					for (let i = 0; i < this.points_count(); i++) {
 						for (let j = 0; j < size; j++) {
@@ -199,7 +196,7 @@ export class CoreGeometry {
 		}
 
 		if (attribute_added) {
-			this._geometry.setAttribute(name, new Float32BufferAttribute(values, size));
+			this._geometry.setAttribute(name.trim(), new Float32BufferAttribute(values, size));
 		} else {
 			console.warn(default_value);
 			throw `CoreGeometry.add_numeric_attrib error: no other default value allowed for now in add_numeric_attrib (default given: ${default_value})`;
@@ -237,7 +234,7 @@ export class CoreGeometry {
 		}
 
 		const old_attrib = this._geometry.getAttribute(old_name);
-		this._geometry.setAttribute(new_name, new Float32BufferAttribute(old_attrib.array, old_attrib.itemSize));
+		this._geometry.setAttribute(new_name.trim(), new Float32BufferAttribute(old_attrib.array, old_attrib.itemSize));
 		return this._geometry.deleteAttribute(old_name);
 	}
 
@@ -353,14 +350,8 @@ export class CoreGeometry {
 	faces_from_geometry(): CoreFace[] {
 		const index_array = this.geometry().index?.array || [];
 		const faces_count = index_array.length / 3;
-		return lodash_range(faces_count).map((i) => new CoreFace(this, i));
+		return ArrayUtils.range(faces_count).map((i) => new CoreFace(this, i));
 	}
 }
 
-// segments_count = 0.5*index.length
-// segments = []
-// lodash_times segments_count, (i)->
-// 	indices = [i, i+1]
-// 	segments.push(indices) #lodash_map(indices, (index)->points[index])
 
-// segments

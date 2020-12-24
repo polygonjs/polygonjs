@@ -13,7 +13,6 @@
  * Note that you can also given an expression to set the value of the attribute, such as `sin(2*@P.z)`
  *
  */
-import lodash_trim from 'lodash/trim';
 import {TypedSopNode} from './_Base';
 import {
 	AttribClassMenuEntries,
@@ -112,7 +111,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		// but we can still use one when no expression is required
 
 		if (this._is_using_expression()) {
-			if (this.pv.name && lodash_trim(this.pv.name) != '') {
+			if (this.pv.name && this.pv.name.trim() != '') {
 				this._add_attribute(ATTRIBUTE_CLASSES[this.pv.class], input_contents[0]);
 			} else {
 				this.states.error.set('attribute name is not valid');

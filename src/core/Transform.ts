@@ -56,9 +56,6 @@ export class CoreTransform {
 			update_scale = true;
 		}
 
-		// EPSILON = 0.0000001
-		// PRECISION = 1000
-		// components = ['x', 'y', 'z']
 
 		matrix.decompose(
 			this.set_params_from_matrix_position,
@@ -70,19 +67,6 @@ export class CoreTransform {
 		this.set_params_from_matrix_euler.toVector3(this.set_params_from_matrix_rotation);
 		this.set_params_from_matrix_rotation.divideScalar(Math.PI / 180);
 
-		// limit precision of position and rotation
-		// lodash_each [position, rotation], (vector)->
-		// 	lodash_each ['x', 'y', 'z'], (c)->
-		// 		val = vector[c]
-		// 		approximation = parseInt(val * PRECISION) / PRECISION
-		// 		vector[c] = approximation
-
-		// round scale if we get values like 0.9999999999 or 1.00000000001
-		// lodash_each ['x', 'y', 'z'], (c)->
-		// 	val = scale[c]
-		// 	rounded = Math.round(val)
-		// 	if Math.abs(val - rounded) < EPSILON
-		// 		scale[c] = rounded
 		this.set_params_from_matrix_position.toArray(this.set_params_from_matrix_t);
 		this.set_params_from_matrix_rotation.toArray(this.set_params_from_matrix_r);
 		this.set_params_from_matrix_scale.toArray(this.set_params_from_matrix_s);
@@ -96,9 +80,7 @@ export class CoreTransform {
 			}
 		});
 	}
-	// this.object().position.copy(position)
-	// this.object().quaternion.copy(quaternion)
-	// this.object().scale.copy(scale)
+
 
 	static set_params_from_object_position_array: Number3 = [0, 0, 0];
 	static set_params_from_object_rotation_deg = new Vector3();
@@ -117,16 +99,6 @@ export class CoreTransform {
 		});
 	}
 
-	// static translation_matrix(x: number, y: number, z: number): Matrix4 {
-	// 	const t = new Vector3(x, y, z);
-	// 	const quaternion = new Quaternion();
-	// 	const s = new Vector3(1, 1, 1);
-
-	// 	const matrix = new Matrix4();
-	// 	matrix.compose(t, quaternion, s);
-	// 	return matrix;
-	// }
-
 	private _translation_matrix: Matrix4 = new Matrix4();
 	private _translation_matrix_q = new Quaternion();
 	private _translation_matrix_s = new Vector3(1, 1, 1);
@@ -135,24 +107,6 @@ export class CoreTransform {
 		return this._translation_matrix;
 	}
 
-	// private static matrix_quaternion_t = new Vector3();
-	// private static matrix_quaternion_s = new Vector3();
-	// static matrix_quaternion(matrix: Matrix4, target_quat: Quaternion): void {
-	// 	matrix.decompose(this.matrix_quaternion_t, target_quat, this.matrix_quaternion_s);
-	// }
-
-	// static matrix(t: Vector3, r: Vector3, s: Vector3, scale: number) {
-	// 	// if I don't clone here, it created issues in the transform SOP
-	// 	s = s.clone().multiplyScalar(scale);
-
-	// 	const quaternion = new Quaternion();
-	// 	const euler = new Euler(r.x, r.y, r.z, ROTATION_ORDER);
-	// 	quaternion.setFromEuler(euler);
-
-	// 	const matrix = new Matrix4();
-	// 	matrix.compose(t, quaternion, s);
-	// 	return matrix;
-	// }
 	private _matrix = new Matrix4().identity();
 	private _matrix_q = new Quaternion();
 	private _matrix_euler = new Euler();
@@ -171,14 +125,6 @@ export class CoreTransform {
 		this._matrix.compose(t, this._matrix_q, this._matrix_s);
 		return this._matrix;
 	}
-
-	// static rotate_geometry(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
-	// 	const quaternion = new Quaternion();
-	// 	quaternion.setFromUnitVectors(vec_origin, vec_dest.clone().normalize());
-	// 	const matrix = new Matrix4();
-	// 	matrix.makeRotationFromQuaternion(quaternion);
-	// 	geometry.applyMatrix(matrix);
-	// }
 
 	private _rotate_geometry_m = new Matrix4();
 	private _rotate_geometry_q = new Quaternion();

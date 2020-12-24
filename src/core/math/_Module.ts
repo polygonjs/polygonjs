@@ -1,7 +1,7 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Triangle} from 'three/src/math/Triangle';
-import lodash_isNumber from 'lodash/isNumber';
 import {Easing} from './Easing';
+import { CoreType } from '../Type';
 
 const RAD_DEG_RATIO = Math.PI / 180;
 const RAND_A = 12.9898;
@@ -57,7 +57,7 @@ export class CoreMath {
 
 	// from threejs glsl rand
 	static rand(number: number): number {
-		if (lodash_isNumber(number)) {
+		if (CoreType.isNumber(number)) {
 			return this.rand_float(number);
 		} else {
 			return this.rand_vec2(number);
