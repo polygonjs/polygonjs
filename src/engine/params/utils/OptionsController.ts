@@ -1,5 +1,3 @@
-import lodash_cloneDeep from 'lodash/cloneDeep';
-import lodash_isEqual from 'lodash/isEqual';
 import {BaseParamType} from '../_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {ParamType} from '../../poly/ParamType';
@@ -8,8 +6,9 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {StringParam} from '../String';
 import {ColorConversion} from '../../../core/Color';
-import { CoreType } from '../../../core/Type';
-import { ArrayUtils } from '../../../core/ArrayUtils';
+import {CoreType} from '../../../core/Type';
+import {ArrayUtils} from '../../../core/ArrayUtils';
+import {ObjectUtils} from '../../../core/ObjectUtils';
 
 const ASSET_REFERENCE_OPTION = 'asset_reference';
 const CALLBACK_OPTION = 'callback';
@@ -194,12 +193,12 @@ export class OptionsController {
 
 	set(options: ParamOptions) {
 		this._default_options = options;
-		this._options = lodash_cloneDeep(this._default_options);
+		this._options = ObjectUtils.cloneDeep(this._default_options);
 		this.post_set_options();
 	}
 	copy(options_controller: OptionsController) {
-		this._default_options = lodash_cloneDeep(options_controller.default);
-		this._options = lodash_cloneDeep(options_controller.current);
+		this._default_options = ObjectUtils.cloneDeep(options_controller.default);
+		this._options = ObjectUtils.cloneDeep(options_controller.current);
 		this.post_set_options();
 	}
 	set_option<K extends keyof ParamOptions>(name: K, value: ParamOptions[K]) {
@@ -231,14 +230,14 @@ export class OptionsController {
 
 	// utils
 	get has_options_overridden(): boolean {
-		return !lodash_isEqual(this._options, this._default_options);
+		return !ObjectUtils.isEqual(this._options, this._default_options);
 	}
 	get overridden_options(): ParamOptions {
 		const overriden: ParamOptions = {};
 		const option_names = Object.keys(this._options) as Array<keyof ParamOptions>;
 		for (let option_name of option_names) {
-			if (!lodash_isEqual(this._options[option_name], this._default_options[option_name])) {
-				const cloned_option = lodash_cloneDeep(this._options[option_name]);
+			if (!ObjectUtils.isEqual(this._options[option_name], this._default_options[option_name])) {
+				const cloned_option = ObjectUtils.cloneDeep(this._options[option_name]);
 				Object.assign(overriden, {[option_name]: cloned_option});
 			}
 		}

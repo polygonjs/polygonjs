@@ -70,8 +70,6 @@ export class TextureAllocationsController {
 					const globals_node = node as GlobalsGlNode;
 					// const output_names_not_attributes = ['frame', 'gl_FragCoord', 'gl_PointCoord'];
 					for (let output_name of globals_node.io.outputs.used_output_names()) {
-						// const is_attribute = !lodash_includes(output_names_not_attributes, output_name)
-
 						// is_attribute, as opposed to frame, gl_FragCoord and gl_PointCoord which are either uniforms or provided by the renderer
 						const is_attribute = OUTPUT_NAME_ATTRIBUTES.includes(output_name);
 

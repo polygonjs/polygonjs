@@ -104,15 +104,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			}
 		}
 
-		// if (this.pv.merge) {
-		// 	const geometries = lodash_map(this._objects, object => object.geometry);
-		// 	const merged_geometry = CoreGeometry.merge_geometries(geometries);
-		// 	lodash_each(geometries, geometry => geometry.dispose());
-		// 	const object = this.create_object(merged_geometry, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
-		// 	this.set_object( object );
-		// } else {
 		this.set_objects(resampled_objects);
-		// }
 	}
 
 	_resample(line_segment: LineSegments) {
@@ -155,8 +147,8 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		// and prevent a curve to go too far
 		const new_curve_points = this._get_points_from_curve(curve);
 
-		let positions:number[][] = [];
-		const indices:number[] = [];
+		let positions: number[][] = [];
+		const indices: number[] = [];
 
 		for (let i = 0; i < new_curve_points.length; i++) {
 			const point_position = new_curve_points[i];
@@ -175,8 +167,6 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		geometry.setIndex(indices);
 
 		return geometry;
-		// const object = this.create_object(geometry, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
-		// this._objects.push(object);
 	}
 
 	_get_points_from_curve(curve: CatmullRomCurve3) {

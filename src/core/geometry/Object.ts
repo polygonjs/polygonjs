@@ -9,8 +9,6 @@ import {AnimationClip} from 'three/src/animation/AnimationClip';
 import {Material} from 'three/src/materials/Material';
 import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
 import {Bone} from 'three/src/objects/Bone';
-
-// import {CoreConstant} from './Constant'
 import {CoreGeometry} from './Geometry';
 import {GroupString} from './Group';
 import {CoreAttribute} from './Attribute';
@@ -18,11 +16,10 @@ import {CoreConstant, AttribType, AttribSize} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
-
-import lodash_cloneDeep from 'lodash/cloneDeep';
 import {CoreEntity} from './Entity';
 import {ParamInitValueSerialized} from '../../engine/params/types/ParamInitValueSerialized';
-import { CoreType } from '../Type';
+import {CoreType} from '../Type';
+import {ObjectUtils} from '../ObjectUtils';
 const PTNUM = 'ptnum';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
@@ -261,7 +258,7 @@ export class CoreObject extends CoreEntity {
 				mesh_node.geometry = CoreGeometry.clone(src_node_geometry);
 				const mesh_node_geometry = mesh_node.geometry as BufferGeometry;
 				if (mesh_node_geometry.userData) {
-					mesh_node_geometry.userData = lodash_cloneDeep(src_node_geometry.userData);
+					mesh_node_geometry.userData = ObjectUtils.cloneDeep(src_node_geometry.userData);
 				}
 			}
 			if (mesh_node.material) {
@@ -276,7 +273,7 @@ export class CoreObject extends CoreEntity {
 				}
 			}
 			if (src_object.userData) {
-				node.userData = lodash_cloneDeep(src_node.userData);
+				node.userData = ObjectUtils.cloneDeep(src_node.userData);
 			}
 
 			const src_node_with_animations = (<unknown>src_node) as Object3DWithAnimations;

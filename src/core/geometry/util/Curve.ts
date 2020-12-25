@@ -31,9 +31,6 @@ export class CoreGeometryUtilCurve {
 				} else {
 					// otherwise we create a new curve
 					accumulated_curve_point_indices.push(curve_point_indices);
-					//current_points = lodash_map curve_point_indices, (index)->points[index]
-					//curve_point_indices_groups.push(current_points)
-					//this._create_curve_from_points(current_points)
 
 					// and reset the array
 					curve_point_indices = [previous_index, index];

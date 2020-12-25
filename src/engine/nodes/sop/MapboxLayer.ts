@@ -5,7 +5,6 @@
  * This is best used with the Mapbox camera.
  * Note that you will need a mapbox key to use this node.
  */
-import lodash_chunk from 'lodash/chunk';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreString} from '../../../core/String';
 import {FeatureConverter} from '../../../core/mapbox/FeatureConverter';
@@ -23,6 +22,7 @@ const DEFAULT_LIST: Readonly<string> = [
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {MapboxListenerParamConfig, MapboxListenerSopNode} from './utils/mapbox/MapboxListener';
 import {MapUtils} from '../../../core/MapUtils';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 // use_bounds: false,
 // update_always_allowed: false
 class MapboxLayerSopParamsConfig extends MapboxListenerParamConfig(NodeParamsConfig) {
@@ -110,7 +110,7 @@ export class MapboxLayerSopNode extends MapboxListenerSopNode<MapboxLayerSopPara
 		const json_str = JSON.stringify(feature.geometry).replace(/{|}|"|:|\[|\]|,|\./g, '');
 		const json_str_elements = json_str.split('');
 		const letters_count = 30;
-		const chunks = lodash_chunk(json_str_elements, json_str_elements.length / letters_count);
+		const chunks = ArrayUtils.chunk(json_str_elements, json_str_elements.length / letters_count);
 		const first_elements = chunks.map((c) => c[0]);
 
 		return first_elements.join('');

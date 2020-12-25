@@ -1,8 +1,8 @@
-import lodash_clone from 'lodash/clone';
 import {PerformanceNode} from './PerformanceNode';
 import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {ArrayUtils} from '../ArrayUtils';
+import {ObjectUtils} from '../ObjectUtils';
 
 export class CorePerformance {
 	private _started: boolean = false;
@@ -11,12 +11,6 @@ export class CorePerformance {
 	_nodes_cook_data: Dictionary<PerformanceNode> = {};
 	_durations_by_name: Dictionary<number> = {};
 	_durations_count_by_name: Dictionary<number> = {};
-	// _performance_id: number;
-
-	// constructor(){
-	// 	console.log("creating perf")
-	// 	this._performance_id = Math.random()
-	// }
 
 	profile(name: string, method: (args?: any) => any) {
 		const start_time = performance.now();
@@ -34,8 +28,6 @@ export class CorePerformance {
 			this._previous_timestamp = this._start_time;
 		}
 	}
-	// else
-	// 	throw "performance already started"
 	stop() {
 		this.reset();
 	}
@@ -106,19 +98,15 @@ export class CorePerformance {
 	}
 
 	print_recordings() {
-		// const start_time = this._start_time
-		const durations_by_name = lodash_clone(this._durations_by_name);
-		const durations_count_by_name = lodash_clone(this._durations_count_by_name);
-		//this.reset()
+		const durations_by_name = ObjectUtils.clone(this._durations_by_name);
+		const durations_count_by_name = ObjectUtils.clone(this._durations_count_by_name);
 
 		const durations = [];
-		//durations_by_name = {}
 		const names_by_duration: Dictionary<string[]> = {};
 
 		for (let name of Object.keys(durations_by_name)) {
 			const duration = durations_by_name[name];
 
-			//durations_by_name[name] = duration
 			durations.push(duration);
 			if (names_by_duration[duration] == null) {
 				names_by_duration[duration] = [];
@@ -130,8 +118,6 @@ export class CorePerformance {
 		const sorted_durations = ArrayUtils.uniq(durations);
 
 		console.log('--------------- PERF RECORDINGS -----------');
-		//console.log("sorted_durations", sorted_durations)
-		// let previous_duration = start_time
 		const table_entries = [];
 		for (let duration of sorted_durations) {
 			const names = names_by_duration[duration];
@@ -142,8 +128,6 @@ export class CorePerformance {
 				const entry = {duration, name, count, duration_per_iteration};
 				table_entries.push(entry);
 			}
-
-			// previous_duration = duration
 		}
 
 		console.table(table_entries);

@@ -1,9 +1,5 @@
-import lodash_capitalize from 'lodash/capitalize';
-import lodash_snakeCase from 'lodash/snakeCase';
-import lodash_upperFirst from 'lodash/upperFirst';
-import lodash_camelCase from 'lodash/camelCase';
-import { CoreType } from './Type';
-import { ArrayUtils } from './ArrayUtils';
+import {CoreType} from './Type';
+import {ArrayUtils} from './ArrayUtils';
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
@@ -85,41 +81,35 @@ export class CoreString {
 		}
 	}
 
-	static camel_case(word: string): string {
-		return lodash_camelCase(word);
+	// https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
+	static camel_case(str: string): string {
+		return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+			if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+			return index === 0 ? match.toLowerCase() : match.toUpperCase();
+		});
 	}
+
 	static upper_first(word: string): string {
-		return lodash_upperFirst(word);
+		const newString = word[0].toUpperCase() + word.substr(1);
+		return newString;
 	}
-	static snake_case(word: string): string {
-		return lodash_snakeCase(word);
+	// https://stackoverflow.com/questions/52963900/convert-different-strings-to-snake-case-in-javascript
+	static snake_case(str: string): string {
+		return str
+			.replace(/\W+/g, ' ')
+			.split(/ |\B(?=[A-Z])/)
+			.map((word) => word.toLowerCase())
+			.join('_');
 	}
 	static titleize(word: string): string {
-		return lodash_capitalize(word.replace(/_/g, ' '));
+		const elements = word.split(/\s|_/g);
+		const newElements = elements.map((elem) => this.upper_first(elem));
+		return newElements.join(' ');
 	}
 
 	static type_to_class_name(word: string): string {
-		return this.upper_first(lodash_camelCase(word));
+		return this.upper_first(this.camel_case(word));
 	}
-	// static class_name_to_type(word): string {
-	// 	// if(this.has_tail_digits(word)){
-	// 	// 	const tail_digits = `${this.tail_digits(word)}`
-	// 	// 	const head = word.substr(0, word.length-tail_digits.length)
-	// 	// 	const head_snake_case = this.snake_case(head)
-	// 	// 	console.log(word, tail_digits, head, head_snake_case)
-	// 	// 	return `${head_snake_case}${tail_digits}`;
-	// 	// } else {
-	// 	// 	return this.snake_case(word)
-	// 	// }
-	// 	const snake_case = this.snake_case(word)
-	// 	const match = snake_case.match(DIGIT_PREDEDED_BY_UNDERSCOPE)
-	// 	console.log("-----", snake_case, match)
-	// 	return snake_case
-	// }
-	// static class_name_to_human(word): string {
-	// 	const human_name = this.class_name_to_type(word).replace(/\s/, ' ');
-	// 	return human_name.replace(/_/g, " ");
-	// }
 
 	static timestamp_to_seconds(word: string): number {
 		return Date.parse(word) / 1000;
@@ -208,20 +198,20 @@ export class CoreString {
 
 	static attrib_names(word: string): string[] {
 		const elements = word.split(ATTRIB_NAMES_SEPARATOR);
-		const names_set:Set<string> = new Set();
-		for(let element of elements){
-			element = element.trim()
-			if(element.length > 0){
+		const names_set: Set<string> = new Set();
+		for (let element of elements) {
+			element = element.trim();
+			if (element.length > 0) {
 				names_set.add(element);
 			}
 		}
-		const names:string[] = new Array(names_set.size);
-		let i=0;
-		names_set.forEach((name)=>{
+		const names: string[] = new Array(names_set.size);
+		let i = 0;
+		names_set.forEach((name) => {
 			names[i] = name;
 			i++;
-		})
-		return names
+		});
+		return names;
 	}
 	static to_id(val: string): number {
 		if (val == null) {
@@ -246,9 +236,8 @@ export class CoreString {
 	static indices(indices_string: string): number[] {
 		const elements = indices_string.split(INDICES_LIST_SEPARATOR);
 		if (elements.length > 1) {
-			const indices:number[] = elements.flatMap((element) => this.indices(element))
+			const indices: number[] = elements.flatMap((element) => this.indices(element));
 			return ArrayUtils.uniq(indices).sort((a, b) => a - b);
-				
 		} else {
 			const element = elements[0];
 			if (element) {

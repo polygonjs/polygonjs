@@ -140,7 +140,6 @@
 // 		// console.log(vector)
 // 		// this.renderer.copyFramebufferToTexture( vector, this.texture );
 
-// 		// console.log(this.texture.image.data, lodash_uniq(this.texture.image.data))
 // 	}
 
 // 	private create_renderer() {

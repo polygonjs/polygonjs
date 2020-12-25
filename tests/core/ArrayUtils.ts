@@ -18,6 +18,27 @@ QUnit.test('ArrayUtils.compact', (assert) => {
 QUnit.test('ArrayUtils.uniq', (assert) => {
 	assert.deepEqual(ArrayUtils.uniq([7, 3, 7]), [7, 3]);
 });
+QUnit.test('ArrayUtils.chunk', (assert) => {
+	assert.deepEqual(ArrayUtils.chunk([0, 1, 2, 3, 4, 5, 6], 2), [[0, 1], [2, 3], [4, 5], [6]]);
+});
+QUnit.test('ArrayUtils.union', (assert) => {
+	assert.deepEqual(ArrayUtils.union([0, 1, 2], [2, 3, 4]), [0, 1, 2, 3, 4]);
+});
+QUnit.test('ArrayUtils.intersection', (assert) => {
+	assert.deepEqual(ArrayUtils.intersection([0, 1, 2], [2, 3, 4]), [2]);
+});
+QUnit.test('ArrayUtils.difference', (assert) => {
+	assert.deepEqual(ArrayUtils.difference([0, 1, 2], [2, 3, 4]), [0, 1, 3, 4]);
+});
+QUnit.test('ArrayUtils.isEqual', (assert) => {
+	assert.deepEqual(ArrayUtils.isEqual([7, 3, 7], [7, 3, 7]), true);
+	assert.deepEqual(ArrayUtils.isEqual([7, 3, 7], [7, 3, 7, 4]), false);
+	assert.deepEqual(ArrayUtils.isEqual([7, 3, 7], [7, 2, 7]), false);
+	assert.deepEqual(ArrayUtils.isEqual([7, 3, 7, 4], [7, 2, 7]), false);
+
+	assert.deepEqual(ArrayUtils.isEqual(['7', '3', '7'], ['7', '3', '7']), true);
+	assert.deepEqual(ArrayUtils.isEqual(['7', '3', '7', '4'], ['7', '2', '7']), false);
+});
 QUnit.test('ArrayUtils.sortBy', (assert) => {
 	assert.deepEqual(
 		ArrayUtils.sortBy([-5, -1, 3, 7], (e) => e * e),

@@ -130,3 +130,29 @@ QUnit.test('number conversion', (assert) => {
 	assert.notOk(CoreString.is_number('A'));
 	assert.notOk(CoreString.is_number('A1.'));
 });
+
+QUnit.test('CoreString.upper_first', (assert) => {
+	assert.ok(CoreString.upper_first('abcde'), 'Abcde');
+	assert.ok(CoreString.upper_first('Abcde'), 'Abcde');
+	assert.ok(CoreString.upper_first('1bcde'), '1bcde');
+});
+QUnit.test('CoreString.titleize', (assert) => {
+	assert.ok(CoreString.titleize('spring_torus'), 'String Torus');
+	assert.ok(CoreString.titleize('spring torus'), 'String Torus');
+	assert.ok(CoreString.titleize('abcde'), 'Abcde');
+	assert.ok(CoreString.titleize('Abcde'), 'Abcde');
+	assert.ok(CoreString.titleize('1bcde'), '1bcde');
+});
+QUnit.test('CoreString.camel_case', (assert) => {
+	assert.ok(CoreString.titleize('spring torus'), 'StringTorus');
+	assert.ok(CoreString.titleize('spring_torus'), 'StringTorus');
+	assert.ok(CoreString.titleize('abcde'), 'Abcde');
+	assert.ok(CoreString.titleize('Abcde'), 'Abcde');
+	assert.ok(CoreString.titleize('1bcde'), '1bcde');
+});
+QUnit.test('CoreString.snake_case', (assert) => {
+	assert.ok(CoreString.titleize('StringTorus'), 'spring_torus');
+	assert.ok(CoreString.titleize('Spring_torus'), 'string_torus');
+	assert.ok(CoreString.titleize('Abcde'), 'abcde');
+	assert.ok(CoreString.titleize('1bcde'), '1bcde');
+});

@@ -1,8 +1,8 @@
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
-import lodash_intersection from 'lodash/intersection';
 import {Vector2} from 'three/src/math/Vector2';
+import {ArrayUtils} from '../../ArrayUtils';
 
 export class CoreGeometryOperationSkin {
 	constructor(
@@ -52,7 +52,7 @@ export class CoreGeometryOperationSkin {
 			points_indices.push(matched_segment[0] + smallest_points_count);
 		});
 
-		const attributes_in_common = lodash_intersection(
+		const attributes_in_common = ArrayUtils.intersection(
 			smallest_geometry.attrib_names(),
 			largest_geometry.attrib_names()
 		);

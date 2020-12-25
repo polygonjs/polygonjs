@@ -1,6 +1,4 @@
-import lodash_intersection from 'lodash/intersection';
-import lodash_clone from 'lodash/clone';
-import lodash_merge from 'lodash/merge';
+import {ObjectUtils} from '../../../../core/ObjectUtils';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {ParamJsonExporterData} from '../../utils/io/IOController';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
@@ -8,6 +6,7 @@ import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
 import {GlAssemblerControllerType, AssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 /*
 Create spare params on mat nodes
@@ -27,14 +26,14 @@ export class AssemblerNodeSpareParamsController {
 		const params_update_options: ParamsUpdateOptions = {};
 		const param_configs = this.assembler.param_configs();
 		const assembler_param_names = param_configs.map((c) => c.name);
-		const spare_param_names_to_add = lodash_clone(assembler_param_names);
+		const spare_param_names_to_add = ObjectUtils.clone(assembler_param_names);
 		const validation_result = this._validate_names(spare_param_names_to_add);
 		if (validation_result == false) {
 			return;
 		}
 
 		// spare_param_names_to_remove is composed of previously created params, but also spare params with the same name, which may be created when loading the scene
-		const spare_param_names_to_remove = lodash_clone(this._created_spare_param_names).concat(
+		const spare_param_names_to_remove = ObjectUtils.clone(this._created_spare_param_names).concat(
 			spare_param_names_to_add
 		);
 
@@ -60,13 +59,13 @@ export class AssemblerNodeSpareParamsController {
 		// this.within_param_folder('spare_params', () => {
 		for (let param_config of param_configs) {
 			if (spare_param_names_to_add.indexOf(param_config.name) >= 0) {
-				const config_options = lodash_clone(param_config.param_options);
+				const config_options = ObjectUtils.clone(param_config.param_options);
 				const default_options: ParamOptions = {
 					spare: true,
 					compute_on_dirty: true,
 					cook: false, // it should update the uniforms only via its callback
 				};
-				const options = lodash_merge(config_options, default_options);
+				const options = ObjectUtils.merge(config_options, default_options);
 
 				// set init_value and raw_input to the previous param's
 				let init_value = this._init_value_serialized_by_param_name.get(param_config.name);
@@ -118,8 +117,8 @@ export class AssemblerNodeSpareParamsController {
 	// we may then change the name of the new spare param.
 	private _validate_names(spare_param_names_to_add: string[]): boolean {
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
-		const current_param_names = lodash_clone(this._node.params.non_spare_names);
-		const spare_params_with_same_name_as_params = lodash_intersection(
+		const current_param_names = ObjectUtils.clone(this._node.params.non_spare_names);
+		const spare_params_with_same_name_as_params = ArrayUtils.intersection(
 			spare_param_names_to_add,
 			current_param_names
 		);

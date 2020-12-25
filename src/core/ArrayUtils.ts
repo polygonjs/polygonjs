@@ -1,4 +1,5 @@
 import {MapUtils} from './MapUtils';
+import {SetUtils} from './SetUtils';
 import {CoreType} from './Type';
 
 export class ArrayUtils {
@@ -28,46 +29,101 @@ export class ArrayUtils {
 		return sum;
 	}
 	static compact<T>(array: Array<T | null | undefined>): Array<T> {
-		const new_array: Array<T> = [];
+		const newArray: Array<T> = [];
 
 		for (let elem of array) {
 			if (elem != null) {
-				new_array.push(elem);
+				newArray.push(elem);
 			}
 		}
 
-		return new_array;
+		return newArray;
 	}
 	static uniq<T>(array: Array<T>): Array<T> {
-		const tmp_set: Set<T> = new Set();
+		const tmpSet: Set<T> = new Set();
 
 		for (let elem of array) {
-			tmp_set.add(elem);
+			tmpSet.add(elem);
 		}
 
-		const new_array: Array<T> = new Array(tmp_set.size);
+		const newArray: Array<T> = new Array(tmpSet.size);
 		let i = 0;
-		tmp_set.forEach((elem) => {
-			new_array[i] = elem;
+		tmpSet.forEach((elem) => {
+			newArray[i] = elem;
 			i++;
 		});
 
-		return new_array;
+		return newArray;
+	}
+	static chunk<T extends number | string>(array: Array<T>, chunkSize: number): Array<Array<T>> {
+		const newArray: Array<Array<T>> = [];
+
+		let newSubArray: Array<T> = [];
+		newArray.push(newSubArray);
+		for (let i = 0; i < array.length; i++) {
+			if (newSubArray.length == chunkSize) {
+				newSubArray = [];
+				newArray.push(newSubArray);
+			}
+			newSubArray.push(array[i]);
+		}
+
+		return newArray;
+	}
+	static union<T extends number | string>(array0: Array<T>, array1: Array<T>): Array<T> {
+		const newArray: Array<T> = [];
+		const unionSet = SetUtils.union(this.toSet(array0), this.toSet(array1));
+		unionSet.forEach((val) => newArray.push(val));
+
+		return newArray;
+	}
+	static intersection<T extends number | string>(array0: Array<T>, array1: Array<T>): Array<T> {
+		const newArray: Array<T> = [];
+		const intersectionSet = SetUtils.intersection(this.toSet(array0), this.toSet(array1));
+		intersectionSet.forEach((val) => newArray.push(val));
+
+		return newArray;
+	}
+	static difference<T extends number | string>(array0: Array<T>, array1: Array<T>): Array<T> {
+		const newArray: Array<T> = [];
+		const differenceSet = SetUtils.difference(this.toSet(array0), this.toSet(array1));
+		differenceSet.forEach((val) => newArray.push(val));
+
+		return newArray;
+	}
+	static toSet<T extends number | string>(array: Array<T>): Set<T> {
+		const set: Set<T> = new Set();
+		for (let elem of array) {
+			set.add(elem);
+		}
+		return set;
+	}
+	static isEqual<T extends number | string>(array0: Array<T>, array1: Array<T>): boolean {
+		if (array0.length != array1.length) {
+			return false;
+		}
+		const count = array0.length;
+		for (let i = 0; i < count; i++) {
+			if (array0[i] != array1[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 	static sortBy<T, K extends number | string>(array: Array<T>, callback: (e: T) => K): Array<T> {
 		if (array.length == 0) {
 			return [];
 		}
-		const elements_by_value: Map<K, T[]> = new Map();
-		const values_set: Set<K> = new Set();
+		const elementsByValue: Map<K, T[]> = new Map();
+		const valuesSet: Set<K> = new Set();
 		for (let elem of array) {
 			const value: K = callback(elem);
-			values_set.add(value);
-			MapUtils.push_on_array_at_entry(elements_by_value, value, elem);
+			valuesSet.add(value);
+			MapUtils.push_on_array_at_entry(elementsByValue, value, elem);
 		}
-		const values: K[] = new Array(values_set.size);
+		const values: K[] = new Array(valuesSet.size);
 		let i = 0;
-		values_set.forEach((value) => {
+		valuesSet.forEach((value) => {
 			values[i] = value;
 			i++;
 		});
@@ -82,7 +138,7 @@ export class ArrayUtils {
 		const sorted_elements: Array<T> = new Array(array.length);
 		i = 0;
 		for (let value of values) {
-			const elements_for_value = elements_by_value.get(value);
+			const elements_for_value = elementsByValue.get(value);
 			if (elements_for_value) {
 				for (let element of elements_for_value) {
 					sorted_elements[i] = element;

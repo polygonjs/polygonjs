@@ -46,7 +46,7 @@ export class TypedJsDefinitionCollection<T extends JsDefinitionType> {
 			}
 		}
 		// sorting may make dependencies be declared after the function calling them
-		// const sorted_definitions = lodash_sortBy(uniq_definitions, (d)=>d.name())
+		// const sorted_definitions = ArrayUtils.sortBy(uniq_definitions, (d)=>d.name())
 		return uniq_definitions;
 	}
 }

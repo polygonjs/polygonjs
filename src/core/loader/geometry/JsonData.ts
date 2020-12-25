@@ -1,5 +1,4 @@
 // import {Core} from '../../_Module';
-import lodash_isObject from 'lodash/isObject';
 import {Points} from 'three/src/objects/Points';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -11,7 +10,8 @@ import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {Poly} from '../../../engine/Poly';
-import { CoreType } from '../../Type';
+import {CoreType} from '../../Type';
+import {ObjectUtils} from '../../ObjectUtils';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 
@@ -189,6 +189,6 @@ export class JsonDataLoader {
 	}
 
 	_value_has_subentries(value: any): boolean {
-		return lodash_isObject(value) && !CoreType.isArray(value);
+		return ObjectUtils.isObject(value) && !CoreType.isArray(value);
 	}
 }

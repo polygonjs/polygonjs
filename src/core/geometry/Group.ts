@@ -11,8 +11,8 @@ import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {CoreConstant, AttribClass, AttribSize, ObjectData, object_type_from_constructor} from './Constant';
-import { CoreType } from '../Type';
-import { ArrayUtils } from '../ArrayUtils';
+import {CoreType} from '../Type';
+import {ArrayUtils} from '../ArrayUtils';
 export type GroupString = string;
 
 export interface Object3DWithGeometry extends Object3D {
@@ -189,10 +189,14 @@ export class CoreGroup {
 		return null;
 	}
 	faces() {
-		return this.core_geometries().map((g) => g.faces()).flat();
+		return this.core_geometries()
+			.map((g) => g.faces())
+			.flat();
 	}
 	points() {
-		return this.core_geometries().map((g) => g.points()).flat()
+		return this.core_geometries()
+			.map((g) => g.points())
+			.flat();
 	}
 	points_count() {
 		return ArrayUtils.sum(this.core_geometries().map((g) => g.points_count()));
@@ -229,13 +233,6 @@ export class CoreGroup {
 		return core_group;
 	}
 
-	// objects() {
-	// 	return this._objects = lodash_map(this._group.children, (object, i)=> {
-	// 		const object_wrapper = new CoreObject(object);
-	// 		object_wrapper.set_index(i);
-	// 		return object_wrapper;
-	// 	});
-	// }
 	objects_from_group(group_name: string): Object3D[] {
 		return this.core_objects_from_group(group_name).map((co) => co.object());
 	}
@@ -393,7 +390,7 @@ export class CoreGroup {
 	attrib_names_matching_mask(masks_string: GroupString) {
 		const masks = CoreString.attrib_names(masks_string);
 
-		const matching_attrib_names:string[] = [];
+		const matching_attrib_names: string[] = [];
 		for (let attrib_name of this.attrib_names()) {
 			for (let mask of masks) {
 				if (CoreString.match_mask(attrib_name, mask)) {

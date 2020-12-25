@@ -43,12 +43,6 @@ export class CoreOctree {
 				found_points = ArrayUtils.sortBy(found_points, (point) => {
 					return point.position().distanceTo(position);
 				});
-				// const lng_lat = {lng: position.x, lat: position.z}
-				// found_points = lodash_sortBy(found_points, (point)=>{
-				// 	const src_position = point.position()
-				// 	const src_lng_lat = {lng: src_position.x, lat: src_position.z}
-				// 	return CoreMath.geodesic_distance(src_lng_lat, lng_lat)
-				// });
 
 				found_points = found_points.slice(0, max_points_count);
 			}
@@ -57,5 +51,3 @@ export class CoreOctree {
 		}
 	}
 }
-
-// Octree.Node = OctreeNode;

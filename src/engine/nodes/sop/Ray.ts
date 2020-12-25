@@ -92,30 +92,6 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 		}
 	}
 	_assign_double_sided_material_to_object(object: Object3D) {
-		// this._material_by_object_uuid[object.uuid] = object.material
 		(object as Mesh).material = RaySopNode.double_sided_material();
 	}
-
-	// average_normals(geometry){
-	// 	const normals = [];
-	// 	const vertex_index_names = ['a', 'b', 'c'];
-	// 	lodash_each(geometry.faces, face=> {
-	// 		return lodash_each(vertex_index_names, (vertex_index_name, i)=> {
-	// 			const vertex_index = face[vertex_index_name];
-	// 			if (normals[vertex_index] == null) { normals[vertex_index] = []; }
-	// 			return normals[vertex_index].push(face.vertexNormals[i].clone());
-	// 		});
-	// 	});
-
-	// 	lodash_each(normals, function(normal_group, i){
-	// 		const average = new Vector3(
-	// 			(lodash_sum(lodash_map(normal_group, 'x')) / normal_group.length),
-	// 			(lodash_sum(lodash_map(normal_group, 'y')) / normal_group.length),
-	// 			(lodash_sum(lodash_map(normal_group, 'z')) / normal_group.length)
-	// 		);
-	// 		return normals[i] = average;
-	// 	});
-
-	// 	return normals;
-	// }
 }

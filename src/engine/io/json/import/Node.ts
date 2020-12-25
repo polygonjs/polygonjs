@@ -1,5 +1,4 @@
 import {TypedNode} from '../../../nodes/_Base';
-import lodash_isObject from 'lodash/isObject';
 import {Vector2} from 'three/src/math/Vector2';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
@@ -14,7 +13,8 @@ import {
 } from '../../../nodes/utils/io/IOController';
 import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
-import { CoreType } from '../../../../core/Type';
+import {CoreType} from '../../../../core/Type';
+import {ObjectUtils} from '../../../../core/ObjectUtils';
 
 const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
 
@@ -329,7 +329,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			return false;
 		}
 
-		if (lodash_isObject(param_data)) {
+		if (ObjectUtils.isObject(param_data)) {
 			const keys = Object.keys(param_data);
 			for (let complex_key of COMPLEX_PARAM_DATA_KEYS) {
 				if (keys.includes(complex_key)) {

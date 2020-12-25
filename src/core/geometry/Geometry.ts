@@ -3,9 +3,6 @@ import {Int32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Box3} from 'three/src/math/Box3';
-import lodash_chunk from 'lodash/chunk';
-import lodash_cloneDeep from 'lodash/cloneDeep';
-import lodash_clone from 'lodash/clone';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
 import {ObjectType, AttribType, AttribSize} from './Constant';
@@ -16,8 +13,9 @@ import {CoreGeometryBuilderMerge} from './builders/Merge';
 import {CoreGeometryBuilderMesh} from './builders/Mesh';
 import {CoreGeometryBuilderLineSegments} from './builders/LineSegments';
 import {TypeAssert} from '../../engine/poly/Assert';
-import { CoreType } from '../Type';
-import { ArrayUtils } from '../ArrayUtils';
+import {CoreType} from '../Type';
+import {ArrayUtils} from '../ArrayUtils';
+import {ObjectUtils} from '../ObjectUtils';
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -229,7 +227,7 @@ export class CoreGeometry {
 
 	rename_attribute(old_name: string, new_name: string) {
 		if (this.is_attrib_indexed(old_name)) {
-			this.user_data_attribs()[new_name] = lodash_clone(this.user_data_attribs()[old_name]);
+			this.user_data_attribs()[new_name] = ObjectUtils.clone(this.user_data_attribs()[old_name]);
 			delete this.user_data_attribs()[old_name];
 		}
 
@@ -263,7 +261,7 @@ export class CoreGeometry {
 
 		const new_geometry = src_geometry.clone();
 		if ((src_userData = src_geometry.userData) != null) {
-			new_geometry.userData = lodash_cloneDeep(src_userData);
+			new_geometry.userData = ObjectUtils.cloneDeep(src_userData);
 		}
 		return new_geometry;
 	}
@@ -291,8 +289,6 @@ export class CoreGeometry {
 		return count;
 	}
 
-	// TODO: use lodash_chunk
-	// like: lodash_chunk(template_geometry.getAttribute('position').array, 3)
 	points(): CorePoint[] {
 		return (this._points = this._points || this.points_from_geometry());
 	}
@@ -339,9 +335,8 @@ export class CoreGeometry {
 	}
 
 	segments() {
-		// const points = this.points();
-		const index = this.geometry().index?.array || [];
-		return lodash_chunk(index, 2);
+		const index: Array<number> = (this.geometry().index?.array || []) as Array<number>;
+		return ArrayUtils.chunk(index, 2);
 	}
 
 	faces(): CoreFace[] {
@@ -353,5 +348,3 @@ export class CoreGeometry {
 		return ArrayUtils.range(faces_count).map((i) => new CoreFace(this, i));
 	}
 }
-
-

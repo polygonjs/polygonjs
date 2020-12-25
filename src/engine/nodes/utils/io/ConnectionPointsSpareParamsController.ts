@@ -10,10 +10,10 @@ import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../params/ParamsController';
 // import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
-import lodash_clone from 'lodash/clone';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
-import { CoreType } from '../../../../core/Type';
+import {CoreType} from '../../../../core/Type';
+import {ObjectUtils} from '../../../../core/ObjectUtils';
 
 /*
 GlNodeSpareParamsController creates spare params from inputs on gl nodes
@@ -156,8 +156,8 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 						name: param_name,
 						type: param_type,
 						// TODO: I should really treat differently init_value and raw_input here
-						init_value: lodash_clone(init_value as any),
-						raw_input: lodash_clone(init_value as any),
+						init_value: ObjectUtils.clone(init_value as any),
+						raw_input: ObjectUtils.clone(init_value as any),
 						options: {
 							spare: true,
 						},
