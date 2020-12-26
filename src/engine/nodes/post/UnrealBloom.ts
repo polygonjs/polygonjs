@@ -28,7 +28,7 @@ const ParamsConfig = new UnrealBloomPostParamsConfig();
 export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, UnrealBloomPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'unreal_bloom';
+		return 'unrealBloom';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

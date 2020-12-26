@@ -2,13 +2,13 @@ QUnit.test('mapbox_transform simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const mapbox_camera1 = scene.root.createNode('mapbox_camera');
+	const mapbox_camera1 = scene.root.createNode('mapboxCamera');
 	const add1 = geo1.createNode('add');
 	const transform1 = geo1.createNode('transform');
 	transform1.p.t.set([-0.07956000001661323, 0, 51.514600000018646]);
-	const mapbox_transform1 = geo1.createNode('mapbox_transform');
-	transform1.set_input(0, add1);
-	mapbox_transform1.set_input(0, transform1);
+	const mapbox_transform1 = geo1.createNode('mapboxTransform');
+	transform1.setInput(0, add1);
+	mapbox_transform1.setInput(0, transform1);
 
 	const element = document.createElement('div');
 	// defined size should help predict the plane dimensions

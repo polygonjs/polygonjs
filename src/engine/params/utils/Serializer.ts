@@ -37,7 +37,7 @@ export class ParamSerializer {
 			// is_dirty: this.param.is_dirty,
 			error_message: this.error_message(),
 			is_visible: this.is_visible(),
-			// folder_name: this.param.ui_data.folder_name,
+			// folder_name: this.param.uiData.folder_name,
 			components: undefined,
 		};
 

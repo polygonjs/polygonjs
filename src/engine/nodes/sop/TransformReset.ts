@@ -46,7 +46,7 @@ const ParamsConfig = new TransformResetSopParamConfig();
 export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'transform_reset';
+		return 'transformReset';
 	}
 
 	static displayed_input_names(): string[] {

@@ -15,7 +15,7 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 	box1 = geo1.createNode('box')
 // 	box2 = geo1.createNode('box')
 
-// 	box2.set_input(0, box1)
+// 	box2.setInput(0, box1)
 
 // 	box2.param('size').set_expression("npoints(0)")
 
@@ -28,7 +28,7 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 	box1 = geo1.createNode('box')
 // 	box2 = geo1.createNode('box')
 
-// 	box2.set_input(0, box1)
+// 	box2.setInput(0, box1)
 
 // 	box2.param('size').set_expression("npoints('../doesnotexist')")
 
@@ -41,7 +41,7 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 	box1 = geo1.createNode('box')
 // 	box2 = geo1.createNode('box')
 
-// 	box2.set_input(0, box1)
+// 	box2.setInput(0, box1)
 
 // 	box2.param('size').set_expression("npoints(1)")
 
@@ -60,7 +60,7 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 		assert.equal box2.param('size').error_message(), "expression npoints error: no node found for argument 0"
 // 		assert.equal box2.error_message(), "param size error: expression npoints error: no node found for argument 0"
 
-// 		box2.set_input(0, box1)
+// 		box2.setInput(0, box1)
 
 // 		box2.param('size').eval =>
 

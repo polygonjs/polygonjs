@@ -48,7 +48,7 @@ export class NodeSerializer {
 			type: this.node.type,
 			graph_node_id: this.node.graph_node_id,
 			is_dirty: this.node.is_dirty,
-			ui_data_json: this.node.ui_data.to_json(),
+			ui_data_json: this.node.uiData.to_json(),
 			error_message: this.node.states.error.message,
 			children: this.children_ids(),
 			inputs: this.input_ids(),

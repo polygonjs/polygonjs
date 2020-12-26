@@ -25,7 +25,7 @@ const ParamsConfig = new MeshLambertMatParamsConfig();
 export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLambertMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_lambert';
+		return 'meshLambert';
 	}
 
 	create_material() {

@@ -8,7 +8,7 @@ import {InputCloneMode} from '../../engine/poly/InputCloneMode';
 export type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
 export type DefaultOperationParams = Dictionary<DefaultOperationParam<ParamType>>;
 
-export const OPERATIONS_COMPOSER_NODE_TYPE: Readonly<string> = 'operations_composer';
+export const OPERATIONS_COMPOSER_NODE_TYPE: Readonly<string> = 'operationsComposer';
 
 export class BaseOperation {
 	static type(): string {

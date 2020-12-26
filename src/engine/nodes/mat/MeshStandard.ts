@@ -48,7 +48,7 @@ const ParamsConfig = new MeshStandardMatParamsConfig();
 export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, MeshStandardMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_standard';
+		return 'meshStandard';
 	}
 
 	create_material() {
@@ -87,7 +87,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		this.texture_env_map_controller.update();
 
 		if (this._material) {
-			this._material.envMapIntensity = this.pv.env_map_intensity;
+			this._material.envMapIntensity = this.pv.envMapIntensity;
 			this._material.roughness = this.pv.roughness;
 			this._material.metalness = this.pv.metalness;
 		}

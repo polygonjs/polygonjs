@@ -8,19 +8,16 @@ import {
 	UpdateOptions,
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
-// import {NodeContext} from '../../../poly/NodeContext';
-// import {BaseCopNodeType} from '../../cop/_Base';
+import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an alpha map */
-		use_alpha_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAlphaMapController));
+		useAlphaMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAlphaMapController));
 		/** @param specify the alpha map COP node */
-		alpha_map = ParamConfig.OPERATOR_PATH(
-			OPERATOR_PATH_DEFAULT.NODE.UV,
-			OperatorPathOptions(TextureAlphaMapController, 'use_alpha_map')
+		alphaMap = ParamConfig.OPERATOR_PATH(
+			NODE_PATH_DEFAULT.NODE.UV,
+			OperatorPathOptions(TextureAlphaMapController, 'useAlphaMap')
 		);
 	};
 }
@@ -39,10 +36,10 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 		super(node, _update_options);
 	}
 	initialize_node() {
-		this.add_hooks(this.node.p.use_alpha_map, this.node.p.alpha_map);
+		this.add_hooks(this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
 	async update() {
-		this._update(this.node.material, 'alphaMap', this.node.p.use_alpha_map, this.node.p.alpha_map);
+		this._update(this.node.material, 'alphaMap', this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
 	static async update(node: TextureAlphaMapMatNode) {
 		node.texture_alpha_map_controller.update();

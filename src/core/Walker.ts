@@ -3,15 +3,17 @@ import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
 import {NodeContext, BaseNodeByContextMap} from '../engine/poly/NodeContext';
 import {ErrorState} from '../engine/nodes/utils/states/Error';
-// import {NodeSimple} from '/graph/NodeSimple'
 
 type NodeOrParam = BaseNodeType | BaseParamType;
 
+export const NODE_PATH_DEFAULT = {
+	NODE: {
+		UV: '/COP/imageUv',
+		ENV_MAP: '/COP/envMap',
+	},
+};
+
 export class TypedPathParamValue {
-	static readonly DEFAULT = {
-		UV: '/COP/file_uv',
-		ENV_MAP: '/COP/env_map',
-	};
 	private _node: BaseNodeType | null = null;
 	constructor(private _path: string = '') {}
 	set_path(path: string) {
@@ -147,7 +149,7 @@ export class CoreWalker {
 	static relative_path(src_graph_node: Readonly<NodeOrParam>, dest_graph_node: Readonly<NodeOrParam>): string {
 		const parent = this.closest_common_parent(src_graph_node, dest_graph_node);
 		if (!parent) {
-			return dest_graph_node.full_path();
+			return dest_graph_node.fullPath();
 		} else {
 			const distance = this.distance_to_parent(src_graph_node, parent);
 			let up = '';
@@ -161,11 +163,11 @@ export class CoreWalker {
 			}
 
 			const parent_path_elements = parent
-				.full_path()
+				.fullPath()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
 			const dest_path_elements = dest_graph_node
-				.full_path()
+				.fullPath()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
 			const remaining_elements = [];
@@ -243,11 +245,11 @@ export class CoreWalker {
 					return this.make_absolute_path(node_src, path_elements.join(CoreWalker.SEPARATOR));
 				}
 				default: {
-					return [node_src.full_path(), path].join(CoreWalker.SEPARATOR);
+					return [node_src.fullPath(), path].join(CoreWalker.SEPARATOR);
 				}
 			}
 		} else {
-			return node_src.full_path();
+			return node_src.fullPath();
 		}
 	}
 }

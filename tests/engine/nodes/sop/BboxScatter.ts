@@ -2,9 +2,9 @@ QUnit.test('bbox_scatter simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const bbox_scatter1 = geo1.createNode('bbox_scatter');
+	const bbox_scatter1 = geo1.createNode('bboxScatter');
 
-	bbox_scatter1.set_input(0, box1);
+	bbox_scatter1.setInput(0, box1);
 
 	let container;
 	container = await bbox_scatter1.request_container();

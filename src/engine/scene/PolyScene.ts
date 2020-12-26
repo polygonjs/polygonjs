@@ -28,14 +28,14 @@ export class PolyScene {
 		return this._default_scene;
 	}
 	_uuid!: string;
-	set_uuid(uuid: string) {
+	setUuid(uuid: string) {
 		return (this._uuid = uuid);
 	}
 	get uuid() {
 		return this._uuid;
 	}
 	_name: string | undefined;
-	set_name(name: string) {
+	setName(name: string) {
 		return (this._name = name);
 	}
 	get name() {
@@ -133,8 +133,8 @@ export class PolyScene {
 	get time_controller() {
 		return this._time_controller;
 	}
-	set_frame(frame: number) {
-		this.time_controller.set_frame(frame);
+	setFrame(frame: number) {
+		this.time_controller.setFrame(frame);
 	}
 
 	get frame() {

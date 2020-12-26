@@ -24,7 +24,7 @@ const ParamsConfig = new AfterImagePostParamsConfig();
 export class AfterImagePostNode extends TypedPostProcessNode<AfterImagePassWithUniforms, AfterImagePostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'after_image';
+		return 'afterImage';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

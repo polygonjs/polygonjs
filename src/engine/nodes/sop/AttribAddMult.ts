@@ -27,7 +27,7 @@ const ParamsConfig = new AttribAddMultSopParamsConfig();
 export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_add_mult';
+		return 'attribAddMult';
 	}
 
 	initialize_node() {

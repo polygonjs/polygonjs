@@ -3,7 +3,7 @@ import {DataType, DATA_TYPES} from '../../../../src/engine/nodes/sop/DataUrl';
 QUnit.test('data_url json', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('data_url');
+	const data_url1 = geo1.createNode('dataUrl');
 
 	let container;
 	container = await data_url1.request_container();
@@ -44,7 +44,7 @@ QUnit.test('data_url json', async (assert) => {
 QUnit.test('data_url csv without reading names from file', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('data_url');
+	const data_url1 = geo1.createNode('dataUrl');
 	data_url1.p.url.set('/examples/sop/data_url/without_attrib_names.csv');
 	data_url1.p.data_type.set(DATA_TYPES.indexOf(DataType.CSV));
 	data_url1.p.read_attrib_names_from_file.set(0);
@@ -73,7 +73,7 @@ QUnit.test('data_url csv without reading names from file', async (assert) => {
 QUnit.test('data_url csv with reading names from file', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('data_url');
+	const data_url1 = geo1.createNode('dataUrl');
 	data_url1.p.url.set('/examples/sop/data_url/with_attrib_names.csv');
 	data_url1.p.data_type.set(DATA_TYPES.indexOf(DataType.CSV));
 	data_url1.p.read_attrib_names_from_file.set(1);
@@ -103,7 +103,7 @@ QUnit.test('data_url csv with reading names from file', async (assert) => {
 QUnit.test('data_url csv with empty line', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('data_url');
+	const data_url1 = geo1.createNode('dataUrl');
 	data_url1.p.url.set('/examples/sop/data_url/with_empty_line.csv');
 	data_url1.p.data_type.set(DATA_TYPES.indexOf(DataType.CSV));
 	data_url1.p.read_attrib_names_from_file.set(1);

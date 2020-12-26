@@ -166,7 +166,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	ui_data(): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = {} as NodeJsonExporterUIData;
 		if (!this.is_root()) {
-			const ui_data = this._node.ui_data;
+			const ui_data = this._node.uiData;
 			data['pos'] = ui_data.position.toArray() as Number2;
 			const comment = ui_data.comment;
 			if (comment) {

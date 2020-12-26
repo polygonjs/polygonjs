@@ -9,8 +9,8 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 		// color = ParamConfig.COLOR([1, 1, 1]);
 		transparent = ParamConfig.BOOLEAN(0);
 		opacity = ParamConfig.FLOAT(1);
-		alpha_test = ParamConfig.FLOAT(0);
-		use_fog = ParamConfig.BOOLEAN(0);
+		alphaTest = ParamConfig.FLOAT(0);
+		useFog = ParamConfig.BOOLEAN(0);
 	};
 }
 
@@ -43,7 +43,7 @@ export class ColorsController extends BaseController {
 		}
 		material.transparent = pv.transparent || pv.opacity < 1;
 		material.depthTest = true;
-		material.alphaTest = pv.alpha_test;
-		material.fog = pv.use_fog;
+		material.alphaTest = pv.alphaTest;
+		material.fog = pv.useFog;
 	}
 }

@@ -22,9 +22,9 @@ QUnit.test('expression precision works on a string', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
-	const attribtransfer1 = geo1.createNode('attrib_transfer');
-	attribtransfer1.set_input(0, box1);
-	attribtransfer1.set_input(0, box2);
+	const attribtransfer1 = geo1.createNode('attribTransfer');
+	attribtransfer1.setInput(0, box1);
+	attribtransfer1.setInput(0, box2);
 
 	const param = attribtransfer1.p.src_group;
 	param.set('`precision(-5.12657, 2)`');

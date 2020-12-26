@@ -23,8 +23,8 @@ export interface AnimNodeChildrenMap {
 	null: NullAnimNode;
 	operation: OperationAnimNode;
 	position: PositionAnimNode;
-	property_name: PropertyNameAnimNode;
-	property_value: PropertyValueAnimNode;
+	propertyName: PropertyNameAnimNode;
+	propertyValue: PropertyValueAnimNode;
 	repeat: RepeatAnimNode;
 	switch: SwitchAnimNode;
 	target: TargetAnimNode;

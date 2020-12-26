@@ -21,7 +21,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
 	initialize_base_node() {
-		this.ui_data.set_layout_horizontal();
+		this.uiData.set_layout_horizontal();
 		this.io.connections.init_inputs();
 
 		this.io.connection_points.spare_params.initialize_node();
@@ -50,7 +50,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	//
 	//
 	gl_var_name(name: string) {
-		const path_sanitized = this.full_path(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
+		const path_sanitized = this.fullPath(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
 		return `v_POLY_${path_sanitized}_${name}`;
 	}
 
@@ -65,7 +65,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				const output_name = output_connection_point.name;
 				return input_node.gl_var_name(output_name);
 			} else {
-				console.warn(`no output called '${name}' for gl node ${input_node.full_path()}`);
+				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);
 				throw 'variable_for_input ERROR';
 			}
 		} else {

@@ -30,7 +30,7 @@ const ParamsConfig = new ForLoopGlParamsConfig();
 export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'for_loop';
+		return 'forLoop';
 	}
 
 	param_default_value(name: string) {

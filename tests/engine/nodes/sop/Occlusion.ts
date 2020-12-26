@@ -10,9 +10,9 @@ QUnit.test('occlusion simple', async (assert) => {
 	box1.p.center.x.set(0.6);
 	box2.p.center.x.set(-0.6);
 
-	merge1.set_input(0, box1);
-	merge1.set_input(1, box2);
-	occlusion1.set_input(0, merge1);
+	merge1.setInput(0, box1);
+	merge1.setInput(1, box2);
+	occlusion1.setInput(0, merge1);
 
 	let container;
 	container = await occlusion1.request_container();

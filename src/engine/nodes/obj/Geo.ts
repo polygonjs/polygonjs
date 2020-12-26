@@ -90,8 +90,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
 	//

@@ -45,7 +45,7 @@ const ParamsConfig = new PointLightObjParamsConfig();
 export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, PointLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'point_light';
+		return 'pointLight';
 	}
 	private _helper_controller = new HelperController<PointLight>(
 		this,

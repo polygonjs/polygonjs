@@ -7,9 +7,9 @@ const DefaultValues: Dictionary<Number3> = {
 	end: [1, 0, 0],
 };
 
-export class VectorAngleGlNode extends MathFunctionArg2Factory('vector_angle', {
+export class VectorAngleGlNode extends MathFunctionArg2Factory('vectorAngle', {
 	in: ['start', 'end'],
-	method: 'vector_angle',
+	method: 'vectorAngle',
 	functions: [Quaternion],
 }) {
 	_expected_input_types() {

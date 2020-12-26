@@ -3,7 +3,7 @@
 
 
 
-// /MAT/mesh_basic_builder1/attribute1
+// /MAT/meshBasicBuilder1/attribute1
 varying vec2 varying_v_POLY_attribute1_val;
 
 
@@ -27,10 +27,10 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/attribute1
+	// /MAT/meshBasicBuilder1/attribute1
 	varying_v_POLY_attribute1_val = vec2(uv);
 	
-	// /MAT/mesh_basic_builder1/output1
+	// /MAT/meshBasicBuilder1/output1
 	vec3 transformed = position;
 	vec3 objectNormal = normal;
 

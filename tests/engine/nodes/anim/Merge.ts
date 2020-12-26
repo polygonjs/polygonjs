@@ -6,8 +6,8 @@
 
 // 	track1.p.name.set('test1');
 // 	track2.p.name.set('test2');
-// 	merge1.set_input(0, track1);
-// 	merge1.set_input(1, track1);
+// 	merge1.setInput(0, track1);
+// 	merge1.setInput(1, track1);
 
 // 	const container = await merge1.request_container();
 // 	const core_group = container.core_content()!;

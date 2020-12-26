@@ -22,7 +22,7 @@ export class NullSopNode extends TypedSopNode<NullSopParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
 		this.io.inputs.init_inputs_cloned_state(NullSopOperation.INPUT_CLONED_STATE);
-		// this.ui_data.set_border_radius(1000);
+		// this.uiData.set_border_radius(1000);
 	}
 
 	private _operation: NullSopOperation | undefined;

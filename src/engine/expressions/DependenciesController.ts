@@ -53,7 +53,7 @@ export class DependenciesController {
 		// const jsep_nodes_by_missing_paths = function_generator.jsep_nodes_by_missing_paths
 
 		// if(jsep_dependencies.length > 0){
-		// 	console.log("connect_param_to_dependencies", this.param.full_path())
+		// 	console.log("connect_param_to_dependencies", this.param.fullPath())
 		// }
 
 		this.cyclic_graph_detected = false;
@@ -118,10 +118,10 @@ export class DependenciesController {
 	// 	const missing_paths = Object.keys(jsep_nodes_by_missing_paths)
 
 	// 	missing_paths.forEach((missing_path)=>{
-	// 		const full_path = CoreWalker.make_absolute(this.param.node(), missing_path)
+	// 		const fullPath = CoreWalker.make_absolute(this.param.node(), missing_path)
 	// 		const jsep_nodes = jsep_nodes_by_missing_paths[missing_path]
 	// 		jsep_nodes.forEach(jsep_node=>{
-	// 			const missing_expression_reference = this.references_controller.register(this.param, jsep_node, full_path)
+	// 			const missing_expression_reference = this.references_controller.register(this.param, jsep_node, fullPath)
 
 	// 			this.missing_expression_references_by_id[missing_expression_reference.id] = missing_expression_reference
 	// 		})

@@ -76,7 +76,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 	initialize_base_node() {
 		this._object = this._create_object_with_attributes();
-		this.name_controller.add_post_set_full_path_hook(this.set_object_name.bind(this));
+		this.name_controller.add_post_set_fullPath_hook(this.set_object_name.bind(this));
 		this.set_object_name();
 	}
 
@@ -95,8 +95,8 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 	protected set_object_name() {
 		if (this._object) {
-			this._object.name = this.full_path();
-			this._children_group.name = `${this.full_path()}:parented_outputs`;
+			this._object.name = this.fullPath();
+			this._children_group.name = `${this.fullPath()}:parented_outputs`;
 		}
 	}
 

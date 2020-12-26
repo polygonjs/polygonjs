@@ -28,7 +28,7 @@ const ParamsConfig = new RestAttributesSopParamsConfig();
 export class RestAttributesSopNode extends TypedSopNode<RestAttributesSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'rest_attributes';
+		return 'restAttributes';
 	}
 
 	initialize_node() {

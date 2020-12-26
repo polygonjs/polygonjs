@@ -2,15 +2,15 @@ QUnit.test('object_properties simple', async (assert) => {
 	let container;
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
-	const object_properties1 = geo1.createNode('object_properties');
-	object_properties1.set_input(0, plane1);
+	const object_properties1 = geo1.createNode('objectProperties');
+	object_properties1.setInput(0, plane1);
 
 	container = await object_properties1.request_container();
 	let object = container.core_content()!.objects()[0];
 	assert.ok(object.castShadow);
 	assert.ok(object.receiveShadow);
 
-	object_properties1.set_input(0, plane1);
+	object_properties1.setInput(0, plane1);
 	container = await object_properties1.request_container();
 	object = container.core_content()!.objects()[0];
 	assert.ok(object.castShadow);

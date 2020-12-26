@@ -14,7 +14,7 @@ export class CoreGraphNode {
 	get name() {
 		return this._name;
 	}
-	set_name(name: string) {
+	setName(name: string) {
 		this._name = name;
 	}
 

@@ -88,7 +88,7 @@ export class PhysicsConstraintAttributesSopNode extends TypedSopNode<PhysicsCons
 			core_object.set_attrib_value(RBDAttribute.SIMULATED, this.pv.simulated);
 
 			if (this.pv.add_id == true) {
-				core_object.set_attrib_value(RBDAttribute.ID, `${this.full_path()}:${i}`);
+				core_object.set_attrib_value(RBDAttribute.ID, `${this.fullPath()}:${i}`);
 			}
 
 			// shape

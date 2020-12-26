@@ -26,8 +26,8 @@ export class TorusKnotSopOperation extends BaseSopOperation {
 		center: new Vector3(0, 0, 0),
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'torus_knot'> {
-		return 'torus_knot';
+	static type(): Readonly<'torusKnot'> {
+		return 'torusKnot';
 	}
 
 	cook(input_contents: CoreGroup[], params: TorusKnotSopParams) {

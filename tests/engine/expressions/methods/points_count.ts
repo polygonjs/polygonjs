@@ -18,7 +18,7 @@ QUnit.test('expression points_count works with input index', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.set_input(0, box1);
+	box2.setInput(0, box1);
 
 	box2.p.size.set('points_count(0)');
 
@@ -97,7 +97,7 @@ QUnit.test('expression points_count fails with bad path', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.set_input(0, box1);
+	box2.setInput(0, box1);
 
 	box2.p.size.set("points_count('../doesnotexist')");
 
@@ -116,7 +116,7 @@ QUnit.test('expression points_count fails with bad input index 1', async (assert
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.set_input(0, box1);
+	box2.setInput(0, box1);
 
 	box2.p.size.set('points_count(1)');
 
@@ -154,7 +154,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 	await box2.request_container();
 	await CoreSleep.sleep(10);
 
-	box2.set_input(0, box1);
+	box2.setInput(0, box1);
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 24, 'param evaluates to 24');
@@ -166,7 +166,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 
 // box1 = geo1.createNode('box')
 // box2 = geo1.createNode('box')
-// console.log(box1.full_path(), box2.full_path())
+// console.log(box1.fullPath(), box2.fullPath())
 
 // box2.p.size.set("points_count(0)")
 
@@ -177,7 +177,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 // 		assert.equal box2.error_message(), "param 'size' error: expression points_count error: no node found for argument 0"
 
 // 		console.log("==========")
-// 		box2.set_input(0, box1)
+// 		box2.setInput(0, box1)
 
 // 		box2.p.size.eval =>
 
@@ -254,7 +254,7 @@ QUnit.test('points_count: if the points count of input changes, the param gets u
 	const param = box2.p.size;
 	param.set('points_count(0)');
 
-	box2.set_input(0, box1);
+	box2.setInput(0, box1);
 	assert.equal(box1.p.divisions.value, 1);
 
 	assert.ok(param.is_dirty);

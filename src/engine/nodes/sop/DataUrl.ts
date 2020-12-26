@@ -90,7 +90,7 @@ const ParamsConfig = new DataUrlSopParamsConfig();
 export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'data_url';
+		return 'dataUrl';
 	}
 
 	async cook() {

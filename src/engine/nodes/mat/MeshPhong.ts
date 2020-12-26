@@ -19,14 +19,14 @@ import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/Tex
 class MeshPhongMatParamsConfig extends TextureAlphaMapParamConfig(
 	TextureMapParamConfig(SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))))
 ) {
-	flat_shading = ParamConfig.BOOLEAN(0);
+	flatShading = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new MeshPhongMatParamsConfig();
 
 export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_phong';
+		return 'meshPhong';
 	}
 
 	create_material() {
@@ -55,8 +55,8 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 
-		if (this.material.flatShading != this.pv.flat_shading) {
-			this.material.flatShading = this.pv.flat_shading;
+		if (this.material.flatShading != this.pv.flatShading) {
+			this.material.flatShading = this.pv.flatShading;
 			this.material.needsUpdate = true;
 		}
 		this.depth_controller.update();

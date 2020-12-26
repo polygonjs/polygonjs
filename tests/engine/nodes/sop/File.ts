@@ -12,8 +12,8 @@ async function with_file(path: string) {
 }
 async function with_hierarchy() {
 	const hierarchy1 = window.geo1.createNode('hierarchy');
-	const file1 = window.geo1.nodes_by_type('file')[0];
-	hierarchy1.set_input(0, file1);
+	const file1 = window.geo1.nodesByType('file')[0];
+	hierarchy1.setInput(0, file1);
 	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
 	const container = await hierarchy1.request_container();
 	return container;
@@ -27,7 +27,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.ok(file1.is_dirty);
 
 	// const merge1 = geo1.createNode('merge');
-	// merge1.set_input(0, file1);
+	// merge1.setInput(0, file1);
 
 	let container;
 	container = await file1.request_container();

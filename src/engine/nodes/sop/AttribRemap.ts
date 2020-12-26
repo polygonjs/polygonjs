@@ -29,7 +29,7 @@ const ParamsConfig = new AttribRemapSopParamsConfig();
 export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_remap';
+		return 'attribRemap';
 	}
 
 	initialize_node() {

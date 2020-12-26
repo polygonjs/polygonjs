@@ -30,9 +30,9 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	builder1.p.use_camera_renderer.set(1);
 	// currently no need to tie it to a material to have it recook
 	// currently use a mat to have the builder recook
-	// const mesh_basic_builder1 = MAT.createNode('mesh_basic_builder')
+	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
 	// mesh_basic_builder1.p.use_map.set(1)
-	// mesh_basic_builder1.p.map.set(builder1.full_path())
+	// mesh_basic_builder1.p.map.set(builder1.fullPath())
 
 	let container = await builder1.request_container();
 	assert.ok(!builder1.states.error.message);
@@ -47,16 +47,16 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0, 0, 0, 1].join(':'), 'black with alpha 1');
 
-	const float_to_vec31 = builder1.createNode('float_to_vec3');
-	output1.set_input('color', float_to_vec31);
-	float_to_vec31.set_input('x', globals1, 'time');
-	scene.set_frame(30);
+	const float_to_vec31 = builder1.createNode('floatToVec3');
+	output1.setInput('color', float_to_vec31);
+	float_to_vec31.setInput('x', globals1, 'time');
+	scene.setFrame(30);
 	assert.equal(scene.time, 0.5);
 	await CoreSleep.sleep(10);
 	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0.5, 0, 0, 1].join(':'));
 
-	scene.set_frame(60);
+	scene.setFrame(60);
 	assert.equal(scene.time, 1);
 	await CoreSleep.sleep(10);
 	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
@@ -74,9 +74,9 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	const {output1, globals1} = create_required_nodes(builder1);
 	// currently no need to tie it to a material to have it recook
 	// currently use a mat to have the builder recook
-	// const mesh_basic_builder1 = MAT.createNode('mesh_basic_builder')
+	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
 	// mesh_basic_builder1.p.use_map.set(1)
-	// mesh_basic_builder1.p.map.set(builder1.full_path())
+	// mesh_basic_builder1.p.map.set(builder1.fullPath())
 
 	let container = await builder1.request_container();
 	assert.ok(!builder1.states.error.message);
@@ -87,15 +87,15 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	const pixelBuffer = texture.image.data;
 	assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [0, 0, 0, 1].join(':'), 'black with alpha 1');
 
-	const float_to_vec31 = builder1.createNode('float_to_vec3');
-	output1.set_input('color', float_to_vec31);
-	float_to_vec31.set_input('x', globals1, 'time');
-	scene.set_frame(30);
+	const float_to_vec31 = builder1.createNode('floatToVec3');
+	output1.setInput('color', float_to_vec31);
+	float_to_vec31.setInput('x', globals1, 'time');
+	scene.setFrame(30);
 	assert.equal(scene.time, 0.5);
 	await CoreSleep.sleep(10);
 	assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [0.5, 0, 0, 1].join(':'));
 
-	scene.set_frame(60);
+	scene.setFrame(60);
 	assert.equal(scene.time, 1);
 	await CoreSleep.sleep(10);
 	assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [1.0, 0, 0, 1].join(':'));
@@ -113,10 +113,10 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 	const param2 = builder1.createNode('param');
 	param2.set_gl_type(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
-	const float_to_vec31 = builder1.createNode('float_to_vec3');
-	float_to_vec31.set_input(0, param1);
-	float_to_vec31.set_input(1, globals1, 'time');
-	output1.set_input('color', float_to_vec31);
+	const float_to_vec31 = builder1.createNode('floatToVec3');
+	float_to_vec31.setInput(0, param1);
+	float_to_vec31.setInput(1, globals1, 'time');
+	output1.setInput('color', float_to_vec31);
 	await builder1.request_container();
 
 	const data = new SceneJsonExporter(scene).data();

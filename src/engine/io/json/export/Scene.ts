@@ -7,10 +7,10 @@ import {JsonExportDispatcher} from './Dispatcher';
 export interface SceneJsonExporterDataProperties {
 	frame: number;
 	frame_range: Number2;
-	frame_range_locked: Boolean2;
-	realtime_state: boolean;
+	frameRangeLocked: Boolean2;
+	realtimeState: boolean;
 	// fps: number;
-	master_camera_node_path: string | null;
+	masterCameraNodePath: string | null;
 }
 export interface SceneJsonExporterData {
 	properties?: SceneJsonExporterDataProperties;
@@ -34,10 +34,10 @@ export class SceneJsonExporter {
 				// name: this._scene.name(), // this conflicts with saving the name from the admin page
 				frame: this._scene.frame || 1,
 				frame_range: this._scene.frame_range,
-				frame_range_locked: this._scene.time_controller.frame_range_locked,
-				realtime_state: this._scene.time_controller.realtime_state,
+				frameRangeLocked: this._scene.time_controller.frameRangeLocked,
+				realtimeState: this._scene.time_controller.realtimeState,
 				// fps: this._scene.time_controller.fps,
-				master_camera_node_path: this._scene.cameras_controller.master_camera_node_path,
+				masterCameraNodePath: this._scene.cameras_controller.masterCameraNodePath,
 			},
 			root: nodes_data,
 			ui: ui_data,

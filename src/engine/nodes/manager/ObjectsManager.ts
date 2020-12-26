@@ -60,8 +60,8 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	children() {
 		return super.children() as BaseObjNodeType[];
 	}
-	nodes_by_type<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as ObjNodeChildrenMap[K][];
+	nodesByType<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K][] {
+		return super.nodesByType(type) as ObjNodeChildrenMap[K][];
 	}
 
 	multiple_display_flags_allowed() {
@@ -80,9 +80,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
 		this._queued_nodes_by_id.forEach((node, id) => {
-			const full_path = `_____${node.render_order}__${node.full_path()}`;
-			paths.push(full_path);
-			queued_nodes_by_path.set(full_path, node);
+			const fullPath = `_____${node.render_order}__${node.fullPath()}`;
+			paths.push(fullPath);
+			queued_nodes_by_path.set(fullPath, node);
 		});
 		this._queued_nodes_by_id.clear();
 
@@ -190,7 +190,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	// private async expected_loading_geo_nodes_by_id() {
-	// 	const geo_nodes = this.nodes_by_type('geo');
+	// 	const geo_nodes = this.nodesByType('geo');
 	// 	const node_by_id: Dictionary<GeoObjNode> = {};
 	// 	for (let geo_node of geo_nodes) {
 	// 		const is_displayed = await geo_node.is_displayed();

@@ -12,7 +12,7 @@ uniform float opacity;
 
 
 
-// /MAT/mesh_basic_builder1/globals1
+// /MAT/meshBasicBuilder1/globals1
 varying vec3 v_POLY_globals1_position;
 
 
@@ -42,22 +42,22 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/for_loop1/subnet_input1
-	vec3 v_POLY_for_loop1_position = v_POLY_globals1_position;
-	float v_POLY_for_loop1_in1 = 0.0;
-	for(float v_POLY_for_loop1_i = 0.0; v_POLY_for_loop1_i < 10.0; v_POLY_for_loop1_i+= 1.0){
-		float v_POLY_for_loop1_subnet_input1_i = v_POLY_for_loop1_i;
-		vec3 v_POLY_for_loop1_subnet_input1_position = v_POLY_for_loop1_position;
+	// /MAT/meshBasicBuilder1/forLoop1/subnetInput1
+	vec3 v_POLY_forLoop1_position = v_POLY_globals1_position;
+	float v_POLY_forLoop1_in1 = 0.0;
+	for(float v_POLY_forLoop1_i = 0.0; v_POLY_forLoop1_i < 10.0; v_POLY_forLoop1_i+= 1.0){
+		float v_POLY_forLoop1_subnetInput1_i = v_POLY_forLoop1_i;
+		vec3 v_POLY_forLoop1_subnetInput1_position = v_POLY_forLoop1_position;
 	
-		// /MAT/mesh_basic_builder1/for_loop1/add1
-		vec3 v_POLY_for_loop1_add1_sum = (v_POLY_for_loop1_subnet_input1_position + vec3(0.1, 0.1, 0.1));
+		// /MAT/meshBasicBuilder1/forLoop1/add1
+		vec3 v_POLY_forLoop1_add1_sum = (v_POLY_forLoop1_subnetInput1_position + vec3(0.1, 0.1, 0.1));
 	
-		// /MAT/mesh_basic_builder1/for_loop1/subnet_output1
-		v_POLY_for_loop1_position = v_POLY_for_loop1_add1_sum;
+		// /MAT/meshBasicBuilder1/forLoop1/subnetOutput1
+		v_POLY_forLoop1_position = v_POLY_forLoop1_add1_sum;
 	}
 	
-	// /MAT/mesh_basic_builder1/output1
-	diffuseColor.xyz = v_POLY_for_loop1_position;
+	// /MAT/meshBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_forLoop1_position;
 
 
 

@@ -3,14 +3,14 @@ import {InstanceSopNode} from '../../../../src/engine/nodes/sop/Instance';
 
 export function create_required_nodes(node: InstanceSopNode) {
 	const MAT = window.MAT;
-	const mesh_mat = MAT.createNode('mesh_basic_builder');
+	const mesh_mat = MAT.createNode('meshBasicBuilder');
 	const output1 = mesh_mat.createNode('output');
-	const instance_transform1 = mesh_mat.createNode('instance_transform');
+	const instance_transform1 = mesh_mat.createNode('instanceTransform');
 
-	output1.set_input('position', instance_transform1, 'position');
-	output1.set_input('normal', instance_transform1, 'normal');
+	output1.setInput('position', instance_transform1, 'position');
+	output1.setInput('normal', instance_transform1, 'normal');
 
-	node.p.material.set(mesh_mat.full_path());
+	node.p.material.set(mesh_mat.fullPath());
 
 	return {output1};
 }
@@ -23,8 +23,8 @@ QUnit.test('instance simple', async (assert) => {
 	const instance1 = geo1.createNode('instance');
 	create_required_nodes(instance1);
 
-	instance1.set_input(0, box1);
-	instance1.set_input(1, plane1);
+	instance1.setInput(0, box1);
+	instance1.setInput(1, plane1);
 
 	let container = await instance1.request_container();
 	const core_group = container.core_content()!;

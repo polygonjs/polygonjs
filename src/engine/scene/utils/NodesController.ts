@@ -27,15 +27,15 @@ export class NodesController {
 	objects_from_mask(mask: string): Object3D[] {
 		const masks = mask.split(' ');
 		const child_nodes = this.root.children() as BaseObjNodeType[];
-		const objects: Object3D[] = []
-		for(let child_node of child_nodes){
-			if(CoreString.matches_one_mask(child_node.name, masks)){
-				if(child_node.object){
-					objects.push(child_node.object)
+		const objects: Object3D[] = [];
+		for (let child_node of child_nodes) {
+			if (CoreString.matches_one_mask(child_node.name, masks)) {
+				if (child_node.object) {
+					objects.push(child_node.object);
 				}
 			}
 		}
-		return objects
+		return objects;
 	}
 	clear() {
 		const children = this.root.children();
@@ -59,13 +59,15 @@ export class NodesController {
 		let current_parents: BaseNodeType[] = [this.root];
 		let cmptr = 0;
 		while (current_parents.length > 0 && cmptr < 10) {
-			const children = current_parents.map((current_parent) => {
-				if (current_parent.children_allowed()) {
-					return current_parent.children();
-				} else {
-					return [];
-				}
-			}).flat();
+			const children = current_parents
+				.map((current_parent) => {
+					if (current_parent.children_allowed()) {
+						return current_parent.children();
+					} else {
+						return [];
+					}
+				})
+				.flat();
 			nodes = nodes.concat(children);
 			current_parents = children;
 			cmptr += 1;
@@ -76,7 +78,7 @@ export class NodesController {
 		const nodes = this.all_nodes();
 		const matching_nodes: BaseNodeType[] = [];
 		for (let node of nodes) {
-			const path = node.full_path();
+			const path = node.fullPath();
 			if (CoreString.match_mask(path, mask)) {
 				matching_nodes.push(node);
 			}

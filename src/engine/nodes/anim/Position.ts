@@ -74,7 +74,7 @@ export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
 		position.set_mode(ANIMATION_POSITION_MODES[this.pv.mode]);
 		position.set_relative_to(ANIMATION_POSITION_RELATIVE_TOS[this.pv.relative_to]);
 		position.set_offset(this.pv.offset);
-		timeline_builder.set_position(position);
+		timeline_builder.setPosition(position);
 
 		this.set_timeline_builder(timeline_builder);
 	}

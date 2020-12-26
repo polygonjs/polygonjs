@@ -22,8 +22,8 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		dest_offset: 0,
 	};
 	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
-	static type(): Readonly<'attrib_copy'> {
-		return 'attrib_copy';
+	static type(): Readonly<'attribCopy'> {
+		return 'attribCopy';
 	}
 
 	cook(input_contents: CoreGroup[], params: AttribCopySopParams) {

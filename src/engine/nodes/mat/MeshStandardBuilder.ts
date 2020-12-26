@@ -48,7 +48,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 > {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_standard_builder';
+		return 'meshStandardBuilder';
 	}
 	public used_assembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
 		return AssemblerName.GL_MESH_STANDARD;
@@ -87,7 +87,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		this.depth_controller.update();
 
 		if (this._material) {
-			this._material.uniforms.envMapIntensity.value = this.pv.env_map_intensity;
+			this._material.uniforms.envMapIntensity.value = this.pv.envMapIntensity;
 			MeshStandardBuilderMatNode._update_metalness(this);
 			MeshStandardBuilderMatNode._update_roughness(this);
 		}

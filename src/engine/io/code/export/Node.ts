@@ -80,7 +80,7 @@ export class NodeCodeExporter {
 			return `${scene_exporter.var_name()}.root`;
 		} else {
 			// add a _ in front in case the name starts by a number
-			// return `context._${this._node.full_path().replace(/\//g, '_').substr(1)}`;
+			// return `context._${this._node.fullPath().replace(/\//g, '_').substr(1)}`;
 			return this._node.name.replace(/\//g, '_');
 		}
 	}
@@ -109,7 +109,7 @@ export class NodeCodeExporter {
 
 	protected add_name() {
 		if (this._node.graph_node_id !== this._node.root.graph_node_id) {
-			this._lines.push(`${this.var_name()}.set_name('${this._node.name}')`);
+			this._lines.push(`${this.var_name()}.setName('${this._node.name}')`);
 		}
 	}
 
@@ -125,9 +125,9 @@ export class NodeCodeExporter {
 					const input_connection_point_name = this._node.io.inputs.named_input_connection_points[input_index]
 						.name;
 					const output_name = input.io.outputs.named_output_connection_points[output_index].name;
-					line = `${this.var_name()}.set_input('${input_connection_point_name}', ${input_exporter.var_name()}, '${output_name}')`;
+					line = `${this.var_name()}.setInput('${input_connection_point_name}', ${input_exporter.var_name()}, '${output_name}')`;
 				} else {
-					line = `${this.var_name()}.set_input(${input_index}, ${input_exporter.var_name()})`;
+					line = `${this.var_name()}.setInput(${input_index}, ${input_exporter.var_name()})`;
 				}
 				this._lines.push(line);
 			}
@@ -136,10 +136,10 @@ export class NodeCodeExporter {
 	protected add_comment() {
 		if (this._node.parent) {
 			// if not root
-			let comment = this._node.ui_data.comment;
+			let comment = this._node.uiData.comment;
 			if (comment) {
 				comment = SceneCodeExporter.sanitize_string(comment);
-				this._lines.push(`${this.var_name()}.ui_data.set_comment('${comment}')`);
+				this._lines.push(`${this.var_name()}.uiData.setComment('${comment}')`);
 			}
 		}
 	}
@@ -147,11 +147,11 @@ export class NodeCodeExporter {
 		if (this._node.parent) {
 			// if not root
 			let x_offset;
-			const pos = this._node.ui_data.position.clone();
+			const pos = this._node.uiData.position.clone();
 			if ((x_offset = options['position_x_offset']) != null) {
 				pos.x += x_offset;
 			}
-			this._lines.push(`${this.var_name()}.ui_data.set_position(${pos.x}, ${pos.y})`);
+			this._lines.push(`${this.var_name()}.uiData.setPosition(${pos.x}, ${pos.y})`);
 		}
 	}
 

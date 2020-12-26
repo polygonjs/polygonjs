@@ -19,8 +19,8 @@ export class AttribAddMultSopOperation extends BaseSopOperation {
 		post_add: 0,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attrib_add_mult'> {
-		return 'attrib_add_mult';
+	static type(): Readonly<'attribAddMult'> {
+		return 'attribAddMult';
 	}
 
 	cook(input_contents: CoreGroup[], params: AttribAddMultSopParams) {

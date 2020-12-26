@@ -20,7 +20,7 @@ const ATTRIBUTE_NAME = {
 	text: 'text',
 };
 const DEFAULT_VALUE = {
-	class_name: 'css2d_object',
+	class_name: 'css2DObject',
 	text: 'default text',
 };
 
@@ -38,7 +38,7 @@ const ParamsConfig = new Css3DObjectSopParamsConfig();
 export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'css3d_object';
+		return 'css3DObject';
 	}
 
 	initialize_node() {

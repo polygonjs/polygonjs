@@ -38,7 +38,7 @@ const ParamsConfig = new HemisphereLightObjParamsConfig();
 export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, HemisphereLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'hemisphere_light';
+		return 'hemisphereLight';
 	}
 	private _helper_controller = new HelperController<HemisphereLight>(
 		this,

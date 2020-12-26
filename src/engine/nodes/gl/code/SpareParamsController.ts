@@ -123,7 +123,7 @@ export class AssemblerNodeSpareParamsController {
 			current_param_names
 		);
 		if (spare_params_with_same_name_as_params.length > 0) {
-			const error_message = `${this._node.full_path()} attempts to create spare params called '${spare_params_with_same_name_as_params.join(
+			const error_message = `${this._node.fullPath()} attempts to create spare params called '${spare_params_with_same_name_as_params.join(
 				', '
 			)}' with same name as params`;
 			this._node.states.error.set(error_message);

@@ -42,7 +42,7 @@ export class ExpGlNode extends MathFunctionArg1Factory('exp') {}
 export class Exp2GlNode extends MathFunctionArg1Factory('exp2') {}
 export class FloorGlNode extends MathFunctionArg1Factory('floor') {}
 export class FractGlNode extends MathFunctionArg1Factory('fract') {}
-export class InverseSqrtGlNode extends MathFunctionArg1Factory('inverse_sqrt', {method: 'inversesqrt'}) {}
+export class InverseSqrtGlNode extends MathFunctionArg1Factory('inverseSqrt', {method: 'inversesqrt'}) {}
 export class LogGlNode extends MathFunctionArg1Factory('log') {}
 export class Log2GlNode extends MathFunctionArg1Factory('log2') {}
 export class NormalizeGlNode extends MathFunctionArg1Factory('normalize', {out: 'normalized'}) {}

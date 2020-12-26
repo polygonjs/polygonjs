@@ -59,7 +59,7 @@ export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
 > {
 	params_config = ParamsConfig;
 	static type() {
-		return 'adaptive_tone_mapping';
+		return 'adaptiveToneMapping';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

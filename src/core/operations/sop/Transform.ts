@@ -88,7 +88,7 @@ export class TransformSopOperation extends BaseSopOperation {
 			for (let point of points) {
 				const position = point.position().sub(params.pivot);
 				position.applyMatrix4(matrix);
-				point.set_position(position.add(params.pivot));
+				point.setPosition(position.add(params.pivot));
 			}
 		}
 	}

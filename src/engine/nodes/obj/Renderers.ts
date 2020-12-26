@@ -35,7 +35,7 @@ export class RenderersObjNode extends ParamLessBaseManagerObjNode {
 	children() {
 		return super.children() as BaseRopNodeType[];
 	}
-	nodes_by_type<K extends keyof RopNodeChildrenMap>(type: K): RopNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as RopNodeChildrenMap[K][];
+	nodesByType<K extends keyof RopNodeChildrenMap>(type: K): RopNodeChildrenMap[K][] {
+		return super.nodesByType(type) as RopNodeChildrenMap[K][];
 	}
 }

@@ -21,8 +21,8 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 		center: new Vector3(0, 0, 0),
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'rounded_box'> {
-		return 'rounded_box';
+	static type(): Readonly<'roundedBox'> {
+		return 'roundedBox';
 	}
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: RoundedBoxSopParams) {

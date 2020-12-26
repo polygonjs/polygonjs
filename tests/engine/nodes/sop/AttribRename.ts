@@ -2,10 +2,10 @@ QUnit.test('attrib_rename simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_rename1 = geo1.createNode('attrib_rename');
-	attrib_create1.set_input(0, plane1);
-	attrib_rename1.set_input(0, attrib_create1);
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_rename1 = geo1.createNode('attribRename');
+	attrib_create1.setInput(0, plane1);
+	attrib_rename1.setInput(0, attrib_create1);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set('@ptnum');

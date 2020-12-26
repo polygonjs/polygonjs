@@ -58,12 +58,12 @@ QUnit.test('a range will limit the result of an expression', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, 2);
 
-	scene.set_frame(1);
+	scene.setFrame(1);
 	param.set('$F');
 	await param.compute();
 	assert.equal(param.value, 1);
 
-	scene.set_frame(5);
+	scene.setFrame(5);
 	await param.compute();
 	assert.equal(param.value, 3);
 });
@@ -78,12 +78,12 @@ QUnit.test('integer param can take an expression returning a boolean', async (as
 	await param.compute();
 	assert.equal(param.value, 2);
 
-	scene.set_frame(1);
+	scene.setFrame(1);
 	param.set('$F>10');
 	await param.compute();
 	assert.equal(param.value, 0);
 
-	scene.set_frame(11);
+	scene.setFrame(11);
 	await param.compute();
 	assert.equal(param.value, 1);
 });

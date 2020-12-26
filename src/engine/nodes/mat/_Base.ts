@@ -16,7 +16,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	initialize_base_node() {
 		super.initialize_base_node();
 
-		this.name_controller.add_post_set_full_path_hook(this.set_material_name.bind(this));
+		this.name_controller.add_post_set_fullPath_hook(this.set_material_name.bind(this));
 
 		this.add_post_dirty_hook('_cook_main_without_inputs_when_dirty', () => {
 			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
@@ -30,7 +30,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 	private set_material_name() {
 		if (this._material) {
-			this._material.name = this.full_path();
+			this._material.name = this.fullPath();
 		}
 	}
 

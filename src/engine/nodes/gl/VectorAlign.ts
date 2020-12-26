@@ -8,7 +8,7 @@ const DefaultValues: Dictionary<Number3> = {
 	up: [0, 1, 0],
 };
 
-export class VectorAlignGlNode extends MathFunctionArg3Factory('vector_align', {
+export class VectorAlignGlNode extends MathFunctionArg3Factory('vectorAlign', {
 	in: ['start', 'end', 'up'],
 	method: 'vector_align_with_up',
 	functions: [Quaternion],

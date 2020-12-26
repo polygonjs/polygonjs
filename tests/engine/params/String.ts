@@ -33,10 +33,10 @@ QUnit.test('a string of `$F` will make the param frame dependent', async (assert
 	text_param.set('`$F*2+1`');
 	await text_param.compute();
 	assert.equal(text_param.value, '3');
-	scene.time_controller.set_frame(2);
+	scene.time_controller.setFrame(2);
 	await text_param.compute();
 	assert.equal(text_param.value, '5');
-	scene.time_controller.set_frame(3);
+	scene.time_controller.setFrame(3);
 	await text_param.compute();
 	assert.equal(text_param.value, '7');
 });
@@ -46,7 +46,7 @@ QUnit.test('set as a number will convert to string', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	transform1.set_input(0, box1);
+	transform1.setInput(0, box1);
 
 	transform1.p.group.set((<unknown>12) as string);
 	assert.equal(transform1.p.group.value, '12');
@@ -64,10 +64,10 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	text2_param.set('ok `ch("../' + text1_name + '/text")` middle `pow($F*3,2)` end');
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 9 end');
-	scene.time_controller.set_frame(2);
+	scene.time_controller.setFrame(2);
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 36 end');
-	scene.time_controller.set_frame(3);
+	scene.time_controller.setFrame(3);
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 81 end');
 	assert.equal(text2_param.graph_predecessors().length, 2);

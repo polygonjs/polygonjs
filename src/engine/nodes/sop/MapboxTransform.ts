@@ -19,7 +19,7 @@ export class MapboxTransformSopNode extends MapboxListenerSopNode<MapboxTransfor
 	params_config = ParamsConfig;
 
 	static type() {
-		return 'mapbox_transform';
+		return 'mapboxTransform';
 	}
 
 	static displayed_input_names(): string[] {
@@ -30,7 +30,7 @@ export class MapboxTransformSopNode extends MapboxListenerSopNode<MapboxTransfor
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 
-		// this.ui_data.set_icon("map-marker-alt");
+		// this.uiData.set_icon("map-marker-alt");
 		// this._init_mapbox_listener();
 	}
 

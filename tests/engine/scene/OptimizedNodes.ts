@@ -21,7 +21,7 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 8);
 	assert.equal(scene_player.nodes_controller.all_nodes().length, scene_no_player.nodes_controller.all_nodes().length);
 
-	const box1_player = scene_player.node(box1.full_path()) as BoxSopNode;
+	const box1_player = scene_player.node(box1.fullPath()) as BoxSopNode;
 	assert.equal(box1_player.type, OperationsComposerSopNode.type());
 
 	let container = await box1_player.request_container();
@@ -35,7 +35,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	transform1.set_input(0, box1);
+	transform1.setInput(0, box1);
 	box1.flags.optimize.set(true);
 	transform1.flags.optimize.set(true);
 	transform1.flags.display.set(true);
@@ -53,7 +53,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 		scene_no_player.nodes_controller.all_nodes().length - 1
 	);
 
-	const transform1_player = scene_player.node(transform1.full_path()) as TransformSopNode;
+	const transform1_player = scene_player.node(transform1.fullPath()) as TransformSopNode;
 	assert.equal(transform1_player.type, OperationsComposerSopNode.type());
 
 	let container = await transform1_player.request_container();
@@ -75,13 +75,13 @@ QUnit.test(
 		const transform2 = geo1.createNode('transform');
 		const merge1 = geo1.createNode('merge');
 		const merge2 = geo1.createNode('merge');
-		transform1.set_input(0, box1);
-		jitter1.set_input(0, transform1);
-		transform2.set_input(0, sphere1);
-		merge1.set_input(0, jitter1);
-		merge1.set_input(1, transform2);
-		merge2.set_input(0, merge1);
-		merge2.set_input(1, add1);
+		transform1.setInput(0, box1);
+		jitter1.setInput(0, transform1);
+		transform2.setInput(0, sphere1);
+		merge1.setInput(0, jitter1);
+		merge1.setInput(1, transform2);
+		merge2.setInput(0, merge1);
+		merge2.setInput(1, add1);
 		merge2.flags.display.set(true);
 
 		transform1.flags.optimize.set(true);
@@ -103,7 +103,7 @@ QUnit.test(
 			scene_no_player.nodes_controller.all_nodes().length - 4
 		);
 
-		const merge2_player = scene_player.node(merge2.full_path()) as TransformSopNode;
+		const merge2_player = scene_player.node(merge2.fullPath()) as TransformSopNode;
 		assert.equal(merge2_player.type, OperationsComposerSopNode.type());
 
 		let container = await merge2_player.request_container();

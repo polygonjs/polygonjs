@@ -144,8 +144,8 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	private make_successors_update_signatures() {
 		const successors = this.node.graph_all_successors();
 		if (this.node.children_allowed()) {
-			const subnet_inputs = this.node.nodes_by_type(NetworkChildNodeType.INPUT);
-			const subnet_outputs = this.node.nodes_by_type(NetworkChildNodeType.OUTPUT);
+			const subnet_inputs = this.node.nodesByType(NetworkChildNodeType.INPUT);
+			const subnet_outputs = this.node.nodesByType(NetworkChildNodeType.OUTPUT);
 			for (let subnet_input of subnet_inputs) {
 				successors.push(subnet_input);
 			}

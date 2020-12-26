@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {TypedPathParamValue} from '../../Walker';
+import {TypedPathParamValue, NODE_PATH_DEFAULT} from '../../Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {AttribFromTexture} from '../../geometry/operation/AttribFromTexture';
 import {CoreObject} from '../../geometry/Object';
@@ -18,15 +18,15 @@ interface AttribFromTextureSopParams extends DefaultOperationParams {
 
 export class AttribFromTextureSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribFromTextureSopParams = {
-		texture: new TypedPathParamValue(TypedPathParamValue.DEFAULT.UV),
+		texture: new TypedPathParamValue(NODE_PATH_DEFAULT.NODE.UV),
 		uv_attrib: 'uv',
 		attrib: 'pscale',
 		add: 0,
 		mult: 1,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attrib_from_texture'> {
-		return 'attrib_from_texture';
+	static type(): Readonly<'attribFromTexture'> {
+		return 'attribFromTexture';
 	}
 
 	async cook(input_contents: CoreGroup[], params: AttribFromTextureSopParams) {

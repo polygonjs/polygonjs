@@ -21,7 +21,7 @@ import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Raycaster} from 'three/src/core/Raycaster';
 import {Vector2} from 'three/src/math/Vector2';
-import {CoreType} from '../../../core/Type'
+import {CoreType} from '../../../core/Type';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -158,7 +158,7 @@ export abstract class TypedCameraObjNode<
 		node.set_as_master_camera();
 	}
 	set_as_master_camera() {
-		this.scene.cameras_controller.set_master_camera_node_path(this.full_path());
+		this.scene.cameras_controller.set_masterCameraNodePath(this.fullPath());
 	}
 
 	setup_for_aspect_ratio(aspect: number) {}
@@ -234,8 +234,8 @@ export class TypedThreejsCameraObjNode<
 	children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
 	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {

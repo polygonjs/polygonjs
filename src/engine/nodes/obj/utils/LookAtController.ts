@@ -49,7 +49,7 @@
 // 	// 		object.lookAt( position )
 
 // 	// 	else
-// 	// 		console.log("no object yet", this.full_path(), @_object)
+// 	// 		console.log("no object yet", this.fullPath(), @_object)
 
 // 	_update_from_look_at_target(look_at_target: Object3D) {
 // 		// TODO: should that set the node to dirty?
@@ -65,7 +65,7 @@
 // 			object.up.copy(this.node.params.value_with_type('up', ParamType.VECTOR3));
 // 			object.lookAt(look_at_target.position);
 // 		} else {
-// 			console.log('no object yet', this.node.full_path());
+// 			console.log('no object yet', this.node.fullPath());
 // 		}
 // 	}
 // }

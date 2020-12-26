@@ -19,11 +19,11 @@ QUnit.test('instances_count simple', async (assert) => {
 	const instance1 = geo1.createNode('instance');
 	create_required_nodes(instance1);
 
-	const instances_count1 = geo1.createNode('instances_count');
+	const instances_count1 = geo1.createNode('instancesCount');
 
-	instance1.set_input(0, box1);
-	instance1.set_input(1, plane1);
-	instances_count1.set_input(0, instance1);
+	instance1.setInput(0, box1);
+	instance1.setInput(1, plane1);
+	instances_count1.setInput(0, instance1);
 
 	let container = await instance1.request_container();
 	assert.equal(container.core_content()!.points().length, 4);

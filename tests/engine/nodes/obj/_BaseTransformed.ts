@@ -11,12 +11,12 @@ QUnit.test('obj nodes can be parented to each other', async (assert) => {
 	assert.equal(world_root.children.length, 3);
 	assert.equal(geo1.object.children[0].children.length, 0);
 
-	geo2.set_input(0, geo1);
+	geo2.setInput(0, geo1);
 	await scene.wait_for_cooks_completed();
 	assert.equal(world_root.children.length, 2);
 	assert.equal(geo1.object.children[0].children.length, 1);
 
-	geo2.set_input(0, null);
+	geo2.setInput(0, null);
 	await scene.wait_for_cooks_completed();
 	assert.equal(world_root.children.length, 3);
 	assert.equal(geo1.object.children[0].children.length, 0);
@@ -29,8 +29,8 @@ QUnit.test('obj nodes can keep their position on input change', async (assert) =
 	const null1 = scene.root.createNode('null');
 	const null2 = scene.root.createNode('null');
 
-	null2.set_input(0, null1);
-	geo1.set_input(0, null1);
+	null2.setInput(0, null1);
+	geo1.setInput(0, null1);
 
 	null1.p.t.y.set(1);
 
@@ -44,19 +44,19 @@ QUnit.test('obj nodes can keep their position on input change', async (assert) =
 
 	geo1.p.keep_pos_when_parenting.set(1);
 	// we remove input so that we parent under _WORLD_
-	geo1.set_input(0, null);
+	geo1.setInput(0, null);
 	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.pv.t.y, 0.4, 'ty');
 	assert.equal(geo1.pv.t.z, 2, 'tz');
 
 	// _WORLD_ -> parent A
-	geo1.set_input(0, null2);
+	geo1.setInput(0, null2);
 	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.pv.t.y, 3.4, 'ty');
 	assert.equal(geo1.pv.t.z, -5, 'tz');
 
 	// parent A -> parent B
-	geo1.set_input(0, null1);
+	geo1.setInput(0, null1);
 	await scene.wait_for_cooks_completed();
 	assert.in_delta(geo1.pv.t.y, -0.6, 0.00001, 'ty');
 	assert.equal(geo1.pv.t.z, 2, 'tz');

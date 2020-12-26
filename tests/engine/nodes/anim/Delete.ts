@@ -8,9 +8,9 @@
 // 	track1.p.name.set('test1');
 // 	track2.p.name.set('test2');
 // 	delete1.p.pattern.set('*2');
-// 	merge1.set_input(0, track1);
-// 	merge1.set_input(1, track1);
-// 	delete1.set_input(0, merge1);
+// 	merge1.setInput(0, track1);
+// 	merge1.setInput(1, track1);
+// 	delete1.setInput(0, merge1);
 
 // 	const container = await delete1.request_container();
 // 	const core_group = container.core_content()!;

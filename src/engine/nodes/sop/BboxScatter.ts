@@ -21,7 +21,7 @@ const ParamsConfig = new BboxScatterSopParamsConfig();
 export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'bbox_scatter';
+		return 'bboxScatter';
 	}
 
 	static displayed_input_names(): string[] {

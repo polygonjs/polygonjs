@@ -68,7 +68,7 @@ QUnit.test('string increment name', (assert) => {
 	assert.equal(CoreString.increment('a'), 'a1');
 	assert.equal(CoreString.increment('a12_11'), 'a12_12');
 	assert.equal(CoreString.increment('a1211'), 'a1212');
-	assert.equal(CoreString.increment('attrib_create'), 'attrib_create1');
+	assert.equal(CoreString.increment('attribCreate'), 'attribCreate1');
 	assert.equal(CoreString.increment('attrib_create1'), 'attrib_create2');
 	assert.equal(CoreString.increment('attrib_create2'), 'attrib_create3');
 	assert.equal(CoreString.increment('attrib_create3'), 'attrib_create4');
@@ -132,27 +132,29 @@ QUnit.test('number conversion', (assert) => {
 });
 
 QUnit.test('CoreString.upper_first', (assert) => {
-	assert.ok(CoreString.upper_first('abcde'), 'Abcde');
-	assert.ok(CoreString.upper_first('Abcde'), 'Abcde');
-	assert.ok(CoreString.upper_first('1bcde'), '1bcde');
+	assert.equal(CoreString.upper_first('abcde'), 'Abcde');
+	assert.equal(CoreString.upper_first('Abcde'), 'Abcde');
+	assert.equal(CoreString.upper_first('1bcde'), '1bcde');
 });
 QUnit.test('CoreString.titleize', (assert) => {
-	assert.ok(CoreString.titleize('spring_torus'), 'String Torus');
-	assert.ok(CoreString.titleize('spring torus'), 'String Torus');
-	assert.ok(CoreString.titleize('abcde'), 'Abcde');
-	assert.ok(CoreString.titleize('Abcde'), 'Abcde');
-	assert.ok(CoreString.titleize('1bcde'), '1bcde');
+	assert.equal(CoreString.titleize('spring_torus'), 'Spring Torus');
+	assert.equal(CoreString.titleize('spring torus'), 'Spring Torus');
+	assert.equal(CoreString.titleize('abcde'), 'Abcde');
+	assert.equal(CoreString.titleize('Abcde'), 'Abcde');
+	assert.equal(CoreString.titleize('1bcde'), '1bcde');
 });
 QUnit.test('CoreString.camel_case', (assert) => {
-	assert.ok(CoreString.titleize('spring torus'), 'StringTorus');
-	assert.ok(CoreString.titleize('spring_torus'), 'StringTorus');
-	assert.ok(CoreString.titleize('abcde'), 'Abcde');
-	assert.ok(CoreString.titleize('Abcde'), 'Abcde');
-	assert.ok(CoreString.titleize('1bcde'), '1bcde');
+	assert.equal(CoreString.camel_case('spring torus'), 'springTorus');
+	assert.equal(CoreString.camel_case('spring_torus'), 'springTorus');
+	assert.equal(CoreString.camel_case('hemisphere_light'), 'hemisphereLight');
+	assert.equal(CoreString.camel_case('mesh_basic_builder'), 'meshBasicBuilder');
+	assert.equal(CoreString.camel_case('abcde'), 'abcde');
+	assert.equal(CoreString.camel_case('Abcde'), 'abcde');
+	assert.equal(CoreString.camel_case('1bcde'), '1bcde');
 });
-QUnit.test('CoreString.snake_case', (assert) => {
-	assert.ok(CoreString.titleize('StringTorus'), 'spring_torus');
-	assert.ok(CoreString.titleize('Spring_torus'), 'string_torus');
-	assert.ok(CoreString.titleize('Abcde'), 'abcde');
-	assert.ok(CoreString.titleize('1bcde'), '1bcde');
-});
+// QUnit.test('CoreString.snake_case', (assert) => {
+// 	assert.equal(CoreString.snake_case('StringTorus'), 'spring_torus');
+// 	assert.equal(CoreString.snake_case('Spring_torus'), 'string_torus');
+// 	assert.equal(CoreString.snake_case('Abcde'), 'abcde');
+// 	assert.equal(CoreString.snake_case('1bcde'), '1bcde');
+// });

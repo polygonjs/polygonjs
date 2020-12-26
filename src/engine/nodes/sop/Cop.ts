@@ -33,7 +33,7 @@ export class CopSopNode extends ParamLessBaseNetworkSopNode {
 	children() {
 		return super.children() as BaseCopNodeType[];
 	}
-	nodes_by_type<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as CopNodeChildrenMap[K][];
+	nodesByType<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K][] {
+		return super.nodesByType(type) as CopNodeChildrenMap[K][];
 	}
 }

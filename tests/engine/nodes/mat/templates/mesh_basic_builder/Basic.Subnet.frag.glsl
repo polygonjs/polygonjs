@@ -12,7 +12,7 @@ uniform float opacity;
 
 
 
-// /MAT/mesh_basic_builder1/globals1
+// /MAT/meshBasicBuilder1/globals1
 varying vec3 v_POLY_globals1_position;
 
 
@@ -42,20 +42,20 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/subnet1/subnet_input1
+	// /MAT/meshBasicBuilder1/subnet1/subnetInput1
 	vec3 v_POLY_subnet1_position = v_POLY_globals1_position;
 	float v_POLY_subnet1_in1 = 0.0;
 	if(true){
-		vec3 v_POLY_subnet1_subnet_input1_position = v_POLY_globals1_position;
+		vec3 v_POLY_subnet1_subnetInput1_position = v_POLY_globals1_position;
 	
-		// /MAT/mesh_basic_builder1/subnet1/add1
-		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_subnet_input1_position + vec3(1.0, 0.5, 0.25));
+		// /MAT/meshBasicBuilder1/subnet1/add1
+		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_subnetInput1_position + vec3(1.0, 0.5, 0.25));
 	
-		// /MAT/mesh_basic_builder1/subnet1/subnet_output1
+		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
 		v_POLY_subnet1_position = v_POLY_subnet1_add1_sum;
 	}
 	
-	// /MAT/mesh_basic_builder1/output1
+	// /MAT/meshBasicBuilder1/output1
 	diffuseColor.xyz = v_POLY_subnet1_position;
 
 

@@ -35,8 +35,8 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		mag_filter: MAG_FILTER_DEFAULT_VALUE,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'texture_properties'> {
-		return 'texture_properties';
+	static type(): Readonly<'textureProperties'> {
+		return 'textureProperties';
 	}
 
 	async cook(input_contents: CoreGroup[], params: TexturePropertiesSopParams) {

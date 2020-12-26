@@ -14,35 +14,35 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	const COP = window.COP;
 	const file1 = COP.createNode('image');
 	const cop_file_name = 'file_uv';
-	file1.set_name(cop_file_name);
+	file1.setName(cop_file_name);
 	const container = await file1.request_container();
 	const file1_texture = container.texture();
 	await scene.wait_for_cooks_completed();
 
-	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const output1 = mesh_basic1.nodes_by_type('output')[0];
-	const globals1 = mesh_basic1.nodes_by_type('globals')[0];
-	const float_to_vec31 = mesh_basic1.createNode('float_to_vec3');
-	const vec3_to_float1 = mesh_basic1.createNode('vec3_to_float');
-	const vec4_to_float1 = mesh_basic1.createNode('vec4_to_float');
+	const output1 = mesh_basic1.nodesByType('output')[0];
+	const globals1 = mesh_basic1.nodesByType('globals')[0];
+	const float_to_vec31 = mesh_basic1.createNode('floatToVec3');
+	const vec3ToFloat1 = mesh_basic1.createNode('vec3ToFloat');
+	const vec4_to_float1 = mesh_basic1.createNode('vec4ToFloat');
 	const param1 = mesh_basic1.createNode('param');
 	const ramp1 = mesh_basic1.createNode('ramp');
 	const texture1 = mesh_basic1.createNode('texture');
-	texture1.p.default_value.set(file1.full_path());
+	texture1.p.default_value.set(file1.fullPath());
 
-	output1.set_input('color', float_to_vec31);
+	output1.setInput('color', float_to_vec31);
 	// ramp
-	float_to_vec31.set_input(0, ramp1);
-	ramp1.set_input(0, vec3_to_float1);
-	vec3_to_float1.set_input(0, globals1, 'position');
+	float_to_vec31.setInput(0, ramp1);
+	ramp1.setInput(0, vec3ToFloat1);
+	vec3ToFloat1.setInput(0, globals1, 'position');
 	// texture
-	float_to_vec31.set_input(1, vec4_to_float1, 0);
-	vec4_to_float1.set_input(0, texture1);
-	texture1.set_input(0, globals1, 'uv');
+	float_to_vec31.setInput(1, vec4_to_float1, 0);
+	vec4_to_float1.setInput(0, texture1);
+	texture1.setInput(0, globals1, 'uv');
 	// param
-	float_to_vec31.set_input(2, param1, 0);
+	float_to_vec31.setInput(2, param1, 0);
 
 	await mesh_basic1.request_container();
 	CoreSleep.sleep(100);
@@ -84,10 +84,10 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	await scene2.wait_for_cooks_completed();
 	await CoreSleep.sleep(500);
 
-	const file2 = scene2.node(file1.full_path()) as ImageCopNode;
+	const file2 = scene2.node(file1.fullPath()) as ImageCopNode;
 	const container2 = await file2.request_container();
 	const file2_texture = container2.texture();
-	const mesh_basic2 = scene2.node(mesh_basic1.full_path()) as MeshBasicBuilderMatNode;
+	const mesh_basic2 = scene2.node(mesh_basic1.fullPath()) as MeshBasicBuilderMatNode;
 	assert.equal(mesh_basic2.params.spare.length, 3);
 	const ramp_spare_param2 = mesh_basic2.params.get('ramp') as RampParam;
 	// const operator_path_spare_param2 = mesh_basic2.params.get('texture_map') as OperatorPathParam;

@@ -14,7 +14,7 @@ const ParamsConfig = new JsPointSopParamsConfig();
 export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'js_point';
+		return 'jsPoint';
 	}
 	// protected _assembler_controller: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
 	// 	ShaderAssemblerParticles
@@ -63,8 +63,8 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	children() {
 		return super.children() as BaseJsNodeType[];
 	}
-	nodes_by_type<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as JsNodeChildrenMap[K][];
+	nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 
 	async cook(input_contents: CoreGroup[]) {

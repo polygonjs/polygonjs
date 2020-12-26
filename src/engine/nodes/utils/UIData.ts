@@ -42,7 +42,7 @@ export class UIData {
 			return NODE_WIDTH_UNIT;
 		}
 	}
-	set_comment(comment: string | undefined) {
+	setComment(comment: string | undefined) {
 		this._comment = comment;
 		this.node.emit(NodeEvent.UI_DATA_COMMENT_UPDATED);
 	}
@@ -77,7 +77,7 @@ export class UIData {
 		return this._position;
 	}
 
-	set_position(new_position: Vector2 | number, y: number = 0) {
+	setPosition(new_position: Vector2 | number, y: number = 0) {
 		if (new_position instanceof Vector2) {
 			this._position.copy(new_position);
 		} else {
@@ -97,15 +97,7 @@ export class UIData {
 
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}
-	// arguments_to_vector(x: number,y: number){
-	// 	if (arguments.length === 2) {
-	// 		this._position.x = arguments[0];
-	// 		this._position.y = arguments[1];
-	// 	} else {
-	// 		this._position.x = new_position.x;
-	// 		this._position.y = new_position.y;
-	// 	}
-	// }
+
 	to_json(): NodeUIDataJson {
 		this._json.x = this._position.x;
 		this._json.y = this._position.y;

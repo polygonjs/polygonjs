@@ -20,10 +20,10 @@ export class TypedContainerController<NC extends NodeContext> {
 
 	request_container(): Promise<ContainerMap[NC]> | ContainerMap[NC] {
 		if (this.node.is_dirty || this.node.flags?.bypass?.active) {
-			// console.log(performance.now(), 'request_container', this.node.full_path());
+			// console.log(performance.now(), 'request_container', this.node.fullPath());
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve);
-				// console.log(performance.now(), 'promise start', this.node.full_path());
+				// console.log(performance.now(), 'promise start', this.node.fullPath());
 				this.node.scene.cook_controller.add_node(this.node);
 
 				// setTimeout(this.process_container_request.bind(this), 0);
@@ -72,7 +72,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		}
 	}
 	notify_requesters(container?: ContainerMap[NC]) {
-		// console.log(performance.now(), 'notify_requesters start', this.node.full_path());
+		// console.log(performance.now(), 'notify_requesters start', this.node.fullPath());
 		// make a copy of the callbacks first,
 		// to ensure that new ones are not added to this list
 		// in side effects from those callbacks
@@ -93,7 +93,7 @@ export class TypedContainerController<NC extends NodeContext> {
 			callback(container);
 		}
 		this.node.scene.cook_controller.remove_node(this.node);
-		// console.log(performance.now(), 'notify_requesters end', this.node.full_path());
+		// console.log(performance.now(), 'notify_requesters end', this.node.fullPath());
 	}
 }
 

@@ -19,9 +19,9 @@ QUnit.test('LOD simple', async (assert) => {
 	LOD1.p.distance0.set(5);
 	LOD1.p.distance1.set(10);
 
-	LOD1.set_input(0, box0);
-	LOD1.set_input(1, box1);
-	LOD1.set_input(2, box2);
+	LOD1.setInput(0, box0);
+	LOD1.setInput(1, box1);
+	LOD1.setInput(2, box2);
 
 	let container = await box0.request_container();
 	let core_group = container.core_content()!;

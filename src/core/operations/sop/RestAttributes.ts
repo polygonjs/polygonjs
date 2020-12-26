@@ -19,8 +19,8 @@ export class RestAttributesSopOperation extends BaseSopOperation {
 		normal: 'normal',
 		restN: 'restN',
 	};
-	static type(): Readonly<'rest_attributes'> {
-		return 'rest_attributes';
+	static type(): Readonly<'restAttributes'> {
+		return 'restAttributes';
 	}
 
 	cook(input_contents: CoreGroup[], params: RestAttributesSopParams) {

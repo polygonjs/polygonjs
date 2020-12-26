@@ -3,7 +3,7 @@ import {TypedNode} from '../../_Base';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 interface DisconnectionOptions {
-	set_input?: boolean;
+	setInput?: boolean;
 }
 
 export class TypedNodeConnection<NC extends NodeContext> {
@@ -56,8 +56,8 @@ export class TypedNodeConnection<NC extends NodeContext> {
 			this._node_dest.io.connections.remove_input_connection(this);
 		}
 
-		if (options.set_input === true) {
-			this._node_dest.io.inputs.set_input(this._input_index, null);
+		if (options.setInput === true) {
+			this._node_dest.io.inputs.setInput(this._input_index, null);
 		}
 	}
 }

@@ -4,7 +4,7 @@ QUnit.test('scatter simple', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const scatter1 = geo1.createNode('scatter');
 
-	scatter1.set_input(0, plane1);
+	scatter1.setInput(0, plane1);
 
 	let container;
 

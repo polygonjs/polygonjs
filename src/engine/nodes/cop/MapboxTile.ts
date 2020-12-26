@@ -66,7 +66,7 @@ export class MapboxTileCopNode extends TypedCopNode<MapboxTileCopParamsConfig> {
 	params_config = ParamsConfig;
 	_param_hires = true;
 	static type() {
-		return 'mapbox_tile';
+		return 'mapboxTile';
 	}
 
 	private _texture_loader: CoreTextureLoader | undefined;

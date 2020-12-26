@@ -12,7 +12,7 @@ uniform float opacity;
 
 
 
-// /MAT/mesh_basic_builder1/globals1
+// /MAT/meshBasicBuilder1/globals1
 varying vec3 v_POLY_globals1_position;
 
 
@@ -42,7 +42,7 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/output1
+	// /MAT/meshBasicBuilder1/output1
 	diffuseColor.xyz = v_POLY_globals1_position;
 
 

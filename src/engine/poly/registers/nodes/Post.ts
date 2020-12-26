@@ -30,20 +30,20 @@ import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
 
 export interface PostNodeChildrenMap {
-	adaptive_post_mapping: AdaptiveToneMappingPostNode;
-	after_image: AfterImagePostNode;
+	adaptiveToneMapping: AdaptiveToneMappingPostNode;
+	afterImage: AfterImagePostNode;
 	bleach: BleachPostNode;
-	brightness_contrast: BrightnessContrastPostNode;
+	brightnessContrast: BrightnessContrastPostNode;
 	clear: ClearPostNode;
-	clear_mask: ClearMaskPostNode;
-	color_correction: ColorCorrectionPostNode;
+	clearMask: ClearMaskPostNode;
+	colorCorrection: ColorCorrectionPostNode;
 	copy: CopyPostNode;
-	depth_of_field: DepthOfFieldPostNode;
-	dot_screen: DotScreenPostNode;
+	depthOfField: DepthOfFieldPostNode;
+	dotScreen: DotScreenPostNode;
 	film: FilmPostNode;
 	fxaa: FXAAPostNode;
-	gamma_correction: GammaCorrectionPostNode;
-	horizontal_blur: HorizontalBlurPostNode;
+	gammaCorrection: GammaCorrectionPostNode;
+	horizontalBlur: HorizontalBlurPostNode;
 	image: ImagePostNode;
 	layer: LayerPostNode;
 	mask: MaskPostNode;
@@ -51,12 +51,12 @@ export interface PostNodeChildrenMap {
 	outline: OutlinePostNode;
 	pixel: PixelPostNode;
 	render: RenderPostNode;
-	rgb_shift: RGBShiftPostNode;
+	rgbShift: RGBShiftPostNode;
 	sepia: SepiaPostNode;
 	sequence: SequencePostNode;
-	triangle_blur: TriangleBlurPostNode;
-	unreal_bloom: UnrealBloomPostNode;
-	vertical_blur: VerticalBlurPostNode;
+	triangleBlur: TriangleBlurPostNode;
+	unrealBloom: UnrealBloomPostNode;
+	verticalBlur: VerticalBlurPostNode;
 	vignette: VignettePostNode;
 }
 

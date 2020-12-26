@@ -13,14 +13,14 @@ export function WebcamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		res = ParamConfig.VECTOR2([1024, 1024]);
 	};
 }
-class WebCamCopParamsConfig extends TextureParamConfig(WebcamCopParamConfig(NodeParamsConfig)) {}
+class WebcamCopParamsConfig extends TextureParamConfig(WebcamCopParamConfig(NodeParamsConfig)) {}
 
-const ParamsConfig = new WebCamCopParamsConfig();
+const ParamsConfig = new WebcamCopParamsConfig();
 
-export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
+export class WebcamCopNode extends TypedCopNode<WebcamCopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'web_cam';
+		return 'webcam';
 	}
 
 	private _video: HTMLVideoElement | undefined;

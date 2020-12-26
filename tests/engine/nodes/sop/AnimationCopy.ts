@@ -4,11 +4,11 @@ QUnit.test('animation_copy simple', async (assert) => {
 	const file1 = geo1.createNode('file');
 	const hierarchy1 = geo1.createNode('hierarchy');
 	const animation_copy1 = geo1.createNode('animation_copy');
-	// const animation_mixer1 = geo1.createNode('animation_mixer');
+	// const animation_mixer1 = geo1.createNode('animationMixer');
 
-	hierarchy1.set_input(0, file1);
-	animation_copy1.set_input(0, hierarchy1);
-	animation_copy1.set_input(1, file1);
+	hierarchy1.setInput(0, file1);
+	animation_copy1.setInput(0, hierarchy1);
+	animation_copy1.setInput(1, file1);
 
 	hierarchy1.p.mode.set(1); // remove parent
 	file1.p.url.set('/examples/models/soldier.glb');

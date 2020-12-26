@@ -1,56 +1,60 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title>Consume Library Test</title>
-		<style>
-			html,
-			body,
-			#app {
-				margin: 0px;
-				height: 100%;
-			}
-			canvas {
-				display: block;
-				height: 100%;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="app"></div>
-	</body>
-	<script src="/dist/all.js"></script>
-	<script>
-		// import '/dist/polygonjs-engine.js';
-		// console.log('test', POLY);
-		// import {PerspectiveCameraObjNode} from '/dist/engine/nodes/obj/PerspectiveCamera.js';
-		// import {HemisphereLightObjNode} from '/dist/engine/nodes/obj/HemisphereLight.js';
-		// import {GeoObjNode} from '/dist/engine/nodes/obj/Geo.js';
-		// import {SphereSopNode} from '/dist/engine/nodes/sop/Sphere.js';
-		// import {EventsSopNode} from '/dist/engine/nodes/sop/Events.js';
-		// import {CameraOrbitControlsEventNode} from '/dist/engine/nodes/event/CameraOrbitControls.js';
 
-		// // create a scene
-		const scene = new POLY.PolyScene();
-
-		// // create a Box
-		const geo = scene.root.createNode('geo');
-		const sphere = geo.createNode('sphere');
-
-		// // add a light
-		const hemisphere = scene.root.createNode('hemisphere_light');
-
-		// // create a camera, add orbit_controls and mount the viewer
-		const perspective_camera1 = scene.root.createNode('perspective_camera');
-		const events1 = perspective_camera1.createNode('events');
-		const orbits_controls = events1.createNode('camera_orbit_controls');
-		perspective_camera1.p.controls.set(orbits_controls.full_path());
-		perspective_camera1.p.t.set([5, 5, 5]);
-		const element = document.getElementById('app');
-		if (element) {
-			perspective_camera1.createViewer(element);
-		} else {
-			console.error('element #app not found');
+<head>
+	<meta charset="utf-8" />
+	<title>Consume Library Test</title>
+	<style>
+		html,
+		body,
+		#app {
+			margin: 0px;
+			height: 100%;
 		}
-	</script>
+
+		canvas {
+			display: block;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app"></div>
+</body>
+<script src="/dist/all.js"></script>
+<script>
+	// import '/dist/polygonjs-engine.js';
+	// console.log('test', POLY);
+	// import {PerspectiveCameraObjNode} from '/dist/engine/nodes/obj/PerspectiveCamera.js';
+	// import {HemisphereLightObjNode} from '/dist/engine/nodes/obj/HemisphereLight.js';
+	// import {GeoObjNode} from '/dist/engine/nodes/obj/Geo.js';
+	// import {SphereSopNode} from '/dist/engine/nodes/sop/Sphere.js';
+	// import {EventsSopNode} from '/dist/engine/nodes/sop/Events.js';
+	// import {CameraOrbitControlsEventNode} from '/dist/engine/nodes/event/CameraOrbitControls.js';
+
+	// // create a scene
+	const scene = new POLY.PolyScene();
+
+	// // create a Box
+	const geo = scene.root.createNode('geo');
+	const sphere = geo.createNode('sphere');
+
+	// // add a light
+	const hemisphere = scene.root.createNode('hemisphereLight');
+
+	// // create a camera, add orbit_controls and mount the viewer
+	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
+	const events1 = perspective_camera1.createNode('events');
+	const orbits_controls = events1.createNode('camera_orbit_controls');
+	perspective_camera1.p.controls.set(orbits_controls.full_path());
+	perspective_camera1.p.t.set([5, 5, 5]);
+	const element = document.getElementById('app');
+	if (element) {
+		perspective_camera1.createViewer(element);
+	} else {
+		console.error('element #app not found');
+	}
+</script>
+
 </html>

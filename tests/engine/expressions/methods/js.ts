@@ -22,8 +22,8 @@ QUnit.test('expression js simple', async (assert) => {
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
-	const geo2 = scene2.root.nodes_by_type('geo')[0];
-	const box2 = geo2.nodes_by_type('box')[0];
+	const geo2 = scene2.root.nodesByType('geo')[0];
+	const box2 = geo2.nodesByType('box')[0];
 	const date2 = Date.now();
 	await box2.p.size.compute();
 	assert.more_than_or_equal(box2.p.size.value, date2 - 100);

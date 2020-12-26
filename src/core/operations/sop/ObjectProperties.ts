@@ -31,8 +31,8 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		receive_shadow: true,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'object_properties'> {
-		return 'object_properties';
+	static type(): Readonly<'objectProperties'> {
+		return 'objectProperties';
 	}
 
 	cook(input_contents: CoreGroup[], params: ObjectPropertiesSopParams) {

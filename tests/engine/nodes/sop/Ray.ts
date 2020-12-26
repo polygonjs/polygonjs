@@ -8,9 +8,9 @@ QUnit.test('ray from normal', async (assert) => {
 
 	transform1.p.scale.set(0.2);
 
-	transform1.set_input(0, sphere1);
-	ray1.set_input(0, transform1);
-	ray1.set_input(1, box1);
+	transform1.setInput(0, sphere1);
+	ray1.setInput(0, transform1);
+	ray1.setInput(1, box1);
 
 	let container, size;
 
@@ -34,10 +34,10 @@ QUnit.test('ray from dir', async (assert) => {
 	transform2.p.scale.set(5);
 	ray1.p.use_normals.set(0);
 
-	transform1.set_input(0, sphere1);
-	transform2.set_input(0, plane1);
-	ray1.set_input(0, transform1);
-	ray1.set_input(1, transform2);
+	transform1.setInput(0, sphere1);
+	transform2.setInput(0, plane1);
+	ray1.setInput(0, transform1);
+	ray1.setInput(1, transform2);
 
 	let container, size;
 

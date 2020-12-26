@@ -3,14 +3,14 @@ QUnit.test('expression centroid works with path', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	transform1.set_input(0, box1);
+	transform1.setInput(0, box1);
 	transform1.p.t.x.set(3);
 	transform1.p.t.y.set(5);
 	transform1.p.t.z.set(-10);
 	transform1.p.scale.set(3);
 
 	const transform2 = geo1.createNode('transform');
-	transform2.set_input(0, transform1);
+	transform2.setInput(0, transform1);
 
 	const box2 = geo1.createNode('box');
 

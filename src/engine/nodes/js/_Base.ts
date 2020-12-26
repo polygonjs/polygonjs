@@ -20,7 +20,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _assembler: BaseJsFunctionAssembler | undefined;
 
 	initialize_base_node() {
-		this.ui_data.set_layout_horizontal();
+		this.uiData.set_layout_horizontal();
 		this.io.connection_points.initialize_node();
 	}
 	cook() {
@@ -60,7 +60,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				const output_name = output_connection_point.name;
 				return input_node.js_var_name(output_name);
 			} else {
-				console.warn(`no output called '${name}' for gl node ${input_node.full_path()}`);
+				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);
 				throw 'variable_for_input ERROR';
 			}
 		} else {

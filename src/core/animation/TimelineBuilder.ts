@@ -101,12 +101,12 @@ export class TimelineBuilder {
 	delay() {
 		return this._delay;
 	}
-	set_position(position: AnimationPosition | undefined) {
+	setPosition(position: AnimationPosition | undefined) {
 		this._position = position;
 		// That should not be recursive here,
 		// otherwise the merge node will override timelines whose position may already been set
 		// for (let builder of this._timeline_builders) {
-		// 	builder.set_position(position);
+		// 	builder.setPosition(position);
 		// }
 	}
 	position() {
@@ -151,15 +151,15 @@ export class TimelineBuilder {
 		if (this._property) {
 			const name = this._property.name();
 			if (name) {
-				new_timeline_builder.set_property_name(name);
+				new_timeline_builder.setPropertyName(name);
 			}
 			const target_value = this._property.target_value();
 			if (target_value != null) {
-				new_timeline_builder.set_property_value(target_value);
+				new_timeline_builder.setPropertyValue(target_value);
 			}
 		}
 		if (this._position) {
-			new_timeline_builder.set_position(this._position.clone());
+			new_timeline_builder.setPosition(this._position.clone());
 		}
 		for (let child_timeline_builder of this._timeline_builders) {
 			const new_child_timeline_builder = child_timeline_builder.clone();
@@ -168,11 +168,11 @@ export class TimelineBuilder {
 		return new_timeline_builder;
 	}
 
-	set_property_name(name: string) {
+	setPropertyName(name: string) {
 		this._property = this._property || new TimelineBuilderProperty();
-		this._property.set_name(name);
+		this._property.setName(name);
 	}
-	set_property_value(value: AnimPropertyTargetValue) {
+	setPropertyValue(value: AnimPropertyTargetValue) {
 		this._property = this._property || new TimelineBuilderProperty();
 		this._property.set_target_value(value);
 	}

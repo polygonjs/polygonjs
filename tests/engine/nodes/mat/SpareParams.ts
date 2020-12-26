@@ -17,7 +17,7 @@ QUnit.test(
 		const MAT = window.MAT;
 		await scene.wait_for_cooks_completed();
 
-		const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 		mesh_basic1.createNode('output');
 		mesh_basic1.createNode('globals');
 		assert.ok(mesh_basic1.assembler_controller, 'assembler controller is present');
@@ -54,7 +54,7 @@ QUnit.test(
 		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.FLOAT);
 
 		// updating the param updates the uniform, without having to cook the material node
-		output1.set_input('alpha', param1);
+		output1.setInput('alpha', param1);
 		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 		await mesh_basic1.request_container();
 		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
@@ -78,14 +78,14 @@ QUnit.test(
 			'param updates the uniform when its expression becomes dirty'
 		);
 
-		scene.set_frame(2);
+		scene.setFrame(2);
 		await CoreSleep.sleep(100);
 		assert.equal(
 			mesh_basic1.material.uniforms[uniform_name].value,
 			2,
 			'param updates the uniform when its expression becomes dirty'
 		);
-		scene.set_frame(3);
+		scene.setFrame(3);
 		await CoreSleep.sleep(20);
 		assert.equal(
 			mesh_basic1.material.uniforms[uniform_name].value,
@@ -101,14 +101,14 @@ QUnit.test(
 		await CoreSleep.sleep(10);
 		assert.equal(spare_param.raw_input, '$F');
 		assert.notOk(spare_param.is_dirty, 'param not dirty');
-		scene.set_frame(35);
+		scene.setFrame(35);
 		assert.ok(spare_param.is_dirty, 'param is dirty');
 		assert.equal(scene.frame, 35, 'scene frame is 35');
 		await spare_param.compute();
 		assert.equal(spare_param.value, 35, 'param is 35');
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 35, 'uniforrm is 35');
-		scene.time_controller.set_frame_range(0, 1000);
-		scene.set_frame(124);
+		scene.time_controller.setFrameRange(0, 1000);
+		scene.setFrame(124);
 		await spare_param.compute();
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 124, 'frame is 124');
 
@@ -127,7 +127,7 @@ QUnit.test(
 		const scene2 = await SceneJsonImporter.load_data(data);
 		await scene2.wait_for_cooks_completed();
 
-		const new_mesh_basic1 = scene2.node('/MAT/mesh_basic_builder1') as BaseBuilderMatNodeType;
+		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 		await new_mesh_basic1.request_container();
 		assert.ok(new_mesh_basic1.assembler_controller, 'assembler_controller is present');
 		assert.notOk(new_mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
@@ -138,14 +138,14 @@ QUnit.test(
 		assert.equal(new_mesh_basic1.material.uniforms[uniform_name].value, 124, 'uniform is 124');
 
 		// update the param to be sure dependency with frame has been created
-		scene2.set_frame(2);
+		scene2.setFrame(2);
 		await CoreSleep.sleep(100);
 		assert.equal(
 			new_mesh_basic1.material.uniforms[uniform_name].value,
 			2,
 			'param updates the uniform when its expression becomes dirty'
 		);
-		scene2.set_frame(10);
+		scene2.setFrame(10);
 		await CoreSleep.sleep(20);
 		assert.equal(
 			new_mesh_basic1.material.uniforms[uniform_name].value,
@@ -158,7 +158,7 @@ QUnit.test(
 QUnit.test('MAT spare params:creating a spare param as vector, saving and load back', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
 
@@ -235,7 +235,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 QUnit.test('MAT spare params: creating a spare param as color, saving and load back', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const mesh_basic1 = MAT.createNode('mesh_basic_builder');
+	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compile required');

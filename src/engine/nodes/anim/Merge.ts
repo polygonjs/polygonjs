@@ -87,7 +87,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 			position.set_mode(AnimationPositionMode.RELATIVE);
 			position.set_relative_to(AnimationPositionRelativeTo.START);
 			position.set_offset(this.pv.offset);
-			timeline_builder.set_position(position);
+			timeline_builder.setPosition(position);
 		}
 	}
 	private _set_play_one_at_a_time(timeline_builder: TimelineBuilder) {
@@ -97,7 +97,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 			position.set_mode(AnimationPositionMode.RELATIVE);
 			position.set_relative_to(AnimationPositionRelativeTo.END);
 			position.set_offset(this.pv.offset);
-			timeline_builder.set_position(position);
+			timeline_builder.setPosition(position);
 		}
 	}
 }

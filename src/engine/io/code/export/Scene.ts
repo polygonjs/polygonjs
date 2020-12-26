@@ -16,13 +16,13 @@ export class SceneCodeExporter {
 				lines.push(root_line);
 			});
 
-		lines.push(`${this.var_name()}.set_frame(${this._scene.frame || 1})`);
-		lines.push(`${this.var_name()}.set_frame_range(${this._scene.frame_range.join(',')})`);
+		lines.push(`${this.var_name()}.setFrame(${this._scene.frame || 1})`);
+		lines.push(`${this.var_name()}.setFrameRange(${this._scene.frame_range.join(',')})`);
 		// lines.push(`${this.var_name()}.time_controller.set_fps(${this._scene.time_controller.fps})`);
 
-		const camera_path = this._scene.cameras_controller.master_camera_node_path;
+		const camera_path = this._scene.cameras_controller.masterCameraNodePath;
 		if (camera_path) {
-			lines.push(`${this.var_name()}.cameras_controller.set_master_camera_node_path('${camera_path}')`);
+			lines.push(`${this.var_name()}.cameras_controller.set_masterCameraNodePath('${camera_path}')`);
 		}
 		this.add_semi_colons(lines);
 		return lines.join('\n');

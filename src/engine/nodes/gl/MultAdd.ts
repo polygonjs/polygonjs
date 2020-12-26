@@ -15,7 +15,7 @@ enum InputName {
 
 export class MultAddGlNode extends BaseNodeGlMathFunctionArg4GlNode {
 	static type() {
-		return 'mult_add';
+		return 'multAdd';
 	}
 
 	protected _gl_input_name(index: number) {

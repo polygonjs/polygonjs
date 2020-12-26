@@ -26,7 +26,7 @@ QUnit.test('expression str_sub simple', async (assert) => {
 
 	// create a text and apply expression to it's text attribute
 	const text2 = geo1.createNode('text');
-	text2.set_name('text2');
+	text2.setName('text2');
 	const text_param2 = text2.p.text;
 	assert.equal(text2.name, 'text2');
 	text_param.set('`str_sub( ch("../text2/text") )`');

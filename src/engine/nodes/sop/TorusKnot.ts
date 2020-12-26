@@ -32,7 +32,7 @@ const ParamsConfig = new TorusKnotSopParamsConfig();
 export class TorusKnotSopNode extends TypedSopNode<TorusKnotSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'torus_knot';
+		return 'torusKnot';
 	}
 	initialize_node() {}
 

@@ -26,7 +26,7 @@ const ParamsConfig = new InstanceTransformGlParamsConfig();
 export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'instance_transform';
+		return 'instanceTransform';
 	}
 
 	initialize_node() {

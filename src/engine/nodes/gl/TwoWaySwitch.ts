@@ -14,7 +14,7 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 	static type() {
-		return 'two_way_switch';
+		return 'twoWaySwitch';
 	}
 
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);

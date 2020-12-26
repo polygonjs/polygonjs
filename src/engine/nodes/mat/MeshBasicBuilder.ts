@@ -25,7 +25,7 @@ const ParamsConfig = new MeshBasicMatParamsConfig();
 export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerBasic, MeshBasicMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_basic_builder';
+		return 'meshBasicBuilder';
 	}
 	public used_assembler(): Readonly<AssemblerName.GL_MESH_BASIC> {
 		return AssemblerName.GL_MESH_BASIC;

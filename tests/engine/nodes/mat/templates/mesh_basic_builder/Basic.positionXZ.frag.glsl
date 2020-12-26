@@ -12,7 +12,7 @@ uniform float opacity;
 
 
 
-// /MAT/mesh_basic_builder1/globals1
+// /MAT/meshBasicBuilder1/globals1
 varying vec3 v_POLY_globals1_position;
 
 
@@ -42,15 +42,15 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/vec3_to_float1
-	float v_POLY_vec3_to_float1_x = v_POLY_globals1_position.x;
-	float v_POLY_vec3_to_float1_y = v_POLY_globals1_position.y;
+	// /MAT/meshBasicBuilder1/vec3ToFloat1
+	float v_POLY_vec3ToFloat1_x = v_POLY_globals1_position.x;
+	float v_POLY_vec3ToFloat1_y = v_POLY_globals1_position.y;
 	
-	// /MAT/mesh_basic_builder1/float_to_vec3_1
-	vec3 v_POLY_float_to_vec3_1_vec3 = vec3(v_POLY_vec3_to_float1_x, 0.0, v_POLY_vec3_to_float1_y);
+	// /MAT/meshBasicBuilder1/floatToVec3_1
+	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_vec3ToFloat1_x, 0.0, v_POLY_vec3ToFloat1_y);
 	
-	// /MAT/mesh_basic_builder1/output1
-	diffuseColor.xyz = v_POLY_float_to_vec3_1_vec3;
+	// /MAT/meshBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_floatToVec3_1_vec3;
 
 
 

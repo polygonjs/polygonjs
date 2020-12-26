@@ -8,10 +8,10 @@ QUnit.test('mat sky simple', async (assert) => {
 	const sphere1 = geo1.createNode('sphere');
 	const material1 = geo1.createNode('material');
 
-	material1.set_input(0, sphere1);
+	material1.setInput(0, sphere1);
 
 	sphere1.p.radius.set(100000);
-	material1.p.material.set(sky1.full_path());
+	material1.p.material.set(sky1.fullPath());
 
 	const container = await material1.request_container();
 	const core_group = container.core_content()!;

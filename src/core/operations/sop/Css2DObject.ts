@@ -4,7 +4,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {CSS2DObject} from '../../../modules/core/objects/CSS2DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../geometry/Group';
-import { CoreType } from '../../Type';
+import {CoreType} from '../../Type';
 
 interface Css2DObjectParams {
 	id: string;
@@ -33,15 +33,15 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 		use_id_attrib: false,
 		id: 'my_css_object',
 		use_class_attrib: false,
-		class_name: 'css2d_object',
+		class_name: 'css2DObject',
 		use_html_attrib: false,
 		html: '<div>default html</div>',
 		copy_attributes: false,
 		attributes_to_copy: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'css2d_object'> {
-		return 'css2d_object';
+	static type(): Readonly<'css2DObject'> {
+		return 'css2DObject';
 	}
 
 	cook(input_contents: CoreGroup[], params: Css2DObjectSopParams) {

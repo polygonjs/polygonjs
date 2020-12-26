@@ -9,19 +9,12 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
 import {ParamConstructorMap} from './types/ParamConstructorMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 enum OperatorPathMode {
 	NODE = 'NODE',
 	PARAM = 'PARAM',
 }
-
-export const OPERATOR_PATH_DEFAULT = {
-	NODE: {
-		UV: '/COP/image_uv',
-		ENV_MAP: '/COP/env_map',
-	},
-};
 
 export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	private _found_node: BaseNodeType | null = null;

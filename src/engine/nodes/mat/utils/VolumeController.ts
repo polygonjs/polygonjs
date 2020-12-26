@@ -14,10 +14,10 @@ import {Object3D} from 'three/src/core/Object3D';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		color = ParamConfig.COLOR([1, 1, 1]);
-		step_size = ParamConfig.FLOAT(0.01);
+		stepSize = ParamConfig.FLOAT(0.01);
 		density = ParamConfig.FLOAT(1);
-		shadow_density = ParamConfig.FLOAT(1);
-		light_dir = ParamConfig.VECTOR3([-1, -1, -1]);
+		shadowDensity = ParamConfig.FLOAT(1);
+		lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
 	};
 }
 class VolumeMaterial extends ShaderMaterial {}
@@ -50,12 +50,12 @@ export class VolumeController {
 		const uniforms = this.node.material.uniforms;
 
 		uniforms.u_Color.value.copy(this.node.pv.color);
-		uniforms.u_StepSize.value = this.node.pv.step_size;
+		uniforms.u_StepSize.value = this.node.pv.stepSize;
 		uniforms.u_VolumeDensity.value = this.node.pv.density;
-		uniforms.u_ShadowDensity.value = this.node.pv.shadow_density;
+		uniforms.u_ShadowDensity.value = this.node.pv.shadowDensity;
 
 		const dir_light = uniforms.u_DirectionalLightDirection.value; //[0];
-		const pv_dir_light = this.node.pv.light_dir;
+		const pv_dir_light = this.node.pv.lightDir;
 		if (dir_light) {
 			/*
 			do not use Vector3.copy, as it fails when the volume material is loaded again after

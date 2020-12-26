@@ -81,9 +81,9 @@ export class CoreString {
 		}
 	}
 
-	// https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
+	// inspired from https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
 	static camel_case(str: string): string {
-		return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+		return str.replace(/_/g, ' ').replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
 			if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
 			return index === 0 ? match.toLowerCase() : match.toUpperCase();
 		});
@@ -94,22 +94,22 @@ export class CoreString {
 		return newString;
 	}
 	// https://stackoverflow.com/questions/52963900/convert-different-strings-to-snake-case-in-javascript
-	static snake_case(str: string): string {
-		return str
-			.replace(/\W+/g, ' ')
-			.split(/ |\B(?=[A-Z])/)
-			.map((word) => word.toLowerCase())
-			.join('_');
-	}
+	// static snake_case(str: string): string {
+	// 	return str
+	// 		.replace(/\W+/g, ' ')
+	// 		.split(/ |\B(?=[A-Z])/)
+	// 		.map((word) => word.toLowerCase())
+	// 		.join('_');
+	// }
 	static titleize(word: string): string {
 		const elements = word.split(/\s|_/g);
 		const newElements = elements.map((elem) => this.upper_first(elem));
 		return newElements.join(' ');
 	}
 
-	static type_to_class_name(word: string): string {
-		return this.upper_first(this.camel_case(word));
-	}
+	// static type_to_class_name(word: string): string {
+	// 	return this.upper_first(this.camel_case(word));
+	// }
 
 	static timestamp_to_seconds(word: string): number {
 		return Date.parse(word) / 1000;

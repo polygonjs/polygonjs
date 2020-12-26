@@ -35,7 +35,7 @@ const ParamsConfig = new AttribTransferSopParamsConfig();
 export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_transfer';
+		return 'attribTransfer';
 	}
 
 	_core_group_dest!: CoreGroup;

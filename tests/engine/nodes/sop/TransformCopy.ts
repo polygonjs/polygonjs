@@ -6,11 +6,11 @@ QUnit.test('transform copy simple', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	const transform_copy1 = geo1.createNode('transform_copy');
+	const transform_copy1 = geo1.createNode('transformCopy');
 
-	transform1.set_input(0, box1);
-	transform_copy1.set_input(0, box1);
-	transform_copy1.set_input(1, transform1);
+	transform1.setInput(0, box1);
+	transform_copy1.setInput(0, box1);
+	transform_copy1.setInput(1, transform1);
 
 	transform1.p.apply_on.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
 	transform1.p.t.x.set(2);

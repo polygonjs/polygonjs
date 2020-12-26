@@ -3,7 +3,7 @@ QUnit.test('transform simple', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	transform1.set_input(0, box1);
+	transform1.setInput(0, box1);
 
 	let container, core_group;
 	container = await transform1.request_container();

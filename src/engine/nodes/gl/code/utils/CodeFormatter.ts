@@ -19,7 +19,7 @@ const BLOCK_END_LAST_CHAR = '}';
 
 export class CodeFormatter {
 	static node_comment(node: BaseGlNodeType, line_type: LineType): string {
-		let line = `// ${node.full_path()}`;
+		let line = `// ${node.fullPath()}`;
 		let prefix: string = LINE_PREFIXES[line_type];
 		if (line_type == LineType.BODY) {
 			let distance = this.node_distance_to_material(node);

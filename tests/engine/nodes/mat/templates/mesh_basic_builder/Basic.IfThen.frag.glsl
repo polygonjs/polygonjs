@@ -12,7 +12,7 @@ uniform float opacity;
 
 
 
-// /MAT/mesh_basic_builder1/globals1
+// /MAT/meshBasicBuilder1/globals1
 varying vec3 v_POLY_globals1_position;
 
 
@@ -42,27 +42,27 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/vec3_to_float1
-	float v_POLY_vec3_to_float1_y = v_POLY_globals1_position.y;
+	// /MAT/meshBasicBuilder1/vec3ToFloat1
+	float v_POLY_vec3ToFloat1_y = v_POLY_globals1_position.y;
 	
-	// /MAT/mesh_basic_builder1/compare1
-	bool v_POLY_compare1_val = (v_POLY_vec3_to_float1_y < 0.0);
+	// /MAT/meshBasicBuilder1/compare1
+	bool v_POLY_compare1_val = (v_POLY_vec3ToFloat1_y < 0.0);
 	
-	// /MAT/mesh_basic_builder1/if_then1/subnet_input1
-	vec3 v_POLY_if_then1_position = v_POLY_globals1_position;
-	float v_POLY_if_then1_in2 = 0.0;
+	// /MAT/meshBasicBuilder1/ifThen1/subnetInput1
+	vec3 v_POLY_ifThen1_position = v_POLY_globals1_position;
+	float v_POLY_ifThen1_in2 = 0.0;
 	if(v_POLY_compare1_val){
-		vec3 v_POLY_if_then1_subnet_input1_position = v_POLY_globals1_position;
+		vec3 v_POLY_ifThen1_subnetInput1_position = v_POLY_globals1_position;
 	
-		// /MAT/mesh_basic_builder1/if_then1/mult_add1
-		vec3 v_POLY_if_then1_mult_add1_val = (vec3(2.0, 2.0, 2.0)*(v_POLY_if_then1_subnet_input1_position + vec3(0.0, 0.0, 0.0))) + vec3(0.0, 0.0, 0.0);
+		// /MAT/meshBasicBuilder1/ifThen1/multAdd1
+		vec3 v_POLY_ifThen1_multAdd1_val = (vec3(2.0, 2.0, 2.0)*(v_POLY_ifThen1_subnetInput1_position + vec3(0.0, 0.0, 0.0))) + vec3(0.0, 0.0, 0.0);
 	
-		// /MAT/mesh_basic_builder1/if_then1/subnet_output1
-		v_POLY_if_then1_position = v_POLY_if_then1_mult_add1_val;
+		// /MAT/meshBasicBuilder1/ifThen1/subnetOutput1
+		v_POLY_ifThen1_position = v_POLY_ifThen1_multAdd1_val;
 	}
 	
-	// /MAT/mesh_basic_builder1/output1
-	diffuseColor.xyz = v_POLY_if_then1_position;
+	// /MAT/meshBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_ifThen1_position;
 
 
 

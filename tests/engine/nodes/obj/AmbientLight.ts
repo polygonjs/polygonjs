@@ -3,18 +3,18 @@ QUnit.test('ambient light simple', async (assert) => {
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2, 'world has 2 children');
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
-	const ambient_light1 = scene.root.createNode('ambient_light');
-	assert.equal(ambient_light1.name, 'ambient_light1');
+	const ambient_light1 = scene.root.createNode('ambientLight');
+	assert.equal(ambient_light1.name, 'ambientLight1');
 	assert.equal(main_group.children.length, 3);
 
-	const ambient_light2 = scene.root.createNode('ambient_light');
-	assert.equal(ambient_light2.name, 'ambient_light2');
+	const ambient_light2 = scene.root.createNode('ambientLight');
+	assert.equal(ambient_light2.name, 'ambientLight2');
 	assert.equal(main_group.children.length, 4);
 
-	assert.equal(main_group.children[2].name, '/ambient_light1');
-	assert.equal(main_group.children[3].name, '/ambient_light2');
+	assert.equal(main_group.children[2].name, '/ambientLight1');
+	assert.equal(main_group.children[3].name, '/ambientLight2');
 
 	assert.equal(ambient_light1.graph_all_successors().length, 0);
 
@@ -42,11 +42,11 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/geo1:/perspectiveCamera1'
 	);
 
-	const ambient_light1 = scene.root.createNode('ambient_light');
-	assert.equal(ambient_light1.name, 'ambient_light1');
+	const ambient_light1 = scene.root.createNode('ambientLight');
+	assert.equal(ambient_light1.name, 'ambientLight1');
 	assert.equal(main_group.children.length, 3);
 	const ambient_light_object = main_group.children[2];
 	assert.equal(ambient_light_object.uuid, ambient_light1.object.uuid);
@@ -55,7 +55,7 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/ambient_light1:/geo1:/perspective_camera1'
+		'/ambientLight1:/geo1:/perspectiveCamera1'
 	);
 	assert.equal(ambient_light_object.children.length, 2);
 
@@ -66,7 +66,7 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/ambient_light1:/geo1:/perspective_camera1'
+		'/ambientLight1:/geo1:/perspectiveCamera1'
 	);
 	assert.equal(ambient_light_object.children.length, 1);
 
@@ -79,10 +79,10 @@ QUnit.test('ambient light display flag off still cooks', async (assert) => {
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
-	const ambient_light1 = scene.root.createNode('ambient_light');
-	assert.equal(ambient_light1.name, 'ambient_light1');
+	const ambient_light1 = scene.root.createNode('ambientLight');
+	assert.equal(ambient_light1.name, 'ambientLight1');
 	assert.equal(main_group.children.length, 3);
 
 	await scene.wait_for_cooks_completed();
@@ -110,18 +110,18 @@ QUnit.test('ambient light is removed from scene when node is deleted', async (as
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/geo1:/perspectiveCamera1'
 	);
 
-	const ambient_light1 = scene.root.createNode('ambient_light');
-	assert.equal(ambient_light1.name, 'ambient_light1');
+	const ambient_light1 = scene.root.createNode('ambientLight');
+	assert.equal(ambient_light1.name, 'ambientLight1');
 	assert.equal(main_group.children.length, 3);
 	assert.equal(
 		main_group.children
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/ambient_light1:/geo1:/perspective_camera1'
+		'/ambientLight1:/geo1:/perspectiveCamera1'
 	);
 
 	scene.root.removeNode(ambient_light1);
@@ -131,7 +131,7 @@ QUnit.test('ambient light is removed from scene when node is deleted', async (as
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/geo1:/perspectiveCamera1'
 	);
 });
 
@@ -140,10 +140,10 @@ QUnit.test('ambient light cooks only once when multiple params are updated', asy
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
-	const ambient_light1 = scene.root.createNode('ambient_light');
-	assert.equal(ambient_light1.name, 'ambient_light1');
+	const ambient_light1 = scene.root.createNode('ambientLight');
+	assert.equal(ambient_light1.name, 'ambientLight1');
 	assert.equal(main_group.children.length, 3);
 
 	window.scene.performance.start();

@@ -4,8 +4,8 @@ QUnit.test('jitter simple', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const scatter1 = geo1.createNode('scatter');
 	const jitter1 = geo1.createNode('jitter');
-	jitter1.set_input(0, scatter1);
-	scatter1.set_input(0, plane1);
+	jitter1.setInput(0, scatter1);
+	scatter1.setInput(0, plane1);
 
 	let container = await jitter1.request_container();
 

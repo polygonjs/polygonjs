@@ -58,7 +58,7 @@ const ParamsConfig = new PhysicsRBDAttributesSopParamsConfig();
 export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttributesSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'physics_rbd_attributes';
+		return 'physicsRbdAttributes';
 	}
 
 	initialize_node() {
@@ -89,7 +89,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			core_object.set_attrib_value(RBDAttribute.SIMULATED, this.pv.simulated);
 
 			if (this.pv.add_id == true) {
-				core_object.set_attrib_value(RBDAttribute.ID, `${this.full_path()}:${i}`);
+				core_object.set_attrib_value(RBDAttribute.ID, `${this.fullPath()}:${i}`);
 			}
 
 			// shape

@@ -4,7 +4,7 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 
 QUnit.test('gl attribute updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	assert.equal(material_basic_builder1.children().length, 0);
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
@@ -24,7 +24,7 @@ QUnit.test('gl attribute updates its output type correctly when created', async 
 QUnit.test('gl attribute updates its output type correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 
@@ -37,7 +37,7 @@ QUnit.test('gl attribute updates its output type correctly when scene is loaded'
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
 
-	const material_basic_builder2 = scene.node('/MAT/mesh_basic_builder1')!;
+	const material_basic_builder2 = scene.node('/MAT/meshBasicBuilder1')!;
 	assert.ok(material_basic_builder2);
 	assert.equal(material_basic_builder2.children().length, 3, 'new mat has 3 children');
 	const attribute2 = material_basic_builder1.node('attribute1')!;

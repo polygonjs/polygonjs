@@ -5,13 +5,13 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 
 function create_scene() {
 	const scene = new PolyScene();
-	scene.set_name('create_scene');
-	scene.root.createNode('ambient_light');
+	scene.setName('create_scene');
+	scene.root.createNode('ambientLight');
 
 	scene.loading_controller.mark_as_loaded();
 
-	const perspective_camera1 = scene.root.createNode('perspective_camera');
-	scene.cameras_controller.set_master_camera_node_path(perspective_camera1.full_path());
+	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
+	scene.cameras_controller.set_masterCameraNodePath(perspective_camera1.fullPath());
 	perspective_camera1.p.t.z.set(10);
 
 	const geo1 = scene.root.createNode('geo');
@@ -30,9 +30,9 @@ QUnit.test('root adds objects to hierarchy when created with api', async (assert
 	await scene.wait_for_cooks_completed();
 	assert.equal(scene.default_scene.children[0].children.length, 3);
 	assert.deepEqual(scene.default_scene.children[0].children.map((n) => n.name).sort(), [
-		'/ambient_light1',
+		'/ambientLight1',
 		'/geo1',
-		'/perspective_camera1',
+		'/perspectiveCamera1',
 	]);
 });
 
@@ -44,13 +44,13 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 	const scene2 = await SceneJsonImporter.load_data(data);
 	assert.ok(scene2.loading_controller.loaded, 'scene is loaded');
 	assert.ok(scene2.loading_controller.auto_updating, 'scene is auto updating');
-	scene2.set_name('from_load');
+	scene2.setName('from_load');
 
 	await CoreSleep.sleep(2000);
 	assert.equal(scene2.default_scene.children[0].children.length, 3);
 	assert.deepEqual(scene2.default_scene.children[0].children.map((n) => n.name).sort(), [
-		'/ambient_light1',
+		'/ambientLight1',
 		'/geo1',
-		'/perspective_camera1',
+		'/perspectiveCamera1',
 	]);
 });

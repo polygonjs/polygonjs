@@ -25,17 +25,17 @@ export class HierarchyParentController {
 	is_selected(): boolean {
 		return this.parent?.children_controller?.selection?.contains(this.node) || false;
 	}
-	full_path(relative_to_parent?: BaseNodeType): string {
+	fullPath(relative_to_parent?: BaseNodeType): string {
 		const separator = CoreWalker.SEPARATOR;
 		if (this._parent != null) {
 			if (this._parent == relative_to_parent) {
 				return this.node.name;
 			} else {
-				const parent_full_path = this._parent.full_path(relative_to_parent);
-				if (parent_full_path === separator) {
-					return parent_full_path + this.node.name;
+				const parent_fullPath = this._parent.fullPath(relative_to_parent);
+				if (parent_fullPath === separator) {
+					return parent_fullPath + this.node.name;
 				} else {
-					return parent_full_path + separator + this.node.name;
+					return parent_fullPath + separator + this.node.name;
 				}
 			}
 		} else {

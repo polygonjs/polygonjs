@@ -4,8 +4,8 @@ QUnit.test('mapbox_plane simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	const mapbox_camera1 = scene.root.createNode('mapbox_camera');
-	const mapbox_plane1 = geo1.createNode('mapbox_plane');
+	const mapbox_camera1 = scene.root.createNode('mapboxCamera');
+	const mapbox_plane1 = geo1.createNode('mapboxPlane');
 	// await CoreSleep.sleep(200);
 	mapbox_plane1.flags.display.set(true);
 

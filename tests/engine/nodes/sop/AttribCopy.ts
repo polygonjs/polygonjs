@@ -2,21 +2,21 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('latitude');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@ptnum');
-	attrib_create1.set_input(0, plane1);
+	attrib_create1.setInput(0, plane1);
 
-	const attrib_create2 = geo1.createNode('attrib_create');
+	const attrib_create2 = geo1.createNode('attribCreate');
 	attrib_create2.p.name.set('longitude');
 	attrib_create2.p.size.set(1);
 	attrib_create2.p.value1.set('2*@ptnum+1');
-	attrib_create2.set_input(0, attrib_create1);
+	attrib_create2.setInput(0, attrib_create1);
 
-	const attrib_copy1 = geo1.createNode('attrib_copy');
-	attrib_copy1.set_input(0, attrib_create2);
-	attrib_copy1.set_input(1, attrib_create2);
+	const attrib_copy1 = geo1.createNode('attribCopy');
+	attrib_copy1.setInput(0, attrib_create2);
+	attrib_copy1.setInput(1, attrib_create2);
 
 	attrib_copy1.p.name.set('latitude');
 	attrib_copy1.p.tnew_name.set(1);
@@ -43,9 +43,9 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	assert.equal(array[5], -0.5);
 	assert.equal(array[8], +0.5);
 
-	const attrib_copy2 = geo1.createNode('attrib_copy');
-	attrib_copy2.set_input(0, attrib_copy1);
-	attrib_copy2.set_input(1, attrib_copy1);
+	const attrib_copy2 = geo1.createNode('attribCopy');
+	attrib_copy2.setInput(0, attrib_copy1);
+	attrib_copy2.setInput(1, attrib_copy1);
 
 	attrib_copy2.p.name.set('longitude');
 	attrib_copy2.p.tnew_name.set(1);

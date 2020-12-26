@@ -4,12 +4,12 @@ QUnit.test('merge simple', async (assert) => {
 	const tube1 = geo1.createNode('tube');
 	const box1 = geo1.createNode('box');
 	const merge1 = geo1.createNode('merge');
-	merge1.set_input(0, box1);
+	merge1.setInput(0, box1);
 
 	let container = await merge1.request_container();
 	assert.equal(container.points_count(), 24);
 
-	merge1.set_input(1, tube1);
+	merge1.setInput(1, tube1);
 	container = await merge1.request_container();
 	assert.equal(container.points_count(), 100);
 });
@@ -20,21 +20,21 @@ QUnit.skip('merge geos with different attributes', async (assert) => {
 	const sphere1 = geo1.createNode('sphere');
 	const box1 = geo1.createNode('box');
 
-	const attrib_create1 = geo1.createNode('attrib_create');
-	attrib_create1.set_input(0, box1);
+	const attrib_create1 = geo1.createNode('attribCreate');
+	attrib_create1.setInput(0, box1);
 	attrib_create1.p.name.set('blend');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(2);
 
-	const attrib_create2 = geo1.createNode('attrib_create');
-	attrib_create2.set_input(0, sphere1);
+	const attrib_create2 = geo1.createNode('attribCreate');
+	attrib_create2.setInput(0, sphere1);
 	attrib_create2.p.name.set('selected');
 	attrib_create2.p.size.set(1);
 	attrib_create2.p.value1.set(1);
 
 	const merge1 = geo1.createNode('merge');
-	merge1.set_input(0, attrib_create1);
-	merge1.set_input(1, attrib_create2);
+	merge1.setInput(0, attrib_create1);
+	merge1.setInput(1, attrib_create2);
 
 	let container = await merge1.request_container();
 	let core_group = container.core_content()!;
@@ -55,8 +55,8 @@ QUnit.test('sop merge has predictable order in assembled objects', async (assert
 	const plane1 = geo1.createNode('plane');
 
 	const merge1 = geo1.createNode('merge');
-	merge1.set_input(0, add1);
-	merge1.set_input(1, plane1);
+	merge1.setInput(0, add1);
+	merge1.setInput(1, plane1);
 
 	let container = await merge1.request_container();
 	let core_group = container.core_content()!;
@@ -73,8 +73,8 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	const plane1 = geo1.createNode('plane');
 
 	const merge1 = geo1.createNode('merge');
-	merge1.set_input(0, add1);
-	merge1.set_input(2, plane1);
+	merge1.setInput(0, add1);
+	merge1.setInput(2, plane1);
 
 	let container = await merge1.request_container();
 	let core_group = container.core_content()!;
@@ -87,9 +87,9 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
-	const add2 = scene2.node(add1.full_path())! as AddSopNode;
-	const plane2 = scene2.node(plane1.full_path())! as PlaneSopNode;
-	const merge2 = scene2.node(merge1.full_path())! as MergeSopNode;
+	const add2 = scene2.node(add1.fullPath())! as AddSopNode;
+	const plane2 = scene2.node(plane1.fullPath())! as PlaneSopNode;
+	const merge2 = scene2.node(merge1.fullPath())! as MergeSopNode;
 	assert.equal(merge2.io.inputs.input(0)?.graph_node_id, add2.graph_node_id, 'input 0 is add node');
 	assert.equal(merge2.io.inputs.input(1)?.graph_node_id, null, 'input 1 is empty');
 	assert.equal(merge2.io.inputs.input(2)?.graph_node_id, plane2.graph_node_id, 'input 2 is plane node');

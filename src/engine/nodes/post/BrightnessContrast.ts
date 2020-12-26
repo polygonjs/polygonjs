@@ -33,7 +33,7 @@ const ParamsConfig = new BrightnessContrastPostParamsConfig();
 export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass, BrightnessContrastPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'brightness_contrast';
+		return 'brightnessContrast';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

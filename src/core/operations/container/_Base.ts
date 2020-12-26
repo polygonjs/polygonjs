@@ -9,7 +9,7 @@ import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {BaseOperation, DefaultOperationParams, DefaultOperationParam} from '../_Base';
 import {ParamInitValueSerializedTypeMap} from '../../../engine/params/types/ParamInitValueSerializedTypeMap';
 import {InputsController} from './utils/InputsController';
-import { CoreType } from '../../Type';
+import {CoreType} from '../../Type';
 
 type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerializedTypeMap[T];
 
@@ -125,7 +125,7 @@ export class BaseOperationContainer {
 	//
 	//
 	protected _inputs: BaseOperationContainer[] | undefined;
-	set_input(index: number, input: BaseOperationContainer) {
+	setInput(index: number, input: BaseOperationContainer) {
 		this._inputs = this._inputs || [];
 		this._inputs[index] = input;
 	}

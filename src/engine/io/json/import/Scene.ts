@@ -22,23 +22,23 @@ export class SceneJsonImporter {
 		// scene.set_js_version(this._data['__js_version'])
 		const properties = this._data['properties'];
 		if (properties) {
-			// scene.set_name(properties['name'])
+			// scene.setName(properties['name'])
 			const frame_range = properties['frame_range'] || [];
-			scene.time_controller.set_frame_range(frame_range[0] || 1, frame_range[1] || 100);
-			const frame_range_locked = properties['frame_range_locked'];
-			if (frame_range_locked) {
-				scene.time_controller.set_frame_range_locked(frame_range_locked[0], frame_range_locked[1]);
+			scene.time_controller.setFrameRange(frame_range[0] || 1, frame_range[1] || 100);
+			const frameRangeLocked = properties['frameRangeLocked'];
+			if (frameRangeLocked) {
+				scene.time_controller.setFrameRange_locked(frameRangeLocked[0], frameRangeLocked[1]);
 			}
-			const realtime_state = properties['realtime_state'];
-			if (realtime_state != null) {
-				scene.time_controller.set_realtime_state(realtime_state);
+			const realtimeState = properties['realtimeState'];
+			if (realtimeState != null) {
+				scene.time_controller.set_realtimeState(realtimeState);
 			}
 			// set frame after the range has been set, to avoid clamping
-			scene.set_frame(properties['frame'] || 1);
+			scene.setFrame(properties['frame'] || 1);
 
 			// scene.time_controller.set_fps(properties['fps'] || 30);
-			if (properties['master_camera_node_path']) {
-				scene.cameras_controller.set_master_camera_node_path(properties['master_camera_node_path']);
+			if (properties['masterCameraNodePath']) {
+				scene.cameras_controller.set_masterCameraNodePath(properties['masterCameraNodePath']);
 			}
 		}
 
@@ -63,7 +63,7 @@ export class SceneJsonImporter {
 		scene.cooker.unblock();
 		// DO NOT wait for cooks here,
 		// as a viewer will only be created once everything has cooked
-		// which would be a problem for env_map or other nodes relying on the renderer being created
+		// which would be a problem for envMap or other nodes relying on the renderer being created
 		// await scene.wait_for_cooks_completed();
 
 		return scene;

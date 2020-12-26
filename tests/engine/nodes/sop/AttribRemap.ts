@@ -5,10 +5,10 @@ QUnit.test('attrib_remap simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_remap1 = geo1.createNode('attrib_remap');
-	attrib_create1.set_input(0, plane1);
-	attrib_remap1.set_input(0, attrib_create1);
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_remap1 = geo1.createNode('attribRemap');
+	attrib_create1.setInput(0, plane1);
+	attrib_remap1.setInput(0, attrib_create1);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set('@ptnum*0.25');

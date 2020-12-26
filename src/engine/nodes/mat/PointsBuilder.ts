@@ -22,7 +22,7 @@ const ParamsConfig = new PointsMatParamsConfig();
 export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoints, PointsMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'points_builder';
+		return 'pointsBuilder';
 	}
 	public used_assembler(): Readonly<AssemblerName.GL_POINTS> {
 		return AssemblerName.GL_POINTS;

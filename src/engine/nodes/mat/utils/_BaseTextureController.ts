@@ -6,18 +6,19 @@ import {BaseMatNodeType} from '../_Base';
 import {ParamConfig} from '../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../poly/NodeContext';
 import {BaseCopNodeType} from '../../cop/_Base';
-import {OperatorPathParam, OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
+import {OperatorPathParam} from '../../../params/OperatorPath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {IUniforms} from '../../../../core/geometry/Material';
+import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		use_map = ParamConfig.BOOLEAN(0);
-		map = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {visible_if: {use_map: 1}});
+		useMap = ParamConfig.BOOLEAN(0);
+		map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {visible_if: {useMap: 1}});
 	};
 }
 // class TextureMapMaterial<T extends string> extends Material {

@@ -27,8 +27,8 @@ class SkyMatParamsConfig extends NodeParamsConfig {
 	rayleigh = ParamConfig.FLOAT(1, {
 		range: [0, 4],
 	});
-	mie_coefficient = ParamConfig.FLOAT(0.005);
-	mie_directional = ParamConfig.FLOAT(0.8);
+	mieCoefficient = ParamConfig.FLOAT(0.005);
+	mieDirectional = ParamConfig.FLOAT(0.8);
 	inclination = ParamConfig.FLOAT(0.5);
 	azimuth = ParamConfig.FLOAT(0.25);
 	up = ParamConfig.VECTOR3([0, 1, 0]);
@@ -52,8 +52,8 @@ export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyM
 		const uniforms = this.material.uniforms;
 		uniforms.turbidity.value = this.pv.turbidity;
 		uniforms.rayleigh.value = this.pv.rayleigh;
-		uniforms.mieCoefficient.value = this.pv.mie_coefficient;
-		uniforms.mieDirectionalG.value = this.pv.mie_directional;
+		uniforms.mieCoefficient.value = this.pv.mieCoefficient;
+		uniforms.mieDirectionalG.value = this.pv.mieDirectional;
 		uniforms.up.value.copy(this.pv.up);
 
 		const theta = Math.PI * (this.pv.inclination - 0.5);

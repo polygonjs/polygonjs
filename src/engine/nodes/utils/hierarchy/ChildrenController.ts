@@ -75,7 +75,7 @@ export class HierarchyChildrenController {
 			// add to new name
 			this._children[new_name] = node;
 			node.name_controller.update_name_from_parent(new_name);
-			this._add_to_nodes_by_type(node);
+			this._add_to_nodesByType(node);
 			this.node.scene.nodes_controller.add_to_instanciated_node(node);
 		}
 	}
@@ -97,7 +97,7 @@ export class HierarchyChildrenController {
 	// 	const node_class = this.available_children_classes()[node_type];
 
 	// 	if (node_class == null) {
-	// 		const message = `child node type '${node_type}' not found for node '${this.node.full_path()}'. Available types are: ${Object.keys(
+	// 		const message = `child node type '${node_type}' not found for node '${this.node.fullPath()}'. Available types are: ${Object.keys(
 	// 			this.available_children_classes()
 	// 		).join(', ')}, ${this._context}, ${this.node.type}`;
 	// 		console.error(message);
@@ -137,7 +137,7 @@ export class HierarchyChildrenController {
 		const node_class = this.available_children_classes()[node_type];
 
 		if (node_class == null) {
-			const message = `child node type '${node_type}' not found for node '${this.node.full_path()}'. Available types are: ${Object.keys(
+			const message = `child node type '${node_type}' not found for node '${this.node.fullPath()}'. Available types are: ${Object.keys(
 				this.available_children_classes()
 			).join(', ')}, ${this._context}, ${this.node.type}`;
 			console.error(message);
@@ -171,10 +171,10 @@ export class HierarchyChildrenController {
 		child_node.set_parent(this.node);
 		child_node.params.init();
 		child_node.parent_controller.on_set_parent();
-		child_node.name_controller.run_post_set_full_path_hooks();
+		child_node.name_controller.run_post_set_fullPath_hooks();
 		if (child_node.children_allowed() && child_node.children_controller) {
 			for (let child of child_node.children_controller.children()) {
-				child.name_controller.run_post_set_full_path_hooks();
+				child.name_controller.run_post_set_fullPath_hooks();
 			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.to_json()});
@@ -196,7 +196,7 @@ export class HierarchyChildrenController {
 
 	removeNode(child_node: BaseNodeType): void {
 		if (child_node.parent != this.node) {
-			return console.warn(`node ${child_node.name} not under parent ${this.node.full_path()}`);
+			return console.warn(`node ${child_node.name} not under parent ${this.node.fullPath()}`);
 		} else {
 			if (this.selection.contains(child_node)) {
 				this.selection.remove([child_node]);
@@ -208,20 +208,20 @@ export class HierarchyChildrenController {
 			if (input_connections) {
 				for (let input_connection of input_connections) {
 					if (input_connection) {
-						input_connection.disconnect({set_input: true});
+						input_connection.disconnect({setInput: true});
 					}
 				}
 			}
 			if (output_connections) {
 				for (let output_connection of output_connections) {
 					if (output_connection) {
-						output_connection.disconnect({set_input: true});
+						output_connection.disconnect({setInput: true});
 						if (first_connection) {
 							const old_src = first_connection.node_src;
 							const old_output_index = output_connection.output_index;
 							const old_dest = output_connection.node_dest;
 							const old_input_index = output_connection.input_index;
-							old_dest.io.inputs.set_input(old_input_index, old_src, old_output_index);
+							old_dest.io.inputs.setInput(old_input_index, old_src, old_output_index);
 						}
 					}
 				}
@@ -230,7 +230,7 @@ export class HierarchyChildrenController {
 			// remove from children
 			child_node.set_parent(null);
 			delete this._children[child_node.name];
-			this._remove_from_nodes_by_type(child_node);
+			this._remove_from_nodesByType(child_node);
 			this.node.scene.nodes_controller.remove_from_instanciated_node(child_node);
 
 			// set other dependencies dirty
@@ -249,7 +249,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	_add_to_nodes_by_type(node: BaseNodeType) {
+	_add_to_nodesByType(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.type;
 		this._children_by_type[type] = this._children_by_type[type] || [];
@@ -258,7 +258,7 @@ export class HierarchyChildrenController {
 		}
 		this.add_to_children_and_grandchildren_by_context(node);
 	}
-	_remove_from_nodes_by_type(node: BaseNodeType) {
+	_remove_from_nodesByType(node: BaseNodeType) {
 		const node_id = node.graph_node_id;
 		const type = node.type;
 		if (this._children_by_type[type]) {
@@ -300,7 +300,7 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	nodes_by_type(type: string): BaseNodeType[] {
+	nodesByType(type: string): BaseNodeType[] {
 		const node_ids = this._children_by_type[type] || [];
 		const graph = this.node.scene.graph;
 		const nodes: BaseNodeType[] = [];

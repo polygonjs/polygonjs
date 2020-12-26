@@ -17,7 +17,7 @@ const ParamsConfigFloatToInt = new FloatToIntGlParamsConfig();
 export class FloatToIntGlNode extends TypedGlNode<FloatToIntGlParamsConfig> {
 	params_config = ParamsConfigFloatToInt;
 	static type() {
-		return 'float_to_int';
+		return 'floatToInt';
 	}
 
 	initialize_node() {
@@ -48,7 +48,7 @@ const ParamsConfigIntToFloat = new IntToFloatGlParamsConfig();
 export class IntToFloatGlNode extends TypedGlNode<IntToFloatGlParamsConfig> {
 	params_config = ParamsConfigIntToFloat;
 	static type() {
-		return 'int_to_float';
+		return 'intToFloat';
 	}
 
 	initialize_node() {

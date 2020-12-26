@@ -27,8 +27,8 @@ export class BaseGlParentNode extends TypedNode<any, any> {
 	children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 }
 export class AssemblerControllerNode extends BaseGlParentNode {

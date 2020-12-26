@@ -10,16 +10,13 @@ import {
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to use a map affecting color */
-		use_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
+		useMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
 		/** @param texture map affecting color */
-		map = ParamConfig.OPERATOR_PATH(
-			OPERATOR_PATH_DEFAULT.NODE.UV,
-			OperatorPathOptions(TextureMapController, 'use_map')
-		);
+		map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, OperatorPathOptions(TextureMapController, 'useMap'));
 	};
 }
 class TextureMapMaterial extends Material {
@@ -37,10 +34,10 @@ export class TextureMapController extends BaseTextureMapController {
 		super(node, _update_options);
 	}
 	initialize_node() {
-		this.add_hooks(this.node.p.use_map, this.node.p.map);
+		this.add_hooks(this.node.p.useMap, this.node.p.map);
 	}
 	async update() {
-		this._update(this.node.material, 'map', this.node.p.use_map, this.node.p.map);
+		this._update(this.node.material, 'map', this.node.p.useMap, this.node.p.map);
 	}
 	static async update(node: TextureMapMatNode) {
 		node.texture_map_controller.update();

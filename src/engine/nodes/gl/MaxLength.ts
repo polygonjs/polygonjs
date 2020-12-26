@@ -14,7 +14,7 @@ const MaxLengthDefaultValues: Dictionary<number> = {
 
 export class MaxLengthGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	static type() {
-		return 'max_length';
+		return 'maxLength';
 	}
 	protected _expected_input_types() {
 		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
@@ -28,7 +28,7 @@ export class MaxLengthGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		return MaxLengthDefaultValues[name];
 	}
 	protected gl_method_name(): string {
-		return 'max_length';
+		return 'maxLength';
 	}
 
 	gl_function_definitions() {

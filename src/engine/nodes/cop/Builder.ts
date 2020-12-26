@@ -131,8 +131,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	children_allowed() {
 		if (this.assembler_controller) {
@@ -310,7 +310,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
-		Poly.warn('created render target', this.full_path(), width, height);
+		Poly.warn('created render target', this.fullPath(), width, height);
 		return renderTarget;
 	}
 }

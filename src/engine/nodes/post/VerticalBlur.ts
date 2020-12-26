@@ -29,7 +29,7 @@ const ParamsConfig = new VerticalBlurPostParamsConfig();
 export class VerticalBlurPostNode extends TypedPostProcessNode<ShaderPass, VerticalBlurPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'vertical_blur';
+		return 'verticalBlur';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

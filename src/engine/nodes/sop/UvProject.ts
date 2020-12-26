@@ -37,7 +37,7 @@ const ParamsConfig = new UvProjectSopParamsConfig();
 export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'uv_project';
+		return 'uvProject';
 	}
 
 	private _camera_controller: CameraController = new CameraController(this._update_uvs_from_camera.bind(this));

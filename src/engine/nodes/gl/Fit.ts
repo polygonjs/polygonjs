@@ -47,7 +47,7 @@ const FitTo01DefaultValues: Dictionary<number> = {
 
 export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	static type() {
-		return 'fit_to_01';
+		return 'fitTo01';
 	}
 
 	_gl_input_name(index: number): string {
@@ -57,7 +57,7 @@ export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 		return FitTo01DefaultValues[name];
 	}
 	gl_method_name(): string {
-		return 'fit_to_01';
+		return 'fitTo01';
 	}
 
 	gl_function_definitions() {
@@ -77,7 +77,7 @@ const FitFrom01DefaultValues: Dictionary<number> = {
 
 export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	static type() {
-		return 'fit_from_01';
+		return 'fitFrom01';
 	}
 
 	_gl_input_name(index: number): string {
@@ -87,7 +87,7 @@ export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 		return FitFrom01DefaultValues[name];
 	}
 	gl_method_name(): string {
-		return 'fit_from_01';
+		return 'fitFrom01';
 	}
 
 	gl_function_definitions() {
@@ -107,7 +107,7 @@ const FitFrom01ToVarianceDefaultValues: Dictionary<number> = {
 
 export class FitFrom01ToVarianceGlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	static type() {
-		return 'fit_from_01_to_variance';
+		return 'fitFrom01ToVariance';
 	}
 
 	_gl_input_name(index: number): string {
@@ -117,7 +117,7 @@ export class FitFrom01ToVarianceGlNode extends BaseNodeGlMathFunctionArg3GlNode 
 		return FitFrom01ToVarianceDefaultValues[name];
 	}
 	gl_method_name(): string {
-		return 'fit_from_01_to_variance';
+		return 'fitFrom01ToVariance';
 	}
 
 	gl_function_definitions() {

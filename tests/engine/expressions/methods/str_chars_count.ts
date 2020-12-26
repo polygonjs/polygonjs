@@ -14,7 +14,7 @@ QUnit.test('expression str_chars_count simple', async (assert) => {
 
 	// create a text and apply expression to it's text attribute
 	const text1 = geo1.createNode('text');
-	text1.set_name('text1');
+	text1.setName('text1');
 	assert.equal(text1.name, 'text1');
 	sizex_param.set('str_chars_count( ch("../text1/text") )');
 

@@ -4,7 +4,7 @@
 // 	const null1 = ANIM.createNode('null');
 
 // 	track1.p.name.set('test1');
-// 	null1.set_input(0, track1);
+// 	null1.setInput(0, track1);
 
 // 	const container = await null1.request_container();
 // 	const core_group = container.core_content()!;

@@ -108,12 +108,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return this._children_controller_context != null;
 	}
 
-	get ui_data(): UIData {
+	get uiData(): UIData {
 		return (this._ui_data = this._ui_data || new UIData(this));
 	}
-	// get dependencies_controller(): DependenciesController {
-	// 	return (this._dependencies_controller = this._dependencies_controller || new DependenciesController(this));
-	// }
+
 	get states(): StatesController {
 		return (this._states = this._states || new StatesController(this));
 	}
@@ -134,8 +132,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get name_controller(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
 	}
-	set_name(name: string) {
-		this.name_controller.set_name(name);
+	setName(name: string) {
+		this.name_controller.setName(name);
 	}
 	_set_core_name(name: string) {
 		this._name = name;
@@ -203,8 +201,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get root() {
 		return this._scene.root;
 	}
-	full_path(relative_to_parent?: BaseNodeType): string {
-		return this.parent_controller.full_path(relative_to_parent);
+	fullPath(relative_to_parent?: BaseNodeType): string {
+		return this.parent_controller.fullPath(relative_to_parent);
 	}
 
 	// params
@@ -239,7 +237,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.container_controller.container.set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
 			if (!(content as any).name) {
-				(content as any).name = this.full_path();
+				(content as any).name = this.fullPath();
 			}
 			if (!(content as any).node) {
 				(content as any).node = this;
@@ -272,7 +270,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	node(path: string) {
 		return this.parent_controller?.find_node(path) || null;
 	}
-	node_sibbling(name: string): NodeTypeMap[NC] | null {
+	nodeSibbling(name: string): NodeTypeMap[NC] | null {
 		if (this.parent) {
 			const node = this.parent.children_controller?.child_by_name(name);
 			if (node) {
@@ -281,17 +279,17 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		}
 		return null;
 	}
-	nodes_by_type(type: string) {
-		return this.children_controller?.nodes_by_type(type) || [];
+	nodesByType(type: string) {
+		return this.children_controller?.nodesByType(type) || [];
 	}
 
 	// inputs
-	set_input(
+	setInput(
 		input_index_or_name: number | string,
 		node: NodeTypeMap[NC] | null,
 		output_index_or_name: number | string = 0
 	) {
-		this.io.inputs.set_input(input_index_or_name, node, output_index_or_name);
+		this.io.inputs.setInput(input_index_or_name, node, output_index_or_name);
 	}
 
 	// emit

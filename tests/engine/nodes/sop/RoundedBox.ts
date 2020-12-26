@@ -2,7 +2,7 @@ QUnit.test('rounded_box simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const rounded_box1 = geo1.createNode('rounded_box');
+	const rounded_box1 = geo1.createNode('roundedBox');
 
 	let container = await rounded_box1.request_container();
 	let core_group = container.core_content();
@@ -28,16 +28,16 @@ QUnit.test('rounded_box with input', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
-	const rounded_box1 = geo1.createNode('rounded_box');
+	const rounded_box1 = geo1.createNode('roundedBox');
 	const transform1 = geo1.createNode('transform');
-	transform1.io.inputs.set_input(0, rounded_box1);
+	transform1.io.inputs.setInput(0, rounded_box1);
 
-	const rounded_box2 = geo1.createNode('rounded_box');
+	const rounded_box2 = geo1.createNode('roundedBox');
 	assert.ok(rounded_box2.is_dirty);
 	let container;
 	await rounded_box2.request_container();
 	assert.notOk(rounded_box2.is_dirty);
-	rounded_box2.io.inputs.set_input(0, transform1);
+	rounded_box2.io.inputs.setInput(0, transform1);
 	assert.ok(rounded_box2.is_dirty);
 	await rounded_box2.request_container();
 	assert.notOk(rounded_box2.is_dirty);

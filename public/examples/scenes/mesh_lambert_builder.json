@@ -2,9 +2,9 @@
 	"properties": {
 		"frame": 1,
 		"frame_range": [1, 600],
-		"frame_range_locked": [true, true],
+		"frameRangeLocked": [true, true],
 		"fps": 60,
-		"master_camera_node_path": "/perspective_camera1"
+		"masterCameraNodePath": "/perspective_camera1"
 	},
 	"root": {
 		"type": "obj",

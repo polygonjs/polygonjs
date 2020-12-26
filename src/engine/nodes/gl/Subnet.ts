@@ -13,7 +13,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
 		this.children_controller?.set_output_node_find_method(() => {
-			return this.nodes_by_type(SubnetOutputGlNode.type())[0];
+			return this.nodesByType(SubnetOutputGlNode.type())[0];
 		});
 
 		this.io.connection_points.set_input_name_function(this._expected_input_name.bind(this));
@@ -111,8 +111,8 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 
 	//

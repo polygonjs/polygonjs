@@ -52,7 +52,7 @@ export class ChildrenDisplayController {
 
 	initialize_node() {
 		this.node.object.add(this.sop_group);
-		this.node.name_controller.add_post_set_full_path_hook(this.set_sop_group_name.bind(this));
+		this.node.name_controller.add_post_set_fullPath_hook(this.set_sop_group_name.bind(this));
 		this._create_sop_group();
 
 		const display_flag = this.node.flags?.display;

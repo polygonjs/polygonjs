@@ -50,12 +50,12 @@ QUnit.test('float param can take an expression returning a boolean', async (asse
 	await param.compute();
 	assert.equal(param.value, 2);
 
-	scene.set_frame(1);
+	scene.setFrame(1);
 	param.set('$F>10');
 	await param.compute();
 	assert.equal(param.value, 0);
 
-	scene.set_frame(11);
+	scene.setFrame(11);
 	await param.compute();
 	assert.equal(param.value, 1);
 });
@@ -63,7 +63,7 @@ QUnit.test('float param can take an expression returning a boolean', async (asse
 QUnit.test('serialized value is float if numerical value entered as a string', async (assert) => {
 	const geo1 = window.geo1;
 
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	const param = attrib_create1.p.value1;
 
 	param.set('12.5');

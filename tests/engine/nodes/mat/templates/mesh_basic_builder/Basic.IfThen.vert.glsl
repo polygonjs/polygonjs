@@ -3,7 +3,7 @@
 
 
 
-// /MAT/mesh_basic_builder1/globals1
+// /MAT/meshBasicBuilder1/globals1
 varying vec3 v_POLY_globals1_position;
 
 
@@ -27,10 +27,10 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/globals1
+	// /MAT/meshBasicBuilder1/globals1
 	v_POLY_globals1_position = vec3(position);
 	
-	// /MAT/mesh_basic_builder1/output1
+	// /MAT/meshBasicBuilder1/output1
 	vec3 transformed = position;
 	vec3 objectNormal = normal;
 

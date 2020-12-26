@@ -52,22 +52,22 @@ const components_v2 = ['x', 'y'];
 const components_v3 = ['x', 'y', 'z'];
 const components_v4 = ['x', 'y', 'z', 'w'];
 
-export class Vec2ToFloatGlNode extends VecToGlFactory('vec2_to_float', {
+export class Vec2ToFloatGlNode extends VecToGlFactory('vec2ToFloat', {
 	components: ['x', 'y'],
 	param_type: ParamType.VECTOR2,
 }) {}
-export class Vec3ToFloatGlNode extends VecToGlFactory('vec3_to_float', {
+export class Vec3ToFloatGlNode extends VecToGlFactory('vec3ToFloat', {
 	components: ['x', 'y', 'z'],
 	param_type: ParamType.VECTOR3,
 }) {}
-export class Vec4ToFloatGlNode extends VecToGlFactory('vec4_to_float', {
+export class Vec4ToFloatGlNode extends VecToGlFactory('vec4ToFloat', {
 	components: components_v4,
 	param_type: ParamType.VECTOR4,
 }) {}
 
 export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 	static type() {
-		return 'vec4_to_vec3';
+		return 'vec4ToVec3';
 	}
 	static readonly INPUT_NAME_VEC4 = 'vec4';
 	static readonly OUTPUT_NAME_VEC3 = 'vec3';
@@ -107,7 +107,7 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 
 export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 	static type() {
-		return 'vec3_to_vec2';
+		return 'vec3ToVec2';
 	}
 	static readonly INPUT_NAME_VEC3 = 'vec3';
 	static readonly OUTPUT_NAME_VEC2 = 'vec2';
@@ -146,7 +146,7 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 }
 export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 	static type() {
-		return 'vec2_to_vec3';
+		return 'vec2ToVec3';
 	}
 	static readonly INPUT_NAME_VEC2 = 'vec3';
 	static readonly INPUT_NAME_Z = 'z';
@@ -178,7 +178,7 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 }
 export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 	static type() {
-		return 'vec3_to_vec4';
+		return 'vec3ToVec4';
 	}
 	static readonly INPUT_NAME_VEC3 = 'vec3';
 	static readonly INPUT_NAME_W = 'w';

@@ -7,7 +7,7 @@ export class ErrorState extends BaseState {
 
 	set(message: string | undefined) {
 		if (this._message != message) {
-			Poly.warn('error', message, this.node.full_path());
+			Poly.warn('error', message, this.node.fullPath());
 			this._message = message;
 			this.on_update();
 		}
@@ -24,7 +24,7 @@ export class ErrorState extends BaseState {
 
 	protected on_update() {
 		if (this._message != null) {
-			// console.warn("new error", message, this.self.full_path())
+			// console.warn("new error", message, this.self.fullPath())
 			this.node.set_container(null, `from error '${this._message}'`);
 		}
 

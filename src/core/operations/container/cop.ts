@@ -22,7 +22,7 @@ export class CopOperationContainer extends BaseOperationContainer {
 	protected _inputs: CopOperationContainer[] = [];
 	private _current_input_index: number = 0;
 	add_input(input: CopOperationContainer) {
-		super.set_input(this._current_input_index, input);
+		super.setInput(this._current_input_index, input);
 		this.increment_input_index();
 	}
 	increment_input_index() {

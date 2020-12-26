@@ -24,7 +24,7 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 	params_config = ParamsConfig;
 
 	static type() {
-		return 'ambient_light';
+		return 'ambientLight';
 	}
 
 	create_light() {

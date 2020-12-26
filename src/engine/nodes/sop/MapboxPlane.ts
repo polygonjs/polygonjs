@@ -72,7 +72,7 @@ const ParamsConfig = new MapboxPlaneSopParamsConfig();
 export class MapboxPlaneSopNode extends MapboxListenerSopNode<MapboxPlaneSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mapbox_plane';
+		return 'mapboxPlane';
 	}
 	private _hexagons_controller = new MapboxPlaneHexagonsController(this);
 	// private _frustum_controller = new MapboxPlaneFrustumController(this);

@@ -43,7 +43,7 @@ const ParamsConfig = new ObjectPropertiesSopParamsConfig();
 export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'object_properties';
+		return 'objectProperties';
 	}
 
 	static displayed_input_names(): string[] {

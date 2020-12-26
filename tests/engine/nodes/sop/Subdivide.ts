@@ -4,7 +4,7 @@ QUnit.test('subdivide simple', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const subdivide1 = geo1.createNode('subdivide');
 
-	subdivide1.set_input(0, box1);
+	subdivide1.setInput(0, box1);
 
 	let container = await subdivide1.request_container();
 	let core_group = container.core_content()!;

@@ -13,7 +13,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 export class PostProcessSopNode extends BaseNetworkSopNode<PostProcessNetworkParamsConfig> {
 	params_config = new PostProcessNetworkParamsConfig();
 	static type() {
-		return 'post_process';
+		return 'postProcess';
 	}
 	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
 	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
@@ -40,7 +40,7 @@ export class PostProcessSopNode extends BaseNetworkSopNode<PostProcessNetworkPar
 	children() {
 		return super.children() as BasePostProcessNodeType[];
 	}
-	nodes_by_type<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as PostNodeChildrenMap[K][];
+	nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][] {
+		return super.nodesByType(type) as PostNodeChildrenMap[K][];
 	}
 }

@@ -21,7 +21,7 @@ const DefaultValues: IDefaultValues = {
 
 export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	static type() {
-		return 'quat_from_axis_angle';
+		return 'quatFromAxisAngle';
 	}
 
 	initialize_node() {
@@ -42,7 +42,7 @@ export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		return DefaultValues[name as InputName];
 	}
 	gl_method_name(): string {
-		return 'quat_from_axis_angle';
+		return 'quatFromAxisAngle';
 	}
 
 	// protected _expected_input_types() {

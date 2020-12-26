@@ -21,7 +21,7 @@ const NULL_ID = '';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Object3D} from 'three/src/core/Object3D';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 class AmmoSolverSopParamsConfig extends NodeParamsConfig {
 	start_frame = ParamConfig.INTEGER(1);
 
@@ -41,7 +41,7 @@ const ParamsConfig = new AmmoSolverSopParamsConfig();
 export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'physics_solver';
+		return 'physicsSolver';
 	}
 	private config: Ammo.btDefaultCollisionConfiguration | undefined;
 	private dispatcher: Ammo.btCollisionDispatcher | undefined;
@@ -319,6 +319,6 @@ export class PhysicsSolverSopNode extends TypedSopNode<AmmoSolverSopParamsConfig
 		this.bodies = [];
 		this._objects_with_RBDs = [];
 		this._input_init = undefined;
-		this.scene.set_frame(this.pv.start_frame);
+		this.scene.setFrame(this.pv.start_frame);
 	}
 }

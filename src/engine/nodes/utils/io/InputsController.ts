@@ -8,7 +8,7 @@ import {ContainerMap, NodeTypeMap} from '../../../containers/utils/ContainerMap'
 import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
-import { CoreType } from '../../../../core/Type';
+import {CoreType} from '../../../../core/Type';
 
 type OnUpdateHook = () => void;
 
@@ -67,7 +67,7 @@ export class InputsController<NC extends NodeContext> {
 					// assume we only work with indices for now, not with connection point names
 					// so we only need to check again the new max number of connection points.
 					if (connection.input_index >= connection_points.length) {
-						connection.disconnect({set_input: true});
+						connection.disconnect({setInput: true});
 					}
 				}
 			}
@@ -250,21 +250,21 @@ export class InputsController<NC extends NodeContext> {
 			if (this.has_named_inputs) {
 				return this.get_named_input_index(input_index_or_name);
 			} else {
-				throw new Error(`node ${this.node.full_path()} has no named inputs`);
+				throw new Error(`node ${this.node.fullPath()} has no named inputs`);
 			}
 		} else {
 			return input_index_or_name;
 		}
 	}
 
-	set_input(
+	setInput(
 		input_index_or_name: number | string,
 		node: NodeTypeMap[NC] | null,
 		output_index_or_name: number | string = 0
 	) {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
 		if (input_index < 0) {
-			const message = `invalid input (${input_index_or_name}) for node ${this.node.full_path()}`;
+			const message = `invalid input (${input_index_or_name}) for node ${this.node.fullPath()}`;
 			console.warn(message);
 			throw new Error(message);
 		}
@@ -277,7 +277,7 @@ export class InputsController<NC extends NodeContext> {
 					const connection_points = node.io.outputs.named_output_connection_points as BaseConnectionPoint[];
 					const names = connection_points.map((cp) => cp.name);
 					console.warn(
-						`node ${node.full_path()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
+						`node ${node.fullPath()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
 							', '
 						)}`
 					);
@@ -326,7 +326,7 @@ export class InputsController<NC extends NodeContext> {
 
 					//this._input_connections[input_index] = new NodeConnection(node, this.self, output_index, input_index);
 					if (old_connection) {
-						old_connection.disconnect({set_input: false});
+						old_connection.disconnect({setInput: false});
 					}
 					this._inputs[input_index] = node;
 					new TypedNodeConnection<NC>(
@@ -336,12 +336,12 @@ export class InputsController<NC extends NodeContext> {
 						input_index
 					);
 				} else {
-					console.warn(`cannot connect ${node.full_path()} to ${this.node.full_path()}`);
+					console.warn(`cannot connect ${node.fullPath()} to ${this.node.fullPath()}`);
 				}
 			} else {
 				this._inputs[input_index] = null;
 				if (old_connection) {
-					old_connection.disconnect({set_input: false});
+					old_connection.disconnect({setInput: false});
 				}
 				// this._input_connections[input_index] = null;
 			}
@@ -360,7 +360,7 @@ export class InputsController<NC extends NodeContext> {
 			input = inputs[i];
 			if (input != null && node != null) {
 				if (input.graph_node_id === node.graph_node_id) {
-					this.set_input(i, null);
+					this.setInput(i, null);
 				}
 			}
 		}

@@ -54,7 +54,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	/** @param button to set a specific frame */
 	set_frame = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			SceneEventNode.PARAM_CALLBACK_set_frame(node as SceneEventNode);
+			SceneEventNode.PARAM_CALLBACK_setFrame(node as SceneEventNode);
 		},
 	});
 }
@@ -76,7 +76,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 			new EventConnectionPoint(
 				SceneNodeInput.SET_FRAME,
 				EventConnectionPointType.BASE,
-				this.on_set_frame.bind(this)
+				this.onSetFrame.bind(this)
 			),
 		]);
 		const out_connection_points: BaseEventConnectionPoint[] = ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
@@ -92,8 +92,8 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 		});
 	}
 
-	private on_set_frame(event_context: EventContext<Event>) {
-		this.scene.set_frame(this.pv.set_frame_value);
+	private onSetFrame(event_context: EventContext<Event>) {
+		this.scene.setFrame(this.pv.set_frame_value);
 	}
 
 	private on_frame_update() {
@@ -112,8 +112,8 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 			}
 		}
 	}
-	static PARAM_CALLBACK_set_frame(node: SceneEventNode) {
-		node.on_set_frame({});
+	static PARAM_CALLBACK_setFrame(node: SceneEventNode) {
+		node.onSetFrame({});
 	}
 	static PARAM_CALLBACK_update_time_dependency(node: SceneEventNode) {
 		node.update_time_dependency();

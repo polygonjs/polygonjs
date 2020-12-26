@@ -17,7 +17,7 @@ export class TextureAllocation {
 	add_variable(variable: TextureVariable) {
 		this._variables = this._variables || [];
 		this._variables.push(variable);
-		variable.set_position(this._size);
+		variable.setPosition(this._size);
 		variable.set_allocation(this);
 		this._size += variable.size;
 	}

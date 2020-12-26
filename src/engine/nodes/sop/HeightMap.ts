@@ -13,10 +13,10 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
 import {Texture} from 'three/src/textures/Texture';
 import {CoreImage} from '../../../core/Image';
-import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
 	/** @param texture node to load the heightmap from */
-	texture = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
+	texture = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 	});
 	/** @param values multiplier */
@@ -27,7 +27,7 @@ const ParamsConfig = new HeightMapSopParamsConfig();
 export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'height_map';
+		return 'heightMap';
 	}
 
 	initialize_node() {

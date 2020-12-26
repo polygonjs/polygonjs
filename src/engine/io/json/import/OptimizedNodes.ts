@@ -7,7 +7,7 @@ import {Poly} from '../../../Poly';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {SopOperationContainer} from '../../../../core/operations/container/sop';
 import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operations/_Base';
-import { CoreType } from '../../../../core/Type';
+import {CoreType} from '../../../../core/Type';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -48,7 +48,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			const node_data = data[node_name];
 			const node = this._node.createNode(OPERATIONS_COMPOSER_NODE_TYPE);
 			if (node) {
-				node.set_name(node_name);
+				node.setName(node_name);
 				this._nodes.push(node);
 
 				// ensure the display flag is set accordingly
@@ -80,7 +80,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				);
 				node.io.inputs.set_count(this._node_inputs.length);
 				for (let i = 0; i < this._node_inputs.length; i++) {
-					node.set_input(i, this._node_inputs[i]);
+					node.setInput(i, this._node_inputs[i]);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 						if (input_node) {
 							this._node_inputs.push(input_node);
 							const node_input_index = this._node_inputs.length - 1;
-							// node.set_input(node_input_index, input_node as BaseSopNodeType);
+							// node.setInput(node_input_index, input_node as BaseSopNodeType);
 							node.add_input_config(current_operation_container, {
 								operation_input_index: current_operation_container.current_input_index(),
 								node_input_index: node_input_index,

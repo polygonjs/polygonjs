@@ -31,7 +31,7 @@ const ParamsConfig = new DrawRangeSopParamsConfig();
 export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'draw_range';
+		return 'drawRange';
 	}
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);

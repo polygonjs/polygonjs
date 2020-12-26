@@ -26,26 +26,26 @@ QUnit.test('COP switch simple', async (assert) => {
 
 	const switch_diffuse = COP.createNode('switch');
 	const switch_env = COP.createNode('switch');
-	switch_diffuse.set_input(0, file_diffuse1);
-	switch_diffuse.set_input(1, file_diffuse2);
-	switch_env.set_input(0, file_env1);
-	switch_env.set_input(1, file_env2);
+	switch_diffuse.setInput(0, file_diffuse1);
+	switch_diffuse.setInput(1, file_diffuse2);
+	switch_env.setInput(0, file_env1);
+	switch_env.setInput(1, file_env2);
 
 	const null_diffuse = COP.createNode('null');
 	const null_env = COP.createNode('null');
-	null_diffuse.set_input(0, switch_diffuse);
-	null_env.set_input(0, switch_env);
+	null_diffuse.setInput(0, switch_diffuse);
+	null_env.setInput(0, switch_env);
 
-	const mesh_standard1 = MAT.createNode('mesh_standard');
-	mesh_standard1.p.map.set(null_diffuse.full_path());
-	mesh_standard1.p.use_map.set(1);
-	mesh_standard1.p.env_map.set(null_env.full_path());
-	mesh_standard1.p.use_env_map.set(1);
+	const mesh_standard1 = MAT.createNode('meshStandard');
+	mesh_standard1.p.map.set(null_diffuse.fullPath());
+	mesh_standard1.p.useMap.set(1);
+	mesh_standard1.p.envMap.set(null_env.fullPath());
+	mesh_standard1.p.useEnvMap.set(1);
 
 	// const sphere1 = geo1.createNode('sphere');
 	// const material1 = geo1.createNode('material');
-	// material1.set_input(0, sphere1);
-	// material1.p.material.set(mesh_standard1.full_path());
+	// material1.setInput(0, sphere1);
+	// material1.p.material.set(mesh_standard1.fullPath());
 
 	const material = mesh_standard1.material;
 

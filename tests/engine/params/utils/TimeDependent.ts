@@ -18,14 +18,14 @@ QUnit.skip('a param sets its node to timedependent and back', (assert) => {});
 // assert geo1.is_dirty()
 // assert !geo1.is_time_dependent()
 
-// scene.context().set_frame(1)
+// scene.context().setFrame(1)
 
 // val = await tx.eval_p()
 // assert.equal val, 2
 // assert tx.is_time_dependent()
 // assert geo1.is_time_dependent()
 
-// scene.context().set_frame(2)
+// scene.context().setFrame(2)
 // val = await tx.eval_p()
 // assert.equal val, 3
 
@@ -94,11 +94,11 @@ QUnit.test('a param value is updated is it is time dependent', async (assert) =>
 	await size.compute();
 	assert.equal(size.value, 0);
 
-	scene.set_frame(12);
+	scene.setFrame(12);
 	await size.compute();
 	assert.equal(size.value, 0.4);
 
-	scene.set_frame(120);
+	scene.setFrame(120);
 	await size.compute();
 	assert.equal(size.value, 4);
 

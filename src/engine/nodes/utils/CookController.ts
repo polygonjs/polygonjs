@@ -57,7 +57,7 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 
 	async cook_main() {
-		// console.log(performance.now(), 'cook main start', this.node.full_path());
+		// console.log(performance.now(), 'cook main start', this.node.fullPath());
 		if (this.is_cooking) {
 			return;
 		}
@@ -74,7 +74,7 @@ export class NodeCookController<NC extends NodeContext> {
 			await this._evaluate_params();
 		}
 		this._start_cook_if_no_errors(input_contents);
-		// console.log(performance.now(), 'cook main end', this.node.full_path());
+		// console.log(performance.now(), 'cook main end', this.node.fullPath());
 	}
 	async cook_main_without_inputs() {
 		this.node.scene.cook_controller.add_node(this.node);
@@ -83,7 +83,7 @@ export class NodeCookController<NC extends NodeContext> {
 			// this seems to happen because when we flush the cooker queue,
 			// some graph nodes will trigger more updates, which will then make dependent nodes
 			// dirty again
-			Poly.warn('cook_main_without_inputs already cooking', this.node.full_path());
+			Poly.warn('cook_main_without_inputs already cooking', this.node.fullPath());
 			return;
 		}
 		this._init_cooking_state();
@@ -103,7 +103,7 @@ export class NodeCookController<NC extends NodeContext> {
 			this.node.remove_dirty_state();
 			this._terminate_cook_process();
 		} else {
-			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.full_path());
+			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.fullPath());
 			this._cooking = false;
 			this.cook_main();
 		}
@@ -121,7 +121,7 @@ export class NodeCookController<NC extends NodeContext> {
 	private async _evaluate_inputs(): Promise<ContainableMap[NC][]> {
 		this._performance_controller.record_inputs_start();
 
-		// console.log(performance.now(), '_evaluate_inputs 0', this.node.full_path());
+		// console.log(performance.now(), '_evaluate_inputs 0', this.node.fullPath());
 		let input_containers: (ContainerMap[NC] | null)[] = [];
 		const io_inputs = this.node.io.inputs;
 		if (this._inputs_evaluation_required) {
@@ -131,7 +131,7 @@ export class NodeCookController<NC extends NodeContext> {
 				input_containers = io_inputs.containers_without_evaluation();
 			}
 		}
-		// console.log(performance.now(), '_evaluate_inputs 1', this.node.full_path());
+		// console.log(performance.now(), '_evaluate_inputs 1', this.node.fullPath());
 
 		const inputs = io_inputs.inputs();
 		const input_contents: ContainableMap[NC][] = [];
@@ -149,7 +149,7 @@ export class NodeCookController<NC extends NodeContext> {
 			}
 		}
 		// }
-		// console.log(performance.now(), '_evaluate_inputs 2', this.node.full_path());
+		// console.log(performance.now(), '_evaluate_inputs 2', this.node.fullPath());
 		this._performance_controller.record_inputs_end();
 		return input_contents;
 	}

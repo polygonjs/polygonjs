@@ -7,12 +7,12 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	const plane2 = geo1.createNode('plane');
 	const plane3 = geo1.createNode('plane');
 
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_create2 = geo1.createNode('attrib_create');
-	const attrib_create3 = geo1.createNode('attrib_create');
-	attrib_create1.set_input(0, plane1);
-	attrib_create2.set_input(0, plane2);
-	attrib_create3.set_input(0, plane3);
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_create2 = geo1.createNode('attribCreate');
+	const attrib_create3 = geo1.createNode('attribCreate');
+	attrib_create1.setInput(0, plane1);
+	attrib_create2.setInput(0, plane2);
+	attrib_create3.setInput(0, plane3);
 
 	attrib_create1.p.name.set('blend');
 	attrib_create2.p.name.set('blend');
@@ -25,11 +25,11 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	const merge1 = geo1.createNode('merge');
 	const merge2 = geo1.createNode('merge');
 
-	merge1.set_input(0, attrib_create1);
-	merge1.set_input(1, attrib_create2);
+	merge1.setInput(0, attrib_create1);
+	merge1.setInput(1, attrib_create2);
 
-	merge2.set_input(0, merge1);
-	merge2.set_input(1, attrib_create3);
+	merge2.setInput(0, merge1);
+	merge2.setInput(1, attrib_create3);
 
 	let container = await merge2.request_container();
 	let core_group = container.core_content()!;
@@ -40,8 +40,8 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	assert.equal(array.length, 12);
 	assert.equal(array.join(','), [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3].join(','));
 
-	const attrib_normalize1 = geo1.createNode('attrib_normalize');
-	attrib_normalize1.set_input(0, merge2);
+	const attrib_normalize1 = geo1.createNode('attribNormalize');
+	attrib_normalize1.setInput(0, merge2);
 	attrib_normalize1.p.name.set('blend');
 
 	container = await attrib_normalize1.request_container();
@@ -63,12 +63,12 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	const plane2 = geo1.createNode('plane');
 	const plane3 = geo1.createNode('plane');
 
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_create2 = geo1.createNode('attrib_create');
-	const attrib_create3 = geo1.createNode('attrib_create');
-	attrib_create1.set_input(0, plane1);
-	attrib_create2.set_input(0, plane2);
-	attrib_create3.set_input(0, plane3);
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_create2 = geo1.createNode('attribCreate');
+	const attrib_create3 = geo1.createNode('attribCreate');
+	attrib_create1.setInput(0, plane1);
+	attrib_create2.setInput(0, plane2);
+	attrib_create3.setInput(0, plane3);
 
 	attrib_create1.p.name.set('blend');
 	attrib_create2.p.name.set('blend');
@@ -83,11 +83,11 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	const merge1 = geo1.createNode('merge');
 	const merge2 = geo1.createNode('merge');
 
-	merge1.set_input(0, attrib_create1);
-	merge1.set_input(1, attrib_create2);
+	merge1.setInput(0, attrib_create1);
+	merge1.setInput(1, attrib_create2);
 
-	merge2.set_input(0, merge1);
-	merge2.set_input(1, attrib_create3);
+	merge2.setInput(0, merge1);
+	merge2.setInput(1, attrib_create3);
 
 	let container = await merge2.request_container();
 	let core_group = container.core_content()!;
@@ -138,8 +138,8 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 		].join(',')
 	);
 
-	const attrib_normalize1 = geo1.createNode('attrib_normalize');
-	attrib_normalize1.set_input(0, merge2);
+	const attrib_normalize1 = geo1.createNode('attribNormalize');
+	attrib_normalize1.setInput(0, merge2);
 	attrib_normalize1.p.name.set('blend');
 
 	container = await attrib_normalize1.request_container();
@@ -250,10 +250,10 @@ QUnit.test('attrib normalize vector length', async (assert) => {
 
 	const add1 = geo1.createNode('add');
 	const transform1 = geo1.createNode('transform');
-	const attrib_normalize1 = geo1.createNode('attrib_normalize');
+	const attrib_normalize1 = geo1.createNode('attribNormalize');
 
-	transform1.set_input(0, add1);
-	attrib_normalize1.set_input(0, transform1);
+	transform1.setInput(0, add1);
+	attrib_normalize1.setInput(0, transform1);
 
 	add1.p.position.set([2, 0, 0]);
 	transform1.p.scale.set(2);

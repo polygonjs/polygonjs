@@ -28,8 +28,8 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		name: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attrib_promote'> {
-		return 'attrib_promote';
+	static type(): Readonly<'attribPromote'> {
+		return 'attribPromote';
 	}
 
 	private _core_group: CoreGroup | undefined;

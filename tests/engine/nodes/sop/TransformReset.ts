@@ -7,10 +7,10 @@ QUnit.test('transform reset simple', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	const transform_reset1 = geo1.createNode('transform_reset');
+	const transform_reset1 = geo1.createNode('transformReset');
 
-	transform1.set_input(0, box1);
-	transform_reset1.set_input(0, transform1);
+	transform1.setInput(0, box1);
+	transform_reset1.setInput(0, transform1);
 
 	transform1.p.apply_on.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
 	transform1.p.t.x.set(2);

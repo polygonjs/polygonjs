@@ -22,7 +22,7 @@ const ParamsConfig = new ImpostorUvGlParamsConfig();
 export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'impostor_uv';
+		return 'impostorUv';
 	}
 	initialize_node() {
 		super.initialize_node();

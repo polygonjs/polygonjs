@@ -8,7 +8,7 @@ import {BaseContainer} from '../../containers/_Base';
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {Poly} from '../../Poly';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 
 export class BaseMethod {
 	protected _require_dependency = false;
@@ -63,7 +63,7 @@ export class BaseMethod {
 					return container;
 				}
 			}
-			throw `referenced node invalid: ${referenced_node.full_path()}`;
+			throw `referenced node invalid: ${referenced_node.fullPath()}`;
 		} else {
 			throw `invalid input (${index_or_path})`;
 		}

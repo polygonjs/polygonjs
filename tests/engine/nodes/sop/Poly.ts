@@ -16,12 +16,12 @@ const definition: PolyNodeDefinition = {
 		},
 	],
 	nodes: {
-		subnet_input1: {
-			type: 'subnet_input',
+		subnetInput1: {
+			type: 'subnetInput',
 			flags: {display: true},
 		},
-		subnet_output1: {
-			type: 'subnet_output',
+		subnetOutput1: {
+			type: 'subnetOutput',
 			inputs: ['transform1'],
 			flags: {display: false},
 		},

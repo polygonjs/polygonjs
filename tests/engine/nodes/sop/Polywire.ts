@@ -4,7 +4,7 @@ QUnit.test('polywire simple', async (assert) => {
 	const circle1 = geo1.createNode('circle');
 	const polywire1 = geo1.createNode('polywire');
 
-	polywire1.set_input(0, circle1);
+	polywire1.setInput(0, circle1);
 
 	let container;
 

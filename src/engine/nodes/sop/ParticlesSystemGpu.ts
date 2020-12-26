@@ -71,7 +71,7 @@ const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();
 export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'particles_system_gpu';
+		return 'particlesSystemGpu';
 	}
 	get assembler_controller() {
 		return this._assembler_controller;
@@ -135,8 +135,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodes_by_type<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GlNodeChildrenMap[K][];
+	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	children_allowed() {
 		if (this.assembler_controller) {

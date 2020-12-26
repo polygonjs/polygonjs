@@ -35,7 +35,7 @@ export class AnimationsObjNode extends ParamLessBaseManagerObjNode {
 	children() {
 		return super.children() as BaseAnimNodeType[];
 	}
-	nodes_by_type<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as AnimNodeChildrenMap[K][];
+	nodesByType<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K][] {
+		return super.nodesByType(type) as AnimNodeChildrenMap[K][];
 	}
 }

@@ -42,15 +42,15 @@ void main() {
 
 
 
-	// /MAT/mesh_basic1/vec3_to_float1
-	float v_POLYGON_vec3_to_float1_x = v_POLYGON_globals1_position.x;
-	float v_POLYGON_vec3_to_float1_y = v_POLYGON_globals1_position.y;
+	// /MAT/mesh_basic1/vec3ToFloat1
+	float v_POLYGON_vec3ToFloat1_x = v_POLYGON_globals1_position.x;
+	float v_POLYGON_vec3ToFloat1_y = v_POLYGON_globals1_position.y;
 	
-	// /MAT/mesh_basic1/float_to_vec3_1
-	vec3 v_POLYGON_float_to_vec3_1_vec = vec3(v_POLYGON_vec3_to_float1_x, 1.0, v_POLYGON_vec3_to_float1_y);
+	// /MAT/mesh_basic1/floatToVec3_1
+	vec3 v_POLYGON_floatToVec3_1_vec = vec3(v_POLYGON_vec3ToFloat1_x, 1.0, v_POLYGON_vec3ToFloat1_y);
 	
 	// /MAT/mesh_basic1/output1
-	diffuseColor.xyz = v_POLYGON_float_to_vec3_1_vec;
+	diffuseColor.xyz = v_POLYGON_floatToVec3_1_vec;
 
 
 

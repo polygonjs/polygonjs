@@ -41,7 +41,7 @@ export class JitterSopOperation extends BaseSopOperation {
 			offset.multiplyScalar(params.amount * CoreMath.rand_float(i * 78 + 54 + params.seed));
 
 			const new_position = point.position().clone().add(offset);
-			point.set_position(new_position);
+			point.setPosition(new_position);
 		}
 
 		return core_group;

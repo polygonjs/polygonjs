@@ -26,7 +26,7 @@ export class ExpressionManager {
 
 	parse_expression(expression: string) {
 		if (this.parse_started) {
-			throw new Error(`parse in progress for param ${this.param.full_path()}`);
+			throw new Error(`parse in progress for param ${this.param.fullPath()}`);
 		}
 		this.parse_started = true;
 		this.parse_completed = false;

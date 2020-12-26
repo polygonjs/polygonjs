@@ -7,9 +7,9 @@ QUnit.test('COP env_map simple', async (assert) => {
 	// start test
 	const COP = window.COP;
 	const file1 = COP.createNode('image');
-	const env_map1 = COP.createNode('env_map');
+	const env_map1 = COP.createNode('envMap');
 
-	env_map1.set_input(0, file1);
+	env_map1.setInput(0, file1);
 
 	file1.p.url.set('/examples/textures/piz_compressed.exr');
 

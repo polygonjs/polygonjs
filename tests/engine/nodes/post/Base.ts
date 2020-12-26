@@ -14,14 +14,14 @@ QUnit.test('Post nodes simple', async (assert) => {
 	assert.ok(renderer);
 
 	// start test
-	const camera = scene.root.nodes_by_type('perspective_camera')[0];
-	const post_process1 = camera.createNode('post_process');
-	const horizontal_blur1 = post_process1.createNode('horizontal_blur');
+	const camera = scene.root.nodesByType('perspectiveCamera')[0];
+	const post_process1 = camera.createNode('postProcess');
+	const horizontal_blur1 = post_process1.createNode('horizontalBlur');
 
 	assert.ok(horizontal_blur1.flags?.display?.active, 'first node created has display flag on');
 
 	camera.p.do_post_process.set(1);
-	camera.p.post_process_node.set(post_process1.full_path());
+	camera.p.post_process_node.set(post_process1.fullPath());
 	await CoreSleep.sleep(20);
 
 	// 2 passes by default
@@ -38,6 +38,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	await CoreSleep.sleep(20);
 	composer = camera.post_process_controller.composer(canvas);
 	assert.ok(composer, 'composer exists');
+	console.log(composer.passes);
 	assert.equal(composer.passes.length, 1, 'composer one pass');
 	assert.equal(
 		((composer.passes[0] as ShaderPass).material as ShaderMaterial).fragmentShader,
@@ -45,8 +46,8 @@ QUnit.test('Post nodes simple', async (assert) => {
 	);
 
 	// add another pass and add as input to the first one
-	const vertical_blur1 = post_process1.createNode('vertical_blur');
-	horizontal_blur1.set_input(0, vertical_blur1);
+	const vertical_blur1 = post_process1.createNode('verticalBlur');
+	horizontal_blur1.setInput(0, vertical_blur1);
 	await CoreSleep.sleep(20);
 	composer = camera.post_process_controller.composer(canvas);
 	assert.equal(composer.passes.length, 2, 'composer has two passes');
@@ -60,7 +61,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	);
 
 	// add another and set the display flag to it
-	const unreal_bloom1 = post_process1.createNode('unreal_bloom');
+	const unreal_bloom1 = post_process1.createNode('unrealBloom');
 	unreal_bloom1.flags.display.set(true);
 	composer = camera.post_process_controller.composer(canvas);
 	assert.equal(composer.passes.length, 1, 'composer has one pass');

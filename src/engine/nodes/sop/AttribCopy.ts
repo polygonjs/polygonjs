@@ -47,7 +47,7 @@ const ParamsConfig = new AttribCopySopParamsConfig();
 export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_copy';
+		return 'attribCopy';
 	}
 
 	static displayed_input_names(): string[] {

@@ -5,7 +5,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 
 export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	static type() {
-		return 'quat_to_axis';
+		return 'quatToAxis';
 	}
 
 	initialize_node() {
@@ -20,7 +20,7 @@ export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	return ['quat'][index];
 	// }
 	gl_method_name(): string {
-		return 'quat_to_axis';
+		return 'quatToAxis';
 	}
 
 	// protected _expected_input_types() {

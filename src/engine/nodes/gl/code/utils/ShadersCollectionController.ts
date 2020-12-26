@@ -28,7 +28,7 @@ export class ShadersCollectionController {
 	// 		console.log('body_line_nodes', body_line_nodes);
 	// 		for (let node of body_line_nodes) {
 	// 			const body_lines = shaders_collection_controller.body_lines(shader_name, node);
-	// 			console.log(node.full_path(), body_lines);
+	// 			console.log(node.fullPath(), body_lines);
 	// 			if (body_lines) {
 	// 				this.add_body_lines(node, body_lines, shader_name);
 	// 			}

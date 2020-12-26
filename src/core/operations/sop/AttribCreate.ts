@@ -37,8 +37,8 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		string: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attrib_create'> {
-		return 'attrib_create';
+	static type(): Readonly<'attribCreate'> {
+		return 'attribCreate';
 	}
 
 	cook(input_contents: CoreGroup[], params: AttribCreateSopParams) {

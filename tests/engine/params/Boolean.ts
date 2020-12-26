@@ -24,15 +24,15 @@ QUnit.test('boolean evals correctly when set to different values', async (assert
 
 	boolean_param.set('$F%2');
 	assert.ok(boolean_param.has_expression());
-	scene.set_frame(1);
+	scene.setFrame(1);
 	await boolean_param.compute();
 	assert.equal(boolean_param.value, true);
 
-	scene.set_frame(2);
+	scene.setFrame(2);
 	await boolean_param.compute();
 	assert.equal(boolean_param.value, false);
 
-	scene.set_frame(3);
+	scene.setFrame(3);
 	await boolean_param.compute();
 	assert.equal(boolean_param.value, true);
 
@@ -86,7 +86,7 @@ QUnit.test('boolean is_default', async (assert) => {
 QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
-	scene.time_controller.set_frame_range(-10, 10);
+	scene.time_controller.setFrameRange(-10, 10);
 
 	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F', {spare: true})!;
 	assert.deepEqual(
@@ -96,27 +96,27 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	assert.ok(spare_boolean.has_expression(), 'has expr');
 	assert.ok(spare_boolean.is_default, 'spare is default');
 
-	scene.set_frame(2);
+	scene.setFrame(2);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.is_default, 'spare is default');
 	assert.ok(spare_boolean.value === true, 'value is true');
 
-	scene.set_frame(1);
+	scene.setFrame(1);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.is_default, 'spare is default');
 	assert.ok(spare_boolean.value === true, 'value is true');
 
-	scene.set_frame(-1);
+	scene.setFrame(-1);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.is_default, 'param is default');
 	assert.ok(spare_boolean.value === false, 'value is false');
 
-	scene.set_frame(1);
+	scene.setFrame(1);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.is_default, 'spare is default');
 	assert.ok(spare_boolean.value === true, 'value is true');
 
-	scene.set_frame(0);
+	scene.setFrame(0);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.is_default, 'param is default');
 	assert.ok(spare_boolean.value === false, 'value is false');
@@ -131,7 +131,7 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	assert.ok(!spare_boolean.is_default);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.value === false, 'value is false');
-	scene.set_frame(1);
+	scene.setFrame(1);
 	assert.ok(!spare_boolean.is_default);
 	await spare_boolean.compute();
 	assert.ok(spare_boolean.value === true, 'value is true');

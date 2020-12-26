@@ -12,22 +12,22 @@ export function SopAttribAddMult() {
 	plane.p.step_size.set(0.05);
 
 	// create an attrib create
-	const attrib_create = geo.createNode('attrib_create');
-	attrib_create.set_input(0, plane);
+	const attrib_create = geo.createNode('attribCreate');
+	attrib_create.setInput(0, plane);
 	attrib_create.p.name.set('height');
 	// here we set the attribute value with an expression
 	// that depends on the z position of each point
 	attrib_create.p.value1.set('sin(2*@P.z)');
 
 	// create the attrib_add_mult
-	const attrib_add_mult = geo.createNode('attrib_add_mult');
-	attrib_add_mult.set_input(0, attrib_create);
+	const attrib_add_mult = geo.createNode('attribAddMult');
+	attrib_add_mult.setInput(0, attrib_create);
 	attrib_add_mult.p.name.set('height');
 	attrib_add_mult.p.mult.set(0.5);
 
 	// create a point SOP to use the height attribute to deform the plane
 	const point = geo.createNode('point');
-	point.set_input(0, attrib_add_mult);
+	point.setInput(0, attrib_add_mult);
 	point.p.update_y.set(1);
 	// by setting another expression,
 	// we set the y position to equal the height attribute
@@ -35,15 +35,15 @@ export function SopAttribAddMult() {
 	point.flags.display.set(true);
 
 	// add a light
-	scene.root.createNode('hemisphere_light');
+	scene.root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspective_camera1 = scene.root.createNode('perspective_camera');
+	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
 	perspective_camera1.p.t.set([5, 5, 5]);
 	// add orbit_controls
 	const events1 = perspective_camera1.createNode('events');
-	const orbits_controls = events1.createNode('camera_orbit_controls');
-	perspective_camera1.p.controls.set(orbits_controls.full_path());
+	const orbits_controls = events1.createNode('cameraOrbitControls');
+	perspective_camera1.p.controls.set(orbits_controls.fullPath());
 
 	// EXPORT
 	const nodes = [attrib_add_mult];

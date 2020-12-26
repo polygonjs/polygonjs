@@ -5,7 +5,7 @@ import {BaseGlNodeType} from '../../../../src/engine/nodes/gl/_Base';
 
 QUnit.test('gl dot updates its input and output types correctly', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
@@ -33,7 +33,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 		GlConnectionPointType.VEC2,
 		'first type is vec2'
 	);
-	dot1.set_input(0, constant1, 'val');
+	dot1.setInput(0, constant1, 'val');
 	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2, '2 inputs');
 	assert.deepEqual(
 		dot1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
@@ -46,7 +46,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 	// change constant to float
 	constant1.p.type.set(2);
 	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.FLOAT);
-	dot1.set_input(0, constant1, 'val');
+	dot1.setInput(0, constant1, 'val');
 	assert.equal(dot1.io.inputs.named_input_connection_points.length, 2);
 	assert.deepEqual(
 		dot1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
@@ -59,7 +59,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 QUnit.test('gl dot updates its output type and param correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
@@ -68,7 +68,7 @@ QUnit.test('gl dot updates its output type and param correctly when scene is loa
 	const dot1 = material_basic_builder1.createNode('dot');
 	constant1.p.type.set(3);
 	assert.equal(constant1.io.outputs.named_output_connection_points[0].type, GlConnectionPointType.VEC2);
-	dot1.set_input(0, constant1, 'val');
+	dot1.setInput(0, constant1, 'val');
 	dot1.params.get('vec1')!.set([1, 2]);
 
 	await scene.wait_for_cooks_completed();
@@ -77,7 +77,7 @@ QUnit.test('gl dot updates its output type and param correctly when scene is loa
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
 
-	const dot2 = scene2.node('/MAT/mesh_basic_builder1/dot1')! as BaseGlNodeType;
+	const dot2 = scene2.node('/MAT/meshBasicBuilder1/dot1')! as BaseGlNodeType;
 	const input_connection_points = dot2.io.inputs.named_input_connection_points;
 	assert.deepEqual(
 		input_connection_points.map((c) => c.type),

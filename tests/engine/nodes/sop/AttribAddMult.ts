@@ -4,10 +4,10 @@ QUnit.test('attrib_add_mult simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_add_mult1 = geo1.createNode('attrib_add_mult');
-	attrib_create1.set_input(0, plane1);
-	attrib_add_mult1.set_input(0, attrib_create1);
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_add_mult1 = geo1.createNode('attribAddMult');
+	attrib_create1.setInput(0, plane1);
+	attrib_add_mult1.setInput(0, attrib_create1);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set('@ptnum');

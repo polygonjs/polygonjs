@@ -29,7 +29,7 @@ const ParamsConfig = new BoxSopParamsConfig();
 export class RoundedBoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'rounded_box';
+		return 'roundedBox';
 	}
 
 	static displayed_input_names(): string[] {

@@ -247,7 +247,6 @@ export class ParamsController {
 		return this._spare_param_names;
 	}
 
-
 	private set_with_type<T extends ParamType>(param_name: string, value: ParamInitValuesTypeMap[T], type: T) {
 		const param = this.param_with_type(param_name, type);
 		if (param) {
@@ -322,9 +321,9 @@ export class ParamsController {
 			return p;
 		} else {
 			Poly.warn(
-				`tried to access param '${param_name}' in node ${this.node.full_path()}, but existing params are: ${
+				`tried to access param '${param_name}' in node ${this.node.fullPath()}, but existing params are: ${
 					this.names
-				} on node ${this.node.full_path()}`
+				} on node ${this.node.fullPath()}`
 			);
 			return null;
 		}
@@ -361,7 +360,7 @@ export class ParamsController {
 			// }
 			// param.emit(ParamEvent.DELETED);
 		} else {
-			throw new Error(`param '${param_name}' does not exist on node ${this.node.full_path()}`);
+			throw new Error(`param '${param_name}' does not exist on node ${this.node.fullPath()}`);
 		}
 	}
 
@@ -375,13 +374,13 @@ export class ParamsController {
 		const is_spare = options['spare'] || false;
 		if (this._param_create_mode === false && !is_spare) {
 			Poly.warn(
-				`node ${this.node.full_path()} (${
+				`node ${this.node.fullPath()} (${
 					this.node.type
 				}) param '${param_name}' cannot be created outside of create_params`
 			);
 		}
 		if (this.node.scene == null) {
-			Poly.warn(`node ${this.node.full_path()} (${this.node.type}) has no scene assigned`);
+			Poly.warn(`node ${this.node.fullPath()} (${this.node.type}) has no scene assigned`);
 		}
 
 		const constructor = ParamConstructorByType[type];
@@ -402,7 +401,7 @@ export class ParamsController {
 			const param: ParamConstructorMap[T] = new constructor(this.node.scene);
 			param.options.set(options);
 
-			param.set_name(param_name);
+			param.setName(param_name);
 			param.set_init_value(default_value as never);
 			param.init_components();
 			if (init_data == null) {

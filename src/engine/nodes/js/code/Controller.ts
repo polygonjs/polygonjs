@@ -25,8 +25,8 @@ export class AssemblerControllerNode extends TypedNode<any, any> {
 	children() {
 		return super.children() as BaseJsNodeType[];
 	}
-	nodes_by_type<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as JsNodeChildrenMap[K][];
+	nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 
 	assembler_controller!: JsAssemblerController<BaseJsFunctionAssembler>;
@@ -61,8 +61,8 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 		const globals = this.node.createNode('globals');
 		const output = this.node.createNode('output');
 
-		globals.ui_data.set_position(-200, 0);
-		output.ui_data.set_position(200, 0);
+		globals.uiData.setPosition(-200, 0);
+		output.uiData.setPosition(200, 0);
 	}
 
 	set_compilation_required(new_state = true) {

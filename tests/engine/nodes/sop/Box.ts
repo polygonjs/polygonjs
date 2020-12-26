@@ -24,14 +24,14 @@ QUnit.test('box with input', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	transform1.io.inputs.set_input(0, box1);
+	transform1.io.inputs.setInput(0, box1);
 
 	const box2 = geo1.createNode('box');
 	assert.ok(box2.is_dirty);
 	let container;
 	await box2.request_container();
 	assert.notOk(box2.is_dirty);
-	box2.io.inputs.set_input(0, transform1);
+	box2.io.inputs.setInput(0, transform1);
 	assert.ok(box2.is_dirty);
 	await box2.request_container();
 	assert.notOk(box2.is_dirty);
@@ -80,7 +80,7 @@ QUnit.test('box with expression', async (assert) => {
 	assert.ok(box1.p.size.states.error.active, 'check param is errored');
 
 	// with $F
-	scene.set_frame(5);
+	scene.setFrame(5);
 	box1.p.size.set('$F');
 	assert.notOk(box1.states.error.active);
 	await box1.p.size.compute();
@@ -90,7 +90,7 @@ QUnit.test('box with expression', async (assert) => {
 
 	assert.notOk(box1.p.size.is_dirty);
 	assert.notOk(box1.is_dirty);
-	scene.set_frame(10);
+	scene.setFrame(10);
 	assert.ok(box1.p.size.is_dirty);
 	assert.ok(box1.is_dirty);
 	await box1.p.size.compute();
@@ -98,7 +98,7 @@ QUnit.test('box with expression', async (assert) => {
 	container = await box1.request_container();
 	assert.equal(container.bounding_box().min.y, -5);
 
-	scene.set_frame(20);
+	scene.setFrame(20);
 	container = await box1.request_container();
 	assert.equal(container.bounding_box().min.y, -10);
 

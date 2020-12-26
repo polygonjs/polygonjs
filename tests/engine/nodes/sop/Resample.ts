@@ -11,7 +11,7 @@ QUnit.test('resample a line', async (assert) => {
 	assert.equal(container.points_count(), 2);
 
 	const resample1 = geo1.createNode('resample');
-	resample1.set_input(0, line1);
+	resample1.setInput(0, line1);
 
 	// try all curve types for method points_count
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
@@ -57,7 +57,7 @@ QUnit.test('resample a text', async (assert) => {
 	assert.equal(container.points_count(), 738);
 
 	const resample1 = geo1.createNode('resample');
-	resample1.set_input(0, text1);
+	resample1.setInput(0, text1);
 
 	// try all curve types for method points_count
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));

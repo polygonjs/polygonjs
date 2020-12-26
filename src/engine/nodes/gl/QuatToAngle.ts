@@ -5,7 +5,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 
 export class QuatToAngleGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	static type() {
-		return 'quat_to_angle';
+		return 'quatToAngle';
 	}
 
 	initialize_node() {
@@ -20,7 +20,7 @@ export class QuatToAngleGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	return ['quat'][index];
 	// }
 	gl_method_name(): string {
-		return 'quat_to_angle';
+		return 'quatToAngle';
 	}
 
 	// protected _expected_input_types() {

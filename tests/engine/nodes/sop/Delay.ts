@@ -7,7 +7,7 @@ QUnit.test('delay simple', async (assert) => {
 
 	await scene.root.process_queue();
 
-	delay1.set_input(0, box1);
+	delay1.setInput(0, box1);
 
 	let start_time: number, total_time: number;
 

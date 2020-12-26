@@ -19,10 +19,10 @@ import {CoreMaterial} from '../../../core/geometry/Material';
 import {VolumeController} from './utils/VolumeController';
 class VolumeMatParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
-	step_size = ParamConfig.FLOAT(0.01);
+	stepSize = ParamConfig.FLOAT(0.01);
 	density = ParamConfig.FLOAT(1);
-	shadow_density = ParamConfig.FLOAT(1);
-	light_dir = ParamConfig.VECTOR3([-1, -1, -1]);
+	shadowDensity = ParamConfig.FLOAT(1);
+	lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
 }
 const ParamsConfig = new VolumeMatParamsConfig();
 

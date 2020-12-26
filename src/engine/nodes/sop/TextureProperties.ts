@@ -54,7 +54,7 @@ const ParamsConfig = new TexturePropertiesSopParamsConfig();
 export class TexturePropertiesSopNode extends TypedSopNode<TexturePropertiesSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'texture_properties';
+		return 'textureProperties';
 	}
 
 	static displayed_input_names(): string[] {

@@ -100,7 +100,7 @@ const ParamsConfig = new CameraNavigationBeaconsEventParamsConfig();
 export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavigationBeaconsEventParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'camera_navigation_beacons';
+		return 'cameraNavigationBeacons';
 	}
 
 	private _src_data: CamData = init_cam_data();
@@ -371,7 +371,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 			src_camera_node.p.far.set(this._dest_data.far);
 			const node = this._dest_data.controls.node;
 			if (node) {
-				src_camera_node.p.controls.set(node.full_path());
+				src_camera_node.p.controls.set(node.fullPath());
 			}
 		});
 	}

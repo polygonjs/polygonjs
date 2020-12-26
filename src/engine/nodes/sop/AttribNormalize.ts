@@ -38,7 +38,7 @@ const ParamsConfig = new AttribNormalizeSopParamsConfig();
 export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_normalize';
+		return 'attribNormalize';
 	}
 
 	initialize_node() {

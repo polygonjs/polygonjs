@@ -54,7 +54,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 > {
 	params_config = ParamsConfig;
 	static type() {
-		return 'directional_light';
+		return 'directionalLight';
 	}
 	private _target_target!: Object3D;
 	private _helper_controller = new HelperController<DirectionalLight>(

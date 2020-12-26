@@ -60,7 +60,8 @@ import {NodeContext} from '../../poly/NodeContext';
 import {BaseCopNodeType} from '../cop/_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {OperatorPathParam, OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
+import {OperatorPathParam} from '../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
 	TextureAlphaMapParamConfig(SkinningParamConfig(SideParamConfig(NodeParamsConfig)))
 ) {
@@ -70,27 +71,27 @@ class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
 	shininess = ParamConfig.FLOAT(1, {
 		range: [0, 1000],
 	});
-	thickness_map = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
+	thicknessMap = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 		...ParamOptionsFactoryTexture('thicknessMap'),
 	});
-	thickness_color = ParamConfig.COLOR([0.5, 0.3, 0.0], {
+	thicknessColor = ParamConfig.COLOR([0.5, 0.3, 0.0], {
 		...ParamOptionsFactoryColor('thicknessColor'),
 	});
-	thickness_distortion = ParamConfig.FLOAT(0.1, {
+	thicknessDistortion = ParamConfig.FLOAT(0.1, {
 		...ParamOptionsFactoryN('thicknessDistortion'),
 	});
-	thickness_ambient = ParamConfig.FLOAT(0.4, {
+	thicknessAmbient = ParamConfig.FLOAT(0.4, {
 		...ParamOptionsFactoryN('thicknessAmbient'),
 	});
-	thickness_attenuation = ParamConfig.FLOAT(0.8, {
+	thicknessAttenuation = ParamConfig.FLOAT(0.8, {
 		...ParamOptionsFactoryN('thicknessAttenuation'),
 	});
-	thickness_power = ParamConfig.FLOAT(2.0, {
+	thicknessPower = ParamConfig.FLOAT(2.0, {
 		range: [0, 10],
 		...ParamOptionsFactoryN('thicknessPower'),
 	});
-	thickness_scale = ParamConfig.FLOAT(16.0, {
+	thicknessScale = ParamConfig.FLOAT(16.0, {
 		range: [0, 100],
 		...ParamOptionsFactoryN('thicknessScale'),
 	});
@@ -118,7 +119,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 > {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_subsurface_scattering';
+		return 'meshSubsurfaceScattering';
 	}
 	create_material() {
 		const uniforms = UniformsUtils.clone(SubsurfaceScatteringShader.uniforms);
@@ -153,16 +154,16 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 
-		this.update_map(this.p.thickness_map, 'thicknessMap');
+		this.update_map(this.p.thicknessMap, 'thicknessMap');
 		this.material.uniforms.diffuse.value.copy(this.pv.diffuse);
 		this.material.uniforms.shininess.value = this.pv.shininess;
 
-		this.material.uniforms.thicknessColor.value.copy(this.pv.thickness_color);
-		this.material.uniforms.thicknessDistortion.value = this.pv.thickness_distortion;
-		this.material.uniforms.thicknessAmbient.value = this.pv.thickness_ambient;
-		this.material.uniforms.thicknessAttenuation.value = this.pv.thickness_attenuation;
-		this.material.uniforms.thicknessPower.value = this.pv.thickness_power;
-		this.material.uniforms.thicknessScale.value = this.pv.thickness_scale;
+		this.material.uniforms.thicknessColor.value.copy(this.pv.thicknessColor);
+		this.material.uniforms.thicknessDistortion.value = this.pv.thicknessDistortion;
+		this.material.uniforms.thicknessAmbient.value = this.pv.thicknessAmbient;
+		this.material.uniforms.thicknessAttenuation.value = this.pv.thicknessAttenuation;
+		this.material.uniforms.thicknessPower.value = this.pv.thicknessPower;
+		this.material.uniforms.thicknessScale.value = this.pv.thicknessScale;
 
 		this.set_material(this.material);
 	}

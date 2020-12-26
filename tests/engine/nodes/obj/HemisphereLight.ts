@@ -5,10 +5,10 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
-	const hemisphere_light1 = scene.root.createNode('hemisphere_light');
-	assert.equal(hemisphere_light1.name, 'hemisphere_light1');
+	const hemisphere_light1 = scene.root.createNode('hemisphereLight');
+	assert.equal(hemisphere_light1.name, 'hemisphereLight1');
 	assert.equal(main_group.children.length, 3);
 
 	assert.deepEqual(hemisphere_light1.p.sky_color.value_pre_conversion_serialized, [1, 1, 1]);
@@ -26,12 +26,12 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	tmp.convertSRGBToLinear();
 	assert.deepEqual(hemisphere_light1.pv.ground_color.toArray(), tmp.toArray());
 
-	const hemisphere_light2 = scene.root.createNode('hemisphere_light');
-	assert.equal(hemisphere_light2.name, 'hemisphere_light2');
+	const hemisphere_light2 = scene.root.createNode('hemisphereLight');
+	assert.equal(hemisphere_light2.name, 'hemisphereLight2');
 	assert.equal(main_group.children.length, 4);
 
-	assert.equal(main_group.children[2].name, '/hemisphere_light1');
-	assert.equal(main_group.children[3].name, '/hemisphere_light2');
+	assert.equal(main_group.children[2].name, '/hemisphereLight1');
+	assert.equal(main_group.children[3].name, '/hemisphereLight2');
 
 	assert.equal(hemisphere_light1.graph_all_successors().length, 0);
 
@@ -52,7 +52,7 @@ QUnit.test('hemisphere light simple', async (assert) => {
 QUnit.test('hemisphere light params update as expected', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root;
-	const hemisphere_light = root.createNode('hemisphere_light');
+	const hemisphere_light = root.createNode('hemisphereLight');
 	assert.equal(hemisphere_light.light.color.r, 1);
 	hemisphere_light.p.sky_color.r.set(0.5);
 	await scene.wait_for_cooks_completed();

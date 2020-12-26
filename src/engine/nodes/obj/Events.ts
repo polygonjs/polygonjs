@@ -38,7 +38,7 @@ export class EventsObjNode extends ParamLessBaseManagerObjNode {
 	children() {
 		return super.children() as BaseEventNodeType[];
 	}
-	nodes_by_type<K extends keyof EventNodeChildrenMap>(type: K): EventNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as EventNodeChildrenMap[K][];
+	nodesByType<K extends keyof EventNodeChildrenMap>(type: K): EventNodeChildrenMap[K][] {
+		return super.nodesByType(type) as EventNodeChildrenMap[K][];
 	}
 }

@@ -2,9 +2,9 @@ QUnit.test('draw range simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const draw_range1 = geo1.createNode('draw_range');
+	const draw_range1 = geo1.createNode('drawRange');
 
-	draw_range1.set_input(0, box1);
+	draw_range1.setInput(0, box1);
 
 	let container = await draw_range1.request_container();
 	let core_group = container.core_content()!;

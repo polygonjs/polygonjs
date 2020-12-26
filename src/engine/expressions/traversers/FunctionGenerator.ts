@@ -106,7 +106,7 @@ import {CoreString} from '../../../core/String';
 
 // import {AsyncFunction} from '../../../core/AsyncFunction';
 import {Poly} from '../../Poly';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
@@ -143,7 +143,7 @@ export class FunctionGenerator extends BaseTraverser {
 					console.warn('no parsed_tree.node');
 				}
 			} catch (e) {
-				console.warn(`error in expression for param ${this.param.full_path()}`);
+				console.warn(`error in expression for param ${this.param.fullPath()}`);
 				console.warn(e);
 			}
 

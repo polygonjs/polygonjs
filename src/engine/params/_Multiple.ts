@@ -4,7 +4,7 @@ import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
@@ -55,7 +55,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			component.set_init_value(default_val);
 
 			// component.set_scene(this.scene);
-			component.set_name(`${this.name}${component_name}`);
+			component.setName(`${this.name}${component_name}`);
 			component.set_parent_param(this);
 
 			// this.add_graph_input(component, false); // already called in set_parent_param

@@ -25,7 +25,7 @@ const ParamsConfig = new ObjectMergeSopParamsConfig();
 export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'object_merge';
+		return 'objectMerge';
 	}
 
 	// _param_apply_parent_transform: boolean

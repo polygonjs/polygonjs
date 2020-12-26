@@ -34,7 +34,7 @@ export class PeakSopOperation extends BaseSopOperation {
 						const normal = point.normal();
 						const position = point.position();
 						const new_position = position.clone().add(normal.multiplyScalar(params.amount));
-						point.set_position(new_position);
+						point.setPosition(new_position);
 					}
 
 					// if (!this.io.inputs.clone_required(0)) {

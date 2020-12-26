@@ -67,14 +67,14 @@ float density_function(vec3 position_for_step){
 
 
 
-	// /MAT/volume_builder1/globals1
+	// /MAT/volumeBuilder1/globals1
 	vec3 v_POLY_globals1_position = position_for_step;
 	
-	// /MAT/volume_builder1/vec3_to_float1
-	float v_POLY_vec3_to_float1_y = v_POLY_globals1_position.y;
+	// /MAT/volumeBuilder1/vec3ToFloat1
+	float v_POLY_vec3ToFloat1_y = v_POLY_globals1_position.y;
 	
-	// /MAT/volume_builder1/output1
-	density *= v_POLY_vec3_to_float1_y;
+	// /MAT/volumeBuilder1/output1
+	density *= v_POLY_vec3ToFloat1_y;
 
 
 

@@ -15,7 +15,7 @@ const ParamsConfig = new LabToRgbGlParamsConfig();
 export class HsluvToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'hsluv_to_rgb';
+		return 'hsluvToRgb';
 	}
 
 	initialize_node() {

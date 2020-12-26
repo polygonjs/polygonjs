@@ -101,13 +101,13 @@ export class NodesRegister {
 		}
 	}
 	registeredNodes(context: NodeContext, parent_node_type: string): Dictionary<BaseNodeConstructor> {
-		const nodes_by_type: Dictionary<BaseNodeConstructor> = {};
+		const nodesByType: Dictionary<BaseNodeConstructor> = {};
 		const nodes = this.registered_nodes_for_context_and_parent_type(context, parent_node_type);
 		for (let node of nodes) {
 			const type = node.type();
-			nodes_by_type[type] = node;
+			nodesByType[type] = node;
 		}
-		return nodes_by_type;
+		return nodesByType;
 	}
 	registered_category(context: NodeContext, type: string) {
 		return this._node_register_categories.get(context)?.get(type);

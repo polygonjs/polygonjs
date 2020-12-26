@@ -10,7 +10,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
 	assert.equal(geo1.children().length, 0);
@@ -67,7 +67,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/geo1:/perspectiveCamera1'
 	);
 	assert.ok(geo1.children_display_controller.sop_group.visible);
 
@@ -78,7 +78,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/geo1:/perspectiveCamera1'
 	);
 	assert.ok(!geo1.children_display_controller.sop_group.visible);
 });
@@ -116,7 +116,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];

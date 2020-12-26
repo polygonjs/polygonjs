@@ -13,8 +13,8 @@ class ModelViewMatrixMultGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ModelViewMatrixMultGlParamsConfig();
 export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGlParamsConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'model_view_matrix_mult'> {
-		return 'model_view_matrix_mult';
+	static type(): Readonly<'modelViewMatrixMult'> {
+		return 'modelViewMatrixMult';
 	}
 
 	initialize_node() {

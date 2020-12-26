@@ -53,26 +53,26 @@ export enum NetworkNodeType {
 	COP = 'cop',
 	EVENT = 'events',
 	MAT = 'materials',
-	POST = 'post_process',
+	POST = 'postProcess',
 	ROP = 'renderers',
 }
 export enum NetworkChildNodeType {
-	INPUT = 'subnet_input',
-	OUTPUT = 'subnet_output',
+	INPUT = 'subnetInput',
+	OUTPUT = 'subnetOutput',
 }
 export enum CameraNodeType {
-	PERSPECTIVE = 'perspective_camera',
-	ORTHOGRAPHIC = 'orthographic_camera',
-	MAPBOX = 'mapbox_camera',
+	PERSPECTIVE = 'perspectiveCamera',
+	ORTHOGRAPHIC = 'orthographicCamera',
+	MAPBOX = 'mapboxCamera',
 }
 export enum GlNodeType {
 	ATTRIBUTE = 'attribute',
 }
 
 export enum CameraControlsNodeType {
-	DEVICE_ORIENTATION = 'camera_device_orientation_controls',
-	MAP = 'camera_map_controls',
-	ORBIT = 'camera_orbit_controls',
+	DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',
+	MAP = 'cameraMapControls',
+	ORBIT = 'cameraOrbitControls',
 }
 export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
 	CameraControlsNodeType.DEVICE_ORIENTATION,

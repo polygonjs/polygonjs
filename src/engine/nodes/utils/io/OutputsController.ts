@@ -2,8 +2,8 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
-import { CoreType } from '../../../../core/Type';
-import { ArrayUtils } from '../../../../core/ArrayUtils';
+import {CoreType} from '../../../../core/Type';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 export class OutputsController<NC extends NodeContext> {
 	private _has_outputs: boolean = false;
 	private _named_output_connection_points: ConnectionPointTypeMap[NC][] | undefined;
@@ -52,7 +52,7 @@ export class OutputsController<NC extends NodeContext> {
 				if (this.has_named_outputs) {
 					return this.get_named_output_index(output_index_or_name);
 				} else {
-					console.warn(`node ${this.node.full_path()} has no named outputs`);
+					console.warn(`node ${this.node.fullPath()} has no named outputs`);
 					return -1;
 				}
 			} else {
@@ -82,7 +82,7 @@ export class OutputsController<NC extends NodeContext> {
 					// assume we only work with indices for now, not with connection point names
 					// so we only need to check again the new max number of connection points.
 					if (connection.output_index >= connection_points.length) {
-						connection.disconnect({set_input: true});
+						connection.disconnect({setInput: true});
 					}
 				}
 			}

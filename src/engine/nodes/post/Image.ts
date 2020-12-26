@@ -19,9 +19,9 @@ interface ShaderPassWithRequiredUniforms extends ShaderPass {
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseCopNodeType} from '../cop/_Base';
-import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class ImagePostParamsConfig extends NodeParamsConfig {
-	map = ParamConfig.OPERATOR_PATH(OPERATOR_PATH_DEFAULT.NODE.UV, {
+	map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
 		node_selection: {context: NodeContext.COP},
 		...PostParamOptions,
 	});

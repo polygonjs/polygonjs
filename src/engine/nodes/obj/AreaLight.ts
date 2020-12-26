@@ -33,7 +33,7 @@ const ParamsConfig = new AreaLightObjParamsConfig();
 export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight, AreaLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'area_light';
+		return 'areaLight';
 	}
 	// private _helper_controller = new HelperController<RectAreaLightHelper, RectAreaLight>(this, RectAreaLightHelper);
 	// initialize_node() {

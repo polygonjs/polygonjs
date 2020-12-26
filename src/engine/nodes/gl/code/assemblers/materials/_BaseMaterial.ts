@@ -324,7 +324,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// // TODO: I should probably raise an error in the node
 		// // maybe when doint the initial eval of all nodes and check for errors?
 		// if(!attribute_name){
-		// 	console.error(attribute_node.full_path())
+		// 	console.error(attribute_node.fullPath())
 		// 	throw new Error("empty attr name")
 		// }
 		// if(GlobalsGeometryHandler.PRE_DEFINED_ATTRIBUTES.indexOf(attribute_name) < 0){

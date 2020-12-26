@@ -12,7 +12,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	initialize_base_node() {
-		this.ui_data.set_layout_horizontal();
+		this.uiData.set_layout_horizontal();
 		// this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 		// cook is required for some nodes like event/animation
 		this.add_post_dirty_hook('cook_without_inputs_on_dirty', this._cook_without_inputs_bound);
@@ -74,7 +74,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 			// 	node.process_event(event_context);
 			// }
 		} else {
-			console.warn(`requested output '${output_name}' does not exist on node '${this.full_path()}'`);
+			console.warn(`requested output '${output_name}' does not exist on node '${this.fullPath()}'`);
 		}
 	}
 

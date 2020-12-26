@@ -9,10 +9,10 @@ import {ParamType} from '../../poly/ParamType';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/ParamConfig';
-import {OPERATOR_PATH_DEFAULT} from '../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class TextureParamsConfig extends NodeParamsConfig {
 	param_name = ParamConfig.STRING('texture_map');
-	default_value = ParamConfig.STRING(OPERATOR_PATH_DEFAULT.NODE.UV);
+	default_value = ParamConfig.STRING(NODE_PATH_DEFAULT.NODE.UV);
 	uv = ParamConfig.VECTOR2([0, 0]);
 }
 const ParamsConfig = new TextureParamsConfig();

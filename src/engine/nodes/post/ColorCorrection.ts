@@ -32,7 +32,7 @@ const ParamsConfig = new ColorCorrectionPostParamsConfig();
 export class ColorCorrectionPostNode extends TypedPostProcessNode<ShaderPass, ColorCorrectionPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'color_correction';
+		return 'colorCorrection';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

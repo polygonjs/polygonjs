@@ -32,7 +32,7 @@ export class MaterialsSopNode extends ParamLessBaseNetworkSopNode {
 	children() {
 		return super.children() as BaseMatNodeType[];
 	}
-	nodes_by_type<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as MatNodeChildrenMap[K][];
+	nodesByType<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K][] {
+		return super.nodesByType(type) as MatNodeChildrenMap[K][];
 	}
 }

@@ -1,7 +1,7 @@
 import {BaseNodeType} from '../../engine/nodes/_Base';
 
 export interface PerformancePrintObject {
-	full_path: string;
+	fullPath: string;
 	cooks_count: number;
 	total_time: number;
 	total_cook_time: number;
@@ -67,7 +67,7 @@ export class PerformanceNode {
 
 	print_object(): PerformancePrintObject {
 		return {
-			full_path: this._node.full_path(),
+			fullPath: this._node.fullPath(),
 			cooks_count: this.cooks_count,
 			total_time: this.total_time,
 			total_cook_time: this.total_cook_time,

@@ -6,7 +6,7 @@ import {
 
 QUnit.test('gl mult default connections', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
@@ -24,7 +24,7 @@ QUnit.test('gl mult default connections', async (assert) => {
 	constant2.set_gl_type(GlConnectionPointType.FLOAT);
 
 	// float only
-	mult1.set_input(0, constant1);
+	mult1.setInput(0, constant1);
 	assert.deepEqual(
 		mult1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
 		[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
@@ -35,7 +35,7 @@ QUnit.test('gl mult default connections', async (assert) => {
 	);
 
 	// float * float
-	mult1.set_input(1, constant2);
+	mult1.setInput(1, constant2);
 	assert.deepEqual(
 		mult1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
 		[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
@@ -59,7 +59,7 @@ QUnit.test('gl mult default connections', async (assert) => {
 
 QUnit.test('gl mult with empty input', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
@@ -75,7 +75,7 @@ QUnit.test('gl mult with empty input', async (assert) => {
 
 	constant1.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT));
 	constant2.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT));
-	mult1.set_input(1, constant1);
+	mult1.setInput(1, constant1);
 	assert.deepEqual(
 		mult1.io.inputs.named_input_connection_points.map((c: BaseGlConnectionPoint) => c.type),
 		[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]

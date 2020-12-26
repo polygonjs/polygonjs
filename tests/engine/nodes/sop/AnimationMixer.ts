@@ -2,9 +2,9 @@ QUnit.test('animation_mixer simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('file');
-	const animation_mixer1 = geo1.createNode('animation_mixer');
+	const animation_mixer1 = geo1.createNode('animationMixer');
 
-	animation_mixer1.set_input(0, file1);
+	animation_mixer1.setInput(0, file1);
 
 	file1.p.url.set('/examples/models/soldier.glb');
 

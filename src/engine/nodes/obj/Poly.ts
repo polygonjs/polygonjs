@@ -78,8 +78,8 @@ export function create_poly_obj_node(node_type: string, definition: PolyNodeDefi
 		children() {
 			return super.children() as BaseSopNodeType[];
 		}
-		nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
-			return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+		nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+			return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 		}
 
 		//

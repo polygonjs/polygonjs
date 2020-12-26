@@ -67,10 +67,10 @@ float density_function(vec3 position_for_step){
 
 
 
-	// /MAT/volume_builder1/constant1
+	// /MAT/volumeBuilder1/constant1
 	float v_POLY_constant1_val = 0.0;
 	
-	// /MAT/volume_builder1/output1
+	// /MAT/volumeBuilder1/output1
 	density *= v_POLY_constant1_val;
 
 

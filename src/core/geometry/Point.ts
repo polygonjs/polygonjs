@@ -155,7 +155,7 @@ export class CorePoint extends CoreEntity {
 			return this._position.fromArray(array, this._index * 3);
 		}
 	}
-	set_position(new_position: Vector3) {
+	setPosition(new_position: Vector3) {
 		this.set_attrib_value_vector3(ATTRIB_NAMES.POSITION, new_position);
 	}
 

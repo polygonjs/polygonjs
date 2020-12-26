@@ -54,7 +54,7 @@ export interface BaseNetworkPostProcessNodeType extends TypedNode<any, PostProce
 	createNode<S extends keyof PostNodeChildrenMap>(node_class: S): PostNodeChildrenMap[S];
 	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>): K;
 	children(): BasePostProcessNodeType[];
-	nodes_by_type<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];
+	nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];
 
 	readonly effects_composer_controller: EffectsComposerController;
 }

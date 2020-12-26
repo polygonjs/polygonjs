@@ -8,13 +8,6 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {DecomposedPath} from '../../core/DecomposedPath';
 import {TypedPathParamValue} from '../../core/Walker';
 
-export const NODE_PATH_DEFAULT = {
-	NODE: {
-		UV: '/COP/file_uv',
-		ENV_MAP: '/COP/env_map',
-	},
-};
-
 export class NodePathParam extends TypedParam<ParamType.NODE_PATH> {
 	private _found_node: BaseNodeType | null = null;
 	public readonly decomposed_path = new DecomposedPath();

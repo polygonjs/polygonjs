@@ -6,14 +6,14 @@ QUnit.test('cache static', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const cache1 = geo1.createNode('cache');
 
-	cache1.set_input(0, sphere1);
+	cache1.setInput(0, sphere1);
 	container = await cache1.request_container();
 	let core_group = container.core_content()!;
 	assert.equal(core_group.points_count(), 63);
 	// let json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 8109);
 
-	cache1.set_input(0, plane1);
+	cache1.setInput(0, plane1);
 	container = await cache1.request_container();
 	core_group = container.core_content()!;
 	assert.equal(core_group.points_count(), 63); // still same points_count
@@ -30,11 +30,11 @@ QUnit.test('cache static', async (assert) => {
 
 // box1 = geo1.createNode('box')
 // transform1 = geo1.createNode('transform')
-// transform1.set_input(0, box1)
+// transform1.setInput(0, box1)
 // transform1.param('ty').set_expression("$F")
 
 // cache1 = geo1.createNode('cache')
-// cache1.set_input(0, transform1)
+// cache1.setInput(0, transform1)
 // cache1.param('animated').set(0)
 // cache1._clear_cache()
 
@@ -66,11 +66,11 @@ QUnit.skip('cache animated', () => {});
 
 // box1 = geo1.createNode('box')
 // transform1 = geo1.createNode('transform')
-// transform1.set_input(0, box1)
+// transform1.setInput(0, box1)
 // transform1.param('ty').set_expression("$F")
 
 // cache1 = geo1.createNode('cache')
-// cache1.set_input(0, transform1)
+// cache1.setInput(0, transform1)
 // cache1.param('animated').set(1)
 // cache1._clear_cache()
 
@@ -96,7 +96,7 @@ QUnit.skip('cache animated', () => {});
 // 		assert !box1.is_dirty()
 // 		assert !transform1.is_dirty()
 
-// 		scene.set_frame( scene.frame()-1 )
+// 		scene.setFrame( scene.frame()-1 )
 // 		assert !box1.is_dirty()
 // 		assert transform1.is_dirty()
 // 		assert cache1.is_dirty()

@@ -33,10 +33,10 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/constant1
+	// /MAT/meshBasicBuilder1/constant1
 	vec3 v_POLY_constant1_val = vec3(1.0, 0.0, 0.5);
 	
-	// /MAT/mesh_basic_builder1/output1
+	// /MAT/meshBasicBuilder1/output1
 	diffuseColor.xyz = v_POLY_constant1_val;
 
 

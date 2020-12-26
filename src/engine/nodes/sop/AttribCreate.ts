@@ -86,7 +86,7 @@ const ParamsConfig = new AttribCreateSopParamsConfig();
 export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_create';
+		return 'attribCreate';
 	}
 
 	private _x_arrays_by_geometry_uuid: ValueArrayByName = {};

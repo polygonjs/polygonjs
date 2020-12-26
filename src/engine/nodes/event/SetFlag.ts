@@ -66,7 +66,7 @@ const ParamsConfig = new SetFlagParamsConfig();
 export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'set_flag';
+		return 'setFlag';
 	}
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([
@@ -80,7 +80,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 			if (node) {
 				const parent = node.parent;
 				if (parent) {
-					mask = `${parent.full_path()}/${mask}`;
+					mask = `${parent.fullPath()}/${mask}`;
 				}
 			}
 		}

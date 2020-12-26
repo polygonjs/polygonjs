@@ -7,8 +7,8 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 
 	const perspective_camera1 = window.perspective_camera1;
 	const events = scene.root.createNode('events');
-	const camera_orbit_controls1 = events.createNode('camera_orbit_controls');
-	const camera_orbit_controls2 = events.createNode('camera_orbit_controls');
+	const camera_orbit_controls1 = events.createNode('cameraOrbitControls');
+	const camera_orbit_controls2 = events.createNode('cameraOrbitControls');
 
 	camera_orbit_controls1.p.tdamping.set(1);
 	camera_orbit_controls2.p.tdamping.set(0);
@@ -23,14 +23,14 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	assert.ok(!viewer.controls_controller.controls);
 
 	// set controls to the first camera_orbit_controls
-	perspective_camera1.p.controls.set(camera_orbit_controls1.full_path());
+	perspective_camera1.p.controls.set(camera_orbit_controls1.fullPath());
 	await CoreSleep.sleep(100);
 	assert.ok(viewer.controls_controller.controls);
 	const id1 = viewer.controls_controller.controls?.name;
 	assert.ok(id1);
 
 	// change control node
-	perspective_camera1.p.controls.set(camera_orbit_controls2.full_path());
+	perspective_camera1.p.controls.set(camera_orbit_controls2.fullPath());
 	await CoreSleep.sleep(100);
 	assert.ok(viewer.controls_controller.controls);
 	const id2 = viewer.controls_controller.controls?.name;

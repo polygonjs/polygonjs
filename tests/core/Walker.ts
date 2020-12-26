@@ -26,7 +26,7 @@ QUnit.test('a param to another', (assert) => {
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	console.log(box1.full_path(), box2.full_path())
+	console.log(box1.fullPath(), box2.fullPath());
 
 	const geo2 = scene.root.createNode('geo');
 	const box3 = geo2.createNode('box');

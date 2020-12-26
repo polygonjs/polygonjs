@@ -27,27 +27,27 @@ import {MapboxCameraObjNode} from '../../../nodes/obj/MapboxCamera';
 // import {CubeCameraObj} from '../../nodes/obj/CubeCamera';
 
 export interface ObjNodeChildrenMap {
-	ambient_light: AmbientLightObjNode;
+	ambientLight: AmbientLightObjNode;
 	animations: AnimationsObjNode;
-	area_light: AreaLightObjNode;
+	areaLight: AreaLightObjNode;
 	blend: BlendObjNode;
 	cop: CopObjNode;
-	directional_light: DirectionalLightObjNode;
+	directionalLight: DirectionalLightObjNode;
 	events: EventsObjNode;
 	geo: GeoObjNode;
-	hemisphere_light: HemisphereLightObjNode;
-	mapbox_camera: MapboxCameraObjNode;
+	hemisphereLight: HemisphereLightObjNode;
+	mapboxCamera: MapboxCameraObjNode;
 	materials: MaterialsObjNode;
 	null: NullObjNode;
-	orthographic_camera: OrthographicCameraObjNode;
-	perspective_camera: PerspectiveCameraObjNode;
-	point_light: PointLightObjNode;
+	orthographicCamera: OrthographicCameraObjNode;
+	perspectiveCamera: PerspectiveCameraObjNode;
+	pointLight: PointLightObjNode;
 	poly: PolyObjNode;
-	post_process: PostProcessObjNode;
+	postProcess: PostProcessObjNode;
 	renderers: RenderersObjNode;
 	rivet: RivetObjNode;
 	scene: SceneObjNode;
-	spot_light: SpotLightObjNode;
+	spotLight: SpotLightObjNode;
 }
 
 import {Poly} from '../../../Poly';

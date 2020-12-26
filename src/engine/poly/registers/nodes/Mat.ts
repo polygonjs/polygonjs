@@ -17,21 +17,21 @@ import {VolumeMatNode} from '../../../nodes/mat/Volume';
 import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
 
 export interface MatNodeChildrenMap {
-	line_basic: LineBasicMatNode;
-	mesh_basic: MeshBasicMatNode;
-	mesh_basic_builder: MeshBasicBuilderMatNode;
-	mesh_lambert: MeshLambertMatNode;
-	mesh_lambert_builder: MeshLambertBuilderMatNode;
-	mesh_phong: MeshPhongMatNode;
-	mesh_standard: MeshStandardMatNode;
-	mesh_standard_builder: MeshStandardBuilderMatNode;
-	mesh_subsurface_scattering: MeshSubsurfaceScatteringMatNode;
+	lineBasic: LineBasicMatNode;
+	meshBasic: MeshBasicMatNode;
+	meshBasicBuilder: MeshBasicBuilderMatNode;
+	meshLambert: MeshLambertMatNode;
+	meshLambertBuilder: MeshLambertBuilderMatNode;
+	meshPhong: MeshPhongMatNode;
+	meshStandard: MeshStandardMatNode;
+	meshStandardBuilder: MeshStandardBuilderMatNode;
+	meshSubsurfaceScattering: MeshSubsurfaceScatteringMatNode;
 	points: PointsMatNode;
-	points_builder: PointsBuilderMatNode;
+	pointsBuilder: PointsBuilderMatNode;
 	shadow: ShadowMatNode;
 	sky: SkyMatNode;
 	volume: VolumeMatNode;
-	volume_builder: VolumeBuilderMatNode;
+	volumeBuilder: VolumeBuilderMatNode;
 }
 
 import {Poly} from '../../../Poly';

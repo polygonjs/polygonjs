@@ -10,15 +10,15 @@ import {
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {OPERATOR_PATH_DEFAULT} from '../../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		use_env_map = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
-		env_map = ParamConfig.OPERATOR_PATH(
-			OPERATOR_PATH_DEFAULT.NODE.ENV_MAP,
-			OperatorPathOptions(TextureEnvMapController, 'use_env_map')
+		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
+		envMap = ParamConfig.OPERATOR_PATH(
+			NODE_PATH_DEFAULT.NODE.ENV_MAP,
+			OperatorPathOptions(TextureEnvMapController, 'useEnvMap')
 		);
-		env_map_intensity = ParamConfig.FLOAT(1, {visible_if: {use_env_map: 1}});
+		envMapIntensity = ParamConfig.FLOAT(1, {visible_if: {useEnvMap: 1}});
 	};
 }
 class TextureEnvMaterial extends Material {
@@ -36,10 +36,10 @@ export class TextureEnvMapController extends BaseTextureMapController {
 		super(node, _update_options);
 	}
 	initialize_node() {
-		this.add_hooks(this.node.p.use_env_map, this.node.p.env_map);
+		this.add_hooks(this.node.p.useEnvMap, this.node.p.envMap);
 	}
 	async update() {
-		this._update(this.node.material, 'envMap', this.node.p.use_env_map, this.node.p.env_map);
+		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
 	}
 	static async update(node: TextureEnvMapMatNode) {
 		node.texture_env_map_controller.update();

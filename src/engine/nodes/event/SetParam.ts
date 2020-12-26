@@ -110,7 +110,7 @@ const ParamsConfig = new SetParamParamsConfig();
 export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'set_param';
+		return 'setParam';
 	}
 	initialize_node() {
 		this.io.inputs.set_named_input_connection_points([

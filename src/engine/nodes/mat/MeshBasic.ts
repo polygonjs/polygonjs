@@ -25,7 +25,7 @@ const ParamsConfig = new MeshBasicMatParamsConfig();
 export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_basic';
+		return 'meshBasic';
 	}
 
 	create_material() {

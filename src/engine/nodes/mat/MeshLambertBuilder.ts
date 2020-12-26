@@ -25,7 +25,7 @@ const ParamsConfig = new MeshLambertMatParamsConfig();
 export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerLambert, MeshLambertMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mesh_lambert_builder';
+		return 'meshLambertBuilder';
 	}
 	public used_assembler(): Readonly<AssemblerName.GL_MESH_LAMBERT> {
 		return AssemblerName.GL_MESH_LAMBERT;

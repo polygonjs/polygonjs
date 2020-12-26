@@ -10,9 +10,9 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function SideParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param defines if the material is double sided or not */
-		double_sided = ParamConfig.BOOLEAN(0);
+		doubleSided = ParamConfig.BOOLEAN(0);
 		/** @param if the material is not double sided, it can be front sided, or back sided */
-		front = ParamConfig.BOOLEAN(1, {visible_if: {double_sided: false}});
+		front = ParamConfig.BOOLEAN(1, {visible_if: {doubleSided: false}});
 	};
 }
 
@@ -32,7 +32,7 @@ export class SideController extends BaseController {
 	}
 	static update(node: SideMatNode) {
 		const single_side = node.pv.front ? FrontSide : BackSide;
-		const new_side = node.pv.double_sided ? DoubleSide : single_side;
+		const new_side = node.pv.doubleSided ? DoubleSide : single_side;
 		if (new_side != node.material.side) {
 			node.material.side = new_side;
 			node.material.needsUpdate = true;

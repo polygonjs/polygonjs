@@ -2,7 +2,7 @@ import {GlRotateMode} from '../../../../src/engine/nodes/gl/Rotate';
 
 QUnit.test('gl rotate has his input updated when mode changes', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);
@@ -18,7 +18,7 @@ QUnit.test('gl rotate has his input updated when mode changes', async (assert) =
 	rotate1.set_signature(GlRotateMode.AXIS);
 	assert.equal(rotate1.io.inputs.named_input_connection_points.length, 3);
 
-	rotate1.set_input(2, constant1);
+	rotate1.setInput(2, constant1);
 	assert.ok(rotate1.io.inputs.input(2));
 	assert.equal(rotate1.io.inputs.input(2)?.graph_node_id, constant1.graph_node_id);
 
@@ -29,7 +29,7 @@ QUnit.test('gl rotate has his input updated when mode changes', async (assert) =
 
 QUnit.test('gl rotate is created with correct defaults', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);

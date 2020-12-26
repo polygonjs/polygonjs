@@ -34,7 +34,7 @@ const ParamsConfig = new MapboxLayerSopParamsConfig();
 export class MapboxLayerSopNode extends MapboxListenerSopNode<MapboxLayerSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'mapbox_layer';
+		return 'mapboxLayer';
 	}
 
 	cook() {

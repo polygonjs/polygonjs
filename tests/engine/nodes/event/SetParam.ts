@@ -10,8 +10,8 @@ QUnit.test('event set_param simple', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const sphere1 = geo1.createNode('sphere');
 	const switch1 = geo1.createNode('switch');
-	switch1.set_input(0, box1);
-	switch1.set_input(1, sphere1);
+	switch1.setInput(0, box1);
+	switch1.setInput(1, sphere1);
 
 	await scene.wait_for_cooks_completed();
 
@@ -20,8 +20,8 @@ QUnit.test('event set_param simple', async (assert) => {
 	assert.equal(container.points_count(), 24);
 
 	const events1 = scene.root.createNode('events');
-	const set_param1 = events1.createNode('set_param');
-	set_param1.p.param.set(switch1.p.input.full_path());
+	const set_param1 = events1.createNode('setParam');
+	set_param1.p.param.set(switch1.p.input.fullPath());
 	await set_param1.p.param.compute();
 	set_param1.p.number.set(1);
 
@@ -43,7 +43,7 @@ QUnit.test('event set_param simple', async (assert) => {
 	set_param1.p.number.set(1);
 	switch1.p.input.set(0); // make sure to save with input as 0
 	const scene1 = events1.createNode('scene');
-	set_param1.set_input(0, scene1, 0);
+	set_param1.setInput(0, scene1, 0);
 
 	const data = new SceneJsonExporter(scene).data();
 	console.log('loading...', data);
@@ -52,6 +52,6 @@ QUnit.test('event set_param simple', async (assert) => {
 
 	await CoreSleep.sleep(100);
 
-	const switch2 = scene2.node(switch1.full_path()) as SwitchSopNode;
+	const switch2 = scene2.node(switch1.fullPath()) as SwitchSopNode;
 	assert.equal(switch2.pv.input, 1);
 });

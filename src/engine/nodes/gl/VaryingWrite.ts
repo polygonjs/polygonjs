@@ -26,8 +26,8 @@ class VaryingWriteGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VaryingWriteGlParamsConfig();
 export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'varying_write'> {
-		return 'varying_write';
+	static type(): Readonly<'varyingWrite'> {
+		return 'varyingWrite';
 	}
 	static readonly INPUT_NAME = 'vertex';
 

@@ -5,7 +5,7 @@ QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 
 	const plane1 = geo1.createNode('plane');
 	const delete1 = geo1.createNode('delete');
-	delete1.set_input(0, plane1);
+	delete1.setInput(0, plane1);
 	delete1.p.by_expression.set(1);
 
 	let container = await delete1.request_container();
@@ -27,7 +27,7 @@ QUnit.test('SOP delete: (class=points) simple box', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const delete1 = geo1.createNode('delete');
-	delete1.set_input(0, box1);
+	delete1.setInput(0, box1);
 	delete1.p.by_expression.set(1);
 
 	let container = await box1.request_container();
@@ -49,10 +49,10 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	const merge1 = geo1.createNode('merge');
 	const delete1 = geo1.createNode('delete');
 
-	merge1.set_input(0, box1);
-	merge1.set_input(1, box2);
+	merge1.setInput(0, box1);
+	merge1.setInput(1, box2);
 	merge1.p.compact.set(0);
-	delete1.set_input(0, merge1);
+	delete1.setInput(0, merge1);
 
 	delete1.p.class.set(AttribClass.OBJECT);
 	delete1.p.by_expression.set(1);

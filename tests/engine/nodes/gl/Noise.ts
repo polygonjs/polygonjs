@@ -2,7 +2,7 @@ import {NOISE_NAMES, NoiseName} from '../../../../src/engine/nodes/gl/Noise';
 
 QUnit.test('gl noise params update as type changes', async (assert) => {
 	const MAT = window.MAT;
-	const material_basic_builder1 = MAT.createNode('mesh_basic_builder');
+	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
 	material_basic_builder1.createNode('globals');
 	assert.equal(material_basic_builder1.children().length, 2);

@@ -6,7 +6,7 @@ QUnit.test('geo obj simple', async (assert) => {
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
@@ -43,7 +43,7 @@ QUnit.test('geo obj is removed from scene when node is deleted', async (assert) 
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspective_camera1'
+		'/geo1:/perspectiveCamera1'
 	);
 
 	const geo1 = window.geo1;
@@ -55,7 +55,7 @@ QUnit.test('geo obj is removed from scene when node is deleted', async (assert) 
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/perspective_camera1'
+		'/perspectiveCamera1'
 	);
 });
 
@@ -64,7 +64,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
 
@@ -93,7 +93,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	const main_group = scene.default_scene.children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
-	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspective_camera1'].sort());
+	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
@@ -117,8 +117,8 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	assert.ok(geo1.is_dirty, 'geo1 is dirty');
 	await geo1.request_container();
 	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
-	scene.set_frame(1);
-	scene.set_frame(3);
+	scene.setFrame(1);
+	scene.setFrame(3);
 	assert.equal(geo1.cook_controller.cooks_count, 1);
 	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
 	geo1.p.r.y.set('$F+10');
@@ -129,7 +129,7 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	assert.notOk(geo1.is_dirty);
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
 
-	scene.set_frame(37);
+	scene.setFrame(37);
 	await scene.wait_for_cooks_completed();
 	assert.equal(geo1.cook_controller.cooks_count, 3);
 	assert.notOk(geo1.is_dirty);

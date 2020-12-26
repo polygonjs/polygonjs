@@ -14,17 +14,17 @@ export function SopAdd() {
 	points.p.color.set([0, 0, 1]);
 	// assign the material
 	const material = geo.createNode('material');
-	material.set_input(0, add);
-	material.p.material.set(points.full_path());
+	material.setInput(0, add);
+	material.p.material.set(points.fullPath());
 	material.flags.display.set(true);
 
 	// create a camera
-	const perspective_camera1 = scene.root.createNode('perspective_camera');
+	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
 	perspective_camera1.p.t.set([5, 5, 5]);
 	// add orbit_controls
 	const events1 = perspective_camera1.createNode('events');
-	const orbits_controls = events1.createNode('camera_orbit_controls');
-	perspective_camera1.p.controls.set(orbits_controls.full_path());
+	const orbits_controls = events1.createNode('cameraOrbitControls');
+	perspective_camera1.p.controls.set(orbits_controls.fullPath());
 
 	// EXPORT
 	const nodes = [add];

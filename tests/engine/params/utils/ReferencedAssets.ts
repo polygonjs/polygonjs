@@ -9,20 +9,20 @@
 // 	const MAT = window.MAT
 
 // 	const root = scene.root()
-// 	const camera1 = root.createNode('perspective_camera')
+// 	const camera1 = root.createNode('perspectiveCamera')
 // 	camera1.set_as_master_camera()
 
-// 	const mesh_basic1 = MAT.createNode('mesh_basic')
+// 	const mesh_basic1 = MAT.createNode('meshBasic')
 // 	mesh_basic1.param('use_texture_map').set(1)
 
-// 	const mesh_basic2 = MAT.createNode('mesh_basic')
+// 	const mesh_basic2 = MAT.createNode('meshBasic')
 // 	mesh_basic2.param('texture_map').set('/textures/red.png')
 
 // 	const box1 = geo1.createNode('box')
 // 	const material1 = geo1.createNode('material')
-// 	material1.set_input(0, box1)
+// 	material1.setInput(0, box1)
 // 	material1.set_display_flag()
-// 	material1.param('material').set(mesh_basic1.full_path())
+// 	material1.param('material').set(mesh_basic1.fullPath())
 
 // 	await material1.request_container_p()
 
@@ -42,11 +42,11 @@
 //       1,
 //       240
 //     ],
-//     "frame_range_locked": [
+//     "frameRangeLocked": [
 //       true,
 //       true
 //     ],
-//     "master_camera_node_path": "/perspective_camera1",
+//     "masterCameraNodePath": "/perspective_camera1",
 //   },
 //   "root": {
 //     "nodes": {

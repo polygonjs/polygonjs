@@ -5,15 +5,15 @@ import {Css3DRendererRopNode} from '../../../nodes/rop/Css3DRenderer';
 import {WebGlRendererRopNode} from '../../../nodes/rop/WebglRenderer';
 
 export enum RopType {
-	CSS2D = 'css2d_renderer',
-	CSS3D = 'css3d_renderer',
-	WEBGL = 'webgl_renderer',
+	CSS2D = 'css2DRenderer',
+	CSS3D = 'css3DRenderer',
+	WEBGL = 'webGlRenderer',
 }
 
 export interface RopNodeChildrenMap {
-	css2d_renderer: Css2DRendererRopNode;
-	css3d_renderer: Css3DRendererRopNode;
-	webgl_renderer: WebGlRendererRopNode;
+	css2DRenderer: Css2DRendererRopNode;
+	css3DRenderer: Css3DRendererRopNode;
+	webGlRenderer: WebGlRendererRopNode;
 }
 
 import {Poly} from '../../../Poly';

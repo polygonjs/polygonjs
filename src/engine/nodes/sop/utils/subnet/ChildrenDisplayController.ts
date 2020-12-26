@@ -46,8 +46,8 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodes_by_type<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
-		return super.nodes_by_type(type) as GeoNodeChildrenMap[K][];
+	nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
 	async cook(input_contents: CoreGroup[]) {
@@ -118,7 +118,7 @@ export class SopSubnetChildrenDisplayController {
 	}
 
 	private _update_output_node() {
-		const found_node = this.node.nodes_by_type(SubnetOutputSopNode.type())[0];
+		const found_node = this.node.nodesByType(SubnetOutputSopNode.type())[0];
 		if (
 			this._output_node == null ||
 			found_node == null ||

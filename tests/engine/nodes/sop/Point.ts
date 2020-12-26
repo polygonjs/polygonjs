@@ -4,7 +4,7 @@ QUnit.test('point without expressions', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	plane1.p.direction.set([0, 1, 0]);
 	// const transform1 = geo1.createNode('transform');
-	// transform1.set_input(0, plane1);
+	// transform1.setInput(0, plane1);
 	// transform1.param('rx').set(90);
 
 	let container = await plane1.request_container();
@@ -15,7 +15,7 @@ QUnit.test('point without expressions', async (assert) => {
 	const point1 = geo1.createNode('point');
 	assert.equal(point1.dirty_controller.dirty_count, 0);
 
-	point1.set_input(0, plane1);
+	point1.setInput(0, plane1);
 	assert.equal(point1.dirty_controller.dirty_count, 1);
 	point1.p.update_y.set(1);
 	point1.p.y.set(1);
@@ -37,11 +37,11 @@ QUnit.test('point with expression based on @P.x', async (assert) => {
 
 	const plane1 = geo1.createNode('plane');
 	const transform1 = geo1.createNode('transform');
-	transform1.set_input(0, plane1);
+	transform1.setInput(0, plane1);
 	// transform1.param('rx').set(90);
 
 	const point1 = geo1.createNode('point');
-	point1.set_input(0, transform1);
+	point1.setInput(0, transform1);
 	point1.p.update_y.set(1);
 	point1.p.y.set('sin(@P.x)');
 
@@ -64,7 +64,7 @@ QUnit.test('point with inverting @P.x and @P.z', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	plane1.p.size.x.set(4);
 	const point1 = geo1.createNode('point');
-	point1.set_input(0, plane1);
+	point1.setInput(0, plane1);
 
 	let container, bbox;
 	container = await point1.request_container();

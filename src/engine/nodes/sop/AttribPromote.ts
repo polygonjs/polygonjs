@@ -45,13 +45,13 @@ const ParamsConfig = new AttribPromoteSopParamsConfig();
 export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_promote';
+		return 'attribPromote';
 	}
 
 	initialize_node() {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(AttribPromoteSopOperation.INPUT_CLONED_STATE);
-		// this.ui_data.set_icon('sort-amount-up');
+		// this.uiData.set_icon('sort-amount-up');
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {

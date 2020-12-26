@@ -20,7 +20,7 @@ export class ObjectContainer extends TypedContainer<NodeContext.OBJ> {
 	// infos() {
 	// 	const node = this.node()
 	// 	return [
-	// 		`full path: ${node.full_path()}`,
+	// 		`full path: ${node.fullPath()}`,
 	// 		`${node.cooks_count()} cooks`,
 	// 		`cook time: ${node.cook_time()}`,
 	// 		this.content(),

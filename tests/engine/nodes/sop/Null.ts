@@ -4,7 +4,7 @@ QUnit.test('null simple', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const null1 = geo1.createNode('null');
 
-	null1.set_input(0, plane1);
+	null1.setInput(0, plane1);
 
 	let container;
 

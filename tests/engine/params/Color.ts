@@ -38,7 +38,7 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 QUnit.test('color is_default', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	scene.time_controller.set_frame_range(0, 10);
+	scene.time_controller.setFrameRange(0, 10);
 
 	const color = geo1.add_param(ParamType.COLOR, 'color_debug', [1, 1, '$F'], {spare: true})!;
 	await color.compute();
@@ -46,7 +46,7 @@ QUnit.test('color is_default', async (assert) => {
 	assert.deepEqual(color.value.toArray(), [1, 1, 1]);
 	assert.equal(color.default_value_serialized.join(':'), '1:1:$F');
 
-	scene.set_frame(2);
+	scene.setFrame(2);
 	await color.compute();
 	assert.ok(color.is_default);
 	assert.deepEqual(color.value.toArray(), [1, 1, 2]);
@@ -75,7 +75,7 @@ QUnit.test(
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
 		await scene2.wait_for_cooks_completed();
-		const color2 = scene2.node(color1.full_path()) as ColorSopNode;
+		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.p.color;
 		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
 	}
@@ -99,7 +99,7 @@ QUnit.test(
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
 		await scene2.wait_for_cooks_completed();
-		const color2 = scene2.node(color1.full_path()) as ColorSopNode;
+		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.params.get('color2')! as ColorParam;
 		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
 	}

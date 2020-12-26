@@ -7,10 +7,10 @@ QUnit.test('materials simple', async (assert) => {
 
 	const plane1 = geo1.createNode('plane');
 	const material1 = geo1.createNode('material');
-	const lambert1 = MAT.createNode('mesh_lambert');
+	const lambert1 = MAT.createNode('meshLambert');
 
-	material1.set_input(0, plane1);
-	material1.p.material.set(lambert1.full_path());
+	material1.setInput(0, plane1);
+	material1.p.material.set(lambert1.fullPath());
 
 	let container;
 
@@ -24,19 +24,19 @@ QUnit.test('materials clone', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
-	const lambert1 = MAT.createNode('mesh_lambert');
+	const lambert1 = MAT.createNode('meshLambert');
 	const plane1 = geo1.createNode('plane');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	const material1 = geo1.createNode('material');
 	const copy1 = geo1.createNode('copy');
 
-	attrib_create1.set_input(0, plane1);
-	material1.set_input(0, attrib_create1);
-	copy1.set_input(0, material1);
-	material1.p.material.set(lambert1.full_path());
+	attrib_create1.setInput(0, plane1);
+	material1.setInput(0, attrib_create1);
+	copy1.setInput(0, material1);
+	material1.p.material.set(lambert1.fullPath());
 
 	attrib_create1.p.name.set('id');
-	attrib_create1.p.value1.set(`copy('${copy1.full_path()}', 0)`);
+	attrib_create1.p.value1.set(`copy('${copy1.fullPath()}', 0)`);
 	material1.p.clone_mat.set(1);
 	copy1.p.count.set(2);
 	copy1.p.use_copy_expr.set(1);

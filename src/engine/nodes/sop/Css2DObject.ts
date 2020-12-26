@@ -45,7 +45,7 @@ const ParamsConfig = new Css2DObjectSopParamsConfig();
 export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'css2d_object';
+		return 'css2DObject';
 	}
 
 	initialize_node() {

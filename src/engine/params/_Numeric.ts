@@ -4,7 +4,7 @@ import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<T> {
 	get is_numeric() {
@@ -43,7 +43,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 					this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED);
 				}
 			} else {
-				this.states.error.set(`param input is invalid (${this.full_path()})`);
+				this.states.error.set(`param input is invalid (${this.fullPath()})`);
 			}
 		}
 	}

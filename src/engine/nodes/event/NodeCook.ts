@@ -55,8 +55,8 @@ const ParamsConfig = new NodeCookEventParamsConfig();
 
 export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig> {
 	params_config = ParamsConfig;
-	static type() {
-		return 'node_cook';
+	static type(): Readonly<'nodeCook'> {
+		return 'nodeCook';
 	}
 	static readonly INPUT_TRIGGER = 'trigger';
 	static readonly OUTPUT_FIRST_NODE = 'first';

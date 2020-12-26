@@ -52,5 +52,5 @@ export class ClampGlNode extends MathFunctionArg3Factory('clamp', {in: ['value',
 		return [this._expected_input_types()[0]];
 	}
 }
-export class FaceforwardGlNode extends MathFunctionArg3Factory('face_forward', {in: ['N', 'I', 'Nref']}) {}
-export class SmoothStepGlNode extends MathFunctionArg3Factory('smoothstep', {in: ['edge0', 'edge1', 'x']}) {}
+export class FaceforwardGlNode extends MathFunctionArg3Factory('faceForward', {in: ['N', 'I', 'Nref']}) {}
+export class SmoothstepGlNode extends MathFunctionArg3Factory('smoothstep', {in: ['edge0', 'edge1', 'x']}) {}

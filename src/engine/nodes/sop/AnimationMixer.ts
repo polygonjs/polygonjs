@@ -26,7 +26,7 @@ const ParamsConfig = new AnimationMixerSopParamsConfig();
 export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'animation_mixer';
+		return 'animationMixer';
 	}
 
 	private _previous_time: number | undefined;

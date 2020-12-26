@@ -14,17 +14,17 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 class VolumeMatParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
-	step_size = ParamConfig.FLOAT(0.01);
+	stepSize = ParamConfig.FLOAT(0.01);
 	density = ParamConfig.FLOAT(1);
-	shadow_density = ParamConfig.FLOAT(1);
-	light_dir = ParamConfig.VECTOR3([-1, -1, -1]);
+	shadowDensity = ParamConfig.FLOAT(1);
+	lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
 }
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVolume, VolumeMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'volume_builder';
+		return 'volumeBuilder';
 	}
 	public used_assembler(): Readonly<AssemblerName.GL_VOLUME> {
 		return AssemblerName.GL_VOLUME;

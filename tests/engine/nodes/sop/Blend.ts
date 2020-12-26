@@ -4,11 +4,11 @@ QUnit.test('blend simple', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
-	transform1.set_input(0, box2);
+	transform1.setInput(0, box2);
 	transform1.p.t.y.set(5);
 	const blend1 = geo1.createNode('blend');
-	blend1.set_input(0, box1);
-	blend1.set_input(1, transform1);
+	blend1.setInput(0, box1);
+	blend1.setInput(1, transform1);
 	blend1.p.attrib_name.set('position');
 
 	let container = await blend1.request_container();

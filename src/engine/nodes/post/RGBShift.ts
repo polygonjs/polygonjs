@@ -34,7 +34,7 @@ const ParamsConfig = new RGBShiftPostParamsConfig();
 export class RGBShiftPostNode extends TypedPostProcessNode<ShaderPass, RGBShiftPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'rgb_shift';
+		return 'rgbShift';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

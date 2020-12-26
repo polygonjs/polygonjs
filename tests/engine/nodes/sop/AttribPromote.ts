@@ -5,14 +5,14 @@ QUnit.test('attrib promote vertex to vertex with min', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@ptnum');
-	attrib_create1.set_input(0, box1);
+	attrib_create1.setInput(0, box1);
 
-	const attrib_promote1 = geo1.createNode('attrib_promote');
-	attrib_promote1.set_input(0, attrib_create1);
+	const attrib_promote1 = geo1.createNode('attribPromote');
+	attrib_promote1.setInput(0, attrib_create1);
 	attrib_promote1.p.class_from.set(AttribClass.VERTEX);
 	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(AttribPromoteMode.MIN);
@@ -34,14 +34,14 @@ QUnit.test('attrib promote vertex to vertex with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@ptnum');
-	attrib_create1.set_input(0, box1);
+	attrib_create1.setInput(0, box1);
 
-	const attrib_promote1 = geo1.createNode('attrib_promote');
-	attrib_promote1.set_input(0, attrib_create1);
+	const attrib_promote1 = geo1.createNode('attribPromote');
+	attrib_promote1.setInput(0, attrib_create1);
 	attrib_promote1.p.class_from.set(AttribClass.VERTEX);
 	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(1); // max
@@ -63,14 +63,14 @@ QUnit.test('attrib promote vertex to object with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@ptnum');
-	attrib_create1.set_input(0, box1);
+	attrib_create1.setInput(0, box1);
 
-	const attrib_promote1 = geo1.createNode('attrib_promote');
-	attrib_promote1.set_input(0, attrib_create1);
+	const attrib_promote1 = geo1.createNode('attribPromote');
+	attrib_promote1.setInput(0, attrib_create1);
 	attrib_promote1.p.class_from.set(AttribClass.VERTEX);
 	attrib_promote1.p.class_to.set(AttribClass.OBJECT);
 	attrib_promote1.p.mode.set(1); // max
@@ -89,15 +89,15 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.class.set(AttribClass.OBJECT);
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@ptnum+12');
-	attrib_create1.set_input(0, box1);
+	attrib_create1.setInput(0, box1);
 
-	const attrib_promote1 = geo1.createNode('attrib_promote');
-	attrib_promote1.set_input(0, attrib_create1);
+	const attrib_promote1 = geo1.createNode('attribPromote');
+	attrib_promote1.setInput(0, attrib_create1);
 	attrib_promote1.p.class_from.set(AttribClass.OBJECT);
 	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(1); // max
@@ -117,22 +117,22 @@ QUnit.test('attrib promote multiple attributes from objects to vertex', async (a
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_create2 = geo1.createNode('attrib_create');
-	const attrib_promote1 = geo1.createNode('attrib_promote');
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_create2 = geo1.createNode('attribCreate');
+	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_create1.p.class.set(AttribClass.OBJECT);
 	attrib_create1.p.name.set('id');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(0.1);
-	attrib_create1.set_input(0, box1);
+	attrib_create1.setInput(0, box1);
 
 	attrib_create2.p.class.set(AttribClass.OBJECT);
 	attrib_create2.p.name.set('role');
 	attrib_create2.p.size.set(1);
 	attrib_create2.p.value1.set(0.2);
-	attrib_create2.set_input(0, attrib_create1);
+	attrib_create2.setInput(0, attrib_create1);
 
-	attrib_promote1.set_input(0, attrib_create2);
+	attrib_promote1.setInput(0, attrib_create2);
 	attrib_promote1.p.class_from.set(AttribClass.OBJECT);
 	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(1); // max

@@ -69,7 +69,7 @@ const ParamsConfig = new Circle3PointsSopParamsConfig();
 export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'circle3points';
+		return 'circle3Points';
 	}
 
 	initialize_node() {

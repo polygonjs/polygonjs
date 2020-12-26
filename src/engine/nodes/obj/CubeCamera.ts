@@ -151,7 +151,7 @@
 // 				parent_by_child_uuid[object.uuid].add(object);
 // 			}
 // 		} else {
-// 			console.warn(`no renderer found for ${this.full_path()}`);
+// 			console.warn(`no renderer found for ${this.fullPath()}`);
 // 		}
 // 	}
 

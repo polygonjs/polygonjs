@@ -35,22 +35,22 @@ declare global {
 QUnit.testStart(async () => {
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
-	window.scene.set_name('test scene');
-	window.scene.set_uuid('test');
+	window.scene.setName('test scene');
+	window.scene.setUuid('test');
 	Poly.instance().set_env('test');
 
 	window.scene.loading_controller.mark_as_loading();
 	window.scene.cooker.block();
 	const root = window.scene.root;
 	window.root = root;
-	window.perspective_camera1 = root.createNode('perspective_camera');
+	window.perspective_camera1 = root.createNode('perspectiveCamera');
 	window.geo1 = root.createNode('geo');
 	window.MAT = root.createNode('materials');
-	window.MAT.set_name('MAT');
-	window.POST = root.createNode('post_process');
-	window.POST.set_name('POST');
+	window.MAT.setName('MAT');
+	window.POST = root.createNode('postProcess');
+	window.POST.setName('POST');
 	window.COP = root.createNode('cop');
-	window.COP.set_name('COP');
+	window.COP.setName('COP');
 
 	window.scene.loading_controller.set_auto_update(true);
 	await window.scene.loading_controller.mark_as_loaded();

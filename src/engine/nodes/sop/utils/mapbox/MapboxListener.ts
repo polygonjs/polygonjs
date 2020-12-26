@@ -21,7 +21,7 @@ export function MapboxListenerParamConfig<TBase extends Constructor>(Base: TBase
 			visible_if: {use_zoom: 1},
 		});
 		// always
-		mapbox_camera = ParamConfig.OPERATOR_PATH('/mapbox_camera1', {
+		mapbox_camera = ParamConfig.OPERATOR_PATH('/mapboxCamera1', {
 			node_selection: {
 				context: NodeContext.OBJ,
 				types: [MapboxCameraObjNode.type()],

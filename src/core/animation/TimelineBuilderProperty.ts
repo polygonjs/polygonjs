@@ -15,7 +15,7 @@ import {Vector4Param} from '../../engine/params/Vector4';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {AnimNodeEasing} from './Constant';
 import {Poly} from '../../engine/Poly';
-import { CoreType } from '../Type';
+import {CoreType} from '../Type';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4;
 
@@ -31,7 +31,7 @@ export class TimelineBuilderProperty {
 	private _property_name: string | undefined;
 	private _target_value: AnimPropertyTargetValue | undefined;
 	constructor() {}
-	set_name(name: string) {
+	setName(name: string) {
 		this._property_name = name;
 	}
 	set_target_value(value: AnimPropertyTargetValue) {
@@ -47,7 +47,7 @@ export class TimelineBuilderProperty {
 	clone() {
 		const cloned = new TimelineBuilderProperty();
 		if (this._property_name) {
-			cloned.set_name(this._property_name);
+			cloned.setName(this._property_name);
 		}
 		if (this._target_value != null) {
 			const new_target_value = CoreType.isNumber(this._target_value)
@@ -175,7 +175,7 @@ export class TimelineBuilderProperty {
 	private _populate_with_node(node: BaseNodeType, timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline) {
 		const target_param = node.p[this._property_name as any] as BaseParamType;
 		if (!target_param) {
-			Poly.warn(`${this._property_name} not found on node ${node.full_path()}`);
+			Poly.warn(`${this._property_name} not found on node ${node.fullPath()}`);
 			return;
 		}
 

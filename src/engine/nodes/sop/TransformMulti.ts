@@ -119,7 +119,7 @@ const ParamsConfig = new TransformMultiSopParamConfig();
 export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'transform_multi';
+		return 'transformMulti';
 	}
 
 	static displayed_input_names(): string[] {

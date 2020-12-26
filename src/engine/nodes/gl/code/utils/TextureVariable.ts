@@ -41,7 +41,7 @@ export class TextureVariable {
 		return this._size;
 	}
 
-	set_position(position: number) {
+	setPosition(position: number) {
 		this._position = position;
 	}
 	get position() {

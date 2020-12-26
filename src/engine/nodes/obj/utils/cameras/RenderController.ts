@@ -33,7 +33,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 
 		set_renderer = ParamConfig.BOOLEAN(0);
 		/** @param override renderer used */
-		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webgl_renderer1', {
+		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webGlRenderer1', {
 			visible_if: {set_renderer: 1},
 			node_selection: {
 				context: NodeContext.ROP,
@@ -43,7 +43,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 
 		set_css_renderer = ParamConfig.BOOLEAN(0);
 		/** @param add a css renderer */
-		css_renderer = ParamConfig.OPERATOR_PATH('./renderers1/css2d_renderer1', {
+		css_renderer = ParamConfig.OPERATOR_PATH('./renderers1/css2DRenderer1', {
 			visible_if: {set_css_renderer: 1},
 			node_selection: {
 				context: NodeContext.ROP,

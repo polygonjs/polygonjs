@@ -19,7 +19,7 @@ import {ParamConfig} from '../../../utils/params/ParamsConfig';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
-		post_process_node = ParamConfig.OPERATOR_PATH('./post_process1', {
+		post_process_node = ParamConfig.NODE_PATH('./postProcess1', {
 			visible_if: {
 				do_post_process: 1,
 			},
@@ -95,7 +95,7 @@ export class PostProcessController {
 			const scene = this.node.render_controller.resolved_scene || this.node.scene.default_scene;
 			const camera = this.node.object;
 
-			const found_node = this.node.p.post_process_node.found_node();
+			const found_node = this.node.p.post_process_node.value.node();
 			if (found_node) {
 				if (found_node.type == NetworkNodeType.POST) {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;

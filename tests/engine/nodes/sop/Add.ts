@@ -17,12 +17,12 @@ QUnit.test('add connect input points', async (assert) => {
 	add2.p.position.set([0, 0, -1]);
 	add3.p.position.set([0, 1, 0]);
 	const merge = geo1.createNode('merge');
-	merge.set_input(0, add1);
-	merge.set_input(1, add2);
-	merge.set_input(2, add3);
+	merge.setInput(0, add1);
+	merge.setInput(1, add2);
+	merge.setInput(2, add3);
 
 	const add = geo1.createNode('add');
-	add.set_input(0, merge);
+	add.setInput(0, merge);
 	add.p.create_point.set(false);
 	add.p.connect_input_points.set(true);
 

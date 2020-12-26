@@ -35,7 +35,7 @@ const ParamsConfig = new PropertyValueAnimParamsConfig();
 export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'property_value';
+		return 'propertyValue';
 	}
 
 	initialize_node() {
@@ -49,7 +49,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 			this.pv.size - 1
 		];
 
-		timeline_builder.set_property_value(target_value);
+		timeline_builder.setPropertyValue(target_value);
 
 		this.set_timeline_builder(timeline_builder);
 	}

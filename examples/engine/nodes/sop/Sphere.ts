@@ -9,15 +9,15 @@ export function SopSphere() {
 	const sphere = geo.createNode('sphere');
 
 	// add a light
-	scene.root.createNode('hemisphere_light');
+	scene.root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspective_camera1 = scene.root.createNode('perspective_camera');
+	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
 	perspective_camera1.p.t.set([5, 5, 5]);
 	// add orbit_controls
 	const events1 = perspective_camera1.createNode('events');
-	const orbits_controls = events1.createNode('camera_orbit_controls');
-	perspective_camera1.p.controls.set(orbits_controls.full_path());
+	const orbits_controls = events1.createNode('cameraOrbitControls');
+	perspective_camera1.p.controls.set(orbits_controls.fullPath());
 
 	// EXPORT
 	const nodes = [sphere];

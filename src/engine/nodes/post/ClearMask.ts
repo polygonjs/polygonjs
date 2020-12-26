@@ -7,7 +7,7 @@ const ParamsConfig = new ClearMaskPostParamsConfig();
 export class ClearMaskPostNode extends TypedPostProcessNode<ClearMaskPass, ClearMaskPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'clear_mask';
+		return 'clearMask';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

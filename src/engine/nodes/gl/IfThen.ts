@@ -12,8 +12,8 @@ const ParamsConfig = new IfThenGlParamsConfig();
 
 export class IfThenGlNode extends SubnetGlNode {
 	params_config = ParamsConfig;
-	static type(): Readonly<'if_then'> {
-		return 'if_then';
+	static type(): Readonly<'ifThen'> {
+		return 'ifThen';
 	}
 
 	protected _expected_inputs_count() {

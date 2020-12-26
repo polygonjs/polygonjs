@@ -10,20 +10,20 @@ import {PostCopNode} from '../../../nodes/cop/Post';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
-import {WebCamCopNode} from '../../../nodes/cop/WebCam';
+import {WebcamCopNode} from '../../../nodes/cop/Webcam';
 
 export interface CopNodeChildrenMap {
 	builder: BuilderCopNode;
 	color: ColorCopNode;
-	env_map: EnvMapCopNode;
+	envMap: EnvMapCopNode;
 	image: ImageCopNode;
-	mapbox_tile: MapboxTileCopNode;
+	mapboxTile: MapboxTileCopNode;
 	Post: PostCopNode;
 	null: NullCopNode;
 	switch: SwitchCopNode;
-	texture_properties: TexturePropertiesCopNode;
+	textureProperties: TexturePropertiesCopNode;
 	video: VideoCopNode;
-	web_cam: WebCamCopNode;
+	webcam: WebcamCopNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -39,6 +39,6 @@ export class CopRegister {
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
-		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
+		poly.registerNode(WebcamCopNode, CATEGORY_COP.ADVANCED);
 	}
 }

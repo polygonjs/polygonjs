@@ -13,7 +13,7 @@ class LineBasicMatParamsConfig extends DepthParamConfig(NodeParamsConfig) {
 	/** @param line color */
 	color = ParamConfig.COLOR([1, 1, 1]);
 	/** @param line width */
-	line_width = ParamConfig.FLOAT(1, {
+	lineWidth = ParamConfig.FLOAT(1, {
 		range: [1, 10],
 		range_locked: [true, false],
 	});
@@ -23,7 +23,7 @@ const ParamsConfig = new LineBasicMatParamsConfig();
 export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicMatParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'line_basic';
+		return 'lineBasic';
 	}
 
 	create_material() {
@@ -37,7 +37,7 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 	initialize_node() {}
 	async cook() {
 		this.material.color.copy(this.pv.color);
-		this.material.linewidth = this.pv.line_width;
+		this.material.linewidth = this.pv.lineWidth;
 		this.depth_controller.update();
 
 		this.set_material(this.material);

@@ -18,7 +18,7 @@ void main() {
 
 
 
-	// /MAT/mesh_basic_builder1/output1
+	// /MAT/meshBasicBuilder1/output1
 	vec3 transformed = position;
 	vec3 objectNormal = normal;
 

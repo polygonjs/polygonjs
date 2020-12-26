@@ -33,7 +33,7 @@ import {ParamOptions, VisibleIfParamOptions} from '../../params/utils/OptionsCon
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 class PhysicsForceAttributesSopParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(FORCE_TYPES.indexOf(ForceType.DIRECTIONAL), {
 		menu: {
@@ -55,7 +55,7 @@ const ParamsConfig = new PhysicsForceAttributesSopParamsConfig();
 export class PhysicsForceAttributesSopNode extends TypedSopNode<PhysicsForceAttributesSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'physics_force_attributes';
+		return 'physicsForceAttributes';
 	}
 
 	initialize_node() {

@@ -24,7 +24,7 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(0, 4);
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
-		// this.ui_data.set_icon('code-branch');
+		// this.uiData.set_icon('code-branch');
 
 		this.cook_controller.disallow_inputs_evaluation();
 	}

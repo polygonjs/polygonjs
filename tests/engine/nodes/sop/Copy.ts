@@ -6,8 +6,8 @@ QUnit.test('copy sop simple', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const plane1 = geo1.createNode('plane');
 	const copy1 = geo1.createNode('copy');
-	copy1.set_input(0, box1);
-	copy1.set_input(1, plane1);
+	copy1.setInput(0, box1);
+	copy1.setInput(1, plane1);
 	plane1.p.direction.set([0, 0, 1]);
 
 	let container = await copy1.request_container();
@@ -32,17 +32,17 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	const plane1 = geo1.createNode('plane');
 	const line1 = geo1.createNode('line');
 	const switch1 = geo1.createNode('switch');
-	switch1.set_input(0, plane1);
-	switch1.set_input(1, box1);
-	attrib_create1.set_input(0, switch1);
+	switch1.setInput(0, plane1);
+	switch1.setInput(1, box1);
+	attrib_create1.setInput(0, switch1);
 
 	const copy1 = geo1.createNode('copy');
-	copy1.set_input(0, attrib_create1);
-	copy1.set_input(1, line1);
+	copy1.setInput(0, attrib_create1);
+	copy1.setInput(1, line1);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set(`1+2*copy('../${copy1.name}', 0)`);
@@ -73,11 +73,11 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const plane1 = geo1.createNode('plane');
 	const switch1 = geo1.createNode('switch');
-	switch1.set_input(0, plane1);
-	switch1.set_input(1, box1);
+	switch1.setInput(0, plane1);
+	switch1.setInput(1, box1);
 
 	const copy1 = geo1.createNode('copy');
-	copy1.set_input(0, switch1);
+	copy1.setInput(0, switch1);
 	copy1.p.count.set(3);
 
 	switch1.p.input.set(`copy('../${copy1.name}', 0) % 2`);
@@ -100,14 +100,14 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const attrib_create1 = geo1.createNode('attrib_create');
+	const attrib_create1 = geo1.createNode('attribCreate');
 	const plane1 = geo1.createNode('plane');
 
 	const copy1 = geo1.createNode('copy');
 	attrib_create1.p.class.set(ATTRIBUTE_CLASSES[AttribClass.OBJECT]);
-	attrib_create1.set_input(0, box1);
-	copy1.set_input(0, attrib_create1);
-	copy1.set_input(1, plane1);
+	attrib_create1.setInput(0, box1);
+	copy1.setInput(0, attrib_create1);
+	copy1.setInput(1, plane1);
 	copy1.p.count.set(3);
 	copy1.p.use_copy_expr.set(1);
 

@@ -5,7 +5,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 
 export class QuatMultGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	static type() {
-		return 'quat_mult';
+		return 'quatMult';
 	}
 	initialize_node() {
 		super.initialize_node();
@@ -22,7 +22,7 @@ export class QuatMultGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	return ['quat0', 'quat1'][index];
 	// }
 	gl_method_name(): string {
-		return 'quat_mult';
+		return 'quatMult';
 	}
 
 	// protected _expected_input_types() {

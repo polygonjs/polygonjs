@@ -25,7 +25,7 @@ const ParamsConfig = new InstancesCountSopParamsConfig();
 export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'instances_count';
+		return 'instancesCount';
 	}
 	initialize_node() {
 		this.io.inputs.set_count(1);

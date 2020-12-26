@@ -9,18 +9,18 @@ QUnit.test('texture_properties simple', async (assert) => {
 	const COP = window.COP;
 	const MAT = window.MAT;
 	const file1 = COP.createNode('image');
-	const basic_material1 = MAT.createNode('mesh_basic');
+	const basic_material1 = MAT.createNode('meshBasic');
 	const plane1 = geo1.createNode('plane');
 	const material1 = geo1.createNode('material');
 
 	// setup scene
 	file1.p.url.set(CoreTextureLoader.PARAM_DEFAULT);
 	file1.p.tanisotropy.set(0);
-	basic_material1.p.use_map.set(1);
+	basic_material1.p.useMap.set(1);
 	await file1.request_container();
-	basic_material1.p.map.set(file1.full_path());
-	material1.p.material.set(basic_material1.full_path());
-	material1.set_input(0, plane1);
+	basic_material1.p.map.set(file1.fullPath());
+	material1.p.material.set(basic_material1.fullPath());
+	material1.setInput(0, plane1);
 
 	let container = await material1.request_container();
 	let core_group = container.core_content()!;
@@ -28,8 +28,8 @@ QUnit.test('texture_properties simple', async (assert) => {
 	assert.equal(texture.anisotropy, 1);
 
 	// test
-	const texture_properties1 = geo1.createNode('texture_properties');
-	texture_properties1.set_input(0, material1);
+	const texture_properties1 = geo1.createNode('textureProperties');
+	texture_properties1.setInput(0, material1);
 
 	container = await texture_properties1.request_container();
 	core_group = container.core_content()!;

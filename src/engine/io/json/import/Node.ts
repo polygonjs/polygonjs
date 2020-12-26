@@ -57,7 +57,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		// this._node.lifecycle.set_creation_completed();
 	}
 	process_inputs_data(data: NodeJsonExporterData) {
-		this.set_inputs(data['inputs']);
+		this.setInputs(data['inputs']);
 	}
 
 	process_ui_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterUIData) {
@@ -67,15 +67,15 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (Poly.instance().player_mode()) {
 			return;
 		}
-		const ui_data = this._node.ui_data;
+		const ui_data = this._node.uiData;
 		const pos = data['pos'];
 		if (pos) {
 			const vector = new Vector2().fromArray(pos);
-			ui_data.set_position(vector);
+			ui_data.setPosition(vector);
 		}
 		const comment = data['comment'];
 		if (comment) {
-			ui_data.set_comment(comment);
+			ui_data.setComment(comment);
 		}
 		if (this._node.children_allowed()) {
 			this.process_nodes_ui_data(scene_importer, data['nodes']);
@@ -138,7 +138,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	set_inputs(inputs_data?: InputData[]) {
+	setInputs(inputs_data?: InputData[]) {
 		if (!inputs_data) {
 			return;
 		}
@@ -149,12 +149,12 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (input_data && this._node.parent) {
 				if (CoreType.isString(input_data)) {
 					const input_node_name = input_data;
-					const input_node = this._node.node_sibbling(input_node_name);
-					this._node.set_input(i, input_node);
+					const input_node = this._node.nodeSibbling(input_node_name);
+					this._node.setInput(i, input_node);
 				} else {
-					const input_node = this._node.node_sibbling(input_data['node']);
+					const input_node = this._node.nodeSibbling(input_data['node']);
 					const input_index = input_data['index'];
-					this._node.set_input(input_index, input_node, input_data['output']);
+					this._node.setInput(input_index, input_node, input_data['output']);
 				}
 			}
 		}

@@ -6,7 +6,7 @@ QUnit.test('layer simple', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const layer1 = geo1.createNode('layer');
 
-	layer1.set_input(0, plane1);
+	layer1.setInput(0, plane1);
 
 	let container, layers;
 	const layers0 = new Layers();

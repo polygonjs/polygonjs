@@ -15,7 +15,7 @@ const LINE_PREFIXES = {
 
 export class JsCodeFormatter {
 	static node_comment(node: BaseJsNodeType, line_type: JsLineType): string {
-		let line = `// ${node.full_path()}`;
+		let line = `// ${node.fullPath()}`;
 		if (line_type == JsLineType.BODY) {
 			line = `	${line}`;
 		}

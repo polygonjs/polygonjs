@@ -21,25 +21,25 @@ QUnit.test('event node_cook simple', async (assert) => {
 
 	await scene.wait_for_cooks_completed();
 
-	const node_cook1 = events.createNode('node_cook');
-	const set_param1 = events.createNode('set_param');
-	const set_param2 = events.createNode('set_param');
+	const node_cook1 = events.createNode('nodeCook');
+	const set_param1 = events.createNode('setParam');
+	const set_param2 = events.createNode('setParam');
 
-	scatter1.set_input(0, box1);
-	scatter2.set_input(0, box1);
-	scatter3.set_input(0, box1);
-	merge1.set_input(0, scatter1);
-	merge1.set_input(1, scatter2);
-	merge1.set_input(2, scatter3);
+	scatter1.setInput(0, box1);
+	scatter2.setInput(0, box1);
+	scatter3.setInput(0, box1);
+	merge1.setInput(0, scatter1);
+	merge1.setInput(1, scatter2);
+	merge1.setInput(2, scatter3);
 
 	assert.ok(scene.loading_controller.loaded);
 	node_cook1.p.mask.set('*scatter*');
-	set_param1.p.param.set(switch1.p.input.full_path());
+	set_param1.p.param.set(switch1.p.input.fullPath());
 	set_param1.p.number.set(1);
-	set_param2.p.param.set(switch2.p.input.full_path());
+	set_param2.p.param.set(switch2.p.input.fullPath());
 	set_param2.p.number.set(1);
-	set_param1.set_input(0, node_cook1, NodeCookEventNode.OUTPUT_FIRST_NODE);
-	set_param2.set_input(0, node_cook1, NodeCookEventNode.OUTPUT_ALL_NODES);
+	set_param1.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_FIRST_NODE);
+	set_param2.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_ALL_NODES);
 
 	assert.equal(switch1.p.input.value, 0);
 	await scatter1.request_container();
@@ -58,10 +58,10 @@ QUnit.test('event node_cook simple', async (assert) => {
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
 	await scene2.wait_for_cooks_completed();
-	const scatter1_2 = scene2.node(scatter1.full_path()) as ScatterSopNode;
-	const merge1_2 = scene2.node(merge1.full_path()) as MergeSopNode;
-	const switch1_2 = scene2.node(switch1.full_path()) as SwitchSopNode;
-	const switch2_2 = scene2.node(switch2.full_path()) as SwitchSopNode;
+	const scatter1_2 = scene2.node(scatter1.fullPath()) as ScatterSopNode;
+	const merge1_2 = scene2.node(merge1.fullPath()) as MergeSopNode;
+	const switch1_2 = scene2.node(switch1.fullPath()) as SwitchSopNode;
+	const switch2_2 = scene2.node(switch2.fullPath()) as SwitchSopNode;
 
 	assert.equal(switch1_2.p.input.value, 0);
 	await scatter1_2.request_container();

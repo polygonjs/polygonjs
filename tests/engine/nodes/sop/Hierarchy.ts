@@ -7,8 +7,8 @@ QUnit.test('hierarchy simple', async (assert) => {
 	const hierarchy1 = geo1.createNode('hierarchy');
 	const hierarchy2 = geo1.createNode('hierarchy');
 
-	hierarchy1.set_input(0, file1);
-	hierarchy2.set_input(0, hierarchy1);
+	hierarchy1.setInput(0, file1);
+	hierarchy2.setInput(0, hierarchy1);
 
 	file1.p.url.set('/examples/models/wolf.obj');
 

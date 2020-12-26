@@ -26,8 +26,8 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 		new_name: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attrib_normalize'> {
-		return 'attrib_normalize';
+	static type(): Readonly<'attribNormalize'> {
+		return 'attribNormalize';
 	}
 
 	cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {

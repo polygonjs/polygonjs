@@ -88,8 +88,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	// name
-	set_name(name: string) {
-		super.set_name(name);
+	setName(name: string) {
+		super.setName(name);
 	}
 
 	get value(): ParamValuesTypeMap[T] {
@@ -151,7 +151,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
 		if (this.scene.loading_controller.is_loading) {
-			console.warn(`param attempt to compute ${this.full_path()}`);
+			console.warn(`param attempt to compute ${this.fullPath()}`);
 		}
 
 		if (this.is_dirty) {
@@ -231,8 +231,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	has_parent_param(): boolean {
 		return this._parent_param != null;
 	}
-	full_path(): string {
-		return this.node?.full_path() + '/' + this.name;
+	fullPath(): string {
+		return this.node?.fullPath() + '/' + this.name;
 	}
 	path_relative_to(node: BaseNodeType | BaseParamType): string {
 		return CoreWalker.relative_path(node, this);

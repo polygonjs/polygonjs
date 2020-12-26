@@ -25,8 +25,8 @@ class VaryingReadGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VaryingReadGlParamsConfig();
 export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	params_config = ParamsConfig;
-	static type(): Readonly<'varying_read'> {
-		return 'varying_read';
+	static type(): Readonly<'varyingRead'> {
+		return 'varyingRead';
 	}
 	static readonly OUTPUT_NAME = 'fragment';
 

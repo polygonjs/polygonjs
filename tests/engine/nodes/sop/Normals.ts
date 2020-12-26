@@ -6,8 +6,8 @@ QUnit.test('normals simple', async (assert) => {
 	const noise1 = geo1.createNode('noise');
 	const normals1 = geo1.createNode('normals');
 
-	noise1.set_input(0, sphere1);
-	normals1.set_input(0, noise1);
+	noise1.setInput(0, sphere1);
+	normals1.setInput(0, noise1);
 
 	noise1.p.compute_normals.set(0);
 	noise1.p.octaves.set(1);

@@ -4,8 +4,8 @@ QUnit.test('SOP switch simple', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const sphere1 = geo1.createNode('sphere');
 	const switch1 = geo1.createNode('switch');
-	switch1.set_input(0, box1);
-	switch1.set_input(1, sphere1);
+	switch1.setInput(0, box1);
+	switch1.setInput(1, sphere1);
 
 	switch1.p.input.set(0);
 

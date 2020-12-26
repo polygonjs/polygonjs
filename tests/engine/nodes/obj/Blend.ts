@@ -26,7 +26,7 @@ QUnit.test('blend obj simple', async (assert) => {
 	await scene.wait_for_cooks_completed();
 	assert.deepEqual(blend1.object.position.toArray(), [0, 1, 0]);
 
-	blend1.p.object0.set(geo3.full_path());
+	blend1.p.object0.set(geo3.fullPath());
 	blend1.p.blend.set(0);
 	await scene.wait_for_cooks_completed();
 	assert.deepEqual(blend1.object.position.toArray(), [0, 0, 5]);

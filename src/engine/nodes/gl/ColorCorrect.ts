@@ -47,7 +47,7 @@ const ParamsConfig = new ColorCorrectParamsConfig();
 export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'color_correct';
+		return 'colorCorrect';
 	}
 	static INPUT_NAME = 'color';
 	static INPUT_GAMMA_FACTOR = 'gamma_factor';

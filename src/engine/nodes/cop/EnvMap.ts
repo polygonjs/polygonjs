@@ -18,7 +18,7 @@ const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'env_map';
+		return 'envMap';
 	}
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;

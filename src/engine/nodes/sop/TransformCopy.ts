@@ -27,7 +27,7 @@ const ParamsConfig = new TransformCopySopParamConfig();
 export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'transform_copy';
+		return 'transformCopy';
 	}
 
 	static displayed_input_names(): string[] {

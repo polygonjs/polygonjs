@@ -15,7 +15,7 @@ const ParamsConfig = new TexturePropertiesCopParamsConfig();
 export class TexturePropertiesCopNode extends TypedCopNode<TexturePropertiesCopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'texture_properties';
+		return 'textureProperties';
 	}
 
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);

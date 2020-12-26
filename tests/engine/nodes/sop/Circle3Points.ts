@@ -8,12 +8,12 @@ QUnit.test('circle 3 points simple', async (assert) => {
 	add0.p.position.set([-1, 0, 0]);
 	add2.p.position.set([1, 0, 0]);
 	add1.p.position.set([0, 0, 1]);
-	merge1.set_input(0, add0);
-	merge1.set_input(1, add1);
-	merge1.set_input(2, add2);
+	merge1.setInput(0, add0);
+	merge1.setInput(1, add1);
+	merge1.setInput(2, add2);
 
-	const circle_3_points1 = geo1.createNode('circle3points');
-	circle_3_points1.set_input(0, merge1);
+	const circle_3_points1 = geo1.createNode('circle3Points');
+	circle_3_points1.setInput(0, merge1);
 
 	let container = await circle_3_points1.request_container();
 	let core_group = container.core_content()!;

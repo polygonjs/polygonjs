@@ -30,7 +30,7 @@ const ParamsConfig = new AttribDeleteSopParamsConfig();
 export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'attrib_delete';
+		return 'attribDelete';
 	}
 
 	static displayed_input_names(): string[] {

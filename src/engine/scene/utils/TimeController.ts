@@ -16,8 +16,8 @@ export class TimeController {
 	private _prev_performance_now: number = 0;
 	private _graph_node: CoreGraphNode;
 	private _frame_range: FrameRange = [1, 600];
-	private _realtime_state = true;
-	private _frame_range_locked: [boolean, boolean] = [true, true];
+	private _realtimeState = true;
+	private _frameRangeLocked: [boolean, boolean] = [true, true];
 	private _playing: boolean = false;
 
 	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
@@ -49,24 +49,24 @@ export class TimeController {
 	get frame_range(): FrameRange {
 		return this._frame_range;
 	}
-	get frame_range_locked(): [boolean, boolean] {
-		return this._frame_range_locked;
+	get frameRangeLocked(): [boolean, boolean] {
+		return this._frameRangeLocked;
 	}
-	get realtime_state() {
-		return this._realtime_state;
+	get realtimeState() {
+		return this._realtimeState;
 	}
-	set_frame_range(start_frame: number, end_frame: number) {
+	setFrameRange(start_frame: number, end_frame: number) {
 		this._frame_range[0] = Math.floor(start_frame);
 		this._frame_range[1] = Math.floor(end_frame);
 		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
-	set_frame_range_locked(start_locked: boolean, end_locked: boolean) {
-		this._frame_range_locked[0] = start_locked;
-		this._frame_range_locked[1] = end_locked;
+	setFrameRange_locked(start_locked: boolean, end_locked: boolean) {
+		this._frameRangeLocked[0] = start_locked;
+		this._frameRangeLocked[1] = end_locked;
 		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
-	set_realtime_state(state: boolean) {
-		this._realtime_state = state;
+	set_realtimeState(state: boolean) {
+		this._realtimeState = state;
 		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.REALTIME_STATUS_UPDATED);
 	}
 	// set_fps(fps: number) {
@@ -74,7 +74,7 @@ export class TimeController {
 	// 	this._frame_interval = 1000 / this._fps;
 	// 	this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	// }
-	set_time(time: number, update_frame = true) {
+	setTime(time: number, update_frame = true) {
 		if (time != this._time) {
 			this._time = time;
 
@@ -82,7 +82,7 @@ export class TimeController {
 				const new_frame = Math.floor(this._time * FPS);
 				const bounded_frame = this._ensure_frame_within_bounds(new_frame);
 				if (new_frame != bounded_frame) {
-					this.set_frame(bounded_frame, true);
+					this.setFrame(bounded_frame, true);
 				} else {
 					this._frame = new_frame;
 				}
@@ -102,13 +102,13 @@ export class TimeController {
 		}
 	}
 
-	set_frame(frame: number, update_time = true) {
+	setFrame(frame: number, update_time = true) {
 		if (frame != this._frame) {
 			frame = this._ensure_frame_within_bounds(frame);
 			if (frame != this._frame) {
 				this._frame = frame;
 				if (update_time) {
-					this.set_time(this._frame / FPS, false);
+					this.setTime(this._frame / FPS, false);
 				}
 			}
 		}
@@ -121,22 +121,22 @@ export class TimeController {
 		}
 	}
 	increment_time() {
-		if (this._realtime_state) {
+		if (this._realtimeState) {
 			const performance_now = performance.now();
 			const delta = (performance_now - this._prev_performance_now) / 1000.0;
 			const new_time = this._time + delta;
 			this._prev_performance_now = performance_now;
-			this.set_time(new_time);
+			this.setTime(new_time);
 		} else {
-			this.set_frame(this.frame + 1);
+			this.setFrame(this.frame + 1);
 		}
 	}
 
 	_ensure_frame_within_bounds(frame: number): number {
-		if (this._frame_range_locked[0] && frame < this._frame_range[0]) {
+		if (this._frameRangeLocked[0] && frame < this._frame_range[0]) {
 			return this._frame_range[1];
 		}
-		if (this._frame_range_locked[1] && frame > this._frame_range[1]) {
+		if (this._frameRangeLocked[1] && frame > this._frame_range[1]) {
 			return this._frame_range[0];
 		}
 		return frame;

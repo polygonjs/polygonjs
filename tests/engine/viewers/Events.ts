@@ -118,9 +118,9 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	await scene2.wait_for_cooks_completed();
 	const element2 = document.createElement('div');
 	document.body.appendChild(element2);
-	const perspective_camera2 = scene2.root.nodes_by_type('perspective_camera')[0];
-	const events2 = scene2.root.nodes_by_type('events')[0];
-	const mouse2 = events2.nodes_by_type('mouse')[0];
+	const perspective_camera2 = scene2.root.nodesByType('perspectiveCamera')[0];
+	const events2 = scene2.root.nodesByType('events')[0];
+	const mouse2 = events2.nodesByType('mouse')[0];
 	const viewer2 = perspective_camera2.create_viewer(element);
 
 	assert.deepEqual(

@@ -87,7 +87,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 	params_config = ParamsConfig;
 
 	static type() {
-		return 'depth_of_field';
+		return 'depthOfField';
 	}
 
 	static saturate(x: number) {

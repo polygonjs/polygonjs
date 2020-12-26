@@ -13,7 +13,7 @@ const ParamsConfig = new GammaCorrectionPostParamsConfig();
 export class GammaCorrectionPostNode extends TypedPostProcessNode<ShaderPass, GammaCorrectionPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'gamma_correction';
+		return 'gammaCorrection';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

@@ -64,7 +64,7 @@ const ParamsConfig = new SpotLightObjParamsConfig();
 export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, SpotLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'spot_light';
+		return 'spotLight';
 	}
 	private _target_target!: Object3D;
 	private _helper_controller = new HelperController<SpotLight>(

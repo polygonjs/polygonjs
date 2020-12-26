@@ -26,7 +26,7 @@ const TEST_SHADER_LIB = {
 QUnit.test('volume builder simple', async (assert) => {
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
-	const volume_builder1 = MAT.createNode('volume_builder');
+	const volume_builder1 = MAT.createNode('volumeBuilder');
 	volume_builder1.createNode('output');
 	volume_builder1.createNode('globals');
 	const material = volume_builder1.material;
@@ -41,15 +41,15 @@ QUnit.test('volume builder simple', async (assert) => {
 	const constant1 = volume_builder1.createNode('constant');
 	constant1.set_gl_type(GlConnectionPointType.FLOAT);
 	constant1.p.vec3.set([1, 0, 0.5]);
-	output1.set_input('density', constant1, ConstantGlNode.OUTPUT_NAME);
+	output1.setInput('density', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
 	await volume_builder1.request_container();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
 
-	const vec3_to_float1 = volume_builder1.createNode('vec3_to_float');
-	output1.set_input('density', vec3_to_float1, 'y');
-	vec3_to_float1.set_input(0, globals1, 'position');
+	const vec3ToFloat1 = volume_builder1.createNode('vec3ToFloat');
+	output1.setInput('density', vec3ToFloat1, 'y');
+	vec3ToFloat1.setInput(0, globals1, 'position');
 
 	await volume_builder1.request_container();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
@@ -58,20 +58,20 @@ QUnit.test('volume builder simple', async (assert) => {
 
 QUnit.test('volume builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
-	const volume1 = MAT.createNode('volume_builder');
+	const volume1 = MAT.createNode('volumeBuilder');
 	volume1.createNode('output');
 	volume1.createNode('globals');
-	const output1 = volume1.nodes_by_type('output')[0];
-	const globals1 = volume1.nodes_by_type('globals')[0];
+	const output1 = volume1.nodesByType('output')[0];
+	const globals1 = volume1.nodesByType('globals')[0];
 	const param1 = volume1.createNode('param');
 	param1.p.name.set('float_param');
 	const param2 = volume1.createNode('param');
 	param2.set_gl_type(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
-	const float_to_vec31 = volume1.createNode('float_to_vec3');
-	float_to_vec31.set_input(0, param1);
-	float_to_vec31.set_input(1, globals1, 'time');
-	output1.set_input(0, param2);
+	const float_to_vec31 = volume1.createNode('floatToVec3');
+	float_to_vec31.setInput(0, param1);
+	float_to_vec31.setInput(1, globals1, 'time');
+	output1.setInput(0, param2);
 	await volume1.request_container();
 
 	const scene = window.scene;
@@ -81,7 +81,7 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 		const scene2 = await SceneJsonImporter.load_data(data);
 		await scene2.wait_for_cooks_completed();
 
-		const new_volume1 = scene2.node('/MAT/volume_builder1') as VolumeBuilderMatNode;
+		const new_volume1 = scene2.node('/MAT/volumeBuilder1') as VolumeBuilderMatNode;
 		assert.notOk(new_volume1.assembler_controller);
 		assert.ok(new_volume1.persisted_config);
 		const float_param = new_volume1.params.get('float_param') as FloatParam;

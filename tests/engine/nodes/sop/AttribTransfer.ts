@@ -4,14 +4,14 @@ QUnit.test('attrib_transfer simple', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	plane1.p.direction.set([0, 1, 0]);
 	const add1 = geo1.createNode('add');
-	const attrib_create1 = geo1.createNode('attrib_create');
-	const attrib_create2 = geo1.createNode('attrib_create');
-	const attrib_transfer1 = geo1.createNode('attrib_transfer');
+	const attrib_create1 = geo1.createNode('attribCreate');
+	const attrib_create2 = geo1.createNode('attribCreate');
+	const attrib_transfer1 = geo1.createNode('attribTransfer');
 
-	attrib_create1.set_input(0, plane1);
-	attrib_create2.set_input(0, add1);
-	attrib_transfer1.set_input(0, attrib_create1);
-	attrib_transfer1.set_input(1, attrib_create2);
+	attrib_create1.setInput(0, plane1);
+	attrib_create2.setInput(0, add1);
+	attrib_transfer1.setInput(0, attrib_create1);
+	attrib_transfer1.setInput(1, attrib_create2);
 
 	add1.p.position.set([0.5, 0, 0.5]);
 	attrib_create1.p.name.set('test');

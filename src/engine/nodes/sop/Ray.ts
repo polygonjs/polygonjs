@@ -76,7 +76,7 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 
 			first_intersect = this._raycaster.intersectObjects(core_group_collision.objects(), true)[0];
 			if (first_intersect) {
-				point.set_position(first_intersect.point);
+				point.setPosition(first_intersect.point);
 				if (this.pv.transfer_face_normals && first_intersect.face) {
 					point.set_normal(first_intersect.face.normal);
 				}

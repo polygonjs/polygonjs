@@ -8,6 +8,7 @@ import {OptimizedNodesJsonImporter} from './OptimizedNodes';
 import {PolyNodeJsonImporter} from './nodes/Poly';
 import {Poly} from '../../../Poly';
 import {NodeJsonImporter} from './Node';
+import {CoreString} from '../../../../core/String';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -29,14 +30,29 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 
 			try {
+				// try with current type
 				const node = this._node.createNode(node_type, non_spare_params_data);
 				if (node) {
-					node.set_name(node_name);
+					node.setName(node_name);
 					nodes.push(node);
 				}
 			} catch (e) {
-				scene_importer.report.add_warning(`failed to create node with type '${node_type}'`);
-				Poly.warn('failed to create node with type', node_type, e);
+				console.log(node_type, typeof node_type);
+				const nodeType = CoreString.camel_case(node_type);
+				console.log('camel case', nodeType);
+				try {
+					// try with camelCased type
+					const node = this._node.createNode(nodeType, non_spare_params_data);
+					if (node) {
+						node.setName(node_name);
+						nodes.push(node);
+					}
+				} catch (e) {
+					scene_importer.report.add_warning(
+						`failed to create node with type '${node_type}' or '${nodeType}'`
+					);
+					Poly.warn('failed to create node with type', node_type, 'or', nodeType, e);
+				}
 			}
 		}
 
