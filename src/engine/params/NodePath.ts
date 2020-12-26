@@ -91,38 +91,38 @@ export class NodePathParam extends TypedParam<ParamType.NODE_PATH> {
 				}
 			}
 
-			this._value.set_node(node);
-
-			// if (node) {
-			// 	this._assign_found_node(node);
-			// }
+			if (node) {
+				this._assign_found_node(node);
+			} else {
+				this._value.set_node(null);
+			}
 
 			this.options.execute_callback();
 		}
 		this.remove_dirty_state();
 	}
 
-	// private _assign_found_node(node: BaseNodeType) {
-	// 	const dependent_on_found_node = this.options.dependent_on_found_node();
-	// 	if (this._is_node_expected_context(node)) {
-	// 		if (this._is_node_expected_type(node)) {
-	// 			this._found_node_with_expected_type = node;
-	// 			if (dependent_on_found_node) {
-	// 				this.add_graph_input(node);
-	// 			}
-	// 		} else {
-	// 			this.states.error.set(
-	// 				`node type is ${node.type} but the params expects one of ${(this._expected_node_types() || []).join(
-	// 					', '
-	// 				)}`
-	// 			);
-	// 		}
-	// 	} else {
-	// 		this.states.error.set(
-	// 			`node context is ${node.node_context()} but the params expects a ${this._expected_context()}`
-	// 		);
-	// 	}
-	// }
+	private _assign_found_node(node: BaseNodeType) {
+		const dependent_on_found_node = this.options.dependent_on_found_node();
+		if (this._is_node_expected_context(node)) {
+			if (this._is_node_expected_type(node)) {
+				this._value.set_node(node);
+				if (dependent_on_found_node) {
+					this.add_graph_input(node);
+				}
+			} else {
+				this.states.error.set(
+					`node type is ${node.type} but the params expects one of ${(this._expected_node_types() || []).join(
+						', '
+					)}`
+				);
+			}
+		} else {
+			this.states.error.set(
+				`node context is ${node.node_context()} but the params expects a ${this._expected_context()}`
+			);
+		}
+	}
 
 	// found_node_with_context<N extends NodeContext>(context: N): BaseNodeByContextMap[N] | undefined {
 	// 	return this._found_node_with_expected_type as BaseNodeByContextMap[N];
@@ -169,28 +169,28 @@ export class NodePathParam extends TypedParam<ParamType.NODE_PATH> {
 	// found_node_with_expected_type() {
 	// 	return this._found_node_with_expected_type;
 	// }
-	// private _expected_context() {
-	// 	return this.options.node_selection_context;
-	// }
-	// private _is_node_expected_context(node: BaseNodeType) {
-	// 	const expected_context = this._expected_context();
-	// 	if (expected_context == null) {
-	// 		return true;
-	// 	}
-	// 	const node_context = node.parent?.children_controller?.context;
-	// 	return expected_context == node_context;
-	// }
-	// private _expected_node_types() {
-	// 	return this.options.node_selection_types;
-	// }
+	private _expected_context() {
+		return this.options.node_selection_context;
+	}
+	private _is_node_expected_context(node: BaseNodeType) {
+		const expected_context = this._expected_context();
+		if (expected_context == null) {
+			return true;
+		}
+		const node_context = node.parent?.children_controller?.context;
+		return expected_context == node_context;
+	}
+	private _expected_node_types() {
+		return this.options.node_selection_types;
+	}
 
-	// private _is_node_expected_type(node: BaseNodeType) {
-	// 	const expected_types = this._expected_node_types();
-	// 	if (expected_types == null) {
-	// 		return true;
-	// 	}
-	// 	return expected_types?.includes(node.type);
-	// }
+	private _is_node_expected_type(node: BaseNodeType) {
+		const expected_types = this._expected_node_types();
+		if (expected_types == null) {
+			return true;
+		}
+		return expected_types?.includes(node.type);
+	}
 
 	notify_path_rebuild_required(node: BaseNodeType) {
 		this.decomposed_path.update_from_name_change(node);
