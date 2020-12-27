@@ -24,21 +24,21 @@ class MapboxCameraObjParamConfig extends CameraMasterCameraParamConfig(NodeParam
 	});
 	zoom = ParamConfig.FLOAT(15.55, {
 		range: [0, 24],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		callback: (node: BaseNodeType) => {
 			MapboxCameraObjNode.PARAM_CALLBACK_update_nav(node as MapboxCameraObjNode);
 		},
 	});
 	zoom_range = ParamConfig.VECTOR2([0, 24], {
 		// range: [0, 24],
-		// range_locked: [true, true]
+		// rangeLocked: [true, true]
 		callback: (node: BaseNodeType) => {
 			MapboxCameraObjNode.PARAM_CALLBACK_update_nav(node as MapboxCameraObjNode);
 		},
 	});
 	pitch = ParamConfig.FLOAT(60, {
 		range: [0, 60],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		callback: (node: BaseNodeType) => {
 			MapboxCameraObjNode.PARAM_CALLBACK_update_nav(node as MapboxCameraObjNode);
 		},

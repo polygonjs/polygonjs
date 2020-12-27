@@ -25,7 +25,7 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 	arc = ParamConfig.BOOLEAN(1);
 	/** @param sets the mode how the points count is computed */
 	points_count_mode = ParamConfig.INTEGER(POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT), {
-		visible_if: {arc: 1},
+		visibleIf: {arc: 1},
 		menu: {
 			entries: POINTS_COUNT_MODE.map((name, value) => {
 				return {value, name};
@@ -34,23 +34,23 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param length of each segment */
 	segments_length = ParamConfig.FLOAT(0.1, {
-		visible_if: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_LENGTH)},
+		visibleIf: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_LENGTH)},
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param count of the number of segments */
 	segments_count = ParamConfig.INTEGER(100, {
-		visible_if: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT)},
+		visibleIf: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT)},
 		range: [1, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param toggle on to create a full circle */
 	full = ParamConfig.BOOLEAN(1, {
-		visible_if: {arc: 1},
+		visibleIf: {arc: 1},
 	});
 	/** @param TBD */
 	join_mode = ParamConfig.INTEGER(JOIN_MODES.indexOf(JoinMode.ABC), {
-		visible_if: {arc: 1, full: 0},
+		visibleIf: {arc: 1, full: 0},
 		menu: {
 			entries: JOIN_MODES.map((name, value) => {
 				return {value, name};

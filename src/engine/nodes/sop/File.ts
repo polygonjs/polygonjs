@@ -9,7 +9,7 @@ import {TypedSopNode} from './_Base';
 import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
-import {DesktopFileType} from '../../params/utils/OptionsController';
+import {FileType} from '../../params/utils/OptionsController';
 import {FileSopOperation} from '../../../core/operations/sop/File';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -18,8 +18,7 @@ const DEFAULT = FileSopOperation.DEFAULT_PARAMS;
 class FileSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
-		desktop_browse: {file_type: DesktopFileType.GEOMETRY},
-		asset_reference: true,
+		fileBrowse: {type: [FileType.GEOMETRY]},
 	});
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {

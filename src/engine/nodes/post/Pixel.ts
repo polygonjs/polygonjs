@@ -19,7 +19,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PixelPostParamsConfig extends NodeParamsConfig {
 	pixel_size = ParamConfig.INTEGER(16, {
 		range: [1, 50],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 }

@@ -22,7 +22,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	});
 	/** @param group this applies to */
 	group = ParamConfig.STRING(DEFAULT.group, {
-		visible_if: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+		visibleIf: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 
 	// transform
@@ -46,7 +46,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	// up = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param pivot */
 	pivot = ParamConfig.VECTOR3(DEFAULT.pivot, {
-		visible_if: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+		visibleIf: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 }
 const ParamsConfig = new TransformSopParamConfig();

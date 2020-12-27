@@ -14,7 +14,7 @@ class TetrahedronSopParamsConfig extends NodeParamsConfig {
 	/** @param resolution of the tetrahedron */
 	detail = ParamConfig.INTEGER(0, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param sets to create only points */
 	points_only = ParamConfig.BOOLEAN(0);

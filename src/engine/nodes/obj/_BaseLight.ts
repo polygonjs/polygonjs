@@ -69,7 +69,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	protected create_shadow_params() {
 		return;
 		// this.add_param('toggle', 'cast_shadows', 1);
-		// shadow_options = {visible_if: {cast_shadows: 1}}
+		// shadow_options = {visibleIf: {cast_shadows: 1}}
 		// this.add_param( 'vector2', 'shadow_res', [1024, 1024], shadow_options );
 		// this.add_param( 'float', 'shadow_near', 0.1, shadow_options );
 		// this.add_param( 'float', 'shadow_far', 100, shadow_options );

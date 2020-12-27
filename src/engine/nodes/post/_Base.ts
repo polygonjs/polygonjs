@@ -29,7 +29,7 @@ function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
 export const PostParamOptions: ParamOptions = {
 	cook: false,
 	callback: PostParamCallback,
-	compute_on_dirty: true, // important if an expression drives a param
+	computeOnDirty: true, // important if an expression drives a param
 };
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {

@@ -18,26 +18,26 @@ class Css2DObjectSopParamsConfig extends NodeParamsConfig {
 	use_id_attrib = ParamConfig.BOOLEAN(DEFAULT.use_id_attrib);
 	/** @param value of the html element id attribute */
 	id = ParamConfig.STRING(DEFAULT.id, {
-		visible_if: {use_id_attrib: 0},
+		visibleIf: {use_id_attrib: 0},
 	});
 	/** @param defines if the vertex class attribute is used to create the html class */
 	use_class_attrib = ParamConfig.BOOLEAN(DEFAULT.use_class_attrib);
 	/** @param value of the html class */
 	class_name = ParamConfig.STRING(DEFAULT.class_name, {
-		visible_if: {use_class_attrib: 0},
+		visibleIf: {use_class_attrib: 0},
 	});
 	/** @param defines if the vertex html attribute is used to create the html content */
 	use_html_attrib = ParamConfig.BOOLEAN(DEFAULT.use_html_attrib);
 	/** @param value of the html content */
 	html = ParamConfig.STRING(DEFAULT.html, {
-		visible_if: {use_html_attrib: 0},
+		visibleIf: {use_html_attrib: 0},
 		multiline: true,
 	});
 	/** @param toggles on if attributes are copied from the geometry to the html element */
 	copy_attributes = ParamConfig.BOOLEAN(DEFAULT.copy_attributes);
 	/** @param names of the attributes that are copied from the geometry to the html element */
 	attributes_to_copy = ParamConfig.STRING(DEFAULT.attributes_to_copy, {
-		visible_if: {copy_attributes: true},
+		visibleIf: {copy_attributes: true},
 	});
 }
 const ParamsConfig = new Css2DObjectSopParamsConfig();

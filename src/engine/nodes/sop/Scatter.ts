@@ -13,18 +13,18 @@ class ScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param number of points to create */
 	points_count = ParamConfig.INTEGER(DEFAULT.points_count, {
 		range: [0, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param seed to affect the distribution of points */
 	seed = ParamConfig.INTEGER(DEFAULT.seed, {
 		range: [0, 100],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	/** @param toggle on to transfer attribute from the input geometry to the created points */
 	transfer_attributes = ParamConfig.BOOLEAN(DEFAULT.transfer_attributes);
 	/** @param names of the attributes to transfer */
 	attributes_to_transfer = ParamConfig.STRING(DEFAULT.attributes_to_transfer, {
-		visible_if: {transfer_attributes: 1},
+		visibleIf: {transfer_attributes: 1},
 	});
 	/** @param add an id attribute, starting at 0, incrementing by 1 for each point (0,1,2,3...) */
 	add_id_attribute = ParamConfig.BOOLEAN(DEFAULT.add_id_attribute);

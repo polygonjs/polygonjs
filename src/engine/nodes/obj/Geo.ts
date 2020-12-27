@@ -24,7 +24,7 @@ class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	/** @param set render order */
 	render_order = ParamConfig.INTEGER(0, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new GeoObjParamConfig();

@@ -15,7 +15,7 @@ import {GeometryContainer} from '../../containers/Geometry';
 class ObjectMergeSopParamsConfig extends NodeParamsConfig {
 	/** @param which SOP node to import from */
 	geometry = ParamConfig.OPERATOR_PATH('', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.SOP,
 		},
 	});

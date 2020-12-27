@@ -8,7 +8,7 @@ export function LayerParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		layer = ParamConfig.INTEGER(0, {
 			range: [0, 31],
-			range_locked: [true, true],
+			rangeLocked: [true, true],
 		});
 	};
 }
@@ -19,7 +19,7 @@ export class LayersController {
 	// add_params() {
 	// 	this.node.add_param(ParamType.INTEGER, PARAM_NAME, 0, {
 	// 		range: [0, 31],
-	// 		range_locked: [true, true],
+	// 		rangeLocked: [true, true],
 	// 	});
 	// }
 

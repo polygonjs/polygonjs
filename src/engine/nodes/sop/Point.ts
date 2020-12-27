@@ -27,22 +27,22 @@ class PointSopParamsConfig extends NodeParamsConfig {
 	update_x = ParamConfig.BOOLEAN(0);
 	/** @param expression the x component */
 	x = ParamConfig.FLOAT('@P.x', {
-		visible_if: {update_x: 1},
-		expression: {for_entities: true},
+		visibleIf: {update_x: 1},
+		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the y component */
 	update_y = ParamConfig.BOOLEAN(0);
 	/** @param expression the y component */
 	y = ParamConfig.FLOAT('@P.y', {
-		visible_if: {update_y: 1},
-		expression: {for_entities: true},
+		visibleIf: {update_y: 1},
+		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the z component */
 	update_z = ParamConfig.BOOLEAN(0);
 	/** @param expression the z component */
 	z = ParamConfig.FLOAT('@P.z', {
-		visible_if: {update_z: 1},
-		expression: {for_entities: true},
+		visibleIf: {update_z: 1},
+		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the normals */
 	update_normals = ParamConfig.BOOLEAN(1);

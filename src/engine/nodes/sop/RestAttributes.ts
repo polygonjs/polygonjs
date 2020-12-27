@@ -13,15 +13,15 @@ class RestAttributesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to create a rest position */
 	tposition = ParamConfig.BOOLEAN(DEFAULT.tposition);
 	/** @param name of the position attribute */
-	position = ParamConfig.STRING(DEFAULT.position, {visible_if: {tposition: true}});
+	position = ParamConfig.STRING(DEFAULT.position, {visibleIf: {tposition: true}});
 	/** @param name of the rest position attribute, on which the position will be copied on */
-	restP = ParamConfig.STRING(DEFAULT.restP, {visible_if: {tposition: true}});
+	restP = ParamConfig.STRING(DEFAULT.restP, {visibleIf: {tposition: true}});
 	/** @param toggle on to create a rest normal */
 	tnormal = ParamConfig.BOOLEAN(DEFAULT.tnormal);
 	/** @param name of the normal attribute */
-	normal = ParamConfig.STRING(DEFAULT.normal, {visible_if: {tnormal: true}});
+	normal = ParamConfig.STRING(DEFAULT.normal, {visibleIf: {tnormal: true}});
 	/** @param name of the rest normal attribute, on which the normal will be copied on */
-	restN = ParamConfig.STRING(DEFAULT.restN, {visible_if: {tposition: true}});
+	restN = ParamConfig.STRING(DEFAULT.restN, {visibleIf: {tposition: true}});
 }
 const ParamsConfig = new RestAttributesSopParamsConfig();
 

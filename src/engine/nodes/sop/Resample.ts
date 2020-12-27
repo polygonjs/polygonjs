@@ -47,7 +47,7 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param type of curve this will generate */
 	curve_type = ParamConfig.INTEGER(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM), {
 		range: [0, 2],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		menu: {
 			entries: CURVE_TYPES.map((name, i) => {
 				return {
@@ -60,17 +60,17 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param curve tension */
 	tension = ParamConfig.FLOAT(0.01, {
 		range: [0, 1],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 	/** @param points count */
 	points_count = ParamConfig.INTEGER(100, {
-		visible_if: {method: METHODS.indexOf(METHOD.POINTS_COUNT)},
+		visibleIf: {method: METHODS.indexOf(METHOD.POINTS_COUNT)},
 		range: [1, 1000],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param segments length */
 	segment_length = ParamConfig.FLOAT(1, {
-		visible_if: {method: METHODS.indexOf(METHOD.SEGMENT_LENGTH)},
+		visibleIf: {method: METHODS.indexOf(METHOD.SEGMENT_LENGTH)},
 	});
 }
 const ParamsConfig = new ResampleSopParamsConfig();

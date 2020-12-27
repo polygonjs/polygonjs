@@ -14,22 +14,22 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 	});
 	edge_strength = ParamConfig.FLOAT(3, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	edge_thickness = ParamConfig.FLOAT(0, {
 		range: [0, 4],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	edge_glow = ParamConfig.FLOAT(0, {
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	pulse_period = ParamConfig.FLOAT(0, {
 		range: [0, 5],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	visible_edge_color = ParamConfig.COLOR([1, 1, 1], {

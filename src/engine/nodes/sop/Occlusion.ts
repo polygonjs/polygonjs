@@ -21,7 +21,7 @@ class OcclusionSopParamsConfig extends NodeParamsConfig {
 	/** @param number of samples. The more samples the better the result, but the longer the calculation */
 	samples = ParamConfig.INTEGER(256, {
 		range: [1, 256],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	sep = ParamConfig.SEPARATOR();
 	/** @param size of buffer used in the calculation */

@@ -13,7 +13,7 @@ import {CoreTextureLoader} from '../../../core/loader/Texture';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {DesktopFileType} from '../../params/utils/OptionsController';
+import {FileType} from '../../params/utils/OptionsController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {CopFileTypeController} from './utils/FileTypeController';
 
@@ -21,8 +21,7 @@ export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the image from */
 		url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
-			desktop_browse: {file_type: DesktopFileType.TEXTURE},
-			asset_reference: true,
+			fileBrowse: {type: [FileType.TEXTURE]},
 		});
 		/** @param reload the image */
 		reload = ParamConfig.BUTTON(null, {

@@ -20,26 +20,26 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 	assign_mat = ParamConfig.BOOLEAN(DEFAULT.assign_mat);
 	/** @param the material node */
 	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.MAT,
 		},
-		dependent_on_found_node: false,
-		visible_if: {assign_mat: 1},
+		dependentOnFoundNode: false,
+		visibleIf: {assign_mat: 1},
 	});
 	/** @param toggle on to also assign the material to children */
-	apply_to_children = ParamConfig.BOOLEAN(DEFAULT.apply_to_children, {visible_if: {assign_mat: 1}});
+	apply_to_children = ParamConfig.BOOLEAN(DEFAULT.apply_to_children, {visibleIf: {assign_mat: 1}});
 	// clone_mat is mostly useful when swapping tex for multiple objects which have different textures
 	// but can also be used when requiring a unique material per object, when using a copy SOP
 	/** @param Cloning the material would prevent the material node to have any effect on the processed geometries. But it would allow to have multiple materials, if this was used with a Copy SOP for instance */
-	clone_mat = ParamConfig.BOOLEAN(DEFAULT.clone_mat, {visible_if: {assign_mat: 1}});
+	clone_mat = ParamConfig.BOOLEAN(DEFAULT.clone_mat, {visibleIf: {assign_mat: 1}});
 	/** @param while cloning the material, you may only want to change basic properties (such as depthWrite or trasparent), but you would want to still use the same uniforms */
-	share_uniforms = ParamConfig.BOOLEAN(DEFAULT.share_uniforms, {visible_if: {assign_mat: 1, clone_mat: 1}});
+	share_uniforms = ParamConfig.BOOLEAN(DEFAULT.share_uniforms, {visibleIf: {assign_mat: 1, clone_mat: 1}});
 	/** @param swap one texture with another */
 	swap_current_tex = ParamConfig.BOOLEAN(DEFAULT.swap_current_tex);
 	/** @param texture to swap */
-	tex_src0 = ParamConfig.STRING(DEFAULT.tex_src0, {visible_if: {swap_current_tex: 1}});
+	tex_src0 = ParamConfig.STRING(DEFAULT.tex_src0, {visibleIf: {swap_current_tex: 1}});
 	/** @param texture to swap */
-	tex_dest0 = ParamConfig.STRING(DEFAULT.tex_dest0, {visible_if: {swap_current_tex: 1}});
+	tex_dest0 = ParamConfig.STRING(DEFAULT.tex_dest0, {visibleIf: {swap_current_tex: 1}});
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 

@@ -10,7 +10,7 @@ class SwitchCopParamsConfig extends NodeParamsConfig {
 	/** @param input index */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 }
 const ParamsConfig = new SwitchCopParamsConfig();

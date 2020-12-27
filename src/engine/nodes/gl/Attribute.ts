@@ -30,7 +30,7 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 	/** @param allows to export the attribute to a material (when used inside a particles system) */
 	texport_when_connected = ParamConfig.BOOLEAN(0, {hidden: true});
 	/** @param allows to export the attribute to a material (when used inside a particles system) */
-	export_when_connected = ParamConfig.BOOLEAN(0, {visible_if: {texport_when_connected: 1}});
+	export_when_connected = ParamConfig.BOOLEAN(0, {visibleIf: {texport_when_connected: 1}});
 }
 const ParamsConfig = new AttributeGlParamsConfig();
 

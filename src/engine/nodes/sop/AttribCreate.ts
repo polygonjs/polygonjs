@@ -53,33 +53,33 @@ class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	/** @param the attribute size (1 for float, 2 for vector2, 3 for vector3, 4 for vector4) */
 	size = ParamConfig.INTEGER(DEFAULT.size, {
 		range: [1, 4],
-		range_locked: [true, true],
-		visible_if: {type: AttribType.NUMERIC},
+		rangeLocked: [true, true],
+		visibleIf: {type: AttribType.NUMERIC},
 	});
 	/** @param the value for a float attribute */
 	value1 = ParamConfig.FLOAT(DEFAULT.value1, {
-		visible_if: {type: AttribType.NUMERIC, size: 1},
-		expression: {for_entities: true},
+		visibleIf: {type: AttribType.NUMERIC, size: 1},
+		expression: {forEntities: true},
 	});
 	/** @param the value for a vector2 */
 	value2 = ParamConfig.VECTOR2(DEFAULT.value2, {
-		visible_if: {type: AttribType.NUMERIC, size: 2},
-		expression: {for_entities: true},
+		visibleIf: {type: AttribType.NUMERIC, size: 2},
+		expression: {forEntities: true},
 	});
 	/** @param the value for a vector3 */
 	value3 = ParamConfig.VECTOR3(DEFAULT.value3, {
-		visible_if: {type: AttribType.NUMERIC, size: 3},
-		expression: {for_entities: true},
+		visibleIf: {type: AttribType.NUMERIC, size: 3},
+		expression: {forEntities: true},
 	});
 	/** @param the value for a vector4 */
 	value4 = ParamConfig.VECTOR4(DEFAULT.value4, {
-		visible_if: {type: AttribType.NUMERIC, size: 4},
-		expression: {for_entities: true},
+		visibleIf: {type: AttribType.NUMERIC, size: 4},
+		expression: {forEntities: true},
 	});
 	/** @param the value for a string attribute */
 	string = ParamConfig.STRING(DEFAULT.string, {
-		visible_if: {type: AttribType.STRING},
-		expression: {for_entities: true},
+		visibleIf: {type: AttribType.STRING},
+		expression: {forEntities: true},
 	});
 }
 const ParamsConfig = new AttribCreateSopParamsConfig();

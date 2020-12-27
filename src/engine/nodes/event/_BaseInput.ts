@@ -5,7 +5,7 @@ import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
 
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
-	visible_if: {active: 1},
+	visibleIf: {active: 1},
 	callback: (node: BaseNodeType) => {
 		BaseInputEventNodeClass.PARAM_CALLBACK_update_register(node as BaseInputEventNodeType);
 	},

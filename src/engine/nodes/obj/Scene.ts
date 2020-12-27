@@ -50,15 +50,15 @@ class SceneObjParamConfig extends NodeParamsConfig {
 	});
 	/** @param background color */
 	bg_color = ParamConfig.COLOR([0, 0, 0], {
-		visible_if: {background_mode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
+		visibleIf: {background_mode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
 	});
 	/** @param background texture */
 	bg_texture = ParamConfig.OPERATOR_PATH('', {
-		visible_if: {background_mode: BACKGROUND_MODES.indexOf(BackgroundMode.TEXTURE)},
-		node_selection: {
+		visibleIf: {background_mode: BACKGROUND_MODES.indexOf(BackgroundMode.TEXTURE)},
+		nodeSelection: {
 			context: NodeContext.COP,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 	});
 
 	// environment
@@ -66,11 +66,11 @@ class SceneObjParamConfig extends NodeParamsConfig {
 	use_environment = ParamConfig.BOOLEAN(0);
 	/** @param environment map */
 	environment = ParamConfig.OPERATOR_PATH('', {
-		visible_if: {use_environment: 1},
-		node_selection: {
+		visibleIf: {use_environment: 1},
+		nodeSelection: {
 			context: NodeContext.COP,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 	});
 
 	// fog
@@ -78,7 +78,7 @@ class SceneObjParamConfig extends NodeParamsConfig {
 	use_fog = ParamConfig.BOOLEAN(0);
 	/** @param fog type */
 	fog_type = ParamConfig.INTEGER(FOG_TYPES.indexOf(FogType.EXPONENTIAL), {
-		visible_if: {use_fog: 1},
+		visibleIf: {use_fog: 1},
 		menu: {
 			entries: FOG_TYPES.map((mode, i) => {
 				return {name: mode, value: i};
@@ -86,22 +86,22 @@ class SceneObjParamConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param fog color */
-	fog_color = ParamConfig.COLOR([1, 1, 1], {visible_if: {use_fog: 1}});
+	fog_color = ParamConfig.COLOR([1, 1, 1], {visibleIf: {use_fog: 1}});
 	/** @param fog near */
 	fog_near = ParamConfig.FLOAT(1, {
 		range: [0, 100],
-		range_locked: [true, false],
-		visible_if: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.LINEAR)},
+		rangeLocked: [true, false],
+		visibleIf: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.LINEAR)},
 	});
 	/** @param fog far */
 	fog_far = ParamConfig.FLOAT(100, {
 		range: [0, 100],
-		range_locked: [true, false],
-		visible_if: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.LINEAR)},
+		rangeLocked: [true, false],
+		visibleIf: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.LINEAR)},
 	});
 	/** @param fog density */
 	fog_density = ParamConfig.FLOAT(0.00025, {
-		visible_if: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.EXPONENTIAL)},
+		visibleIf: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.EXPONENTIAL)},
 	});
 
 	// override material
@@ -109,11 +109,11 @@ class SceneObjParamConfig extends NodeParamsConfig {
 	use_override_material = ParamConfig.BOOLEAN(0);
 	/** @param material */
 	override_material = ParamConfig.OPERATOR_PATH('/MAT/mesh_standard1', {
-		visible_if: {use_override_material: 1},
-		node_selection: {
+		visibleIf: {use_override_material: 1},
+		nodeSelection: {
 			context: NodeContext.MAT,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 	});
 }
 const ParamsConfig = new SceneObjParamConfig();

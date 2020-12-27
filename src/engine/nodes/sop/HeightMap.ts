@@ -17,7 +17,7 @@ import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
 	/** @param texture node to load the heightmap from */
 	texture = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
-		node_selection: {context: NodeContext.COP},
+		nodeSelection: {context: NodeContext.COP},
 	});
 	/** @param values multiplier */
 	mult = ParamConfig.FLOAT(1);

@@ -19,10 +19,10 @@
 
 // 	create_params() {
 // 		this.add_param(ParamType.OPERATOR_PATH, 'cube_camera', '/cube_camera1', {
-// 			node_selection: {
+// 			nodeSelection: {
 // 				context: NodeContext.OBJ,
 // 			},
-// 			dependent_on_found_node: true,
+// 			dependentOnFoundNode: true,
 // 		});
 // 		this.add_param(ParamType.BUTTON, 'update', null, {
 // 			callback: this.cook.bind(this),

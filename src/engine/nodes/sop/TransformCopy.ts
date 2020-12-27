@@ -16,10 +16,10 @@ class TransformCopySopParamConfig extends NodeParamsConfig {
 	use_second_input = ParamConfig.BOOLEAN(1);
 	/** @param use a reference object */
 	reference = ParamConfig.OPERATOR_PATH('', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.SOP,
 		},
-		visible_if: {use_second_input: 0},
+		visibleIf: {use_second_input: 0},
 	});
 }
 const ParamsConfig = new TransformCopySopParamConfig();

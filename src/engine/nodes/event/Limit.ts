@@ -22,7 +22,7 @@ class LimitEventParamsConfig extends NodeParamsConfig {
 	/** @param max number of events that can be processed */
 	max_count = ParamConfig.INTEGER(5, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param resets the count */
 	reset = ParamConfig.BUTTON(null, {

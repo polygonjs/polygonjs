@@ -22,14 +22,14 @@ import {BaseObjNodeType} from '../obj/_Base';
 class UvProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param camera node to use as projection */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
 	// force_aspect = ParamConfig.BOOLEAN(0)
 	// aspect = ParamConfig.FLOAT(1, {
 	// 	range: [0, 2],
-	// 	visible_if: {force_aspect: 1},
+	// 	visibleIf: {force_aspect: 1},
 	// })
 }
 const ParamsConfig = new UvProjectSopParamsConfig();

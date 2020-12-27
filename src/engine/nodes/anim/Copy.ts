@@ -5,7 +5,7 @@ import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 class CopyAnimParamsConfig extends NodeParamsConfig {
 	count = ParamConfig.INTEGER(1, {
 		range: [1, 20],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new CopyAnimParamsConfig();

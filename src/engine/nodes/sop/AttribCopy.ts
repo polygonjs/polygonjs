@@ -28,17 +28,17 @@ class AttribCopySopParamsConfig extends NodeParamsConfig {
 	/** @param toggle if you want to copy to another name */
 	tnew_name = ParamConfig.BOOLEAN(DEFAULT.tnew_name);
 	/** @param the new name of the attribute */
-	new_name = ParamConfig.STRING(DEFAULT.new_name, {visible_if: {tnew_name: 1}});
+	new_name = ParamConfig.STRING(DEFAULT.new_name, {visibleIf: {tnew_name: 1}});
 
 	/** @param this defines which component the copy starts from. If you want to copy the whole attribute, leave it at 0. If you want to copy only the y component, set it to 1. If you want to copy the z component, set it to 2. Note that this only makes sense if you copy from an attribute that has enough components to copy from. So setting it to 2 (for z) to copy from a vector2 attribute will raise an error. */
 	src_offset = ParamConfig.INTEGER(DEFAULT.src_offset, {
 		range: [0, 3],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 	/** @param this defines which component the attribute is copied to */
 	dest_offset = ParamConfig.INTEGER(DEFAULT.dest_offset, {
 		range: [0, 3],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 }
 const ParamsConfig = new AttribCopySopParamsConfig();

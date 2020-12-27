@@ -20,12 +20,12 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
-import { ArrayUtils } from '../../../core/ArrayUtils';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 class CopySopParamsConfig extends NodeParamsConfig {
 	/** @param copies count, used when the second input is not given */
 	count = ParamConfig.INTEGER(1, {
 		range: [1, 20],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param transforms every input object each on a single input point */
 	transform_only = ParamConfig.BOOLEAN(0);
@@ -33,7 +33,7 @@ class CopySopParamsConfig extends NodeParamsConfig {
 	copy_attributes = ParamConfig.BOOLEAN(0);
 	/** @param names of attributes to copy */
 	attributes_to_copy = ParamConfig.STRING('', {
-		visible_if: {copy_attributes: true},
+		visibleIf: {copy_attributes: true},
 	});
 	/** @param toggle on to use the `copy` expression, which allows to change how the left input is evaluated for each point */
 	use_copy_expr = ParamConfig.BOOLEAN(0);

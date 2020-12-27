@@ -5,7 +5,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {ArrayUtils} from '../../../core/ArrayUtils'
+import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {TextBufferGeometry} from 'three/src/geometries/TextBufferGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -39,9 +39,7 @@ import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
 import {Poly} from '../../Poly';
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
-	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
-		asset_reference: true,
-	});
+	font = ParamConfig.STRING(DEFAULT_FONT_URL);
 	/** @param text created */
 	text = ParamConfig.STRING('polygonjs', {multiline: true});
 	/** @param type of geometry created */
@@ -58,25 +56,25 @@ class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font size */
 	size = ParamConfig.FLOAT(1, {
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param extrude depth */
 	extrude = ParamConfig.FLOAT(0.1, {
-		visible_if: {
+		visibleIf: {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.MESH),
 		},
 	});
 	/** @param segments count */
 	segments = ParamConfig.INTEGER(1, {
 		range: [1, 20],
-		range_locked: [true, false],
-		visible_if: {
+		rangeLocked: [true, false],
+		visibleIf: {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.MESH),
 		},
 	});
 	/** @param stroke width */
 	stroke_width = ParamConfig.FLOAT(0.02, {
-		visible_if: {
+		visibleIf: {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.STROKE),
 		},
 	});

@@ -12,7 +12,7 @@ class SubdivideSopParamsConfig extends NodeParamsConfig {
 	/** @param number of subdivisions */
 	subdivisions = ParamConfig.INTEGER(DEFAULT.subdivisions, {
 		range: [0, 5],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new SubdivideSopParamsConfig();

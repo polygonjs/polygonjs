@@ -20,11 +20,11 @@ class InstanceSopParamsConfig extends NodeParamsConfig {
 	apply_material = ParamConfig.BOOLEAN(DEFAULT.apply_material);
 	/** @param material to apply */
 	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
-		visible_if: {apply_material: 1},
-		node_selection: {
+		visibleIf: {apply_material: 1},
+		nodeSelection: {
 			context: NodeContext.MAT,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 	});
 }
 const ParamsConfig = new InstanceSopParamsConfig();

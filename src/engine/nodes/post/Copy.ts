@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CopyPostParamsConfig extends NodeParamsConfig {
 	opacity = ParamConfig.FLOAT(1, {
 		range: [0, 1],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);

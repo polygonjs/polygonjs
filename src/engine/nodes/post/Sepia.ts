@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class SepiaPostParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(0.5, {
 		range: [0, 2],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 }

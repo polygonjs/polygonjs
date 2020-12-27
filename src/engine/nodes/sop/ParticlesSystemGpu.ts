@@ -41,9 +41,9 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param auto sets the resolution of the textures used by the GPU shaders */
 	auto_textures_size = ParamConfig.BOOLEAN(1);
 	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
-	max_textures_size = ParamConfig.VECTOR2([1024, 1024], {visible_if: {auto_textures_size: 1}});
+	max_textures_size = ParamConfig.VECTOR2([1024, 1024], {visibleIf: {auto_textures_size: 1}});
 	/** @param sets the texture size manually */
-	textures_size = ParamConfig.VECTOR2([64, 64], {visible_if: {auto_textures_size: 0}});
+	textures_size = ParamConfig.VECTOR2([64, 64], {visibleIf: {auto_textures_size: 0}});
 	/** @param data type used by the solver */
 	data_type = ParamConfig.INTEGER(0, {
 		menu: {
@@ -61,10 +61,10 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 
 	/** @param material used to render the particles */
 	material = ParamConfig.OPERATOR_PATH('', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.MAT,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 	});
 }
 const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();

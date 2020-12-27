@@ -14,7 +14,7 @@ class LineSopParamsConfig extends NodeParamsConfig {
 	/** @param number of points */
 	points_count = ParamConfig.INTEGER(1, {
 		range: [2, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param start position of the line */
 	origin = ParamConfig.VECTOR3([0, 0, 0]);
@@ -39,7 +39,7 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 
 		const last_pt = this.pv.direction.clone().normalize().multiplyScalar(this.pv.length);
 
-		for(let i=0; i<points_count;i++){
+		for (let i = 0; i < points_count; i++) {
 			const i_n = i / (points_count - 1);
 			const point = last_pt.clone().multiplyScalar(i_n);
 			point.add(this.pv.origin);

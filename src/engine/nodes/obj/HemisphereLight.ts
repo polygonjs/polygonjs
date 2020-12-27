@@ -31,7 +31,7 @@ class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 	/** @param toggle to show helper */
 	show_helper = ParamConfig.BOOLEAN(0);
 	/** @param helper size */
-	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
+	helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
 }
 const ParamsConfig = new HemisphereLightObjParamsConfig();
 

@@ -16,8 +16,8 @@ class InstancesCountSopParamsConfig extends NodeParamsConfig {
 	/** @param max number of instances to display */
 	max = ParamConfig.INTEGER(1, {
 		range: [0, 100],
-		range_locked: [true, false],
-		visible_if: {use_max: 1},
+		rangeLocked: [true, false],
+		visibleIf: {use_max: 1},
 	});
 }
 const ParamsConfig = new InstancesCountSopParamsConfig();

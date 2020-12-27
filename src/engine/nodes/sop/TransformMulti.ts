@@ -33,7 +33,7 @@ function visible_for_count(count: number): ParamOptions {
 			count: i,
 		});
 	}
-	return {visible_if: list};
+	return {visibleIf: list};
 }
 
 type VectorNumberParamPair = [Vector3Param, IntegerParam];
@@ -57,7 +57,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	/** @param number of transformations this can apply */
 	count = ParamConfig.INTEGER(2, {
 		range: [0, max_transform_count],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 	// 0
 	sep0 = ParamConfig.SEPARATOR(null, {...visible_for_count(0)});

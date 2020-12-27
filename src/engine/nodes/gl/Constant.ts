@@ -10,7 +10,7 @@ import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/conn
 
 function typed_visible_options(type: GlConnectionPointType) {
 	const val = GL_CONNECTION_POINT_TYPES.indexOf(type);
-	return {visible_if: {type: val}};
+	return {visibleIf: {type: val}};
 }
 
 import {BaseParamType} from '../../params/_Base';

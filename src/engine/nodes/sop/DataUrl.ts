@@ -33,28 +33,26 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param the url to fetch the data from */
-	url = ParamConfig.STRING('/examples/sop/data_url/basic.json', {
-		asset_reference: true,
-	});
+	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');
 
 	//
 	// JSON params
 	//
 	/** @param if the data is inside the payload, defines the prefix to read it from here */
 	json_data_keys_prefix = ParamConfig.STRING('', {
-		visible_if: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
 	});
 	/** @param which entries are skipped */
 	skip_entries = ParamConfig.STRING('', {
-		visible_if: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
 	});
 	/** @param sets if some attributes should be converted */
 	convert = ParamConfig.BOOLEAN(0, {
-		visible_if: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
 	});
 	/** @param sets which attributes should be converted from string to numeric */
 	convert_to_numeric = ParamConfig.STRING('', {
-		visible_if: {
+		visibleIf: {
 			data_type: DATA_TYPES.indexOf(DataType.JSON),
 			convert: 1,
 		},
@@ -65,11 +63,11 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 	//
 	/** @param when fetching from a csv, the attribute names will not be present. Those can then be mentioned here */
 	read_attrib_names_from_file = ParamConfig.BOOLEAN(1, {
-		visible_if: {data_type: DATA_TYPES.indexOf(DataType.CSV)},
+		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.CSV)},
 	});
 	/** @param list of attributes names when fetching from a csv */
 	attrib_names = ParamConfig.STRING('height scale', {
-		visible_if: {
+		visibleIf: {
 			data_type: DATA_TYPES.indexOf(DataType.CSV),
 			read_attrib_names_from_file: 0,
 		},

@@ -13,7 +13,7 @@ class RepeatAnimParamsConfig extends NodeParamsConfig {
 	/** @param number of times the animation should repeat */
 	count = ParamConfig.INTEGER(1, {
 		range: [0, 10],
-		visible_if: {unlimited: 0},
+		visibleIf: {unlimited: 0},
 	});
 	/** @param delay */
 	delay = ParamConfig.FLOAT(0);

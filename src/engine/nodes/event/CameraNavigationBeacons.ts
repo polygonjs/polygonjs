@@ -69,7 +69,7 @@ import {CoreSleep} from '../../../core/Sleep';
 class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	/** @param sets the camera */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera_MASTER', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
 		},
@@ -78,11 +78,11 @@ class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	init = ParamConfig.BOOLEAN(0);
 	/** @param the camera to initialize to */
 	init_camera = ParamConfig.OPERATOR_PATH('/perspective_camera_0', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
 		},
-		visible_if: {init: 1},
+		visibleIf: {init: 1},
 	});
 	/** @param duration of movement from one navigation point to another */
 	duration = ParamConfig.FLOAT(2);

@@ -22,19 +22,19 @@ class FilmPostParamsConfig extends NodeParamsConfig {
 	/** @param noise intensity */
 	noise_intensity = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 	/** @param scanlines intensity */
 	scanlines_intensity = ParamConfig.FLOAT(0.05, {
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	/** @param scanlines count */
 	scanlines_count = ParamConfig.FLOAT(4096, {
 		range: [0, 4096],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	/** @param toggle on to be grayscale */

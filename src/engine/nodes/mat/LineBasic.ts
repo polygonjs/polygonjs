@@ -15,7 +15,7 @@ class LineBasicMatParamsConfig extends DepthParamConfig(NodeParamsConfig) {
 	/** @param line width */
 	lineWidth = ParamConfig.FLOAT(1, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new LineBasicMatParamsConfig();

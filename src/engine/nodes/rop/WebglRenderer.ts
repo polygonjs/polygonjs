@@ -204,13 +204,13 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	sort_objects = ParamConfig.BOOLEAN(1);
 	sampling = ParamConfig.INTEGER(1, {
 		range: [1, 4],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	tshadow_map = ParamConfig.BOOLEAN(1);
-	shadow_map_auto_update = ParamConfig.BOOLEAN(1, {visible_if: {tshadow_map: 1}});
-	shadow_map_needs_update = ParamConfig.BOOLEAN(0, {visible_if: {tshadow_map: 1}});
+	shadow_map_auto_update = ParamConfig.BOOLEAN(1, {visibleIf: {tshadow_map: 1}});
+	shadow_map_needs_update = ParamConfig.BOOLEAN(0, {visibleIf: {tshadow_map: 1}});
 	shadow_map_type = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
-		visible_if: {tshadow_map: 1},
+		visibleIf: {tshadow_map: 1},
 		menu: {
 			entries: SHADOW_MAP_TYPE_NAMES.map((name, i) => {
 				return {

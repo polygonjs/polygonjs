@@ -25,7 +25,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 			SceneEventNode.PARAM_CALLBACK_update_register(node as SceneEventNode);
 		},
 	});
-	sep = ParamConfig.SEPARATOR(null, {visible_if: {active: true}});
+	sep = ParamConfig.SEPARATOR(null, {visibleIf: {active: true}});
 	/** @param toggle on to trigger an event when the scene has loaded. This can be useful to initialize other nodes */
 	scene_loaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene starts playing */
@@ -43,7 +43,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param time to trigger an event */
 	reached_time = ParamConfig.INTEGER(10, {
-		visible_if: {treached_time: 1},
+		visibleIf: {treached_time: 1},
 		range: [0, 100],
 	});
 	sep1 = ParamConfig.SEPARATOR();

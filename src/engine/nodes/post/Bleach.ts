@@ -19,7 +19,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BleachPostParamsConfig extends NodeParamsConfig {
 	opacity = ParamConfig.FLOAT(0.95, {
 		range: [-5, 5],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
 }

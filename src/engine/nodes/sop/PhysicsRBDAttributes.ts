@@ -40,10 +40,10 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	// shape_size_sphere = ParamConfig.FLOAT(1, {
-	// 	visible_if: {shape: RBD_SHAPES.indexOf(RBDShape.SPHERE)},
+	// 	visibleIf: {shape: RBD_SHAPES.indexOf(RBDShape.SPHERE)},
 	// });
 	// shape_size_box = ParamConfig.VECTOR3([1, 1, 1], {
-	// 	visible_if: {shape: RBD_SHAPES.indexOf(RBDShape.BOX)},
+	// 	visibleIf: {shape: RBD_SHAPES.indexOf(RBDShape.BOX)},
 	// });
 	add_id = ParamConfig.BOOLEAN(1);
 	mass = ParamConfig.FLOAT(1);

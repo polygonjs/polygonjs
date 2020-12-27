@@ -18,14 +18,14 @@ class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to set a new name */
 	tname = ParamConfig.BOOLEAN(DEFAULT.tname);
 	/** @param new name */
-	name = ParamConfig.STRING(DEFAULT.name, {visible_if: {tname: true}});
+	name = ParamConfig.STRING(DEFAULT.name, {visibleIf: {tname: true}});
 	/** @param toggle on to set a new render order */
 	trender_order = ParamConfig.BOOLEAN(DEFAULT.trender_order);
 	/** @param render order */
 	render_order = ParamConfig.INTEGER(DEFAULT.render_order, {
-		visible_if: {trender_order: true},
+		visibleIf: {trender_order: true},
 		range: [0, 10],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	/** @param sets frustrumCulled */
 	frustrum_culled = ParamConfig.BOOLEAN(DEFAULT.frustrum_culled);

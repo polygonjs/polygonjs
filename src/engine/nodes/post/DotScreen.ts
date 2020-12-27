@@ -23,12 +23,12 @@ class DotScreenPostParamsConfig extends NodeParamsConfig {
 	});
 	angle = ParamConfig.FLOAT('$PI*0.5', {
 		range: [0, 10],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 	scale = ParamConfig.FLOAT(1.0, {
 		range: [0, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 }

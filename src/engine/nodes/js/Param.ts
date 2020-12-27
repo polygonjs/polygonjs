@@ -13,7 +13,7 @@ import {UniformJsDefinition} from './utils/JsDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {LinesController} from './code/utils/LinesController';
 import {JsParamConfig} from './code/utils/ParamConfig';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 class ParamJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
@@ -24,7 +24,7 @@ class ParamJsParamsConfig extends NodeParamsConfig {
 		},
 	});
 	as_color = ParamConfig.BOOLEAN(0, {
-		visible_if: {type: JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.VEC3)},
+		visibleIf: {type: JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.VEC3)},
 	});
 }
 const ParamsConfig = new ParamJsParamsConfig();

@@ -24,21 +24,21 @@ const RAYCAST_MODES: Array<RaycastMode> = [RaycastMode.CPU, RaycastMode.GPU];
 
 function visible_for_cpu(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
-	return {visible_if: options};
+	return {visibleIf: options};
 }
 function visible_for_cpu_geometry(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
 	options['intersect_with'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY);
-	return {visible_if: options};
+	return {visibleIf: options};
 }
 function visible_for_cpu_plane(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
 	options['intersect_with'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.PLANE);
-	return {visible_if: options};
+	return {visibleIf: options};
 }
 function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.GPU);
-	return {visible_if: options};
+	return {visibleIf: options};
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -66,32 +66,32 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	override_camera = ParamConfig.BOOLEAN(0);
 	/** @param by default the ray is sent from the current camera, but this allows to set a custom ray */
 	override_ray = ParamConfig.BOOLEAN(0, {
-		visible_if: {
+		visibleIf: {
 			mode: RAYCAST_MODES.indexOf(RaycastMode.CPU),
 			override_camera: 1,
 		},
 	});
 	/** @param the camera to override to */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
-		dependent_on_found_node: false,
-		visible_if: {
+		dependentOnFoundNode: false,
+		visibleIf: {
 			override_camera: 1,
 			override_ray: 0,
 		},
 	});
 	/** @param the ray origin */
 	ray_origin = ParamConfig.VECTOR3([0, 0, 0], {
-		visible_if: {
+		visibleIf: {
 			override_camera: 1,
 			override_ray: 1,
 		},
 	});
 	/** @param the ray direction */
 	ray_direction = ParamConfig.VECTOR3([0, 0, 1], {
-		visible_if: {
+		visibleIf: {
 			override_camera: 1,
 			override_ray: 1,
 		},
@@ -104,10 +104,10 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	/** @param the material to use on the scene for GPU detection */
 	material = ParamConfig.OPERATOR_PATH('/MAT/mesh_basic_builder1', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.MAT,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastGPUController.PARAM_CALLBACK_update_material(node as RaycastEventNode);
 		},
@@ -141,7 +141,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param threshold used to test hit with points */
 	points_threshold = ParamConfig.FLOAT(1, {
 		range: [0, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...visible_for_cpu(),
 	});
 	//
@@ -165,10 +165,10 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	/** @param objects to test hit against, when testing against geometries */
 	target = ParamConfig.OPERATOR_PATH('/geo1', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
@@ -204,8 +204,8 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	position_target = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
 		...visible_for_cpu({tposition_target: 1}),
-		param_selection: ParamType.VECTOR3,
-		compute_on_dirty: true,
+		paramSelection: ParamType.VECTOR3,
+		computeOnDirty: true,
 	});
 	/** @param toggle on to set the param to the mouse velocity (experimental) */
 	tvelocity = ParamConfig.BOOLEAN(0, {
@@ -228,8 +228,8 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	velocity_target = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
 		...visible_for_cpu({tvelocity: 1, tvelocity_target: 1}),
-		param_selection: ParamType.VECTOR3,
-		compute_on_dirty: true,
+		paramSelection: ParamType.VECTOR3,
+		computeOnDirty: true,
 	});
 	//
 	//

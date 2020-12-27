@@ -18,11 +18,11 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 	/** @param step size */
 	step_size = ParamConfig.FLOAT(DEFAULT.step_size, {
 		range: [0.001, 1],
-		range_locked: [false, false],
-		visible_if: {use_segments_count: 0},
+		rangeLocked: [false, false],
+		visibleIf: {use_segments_count: 0},
 	});
 	/** @param segments count */
-	segments = ParamConfig.VECTOR2(DEFAULT.segments, {visible_if: {use_segments_count: 1}});
+	segments = ParamConfig.VECTOR2(DEFAULT.segments, {visibleIf: {use_segments_count: 1}});
 	/** @param axis perpendicular to the plane */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction);
 	/** @param center of the plane */

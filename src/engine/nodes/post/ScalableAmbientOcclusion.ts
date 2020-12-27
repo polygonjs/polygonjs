@@ -42,39 +42,39 @@
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "bias", 0.5, {
 // 			range: [-1, 1],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "intensity", 0.2, {
 // 			range: [0, 1],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "scale", 1, {
 // 			range: [0, 10],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "kernel_radius", 100, {
 // 			range: [0, 100],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "min_resolution", 0, {
 // 			range: [0, 1],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.self.add_param(ParamType.TOGGLE, "blur", 1);
 // 		this.self.add_param(ParamType.FLOAT, "blur_radius", 8, {
 // 			range: [0, 200],
-// 			range_locked: [true, true],
-// 			visible_if: { blur: 1 }
+// 			rangeLocked: [true, true],
+// 			visibleIf: { blur: 1 }
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "blur_std_dev", 4, {
 // 			range: [0.5, 150],
-// 			range_locked: [true, true],
-// 			visible_if: { blur: 1 }
+// 			rangeLocked: [true, true],
+// 			visibleIf: { blur: 1 }
 // 		});
 // 		this.self.add_param(ParamType.FLOAT, "blur_deoth_cutoff", 0.01, {
 // 			range: [0, 0.1],
-// 			range_locked: [true, true],
-// 			visible_if: { blur: 1 }
+// 			rangeLocked: [true, true],
+// 			visibleIf: { blur: 1 }
 // 		});
 // 	}
 

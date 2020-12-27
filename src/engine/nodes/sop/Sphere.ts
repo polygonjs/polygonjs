@@ -22,36 +22,36 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param radius of the sphere when the type is default */
-	radius = ParamConfig.FLOAT(DEFAULT.radius, {visible_if: {type: SPHERE_TYPE.default}});
+	radius = ParamConfig.FLOAT(DEFAULT.radius, {visibleIf: {type: SPHERE_TYPE.default}});
 	/** @param resolution - number of segments in x and y */
-	resolution = ParamConfig.VECTOR2(DEFAULT.resolution, {visible_if: {type: SPHERE_TYPE.default}});
+	resolution = ParamConfig.VECTOR2(DEFAULT.resolution, {visibleIf: {type: SPHERE_TYPE.default}});
 	/** @param if set to 1, you can then set the phi_start, phi_end, theta_start and theta_end */
-	open = ParamConfig.BOOLEAN(DEFAULT.open, {visible_if: {type: SPHERE_TYPE.default}});
+	open = ParamConfig.BOOLEAN(DEFAULT.open, {visibleIf: {type: SPHERE_TYPE.default}});
 	/** @param start of phi angle */
 	phi_start = ParamConfig.FLOAT(DEFAULT.phi_start, {
 		range: [0, Math.PI * 2],
-		visible_if: {type: SPHERE_TYPE.default, open: true},
+		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param length of phi opening */
 	phi_length = ParamConfig.FLOAT('$PI*2', {
 		range: [0, Math.PI * 2],
-		visible_if: {type: SPHERE_TYPE.default, open: true},
+		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param start of theta angle */
 	theta_start = ParamConfig.FLOAT(DEFAULT.theta_start, {
 		range: [0, Math.PI],
-		visible_if: {type: SPHERE_TYPE.default, open: true},
+		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param length of theta opening */
 	theta_length = ParamConfig.FLOAT('$PI', {
 		range: [0, Math.PI],
-		visible_if: {type: SPHERE_TYPE.default, open: true},
+		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param resolution of the sphere when the type is isocahedron */
 	detail = ParamConfig.INTEGER(DEFAULT.detail, {
 		range: [0, 5],
-		range_locked: [true, false],
-		visible_if: {type: SPHERE_TYPE.isocahedron},
+		rangeLocked: [true, false],
+		visibleIf: {type: SPHERE_TYPE.isocahedron},
 	});
 	/** @param center of the sphere */
 	center = ParamConfig.VECTOR3(DEFAULT.center);

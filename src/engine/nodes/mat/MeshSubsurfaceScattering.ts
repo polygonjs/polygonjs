@@ -72,7 +72,7 @@ class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
 		range: [0, 1000],
 	});
 	thicknessMap = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
-		node_selection: {context: NodeContext.COP},
+		nodeSelection: {context: NodeContext.COP},
 		...ParamOptionsFactoryTexture('thicknessMap'),
 	});
 	thicknessColor = ParamConfig.COLOR([0.5, 0.3, 0.0], {

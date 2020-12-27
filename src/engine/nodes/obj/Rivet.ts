@@ -32,11 +32,11 @@ const UPDATE_MODES: RivetUpdateMode[] = [RivetUpdateMode.ON_RENDER, RivetUpdateM
 
 class RivetObjParamConfig extends NodeParamsConfig {
 	object = ParamConfig.OPERATOR_PATH('', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
-		dependent_on_found_node: false,
-		compute_on_dirty: true,
+		dependentOnFoundNode: false,
+		computeOnDirty: true,
 		callback: (node: BaseNodeType) => {
 			RivetObjNode.PARAM_CALLBACK_update_resolved_object(node as RivetObjNode);
 		},
@@ -61,13 +61,13 @@ class RivetObjParamConfig extends NodeParamsConfig {
 				return {name, value};
 			}),
 		},
-		// visible_if: {active: true},
+		// visibleIf: {active: true},
 	});
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			RivetObjNode.PARAM_CALLBACK_update(node as RivetObjNode);
 		},
-		visible_if: {update_mode: UPDATE_MODES.indexOf(RivetUpdateMode.MANUAL)},
+		visibleIf: {update_mode: UPDATE_MODES.indexOf(RivetUpdateMode.MANUAL)},
 	});
 	// update = ParamConfig.BUTTON(null, {
 	// 	callback: (node: BaseNodeType) => {

@@ -27,7 +27,7 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	tdisplay = ParamConfig.BOOLEAN(0);
 	/** @param sets how the display flag will be updated (set to a value or toggle) */
 	display_mode = ParamConfig.INTEGER(FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET), {
-		visible_if: {tdisplay: 1},
+		visibleIf: {tdisplay: 1},
 		menu: {
 			entries: FLAG_UPDATE_MODES.map((name, value) => {
 				return {name, value};
@@ -36,14 +36,14 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	});
 	/** @param new display flag state */
 	display = ParamConfig.BOOLEAN(0, {
-		visible_if: {tdisplay: 1, display_mode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
+		visibleIf: {tdisplay: 1, display_mode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
 	});
 	sep1 = ParamConfig.SEPARATOR();
 	/** @param toggle on to update the bypass flag */
 	tbypass = ParamConfig.BOOLEAN(0);
 	/** @param sets how the bypass flag will be updated (set to a value or toggle) */
 	bypass_mode = ParamConfig.INTEGER(FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET), {
-		visible_if: {tbypass: 1},
+		visibleIf: {tbypass: 1},
 		menu: {
 			entries: FLAG_UPDATE_MODES.map((name, value) => {
 				return {name, value};
@@ -52,7 +52,7 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	});
 	/** @param new bypass flag state */
 	bypass = ParamConfig.BOOLEAN(0, {
-		visible_if: {tbypass: 1, display_mode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
+		visibleIf: {tbypass: 1, display_mode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
 	});
 	/** @param button to trigger the node. Useful to debug */
 	execute = ParamConfig.BUTTON(null, {

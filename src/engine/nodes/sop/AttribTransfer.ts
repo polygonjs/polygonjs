@@ -23,7 +23,7 @@ class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param max number of samples to use */
 	max_samples_count = ParamConfig.INTEGER(1, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param max distance to search points to transfer from */
 	distance_threshold = ParamConfig.FLOAT(1);

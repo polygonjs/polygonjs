@@ -21,20 +21,20 @@ class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 	tanisotropy = ParamConfig.BOOLEAN(DEFAULT.tanisotropy);
 	/** @param sets if the anisotropy should be set to the max capabilities of the renderer */
 	use_renderer_max_anisotropy = ParamConfig.BOOLEAN(DEFAULT.use_renderer_max_anisotropy, {
-		visible_if: {tanisotropy: 1},
+		visibleIf: {tanisotropy: 1},
 	});
 	/** @param anisotropy value */
 	anisotropy = ParamConfig.INTEGER(DEFAULT.anisotropy, {
-		visible_if: {tanisotropy: 1, use_renderer_max_anisotropy: 0},
+		visibleIf: {tanisotropy: 1, use_renderer_max_anisotropy: 0},
 		range: [0, 32],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	// filters
 	/** @param toggle on to update min filter */
 	tmin_filter = ParamConfig.BOOLEAN(0);
 	/** @param min filter value */
 	min_filter = ParamConfig.INTEGER(DEFAULT.min_filter, {
-		visible_if: {tmin_filter: 1},
+		visibleIf: {tmin_filter: 1},
 		menu: {
 			entries: MIN_FILTER_MENU_ENTRIES,
 		},
@@ -43,7 +43,7 @@ class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 	tmag_filter = ParamConfig.BOOLEAN(0);
 	/** @param mag filter value */
 	mag_filter = ParamConfig.INTEGER(DEFAULT.mag_filter, {
-		visible_if: {tmag_filter: 1},
+		visibleIf: {tmag_filter: 1},
 		menu: {
 			entries: MAG_FILTER_MENU_ENTRIES,
 		},

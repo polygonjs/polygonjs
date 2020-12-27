@@ -21,7 +21,7 @@ class ForLoopGlParamsConfig extends NodeParamsConfig {
 	start = ParamConfig.FLOAT(0);
 	max = ParamConfig.FLOAT(10, {
 		range: [0, 100],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	step = ParamConfig.FLOAT(1);
 }

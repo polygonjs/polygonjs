@@ -4,23 +4,21 @@ import {ParamType} from '../../poly/ParamType';
 import {ParamEvent} from '../../poly/ParamEvent';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
-import {StringParam} from '../String';
 import {ColorConversion} from '../../../core/Color';
 import {CoreType} from '../../../core/Type';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 
-const ASSET_REFERENCE_OPTION = 'asset_reference';
 const CALLBACK_OPTION = 'callback';
-const CALLBACK_STRING_OPTION = 'callback_string';
+const CALLBACK_STRING_OPTION = 'callbackString';
 // const COLOR_OPTION = 'color';
-const COMPUTE_ON_DIRTY = 'compute_on_dirty';
+const COMPUTE_ON_DIRTY = 'computeOnDirty';
 const COOK_OPTION = 'cook';
-const DESKTOP_BROWSE_OPTION = 'desktop_browse';
-const FILE_TYPE_OPTION = 'file_type';
+const FILE_BROWSE_OPTION = 'fileBrowse';
+const FILE_TYPE_OPTION = 'type';
 // const EXPRESSION_ONLY_OPTION = 'expression_only';
 const EXPRESSION = 'expression';
-const FOR_ENTITIES = 'for_entities';
+const FOR_ENTITIES = 'forEntities';
 const LABEL = 'label';
 const LEVEL = 'level';
 const MENU = 'menu';
@@ -29,21 +27,21 @@ const ENTRIES = 'entries';
 // const RADIO = 'radio';
 const MULTILINE_OPTION = 'multiline';
 const LANGUAGE_OPTION = 'language';
-const NODE_SELECTION = 'node_selection';
+const NODE_SELECTION = 'nodeSelection';
 const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPES = 'types';
-const PARAM_SELECTION = 'param_selection';
-const DEPENDENT_ON_FOUND_NODE = 'dependent_on_found_node';
+const PARAM_SELECTION = 'paramSelection';
+const DEPENDENT_ON_FOUND_NODE = 'dependentOnFoundNode';
 const RANGE_OPTION = 'range';
-const RANGE_LOCKED_OPTION = 'range_locked';
+const RANGE_LOCKED_OPTION = 'rangeLocked';
 const STEP_OPTION = 'step';
 const SPARE_OPTION = 'spare';
 const TEXTURE_OPTION = 'texture';
 const ENV_OPTION = 'env';
 const HIDDEN_OPTION = 'hidden';
-const SHOW_LABEL_OPTION = 'show_label';
+// const SHOW_LABEL_OPTION = 'show_label';
 const FIELD_OPTION = 'field';
-const VISIBLE_IF_OPTION = 'visible_if';
+const VISIBLE_IF_OPTION = 'visibleIf';
 const COLOR_CONVERSION = 'conversion';
 
 export interface ParamOptionsMenuEntry {
@@ -56,7 +54,7 @@ export enum StringParamLanguage {
 	// GLSL = 'glsl',
 }
 
-export enum DesktopFileType {
+export enum FileType {
 	TEXTURE = 'texture',
 	GEOMETRY = 'geometry',
 }
@@ -69,9 +67,9 @@ interface BaseParamOptions {
 	spare?: boolean;
 	// visible
 	hidden?: boolean;
-	show_label?: boolean;
+	// show_label?: boolean;
 	field?: boolean;
-	visible_if?: VisibleIfParamOptions | VisibleIfParamOptions[];
+	visibleIf?: VisibleIfParamOptions | VisibleIfParamOptions[];
 }
 export interface MenuParamOptions {
 	menu?: {
@@ -80,29 +78,27 @@ export interface MenuParamOptions {
 }
 interface ExpressionParamOptions {
 	expression?: {
-		for_entities?: boolean;
+		forEntities?: boolean;
 	};
 }
 
 interface NumberParamOptions extends BaseParamOptions {
 	range?: Number2;
-	range_locked?: Boolean2;
+	rangeLocked?: Boolean2;
 	step?: number;
 }
-interface AssetParamOptions {
-	asset_reference?: boolean;
-}
-interface DesktopParamOptions {
-	desktop_browse?: {
-		file_type: DesktopFileType;
+
+interface FileParamOptions {
+	fileBrowse?: {
+		type: FileType[];
 	};
 }
 interface ComputeOnDirtyParamOptions {
-	compute_on_dirty?: boolean;
+	computeOnDirty?: boolean;
 }
 interface CallbackParamOptions {
 	callback?: (node: BaseNodeType, param: BaseParamType) => any;
-	callback_string?: string;
+	callbackString?: string;
 }
 interface LabelParamOptions {
 	label?: string;
@@ -137,22 +133,21 @@ export interface FolderParamOptions extends BaseParamOptions {
 export interface IntegerParamOptions extends NumberParamOptions, MenuParamOptions, CallbackParamOptions {}
 export interface OperatorPathParamOptions
 	extends BaseParamOptions,
-		DesktopParamOptions,
+		FileParamOptions,
 		ComputeOnDirtyParamOptions,
 		CallbackParamOptions {
-	node_selection?: {
+	nodeSelection?: {
 		context?: NodeContext;
 		types?: Readonly<string[]>;
 	};
-	dependent_on_found_node?: boolean;
-	param_selection?: ParamType | boolean;
+	dependentOnFoundNode?: boolean;
+	paramSelection?: ParamType | boolean;
 }
 export interface RampParamOptions extends BaseParamOptions {}
 export interface SeparatorParamOptions extends BaseParamOptions {}
 export interface StringParamOptions
 	extends BaseParamOptions,
-		AssetParamOptions,
-		DesktopParamOptions,
+		FileParamOptions,
 		CallbackParamOptions,
 		ExpressionParamOptions {
 	multiline?: boolean;
@@ -174,7 +169,7 @@ export interface ParamOptions
 		FolderParamOptions,
 		ExpressionParamOptions,
 		ButtonParamOptions,
-		DesktopParamOptions,
+		FileParamOptions,
 		MenuParamOptions,
 		StringParamOptions,
 		OperatorPathParamOptions {
@@ -210,10 +205,7 @@ export class OptionsController {
 		}
 	}
 	private post_set_options() {
-		this._handle_compute_on_dirty();
-		if (this.asset_reference && this.param.type == ParamType.STRING) {
-			this.param.scene.assets_controller.register_param(this.param as StringParam);
-		}
+		this._handle_computeOnDirty();
 	}
 	get param() {
 		return this._param;
@@ -247,21 +239,16 @@ export class OptionsController {
 		return Object.keys(this.overridden_options) as Array<keyof ParamOptions>;
 	}
 
-	// referenced assets
-	get asset_reference(): boolean {
-		return this._options[ASSET_REFERENCE_OPTION] || false;
-	}
-
 	// compute on dirty
-	get compute_on_dirty(): boolean {
+	get computeOnDirty(): boolean {
 		return this._options[COMPUTE_ON_DIRTY] || false;
 	}
-	private _compute_on_dirty_callback_added: boolean | undefined;
-	private _handle_compute_on_dirty() {
-		if (this.compute_on_dirty) {
-			if (!this._compute_on_dirty_callback_added) {
-				this.param.add_post_dirty_hook('compute_on_dirty', this._compute_param.bind(this));
-				this._compute_on_dirty_callback_added = true;
+	private _computeOnDirty_callback_added: boolean | undefined;
+	private _handle_computeOnDirty() {
+		if (this.computeOnDirty) {
+			if (!this._computeOnDirty_callback_added) {
+				this.param.add_post_dirty_hook('computeOnDirty', this._compute_param.bind(this));
+				this._computeOnDirty_callback_added = true;
 			}
 		}
 	}
@@ -313,9 +300,9 @@ export class OptionsController {
 		}
 	}
 	private create_callback_from_string() {
-		const callback_string = this._options[CALLBACK_STRING_OPTION];
-		if (callback_string) {
-			const callback_function = new Function('node', 'scene', 'window', 'location', callback_string);
+		const callbackString = this._options[CALLBACK_STRING_OPTION];
+		if (callbackString) {
+			const callback_function = new Function('node', 'scene', 'window', 'location', callbackString);
 			return () => {
 				callback_function(this.node, this.node.scene, null, null);
 			};
@@ -344,15 +331,15 @@ export class OptionsController {
 	}
 
 	// desktop
-	get desktop_browse_option() {
-		return this._options[DESKTOP_BROWSE_OPTION];
+	get file_browse_option() {
+		return this._options[FILE_BROWSE_OPTION];
 	}
-	get desktop_browse_allowed(): boolean {
-		return this.desktop_browse_option != null;
+	get file_browse_allowed(): boolean {
+		return this.file_browse_option != null;
 	}
-	desktop_browse_file_type(): DesktopFileType | null {
-		if (this.desktop_browse_option) {
-			return this.desktop_browse_option[FILE_TYPE_OPTION];
+	file_browse_type(): FileType[] | null {
+		if (this.file_browse_option) {
+			return this.file_browse_option[FILE_TYPE_OPTION];
 		} else {
 			return null;
 		}
@@ -521,7 +508,7 @@ export class OptionsController {
 	get is_label_hidden(): boolean {
 		const type = this.param.type;
 		return (
-			this._options[SHOW_LABEL_OPTION] === false ||
+			// this._options[SHOW_LABEL_OPTION] === false ||
 			type === ParamType.BUTTON ||
 			type === ParamType.SEPARATOR ||
 			(type === ParamType.BOOLEAN && this.is_field_hidden())

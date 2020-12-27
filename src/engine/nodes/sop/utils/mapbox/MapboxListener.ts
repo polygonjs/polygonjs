@@ -10,19 +10,19 @@ export function MapboxListenerParamConfig<TBase extends Constructor>(Base: TBase
 		// if use bounds
 		use_bounds = ParamConfig.BOOLEAN(0, {hidden: true});
 		south_west = ParamConfig.VECTOR2([-0.11, 51.51], {
-			visible_if: {use_bounds: 1},
+			visibleIf: {use_bounds: 1},
 		});
 		north_east = ParamConfig.VECTOR2([-0.1, 51.52], {
-			visible_if: {use_bounds: 1},
+			visibleIf: {use_bounds: 1},
 		});
 		// if use zoom
 		use_zoom = ParamConfig.BOOLEAN(0, {hidden: true});
 		zoom = ParamConfig.FLOAT(0, {
-			visible_if: {use_zoom: 1},
+			visibleIf: {use_zoom: 1},
 		});
 		// always
 		mapbox_camera = ParamConfig.OPERATOR_PATH('/mapboxCamera1', {
-			node_selection: {
+			nodeSelection: {
 				context: NodeContext.OBJ,
 				types: [MapboxCameraObjNode.type()],
 			},
@@ -36,7 +36,7 @@ export function MapboxListenerParamConfig<TBase extends Constructor>(Base: TBase
 		// if update_always_allowed
 		update_always_allowed = ParamConfig.BOOLEAN(0, {hidden: true});
 		update_always = ParamConfig.BOOLEAN(0, {
-			visible_if: {update_always_allowed: 1},
+			visibleIf: {update_always_allowed: 1},
 		});
 	};
 }

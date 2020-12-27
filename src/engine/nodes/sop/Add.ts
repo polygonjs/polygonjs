@@ -19,11 +19,11 @@ class AddSopParamsConfig extends NodeParamsConfig {
 	/** @param define the number of points to create */
 	points_count = ParamConfig.INTEGER(DEFAULT.points_count, {
 		range: [1, 100],
-		range_locked: [true, false],
-		visible_if: {create_point: true},
+		rangeLocked: [true, false],
+		visibleIf: {create_point: true},
 	});
 	/** @param the position of the created points */
-	position = ParamConfig.VECTOR3(DEFAULT.position, {visible_if: {create_point: true}});
+	position = ParamConfig.VECTOR3(DEFAULT.position, {visibleIf: {create_point: true}});
 	/** @param toggle on to connect the points from the input geometry */
 	connect_input_points = ParamConfig.BOOLEAN(0);
 	/** @param check if the last point is connected */

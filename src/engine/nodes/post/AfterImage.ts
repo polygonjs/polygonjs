@@ -16,7 +16,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AfterImagePostParamsConfig extends NodeParamsConfig {
 	damp = ParamConfig.FLOAT(0.96, {
 		range: [0, 1],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
 }

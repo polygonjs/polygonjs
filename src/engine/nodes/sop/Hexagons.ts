@@ -20,14 +20,14 @@ class HexagonsSopParamsConfig extends NodeParamsConfig {
 	/** @param hexagons size */
 	hexagon_radius = ParamConfig.FLOAT(0.1, {
 		range: [0.001, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	/** @param axis perpendicular to the plane */
 	direction = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param do not create polygons, only points */
 	points_only = ParamConfig.BOOLEAN(0);
 	// no need to have centers, as all points are centers anyway
-	//this.add_param( ParamType.TOGGLE, 'centers_only', 0, {visible_if: {points_only: 1}})
+	//this.add_param( ParamType.TOGGLE, 'centers_only', 0, {visibleIf: {points_only: 1}})
 }
 const ParamsConfig = new HexagonsSopParamsConfig();
 

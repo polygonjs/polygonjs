@@ -50,20 +50,20 @@
 // 		});
 // 		this.add_param(ParamType.INTEGER, "kernel_radius", 8, {
 // 			range: [0, 32],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.add_param(ParamType.INTEGER, "kernel_size", 16, {
 // 			range: [0, 32],
-// 			range_locked: [true, true]
+// 			rangeLocked: [true, true]
 // 		});
 // 		this.add_param(ParamType.FLOAT, "min_distance", 0.005, {
 // 			range: [0.001, 0.02],
-// 			range_locked: [true, true],
+// 			rangeLocked: [true, true],
 // 			step: 0.001
 // 		});
 // 		this.add_param(ParamType.FLOAT, "max_distance", 0.1, {
 // 			range: [0.01, 0.3],
-// 			range_locked: [true, true],
+// 			rangeLocked: [true, true],
 // 			step: 0.001
 // 		});
 // 	}

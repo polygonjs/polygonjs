@@ -22,7 +22,7 @@ class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle if you want to create a new attribute */
 	change_name = ParamConfig.BOOLEAN(0);
 	/** @param new attribute name */
-	new_name = ParamConfig.STRING('', {visible_if: {change_name: 1}});
+	new_name = ParamConfig.STRING('', {visibleIf: {change_name: 1}});
 }
 const ParamsConfig = new AttribRemapSopParamsConfig();
 

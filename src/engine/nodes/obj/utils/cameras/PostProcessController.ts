@@ -20,22 +20,22 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 	return class Mixin extends Base {
 		do_post_process = ParamConfig.BOOLEAN(0);
 		post_process_node = ParamConfig.NODE_PATH('./postProcess1', {
-			visible_if: {
+			visibleIf: {
 				do_post_process: 1,
 			},
-			node_selection: {
+			nodeSelection: {
 				types: [NetworkNodeType.POST],
 			},
 			// cook: false,
 			...POST_PROCESS_PARAM_OPTIONS,
 		});
 		// prepend_render_pass = ParamConfig.BOOLEAN(1, {
-		// 	visible_if: {
+		// 	visibleIf: {
 		// 		do_post_process: 1,
 		// 	},
 		// });
 		// use_render_target = ParamConfig.BOOLEAN(0, {
-		// 	visible_if: {
+		// 	visibleIf: {
 		// 		do_post_process: 1,
 		// 	},
 		// 	...POST_PROCESS_PARAM_OPTIONS,

@@ -62,7 +62,7 @@ export class AssemblerNodeSpareParamsController {
 				const config_options = ObjectUtils.clone(param_config.param_options);
 				const default_options: ParamOptions = {
 					spare: true,
-					compute_on_dirty: true,
+					computeOnDirty: true,
 					cook: false, // it should update the uniforms only via its callback
 				};
 				const options = ObjectUtils.merge(config_options, default_options);

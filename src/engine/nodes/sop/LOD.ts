@@ -28,8 +28,8 @@ class LODSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param sets which camera will be used when the switch is to be done manually */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-		visible_if: {auto_update: 0},
-		dependent_on_found_node: false,
+		visibleIf: {auto_update: 0},
+		dependentOnFoundNode: false,
 	});
 }
 const ParamsConfig = new LODSopParamsConfig();

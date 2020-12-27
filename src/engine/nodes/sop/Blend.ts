@@ -21,7 +21,7 @@ class BlendSopParamsConfig extends NodeParamsConfig {
 	/** @param blend value. 0 means the result will equal the left input, 1 will equal the right input, and 0.5 will be an average of both. */
 	blend = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 }
 const ParamsConfig = new BlendSopParamsConfig();

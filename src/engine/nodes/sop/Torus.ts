@@ -17,12 +17,12 @@ class TorusSopParamsConfig extends NodeParamsConfig {
 	/** @param number of segments along the length of the torus */
 	segments_radial = ParamConfig.INTEGER(DEFAULT.segments_radial, {
 		range: [1, 50],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param number of segments along the tube */
 	segments_tube = ParamConfig.INTEGER(DEFAULT.segments_tube, {
 		range: [1, 50],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param center of the torus */
 	center = ParamConfig.VECTOR3(DEFAULT.center);

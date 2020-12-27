@@ -24,29 +24,29 @@ export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 	prepend_render_pass = ParamConfig.BOOLEAN(1);
 	use_render_target = ParamConfig.BOOLEAN(1);
 	tmag_filter = ParamConfig.BOOLEAN(0, {
-		visible_if: {use_render_target: 1},
+		visibleIf: {use_render_target: 1},
 	});
 	mag_filter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
-		visible_if: {use_render_target: 1, tmag_filter: 1},
+		visibleIf: {use_render_target: 1, tmag_filter: 1},
 		menu: {
 			entries: MAG_FILTER_MENU_ENTRIES,
 		},
 	});
 	tmin_filter = ParamConfig.BOOLEAN(0, {
-		visible_if: {use_render_target: 1},
+		visibleIf: {use_render_target: 1},
 	});
 	min_filter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
-		visible_if: {use_render_target: 1, tmin_filter: 1},
+		visibleIf: {use_render_target: 1, tmin_filter: 1},
 		menu: {
 			entries: MIN_FILTER_MENU_ENTRIES,
 		},
 	});
 	stencil_buffer = ParamConfig.BOOLEAN(0, {
-		visible_if: {use_render_target: 1},
+		visibleIf: {use_render_target: 1},
 	});
 	sampling = ParamConfig.INTEGER(1, {
 		range: [1, 4],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 export interface BaseNetworkPostProcessNodeType extends TypedNode<any, PostProcessNetworkParamsConfig> {

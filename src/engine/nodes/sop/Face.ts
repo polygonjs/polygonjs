@@ -20,19 +20,19 @@ class FaceSopParamsConfig extends NodeParamsConfig {
 	make_faces_unique = ParamConfig.BOOLEAN(0);
 	/** @param adds a vector3 attribute that represents the center of a face */
 	add_face_center_attribute = ParamConfig.BOOLEAN(0, {
-		visible_if: {make_faces_unique: 1},
+		visibleIf: {make_faces_unique: 1},
 	});
 	/** @param add an id attribute for each face */
 	add_face_id = ParamConfig.BOOLEAN(0, {
-		visible_if: {make_faces_unique: 1},
+		visibleIf: {make_faces_unique: 1},
 	});
 	/** @param allows to transform each face */
 	transform = ParamConfig.BOOLEAN(0, {
-		visible_if: {make_faces_unique: 1},
+		visibleIf: {make_faces_unique: 1},
 	});
 	/** @param scales the faces indepedently */
 	scale = ParamConfig.FLOAT(1, {
-		visible_if: {make_faces_unique: 1, transform: 1},
+		visibleIf: {make_faces_unique: 1, transform: 1},
 	});
 }
 const ParamsConfig = new FaceSopParamsConfig();

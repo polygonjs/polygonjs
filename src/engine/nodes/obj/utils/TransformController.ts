@@ -40,14 +40,14 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		matrix_auto_update = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
 		tlook_at = ParamConfig.BOOLEAN(0);
 		look_at_pos = ParamConfig.VECTOR3([0, 0, 0], {
-			visible_if: {tlook_at: 1},
+			visibleIf: {tlook_at: 1},
 		});
 		// look_at = ParamConfig.OPERATOR_PATH('', {
-		// 	visible_if: {tlook_at: 1},
-		// 	node_selection: {context: NodeContext.OBJ},
+		// 	visibleIf: {tlook_at: 1},
+		// 	nodeSelection: {context: NodeContext.OBJ},
 		// });
 		up = ParamConfig.VECTOR3([0, 1, 0], {
-			visible_if: {tlook_at: 1},
+			visibleIf: {tlook_at: 1},
 		});
 	};
 }

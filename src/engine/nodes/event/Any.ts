@@ -18,7 +18,7 @@ class AnyEventParamsConfig extends NodeParamsConfig {
 	/** @param number of possible events */
 	inputs_count = ParamConfig.INTEGER(5, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new AnyEventParamsConfig();

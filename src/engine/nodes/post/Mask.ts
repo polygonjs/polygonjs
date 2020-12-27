@@ -22,8 +22,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class MaskPostParamsConfig extends NodeParamsConfig {
 	override_scene = ParamConfig.BOOLEAN(0, PostParamOptions);
 	scene = ParamConfig.OPERATOR_PATH('/scene1', {
-		visible_if: {override_scene: 1},
-		node_selection: {
+		visibleIf: {override_scene: 1},
+		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [SceneObjNode.type()],
 		},
@@ -31,8 +31,8 @@ class MaskPostParamsConfig extends NodeParamsConfig {
 	});
 	override_camera = ParamConfig.BOOLEAN(0, PostParamOptions);
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-		visible_if: {override_camera: 1},
-		node_selection: {
+		visibleIf: {override_camera: 1},
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 		...PostParamOptions,

@@ -63,7 +63,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 	return class Mixin extends Base {
 		camera = ParamConfig.FOLDER();
 		controls = ParamConfig.OPERATOR_PATH('', {
-			node_selection: {
+			nodeSelection: {
 				context: NodeContext.EVENT,
 			},
 		});
@@ -83,7 +83,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
 			range: [0, 100],
 			cook: false,
-			compute_on_dirty: true,
+			computeOnDirty: true,
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_update_near_far_from_param(
 					node as BaseThreejsCameraObjNodeType,
@@ -94,7 +94,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {
 			range: [0, 100],
 			cook: false,
-			compute_on_dirty: true,
+			computeOnDirty: true,
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_update_near_far_from_param(
 					node as BaseThreejsCameraObjNodeType,

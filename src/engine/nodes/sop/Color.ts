@@ -30,16 +30,16 @@ class ColorSopParamsConfig extends NodeParamsConfig {
 	from_attribute = ParamConfig.BOOLEAN(DEFAULT.from_attribute);
 	/** @param attribute name to copy value from */
 	attrib_name = ParamConfig.STRING(DEFAULT.attrib_name, {
-		visible_if: {from_attribute: 1},
+		visibleIf: {from_attribute: 1},
 	});
 	/** @param color valu */
 	color = ParamConfig.COLOR(DEFAULT.color, {
-		visible_if: {from_attribute: 0},
-		expression: {for_entities: true},
+		visibleIf: {from_attribute: 0},
+		expression: {forEntities: true},
 	});
 	/** @param toggle on if the value should be set with hsv values rather than rgb */
 	as_hsv = ParamConfig.BOOLEAN(DEFAULT.as_hsv, {
-		visible_if: {from_attribute: 0},
+		visibleIf: {from_attribute: 0},
 	});
 }
 const ParamsConfig = new ColorSopParamsConfig();

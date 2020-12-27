@@ -18,7 +18,7 @@ class PassEventParamsConfig extends NodeParamsConfig {
 	/** @param number of possible outputs */
 	outputs_count = ParamConfig.INTEGER(5, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new PassEventParamsConfig();

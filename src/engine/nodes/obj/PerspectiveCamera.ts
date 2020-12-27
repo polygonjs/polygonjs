@@ -27,8 +27,8 @@ export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(
 	return class Mixin extends Base {
 		/** @param field of view */
 		fov = ParamConfig.FLOAT(DEFAULT.fov, {range: [0, 100]});
-		// vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 1}});
-		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visible_if: {lock_width: 0}});
+		// vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 1}});
+		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 0}});
 	};
 }
 class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(

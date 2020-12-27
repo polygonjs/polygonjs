@@ -30,7 +30,7 @@ class ParamGlParamsConfig extends NodeParamsConfig {
 		},
 	});
 	as_color = ParamConfig.BOOLEAN(0, {
-		visible_if: {type: GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.VEC3)},
+		visibleIf: {type: GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.VEC3)},
 	});
 }
 const ParamsConfig = new ParamGlParamsConfig();

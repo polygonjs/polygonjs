@@ -20,7 +20,7 @@ class FuseSopParamsConfig extends NodeParamsConfig {
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new FuseSopParamsConfig();

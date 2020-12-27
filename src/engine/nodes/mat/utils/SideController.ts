@@ -12,7 +12,7 @@ export function SideParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param defines if the material is double sided or not */
 		doubleSided = ParamConfig.BOOLEAN(0);
 		/** @param if the material is not double sided, it can be front sided, or back sided */
-		front = ParamConfig.BOOLEAN(1, {visible_if: {doubleSided: false}});
+		front = ParamConfig.BOOLEAN(1, {visibleIf: {doubleSided: false}});
 	};
 }
 

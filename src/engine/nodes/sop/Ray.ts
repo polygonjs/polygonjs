@@ -23,7 +23,7 @@ class RaySopParamsConfig extends NodeParamsConfig {
 	use_normals = ParamConfig.BOOLEAN(1);
 	/** @param if the normals are not used as the ray direction, this define the direction used */
 	direction = ParamConfig.VECTOR3([0, -1, 0], {
-		visible_if: {use_normals: 0},
+		visibleIf: {use_normals: 0},
 	});
 	/** @param copies the normals from the right geometry to the left one */
 	transfer_face_normals = ParamConfig.BOOLEAN(1);

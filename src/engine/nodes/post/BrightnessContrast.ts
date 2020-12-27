@@ -19,12 +19,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 	brightness = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 	contrast = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);

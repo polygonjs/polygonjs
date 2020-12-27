@@ -14,12 +14,12 @@ class BoxSopParamsConfig extends NodeParamsConfig {
 	/** @param divisions count */
 	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param bevel size */
 	bevel = ParamConfig.FLOAT(DEFAULT.bevel, {
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param center of the box */
 	center = ParamConfig.VECTOR3(DEFAULT.center);

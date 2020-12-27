@@ -28,7 +28,7 @@ class PolywireSopParamsConfig extends NodeParamsConfig {
 	/** @param segments count on the circle used */
 	segments_radial = ParamConfig.INTEGER(8, {
 		range: [3, 20],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param toggle on for the geometry to close back on itself */
 	closed = ParamConfig.BOOLEAN(0);

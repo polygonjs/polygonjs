@@ -12,7 +12,7 @@ class LayerSopParamsConfig extends NodeParamsConfig {
 	/** @param the layer that the objects will be assigned to */
 	layer = ParamConfig.INTEGER(0, {
 		range: [0, 31],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 }
 const ParamsConfig = new LayerSopParamsConfig();

@@ -18,7 +18,7 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		// directional
 		// position = ParamConfig.VECTOR3([0, 1, 0]);
 		// target = ParamConfig.VECTOR3([0, 0, 0]);
-		// lookat = ParamConfig.OPERATOR_PATH('', {dependent_on_found_node: false});
+		// lookat = ParamConfig.OPERATOR_PATH('', {dependentOnFoundNode: false});
 
 		light = ParamConfig.FOLDER();
 		/** @param light color */
@@ -41,7 +41,7 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		/** @param toggle to show helper */
 		show_helper = ParamConfig.BOOLEAN(0);
 		/** @param helper size */
-		helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
+		helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
 	};
 }
 

@@ -11,7 +11,7 @@ class DurationAnimParamsConfig extends NodeParamsConfig {
 	/** @param duration */
 	duration = ParamConfig.FLOAT(1, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new DurationAnimParamsConfig();

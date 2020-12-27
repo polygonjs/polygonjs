@@ -29,15 +29,15 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 	});
 	/** @param if set to a Polygonjs node, this is the node path */
 	node_path = ParamConfig.OPERATOR_PATH('/geo1', {
-		visible_if: {type: TARGET_TYPES.indexOf(TargetType.NODE)},
+		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.NODE)},
 	});
 	/** @param if set to a THREE object, this is a mask to find the objects */
 	object_mask = ParamConfig.STRING('/geo*', {
-		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
+		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
 	/** @param sets if the matrix should be updated as the animation progresses */
 	update_matrix = ParamConfig.BOOLEAN(0, {
-		visible_if: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
+		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
 	/** @param prints which objects are targeted by this node, for debuggin */
 	print_resolve = ParamConfig.BUTTON(null, {

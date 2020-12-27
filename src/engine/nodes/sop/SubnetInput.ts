@@ -14,7 +14,7 @@ class SubnetInputSopParamsConfig extends NodeParamsConfig {
 	/** @param sets which input of the parent subnet node is used */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		callback: (node: BaseNodeType) => {
 			SubnetInputSopNode.PARAM_CALLBACK_reset(node as SubnetInputSopNode);
 		},

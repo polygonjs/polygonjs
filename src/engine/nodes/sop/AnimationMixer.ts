@@ -10,10 +10,10 @@ import {BaseParamType} from '../../params/_Base';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 	time = ParamConfig.FLOAT('$T', {range: [0, 10]});
 	clip = ParamConfig.OPERATOR_PATH('/ANIM/OUT', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.ANIM,
 		},
-		dependent_on_found_node: false,
+		dependentOnFoundNode: false,
 	});
 	reset = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {

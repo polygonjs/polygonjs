@@ -15,15 +15,15 @@ class DrawRangeSopParamsConfig extends NodeParamsConfig {
 	/** @param start of the draw range */
 	start = ParamConfig.INTEGER(0, {
 		range: [0, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param defines if count is used */
 	use_count = ParamConfig.BOOLEAN(0);
 	/** @param number of items in the draw range */
 	count = ParamConfig.INTEGER(0, {
 		range: [0, 100],
-		range_locked: [true, false],
-		visible_if: {use_count: 1},
+		rangeLocked: [true, false],
+		visibleIf: {use_count: 1},
 	});
 }
 const ParamsConfig = new DrawRangeSopParamsConfig();

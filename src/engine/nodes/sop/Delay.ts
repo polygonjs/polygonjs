@@ -13,7 +13,7 @@ class DelaySopParamsConfig extends NodeParamsConfig {
 	/** @param duration in milliseconds */
 	duration = ParamConfig.INTEGER(1000, {
 		range: [0, 1000],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 }
 const ParamsConfig = new DelaySopParamsConfig();

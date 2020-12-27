@@ -49,8 +49,8 @@
 // 	create_params() {
 // 		CoreTransform.create_params(this);
 // 		this.within_param_folder('cube_camera', () => {
-// 			this.add_param(ParamType.FLOAT, 'near', 0.1, {range: [0, 1], range_locked: [true, false]});
-// 			this.add_param(ParamType.FLOAT, 'far', 10, {range: [0, 100], range_locked: [true, false]});
+// 			this.add_param(ParamType.FLOAT, 'near', 0.1, {range: [0, 1], rangeLocked: [true, false]});
+// 			this.add_param(ParamType.FLOAT, 'far', 10, {range: [0, 100], rangeLocked: [true, false]});
 
 // 			this.add_param(ParamType.INTEGER, 'resolution', 256);
 // 			this.add_param(ParamType.STRING, 'object_mask', '*light* *'); // ensure lights are in it too

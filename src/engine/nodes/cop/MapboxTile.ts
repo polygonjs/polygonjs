@@ -47,7 +47,7 @@ class MapboxTileCopParamsConfig extends NodeParamsConfig {
 	/** @param zoom value */
 	zoom = ParamConfig.INTEGER(12, {
 		range: [1, 24],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 	});
 	/** @param type of tile (elevation or satellite) */
 	type = ParamConfig.INTEGER(0, {

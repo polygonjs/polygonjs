@@ -12,7 +12,7 @@ class UnrealBloomPostParamsConfig extends NodeParamsConfig {
 	/** @param effect strength */
 	strength = ParamConfig.FLOAT(1.5, {
 		range: [0, 3],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	/** @param effect radius */

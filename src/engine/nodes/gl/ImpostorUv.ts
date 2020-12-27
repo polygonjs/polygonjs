@@ -14,7 +14,7 @@ class ImpostorUvGlParamsConfig extends NodeParamsConfig {
 	uv = ParamConfig.VECTOR2([0, 0]);
 	tiles_count = ParamConfig.INTEGER(8, {
 		range: [0, 32],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	offset = ParamConfig.FLOAT(0);
 }

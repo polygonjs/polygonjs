@@ -19,7 +19,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class HorizontalBlurPostParamsConfig extends NodeParamsConfig {
 	amount = ParamConfig.FLOAT(2, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		step: 0.01,
 		...PostParamOptions,
 	});

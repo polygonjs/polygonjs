@@ -18,7 +18,7 @@ class BoxSopParamsConfig extends NodeParamsConfig {
 	/** @param number of segments on each axis */
 	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param center of the geometry */
 	center = ParamConfig.VECTOR3(DEFAULT.center);

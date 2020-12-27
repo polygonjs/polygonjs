@@ -18,7 +18,7 @@ import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		useMap = ParamConfig.BOOLEAN(0);
-		map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {visible_if: {useMap: 1}});
+		map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {visibleIf: {useMap: 1}});
 	};
 }
 // class TextureMapMaterial<T extends string> extends Material {
@@ -51,8 +51,8 @@ export function BooleanParamOptions(controller_class: typeof BaseTextureMapContr
 }
 export function OperatorPathOptions(controller: typeof BaseTextureMapController, use_map_name: string) {
 	return {
-		visible_if: {[use_map_name]: 1},
-		node_selection: {context: NodeContext.COP},
+		visibleIf: {[use_map_name]: 1},
+		nodeSelection: {context: NodeContext.COP},
 		cook: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			controller.update(node as BaseMatNodeType);

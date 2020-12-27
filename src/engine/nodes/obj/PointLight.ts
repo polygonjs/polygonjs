@@ -26,19 +26,19 @@ class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig)
 	/** @param toggle to cast shadows */
 	cast_shadows = ParamConfig.BOOLEAN(1);
 	/** @param shadow res */
-	shadow_res = ParamConfig.VECTOR2([1024, 1024], {visible_if: {cast_shadows: 1}});
+	shadow_res = ParamConfig.VECTOR2([1024, 1024], {visibleIf: {cast_shadows: 1}});
 	/** @param shadow bias */
-	shadow_bias = ParamConfig.FLOAT(0.001, {visible_if: {cast_shadows: 1}});
+	shadow_bias = ParamConfig.FLOAT(0.001, {visibleIf: {cast_shadows: 1}});
 	/** @param shadow camera near */
-	shadow_near = ParamConfig.FLOAT(1, {visible_if: {cast_shadows: 1}});
+	shadow_near = ParamConfig.FLOAT(1, {visibleIf: {cast_shadows: 1}});
 	/** @param shadow camera far */
-	shadow_far = ParamConfig.FLOAT(100, {visible_if: {cast_shadows: 1}});
+	shadow_far = ParamConfig.FLOAT(100, {visibleIf: {cast_shadows: 1}});
 
 	// helper
 	/** @param toggle to show helper */
 	show_helper = ParamConfig.BOOLEAN(0);
 	/** @param helper size */
-	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
+	helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
 }
 const ParamsConfig = new PointLightObjParamsConfig();
 

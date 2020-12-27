@@ -19,13 +19,13 @@ class VignettePostParamsConfig extends NodeParamsConfig {
 	/** @param offset */
 	offset = ParamConfig.FLOAT(1, {
 		range: [0, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
 	/** @param darkness */
 	darkness = ParamConfig.FLOAT(1, {
 		range: [0, 2],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 }

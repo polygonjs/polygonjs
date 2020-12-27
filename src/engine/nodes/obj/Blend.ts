@@ -23,12 +23,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 class BlendObjParamConfig extends NodeParamsConfig {
 	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
 	object1 = ParamConfig.OPERATOR_PATH('/geo2', {
-		node_selection: {
+		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
@@ -40,19 +40,19 @@ class BlendObjParamConfig extends NodeParamsConfig {
 		},
 	});
 	blend = ParamConfig.FLOAT(0, {
-		visible_if: {mode: BLEND_MODES.indexOf(BlendMode.TOGETHER)},
+		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.TOGETHER)},
 		range: [0, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	blend_t = ParamConfig.FLOAT(0, {
-		visible_if: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
+		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	blend_r = ParamConfig.FLOAT(0, {
-		visible_if: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
+		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 }
 const ParamsConfig = new BlendObjParamConfig();

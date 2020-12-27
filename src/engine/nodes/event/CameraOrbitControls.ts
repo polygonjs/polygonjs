@@ -35,7 +35,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	tdamping = ParamConfig.BOOLEAN(1);
 	/** @param damping value */
 	damping = ParamConfig.FLOAT(0.1, {
-		visible_if: {tdamping: true},
+		visibleIf: {tdamping: true},
 	});
 	/** @param toggle on to have the pan in screen space */
 	screen_space_panning = ParamConfig.BOOLEAN(1);
@@ -44,25 +44,25 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	/** @param smallest distance the camera can go to the target */
 	min_distance = ParamConfig.FLOAT(1, {
 		range: [0, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param max distance the camera can go away the target */
 	max_distance = ParamConfig.FLOAT(50, {
 		range: [0, 100],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param toggle on to limit the azimuth (up-down) angle */
 	limit_azimuth_angle = ParamConfig.BOOLEAN(0);
 	/** @param azimuth angle range */
 	azimuth_angle_range = ParamConfig.VECTOR2(['-2*$PI', '2*$PI'], {
-		visible_if: {limit_azimuth_angle: 1},
+		visibleIf: {limit_azimuth_angle: 1},
 	});
 	/** @param polar (left-right) angle range */
 	polar_angle_range = ParamConfig.VECTOR2([0, '$PI']);
 	/** @param target position. This is updated automatically as the camera is controlled by user events */
 	target = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
-		compute_on_dirty: true,
+		computeOnDirty: true,
 		callback: (node: BaseNodeType) => {
 			CameraOrbitControlsEventNode.PARAM_CALLBACK_update_target(node as CameraOrbitControlsEventNode);
 		},
@@ -71,7 +71,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	enable_keys = ParamConfig.BOOLEAN(0);
 	/** @param key modes (pan or rotate) */
 	keys_mode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
-		visible_if: {enable_keys: 1},
+		visibleIf: {enable_keys: 1},
 		menu: {
 			entries: KEYS_MODES.map((name, value) => {
 				return {name, value};
@@ -81,20 +81,20 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	/** @param keys pan speed */
 	keys_pan_speed = ParamConfig.FLOAT(7, {
 		range: [0, 10],
-		range_locked: [false, false],
-		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.PAN)},
+		rangeLocked: [false, false],
+		visibleIf: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.PAN)},
 	});
 	/** @param keys rotate speed vertical */
 	keys_rotate_speed_vertical = ParamConfig.FLOAT(1, {
 		range: [0, 1],
-		range_locked: [false, false],
-		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+		rangeLocked: [false, false],
+		visibleIf: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
 	});
 	/** @param keys rotate speed horizontal */
 	keys_rotate_speed_horizontal = ParamConfig.FLOAT(1, {
 		range: [0, 1],
-		range_locked: [false, false],
-		visible_if: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+		rangeLocked: [false, false],
+		visibleIf: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
 	});
 }
 const ParamsConfig = new CameraOrbitEventParamsConfig();

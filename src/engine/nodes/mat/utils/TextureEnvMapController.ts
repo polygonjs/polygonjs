@@ -18,7 +18,7 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 			NODE_PATH_DEFAULT.NODE.ENV_MAP,
 			OperatorPathOptions(TextureEnvMapController, 'useEnvMap')
 		);
-		envMapIntensity = ParamConfig.FLOAT(1, {visible_if: {useEnvMap: 1}});
+		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 	};
 }
 class TextureEnvMaterial extends Material {

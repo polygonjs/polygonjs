@@ -20,13 +20,13 @@ class RGBShiftPostParamsConfig extends NodeParamsConfig {
 	/** @param effect amount */
 	amount = ParamConfig.FLOAT(0.005, {
 		range: [0, 1],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	/** @param effect angle */
 	angle = ParamConfig.FLOAT(0, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 }

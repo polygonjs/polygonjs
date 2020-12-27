@@ -34,30 +34,30 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	cast_shadows = ParamConfig.BOOLEAN(1);
 	/** @param shadows res */
 	shadow_res = ParamConfig.VECTOR2([1024, 1024], {
-		visible_if: {cast_shadows: 1},
+		visibleIf: {cast_shadows: 1},
 	});
 	/** @param shadows bias */
 	shadow_bias = ParamConfig.FLOAT(0.001, {
-		visible_if: {cast_shadows: 1},
+		visibleIf: {cast_shadows: 1},
 		range: [-0.01, 0.01],
-		range_locked: [false, false],
+		rangeLocked: [false, false],
 	});
 	// shadow_near = ParamConfig.FLOAT(0.1, {
-	// 	visible_if: {cast_shadows: 1},
+	// 	visibleIf: {cast_shadows: 1},
 	// 	range: [0, 100],
-	// 	range_locked: [true, false],
+	// 	rangeLocked: [true, false],
 	// });
 	// shadow_far = ParamConfig.FLOAT(100, {
-	// 	visible_if: {cast_shadows: 1},
+	// 	visibleIf: {cast_shadows: 1},
 	// 	range: [0, 100],
-	// 	range_locked: [true, false],
+	// 	rangeLocked: [true, false],
 	// });
 
 	// helper
 	/** @param toggle on to show helper */
 	show_helper = ParamConfig.BOOLEAN(0);
 	/** @param helper size */
-	helper_size = ParamConfig.FLOAT(1, {visible_if: {show_helper: 1}});
+	helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 

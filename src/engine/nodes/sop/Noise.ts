@@ -36,14 +36,14 @@ const ATTRIB_NORMAL = 'normal';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
 	/** @param toggle on to multiply the amplitude by a vertex attribute */
 	tamplitude_attrib = ParamConfig.BOOLEAN(0);
 	/** @param which vertex attribute to use */
-	amplitude_attrib = ParamConfig.STRING('amp', {visible_if: {tamplitude_attrib: true}});
+	amplitude_attrib = ParamConfig.STRING('amp', {visibleIf: {tamplitude_attrib: true}});
 	/** @param noise frequency */
 	freq = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param noise offset */
@@ -51,7 +51,7 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise octaves */
 	octaves = ParamConfig.INTEGER(3, {
 		range: [1, 8],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	/** @param amplitude attenuation for higher octaves */
 	amp_attenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
@@ -67,9 +67,9 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to use rest attributes. This can be useful when the noise is animated and this node does not clone the input geometry. Without using rest attributes, the noise would be based on an already modified position, and would therefore accumulate on itself after each cook. This may be what you are after, but for a more conventional result, using a rest attribute will ensure that the noise remains stable. Note that the rest attribute can be created by a RestAttributes node */
 	use_rest_attributes = ParamConfig.BOOLEAN(0);
 	/** @param name of rest position */
-	restP = ParamConfig.STRING('restP', {visible_if: {use_rest_attributes: true}});
+	restP = ParamConfig.STRING('restP', {visibleIf: {use_rest_attributes: true}});
 	/** @param name of rest normal */
-	restN = ParamConfig.STRING('restN', {visible_if: {use_rest_attributes: true}});
+	restN = ParamConfig.STRING('restN', {visibleIf: {use_rest_attributes: true}});
 	/** @param operation done when applying the noise (add, set, mult, substract, divide) */
 	operation = ParamConfig.INTEGER(Operations.indexOf(Operation.ADD), {
 		menu: {

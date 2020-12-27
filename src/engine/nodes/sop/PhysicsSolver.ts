@@ -28,7 +28,7 @@ class AmmoSolverSopParamsConfig extends NodeParamsConfig {
 	gravity = ParamConfig.VECTOR3([0, -9.81, 0]);
 	max_substeps = ParamConfig.INTEGER(2, {
 		range: [1, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 	});
 	reset = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {

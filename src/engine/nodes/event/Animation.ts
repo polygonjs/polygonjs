@@ -25,8 +25,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AnimationEventParamsConfig extends NodeParamsConfig {
 	/** @parm animation node */
 	animation = ParamConfig.OPERATOR_PATH('/ANIM/OUT', {
-		node_selection: {context: NodeContext.ANIM},
-		dependent_on_found_node: false,
+		nodeSelection: {context: NodeContext.ANIM},
+		dependentOnFoundNode: false,
 	});
 	/** @parm presses to play the animation */
 	play = ParamConfig.BUTTON(null, {

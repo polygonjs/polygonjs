@@ -1,4 +1,4 @@
-import {ArrayUtils} from '../../../core/ArrayUtils'
+import {ArrayUtils} from '../../../core/ArrayUtils';
 import {TypedGlNode} from './_Base';
 import {
 	GlConnectionPoint,
@@ -162,7 +162,7 @@ class NoiseGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	octaves = ParamConfig.INTEGER(3, {range: [1, 10], range_locked: [true, false]});
+	octaves = ParamConfig.INTEGER(3, {range: [1, 10], rangeLocked: [true, false]});
 	amp_attenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
 	freq_increase = ParamConfig.FLOAT(2, {range: [0, 10]});
 	separator = ParamConfig.SEPARATOR();

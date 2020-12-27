@@ -20,35 +20,35 @@ class NormalsSopParamsConfig extends NodeParamsConfig {
 	edit = ParamConfig.BOOLEAN(0);
 	/** @param toggle on to update the x component */
 	update_x = ParamConfig.BOOLEAN(0, {
-		visible_if: {edit: 1},
+		visibleIf: {edit: 1},
 	});
 	/** @param expression or value for the x component */
 	x = ParamConfig.FLOAT('@N.x', {
-		visible_if: {update_x: 1, edit: 1},
-		expression: {for_entities: true},
+		visibleIf: {update_x: 1, edit: 1},
+		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the y component */
 	update_y = ParamConfig.BOOLEAN(0, {
-		visible_if: {edit: 1},
+		visibleIf: {edit: 1},
 	});
 	/** @param expression or value for the y component */
 	y = ParamConfig.FLOAT('@N.y', {
-		visible_if: {update_y: 1, edit: 1},
-		expression: {for_entities: true},
+		visibleIf: {update_y: 1, edit: 1},
+		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the z component */
 	update_z = ParamConfig.BOOLEAN(0, {
-		visible_if: {edit: 1},
+		visibleIf: {edit: 1},
 	});
 	/** @param expression or value for the z component */
 	z = ParamConfig.FLOAT('@N.z', {
-		visible_if: {update_z: 1, edit: 1},
-		expression: {for_entities: true},
+		visibleIf: {update_z: 1, edit: 1},
+		expression: {forEntities: true},
 	});
 
 	/** @param recompute the normals based on the position */
 	recompute = ParamConfig.BOOLEAN(1, {
-		visible_if: {edit: 0},
+		visibleIf: {edit: 0},
 	});
 	/** @param invert normals */
 	invert = ParamConfig.BOOLEAN(0);

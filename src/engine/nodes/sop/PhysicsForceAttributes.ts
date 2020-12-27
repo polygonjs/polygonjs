@@ -19,7 +19,7 @@ import {
 
 function visible_for_type(type: ForceType, options: VisibleIfParamOptions = {}): ParamOptions {
 	options['type'] = FORCE_TYPES.indexOf(type);
-	return {visible_if: options};
+	return {visibleIf: options};
 }
 function visible_for_directional(options: VisibleIfParamOptions = {}): ParamOptions {
 	return visible_for_type(ForceType.DIRECTIONAL, options);

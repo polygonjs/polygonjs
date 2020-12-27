@@ -12,18 +12,18 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	focal_depth = ParamConfig.FLOAT(10, {
 		range: [0, 50],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		step: 0.001,
 		...PostParamOptions,
 	});
 	f_stop = ParamConfig.FLOAT(10, {
 		range: [0.1, 22],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
 	max_blur = ParamConfig.FLOAT(2, {
 		range: [0, 10],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
 	vignetting = ParamConfig.BOOLEAN(0, {
@@ -34,25 +34,25 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	});
 	threshold = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		step: 0.001,
 		...PostParamOptions,
 	});
 	gain = ParamConfig.FLOAT(1, {
 		range: [0, 100],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		step: 0.001,
 		...PostParamOptions,
 	});
 	bias = ParamConfig.FLOAT(1, {
 		range: [0, 3],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		step: 0.001,
 		...PostParamOptions,
 	});
 	fringe = ParamConfig.FLOAT(0.7, {
 		range: [0, 5],
-		range_locked: [true, false],
+		rangeLocked: [true, false],
 		step: 0.001,
 		...PostParamOptions,
 	});
@@ -61,7 +61,7 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	});
 	dithering = ParamConfig.FLOAT(0, {
 		range: [0, 0.001],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		step: 0.0001,
 		...PostParamOptions,
 	});
@@ -70,12 +70,12 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	});
 	rings = ParamConfig.INTEGER(3, {
 		range: [1, 8],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
 	samples = ParamConfig.INTEGER(4, {
 		range: [1, 13],
-		range_locked: [true, true],
+		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
 	clear_color = ParamConfig.COLOR([1, 1, 1], {
