@@ -1,11 +1,12 @@
 import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/core/operations/sop/Hierarchy';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {ASSETS_ROOT} from '../../../helpers/AssetsUtils';
 
 async function with_file(path: string) {
 	const geo1 = window.geo1;
 	const file1 = geo1.createNode('file');
-	file1.p.url.set(path);
+	file1.p.url.set(`${ASSETS_ROOT}/${path}`);
 
 	const container = await file1.request_container();
 	return container;
@@ -23,7 +24,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('file');
-	file1.p.url.set('/examples/models/male03.obj');
+	file1.p.url.set(`${ASSETS_ROOT}/models/male.obj`);
 	assert.ok(file1.is_dirty);
 
 	// const merge1 = geo1.createNode('merge');
@@ -36,7 +37,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	// let {geometry} = core_group.objects()[0];
 	assert.equal(container.total_points_count(), 15012, 'total points_count is 15012');
 
-	file1.p.url.set('/examples/models/box.obj');
+	file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 	assert.ok(file1.is_dirty);
 
 	container = await file1.request_container();
@@ -60,7 +61,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	// assert.equal(core_group.objects().length, 0, 'content has 0 points');
 
 	// clear error state
-	file1.p.url.set('/examples/models/box.obj');
+	file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 	assert.ok(file1.is_dirty);
 	container = await file1.request_container();
 	assert.ok(!file1.is_dirty);
@@ -72,7 +73,7 @@ QUnit.test('SOP file simple', async (assert) => {
 });
 
 QUnit.test('SOP file obj wolf', async (assert) => {
-	const container = await with_file('/examples/models/wolf.obj');
+	const container = await with_file('/models/wolf.obj');
 	const core_content = container.core_content()!;
 	assert.equal(container.objects_count(), 1);
 	assert.equal(container.points_count(), 0);
@@ -89,44 +90,44 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	assert.ok(first_geometry.index, 'geometry has index');
 });
 QUnit.test('SOP file json wolf', async (assert) => {
-	const container = await with_file('/examples/models/wolf.json');
+	const container = await with_file('/models/wolf.json');
 	assert.equal(container.total_points_count(), 5352);
 });
 QUnit.test('SOP file glb stork', async (assert) => {
-	const container = await with_file('/examples/models/stork.glb');
+	const container = await with_file('/models/stork.glb');
 	assert.equal(container.total_points_count(), 358);
 });
 QUnit.test('SOP file glb soldier', async (assert) => {
-	const container = await with_file('/examples/models/soldier.glb');
+	const container = await with_file('/models/soldier.glb');
 	assert.equal(container.total_points_count(), 7434);
 });
 QUnit.test('SOP file glb json', async (assert) => {
-	const container = await with_file('/examples/models/parrot.glb');
+	const container = await with_file('/models/parrot.glb');
 	assert.equal(container.total_points_count(), 497);
 });
 QUnit.test('SOP file glb horse', async (assert) => {
-	const container = await with_file('/examples/models/horse.glb');
+	const container = await with_file('/models/horse.glb');
 	assert.equal(container.total_points_count(), 796);
 });
 QUnit.test('SOP file glb flamingo', async (assert) => {
-	const container = await with_file('/examples/models/flamingo.glb');
+	const container = await with_file('/models/flamingo.glb');
 	assert.equal(container.total_points_count(), 337);
 });
 QUnit.test('SOP file z3 glb with draco', async (assert) => {
-	const container = await with_file('/examples/models/z3.glb');
+	const container = await with_file('/models/z3.glb');
 	assert.equal(container.points_count(), 0);
 	const container2 = await with_hierarchy();
 	assert.equal(container2.points_count(), 498800);
 });
 QUnit.test('SOP file draco bunny', async (assert) => {
-	const container = await with_file('/examples/models/bunny.drc');
+	const container = await with_file('/models/bunny.drc');
 	assert.equal(container.points_count(), 34834);
 });
 QUnit.test('SOP file format pdb', async (assert) => {
-	const container = await with_file('/examples/models/ethanol.pdb');
+	const container = await with_file('/models/ethanol.pdb');
 	assert.equal(container.points_count(), 25);
 });
 QUnit.test('SOP file format ply', async (assert) => {
-	const container = await with_file('/examples/models/dolphins_be.ply');
+	const container = await with_file('/models/dolphins_be.ply');
 	assert.equal(container.points_count(), 855);
 });

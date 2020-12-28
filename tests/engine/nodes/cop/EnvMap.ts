@@ -1,4 +1,5 @@
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {ASSETS_ROOT} from '../../../helpers/AssetsUtils';
 
 QUnit.test('COP env_map simple', async (assert) => {
 	const {renderer} = await RendererUtils.wait_for_renderer();
@@ -11,7 +12,7 @@ QUnit.test('COP env_map simple', async (assert) => {
 
 	env_map1.setInput(0, file1);
 
-	file1.p.url.set('/examples/textures/piz_compressed.exr');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/piz_compressed.exr`);
 
 	let container = await env_map1.request_container();
 	assert.ok(!env_map1.states.error.active);

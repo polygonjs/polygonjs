@@ -1,4 +1,5 @@
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {ASSETS_ROOT} from '../../../helpers/AssetsUtils';
 
 QUnit.test('COP image simple default', async (assert) => {
 	const COP = window.COP;
@@ -33,7 +34,7 @@ QUnit.test('COP image simple exr', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('image');
-	file1.p.url.set('/examples/textures/piz_compressed.exr');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/piz_compressed.exr`);
 
 	let container, texture;
 
@@ -52,7 +53,7 @@ QUnit.test('COP image simple basis', async (assert) => {
 	assert.ok(renderer);
 
 	const file1 = COP.createNode('image');
-	file1.p.url.set('/examples/textures/PavingStones.basis');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/PavingStones.basis`);
 
 	let container, texture;
 
@@ -69,7 +70,7 @@ QUnit.test('COP image simple hdr', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('image');
-	file1.p.url.set('/examples/textures/equirectangular/spot1Lux.hdr');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/equirectangular/spot1Lux.hdr`);
 
 	let container, texture;
 
