@@ -1,22 +1,22 @@
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import { Pass } from "../postprocessing/Pass.js";
-import { DotScreenShader } from "../shaders/DotScreenShader.js";
+import { Pass } from '../postprocessing/Pass.js';
+import { DotScreenShader } from '../shaders/DotScreenShader.js';
 
 var DotScreenPass = function ( center, angle, scale ) {
 
 	Pass.call( this );
 
 	if ( DotScreenShader === undefined )
-		console.error( "DotScreenPass relies on DotScreenShader" );
+		console.error( 'THREE.DotScreenPass relies on DotScreenShader' );
 
 	var shader = DotScreenShader;
 
 	this.uniforms = UniformsUtils.clone( shader.uniforms );
 
-	if ( center !== undefined ) this.uniforms[ "center" ].value.copy( center );
-	if ( angle !== undefined ) this.uniforms[ "angle" ].value = angle;
-	if ( scale !== undefined ) this.uniforms[ "scale" ].value = scale;
+	if ( center !== undefined ) this.uniforms[ 'center' ].value.copy( center );
+	if ( angle !== undefined ) this.uniforms[ 'angle' ].value = angle;
+	if ( scale !== undefined ) this.uniforms[ 'scale' ].value = scale;
 
 	this.material = new ShaderMaterial( {
 
@@ -36,8 +36,8 @@ DotScreenPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
-		this.uniforms[ "tDiffuse" ].value = readBuffer.texture;
-		this.uniforms[ "tSize" ].value.set( readBuffer.width, readBuffer.height );
+		this.uniforms[ 'tDiffuse' ].value = readBuffer.texture;
+		this.uniforms[ 'tSize' ].value.set( readBuffer.width, readBuffer.height );
 
 		if ( this.renderToScreen ) {
 

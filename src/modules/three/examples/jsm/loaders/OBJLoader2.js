@@ -6,9 +6,9 @@ import {Object3D} from 'three/src/core/Object3D';
  */
 
 
-import { OBJLoader2Parser } from "./obj2/OBJLoader2Parser.js";
-import { MeshReceiver } from "./obj2/shared/MeshReceiver.js";
-import { MaterialHandler } from "./obj2/shared/MaterialHandler.js";
+import { OBJLoader2Parser } from './obj2/OBJLoader2Parser.js';
+import { MeshReceiver } from './obj2/shared/MeshReceiver.js';
+import { MaterialHandler } from './obj2/shared/MaterialHandler.js';
 
 /**
  * Creates a new OBJLoader2. Use it to load OBJ data from files or to parse OBJ data from arraybuffer or text.
@@ -297,7 +297,7 @@ OBJLoader2.prototype = Object.assign( Object.create( Loader.prototype ), {
 		this.setCallbackOnMeshAlter( onMeshAlter );
 		const fileLoaderOnLoad = function ( content ) {
 
-			scope.parser.callbacks.onLoad( scope.parse( content ), "OBJLoader2#load: Parsing completed" );
+			scope.parser.callbacks.onLoad( scope.parse( content ), 'OBJLoader2#load: Parsing completed' );
 
 		};
 

@@ -4,14 +4,14 @@ import {MathUtils} from 'three/src/math/MathUtils';
 import {RGBFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import { Pass } from "../postprocessing/Pass.js";
-import { DigitalGlitch } from "../shaders/DigitalGlitch.js";
+import { Pass } from '../postprocessing/Pass.js';
+import { DigitalGlitch } from '../shaders/DigitalGlitch.js';
 
 var GlitchPass = function ( dt_size ) {
 
 	Pass.call( this );
 
-	if ( DigitalGlitch === undefined ) console.error( "GlitchPass relies on DigitalGlitch" );
+	if ( DigitalGlitch === undefined ) console.error( 'THREE.GlitchPass relies on DigitalGlitch' );
 
 	var shader = DigitalGlitch;
 	this.uniforms = UniformsUtils.clone( shader.uniforms );
@@ -19,7 +19,7 @@ var GlitchPass = function ( dt_size ) {
 	if ( dt_size == undefined ) dt_size = 64;
 
 
-	this.uniforms[ "tDisp" ].value = this.generateHeightmap( dt_size );
+	this.uniforms[ 'tDisp' ].value = this.generateHeightmap( dt_size );
 
 
 	this.material = new ShaderMaterial( {
@@ -42,7 +42,7 @@ GlitchPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
-		this.uniforms[ "tDiffuse" ].value = readBuffer.texture;
+		this.uniforms[ 'tDiffuse' ].value = readBuffer.texture;
 		this.uniforms[ 'seed' ].value = Math.random();//default seeding
 		this.uniforms[ 'byp' ].value = 0;
 

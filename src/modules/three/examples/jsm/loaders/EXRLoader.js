@@ -10,7 +10,7 @@ import {RGBEEncoding} from 'three/src/constants';
 import {RGBEFormat} from 'three/src/constants';
 import {RGBFormat} from 'three/src/constants';
 import {UnsignedByteType} from 'three/src/constants';
-import { Inflate } from "../libs/inflate.module.min.js";
+import { Inflate } from '../libs/inflate.module.min.js';
 
 /**
  * OpenEXR loader currently supports uncompressed, ZIP(S), RLE, PIZ and DWA/B compression.

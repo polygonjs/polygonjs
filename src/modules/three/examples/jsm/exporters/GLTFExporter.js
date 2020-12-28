@@ -8,6 +8,7 @@ import {LinearFilter} from 'three/src/constants';
 import {LinearMipmapLinearFilter} from 'three/src/constants';
 import {LinearMipmapNearestFilter} from 'three/src/constants';
 import {MathUtils} from 'three/src/math/MathUtils';
+import {Matrix4} from 'three/src/math/Matrix4';
 import {MirroredRepeatWrapping} from 'three/src/constants';
 import {NearestFilter} from 'three/src/constants';
 import {NearestMipmapLinearFilter} from 'three/src/constants';
@@ -114,8 +115,8 @@ GLTFExporter.prototype = {
 
 			asset: {
 
-				version: "2.0",
-				generator: "GLTFExporter"
+				version: '2.0',
+				generator: 'THREE.GLTFExporter'
 
 			}
 
@@ -176,7 +177,7 @@ GLTFExporter.prototype = {
 		/**
 		 * Is identity matrix
 		 *
-		 * @param {THREE.Matrix4} matrix
+		 * @param {Matrix4} matrix
 		 * @returns {Boolean} Returns true, if parameter is identity matrix
 		 */
 		function isIdentityMatrix( matrix ) {
@@ -782,7 +783,7 @@ GLTFExporter.prototype = {
 
 			var cachedImages = cachedData.images.get( image );
 			var mimeType = format === RGBAFormat ? 'image/png' : 'image/jpeg';
-			var key = mimeType + ":flipY/" + flipY.toString();
+			var key = mimeType + ':flipY/' + flipY.toString();
 
 			if ( cachedImages[ key ] !== undefined ) {
 
@@ -1714,12 +1715,15 @@ GLTFExporter.prototype = {
 
 			var joints = [];
 			var inverseBindMatrices = new Float32Array( skeleton.bones.length * 16 );
+			var temporaryBoneInverse = new Matrix4();
 
 			for ( var i = 0; i < skeleton.bones.length; ++ i ) {
 
 				joints.push( nodeMap.get( skeleton.bones[ i ] ) );
 
-				skeleton.boneInverses[ i ].toArray( inverseBindMatrices, i * 16 );
+				temporaryBoneInverse.copy( skeleton.boneInverses[ i ] );
+
+				temporaryBoneInverse.multiply( object.bindMatrix ).toArray( inverseBindMatrices, i * 16 );
 
 			}
 
@@ -2303,7 +2307,7 @@ GLTFExporter.Utils = {
 
 				// We need to take into consideration the intended target node
 				// of our original un-merged morphTarget animation.
-				mergedTrack.name = sourceTrackBinding.nodeName + '.morphTargetInfluences';
+				mergedTrack.name = ( sourceTrackBinding.nodeName || '' ) + '.morphTargetInfluences';
 				mergedTrack.values = values;
 
 				mergedTracks[ sourceTrackNode.uuid ] = mergedTrack;

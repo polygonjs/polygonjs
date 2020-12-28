@@ -6,10 +6,10 @@ import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
 import {RGBAFormat} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import { CopyShader } from "../shaders/CopyShader.js";
-import { ShaderPass } from "../postprocessing/ShaderPass.js";
-import { MaskPass } from "../postprocessing/MaskPass.js";
-import { ClearMaskPass } from "../postprocessing/MaskPass.js";
+import { CopyShader } from '../shaders/CopyShader.js';
+import { ShaderPass } from '../postprocessing/ShaderPass.js';
+import { MaskPass } from '../postprocessing/MaskPass.js';
+import { ClearMaskPass } from '../postprocessing/MaskPass.js';
 
 var EffectComposer = function ( renderer, renderTarget ) {
 

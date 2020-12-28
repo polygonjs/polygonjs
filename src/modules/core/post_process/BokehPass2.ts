@@ -175,9 +175,10 @@ export class BokehPass2 {
 		this._rtTextureColor.dispose();
 	}
 
+	private _prev_clear_color = new Color();
 	render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
 		const debug_display_depth = false;
-		const prev_clear_color = renderer.getClearColor();
+		renderer.getClearColor(this._prev_clear_color);
 		renderer.setClearColor(this.clear_color);
 
 		// TODO: try and make this work so it can be combined with other POST nodes
@@ -214,7 +215,7 @@ export class BokehPass2 {
 			renderer.render(this._processing_scene, this._processing_camera);
 		}
 
-		renderer.setClearColor(prev_clear_color);
+		renderer.setClearColor(this._prev_clear_color);
 	}
 
 	update_camera_uniforms_with_node(node: DepthOfFieldPostNode, camera: PerspectiveCamera) {
