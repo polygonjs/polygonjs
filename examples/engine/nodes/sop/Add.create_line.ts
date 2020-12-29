@@ -1,6 +1,6 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-export function SopAdd_create_line() {
+export function SopAdd_createLine() {
 	// create a scene
 	const scene = new PolyScene();
 
@@ -20,24 +20,24 @@ export function SopAdd_create_line() {
 
 	// let's add a material so we can actually see the line
 	const materials = scene.root.createNode('materials');
-	const line_basic = materials.createNode('lineBasic');
-	line_basic.p.color.set([0, 0, 1]);
+	const lineBasic = materials.createNode('lineBasic');
+	lineBasic.p.color.set([0, 0, 1]);
 	// assign the material
 	const material = geo.createNode('material');
 	material.setInput(0, add2);
-	material.p.material.set(line_basic.fullPath());
+	material.p.material.set(lineBasic.fullPath());
 	material.flags.display.set(true);
 
 	// create a camera
-	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
-	perspective_camera1.p.t.set([5, 5, 5]);
-	// add orbit_controls
-	const events1 = perspective_camera1.createNode('events');
-	const orbits_controls = events1.createNode('cameraOrbitControls');
-	perspective_camera1.p.controls.set(orbits_controls.fullPath());
+	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	perspectiveCamera1.p.t.set([5, 5, 5]);
+	// add orbitControls
+	const events1 = perspectiveCamera1.createNode('events');
+	const orbitsControls = events1.createNode('cameraOrbitControls');
+	perspectiveCamera1.p.controls.set(orbitsControls.fullPath());
 
 	// EXPORT
 	const nodes = [add2];
-	const camera = perspective_camera1;
+	const camera = perspectiveCamera1;
 	return {scene, camera, nodes};
 }

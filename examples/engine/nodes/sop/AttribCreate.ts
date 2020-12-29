@@ -16,14 +16,14 @@ export function SopAttribCreate() {
 	// - 0 for the first point
 	// - 1 for the last point
 	// - and a smooth gradient in between
-	const attrib_create = geo.createNode('attribCreate');
-	attrib_create.setInput(0, line);
-	attrib_create.p.name.set('amp');
-	attrib_create.p.value1.set('@ptnum / (points_count(0)-1)');
+	const attribCreate = geo.createNode('attribCreate');
+	attribCreate.setInput(0, line);
+	attribCreate.p.name.set('amp');
+	attribCreate.p.value1.set('@ptnum / (points_count(0)-1)');
 
 	// create a noise SOP
 	const noise = geo.createNode('noise');
-	noise.setInput(0, attrib_create);
+	noise.setInput(0, attribCreate);
 	noise.p.tamplitude_attrib.set(true);
 	// init with a non-zero offset to better see the noise
 	noise.p.offset.set([4.3, 0, 0]);
@@ -32,25 +32,25 @@ export function SopAttribCreate() {
 
 	// add a material to see the line
 	const materials = scene.root.createNode('materials');
-	const line_basic = materials.createNode('lineBasic');
-	line_basic.p.color.set([0, 0, 1]);
+	const lineBasic = materials.createNode('lineBasic');
+	lineBasic.p.color.set([0, 0, 1]);
 	// assign the material
 	const material = geo.createNode('material');
 	material.setInput(0, noise);
-	material.p.material.set(line_basic.fullPath());
+	material.p.material.set(lineBasic.fullPath());
 	material.flags.display.set(true);
 
 	// create a camera
-	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
-	perspective_camera1.p.t.set([5, 5, 5]);
-	// add orbit_controls
-	const events1 = perspective_camera1.createNode('events');
-	const orbits_controls = events1.createNode('cameraOrbitControls');
-	perspective_camera1.p.controls.set(orbits_controls.fullPath());
+	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	perspectiveCamera1.p.t.set([5, 5, 5]);
+	// add orbitControls
+	const events1 = perspectiveCamera1.createNode('events');
+	const orbitsControls = events1.createNode('cameraOrbitControls');
+	perspectiveCamera1.p.controls.set(orbitsControls.fullPath());
 
 	// EXPORT
-	const nodes = [attrib_create];
-	const camera = perspective_camera1;
-	const html_nodes = {noise, attrib_create};
-	return {scene, camera, nodes, html_nodes};
+	const nodes = [attribCreate];
+	const camera = perspectiveCamera1;
+	const htmlNodes = {noise, attribCreate};
+	return {scene, camera, nodes, htmlNodes};
 }

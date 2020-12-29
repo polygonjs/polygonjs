@@ -13,15 +13,15 @@ export function SopFile() {
 	scene.root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
-	perspective_camera1.p.t.set([5, 5, 5]);
-	// add orbit_controls
-	const events1 = perspective_camera1.createNode('events');
-	const orbits_controls = events1.createNode('cameraOrbitControls');
-	perspective_camera1.p.controls.set(orbits_controls.fullPath());
+	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	perspectiveCamera1.p.t.set([5, 5, 5]);
+	// add orbitControls
+	const events1 = perspectiveCamera1.createNode('events');
+	const orbitsControls = events1.createNode('cameraOrbitControls');
+	perspectiveCamera1.p.controls.set(orbitsControls.fullPath());
 
 	// EXPORT
 	const nodes = [file];
-	const camera = perspective_camera1;
+	const camera = perspectiveCamera1;
 	return {scene, camera, nodes};
 }

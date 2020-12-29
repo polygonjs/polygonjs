@@ -11,7 +11,7 @@ import {MatMeshBasic} from '../../examples/engine/nodes/mat/MeshBasic';
 import {MatMeshLambert} from '../../examples/engine/nodes/mat/MeshLambert';
 // sop
 import {SopAdd} from '../../examples/engine/nodes/sop/Add';
-import {SopAdd_create_line} from '../../examples/engine/nodes/sop/Add.create_line';
+import {SopAdd_createLine} from '../../examples/engine/nodes/sop/Add.create_line';
 import {SopAttribAddMult} from '../../examples/engine/nodes/sop/AttribAddMult';
 import {SopAttribCopy} from '../../examples/engine/nodes/sop/AttribCopy';
 import {SopAttribCreate} from '../../examples/engine/nodes/sop/AttribCreate';
@@ -32,7 +32,7 @@ const ANIM = [AnimPosition];
 const MAT = [MatMeshBasic, MatMeshLambert];
 const SOP = [
 	SopAdd,
-	SopAdd_create_line,
+	SopAdd_createLine,
 	SopAttribAddMult,
 	SopAttribCopy,
 	SopAttribCreate,
@@ -57,16 +57,16 @@ interface SceneBuilderResult {
 	scene: PolyScene;
 	camera: PerspectiveCameraObjNode;
 	nodes: BaseNodeType[];
-	html_nodes?: Dictionary<BaseNodeType>;
+	htmlNodes?: Dictionary<BaseNodeType>;
 }
 
 const result: SceneBuilderResult = AnimPosition();
 (window as any).scene = result.scene;
 
-const html_nodes = result.html_nodes;
-if (html_nodes) {
-	for (let k of Object.keys(html_nodes)) {
-		(window as any)[k] = html_nodes[k];
+const htmlNodes = result.htmlNodes;
+if (htmlNodes) {
+	for (let k of Object.keys(htmlNodes)) {
+		(window as any)[k] = htmlNodes[k];
 	}
 }
 
