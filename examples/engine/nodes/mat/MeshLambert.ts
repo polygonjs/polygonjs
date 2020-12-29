@@ -30,7 +30,7 @@ export function MatMeshLambert() {
 	// assign the material
 	const material = geo.createNode('material');
 	material.setInput(0, merge);
-	material.p.material.set(meshBasic.fullPath());
+	material.p.material.setNode(meshBasic);
 	// set the display flag on the material node
 	material.flags.display.set(true);
 
@@ -43,7 +43,7 @@ export function MatMeshLambert() {
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
-	perspectiveCamera1.p.controls.set(orbitsControls.fullPath());
+	perspectiveCamera1.p.controls.setNode(orbitsControls);
 
 	// EXPORT
 	const nodes = [sphere];

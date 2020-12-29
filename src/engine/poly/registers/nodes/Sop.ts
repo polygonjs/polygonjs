@@ -64,7 +64,6 @@ import {NormalsSopNode} from '../../../nodes/sop/Normals';
 import {NullSopNode} from '../../../nodes/sop/Null';
 import {ObjectMergeSopNode} from '../../../nodes/sop/ObjectMerge';
 import {ObjectPropertiesSopNode} from '../../../nodes/sop/ObjectProperties';
-import {OcclusionSopNode} from '../../../nodes/sop/Occlusion';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../../nodes/sop/Peak';
@@ -163,7 +162,6 @@ export interface GeoNodeChildrenMap {
 	null: NullSopNode;
 	objectMerge: ObjectMergeSopNode;
 	objectProperties: ObjectPropertiesSopNode;
-	occlusion: OcclusionSopNode;
 	operationsComposer: OperationsComposerSopNode;
 	particlesSystemGpu: ParticlesSystemGpuSopNode;
 	peak: PeakSopNode;
@@ -327,7 +325,6 @@ export class SopRegister {
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(OcclusionSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(OperationsComposerSopNode, CATEGORY_SOP.ADVANCED, {user_allowed: false});
 		poly.registerNode(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);

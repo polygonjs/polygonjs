@@ -15,7 +15,7 @@ export function SopAdd() {
 	// assign the material
 	const material = geo.createNode('material');
 	material.setInput(0, add);
-	material.p.material.set(points.fullPath());
+	material.p.material.setNode(points);
 	material.flags.display.set(true);
 
 	// create a camera
@@ -24,7 +24,7 @@ export function SopAdd() {
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
-	perspectiveCamera1.p.controls.set(orbitsControls.fullPath());
+	perspectiveCamera1.p.controls.setNode(orbitsControls);
 
 	// EXPORT
 	const nodes = [add];

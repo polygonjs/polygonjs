@@ -43,7 +43,7 @@ export function SopAttribAddMult() {
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
-	perspectiveCamera1.p.controls.set(orbitsControls.fullPath());
+	perspectiveCamera1.p.controls.setNode(orbitsControls);
 
 	// EXPORT
 	const nodes = [attribAddMult];

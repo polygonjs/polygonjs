@@ -46,6 +46,9 @@ export class NodePathParam extends TypedParam<ParamType.NODE_PATH> {
 	get is_default(): boolean {
 		return this._raw_input == this.default_value;
 	}
+	setNode(node: BaseNodeType) {
+		this.set(node.fullPath());
+	}
 	protected process_raw_input() {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
