@@ -11,7 +11,7 @@ function create_scene() {
 	scene.loading_controller.mark_as_loaded();
 
 	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
-	scene.cameras_controller.set_masterCameraNodePath(perspective_camera1.fullPath());
+	scene.camerasController.setMasterCameraNodePath(perspective_camera1.fullPath());
 	perspective_camera1.p.t.z.set(10);
 
 	const geo1 = scene.root.createNode('geo');

@@ -20,7 +20,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _assembler: BaseJsFunctionAssembler | undefined;
 
 	initialize_base_node() {
-		this.uiData.set_layout_horizontal();
+		this.uiData.setLayoutHorizontal();
 		this.io.connection_points.initialize_node();
 	}
 	cook() {

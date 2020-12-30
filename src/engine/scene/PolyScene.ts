@@ -43,7 +43,7 @@ export class PolyScene {
 	}
 
 	protected _cameras_controller = new CamerasController(this);
-	get cameras_controller() {
+	get camerasController() {
 		return this._cameras_controller;
 	}
 

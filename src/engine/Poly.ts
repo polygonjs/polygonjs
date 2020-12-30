@@ -13,15 +13,17 @@ import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesReg
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from '../core/operations/_Base';
+import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
 
 export class Poly {
 	static _instance: Poly | undefined;
 	public readonly renderers_controller: RenderersController = new RenderersController();
-	public readonly nodesRegister: NodesRegister = new NodesRegister();
-	public readonly operationsRegister: OperationsRegister = new OperationsRegister();
+	public readonly nodesRegister: NodesRegister = new NodesRegister(this);
+	public readonly operationsRegister: OperationsRegister = new OperationsRegister(this);
 	public readonly expressionsRegister: ExpressionRegister = new ExpressionRegister();
 	public readonly modulesRegister: DynamicModulesRegister = new DynamicModulesRegister();
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
+	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;

@@ -118,14 +118,6 @@ export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConf
 	)
 ) {}
 
-// export abstract class TypedMinimalCameraObjNode<
-// 	O extends OrthoOrPerspCamera,
-// 	K extends NodeParamsConfig
-// > extends TypedObjNode<O, K> {
-// 	setup_for_aspect_ratio(aspect: number) {}
-// 	abstract create_viewer(element: HTMLElement): BaseViewer;
-// }
-
 export abstract class TypedCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseCameraObjParamsConfig
@@ -158,7 +150,7 @@ export abstract class TypedCameraObjNode<
 		node.set_as_master_camera();
 	}
 	set_as_master_camera() {
-		this.scene.cameras_controller.set_masterCameraNodePath(this.fullPath());
+		this.scene.camerasController.setMasterCameraNodePath(this.fullPath());
 	}
 
 	setup_for_aspect_ratio(aspect: number) {}
@@ -168,7 +160,7 @@ export abstract class TypedCameraObjNode<
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
 		CoreTransform.set_params_from_object(this._object, this);
 	}
-	abstract create_viewer(element: HTMLElement): BaseViewerType;
+	abstract createViewer(element: HTMLElement): BaseViewerType;
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
 		(node.object as any)[param.name] = (node.pv as any)[param.name];
@@ -281,11 +273,9 @@ export class TypedThreejsCameraObjNode<
 			this._update_for_aspect_ratio();
 		}
 	}
-	create_viewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
-		return new ThreejsViewer(element, this.scene, this, viewer_properties);
-	}
+
 	createViewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
-		return this.create_viewer(element, viewer_properties);
+		return new ThreejsViewer(element, this.scene, this, viewer_properties);
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.post_process_controller.reset();

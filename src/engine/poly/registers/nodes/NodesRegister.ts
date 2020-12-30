@@ -1,6 +1,7 @@
 import {BaseNodeClass} from '../../../nodes/_Base';
 import {BaseOperation} from '../../../../core/operations/_Base';
 import {NodeContext} from '../../NodeContext';
+import {Poly} from '../../../Poly';
 
 export interface RegisterOptions {
 	only?: string[];
@@ -26,6 +27,8 @@ export class NodesRegister {
 	private _node_register: NodeConstructorByTypeByContext = new Map();
 	private _node_register_categories: TabMenuByTypeByContext = new Map();
 	private _node_register_options: RegisterOptionsByTypeByContext = new Map();
+
+	constructor(private poly: Poly) {}
 
 	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		const context = node.node_context();
@@ -59,6 +62,7 @@ export class NodesRegister {
 			}
 			current_options.set(node_type, options);
 		}
+		this.poly.pluginsRegister.registerNode(node);
 	}
 	deregister(context: NodeContext, node_type: string) {
 		this._node_register.get(context)?.delete(node_type);
@@ -121,6 +125,8 @@ export class NodesRegister {
 export class OperationsRegister {
 	private _operation_register: OperationConstructorByTypeByContext = new Map();
 
+	constructor(private poly: Poly) {}
+
 	register(operation: BaseOperationConstructor) {
 		const context = operation.context();
 		let current_operations_for_context = this._operation_register.get(context);
@@ -137,6 +143,7 @@ export class OperationsRegister {
 			throw new Error(message);
 		}
 		current_operations_for_context.set(operation_type, operation);
+		this.poly.pluginsRegister.registerOperation(operation);
 	}
 
 	registered_operations_for_context_and_parent_type(context: NodeContext, parent_node_type: string) {

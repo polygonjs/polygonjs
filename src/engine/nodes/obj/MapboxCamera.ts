@@ -445,7 +445,7 @@ export class MapboxCameraObjNode extends TypedCameraObjNode<PerspectiveCamera, M
 		});
 	}
 
-	create_viewer(element: HTMLElement) {
+	createViewer(element: HTMLElement) {
 		return new MapboxViewer(element, this.scene, this);
 	}
 }

@@ -10,7 +10,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 	const element = document.createElement('div');
 	document.body.appendChild(element);
 	const perspective_camera1 = window.perspective_camera1;
-	const viewer = perspective_camera1.create_viewer(element);
+	const viewer = perspective_camera1.createViewer(element);
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), [], 'no events registered yet');
 
@@ -74,7 +74,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 	// creating a new viewer will set its listeners correctly as well
 	const element2 = document.createElement('div');
 	document.body.appendChild(element2);
-	const viewer2 = perspective_camera1.create_viewer(element);
+	const viewer2 = perspective_camera1.createViewer(element);
 	assert.deepEqual(viewer2.events_controller.registered_event_types(), ['click', 'mousedown']);
 
 	// clear elements
@@ -92,7 +92,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	const element = document.createElement('div');
 	document.body.appendChild(element);
 	const perspective_camera1 = window.perspective_camera1;
-	const viewer = perspective_camera1.create_viewer(element);
+	const viewer = perspective_camera1.createViewer(element);
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), [], 'no events registered yet');
 
@@ -121,7 +121,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	const perspective_camera2 = scene2.root.nodesByType('perspectiveCamera')[0];
 	const events2 = scene2.root.nodesByType('events')[0];
 	const mouse2 = events2.nodesByType('mouse')[0];
-	const viewer2 = perspective_camera2.create_viewer(element);
+	const viewer2 = perspective_camera2.createViewer(element);
 
 	assert.deepEqual(
 		viewer2.events_controller.registered_event_types(),
@@ -155,7 +155,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 	const element = document.createElement('div');
 	document.body.appendChild(element);
 	const perspective_camera1 = window.perspective_camera1;
-	const viewer = perspective_camera1.create_viewer(element);
+	const viewer = perspective_camera1.createViewer(element);
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), []);
 
@@ -201,7 +201,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 	// creating a new viewer will set its listeners correctly as well
 	const element2 = document.createElement('div');
 	document.body.appendChild(element2);
-	const viewer2 = perspective_camera1.create_viewer(element);
+	const viewer2 = perspective_camera1.createViewer(element);
 	assert.deepEqual(viewer2.events_controller.registered_event_types(), ['keypress']);
 
 	// clear elements
@@ -219,7 +219,7 @@ QUnit.test('scene event nodes do not add events to the viewer', async (assert) =
 	const element = document.createElement('div');
 	document.body.appendChild(element);
 	const perspective_camera1 = window.perspective_camera1;
-	const viewer = perspective_camera1.create_viewer(element);
+	const viewer = perspective_camera1.createViewer(element);
 
 	assert.deepEqual(viewer.events_controller.registered_event_types(), []);
 

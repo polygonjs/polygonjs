@@ -16,7 +16,7 @@ const ParamsConfig = new AnimationCopySopParamsConfig();
 export class AnimationCopySopNode extends TypedSopNode<AnimationCopySopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'animation_copy';
+		return 'animationCopy';
 	}
 
 	static displayed_input_names(): string[] {

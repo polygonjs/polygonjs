@@ -6,7 +6,7 @@ export class CamerasController {
 
 	_masterCameraNodePath: string | null = null;
 
-	set_masterCameraNodePath(camera_node_path: string) {
+	setMasterCameraNodePath(camera_node_path: string) {
 		this._masterCameraNodePath = camera_node_path;
 	}
 	get masterCameraNodePath() {

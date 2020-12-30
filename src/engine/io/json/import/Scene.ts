@@ -38,7 +38,7 @@ export class SceneJsonImporter {
 
 			// scene.time_controller.set_fps(properties['fps'] || 30);
 			if (properties['masterCameraNodePath']) {
-				scene.cameras_controller.set_masterCameraNodePath(properties['masterCameraNodePath']);
+				scene.camerasController.setMasterCameraNodePath(properties['masterCameraNodePath']);
 			}
 		}
 

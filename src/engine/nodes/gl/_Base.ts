@@ -21,7 +21,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
 	initialize_base_node() {
-		this.uiData.set_layout_horizontal();
+		this.uiData.setLayoutHorizontal();
 		this.io.connections.init_inputs();
 
 		this.io.connection_points.spare_params.initialize_node();

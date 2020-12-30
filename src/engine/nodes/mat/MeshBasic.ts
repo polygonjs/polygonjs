@@ -17,8 +17,13 @@ import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
-class MeshBasicMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))))
+import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
+class MeshBasicMatParamsConfig extends WireframeParamConfig(
+	TextureAlphaMapParamConfig(
+		TextureMapParamConfig(
+			SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+		)
+	)
 ) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
@@ -54,6 +59,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 		this.depth_controller.update();
+		WireframeController.update(this);
 
 		this.set_material(this.material);
 	}

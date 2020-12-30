@@ -12,7 +12,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	initialize_base_node() {
-		this.uiData.set_layout_horizontal();
+		this.uiData.setLayoutHorizontal();
 		// this.add_post_dirty_hook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 		// cook is required for some nodes like event/animation
 		this.add_post_dirty_hook('cook_without_inputs_on_dirty', this._cook_without_inputs_bound);

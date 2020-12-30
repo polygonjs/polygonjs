@@ -21,7 +21,7 @@ const PLAYER_BASE_URLS: string[] = ['root', 'properties'];
 const EDITOR_BASE_URLS: string[] = PLAYER_BASE_URLS.concat(['ui', 'editor']);
 
 export class SceneDataManifestImporter {
-	static async import_scene_data(import_data: ImportData): Promise<SceneJsonExporterData> {
+	static async importSceneData(import_data: ImportData): Promise<SceneJsonExporterData> {
 		if (import_data.editor_mode == null) {
 			import_data.editor_mode = false;
 		}

@@ -37,7 +37,7 @@ export class SceneJsonExporter {
 				frameRangeLocked: this._scene.time_controller.frameRangeLocked,
 				realtimeState: this._scene.time_controller.realtimeState,
 				// fps: this._scene.time_controller.fps,
-				masterCameraNodePath: this._scene.cameras_controller.masterCameraNodePath,
+				masterCameraNodePath: this._scene.camerasController.masterCameraNodePath,
 			},
 			root: nodes_data,
 			ui: ui_data,

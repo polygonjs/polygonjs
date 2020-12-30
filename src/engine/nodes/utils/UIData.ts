@@ -2,6 +2,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
+import {CoreType} from '../../../core/Type';
 
 export interface NodeUIDataJson {
 	x: number;
@@ -49,22 +50,22 @@ export class UIData {
 	get comment(): string | undefined {
 		return this._comment;
 	}
-	set_color(color: Color) {
+	setColor(color: Color) {
 		this._color = color;
 	}
 	color() {
 		return this._color;
 	}
-	// set_icon(icon: string) {
+	// setIcon(icon: string) {
 	// 	this._icon = icon;
 	// }
 	// icon() {
 	// 	return this._icon;
 	// }
-	set_layout_horizontal() {
+	setLayoutHorizontal() {
 		this._layout_vertical = false;
 	}
-	is_layout_vertical() {
+	isLayoutVertical() {
 		return this._layout_vertical;
 	}
 
@@ -78,11 +79,11 @@ export class UIData {
 	}
 
 	setPosition(new_position: Vector2 | number, y: number = 0) {
-		if (new_position instanceof Vector2) {
-			this._position.copy(new_position);
-		} else {
+		if (CoreType.isNumber(new_position)) {
 			const x = new_position;
 			this._position.set(x, y);
+		} else {
+			this._position.copy(new_position);
 		}
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}
