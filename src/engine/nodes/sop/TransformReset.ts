@@ -60,6 +60,10 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
 	}
 
+	setMode(mode: TransformResetMode) {
+		this.p.mode.set(TRANSFORM_RESET_MODES.indexOf(mode));
+	}
+
 	cook(input_contents: CoreGroup[]) {
 		const mode = TRANSFORM_RESET_MODES[this.pv.mode];
 		this._select_mode(mode, input_contents);

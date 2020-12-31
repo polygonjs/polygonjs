@@ -112,16 +112,6 @@ module.exports = (env) => {
 						priority: -10,
 						reuseExistingChunk: true,
 					},
-					regl: {
-						test: /[\\/]node_modules[\\/]regl[\\/]/,
-						priority: -5,
-						reuseExistingChunk: true,
-					},
-					ammo: {
-						test: /[\\/]node_modules[\\/]ammo.*[\\/]/,
-						priority: -5,
-						reuseExistingChunk: true,
-					},
 					gsap: {
 						test: /[\\/]node_modules[\\/]gsap-core[\\/]/,
 						priority: -1,

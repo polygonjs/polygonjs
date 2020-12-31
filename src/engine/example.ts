@@ -60,7 +60,7 @@ interface SceneBuilderResult {
 	htmlNodes?: Dictionary<BaseNodeType>;
 }
 
-const result: SceneBuilderResult = AnimPosition();
+const result: SceneBuilderResult = SopRoundedBox();
 (window as any).scene = result.scene;
 
 const htmlNodes = result.htmlNodes;
