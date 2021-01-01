@@ -23,14 +23,14 @@ QUnit.test('add connect input points', async (assert) => {
 
 	const add = geo1.createNode('add');
 	add.setInput(0, merge);
-	add.p.create_point.set(false);
-	add.p.connect_input_points.set(true);
+	add.p.createPoint.set(false);
+	add.p.connectInputPoints.set(true);
 
 	let container = await add.request_container();
 	let core_group = container.core_content()!;
 	assert.equal(core_group.points().length, 3);
 
-	add.p.connect_to_last_point.set(true);
+	add.p.connectToLastPoint.set(true);
 	container = await add.request_container();
 	core_group = container.core_content()!;
 	assert.equal(core_group.points().length, 4);

@@ -342,7 +342,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 	private _get_all_nav_beacon_objects(camera_path_attrib_value: string): Object3D[] {
 		// find all other objects with same camera attribute
 		const objects: Object3D[] = [];
-		this.scene.default_scene.traverse((child) => {
+		this.scene.defaultScene.traverse((child) => {
 			const obj_camera_path = CoreObject.string_attrib_value(child, ATTRIB_NAME.CAMERA, 0);
 			if (obj_camera_path && obj_camera_path == camera_path_attrib_value) {
 				objects.push(child);

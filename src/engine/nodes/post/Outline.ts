@@ -69,7 +69,7 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 	private _set_selected_objects(pass: OutlinePass) {
 		const objects: Object3D[] = [];
 		const mask = this.pv.objects_mask;
-		this.scene.default_scene.traverse((object) => {
+		this.scene.defaultScene.traverse((object) => {
 			if (CoreString.match_mask(object.name, mask)) {
 				objects.push(object);
 			}

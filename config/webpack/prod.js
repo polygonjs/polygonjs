@@ -107,11 +107,6 @@ module.exports = (env) => {
 				automaticNameDelimiter: '~',
 				enforceSizeThreshold: 50000,
 				cacheGroups: {
-					mapbox: {
-						test: /[\\/].*mapbox.*[\\/]/,
-						priority: -10,
-						reuseExistingChunk: true,
-					},
 					gsap: {
 						test: /[\\/]node_modules[\\/]gsap-core[\\/]/,
 						priority: -1,

@@ -16,12 +16,14 @@ export class PluginsRegister {
 
 	constructor(private poly: Poly) {}
 
-	register(name: string, callback: (poly: Poly) => void) {
-		const plugin = new PolyPlugin(name, callback);
+	register(plugin: PolyPlugin) {
 		this._current_plugin = plugin;
-		this._plugins_by_name.set(name, plugin);
+		this._plugins_by_name.set(plugin.name(), plugin);
 		plugin.init(this.poly);
 		this._current_plugin = undefined;
+	}
+	pluginByName(pluginName: string) {
+		return this._plugins_by_name.get(pluginName);
 	}
 
 	registerNode(node: BaseNodeConstructor) {

@@ -23,7 +23,7 @@ export class RayHelper {
 
 	constructor(
 		private event_helper: EventHelper,
-		private default_scene: Scene,
+		private defaultScene: Scene,
 		// private _line_precision_mult: number = 1,
 		private _point_threshold_mult: number = 1
 	) {
@@ -91,7 +91,7 @@ export class RayHelper {
 		// this.raycaster.ray.origin = camera.position
 
 		if (objects == null) {
-			objects = this.default_scene.children;
+			objects = this.defaultScene.children;
 		}
 		let intersects = this.raycaster.intersectObjects(objects, true);
 		// console.log(intersects)

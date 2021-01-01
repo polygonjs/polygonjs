@@ -195,7 +195,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// }
 
 	// node
-	set_node(node: BaseNodeType | null) {
+	_set_node_owner(node: BaseNodeType | null) {
 		if (!node) {
 			if (this._node) {
 				this._node.params.params_node?.remove_graph_input(this);
@@ -209,7 +209,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 		if (this.components) {
 			for (let c of this.components) {
-				c.set_node(node);
+				c._set_node_owner(node);
 			}
 		}
 	}

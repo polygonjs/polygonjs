@@ -7,7 +7,7 @@ export function SopAdd_createLine() {
 	const geo = scene.root.createNode('geo');
 	// create a first add node, that generates multiple points
 	const add = geo.createNode('add');
-	add.p.points_count.set(10);
+	add.p.pointsCount.set(10);
 	// plug it into a jitter node, to move those points around
 	const jitter = geo.createNode('jitter');
 	jitter.setInput(0, add);
@@ -15,8 +15,8 @@ export function SopAdd_createLine() {
 	// and create the add node that will connect those points
 	const add2 = geo.createNode('add');
 	add2.setInput(0, jitter);
-	add2.p.create_point.set(false);
-	add2.p.connect_input_points.set(true);
+	add2.p.createPoint.set(false);
+	add2.p.connectInputPoints.set(true);
 
 	// let's add a material so we can actually see the line
 	const materials = scene.root.createNode('materials');

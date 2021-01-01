@@ -13,13 +13,7 @@ export class CopObjNode extends ParamLessBaseManagerObjNode {
 	static type() {
 		return NetworkNodeType.COP;
 	}
-	// children_context(){ return NodeContext.COP }
-
 	protected _children_controller_context = NodeContext.COP;
-	// initialize_node() {
-	// 	this.children_controller?.init({dependent: false});
-	// 	// this._init_manager();
-	// }
 
 	createNode<S extends keyof CopNodeChildrenMap>(
 		node_class: S,

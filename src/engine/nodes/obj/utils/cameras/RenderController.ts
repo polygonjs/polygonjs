@@ -120,7 +120,7 @@ export class RenderController {
 				this._resolved_scene = node.object;
 			}
 		} else {
-			this._resolved_scene = this.node.scene.default_scene;
+			this._resolved_scene = this.node.scene.defaultScene;
 		}
 	}
 

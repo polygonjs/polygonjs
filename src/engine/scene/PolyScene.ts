@@ -23,9 +23,9 @@ import {SceneLibsController} from './utils/LibsController';
 import {BaseNodeType} from '../nodes/_Base';
 
 export class PolyScene {
-	protected _default_scene = new Scene();
-	get default_scene() {
-		return this._default_scene;
+	protected _defaultScene = new Scene();
+	get defaultScene() {
+		return this._defaultScene;
 	}
 	_uuid!: string;
 	setUuid(uuid: string) {
@@ -207,8 +207,8 @@ export class PolyScene {
 	//
 	//
 	constructor() {
-		this._default_scene.name = 'default_scene';
-		this._default_scene.matrixAutoUpdate = false;
+		this._defaultScene.name = 'defaultScene';
+		this._defaultScene.matrixAutoUpdate = false;
 		// this.mark_as_loaded()
 		this._graph.set_scene(this);
 		// this.time_controller.init();

@@ -4,7 +4,6 @@ import {BuilderCopNode} from '../../../nodes/cop/Builder';
 import {ColorCopNode} from '../../../nodes/cop/Color';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {ImageCopNode} from '../../../nodes/cop/Image';
-import {MapboxTileCopNode} from '../../../nodes/cop/MapboxTile';
 import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
@@ -17,7 +16,6 @@ export interface CopNodeChildrenMap {
 	color: ColorCopNode;
 	envMap: EnvMapCopNode;
 	image: ImageCopNode;
-	mapboxTile: MapboxTileCopNode;
 	Post: PostCopNode;
 	null: NullCopNode;
 	switch: SwitchCopNode;
@@ -33,7 +31,6 @@ export class CopRegister {
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
-		poly.registerNode(MapboxTileCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(PostCopNode, CATEGORY_COP.FILTER);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);

@@ -28,8 +28,8 @@ QUnit.test('root adds objects to hierarchy when created with api', async (assert
 	assert.ok(!scene.loading_controller.is_loading);
 
 	await scene.wait_for_cooks_completed();
-	assert.equal(scene.default_scene.children[0].children.length, 3);
-	assert.deepEqual(scene.default_scene.children[0].children.map((n) => n.name).sort(), [
+	assert.equal(scene.defaultScene.children[0].children.length, 3);
+	assert.deepEqual(scene.defaultScene.children[0].children.map((n) => n.name).sort(), [
 		'/ambientLight1',
 		'/geo1',
 		'/perspectiveCamera1',
@@ -47,8 +47,8 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 	scene2.setName('from_load');
 
 	await CoreSleep.sleep(2000);
-	assert.equal(scene2.default_scene.children[0].children.length, 3);
-	assert.deepEqual(scene2.default_scene.children[0].children.map((n) => n.name).sort(), [
+	assert.equal(scene2.defaultScene.children[0].children.length, 3);
+	assert.deepEqual(scene2.defaultScene.children[0].children.map((n) => n.name).sort(), [
 		'/ambientLight1',
 		'/geo1',
 		'/perspectiveCamera1',

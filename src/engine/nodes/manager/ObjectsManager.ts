@@ -32,7 +32,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	init_default_scene() {
 		this._object.name = '_WORLD_';
-		this._scene.default_scene.add(this._object);
+		this._scene.defaultScene.add(this._object);
 	}
 
 	object() {
@@ -50,12 +50,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
 	): K {
-		const node = super.createNode(node_class, params_init_value_overrides) as K;
-		// if (node.dirty_controller.is_dirty) {
-		// 	// ensure that objects such as light have their parameters set in examples
-		// 	node.request_container();
-		// }
-		return node;
+		return super.createNode(node_class, params_init_value_overrides) as K;
 	}
 	children() {
 		return super.children() as BaseObjNodeType[];

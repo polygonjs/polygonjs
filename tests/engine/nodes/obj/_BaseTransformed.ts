@@ -1,7 +1,7 @@
 QUnit.test('obj nodes can be parented to each other', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	const world_root = scene.default_scene.children[0];
+	const world_root = scene.defaultScene.children[0];
 	assert.equal(world_root.children.length, 2);
 	assert.equal(geo1.object.children[0].children.length, 0);
 

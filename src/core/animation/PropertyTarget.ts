@@ -29,7 +29,7 @@ export class PropertyTarget {
 		if (!mask) {
 			return;
 		}
-		scene.default_scene.traverse((object) => {
+		scene.defaultScene.traverse((object) => {
 			if (CoreString.match_mask(object.name, mask)) {
 				objects.push(object);
 			}

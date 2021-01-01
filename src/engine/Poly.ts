@@ -14,6 +14,8 @@ import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from '../core/operations/_Base';
 import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
+import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
+import {PolyPlugin} from './poly/registers/plugins/Plugin';
 
 export class Poly {
 	static _instance: Poly | undefined;
@@ -24,6 +26,7 @@ export class Poly {
 	public readonly modulesRegister: DynamicModulesRegister = new DynamicModulesRegister();
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
+	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
 	scenes_by_uuid: Dictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;
@@ -47,11 +50,20 @@ export class Poly {
 	registerOperation(operation: typeof BaseOperation) {
 		this.operationsRegister.register(operation);
 	}
+	registerCamera(node: BaseNodeConstructor) {
+		this.camerasRegister.register(node);
+	}
+	registerPlugin(plugin: PolyPlugin) {
+		this.pluginsRegister.register(plugin);
+	}
 	registeredNodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNodeClass> {
 		return this.nodesRegister.registeredNodes(parent_context, type);
 	}
 	registeredOperation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {
 		return this.operationsRegister.registeredOperation(parent_context, operation_type);
+	}
+	registeredCameraTypes() {
+		return this.camerasRegister.registeredTypes();
 	}
 
 	in_worker_thread() {

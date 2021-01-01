@@ -15,19 +15,19 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AddSopOperation.DEFAULT_PARAMS;
 class AddSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle to create points */
-	create_point = ParamConfig.BOOLEAN(DEFAULT.create_point);
+	createPoint = ParamConfig.BOOLEAN(DEFAULT.createPoint);
 	/** @param define the number of points to create */
-	points_count = ParamConfig.INTEGER(DEFAULT.points_count, {
+	pointsCount = ParamConfig.INTEGER(DEFAULT.pointsCount, {
 		range: [1, 100],
 		rangeLocked: [true, false],
-		visibleIf: {create_point: true},
+		visibleIf: {createPoint: true},
 	});
 	/** @param the position of the created points */
-	position = ParamConfig.VECTOR3(DEFAULT.position, {visibleIf: {create_point: true}});
+	position = ParamConfig.VECTOR3(DEFAULT.position, {visibleIf: {createPoint: true}});
 	/** @param toggle on to connect the points from the input geometry */
-	connect_input_points = ParamConfig.BOOLEAN(0);
+	connectInputPoints = ParamConfig.BOOLEAN(DEFAULT.connectInputPoints);
 	/** @param check if the last point is connected */
-	connect_to_last_point = ParamConfig.BOOLEAN(DEFAULT.connect_to_last_point);
+	connectToLastPoint = ParamConfig.BOOLEAN(DEFAULT.connectToLastPoint);
 }
 const ParamsConfig = new AddSopParamsConfig();
 

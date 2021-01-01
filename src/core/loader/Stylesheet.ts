@@ -1,7 +1,7 @@
 import {Poly} from '../../engine/Poly';
 
 export class CoreStylesheetLoader {
-	static load_url(url: string) {
+	static loadUrl(url: string) {
 		// add .js ext if not present
 		const elements = url.split('.');
 		const ext = elements[elements.length - 1];

@@ -52,7 +52,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	}
 
 	constructor(protected _container: HTMLElement, protected _scene: PolyScene, protected _camera_node: C) {
-		// this._display_scene = this._scene.default_scene;
+		// this._display_scene = this._scene.defaultScene;
 		// this._init_from_scene(this._camera_node).then(() => {
 		// this._build();
 		// });

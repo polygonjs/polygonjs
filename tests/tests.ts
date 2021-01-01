@@ -67,7 +67,6 @@ QUnit.module('cop');
 import './engine/nodes/cop/Builder';
 import './engine/nodes/cop/EnvMap';
 import './engine/nodes/cop/Image';
-import './engine/nodes/cop/MapboxTile';
 import './engine/nodes/cop/Switch';
 
 QUnit.module('event');
@@ -155,9 +154,6 @@ import './engine/nodes/sop/Layer';
 import './engine/nodes/sop/Line';
 import './engine/nodes/sop/LOD';
 import './engine/nodes/sop/Material';
-import './engine/nodes/sop/MapboxLayer';
-import './engine/nodes/sop/MapboxPlane';
-import './engine/nodes/sop/MapboxTransform';
 import './engine/nodes/sop/Merge';
 import './engine/nodes/sop/Noise';
 import './engine/nodes/sop/Normals';

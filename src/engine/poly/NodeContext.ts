@@ -63,7 +63,6 @@ export enum NetworkChildNodeType {
 export enum CameraNodeType {
 	PERSPECTIVE = 'perspectiveCamera',
 	ORTHOGRAPHIC = 'orthographicCamera',
-	MAPBOX = 'mapboxCamera',
 }
 export enum GlNodeType {
 	ATTRIBUTE = 'attribute',

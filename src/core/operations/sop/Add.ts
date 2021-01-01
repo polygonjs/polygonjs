@@ -9,22 +9,22 @@ import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttr
 import {CorePoint} from '../../geometry/Point';
 interface AddSopParams extends DefaultOperationParams {
 	// create point
-	create_point: boolean;
-	points_count: number;
+	createPoint: boolean;
+	pointsCount: number;
 	position: Vector3;
 	// connect input points
-	connect_input_points: boolean;
+	connectInputPoints: boolean;
 	// open: boolean; // creating a polygon when this is closed still needs work
-	connect_to_last_point: boolean;
+	connectToLastPoint: boolean;
 }
 
 export class AddSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AddSopParams = {
-		create_point: true,
-		points_count: 1,
+		createPoint: true,
+		pointsCount: 1,
 		position: new Vector3(0, 0, 0),
-		connect_input_points: false,
-		connect_to_last_point: false,
+		connectInputPoints: false,
+		connectToLastPoint: false,
 	};
 	static type(): Readonly<'add'> {
 		return 'add';
@@ -38,12 +38,12 @@ export class AddSopOperation extends BaseSopOperation {
 		return this.create_core_group_from_objects(objects);
 	}
 	private _create_point(objects: Object3D[], params: AddSopParams) {
-		if (!params.create_point) {
+		if (!params.createPoint) {
 			return;
 		}
 		const geometry = new BufferGeometry();
 		const positions: number[] = [];
-		for (let i = 0; i < params.points_count; i++) {
+		for (let i = 0; i < params.pointsCount; i++) {
 			params.position.toArray(positions, i * 3);
 		}
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
@@ -55,7 +55,7 @@ export class AddSopOperation extends BaseSopOperation {
 	}
 
 	private _create_polygon(core_group: CoreGroup, objects: Object3D[], params: AddSopParams) {
-		if (!params.connect_input_points) {
+		if (!params.connectInputPoints) {
 			return;
 		}
 		const points = core_group.points();
@@ -94,7 +94,7 @@ export class AddSopOperation extends BaseSopOperation {
 			}
 		}
 
-		if (points.length > 2 && params.connect_to_last_point) {
+		if (points.length > 2 && params.connectToLastPoint) {
 			points[0].position().toArray(positions, positions.length);
 			const last_index = indices[indices.length - 1];
 			indices.push(last_index);
