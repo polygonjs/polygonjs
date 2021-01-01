@@ -43,18 +43,18 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 			const node_context = node.node_context();
 			if (node_context == NodeContext.COP) {
 				const texture_node = node as BaseCopNodeType;
-				const container = await texture_node.request_container();
+				const container = await texture_node.requestContainer();
 				const texture = container.texture();
 
-				for (let core_object of core_group.core_objects()) {
+				for (let core_object of core_group.coreObjects()) {
 					this._set_position_from_data_texture(core_object, texture);
 				}
 			} else {
 				this.states.error.set('found node is not a texture');
 			}
 		}
-		core_group.compute_vertex_normals();
-		this.set_core_group(core_group);
+		core_group.computeVertexNormals();
+		this.setCoreGroup(core_group);
 	}
 
 	private _set_position_from_data_texture(core_object: CoreObject, texture: Texture) {
@@ -65,7 +65,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		const {data, resx, resy} = texture_data;
 		const texture_component_size = data.length / (resx * resy);
 
-		const geometry = core_object.core_geometry()?.geometry();
+		const geometry = core_object.coreGeometry()?.geometry();
 		if (!geometry) {
 			return;
 		}

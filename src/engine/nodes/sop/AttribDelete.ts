@@ -50,7 +50,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 
 	cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
-		const attrib_names = core_group.attrib_names_matching_mask(this.pv.name);
+		const attrib_names = core_group.attribNamesMatchingMask(this.pv.name);
 
 		for (let attrib_name of attrib_names) {
 			switch (this.pv.class) {
@@ -61,7 +61,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 			}
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	delete_vertex_attribute(core_group: CoreGroup, attrib_name: string) {
@@ -70,7 +70,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 				const child = object3d as Mesh;
 				if (child.geometry) {
 					const core_geometry = new CoreGeometry(child.geometry as BufferGeometry);
-					core_geometry.delete_attribute(attrib_name);
+					core_geometry.deleteAttribute(attrib_name);
 				}
 			});
 		}
@@ -81,7 +81,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 			object.traverse((object3d: Object3D) => {
 				const child = object3d as Mesh;
 				const core_object = new CoreObject(child, index);
-				core_object.delete_attribute(attrib_name);
+				core_object.deleteAttribute(attrib_name);
 				index++;
 			});
 		}

@@ -55,7 +55,7 @@ export const OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE: ObjectConstructorByObjectType = 
 	[ObjectType.OBJECT3D]: Object3D,
 	[ObjectType.LOD]: LOD,
 };
-export function object_type_from_constructor(constructor: Function) {
+export function objectTypeFromConstructor(constructor: Function) {
 	switch (constructor) {
 		case Object3D:
 			return ObjectType.OBJECT3D;

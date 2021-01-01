@@ -58,22 +58,22 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 	async cook(input_contents: CoreGroup[]) {
 		this._core_group_dest = input_contents[0];
-		const dest_points = this._core_group_dest.points_from_group(this.pv.dest_group);
+		const dest_points = this._core_group_dest.pointsFromGroup(this.pv.dest_group);
 
 		this._core_group_src = input_contents[1];
 
-		this._attrib_names = this._core_group_src.attrib_names_matching_mask(this.pv.name);
+		this._attrib_names = this._core_group_src.attribNamesMatchingMask(this.pv.name);
 		this._error_if_attribute_not_found_on_second_input();
 		this._build_octree_if_required(this._core_group_src);
 		this._add_attribute_if_required();
 
 		await this._transfer_attributes(dest_points);
-		this.set_core_group(this._core_group_dest);
+		this.setCoreGroup(this._core_group_dest);
 	}
 
 	_error_if_attribute_not_found_on_second_input() {
 		for (let attrib_name of this._attrib_names) {
-			if (!this._core_group_src.has_attrib(attrib_name)) {
+			if (!this._core_group_src.hasAttrib(attrib_name)) {
 				this.states.error.set(`attribute '${attrib_name}' not found on second input`);
 			}
 		}
@@ -88,18 +88,18 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 			this._octree_timestamp = core_group.timestamp();
 			this._prev_param_src_group = this.pv.src_group;
 
-			const points_src = this._core_group_src.points_from_group(this.pv.src_group);
+			const points_src = this._core_group_src.pointsFromGroup(this.pv.src_group);
 
-			this._octree = new CoreOctree(this._core_group_src.bounding_box());
+			this._octree = new CoreOctree(this._core_group_src.boundingBox());
 			this._octree.set_points(points_src);
 		}
 	}
 
 	private _add_attribute_if_required() {
 		this._attrib_names.forEach((attrib_name) => {
-			if (!this._core_group_dest.has_attrib(attrib_name)) {
-				const attrib_size = this._core_group_src.attrib_size(attrib_name);
-				this._core_group_dest.add_numeric_vertex_attrib(attrib_name, attrib_size, 0);
+			if (!this._core_group_dest.hasAttrib(attrib_name)) {
+				const attrib_size = this._core_group_src.attribSize(attrib_name);
+				this._core_group_dest.addNumericVertexAttrib(attrib_name, attrib_size, 0);
 			}
 		});
 	}
@@ -130,7 +130,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		);
 
 		if (new_value != null) {
-			point_dest.set_attrib_value(attrib_name, new_value);
+			point_dest.setAttribValue(attrib_name, new_value);
 		}
 	}
 }

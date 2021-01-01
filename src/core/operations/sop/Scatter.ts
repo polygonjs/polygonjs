@@ -58,14 +58,14 @@ export class ScatterSopOperation extends BaseSopOperation {
 		const positions: number[] = [];
 		let attrib_names: string[] = [];
 		if (params.transfer_attributes) {
-			attrib_names = core_group.attrib_names_matching_mask(params.attributes_to_transfer);
+			attrib_names = core_group.attribNamesMatchingMask(params.attributes_to_transfer);
 		}
 
 		const attrib_values_by_name: Map<string, number[]> = new Map();
 		const attrib_sizes_by_name: Map<string, number> = new Map();
 		for (let attrib_name of attrib_names) {
 			attrib_values_by_name.set(attrib_name, []);
-			attrib_sizes_by_name.set(attrib_name, core_group.attrib_size(attrib_name));
+			attrib_sizes_by_name.set(attrib_name, core_group.attribSize(attrib_name));
 		}
 
 		const iterator = new CoreIterator();

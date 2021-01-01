@@ -12,7 +12,7 @@ import {
 	ATTRIBUTE_TYPES,
 	AttribType,
 	AttribTypeMenuEntries,
-	object_type_from_constructor,
+	objectTypeFromConstructor,
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 
@@ -58,50 +58,50 @@ export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			this._split_core_group(core_group);
 		}
 
-		this.set_objects(this._new_objects);
+		this.setObjects(this._new_objects);
 	}
 
 	async _split_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		for (let core_object of core_objects) {
 			this._split_core_object(core_object);
 		}
 	}
 
 	private _split_core_object(core_object: CoreObject) {
-		let core_geometry = core_object.core_geometry();
+		let core_geometry = core_object.coreGeometry();
 		let attrib_name: string = this.pv.attrib_name;
 		let points_by_value: Map<string | number, CorePoint[]> = new Map();
 		if (core_geometry) {
 			const object = core_object.object() as Object3DWithGeometry;
-			const points = core_geometry.points_from_geometry();
+			const points = core_geometry.pointsFromGeometry();
 			const first_point = points[0];
 			if (first_point) {
-				const attrib_size = first_point.attrib_size(attrib_name);
-				if (!(attrib_size == AttribSize.FLOAT || first_point.is_attrib_indexed(attrib_name))) {
+				const attrib_size = first_point.attribSize(attrib_name);
+				if (!(attrib_size == AttribSize.FLOAT || first_point.isAttribIndexed(attrib_name))) {
 					this.states.error.set(`attrib '${attrib_name}' must be a float or a string`);
 					return;
 				}
 				let val: string | number;
-				if (first_point.is_attrib_indexed(attrib_name)) {
+				if (first_point.isAttribIndexed(attrib_name)) {
 					for (let point of points) {
-						val = point.indexed_attrib_value(attrib_name);
+						val = point.indexedAttribValue(attrib_name);
 						MapUtils.push_on_array_at_entry(points_by_value, val, point);
 					}
 				} else {
 					for (let point of points) {
-						val = point.attrib_value(attrib_name) as number;
+						val = point.attribValue(attrib_name) as number;
 						MapUtils.push_on_array_at_entry(points_by_value, val, point);
 					}
 				}
 			}
 
-			const object_type = object_type_from_constructor(object.constructor);
+			const object_type = objectTypeFromConstructor(object.constructor);
 			points_by_value.forEach((points, value) => {
-				const new_geometry = CoreGeometry.geometry_from_points(points, object_type);
+				const new_geometry = CoreGeometry.geometryFromPoints(points, object_type);
 				if (new_geometry) {
 					const object = this.create_object(new_geometry, object_type);
-					CoreObject.add_attribute(object, attrib_name, value);
+					CoreObject.addAttribute(object, attrib_name, value);
 					this._new_objects.push(object);
 				}
 			});

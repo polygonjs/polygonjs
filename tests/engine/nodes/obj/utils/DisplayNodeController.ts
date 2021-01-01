@@ -21,7 +21,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	await CoreSleep.sleep(10);
 	assert.equal(
 		geo1.children_display_controller.sop_group.children[0].uuid,
-		box1.container_controller.container.core_content()?.objects()[0].uuid
+		box1.container_controller.container.coreContent()?.objects()[0].uuid
 	);
 
 	assert.equal(box1.cook_controller.cooks_count, 1);
@@ -107,7 +107,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	assert.equal(box1.cook_controller.cooks_count, 1);
 	assert.equal(
 		geo1.children_display_controller.sop_group.children[0].uuid,
-		box1.container_controller.container.core_content()?.objects()[0].uuid
+		box1.container_controller.container.coreContent()?.objects()[0].uuid
 	);
 });
 
@@ -127,8 +127,8 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// display the box
 	box1.flags.display.set(true);
 	await scene.wait_for_cooks_completed();
-	await box1.request_container();
-	await plane1.request_container();
+	await box1.requestContainer();
+	await plane1.requestContainer();
 	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2, 'obj has 2 children');
 	assert.deepEqual(

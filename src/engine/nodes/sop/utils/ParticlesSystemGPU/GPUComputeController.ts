@@ -318,9 +318,9 @@ export class ParticlesSystemGpuComputeController {
 
 		const uv_attrib_name = GlobalsTextureHandler.UV_ATTRIB;
 		if (this._particles_core_group) {
-			for (let core_geometry of this._particles_core_group.core_geometries()) {
+			for (let core_geometry of this._particles_core_group.coreGeometries()) {
 				const geometry = core_geometry.geometry();
-				const attribute_constructor = core_geometry.marked_as_instance()
+				const attribute_constructor = core_geometry.markedAsInstance()
 					? InstancedBufferAttribute
 					: BufferAttribute;
 				geometry.setAttribute(uv_attrib_name, new attribute_constructor(uvs, 2));
@@ -358,16 +358,16 @@ export class ParticlesSystemGpuComputeController {
 
 				const first_point = this._points[0];
 				if (first_point) {
-					const has_attrib = first_point.has_attrib(variable_name);
+					const has_attrib = first_point.hasAttrib(variable_name);
 					if (has_attrib) {
-						const attrib_size = first_point.attrib_size(variable_name);
+						const attrib_size = first_point.attribSize(variable_name);
 						let cmptr = texture_position;
 						for (let point of this._points) {
 							if (attrib_size == 1) {
-								const val: number = point.attrib_value(variable_name) as number;
+								const val: number = point.attribValue(variable_name) as number;
 								array[cmptr] = val;
 							} else {
-								(point.attrib_value(variable_name) as Vector2).toArray(array, cmptr);
+								(point.attribValue(variable_name) as Vector2).toArray(array, cmptr);
 							}
 							cmptr += 4;
 						}
@@ -439,13 +439,13 @@ export class ParticlesSystemGpuComputeController {
 			return;
 		}
 
-		let geometries = this._particles_core_group.core_geometries();
+		let geometries = this._particles_core_group.coreGeometries();
 		const first_geometry = geometries[0];
 		if (first_geometry) {
-			const type = first_geometry.marked_as_instance();
+			const type = first_geometry.markedAsInstance();
 			const selected_geometries = [];
 			for (let geometry of geometries) {
-				if (geometry.marked_as_instance() == type) {
+				if (geometry.markedAsInstance() == type) {
 					selected_geometries.push(geometry);
 				}
 			}

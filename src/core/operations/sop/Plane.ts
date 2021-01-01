@@ -57,7 +57,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		return this.create_core_group_from_geometry(geometry);
 	}
 	private _cook_with_input(core_group: CoreGroup, params: PlaneSopParams) {
-		const bbox = core_group.bounding_box();
+		const bbox = core_group.boundingBox();
 		const size = new Vector3();
 		bbox.getSize(size);
 		const center = new Vector3();

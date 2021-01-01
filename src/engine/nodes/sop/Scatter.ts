@@ -52,6 +52,6 @@ export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 	async cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new ScatterSopOperation(this.scene, this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

@@ -14,9 +14,9 @@ QUnit.test('COP env_map simple', async (assert) => {
 
 	file1.p.url.set(`${ASSETS_ROOT}/textures/piz_compressed.exr`);
 
-	let container = await env_map1.request_container();
+	let container = await env_map1.requestContainer();
 	assert.ok(!env_map1.states.error.active);
-	let texture = container.core_content();
+	let texture = container.coreContent();
 	assert.equal(texture.image.width, 768);
 	assert.equal(texture.image.height, 768);
 

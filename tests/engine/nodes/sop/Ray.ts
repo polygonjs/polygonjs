@@ -14,7 +14,7 @@ QUnit.test('ray from normal', async (assert) => {
 
 	let container, size;
 
-	container = await ray1.request_container();
+	container = await ray1.requestContainer();
 	size = container.size().toArray();
 	assert.in_delta(size[0], 1, 0.1);
 	assert.in_delta(size[1], 1, 0.1);
@@ -41,7 +41,7 @@ QUnit.test('ray from dir', async (assert) => {
 
 	let container, size;
 
-	container = await ray1.request_container();
+	container = await ray1.requestContainer();
 	size = container.size().toArray();
 	assert.in_delta(size[0], 2, 0.1);
 	assert.in_delta(size[1], 0, 0.1);

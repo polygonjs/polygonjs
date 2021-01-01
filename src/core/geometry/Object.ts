@@ -52,7 +52,7 @@ export class CoreObject extends CoreEntity {
 	geometry(): BufferGeometry | null {
 		return (this._object as Mesh).geometry as BufferGeometry | null;
 	}
-	core_geometry(): CoreGeometry | null {
+	coreGeometry(): CoreGeometry | null {
 		const geo = this.geometry();
 		if (geo) {
 			return new CoreGeometry(geo);
@@ -67,9 +67,9 @@ export class CoreObject extends CoreEntity {
 		// }
 	}
 	points() {
-		return this.core_geometry()?.points() || [];
+		return this.coreGeometry()?.points() || [];
 	}
-	points_from_group(group: GroupString): CorePoint[] {
+	pointsFromGroup(group: GroupString): CorePoint[] {
 		if (group) {
 			const indices = CoreString.indices(group);
 			if (indices) {
@@ -83,11 +83,11 @@ export class CoreObject extends CoreEntity {
 		}
 	}
 
-	compute_vertex_normals() {
-		this.core_geometry()?.compute_vertex_normals();
+	computeVertexNormals() {
+		this.coreGeometry()?.computeVertexNormals();
 	}
 
-	static add_attribute(object: Object3D, attrib_name: string, value: AttribValue) {
+	static addAttribute(object: Object3D, attrib_name: string, value: AttribValue) {
 		let data: ParamInitValueSerialized;
 		if (value != null && !CoreType.isNumber(value) && !CoreType.isArray(value) && !CoreType.isString(value)) {
 			data = (value as Vector3).toArray() as Number3;
@@ -98,48 +98,48 @@ export class CoreObject extends CoreEntity {
 		user_data[ATTRIBUTES] = user_data[ATTRIBUTES] || {};
 		user_data[ATTRIBUTES][attrib_name] = data;
 	}
-	add_attribute(name: string, value: AttribValue) {
-		CoreObject.add_attribute(this._object, name, value);
+	addAttribute(name: string, value: AttribValue) {
+		CoreObject.addAttribute(this._object, name, value);
 	}
-	add_numeric_attrib(name: string, value: NumericAttribValue) {
-		this.add_attribute(name, value);
+	addNumericAttrib(name: string, value: NumericAttribValue) {
+		this.addAttribute(name, value);
 	}
-	set_attrib_value(name: string, value: AttribValue) {
-		this.add_attribute(name, value);
+	setAttribValue(name: string, value: AttribValue) {
+		this.addAttribute(name, value);
 	}
-	add_numeric_vertex_attrib(name: string, size: number, default_value: NumericAttribValue) {
+	addNumericVertexAttrib(name: string, size: number, default_value: NumericAttribValue) {
 		if (default_value == null) {
 			default_value = CoreAttribute.default_value(size);
 		}
-		this.core_geometry()?.add_numeric_attrib(name, size, default_value);
+		this.coreGeometry()?.addNumericAttrib(name, size, default_value);
 	}
 
-	attribute_names(): string[] {
+	attributeNames(): string[] {
 		// TODO: to remove
 		return Object.keys(this._object.userData[ATTRIBUTES]);
 	}
-	attrib_names(): string[] {
-		return this.attribute_names();
+	attribNames(): string[] {
+		return this.attributeNames();
 	}
 
-	has_attrib(name: string): boolean {
-		return this.attribute_names().includes(name);
+	hasAttrib(name: string): boolean {
+		return this.attributeNames().includes(name);
 	}
 
-	rename_attribute(old_name: string, new_name: string) {
-		const current_value = this.attrib_value(old_name);
+	renameAttrib(old_name: string, new_name: string) {
+		const current_value = this.attribValue(old_name);
 		if (current_value != null) {
-			this.add_attribute(new_name, current_value);
-			this.delete_attribute(old_name);
+			this.addAttribute(new_name, current_value);
+			this.deleteAttribute(old_name);
 		} else {
 			console.warn(`attribute ${old_name} not found`);
 		}
 	}
 
-	delete_attribute(name: string) {
+	deleteAttribute(name: string) {
 		delete this._object.userData[ATTRIBUTES][name];
 	}
-	static attrib_value(
+	static attribValue(
 		object: Object3D,
 		name: string,
 		index: number = 0,
@@ -164,8 +164,8 @@ export class CoreObject extends CoreEntity {
 			}
 		}
 	}
-	static string_attrib_value(object: Object3D, name: string, index: number = 0): string | undefined {
-		const str = this.attrib_value(object, name, index);
+	static stringAttribValue(object: Object3D, name: string, index: number = 0): string | undefined {
+		const str = this.attribValue(object, name, index);
 		if (str != null) {
 			if (CoreType.isString(str)) {
 				return str;
@@ -174,48 +174,48 @@ export class CoreObject extends CoreEntity {
 			}
 		}
 	}
-	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
-		return CoreObject.attrib_value(this._object, name, this._index, target);
+	attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
+		return CoreObject.attribValue(this._object, name, this._index, target);
 	}
-	string_attrib_value(name: string) {
-		return CoreObject.string_attrib_value(this._object, name, this._index);
+	stringAttribValue(name: string) {
+		return CoreObject.stringAttribValue(this._object, name, this._index);
 	}
 	name(): string {
-		return this.attrib_value(NAME_ATTR) as string;
+		return this.attribValue(NAME_ATTR) as string;
 	}
-	human_type(): string {
+	humanType(): string {
 		return CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[this._object.constructor.name];
 	}
-	attrib_types() {
+	attribTypes() {
 		const h: Dictionary<AttribType> = {};
-		for (let attrib_name of this.attrib_names()) {
-			const type = this.attrib_type(attrib_name);
+		for (let attrib_name of this.attribNames()) {
+			const type = this.attribType(attrib_name);
 			if (type != null) {
 				h[attrib_name] = type;
 			}
 		}
 		return h;
 	}
-	attrib_type(name: string) {
-		const val = this.attrib_value(name);
+	attribType(name: string) {
+		const val = this.attribValue(name);
 		if (CoreType.isString(val)) {
 			return AttribType.STRING;
 		} else {
 			return AttribType.NUMERIC;
 		}
 	}
-	attrib_sizes() {
+	attribSizes() {
 		const h: Dictionary<AttribSize> = {};
-		for (let attrib_name of this.attrib_names()) {
-			const size = this.attrib_size(attrib_name);
+		for (let attrib_name of this.attribNames()) {
+			const size = this.attribSize(attrib_name);
 			if (size != null) {
 				h[attrib_name] = size;
 			}
 		}
 		return h;
 	}
-	attrib_size(name: string): AttribSize | null {
-		const val = this.attrib_value(name);
+	attribSize(name: string): AttribSize | null {
+		const val = this.attribValue(name);
 		if (val == null) {
 			return null;
 		}

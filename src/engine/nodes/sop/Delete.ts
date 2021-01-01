@@ -12,7 +12,7 @@ import {
 	ObjectType,
 	ObjectTypeMenuEntries,
 	ObjectTypes,
-	object_type_from_constructor,
+	objectTypeFromConstructor,
 	AttribType,
 	AttribTypeMenuEntries,
 	ATTRIBUTE_TYPES,
@@ -212,7 +212,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private async _eval_for_objects(core_group: CoreGroup) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		this.entity_selection_helper.init(core_objects);
 
 		this._marked_for_deletion_per_object_index = new Map();
@@ -245,19 +245,19 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			}
 		}
 
-		this.set_objects(objects_to_keep);
+		this.setObjects(objects_to_keep);
 	}
 
 	private async _eval_for_points(core_group: CoreGroup) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		let core_object;
 		let objects: Object3D[] = [];
 		for (let i = 0; i < core_objects.length; i++) {
 			core_object = core_objects[i];
-			let core_geometry = core_object.core_geometry();
+			let core_geometry = core_object.coreGeometry();
 			if (core_geometry) {
 				const object = core_object.object() as Object3DWithGeometry;
-				const points = core_geometry.points_from_geometry();
+				const points = core_geometry.pointsFromGeometry();
 				this.entity_selection_helper.init(points);
 
 				const init_points_count = points.length;
@@ -279,9 +279,9 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				} else {
 					core_geometry.geometry().dispose();
 					if (kept_points.length > 0) {
-						const new_geo = CoreGeometry.geometry_from_points(
+						const new_geo = CoreGeometry.geometryFromPoints(
 							kept_points,
-							object_type_from_constructor(object.constructor)
+							objectTypeFromConstructor(object.constructor)
 						);
 						if (new_geo) {
 							object.geometry = new_geo;
@@ -291,12 +291,12 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				}
 			}
 		}
-		this.set_objects(objects);
+		this.setObjects(objects);
 	}
 
 	private _point_object(core_object: CoreObject) {
 		const core_points = core_object.points();
-		const geometry = CoreGeometry.geometry_from_points(core_points, ObjectType.POINTS);
+		const geometry = CoreGeometry.geometryFromPoints(core_points, ObjectType.POINTS);
 		if (geometry) return this.create_object(geometry, ObjectType.POINTS);
 	}
 }

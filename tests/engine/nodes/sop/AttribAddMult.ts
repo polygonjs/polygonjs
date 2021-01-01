@@ -15,13 +15,13 @@ QUnit.test('attrib_add_mult simple', async (assert) => {
 	attrib_add_mult1.p.mult.set(0.5);
 
 	let container, core_group, values;
-	container = await attrib_create1.request_container();
-	core_group = container.core_content()!;
-	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
+	container = await attrib_create1.requestContainer();
+	core_group = container.coreContent()!;
+	values = core_group.points().map((p: CorePoint) => p.attribValue('test'));
 	assert.deepEqual(values, [0, 1, 2, 3]);
 
-	container = await attrib_add_mult1.request_container();
-	core_group = container.core_content()!;
-	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
+	container = await attrib_add_mult1.requestContainer();
+	core_group = container.coreContent()!;
+	values = core_group.points().map((p: CorePoint) => p.attribValue('test'));
 	assert.deepEqual(values, [0, 0.5, 1, 1.5]);
 });

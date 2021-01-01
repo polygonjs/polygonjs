@@ -23,7 +23,7 @@ QUnit.test('points builder persisted_config', async (assert) => {
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
-	await points1.request_container();
+	await points1.requestContainer();
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();

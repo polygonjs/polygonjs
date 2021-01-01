@@ -48,7 +48,7 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 			await this.create_mixer_if_required(object);
 			this._update_mixer();
 		}
-		this.set_objects([object]);
+		this.setObjects([object]);
 	}
 
 	private async create_mixer_if_required(object: Object3D) {
@@ -66,7 +66,7 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 		}
 		const anim_node = this.p.clip.found_node_with_context(NodeContext.ANIM);
 		if (anim_node) {
-			// const container = await anim_node.request_container();
+			// const container = await anim_node.requestContainer();
 			// const animation_clip = container.animation_clip();
 			const mixer = new AnimationMixer(object);
 			// const action = mixer.clipAction(animation_clip);

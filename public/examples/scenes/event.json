@@ -72,7 +72,7 @@
 					"code1": {
 						"type": "code",
 						"params": {
-							"cook": "const core_group = core_groups[0];\nconst object = core_group.objects()[0]\nobject.position.y = Math.sin(scene.time*10);\nnode.set_core_group(core_groups[0]);\n\n\n"
+							"cook": "const core_group = core_groups[0];\nconst object = core_group.objects()[0]\nobject.position.y = Math.sin(scene.time*10);\nnode.setCoreGroup(core_groups[0]);\n\n\n"
 						},
 						"inputs": ["transform1"],
 						"flags": {"display": false},

@@ -196,7 +196,7 @@ export class CoreString {
 		return matches_one_mask;
 	}
 
-	static attrib_names(word: string): string[] {
+	static attribNames(word: string): string[] {
 		const elements = word.split(ATTRIB_NAMES_SEPARATOR);
 		const names_set: Set<string> = new Set();
 		for (let element of elements) {

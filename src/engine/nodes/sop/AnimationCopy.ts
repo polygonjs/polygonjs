@@ -38,7 +38,7 @@ export class AnimationCopySopNode extends TypedSopNode<AnimationCopySopParamsCon
 		const src_animations = src_object.animations;
 		if (src_animations) {
 			target_object.animations = src_animations.map((a) => a.clone());
-			this.set_core_group(core_group_target);
+			this.setCoreGroup(core_group_target);
 		} else {
 			this.states.error.set('no animation found');
 		}

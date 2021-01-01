@@ -61,7 +61,7 @@ export class BboxExpression extends BaseMethod {
 		component_name: keyof Vector3Like
 	) {
 		if (VECTOR_NAMES.indexOf(vector_name) >= 0) {
-			const bbox = container.bounding_box();
+			const bbox = container.boundingBox();
 
 			let vector = new Vector3();
 			switch (vector_name) {

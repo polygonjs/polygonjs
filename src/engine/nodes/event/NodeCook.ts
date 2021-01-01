@@ -131,7 +131,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		if (this.pv.force) {
 			node.set_dirty(this);
 		}
-		return node.request_container();
+		return node.requestContainer();
 	}
 
 	static PARAM_CALLBACK_update_resolved_nodes(node: NodeCookEventNode) {

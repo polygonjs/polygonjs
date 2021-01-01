@@ -58,7 +58,7 @@ export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 				const loader = new JsonDataLoader();
 				loader.set_json(json);
 				const geometry = loader.create_object();
-				this.set_geometry(geometry, ObjectType.POINTS);
+				this.setGeometry(geometry, ObjectType.POINTS);
 			} catch (e) {
 				this.states.error.set('could not build geometry from json');
 			}

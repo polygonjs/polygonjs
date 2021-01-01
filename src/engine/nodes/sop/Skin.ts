@@ -64,7 +64,7 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 			}
 		}
 
-		this.set_geometries(geometries);
+		this.setGeometries(geometries);
 	}
 
 	process_two_inputs(input_contents: CoreGroup[]) {
@@ -88,7 +88,7 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 			}
 		});
 
-		this.set_geometries(geometries);
+		this.setGeometries(geometries);
 	}
 
 	_get_line_segments(core_group: CoreGroup) {

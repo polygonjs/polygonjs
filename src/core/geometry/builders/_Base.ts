@@ -3,7 +3,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
-import { ArrayUtils } from '../../ArrayUtils';
+import {ArrayUtils} from '../../ArrayUtils';
 
 export abstract class CoreGeometryBuilderBase {
 	from_points(points: CorePoint[]) {
@@ -14,7 +14,7 @@ export abstract class CoreGeometryBuilderBase {
 		const first_point = points[0];
 		if (first_point != null) {
 			const old_geometry = first_point.geometry();
-			const old_core_geometry = first_point.geometry_wrapper();
+			const old_core_geometry = first_point.core_geometry();
 
 			// index
 			const new_index_by_old_index: Dictionary<number> = {};
@@ -31,24 +31,24 @@ export abstract class CoreGeometryBuilderBase {
 			const {attributes} = old_geometry;
 			// const new_attributes = {}
 			for (let attribute_name of Object.keys(attributes)) {
-				const attrib_values = old_core_geometry.user_data_attribs()[attribute_name];
+				const attrib_values = old_core_geometry.userDataAttribs()[attribute_name];
 				const is_attrib_indexed = attrib_values != null;
 
 				if (is_attrib_indexed) {
 					const new_values: string[] = ArrayUtils.uniq(
-						points.map((point) => point.indexed_attrib_value(attribute_name))
+						points.map((point) => point.indexedAttribValue(attribute_name))
 					);
 					const new_index_by_value: Dictionary<number> = {};
 					new_values.forEach((new_value, i) => (new_index_by_value[new_value] = i));
 
-					core_geometry.user_data_attribs()[attribute_name] = new_values;
+					core_geometry.userDataAttribs()[attribute_name] = new_values;
 
 					// const old_attrib = old_geometry.getAttribute(attribute_name)
 					// const old_attrib_array = old_attrib.array
 					const new_attrib_indices = [];
 					for (let point of points) {
 						// const old_index = old_attrib_array[point.index()]
-						const new_index = new_index_by_value[point.indexed_attrib_value(attribute_name)];
+						const new_index = new_index_by_value[point.indexedAttribValue(attribute_name)];
 						new_attrib_indices.push(new_index);
 					}
 
@@ -59,13 +59,13 @@ export abstract class CoreGeometryBuilderBase {
 					switch (attrib_size) {
 						case 1:
 							for (let i = 0; i < points.length; i++) {
-								values[i] = points[i].attrib_value(attribute_name) as number;
+								values[i] = points[i].attribValue(attribute_name) as number;
 							}
 							break;
 						default:
 							let value: Vector3;
 							for (let i = 0; i < points.length; i++) {
-								value = points[i].attrib_value(attribute_name) as Vector3;
+								value = points[i].attribValue(attribute_name) as Vector3;
 								value.toArray(values, i * attrib_size);
 							}
 							break;

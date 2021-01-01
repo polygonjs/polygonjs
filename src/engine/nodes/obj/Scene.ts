@@ -181,7 +181,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 				const node = this.p.bg_texture.found_node();
 				if (node) {
 					if (node.node_context() == NodeContext.COP) {
-						(node as BaseCopNodeType).request_container().then((container) => {
+						(node as BaseCopNodeType).requestContainer().then((container) => {
 							this.object.background = container.texture();
 						});
 					} else {
@@ -235,7 +235,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 			const node = this.p.environment.found_node();
 			if (node) {
 				if (node.node_context() == NodeContext.COP) {
-					(node as BaseCopNodeType).request_container().then((container) => {
+					(node as BaseCopNodeType).requestContainer().then((container) => {
 						this.object.environment = container.texture();
 					});
 				} else {
@@ -259,7 +259,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 			const node = this.p.override_material.found_node();
 			if (node) {
 				if (node.node_context() == NodeContext.MAT) {
-					(node as BaseMatNodeType).request_container().then((container) => {
+					(node as BaseMatNodeType).requestContainer().then((container) => {
 						this.object.overrideMaterial = container.material();
 					});
 				} else {

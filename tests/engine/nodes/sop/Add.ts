@@ -2,8 +2,8 @@ QUnit.test('add simple', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 
-	const container = await add1.request_container();
-	const core_group = container.core_content()!;
+	const container = await add1.requestContainer();
+	const core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 1);
 });
 
@@ -26,12 +26,12 @@ QUnit.test('add connect input points', async (assert) => {
 	add.p.createPoint.set(false);
 	add.p.connectInputPoints.set(true);
 
-	let container = await add.request_container();
-	let core_group = container.core_content()!;
+	let container = await add.requestContainer();
+	let core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 3);
 
 	add.p.connectToLastPoint.set(true);
-	container = await add.request_container();
-	core_group = container.core_content()!;
+	container = await add.requestContainer();
+	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 4);
 });

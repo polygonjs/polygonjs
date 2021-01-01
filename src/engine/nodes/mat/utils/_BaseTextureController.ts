@@ -275,7 +275,7 @@ export class BaseTextureMapController extends BaseController {
 				if (found_node.node_context() == NodeContext.COP) {
 					const texture_node = found_node as BaseCopNodeType;
 
-					const container = await texture_node.request_container();
+					const container = await texture_node.requestContainer();
 					const texture = container.texture();
 
 					if (texture) {

@@ -64,7 +64,7 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 			object1 = objects1[i];
 			this.blend(object0, object1, this.pv.blend);
 		}
-		this.set_core_group(core_group0);
+		this.setCoreGroup(core_group0);
 	}
 
 	// 		else

@@ -19,7 +19,7 @@ export class CenterSopOperation extends BaseSopOperation {
 	private _geo_center: Vector3 = new Vector3();
 	cook(input_contents: CoreGroup[], params: CenterSopParams) {
 		const core_group = input_contents[0];
-		const src_objects = core_group.objects_with_geo();
+		const src_objects = core_group.objectsWithGeo();
 
 		const positions = new Array(src_objects.length * 3);
 		positions.fill(0);

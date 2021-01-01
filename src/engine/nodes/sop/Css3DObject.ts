@@ -58,8 +58,8 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 		const points = core_group.points();
 		const objects: CSS3DObject[] = [];
 		for (let point of points) {
-			const class_name = (point.attrib_value(ATTRIBUTE_NAME.class_name) as string) || DEFAULT_VALUE.class_name;
-			const text = (point.attrib_value(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
+			const class_name = (point.attribValue(ATTRIBUTE_NAME.class_name) as string) || DEFAULT_VALUE.class_name;
+			const text = (point.attribValue(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
 
 			const object = Css3DObjectSopNode.create_css_object({
 				class_name,
@@ -71,7 +71,7 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 
 			objects.push(object);
 		}
-		this.set_objects(objects);
+		this.setObjects(objects);
 	}
 
 	private _create_object_from_scratch() {
@@ -82,7 +82,7 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 
 		Css3DObjectSopNode._assign_clone_method(object);
 
-		this.set_objects([object]);
+		this.setObjects([object]);
 	}
 
 	private static create_css_object(params: Css2DObjectParams) {

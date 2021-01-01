@@ -35,7 +35,7 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 		const geometry_node = this.p.geometry.found_node();
 		if (geometry_node) {
 			if (geometry_node.node_context() == NodeContext.SOP) {
-				const container = await geometry_node.request_container();
+				const container = await geometry_node.requestContainer();
 				this.import_input(geometry_node as BaseSopNodeType, container);
 			} else {
 				this.states.error.set('found node is not a geometry');
@@ -51,7 +51,7 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 		// because if 2 objectmerge nodes import the same geometry,
 		// they would try to place it under 2 different geo nodes
 		// which is not possible
-		if ((core_group = container.core_content_cloned()) != null) {
+		if ((core_group = container.coreContentCloned()) != null) {
 			// cannot do that until i know how to make it recook
 			// when the obj changes
 			// if (this._param_apply_parent_transform){
@@ -65,7 +65,7 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 			// 	})
 			// }
 
-			this.set_core_group(core_group);
+			this.setCoreGroup(core_group);
 		} else {
 			this.states.error.set('invalid target');
 		}

@@ -199,7 +199,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		if (!clicked_object) {
 			return;
 		}
-		const camera_path = CoreObject.string_attrib_value(clicked_object, ATTRIB_NAME.CAMERA, 0);
+		const camera_path = CoreObject.stringAttribValue(clicked_object, ATTRIB_NAME.CAMERA, 0);
 		if (!camera_path) {
 			return;
 		}
@@ -343,7 +343,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		// find all other objects with same camera attribute
 		const objects: Object3D[] = [];
 		this.scene.defaultScene.traverse((child) => {
-			const obj_camera_path = CoreObject.string_attrib_value(child, ATTRIB_NAME.CAMERA, 0);
+			const obj_camera_path = CoreObject.stringAttribValue(child, ATTRIB_NAME.CAMERA, 0);
 			if (obj_camera_path && obj_camera_path == camera_path_attrib_value) {
 				objects.push(child);
 			}

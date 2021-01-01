@@ -39,7 +39,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 	cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		this._remap_attribute(core_group);
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	private _remap_attribute(core_group: CoreGroup) {
@@ -51,8 +51,8 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 			return;
 		}
 
-		const attrib_size = points[0].attrib_size(this.pv.name);
-		const values = points.map((point) => point.attrib_value(this.pv.name));
+		const attrib_size = points[0].attribSize(this.pv.name);
+		const values = points.map((point) => point.attribValue(this.pv.name));
 		// let min: NumericAttribValue, max: NumericAttribValue;
 		let remaped_values: NumericAttribValue[] = new Array(points.length);
 		this._get_remaped_values(attrib_size, values, remaped_values);
@@ -60,15 +60,15 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		let target_name = this.pv.name;
 		if (this.pv.change_name) {
 			target_name = this.pv.new_name;
-			if (!core_group.has_attrib(target_name)) {
-				core_group.add_numeric_vertex_attrib(target_name, attrib_size, 0);
+			if (!core_group.hasAttrib(target_name)) {
+				core_group.addNumericVertexAttrib(target_name, attrib_size, 0);
 			}
 		}
 
 		let i = 0;
 		for (let normalized_value of remaped_values) {
 			const point = points[i];
-			point.set_attrib_value(target_name, normalized_value);
+			point.setAttribValue(target_name, normalized_value);
 			i++;
 		}
 	}

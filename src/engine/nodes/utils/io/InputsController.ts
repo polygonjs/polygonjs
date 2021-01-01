@@ -221,7 +221,7 @@ export class InputsController<NC extends NodeContext> {
 			this._graph_node_inputs[input_index].remove_dirty_state();
 		}
 		// we do not clone here, as we just check if a group is present
-		if (container && container.core_content()) {
+		if (container && container.coreContent()) {
 			// return container;
 		} else {
 			const input_node = this.input(input_index);

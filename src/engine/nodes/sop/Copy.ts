@@ -86,11 +86,11 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const s = new Vector3();
 		instance_matrices[0].decompose(t, q, s);
 
-		this._attribute_names_to_copy = CoreString.attrib_names(this.pv.attributes_to_copy).filter((attrib_name) =>
-			template_core_group.has_attrib(attrib_name)
+		this._attribute_names_to_copy = CoreString.attribNames(this.pv.attributes_to_copy).filter((attrib_name) =>
+			template_core_group.hasAttrib(attrib_name)
 		);
 		await this._copy_moved_objects_on_template_points(instance_core_group, instance_matrices, template_points);
-		this.set_objects(this._objects);
+		this.setObjects(this._objects);
 	}
 
 	// https://stackoverflow.com/questions/24586110/resolve-promises-one-after-another-i-e-in-sequence
@@ -154,8 +154,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			// duplicate or select from instance children
 			const moved_objects = this.pv.transform_only
 				? // TODO: why is doing a transform slower than cloning the input??
-				  ArrayUtils.compact([stamped_instance_core_group.objects_with_geo()[point_index]])
-				: stamped_instance_core_group.clone().objects_with_geo();
+				  ArrayUtils.compact([stamped_instance_core_group.objectsWithGeo()[point_index]])
+				: stamped_instance_core_group.clone().objectsWithGeo();
 
 			return moved_objects;
 		} else {
@@ -167,7 +167,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		if (this.pv.use_copy_expr) {
 			const container0 = await this.container_controller.request_input_container(0);
 			if (container0) {
-				const core_group0 = container0.core_content();
+				const core_group0 = container0.coreContent();
 				if (core_group0) {
 					return core_group0;
 				} else {
@@ -206,14 +206,14 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this._objects = [];
 		await this._copy_moved_objects_for_each_instance(instance_core_group);
 
-		this.set_objects(this._objects);
+		this.setObjects(this._objects);
 	}
 
 	private _copy_attributes_from_template(object: Object3D, template_point: CorePoint) {
 		this._attribute_names_to_copy.forEach((attrib_name, i) => {
-			const attrib_value = template_point.attrib_value(attrib_name);
+			const attrib_value = template_point.attribValue(attrib_name);
 			const object_wrapper = new CoreObject(object, i);
-			object_wrapper.add_attribute(attrib_name, attrib_value);
+			object_wrapper.addAttribute(attrib_name, attrib_value);
 		});
 	}
 

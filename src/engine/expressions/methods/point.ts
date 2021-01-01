@@ -41,12 +41,12 @@ export class PointExpression extends BaseMethod {
 	}
 
 	_get_value_from_container(container: GeometryContainer, attrib_name: string, point_index: number) {
-		const core_group = container.core_content();
+		const core_group = container.coreContent();
 		if (core_group) {
 			const point = core_group.points()[point_index];
 
 			if (point) {
-				return point.attrib_value(attrib_name);
+				return point.attribValue(attrib_name);
 			} else {
 				return 0;
 			}

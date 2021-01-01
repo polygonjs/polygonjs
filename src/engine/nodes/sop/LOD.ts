@@ -65,7 +65,7 @@ export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
 
 		this._lod.autoUpdate = this.pv.auto_update;
 
-		this.set_object(this._lod);
+		this.setObject(this._lod);
 	}
 
 	_add_level(core_group: CoreGroup | undefined, level: number) {

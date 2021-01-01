@@ -44,7 +44,7 @@ export class CoreInterpolate {
 		const position_src = point_src.position();
 		const distance = position_dest.distanceTo(position_src);
 
-		const value_src = point_src.attrib_value(attrib_name);
+		const value_src = point_src.attribValue(attrib_name);
 		if (CoreType.isNumber(value_src)) {
 			return this._weighted_value_from_distance(
 				point_dest,
@@ -75,7 +75,7 @@ export class CoreInterpolate {
 		if (distance <= distance_threshold) {
 			return value_src;
 		} else {
-			const value_dest = point_dest.attrib_value(attrib_name);
+			const value_dest = point_dest.attribValue(attrib_name);
 			if (CoreType.isNumber(value_dest)) {
 				const blend = this._weight_from_distance(distance, distance_threshold, blend_with);
 				return blend * value_dest + (1 - blend) * value_src;

@@ -27,6 +27,6 @@ export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfi
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		this.set_core_group(input_contents[0]);
+		this.setCoreGroup(input_contents[0]);
 	}
 }

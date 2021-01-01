@@ -199,7 +199,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		if (node) {
 			if (node.node_context() == NodeContext.COP) {
 				const texture_node = node as BaseCopNodeType;
-				const container = await texture_node.request_container();
+				const container = await texture_node.requestContainer();
 				this.material.uniforms[uniform_name].value = container.texture();
 				return;
 			}

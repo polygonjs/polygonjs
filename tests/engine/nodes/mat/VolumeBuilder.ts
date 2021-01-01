@@ -33,7 +33,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	const globals1: GlobalsGlNode = volume_builder1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = volume_builder1.node('output1')! as OutputGlNode;
 
-	await volume_builder1.request_container();
+	await volume_builder1.requestContainer();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(VOLUME_UNIFORMS).sort());
@@ -43,7 +43,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.setInput('density', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
-	await volume_builder1.request_container();
+	await volume_builder1.requestContainer();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
 
@@ -51,7 +51,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	output1.setInput('density', vec3ToFloat1, 'y');
 	vec3ToFloat1.setInput(0, globals1, 'position');
 
-	await volume_builder1.request_container();
+	await volume_builder1.requestContainer();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
 });
@@ -72,7 +72,7 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 	float_to_vec31.setInput(0, param1);
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput(0, param2);
-	await volume1.request_container();
+	await volume1.requestContainer();
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();

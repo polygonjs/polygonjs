@@ -42,10 +42,10 @@ export abstract class TypedContainer<NC extends NodeContext> {
 		return this._content;
 	}
 	protected _post_set_content() {}
-	public core_content(): ContainableMap[NC] | undefined {
+	public coreContent(): ContainableMap[NC] | undefined {
 		return this._content;
 	}
-	public core_content_cloned(): ContainableMap[NC] | undefined {
+	public coreContentCloned(): ContainableMap[NC] | undefined {
 		return this._content;
 	}
 	// abstract clone_content(): T

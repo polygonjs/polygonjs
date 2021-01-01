@@ -35,10 +35,10 @@ export class TetrahedronSopNode extends TypedSopNode<TetrahedronSopParamsConfig>
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 		if (points_only) {
 			const object = this.create_object(geometry, ObjectType.POINTS);
-			this.set_object(object);
+			this.setObject(object);
 		} else {
 			geometry.computeVertexNormals();
-			this.set_geometry(geometry);
+			this.setGeometry(geometry);
 		}
 	}
 }

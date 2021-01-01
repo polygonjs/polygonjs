@@ -53,6 +53,6 @@ export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
 				}
 			}
 		}
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

@@ -3,10 +3,10 @@ QUnit.test('torus knot simple', async (assert) => {
 
 	const torus_knot1 = geo1.createNode('torusKnot');
 
-	let container = await torus_knot1.request_container();
-	const core_group = container.core_content()!;
-	const {geometry} = core_group.objects_with_geo()[0];
+	let container = await torus_knot1.requestContainer();
+	const core_group = container.coreContent()!;
+	const {geometry} = core_group.objectsWithGeo()[0];
 
 	assert.ok(geometry);
-	assert.equal(container.points_count(), 585);
+	assert.equal(container.pointsCount(), 585);
 });

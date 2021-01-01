@@ -48,7 +48,7 @@ export class CoreScene {
 							}
 						}
 					} else {
-						if (CoreGeometry.marked_as_instance(geometry)) {
+						if (CoreGeometry.markedAsInstance(geometry)) {
 							assigned_material = instance_material as MaterialWithUniforms;
 						} else {
 							assigned_material = base_material as MaterialWithUniforms;
@@ -60,7 +60,7 @@ export class CoreScene {
 						object.material = assigned_material;
 					}
 
-					// if( CoreGeometry.marked_as_instance(geometry) ){
+					// if( CoreGeometry.markedAsInstance(geometry) ){
 					// 	object.material = instance_material
 					// } else {
 					// 	object.material = base_material

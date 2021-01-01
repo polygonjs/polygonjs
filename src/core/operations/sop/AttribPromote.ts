@@ -42,7 +42,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		this._values_per_attrib_name = {};
 		this._filtered_values_per_attrib_name = {};
 
-		for (let core_object of this._core_group.core_objects()) {
+		for (let core_object of this._core_group.coreObjects()) {
 			this._core_object = core_object;
 			this.find_values(params);
 			this.filter_values(params);
@@ -52,7 +52,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		return this._core_group;
 	}
 	private find_values(params: AttribPromoteSopParams) {
-		const attrib_names = CoreString.attrib_names(params.name);
+		const attrib_names = CoreString.attribNames(params.name);
 		for (let attrib_name of attrib_names) {
 			this._find_values_for_attrib_name(attrib_name, params);
 		}
@@ -71,12 +71,12 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 			const points = this._core_object.points();
 			const first_point = points[0];
 			if (first_point) {
-				if (!first_point.is_attrib_indexed(attrib_name)) {
+				if (!first_point.isAttribIndexed(attrib_name)) {
 					const values: NumericAttribValue[] = new Array(points.length);
 					let point: CorePoint;
 					for (let i = 0; i < points.length; i++) {
 						point = points[i];
-						values[i] = point.attrib_value(attrib_name) as NumericAttribValue;
+						values[i] = point.attribValue(attrib_name) as NumericAttribValue;
 					}
 					this._values_per_attrib_name[attrib_name] = values;
 				}
@@ -87,7 +87,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 	private find_values_from_object(attrib_name: string, params: AttribPromoteSopParams) {
 		this._values_per_attrib_name[attrib_name] = [];
 		if (this._core_object) {
-			this._values_per_attrib_name[attrib_name].push(this._core_object.attrib_value(attrib_name) as number);
+			this._values_per_attrib_name[attrib_name].push(this._core_object.attribValue(attrib_name) as number);
 		}
 	}
 
@@ -130,20 +130,20 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 
 	private set_values_to_points(attrib_name: string, new_value: NumericAttribValue, params: AttribPromoteSopParams) {
 		if (this._core_group && this._core_object) {
-			const attribute_exists = this._core_group.has_attrib(attrib_name);
+			const attribute_exists = this._core_group.hasAttrib(attrib_name);
 			if (!attribute_exists) {
 				const param_size = 1; // TODO: allow size with larger params
-				this._core_group.add_numeric_vertex_attrib(attrib_name, param_size, new_value);
+				this._core_group.addNumericVertexAttrib(attrib_name, param_size, new_value);
 			}
 
 			const points = this._core_object.points();
 			for (let point of points) {
-				point.set_attrib_value(attrib_name, new_value);
+				point.setAttribValue(attrib_name, new_value);
 			}
 		}
 	}
 
 	private set_values_to_object(attrib_name: string, new_value: NumericAttribValue, params: AttribPromoteSopParams) {
-		this._core_object?.set_attrib_value(attrib_name, new_value);
+		this._core_object?.setAttribValue(attrib_name, new_value);
 	}
 }

@@ -42,7 +42,7 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 	assert.equal(box2.p.size.value, 24);
 
 	assert.ok(!box2.p.size.is_dirty);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.ok(!box2.is_dirty, 'box is dirty');
 
 	// check that bbox2 is set to dirty if box1 changes
@@ -59,7 +59,7 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 	assert.equal(graph_successor.graph_node_id, box2.p.size.graph_node_id);
 	box2.p.size.set('1+1');
 	assert.ok(box2.is_dirty);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.ok(!box2.is_dirty);
 	box1.p.divisions.set(3);
 
@@ -75,14 +75,14 @@ QUnit.skip('expression points_count cannot create infinite loop if scene is load
 	// const box2 = geo1.createNode('box');
 	// box1.p.divisions.set(1);
 	// box2.p.size.set("points_count('../box1')");
-	// box2.request_container_p().then(() => {
+	// box2.requestContainer_p().then(() => {
 	// 	assert.notOk(b.error_message());
 	// 	box1.p.size.set("points_count('../box2')");
 	// 	box1.p.size.compute().then(val=> {
 	// 		console.logx1.p.size.error_message(), val);
 	// 		assert.equal(box1.p.size.error_message(), "expression points_count error: cannot create infinite graph");
 	// 		console.log("THIS DOES NOT RETURN, because the points_cloud method fails to connect to the node, as the graph is then cyclic. and the throw call fucks up somewhere in the callbacks...")
-	// 		box1.request_container_p().then(() => {
+	// 		box1.requestContainer_p().then(() => {
 	// 			assert.equal(box1.error_message(), "param 'size' error: expression points_count error: cannot create infinite graph");
 	// 			done()
 	// 		});
@@ -103,7 +103,7 @@ QUnit.test('expression points_count fails with bad path', async (assert) => {
 
 	await box2.p.size.compute();
 	assert.ok(!box2.states.error.active);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.equal(
 		box2.states.error.message,
 		"param 'size' error: expression error: \"points_count('../doesnotexist')\" (invalid input (../doesnotexist))"
@@ -122,7 +122,7 @@ QUnit.test('expression points_count fails with bad input index 1', async (assert
 
 	await box2.p.size.compute();
 	assert.ok(!box2.states.error.active);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.equal(
 		box2.states.error.message,
 		'param \'size\' error: expression error: "points_count(1)" (invalid input (1))'
@@ -145,13 +145,13 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 	assert.equal(box2.p.size.value, 1);
 	assert.equal(box2.p.size.states.error.message, 'expression error: "points_count(0)" (invalid input (0))');
 	assert.ok(!box2.states.error.active);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.equal(
 		box2.states.error.message,
 		'param \'size\' error: expression error: "points_count(0)" (invalid input (0))'
 	);
 
-	await box2.request_container();
+	await box2.requestContainer();
 	await CoreSleep.sleep(10);
 
 	box2.setInput(0, box1);
@@ -160,7 +160,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 	assert.equal(box2.p.size.value, 24, 'param evaluates to 24');
 	assert.ok(!box2.p.size.states.error.message, 'param has no error');
 	assert.ok(box2.states.error.active, 'box is errored');
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.ok(!box2.states.error.message, 'box has no error');
 });
 
@@ -173,7 +173,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 // box2.p.size.eva>
 // 	assert.equal box2.p.size.error_message(), "expression points_count error: no node found for argument 0"
 // 	assert !box2.is_errored()
-// 	box2.request_container =>
+// 	box2.requestContainer =>
 // 		assert.equal box2.error_message(), "param 'size' error: expression points_count error: no node found for argument 0"
 
 // 		console.log("==========")
@@ -184,7 +184,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 // 			assert.notOk box2.p.size.error_message()
 // 			assert.equal box2.error_message(), "param 'size' error: expression points_count error: no node found for argument 0"
 
-// 			box2.request_container (container)=>
+// 			box2.requestContainer (container)=>
 // 				console.log(container)
 // 				console.log(box2.error_message())
 // 				assert.notOk box2.error_message()
@@ -203,7 +203,7 @@ QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (a
 	assert.equal(box2.p.size.value, 24);
 
 	assert.ok(!box2.p.size.is_dirty);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.ok(!box2.is_dirty);
 
 	assert.equal(box2.p.size.graph_all_predecessors().length, 10, 'has 10 predecessors');
@@ -226,7 +226,7 @@ QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (a
 	// assert.equal(box2.states.error.message, 'bla');
 
 	// assert !box2.p.size.is_dirty
-	// box2.request_container =>
+	// box2.requestContainer =>
 	// 	assert !box2.is_dirty
 
 	//  	# test if the expression can reconnect by itself

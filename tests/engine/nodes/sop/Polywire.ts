@@ -8,9 +8,9 @@ QUnit.test('polywire simple', async (assert) => {
 
 	let container;
 
-	container = await circle1.request_container();
-	assert.equal(container.points_count(), 12);
+	container = await circle1.requestContainer();
+	assert.equal(container.pointsCount(), 12);
 
-	container = await polywire1.request_container();
-	assert.equal(container.points_count(), 192);
+	container = await polywire1.requestContainer();
+	assert.equal(container.pointsCount(), 192);
 });

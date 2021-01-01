@@ -14,21 +14,21 @@ QUnit.test('normals simple', async (assert) => {
 
 	let container, normal;
 
-	container = await noise1.request_container();
-	normal = container.core_content()!.points()[0].normal().toArray();
+	container = await noise1.requestContainer();
+	normal = container.coreContent()!.points()[0].normal().toArray();
 	assert.in_delta(normal[0], 0, 0.05);
 	assert.in_delta(normal[1], 1, 0.05);
 	assert.in_delta(normal[2], 0, 0.05);
 
-	container = await normals1.request_container();
-	normal = container.core_content()!.points()[0].normal().toArray();
+	container = await normals1.requestContainer();
+	normal = container.coreContent()!.points()[0].normal().toArray();
 	assert.in_delta(normal[0], 0.05, 0.05);
 	assert.in_delta(normal[1], -0.95, 0.05);
 	assert.in_delta(normal[2], -0.4, 0.05);
 
 	normals1.p.invert.set(1);
-	container = await normals1.request_container();
-	normal = container.core_content()!.points()[0].normal().toArray();
+	container = await normals1.requestContainer();
+	normal = container.coreContent()!.points()[0].normal().toArray();
 	assert.in_delta(normal[0], -0.05, 0.05);
 	assert.in_delta(normal[1], 0.95, 0.05);
 	assert.in_delta(normal[2], 0.4, 0.05);

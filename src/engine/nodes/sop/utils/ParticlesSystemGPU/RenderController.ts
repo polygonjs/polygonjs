@@ -88,7 +88,7 @@ export class ParticlesSystemGpuRenderController {
 	}
 
 	init_core_group(core_group: CoreGroup) {
-		for (let child of core_group.objects_with_geo()) {
+		for (let child of core_group.objectsWithGeo()) {
 			this._particles_group_objects.push(child);
 		}
 	}
@@ -131,7 +131,7 @@ export class ParticlesSystemGpuRenderController {
 					}
 				}
 			}
-			const container = await mat_node.request_container();
+			const container = await mat_node.requestContainer();
 			this._render_material = container.material() as ShaderMaterial;
 		} else {
 			this.node.states.error.set('render material not valid');

@@ -8,10 +8,10 @@ QUnit.test('scatter simple', async (assert) => {
 
 	let container;
 
-	container = await scatter1.request_container();
-	assert.equal(container.points_count(), 100);
+	container = await scatter1.requestContainer();
+	assert.equal(container.pointsCount(), 100);
 
 	scatter1.p.points_count.set(1000);
-	container = await scatter1.request_container();
-	assert.equal(container.points_count(), 1000);
+	container = await scatter1.requestContainer();
+	assert.equal(container.pointsCount(), 1000);
 });

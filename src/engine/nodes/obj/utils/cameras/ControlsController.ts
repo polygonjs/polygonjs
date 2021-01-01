@@ -75,8 +75,8 @@ export class ThreejsCameraControlsController {
 				this._applied_controls_by_element_id.set(html_element.id, map_for_element);
 				map_for_element.set(controls_id, controls_node);
 
-				// request_container forces a cook
-				//controls_node.request_container (controls_container)=>
+				// requestContainer forces a cook
+				//controls_node.requestContainer (controls_container)=>
 				const controls = await controls_node.apply_controls(this.node.object, html_element);
 				const config = new CameraControlsConfig(this.node.graph_node_id, controls_node, controls);
 				// controls_node.set_from_camera_node(controls, this.node);

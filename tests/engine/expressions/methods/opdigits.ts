@@ -9,22 +9,22 @@ QUnit.test('expression opdigits works', async (assert) => {
 	attrib_create1.p.value1.set('opdigits(".")');
 	attrib_create1.setInput(0, line1);
 
-	let container = await attrib_create1.request_container();
+	let container = await attrib_create1.requestContainer();
 	assert.deepEqual(
 		container
-			.core_content()!
+			.coreContent()!
 			.points()
-			.map((p: CorePoint) => p.attrib_value('ptid')),
+			.map((p: CorePoint) => p.attribValue('ptid')),
 		[1, 1]
 	);
 
 	attrib_create1.setName('bla12');
-	container = await attrib_create1.request_container();
+	container = await attrib_create1.requestContainer();
 	assert.deepEqual(
 		container
-			.core_content()!
+			.coreContent()!
 			.points()
-			.map((p: CorePoint) => p.attrib_value('ptid')),
+			.map((p: CorePoint) => p.attribValue('ptid')),
 		[12, 12]
 	);
 });

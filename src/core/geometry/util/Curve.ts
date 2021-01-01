@@ -64,7 +64,7 @@ export class CoreGeometryUtilCurve {
 			// const position = point.position();
 			// new_positions.push(position.toArray());
 			attrib_names.forEach((attrib_name) => {
-				const attrib_value = point.attrib_value(attrib_name);
+				const attrib_value = point.attribValue(attrib_name);
 				const attrib_size = attrib_sizes_by_name[attrib_name];
 				let attrib_value_f: number[];
 				if (attrib_size > 1) {
@@ -98,14 +98,14 @@ export class CoreGeometryUtilCurve {
 	static line_segment_to_geometries(geometry: BufferGeometry) {
 		const geometries: BufferGeometry[] = [];
 		const core_geometry = new CoreGeometry(geometry);
-		const attrib_names = core_geometry.attrib_names();
+		const attrib_names = core_geometry.attribNames();
 		const points = core_geometry.points();
 		const indices = (geometry.getIndex()?.array as number[]) || [];
 
 		const accumulated_curve_point_indices = this.accumulated_curve_point_indices(indices);
 
 		if (accumulated_curve_point_indices.length > 0) {
-			const attribute_sizes_by_name = core_geometry.attrib_sizes();
+			const attribute_sizes_by_name = core_geometry.attribSizes();
 
 			accumulated_curve_point_indices.forEach((curve_point_indices, i) => {
 				geometry = this.create_line_segment_geometry(

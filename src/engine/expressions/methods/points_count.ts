@@ -28,7 +28,7 @@ export class PointsCountExpression extends BaseMethod {
 				}
 
 				if (container) {
-					const value = container.points_count();
+					const value = container.pointsCount();
 					resolve(value);
 				}
 			} else {

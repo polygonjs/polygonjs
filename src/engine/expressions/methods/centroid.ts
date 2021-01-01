@@ -35,7 +35,7 @@ export class CentroidExpression extends BaseMethod {
 				}
 
 				if (container) {
-					const bbox = container.bounding_box();
+					const bbox = container.boundingBox();
 					const center = bbox.min.clone().add(bbox.max).multiplyScalar(0.5);
 
 					const value = center[component_name];
@@ -56,7 +56,7 @@ export class CentroidExpression extends BaseMethod {
 	// _get_param_value(index_or_path, component_name, callback){
 	// 	return this.get_referenced_node_container(index_or_path, container=> {
 	// 		let value;
-	// 		const bbox = container.bounding_box();
+	// 		const bbox = container.boundingBox();
 	// 		const size = bbox.min.clone().add(bbox.max).multiplyScalar(0.5);
 
 	// 		if ((value = size[component_name]) != null) {

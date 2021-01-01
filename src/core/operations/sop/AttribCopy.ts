@@ -30,7 +30,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const core_group_dest = input_contents[0];
 		const core_group_src = input_contents[1] || core_group_dest;
 
-		const attrib_names = core_group_src.attrib_names_matching_mask(params.name);
+		const attrib_names = core_group_src.attribNamesMatchingMask(params.name);
 		for (let attrib_name of attrib_names) {
 			this.copy_vertex_attribute_between_core_groups(core_group_dest, core_group_src, attrib_name, params);
 		}
@@ -44,8 +44,8 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		attrib_name: string,
 		params: AttribCopySopParams
 	) {
-		const src_objects = core_group_src.objects_with_geo();
-		const dest_objects = core_group_dest.objects_with_geo();
+		const src_objects = core_group_src.objectsWithGeo();
+		const dest_objects = core_group_dest.objectsWithGeo();
 
 		if (dest_objects.length > src_objects.length) {
 			this.states?.error.set('second input does not have enough objects to copy attributes from');

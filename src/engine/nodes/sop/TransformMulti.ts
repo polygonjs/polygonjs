@@ -153,12 +153,12 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 	private _core_transform = new CoreTransform();
 	private _rot_and_index_pairs: VectorNumberParamPair[] | undefined;
 	cook(input_contents: CoreGroup[]) {
-		const objects = input_contents[0].objects_with_geo();
-		const src_object = input_contents[1] ? input_contents[1].objects_with_geo()[0] : undefined;
+		const objects = input_contents[0].objectsWithGeo();
+		const src_object = input_contents[1] ? input_contents[1].objectsWithGeo()[0] : undefined;
 
 		this._apply_transforms(objects, src_object);
 
-		this.set_objects(objects);
+		this.setObjects(objects);
 	}
 
 	private _apply_transforms(objects: Object3DWithGeometry[], src_object: Object3DWithGeometry | undefined) {

@@ -85,15 +85,15 @@ export class JsonDataLoader {
 
 		if (this._json != null) {
 			const points_count = this._json.length;
-			core_geo.init_position_attribute(points_count);
+			core_geo.initPositionAttribute(points_count);
 
 			this._find_attributes();
 			// for(let attrib_name of Object.keys(this._attribute_names)){
 			// 	const attrib_data = this._attribute_datas_by_name[attrib_name];
-			// 	return core_geo.add_attribute(attrib_name, attrib_data);
+			// 	return core_geo.addAttribute(attrib_name, attrib_data);
 			// }
 
-			const convert_to_numeric_masks = CoreString.attrib_names(this._options.convert_to_numeric || '');
+			const convert_to_numeric_masks = CoreString.attribNames(this._options.convert_to_numeric || '');
 
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
@@ -125,7 +125,7 @@ export class JsonDataLoader {
 						);
 					} else {
 						const index_data = CoreAttribute.array_to_indexed_arrays(attrib_values as string[]);
-						core_geo.set_indexed_attribute(geo_attrib_name, index_data['values'], index_data['indices']);
+						core_geo.setIndexedAttribute(geo_attrib_name, index_data['values'], index_data['indices']);
 					}
 				} else {
 					const numerical_attrib_values = attrib_values as number[];
@@ -143,7 +143,7 @@ export class JsonDataLoader {
 	private _find_attributes() {
 		let first_pt;
 
-		const masks = CoreString.attrib_names(this._options.skip_entries || '');
+		const masks = CoreString.attribNames(this._options.skip_entries || '');
 
 		if (this._json) {
 			if ((first_pt = this._json[0]) != null) {

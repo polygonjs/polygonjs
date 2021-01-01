@@ -24,7 +24,7 @@
 // 	material1.set_display_flag()
 // 	material1.param('material').set(mesh_basic1.fullPath())
 
-// 	await material1.request_container_p()
+// 	await material1.requestContainer_p()
 
 // 	assert.ok( 		mesh_basic1.param('texture_map').is_referencing_asset() )
 // 	assert.notOk( mesh_basic2.param('texture_map').is_referencing_asset() )

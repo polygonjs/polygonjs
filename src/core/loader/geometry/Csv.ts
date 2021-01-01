@@ -4,7 +4,7 @@ import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
-import { CoreType } from '../../Type';
+import {CoreType} from '../../Type';
 
 type CsvValue = string | number | number[];
 const POSITION = 'position';
@@ -72,7 +72,7 @@ export class CsvLoader {
 		if (CoreType.isString(attribute_value)) {
 			if (`${parseFloat(attribute_value)}` === attribute_value) {
 				return parseFloat(attribute_value);
-			} else if (attribute_value[0] === '[' && attribute_value[attribute_value.length-1] === ']') {
+			} else if (attribute_value[0] === '[' && attribute_value[attribute_value.length - 1] === ']') {
 				const attribute_value_within_brackets = attribute_value.substring(1, attribute_value.length - 1);
 				const elements_s = attribute_value_within_brackets.split(CsvLoader.VECTOR_SEPARATOR);
 				return elements_s.map((element_s) => parseFloat(element_s));
@@ -129,7 +129,7 @@ export class CsvLoader {
 			const type = this.attribute_data_by_name[attribute_name].type();
 			if (type == AttribType.STRING) {
 				const index_data = CoreAttribute.array_to_indexed_arrays(attribute_values as string[]);
-				core_geometry.set_indexed_attribute(attribute_name, index_data['values'], index_data['indices']);
+				core_geometry.setIndexedAttribute(attribute_name, index_data['values'], index_data['indices']);
 			} else {
 				geometry.setAttribute(attribute_name, new Float32BufferAttribute(attribute_values as number[], size));
 			}

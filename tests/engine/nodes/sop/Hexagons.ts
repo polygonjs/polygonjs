@@ -5,6 +5,6 @@ QUnit.test('hexagons simple', async (assert) => {
 
 	let container;
 
-	container = await hexagons1.request_container();
-	assert.equal(container.points_count(), 110);
+	container = await hexagons1.requestContainer();
+	assert.equal(container.pointsCount(), 110);
 });

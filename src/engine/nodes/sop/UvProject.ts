@@ -65,7 +65,7 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 			this._camera_controller.remove_target();
 		}
 
-		this.set_core_group(this._processed_core_group);
+		this.setCoreGroup(this._processed_core_group);
 	}
 
 	_update_uvs_from_camera(look_at_target: Object3D) {
@@ -86,7 +86,7 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 						x: 1 - (uvw[0] * 0.5 + 0.5),
 						y: uvw[1] * 0.5 + 0.5,
 					};
-					point.set_attrib_value(UV_NAME, uv);
+					point.setAttribValue(UV_NAME, uv);
 				}
 			});
 

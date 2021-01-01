@@ -29,6 +29,6 @@ export class NullSopNode extends TypedSopNode<NullSopParamsConfig> {
 	cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new NullSopOperation(this.scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

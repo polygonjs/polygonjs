@@ -47,7 +47,7 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 			for (let object of core_group.objects()) {
 				json.push(object.toJSON());
 			}
-			this.set_core_group(core_group);
+			this.setCoreGroup(core_group);
 			this.p.cache.set(JSON.stringify(json));
 		} else {
 			if (this.pv.cache) {
@@ -60,9 +60,9 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 					all_objects.push(parent);
 					// }
 				}
-				this.set_objects(all_objects);
+				this.setObjects(all_objects);
 			} else {
-				this.set_objects([]);
+				this.setObjects([]);
 			}
 		}
 	}
@@ -72,6 +72,6 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 	}
 	async param_callback_PARAM_CALLBACK_reset() {
 		this.p.cache.set('');
-		this.request_container();
+		this.requestContainer();
 	}
 }

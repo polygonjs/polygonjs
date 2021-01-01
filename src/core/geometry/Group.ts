@@ -10,7 +10,7 @@ import {CoreObject} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {CoreConstant, AttribClass, AttribSize, ObjectData, object_type_from_constructor} from './Constant';
+import {CoreConstant, AttribClass, AttribSize, ObjectData, objectTypeFromConstructor} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 export type GroupString = string;
@@ -70,7 +70,7 @@ export class CoreGroup {
 			for (let object of this._objects) {
 				objects.push(CoreObject.clone(object));
 			}
-			core_group.set_objects(objects);
+			core_group.setObjects(objects);
 		}
 		return core_group;
 	}
@@ -79,7 +79,7 @@ export class CoreGroup {
 	// OBJECTS
 	//
 	//
-	set_objects(objects: Object3D[]) {
+	setObjects(objects: Object3D[]) {
 		this._objects = objects;
 		this._objects_with_geo = objects.filter((obj) => (obj as Mesh).geometry != null) as Object3DWithGeometry[];
 		this.touch();
@@ -87,10 +87,10 @@ export class CoreGroup {
 	objects() {
 		return this._objects;
 	}
-	objects_with_geo() {
+	objectsWithGeo() {
 		return this._objects_with_geo;
 	}
-	core_objects() {
+	coreObjects() {
 		return (this._core_objects = this._core_objects || this._create_core_objects());
 	}
 	private _create_core_objects(): CoreObject[] {
@@ -109,19 +109,19 @@ export class CoreGroup {
 		return [];
 		// return list;
 	}
-	objects_data(): ObjectData[] {
+	objectsData(): ObjectData[] {
 		if (this._objects) {
-			return this._objects.map((object) => this._object_data(object));
+			return this._objects.map((object) => this._objectData(object));
 		}
 		return [];
 	}
-	private _object_data(object: Object3D): ObjectData {
+	private _objectData(object: Object3D): ObjectData {
 		let points_count = 0;
 		if ((object as Mesh).geometry) {
-			points_count = CoreGeometry.points_count((object as Mesh).geometry as BufferGeometry);
+			points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
 		}
 		return {
-			type: object_type_from_constructor(object.constructor),
+			type: objectTypeFromConstructor(object.constructor),
 			name: object.name,
 			children_count: object.children.length,
 			points_count: points_count,
@@ -147,7 +147,7 @@ export class CoreGroup {
 		// }
 		// return this._geometries;
 		const list: BufferGeometry[] = [];
-		for (let core_object of this.core_objects()) {
+		for (let core_object of this.coreObjects()) {
 			const geometry = (core_object.object() as Mesh).geometry as BufferGeometry;
 			if (geometry) {
 				list.push(geometry);
@@ -155,10 +155,10 @@ export class CoreGroup {
 		}
 		return list;
 	}
-	core_geometries(): CoreGeometry[] {
-		return (this._core_geometries = this._core_geometries || this.create_core_geometries());
+	coreGeometries(): CoreGeometry[] {
+		return (this._core_geometries = this._core_geometries || this._createCoreGeometries());
 	}
-	private create_core_geometries() {
+	private _createCoreGeometries() {
 		const list: CoreGeometry[] = [];
 		for (let geometry of this.geometries()) {
 			list.push(new CoreGeometry(geometry));
@@ -171,44 +171,44 @@ export class CoreGroup {
 		}
 		return list;
 	}
-	__geometry_from_object(list: BufferGeometry[], object: Mesh) {
-		if (object.geometry) {
-			return list.push(object.geometry as BufferGeometry);
-		}
-	}
+	// __geometry_from_object(list: BufferGeometry[], object: Mesh) {
+	// 	if (object.geometry) {
+	// 		return list.push(object.geometry as BufferGeometry);
+	// 	}
+	// }
 	// __core_geometry_from_object(list, object){
 	// 	const geometry = CoreGroup.geometry_from_object(object)
 	// 	if (geometry != null) {
 	// 		return list.push(new CoreGeometry(geometry));
 	// 	}
 	// }
-	static geometry_from_object(object: Object3D): BufferGeometry | null {
+	static geometryFromObject(object: Object3D): BufferGeometry | null {
 		if ((object as Mesh).isMesh || (object as LineSegments).isLine || (object as Points).isPoints) {
 			return (object as Mesh).geometry as BufferGeometry;
 		}
 		return null;
 	}
 	faces() {
-		return this.core_geometries()
+		return this.coreGeometries()
 			.map((g) => g.faces())
 			.flat();
 	}
 	points() {
-		return this.core_geometries()
+		return this.coreGeometries()
 			.map((g) => g.points())
 			.flat();
 	}
-	points_count() {
-		return ArrayUtils.sum(this.core_geometries().map((g) => g.points_count()));
+	pointsCount() {
+		return ArrayUtils.sum(this.coreGeometries().map((g) => g.pointsCount()));
 	}
-	total_points_count() {
+	totalPointsCount() {
 		if (this._objects) {
 			let sum = 0;
 			for (let object of this._objects) {
 				object.traverse((object) => {
 					const geometry = (object as Mesh).geometry as BufferGeometry;
 					if (geometry) {
-						sum += CoreGeometry.points_count(geometry);
+						sum += CoreGeometry.pointsCount(geometry);
 					}
 				});
 			}
@@ -217,7 +217,7 @@ export class CoreGroup {
 			return 0;
 		}
 	}
-	points_from_group(group: GroupString) {
+	pointsFromGroup(group: GroupString) {
 		if (group) {
 			const indices = CoreString.indices(group);
 			const points = this.points();
@@ -227,33 +227,33 @@ export class CoreGroup {
 		}
 	}
 
-	static from_objects(objects: Object3D[]): CoreGroup {
+	static _fromObjects(objects: Object3D[]): CoreGroup {
 		const core_group = new CoreGroup();
-		core_group.set_objects(objects);
+		core_group.setObjects(objects);
 		return core_group;
 	}
 
-	objects_from_group(group_name: string): Object3D[] {
-		return this.core_objects_from_group(group_name).map((co) => co.object());
+	objectsFromGroup(group_name: string): Object3D[] {
+		return this.coreObjectsFromGroup(group_name).map((co) => co.object());
 	}
-	core_objects_from_group(group_name: string): CoreObject[] {
+	coreObjectsFromGroup(group_name: string): CoreObject[] {
 		group_name = group_name.trim();
 
 		if (group_name !== '') {
 			const index = parseInt(group_name);
 			if (!CoreType.isNaN(index)) {
-				return ArrayUtils.compact([this.core_objects()[index]]);
+				return ArrayUtils.compact([this.coreObjects()[index]]);
 			} else {
-				return this.core_objects().filter((core_object) => {
+				return this.coreObjects().filter((core_object) => {
 					return CoreString.match_mask(group_name, core_object.name());
 				});
 			}
 		} else {
-			return this.core_objects();
+			return this.coreObjects();
 		}
 	}
 
-	bounding_box(): Box3 {
+	boundingBox(): Box3 {
 		return (this._bounding_box = this._bounding_box || this._compute_bounding_box());
 	}
 	// bounding_sphere(): Sphere {
@@ -261,12 +261,12 @@ export class CoreGroup {
 	// }
 	center(): Vector3 {
 		const center = new Vector3();
-		this.bounding_box().getCenter(center);
+		this.boundingBox().getCenter(center);
 		return center;
 	}
 	size(): Vector3 {
 		const size = new Vector3();
-		this.bounding_box().getSize(size);
+		this.boundingBox().getSize(size);
 		return size;
 	}
 
@@ -306,48 +306,48 @@ export class CoreGroup {
 	// 	sphere = sphere || new Sphere(new Vector3(0, 0, 0), 1);
 	// 	return sphere;
 	// }
-	compute_vertex_normals() {
-		for (let object of this.core_objects()) {
-			object.compute_vertex_normals();
+	computeVertexNormals() {
+		for (let object of this.coreObjects()) {
+			object.computeVertexNormals();
 		}
 	}
 
-	has_attrib(name: string) {
+	hasAttrib(name: string) {
 		let first_geometry;
-		if ((first_geometry = this.core_geometries()[0]) != null) {
-			return first_geometry.has_attrib(name);
+		if ((first_geometry = this.coreGeometries()[0]) != null) {
+			return first_geometry.hasAttrib(name);
 		} else {
 			return false;
 		}
 	}
-	attrib_type(name: string) {
-		const first_core_geometry = this.core_geometries()[0];
+	attribType(name: string) {
+		const first_core_geometry = this.coreGeometries()[0];
 		if (first_core_geometry != null) {
-			return first_core_geometry.attrib_type(name);
+			return first_core_geometry.attribType(name);
 		} else {
 			return null;
 		}
 	}
-	object_attrib_type(name: string) {
-		const first_core_object = this.core_objects()[0];
+	objectAttribType(name: string) {
+		const first_core_object = this.coreObjects()[0];
 		if (first_core_object != null) {
-			return first_core_object.attrib_type(name);
+			return first_core_object.attribType(name);
 		} else {
 			return null;
 		}
 	}
 
-	rename_attrib(old_name: string, new_name: string, attrib_class: AttribClass) {
+	renameAttrib(old_name: string, new_name: string, attrib_class: AttribClass) {
 		switch (attrib_class) {
 			case CoreConstant.ATTRIB_CLASS.VERTEX:
-				if (this.has_attrib(old_name)) {
+				if (this.hasAttrib(old_name)) {
 					if (this._objects) {
 						for (let object of this._objects) {
 							object.traverse((child) => {
-								const geometry = CoreGroup.geometry_from_object(child);
+								const geometry = CoreGroup.geometryFromObject(child);
 								if (geometry) {
 									const core_geometry = new CoreGeometry(geometry);
-									core_geometry.rename_attribute(old_name, new_name);
+									core_geometry.renameAttrib(old_name, new_name);
 								}
 							});
 						}
@@ -356,12 +356,12 @@ export class CoreGroup {
 				break;
 
 			case CoreConstant.ATTRIB_CLASS.OBJECT:
-				if (this.has_attrib(old_name)) {
+				if (this.hasAttrib(old_name)) {
 					if (this._objects) {
 						for (let object of this._objects) {
 							object.traverse((child) => {
 								const core_object = new CoreObject(child, 0);
-								core_object.rename_attribute(old_name, new_name);
+								core_object.renameAttrib(old_name, new_name);
 							});
 						}
 					}
@@ -370,28 +370,28 @@ export class CoreGroup {
 		}
 	}
 
-	attrib_names() {
+	attribNames() {
 		let first_geometry;
-		if ((first_geometry = this.core_geometries()[0]) != null) {
-			return first_geometry.attrib_names();
+		if ((first_geometry = this.coreGeometries()[0]) != null) {
+			return first_geometry.attribNames();
 		} else {
 			return [];
 		}
 	}
-	object_attrib_names() {
+	objectAttribNames() {
 		let first_object;
-		if ((first_object = this.core_objects()[0]) != null) {
-			return first_object.attrib_names();
+		if ((first_object = this.coreObjects()[0]) != null) {
+			return first_object.attribNames();
 		} else {
 			return [];
 		}
 	}
 
-	attrib_names_matching_mask(masks_string: GroupString) {
-		const masks = CoreString.attrib_names(masks_string);
+	attribNamesMatchingMask(masks_string: GroupString) {
+		const masks = CoreString.attribNames(masks_string);
 
 		const matching_attrib_names: string[] = [];
-		for (let attrib_name of this.attrib_names()) {
+		for (let attrib_name of this.attribNames()) {
 			for (let mask of masks) {
 				if (CoreString.match_mask(attrib_name, mask)) {
 					matching_attrib_names.push(attrib_name);
@@ -402,50 +402,50 @@ export class CoreGroup {
 		return ArrayUtils.uniq(matching_attrib_names);
 	}
 
-	attrib_sizes() {
+	attribSizes() {
 		let first_geometry;
-		if ((first_geometry = this.core_geometries()[0]) != null) {
-			return first_geometry.attrib_sizes();
+		if ((first_geometry = this.coreGeometries()[0]) != null) {
+			return first_geometry.attribSizes();
 		} else {
 			return {};
 		}
 	}
-	object_attrib_sizes(): Dictionary<AttribSize> {
+	objectAttribSizes(): Dictionary<AttribSize> {
 		let first_object;
-		if ((first_object = this.core_objects()[0]) != null) {
-			return first_object.attrib_sizes();
+		if ((first_object = this.coreObjects()[0]) != null) {
+			return first_object.attribSizes();
 		} else {
 			return {};
 		}
 	}
-	attrib_size(attrib_name: string) {
+	attribSize(attrib_name: string) {
 		let first_geometry;
-		if ((first_geometry = this.core_geometries()[0]) != null) {
-			return first_geometry.attrib_size(attrib_name);
+		if ((first_geometry = this.coreGeometries()[0]) != null) {
+			return first_geometry.attribSize(attrib_name);
 		} else {
 			return 0;
 		}
 	}
 
-	add_numeric_vertex_attrib(name: string, size: number, default_value: NumericAttribValue) {
+	addNumericVertexAttrib(name: string, size: number, default_value: NumericAttribValue) {
 		if (default_value == null) {
 			default_value = CoreAttribute.default_value(size);
 		}
 
-		for (let core_geometry of this.core_geometries()) {
-			core_geometry.add_numeric_attrib(name, size, default_value);
+		for (let core_geometry of this.coreGeometries()) {
+			core_geometry.addNumericAttrib(name, size, default_value);
 		}
 	}
 
-	add_numeric_object_attrib(name: string, size: number, default_value: NumericAttribValue) {
-		if (default_value == null) {
-			default_value = CoreAttribute.default_value(size);
-		}
+	// add_numeric_object_attrib(name: string, size: number, default_value: NumericAttribValue) {
+	// 	if (default_value == null) {
+	// 		default_value = CoreAttribute.default_value(size);
+	// 	}
 
-		for (let core_object of this.core_objects()) {
-			core_object.add_numeric_attrib(name, default_value);
-		}
-	}
+	// 	for (let core_object of this.coreObjects()) {
+	// 		core_object.addNumericAttrib(name, default_value);
+	// 	}
+	// }
 
 	static clone(src_group: Group) {
 		const new_group = new Group();

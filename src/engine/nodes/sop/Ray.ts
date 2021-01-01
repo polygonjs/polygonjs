@@ -78,12 +78,12 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 			if (first_intersect) {
 				point.setPosition(first_intersect.point);
 				if (this.pv.transfer_face_normals && first_intersect.face) {
-					point.set_normal(first_intersect.face.normal);
+					point.setNormal(first_intersect.face.normal);
 				}
 			}
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	_assign_double_sided_material_to_core_group(core_group: CoreGroup) {

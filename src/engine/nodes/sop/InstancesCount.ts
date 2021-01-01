@@ -34,7 +34,7 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
-		const objects = core_group.objects_with_geo();
+		const objects = core_group.objectsWithGeo();
 		for (let object of objects) {
 			const geometry = object.geometry;
 			if (geometry) {
@@ -47,6 +47,6 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 				}
 			}
 		}
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../geometry/Group';
-import {ObjectType, object_type_from_constructor} from '../../geometry/Constant';
+import {ObjectType, objectTypeFromConstructor} from '../../geometry/Constant';
 import {Material} from 'three/src/materials/Material';
 import {MapUtils} from '../../MapUtils';
 import {CoreGeometry} from '../../geometry/Geometry';
@@ -56,7 +56,7 @@ export class MergeSopOperation extends BaseSopOperation {
 			object.traverse((object3d: Object3D) => {
 				const object = object3d as Object3DWithGeometry;
 				if (object.geometry) {
-					const object_type = object_type_from_constructor(object.constructor);
+					const object_type = objectTypeFromConstructor(object.constructor);
 					if (!ordered_object_types.includes(object_type)) {
 						ordered_object_types.push(object_type);
 					}

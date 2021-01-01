@@ -110,8 +110,8 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const dest_points = core_group.points();
 
 		const simplex = this._get_simplex();
-		const use_normals = this.pv.use_normals && core_group.has_attrib(ATTRIB_NORMAL);
-		const target_attrib_size = core_group.attrib_size(this.pv.attrib_name);
+		const use_normals = this.pv.use_normals && core_group.hasAttrib(ATTRIB_NORMAL);
+		const target_attrib_size = core_group.attribSize(this.pv.attrib_name);
 		const operation = Operations[this.pv.operation];
 		const dest_attrib_name = this.pv.attrib_name;
 		const use_rest_attributes: boolean = this.pv.use_rest_attributes;
@@ -124,13 +124,13 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		for (let i = 0; i < dest_points.length; i++) {
 			const dest_point = dest_points[i];
 
-			current_attrib_value = dest_point.attrib_value(dest_attrib_name) as Vector3;
+			current_attrib_value = dest_point.attribValue(dest_attrib_name) as Vector3;
 			if (use_rest_attributes) {
-				restP = dest_point.attrib_value(this.pv.restP) as Vector3;
-				restN = use_normals ? (dest_point.attrib_value(this.pv.restN) as Vector3) : undefined;
+				restP = dest_point.attribValue(this.pv.restP) as Vector3;
+				restN = use_normals ? (dest_point.attribValue(this.pv.restN) as Vector3) : undefined;
 				current_attrib_value = restP;
 			} else {
-				restN = use_normals ? (dest_point.attrib_value('normal') as Vector3) : undefined;
+				restN = use_normals ? (dest_point.attribValue('normal') as Vector3) : undefined;
 			}
 
 			const amplitude = use_amplitude_attrib
@@ -146,7 +146,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 					current_attrib_value,
 					noise_value
 				);
-				dest_point.set_attrib_value(dest_attrib_name, new_attrib_value_f);
+				dest_point.setAttribValue(dest_attrib_name, new_attrib_value_f);
 			} else {
 				if (current_attrib_value instanceof Vector2 && noise_value instanceof Vector2) {
 					const new_attrib_value_v = this._new_attrib_value_from_vector2(
@@ -154,7 +154,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 						current_attrib_value,
 						noise_value
 					);
-					dest_point.set_attrib_value(dest_attrib_name, new_attrib_value_v);
+					dest_point.setAttribValue(dest_attrib_name, new_attrib_value_v);
 				} else {
 					if (current_attrib_value instanceof Vector3 && noise_value instanceof Vector3) {
 						const new_attrib_value_v = this._new_attrib_value_from_vector3(
@@ -162,7 +162,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 							current_attrib_value,
 							noise_value
 						);
-						dest_point.set_attrib_value(dest_attrib_name, new_attrib_value_v);
+						dest_point.setAttribValue(dest_attrib_name, new_attrib_value_v);
 					} else {
 						if (current_attrib_value instanceof Vector4 && noise_value instanceof Vector4) {
 							const new_attrib_value_v = this._new_attrib_value_from_vector4(
@@ -170,7 +170,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 								current_attrib_value,
 								noise_value
 							);
-							dest_point.set_attrib_value(dest_attrib_name, new_attrib_value_v);
+							dest_point.setAttribValue(dest_attrib_name, new_attrib_value_v);
 						}
 					}
 				}
@@ -184,9 +184,9 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		}
 
 		if (this.pv.compute_normals) {
-			core_group.compute_vertex_normals();
+			core_group.computeVertexNormals();
 		}
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	private _noise_value(
@@ -307,7 +307,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	}
 
 	private _amplitude_from_attrib(point: CorePoint, base_amplitude: number): number {
-		const attrib_value = point.attrib_value(this.pv.amplitude_attrib) as NumericAttribValue;
+		const attrib_value = point.attribValue(this.pv.amplitude_attrib) as NumericAttribValue;
 
 		if (CoreType.isNumber(attrib_value)) {
 			return attrib_value * base_amplitude;

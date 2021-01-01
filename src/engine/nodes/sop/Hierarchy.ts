@@ -51,6 +51,6 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 	cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new HierarchySopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

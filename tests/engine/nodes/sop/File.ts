@@ -8,7 +8,7 @@ async function with_file(path: string) {
 	const file1 = geo1.createNode('file');
 	file1.p.url.set(`${ASSETS_ROOT}/${path}`);
 
-	const container = await file1.request_container();
+	const container = await file1.requestContainer();
 	return container;
 }
 async function with_hierarchy() {
@@ -16,7 +16,7 @@ async function with_hierarchy() {
 	const file1 = window.geo1.nodesByType('file')[0];
 	hierarchy1.setInput(0, file1);
 	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
-	const container = await hierarchy1.request_container();
+	const container = await hierarchy1.requestContainer();
 	return container;
 }
 
@@ -31,56 +31,56 @@ QUnit.test('SOP file simple', async (assert) => {
 	// merge1.setInput(0, file1);
 
 	let container;
-	container = await file1.request_container();
+	container = await file1.requestContainer();
 	assert.ok(!file1.is_dirty);
-	// let core_group = container.core_content()!;
+	// let core_group = container.coreContent()!;
 	// let {geometry} = core_group.objects()[0];
-	assert.equal(container.total_points_count(), 15012, 'total points_count is 15012');
+	assert.equal(container.totalPointsCount(), 15012, 'total points_count is 15012');
 
 	file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 	assert.ok(file1.is_dirty);
 
-	container = await file1.request_container();
+	container = await file1.requestContainer();
 	assert.ok(!file1.is_dirty);
-	// core_group = container.core_content();
+	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
-	assert.equal(container.total_points_count(), 36);
+	assert.equal(container.totalPointsCount(), 36);
 
 	// set error state
 	file1.p.url.set('/test/file_sop_doesnotexist.obj');
 	assert.ok(file1.is_dirty);
-	container = await file1.request_container();
+	container = await file1.requestContainer();
 	assert.ok(!file1.is_dirty);
 	assert.ok(file1.states.error.active, 'file sop to file_sop_doesnotexist is errored');
 
 	// this only works if I have a path catch all in routes.db
 	// get '*path' => 'errors#route_not_found'
 	// assert.equal(file1.error_message(), "could not load geometry from /tests/fixtures/files/geometries/doesnotexist.obj (Error: THREE.OBJLoader: Unexpected line: \"<!DOCTYPE html>\")");
-	let core_group = container.core_content()!;
+	let core_group = container.coreContent()!;
 	assert.notOk(core_group, 'file sop core group is empty');
 	// assert.equal(core_group.objects().length, 0, 'content has 0 points');
 
 	// clear error state
 	file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 	assert.ok(file1.is_dirty);
-	container = await file1.request_container();
+	container = await file1.requestContainer();
 	assert.ok(!file1.is_dirty);
 	assert.ok(!file1.states.error.active);
-	core_group = container.core_content()!;
+	core_group = container.coreContent()!;
 	//geometry = group.children[0].geometry
 	assert.ok(core_group);
-	assert.equal(container.total_points_count(), 36);
+	assert.equal(container.totalPointsCount(), 36);
 });
 
 QUnit.test('SOP file obj wolf', async (assert) => {
 	const container = await with_file('/models/wolf.obj');
-	const core_content = container.core_content()!;
+	const core_content = container.coreContent()!;
 	assert.equal(container.objects_count(), 1);
-	assert.equal(container.points_count(), 0);
+	assert.equal(container.pointsCount(), 0);
 	console.log(container.objects_count_by_type());
 	assert.deepEqual(container.objects_count_by_type(), {Object3D: 1});
 	assert.equal(core_content.objects().length, 1);
-	assert.equal(core_content.points_count(), 0);
+	assert.equal(core_content.pointsCount(), 0);
 	const first_object = core_content.objects()[0];
 	assert.equal(first_object.children.length, 4);
 
@@ -91,43 +91,43 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 });
 QUnit.test('SOP file json wolf', async (assert) => {
 	const container = await with_file('/models/wolf.json');
-	assert.equal(container.total_points_count(), 5352);
+	assert.equal(container.totalPointsCount(), 5352);
 });
 QUnit.test('SOP file glb stork', async (assert) => {
 	const container = await with_file('/models/stork.glb');
-	assert.equal(container.total_points_count(), 358);
+	assert.equal(container.totalPointsCount(), 358);
 });
 QUnit.test('SOP file glb soldier', async (assert) => {
 	const container = await with_file('/models/soldier.glb');
-	assert.equal(container.total_points_count(), 7434);
+	assert.equal(container.totalPointsCount(), 7434);
 });
 QUnit.test('SOP file glb json', async (assert) => {
 	const container = await with_file('/models/parrot.glb');
-	assert.equal(container.total_points_count(), 497);
+	assert.equal(container.totalPointsCount(), 497);
 });
 QUnit.test('SOP file glb horse', async (assert) => {
 	const container = await with_file('/models/horse.glb');
-	assert.equal(container.total_points_count(), 796);
+	assert.equal(container.totalPointsCount(), 796);
 });
 QUnit.test('SOP file glb flamingo', async (assert) => {
 	const container = await with_file('/models/flamingo.glb');
-	assert.equal(container.total_points_count(), 337);
+	assert.equal(container.totalPointsCount(), 337);
 });
 QUnit.test('SOP file z3 glb with draco', async (assert) => {
 	const container = await with_file('/models/z3.glb');
-	assert.equal(container.points_count(), 0);
+	assert.equal(container.pointsCount(), 0);
 	const container2 = await with_hierarchy();
-	assert.equal(container2.points_count(), 498800);
+	assert.equal(container2.pointsCount(), 498800);
 });
 QUnit.test('SOP file draco bunny', async (assert) => {
 	const container = await with_file('/models/bunny.drc');
-	assert.equal(container.points_count(), 34834);
+	assert.equal(container.pointsCount(), 34834);
 });
 QUnit.test('SOP file format pdb', async (assert) => {
 	const container = await with_file('/models/ethanol.pdb');
-	assert.equal(container.points_count(), 25);
+	assert.equal(container.pointsCount(), 25);
 });
 QUnit.test('SOP file format ply', async (assert) => {
 	const container = await with_file('/models/dolphins_be.ply');
-	assert.equal(container.points_count(), 855);
+	assert.equal(container.pointsCount(), 855);
 });

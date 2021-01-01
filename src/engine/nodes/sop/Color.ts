@@ -66,7 +66,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 
 		for (let core_object of core_objects) {
 			if (this.pv.from_attribute) {
@@ -89,18 +89,18 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			}
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	_set_from_attribute(core_object: CoreObject) {
-		const core_geometry = core_object.core_geometry();
+		const core_geometry = core_object.coreGeometry();
 		if (!core_geometry) {
 			return;
 		}
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 		const points = core_geometry.points();
 
-		const src_attrib_size = core_geometry.attrib_size(this.pv.attrib_name);
+		const src_attrib_size = core_geometry.attribSize(this.pv.attrib_name);
 		const geometry = core_geometry.geometry();
 		const src_array = geometry.getAttribute(this.pv.attrib_name).array;
 		const dest_array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
@@ -145,13 +145,13 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	}
 
 	private _create_init_color(core_geometry: CoreGeometry, color: Color) {
-		if (!core_geometry.has_attrib(COLOR_ATTRIB_NAME)) {
-			core_geometry.add_numeric_attrib(COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
+		if (!core_geometry.hasAttrib(COLOR_ATTRIB_NAME)) {
+			core_geometry.addNumericAttrib(COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
 		}
 	}
 
 	_eval_simple_values(core_object: CoreObject) {
-		const core_geometry = core_object.core_geometry();
+		const core_geometry = core_object.coreGeometry();
 		if (!core_geometry) {
 			return;
 		}
@@ -164,13 +164,13 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		} else {
 			new_color = this.pv.color; //.clone();
 		}
-		core_geometry.add_numeric_attrib(COLOR_ATTRIB_NAME, 3, new_color);
+		core_geometry.addNumericAttrib(COLOR_ATTRIB_NAME, 3, new_color);
 	}
 
 	async _eval_expressions(core_object: CoreObject) {
 		const points = core_object.points();
 		const object = core_object.object();
-		const core_geometry = core_object.core_geometry();
+		const core_geometry = core_object.coreGeometry();
 		if (core_geometry) {
 			this._create_init_color(core_geometry, DEFAULT_COLOR);
 		}

@@ -7,23 +7,23 @@ QUnit.test('cache static', async (assert) => {
 	const cache1 = geo1.createNode('cache');
 
 	cache1.setInput(0, sphere1);
-	container = await cache1.request_container();
-	let core_group = container.core_content()!;
-	assert.equal(core_group.points_count(), 63);
+	container = await cache1.requestContainer();
+	let core_group = container.coreContent()!;
+	assert.equal(core_group.pointsCount(), 63);
 	// let json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 8109);
 
 	cache1.setInput(0, plane1);
-	container = await cache1.request_container();
-	core_group = container.core_content()!;
-	assert.equal(core_group.points_count(), 63); // still same points_count
+	container = await cache1.requestContainer();
+	core_group = container.coreContent()!;
+	assert.equal(core_group.pointsCount(), 63); // still same points_count
 	// json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 8109); // still same length
 
 	cache1.p.reset.press_button();
-	container = await cache1.request_container();
-	core_group = container.core_content()!;
-	assert.equal(core_group.points_count(), 4); // not same points_count anymore
+	container = await cache1.requestContainer();
+	core_group = container.coreContent()!;
+	assert.equal(core_group.pointsCount(), 4); // not same points_count anymore
 	// json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 1345); // not same length anymore
 });
@@ -38,7 +38,7 @@ QUnit.test('cache static', async (assert) => {
 // cache1.param('animated').set(0)
 // cache1._clear_cache()
 
-// cache1.request_container (container)=>
+// cache1.requestContainer (container)=>
 // 	group = container.group()
 
 // 	assert.equal cache1.cooks_count(), 1
@@ -50,7 +50,7 @@ QUnit.test('cache static', async (assert) => {
 // 	assert transform1.is_dirty()
 // 	assert !cache1.is_dirty()
 
-// 	cache1.request_container (container)=>
+// 	cache1.requestContainer (container)=>
 // 		group = container.group()
 
 // 		assert.equal cache1.cooks_count(), 1
@@ -74,7 +74,7 @@ QUnit.skip('cache animated', () => {});
 // cache1.param('animated').set(1)
 // cache1._clear_cache()
 
-// cache1.request_container (container)=>
+// cache1.requestContainer (container)=>
 // 	group = container.group()
 
 // 	assert.equal cache1.cooks_count(), 1
@@ -86,7 +86,7 @@ QUnit.skip('cache animated', () => {});
 // 	assert transform1.is_dirty()
 // 	assert cache1.is_dirty()
 
-// 	cache1.request_container (container)=>
+// 	cache1.requestContainer (container)=>
 // 		group = container.group()
 
 // 		assert.equal cache1.cooks_count(), 2
@@ -101,7 +101,7 @@ QUnit.skip('cache animated', () => {});
 // 		assert transform1.is_dirty()
 // 		assert cache1.is_dirty()
 
-// 		cache1.request_container (container)=>
+// 		cache1.requestContainer (container)=>
 // 			group = container.group()
 
 // 			assert.equal cache1.cooks_count(), 3

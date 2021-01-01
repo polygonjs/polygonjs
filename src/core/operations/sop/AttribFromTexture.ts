@@ -36,9 +36,9 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		if (!texture_node) {
 			return core_group;
 		}
-		const container = await texture_node.request_container();
+		const container = await texture_node.requestContainer();
 		const texture = container.texture();
-		for (let core_object of core_group.core_objects()) {
+		for (let core_object of core_group.coreObjects()) {
 			this._set_position_from_data_texture(core_object, texture, params);
 		}
 
@@ -49,7 +49,7 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		texture: Texture,
 		params: AttribFromTextureSopParams
 	) {
-		const geometry = core_object.core_geometry()?.geometry();
+		const geometry = core_object.coreGeometry()?.geometry();
 		if (!geometry) {
 			return;
 		}

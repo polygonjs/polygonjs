@@ -16,14 +16,14 @@ QUnit.test('transform reset simple', async (assert) => {
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 
-	let container = await transform1.request_container();
-	let core_group = container.core_content()!;
+	let container = await transform1.requestContainer();
+	let core_group = container.coreContent()!;
 	let elements = core_group.objects()[0].matrix.elements;
 	assert.in_delta(elements[0], 1, 0.01);
 	assert.equal(elements[12], 2);
 
-	container = await transform_reset1.request_container();
-	core_group = container.core_content()!;
+	container = await transform_reset1.requestContainer();
+	core_group = container.coreContent()!;
 	elements = core_group.objects()[0].matrix.elements;
 	assert.deepEqual(elements, new Matrix4().identity().elements);
 });

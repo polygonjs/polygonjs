@@ -53,12 +53,12 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 			this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
 			if (this.pv.points_only) {
-				this.set_geometry(geometry, ObjectType.POINTS);
+				this.setGeometry(geometry, ObjectType.POINTS);
 			} else {
-				this.set_geometry(geometry);
+				this.setGeometry(geometry);
 			}
 		} else {
-			this.set_objects([]);
+			this.setObjects([]);
 		}
 	}
 }

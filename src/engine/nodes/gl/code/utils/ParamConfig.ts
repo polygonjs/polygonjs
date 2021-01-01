@@ -102,7 +102,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		const found_node = param.found_node();
 		if (found_node) {
 			if (found_node.is_dirty) {
-				found_node.request_container().then((container) => {
+				found_node.requestContainer().then((container) => {
 					const texture = container.texture();
 					uniform.value = texture;
 				});

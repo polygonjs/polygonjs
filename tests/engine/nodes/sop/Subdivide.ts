@@ -6,12 +6,12 @@ QUnit.test('subdivide simple', async (assert) => {
 
 	subdivide1.setInput(0, box1);
 
-	let container = await subdivide1.request_container();
-	let core_group = container.core_content()!;
-	assert.equal(core_group.points_count(), 144);
+	let container = await subdivide1.requestContainer();
+	let core_group = container.coreContent()!;
+	assert.equal(core_group.pointsCount(), 144);
 
 	subdivide1.p.subdivisions.set(3);
-	container = await subdivide1.request_container();
-	core_group = container.core_content()!;
-	assert.equal(core_group.points_count(), 2304);
+	container = await subdivide1.requestContainer();
+	core_group = container.coreContent()!;
+	assert.equal(core_group.pointsCount(), 2304);
 });

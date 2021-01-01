@@ -119,7 +119,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		} else {
 			this._operation = this._operation || new AttribCreateSopOperation(this.scene, this.states);
 			const core_group = this._operation.cook(input_contents, this.pv);
-			this.set_core_group(core_group);
+			this.setCoreGroup(core_group);
 		}
 	}
 	private async _add_attribute(attrib_class: AttribClass, core_group: CoreGroup) {
@@ -127,16 +127,16 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		switch (attrib_class) {
 			case AttribClass.VERTEX:
 				await this.add_point_attribute(attrib_type, core_group);
-				return this.set_core_group(core_group);
+				return this.setCoreGroup(core_group);
 			case AttribClass.OBJECT:
 				await this.add_object_attribute(attrib_type, core_group);
-				return this.set_core_group(core_group);
+				return this.setCoreGroup(core_group);
 		}
 		TypeAssert.unreachable(attrib_class);
 	}
 
 	async add_point_attribute(attrib_type: AttribType, core_group: CoreGroup) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		switch (attrib_type) {
 			case AttribType.NUMERIC: {
 				for (let i = 0; i < core_objects.length; i++) {
@@ -154,7 +154,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		TypeAssert.unreachable(attrib_type);
 	}
 	async add_object_attribute(attrib_type: AttribType, core_group: CoreGroup) {
-		const core_objects = core_group.core_objects_from_group(this.pv.group);
+		const core_objects = core_group.coreObjectsFromGroup(this.pv.group);
 		switch (attrib_type) {
 			case AttribType.NUMERIC:
 				await this.add_numeric_attribute_to_object(core_objects);
@@ -167,17 +167,17 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	}
 
 	async add_numeric_attribute_to_points(core_object: CoreObject) {
-		const core_geometry = core_object.core_geometry();
+		const core_geometry = core_object.coreGeometry();
 		if (!core_geometry) {
 			return;
 		}
-		const points = core_object.points_from_group(this.pv.group);
+		const points = core_object.pointsFromGroup(this.pv.group);
 
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
 
 		if (param.has_expression()) {
-			if (!core_geometry.has_attrib(this.pv.name)) {
-				core_geometry.add_numeric_attrib(this.pv.name, this.pv.size, param.value);
+			if (!core_geometry.hasAttrib(this.pv.name)) {
+				core_geometry.addNumericAttrib(this.pv.name, this.pv.size, param.value);
 			}
 
 			const geometry = core_geometry.geometry();
@@ -246,7 +246,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					await this.p.value1.expression_controller.compute_expression_for_objects(
 						core_objects,
 						(core_object, value) => {
-							core_object.set_attrib_value(this.pv.name, value);
+							core_object.setAttribValue(this.pv.name, value);
 						}
 					);
 				}
@@ -278,7 +278,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				for (let i = 0; i < core_objects.length; i++) {
 					const core_object = core_objects[i];
 					const value = values_by_core_object_index[core_object.index];
-					core_object.set_attrib_value(this.pv.name, value);
+					core_object.setAttribValue(this.pv.name, value);
 				}
 			}
 		} else {
@@ -310,7 +310,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	// }
 
 	async add_string_attribute_to_points(core_object: CoreObject) {
-		const points = core_object.points_from_group(this.pv.group);
+		const points = core_object.pointsFromGroup(this.pv.group);
 		const param = this.p.string;
 
 		const string_values: string[] = new Array(points.length);
@@ -323,9 +323,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		}
 
 		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
-		const geometry = core_object.core_geometry();
+		const geometry = core_object.coreGeometry();
 		if (geometry) {
-			geometry.set_indexed_attribute(this.pv.name, index_data['values'], index_data['indices']);
+			geometry.setIndexedAttribute(this.pv.name, index_data['values'], index_data['indices']);
 		}
 	}
 
@@ -333,7 +333,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const param = this.p.string;
 		if (param.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_objects(core_objects, (core_object, value) => {
-				core_object.set_attrib_value(this.pv.name, value);
+				core_object.setAttribValue(this.pv.name, value);
 			});
 		} else {
 			// no need to do work here, as this will be done in the operation
@@ -343,7 +343,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		// const core_object = new CoreObject(object);
 
 		// this.param('string').eval(val => {
-		// 	core_object.add_attribute(this.pv.name, val);
+		// 	core_object.addAttribute(this.pv.name, val);
 		// });
 	}
 

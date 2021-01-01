@@ -10,17 +10,17 @@ QUnit.test('fuse simple', async (assert) => {
 
 	let container;
 
-	container = await bbox_scatter1.request_container();
-	assert.equal(container.points_count(), 1000);
+	container = await bbox_scatter1.requestContainer();
+	assert.equal(container.pointsCount(), 1000);
 
-	container = await fuse1.request_container();
-	assert.equal(container.points_count(), 1000);
+	container = await fuse1.requestContainer();
+	assert.equal(container.pointsCount(), 1000);
 
 	fuse1.p.dist.set(0.4);
-	container = await fuse1.request_container();
-	assert.equal(container.points_count(), 27);
+	container = await fuse1.requestContainer();
+	assert.equal(container.pointsCount(), 27);
 
 	fuse1.p.dist.set(0.2);
-	container = await fuse1.request_container();
-	assert.equal(container.points_count(), 125);
+	container = await fuse1.requestContainer();
+	assert.equal(container.pointsCount(), 125);
 });

@@ -26,11 +26,11 @@ QUnit.test('instance simple', async (assert) => {
 	instance1.setInput(0, box1);
 	instance1.setInput(1, plane1);
 
-	let container = await instance1.request_container();
-	const core_group = container.core_content()!;
-	const objects = core_group.objects_with_geo();
+	let container = await instance1.requestContainer();
+	const core_group = container.coreContent()!;
+	const objects = core_group.objectsWithGeo();
 	const first_object = objects[0];
 	const first_geo = first_object.geometry as InstancedBufferGeometry;
 	assert.equal(first_geo.instanceCount, Infinity);
-	assert.equal(container.core_content()!.points().length, 4);
+	assert.equal(container.coreContent()!.points().length, 4);
 });

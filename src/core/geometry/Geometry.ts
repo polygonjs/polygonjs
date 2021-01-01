@@ -30,79 +30,79 @@ export class CoreGeometry {
 		return this._geometry.uuid;
 	}
 
-	bounding_box() {
+	boundingBox() {
 		return (this._bounding_box = this._bounding_box || this._create_bounding_box());
 	}
-	_create_bounding_box() {
+	private _create_bounding_box() {
 		this._geometry.computeBoundingBox();
 		if (this._geometry.boundingBox) {
 			return this._geometry.boundingBox;
 		}
 	}
 
-	mark_as_instance() {
+	markAsInstance() {
 		this._geometry.userData['is_instance'] = true;
 	}
-	static marked_as_instance(geometry: BufferGeometry): boolean {
+	static markedAsInstance(geometry: BufferGeometry): boolean {
 		return geometry.userData['is_instance'] === true;
 	}
-	marked_as_instance(): boolean {
-		return CoreGeometry.marked_as_instance(this._geometry);
+	markedAsInstance(): boolean {
+		return CoreGeometry.markedAsInstance(this._geometry);
 	}
-	position_attrib_name() {
+	positionAttribName() {
 		let name = 'position';
-		if (this.marked_as_instance()) {
+		if (this.markedAsInstance()) {
 			name = 'instancePosition';
 		}
 		return name;
 	}
 
-	compute_vertex_normals() {
+	computeVertexNormals() {
 		this._geometry.computeVertexNormals();
 	}
 
-	user_data_attribs() {
+	userDataAttribs() {
 		const key = 'indexed_attrib_values';
 		return (this._geometry.userData[key] = this._geometry.userData[key] || {});
 	}
-	indexed_attribute_names() {
-		return Object.keys(this.user_data_attribs() || {});
+	indexedAttributeNames() {
+		return Object.keys(this.userDataAttribs() || {});
 	}
-	user_data_attrib(name: string) {
+	userDataAttrib(name: string) {
 		name = CoreAttribute.remap_name(name);
-		return this.user_data_attribs()[name];
+		return this.userDataAttribs()[name];
 	}
-	is_attrib_indexed(name: string): boolean {
+	isAttribIndexed(name: string): boolean {
 		name = CoreAttribute.remap_name(name);
-		return this.user_data_attrib(name) != null;
+		return this.userDataAttrib(name) != null;
 	}
 
-	has_attrib(name: string): boolean {
+	hasAttrib(name: string): boolean {
 		if (name === 'ptnum') {
 			return true;
 		}
 		name = CoreAttribute.remap_name(name);
 		return this._geometry.attributes[name] != null;
 	}
-	attrib_type(name: string) {
-		if (this.is_attrib_indexed(name)) {
+	attribType(name: string) {
+		if (this.isAttribIndexed(name)) {
 			return AttribType.STRING;
 		} else {
 			return AttribType.NUMERIC;
 		}
 	}
 
-	attrib_names(): string[] {
+	attribNames(): string[] {
 		return Object.keys(this._geometry.attributes);
 	}
-	attrib_sizes() {
+	attribSizes() {
 		const h: Dictionary<AttribSize> = {};
-		for (let attrib_name of this.attrib_names()) {
+		for (let attrib_name of this.attribNames()) {
 			h[attrib_name] = this._geometry.attributes[attrib_name].itemSize;
 		}
 		return h;
 	}
-	attrib_size(name: string): number {
+	attribSize(name: string): number {
 		let attrib;
 		name = CoreAttribute.remap_name(name);
 		if ((attrib = this._geometry.attributes[name]) != null) {
@@ -117,22 +117,22 @@ export class CoreGeometry {
 		}
 	}
 
-	set_indexed_attribute_values(name: string, values: string[]) {
-		this.user_data_attribs()[name] = values;
+	setIndexedAttributeValues(name: string, values: string[]) {
+		this.userDataAttribs()[name] = values;
 	}
 
-	set_indexed_attribute(name: string, values: string[], indices: number[]) {
-		this.set_indexed_attribute_values(name, values);
+	setIndexedAttribute(name: string, values: string[], indices: number[]) {
+		this.setIndexedAttributeValues(name, values);
 		this._geometry.setAttribute(name, new Int32BufferAttribute(indices, 1));
 	}
 
-	add_numeric_attrib(name: string, size: number = 1, default_value: NumericAttribValue = 0) {
+	addNumericAttrib(name: string, size: number = 1, default_value: NumericAttribValue = 0) {
 		const values = [];
 
 		let attribute_added = false;
 		if (CoreType.isNumber(default_value)) {
 			// adding number
-			for (let i = 0; i < this.points_count(); i++) {
+			for (let i = 0; i < this.pointsCount(); i++) {
 				for (let j = 0; j < size; j++) {
 					values.push(default_value);
 				}
@@ -142,7 +142,7 @@ export class CoreGeometry {
 			if (size > 1) {
 				if (CoreType.isArray(default_value)) {
 					// adding array
-					for (let i = 0; i < this.points_count(); i++) {
+					for (let i = 0; i < this.pointsCount(); i++) {
 						for (let j = 0; j < size; j++) {
 							values.push(default_value[j]);
 						}
@@ -152,7 +152,7 @@ export class CoreGeometry {
 					// adding Vector2
 					const vec2 = default_value as Vector2Like;
 					if (size == 2 && vec2.x != null && vec2.y != null) {
-						for (let i = 0; i < this.points_count(); i++) {
+						for (let i = 0; i < this.pointsCount(); i++) {
 							values.push(vec2.x);
 							values.push(vec2.y);
 						}
@@ -161,7 +161,7 @@ export class CoreGeometry {
 					// adding Vector3
 					const vec3 = default_value as Vector3Like;
 					if (size == 3 && vec3.x != null && vec3.y != null && vec3.z != null) {
-						for (let i = 0; i < this.points_count(); i++) {
+						for (let i = 0; i < this.pointsCount(); i++) {
 							values.push(vec3.x);
 							values.push(vec3.y);
 							values.push(vec3.z);
@@ -171,7 +171,7 @@ export class CoreGeometry {
 					// adding Color
 					const col = default_value as ColorLike;
 					if (size == 3 && col.r != null && col.g != null && col.b != null) {
-						for (let i = 0; i < this.points_count(); i++) {
+						for (let i = 0; i < this.pointsCount(); i++) {
 							values.push(col.r);
 							values.push(col.g);
 							values.push(col.b);
@@ -181,7 +181,7 @@ export class CoreGeometry {
 					// adding Vector4
 					const vec4 = default_value as Vector4Like;
 					if (size == 4 && vec4.x != null && vec4.y != null && vec4.z != null && vec4.w != null) {
-						for (let i = 0; i < this.points_count(); i++) {
+						for (let i = 0; i < this.pointsCount(); i++) {
 							values.push(vec4.x);
 							values.push(vec4.y);
 							values.push(vec4.z);
@@ -201,7 +201,7 @@ export class CoreGeometry {
 		}
 	}
 
-	init_position_attribute(points_count: number, default_value?: Vector3) {
+	initPositionAttribute(points_count: number, default_value?: Vector3) {
 		const values = [];
 		if (default_value == null) {
 			default_value = new Vector3();
@@ -216,19 +216,19 @@ export class CoreGeometry {
 		return this._geometry.setAttribute('position', new Float32BufferAttribute(values, 3));
 	}
 
-	add_attribute(name: string, attrib_data: CoreAttributeData) {
+	addAttribute(name: string, attrib_data: CoreAttributeData) {
 		switch (attrib_data.type()) {
 			case AttribType.STRING:
 				return console.log('TODO: to implement');
 			case AttribType.NUMERIC:
-				return this.add_numeric_attrib(name, attrib_data.size());
+				return this.addNumericAttrib(name, attrib_data.size());
 		}
 	}
 
-	rename_attribute(old_name: string, new_name: string) {
-		if (this.is_attrib_indexed(old_name)) {
-			this.user_data_attribs()[new_name] = ObjectUtils.clone(this.user_data_attribs()[old_name]);
-			delete this.user_data_attribs()[old_name];
+	renameAttrib(old_name: string, new_name: string) {
+		if (this.isAttribIndexed(old_name)) {
+			this.userDataAttribs()[new_name] = ObjectUtils.clone(this.userDataAttribs()[old_name]);
+			delete this.userDataAttribs()[old_name];
 		}
 
 		const old_attrib = this._geometry.getAttribute(old_name);
@@ -236,9 +236,9 @@ export class CoreGeometry {
 		return this._geometry.deleteAttribute(old_name);
 	}
 
-	delete_attribute(name: string) {
-		if (this.is_attrib_indexed(name)) {
-			delete this.user_data_attribs()[name];
+	deleteAttribute(name: string) {
+		if (this.isAttribIndexed(name)) {
+			delete this.userDataAttribs()[name];
 		}
 
 		return this._geometry.deleteAttribute(name);
@@ -266,16 +266,16 @@ export class CoreGeometry {
 		return new_geometry;
 	}
 
-	points_count(): number {
-		return CoreGeometry.points_count(this._geometry);
+	pointsCount(): number {
+		return CoreGeometry.pointsCount(this._geometry);
 	}
 
-	static points_count(geometry: BufferGeometry): number {
+	static pointsCount(geometry: BufferGeometry): number {
 		let position;
 		let count = 0;
 		const core_geometry = new this(geometry);
 		let position_attrib_name = 'position';
-		if (core_geometry.marked_as_instance()) {
+		if (core_geometry.markedAsInstance()) {
 			position_attrib_name = 'instancePosition';
 		}
 
@@ -290,14 +290,14 @@ export class CoreGeometry {
 	}
 
 	points(): CorePoint[] {
-		return (this._points = this._points || this.points_from_geometry());
+		return (this._points = this._points || this.pointsFromGeometry());
 	}
-	reset_points() {
+	resetPoints() {
 		this._points = undefined;
 	}
-	points_from_geometry(): CorePoint[] {
+	pointsFromGeometry(): CorePoint[] {
 		const points = [];
-		const position_attrib = this._geometry.getAttribute(this.position_attrib_name());
+		const position_attrib = this._geometry.getAttribute(this.positionAttribName());
 
 		if (position_attrib != null) {
 			const points_count = position_attrib.array.length / 3;
@@ -314,7 +314,7 @@ export class CoreGeometry {
 	private static _mesh_builder = new CoreGeometryBuilderMesh();
 	private static _points_builder = new CoreGeometryBuilderPoints();
 	private static _lines_segment_builder = new CoreGeometryBuilderLineSegments();
-	static geometry_from_points(points: CorePoint[], object_type: ObjectType) {
+	static geometryFromPoints(points: CorePoint[], object_type: ObjectType) {
 		switch (object_type) {
 			case ObjectType.MESH:
 				return this._mesh_builder.from_points(points);
@@ -340,9 +340,9 @@ export class CoreGeometry {
 	}
 
 	faces(): CoreFace[] {
-		return this.faces_from_geometry();
+		return this.facesFromGeometry();
 	}
-	faces_from_geometry(): CoreFace[] {
+	facesFromGeometry(): CoreFace[] {
 		const index_array = this.geometry().index?.array || [];
 		const faces_count = index_array.length / 3;
 		return ArrayUtils.range(faces_count).map((i) => new CoreFace(this, i));

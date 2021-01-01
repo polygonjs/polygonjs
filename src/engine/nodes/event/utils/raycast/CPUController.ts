@@ -14,7 +14,7 @@ import {Plane} from 'three/src/math/Plane';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
-import {object_type_from_constructor, ObjectType} from '../../../../../core/geometry/Constant';
+import {objectTypeFromConstructor, ObjectType} from '../../../../../core/geometry/Constant';
 import {CoreGeometry} from '../../../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Triangle} from 'three/src/math/Triangle';
@@ -22,7 +22,7 @@ import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {Vector3Param} from '../../../../params/Vector3';
 import {Poly} from '../../../../Poly';
 import {RaycastCPUVelocityController} from './VelocityController';
-import { CoreType } from '../../../../../core/Type';
+import {CoreType} from '../../../../../core/Type';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -125,7 +125,7 @@ export class RaycastCPUController {
 		}
 	}
 	static resolve_geometry_attribute(intersection: Intersection, attribute_name: string, attrib_type: AttribType) {
-		const object_type = object_type_from_constructor(intersection.object.constructor);
+		const object_type = objectTypeFromConstructor(intersection.object.constructor);
 		switch (object_type) {
 			case ObjectType.MESH:
 				return this.resolve_geometry_attribute_for_mesh(intersection, attribute_name, attrib_type);
@@ -180,7 +180,7 @@ export class RaycastCPUController {
 						const core_geometry = new CoreGeometry(geometry);
 						const core_point = core_geometry.points()[0];
 						if (core_point) {
-							return core_point.string_attrib_value(attribute_name);
+							return core_point.stringAttribValue(attribute_name);
 						}
 						return;
 					}
@@ -208,7 +208,7 @@ export class RaycastCPUController {
 					const core_geometry = new CoreGeometry(geometry);
 					const core_point = core_geometry.points()[intersection.index];
 					if (core_point) {
-						return core_point.string_attrib_value(attribute_name);
+						return core_point.stringAttribValue(attribute_name);
 					}
 					return;
 				}

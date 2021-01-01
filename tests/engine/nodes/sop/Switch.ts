@@ -9,16 +9,16 @@ QUnit.test('SOP switch simple', async (assert) => {
 
 	switch1.p.input.set(0);
 
-	let container = await switch1.request_container();
-	// let core_group = container.core_content();
+	let container = await switch1.requestContainer();
+	// let core_group = container.coreContent();
 	// let {geometry} = core_group.objects()[0];
 
-	assert.equal(container.points_count(), 24);
+	assert.equal(container.pointsCount(), 24);
 
 	switch1.p.input.set(1);
-	container = await sphere1.request_container();
-	// core_group = container.core_content();
+	container = await sphere1.requestContainer();
+	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
 
-	assert.equal(container.points_count(), 961);
+	assert.equal(container.pointsCount(), 961);
 });

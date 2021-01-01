@@ -7,8 +7,8 @@ QUnit.test('resample a line', async (assert) => {
 	const line1 = geo1.createNode('line');
 	let container;
 
-	container = await line1.request_container();
-	assert.equal(container.points_count(), 2);
+	container = await line1.requestContainer();
+	assert.equal(container.pointsCount(), 2);
 
 	const resample1 = geo1.createNode('resample');
 	resample1.setInput(0, line1);
@@ -17,32 +17,32 @@ QUnit.test('resample a line', async (assert) => {
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 101);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 101);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 101);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 101);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 101);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 101);
 
 	// try all curve types for method segment_length
 	resample1.p.method.set(METHODS.indexOf(METHOD.SEGMENT_LENGTH));
 	resample1.p.segment_length.set(0.05);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 22);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 22);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 22);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 22);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 22);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 22);
 });
 
 QUnit.test('resample a text', async (assert) => {
@@ -53,8 +53,8 @@ QUnit.test('resample a text', async (assert) => {
 	let container;
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.LINE));
-	container = await text1.request_container();
-	assert.equal(container.points_count(), 738);
+	container = await text1.requestContainer();
+	assert.equal(container.pointsCount(), 738);
 
 	const resample1 = geo1.createNode('resample');
 	resample1.setInput(0, text1);
@@ -63,60 +63,60 @@ QUnit.test('resample a text', async (assert) => {
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 505);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 505);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 505);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 505);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 505);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 505);
 
 	// vary points count
 	resample1.p.points_count.set(500);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 2505);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 2505);
 
 	// try all curve types for method segment_length
 	resample1.p.method.set(METHODS.indexOf(METHOD.SEGMENT_LENGTH));
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 21);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 21);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 21);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 21);
 
 	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 21);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 21);
 
 	// vary segment length
 	resample1.p.segment_length.set(0.01);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 1235);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 1235);
 
 	resample1.p.segment_length.set(0.04);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 314);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 314);
 
 	// also vary tension
 	resample1.p.tension.set(0);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 314, 'with tension 0');
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 314, 'with tension 0');
 
 	resample1.p.tension.set(0.01);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 314, 'with tension 0.01');
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 314, 'with tension 0.01');
 
 	resample1.p.tension.set(0.5);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 329);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 329);
 
 	resample1.p.tension.set(1);
-	container = await resample1.request_container();
-	assert.equal(container.points_count(), 354);
+	container = await resample1.requestContainer();
+	assert.equal(container.pointsCount(), 354);
 });

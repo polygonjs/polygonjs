@@ -18,9 +18,9 @@ export class TypedContainerController<NC extends NodeContext> {
 		return this._container;
 	}
 
-	request_container(): Promise<ContainerMap[NC]> | ContainerMap[NC] {
+	requestContainer(): Promise<ContainerMap[NC]> | ContainerMap[NC] {
 		if (this.node.is_dirty || this.node.flags?.bypass?.active) {
-			// console.log(performance.now(), 'request_container', this.node.fullPath());
+			// console.log(performance.now(), 'requestContainer', this.node.fullPath());
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve);
 				// console.log(performance.now(), 'promise start', this.node.fullPath());
@@ -60,7 +60,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		if (input_node) {
 			// input_node.processing_context.copy(this.node.processing_context);
 			if (input_node.is_dirty || input_node.flags?.bypass?.active) {
-				const container = await input_node.container_controller.request_container();
+				const container = await input_node.container_controller.requestContainer();
 				return container;
 			} else {
 				return input_node.container_controller.container;

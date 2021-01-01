@@ -11,7 +11,7 @@ QUnit.test('height map simple', async (assert) => {
 	height_map1.p.texture.set(file1.fullPath());
 	height_map1.p.mult.set(100);
 
-	let container = await height_map1.request_container();
-	assert.equal(container.bounding_box().min.y, 6200);
-	assert.equal(container.bounding_box().max.y, 10800);
+	let container = await height_map1.requestContainer();
+	assert.equal(container.boundingBox().min.y, 6200);
+	assert.equal(container.boundingBox().max.y, 10800);
 });

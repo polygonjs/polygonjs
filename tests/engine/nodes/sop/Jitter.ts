@@ -7,7 +7,7 @@ QUnit.test('jitter simple', async (assert) => {
 	jitter1.setInput(0, scatter1);
 	scatter1.setInput(0, plane1);
 
-	let container = await jitter1.request_container();
+	let container = await jitter1.requestContainer();
 
 	let size = container.size();
 	assert.more_than(size.x, 2.0);

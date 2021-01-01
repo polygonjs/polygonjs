@@ -66,7 +66,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	const globals1: GlobalsGlNode = mesh_basic1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = mesh_basic1.node('output1')! as OutputGlNode;
 
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).sort());
@@ -76,12 +76,12 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.setInput('color', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
 	output1.setInput('color', globals1, 'position');
 
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
 
@@ -92,7 +92,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	vec3ToFloat1.setInput('vec', globals1, 'position');
 	output1.setInput('color', float_to_vec3_1);
 
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 
 	assert.equal(material.lights, false);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.positionXZ.vert);
@@ -102,7 +102,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	const float_to_vec3_2 = mesh_basic1.createNode('floatToVec3');
 	float_to_vec3_2.setInput('z', globals1, 'time');
 	output1.setInput('position', float_to_vec3_2, 'vec3');
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).concat(['time']).sort());
 });
 
@@ -114,7 +114,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	mesh_basic1.createNode('globals');
 	await scene.wait_for_cooks_completed();
 
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required());
 
@@ -131,7 +131,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	// await CoreSleep.sleep(50);
 
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	// mesh_basic1.param_names();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
@@ -145,7 +145,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	await scene2.wait_for_cooks_completed();
 
 	const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-	await new_mesh_basic1.request_container();
+	await new_mesh_basic1.requestContainer();
 	assert.notOk(new_mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
 	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['texture_map'], 'spare params has texture_map');
 	assert.equal(new_mesh_basic1.params.get('texture_map')?.value, '/COP/file2', 'texture_map value is "/COP/file_uv"');
@@ -171,19 +171,19 @@ QUnit.test(
 		output1.setInput('position', float_to_vec31);
 
 		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
-		await mesh_basic1.request_container();
+		await mesh_basic1.requestContainer();
 		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert);
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInVertex.frag);
 
 		// set uv to color, to have it declared to the fragment shader
 		output1.setInput('color', float_to_vec31);
-		await mesh_basic1.request_container();
+		await mesh_basic1.requestContainer();
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInFragment.vert);
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInFragment.frag);
 		// remove uv from position, to have it declared ONLY to the fragment shader
 		output1.setInput('position', null);
-		await mesh_basic1.request_container();
+		await mesh_basic1.requestContainer();
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInFragmentOnly.vert);
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInFragmentOnly.frag);
 	}
@@ -216,7 +216,7 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	ifThen_subnetOutput1.setInput(0, multAdd1);
 
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag);
@@ -226,7 +226,7 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	rotate1.setInput(0, ifThen_subnetInput1);
 	ifThen_subnetOutput1.setInput(0, rotate1);
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag);
@@ -253,7 +253,7 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	add1.params.get('add1')!.set([0.1, 0.1, 0.1]);
 
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
@@ -280,7 +280,7 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	add1.params.get('add1')!.set([1.0, 0.5, 0.25]);
 
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
@@ -303,7 +303,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();

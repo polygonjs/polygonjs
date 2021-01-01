@@ -69,7 +69,7 @@ export class ByAttributeHelper {
 	private _eval_for_string(entities: CoreEntity[]) {
 		let value: string | undefined;
 		for (let entity of entities) {
-			value = entity.string_attrib_value(this.node.pv.attrib_name);
+			value = entity.stringAttribValue(this.node.pv.attrib_name);
 			if (value == this.node.pv.attrib_string) {
 				this.node.entity_selection_helper.select(entity);
 			}
@@ -101,7 +101,7 @@ export class ByAttributeHelper {
 		const comparison_operator: ComparisonOperator = COMPARISON_OPERATORS[this.node.pv.attrib_comparison_operator];
 		const compare_method = COMPARE_METHOD_FLOAT[comparison_operator];
 		for (let entity of entities) {
-			value = entity.attrib_value(attrib_name) as number;
+			value = entity.attribValue(attrib_name) as number;
 			if (compare_method(value, compared_value)) {
 				this.node.entity_selection_helper.select(entity);
 			}
@@ -112,7 +112,7 @@ export class ByAttributeHelper {
 		const compared_value = this.node.pv.attrib_value2;
 		let target = new Vector2();
 		for (let entity of entities) {
-			const value = entity.attrib_value(attrib_name, target) as Vector2;
+			const value = entity.attribValue(attrib_name, target) as Vector2;
 			if (compared_value.equals(value)) {
 				this.node.entity_selection_helper.select(entity);
 			}
@@ -123,7 +123,7 @@ export class ByAttributeHelper {
 		const compared_value = this.node.pv.attrib_value3;
 		let target = new Vector3();
 		for (let entity of entities) {
-			const value = entity.attrib_value(attrib_name, target) as Vector3;
+			const value = entity.attribValue(attrib_name, target) as Vector3;
 			if (compared_value.equals(value)) {
 				this.node.entity_selection_helper.select(entity);
 			}
@@ -134,7 +134,7 @@ export class ByAttributeHelper {
 		const compared_value = this.node.pv.attrib_value4;
 		let target = new Vector4();
 		for (let entity of entities) {
-			const value = entity.attrib_value(attrib_name, target) as Vector4;
+			const value = entity.attribValue(attrib_name, target) as Vector4;
 			if (compared_value.equals(value)) {
 				this.node.entity_selection_helper.select(entity);
 			}

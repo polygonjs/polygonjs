@@ -67,9 +67,9 @@ export class MaterialSopOperation extends BaseSopOperation {
 				assembler_controller.set_assembler_globals_handler(this._globals_handler);
 			}
 
-			await material_node.request_container();
+			await material_node.requestContainer();
 			if (material) {
-				for (let object of core_group.objects_from_group(params.group)) {
+				for (let object of core_group.objectsFromGroup(params.group)) {
 					if (params.apply_to_children) {
 						object.traverse((grand_child) => {
 							this._apply_material(grand_child, material, params);
@@ -96,7 +96,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 		this._materials_by_uuid.clear();
 
-		for (let object of core_group.objects_from_group(params.group)) {
+		for (let object of core_group.objectsFromGroup(params.group)) {
 			if (params.apply_to_children) {
 				object.traverse((child) => {
 					const mat = (object as Mesh).material as Material;

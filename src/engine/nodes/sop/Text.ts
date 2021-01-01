@@ -133,7 +133,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				const position_array = geometry.getAttribute('position').array;
 				geometry.setIndex(ArrayUtils.range(position_array.length / 3));
 			}
-			this.set_geometry(geometry);
+			this.setGeometry(geometry);
 		} catch (err) {
 			this.states.error.set(GENERATION_ERROR_MESSAGE);
 		}
@@ -143,7 +143,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		const shapes = this._get_shapes(font);
 		if (shapes) {
 			var geometry = new ShapeBufferGeometry(shapes);
-			this.set_geometry(geometry);
+			this.setGeometry(geometry);
 		}
 	}
 	private _create_geometry_from_type_line(font: Font) {
@@ -171,7 +171,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			const geometry = new BufferGeometry();
 			geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 			geometry.setIndex(indices);
-			this.set_geometry(geometry, ObjectType.LINE_SEGMENTS);
+			this.setGeometry(geometry, ObjectType.LINE_SEGMENTS);
 		}
 	}
 	private async _create_geometry_from_type_stroke(font: Font) {
@@ -200,7 +200,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				geometries.push(geometry);
 			}
 			const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
-			this.set_geometry(merged_geometry); //, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
+			this.setGeometry(merged_geometry); //, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
 		}
 	}
 

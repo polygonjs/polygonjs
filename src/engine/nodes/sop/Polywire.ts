@@ -71,9 +71,9 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 		if (merged_geometry) {
 			const object = this.create_object(merged_geometry, ObjectType.MESH);
 
-			this.set_object(object);
+			this.setObject(object);
 		} else {
-			this.set_objects([]);
+			this.setObjects([]);
 		}
 	}
 
@@ -96,7 +96,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			return;
 		}
 
-		const positions = points.map((point) => point.attrib_value(POSITION_ATTRIBUTE_NAME)) as Vector3[];
+		const positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 
 		const circle_template = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segments_radial);
 		const circles: BufferGeometry[] = [];

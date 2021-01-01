@@ -124,7 +124,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	}
 
 	_on_load(geometry: BufferGeometry) {
-		this.set_geometry(geometry, ObjectType.POINTS);
+		this.setGeometry(geometry, ObjectType.POINTS);
 	}
 	_on_error(error: ErrorEvent) {
 		this.states.error.set(`could not load geometry from ${this._url()} (${error})`);
@@ -141,7 +141,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		const loader = new CsvLoader(attrib_names);
 		const geometry = await loader.load(this._url());
 		if (geometry) {
-			this.set_geometry(geometry, ObjectType.POINTS);
+			this.setGeometry(geometry, ObjectType.POINTS);
 		} else {
 			this.states.error.set('could not generate points');
 		}

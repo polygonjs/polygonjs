@@ -9,8 +9,8 @@ QUnit.test('center simple', async (assert) => {
 	transform1.p.t.set([1, 3, 4]);
 	center1.setInput(0, transform1);
 
-	let container = await center1.request_container();
-	const geometry = container.core_content()!.objects_with_geo()[0].geometry;
+	let container = await center1.requestContainer();
+	const geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	const positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [1, 3, 4].join(','));
 });
@@ -34,8 +34,8 @@ QUnit.test('center with multiple objects', async (assert) => {
 	merge.p.compact.set(0);
 	center1.setInput(0, merge);
 
-	let container = await center1.request_container();
-	const geometry = container.core_content()!.objects_with_geo()[0].geometry;
+	let container = await center1.requestContainer();
+	const geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	const positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [1, 3, 4, -1, 5, 2].join(','));
 });

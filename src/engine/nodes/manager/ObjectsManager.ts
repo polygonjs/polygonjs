@@ -137,7 +137,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 			const parent_object = node.root.get_parent_for_node(node);
 			if (parent_object) {
 				// await node.params.eval_all().then((params_eval_key) => {
-				// 	node.request_container();
+				// 	node.requestContainer();
 				// });
 
 				if (node.used_in_scene) {
@@ -148,7 +148,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 					// TODO: investigate if it has a performance cost, or if it could be done
 					// only when scene loads. Or if the display_node_controller itself could be improved
 					// to take care of it itself.
-					// node.request_container();
+					// node.requestContainer();
 					node.children_display_controller?.request_display_node_container();
 					node.add_object_to_parent(parent_object);
 				} else {
@@ -158,7 +158,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 				// node.request_display_node();
 			} else {
-				// node.request_container().then(() => {
+				// node.requestContainer().then(() => {
 				// 	// force events and mat to cook and remove the dirty state
 				// 	// ensure that pickers are cooked
 				// 	// TODO: although there has been cases with two picker and

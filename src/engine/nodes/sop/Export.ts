@@ -51,15 +51,15 @@
 
 // 	cook(input_contents: CoreGroup[]) {
 // 		const core_group = input_contents[0];
-// 		this.set_core_group(core_group);
+// 		this.setCoreGroup(core_group);
 // 	}
 // 	static PARAM_CALLBACK_export(node: ExportSopNode, param: BaseParamType) {
 // 		node.param_callback_export();
 // 	}
 // 	private async param_callback_export() {
-// 		const container = await this.request_container();
+// 		const container = await this.requestContainer();
 
-// 		const core_group = container.core_content();
+// 		const core_group = container.coreContent();
 // 		if (core_group) {
 // 			const group = new Group();
 // 			for (let object of core_group.objects()) {

@@ -93,7 +93,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		// this._objects = [];
 		const resampled_objects = [];
 		if (this.pv.points_count >= 2) {
-			const core_objects = core_group.core_objects();
+			const core_objects = core_group.coreObjects();
 			for (let i = 0; i < core_objects.length; i++) {
 				const core_object = core_objects[i];
 				const object = core_object.object();
@@ -104,7 +104,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			}
 		}
 
-		this.set_objects(resampled_objects);
+		this.setObjects(resampled_objects);
 	}
 
 	_resample(line_segment: LineSegments) {
@@ -134,7 +134,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			return;
 		}
 
-		const old_curve_positions = points.map((point) => point.attrib_value(POSITION_ATTRIBUTE_NAME)) as Vector3[];
+		const old_curve_positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 		const closed = false;
 		const curve_type = CURVE_TYPES[this.pv.curve_type];
 		const tension = this.pv.tension;

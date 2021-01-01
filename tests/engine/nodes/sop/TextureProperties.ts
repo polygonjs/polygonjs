@@ -17,13 +17,13 @@ QUnit.test('texture_properties simple', async (assert) => {
 	file1.p.url.set(CoreTextureLoader.PARAM_DEFAULT);
 	file1.p.tanisotropy.set(0);
 	basic_material1.p.useMap.set(1);
-	await file1.request_container();
+	await file1.requestContainer();
 	basic_material1.p.map.set(file1.fullPath());
 	material1.p.material.set(basic_material1.fullPath());
 	material1.setInput(0, plane1);
 
-	let container = await material1.request_container();
-	let core_group = container.core_content()!;
+	let container = await material1.requestContainer();
+	let core_group = container.coreContent()!;
 	let texture = ((core_group.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 1);
 
@@ -31,16 +31,16 @@ QUnit.test('texture_properties simple', async (assert) => {
 	const texture_properties1 = geo1.createNode('textureProperties');
 	texture_properties1.setInput(0, material1);
 
-	container = await texture_properties1.request_container();
-	core_group = container.core_content()!;
+	container = await texture_properties1.requestContainer();
+	core_group = container.coreContent()!;
 	texture = ((core_group.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 1);
 
 	texture_properties1.p.tanisotropy.set(1);
 	texture_properties1.p.use_renderer_max_anisotropy.set(0);
 	texture_properties1.p.anisotropy.set(8);
-	container = await texture_properties1.request_container();
-	core_group = container.core_content()!;
+	container = await texture_properties1.requestContainer();
+	core_group = container.coreContent()!;
 	texture = ((core_group.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 8);
 });

@@ -40,12 +40,12 @@ QUnit.test('string match_mask', (assert) => {
 });
 
 QUnit.test('string attrib_names', (assert) => {
-	assert.deepEqual(CoreString.attrib_names('position, normal'), ['position', 'normal']);
-	assert.deepEqual(CoreString.attrib_names('position,normal'), ['position', 'normal']);
-	assert.deepEqual(CoreString.attrib_names('position,   normal'), ['position', 'normal']);
-	assert.deepEqual(CoreString.attrib_names('position,		  normal'), ['position', 'normal']);
-	assert.deepEqual(CoreString.attrib_names('  position  ,		  normal  '), ['position', 'normal']);
-	assert.deepEqual(CoreString.attrib_names('position,normal,'), ['position', 'normal']);
+	assert.deepEqual(CoreString.attribNames('position, normal'), ['position', 'normal']);
+	assert.deepEqual(CoreString.attribNames('position,normal'), ['position', 'normal']);
+	assert.deepEqual(CoreString.attribNames('position,   normal'), ['position', 'normal']);
+	assert.deepEqual(CoreString.attribNames('position,		  normal'), ['position', 'normal']);
+	assert.deepEqual(CoreString.attribNames('  position  ,		  normal  '), ['position', 'normal']);
+	assert.deepEqual(CoreString.attribNames('position,normal,'), ['position', 'normal']);
 });
 QUnit.test('string utils to_id', (assert) => {
 	assert.equal(CoreString.to_id('ab'), 1068);

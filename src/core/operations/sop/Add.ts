@@ -72,7 +72,7 @@ export class AddSopOperation extends BaseSopOperation {
 	// private _create_polygon_closed(core_group: CoreGroup, objects: Object3D[]) {
 	// 	const points = core_group.points();
 
-	// 	const geometry = CoreGeometryUtilShape.geometry_from_points(points.map((p) => p.position()));
+	// 	const geometry = CoreGeometryUtilShape.geometryFromPoints(points.map((p) => p.position()));
 	// 	const object = this.create_object(geometry, ObjectType.MESH);
 	// 	objects.push(object);
 	// }

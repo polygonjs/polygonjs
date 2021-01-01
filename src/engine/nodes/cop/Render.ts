@@ -78,7 +78,7 @@
 // 		// Walker.find_node(<unknown>this as Node, this._param_camera)
 // 		if (this._camera_node) {
 // 			this.camera = this._camera_node.object();
-// 			const container = await this._camera_node.request_container_p();
+// 			const container = await this._camera_node.requestContainer_p();
 // 			this.start_animate();
 // 		} else {
 // 			this.camera = null;

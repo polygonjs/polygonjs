@@ -20,7 +20,7 @@ export class CoreGeometryBuilderMerge {
 		// 2/4. set the new attrib indices for the indexed attributes
 		//
 		const core_geometries = geometries.map((geometry) => new CoreGeometry(geometry));
-		const indexed_attribute_names = core_geometries[0].indexed_attribute_names();
+		const indexed_attribute_names = core_geometries[0].indexedAttributeNames();
 
 		const new_values_by_attribute_name: Dictionary<string[]> = {};
 		for (let indexed_attribute_name of indexed_attribute_names) {
@@ -30,8 +30,8 @@ export class CoreGeometryBuilderMerge {
 				const geometry_points = core_geometry.points();
 				for (let point of geometry_points) {
 					all_geometries_points.push(point);
-					const value: string = point.indexed_attrib_value(indexed_attribute_name);
-					//value_index = point.attrib_value_index(indexed_attribute_name)
+					const value: string = point.indexedAttribValue(indexed_attribute_name);
+					//value_index = point.attribValueIndex(indexed_attribute_name)
 					// TODO: typescript: that doesn't seem right
 					index_by_values[value] != null
 						? index_by_values[value]
@@ -41,9 +41,9 @@ export class CoreGeometryBuilderMerge {
 
 			const values = Object.keys(index_by_values);
 			for (let point of all_geometries_points) {
-				const value = point.indexed_attrib_value(indexed_attribute_name);
+				const value = point.indexedAttribValue(indexed_attribute_name);
 				const new_index = index_by_values[value];
-				point.set_attrib_index(indexed_attribute_name, new_index);
+				point.setAttribIndex(indexed_attribute_name, new_index);
 			}
 
 			new_values_by_attribute_name[indexed_attribute_name] = values;
@@ -58,10 +58,10 @@ export class CoreGeometryBuilderMerge {
 		// 4/4. add the index attrib values
 		//
 
-		const merged_geometry_wrapper = new CoreGeometry(merged_geometry);
+		const merged_core_geometry = new CoreGeometry(merged_geometry);
 		Object.keys(new_values_by_attribute_name).forEach((indexed_attribute_name) => {
 			const values = new_values_by_attribute_name[indexed_attribute_name];
-			merged_geometry_wrapper.set_indexed_attribute_values(indexed_attribute_name, values);
+			merged_core_geometry.setIndexedAttributeValues(indexed_attribute_name, values);
 		});
 
 		if (merged_geometry) {

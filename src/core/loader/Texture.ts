@@ -54,7 +54,7 @@ export class CoreTextureLoader {
 			found_node = CoreWalker.find_node(this._node, node_path);
 			if (found_node) {
 				if (found_node instanceof BaseCopNodeClass) {
-					const container: TextureContainer = await found_node.request_container();
+					const container: TextureContainer = await found_node.requestContainer();
 					texture = container.texture();
 				} else {
 					this._node.states.error.set(`found node is not a texture node`);
@@ -250,12 +250,12 @@ export class CoreTextureLoader {
 	// TODO: typescript: check what type the pixel_data is
 	// static pixel_data_to_attribute(pixel_data: Pixel, geometry: BufferGeometry, attrib_name_with_component:string, convert_method: (x:number, y:number, z:number, w:number)=>number) {
 	// 	const {data} = pixel_data;
-	// 	const geometry_wrapper = new CoreGeometry(geometry);
+	// 	const core_geometry = new CoreGeometry(geometry);
 	// 	// TODO: add error if no uvs
 	// 	const values = [];
-	// 	const points = geometry_wrapper.points();
+	// 	const points = core_geometry.points();
 	// 	for (let point of points) {
-	// 		const uv = point.attrib_value('uv');
+	// 		const uv = point.attribValue('uv');
 	// 		const x = Math.floor((pixel_data.width - 1) * uv.x);
 	// 		const y = Math.floor((pixel_data.height - 1) * (1 - uv.y));
 	// 		const i = y * pixel_data.width + x;

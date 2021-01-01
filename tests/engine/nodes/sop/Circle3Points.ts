@@ -15,10 +15,10 @@ QUnit.test('circle 3 points simple', async (assert) => {
 	const circle_3_points1 = geo1.createNode('circle3Points');
 	circle_3_points1.setInput(0, merge1);
 
-	let container = await circle_3_points1.request_container();
-	let core_group = container.core_content()!;
-	let geometry = core_group.objects_with_geo()[0].geometry;
+	let container = await circle_3_points1.requestContainer();
+	let core_group = container.coreContent()!;
+	let geometry = core_group.objectsWithGeo()[0].geometry;
 
 	assert.ok(geometry);
-	assert.equal(container.points_count(), 101);
+	assert.equal(container.pointsCount(), 101);
 });

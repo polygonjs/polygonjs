@@ -50,8 +50,8 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 		// const group = input_containers[0].group();
 		const core_group = input_contents[0];
 
-		core_group.rename_attrib(this.pv.old_name, this.pv.new_name, this.pv.class);
+		core_group.renameAttrib(this.pv.old_name, this.pv.new_name, this.pv.class);
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

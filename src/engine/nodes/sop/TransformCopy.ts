@@ -61,13 +61,13 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 			target_object.matrix.decompose(target_object.position, target_object.quaternion, target_object.scale);
 		}
 
-		this.set_objects(target_objects);
+		this.setObjects(target_objects);
 	}
 	private async _copy_from_found_node(target_objects: Object3D[]) {
 		const node = this.p.reference.found_node_with_context(NodeContext.SOP);
 		if (node) {
-			const container = await node.request_container();
-			const core_group = container.core_content();
+			const container = await node.requestContainer();
+			const core_group = container.coreContent();
 			if (core_group) {
 				const src_objects = core_group.objects();
 				this._copy_from_src_objects(target_objects, src_objects);
@@ -75,6 +75,6 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 			}
 		}
 
-		this.set_objects(target_objects);
+		this.setObjects(target_objects);
 	}
 }

@@ -17,10 +17,10 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 	texture(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
-	core_content(): ContainableMap[NodeContext.COP] {
+	coreContent(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
-	core_content_cloned(): ContainableMap[NodeContext.COP] | undefined {
+	coreContentCloned(): ContainableMap[NodeContext.COP] | undefined {
 		const texture = this._content?.clone();
 		if (texture) {
 			texture.needsUpdate = true;

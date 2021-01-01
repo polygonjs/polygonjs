@@ -34,7 +34,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	// mesh_basic_builder1.p.use_map.set(1)
 	// mesh_basic_builder1.p.map.set(builder1.fullPath())
 
-	let container = await builder1.request_container();
+	let container = await builder1.requestContainer();
 	assert.ok(!builder1.states.error.message);
 	let texture = container.texture();
 	assert.equal(texture.image.width, 256);
@@ -78,7 +78,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	// mesh_basic_builder1.p.use_map.set(1)
 	// mesh_basic_builder1.p.map.set(builder1.fullPath())
 
-	let container = await builder1.request_container();
+	let container = await builder1.requestContainer();
 	assert.ok(!builder1.states.error.message);
 	let texture = container.texture();
 	assert.equal(texture.image.width, 256);
@@ -117,7 +117,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 	float_to_vec31.setInput(0, param1);
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput('color', float_to_vec31);
-	await builder1.request_container();
+	await builder1.requestContainer();
 
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.with_unregistered_assembler(builder1.used_assembler(), async () => {

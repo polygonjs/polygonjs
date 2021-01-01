@@ -45,24 +45,24 @@ export class CorePoint extends CoreEntity {
 		this._geometry = this._core_geometry.geometry();
 	}
 
-	geometry_wrapper() {
+	core_geometry() {
 		return this._core_geometry;
 	}
 	geometry() {
 		return (this._geometry = this._geometry || this._core_geometry.geometry());
 	}
 
-	attrib_size(name: string): number {
+	attribSize(name: string): number {
 		name = CoreAttribute.remap_name(name);
 		return this._geometry.getAttribute(name).itemSize;
 	}
 
-	has_attrib(name: string): boolean {
+	hasAttrib(name: string): boolean {
 		const remapped_name = CoreAttribute.remap_name(name);
-		return this._core_geometry.has_attrib(remapped_name);
+		return this._core_geometry.hasAttrib(remapped_name);
 	}
 
-	attrib_value(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
+	attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		if (name === PTNUM) {
 			return this.index;
 		} else {
@@ -78,8 +78,8 @@ export class CorePoint extends CoreEntity {
 			const attrib = this._geometry.getAttribute(remaped_name);
 			if (attrib) {
 				const {array} = attrib;
-				if (this._core_geometry.is_attrib_indexed(remaped_name)) {
-					return this.indexed_attrib_value(remaped_name);
+				if (this._core_geometry.isAttribIndexed(remaped_name)) {
+					return this.indexedAttribValue(remaped_name);
 				} else {
 					const size = attrib.itemSize;
 					const start_index = this._index * size;
@@ -127,23 +127,23 @@ export class CorePoint extends CoreEntity {
 		}
 	}
 
-	indexed_attrib_value(name: string): string {
-		const value_index = this.attrib_value_index(name); //attrib.value()
-		return this._core_geometry.user_data_attrib(name)[value_index];
+	indexedAttribValue(name: string): string {
+		const value_index = this.attribValueIndex(name); //attrib.value()
+		return this._core_geometry.userDataAttrib(name)[value_index];
 	}
-	string_attrib_value(name: string) {
-		return this.indexed_attrib_value(name);
+	stringAttribValue(name: string) {
+		return this.indexedAttribValue(name);
 	}
 
-	attrib_value_index(name: string): number {
-		if (this._core_geometry.is_attrib_indexed(name)) {
+	attribValueIndex(name: string): number {
+		if (this._core_geometry.isAttribIndexed(name)) {
 			return this._geometry.getAttribute(name).array[this._index];
 		} else {
 			return -1;
 		}
 	}
-	is_attrib_indexed(name: string) {
-		return this._core_geometry.is_attrib_indexed(name);
+	isAttribIndexed(name: string) {
+		return this._core_geometry.isAttribIndexed(name);
 	}
 
 	position(target?: Vector3): Vector3 {
@@ -156,7 +156,7 @@ export class CorePoint extends CoreEntity {
 		}
 	}
 	setPosition(new_position: Vector3) {
-		this.set_attrib_value_vector3(ATTRIB_NAMES.POSITION, new_position);
+		this.setAttribValueVector3(ATTRIB_NAMES.POSITION, new_position);
 	}
 
 	normal(): Vector3 {
@@ -164,11 +164,11 @@ export class CorePoint extends CoreEntity {
 		this._normal = this._normal || new Vector3();
 		return this._normal.fromArray(array, this._index * 3);
 	}
-	set_normal(new_normal: Vector3) {
-		return this.set_attrib_value_vector3(ATTRIB_NAMES.NORMAL, new_normal);
+	setNormal(new_normal: Vector3) {
+		return this.setAttribValueVector3(ATTRIB_NAMES.NORMAL, new_normal);
 	}
 
-	set_attrib_value(name: string, value: NumericAttribValue | string) {
+	setAttribValue(name: string, value: NumericAttribValue | string) {
 		// TODO: this fails if the value is null
 		if (value == null) {
 			return;
@@ -209,7 +209,7 @@ export class CorePoint extends CoreEntity {
 				throw `attrib size ${attrib_size} not implemented`;
 		}
 	}
-	set_attrib_value_vector3(name: string, value: Vector3) {
+	setAttribValueVector3(name: string, value: Vector3) {
 		// TODO: this fails if the value is null
 		if (value == null) {
 			return;
@@ -227,7 +227,7 @@ export class CorePoint extends CoreEntity {
 		array[i + 2] = value.z;
 	}
 
-	set_attrib_index(name: string, new_value_index: number) {
+	setAttribIndex(name: string, new_value_index: number) {
 		const array = this._geometry.getAttribute(name).array as number[];
 		return (array[this._index] = new_value_index);
 	}

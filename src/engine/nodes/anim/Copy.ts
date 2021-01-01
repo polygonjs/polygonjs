@@ -28,7 +28,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 			this.stamp_node.set_global_index(i);
 			const container = await this.container_controller.request_input_container(0);
 			if (container) {
-				const stamped_builder = container.core_content_cloned();
+				const stamped_builder = container.coreContentCloned();
 				if (stamped_builder) {
 					builder.add_timeline_builder(stamped_builder);
 				}

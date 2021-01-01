@@ -44,6 +44,6 @@ export class LayerSopNode extends TypedSopNode<LayerSopParamsConfig> {
 			object.layers.set(this.pv.layer);
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

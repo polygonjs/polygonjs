@@ -44,7 +44,7 @@ export class TransformSopOperation extends BaseSopOperation {
 
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: TransformSopParams) {
-		const objects = input_contents[0].objects_with_geo();
+		const objects = input_contents[0].objectsWithGeo();
 		const matrix = this._core_transform.matrix(
 			params.t,
 			params.r,
@@ -83,8 +83,8 @@ export class TransformSopOperation extends BaseSopOperation {
 				}
 			}
 		} else {
-			const core_group = CoreGroup.from_objects(objects);
-			const points = core_group.points_from_group(params.group);
+			const core_group = CoreGroup._fromObjects(objects);
+			const points = core_group.pointsFromGroup(params.group);
 			for (let point of points) {
 				const position = point.position().sub(params.pivot);
 				position.applyMatrix4(matrix);

@@ -64,7 +64,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 	}
 
 	async add_point_attribute(attrib_type: AttribType, core_group: CoreGroup, params: AttribCreateSopParams) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		switch (attrib_type) {
 			case AttribType.NUMERIC: {
 				for (let i = 0; i < core_objects.length; i++) {
@@ -82,7 +82,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attrib_type);
 	}
 	async add_object_attribute(attrib_type: AttribType, core_group: CoreGroup, params: AttribCreateSopParams) {
-		const core_objects = core_group.core_objects_from_group(params.group);
+		const core_objects = core_group.coreObjectsFromGroup(params.group);
 		switch (attrib_type) {
 			case AttribType.NUMERIC:
 				await this.add_numeric_attribute_to_object(core_objects, params);
@@ -95,24 +95,24 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 	}
 
 	async add_numeric_attribute_to_points(core_object: CoreObject, params: AttribCreateSopParams) {
-		const core_geometry = core_object.core_geometry();
+		const core_geometry = core_object.coreGeometry();
 		if (!core_geometry) {
 			return;
 		}
 
 		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
-		core_object.add_numeric_vertex_attrib(params.name, params.size, value);
+		core_object.addNumericVertexAttrib(params.name, params.size, value);
 	}
 
 	async add_numeric_attribute_to_object(core_objects: CoreObject[], params: AttribCreateSopParams) {
 		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
 		for (let core_object of core_objects) {
-			core_object.set_attrib_value(params.name, value);
+			core_object.setAttribValue(params.name, value);
 		}
 	}
 
 	async add_string_attribute_to_points(core_object: CoreObject, params: AttribCreateSopParams) {
-		const points = core_object.points_from_group(params.group);
+		const points = core_object.pointsFromGroup(params.group);
 		const value = params.string;
 
 		const string_values: string[] = new Array(points.length);
@@ -122,16 +122,16 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		}
 
 		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
-		const geometry = core_object.core_geometry();
+		const geometry = core_object.coreGeometry();
 		if (geometry) {
-			geometry.set_indexed_attribute(params.name, index_data['values'], index_data['indices']);
+			geometry.setIndexedAttribute(params.name, index_data['values'], index_data['indices']);
 		}
 	}
 
 	async add_string_attribute_to_object(core_objects: CoreObject[], params: AttribCreateSopParams) {
 		const value = params.string;
 		for (let core_object of core_objects) {
-			core_object.set_attrib_value(params.name, value);
+			core_object.setAttribValue(params.name, value);
 		}
 	}
 }

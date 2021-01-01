@@ -43,7 +43,7 @@ export class BoxSopOperation extends BaseSopOperation {
 	private _cook_with_input(core_group: CoreGroup, params: BoxSopParams) {
 		const divisions = params.divisions;
 
-		const bbox = core_group.bounding_box();
+		const bbox = core_group.boundingBox();
 		const size = bbox.max.clone().sub(bbox.min);
 		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 

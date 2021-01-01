@@ -11,14 +11,14 @@ QUnit.test('blend simple', async (assert) => {
 	blend1.setInput(1, transform1);
 	blend1.p.attrib_name.set('position');
 
-	let container = await blend1.request_container();
-	// const core_group = container.core_content()!;
+	let container = await blend1.requestContainer();
+	// const core_group = container.coreContent()!;
 	// const {geometry} = core_group.objects()[0];
 
-	assert.equal(container.points_count(), 24);
-	assert.equal(container.bounding_box().min.y, 2);
+	assert.equal(container.pointsCount(), 24);
+	assert.equal(container.boundingBox().min.y, 2);
 
 	blend1.p.blend.set(0.75);
-	container = await blend1.request_container();
-	assert.equal(container.bounding_box().min.y, 3.25);
+	container = await blend1.requestContainer();
+	assert.equal(container.boundingBox().min.y, 3.25);
 });

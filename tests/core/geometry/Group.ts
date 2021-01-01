@@ -14,16 +14,13 @@ QUnit.test('attrib_names_matching_mask', async (assert) => {
 	attrib_create_blend3.p.name.set('restP');
 	attrib_create_blend3.setInput(0, attrib_create_blend2);
 
-	const container = await attrib_create_blend3.request_container();
-	const core_group = container.core_content()!;
+	const container = await attrib_create_blend3.requestContainer();
+	const core_group = container.coreContent()!;
 
-	assert.deepEqual(core_group.attrib_names().sort(), ['position', 'normal', 'uv', 'blend', 'blend2', 'restP'].sort());
-	assert.deepEqual(core_group.attrib_names_matching_mask('blend*').sort(), ['blend', 'blend2'].sort());
-	assert.deepEqual(core_group.attrib_names_matching_mask('pos*').sort(), ['position'].sort());
-	assert.deepEqual(core_group.attrib_names_matching_mask('pos').sort(), [].sort());
-	assert.deepEqual(core_group.attrib_names_matching_mask('blend*,pos').sort(), ['blend', 'blend2'].sort());
-	assert.deepEqual(
-		core_group.attrib_names_matching_mask('blend*,pos*').sort(),
-		['blend', 'blend2', 'position'].sort()
-	);
+	assert.deepEqual(core_group.attribNames().sort(), ['position', 'normal', 'uv', 'blend', 'blend2', 'restP'].sort());
+	assert.deepEqual(core_group.attribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(core_group.attribNamesMatchingMask('pos*').sort(), ['position'].sort());
+	assert.deepEqual(core_group.attribNamesMatchingMask('pos').sort(), [].sort());
+	assert.deepEqual(core_group.attribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(core_group.attribNamesMatchingMask('blend*,pos*').sort(), ['blend', 'blend2', 'position'].sort());
 });

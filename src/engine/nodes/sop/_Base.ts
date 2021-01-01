@@ -59,7 +59,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.io.outputs.set_has_one_output();
 	}
 
-	set_core_group(core_group: CoreGroup) {
+	setCoreGroup(core_group: CoreGroup) {
 		// const objects = core_group.objects();
 		// for (let object of objects) {
 		// 	this._set_object_attributes(object);
@@ -67,23 +67,23 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.set_container(core_group, MESSAGE.FROM_SET_CORE_GROUP);
 	}
 
-	set_object(object: Object3D) {
+	setObject(object: Object3D) {
 		// this._set_object_attributes(object);
 		this.set_container_objects([object], MESSAGE.FROM_SET_OBJECT);
 	}
-	set_objects(objects: Object3D[]) {
+	setObjects(objects: Object3D[]) {
 		// for (let object of objects) {
 		// 	this._set_object_attributes(object);
 		// }
 		this.set_container_objects(objects, MESSAGE.FROM_SET_OBJECTS);
 	}
 
-	set_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
+	setGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		const object = this.create_object(geometry, type);
 		this.set_container_objects([object], MESSAGE.FROM_SET_GEOMETRY);
 	}
 
-	set_geometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
+	setGeometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
 		const objects: Object3D[] = [];
 		let object;
 		for (let geometry of geometries) {
@@ -95,8 +95,8 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	set_container_objects(objects: Object3D[], message: MESSAGE) {
-		const core_group = this.container_controller.container.core_content() || new CoreGroup();
-		core_group.set_objects(objects);
+		const core_group = this.container_controller.container.coreContent() || new CoreGroup();
+		core_group.setObjects(objects);
 		core_group.touch();
 		this.set_container(core_group);
 	}
@@ -142,10 +142,10 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		const position_attrib = geometry.getAttribute('position');
 		const position_array = position_attrib.array;
 		const points_count = position_array.length / 3;
-		const indices: number[] = new Array(points_count)
-		for(let i=0; i<points_count; i++){
-			indices[i]=i
-		}	
+		const indices: number[] = new Array(points_count);
+		for (let i = 0; i < points_count; i++) {
+			indices[i] = i;
+		}
 
 		geometry.setIndex(indices);
 	}

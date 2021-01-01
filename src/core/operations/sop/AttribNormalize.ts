@@ -32,8 +32,8 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 
 	cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {
 		const core_group = input_contents[0];
-		const objects = input_contents[0].objects_with_geo();
-		const attrib_names = CoreString.attrib_names(params.name);
+		const objects = input_contents[0].objectsWithGeo();
+		const attrib_names = CoreString.attribNames(params.name);
 		for (let object of objects) {
 			const geometry = object.geometry;
 			for (let attrib_name of attrib_names) {
@@ -74,7 +74,7 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 		const attrib_size = src_attrib.itemSize;
 		const src_array = src_attrib.array as number[];
 		const dest_array = dest_attrib.array as number[];
-		// const values = points.map((point) => point.attrib_value(params.name));
+		// const values = points.map((point) => point.attribValue(params.name));
 		switch (attrib_size) {
 			case 1: {
 				const minf = Math.min(...src_array);
@@ -112,14 +112,14 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 		// let target_name = params.name;
 		// if (params.change_name) {
 		// 	target_name = params.new_name;
-		// 	if (!core_group.has_attrib(target_name)) {
-		// 		core_group.add_numeric_vertex_attrib(target_name, attrib_size, 0);
+		// 	if (!core_group.hasAttrib(target_name)) {
+		// 		core_group.addNumericVertexAttrib(target_name, attrib_size, 0);
 		// 	}
 		// }
 
 		// normalized_values.forEach((normalized_value, i) => {
 		// 	const point = points[i];
-		// 	point.set_attrib_value(target_name, normalized_value);
+		// 	point.setAttribValue(target_name, normalized_value);
 		// });
 	}
 

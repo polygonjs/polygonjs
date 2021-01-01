@@ -67,7 +67,7 @@ QUnit.test('expression bbox works with path', async (assert) => {
 // 			assert_null box2.param('size').error_message()
 // 			assert.equal box2.error_message(), "param size error: expression npoints error: no node found for argument 0"
 
-// 			box2.request_container =>
+// 			box2.requestContainer =>
 // 				assert_null box2.error_message()
 
 // 				done()

@@ -73,7 +73,7 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 				this._input_configs_by_operation_container
 			);
 			if (core_group) {
-				this.set_core_group(core_group);
+				this.setCoreGroup(core_group);
 			}
 		}
 	}

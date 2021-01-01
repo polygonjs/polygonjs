@@ -37,7 +37,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		const core_group_to_instance = input_contents[0];
 		this._geometry = undefined;
 
-		const object_to_instance = core_group_to_instance.objects_with_geo()[0];
+		const object_to_instance = core_group_to_instance.objectsWithGeo()[0];
 		if (object_to_instance) {
 			const geometry_to_instance = object_to_instance.geometry;
 			if (geometry_to_instance) {
@@ -74,7 +74,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 					mat_builder_node.assembler_controller.set_assembler_globals_handler(this._globals_handler);
 				}
 
-				const container = await material_node.request_container();
+				const container = await material_node.requestContainer();
 				const material = container.material();
 				return material;
 			}

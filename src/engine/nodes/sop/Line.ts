@@ -53,6 +53,6 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 		geometry.setIndex(indices);
-		this.set_geometry(geometry, ObjectType.LINE_SEGMENTS);
+		this.setGeometry(geometry, ObjectType.LINE_SEGMENTS);
 	}
 }

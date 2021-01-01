@@ -53,12 +53,12 @@ export class BaseMethod {
 			// const time_start = performance.now();
 			let container: ContainerMap[NodeContext];
 			if (referenced_node.is_dirty) {
-				container = await referenced_node.request_container();
+				container = await referenced_node.requestContainer();
 			} else {
 				container = referenced_node.container_controller.container;
 			}
 			if (container) {
-				const core_group = container.core_content();
+				const core_group = container.coreContent();
 				if (core_group) {
 					return container;
 				}

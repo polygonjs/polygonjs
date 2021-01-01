@@ -76,18 +76,18 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			await this._eval_expressions_for_core_group(core_group);
 		} else {
 			if (this.pv.recompute) {
-				core_group.compute_vertex_normals();
+				core_group.computeVertexNormals();
 			}
 		}
 		if (this.pv.invert) {
 			this._invert_normals(core_group);
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	private async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		for (let i = 0; i < core_objects.length; i++) {
 			await this._eval_expressions_for_core_object(core_objects[i]);
 		}
@@ -100,7 +100,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		let attrib = geometry.getAttribute(Attribute.NORMAL);
 		if (!attrib) {
 			const core_geometry = new CoreGeometry(geometry);
-			core_geometry.add_numeric_attrib(Attribute.NORMAL, 3, 0);
+			core_geometry.addNumericAttrib(Attribute.NORMAL, 3, 0);
 			attrib = geometry.getAttribute(Attribute.NORMAL);
 		}
 		const array = attrib.array as number[];
@@ -150,8 +150,8 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	}
 
 	private _invert_normals(core_group: CoreGroup) {
-		for (let core_object of core_group.core_objects()) {
-			const geometry = core_object.core_geometry()?.geometry();
+		for (let core_object of core_group.coreObjects()) {
+			const geometry = core_object.coreGeometry()?.geometry();
 			if (geometry) {
 				const normal_attrib = geometry.attributes[Attribute.NORMAL];
 				if (normal_attrib) {

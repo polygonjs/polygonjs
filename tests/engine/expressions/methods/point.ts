@@ -18,8 +18,8 @@ QUnit.test('expression points works with path', async (assert) => {
 	attrib_create2.p.name.set('t');
 	attrib_create2.p.value1.set('point("../attribCreate1", "h", 2)');
 
-	const container = await attrib_create2.request_container();
-	const array = container.core_content()!.objects_with_geo()[0].geometry.attributes['t'].array as number[];
+	const container = await attrib_create2.requestContainer();
+	const array = container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t'].array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -39,8 +39,8 @@ QUnit.test('expression points works with input index', async (assert) => {
 	attrib_create2.p.name.set('t');
 	attrib_create2.p.value1.set('point(0, "h", 2)');
 
-	const container = await attrib_create2.request_container();
-	const array = container.core_content()!.objects_with_geo()[0].geometry.attributes['t'].array as number[];
+	const container = await attrib_create2.requestContainer();
+	const array = container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t'].array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -56,9 +56,9 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	point1.p.update_y.set(1);
 	point1.p.y.set("(point(0, 'P', 0).y + point(0, 'P', 1).y) * 0.5");
 
-	let container = await point1.request_container();
+	let container = await point1.requestContainer();
 	assert.notOk(point1.states.error.active);
-	let geometry = container.core_content()!.objects_with_geo()[0].geometry;
+	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	let positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 
@@ -69,10 +69,10 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	await scene2.wait_for_cooks_completed();
 	const point2 = scene2.node(point1.fullPath()) as PointSopNode;
 	console.log('loaded point2');
-	container = await point2.request_container();
+	container = await point2.requestContainer();
 	console.log('container', container);
 	assert.notOk(point2.states.error.active);
-	geometry = container.core_content()!.objects_with_geo()[0].geometry;
+	geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 });

@@ -20,14 +20,14 @@ QUnit.test('attrib_transfer simple', async (assert) => {
 	attrib_transfer1.p.name.set('test');
 
 	let container, core_group, array;
-	container = await attrib_transfer1.request_container();
-	core_group = container.core_content()!;
-	array = core_group.objects_with_geo()[0].geometry.getAttribute('test').array;
+	container = await attrib_transfer1.requestContainer();
+	core_group = container.coreContent()!;
+	array = core_group.objectsWithGeo()[0].geometry.getAttribute('test').array;
 	assert.deepEqual(Array.from(array), [0, 1, 1, 1]);
 
 	// attrib_transfer1.p.distance_threshold.set(0.5);
-	// container = await attrib_transfer1.request_container();
-	// core_group = container.core_content()!;
+	// container = await attrib_transfer1.requestContainer();
+	// core_group = container.coreContent()!;
 	// array = core_group.objects()[0].geometry.getAttribute('test').array;
 	// assert.deepEqual(Array.from(array), [0, 0, 0, 1]);
 });

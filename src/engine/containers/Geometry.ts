@@ -7,16 +7,16 @@ import {TypedContainer} from './_Base';
 import {CoreGroup} from '../../core/geometry/Group';
 import {CoreGeometry} from '../../core/geometry/Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Object3D} from 'three/src/core/Object3D';
+// import {Object3D} from 'three/src/core/Object3D';
 import {ContainableMap} from './utils/ContainableMap';
 import {CoreObject} from '../../core/geometry/Object';
 import {AttribType, ObjectData} from '../../core/geometry/Constant';
 import {NodeContext} from '../poly/NodeContext';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
-	set_objects(objects: Object3D[]) {}
+	// set_objects(objects: Object3D[]) {}
 
-	core_content_cloned(): CoreGroup | undefined {
+	coreContentCloned(): CoreGroup | undefined {
 		if (this._content) {
 			return this._content.clone();
 		}
@@ -63,8 +63,8 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		const count_by_type: Dictionary<number> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
-			for (let core_object of core_group.core_objects()) {
-				const human_type = core_object.human_type();
+			for (let core_object of core_group.coreObjects()) {
+				const human_type = core_object.humanType();
 				if (count_by_type[human_type] == null) {
 					count_by_type[human_type] = 0;
 				}
@@ -77,8 +77,8 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		const names_by_type: Dictionary<string[]> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
-			for (let core_object of core_group.core_objects()) {
-				const human_type = core_object.human_type();
+			for (let core_object of core_group.coreObjects()) {
+				const human_type = core_object.humanType();
 				names_by_type[human_type] = names_by_type[human_type] || [];
 				names_by_type[human_type].push(core_object.name());
 			}
@@ -109,8 +109,8 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		let sizes_by_name: Dictionary<number> = {};
 		const core_object = this.first_core_object();
 		if (core_object) {
-			for (let name of core_object.attrib_names()) {
-				const size = core_object.attrib_size(name);
+			for (let name of core_object.attribNames()) {
+				const size = core_object.attribSize(name);
 				if (size != null) {
 					sizes_by_name[name] = size;
 				}
@@ -124,7 +124,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		if (geometry) {
 			const core_geo = new CoreGeometry(geometry);
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
-				types_by_name[attrib_name] = core_geo.attrib_type(attrib_name);
+				types_by_name[attrib_name] = core_geo.attribType(attrib_name);
 			});
 		}
 		return types_by_name;
@@ -133,8 +133,8 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		let types_by_name: Dictionary<AttribType> = {};
 		const core_object = this.first_core_object();
 		if (core_object) {
-			for (let name of core_object.attrib_names()) {
-				types_by_name[name] = core_object.attrib_type(name);
+			for (let name of core_object.attribNames()) {
+				types_by_name[name] = core_object.attribType(name);
 			}
 		}
 		return types_by_name;
@@ -148,23 +148,23 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return names;
 	}
 
-	points_count(): number {
+	pointsCount(): number {
 		if (this._content) {
-			return this._content.points_count();
+			return this._content.pointsCount();
 		} else {
 			return 0;
 		}
 	}
-	total_points_count(): number {
+	totalPointsCount(): number {
 		if (this._content) {
-			return this._content.total_points_count();
+			return this._content.totalPointsCount();
 		} else {
 			return 0;
 		}
 	}
-	objects_data(): ObjectData[] {
+	objectsData(): ObjectData[] {
 		if (this._content) {
-			return this._content.objects_data();
+			return this._content.objectsData();
 		} else {
 			return [];
 		}
@@ -175,8 +175,8 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// BBOX
 	//
 	//
-	bounding_box(): Box3 {
-		return this._content.bounding_box();
+	boundingBox(): Box3 {
+		return this._content.boundingBox();
 	}
 	center(): Vector3 {
 		return this._content.center();

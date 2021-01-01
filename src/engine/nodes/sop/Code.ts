@@ -15,7 +15,7 @@
 // 		const core_group = core_groups[0];
 // 		const object = core_group.objects()[0];
 // 		object.position.y = 1;
-// 		this.set_core_group(core_groups[0]);
+// 		this.setCoreGroup(core_groups[0]);
 // 	}
 // }
 
@@ -31,10 +31,10 @@
 // 	cook(core_groups: CoreGroup[]) {}
 // 	initialize_processor() {}
 // 	protected set_core_group(core_group: CoreGroup) {
-// 		this.node.set_core_group(core_group);
+// 		this.node.setCoreGroup(core_group);
 // 	}
 // 	protected set_objects(objects: Object3D[]) {
-// 		this.node.set_objects(objects);
+// 		this.node.setObjects(objects);
 // 	}
 // }
 
@@ -75,7 +75,7 @@
 // 		if (this._processor) {
 // 			this._processor.cook(core_groups);
 // 		} else {
-// 			this.set_core_group(core_groups[0]);
+// 			this.setCoreGroup(core_groups[0]);
 // 		}
 // 	}
 

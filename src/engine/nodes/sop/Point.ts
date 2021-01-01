@@ -80,7 +80,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	// 		geometry.computeVertexNormals()
 
 	async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.core_objects();
+		const core_objects = core_group.coreObjects();
 		// this._allocate_arrays(core_objects)
 
 		for (let i = 0; i < core_objects.length; i++) {
@@ -88,7 +88,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		}
 
 		if (this.pv.update_normals) {
-			core_group.compute_vertex_normals();
+			core_group.computeVertexNormals();
 		}
 
 		const geometries = core_group.geometries();
@@ -105,7 +105,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			}
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 	async _eval_expressions_for_core_object(core_object: CoreObject) {
 		const object = core_object.object();

@@ -13,14 +13,14 @@ QUnit.test('delay simple', async (assert) => {
 
 	delay1.p.duration.set(200);
 	start_time = performance.now();
-	await delay1.request_container();
+	await delay1.requestContainer();
 	total_time = performance.now() - start_time;
 	assert.more_than(total_time, 190);
 	assert.less_than(total_time, 300);
 
 	delay1.p.duration.set(100);
 	start_time = performance.now();
-	await delay1.request_container();
+	await delay1.requestContainer();
 	total_time = performance.now() - start_time;
 	assert.more_than(total_time, 90);
 	assert.less_than(total_time, 200);

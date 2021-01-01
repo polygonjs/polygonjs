@@ -63,7 +63,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	async cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new FileSopOperation(this.scene, this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 
 	static PARAM_CALLBACK_reload(node: FileSopNode) {

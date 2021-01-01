@@ -13,7 +13,7 @@ export class CopyStamp extends BaseCopyStamp {
 	value(attrib_name?: string) {
 		if (this._point) {
 			if (attrib_name) {
-				return this._point.attrib_value(attrib_name);
+				return this._point.attribValue(attrib_name);
 			} else {
 				return this._point.index;
 			}

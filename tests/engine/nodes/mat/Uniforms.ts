@@ -15,7 +15,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	const file1 = COP.createNode('image');
 	const cop_file_name = 'file_uv';
 	file1.setName(cop_file_name);
-	const container = await file1.request_container();
+	const container = await file1.requestContainer();
 	const file1_texture = container.texture();
 	await scene.wait_for_cooks_completed();
 
@@ -44,7 +44,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	// param
 	float_to_vec31.setInput(2, param1, 0);
 
-	await mesh_basic1.request_container();
+	await mesh_basic1.requestContainer();
 	CoreSleep.sleep(100);
 	assert.equal(mesh_basic1.params.spare.length, 3);
 	const ramp_spare_param1 = mesh_basic1.params.get('ramp') as RampParam;
@@ -85,7 +85,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	await CoreSleep.sleep(500);
 
 	const file2 = scene2.node(file1.fullPath()) as ImageCopNode;
-	const container2 = await file2.request_container();
+	const container2 = await file2.requestContainer();
 	const file2_texture = container2.texture();
 	const mesh_basic2 = scene2.node(mesh_basic1.fullPath()) as MeshBasicBuilderMatNode;
 	assert.equal(mesh_basic2.params.spare.length, 3);

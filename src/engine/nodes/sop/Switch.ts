@@ -43,9 +43,9 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 		if (this.io.inputs.has_input(input_index)) {
 			const container = await this.container_controller.request_input_container(input_index);
 			if (container) {
-				const core_group = container.core_content();
+				const core_group = container.coreContent();
 				if (core_group) {
-					this.set_core_group(core_group);
+					this.setCoreGroup(core_group);
 					return;
 				}
 			}

@@ -16,8 +16,8 @@ QUnit.test('event set_param simple', async (assert) => {
 	await scene.wait_for_cooks_completed();
 
 	switch1.p.input.set(0);
-	let container = await switch1.request_container();
-	assert.equal(container.points_count(), 24);
+	let container = await switch1.requestContainer();
+	assert.equal(container.pointsCount(), 24);
 
 	const events1 = scene.root.createNode('events');
 	const set_param1 = events1.createNode('setParam');
@@ -29,15 +29,15 @@ QUnit.test('event set_param simple', async (assert) => {
 	await set_param1.p.execute.press_button();
 	await CoreSleep.sleep(100);
 	assert.equal(switch1.pv.input, 1, 'switch input is set to 1');
-	container = await switch1.request_container();
-	assert.equal(container.points_count(), 961);
+	container = await switch1.requestContainer();
+	assert.equal(container.pointsCount(), 961);
 
 	set_param1.p.number.set(0);
 	await set_param1.p.execute.press_button();
 	await CoreSleep.sleep(100);
 	assert.equal(switch1.pv.input, 0, 'switch input is set to 0');
-	container = await switch1.request_container();
-	assert.equal(container.points_count(), 24);
+	container = await switch1.requestContainer();
+	assert.equal(container.pointsCount(), 24);
 
 	// then setup on scene load
 	set_param1.p.number.set(1);

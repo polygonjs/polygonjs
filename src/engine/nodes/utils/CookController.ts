@@ -142,9 +142,9 @@ export class NodeCookController<NC extends NodeContext> {
 			if (input_container) {
 				if (io_inputs.clone_required(i)) {
 					// console.log('cloned');
-					input_contents[i] = input_container.core_content_cloned() as ContainableMap[NC];
+					input_contents[i] = input_container.coreContentCloned() as ContainableMap[NC];
 				} else {
-					input_contents[i] = input_container.core_content() as ContainableMap[NC];
+					input_contents[i] = input_container.coreContent() as ContainableMap[NC];
 				}
 			}
 		}

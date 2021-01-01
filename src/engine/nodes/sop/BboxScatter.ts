@@ -35,7 +35,7 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 	cook(input_contents: CoreGroup[]) {
 		const container = input_contents[0];
 		const step_size = this.pv.step_size;
-		const bbox = container.bounding_box();
+		const bbox = container.boundingBox();
 		const min = bbox.min;
 		const max = bbox.max;
 
@@ -53,6 +53,6 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 
-		this.set_geometry(geometry, ObjectType.POINTS);
+		this.setGeometry(geometry, ObjectType.POINTS);
 	}
 }

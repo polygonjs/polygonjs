@@ -21,14 +21,14 @@ QUnit.test('attrib_remap simple', async (assert) => {
 	attrib_remap1.p.ramp.set(ramp_value);
 
 	let container, core_group, values;
-	container = await attrib_create1.request_container();
-	core_group = container.core_content()!;
-	values = core_group.points().map((p: CorePoint) => p.attrib_value('test'));
+	container = await attrib_create1.requestContainer();
+	core_group = container.coreContent()!;
+	values = core_group.points().map((p: CorePoint) => p.attribValue('test'));
 	assert.deepEqual(values, [0, 0.25, 0.5, 0.75]);
 
-	container = await attrib_remap1.request_container();
-	core_group = container.core_content()!;
-	values = core_group.points().map((p: CorePoint) => p.attrib_value('test') as number);
+	container = await attrib_remap1.requestContainer();
+	core_group = container.coreContent()!;
+	values = core_group.points().map((p: CorePoint) => p.attribValue('test') as number);
 	console.log('values', values);
 	assert.equal(values[0], 0);
 	assert.equal(values[1], 0.625);

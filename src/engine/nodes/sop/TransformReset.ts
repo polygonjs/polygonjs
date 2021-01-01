@@ -91,15 +91,15 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 			CoreTransform.decompose_matrix(object);
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 	private _center_geos(core_groups: CoreGroup[], apply_matrix_to_object: boolean) {
 		const core_group = core_groups[0];
-		const objects = core_group.objects_with_geo();
+		const objects = core_group.objectsWithGeo();
 		let ref_objects = objects;
 		const ref_core_group = core_groups[1];
 		if (ref_core_group) {
-			ref_objects = ref_core_group.objects_with_geo();
+			ref_objects = ref_core_group.objectsWithGeo();
 		}
 		for (let i = 0; i < objects.length; i++) {
 			const object = objects[i];
@@ -140,6 +140,6 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 			}
 		}
 
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

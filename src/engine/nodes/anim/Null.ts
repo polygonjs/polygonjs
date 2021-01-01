@@ -45,11 +45,11 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 	private _timeline: gsap.core.Timeline | undefined;
 	async play() {
 		return new Promise(async (resolve) => {
-			const container = await this.request_container();
+			const container = await this.requestContainer();
 			if (!container) {
 				return;
 			}
-			this._timeline_builder = container.core_content();
+			this._timeline_builder = container.coreContent();
 			if (!this._timeline_builder) {
 				return;
 			}

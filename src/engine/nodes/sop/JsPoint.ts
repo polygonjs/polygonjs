@@ -82,11 +82,11 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.gpu_controller.compute_similation_if_required();
 
 		// if (this.is_on_frame_start()) {
-		// 	this.set_core_group(core_group);
+		// 	this.setCoreGroup(core_group);
 		// } else {
 		// 	this.cook_controller.end_cook();
 		// }
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 	async compile_if_required() {
 		// if (this.assembler_controller.compile_required()) {

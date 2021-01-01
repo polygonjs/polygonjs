@@ -20,7 +20,7 @@ export class BaseSopOperation extends BaseOperation {
 	//
 	protected create_core_group_from_objects(objects: Object3D[]) {
 		const core_group = new CoreGroup();
-		core_group.set_objects(objects);
+		core_group.setObjects(objects);
 		return core_group;
 	}
 	protected create_core_group_from_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {

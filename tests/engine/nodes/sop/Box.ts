@@ -4,18 +4,18 @@ QUnit.test('box simple', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 
-	let container = await box1.request_container();
-	const core_group = container.core_content();
-	const geometry = core_group?.objects_with_geo()[0].geometry;
+	let container = await box1.requestContainer();
+	const core_group = container.coreContent();
+	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 72);
-	assert.equal(container.bounding_box().min.y, -0.5);
+	assert.equal(container.boundingBox().min.y, -0.5);
 	assert.notOk(box1.is_dirty, 'box is dirty');
 
 	box1.p.size.set(2);
 	assert.ok(box1.is_dirty, 'box is dirty');
-	container = await box1.request_container();
+	container = await box1.requestContainer();
 	assert.ok(!box1.is_dirty, 'box is not dirty anymore');
-	assert.equal(container.bounding_box().min.y, -1.0);
+	assert.equal(container.boundingBox().min.y, -1.0);
 });
 
 QUnit.test('box with input', async (assert) => {
@@ -29,22 +29,22 @@ QUnit.test('box with input', async (assert) => {
 	const box2 = geo1.createNode('box');
 	assert.ok(box2.is_dirty);
 	let container;
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.notOk(box2.is_dirty);
 	box2.io.inputs.setInput(0, transform1);
 	assert.ok(box2.is_dirty);
-	await box2.request_container();
+	await box2.requestContainer();
 	assert.notOk(box2.is_dirty);
 
 	transform1.p.scale.set(3);
 	assert.ok(box2.is_dirty);
 
-	container = await box2.request_container();
-	const group = container.core_content()!;
-	const {geometry} = group.objects_with_geo()[0];
+	container = await box2.requestContainer();
+	const group = container.coreContent()!;
+	const {geometry} = group.objectsWithGeo()[0];
 
 	assert.equal(geometry.getAttribute('position').array.length, 72);
-	assert.equal(container.bounding_box().min.y, -1.5);
+	assert.equal(container.boundingBox().min.y, -1.5);
 });
 
 QUnit.test('box with expression', async (assert) => {
@@ -55,23 +55,23 @@ QUnit.test('box with expression', async (assert) => {
 	let container;
 	const box1 = geo1.createNode('box');
 
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -0.5);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -0.5);
 
 	box1.p.size.set('1+1');
 	assert.ok(box1.p.size.is_dirty, 'size is dirty');
 	await box1.p.size.compute();
 	assert.equal(box1.pv.size, 2);
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -1);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -1);
 
 	box1.p.size.set('2*3');
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -3);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -3);
 
 	box1.p.size.set('$PI');
-	container = await box1.request_container();
-	assert.in_delta(container.bounding_box().min.y, -1.57, 0.1);
+	container = await box1.requestContainer();
+	assert.in_delta(container.boundingBox().min.y, -1.57, 0.1);
 
 	// with an invalid value
 	assert.notOk(box1.states.error.active);
@@ -85,8 +85,8 @@ QUnit.test('box with expression', async (assert) => {
 	assert.notOk(box1.states.error.active);
 	await box1.p.size.compute();
 	assert.equal(box1.pv.size, 5);
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -2.5);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -2.5);
 
 	assert.notOk(box1.p.size.is_dirty);
 	assert.notOk(box1.is_dirty);
@@ -95,14 +95,14 @@ QUnit.test('box with expression', async (assert) => {
 	assert.ok(box1.is_dirty);
 	await box1.p.size.compute();
 	assert.equal(box1.pv.size, 10);
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -5);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -5);
 
 	scene.setFrame(20);
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -10);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -10);
 
 	box1.p.size.set('$F+1');
-	container = await box1.request_container();
-	assert.equal(container.bounding_box().min.y, -10.5);
+	container = await box1.requestContainer();
+	assert.equal(container.boundingBox().min.y, -10.5);
 });

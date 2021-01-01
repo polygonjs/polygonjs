@@ -15,7 +15,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
-import {object_type_from_constructor} from '../../../core/geometry/Constant';
+import {objectTypeFromConstructor} from '../../../core/geometry/Constant';
 class FuseSopParamsConfig extends NodeParamsConfig {
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.1, {
@@ -45,14 +45,14 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		const new_objects = [];
 		let new_object;
-		for (let core_object of core_group.core_objects()) {
+		for (let core_object of core_group.coreObjects()) {
 			new_object = this._fuse_core_object(core_object);
 			if (new_object) {
 				new_objects.push(new_object);
 			}
 		}
 
-		this.set_objects(new_objects);
+		this.setObjects(new_objects);
 	}
 
 	private _fuse_core_object(core_object: CoreObject) {
@@ -83,9 +83,9 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		(object as Mesh).geometry.dispose();
 		if (kept_points.length > 0) {
-			const geometry = CoreGeometry.geometry_from_points(
+			const geometry = CoreGeometry.geometryFromPoints(
 				kept_points,
-				object_type_from_constructor(object.constructor)
+				objectTypeFromConstructor(object.constructor)
 			);
 			if (geometry) {
 				(object as Mesh).geometry = geometry;

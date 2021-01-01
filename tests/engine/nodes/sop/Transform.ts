@@ -6,13 +6,13 @@ QUnit.test('transform simple', async (assert) => {
 	transform1.setInput(0, box1);
 
 	let container, core_group;
-	container = await transform1.request_container();
-	core_group = container.core_content();
-	const geometry = core_group?.objects_with_geo()[0].geometry;
+	container = await transform1.requestContainer();
+	core_group = container.coreContent();
+	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	assert.equal(container.points_count(), 24);
-	assert.equal(container.bounding_box().min.y, -0.5);
+	assert.equal(container.pointsCount(), 24);
+	assert.equal(container.boundingBox().min.y, -0.5);
 
 	assert.notOk(transform1.is_dirty, 'transform is not dirty');
 	assert.notOk(transform1.p.t.is_dirty, 'transform t is not dirty');
@@ -21,9 +21,9 @@ QUnit.test('transform simple', async (assert) => {
 	assert.ok(transform1.is_dirty, 'transform is dirty');
 	assert.ok(transform1.p.t.is_dirty, 'transform t is dirty');
 	assert.notOk(transform1.p.t.y.is_dirty, 'transform ty is not dirty');
-	container = await transform1.request_container();
-	assert.equal(container.bounding_box().min.y, +1.5);
-	assert.equal(container.bounding_box().max.y, +2.5);
+	container = await transform1.requestContainer();
+	assert.equal(container.boundingBox().min.y, +1.5);
+	assert.equal(container.boundingBox().max.y, +2.5);
 	assert.notOk(transform1.is_dirty);
 	assert.notOk(transform1.p.t.is_dirty);
 	assert.notOk(transform1.p.t.y.is_dirty);
@@ -31,10 +31,10 @@ QUnit.test('transform simple', async (assert) => {
 	transform1.p.s.y.set(2);
 
 	// no change for now
-	assert.equal(container.bounding_box().min.y, +1.5);
-	assert.equal(container.bounding_box().max.y, +2.5);
+	assert.equal(container.boundingBox().min.y, +1.5);
+	assert.equal(container.boundingBox().max.y, +2.5);
 
-	container = await transform1.request_container();
-	assert.equal(container.bounding_box().min.y, +1);
-	assert.equal(container.bounding_box().max.y, +3);
+	container = await transform1.requestContainer();
+	assert.equal(container.boundingBox().min.y, +1);
+	assert.equal(container.boundingBox().max.y, +3);
 });

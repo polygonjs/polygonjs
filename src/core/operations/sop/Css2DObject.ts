@@ -58,11 +58,11 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 		const points = core_group.points();
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
-			const id = params.use_id_attrib ? (point.attrib_value(ATTRIBUTE_NAME.id) as string) : params.class_name;
+			const id = params.use_id_attrib ? (point.attribValue(ATTRIBUTE_NAME.id) as string) : params.class_name;
 			const class_name = params.use_class_attrib
-				? (point.attrib_value(ATTRIBUTE_NAME.class_name) as string)
+				? (point.attribValue(ATTRIBUTE_NAME.class_name) as string)
 				: params.class_name;
-			const html = params.use_html_attrib ? (point.attrib_value(ATTRIBUTE_NAME.html) as string) : params.html;
+			const html = params.use_html_attrib ? (point.attribValue(ATTRIBUTE_NAME.html) as string) : params.html;
 
 			const object = Css2DObjectSopOperation.create_css_object({
 				id,
@@ -71,9 +71,9 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 			});
 			const element = object.element;
 			if (params.copy_attributes) {
-				const attrib_names = CoreString.attrib_names(params.attributes_to_copy);
+				const attrib_names = CoreString.attribNames(params.attributes_to_copy);
 				for (let attrib_name of attrib_names) {
-					const attrib_value = point.attrib_value(attrib_name);
+					const attrib_value = point.attribValue(attrib_name);
 					if (CoreType.isString(attrib_value)) {
 						element.setAttribute(attrib_name, attrib_value);
 					} else {

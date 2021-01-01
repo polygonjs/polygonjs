@@ -25,7 +25,7 @@ export class AttribAddMultSopOperation extends BaseSopOperation {
 
 	cook(input_contents: CoreGroup[], params: AttribAddMultSopParams) {
 		const core_group = input_contents[0];
-		const attrib_names = core_group.attrib_names_matching_mask(params.name);
+		const attrib_names = core_group.attribNamesMatchingMask(params.name);
 
 		for (let attrib_name of attrib_names) {
 			const geometries = core_group.geometries();

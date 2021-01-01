@@ -45,6 +45,6 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 	cook() {
 		this._operation = this._operation || new CircleSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook([], this.pv);
-		this.set_core_group(core_group);
+		this.setCoreGroup(core_group);
 	}
 }

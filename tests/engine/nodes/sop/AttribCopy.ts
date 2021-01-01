@@ -25,17 +25,17 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	// attrib_copy1.param('src_component').set(0);
 	// attrib_copy1.param('dest_component').set(0);
 
-	let container = await attrib_copy1.request_container();
+	let container = await attrib_copy1.requestContainer();
 	assert.notOk(attrib_copy1.states.error.message, 'no error');
-	let core_group = container.core_content()!;
-	let geometry = core_group.objects_with_geo()[0].geometry;
+	let core_group = container.coreContent()!;
+	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group, 'core group exists');
 	assert.ok(geometry, 'geometry exists');
 	console.log('geometry', geometry);
 
 	let {array} = geometry.getAttribute('position');
-	assert.equal(array.length, container.points_count() * 3, 'array is 3x the points count');
-	console.log('array', array, array.length, container.points_count());
+	assert.equal(array.length, container.pointsCount() * 3, 'array is 3x the points count');
+	console.log('array', array, array.length, container.pointsCount());
 	assert.equal(array[0], 0);
 	assert.equal(array[3], 1);
 	assert.equal(array[6], 2);
@@ -55,15 +55,15 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	// attrib_copy2.param('src_component').set(0);
 	// attrib_copy2.param('dest_component').set(2);
 
-	container = await attrib_copy2.request_container();
+	container = await attrib_copy2.requestContainer();
 	assert.notOk(attrib_copy2.states.error.message);
-	core_group = container.core_content()!;
-	geometry = core_group.objects_with_geo()[0].geometry;
+	core_group = container.coreContent()!;
+	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
 	array = geometry.getAttribute('position').array;
-	assert.equal(array.length, container.points_count() * 3, 'array is 3x points_count');
+	assert.equal(array.length, container.pointsCount() * 3, 'array is 3x points_count');
 	console.log('array', array);
 	assert.equal(array[0], 0);
 	assert.equal(array[3], 1);

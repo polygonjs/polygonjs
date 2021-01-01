@@ -51,6 +51,6 @@ export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
-		this.set_geometry(geometry);
+		this.setGeometry(geometry);
 	}
 }

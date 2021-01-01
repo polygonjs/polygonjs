@@ -27,31 +27,31 @@ QUnit.test('skin simple with 2 curves', async (assert) => {
 	let container;
 	let core_group;
 
-	container = await line1.request_container();
-	assert.equal(container.points_count(), 2);
-	container = await line2.request_container();
-	assert.equal(container.points_count(), 2);
+	container = await line1.requestContainer();
+	assert.equal(container.pointsCount(), 2);
+	container = await line2.requestContainer();
+	assert.equal(container.pointsCount(), 2);
 
-	container = await attrib_create1.request_container();
-	core_group = container.core_content()!;
-	assert.deepEqual(core_group.attrib_names().sort(), ['position', 'h'].sort());
-	assert.equal(container.points_count(), 4);
+	container = await attrib_create1.requestContainer();
+	core_group = container.coreContent()!;
+	assert.deepEqual(core_group.attribNames().sort(), ['position', 'h'].sort());
+	assert.equal(container.pointsCount(), 4);
 	assert.equal(
-		(core_group.objects_with_geo()[0].geometry.attributes['h'].array as number[]).join(''),
+		(core_group.objectsWithGeo()[0].geometry.attributes['h'].array as number[]).join(''),
 		[0, 1, 2, 3].join('')
 	);
 
-	container = await skin1.request_container();
-	core_group = container.core_content()!;
-	assert.equal(container.points_count(), 4);
-	assert.deepEqual(core_group.attrib_names().sort(), ['normal', 'position', 'h'].sort());
+	container = await skin1.requestContainer();
+	core_group = container.coreContent()!;
+	assert.equal(container.pointsCount(), 4);
+	assert.deepEqual(core_group.attribNames().sort(), ['normal', 'position', 'h'].sort());
 
-	container = await attrib_copy1.request_container();
-	core_group = container.core_content()!;
-	assert.equal(container.points_count(), 4);
-	assert.deepEqual(core_group.attrib_names().sort(), ['normal', 'position', 'h'].sort());
+	container = await attrib_copy1.requestContainer();
+	core_group = container.coreContent()!;
+	assert.equal(container.pointsCount(), 4);
+	assert.deepEqual(core_group.attribNames().sort(), ['normal', 'position', 'h'].sort());
 	assert.equal(
-		(core_group.objects_with_geo()[0].geometry.attributes['h'].array as number[]).join(''),
+		(core_group.objectsWithGeo()[0].geometry.attributes['h'].array as number[]).join(''),
 		[0, 1, 2, 3].join('')
 	);
 });
@@ -71,9 +71,9 @@ QUnit.skip('skin simple with 3 curves', async (assert) => {
 	skin1.setInput(0, merge1);
 
 	let container;
-	container = await merge1.request_container();
-	assert.equal(container.points_count(), 6);
+	container = await merge1.requestContainer();
+	assert.equal(container.pointsCount(), 6);
 
-	container = await skin1.request_container();
-	assert.equal(container.points_count(), 8);
+	container = await skin1.requestContainer();
+	assert.equal(container.pointsCount(), 8);
 });

@@ -6,7 +6,7 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CorePoint} from './Point';
 import {CoreGeometry} from './Geometry';
 import {CoreMath} from '../math/_Module';
-import { ArrayUtils } from '../ArrayUtils';
+import {ArrayUtils} from '../ArrayUtils';
 
 interface FaceLike {
 	a: number;
@@ -113,7 +113,7 @@ export class CoreFace {
 
 		const attrib = this._geometry.attributes[attrib_name];
 		const attrib_size = attrib.itemSize;
-		const point_values = this.points.map((point) => point.attrib_value(attrib_name));
+		const point_values = this.points.map((point) => point.attribValue(attrib_name));
 
 		let new_attrib_value;
 		let sum;
@@ -121,7 +121,7 @@ export class CoreFace {
 		switch (attrib_size) {
 			case 1: {
 				sum = 0;
-				for (let point_value of (point_values as number[])) {
+				for (let point_value of point_values as number[]) {
 					sum += point_value * weights[index];
 					index++;
 				}
@@ -129,7 +129,7 @@ export class CoreFace {
 				break;
 			}
 			default: {
-				for (let point_value of (point_values as Vector3[])) {
+				for (let point_value of point_values as Vector3[]) {
 					const weighted_value = point_value.multiplyScalar(weights[index]);
 					if (sum) {
 						sum.add(weighted_value);

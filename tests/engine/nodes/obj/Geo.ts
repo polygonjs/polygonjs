@@ -103,7 +103,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 
 	file1.flags.display.set(true);
 	await scene.wait_for_cooks_completed();
-	await file1.request_container();
+	await file1.requestContainer();
 	await CoreSleep.sleep(10);
 	assert.equal(obj.children.length, 2);
 	assert.equal(obj.children[1].children[0].children.length, 4);
@@ -115,7 +115,7 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	await scene.wait_for_cooks_completed();
 	const geo1 = window.geo1;
 	assert.ok(geo1.is_dirty, 'geo1 is dirty');
-	await geo1.request_container();
+	await geo1.requestContainer();
 	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
 	scene.setFrame(1);
 	scene.setFrame(3);

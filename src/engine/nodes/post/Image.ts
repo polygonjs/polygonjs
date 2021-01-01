@@ -76,8 +76,8 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 		if (found_node) {
 			if (found_node.node_context() == NodeContext.COP) {
 				const cop_node = found_node as BaseCopNodeType;
-				const map_container = await cop_node.request_container();
-				const texture = map_container.core_content();
+				const map_container = await cop_node.requestContainer();
+				const texture = map_container.coreContent();
 				pass.uniforms.map.value = texture;
 			} else {
 				this.states.error.set('node is not COP');

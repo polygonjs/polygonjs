@@ -32,7 +32,7 @@ export class DelaySopNode extends TypedSopNode<DelaySopParamsConfig> {
 	cook(inputs_contents: CoreGroup[]) {
 		const core_group = inputs_contents[0];
 		const c = () => {
-			this.set_core_group(core_group);
+			this.setCoreGroup(core_group);
 		};
 		setTimeout(c, Math.max(this.pv.duration, 0));
 	}

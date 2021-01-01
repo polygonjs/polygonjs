@@ -225,11 +225,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// container
-	async request_container() {
+	async requestContainer() {
 		if (!this.is_dirty) {
 			return this.container_controller.container;
 		} else {
-			return await this.container_controller.request_container();
+			return await this.container_controller.requestContainer();
 		}
 	}
 	set_container(content: ContainableMap[NC], message: string | null = null) {

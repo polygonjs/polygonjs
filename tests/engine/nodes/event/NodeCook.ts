@@ -42,12 +42,12 @@ QUnit.test('event node_cook simple', async (assert) => {
 	set_param2.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_ALL_NODES);
 
 	assert.equal(switch1.p.input.value, 0);
-	await scatter1.request_container();
+	await scatter1.requestContainer();
 	await CoreSleep.sleep(100);
 	assert.equal(switch1.p.input.value, 1);
 
 	assert.equal(switch2.p.input.value, 0);
-	await merge1.request_container();
+	await merge1.requestContainer();
 	await CoreSleep.sleep(100);
 	assert.equal(switch2.p.input.value, 1);
 
@@ -64,12 +64,12 @@ QUnit.test('event node_cook simple', async (assert) => {
 	const switch2_2 = scene2.node(switch2.fullPath()) as SwitchSopNode;
 
 	assert.equal(switch1_2.p.input.value, 0);
-	await scatter1_2.request_container();
+	await scatter1_2.requestContainer();
 	await CoreSleep.sleep(100);
 	assert.equal(switch1_2.p.input.value, 1);
 
 	assert.equal(switch2_2.p.input.value, 0);
-	await merge1_2.request_container();
+	await merge1_2.requestContainer();
 	await CoreSleep.sleep(100);
 	assert.equal(switch2_2.p.input.value, 1);
 });

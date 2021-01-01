@@ -6,12 +6,12 @@ QUnit.test('merge simple', async (assert) => {
 	const merge1 = geo1.createNode('merge');
 	merge1.setInput(0, box1);
 
-	let container = await merge1.request_container();
-	assert.equal(container.points_count(), 24);
+	let container = await merge1.requestContainer();
+	assert.equal(container.pointsCount(), 24);
 
 	merge1.setInput(1, tube1);
-	container = await merge1.request_container();
-	assert.equal(container.points_count(), 100);
+	container = await merge1.requestContainer();
+	assert.equal(container.pointsCount(), 100);
 });
 
 QUnit.skip('merge geos with different attributes', async (assert) => {
@@ -36,9 +36,9 @@ QUnit.skip('merge geos with different attributes', async (assert) => {
 	merge1.setInput(0, attrib_create1);
 	merge1.setInput(1, attrib_create2);
 
-	let container = await merge1.request_container();
-	let core_group = container.core_content()!;
-	assert.equal(core_group.points_count(), 12);
+	let container = await merge1.requestContainer();
+	let core_group = container.coreContent()!;
+	assert.equal(core_group.pointsCount(), 12);
 });
 
 import {Points} from 'three/src/objects/Points';
@@ -58,8 +58,8 @@ QUnit.test('sop merge has predictable order in assembled objects', async (assert
 	merge1.setInput(0, add1);
 	merge1.setInput(1, plane1);
 
-	let container = await merge1.request_container();
-	let core_group = container.core_content()!;
+	let container = await merge1.requestContainer();
+	let core_group = container.coreContent()!;
 	let objects = core_group.objects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
@@ -76,8 +76,8 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	merge1.setInput(0, add1);
 	merge1.setInput(2, plane1);
 
-	let container = await merge1.request_container();
-	let core_group = container.core_content()!;
+	let container = await merge1.requestContainer();
+	let core_group = container.coreContent()!;
 	let objects = core_group.objects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
@@ -94,8 +94,8 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	assert.equal(merge2.io.inputs.input(1)?.graph_node_id, null, 'input 1 is empty');
 	assert.equal(merge2.io.inputs.input(2)?.graph_node_id, plane2.graph_node_id, 'input 2 is plane node');
 
-	container = await merge1.request_container();
-	core_group = container.core_content()!;
+	container = await merge1.requestContainer();
+	core_group = container.coreContent()!;
 	objects = core_group.objects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);

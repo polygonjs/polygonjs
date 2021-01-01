@@ -4,8 +4,8 @@ QUnit.test('cone simple', async (assert) => {
 
 	const cone1 = geo1.createNode('cone');
 
-	let container = await cone1.request_container();
-	const core_group = container.core_content();
-	const geometry = core_group?.objects_with_geo()[0].geometry;
+	let container = await cone1.requestContainer();
+	const core_group = container.coreContent();
+	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 153);
 });
