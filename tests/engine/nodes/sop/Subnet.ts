@@ -29,7 +29,7 @@ QUnit.test('subnet simple', async (assert) => {
 
 	// we have an error if the content is invalid
 	await CoreSleep.sleep(10);
-	scatter1.p.points_count.set(100);
+	scatter1.p.pointsCount.set(100);
 	container = await subnet1.requestContainer();
 	core_group = container.coreContent();
 	assert.notOk(core_group);

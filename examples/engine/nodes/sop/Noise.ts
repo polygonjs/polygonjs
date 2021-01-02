@@ -12,7 +12,7 @@ export function SopNoise() {
 	const noise = geo.createNode('noise');
 	noise.setInput(0, sphere);
 	noise.p.amplitude.set(0.5);
-	noise.p.use_normals.set(true);
+	noise.p.useNormals.set(true);
 	noise.flags.display.set(true);
 
 	// add a light

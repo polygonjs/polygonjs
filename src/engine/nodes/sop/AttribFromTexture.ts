@@ -19,7 +19,7 @@ class AttribFromTextureSopParamsConfig extends NodeParamsConfig {
 		nodeSelection: {context: NodeContext.COP},
 	});
 	/** @param uv attribute */
-	uv_attrib = ParamConfig.STRING(DEFAULT.uv_attrib);
+	uvAttrib = ParamConfig.STRING(DEFAULT.uvAttrib);
 	/** @param attribute to set the value to */
 	attrib = ParamConfig.STRING(DEFAULT.attrib);
 	/** @param value to add to the attribute */

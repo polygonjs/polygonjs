@@ -73,7 +73,7 @@ class TextSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param stroke width */
-	stroke_width = ParamConfig.FLOAT(0.02, {
+	strokeWidth = ParamConfig.FLOAT(0.02, {
 		visibleIf: {
 			type: TEXT_TYPES.indexOf(TEXT_TYPE.STROKE),
 		},
@@ -182,7 +182,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				return;
 			}
 			// TODO: typescript: correct definition for last 3 optional args
-			var style = loader.getStrokeStyle(this.pv.stroke_width, 'white', 'miter', 'butt', 4);
+			var style = loader.getStrokeStyle(this.pv.strokeWidth, 'white', 'miter', 'butt', 4);
 			const geometries = [];
 
 			for (let i = 0; i < shapes.length; i++) {

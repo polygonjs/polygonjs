@@ -10,8 +10,8 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 const OUTPUT_NAME = 'color';
 class FogGlParamsConfig extends NodeParamsConfig {
 	mvPosition = ParamConfig.VECTOR4([0, 0, 0, 0]);
-	base_color = ParamConfig.COLOR([0, 0, 0]);
-	fog_color = ParamConfig.COLOR([1, 1, 1]);
+	baseColor = ParamConfig.COLOR([0, 0, 0]);
+	fogColor = ParamConfig.COLOR([1, 1, 1]);
 	near = ParamConfig.FLOAT(0);
 	far = ParamConfig.FLOAT(0);
 }
@@ -43,12 +43,12 @@ export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
 			// fragment
 			const function_definition = new FunctionGLDefinition(this, FogGlsl);
 			const mvPosition = ThreeToGl.vector4(this.variable_for_input('mvPosition'));
-			const base_color = ThreeToGl.vector3(this.variable_for_input('base_color'));
-			const fog_color = ThreeToGl.vector3(this.variable_for_input('fog_color'));
+			const baseColor = ThreeToGl.vector3(this.variable_for_input('baseColor'));
+			const fogColor = ThreeToGl.vector3(this.variable_for_input('fogColor'));
 			const near = ThreeToGl.vector3(this.variable_for_input('near'));
 			const far = ThreeToGl.vector3(this.variable_for_input('far'));
 			const out_value = this.gl_var_name(OUTPUT_NAME);
-			const args = [mvPosition, base_color, fog_color, near, far].join(', ');
+			const args = [mvPosition, baseColor, fogColor, near, far].join(', ');
 			const body_line = `vec3 ${out_value} = compute_fog(${args})`;
 			shaders_collection_controller.add_definitions(this, [definition, function_definition]);
 			shaders_collection_controller.add_body_lines(this, [body_line]);

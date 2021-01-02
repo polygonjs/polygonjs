@@ -6,14 +6,14 @@
  * Note that you can copy attributes that have different sizes. For instance:
 
  * - to copy only the y component of the position to a float attribute, set it as such:
- * 	- src_offset = 1
- * 	- dest_offset = 0
+ * 	- srcOffset = 1
+ * 	- destOffset = 0
  * - to copy the y component to the z component of another attribute:
- * 	- src_offset = 1
- * 	- dest_offset = 2
+ * 	- srcOffset = 1
+ * 	- destOffset = 2
  * - if you copy from a float to a float:
- * 	- src_offset = 0
- * 	- dest_offset = 0
+ * 	- srcOffset = 0
+ * 	- destOffset = 0
  *
  */
 import {TypedSopNode} from './_Base';
@@ -26,17 +26,17 @@ class AttribCopySopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to copy */
 	name = ParamConfig.STRING(DEFAULT.name);
 	/** @param toggle if you want to copy to another name */
-	tnew_name = ParamConfig.BOOLEAN(DEFAULT.tnew_name);
+	tnewName = ParamConfig.BOOLEAN(DEFAULT.tnewName);
 	/** @param the new name of the attribute */
-	new_name = ParamConfig.STRING(DEFAULT.new_name, {visibleIf: {tnew_name: 1}});
+	newName = ParamConfig.STRING(DEFAULT.newName, {visibleIf: {tnewName: 1}});
 
 	/** @param this defines which component the copy starts from. If you want to copy the whole attribute, leave it at 0. If you want to copy only the y component, set it to 1. If you want to copy the z component, set it to 2. Note that this only makes sense if you copy from an attribute that has enough components to copy from. So setting it to 2 (for z) to copy from a vector2 attribute will raise an error. */
-	src_offset = ParamConfig.INTEGER(DEFAULT.src_offset, {
+	srcOffset = ParamConfig.INTEGER(DEFAULT.srcOffset, {
 		range: [0, 3],
 		rangeLocked: [true, true],
 	});
 	/** @param this defines which component the attribute is copied to */
-	dest_offset = ParamConfig.INTEGER(DEFAULT.dest_offset, {
+	destOffset = ParamConfig.INTEGER(DEFAULT.destOffset, {
 		range: [0, 3],
 		rangeLocked: [true, true],
 	});
@@ -60,8 +60,8 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.name, this.p.tnew_name, this.p.new_name], () => {
-					return this.pv.tnew_name ? `${this.pv.name} -> ${this.pv.new_name}` : this.pv.name;
+				this.params.label.init([this.p.name, this.p.tnewName, this.p.newName], () => {
+					return this.pv.tnewName ? `${this.pv.name} -> ${this.pv.newName}` : this.pv.name;
 				});
 			});
 		});

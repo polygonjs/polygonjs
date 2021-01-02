@@ -9,30 +9,30 @@ import {Poly} from '../../../engine/Poly';
 
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/ConstantFilter';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
-	apply_to_children: boolean;
+	applyToChildren: boolean;
 	// anisotropy
 	tanisotropy: boolean;
-	use_renderer_max_anisotropy: boolean;
+	useRendererMaxAnisotropy: boolean;
 	anisotropy: number;
 	// filters
-	tmin_filter: boolean;
-	min_filter: number;
-	tmag_filter: boolean;
-	mag_filter: number;
+	tminFilter: boolean;
+	minFilter: number;
+	tmagFilter: boolean;
+	magFilter: number;
 }
 
 export class TexturePropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
-		apply_to_children: false,
+		applyToChildren: false,
 		// anisotropy
 		tanisotropy: false,
-		use_renderer_max_anisotropy: false,
+		useRendererMaxAnisotropy: false,
 		anisotropy: 1,
 		// filters
-		tmin_filter: false,
-		min_filter: MIN_FILTER_DEFAULT_VALUE,
-		tmag_filter: false,
-		mag_filter: MAG_FILTER_DEFAULT_VALUE,
+		tminFilter: false,
+		minFilter: MIN_FILTER_DEFAULT_VALUE,
+		tmagFilter: false,
+		magFilter: MAG_FILTER_DEFAULT_VALUE,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'textureProperties'> {
@@ -44,7 +44,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 
 		const objects: Mesh[] = [];
 		for (let object of core_group.objects() as Mesh[]) {
-			if (params.apply_to_children) {
+			if (params.applyToChildren) {
 				object.traverse((child) => {
 					objects.push(child as Mesh);
 				});
@@ -78,7 +78,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 	}
 
 	private async _update_anisotropy(texture: Texture, params: TexturePropertiesSopParams) {
-		if (params.use_renderer_max_anisotropy) {
+		if (params.useRendererMaxAnisotropy) {
 			const renderer = await Poly.instance().renderers_controller.first_renderer();
 			if (renderer) {
 				texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -89,10 +89,10 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 	}
 	private _update_filter(texture: Texture, params: TexturePropertiesSopParams) {
 		if (params.tminfilter) {
-			texture.minFilter = params.min_filter;
+			texture.minFilter = params.minFilter;
 		}
 		if (params.tmagfilter) {
-			texture.magFilter = params.mag_filter;
+			texture.magFilter = params.magFilter;
 		}
 	}
 }

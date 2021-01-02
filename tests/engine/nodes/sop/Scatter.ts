@@ -11,7 +11,7 @@ QUnit.test('scatter simple', async (assert) => {
 	container = await scatter1.requestContainer();
 	assert.equal(container.pointsCount(), 100);
 
-	scatter1.p.points_count.set(1000);
+	scatter1.p.pointsCount.set(1000);
 	container = await scatter1.requestContainer();
 	assert.equal(container.pointsCount(), 1000);
 });

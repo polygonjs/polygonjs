@@ -11,8 +11,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/ParamConfig';
 import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class TextureParamsConfig extends NodeParamsConfig {
-	param_name = ParamConfig.STRING('texture_map');
-	default_value = ParamConfig.STRING(NODE_PATH_DEFAULT.NODE.UV);
+	paramName = ParamConfig.STRING('textureMap');
+	defaultValue = ParamConfig.STRING(NODE_PATH_DEFAULT.NODE.UV);
 	uv = ParamConfig.VECTOR2([0, 0]);
 }
 const ParamsConfig = new TextureParamsConfig();
@@ -31,7 +31,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.param_name]);
+				this.params.label.init([this.p.paramName]);
 			});
 		});
 	}
@@ -53,13 +53,13 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 
 		const param_config = new GlParamConfig(
 			ParamType.OPERATOR_PATH,
-			this.pv.param_name,
-			this.pv.default_value,
+			this.pv.paramName,
+			this.pv.defaultValue,
 			this._uniform_name()
 		);
 		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {
-		return this.gl_var_name(this.pv.param_name);
+		return this.gl_var_name(this.pv.paramName);
 	}
 }

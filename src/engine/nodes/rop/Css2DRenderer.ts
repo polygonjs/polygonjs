@@ -11,18 +11,22 @@ import {RopType} from '../../poly/registers/nodes/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Css2DRendererRopParamsConfig extends NodeParamsConfig {
+	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
 		multiline: true,
 	});
-
-	sort_objects = ParamConfig.BOOLEAN(0);
-	use_fog = ParamConfig.BOOLEAN(0);
-	fog_near = ParamConfig.FLOAT(1, {
+	/** @param toggle on to ensure objects z-index is set based on camera depth */
+	sortObjects = ParamConfig.BOOLEAN(0);
+	/** @param toggle on to have css opacity be set from camera depth */
+	useFog = ParamConfig.BOOLEAN(0);
+	/** @param fog near */
+	fogNear = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 		visibleIf: {use_fog: 1},
 	});
-	fog_far = ParamConfig.FLOAT(100, {
+	/** @param fog far */
+	fogFar = ParamConfig.FLOAT(100, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 		visibleIf: {use_fog: 1},
@@ -78,9 +82,9 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 	}
 
 	private _update_renderer(renderer: CSS2DRenderer) {
-		renderer.set_sorting(this.pv.sort_objects);
-		renderer.set_use_fog(this.pv.use_fog);
-		renderer.set_fog_range(this.pv.fog_near, this.pv.fog_far);
+		renderer.set_sorting(this.pv.sortObjects);
+		renderer.set_use_fog(this.pv.useFog);
+		renderer.set_fog_range(this.pv.fogNear, this.pv.fogFar);
 	}
 
 	private _update_css() {

@@ -15,12 +15,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = InstanceSopOperation.DEFAULT_PARAMS;
 class InstanceSopParamsConfig extends NodeParamsConfig {
 	/** @param attributes to copy to the instance */
-	attributes_to_copy = ParamConfig.STRING(DEFAULT.attributes_to_copy);
+	attributesToCopy = ParamConfig.STRING(DEFAULT.attributesToCopy);
 	/** @param toggles on to apply a material. This is useful in most cases, but there may be situations where the material would be apply later, such as when you are feeding this node to a particles system */
-	apply_material = ParamConfig.BOOLEAN(DEFAULT.apply_material);
+	applyMaterial = ParamConfig.BOOLEAN(DEFAULT.applyMaterial);
 	/** @param material to apply */
 	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
-		visibleIf: {apply_material: 1},
+		visibleIf: {applyMaterial: 1},
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},

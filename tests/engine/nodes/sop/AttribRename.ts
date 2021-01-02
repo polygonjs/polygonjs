@@ -9,8 +9,8 @@ QUnit.test('attrib_rename simple', async (assert) => {
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set('@ptnum');
-	attrib_rename1.p.old_name.set('test');
-	attrib_rename1.p.new_name.set('test2');
+	attrib_rename1.p.oldName.set('test');
+	attrib_rename1.p.newName.set('test2');
 
 	let container, core_group, geometry;
 	container = await attrib_create1.requestContainer();

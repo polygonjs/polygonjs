@@ -14,8 +14,8 @@ export function SopAttribCopy() {
 	const attribCopy = geo.createNode('attribCopy');
 	attribCopy.setInput(0, sphere);
 	attribCopy.p.name.set('uv');
-	attribCopy.p.tnew_name.set(true);
-	attribCopy.p.new_name.set('position');
+	attribCopy.p.tnewName.set(true);
+	attribCopy.p.newName.set('position');
 
 	// flatten the resulting geo
 	const transform = geo.createNode('transform');

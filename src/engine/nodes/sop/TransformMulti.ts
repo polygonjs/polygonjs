@@ -47,7 +47,7 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CoreAttribute, Attribute} from '../../../core/geometry/Attribute';
 class TransformMultiSopParamConfig extends NodeParamsConfig {
 	/** @param defines if this applies to objects or geometries */
-	apply_on = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
+	applyOn = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
 		menu: {
 			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
 				return {name: target_type, value: i};
@@ -62,7 +62,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	// 0
 	sep0 = ParamConfig.SEPARATOR(null, {...visible_for_count(0)});
 	/** @param transform 0 rotation order */
-	rotation_order0 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+	rotationOrder0 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(0),
 	});
@@ -71,7 +71,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	// 1
 	sep1 = ParamConfig.SEPARATOR(null, {...visible_for_count(1)});
 	/** @param transform 1 rotation order */
-	rotation_order1 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+	rotationOrder1 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(1),
 	});
@@ -80,7 +80,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	// 2
 	sep2 = ParamConfig.SEPARATOR(null, {...visible_for_count(2)});
 	/** @param transform 2 rotation order */
-	rotation_order2 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+	rotationOrder2 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(2),
 	});
@@ -89,7 +89,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	// 3
 	sep3 = ParamConfig.SEPARATOR(null, {...visible_for_count(3)});
 	/** @param transform 3 rotation order */
-	rotation_order3 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+	rotationOrder3 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(3),
 	});
@@ -98,7 +98,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	// 4
 	sep4 = ParamConfig.SEPARATOR(null, {...visible_for_count(4)});
 	/** @param transform 4 rotation order */
-	rotation_order4 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+	rotationOrder4 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(4),
 	});
@@ -107,7 +107,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 	// 5
 	sep5 = ParamConfig.SEPARATOR(null, {...visible_for_count(5)});
 	/** @param transform 5 rotation order */
-	rotation_order5 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+	rotationOrder5 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(5),
 	});
@@ -132,20 +132,20 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.apply_on], () => {
-					return TRANSFORM_TARGET_TYPES[this.pv.apply_on];
+				this.params.label.init([this.p.applyOn], () => {
+					return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 				});
 			});
 		});
 
 		this.params.on_params_created('cache param pairs', () => {
 			this._rot_and_index_pairs = [
-				[this.p.r0, this.p.rotation_order0],
-				[this.p.r1, this.p.rotation_order1],
-				[this.p.r2, this.p.rotation_order2],
-				[this.p.r3, this.p.rotation_order3],
-				[this.p.r4, this.p.rotation_order4],
-				[this.p.r5, this.p.rotation_order5],
+				[this.p.r0, this.p.rotationOrder0],
+				[this.p.r1, this.p.rotationOrder1],
+				[this.p.r2, this.p.rotationOrder2],
+				[this.p.r3, this.p.rotationOrder3],
+				[this.p.r4, this.p.rotationOrder4],
+				[this.p.r5, this.p.rotationOrder5],
 			];
 		});
 	}
@@ -162,7 +162,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 	}
 
 	private _apply_transforms(objects: Object3DWithGeometry[], src_object: Object3DWithGeometry | undefined) {
-		const mode = TRANSFORM_TARGET_TYPES[this.pv.apply_on];
+		const mode = TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRIES: {
 				return this._apply_matrix_to_geometries(objects, src_object);

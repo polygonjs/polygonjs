@@ -8,8 +8,8 @@ import {CoreString} from '../../String';
 interface AttribNormalizeSopParams extends DefaultOperationParams {
 	mode: number;
 	name: string;
-	change_name: boolean;
-	new_name: string;
+	changeName: boolean;
+	newName: string;
 }
 
 export enum NormalizeMode {
@@ -22,8 +22,8 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribNormalizeSopParams = {
 		mode: 0,
 		name: 'position',
-		change_name: false,
-		new_name: '',
+		changeName: false,
+		newName: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'attribNormalize'> {
@@ -40,8 +40,8 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 				const src_attrib = geometry.getAttribute(attrib_name) as BufferAttribute;
 				if (src_attrib) {
 					let dest_attrib: BufferAttribute | undefined = src_attrib;
-					if (params.change_name && params.new_name != '') {
-						dest_attrib = geometry.getAttribute(params.new_name) as BufferAttribute;
+					if (params.changeName && params.newName != '') {
+						dest_attrib = geometry.getAttribute(params.newName) as BufferAttribute;
 						if (dest_attrib) {
 							dest_attrib.needsUpdate = true;
 						}
@@ -110,8 +110,8 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 		}
 
 		// let target_name = params.name;
-		// if (params.change_name) {
-		// 	target_name = params.new_name;
+		// if (params.changeName) {
+		// 	target_name = params.newName;
 		// 	if (!core_group.hasAttrib(target_name)) {
 		// 		core_group.addNumericVertexAttrib(target_name, attrib_size, 0);
 		// 	}

@@ -20,7 +20,7 @@ class CircleSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to have an arc instead of a closed circle */
 	open = ParamConfig.BOOLEAN(DEFAULT.open);
 	/** @param angle fo the arc */
-	arc_angle = ParamConfig.FLOAT(DEFAULT.arc_angle, {
+	arcAngle = ParamConfig.FLOAT(DEFAULT.arcAngle, {
 		range: [0, 360],
 		rangeLocked: [false, false],
 		visibleIf: {open: 1},

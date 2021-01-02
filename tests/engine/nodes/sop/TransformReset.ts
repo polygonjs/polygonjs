@@ -12,7 +12,7 @@ QUnit.test('transform reset simple', async (assert) => {
 	transform1.setInput(0, box1);
 	transform_reset1.setInput(0, transform1);
 
-	transform1.p.apply_on.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
+	transform1.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 

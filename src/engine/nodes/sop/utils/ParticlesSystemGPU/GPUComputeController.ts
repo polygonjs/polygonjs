@@ -86,7 +86,7 @@ export class ParticlesSystemGpuComputeController {
 
 	compute_similation_if_required() {
 		const frame = this.node.scene.frame;
-		const start_frame: number = this.node.pv.start_frame;
+		const start_frame: number = this.node.pv.startFrame;
 		if (frame >= start_frame) {
 			if (this._last_simulated_frame == null) {
 				this._last_simulated_frame = start_frame - 1;
@@ -119,34 +119,34 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private _data_type() {
-		const data_type_name = PARTICLE_DATA_TYPES[this.node.pv.data_type];
+		const data_type_name = PARTICLE_DATA_TYPES[this.node.pv.dataType];
 		return DATA_TYPE_BY_ENUM[data_type_name];
 	}
 
 	async create_gpu_compute() {
 		if (this.node.pv.auto_textures_size) {
 			const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(this._points.length));
-			this._used_textures_size.x = Math.min(nearest_power_of_two, this.node.pv.max_textures_size.x);
-			this._used_textures_size.y = Math.min(nearest_power_of_two, this.node.pv.max_textures_size.y);
+			this._used_textures_size.x = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.x);
+			this._used_textures_size.y = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.y);
 		} else {
 			if (
 				!(
-					MathUtils.isPowerOfTwo(this.node.pv.textures_size.x) &&
-					MathUtils.isPowerOfTwo(this.node.pv.textures_size.y)
+					MathUtils.isPowerOfTwo(this.node.pv.texturesSize.x) &&
+					MathUtils.isPowerOfTwo(this.node.pv.texturesSize.y)
 				)
 			) {
 				this.node.states.error.set('texture size must be a power of 2');
 				return;
 			}
 
-			const max_particles_count = this.node.pv.textures_size.x * this.node.pv.textures_size.y;
+			const max_particles_count = this.node.pv.texturesSize.x * this.node.pv.texturesSize.y;
 			if (this._points.length > max_particles_count) {
 				this.node.states.error.set(
-					`max particles is set to (${this.node.pv.textures_size.x}x${this.node.pv.textures_size.y}=) ${max_particles_count}`
+					`max particles is set to (${this.node.pv.texturesSize.x}x${this.node.pv.texturesSize.y}=) ${max_particles_count}`
 				);
 				return;
 			}
-			this._used_textures_size.copy(this.node.pv.textures_size);
+			this._used_textures_size.copy(this.node.pv.texturesSize);
 		}
 
 		this._force_time_dependent();

@@ -20,13 +20,13 @@ const MAT_DOUBLE_SIDED = new MeshBasicMaterial({
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RaySopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to use the normals as the ray direction */
-	use_normals = ParamConfig.BOOLEAN(1);
+	useNormals = ParamConfig.BOOLEAN(1);
 	/** @param if the normals are not used as the ray direction, this define the direction used */
 	direction = ParamConfig.VECTOR3([0, -1, 0], {
-		visibleIf: {use_normals: 0},
+		visibleIf: {useNormals: 0},
 	});
 	/** @param copies the normals from the right geometry to the left one */
-	transfer_face_normals = ParamConfig.BOOLEAN(1);
+	transferFaceNormals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new RaySopParamsConfig();
 
@@ -71,13 +71,13 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 
 		let direction: Vector3, first_intersect: Intersection;
 		for (let point of core_group.points()) {
-			direction = this.pv.use_normals ? point.normal() : this.pv.direction;
+			direction = this.pv.useNormals ? point.normal() : this.pv.direction;
 			this._raycaster.set(point.position(), direction);
 
 			first_intersect = this._raycaster.intersectObjects(core_group_collision.objects(), true)[0];
 			if (first_intersect) {
 				point.setPosition(first_intersect.point);
-				if (this.pv.transfer_face_normals && first_intersect.face) {
+				if (this.pv.transferFaceNormals && first_intersect.face) {
 					point.setNormal(first_intersect.face.normal);
 				}
 			}

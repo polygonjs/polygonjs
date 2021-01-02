@@ -11,22 +11,22 @@ import {CoreType} from '../../Type';
 import {ArrayUtils} from '../../ArrayUtils';
 
 interface ScatterSopParams extends DefaultOperationParams {
-	points_count: number;
+	pointsCount: number;
 	seed: number;
-	transfer_attributes: boolean;
-	attributes_to_transfer: string;
-	add_id_attribute: boolean;
-	add_idn_attribute: boolean;
+	transferAttributes: boolean;
+	attributesToTransfer: string;
+	addIdAttribute: boolean;
+	addIdnAttribute: boolean;
 }
 
 export class ScatterSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ScatterSopParams = {
-		points_count: 100,
+		pointsCount: 100,
 		seed: 0,
-		transfer_attributes: true,
-		attributes_to_transfer: 'normal',
-		add_id_attribute: true,
-		add_idn_attribute: true,
+		transferAttributes: true,
+		attributesToTransfer: 'normal',
+		addIdAttribute: true,
+		addIdnAttribute: true,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'scatter'> {
@@ -57,8 +57,8 @@ export class ScatterSopOperation extends BaseSopOperation {
 
 		const positions: number[] = [];
 		let attrib_names: string[] = [];
-		if (params.transfer_attributes) {
-			attrib_names = core_group.attribNamesMatchingMask(params.attributes_to_transfer);
+		if (params.transferAttributes) {
+			attrib_names = core_group.attribNamesMatchingMask(params.attributesToTransfer);
 		}
 
 		const attrib_values_by_name: Map<string, number[]> = new Map();
@@ -69,8 +69,8 @@ export class ScatterSopOperation extends BaseSopOperation {
 		}
 
 		const iterator = new CoreIterator();
-		// await iterator.start_with_count(params.points_count, this._add_point.bind(this))
-		await iterator.start_with_count(params.points_count, (point_index: number) => {
+		// await iterator.start_with_count(params.pointsCount, this._add_point.bind(this))
+		await iterator.start_with_count(params.pointsCount, (point_index: number) => {
 			const rand = CoreMath.rand_float(params.seed + point_index) * area_sum;
 
 			for (let face_index = 0; face_index < areas_thresholds.length; face_index++) {
@@ -100,7 +100,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 			}
 		});
 
-		// for(let point_index=0; point_index<params.points_count; point_index++){
+		// for(let point_index=0; point_index<params.pointsCount; point_index++){
 
 		// 	const rand = CoreMath.rand_float(params.seed+point_index) * area_sum
 
@@ -142,14 +142,14 @@ export class ScatterSopOperation extends BaseSopOperation {
 			);
 		}
 
-		if (params.add_id_attribute || params.add_idn_attribute) {
-			const points_count = params.points_count;
-			const ids = ArrayUtils.range(points_count);
-			if (params.add_id_attribute) {
+		if (params.addIdAttribute || params.addIdnAttribute) {
+			const pointsCount = params.pointsCount;
+			const ids = ArrayUtils.range(pointsCount);
+			if (params.addIdAttribute) {
 				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
 			}
-			const idns = ids.map((id) => id / (points_count - 1));
-			if (params.add_idn_attribute) {
+			const idns = ids.map((id) => id / (pointsCount - 1));
+			if (params.addIdnAttribute) {
 				geometry.setAttribute('idn', new BufferAttribute(new Float32Array(idns), 1));
 			}
 		}

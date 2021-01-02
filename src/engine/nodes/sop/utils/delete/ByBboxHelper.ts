@@ -20,8 +20,8 @@ export class ByBboxHelper {
 		return this._bbox_cache != null
 			? this._bbox_cache
 			: (this._bbox_cache = new Box3(
-					this.node.pv.bbox_center.clone().sub(this.node.pv.bbox_size.clone().multiplyScalar(0.5)),
-					this.node.pv.bbox_center.clone().add(this.node.pv.bbox_size.clone().multiplyScalar(0.5))
+					this.node.pv.bboxCenter.clone().sub(this.node.pv.bboxSize.clone().multiplyScalar(0.5)),
+					this.node.pv.bboxCenter.clone().add(this.node.pv.bboxSize.clone().multiplyScalar(0.5))
 			  ));
 	}
 }

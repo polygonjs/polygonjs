@@ -153,7 +153,7 @@ class NoiseGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	output_type = ParamConfig.INTEGER(default_output_type, {
+	outputType = ParamConfig.INTEGER(default_output_type, {
 		menu: {
 			entries: OUTPUT_TYPES.map((output_type) => {
 				const val = OUTPUT_TYPES[output_type];
@@ -163,8 +163,8 @@ class NoiseGlParamsConfig extends NodeParamsConfig {
 		},
 	});
 	octaves = ParamConfig.INTEGER(3, {range: [1, 10], rangeLocked: [true, false]});
-	amp_attenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
-	freq_increase = ParamConfig.FLOAT(2, {range: [0, 10]});
+	ampAttenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
+	freqIncrease = ParamConfig.FLOAT(2, {range: [0, 10]});
 	separator = ParamConfig.SEPARATOR();
 }
 const ParamsConfig = new NoiseGlParamsConfig();
@@ -179,11 +179,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	initialize_node() {
 		super.initialize_node();
 		this.io.connection_points.initialize_node();
-		this.io.connection_points.spare_params.set_inputless_param_names([
-			'octaves',
-			'amp_attenuation',
-			'freq_increase',
-		]);
+		this.io.connection_points.spare_params.set_inputless_param_names(['octaves', 'ampAttenuation', 'freqIncrease']);
 
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
@@ -210,7 +206,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	}
 	private _expected_output_types(): GlConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];
-		const output_type = OUTPUT_TYPES[this.pv.output_type];
+		const output_type = OUTPUT_TYPES[this.pv.outputType];
 		if (output_type == OUTPUT_TYPE.NoChange) {
 			return [INPUT_TYPES_BY_NOISE_NAME[noise_name]];
 		} else {
@@ -295,8 +291,8 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 	float amplitude = 1.0;
 	for (int i = 0; i < ${ThreeToGl.int(this.pv.octaves)}; i++) {
 		value += amplitude * ${method_name}(st);
-		st *= ${ThreeToGl.float(this.pv.freq_increase)};
-		amplitude *= ${ThreeToGl.float(this.pv.amp_attenuation)};
+		st *= ${ThreeToGl.float(this.pv.freqIncrease)};
+		amplitude *= ${ThreeToGl.float(this.pv.ampAttenuation)};
 	}
 	return value;
 }

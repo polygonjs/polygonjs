@@ -7,7 +7,7 @@ export function SopAttribCreate() {
 	const geo = scene.root.createNode('geo');
 	// create a line
 	const line = geo.createNode('line');
-	line.p.points_count.set(50);
+	line.p.pointsCount.set(50);
 
 	// add an attribute 'amp'
 	// which we can later use in a noise SOP
@@ -24,11 +24,11 @@ export function SopAttribCreate() {
 	// create a noise SOP
 	const noise = geo.createNode('noise');
 	noise.setInput(0, attribCreate);
-	noise.p.tamplitude_attrib.set(true);
+	noise.p.tamplitudeAttrib.set(true);
 	// init with a non-zero offset to better see the noise
 	noise.p.offset.set([4.3, 0, 0]);
-	noise.p.use_rest_attributes.set(false);
-	noise.p.compute_normals.set(false);
+	noise.p.useRestAttributes.set(false);
+	noise.p.computeNormals.set(false);
 
 	// add a material to see the line
 	const materials = scene.root.createNode('materials');

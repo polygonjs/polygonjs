@@ -5,30 +5,30 @@ import {Object3D} from 'three/src/core/Object3D';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
-	apply_to_children: boolean;
+	applyToChildren: boolean;
 	tname: boolean;
 	name: string;
-	trender_order: boolean;
-	render_order: number;
-	frustrum_culled: boolean;
-	matrix_auto_update: boolean;
+	trenderOrder: boolean;
+	renderOrder: number;
+	frustumCulled: boolean;
+	matrixAutoUpdate: boolean;
 	visible: boolean;
-	cast_shadow: boolean;
-	receive_shadow: boolean;
+	castShadow: boolean;
+	receiveShadow: boolean;
 }
 
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
-		apply_to_children: false,
+		applyToChildren: false,
 		tname: false,
 		name: '',
-		trender_order: false,
-		render_order: 0,
-		frustrum_culled: true,
-		matrix_auto_update: false,
+		trenderOrder: false,
+		renderOrder: 0,
+		frustumCulled: true,
+		matrixAutoUpdate: false,
 		visible: true,
-		cast_shadow: true,
-		receive_shadow: true,
+		castShadow: true,
+		receiveShadow: true,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'objectProperties'> {
@@ -39,7 +39,7 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		const core_group = input_contents[0];
 
 		for (let object of core_group.objects()) {
-			if (params.apply_to_children) {
+			if (params.applyToChildren) {
 				object.traverse((child) => {
 					this._update_object(child, params);
 				});
@@ -54,13 +54,13 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		if (params.tname) {
 			object.name = params.name;
 		}
-		if (params.trender_order) {
-			object.renderOrder = params.render_order;
+		if (params.trenderOrder) {
+			object.renderOrder = params.renderOrder;
 		}
-		object.frustumCulled = params.frustrum_culled;
-		object.matrixAutoUpdate = params.matrix_auto_update;
+		object.frustumCulled = params.frustumCulled;
+		object.matrixAutoUpdate = params.matrixAutoUpdate;
 		object.visible = params.visible;
-		object.castShadow = params.cast_shadow;
-		object.receiveShadow = params.receive_shadow;
+		object.castShadow = params.castShadow;
+		object.receiveShadow = params.receiveShadow;
 	}
 }

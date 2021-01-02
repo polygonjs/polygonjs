@@ -9,7 +9,7 @@ QUnit.test('normals simple', async (assert) => {
 	noise1.setInput(0, sphere1);
 	normals1.setInput(0, noise1);
 
-	noise1.p.compute_normals.set(0);
+	noise1.p.computeNormals.set(0);
 	noise1.p.octaves.set(1);
 
 	let container, normal;

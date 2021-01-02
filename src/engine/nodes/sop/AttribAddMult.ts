@@ -16,11 +16,11 @@ class AttribAddMultSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute name */
 	name = ParamConfig.STRING(DEFAULT.name);
 	/** @param value to add before the multiplication */
-	pre_add = ParamConfig.FLOAT(DEFAULT.pre_add, {range: [0, 1]});
+	preAdd = ParamConfig.FLOAT(DEFAULT.preAdd, {range: [0, 1]});
 	/** @param value to multiply */
 	mult = ParamConfig.FLOAT(DEFAULT.mult, {range: [0, 1]});
 	/** @param value to add after the multiplication */
-	post_add = ParamConfig.FLOAT(DEFAULT.post_add, {range: [0, 1]});
+	postAdd = ParamConfig.FLOAT(DEFAULT.postAdd, {range: [0, 1]});
 }
 const ParamsConfig = new AttribAddMultSopParamsConfig();
 

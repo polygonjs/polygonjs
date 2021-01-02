@@ -10,7 +10,7 @@ QUnit.test('bbox_scatter simple', async (assert) => {
 	container = await bbox_scatter1.requestContainer();
 	assert.equal(container.pointsCount(), 1000);
 
-	bbox_scatter1.p.step_size.set(0.5);
+	bbox_scatter1.p.stepSize.set(0.5);
 	container = await bbox_scatter1.requestContainer();
 	assert.equal(container.pointsCount(), 8);
 });

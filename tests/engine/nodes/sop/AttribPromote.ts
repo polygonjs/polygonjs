@@ -13,8 +13,8 @@ QUnit.test('attrib promote vertex to vertex with min', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.class_from.set(AttribClass.VERTEX);
-	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
+	attrib_promote1.p.classFrom.set(AttribClass.VERTEX);
+	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(AttribPromoteMode.MIN);
 	attrib_promote1.p.name.set('test');
 
@@ -42,8 +42,8 @@ QUnit.test('attrib promote vertex to vertex with max', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.class_from.set(AttribClass.VERTEX);
-	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
+	attrib_promote1.p.classFrom.set(AttribClass.VERTEX);
+	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('test');
 
@@ -71,8 +71,8 @@ QUnit.test('attrib promote vertex to object with max', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.class_from.set(AttribClass.VERTEX);
-	attrib_promote1.p.class_to.set(AttribClass.OBJECT);
+	attrib_promote1.p.classFrom.set(AttribClass.VERTEX);
+	attrib_promote1.p.classTo.set(AttribClass.OBJECT);
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('test');
 
@@ -98,8 +98,8 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.class_from.set(AttribClass.OBJECT);
-	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
+	attrib_promote1.p.classFrom.set(AttribClass.OBJECT);
+	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('test');
 
@@ -133,8 +133,8 @@ QUnit.test('attrib promote multiple attributes from objects to vertex', async (a
 	attrib_create2.setInput(0, attrib_create1);
 
 	attrib_promote1.setInput(0, attrib_create2);
-	attrib_promote1.p.class_from.set(AttribClass.OBJECT);
-	attrib_promote1.p.class_to.set(AttribClass.VERTEX);
+	attrib_promote1.p.classFrom.set(AttribClass.OBJECT);
+	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('id role');
 

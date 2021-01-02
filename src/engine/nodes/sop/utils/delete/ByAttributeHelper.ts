@@ -53,8 +53,8 @@ export class ByAttributeHelper {
 	constructor(private node: DeleteSopNode) {}
 
 	eval_for_entities(entities: CoreEntity[]) {
-		const attrib_type = ATTRIBUTE_TYPES[this.node.pv.attrib_type];
-		switch (attrib_type) {
+		const attribType = ATTRIBUTE_TYPES[this.node.pv.attribType];
+		switch (attribType) {
 			case AttribType.NUMERIC: {
 				this._eval_for_numeric(entities);
 				return;
@@ -64,20 +64,20 @@ export class ByAttributeHelper {
 				return;
 			}
 		}
-		TypeAssert.unreachable(attrib_type);
+		TypeAssert.unreachable(attribType);
 	}
 	private _eval_for_string(entities: CoreEntity[]) {
 		let value: string | undefined;
 		for (let entity of entities) {
-			value = entity.stringAttribValue(this.node.pv.attrib_name);
+			value = entity.stringAttribValue(this.node.pv.attribName);
 			if (value == this.node.pv.attrib_string) {
 				this.node.entity_selection_helper.select(entity);
 			}
 		}
 	}
 	private _eval_for_numeric(entities: CoreEntity[]) {
-		const attrib_size: AttribSize = ATTRIBUTE_SIZES[this.node.pv.attrib_size - 1];
-		switch (attrib_size) {
+		const attribSize: AttribSize = ATTRIBUTE_SIZES[this.node.pv.attribSize - 1];
+		switch (attribSize) {
 			case AttribSize.FLOAT: {
 				return this._eval_for_points_numeric_float(entities);
 			}
@@ -91,50 +91,50 @@ export class ByAttributeHelper {
 				return this._eval_for_points_numeric_vector4(entities);
 			}
 		}
-		TypeAssert.unreachable(attrib_size);
+		TypeAssert.unreachable(attribSize);
 	}
 
 	private _eval_for_points_numeric_float(entities: CoreEntity[]) {
-		let attrib_name = this.node.pv.attrib_name;
-		const compared_value = this.node.pv.attrib_value1;
+		let attribName = this.node.pv.attribName;
+		const compared_value = this.node.pv.attribValue1;
 		let value: number;
-		const comparison_operator: ComparisonOperator = COMPARISON_OPERATORS[this.node.pv.attrib_comparison_operator];
+		const comparison_operator: ComparisonOperator = COMPARISON_OPERATORS[this.node.pv.attribComparisonOperator];
 		const compare_method = COMPARE_METHOD_FLOAT[comparison_operator];
 		for (let entity of entities) {
-			value = entity.attribValue(attrib_name) as number;
+			value = entity.attribValue(attribName) as number;
 			if (compare_method(value, compared_value)) {
 				this.node.entity_selection_helper.select(entity);
 			}
 		}
 	}
 	private _eval_for_points_numeric_vector2(entities: CoreEntity[]) {
-		let attrib_name = this.node.pv.attrib_name;
-		const compared_value = this.node.pv.attrib_value2;
+		let attribName = this.node.pv.attribName;
+		const compared_value = this.node.pv.attribValue2;
 		let target = new Vector2();
 		for (let entity of entities) {
-			const value = entity.attribValue(attrib_name, target) as Vector2;
+			const value = entity.attribValue(attribName, target) as Vector2;
 			if (compared_value.equals(value)) {
 				this.node.entity_selection_helper.select(entity);
 			}
 		}
 	}
 	private _eval_for_points_numeric_vector3(entities: CoreEntity[]) {
-		let attrib_name = this.node.pv.attrib_name;
-		const compared_value = this.node.pv.attrib_value3;
+		let attribName = this.node.pv.attribName;
+		const compared_value = this.node.pv.attribValue3;
 		let target = new Vector3();
 		for (let entity of entities) {
-			const value = entity.attribValue(attrib_name, target) as Vector3;
+			const value = entity.attribValue(attribName, target) as Vector3;
 			if (compared_value.equals(value)) {
 				this.node.entity_selection_helper.select(entity);
 			}
 		}
 	}
 	private _eval_for_points_numeric_vector4(entities: CoreEntity[]) {
-		let attrib_name = this.node.pv.attrib_name;
-		const compared_value = this.node.pv.attrib_value4;
+		let attribName = this.node.pv.attribName;
+		const compared_value = this.node.pv.attribValue4;
 		let target = new Vector4();
 		for (let entity of entities) {
-			const value = entity.attribValue(attrib_name, target) as Vector4;
+			const value = entity.attribValue(attribName, target) as Vector4;
 			if (compared_value.equals(value)) {
 				this.node.entity_selection_helper.select(entity);
 			}

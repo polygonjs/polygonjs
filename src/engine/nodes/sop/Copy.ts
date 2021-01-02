@@ -28,15 +28,15 @@ class CopySopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param transforms every input object each on a single input point */
-	transform_only = ParamConfig.BOOLEAN(0);
+	transformOnly = ParamConfig.BOOLEAN(0);
 	/** @param toggles on to copy attributes from the input points to the created objects. Note that the vertex attributes from the points become object attributes */
-	copy_attributes = ParamConfig.BOOLEAN(0);
+	copyAttributes = ParamConfig.BOOLEAN(0);
 	/** @param names of attributes to copy */
-	attributes_to_copy = ParamConfig.STRING('', {
-		visibleIf: {copy_attributes: true},
+	attributesToCopy = ParamConfig.STRING('', {
+		visibleIf: {copyAttributes: true},
 	});
 	/** @param toggle on to use the `copy` expression, which allows to change how the left input is evaluated for each point */
-	use_copy_expr = ParamConfig.BOOLEAN(0);
+	useCopyExpr = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new CopySopParamsConfig();
 
@@ -86,7 +86,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const s = new Vector3();
 		instance_matrices[0].decompose(t, q, s);
 
-		this._attribute_names_to_copy = CoreString.attribNames(this.pv.attributes_to_copy).filter((attrib_name) =>
+		this._attribute_names_to_copy = CoreString.attribNames(this.pv.attributesToCopy).filter((attrib_name) =>
 			template_core_group.hasAttrib(attrib_name)
 		);
 		await this._copy_moved_objects_on_template_points(instance_core_group, instance_matrices, template_points);
@@ -122,15 +122,15 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
 
 		for (let moved_object of moved_objects) {
-			if (this.pv.copy_attributes) {
-				this._copy_attributes_from_template(moved_object, template_point);
+			if (this.pv.copyAttributes) {
+				this._copyAttributes_from_template(moved_object, template_point);
 			}
 
 			// TODO: that node is getting inconsistent...
 			// should I always only move the object?
 			// and have a toggle to bake back to the geo?
 			// or just enfore the use of a merge?
-			if (this.pv.transform_only) {
+			if (this.pv.transformOnly) {
 				moved_object.applyMatrix4(matrix);
 			} else {
 				const geometry = moved_object.geometry;
@@ -152,7 +152,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 		if (stamped_instance_core_group) {
 			// duplicate or select from instance children
-			const moved_objects = this.pv.transform_only
+			const moved_objects = this.pv.transformOnly
 				? // TODO: why is doing a transform slower than cloning the input??
 				  ArrayUtils.compact([stamped_instance_core_group.objectsWithGeo()[point_index]])
 				: stamped_instance_core_group.clone().objectsWithGeo();
@@ -164,7 +164,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
-		if (this.pv.use_copy_expr) {
+		if (this.pv.useCopyExpr) {
 			const container0 = await this.container_controller.request_input_container(0);
 			if (container0) {
 				const core_group0 = container0.coreContent();
@@ -209,7 +209,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.setObjects(this._objects);
 	}
 
-	private _copy_attributes_from_template(object: Object3D, template_point: CorePoint) {
+	private _copyAttributes_from_template(object: Object3D, template_point: CorePoint) {
 		this._attribute_names_to_copy.forEach((attrib_name, i) => {
 			const attrib_value = template_point.attribValue(attrib_name);
 			const object_wrapper = new CoreObject(object, i);

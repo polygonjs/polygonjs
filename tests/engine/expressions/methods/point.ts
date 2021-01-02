@@ -53,7 +53,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 
 	point1.setInput(0, line1);
 
-	point1.p.update_y.set(1);
+	point1.p.updateY.set(1);
 	point1.p.y.set("(point(0, 'P', 0).y + point(0, 'P', 1).y) * 0.5");
 
 	let container = await point1.requestContainer();

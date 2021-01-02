@@ -4,18 +4,18 @@ import {CoreGroup} from '../../geometry/Group';
 import {Color} from 'three/src/math/Color';
 
 interface ColorSopParams extends DefaultOperationParams {
-	from_attribute: boolean;
-	attrib_name: string;
+	fromAttribute: boolean;
+	attribName: string;
 	color: Color;
-	as_hsv: boolean;
+	asHsv: boolean;
 }
 
 export class ColorSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ColorSopParams = {
-		from_attribute: false,
-		attrib_name: '',
+		fromAttribute: false,
+		attribName: '',
 		color: new Color(1, 1, 1),
-		as_hsv: false,
+		asHsv: false,
 	};
 	static type(): Readonly<'color'> {
 		return 'color';

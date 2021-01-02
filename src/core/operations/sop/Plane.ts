@@ -9,8 +9,8 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface PlaneSopParams extends DefaultOperationParams {
 	size: Vector2;
-	use_segments_count: boolean;
-	step_size: number;
+	useSegmentsCount: boolean;
+	stepSize: number;
 	segments: Vector2;
 	direction: Vector3;
 	center: Vector3;
@@ -22,8 +22,8 @@ const ROTATE_END = new Vector3(0, 1, 0);
 export class PlaneSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: PlaneSopParams = {
 		size: new Vector2(1, 1),
-		use_segments_count: false,
-		step_size: 1,
+		useSegmentsCount: false,
+		stepSize: 1,
 		segments: new Vector2(1, 1),
 		direction: new Vector3(0, 1, 0),
 		center: new Vector3(0, 0, 0),
@@ -78,15 +78,15 @@ export class PlaneSopOperation extends BaseSopOperation {
 	private _create_plane(size: Vector2, params: PlaneSopParams) {
 		let segments_count = new Vector2(1, 1);
 		size = size.clone();
-		if (params.use_segments_count) {
+		if (params.useSegmentsCount) {
 			segments_count.x = Math.floor(params.segments.x);
 			segments_count.y = Math.floor(params.segments.y);
 		} else {
-			if (params.step_size > 0) {
-				segments_count.x = Math.floor(size.x / params.step_size);
-				segments_count.y = Math.floor(size.y / params.step_size);
-				size.x = segments_count.x * params.step_size;
-				size.y = segments_count.y * params.step_size;
+			if (params.stepSize > 0) {
+				segments_count.x = Math.floor(size.x / params.stepSize);
+				segments_count.y = Math.floor(size.y / params.stepSize);
+				size.x = segments_count.x * params.stepSize;
+				size.y = segments_count.y * params.stepSize;
 			}
 		}
 		return new PlaneBufferGeometry(size.x, size.y, segments_count.x, segments_count.y);

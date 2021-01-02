@@ -179,18 +179,22 @@ export interface WebGLRendererWithSampling extends WebGLRenderer {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 class WebGlRendererRopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to have antialias on (change requires page reload) */
 	antialias = ParamConfig.BOOLEAN(1);
-	tone_mapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
+	/** @param tone mapping */
+	toneMapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
 		menu: {
 			entries: TONE_MAPPING_MENU_ENTRIES,
 		},
 	});
-	tone_mapping_exposure = ParamConfig.FLOAT(1, {
+	/** @param tone mapping exposure */
+	toneMappingExposure = ParamConfig.FLOAT(1, {
 		range: [0, 2],
 	});
-
-	output_encoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
+	/** @param output encoding */
+	outputEncoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
 		menu: {
 			entries: ENCODING_NAMES.map((name, i) => {
 				return {
@@ -200,17 +204,24 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	physically_correct_lights = ParamConfig.BOOLEAN(1);
-	sort_objects = ParamConfig.BOOLEAN(1);
+	/** @param physically correct lights */
+	physicallyCorrectLights = ParamConfig.BOOLEAN(1);
+	/** @param sort objects, which can be necessary when rendering transparent obejcts */
+	sortObjects = ParamConfig.BOOLEAN(1);
+	/** @param sampling will increase the renderer size */
 	sampling = ParamConfig.INTEGER(1, {
 		range: [1, 4],
 		rangeLocked: [true, false],
 	});
-	tshadow_map = ParamConfig.BOOLEAN(1);
-	shadow_map_auto_update = ParamConfig.BOOLEAN(1, {visibleIf: {tshadow_map: 1}});
-	shadow_map_needs_update = ParamConfig.BOOLEAN(0, {visibleIf: {tshadow_map: 1}});
-	shadow_map_type = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
-		visibleIf: {tshadow_map: 1},
+	/** @param toggle on to have shadow maps */
+	tshadowMap = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to recompute the shadow maps on every frame. If all objects are static, you may want to turn this off */
+	shadowMapAutoUpdate = ParamConfig.BOOLEAN(1, {visibleIf: {tshadowMap: 1}});
+	/** @param toggle on to trigger shadows update */
+	shadowMapNeedsUpdate = ParamConfig.BOOLEAN(0, {visibleIf: {tshadowMap: 1}});
+	/** @param shadows type */
+	shadowMapType = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
+		visibleIf: {tshadowMap: 1},
 		menu: {
 			entries: SHADOW_MAP_TYPE_NAMES.map((name, i) => {
 				return {
@@ -267,18 +278,18 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 	}
 	_update_renderer(renderer: WebGLRendererWithSampling) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
-		renderer.physicallyCorrectLights = this.pv.physically_correct_lights;
-		renderer.outputEncoding = this.pv.output_encoding;
-		renderer.toneMapping = this.pv.tone_mapping;
-		renderer.toneMappingExposure = this.pv.tone_mapping_exposure;
+		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
+		renderer.outputEncoding = this.pv.outputEncoding;
+		renderer.toneMapping = this.pv.toneMapping;
+		renderer.toneMappingExposure = this.pv.toneMappingExposure;
 
 		// shadows
-		renderer.shadowMap.enabled = true;
-		renderer.shadowMap.autoUpdate = true;
-		renderer.shadowMap.needsUpdate = true;
-		renderer.shadowMap.type = this.pv.shadow_map_type;
+		renderer.shadowMap.enabled = this.pv.tshadowMap;
+		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
+		renderer.shadowMap.needsUpdate = this.pv.shadowMapNeedsUpdate;
+		renderer.shadowMap.type = this.pv.shadowMapType;
 
-		renderer.sortObjects = this.pv.sort_objects;
+		renderer.sortObjects = this.pv.sortObjects;
 
 		renderer.sampling = this.pv.sampling;
 	}

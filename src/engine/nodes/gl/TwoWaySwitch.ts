@@ -5,8 +5,8 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 const OUTPUT_NAME = 'val';
 enum InputName {
 	CONDITION = 'condition',
-	IF_TRUE = 'if_true',
-	IF_FALSE = 'if_false',
+	IF_TRUE = 'ifTrue',
+	IF_FALSE = 'ifFalse',
 }
 const InputNames: Array<InputName> = [InputName.CONDITION, InputName.IF_TRUE, InputName.IF_FALSE];
 
@@ -52,16 +52,16 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 
 		const value = this.gl_var_name(OUTPUT_NAME);
 		const condition = ThreeToGl.bool(this.variable_for_input(InputName.CONDITION));
-		const if_true = ThreeToGl.any(this.variable_for_input(InputName.IF_TRUE));
-		const if_false = ThreeToGl.any(this.variable_for_input(InputName.IF_FALSE));
+		const ifTrue = ThreeToGl.any(this.variable_for_input(InputName.IF_TRUE));
+		const ifFalse = ThreeToGl.any(this.variable_for_input(InputName.IF_FALSE));
 
 		const gl_type = this._expected_output_types()[0];
 		body_lines.push(`${gl_type} ${value}`);
 		body_lines.push(`if(${condition}){`);
-		body_lines.push(`${value} = ${if_true}`);
+		body_lines.push(`${value} = ${ifTrue}`);
 		body_lines.push(`} else {`);
 		// TODO: why is this second line skipped, if both the true and false lines are the same?
-		body_lines.push(`${value} = ${if_false}`);
+		body_lines.push(`${value} = ${ifFalse}`);
 		body_lines.push(`}`);
 		shaders_collection_controller.add_body_lines(this, body_lines);
 	}

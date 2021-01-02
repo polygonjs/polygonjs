@@ -8,8 +8,8 @@ import {CorePoint} from '../../geometry/Point';
 import {CoreString} from '../../String';
 import {ArrayUtils} from '../../ArrayUtils';
 interface AttribPromoteSopParams extends DefaultOperationParams {
-	class_from: number;
-	class_to: number;
+	classFrom: number;
+	classTo: number;
 	mode: number;
 	name: string;
 }
@@ -22,8 +22,8 @@ export enum AttribPromoteMode {
 
 export class AttribPromoteSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribPromoteSopParams = {
-		class_from: AttribClass.VERTEX,
-		class_to: AttribClass.OBJECT,
+		classFrom: AttribClass.VERTEX,
+		classTo: AttribClass.OBJECT,
 		mode: AttribPromoteMode.FIRST_FOUND,
 		name: '',
 	};
@@ -58,7 +58,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		}
 	}
 	private _find_values_for_attrib_name(attrib_name: string, params: AttribPromoteSopParams) {
-		switch (params.class_from) {
+		switch (params.classFrom) {
 			case AttribClass.VERTEX:
 				return this.find_values_from_points(attrib_name, params);
 			case AttribClass.OBJECT:
@@ -116,7 +116,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		for (let attrib_name of attrib_names) {
 			const new_value = this._filtered_values_per_attrib_name[attrib_name];
 			if (new_value != null) {
-				switch (params.class_to) {
+				switch (params.classTo) {
 					case AttribClass.VERTEX:
 						this.set_values_to_points(attrib_name, new_value, params);
 						break;

@@ -13,13 +13,13 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class TransformCopySopParamConfig extends NodeParamsConfig {
 	/** @param toggle on if the second input should be used */
-	use_second_input = ParamConfig.BOOLEAN(1);
+	useSecondInput = ParamConfig.BOOLEAN(1);
 	/** @param use a reference object */
 	reference = ParamConfig.OPERATOR_PATH('', {
 		nodeSelection: {
 			context: NodeContext.SOP,
 		},
-		visibleIf: {use_second_input: 0},
+		visibleIf: {useSecondInput: 0},
 	});
 }
 const ParamsConfig = new TransformCopySopParamConfig();
@@ -40,7 +40,7 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		if (this.pv.use_second_input == true && input_contents[1]) {
+		if (this.pv.useSecondInput == true && input_contents[1]) {
 			this._copy_from_src_objects(input_contents[0].objects(), input_contents[1].objects());
 		} else {
 			this._copy_from_found_node(input_contents[0].objects());

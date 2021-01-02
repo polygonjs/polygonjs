@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = ScatterSopOperation.DEFAULT_PARAMS;
 class ScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param number of points to create */
-	points_count = ParamConfig.INTEGER(DEFAULT.points_count, {
+	pointsCount = ParamConfig.INTEGER(DEFAULT.pointsCount, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
@@ -21,15 +21,15 @@ class ScatterSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [false, false],
 	});
 	/** @param toggle on to transfer attribute from the input geometry to the created points */
-	transfer_attributes = ParamConfig.BOOLEAN(DEFAULT.transfer_attributes);
+	transferAttributes = ParamConfig.BOOLEAN(DEFAULT.transferAttributes);
 	/** @param names of the attributes to transfer */
-	attributes_to_transfer = ParamConfig.STRING(DEFAULT.attributes_to_transfer, {
-		visibleIf: {transfer_attributes: 1},
+	attributesToTransfer = ParamConfig.STRING(DEFAULT.attributesToTransfer, {
+		visibleIf: {transferAttributes: 1},
 	});
 	/** @param add an id attribute, starting at 0, incrementing by 1 for each point (0,1,2,3...) */
-	add_id_attribute = ParamConfig.BOOLEAN(DEFAULT.add_id_attribute);
+	addIdAttribute = ParamConfig.BOOLEAN(DEFAULT.addIdAttribute);
 	/** @param add an idn attribute, which is the id normalized between 0 and 1 */
-	add_idn_attribute = ParamConfig.BOOLEAN(DEFAULT.add_idn_attribute);
+	addIdnAttribute = ParamConfig.BOOLEAN(DEFAULT.addIdnAttribute);
 }
 const ParamsConfig = new ScatterSopParamsConfig();
 

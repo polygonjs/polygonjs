@@ -37,7 +37,7 @@ QUnit.test('texture_properties simple', async (assert) => {
 	assert.equal(texture.anisotropy, 1);
 
 	texture_properties1.p.tanisotropy.set(1);
-	texture_properties1.p.use_renderer_max_anisotropy.set(0);
+	texture_properties1.p.useRendererMaxAnisotropy.set(0);
 	texture_properties1.p.anisotropy.set(8);
 	container = await texture_properties1.requestContainer();
 	core_group = container.coreContent()!;

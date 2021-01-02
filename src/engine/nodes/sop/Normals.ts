@@ -19,30 +19,30 @@ class NormalsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
 	/** @param toggle on to update the x component */
-	update_x = ParamConfig.BOOLEAN(0, {
+	updateX = ParamConfig.BOOLEAN(0, {
 		visibleIf: {edit: 1},
 	});
 	/** @param expression or value for the x component */
 	x = ParamConfig.FLOAT('@N.x', {
-		visibleIf: {update_x: 1, edit: 1},
+		visibleIf: {updateX: 1, edit: 1},
 		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the y component */
-	update_y = ParamConfig.BOOLEAN(0, {
+	updateY = ParamConfig.BOOLEAN(0, {
 		visibleIf: {edit: 1},
 	});
 	/** @param expression or value for the y component */
 	y = ParamConfig.FLOAT('@N.y', {
-		visibleIf: {update_y: 1, edit: 1},
+		visibleIf: {updateY: 1, edit: 1},
 		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the z component */
-	update_z = ParamConfig.BOOLEAN(0, {
+	updateZ = ParamConfig.BOOLEAN(0, {
 		visibleIf: {edit: 1},
 	});
 	/** @param expression or value for the z component */
 	z = ParamConfig.FLOAT('@N.z', {
-		visibleIf: {update_z: 1, edit: 1},
+		visibleIf: {updateZ: 1, edit: 1},
 		expression: {forEntities: true},
 	});
 
@@ -106,7 +106,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const array = attrib.array as number[];
 
 		// x
-		if (this.pv.update_x) {
+		if (this.pv.updateX) {
 			if (this.p.x.has_expression() && this.p.x.expression_controller) {
 				await this.p.x.expression_controller.compute_expression_for_points(points, (point, value) => {
 					array[point.index * 3 + 0] = value;
@@ -120,7 +120,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			}
 		}
 		// y
-		if (this.pv.update_y) {
+		if (this.pv.updateY) {
 			if (this.p.y.has_expression() && this.p.y.expression_controller) {
 				await this.p.y.expression_controller.compute_expression_for_points(points, (point, value) => {
 					array[point.index * 3 + 1] = value;
@@ -134,7 +134,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			}
 		}
 		// z
-		if (this.pv.update_z) {
+		if (this.pv.updateZ) {
 			if (this.p.z.has_expression() && this.p.z.expression_controller) {
 				await this.p.z.expression_controller.compute_expression_for_points(points, (point, value) => {
 					array[point.index * 3 + 2] = value;

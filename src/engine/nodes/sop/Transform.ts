@@ -13,7 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;
 class TransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
-	apply_on = ParamConfig.INTEGER(DEFAULT.apply_on, {
+	applyOn = ParamConfig.INTEGER(DEFAULT.applyOn, {
 		menu: {
 			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
 				return {name: target_type, value: i};
@@ -22,12 +22,12 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	});
 	/** @param group this applies to */
 	group = ParamConfig.STRING(DEFAULT.group, {
-		visibleIf: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 
 	// transform
 	/** @param rotation order */
-	rotation_order = ParamConfig.INTEGER(DEFAULT.rotation_order, {
+	rotationOrder = ParamConfig.INTEGER(DEFAULT.rotationOrder, {
 		menu: {
 			entries: ROTATION_ORDERS.map((order, v) => {
 				return {name: order, value: v};
@@ -46,7 +46,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	// up = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param pivot */
 	pivot = ParamConfig.VECTOR3(DEFAULT.pivot, {
-		visibleIf: {apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
 	});
 }
 const ParamsConfig = new TransformSopParamConfig();
@@ -62,14 +62,14 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	}
 
 	initialize_node() {
-		// this.uiData.set_param_label(this.p.apply_on, (v)=>TARGET_TYPES[v])
+		// this.uiData.set_param_label(this.p.applyOn, (v)=>TARGET_TYPES[v])
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(TransformSopOperation.INPUT_CLONED_STATE);
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.apply_on], () => {
-					return TRANSFORM_TARGET_TYPES[this.pv.apply_on];
+				this.params.label.init([this.p.applyOn], () => {
+					return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 				});
 			});
 		});

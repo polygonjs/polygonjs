@@ -24,28 +24,28 @@ type ComponentOffset = 0 | 1 | 2;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PointSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the x component */
-	update_x = ParamConfig.BOOLEAN(0);
+	updateX = ParamConfig.BOOLEAN(0);
 	/** @param expression the x component */
 	x = ParamConfig.FLOAT('@P.x', {
-		visibleIf: {update_x: 1},
+		visibleIf: {updateX: 1},
 		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the y component */
-	update_y = ParamConfig.BOOLEAN(0);
+	updateY = ParamConfig.BOOLEAN(0);
 	/** @param expression the y component */
 	y = ParamConfig.FLOAT('@P.y', {
-		visibleIf: {update_y: 1},
+		visibleIf: {updateY: 1},
 		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the z component */
-	update_z = ParamConfig.BOOLEAN(0);
+	updateZ = ParamConfig.BOOLEAN(0);
 	/** @param expression the z component */
 	z = ParamConfig.FLOAT('@P.z', {
-		visibleIf: {update_z: 1},
+		visibleIf: {updateZ: 1},
 		expression: {forEntities: true},
 	});
 	/** @param toggle on to update the normals */
-	update_normals = ParamConfig.BOOLEAN(1);
+	updateNormals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new PointSopParamsConfig();
 
@@ -87,7 +87,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			await this._eval_expressions_for_core_object(core_objects[i]);
 		}
 
-		if (this.pv.update_normals) {
+		if (this.pv.updateNormals) {
 			core_group.computeVertexNormals();
 		}
 
@@ -118,7 +118,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			geometry,
 			array,
 			points,
-			this.p.update_x,
+			this.p.updateX,
 			this.p.x,
 			this.pv.x,
 			this._x_arrays_by_geometry_uuid,
@@ -128,7 +128,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			geometry,
 			array,
 			points,
-			this.p.update_y,
+			this.p.updateY,
 			this.p.y,
 			this.pv.y,
 			this._y_arrays_by_geometry_uuid,
@@ -138,7 +138,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			geometry,
 			array,
 			points,
-			this.p.update_z,
+			this.p.updateZ,
 			this.p.z,
 			this.pv.z,
 			this._z_arrays_by_geometry_uuid,

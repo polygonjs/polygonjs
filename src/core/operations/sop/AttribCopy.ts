@@ -7,19 +7,19 @@ import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttr
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 interface AttribCopySopParams extends DefaultOperationParams {
 	name: string;
-	tnew_name: boolean;
-	new_name: string;
-	src_offset: number;
-	dest_offset: number;
+	tnewName: boolean;
+	newName: string;
+	srcOffset: number;
+	destOffset: number;
 }
 
 export class AttribCopySopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribCopySopParams = {
 		name: '',
-		tnew_name: false,
-		new_name: '',
-		src_offset: 0,
-		dest_offset: 0,
+		tnewName: false,
+		newName: '',
+		srcOffset: 0,
+		destOffset: 0,
 	};
 	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
 	static type(): Readonly<'attribCopy'> {
@@ -72,7 +72,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 				this.states?.error.set('not enough points in second input');
 			}
 
-			const dest_name = params.tnew_name ? params.new_name : attrib_name;
+			const dest_name = params.tnewName ? params.newName : attrib_name;
 			let dest_attribute = dest_geometry.getAttribute(dest_name);
 			if (dest_attribute) {
 				this._fill_dest_array(dest_attribute as BufferAttribute, src_attrib as BufferAttribute, params);
@@ -97,8 +97,8 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const dest_array_size = dest_array.length;
 		const dest_item_size = dest_attribute.itemSize;
 		const src_item_size = src_attribute.itemSize;
-		const src_offset = params.src_offset;
-		const dest_offset = params.dest_offset;
+		const srcOffset = params.srcOffset;
+		const destOffset = params.destOffset;
 		// if same itemSize, we copy item by item
 		if (dest_attribute.itemSize == src_attribute.itemSize) {
 			dest_attribute.copyArray(src_attribute.array);
@@ -112,16 +112,14 @@ export class AttribCopySopOperation extends BaseSopOperation {
 				// we copy only the selected items from src
 				for (let i = 0; i < points_count; i++) {
 					for (let j = 0; j < dest_item_size; j++) {
-						dest_array[i * dest_item_size + j + dest_offset] =
-							src_array[i * src_item_size + j + src_offset];
+						dest_array[i * dest_item_size + j + destOffset] = src_array[i * src_item_size + j + srcOffset];
 					}
 				}
 			} else {
 				// if dest attrib is larger than src attrib (ie: float -> vector )
 				for (let i = 0; i < points_count; i++) {
 					for (let j = 0; j < src_item_size; j++) {
-						dest_array[i * dest_item_size + j + dest_offset] =
-							src_array[i * src_item_size + j + src_offset];
+						dest_array[i * dest_item_size + j + destOffset] = src_array[i * src_item_size + j + srcOffset];
 					}
 				}
 			}

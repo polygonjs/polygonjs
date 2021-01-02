@@ -12,22 +12,22 @@ import {CSS3DObject} from '../../../modules/three/examples/jsm/renderers/CSS3DRe
 import {CoreGroup} from '../../../core/geometry/Group';
 
 interface Css2DObjectParams {
-	class_name: string;
+	className: string;
 	text: string;
 }
 const ATTRIBUTE_NAME = {
-	class_name: 'class',
+	className: 'class',
 	text: 'text',
 };
 const DEFAULT_VALUE = {
-	class_name: 'css2DObject',
+	className: 'css2DObject',
 	text: 'default text',
 };
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Css3DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param html class */
-	class_name = ParamConfig.STRING(DEFAULT_VALUE.class_name);
+	className = ParamConfig.STRING(DEFAULT_VALUE.className);
 	/** @param text content */
 	text = ParamConfig.STRING(DEFAULT_VALUE.text, {
 		multiline: true,
@@ -58,11 +58,11 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 		const points = core_group.points();
 		const objects: CSS3DObject[] = [];
 		for (let point of points) {
-			const class_name = (point.attribValue(ATTRIBUTE_NAME.class_name) as string) || DEFAULT_VALUE.class_name;
+			const className = (point.attribValue(ATTRIBUTE_NAME.className) as string) || DEFAULT_VALUE.className;
 			const text = (point.attribValue(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
 
 			const object = Css3DObjectSopNode.create_css_object({
-				class_name,
+				className,
 				text,
 			});
 
@@ -76,7 +76,7 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 
 	private _create_object_from_scratch() {
 		const object = Css3DObjectSopNode.create_css_object({
-			class_name: this.pv.class_name,
+			className: this.pv.className,
 			text: this.pv.text,
 		});
 
@@ -87,7 +87,7 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 
 	private static create_css_object(params: Css2DObjectParams) {
 		const element = document.createElement('div');
-		element.className = params.class_name;
+		element.className = params.className;
 		element.textContent = params.text;
 		const object = new CSS3DObject(element);
 

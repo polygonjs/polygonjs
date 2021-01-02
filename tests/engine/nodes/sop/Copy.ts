@@ -17,7 +17,7 @@ QUnit.test('copy sop simple', async (assert) => {
 	assert.equal(container.pointsCount(), 96);
 	assert.equal(container.boundingBox().min.y, -1.0);
 
-	plane1.p.use_segments_count.set(1);
+	plane1.p.useSegmentsCount.set(1);
 	plane1.p.size.y.set(2);
 
 	container = await copy1.requestContainer();
@@ -55,7 +55,7 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 
 	assert.equal(container.pointsCount(), 8);
 
-	copy1.p.use_copy_expr.set(1);
+	copy1.p.useCopyExpr.set(1);
 	container = await copy1.requestContainer();
 	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
@@ -88,7 +88,7 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 
 	assert.equal(container.pointsCount(), 12);
 
-	copy1.p.use_copy_expr.set(1);
+	copy1.p.useCopyExpr.set(1);
 	container = await copy1.requestContainer();
 	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
@@ -109,7 +109,7 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	copy1.setInput(0, attrib_create1);
 	copy1.setInput(1, plane1);
 	copy1.p.count.set(3);
-	copy1.p.use_copy_expr.set(1);
+	copy1.p.useCopyExpr.set(1);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set(`copy('../${copy1.name}', 0)`);

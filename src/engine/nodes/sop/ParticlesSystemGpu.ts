@@ -37,15 +37,15 @@ import {ParamsInitData} from '../utils/io/IOController';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param frame the particles simulation starts */
-	start_frame = ParamConfig.FLOAT(1, {range: [1, 100]});
+	startFrame = ParamConfig.FLOAT(1, {range: [1, 100]});
 	/** @param auto sets the resolution of the textures used by the GPU shaders */
-	auto_textures_size = ParamConfig.BOOLEAN(1);
+	autoTexturesSize = ParamConfig.BOOLEAN(1);
 	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
-	max_textures_size = ParamConfig.VECTOR2([1024, 1024], {visibleIf: {auto_textures_size: 1}});
+	maxTexturesSize = ParamConfig.VECTOR2([1024, 1024], {visibleIf: {autoTexturesSize: 1}});
 	/** @param sets the texture size manually */
-	textures_size = ParamConfig.VECTOR2([64, 64], {visibleIf: {auto_textures_size: 0}});
+	texturesSize = ParamConfig.VECTOR2([64, 64], {visibleIf: {autoTexturesSize: 0}});
 	/** @param data type used by the solver */
-	data_type = ParamConfig.INTEGER(0, {
+	dataType = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: PARTICLE_DATA_TYPES.map((value, index) => {
 				return {value: index, name: value};
@@ -156,7 +156,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	is_on_frame_start(): boolean {
-		return this.scene.frame == this.pv.start_frame;
+		return this.scene.frame == this.pv.startFrame;
 	}
 
 	async cook(input_contents: CoreGroup[]) {

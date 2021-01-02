@@ -13,14 +13,14 @@ class TorusSopParamsConfig extends NodeParamsConfig {
 	/** @param large radius */
 	radius = ParamConfig.FLOAT(DEFAULT.radius, {range: [0, 1]});
 	/** @param radius of the tube */
-	radius_tube = ParamConfig.FLOAT(DEFAULT.radius_tube, {range: [0, 1]});
+	radiusTube = ParamConfig.FLOAT(DEFAULT.radiusTube, {range: [0, 1]});
 	/** @param number of segments along the length of the torus */
-	segments_radial = ParamConfig.INTEGER(DEFAULT.segments_radial, {
+	segmentsRadial = ParamConfig.INTEGER(DEFAULT.segmentsRadial, {
 		range: [1, 50],
 		rangeLocked: [true, false],
 	});
 	/** @param number of segments along the tube */
-	segments_tube = ParamConfig.INTEGER(DEFAULT.segments_tube, {
+	segmentsTube = ParamConfig.INTEGER(DEFAULT.segmentsTube, {
 		range: [1, 50],
 		rangeLocked: [true, false],
 	});

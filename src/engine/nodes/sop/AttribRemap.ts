@@ -20,9 +20,9 @@ class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	/** @param ramp used to remap */
 	ramp = ParamConfig.RAMP();
 	/** @param toggle if you want to create a new attribute */
-	change_name = ParamConfig.BOOLEAN(0);
+	changeName = ParamConfig.BOOLEAN(0);
 	/** @param new attribute name */
-	new_name = ParamConfig.STRING('', {visibleIf: {change_name: 1}});
+	newName = ParamConfig.STRING('', {visibleIf: {changeName: 1}});
 }
 const ParamsConfig = new AttribRemapSopParamsConfig();
 
@@ -58,8 +58,8 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		this._get_remaped_values(attrib_size, values, remaped_values);
 
 		let target_name = this.pv.name;
-		if (this.pv.change_name) {
-			target_name = this.pv.new_name;
+		if (this.pv.changeName) {
+			target_name = this.pv.newName;
 			if (!core_group.hasAttrib(target_name)) {
 				core_group.addNumericVertexAttrib(target_name, attrib_size, 0);
 			}

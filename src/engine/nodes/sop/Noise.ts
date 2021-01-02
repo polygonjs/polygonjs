@@ -41,9 +41,9 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
 	/** @param toggle on to multiply the amplitude by a vertex attribute */
-	tamplitude_attrib = ParamConfig.BOOLEAN(0);
+	tamplitudeAttrib = ParamConfig.BOOLEAN(0);
 	/** @param which vertex attribute to use */
-	amplitude_attrib = ParamConfig.STRING('amp', {visibleIf: {tamplitude_attrib: true}});
+	amplitudeAttrib = ParamConfig.STRING('amp', {visibleIf: {tamplitudeAttrib: true}});
 	/** @param noise frequency */
 	freq = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param noise offset */
@@ -54,22 +54,22 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param amplitude attenuation for higher octaves */
-	amp_attenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
+	ampAttenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
 	/** @param frequency increase for higher octaves */
-	freq_increase = ParamConfig.FLOAT(2, {range: [0, 10]});
+	freqIncrease = ParamConfig.FLOAT(2, {range: [0, 10]});
 	/** @param noise seed */
 	seed = ParamConfig.INTEGER(0, {range: [0, 100]});
 	separator = ParamConfig.SEPARATOR();
 	/** @param toggle on to have the noise be multiplied by the normal */
-	use_normals = ParamConfig.BOOLEAN(0);
+	useNormals = ParamConfig.BOOLEAN(0);
 	/** @param set which attribute will be affected by the noise */
-	attrib_name = ParamConfig.STRING('position');
+	attribName = ParamConfig.STRING('position');
 	/** @param toggle on to use rest attributes. This can be useful when the noise is animated and this node does not clone the input geometry. Without using rest attributes, the noise would be based on an already modified position, and would therefore accumulate on itself after each cook. This may be what you are after, but for a more conventional result, using a rest attribute will ensure that the noise remains stable. Note that the rest attribute can be created by a RestAttributes node */
-	use_rest_attributes = ParamConfig.BOOLEAN(0);
+	useRestAttributes = ParamConfig.BOOLEAN(0);
 	/** @param name of rest position */
-	restP = ParamConfig.STRING('restP', {visibleIf: {use_rest_attributes: true}});
+	restP = ParamConfig.STRING('restP', {visibleIf: {useRestAttributes: true}});
 	/** @param name of rest normal */
-	restN = ParamConfig.STRING('restN', {visibleIf: {use_rest_attributes: true}});
+	restN = ParamConfig.STRING('restN', {visibleIf: {useRestAttributes: true}});
 	/** @param operation done when applying the noise (add, set, mult, substract, divide) */
 	operation = ParamConfig.INTEGER(Operations.indexOf(Operation.ADD), {
 		menu: {
@@ -82,7 +82,7 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param toggle on to recompute normals if the position has been updated */
-	compute_normals = ParamConfig.BOOLEAN(1);
+	computeNormals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new NoiseSopParamsConfig();
 
@@ -110,13 +110,13 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const dest_points = core_group.points();
 
 		const simplex = this._get_simplex();
-		const use_normals = this.pv.use_normals && core_group.hasAttrib(ATTRIB_NORMAL);
-		const target_attrib_size = core_group.attribSize(this.pv.attrib_name);
+		const useNormals = this.pv.useNormals && core_group.hasAttrib(ATTRIB_NORMAL);
+		const target_attrib_size = core_group.attribSize(this.pv.attribName);
 		const operation = Operations[this.pv.operation];
-		const dest_attrib_name = this.pv.attrib_name;
-		const use_rest_attributes: boolean = this.pv.use_rest_attributes;
+		const dest_attribName = this.pv.attribName;
+		const useRestAttributes: boolean = this.pv.useRestAttributes;
 		const base_amplitude: number = this.pv.amplitude;
-		const use_amplitude_attrib: boolean = this.pv.tamplitude_attrib;
+		const use_amplitudeAttrib: boolean = this.pv.tamplitudeAttrib;
 
 		let restP: Vector3 | undefined;
 		let restN: Vector3 | undefined;
@@ -124,20 +124,20 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		for (let i = 0; i < dest_points.length; i++) {
 			const dest_point = dest_points[i];
 
-			current_attrib_value = dest_point.attribValue(dest_attrib_name) as Vector3;
-			if (use_rest_attributes) {
+			current_attrib_value = dest_point.attribValue(dest_attribName) as Vector3;
+			if (useRestAttributes) {
 				restP = dest_point.attribValue(this.pv.restP) as Vector3;
-				restN = use_normals ? (dest_point.attribValue(this.pv.restN) as Vector3) : undefined;
+				restN = useNormals ? (dest_point.attribValue(this.pv.restN) as Vector3) : undefined;
 				current_attrib_value = restP;
 			} else {
-				restN = use_normals ? (dest_point.attribValue('normal') as Vector3) : undefined;
+				restN = useNormals ? (dest_point.attribValue('normal') as Vector3) : undefined;
 			}
 
-			const amplitude = use_amplitude_attrib
+			const amplitude = use_amplitudeAttrib
 				? this._amplitude_from_attrib(dest_point, base_amplitude)
 				: base_amplitude;
 
-			const noise_result = this._noise_value(use_normals, simplex, amplitude, current_attrib_value, restN);
+			const noise_result = this._noise_value(useNormals, simplex, amplitude, current_attrib_value, restN);
 			const noise_value = this._make_noise_value_correct_size(noise_result, target_attrib_size);
 
 			if (CoreType.isNumber(current_attrib_value) && CoreType.isNumber(noise_value)) {
@@ -146,7 +146,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 					current_attrib_value,
 					noise_value
 				);
-				dest_point.setAttribValue(dest_attrib_name, new_attrib_value_f);
+				dest_point.setAttribValue(dest_attribName, new_attrib_value_f);
 			} else {
 				if (current_attrib_value instanceof Vector2 && noise_value instanceof Vector2) {
 					const new_attrib_value_v = this._new_attrib_value_from_vector2(
@@ -154,7 +154,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 						current_attrib_value,
 						noise_value
 					);
-					dest_point.setAttribValue(dest_attrib_name, new_attrib_value_v);
+					dest_point.setAttribValue(dest_attribName, new_attrib_value_v);
 				} else {
 					if (current_attrib_value instanceof Vector3 && noise_value instanceof Vector3) {
 						const new_attrib_value_v = this._new_attrib_value_from_vector3(
@@ -162,7 +162,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 							current_attrib_value,
 							noise_value
 						);
-						dest_point.setAttribValue(dest_attrib_name, new_attrib_value_v);
+						dest_point.setAttribValue(dest_attribName, new_attrib_value_v);
 					} else {
 						if (current_attrib_value instanceof Vector4 && noise_value instanceof Vector4) {
 							const new_attrib_value_v = this._new_attrib_value_from_vector4(
@@ -170,7 +170,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 								current_attrib_value,
 								noise_value
 							);
-							dest_point.setAttribValue(dest_attrib_name, new_attrib_value_v);
+							dest_point.setAttribValue(dest_attribName, new_attrib_value_v);
 						}
 					}
 				}
@@ -179,18 +179,18 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 		if (!this.io.inputs.clone_required(0)) {
 			for (let geometry of core_group.geometries()) {
-				(geometry.getAttribute(dest_attrib_name) as BufferAttribute).needsUpdate = true;
+				(geometry.getAttribute(dest_attribName) as BufferAttribute).needsUpdate = true;
 			}
 		}
 
-		if (this.pv.compute_normals) {
+		if (this.pv.computeNormals) {
 			core_group.computeVertexNormals();
 		}
 		this.setCoreGroup(core_group);
 	}
 
 	private _noise_value(
-		use_normals: boolean,
+		useNormals: boolean,
 		simplex: SimplexNoise,
 		amplitude: number,
 		restP: Vector3,
@@ -198,7 +198,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	) {
 		this._rest_pos.copy(restP).add(this.pv.offset).multiply(this.pv.freq);
 		// const pos = rest_point.position(this._rest_pos)
-		if (use_normals && restN) {
+		if (useNormals && restN) {
 			const noise = amplitude * this._fbm(simplex, this._rest_pos.x, this._rest_pos.y, this._rest_pos.z);
 			this._noise_value_v.copy(restN);
 			return this._noise_value_v.multiplyScalar(noise);
@@ -307,7 +307,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	}
 
 	private _amplitude_from_attrib(point: CorePoint, base_amplitude: number): number {
-		const attrib_value = point.attribValue(this.pv.amplitude_attrib) as NumericAttribValue;
+		const attrib_value = point.attribValue(this.pv.amplitudeAttrib) as NumericAttribValue;
 
 		if (CoreType.isNumber(attrib_value)) {
 			return attrib_value * base_amplitude;
@@ -324,10 +324,10 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		let amplitude = 1.0;
 		for (let i = 0; i < this.pv.octaves; i++) {
 			value += amplitude * simplex.noise3d(x, y, z);
-			x *= this.pv.freq_increase;
-			y *= this.pv.freq_increase;
-			z *= this.pv.freq_increase;
-			amplitude *= this.pv.amp_attenuation;
+			x *= this.pv.freqIncrease;
+			y *= this.pv.freqIncrease;
+			z *= this.pv.freqIncrease;
+			amplitude *= this.pv.ampAttenuation;
 		}
 		return value;
 	}

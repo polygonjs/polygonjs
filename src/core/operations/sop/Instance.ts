@@ -14,15 +14,15 @@ import {Material} from 'three/src/materials/Material';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface InstanceSopParams extends DefaultOperationParams {
-	attributes_to_copy: string;
-	apply_material: boolean;
+	attributesToCopy: string;
+	applyMaterial: boolean;
 	material: TypedPathParamValue;
 }
 
 export class InstanceSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: InstanceSopParams = {
-		attributes_to_copy: 'instance*',
-		apply_material: true,
+		attributesToCopy: 'instance*',
+		applyMaterial: true,
 		material: new TypedPathParamValue(''),
 	};
 	static readonly INPUT_CLONED_STATE = [InputCloneMode.ALWAYS, InputCloneMode.NEVER];
@@ -51,10 +51,10 @@ export class InstanceSopOperation extends BaseSopOperation {
 			if (type) {
 				const object = this.create_object(this._geometry, type);
 
-				if (params.apply_material) {
+				if (params.applyMaterial) {
 					const material = await this._get_material(params);
 					if (material) {
-						await this._apply_material(object as Mesh, material);
+						await this._applyMaterial(object as Mesh, material);
 					}
 				}
 
@@ -65,7 +65,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 	}
 
 	private async _get_material(params: InstanceSopParams) {
-		if (params.apply_material) {
+		if (params.applyMaterial) {
 			const material_node = params.material.ensure_node_context(NodeContext.MAT, this.states?.error);
 			if (material_node) {
 				this._globals_handler = this._globals_handler || new GlobalsGeometryHandler();
@@ -81,7 +81,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		}
 	}
 
-	async _apply_material(object: Mesh, material: Material) {
+	async _applyMaterial(object: Mesh, material: Material) {
 		object.material = material;
 		CoreMaterial.apply_custom_materials(object, material);
 	}
@@ -94,7 +94,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		this._geometry = CoreInstancer.create_instance_buffer_geo(
 			geometry_to_instance,
 			template_core_group,
-			params.attributes_to_copy
+			params.attributesToCopy
 		);
 	}
 }

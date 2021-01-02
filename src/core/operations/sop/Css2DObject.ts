@@ -8,36 +8,36 @@ import {CoreType} from '../../Type';
 
 interface Css2DObjectParams {
 	id: string;
-	class_name: string;
+	className: string;
 	html: string;
 }
 const ATTRIBUTE_NAME = {
 	id: 'id',
-	class_name: 'class',
+	className: 'class',
 	html: 'html',
 };
 
 interface Css2DObjectSopParams extends DefaultOperationParams {
-	use_id_attrib: boolean;
+	useIdAttrib: boolean;
 	id: string;
-	use_class_attrib: boolean;
-	class_name: string;
-	use_html_attrib: boolean;
+	useClassAttrib: boolean;
+	className: string;
+	useHtmlAttrib: boolean;
 	html: string;
-	copy_attributes: boolean;
-	attributes_to_copy: string;
+	copyAttributes: boolean;
+	attributesToCopy: string;
 }
 
 export class Css2DObjectSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: Css2DObjectSopParams = {
-		use_id_attrib: false,
+		useIdAttrib: false,
 		id: 'my_css_object',
-		use_class_attrib: false,
-		class_name: 'css2DObject',
-		use_html_attrib: false,
+		useClassAttrib: false,
+		className: 'css2DObject',
+		useHtmlAttrib: false,
 		html: '<div>default html</div>',
-		copy_attributes: false,
-		attributes_to_copy: '',
+		copyAttributes: false,
+		attributesToCopy: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'css2DObject'> {
@@ -58,20 +58,20 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 		const points = core_group.points();
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
-			const id = params.use_id_attrib ? (point.attribValue(ATTRIBUTE_NAME.id) as string) : params.class_name;
-			const class_name = params.use_class_attrib
-				? (point.attribValue(ATTRIBUTE_NAME.class_name) as string)
-				: params.class_name;
-			const html = params.use_html_attrib ? (point.attribValue(ATTRIBUTE_NAME.html) as string) : params.html;
+			const id = params.useIdAttrib ? (point.attribValue(ATTRIBUTE_NAME.id) as string) : params.className;
+			const className = params.useClassAttrib
+				? (point.attribValue(ATTRIBUTE_NAME.className) as string)
+				: params.className;
+			const html = params.useHtmlAttrib ? (point.attribValue(ATTRIBUTE_NAME.html) as string) : params.html;
 
 			const object = Css2DObjectSopOperation.create_css_object({
 				id,
-				class_name,
+				className,
 				html,
 			});
 			const element = object.element;
-			if (params.copy_attributes) {
-				const attrib_names = CoreString.attribNames(params.attributes_to_copy);
+			if (params.copyAttributes) {
+				const attrib_names = CoreString.attribNames(params.attributesToCopy);
 				for (let attrib_name of attrib_names) {
 					const attrib_value = point.attribValue(attrib_name);
 					if (CoreType.isString(attrib_value)) {
@@ -95,7 +95,7 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 	private _create_object_from_scratch(params: Css2DObjectSopParams) {
 		const object = Css2DObjectSopOperation.create_css_object({
 			id: params.id,
-			class_name: params.class_name,
+			className: params.className,
 			html: params.html,
 		});
 
@@ -105,7 +105,7 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 	private static create_css_object(params: Css2DObjectParams) {
 		const element = document.createElement('div');
 		element.id = params.id;
-		element.className = params.class_name;
+		element.className = params.className;
 		element.innerHTML = params.html;
 
 		const object = new CSS2DObject(element);

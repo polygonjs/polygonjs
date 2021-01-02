@@ -10,7 +10,7 @@ QUnit.test('draw range simple', async (assert) => {
 	let core_group = container.coreContent()!;
 	assert.deepEqual(core_group.geometries()[0].drawRange, {start: 0, count: Infinity});
 
-	draw_range1.p.use_count.set(1);
+	draw_range1.p.useCount.set(1);
 	container = await draw_range1.requestContainer();
 	core_group = container.coreContent()!;
 	assert.deepEqual(core_group.geometries()[0].drawRange, {start: 0, count: 0});

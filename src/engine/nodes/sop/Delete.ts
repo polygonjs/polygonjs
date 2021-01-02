@@ -51,110 +51,110 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	// 	visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	// });
 
-	// by_object_type
+	// byObjectType
 	/** @param deletes objects by object type */
-	by_object_type = ParamConfig.BOOLEAN(0, {
+	byObjectType = ParamConfig.BOOLEAN(0, {
 		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
 	/** @param sets which object types should be deleted */
-	object_type = ParamConfig.INTEGER(ObjectTypes.indexOf(ObjectType.MESH), {
+	objectType = ParamConfig.INTEGER(ObjectTypes.indexOf(ObjectType.MESH), {
 		menu: {
 			entries: ObjectTypeMenuEntries,
 		},
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
-			by_object_type: true,
+			byObjectType: true,
 		},
 	});
-	separator_object_type = ParamConfig.SEPARATOR(null, {
+	separatorObjectType = ParamConfig.SEPARATOR(null, {
 		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
 
-	// by_expression
+	// byExpression
 	/** @param deletes objects by an expression */
-	by_expression = ParamConfig.BOOLEAN(0);
+	byExpression = ParamConfig.BOOLEAN(0);
 	/** @param sets the expression to select what should be deleted */
 	expression = ParamConfig.BOOLEAN('@ptnum==0', {
-		visibleIf: {by_expression: true},
+		visibleIf: {byExpression: true},
 		expression: {forEntities: true},
 	});
-	separator_expression = ParamConfig.SEPARATOR();
+	separatorExpression = ParamConfig.SEPARATOR();
 
-	// by_attrib
+	// byAttrib
 	/** @param deletes objects by an attribute */
-	by_attrib = ParamConfig.BOOLEAN(0);
+	byAttrib = ParamConfig.BOOLEAN(0);
 	/** @param sets the type of the attribute for which items should be deleted */
-	attrib_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
+	attribType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
-		visibleIf: {by_attrib: 1},
+		visibleIf: {byAttrib: 1},
 	});
 	/** @param name of the attribute used */
-	attrib_name = ParamConfig.STRING('', {
-		visibleIf: {by_attrib: 1},
+	attribName = ParamConfig.STRING('', {
+		visibleIf: {byAttrib: 1},
 	});
 	/** @param size of the attribute used */
-	attrib_size = ParamConfig.INTEGER(1, {
+	attribSize = ParamConfig.INTEGER(1, {
 		range: ATTRIBUTE_SIZE_RANGE,
 		rangeLocked: [true, true],
-		visibleIf: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
+		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
 	});
 	/** @param comparison operator */
-	attrib_comparison_operator = ParamConfig.INTEGER(COMPARISON_OPERATORS.indexOf(ComparisonOperator.EQUAL), {
+	attribComparisonOperator = ParamConfig.INTEGER(COMPARISON_OPERATORS.indexOf(ComparisonOperator.EQUAL), {
 		menu: {
 			entries: ComparisonOperatorMenuEntries,
 		},
 		visibleIf: {
-			by_attrib: true,
-			attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
-			attrib_size: AttribSize.FLOAT,
+			byAttrib: true,
+			attribType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
+			attribSize: AttribSize.FLOAT,
 		},
 	});
 	/** @param value of the attribute to compare with (when using float attribute) */
-	attrib_value1 = ParamConfig.FLOAT(0, {
-		visibleIf: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 1},
+	attribValue1 = ParamConfig.FLOAT(0, {
+		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attribSize: 1},
 	});
 	/** @param value of the attribute to compare with (when using vector2 attribute) */
-	attrib_value2 = ParamConfig.VECTOR2([0, 0], {
-		visibleIf: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 2},
+	attribValue2 = ParamConfig.VECTOR2([0, 0], {
+		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attribSize: 2},
 	});
 	/** @param value of the attribute to compare with (when using vector3 attribute) */
-	attrib_value3 = ParamConfig.VECTOR3([0, 0, 0], {
-		visibleIf: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 3},
+	attribValue3 = ParamConfig.VECTOR3([0, 0, 0], {
+		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attribSize: 3},
 	});
 	/** @param value of the attribute to compare with (when using vector4 attribute) */
-	attrib_value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
-		visibleIf: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attrib_size: 4},
+	attribValue4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
+		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), attribSize: 4},
 	});
 	/** @param value of the attribute to compare with (when using string attribute) */
-	attrib_string = ParamConfig.STRING('', {
-		visibleIf: {by_attrib: 1, attrib_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
+	attribString = ParamConfig.STRING('', {
+		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
 	});
-	separator_attrib = ParamConfig.SEPARATOR();
+	separatorAttrib = ParamConfig.SEPARATOR();
 
-	// by_bbox
+	// byBbox
 	/** @param deletes objects that are inside a bounding box */
-	by_bbox = ParamConfig.BOOLEAN(0, {
+	byBbox = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		},
 	});
 	/** @param the bounding box size */
-	bbox_size = ParamConfig.VECTOR3([1, 1, 1], {
+	bboxSize = ParamConfig.VECTOR3([1, 1, 1], {
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
-			by_bbox: true,
+			byBbox: true,
 		},
 	});
 	/** @param the bounding box center */
-	bbox_center = ParamConfig.VECTOR3([0, 0, 0], {
+	bboxCenter = ParamConfig.VECTOR3([0, 0, 0], {
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
-			by_bbox: true,
+			byBbox: true,
 		},
 	});
-	separator_bbox = ParamConfig.SEPARATOR(null, {
+	separatorBbox = ParamConfig.SEPARATOR(null, {
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		},
@@ -166,7 +166,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	// 	visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	// });
 	/** @param keeps points */
-	keep_points = ParamConfig.BOOLEAN(0, {
+	keepPoints = ParamConfig.BOOLEAN(0, {
 		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
 }
@@ -180,10 +180,10 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 
 	private _marked_for_deletion_per_object_index: Map<number, boolean> = new Map();
 	public readonly entity_selection_helper = new EntitySelectionHelper(this);
-	public readonly by_bbox_helper = new ByBboxHelper(this);
-	public readonly by_expression_helper = new ByExpressionHelper(this);
-	public readonly by_attribute_helper = new ByAttributeHelper(this);
-	public readonly by_object_type_helper = new ByObjectTypeHelper(this);
+	public readonly byBbox_helper = new ByBboxHelper(this);
+	public readonly byExpression_helper = new ByExpressionHelper(this);
+	public readonly byAttribute_helper = new ByAttributeHelper(this);
+	public readonly byObjectType_helper = new ByObjectTypeHelper(this);
 
 	static displayed_input_names(): string[] {
 		return ['geometry to delete from'];
@@ -220,22 +220,22 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			this._marked_for_deletion_per_object_index.set(core_object.index, false);
 		}
 
-		if (this.pv.by_expression) {
-			await this.by_expression_helper.eval_for_entities(core_objects);
+		if (this.pv.byExpression) {
+			await this.byExpression_helper.eval_for_entities(core_objects);
 		}
 
-		if (this.pv.by_object_type) {
-			this.by_object_type_helper.eval_for_objects(core_objects);
+		if (this.pv.byObjectType) {
+			this.byObjectType_helper.eval_for_objects(core_objects);
 		}
 
-		if (this.pv.by_attrib && this.pv.attrib_name != '') {
-			this.by_attribute_helper.eval_for_entities(core_objects);
+		if (this.pv.byAttrib && this.pv.attribName != '') {
+			this.byAttribute_helper.eval_for_entities(core_objects);
 		}
 
 		const core_objects_to_keep = this.entity_selection_helper.entities_to_keep() as CoreObject[];
 		const objects_to_keep = core_objects_to_keep.map((co) => co.object());
 
-		if (this.pv.keep_points) {
+		if (this.pv.keepPoints) {
 			const core_objects_to_delete = this.entity_selection_helper.entities_to_delete() as CoreObject[];
 			for (let core_object_to_delete of core_objects_to_delete) {
 				const point_object = this._point_object(core_object_to_delete);
@@ -261,16 +261,16 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				this.entity_selection_helper.init(points);
 
 				const init_points_count = points.length;
-				if (this.pv.by_expression) {
-					await this.by_expression_helper.eval_for_entities(points);
+				if (this.pv.byExpression) {
+					await this.byExpression_helper.eval_for_entities(points);
 				}
 				// TODO: the helpers do not yet take into account if an entity has been selected or not.
 				// This could really speed up iterating through them, as I could skip the ones that have already been
-				if (this.pv.by_attrib && this.pv.attrib_name != '') {
-					this.by_attribute_helper.eval_for_entities(points);
+				if (this.pv.byAttrib && this.pv.attribName != '') {
+					this.byAttribute_helper.eval_for_entities(points);
 				}
-				if (this.pv.by_bbox) {
-					this.by_bbox_helper.eval_for_points(points);
+				if (this.pv.byBbox) {
+					this.byBbox_helper.eval_for_points(points);
 				}
 				const kept_points = this.entity_selection_helper.entities_to_keep() as CorePoint[];
 

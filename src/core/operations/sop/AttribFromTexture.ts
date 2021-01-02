@@ -10,7 +10,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface AttribFromTextureSopParams extends DefaultOperationParams {
 	texture: TypedPathParamValue;
-	uv_attrib: string;
+	uvAttrib: string;
 	attrib: string;
 	add: number;
 	mult: number;
@@ -19,7 +19,7 @@ interface AttribFromTextureSopParams extends DefaultOperationParams {
 export class AttribFromTextureSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribFromTextureSopParams = {
 		texture: new TypedPathParamValue(NODE_PATH_DEFAULT.NODE.UV),
-		uv_attrib: 'uv',
+		uvAttrib: 'uv',
 		attrib: 'pscale',
 		add: 0,
 		mult: 1,
@@ -54,9 +54,9 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const uv_attrib = geometry.getAttribute('uv');
+		const uvAttrib = geometry.getAttribute('uv');
 
-		if (uv_attrib == null) {
+		if (uvAttrib == null) {
 			this.states?.error.set('uvs are required');
 			return;
 		}
@@ -64,9 +64,9 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		operation.set_attrib({
 			geometry: geometry,
 			texture: texture,
-			uv_attrib_name: 'uv',
-			target_attrib_name: params.attrib,
-			target_attrib_size: 1,
+			uvAttribName: 'uv',
+			targetAttribName: params.attrib,
+			targetAttribSize: 1,
 			add: params.add,
 			mult: params.mult,
 		});

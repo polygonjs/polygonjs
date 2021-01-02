@@ -11,7 +11,7 @@ interface CircleSopParams extends DefaultOperationParams {
 	radius: number;
 	segments: number;
 	open: boolean;
-	arc_angle: number;
+	arcAngle: number;
 	direction: Vector3;
 }
 const DEFAULT_UP = new Vector3(0, 0, 1);
@@ -21,7 +21,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		radius: 1,
 		segments: 12,
 		open: true,
-		arc_angle: 360,
+		arcAngle: 360,
 		direction: new Vector3(0, 1, 0),
 	};
 	static type(): Readonly<'circle'> {
@@ -37,7 +37,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		}
 	}
 	private _create_circle(params: CircleSopParams) {
-		const geometry = CoreGeometryUtilCircle.create(params.radius, params.segments, params.arc_angle);
+		const geometry = CoreGeometryUtilCircle.create(params.radius, params.segments, params.arcAngle);
 
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, params.direction);
 

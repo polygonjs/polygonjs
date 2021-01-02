@@ -32,7 +32,7 @@ QUnit.test('ray from dir', async (assert) => {
 
 	transform1.p.t.y.set(2);
 	transform2.p.scale.set(5);
-	ray1.p.use_normals.set(0);
+	ray1.p.useNormals.set(0);
 
 	transform1.setInput(0, sphere1);
 	transform2.setInput(0, plane1);

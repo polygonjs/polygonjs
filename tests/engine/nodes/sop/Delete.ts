@@ -6,7 +6,7 @@ QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const delete1 = geo1.createNode('delete');
 	delete1.setInput(0, plane1);
-	delete1.p.by_expression.set(1);
+	delete1.p.byExpression.set(1);
 
 	let container = await delete1.requestContainer();
 	assert.equal(container.pointsCount(), 3);
@@ -28,7 +28,7 @@ QUnit.test('SOP delete: (class=points) simple box', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const delete1 = geo1.createNode('delete');
 	delete1.setInput(0, box1);
-	delete1.p.by_expression.set(1);
+	delete1.p.byExpression.set(1);
 
 	let container = await box1.requestContainer();
 	assert.equal(container.pointsCount(), 24, 'box');
@@ -55,7 +55,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	delete1.setInput(0, merge1);
 
 	delete1.p.class.set(AttribClass.OBJECT);
-	delete1.p.by_expression.set(1);
+	delete1.p.byExpression.set(1);
 	delete1.p.expression.set('@ptnum==1');
 
 	let container = await merge1.requestContainer();
@@ -65,7 +65,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[1].object().constructor), ObjectType.MESH);
 
 	// now with keep_points on
-	delete1.p.keep_points.set(1);
+	delete1.p.keepPoints.set(1);
 	container = await delete1.requestContainer();
 	core_object = container.coreContent()!;
 	assert.equal(core_object.coreObjects().length, 2);
@@ -73,7 +73,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[1].object().constructor), ObjectType.POINTS);
 
 	// now with keep_points off
-	delete1.p.keep_points.set(0);
+	delete1.p.keepPoints.set(0);
 	container = await delete1.requestContainer();
 	core_object = container.coreContent()!;
 	assert.equal(core_object.coreObjects().length, 1);

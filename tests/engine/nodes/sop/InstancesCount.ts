@@ -31,7 +31,7 @@ QUnit.test('instances_count simple', async (assert) => {
 	let first_geo = await get_first_geo(instances_count1);
 	assert.equal(first_geo.instanceCount, Infinity);
 
-	instances_count1.p.use_max.set(1);
+	instances_count1.p.useMax.set(1);
 	first_geo = await get_first_geo(instances_count1);
 	assert.equal(first_geo.instanceCount, 1);
 
@@ -39,7 +39,7 @@ QUnit.test('instances_count simple', async (assert) => {
 	first_geo = await get_first_geo(instances_count1);
 	assert.equal(first_geo.instanceCount, 3);
 
-	instances_count1.p.use_max.set(0);
+	instances_count1.p.useMax.set(0);
 	first_geo = await get_first_geo(instances_count1);
 	assert.equal(first_geo.instanceCount, Infinity);
 });

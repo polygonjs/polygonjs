@@ -16,9 +16,9 @@ import {
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface TransformSopParams extends DefaultOperationParams {
-	apply_on: number;
+	applyOn: number;
 	group: string;
-	rotation_order: number;
+	rotationOrder: number;
 	t: Vector3;
 	r: Vector3;
 	s: Vector3;
@@ -28,9 +28,9 @@ interface TransformSopParams extends DefaultOperationParams {
 
 export class TransformSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: TransformSopParams = {
-		apply_on: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
+		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
 		group: '',
-		rotation_order: ROTATION_ORDERS.indexOf(RotationOrder.XYZ),
+		rotationOrder: ROTATION_ORDERS.indexOf(RotationOrder.XYZ),
 		t: new Vector3(0, 0, 0),
 		r: new Vector3(0, 0, 0),
 		s: new Vector3(1, 1, 1),
@@ -50,7 +50,7 @@ export class TransformSopOperation extends BaseSopOperation {
 			params.r,
 			params.s,
 			params.scale,
-			ROTATION_ORDERS[params.rotation_order]
+			ROTATION_ORDERS[params.rotationOrder]
 		);
 
 		this._apply_transform(objects, params, matrix);
@@ -58,7 +58,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		return input_contents[0];
 	}
 	private _apply_transform(objects: Object3DWithGeometry[], params: TransformSopParams, matrix: Matrix4) {
-		const mode = TRANSFORM_TARGET_TYPES[params.apply_on];
+		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRIES: {
 				return this._apply_matrix_to_geometries(objects, params, matrix);

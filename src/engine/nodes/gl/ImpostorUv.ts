@@ -10,9 +10,9 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 const OUTPUT_NAME = 'uv';
 class ImpostorUvGlParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	camera_pos = ParamConfig.VECTOR3([0, 0, 0]);
+	cameraPos = ParamConfig.VECTOR3([0, 0, 0]);
 	uv = ParamConfig.VECTOR2([0, 0]);
-	tiles_count = ParamConfig.INTEGER(8, {
+	tilesCount = ParamConfig.INTEGER(8, {
 		range: [0, 32],
 		rangeLocked: [true, false],
 	});
@@ -41,13 +41,13 @@ export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
 		]);
 
 		const center = ThreeToGl.vector3(this.variable_for_input(this.p.center.name));
-		const camera_pos = ThreeToGl.vector3(this.variable_for_input(this.p.camera_pos.name));
+		const cameraPos = ThreeToGl.vector3(this.variable_for_input(this.p.cameraPos.name));
 		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name));
-		const tiles_count = ThreeToGl.float(this.variable_for_input(this.p.tiles_count.name));
+		const tilesCount = ThreeToGl.float(this.variable_for_input(this.p.tilesCount.name));
 		const offset = ThreeToGl.float(this.variable_for_input(this.p.offset.name));
 
 		const impostor_uv = this.gl_var_name(OUTPUT_NAME);
-		const args = [center, camera_pos, uv, tiles_count, offset].join(', ');
+		const args = [center, cameraPos, uv, tilesCount, offset].join(', ');
 		body_lines.push(`vec2 ${impostor_uv} = impostor_uv(${args})`);
 
 		shaders_collection_controller.add_body_lines(this, body_lines);

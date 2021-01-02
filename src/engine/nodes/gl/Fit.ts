@@ -9,10 +9,10 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 //
 //
 const FitDefaultValues: Dictionary<number> = {
-	src_min: 0,
-	src_max: 1,
-	dest_min: 0,
-	dest_max: 1,
+	srcMin: 0,
+	srcMax: 1,
+	destMin: 0,
+	destMax: 1,
 };
 
 export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
@@ -21,7 +21,7 @@ export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
 	}
 
 	protected _gl_input_name(index: number): string {
-		return ['val', 'src_min', 'src_max', 'dest_min', 'dest_max'][index];
+		return ['val', 'srcMin', 'srcMax', 'destMin', 'destMax'][index];
 	}
 	param_default_value(name: string) {
 		return FitDefaultValues[name];
@@ -41,8 +41,8 @@ export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
 //
 //
 const FitTo01DefaultValues: Dictionary<number> = {
-	src_min: 0,
-	src_max: 1,
+	srcMin: 0,
+	srcMax: 1,
 };
 
 export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
@@ -51,7 +51,7 @@ export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	}
 
 	_gl_input_name(index: number): string {
-		return ['val', 'src_min', 'src_max'][index];
+		return ['val', 'srcMin', 'srcMax'][index];
 	}
 	param_default_value(name: string) {
 		return FitTo01DefaultValues[name];
@@ -71,8 +71,8 @@ export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 //
 //
 const FitFrom01DefaultValues: Dictionary<number> = {
-	dest_min: 0,
-	dest_max: 1,
+	destMin: 0,
+	destMax: 1,
 };
 
 export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
@@ -81,7 +81,7 @@ export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	}
 
 	_gl_input_name(index: number): string {
-		return ['val', 'dest_min', 'dest_max'][index];
+		return ['val', 'destMin', 'destMax'][index];
 	}
 	param_default_value(name: string) {
 		return FitFrom01DefaultValues[name];

@@ -17,29 +17,29 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
 	group = ParamConfig.STRING(DEFAULT.group);
 	/** @param toggle on to assign the new material */
-	assign_mat = ParamConfig.BOOLEAN(DEFAULT.assign_mat);
+	assignMat = ParamConfig.BOOLEAN(DEFAULT.assignMat);
 	/** @param the material node */
 	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},
 		dependentOnFoundNode: false,
-		visibleIf: {assign_mat: 1},
+		visibleIf: {assignMat: 1},
 	});
 	/** @param toggle on to also assign the material to children */
-	apply_to_children = ParamConfig.BOOLEAN(DEFAULT.apply_to_children, {visibleIf: {assign_mat: 1}});
-	// clone_mat is mostly useful when swapping tex for multiple objects which have different textures
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {visibleIf: {assignMat: 1}});
+	// cloneMat is mostly useful when swapping tex for multiple objects which have different textures
 	// but can also be used when requiring a unique material per object, when using a copy SOP
 	/** @param Cloning the material would prevent the material node to have any effect on the processed geometries. But it would allow to have multiple materials, if this was used with a Copy SOP for instance */
-	clone_mat = ParamConfig.BOOLEAN(DEFAULT.clone_mat, {visibleIf: {assign_mat: 1}});
+	cloneMat = ParamConfig.BOOLEAN(DEFAULT.cloneMat, {visibleIf: {assignMat: 1}});
 	/** @param while cloning the material, you may only want to change basic properties (such as depthWrite or trasparent), but you would want to still use the same uniforms */
-	share_uniforms = ParamConfig.BOOLEAN(DEFAULT.share_uniforms, {visibleIf: {assign_mat: 1, clone_mat: 1}});
+	shareUniforms = ParamConfig.BOOLEAN(DEFAULT.shareUniforms, {visibleIf: {assignMat: 1, cloneMat: 1}});
 	/** @param swap one texture with another */
-	swap_current_tex = ParamConfig.BOOLEAN(DEFAULT.swap_current_tex);
+	swapCurrentTex = ParamConfig.BOOLEAN(DEFAULT.swapCurrentTex);
 	/** @param texture to swap */
-	tex_src0 = ParamConfig.STRING(DEFAULT.tex_src0, {visibleIf: {swap_current_tex: 1}});
+	texSrc0 = ParamConfig.STRING(DEFAULT.texSrc0, {visibleIf: {swapCurrentTex: 1}});
 	/** @param texture to swap */
-	tex_dest0 = ParamConfig.STRING(DEFAULT.tex_dest0, {visibleIf: {swap_current_tex: 1}});
+	texDest0 = ParamConfig.STRING(DEFAULT.texDest0, {visibleIf: {swapCurrentTex: 1}});
 }
 const ParamsConfig = new MaterialSopParamsConfig();
 

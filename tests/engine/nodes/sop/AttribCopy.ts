@@ -19,8 +19,8 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	attrib_copy1.setInput(1, attrib_create2);
 
 	attrib_copy1.p.name.set('latitude');
-	attrib_copy1.p.tnew_name.set(1);
-	attrib_copy1.p.new_name.set('position');
+	attrib_copy1.p.tnewName.set(1);
+	attrib_copy1.p.newName.set('position');
 	// attrib_copy1.param('to_all_components').set(0);
 	// attrib_copy1.param('src_component').set(0);
 	// attrib_copy1.param('dest_component').set(0);
@@ -48,9 +48,9 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	attrib_copy2.setInput(1, attrib_copy1);
 
 	attrib_copy2.p.name.set('longitude');
-	attrib_copy2.p.tnew_name.set(1);
-	attrib_copy2.p.new_name.set('position');
-	attrib_copy2.p.dest_offset.set(2);
+	attrib_copy2.p.tnewName.set(1);
+	attrib_copy2.p.newName.set('position');
+	attrib_copy2.p.destOffset.set(2);
 	// attrib_copy2.param('to_all_components').set(0);
 	// attrib_copy2.param('src_component').set(0);
 	// attrib_copy2.param('dest_component').set(2);

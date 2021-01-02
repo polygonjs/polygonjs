@@ -13,34 +13,34 @@ QUnit.test('resample a line', async (assert) => {
 	const resample1 = geo1.createNode('resample');
 	resample1.setInput(0, line1);
 
-	// try all curve types for method points_count
+	// try all curve types for method pointsCount
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 101);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 101);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 101);
 
-	// try all curve types for method segment_length
+	// try all curve types for method segmentLength
 	resample1.p.method.set(METHODS.indexOf(METHOD.SEGMENT_LENGTH));
-	resample1.p.segment_length.set(0.05);
+	resample1.p.segmentLength.set(0.05);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 22);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 22);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 22);
 });
@@ -59,47 +59,47 @@ QUnit.test('resample a text', async (assert) => {
 	const resample1 = geo1.createNode('resample');
 	resample1.setInput(0, text1);
 
-	// try all curve types for method points_count
+	// try all curve types for method pointsCount
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 505);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 505);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 505);
 
 	// vary points count
-	resample1.p.points_count.set(500);
+	resample1.p.pointsCount.set(500);
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 2505);
 
-	// try all curve types for method segment_length
+	// try all curve types for method segmentLength
 	resample1.p.method.set(METHODS.indexOf(METHOD.SEGMENT_LENGTH));
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 21);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 21);
 
-	resample1.p.curve_type.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 21);
 
 	// vary segment length
-	resample1.p.segment_length.set(0.01);
+	resample1.p.segmentLength.set(0.01);
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 1235);
 
-	resample1.p.segment_length.set(0.04);
+	resample1.p.segmentLength.set(0.04);
 	container = await resample1.requestContainer();
 	assert.equal(container.pointsCount(), 314);
 

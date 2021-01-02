@@ -26,7 +26,7 @@ class PolywireSopParamsConfig extends NodeParamsConfig {
 	/** @param radius */
 	radius = ParamConfig.FLOAT(1);
 	/** @param segments count on the circle used */
-	segments_radial = ParamConfig.INTEGER(8, {
+	segmentsRadial = ParamConfig.INTEGER(8, {
 		range: [3, 20],
 		rangeLocked: [true, false],
 	});
@@ -98,7 +98,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 
 		const positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 
-		const circle_template = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segments_radial);
+		const circle_template = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segmentsRadial);
 		const circles: BufferGeometry[] = [];
 		const scale = 1;
 		for (let position of positions) {

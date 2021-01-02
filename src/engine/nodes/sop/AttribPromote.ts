@@ -20,13 +20,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 	/** @param class the attribute is from (object or geometry) */
-	class_from = ParamConfig.INTEGER(DEFAULT.class_from, {
+	classFrom = ParamConfig.INTEGER(DEFAULT.classFrom, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
 	/** @param class the attribute should be promoted to (object or geometry) */
-	class_to = ParamConfig.INTEGER(DEFAULT.class_to, {
+	classTo = ParamConfig.INTEGER(DEFAULT.classTo, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
@@ -55,11 +55,11 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.name, this.p.class_from, this.p.class_to], () => {
+				this.params.label.init([this.p.name, this.p.classFrom, this.p.classTo], () => {
 					if (this.pv.name != '') {
-						const from_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.class_from)[0]
+						const from_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.classFrom)[0]
 							.name;
-						const to_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.class_to)[0].name;
+						const to_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.classTo)[0].name;
 						return `${this.pv.name} (${from_s} -> ${to_s})`;
 					} else {
 						return '';

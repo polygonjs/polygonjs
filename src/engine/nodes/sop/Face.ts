@@ -17,22 +17,22 @@ import {CoreFace} from '../../../core/geometry/Face';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 class FaceSopParamsConfig extends NodeParamsConfig {
 	/** @param makes faces unique */
-	make_faces_unique = ParamConfig.BOOLEAN(0);
+	makeFacesUnique = ParamConfig.BOOLEAN(0);
 	/** @param adds a vector3 attribute that represents the center of a face */
-	add_face_center_attribute = ParamConfig.BOOLEAN(0, {
-		visibleIf: {make_faces_unique: 1},
+	addFaceCenterAttribute = ParamConfig.BOOLEAN(0, {
+		visibleIf: {makeFacesUnique: 1},
 	});
 	/** @param add an id attribute for each face */
-	add_face_id = ParamConfig.BOOLEAN(0, {
-		visibleIf: {make_faces_unique: 1},
+	addFaceId = ParamConfig.BOOLEAN(0, {
+		visibleIf: {makeFacesUnique: 1},
 	});
 	/** @param allows to transform each face */
 	transform = ParamConfig.BOOLEAN(0, {
-		visibleIf: {make_faces_unique: 1},
+		visibleIf: {makeFacesUnique: 1},
 	});
 	/** @param scales the faces indepedently */
 	scale = ParamConfig.FLOAT(1, {
-		visibleIf: {make_faces_unique: 1, transform: 1},
+		visibleIf: {makeFacesUnique: 1, transform: 1},
 	});
 }
 const ParamsConfig = new FaceSopParamsConfig();
@@ -51,17 +51,17 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 	cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		if (this.pv.make_faces_unique) {
-			this._make_faces_unique(core_group);
+		if (this.pv.makeFacesUnique) {
+			this._makeFacesUnique(core_group);
 
 			// we can only add face_center attrib
 			// if the faces have been split
 			// otherwise a point may belong to multiple faces
-			if (this.pv.add_face_center_attribute) {
-				this._add_face_center_attribute(core_group);
+			if (this.pv.addFaceCenterAttribute) {
+				this._addFaceCenterAttribute(core_group);
 			}
-			if (this.pv.add_face_id) {
-				this._add_face_id(core_group);
+			if (this.pv.addFaceId) {
+				this._addFaceId(core_group);
 			}
 			if (this.pv.transform) {
 				this._transform_faces(core_group);
@@ -71,7 +71,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		this.setCoreGroup(core_group);
 	}
 
-	private _make_faces_unique(core_group: CoreGroup) {
+	private _makeFacesUnique(core_group: CoreGroup) {
 		for (let object of core_group.objects()) {
 			if ((object as Mesh).isMesh) {
 				const geometry = (object as Mesh).geometry as BufferGeometry;
@@ -99,7 +99,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		}
 	}
 
-	private _add_face_center_attribute(core_group: CoreGroup) {
+	private _addFaceCenterAttribute(core_group: CoreGroup) {
 		const attrib_name = 'face_center';
 		const face_center = new Vector3();
 		let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
@@ -127,7 +127,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		});
 	}
 
-	private _add_face_id(core_group: CoreGroup) {
+	private _addFaceId(core_group: CoreGroup) {
 		const attrib_name = 'face_id';
 
 		core_group.coreObjects().forEach((core_object) => {

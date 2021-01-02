@@ -26,7 +26,7 @@ QUnit.test('expression precision works on a string', async (assert) => {
 	attribtransfer1.setInput(0, box1);
 	attribtransfer1.setInput(0, box2);
 
-	const param = attribtransfer1.p.src_group;
+	const param = attribtransfer1.p.srcGroup;
 	param.set('`precision(-5.12657, 2)`');
 
 	await param.compute();

@@ -16,10 +16,10 @@ import {ObjectUtils} from '../../ObjectUtils';
 const DEEP_ATTRIB_SEPARATOR = ':';
 
 export interface JsonDataLoaderOptions {
-	data_keys_prefix?: string;
-	skip_entries?: string;
-	do_convert?: boolean;
-	convert_to_numeric?: string;
+	dataKeysPrefix?: string;
+	skipEntries?: string;
+	doConvert?: boolean;
+	convertToNumeric?: string;
 }
 
 export class JsonDataLoader {
@@ -28,10 +28,10 @@ export class JsonDataLoader {
 	private _options: JsonDataLoaderOptions = {};
 
 	constructor(options: JsonDataLoaderOptions = {}) {
-		this._options.data_keys_prefix = options.data_keys_prefix;
-		this._options.skip_entries = options.skip_entries;
-		this._options.do_convert = options.do_convert || false;
-		this._options.convert_to_numeric = options.convert_to_numeric;
+		this._options.dataKeysPrefix = options.dataKeysPrefix;
+		this._options.skipEntries = options.skipEntries;
+		this._options.doConvert = options.doConvert || false;
+		this._options.convertToNumeric = options.convertToNumeric;
 	}
 	//
 
@@ -51,8 +51,8 @@ export class JsonDataLoader {
 				// const end_time = performance.now();
 
 				this._json = await response.json();
-				if (this._options.data_keys_prefix != null && this._options.data_keys_prefix != '') {
-					this._json = this.get_prefixed_json(this._json, this._options.data_keys_prefix.split('.'));
+				if (this._options.dataKeysPrefix != null && this._options.dataKeysPrefix != '') {
+					this._json = this.get_prefixed_json(this._json, this._options.dataKeysPrefix.split('.'));
 				}
 				const object = this.create_object();
 				success_callback(object);
@@ -93,7 +93,7 @@ export class JsonDataLoader {
 			// 	return core_geo.addAttribute(attrib_name, attrib_data);
 			// }
 
-			const convert_to_numeric_masks = CoreString.attribNames(this._options.convert_to_numeric || '');
+			const convert_to_numeric_masks = CoreString.attribNames(this._options.convertToNumeric || '');
 
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
@@ -108,10 +108,7 @@ export class JsonDataLoader {
 					// 	attrib_values as string[]
 					// )
 
-					if (
-						this._options.do_convert &&
-						CoreString.matches_one_mask(attrib_name, convert_to_numeric_masks)
-					) {
+					if (this._options.doConvert && CoreString.matches_one_mask(attrib_name, convert_to_numeric_masks)) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
 							if (CoreType.isString(v)) {
 								return parseFloat(v) || 0;
@@ -143,7 +140,7 @@ export class JsonDataLoader {
 	private _find_attributes() {
 		let first_pt;
 
-		const masks = CoreString.attribNames(this._options.skip_entries || '');
+		const masks = CoreString.attribNames(this._options.skipEntries || '');
 
 		if (this._json) {
 			if ((first_pt = this._json[0]) != null) {

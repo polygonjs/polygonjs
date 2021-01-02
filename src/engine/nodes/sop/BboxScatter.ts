@@ -14,7 +14,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 class BboxScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param the smaller the step size, the more points this will create */
-	step_size = ParamConfig.FLOAT(0.1);
+	stepSize = ParamConfig.FLOAT(0.1);
 }
 const ParamsConfig = new BboxScatterSopParamsConfig();
 
@@ -34,15 +34,15 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 
 	cook(input_contents: CoreGroup[]) {
 		const container = input_contents[0];
-		const step_size = this.pv.step_size;
+		const stepSize = this.pv.stepSize;
 		const bbox = container.boundingBox();
 		const min = bbox.min;
 		const max = bbox.max;
 
 		const positions: number[] = [];
-		for (let x = min.x; x < max.x; x += step_size) {
-			for (let y = min.x; y < max.y; y += step_size) {
-				for (let z = min.x; z < max.z; z += step_size) {
+		for (let x = min.x; x < max.x; x += stepSize) {
+			for (let y = min.x; y < max.y; y += stepSize) {
+				for (let z = min.x; z < max.z; z += stepSize) {
 					positions.push(x);
 					positions.push(y);
 					positions.push(z);

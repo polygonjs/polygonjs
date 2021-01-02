@@ -12,12 +12,12 @@ import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class InstancesCountSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if max is used */
-	use_max = ParamConfig.BOOLEAN(0);
+	useMax = ParamConfig.BOOLEAN(0);
 	/** @param max number of instances to display */
 	max = ParamConfig.INTEGER(1, {
 		range: [0, 100],
 		rangeLocked: [true, false],
-		visibleIf: {use_max: 1},
+		visibleIf: {useMax: 1},
 	});
 }
 const ParamsConfig = new InstancesCountSopParamsConfig();
@@ -39,7 +39,7 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 			const geometry = object.geometry;
 			if (geometry) {
 				if (geometry instanceof InstancedBufferGeometry) {
-					if (this.pv.use_max) {
+					if (this.pv.useMax) {
 						geometry.instanceCount = this.pv.max;
 					} else {
 						geometry.instanceCount = Infinity;

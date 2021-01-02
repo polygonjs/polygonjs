@@ -7,9 +7,9 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface TorusKnotSopParams extends DefaultOperationParams {
 	radius: number;
-	radius_tube: number;
-	segments_radial: number;
-	segments_tube: number;
+	radiusTube: number;
+	segmentsRadial: number;
+	segmentsTube: number;
 	p: number;
 	q: number;
 	center: Vector3;
@@ -18,9 +18,9 @@ interface TorusKnotSopParams extends DefaultOperationParams {
 export class TorusKnotSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: TorusKnotSopParams = {
 		radius: 1,
-		radius_tube: 1,
-		segments_radial: 64,
-		segments_tube: 8,
+		radiusTube: 1,
+		segmentsRadial: 64,
+		segmentsTube: 8,
 		p: 2,
 		q: 3,
 		center: new Vector3(0, 0, 0),
@@ -32,13 +32,13 @@ export class TorusKnotSopOperation extends BaseSopOperation {
 
 	cook(input_contents: CoreGroup[], params: TorusKnotSopParams) {
 		const radius = params.radius;
-		const radius_tube = params.radius_tube;
-		const segments_radial = params.segments_radial;
-		const segments_tube = params.segments_tube;
+		const radiusTube = params.radiusTube;
+		const segmentsRadial = params.segmentsRadial;
+		const segmentsTube = params.segmentsTube;
 		const p = params.p;
 		const q = params.q;
 
-		const geometry = new TorusKnotBufferGeometry(radius, radius_tube, segments_radial, segments_tube, p, q);
+		const geometry = new TorusKnotBufferGeometry(radius, radiusTube, segmentsRadial, segmentsTube, p, q);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		return this.create_core_group_from_geometry(geometry);
 	}

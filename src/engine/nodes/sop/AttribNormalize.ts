@@ -29,9 +29,9 @@ class AttribNormalizeSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute to normalize */
 	name = ParamConfig.STRING(DEFAULT.name);
 	/** @param toggle to change the name of the attribute */
-	change_name = ParamConfig.BOOLEAN(DEFAULT.change_name);
+	changeName = ParamConfig.BOOLEAN(DEFAULT.changeName);
 	/** @param new attribute name */
-	new_name = ParamConfig.STRING(DEFAULT.new_name, {visibleIf: {change_name: 1}});
+	newName = ParamConfig.STRING(DEFAULT.newName, {visibleIf: {changeName: 1}});
 }
 const ParamsConfig = new AttribNormalizeSopParamsConfig();
 

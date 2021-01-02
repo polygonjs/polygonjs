@@ -5,7 +5,7 @@ QUnit.test('noise simple', async (assert) => {
 	sphere1.p.resolution.set([8, 6]);
 	const noise1 = geo1.createNode('noise');
 	noise1.setInput(0, sphere1);
-	noise1.p.use_normals.set(1);
+	noise1.p.useNormals.set(1);
 
 	let container = await noise1.requestContainer();
 	// const core_group = container.coreContent();

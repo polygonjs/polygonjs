@@ -4,6 +4,7 @@ import {RopType} from '../../poly/registers/nodes/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class Css3DRendererRopParamsConfig extends NodeParamsConfig {
+	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
 		multiline: true,
 	});

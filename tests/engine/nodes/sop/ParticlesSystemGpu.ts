@@ -43,10 +43,10 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	add1.params.get('add1')!.set([0, 1, 0]);
 
 	plane1.p.size.set([2, 2]);
-	plane1.p.use_segments_count.set(1);
+	plane1.p.useSegmentsCount.set(1);
 	delete1.set_class(AttribClass.OBJECT);
-	delete1.p.by_expression.set(1);
-	delete1.p.keep_points.set(1);
+	delete1.p.byExpression.set(1);
+	delete1.p.keepPoints.set(1);
 	delete1.setInput(0, plane1);
 	particles1.setInput(0, delete1);
 
@@ -109,10 +109,10 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	output1.setInput('position', add1);
 
 	plane1.p.size.set([2, 2]);
-	plane1.p.use_segments_count.set(1);
+	plane1.p.useSegmentsCount.set(1);
 	delete1.set_class(AttribClass.OBJECT);
-	delete1.p.by_expression.set(1);
-	delete1.p.keep_points.set(1);
+	delete1.p.byExpression.set(1);
+	delete1.p.keepPoints.set(1);
 	delete1.setInput(0, plane1);
 	particles1.setInput(0, delete1);
 

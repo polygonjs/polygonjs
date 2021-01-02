@@ -20,13 +20,13 @@ export const JOIN_MODES: JoinMode[] = [JoinMode.ABC, JoinMode.ACB, JoinMode.AB, 
 interface Circle3PointsParameters {
 	arc: boolean;
 	center: boolean;
-	points_count_mode: PointsCountMode;
-	segments_length: number;
-	segments_count: number;
+	pointsCountMode: PointsCountMode;
+	segmentsLength: number;
+	segmentsCount: number;
 	full: boolean;
-	join_mode: JoinMode;
-	add_id_attribute: boolean;
-	add_idn_attribute: boolean;
+	joinMode: JoinMode;
+	addIdAttribute: boolean;
+	addIdnAttribute: boolean;
 }
 interface CreatedGeometries {
 	arc?: BufferGeometry;
@@ -106,16 +106,16 @@ export class Circle3Points {
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 		geometry.setIndex(indices);
-		if (this.params.add_id_attribute || this.params.add_idn_attribute) {
+		if (this.params.addIdAttribute || this.params.addIdnAttribute) {
 			const ids: number[] = new Array(points_count);
 			for (let i = 0; i < ids.length; i++) {
 				ids[i] = i;
 			}
-			if (this.params.add_id_attribute) {
+			if (this.params.addIdAttribute) {
 				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
 			}
 			const idns = ids.map((id) => id / (points_count - 1));
-			if (this.params.add_idn_attribute) {
+			if (this.params.addIdnAttribute) {
 				geometry.setAttribute('idn', new BufferAttribute(new Float32Array(idns), 1));
 			}
 		}
@@ -156,7 +156,7 @@ export class Circle3Points {
 			this.bn.copy(this.b).sub(this.center).normalize();
 			this.cn.copy(this.c).sub(this.center).normalize();
 
-			this._set_x_from_join_mode();
+			this._set_x_from_joinMode();
 			this.y.copy(this.normal);
 			this.z.copy(this.x).cross(this.y).normalize();
 
@@ -164,30 +164,30 @@ export class Circle3Points {
 			this.angle_ac = this.an.angleTo(this.cn);
 			this.angle_bc = this.bn.angleTo(this.cn);
 
-			this._set_angle_from_join_mode();
+			this._set_angle_from_joinMode();
 		}
 	}
 
 	private _points_count() {
-		const mode = this.params.points_count_mode;
+		const mode = this.params.pointsCountMode;
 		switch (mode) {
 			case PointsCountMode.SEGMENTS_COUNT: {
-				return this.params.segments_count + 1;
+				return this.params.segmentsCount + 1;
 			}
 			case PointsCountMode.SEGMENTS_LENGTH: {
 				let perimeter = Math.PI * this.radius * this.radius;
 				if (!this.params.full) {
 					perimeter *= Math.abs(this.angle) / (Math.PI * 2);
 				}
-				return Math.ceil(perimeter / this.params.segments_length);
+				return Math.ceil(perimeter / this.params.segmentsLength);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
-	private _set_x_from_join_mode() {
-		const join_mode = this.params.join_mode;
+	private _set_x_from_joinMode() {
+		const joinMode = this.params.joinMode;
 		this.x.copy(this.a).sub(this.center).normalize();
-		switch (join_mode) {
+		switch (joinMode) {
 			case JoinMode.ABC: {
 				return this.x.copy(this.an);
 			}
@@ -204,11 +204,11 @@ export class Circle3Points {
 				return this.x.copy(this.bn);
 			}
 		}
-		TypeAssert.unreachable(join_mode);
+		TypeAssert.unreachable(joinMode);
 	}
-	private _set_angle_from_join_mode(): void {
-		const join_mode = this.params.join_mode;
-		switch (join_mode) {
+	private _set_angle_from_joinMode(): void {
+		const joinMode = this.params.joinMode;
+		switch (joinMode) {
 			case JoinMode.ABC: {
 				this.angle = this.angle_ab + this.angle_bc;
 				return;
@@ -232,6 +232,6 @@ export class Circle3Points {
 				return;
 			}
 		}
-		TypeAssert.unreachable(join_mode);
+		TypeAssert.unreachable(joinMode);
 	}
 }

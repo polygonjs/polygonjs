@@ -9,7 +9,7 @@ QUnit.test('blend simple', async (assert) => {
 	const blend1 = geo1.createNode('blend');
 	blend1.setInput(0, box1);
 	blend1.setInput(1, transform1);
-	blend1.p.attrib_name.set('position');
+	blend1.p.attribName.set('position');
 
 	let container = await blend1.requestContainer();
 	// const core_group = container.coreContent()!;

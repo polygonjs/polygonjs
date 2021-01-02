@@ -18,16 +18,16 @@ class HexagonsSopParamsConfig extends NodeParamsConfig {
 	/** @param plane size */
 	size = ParamConfig.VECTOR2([1, 1]);
 	/** @param hexagons size */
-	hexagon_radius = ParamConfig.FLOAT(0.1, {
+	hexagonRadius = ParamConfig.FLOAT(0.1, {
 		range: [0.001, 1],
 		rangeLocked: [false, false],
 	});
 	/** @param axis perpendicular to the plane */
 	direction = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param do not create polygons, only points */
-	points_only = ParamConfig.BOOLEAN(0);
+	pointsOnly = ParamConfig.BOOLEAN(0);
 	// no need to have centers, as all points are centers anyway
-	//this.add_param( ParamType.TOGGLE, 'centers_only', 0, {visibleIf: {points_only: 1}})
+	//this.add_param( ParamType.TOGGLE, 'centers_only', 0, {visibleIf: {pointsOnly: 1}})
 }
 const ParamsConfig = new HexagonsSopParamsConfig();
 
@@ -42,17 +42,13 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 	initialize_node() {}
 
 	cook() {
-		if (this.pv.hexagon_radius > 0) {
-			const operation = new CoreGeometryOperationHexagon(
-				this.pv.size,
-				this.pv.hexagon_radius,
-				this.pv.points_only
-			);
+		if (this.pv.hexagonRadius > 0) {
+			const operation = new CoreGeometryOperationHexagon(this.pv.size, this.pv.hexagonRadius, this.pv.pointsOnly);
 			const geometry = operation.process();
 
 			this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
-			if (this.pv.points_only) {
+			if (this.pv.pointsOnly) {
 				this.setGeometry(geometry, ObjectType.POINTS);
 			} else {
 				this.setGeometry(geometry);

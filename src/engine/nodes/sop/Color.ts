@@ -27,19 +27,19 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if the color should be copied from another attribute */
-	from_attribute = ParamConfig.BOOLEAN(DEFAULT.from_attribute);
+	fromAttribute = ParamConfig.BOOLEAN(DEFAULT.fromAttribute);
 	/** @param attribute name to copy value from */
-	attrib_name = ParamConfig.STRING(DEFAULT.attrib_name, {
-		visibleIf: {from_attribute: 1},
+	attribName = ParamConfig.STRING(DEFAULT.attribName, {
+		visibleIf: {fromAttribute: 1},
 	});
 	/** @param color valu */
 	color = ParamConfig.COLOR(DEFAULT.color, {
-		visibleIf: {from_attribute: 0},
+		visibleIf: {fromAttribute: 0},
 		expression: {forEntities: true},
 	});
 	/** @param toggle on if the value should be set with hsv values rather than rgb */
-	as_hsv = ParamConfig.BOOLEAN(DEFAULT.as_hsv, {
-		visibleIf: {from_attribute: 0},
+	asHsv = ParamConfig.BOOLEAN(DEFAULT.asHsv, {
+		visibleIf: {fromAttribute: 0},
 	});
 }
 const ParamsConfig = new ColorSopParamsConfig();
@@ -69,8 +69,8 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const core_objects = core_group.coreObjects();
 
 		for (let core_object of core_objects) {
-			if (this.pv.from_attribute) {
-				this._set_from_attribute(core_object);
+			if (this.pv.fromAttribute) {
+				this._set_fromAttribute(core_object);
 			} else {
 				const has_expression = this.p.color.has_expression();
 				if (has_expression) {
@@ -92,7 +92,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this.setCoreGroup(core_group);
 	}
 
-	_set_from_attribute(core_object: CoreObject) {
+	_set_fromAttribute(core_object: CoreObject) {
 		const core_geometry = core_object.coreGeometry();
 		if (!core_geometry) {
 			return;
@@ -100,9 +100,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 		const points = core_geometry.points();
 
-		const src_attrib_size = core_geometry.attribSize(this.pv.attrib_name);
+		const src_attrib_size = core_geometry.attribSize(this.pv.attribName);
 		const geometry = core_geometry.geometry();
-		const src_array = geometry.getAttribute(this.pv.attrib_name).array;
+		const src_array = geometry.getAttribute(this.pv.attribName).array;
 		const dest_array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
 
 		switch (src_attrib_size) {
@@ -158,7 +158,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 
 		let new_color: Color;
-		if (this.pv.as_hsv) {
+		if (this.pv.asHsv) {
 			new_color = new Color();
 			CoreColor.set_hsv(this.pv.color.r, this.pv.color.g, this.pv.color.b, new_color);
 		} else {
@@ -193,7 +193,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			}
 
 			// to hsv
-			if (this.pv.as_hsv) {
+			if (this.pv.asHsv) {
 				let current = new Color();
 				let target = new Color();
 				let index;

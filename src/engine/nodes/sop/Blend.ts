@@ -17,7 +17,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 
 class BlendSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to blend */
-	attrib_name = ParamConfig.STRING('position');
+	attribName = ParamConfig.STRING('position');
 	/** @param blend value. 0 means the result will equal the left input, 1 will equal the right input, and 0.5 will be an average of both. */
 	blend = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
@@ -79,8 +79,8 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 			return;
 		}
 
-		const attrib0 = geometry0.getAttribute(this.pv.attrib_name);
-		const attrib1 = geometry1.getAttribute(this.pv.attrib_name);
+		const attrib0 = geometry0.getAttribute(this.pv.attribName);
+		const attrib1 = geometry1.getAttribute(this.pv.attribName);
 		if (attrib0 == null || attrib1 == null) {
 			return;
 		}

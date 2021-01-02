@@ -15,27 +15,27 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
-	assign_mat: boolean;
+	assignMat: boolean;
 	material: TypedPathParamValue;
-	apply_to_children: boolean;
-	clone_mat: boolean;
-	share_uniforms: boolean;
-	swap_current_tex: boolean;
-	tex_src0: string;
-	tex_dest0: string;
+	applyToChildren: boolean;
+	cloneMat: boolean;
+	shareUniforms: boolean;
+	swapCurrentTex: boolean;
+	texSrc0: string;
+	texDest0: string;
 }
 
 export class MaterialSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
-		assign_mat: true,
+		assignMat: true,
 		material: new TypedPathParamValue('/MAT/mesh_standard1'),
-		apply_to_children: true,
-		clone_mat: false,
-		share_uniforms: true,
-		swap_current_tex: false,
-		tex_src0: 'emissiveMap',
-		tex_dest0: 'map',
+		applyToChildren: true,
+		cloneMat: false,
+		shareUniforms: true,
+		swapCurrentTex: false,
+		texSrc0: 'emissiveMap',
+		texDest0: 'map',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'material'> {
@@ -55,7 +55,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	}
 
 	private async _apply_materials(core_group: CoreGroup, params: MaterialSopParams) {
-		if (!params.assign_mat) {
+		if (!params.assignMat) {
 			return;
 		}
 
@@ -70,7 +70,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 			await material_node.requestContainer();
 			if (material) {
 				for (let object of core_group.objectsFromGroup(params.group)) {
-					if (params.apply_to_children) {
+					if (params.applyToChildren) {
 						object.traverse((grand_child) => {
 							this._apply_material(grand_child, material, params);
 						});
@@ -90,14 +90,14 @@ export class MaterialSopOperation extends BaseSopOperation {
 	private _old_mat_by_old_new_id: Map<string, Material> = new Map();
 	private _materials_by_uuid: Map<string, Material> = new Map();
 	private _swap_textures(core_group: CoreGroup, params: MaterialSopParams) {
-		if (!params.swap_current_tex) {
+		if (!params.swapCurrentTex) {
 			return;
 		}
 
 		this._materials_by_uuid.clear();
 
 		for (let object of core_group.objectsFromGroup(params.group)) {
-			if (params.apply_to_children) {
+			if (params.applyToChildren) {
 				object.traverse((child) => {
 					const mat = (object as Mesh).material as Material;
 					this._materials_by_uuid.set(mat.uuid, mat);
@@ -114,7 +114,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	}
 
 	private _apply_material(object: Object3D, src_material: Material, params: MaterialSopParams) {
-		const used_material = params.clone_mat ? CoreMaterial.clone(src_material) : src_material;
+		const used_material = params.cloneMat ? CoreMaterial.clone(src_material) : src_material;
 
 		if (src_material instanceof ShaderMaterial && used_material instanceof ShaderMaterial) {
 			for (let uniform_name in src_material.uniforms) {
@@ -124,7 +124,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 		const object_with_material = object as Mesh;
 		// const current_mat = object_with_material.material as Material | undefined;
-		// if (current_mat && params.swap_current_tex) {
+		// if (current_mat && params.swapCurrentTex) {
 		// 	this._swap_texture(used_material, current_mat, params);
 		// }
 		this._old_mat_by_old_new_id.set(used_material.uuid, object_with_material.material as Material);
@@ -135,24 +135,24 @@ export class MaterialSopOperation extends BaseSopOperation {
 	}
 
 	private _swap_texture(target_mat: Material, params: MaterialSopParams) {
-		if (params.tex_src0 == '' || params.tex_dest0 == '') {
+		if (params.texSrc0 == '' || params.texDest0 == '') {
 			return;
 		}
 		let src_mat = this._old_mat_by_old_new_id.get(target_mat.uuid);
 		src_mat = src_mat || target_mat;
 
-		const src_tex: Texture | null = (src_mat as any)[params.tex_src0];
+		const src_tex: Texture | null = (src_mat as any)[params.texSrc0];
 		if (src_tex) {
 			// swap mat param
-			(target_mat as any)[params.tex_dest0] = src_tex;
-			// (src_mat as any)[params.tex_src0] = null;
+			(target_mat as any)[params.texDest0] = src_tex;
+			// (src_mat as any)[params.texSrc0] = null;
 			// swap uniforms
 			const uniforms = (target_mat as any).uniforms;
 			if (uniforms) {
-				const uniforms_map = uniforms[params.tex_dest0];
+				const uniforms_map = uniforms[params.texDest0];
 				if (uniforms_map) {
-					uniforms[params.tex_dest0] = {value: src_tex};
-					// uniforms[params.tex_src0] = {value: null};
+					uniforms[params.texDest0] = {value: src_tex};
+					// uniforms[params.texSrc0] = {value: null};
 				}
 			}
 		}

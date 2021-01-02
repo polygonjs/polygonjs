@@ -18,12 +18,12 @@ class DrawRangeSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param defines if count is used */
-	use_count = ParamConfig.BOOLEAN(0);
+	useCount = ParamConfig.BOOLEAN(0);
 	/** @param number of items in the draw range */
 	count = ParamConfig.INTEGER(0, {
 		range: [0, 100],
 		rangeLocked: [true, false],
-		visibleIf: {use_count: 1},
+		visibleIf: {useCount: 1},
 	});
 }
 const ParamsConfig = new DrawRangeSopParamsConfig();
@@ -46,7 +46,7 @@ export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
 			if (geometry) {
 				const draw_range = geometry.drawRange;
 				draw_range.start = this.pv.start;
-				if (this.pv.use_count) {
+				if (this.pv.useCount) {
 					draw_range.count = this.pv.count;
 				} else {
 					draw_range.count = Infinity;

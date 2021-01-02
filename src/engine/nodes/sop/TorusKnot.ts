@@ -15,11 +15,11 @@ class TorusKnotSopParamsConfig extends NodeParamsConfig {
 	/** @param large radius */
 	radius = ParamConfig.FLOAT(DEFAULT.radius);
 	/** @param radius of the tube */
-	radius_tube = ParamConfig.FLOAT(DEFAULT.radius_tube);
+	radiusTube = ParamConfig.FLOAT(DEFAULT.radiusTube);
 	/** @param number of segments along the length of the torus */
-	segments_radial = ParamConfig.INTEGER(DEFAULT.segments_radial, {range: [1, 128]});
+	segmentsRadial = ParamConfig.INTEGER(DEFAULT.segmentsRadial, {range: [1, 128]});
 	/** @param number of segments along the tube */
-	segments_tube = ParamConfig.INTEGER(DEFAULT.segments_tube, {range: [1, 32]});
+	segmentsTube = ParamConfig.INTEGER(DEFAULT.segmentsTube, {range: [1, 32]});
 	/** @param change this to create more interesting shapes. Don't ask me what it is exactly, I don't know! */
 	p = ParamConfig.INTEGER(DEFAULT.p, {range: [1, 10]});
 	/** @param change this to create more interesting shapes. Don't ask me what it is exactly, I don't know! */

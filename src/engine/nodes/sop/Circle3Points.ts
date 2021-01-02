@@ -24,7 +24,7 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to create the arc */
 	arc = ParamConfig.BOOLEAN(1);
 	/** @param sets the mode how the points count is computed */
-	points_count_mode = ParamConfig.INTEGER(POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT), {
+	pointsCountMode = ParamConfig.INTEGER(POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT), {
 		visibleIf: {arc: 1},
 		menu: {
 			entries: POINTS_COUNT_MODE.map((name, value) => {
@@ -33,14 +33,14 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param length of each segment */
-	segments_length = ParamConfig.FLOAT(0.1, {
-		visibleIf: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_LENGTH)},
+	segmentsLength = ParamConfig.FLOAT(0.1, {
+		visibleIf: {arc: 1, pointsCountMode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_LENGTH)},
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
 	/** @param count of the number of segments */
-	segments_count = ParamConfig.INTEGER(100, {
-		visibleIf: {arc: 1, points_count_mode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT)},
+	segmentsCount = ParamConfig.INTEGER(100, {
+		visibleIf: {arc: 1, pointsCountMode: POINTS_COUNT_MODE.indexOf(PointsCountMode.SEGMENTS_COUNT)},
 		range: [1, 100],
 		rangeLocked: [true, false],
 	});
@@ -49,7 +49,7 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {arc: 1},
 	});
 	/** @param TBD */
-	join_mode = ParamConfig.INTEGER(JOIN_MODES.indexOf(JoinMode.ABC), {
+	joinMode = ParamConfig.INTEGER(JOIN_MODES.indexOf(JoinMode.ABC), {
 		visibleIf: {arc: 1, full: 0},
 		menu: {
 			entries: JOIN_MODES.map((name, value) => {
@@ -58,9 +58,9 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param add an id attribute for the generated points */
-	add_id_attribute = ParamConfig.BOOLEAN(1);
+	addIdAttribute = ParamConfig.BOOLEAN(1);
 	/** @param add an idn attribute (same as id attribute, but normalized between 0 and 1) */
-	add_idn_attribute = ParamConfig.BOOLEAN(1);
+	addIdnAttribute = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to create a point in the center */
 	center = ParamConfig.BOOLEAN(0);
 }
@@ -95,13 +95,13 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 		const circle3points = new Circle3Points({
 			arc: this.pv.arc,
 			center: this.pv.center,
-			points_count_mode: POINTS_COUNT_MODE[this.pv.points_count_mode],
-			segments_length: this.pv.segments_length,
-			segments_count: this.pv.segments_count,
+			pointsCountMode: POINTS_COUNT_MODE[this.pv.pointsCountMode],
+			segmentsLength: this.pv.segmentsLength,
+			segmentsCount: this.pv.segmentsCount,
 			full: this.pv.full,
-			join_mode: JOIN_MODES[this.pv.join_mode],
-			add_id_attribute: this.pv.add_id_attribute,
-			add_idn_attribute: this.pv.add_idn_attribute,
+			joinMode: JOIN_MODES[this.pv.joinMode],
+			addIdAttribute: this.pv.addIdAttribute,
+			addIdnAttribute: this.pv.addIdnAttribute,
 		});
 		points[0].position(this.a);
 		points[1].position(this.b);

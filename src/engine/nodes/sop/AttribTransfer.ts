@@ -15,20 +15,20 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
-	src_group = ParamConfig.STRING();
+	srcGroup = ParamConfig.STRING();
 	/** @param dest group to transfer to (left input, or input 0) */
-	dest_group = ParamConfig.STRING();
+	destGroup = ParamConfig.STRING();
 	/** @param name of the attribute to transfer */
 	name = ParamConfig.STRING();
 	/** @param max number of samples to use */
-	max_samples_count = ParamConfig.INTEGER(1, {
+	maxSamplesCount = ParamConfig.INTEGER(1, {
 		range: [1, 10],
 		rangeLocked: [true, false],
 	});
 	/** @param max distance to search points to transfer from */
-	distance_threshold = ParamConfig.FLOAT(1);
+	distanceThreshold = ParamConfig.FLOAT(1);
 	/** @param blend width */
-	blend_width = ParamConfig.FLOAT(0);
+	blendWidth = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new AttribTransferSopParamsConfig();
 
@@ -44,7 +44,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	// utils
 	_attrib_names!: string[];
 	_octree_timestamp: number | undefined;
-	_prev_param_src_group: string | undefined;
+	_prev_param_srcGroup: string | undefined;
 	_octree: CoreOctree | undefined;
 
 	static displayed_input_names(): string[] {
@@ -58,7 +58,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 	async cook(input_contents: CoreGroup[]) {
 		this._core_group_dest = input_contents[0];
-		const dest_points = this._core_group_dest.pointsFromGroup(this.pv.dest_group);
+		const dest_points = this._core_group_dest.pointsFromGroup(this.pv.destGroup);
 
 		this._core_group_src = input_contents[1];
 
@@ -82,13 +82,13 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	private _build_octree_if_required(core_group: CoreGroup) {
 		const second_input_changed =
 			this._octree_timestamp == null || this._octree_timestamp !== core_group.timestamp();
-		const src_group_changed = this._prev_param_src_group !== this.pv.src_group;
+		const srcGroup_changed = this._prev_param_srcGroup !== this.pv.srcGroup;
 
-		if (src_group_changed || second_input_changed) {
+		if (srcGroup_changed || second_input_changed) {
 			this._octree_timestamp = core_group.timestamp();
-			this._prev_param_src_group = this.pv.src_group;
+			this._prev_param_srcGroup = this.pv.srcGroup;
 
-			const points_src = this._core_group_src.pointsFromGroup(this.pv.src_group);
+			const points_src = this._core_group_src.pointsFromGroup(this.pv.srcGroup);
 
 			this._octree = new CoreOctree(this._core_group_src.boundingBox());
 			this._octree.set_points(points_src);
@@ -109,9 +109,9 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		await iterator.start_with_array(dest_points, this._transfer_attributes_for_point.bind(this));
 	}
 	private _transfer_attributes_for_point(dest_point: CorePoint) {
-		const total_dist = this.pv.distance_threshold + this.pv.blend_width;
+		const total_dist = this.pv.distanceThreshold + this.pv.blendWidth;
 		const nearest_points: CorePoint[] =
-			this._octree?.find_points(dest_point.position(), total_dist, this.pv.max_samples_count) || [];
+			this._octree?.find_points(dest_point.position(), total_dist, this.pv.maxSamplesCount) || [];
 
 		for (let attrib_name of this._attrib_names) {
 			this._interpolate_points(dest_point, nearest_points, attrib_name);
@@ -125,8 +125,8 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 			point_dest,
 			src_points,
 			attrib_name,
-			this.pv.distance_threshold,
-			this.pv.blend_width
+			this.pv.distanceThreshold,
+			this.pv.blendWidth
 		);
 
 		if (new_value != null) {

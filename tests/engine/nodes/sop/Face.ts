@@ -7,12 +7,12 @@ QUnit.test('face simple', async (assert) => {
 	sphere1.p.resolution.set([8, 6]);
 	const face1 = geo1.createNode('face');
 	face1.setInput(0, sphere1);
-	face1.p.make_faces_unique.set(0);
+	face1.p.makeFacesUnique.set(0);
 
 	let container = await face1.requestContainer();
 	assert.equal(container.pointsCount(), 63);
 
-	face1.p.make_faces_unique.set(1);
+	face1.p.makeFacesUnique.set(1);
 	container = await face1.requestContainer();
 	assert.equal(container.pointsCount(), 240);
 	const bbox_size = new Vector3();

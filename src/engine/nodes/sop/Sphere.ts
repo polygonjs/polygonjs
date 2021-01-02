@@ -25,25 +25,25 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(DEFAULT.radius, {visibleIf: {type: SPHERE_TYPE.default}});
 	/** @param resolution - number of segments in x and y */
 	resolution = ParamConfig.VECTOR2(DEFAULT.resolution, {visibleIf: {type: SPHERE_TYPE.default}});
-	/** @param if set to 1, you can then set the phi_start, phi_end, theta_start and theta_end */
+	/** @param if set to 1, you can then set the phiStart, phi_end, thetaStart and theta_end */
 	open = ParamConfig.BOOLEAN(DEFAULT.open, {visibleIf: {type: SPHERE_TYPE.default}});
 	/** @param start of phi angle */
-	phi_start = ParamConfig.FLOAT(DEFAULT.phi_start, {
+	phiStart = ParamConfig.FLOAT(DEFAULT.phiStart, {
 		range: [0, Math.PI * 2],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param length of phi opening */
-	phi_length = ParamConfig.FLOAT('$PI*2', {
+	phiLength = ParamConfig.FLOAT('$PI*2', {
 		range: [0, Math.PI * 2],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param start of theta angle */
-	theta_start = ParamConfig.FLOAT(DEFAULT.theta_start, {
+	thetaStart = ParamConfig.FLOAT(DEFAULT.thetaStart, {
 		range: [0, Math.PI],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});
 	/** @param length of theta opening */
-	theta_length = ParamConfig.FLOAT('$PI', {
+	thetaLength = ParamConfig.FLOAT('$PI', {
 		range: [0, Math.PI],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
 	});

@@ -17,9 +17,9 @@ class AttribRenameSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param old attribute name */
-	old_name = ParamConfig.STRING();
+	oldName = ParamConfig.STRING();
 	/** @param new attribute name */
-	new_name = ParamConfig.STRING();
+	newName = ParamConfig.STRING();
 }
 const ParamsConfig = new AttribRenameSopParamsConfig();
 
@@ -35,9 +35,9 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.old_name, this.p.new_name], () => {
-					if (this.pv.old_name != '' && this.pv.new_name != '') {
-						return `${this.pv.old_name} -> ${this.pv.new_name}`;
+				this.params.label.init([this.p.oldName, this.p.newName], () => {
+					if (this.pv.oldName != '' && this.pv.newName != '') {
+						return `${this.pv.oldName} -> ${this.pv.newName}`;
 					} else {
 						return '';
 					}
@@ -50,7 +50,7 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 		// const group = input_containers[0].group();
 		const core_group = input_contents[0];
 
-		core_group.renameAttrib(this.pv.old_name, this.pv.new_name, this.pv.class);
+		core_group.renameAttrib(this.pv.oldName, this.pv.newName, this.pv.class);
 
 		this.setCoreGroup(core_group);
 	}

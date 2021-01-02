@@ -30,7 +30,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	const param1 = mesh_basic1.createNode('param');
 	const ramp1 = mesh_basic1.createNode('ramp');
 	const texture1 = mesh_basic1.createNode('texture');
-	texture1.p.default_value.set(file1.fullPath());
+	texture1.p.defaultValue.set(file1.fullPath());
 
 	output1.setInput('color', float_to_vec31);
 	// ramp
@@ -48,7 +48,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	CoreSleep.sleep(100);
 	assert.equal(mesh_basic1.params.spare.length, 3);
 	const ramp_spare_param1 = mesh_basic1.params.get('ramp') as RampParam;
-	const operator_path_spare_param1 = mesh_basic1.params.get('texture_map') as OperatorPathParam;
+	const operator_path_spare_param1 = mesh_basic1.params.get('textureMap') as OperatorPathParam;
 	const float_spare_param1 = mesh_basic1.params.get('param1') as FloatParam;
 	float_spare_param1.set(0.75);
 	await CoreSleep.sleep(300); // delay should be longer than the delay in SpareParamsController for operator_path params
@@ -63,14 +63,14 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	assert.equal(float_spare_param1.type, ParamType.FLOAT);
 	// check that the uniforms are present
 	assert.ok(mesh_basic1.material.uniforms['ramp_texture_v_POLY_ramp1_val']);
-	assert.ok(mesh_basic1.material.uniforms['v_POLY_texture1_texture_map']);
+	assert.ok(mesh_basic1.material.uniforms['v_POLY_texture1_textureMap']);
 	assert.ok(mesh_basic1.material.uniforms['v_POLY_param1_val']);
 
 	assert.equal(
 		mesh_basic1.material.uniforms['ramp_texture_v_POLY_ramp1_val'].value.uuid,
 		ramp_spare_param1.ramp_texture().uuid
 	);
-	assert.equal(mesh_basic1.material.uniforms['v_POLY_texture1_texture_map'].value.uuid, file1_texture.uuid);
+	assert.equal(mesh_basic1.material.uniforms['v_POLY_texture1_textureMap'].value.uuid, file1_texture.uuid);
 	assert.equal(mesh_basic1.material.uniforms['v_POLY_param1_val'].value, 0.75);
 
 	// and now we save and reload
@@ -90,13 +90,13 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	const mesh_basic2 = scene2.node(mesh_basic1.fullPath()) as MeshBasicBuilderMatNode;
 	assert.equal(mesh_basic2.params.spare.length, 3);
 	const ramp_spare_param2 = mesh_basic2.params.get('ramp') as RampParam;
-	// const operator_path_spare_param2 = mesh_basic2.params.get('texture_map') as OperatorPathParam;
+	// const operator_path_spare_param2 = mesh_basic2.params.get('textureMap') as OperatorPathParam;
 	// const float_spare_param2 = mesh_basic2.params.get('param1') as FloatParam;
 
 	assert.equal(
 		mesh_basic2.material.uniforms['ramp_texture_v_POLY_ramp1_val'].value.uuid,
 		ramp_spare_param2.ramp_texture().uuid
 	);
-	assert.equal(mesh_basic2.material.uniforms['v_POLY_texture1_texture_map'].value.uuid, file2_texture.uuid);
+	assert.equal(mesh_basic2.material.uniforms['v_POLY_texture1_textureMap'].value.uuid, file2_texture.uuid);
 	assert.equal(mesh_basic2.material.uniforms['v_POLY_param1_val'].value, 0.75);
 });

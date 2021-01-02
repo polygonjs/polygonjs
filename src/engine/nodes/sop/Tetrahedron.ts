@@ -17,7 +17,7 @@ class TetrahedronSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param sets to create only points */
-	points_only = ParamConfig.BOOLEAN(0);
+	pointsOnly = ParamConfig.BOOLEAN(0);
 	/** @param center of the tetrahedron */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 }
@@ -30,10 +30,10 @@ export class TetrahedronSopNode extends TypedSopNode<TetrahedronSopParamsConfig>
 	}
 
 	cook() {
-		const points_only = this.pv.points_only;
-		const geometry = new TetrahedronBufferGeometry(this.pv.radius, this.pv.detail, points_only);
+		const pointsOnly = this.pv.pointsOnly;
+		const geometry = new TetrahedronBufferGeometry(this.pv.radius, this.pv.detail, pointsOnly);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
-		if (points_only) {
+		if (pointsOnly) {
 			const object = this.create_object(geometry, ObjectType.POINTS);
 			this.setObject(object);
 		} else {

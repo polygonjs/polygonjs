@@ -338,7 +338,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	const box1 = geo1.createNode('box');
 	const bbox_scatter1 = geo1.createNode('bboxScatter');
 	bbox_scatter1.setInput(0, box1);
-	bbox_scatter1.p.step_size.set(0.5);
+	bbox_scatter1.p.stepSize.set(0.5);
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.setInput(0, bbox_scatter1);
 
@@ -359,7 +359,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	const point = core_group.points()[3];
 	assert.equal(point.attribValue('ptid'), 3);
 
-	bbox_scatter1.p.step_size.set(0.1);
+	bbox_scatter1.p.stepSize.set(0.1);
 	container = await attrib_create1.requestContainer();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 1000);

@@ -14,15 +14,15 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the plane */
 	size = ParamConfig.VECTOR2(DEFAULT.size);
 	/** @param defines if the plane resolution is sets via the number of segments or via the step size */
-	use_segments_count = ParamConfig.BOOLEAN(DEFAULT.use_segments_count);
+	useSegmentsCount = ParamConfig.BOOLEAN(DEFAULT.useSegmentsCount);
 	/** @param step size */
-	step_size = ParamConfig.FLOAT(DEFAULT.step_size, {
+	stepSize = ParamConfig.FLOAT(DEFAULT.stepSize, {
 		range: [0.001, 1],
 		rangeLocked: [false, false],
-		visibleIf: {use_segments_count: 0},
+		visibleIf: {useSegmentsCount: 0},
 	});
 	/** @param segments count */
-	segments = ParamConfig.VECTOR2(DEFAULT.segments, {visibleIf: {use_segments_count: 1}});
+	segments = ParamConfig.VECTOR2(DEFAULT.segments, {visibleIf: {useSegmentsCount: 1}});
 	/** @param axis perpendicular to the plane */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction);
 	/** @param center of the plane */

@@ -19,7 +19,7 @@ class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param distance when switching between mid res and low res (second input and third input) */
 	distance1 = ParamConfig.FLOAT(2);
 	/** @param sets if the switch is done automatically */
-	auto_update = ParamConfig.BOOLEAN(1);
+	autoUpdate = ParamConfig.BOOLEAN(1);
 	/** @param updates which object is displayed manually */
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
@@ -28,7 +28,7 @@ class LODSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param sets which camera will be used when the switch is to be done manually */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-		visibleIf: {auto_update: 0},
+		visibleIf: {autoUpdate: 0},
 		dependentOnFoundNode: false,
 	});
 }
@@ -63,7 +63,7 @@ export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
 		this._add_level(input_contents[1], this.pv.distance0);
 		this._add_level(input_contents[2], this.pv.distance1);
 
-		this._lod.autoUpdate = this.pv.auto_update;
+		this._lod.autoUpdate = this.pv.autoUpdate;
 
 		this.setObject(this._lod);
 	}
@@ -107,7 +107,7 @@ export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
 		node._update_lod();
 	}
 	private async _update_lod() {
-		if (this.p.auto_update) {
+		if (this.p.autoUpdate) {
 			return;
 		}
 

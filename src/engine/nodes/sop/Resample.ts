@@ -14,8 +14,8 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 const POSITION_ATTRIBUTE_NAME = 'position';
 export enum METHOD {
-	POINTS_COUNT = 'points_count',
-	SEGMENT_LENGTH = 'segment_length',
+	POINTS_COUNT = 'pointsCount',
+	SEGMENT_LENGTH = 'segmentLength',
 }
 export const METHODS = [METHOD.POINTS_COUNT, METHOD.SEGMENT_LENGTH];
 
@@ -45,7 +45,7 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param type of curve this will generate */
-	curve_type = ParamConfig.INTEGER(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM), {
+	curveType = ParamConfig.INTEGER(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM), {
 		range: [0, 2],
 		rangeLocked: [true, true],
 		menu: {
@@ -63,13 +63,13 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, true],
 	});
 	/** @param points count */
-	points_count = ParamConfig.INTEGER(100, {
+	pointsCount = ParamConfig.INTEGER(100, {
 		visibleIf: {method: METHODS.indexOf(METHOD.POINTS_COUNT)},
 		range: [1, 1000],
 		rangeLocked: [true, false],
 	});
 	/** @param segments length */
-	segment_length = ParamConfig.FLOAT(1, {
+	segmentLength = ParamConfig.FLOAT(1, {
 		visibleIf: {method: METHODS.indexOf(METHOD.SEGMENT_LENGTH)},
 	});
 }
@@ -92,7 +92,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 		// this._objects = [];
 		const resampled_objects = [];
-		if (this.pv.points_count >= 2) {
+		if (this.pv.pointsCount >= 2) {
 			const core_objects = core_group.coreObjects();
 			for (let i = 0; i < core_objects.length; i++) {
 				const core_object = core_objects[i];
@@ -136,9 +136,9 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 		const old_curve_positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 		const closed = false;
-		const curve_type = CURVE_TYPES[this.pv.curve_type];
+		const curveType = CURVE_TYPES[this.pv.curveType];
 		const tension = this.pv.tension;
-		const curve = new CatmullRomCurve3(old_curve_positions, closed, curve_type, tension);
+		const curve = new CatmullRomCurve3(old_curve_positions, closed, curveType, tension);
 		// const curve = new LineCurve3(old_curve_positions);
 		// const curve = new CubicBezierCurve3(old_curve_positions);
 		// const curve = new QuadraticBezierCurve3(old_curve_positions);
@@ -173,15 +173,15 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		const method = METHODS[this.pv.method];
 		switch (method) {
 			case METHOD.POINTS_COUNT:
-				return curve.getSpacedPoints(Math.max(2, this.pv.points_count));
+				return curve.getSpacedPoints(Math.max(2, this.pv.pointsCount));
 			case METHOD.SEGMENT_LENGTH:
 				var length = curve.getLength();
 
-				var points_count = this.pv.segment_length !== 0 ? 1 + length / this.pv.segment_length : 2;
+				var pointsCount = this.pv.segmentLength !== 0 ? 1 + length / this.pv.segmentLength : 2;
 
-				points_count = Math.max(2, points_count);
+				pointsCount = Math.max(2, pointsCount);
 
-				return curve.getSpacedPoints(points_count);
+				return curve.getSpacedPoints(pointsCount);
 		}
 		TypeAssert.unreachable(method);
 	}

@@ -9,7 +9,7 @@ export function SopAttribAddMult() {
 	const plane = geo.createNode('plane');
 	plane.p.size.set([4, 4]);
 	//let's increase the resolution of the plane
-	plane.p.step_size.set(0.05);
+	plane.p.stepSize.set(0.05);
 
 	// create an attrib create
 	const attribCreate = geo.createNode('attribCreate');
@@ -28,7 +28,7 @@ export function SopAttribAddMult() {
 	// create a point SOP to use the height attribute to deform the plane
 	const point = geo.createNode('point');
 	point.setInput(0, attribAddMult);
-	point.p.update_y.set(1);
+	point.p.updateY.set(1);
 	// by setting another expression,
 	// we set the y position to equal the height attribute
 	point.p.y.set('@height');

@@ -18,9 +18,9 @@ class TubeSopParamsConfig extends NodeParamsConfig {
 	/** @param tube height */
 	height = ParamConfig.FLOAT(1, {range: [0, 1]});
 	/** @param number of segments in the radial direction */
-	segments_radial = ParamConfig.INTEGER(12, {range: [3, 20], rangeLocked: [true, false]});
+	segmentsRadial = ParamConfig.INTEGER(12, {range: [3, 20], rangeLocked: [true, false]});
 	/** @param number of segments in the height direction */
-	segments_height = ParamConfig.INTEGER(1, {range: [1, 20], rangeLocked: [true, false]});
+	segmentsHeight = ParamConfig.INTEGER(1, {range: [1, 20], rangeLocked: [true, false]});
 	/** @param adds caps */
 	cap = ParamConfig.BOOLEAN(1);
 	/** @param center of the tube */
@@ -43,8 +43,8 @@ export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 			this.pv.radius,
 			this.pv.radius,
 			this.pv.height,
-			this.pv.segments_radial,
-			this.pv.segments_height,
+			this.pv.segmentsRadial,
+			this.pv.segmentsHeight,
 			!this.pv.cap
 		);
 

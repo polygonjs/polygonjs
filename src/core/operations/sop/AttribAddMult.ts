@@ -6,17 +6,17 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 interface AttribAddMultSopParams extends DefaultOperationParams {
 	name: string;
-	pre_add: number;
+	preAdd: number;
 	mult: number;
-	post_add: number;
+	postAdd: number;
 }
 
 export class AttribAddMultSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribAddMultSopParams = {
 		name: '',
-		pre_add: 0,
+		preAdd: 0,
 		mult: 1,
-		post_add: 0,
+		postAdd: 0,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'attribAddMult'> {
@@ -41,12 +41,12 @@ export class AttribAddMultSopOperation extends BaseSopOperation {
 		if (attribute) {
 			const values = attribute.array as number[];
 
-			const pre_add = params.pre_add;
+			const preAdd = params.preAdd;
 			const mult = params.mult;
-			const post_add = params.post_add;
+			const postAdd = params.postAdd;
 			for (let i = 0; i < values.length; i++) {
 				const value = values[i];
-				values[i] = (value + pre_add) * mult + post_add;
+				values[i] = (value + preAdd) * mult + postAdd;
 			}
 			// if (!this.io.inputs.clone_required(0)) {
 			attribute.needsUpdate = true;

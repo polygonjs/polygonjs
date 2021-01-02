@@ -3,7 +3,7 @@ QUnit.test('icosahedron simple', async (assert) => {
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
 	const icosahedron1 = geo1.createNode('icosahedron');
-	icosahedron1.p.points_only.set(0);
+	icosahedron1.p.pointsOnly.set(0);
 
 	let container = await icosahedron1.requestContainer();
 	let core_group = container.coreContent();
@@ -22,7 +22,7 @@ QUnit.test('icosahedron simple', async (assert) => {
 	container = await icosahedron1.requestContainer();
 	assert.equal(container.coreContent()?.pointsCount(), 121500);
 
-	icosahedron1.p.points_only.set(1);
+	icosahedron1.p.pointsOnly.set(1);
 	icosahedron1.p.detail.set(0);
 
 	container = await icosahedron1.requestContainer();

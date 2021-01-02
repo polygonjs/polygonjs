@@ -37,9 +37,9 @@ QUnit.test('materials clone', async (assert) => {
 
 	attrib_create1.p.name.set('id');
 	attrib_create1.p.value1.set(`copy('${copy1.fullPath()}', 0)`);
-	material1.p.clone_mat.set(1);
+	material1.p.cloneMat.set(1);
 	copy1.p.count.set(2);
-	copy1.p.use_copy_expr.set(1);
+	copy1.p.useCopyExpr.set(1);
 
 	let container;
 

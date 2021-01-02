@@ -10,17 +10,17 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 const VARS = {
 	position: 'position',
 	normal: 'normal',
-	instance_position: 'instancePosition',
-	instance_orientation: 'instanceOrientation',
-	instance_scale: 'instanceScale',
+	instancePosition: 'instancePosition',
+	instanceOrientation: 'instanceOrientation',
+	instanceScale: 'instanceScale',
 };
 
 class InstanceTransformGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	normal = ParamConfig.VECTOR3([0, 0, 1]);
-	instance_position = ParamConfig.VECTOR3([0, 0, 0]);
-	instance_orientation = ParamConfig.VECTOR4([0, 0, 0, 0]);
-	instance_scale = ParamConfig.VECTOR3([1, 1, 1]);
+	instancePosition = ParamConfig.VECTOR3([0, 0, 0]);
+	instanceOrientation = ParamConfig.VECTOR4([0, 0, 0, 0]);
+	instanceScale = ParamConfig.VECTOR3([1, 1, 1]);
 }
 const ParamsConfig = new InstanceTransformGlParamsConfig();
 export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlParamsConfig> {
@@ -54,21 +54,21 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 			? ThreeToGl.float(this.variable_for_input(this.p.normal.name))
 			: this._default_normal();
 
-		const input_instancePosition = this.io.inputs.named_input(this.p.instance_position.name);
+		const input_instancePosition = this.io.inputs.named_input(this.p.instancePosition.name);
 		const instancePosition = input_instancePosition
-			? ThreeToGl.float(this.variable_for_input(this.p.instance_position.name))
-			: this._default_instance_position(shaders_collection_controller);
+			? ThreeToGl.float(this.variable_for_input(this.p.instancePosition.name))
+			: this._default_instancePosition(shaders_collection_controller);
 		// const instancePosition = ThreeToGl.float(this.variable_for_input('instancePosition'))
 
-		const input_instanceOrientation = this.io.inputs.named_input(this.p.instance_orientation.name);
+		const input_instanceOrientation = this.io.inputs.named_input(this.p.instanceOrientation.name);
 		const instanceOrientation = input_instanceOrientation
-			? ThreeToGl.float(this.variable_for_input(this.p.instance_orientation.name))
-			: this._default_input_instance_orientation(shaders_collection_controller);
+			? ThreeToGl.float(this.variable_for_input(this.p.instanceOrientation.name))
+			: this._default_input_instanceOrientation(shaders_collection_controller);
 
-		const input_instanceScale = this.io.inputs.named_input(this.p.instance_scale.name);
+		const input_instanceScale = this.io.inputs.named_input(this.p.instanceScale.name);
 		const instanceScale = input_instanceScale
-			? ThreeToGl.float(this.variable_for_input(this.p.instance_scale.name))
-			: this._default_input_instance_scale(shaders_collection_controller);
+			? ThreeToGl.float(this.variable_for_input(this.p.instanceScale.name))
+			: this._default_input_instanceScale(shaders_collection_controller);
 
 		const result_position = this.gl_var_name(this.gl_output_name_position());
 		const result_normal = this.gl_var_name(this.gl_output_name_normal());
@@ -95,37 +95,37 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	private _default_normal(): string {
 		return VARS.normal;
 	}
-	private _default_instance_position(shaders_collection_controller: ShadersCollectionController): string | undefined {
+	private _default_instancePosition(shaders_collection_controller: ShadersCollectionController): string | undefined {
 		return this.material_node?.assembler_controller?.assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC3,
-			VARS.instance_position,
+			VARS.instancePosition,
 			shaders_collection_controller
 		);
 		// return this.assembler()
 		// 	.globals_handler()
-		// 	.read_attribute(this, 'vec3', VARS.instance_position, this._shader_name);
+		// 	.read_attribute(this, 'vec3', VARS.instancePosition, this._shader_name);
 	}
-	private _default_input_instance_orientation(shaders_collection_controller: ShadersCollectionController) {
+	private _default_input_instanceOrientation(shaders_collection_controller: ShadersCollectionController) {
 		return this.material_node?.assembler_controller?.assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC4,
-			VARS.instance_orientation,
+			VARS.instanceOrientation,
 			shaders_collection_controller
 		);
 		// return this.assembler()
 		// 	.globals_handler()
-		// 	.read_attribute(this, 'vec4', VARS.instance_orientation, this._shader_name);
+		// 	.read_attribute(this, 'vec4', VARS.instanceOrientation, this._shader_name);
 	}
-	private _default_input_instance_scale(shaders_collection_controller: ShadersCollectionController) {
+	private _default_input_instanceScale(shaders_collection_controller: ShadersCollectionController) {
 		return this.material_node?.assembler_controller?.assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC3,
-			VARS.instance_scale,
+			VARS.instanceScale,
 			shaders_collection_controller
 		);
 		// return this.assembler()
 		// 	.globals_handler()
-		// 	.read_attribute(this, 'vec3', VARS.instance_scale, this._shader_name);
+		// 	.read_attribute(this, 'vec3', VARS.instanceScale, this._shader_name);
 	}
 }

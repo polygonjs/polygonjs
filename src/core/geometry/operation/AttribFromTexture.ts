@@ -7,9 +7,9 @@ import {DataTexture} from 'three/src/textures/DataTexture';
 interface AttribFromTextureParams {
 	geometry: BufferGeometry;
 	texture: Texture;
-	uv_attrib_name: string;
-	target_attrib_name: string;
-	target_attrib_size: 1 | 2 | 3;
+	uvAttribName: string;
+	targetAttribName: string;
+	targetAttribSize: 1 | 2 | 3;
 	add: number;
 	mult: number;
 }
@@ -18,7 +18,7 @@ export class AttribFromTexture {
 	// currently assumes we read the red channel and create a 1-dimension (float) attribute
 	set_attrib(params: AttribFromTextureParams) {
 		const geometry = params.geometry;
-		const target_attrib_size = params.target_attrib_size;
+		const targetAttribSize = params.targetAttribSize;
 		const add = params.add;
 		const mult = params.mult / 255.0;
 		const texture_data = this._data_from_texture(params.texture);
@@ -28,7 +28,7 @@ export class AttribFromTexture {
 		const {data, resx, resy} = texture_data;
 		const texture_component_size = data.length / (resx * resy);
 
-		const uv_attrib = geometry.getAttribute(params.uv_attrib_name);
+		const uv_attrib = geometry.getAttribute(params.uvAttribName);
 		const uvs = uv_attrib.array;
 
 		const points_count = uvs.length / 2;
@@ -45,12 +45,12 @@ export class AttribFromTexture {
 			j = y * resx + x;
 			val = data[texture_component_size * j];
 
-			index = i * target_attrib_size;
+			index = i * targetAttribSize;
 			values[index] = mult * val + add;
 		}
 
 		const array = new Float32Array(values);
-		geometry.setAttribute(params.target_attrib_name, new BufferAttribute(array, target_attrib_size));
+		geometry.setAttribute(params.targetAttribName, new BufferAttribute(array, targetAttribSize));
 	}
 
 	private _data_from_texture(texture: Texture) {

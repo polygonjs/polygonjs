@@ -6,7 +6,7 @@ export class ByObjectTypeHelper {
 	constructor(private node: DeleteSopNode) {}
 
 	eval_for_objects(core_objects: CoreObject[]) {
-		const object_type = ObjectTypes[this.node.pv.object_type];
+		const object_type = ObjectTypes[this.node.pv.objectType];
 
 		for (let core_object of core_objects) {
 			const object = core_object.object();

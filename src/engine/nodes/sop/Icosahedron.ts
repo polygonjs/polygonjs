@@ -18,7 +18,7 @@ class IcosahedronSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param do not create polygons, only points. */
-	points_only = ParamConfig.BOOLEAN(DEFAULT.points_only);
+	pointsOnly = ParamConfig.BOOLEAN(DEFAULT.pointsOnly);
 	/** @param center of the icosahedron */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }

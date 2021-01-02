@@ -12,7 +12,7 @@ class LineSopParamsConfig extends NodeParamsConfig {
 	/** @param length of the line */
 	length = ParamConfig.FLOAT(1, {range: [0, 10]});
 	/** @param number of points */
-	points_count = ParamConfig.INTEGER(1, {
+	pointsCount = ParamConfig.INTEGER(1, {
 		range: [2, 100],
 		rangeLocked: [true, false],
 	});
@@ -32,15 +32,15 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 	initialize_node() {}
 
 	cook() {
-		const points_count = Math.max(2, this.pv.points_count);
+		const pointsCount = Math.max(2, this.pv.pointsCount);
 
-		const positions: number[] = new Array(points_count * 3);
-		const indices: number[] = new Array(points_count);
+		const positions: number[] = new Array(pointsCount * 3);
+		const indices: number[] = new Array(pointsCount);
 
 		const last_pt = this.pv.direction.clone().normalize().multiplyScalar(this.pv.length);
 
-		for (let i = 0; i < points_count; i++) {
-			const i_n = i / (points_count - 1);
+		for (let i = 0; i < pointsCount; i++) {
+			const i_n = i / (pointsCount - 1);
 			const point = last_pt.clone().multiplyScalar(i_n);
 			point.add(this.pv.origin);
 			point.toArray(positions, i * 3);

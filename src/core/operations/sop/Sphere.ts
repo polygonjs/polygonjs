@@ -12,10 +12,10 @@ interface SphereSopParams extends DefaultOperationParams {
 	radius: number;
 	resolution: Vector2;
 	open: boolean;
-	phi_start: number;
-	phi_length: number;
-	theta_start: number;
-	theta_length: number;
+	phiStart: number;
+	phiLength: number;
+	thetaStart: number;
+	thetaLength: number;
 	detail: number;
 	center: Vector3;
 }
@@ -37,10 +37,10 @@ export class SphereSopOperation extends BaseSopOperation {
 		radius: 1,
 		resolution: new Vector2(30, 30),
 		open: false,
-		phi_start: 0,
-		phi_length: Math.PI * 2,
-		theta_start: 0,
-		theta_length: Math.PI,
+		phiStart: 0,
+		phiLength: Math.PI * 2,
+		thetaStart: 0,
+		thetaLength: Math.PI,
 		detail: 1,
 		center: new Vector3(0, 0, 0),
 	};
@@ -88,10 +88,10 @@ export class SphereSopOperation extends BaseSopOperation {
 				params.radius,
 				params.resolution.x,
 				params.resolution.y,
-				params.phi_start,
-				params.phi_length,
-				params.theta_start,
-				params.theta_length
+				params.phiStart,
+				params.phiLength,
+				params.thetaStart,
+				params.thetaLength
 			);
 		} else {
 			return new SphereBufferGeometry(params.radius, params.resolution.x, params.resolution.y);

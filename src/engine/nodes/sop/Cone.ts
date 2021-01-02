@@ -18,15 +18,15 @@ class ConeSopParamsConfig extends NodeParamsConfig {
 	/** @param cone height */
 	height = ParamConfig.FLOAT(1, {range: [0, 1]});
 	/** @param radial segments count */
-	segments_radial = ParamConfig.INTEGER(12, {range: [3, 20], rangeLocked: [true, false]});
+	segmentsRadial = ParamConfig.INTEGER(12, {range: [3, 20], rangeLocked: [true, false]});
 	/** @param height segments count */
-	segments_height = ParamConfig.INTEGER(1, {range: [1, 20], rangeLocked: [true, false]});
+	segmentsHeight = ParamConfig.INTEGER(1, {range: [1, 20], rangeLocked: [true, false]});
 	/** @param adds a cap */
 	cap = ParamConfig.BOOLEAN(1);
 	/** @param theta start */
-	theta_start = ParamConfig.FLOAT(1, {range: [0, Math.PI * 2]});
+	thetaStart = ParamConfig.FLOAT(1, {range: [0, Math.PI * 2]});
 	/** @param start length */
-	theta_length = ParamConfig.FLOAT('2*$PI', {range: [0, Math.PI * 2]});
+	thetaLength = ParamConfig.FLOAT('2*$PI', {range: [0, Math.PI * 2]});
 	/** @param center */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param direction */
@@ -46,11 +46,11 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 		const geometry = new ConeBufferGeometry(
 			this.pv.radius,
 			this.pv.height,
-			this.pv.segments_radial,
-			this.pv.segments_height,
+			this.pv.segmentsRadial,
+			this.pv.segmentsHeight,
 			!this.pv.cap,
-			this.pv.theta_start,
-			this.pv.theta_length
+			this.pv.thetaStart,
+			this.pv.thetaLength
 		);
 
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);

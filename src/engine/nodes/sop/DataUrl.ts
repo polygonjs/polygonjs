@@ -22,7 +22,7 @@ export const DATA_TYPES: DataType[] = [DataType.JSON, DataType.CSV];
 
 class DataUrlSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if the data is interpreted as json or csv */
-	data_type = ParamConfig.INTEGER(DATA_TYPES.indexOf(DataType.JSON), {
+	dataType = ParamConfig.INTEGER(DATA_TYPES.indexOf(DataType.JSON), {
 		menu: {
 			entries: DATA_TYPES.map((t, i) => {
 				return {
@@ -39,21 +39,21 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 	// JSON params
 	//
 	/** @param if the data is inside the payload, defines the prefix to read it from here */
-	json_data_keys_prefix = ParamConfig.STRING('', {
-		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+	jsonDataKeysPrefix = ParamConfig.STRING('', {
+		visibleIf: {dataType: DATA_TYPES.indexOf(DataType.JSON)},
 	});
 	/** @param which entries are skipped */
-	skip_entries = ParamConfig.STRING('', {
-		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+	skipEntries = ParamConfig.STRING('', {
+		visibleIf: {dataType: DATA_TYPES.indexOf(DataType.JSON)},
 	});
 	/** @param sets if some attributes should be converted */
 	convert = ParamConfig.BOOLEAN(0, {
-		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.JSON)},
+		visibleIf: {dataType: DATA_TYPES.indexOf(DataType.JSON)},
 	});
 	/** @param sets which attributes should be converted from string to numeric */
-	convert_to_numeric = ParamConfig.STRING('', {
+	convertToNumeric = ParamConfig.STRING('', {
 		visibleIf: {
-			data_type: DATA_TYPES.indexOf(DataType.JSON),
+			dataType: DATA_TYPES.indexOf(DataType.JSON),
 			convert: 1,
 		},
 	});
@@ -62,14 +62,14 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 	// CSV params
 	//
 	/** @param when fetching from a csv, the attribute names will not be present. Those can then be mentioned here */
-	read_attrib_names_from_file = ParamConfig.BOOLEAN(1, {
-		visibleIf: {data_type: DATA_TYPES.indexOf(DataType.CSV)},
+	readAttribNamesFromFile = ParamConfig.BOOLEAN(1, {
+		visibleIf: {dataType: DATA_TYPES.indexOf(DataType.CSV)},
 	});
 	/** @param list of attributes names when fetching from a csv */
-	attrib_names = ParamConfig.STRING('height scale', {
+	attribNames = ParamConfig.STRING('height scale', {
 		visibleIf: {
-			data_type: DATA_TYPES.indexOf(DataType.CSV),
-			read_attrib_names_from_file: 0,
+			dataType: DATA_TYPES.indexOf(DataType.CSV),
+			readAttribNamesFromFile: 0,
 		},
 	});
 
@@ -92,7 +92,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	}
 
 	async cook() {
-		switch (DATA_TYPES[this.pv.data_type]) {
+		switch (DATA_TYPES[this.pv.dataType]) {
 			case DataType.JSON:
 				return this._load_json();
 			case DataType.CSV:
@@ -114,10 +114,10 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	//
 	private _load_json() {
 		const loader = new JsonDataLoader({
-			data_keys_prefix: this.pv.json_data_keys_prefix,
-			skip_entries: this.pv.skip_entries,
-			do_convert: this.pv.convert,
-			convert_to_numeric: this.pv.convert_to_numeric,
+			dataKeysPrefix: this.pv.jsonDataKeysPrefix,
+			skipEntries: this.pv.skipEntries,
+			doConvert: this.pv.convert,
+			convertToNumeric: this.pv.convertToNumeric,
 		});
 
 		loader.load(this._url(), this._on_load.bind(this), undefined, this._on_error.bind(this));
@@ -137,8 +137,8 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	//
 	//
 	async _load_csv() {
-		const attrib_names = this.pv.read_attrib_names_from_file ? undefined : this.pv.attrib_names.split(' ');
-		const loader = new CsvLoader(attrib_names);
+		const attribNames = this.pv.readAttribNamesFromFile ? undefined : this.pv.attribNames.split(' ');
+		const loader = new CsvLoader(attribNames);
 		const geometry = await loader.load(this._url());
 		if (geometry) {
 			this.setGeometry(geometry, ObjectType.POINTS);
