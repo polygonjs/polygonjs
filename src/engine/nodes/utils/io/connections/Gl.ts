@@ -271,7 +271,7 @@ export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConn
 		return this._init_value;
 	}
 
-	to_json(): GlConnectionPointData<T> {
+	toJSON(): GlConnectionPointData<T> {
 		return (this._json = this._json || this._create_json());
 	}
 	protected _create_json(): GlConnectionPointData<T> {

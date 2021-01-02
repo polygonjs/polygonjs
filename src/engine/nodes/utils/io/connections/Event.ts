@@ -77,7 +77,7 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 	// 	return this._init_value;
 	// }
 
-	to_json(): EventConnectionPointData<T> {
+	toJSON(): EventConnectionPointData<T> {
 		return (this._json = this._json || this._create_json());
 	}
 	protected _create_json(): EventConnectionPointData<T> {

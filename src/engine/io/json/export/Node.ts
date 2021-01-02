@@ -151,7 +151,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 
 		// persisted config
 		if (this._node.persisted_config) {
-			const persisted_config_data = this._node.persisted_config.to_json();
+			const persisted_config_data = this._node.persisted_config.toJSON();
 			if (persisted_config_data) {
 				this._data.persisted_config = persisted_config_data;
 			}
@@ -228,7 +228,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				data['in'] = [];
 				for (let cp of this._node.io.inputs.named_input_connection_points) {
 					if (cp) {
-						data['in'].push(cp.to_json());
+						data['in'].push(cp.toJSON());
 					}
 				}
 			}
@@ -236,7 +236,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				data['out'] = [];
 				for (let cp of this._node.io.outputs.named_output_connection_points) {
 					if (cp) {
-						data['out'].push(cp.to_json());
+						data['out'].push(cp.toJSON());
 					}
 				}
 			}

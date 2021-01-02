@@ -81,14 +81,14 @@ export class TextureAllocation {
 		return texture_allocation;
 	}
 
-	to_json(scene: PolyScene): TextureAllocationData {
+	toJSON(scene: PolyScene): TextureAllocationData {
 		if (this._variables) {
-			return this._variables.map((v) => v.to_json(scene));
+			return this._variables.map((v) => v.toJSON(scene));
 		} else {
 			return [];
 		}
 		// for(let variable of this._variables){
-		// 	data[variable.name()] = variable.to_json(scene)
+		// 	data[variable.name()] = variable.toJSON(scene)
 		// }
 		// return data
 	}

@@ -18,7 +18,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 	constructor(protected node: BuilderCopNode) {
 		super(node);
 	}
-	to_json(): PersistedConfigBaseTextureData | undefined {
+	toJSON(): PersistedConfigBaseTextureData | undefined {
 		if (!this.node.assembler_controller) {
 			return;
 		}

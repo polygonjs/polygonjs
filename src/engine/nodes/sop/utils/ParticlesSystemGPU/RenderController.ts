@@ -106,7 +106,7 @@ export class ParticlesSystemGpuRenderController {
 
 		if (mat_node) {
 			if (assembler) {
-				const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.to_json(
+				const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.toJSON(
 					this.node.scene
 				);
 

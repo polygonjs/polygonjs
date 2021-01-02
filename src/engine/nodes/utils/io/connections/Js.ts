@@ -162,7 +162,7 @@ export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConn
 		return this._init_value;
 	}
 
-	to_json(): JsConnectionPointData<T> {
+	toJSON(): JsConnectionPointData<T> {
 		return (this._json = this._json || this._create_json());
 	}
 	protected _create_json(): JsConnectionPointData<T> {

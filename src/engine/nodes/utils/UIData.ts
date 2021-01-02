@@ -99,7 +99,7 @@ export class UIData {
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}
 
-	to_json(): NodeUIDataJson {
+	toJSON(): NodeUIDataJson {
 		this._json.x = this._position.x;
 		this._json.y = this._position.y;
 		this._json.comment = this._comment;

@@ -26,11 +26,11 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	private _ramp_texture = new DataTexture(this._texture_data, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBFormat);
 
 	static DEFAULT_VALUE = new RampValue(RampInterpolation.LINEAR, [new RampPoint(0, 0), new RampPoint(1, 1)]);
-	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.to_json();
+	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
 
 	get default_value_serialized() {
 		if (this.default_value instanceof RampValue) {
-			return this.default_value.to_json();
+			return this.default_value.toJSON();
 		} else {
 			return this.default_value;
 		}
@@ -39,18 +39,18 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		if (raw_input instanceof RampValue) {
 			return raw_input.clone();
 		} else {
-			return RampValue.from_json(raw_input).to_json();
+			return RampValue.from_json(raw_input).toJSON();
 		}
 	}
 	get raw_input_serialized() {
 		if (this._raw_input instanceof RampValue) {
-			return this._raw_input.to_json();
+			return this._raw_input.toJSON();
 		} else {
-			return RampValue.from_json(this._raw_input).to_json();
+			return RampValue.from_json(this._raw_input).toJSON();
 		}
 	}
 	get value_serialized() {
-		return this.value.to_json();
+		return this.value.toJSON();
 	}
 	protected _copy_value(param: RampParam) {
 		this.set(param.value_serialized);

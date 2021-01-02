@@ -43,7 +43,7 @@ export abstract class BaseConnectionPoint {
 	// 	return this._init_value;
 	// }
 
-	to_json(): BaseConnectionPointData {
+	toJSON(): BaseConnectionPointData {
 		return (this._json = this._json || this._create_json());
 	}
 	protected _create_json(): BaseConnectionPointData {

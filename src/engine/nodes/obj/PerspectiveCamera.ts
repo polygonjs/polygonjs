@@ -37,7 +37,7 @@ class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
 			CameraMasterCameraParamConfig(
 				PerspectiveCameraObjParamConfigMixin(
 					ThreejsCameraTransformParamConfig(
-						TransformedParamConfig(NodeParamsConfig, {matrix_auto_update: true})
+						TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
 					)
 				)
 			)

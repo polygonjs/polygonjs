@@ -25,7 +25,7 @@ export interface ParamSerializerData {
 export class ParamSerializer {
 	constructor(protected param: BaseParamType) {}
 
-	to_json(): ParamSerializerData {
+	toJSON(): ParamSerializerData {
 		const data: ParamSerializerData = {
 			name: this.param.name,
 			type: this.param.type,

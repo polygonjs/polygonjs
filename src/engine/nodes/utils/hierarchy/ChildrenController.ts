@@ -177,7 +177,7 @@ export class HierarchyChildrenController {
 				child.name_controller.run_post_set_fullPath_hooks();
 			}
 		}
-		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.to_json()});
+		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
 		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
 			child_node.lifecycle.run_on_create_hooks();
 		}

@@ -24,7 +24,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 	constructor(protected node: BaseBuilderMatNodeType) {
 		super(node);
 	}
-	to_json(): PersistedConfigBaseMaterialData | undefined {
+	toJSON(): PersistedConfigBaseMaterialData | undefined {
 		if (!this.node.assembler_controller) {
 			return;
 		}

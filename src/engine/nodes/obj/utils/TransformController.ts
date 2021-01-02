@@ -7,14 +7,14 @@ import {Object3D} from 'three/src/core/Object3D';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 
 interface TransformedParamConfigDefaultParams {
-	matrix_auto_update?: boolean;
+	matrixAutoUpdate?: boolean;
 }
 
 export function TransformedParamConfig<TBase extends Constructor>(
 	Base: TBase,
 	default_params?: TransformedParamConfigDefaultParams
 ) {
-	const matrix_auto_update = default_params?.matrix_auto_update || false;
+	const matrixAutoUpdate = default_params?.matrixAutoUpdate || false;
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
 		/** @param toggle on to keep world position when adding a parent or removing from one */
@@ -37,7 +37,7 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		scale = ParamConfig.FLOAT(1);
 		// pivot = ParamConfig.VECTOR3([0, 0, 0]);
 		/** @param set for the matrix to be updated every frame */
-		matrixAutoUpdate = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
+		matrixAutoUpdate = ParamConfig.BOOLEAN(matrixAutoUpdate ? 1 : 0);
 		tlookAt = ParamConfig.BOOLEAN(0);
 		lookAtPos = ParamConfig.VECTOR3([0, 0, 0], {
 			visibleIf: {tlookAt: 1},

@@ -221,15 +221,15 @@ export class TextureAllocationsController {
 		}
 		return controller;
 	}
-	to_json(scene: PolyScene): TextureAllocationsControllerData {
+	toJSON(scene: PolyScene): TextureAllocationsControllerData {
 		return this._allocations.map((allocation: TextureAllocation) => {
 			const data = {
-				[allocation.shader_name]: allocation.to_json(scene),
+				[allocation.shader_name]: allocation.toJSON(scene),
 			};
 			return data;
 		});
 	}
 	print(scene: PolyScene) {
-		console.log(JSON.stringify(this.to_json(scene), [''], 2));
+		console.log(JSON.stringify(this.toJSON(scene), [''], 2));
 	}
 }

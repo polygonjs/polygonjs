@@ -38,7 +38,7 @@ class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
 			OrthographicCameraObjParamConfigMixin(
 				CameraMasterCameraParamConfig(
 					ThreejsCameraTransformParamConfig(
-						TransformedParamConfig(NodeParamsConfig, {matrix_auto_update: true})
+						TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
 					)
 				)
 			)

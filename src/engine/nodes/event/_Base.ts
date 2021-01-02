@@ -79,7 +79,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	private _on_dispatch_hooks_by_output_name: Map<string, DispatchHook[]> | undefined;
-	public on_dispatch(output_name: string, callback: DispatchHook) {
+	public onDispatch(output_name: string, callback: DispatchHook) {
 		this._on_dispatch_hooks_by_output_name = this._on_dispatch_hooks_by_output_name || new Map();
 		MapUtils.push_on_array_at_entry(this._on_dispatch_hooks_by_output_name, output_name, callback);
 	}

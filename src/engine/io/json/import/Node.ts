@@ -15,6 +15,7 @@ import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
 import {CoreType} from '../../../../core/Type';
 import {ObjectUtils} from '../../../../core/ObjectUtils';
+import {CoreString} from '../../../../core/String';
 
 const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
 
@@ -195,6 +196,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			const param_data = data[param_name] as ComplexParamJsonExporterData<ParamType>;
 			const options = param_data['options'];
 			// const is_spare = options && options['spare'] === true;
+
+			// make camelCase if required
+			if (false && param_name.includes('_')) {
+				param_name = CoreString.camel_case(param_name);
+			}
 
 			const param_type = param_data['type']!;
 			const has_param = this._node.params.has_param(param_name);

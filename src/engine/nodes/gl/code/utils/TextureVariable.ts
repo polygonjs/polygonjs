@@ -55,7 +55,7 @@ export class TextureVariable {
 		return new TextureVariable(data.name, data.size);
 	}
 
-	to_json(scene: PolyScene): TextureVariableData {
+	toJSON(scene: PolyScene): TextureVariableData {
 		const names: string[] = [];
 		if (this._graph_node_ids) {
 			this._graph_node_ids.forEach((boolean, node_id) => {

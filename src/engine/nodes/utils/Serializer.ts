@@ -32,11 +32,11 @@ export class NodeSerializer {
 	constructor(private node: BaseNodeType) {}
 
 	// serialize() {
-	// 	return this.to_json();
+	// 	return this.toJSON();
 	// }
 
 	// TODO: find a way to not re-create a json everytime
-	to_json(include_param_components: boolean = false): NodeSerializerData {
+	toJSON(include_param_components: boolean = false): NodeSerializerData {
 		// const spare_params_json_by_name = {};
 		// lodash_each(this.node.spare_param_names(), param_name=> {
 		// 	const param = this.node.spare_param(param_name);
@@ -48,7 +48,7 @@ export class NodeSerializer {
 			type: this.node.type,
 			graph_node_id: this.node.graph_node_id,
 			is_dirty: this.node.is_dirty,
-			ui_data_json: this.node.uiData.to_json(),
+			ui_data_json: this.node.uiData.toJSON(),
 			error_message: this.node.states.error.message,
 			children: this.children_ids(),
 			inputs: this.input_ids(),
@@ -69,7 +69,7 @@ export class NodeSerializer {
 		};
 
 		if (this.node.children_allowed() && this.node.children_controller) {
-			data['selection'] = this.node.children_controller.selection.to_json();
+			data['selection'] = this.node.children_controller.selection.toJSON();
 		}
 
 		return data;
@@ -89,10 +89,10 @@ export class NodeSerializer {
 			?.map((connection) => (connection != null ? connection.output_index : undefined));
 	}
 	named_input_connection_points() {
-		return this.node.io.inputs.named_input_connection_points.map((i) => i.to_json());
+		return this.node.io.inputs.named_input_connection_points.map((i) => i.toJSON());
 	}
 	named_output_connection_points() {
-		return this.node.io.outputs.named_output_connection_points.map((o) => o.to_json());
+		return this.node.io.outputs.named_output_connection_points.map((o) => o.toJSON());
 	}
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {

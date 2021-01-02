@@ -13,7 +13,7 @@ interface MaterialData {
 const POSSIBLE_MAP_NAMES = ['map', 'alphaMap', 'envMap'];
 export class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
-	to_json(): object | void {}
+	toJSON(): object | void {}
 	load(data: object) {}
 
 	//

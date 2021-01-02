@@ -313,8 +313,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// serializer
-	to_json(include_param_components: boolean = false) {
-		return this.serializer.to_json(include_param_components);
+	toJSON(include_param_components: boolean = false) {
+		return this.serializer.toJSON(include_param_components);
 	}
 
 	// modules

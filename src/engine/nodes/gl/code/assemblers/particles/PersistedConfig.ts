@@ -18,7 +18,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	constructor(protected node: ParticlesSystemGpuSopNode) {
 		super(node);
 	}
-	to_json(): PersistedConfigBaseParticlesData | undefined {
+	toJSON(): PersistedConfigBaseParticlesData | undefined {
 		if (!this.node.assembler_controller) {
 			return;
 		}
@@ -28,7 +28,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			shaders_by_name[shader_name] = shader;
 		});
 
-		const texture_allocations_data = this.node.assembler_controller.assembler.texture_allocations_controller.to_json(
+		const texture_allocations_data = this.node.assembler_controller.assembler.texture_allocations_controller.toJSON(
 			this.node.scene
 		);
 

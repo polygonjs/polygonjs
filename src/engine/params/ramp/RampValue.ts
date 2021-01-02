@@ -12,7 +12,7 @@ export interface RampValueJson {
 export class RampPoint {
 	constructor(private _position: number = 0, private _value: number = 0) {}
 
-	to_json(): RampPointJson {
+	toJSON(): RampPointJson {
 		return {
 			position: this._position,
 			value: this._value,
@@ -77,10 +77,10 @@ export class RampValue {
 		}
 		return new RampValue(json.interpolation, points);
 	}
-	to_json(): RampValueJson {
+	toJSON(): RampValueJson {
 		return {
 			interpolation: this._interpolation,
-			points: this._points.map((p) => p.to_json()),
+			points: this._points.map((p) => p.toJSON()),
 		};
 	}
 	clone(): RampValue {

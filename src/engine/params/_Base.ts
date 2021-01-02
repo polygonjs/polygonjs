@@ -268,8 +268,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	// serialize
-	to_json() {
-		return this.serializer.to_json();
+	toJSON() {
+		return this.serializer.toJSON();
 	}
 }
 export type BaseParamType = TypedParam<ParamType>;

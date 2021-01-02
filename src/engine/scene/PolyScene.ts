@@ -162,8 +162,8 @@ export class PolyScene {
 	private get serializer() {
 		return (this._serializer = this._serializer || new PolySceneSerializer(this));
 	}
-	to_json() {
-		return this.serializer.to_json();
+	toJSON() {
+		return this.serializer.toJSON();
 	}
 	private _read_only = false;
 	private _read_only_requester: BaseNodeType | undefined;

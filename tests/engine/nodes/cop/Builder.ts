@@ -130,8 +130,8 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 		assert.ok(new_builder1.persisted_config);
 		const float_param = new_builder1.params.get('float_param') as FloatParam;
 		const vec3_param = new_builder1.params.get('vec3_param') as Vector3Param;
-		assert.ok(float_param);
-		assert.ok(vec3_param);
+		assert.ok(float_param, 'float param does not exist');
+		assert.ok(vec3_param, 'vec3 param does not exist');
 		const material = new_builder1.texture_material;
 		assert.equal(material.fragmentShader, builder1.texture_material.fragmentShader);
 		assert.equal(material.vertexShader, builder1.texture_material.vertexShader);

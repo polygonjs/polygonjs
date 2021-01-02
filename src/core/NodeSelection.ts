@@ -56,7 +56,7 @@ export class CoreNodeSelection {
 	}
 
 	private _json: CoreGraphNodeId[] = [];
-	to_json() {
+	toJSON() {
 		this._json = this._json || [];
 		this._json = this._node_ids.map((id) => id);
 		return this._json;
