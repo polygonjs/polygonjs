@@ -1,3 +1,4 @@
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../json/export/Node';
 import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json/export/Scene';
 
@@ -51,7 +52,7 @@ export class SceneDataManifestImporter {
 			response_offset += 1;
 		}
 
-		const json_by_name: Dictionary<object> = {};
+		const json_by_name: PolyDictionary<object> = {};
 		const manifest_nodes = manifest.nodes;
 		for (let i = 0; i < manifest_nodes.length; i++) {
 			const manifest_name = manifest_nodes[i];
@@ -65,7 +66,7 @@ export class SceneDataManifestImporter {
 	static async assemble(
 		assemble_data: SceneDataElements,
 		manifest_nodes: string[],
-		json_by_name: Dictionary<object>
+		json_by_name: PolyDictionary<object>
 	) {
 		const scene_data: SceneJsonExporterData = {
 			root: assemble_data.root,

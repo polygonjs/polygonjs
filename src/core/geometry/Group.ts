@@ -1,3 +1,4 @@
+import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Vector3} from 'three/src/math/Vector3';
 import {Points} from 'three/src/objects/Points';
 import {Object3D} from 'three/src/core/Object3D';
@@ -410,7 +411,7 @@ export class CoreGroup {
 			return {};
 		}
 	}
-	objectAttribSizes(): Dictionary<AttribSize> {
+	objectAttribSizes(): PolyDictionary<AttribSize> {
 		let first_object;
 		if ((first_object = this.coreObjects()[0]) != null) {
 			return first_object.attribSizes();

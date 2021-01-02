@@ -19,6 +19,7 @@ import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitVa
 import {ParamsLabelController} from './ParamsLabelController';
 import {Poly} from '../../../Poly';
 import {ParamInitData} from '../io/IOController';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -40,7 +41,7 @@ export interface ParamsUpdateOptions {
 export class ParamsController {
 	private _param_create_mode: boolean = false;
 	private _params_created: boolean = false;
-	private _params_by_name: Dictionary<BaseParamType> = {};
+	private _params_by_name: PolyDictionary<BaseParamType> = {};
 	// caches
 	private _params_list: BaseParamType[] = [];
 	private _param_names: string[] = [];

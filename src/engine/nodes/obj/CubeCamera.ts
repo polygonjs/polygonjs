@@ -116,7 +116,7 @@
 // 		const renderer = POLY.renderers_controller.first_renderer();
 // 		if (renderer) {
 // 			// add objects to this._cube_camera_scene
-// 			const parent_by_child_uuid: Dictionary<Object3D> = {};
+// 			const parent_by_child_uuid: PolyDictionary<Object3D> = {};
 // 			let light_given = false;
 // 			for (let object of this._cube_camera_objects) {
 // 				if (!light_given && this.object_is_light(object)) {

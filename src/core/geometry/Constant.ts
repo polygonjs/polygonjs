@@ -1,3 +1,4 @@
+import {Number2} from '../../types/GlobalTypes';
 import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
 import {Scene} from 'three/src/scenes/Scene';
 import {Points} from 'three/src/objects/Points';

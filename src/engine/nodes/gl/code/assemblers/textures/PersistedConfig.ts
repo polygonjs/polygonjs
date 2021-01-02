@@ -3,8 +3,9 @@ import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {BuilderCopNode} from '../../../../cop/Builder';
 import {GlParamConfig} from '../../utils/ParamConfig';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
+import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
-type IUniforms = Dictionary<IUniform>;
+type IUniforms = PolyDictionary<IUniform>;
 
 export interface PersistedConfigBaseTextureData {
 	fragment_shader: string;

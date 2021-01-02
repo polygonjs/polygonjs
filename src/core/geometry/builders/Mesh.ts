@@ -1,6 +1,7 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometryBuilderBase} from './_Base';
 import {CorePoint} from '../Point';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 	protected _filter_points(points: CorePoint[]) {
@@ -13,7 +14,7 @@ export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 			const indices = geometry.getIndex()?.array;
 
 			if (indices) {
-				const points_by_index: Dictionary<CorePoint> = {};
+				const points_by_index: PolyDictionary<CorePoint> = {};
 				for (let point of points) {
 					points_by_index[point.index] = point;
 				}
@@ -40,7 +41,7 @@ export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 		return [];
 	}
 
-	protected _indices_from_points(new_index_by_old_index: Dictionary<number>, old_geometry: BufferGeometry) {
+	protected _indices_from_points(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
 		const index_attrib = old_geometry.index;
 		if (index_attrib != null) {
 			const old_indices = index_attrib.array;

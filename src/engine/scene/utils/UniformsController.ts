@@ -1,8 +1,9 @@
+import {PolyDictionary, Vector2Like} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
-type IUniforms = Dictionary<IUniform>;
+type IUniforms = PolyDictionary<IUniform>;
 export interface IUniformsWithTime extends IUniforms {
 	time: IUniform;
 }
@@ -15,11 +16,11 @@ export interface IUniformsWithResolution extends IUniforms {
 export class UniformsController {
 	constructor(private scene: PolyScene) {}
 
-	private _time_dependent_uniform_owners: Dictionary<IUniformsWithTime> = {}; //new Map()
+	private _time_dependent_uniform_owners: PolyDictionary<IUniformsWithTime> = {}; //new Map()
 	private _time_dependent_uniform_owners_ids: string[] | null = null;
 
 	private _resolution: Vector2 = new Vector2(1, 1);
-	private _resolution_dependent_uniform_owners: Dictionary<IUniformsWithResolution> = {};
+	private _resolution_dependent_uniform_owners: PolyDictionary<IUniformsWithResolution> = {};
 	private _resolution_dependent_uniform_owners_ids: string[] = [];
 
 	// time

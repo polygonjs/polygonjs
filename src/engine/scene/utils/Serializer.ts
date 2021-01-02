@@ -1,12 +1,13 @@
 import {PolyScene} from '../PolyScene';
 import {NodeSerializer} from '../../../engine/nodes/utils/Serializer';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class PolySceneSerializer {
 	constructor(private scene: PolyScene) {}
 
 	toJSON(include_node_param_components: boolean = false) {
-		const nodes_by_graph_node_id: Dictionary<object> = {};
-		const params_by_graph_node_id: Dictionary<object> = {};
+		const nodes_by_graph_node_id: PolyDictionary<object> = {};
+		const params_by_graph_node_id: PolyDictionary<object> = {};
 
 		for (let node of this.scene.nodes_controller.all_nodes()) {
 			const node_serializer = new NodeSerializer(node);

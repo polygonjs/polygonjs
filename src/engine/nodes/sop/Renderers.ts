@@ -2,6 +2,7 @@
  * A subnet to create ROP nodes
  *
  */
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {RopNodeChildrenMap} from '../../poly/registers/nodes/Rop';

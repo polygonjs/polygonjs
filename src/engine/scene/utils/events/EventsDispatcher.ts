@@ -1,3 +1,4 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {PolyScene} from '../../PolyScene';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
 import {MouseEventNode} from '../../../nodes/event/Mouse';

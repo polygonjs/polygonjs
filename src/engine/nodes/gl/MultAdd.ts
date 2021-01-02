@@ -1,8 +1,9 @@
 import {BaseNodeGlMathFunctionArg4GlNode} from './_BaseMathFunction';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
-const DefaultValues: Dictionary<number> = {
+const DefaultValues: PolyDictionary<number> = {
 	mult: 1,
 };
 

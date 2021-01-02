@@ -37,6 +37,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 const EASE_NAMES = [
 	'back-in-out',
@@ -72,7 +73,7 @@ const EASE_NAMES = [
 	'sine-out',
 ];
 
-const IMPORT_BY_EASE_NAME: Dictionary<string> = {
+const IMPORT_BY_EASE_NAME: PolyDictionary<string> = {
 	'circular-in-out': CircularInOut,
 	'exponential-in-out': ExponentialInOut,
 	'circular-in': CircularIn,
@@ -105,12 +106,12 @@ const IMPORT_BY_EASE_NAME: Dictionary<string> = {
 	'bounce-in': BounceIn,
 	'sine-out': SineOut,
 };
-const IMPORT_DEPENDENCIES_BY_EASE_NAME: Dictionary<string[]> = {
+const IMPORT_DEPENDENCIES_BY_EASE_NAME: PolyDictionary<string[]> = {
 	'bounce-in': [BounceOut],
 	'bounce-in-out': [BounceOut],
 };
 
-const METHOD_NAMES_BY_EASE_NAME: Dictionary<string> = {
+const METHOD_NAMES_BY_EASE_NAME: PolyDictionary<string> = {
 	'circular-in-out': 'circularInOut',
 	'exponential-in-out': 'exponentialInOut',
 	'circular-in': 'circularIn',

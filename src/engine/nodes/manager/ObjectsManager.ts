@@ -7,6 +7,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {HierarchyObjNode} from '../obj/utils/HierarchyController';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -18,7 +19,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	private _object: Group = new Group();
 	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
-	// private _expected_geo_nodes: Dictionary<GeoObjNode> = {};
+	// private _expected_geo_nodes: PolyDictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
 
 	protected _children_controller_context = NodeContext.OBJ;
@@ -186,7 +187,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	// private async expected_loading_geo_nodes_by_id() {
 	// 	const geo_nodes = this.nodesByType('geo');
-	// 	const node_by_id: Dictionary<GeoObjNode> = {};
+	// 	const node_by_id: PolyDictionary<GeoObjNode> = {};
 	// 	for (let geo_node of geo_nodes) {
 	// 		const is_displayed = await geo_node.is_displayed();
 	// 		if (is_displayed) {

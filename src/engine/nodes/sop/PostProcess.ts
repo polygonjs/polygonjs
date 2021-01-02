@@ -2,6 +2,7 @@
  * A subnet to create POST PROCESS nodes
  *
  */
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseNetworkSopNode} from './_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';

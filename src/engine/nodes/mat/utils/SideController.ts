@@ -1,5 +1,5 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
-
 import {FrontSide} from 'three/src/constants';
 import {DoubleSide} from 'three/src/constants';
 import {BackSide} from 'three/src/constants';

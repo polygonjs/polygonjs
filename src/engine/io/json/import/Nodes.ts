@@ -9,12 +9,13 @@ import {PolyNodeJsonImporter} from './nodes/Poly';
 import {Poly} from '../../../Poly';
 import {NodeJsonImporter} from './Node';
 import {CoreString} from '../../../../core/String';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T) {}
 
-	process_data(scene_importer: SceneJsonImporter, data?: Dictionary<NodeJsonExporterData>) {
+	process_data(scene_importer: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
 		if (!data) {
 			return;
 		}

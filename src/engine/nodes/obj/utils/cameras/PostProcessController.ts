@@ -1,5 +1,5 @@
+import {Constructor, PolyDictionary} from '../../../../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
-
 import {BaseThreejsCameraObjNodeType, BaseThreejsCameraObjNodeClass} from '../../_BaseCamera';
 import {EffectComposer} from '../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {NetworkNodeType} from '../../../../poly/NodeContext';
@@ -44,7 +44,7 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 }
 
 export class PostProcessController {
-	private _composers_by_canvas_id: Dictionary<EffectComposer> = {};
+	private _composers_by_canvas_id: PolyDictionary<EffectComposer> = {};
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {
 		if (this.node.p.postProcessNode) {

@@ -1,3 +1,4 @@
+import {Number2} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';

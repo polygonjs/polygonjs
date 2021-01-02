@@ -3,6 +3,7 @@ import {CSS3DRenderer} from '../../../modules/three/examples/jsm/renderers/CSS3D
 import {RopType} from '../../poly/registers/nodes/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 class Css3DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
@@ -17,7 +18,7 @@ export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsCon
 		return RopType.CSS3D;
 	}
 
-	private _renderers_by_canvas_id: Dictionary<CSS3DRenderer> = {};
+	private _renderers_by_canvas_id: PolyDictionary<CSS3DRenderer> = {};
 	create_renderer(canvas: HTMLCanvasElement) {
 		const renderer = new CSS3DRenderer();
 		this._renderers_by_canvas_id[canvas.id] = renderer;

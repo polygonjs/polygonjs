@@ -2,16 +2,17 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Sphere} from 'three/src/math/Sphere';
 import {Box3} from 'three/src/math/Box3';
 import {CorePoint} from '../../geometry/Point';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export type OctreeNodeTraverseCallback = (node: OctreeNode) => void;
 
 export class OctreeNode {
-	_leaves_by_octant: Dictionary<OctreeNode> = {};
-	_points_by_octant_id: Dictionary<CorePoint[]> = {};
+	_leaves_by_octant: PolyDictionary<OctreeNode> = {};
+	_points_by_octant_id: PolyDictionary<CorePoint[]> = {};
 	_leaves: OctreeNode[] = [];
 	// _bbox: Box3 | undefined;
 	_center: Vector3;
-	_bounding_boxes_by_octant: Dictionary<Box3> = {};
+	_bounding_boxes_by_octant: PolyDictionary<Box3> = {};
 	_bounding_boxes_by_octant_prepared: boolean = false;
 
 	constructor(private _bbox: Box3, private _level: number = 0) {

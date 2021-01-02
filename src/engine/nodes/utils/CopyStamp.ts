@@ -1,3 +1,4 @@
+import {AttribValue} from '../../../types/GlobalTypes';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {PolyScene} from '../../scene/PolyScene';
 

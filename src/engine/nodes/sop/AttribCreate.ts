@@ -28,10 +28,11 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
-type ValueArrayByName = Dictionary<number[]>;
+type ValueArrayByName = PolyDictionary<number[]>;
 
 import {AttribCreateSopOperation} from '../../../core/operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NumericAttribValueAsArray, PolyDictionary} from '../../../types/GlobalTypes';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	/** @param the group this applies to */
@@ -253,7 +254,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
 				let params = vparam.components;
-				let values_by_core_object_index: Dictionary<NumericAttribValueAsArray> = {};
+				let values_by_core_object_index: PolyDictionary<NumericAttribValueAsArray> = {};
 				// for (let component_param of params) {
 				// 	values.push(component_param.value);
 				// }

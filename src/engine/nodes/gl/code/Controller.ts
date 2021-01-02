@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../../types/GlobalTypes';
 import {TypedNode} from '../../_Base';
 import {BaseGlShaderAssembler} from './assemblers/_Base';
 import {GlobalsBaseController} from './globals/_Base';

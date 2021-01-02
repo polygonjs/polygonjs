@@ -1,3 +1,4 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedObjNode} from '../_Base';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {CoreTransform, SetParamsFromMatrixOptions, ROTATION_ORDERS, RotationOrder} from '../../../../core/Transform';

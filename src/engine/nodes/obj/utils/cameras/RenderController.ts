@@ -1,3 +1,4 @@
+import {Constructor, PolyDictionary} from '../../../../../types/GlobalTypes';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Vector2} from 'three/src/math/Vector2';
 import {Scene} from 'three/src/scenes/Scene';
@@ -54,8 +55,8 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 }
 
 export class RenderController {
-	private _renderers_by_canvas_id: Dictionary<WebGLRenderer> = {};
-	private _resolution_by_canvas_id: Dictionary<Vector2> = {};
+	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
+	private _resolution_by_canvas_id: PolyDictionary<Vector2> = {};
 	private _resolved_scene: Scene | undefined;
 	private _resolved_renderer_rop: WebGlRendererRopNode | undefined;
 	private _resolved_cssRenderer_rop: Css2DRendererRopNode | Css3DRendererRopNode | undefined;
@@ -68,7 +69,7 @@ export class RenderController {
 	//
 	//
 	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number) {
-		if (this.node.pv.do_post_process) {
+		if (this.node.pv.doPostProcess) {
 			this.node.post_process_controller.render(canvas, size);
 		} else {
 			this.render_with_renderer(canvas);

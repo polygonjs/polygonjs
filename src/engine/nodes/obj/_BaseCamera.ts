@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {Camera} from 'three/src/cameras/Camera';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';

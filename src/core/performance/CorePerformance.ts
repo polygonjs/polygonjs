@@ -3,14 +3,15 @@ import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceCont
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 export class CorePerformance {
 	private _started: boolean = false;
 	_start_time: number | null = 0;
 	_previous_timestamp: number = 0;
-	_nodes_cook_data: Dictionary<PerformanceNode> = {};
-	_durations_by_name: Dictionary<number> = {};
-	_durations_count_by_name: Dictionary<number> = {};
+	_nodes_cook_data: PolyDictionary<PerformanceNode> = {};
+	_durations_by_name: PolyDictionary<number> = {};
+	_durations_count_by_name: PolyDictionary<number> = {};
 
 	profile(name: string, method: (args?: any) => any) {
 		const start_time = performance.now();
@@ -102,7 +103,7 @@ export class CorePerformance {
 		const durations_count_by_name = ObjectUtils.clone(this._durations_count_by_name);
 
 		const durations = [];
-		const names_by_duration: Dictionary<string[]> = {};
+		const names_by_duration: PolyDictionary<string[]> = {};
 
 		for (let name of Object.keys(durations_by_name)) {
 			const duration = durations_by_name[name];

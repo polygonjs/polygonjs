@@ -3,6 +3,7 @@
  *
  *
  */
+import {Constructor} from '../../../types/GlobalTypes';
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {DirectionalLightHelper} from './utils/helpers/DirectionalLightHelper';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

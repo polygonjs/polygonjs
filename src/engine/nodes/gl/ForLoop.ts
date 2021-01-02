@@ -4,13 +4,14 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 enum ForLoopInput {
 	START_INDEX = 'i',
 	MAX = 'max',
 	STEP = 'step',
 }
-const DEFAULT_VALUES: Dictionary<number> = {
+const DEFAULT_VALUES: PolyDictionary<number> = {
 	[ForLoopInput.START_INDEX]: 0,
 	[ForLoopInput.MAX]: 10,
 	[ForLoopInput.STEP]: 1,

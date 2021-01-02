@@ -1,3 +1,4 @@
+import {Number3, StringOrNumber3} from '../../types/GlobalTypes';
 import {TypedMultipleParam} from './_Multiple';
 import {Color} from 'three/src/math/Color';
 import {ParamType} from '../poly/ParamType';
@@ -6,7 +7,7 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ColorConversion} from '../../core/Color';
 import {TypeAssert} from '../poly/Assert';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {

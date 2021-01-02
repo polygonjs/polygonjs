@@ -1,5 +1,5 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseObjNodeType} from '../_Base';
-// import {ParamType} from '../../../poly/ParamType';
 
 const PARAM_NAME = 'layer';
 

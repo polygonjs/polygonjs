@@ -1,3 +1,4 @@
+import {Number2, PolyDictionary} from '../../../../types/GlobalTypes';
 import {TypedNode} from '../../../nodes/_Base';
 import {SceneJsonExporter} from './Scene';
 import {NodeContext} from '../../../poly/NodeContext';
@@ -29,9 +30,9 @@ export interface IoConnectionPointsData {
 
 export interface NodeJsonExporterData {
 	type: string;
-	nodes?: Dictionary<NodeJsonExporterData>;
+	nodes?: PolyDictionary<NodeJsonExporterData>;
 	children_context?: NodeContext;
-	params?: Dictionary<ParamJsonExporterData<ParamType>>;
+	params?: PolyDictionary<ParamJsonExporterData<ParamType>>;
 	inputs?: InputData[];
 	connection_points?: IoConnectionPointsData;
 	selection?: string[];
@@ -43,7 +44,7 @@ export interface NodeJsonExporterData {
 export interface NodeJsonExporterUIData {
 	pos?: Number2;
 	comment?: string;
-	nodes: Dictionary<NodeJsonExporterUIData>;
+	nodes: PolyDictionary<NodeJsonExporterUIData>;
 }
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
@@ -125,7 +126,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			if (selection && this._node.children().length > 0) {
 				// only save the nodes that are still present, in case the selection just got deleted
 				const selected_children: BaseNodeTypeWithIO[] = [];
-				const selected_ids: Dictionary<boolean> = {};
+				const selected_ids: PolyDictionary<boolean> = {};
 				for (let selected_node of selection.nodes()) {
 					selected_ids[selected_node.graph_node_id] = true;
 				}
@@ -245,7 +246,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	}
 
 	protected params_data() {
-		const data: Dictionary<ParamJsonExporterData<ParamType>> = {};
+		const data: PolyDictionary<ParamJsonExporterData<ParamType>> = {};
 
 		for (let param_name of this._node.params.names) {
 			const param = this._node.params.get(param_name);
@@ -262,7 +263,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	}
 
 	protected nodes_data() {
-		const data: Dictionary<NodeJsonExporterData> = {};
+		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
 			const node_exporter = JsonExportDispatcher.dispatch_node(child); //.json_exporter()
 			data[child.name] = node_exporter.data();

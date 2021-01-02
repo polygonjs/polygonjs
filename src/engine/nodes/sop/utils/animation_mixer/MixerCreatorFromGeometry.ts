@@ -43,7 +43,7 @@
 // 		});
 
 // 		// set material skinning
-// 		const materials_by_id: Dictionary<Material> = {};
+// 		const materials_by_id: PolyDictionary<Material> = {};
 // 		this._animation_target.traverse((object3d: Object3D) => {
 // 			const child = object3d as Mesh;
 // 			if (child.material) {

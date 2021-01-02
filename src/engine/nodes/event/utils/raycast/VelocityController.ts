@@ -1,3 +1,4 @@
+import {Number3} from '../../../../../types/GlobalTypes';
 import {RaycastEventNode} from '../../Raycast';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../../../../poly/ParamType';

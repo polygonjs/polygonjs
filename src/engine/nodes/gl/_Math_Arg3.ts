@@ -1,12 +1,13 @@
 import {BaseNodeGlMathFunctionArg3GlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 interface MathArg3Options {
 	in?: [string, string, string];
 	out?: string;
 	out_type?: GlConnectionPointType;
 	method?: string;
-	default?: Dictionary<any>;
+	default?: PolyDictionary<any>;
 	functions?: string[];
 }
 

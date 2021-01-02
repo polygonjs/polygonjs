@@ -2,6 +2,7 @@
  * Imports a video from your webcam
  *
  */
+import {Constructor} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -1,3 +1,4 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
 import {Material} from 'three/src/materials/Material';

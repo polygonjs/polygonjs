@@ -4,9 +4,10 @@ import {ParamValuesTypeMap} from '../../engine/params/types/ParamValuesTypeMap';
 import {StatesController} from '../../engine/nodes/utils/StatesController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {InputCloneMode} from '../../engine/poly/InputCloneMode';
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 export type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
-export type DefaultOperationParams = Dictionary<DefaultOperationParam<ParamType>>;
+export type DefaultOperationParams = PolyDictionary<DefaultOperationParam<ParamType>>;
 
 export const OPERATIONS_COMPOSER_NODE_TYPE: Readonly<string> = 'operationsComposer';
 

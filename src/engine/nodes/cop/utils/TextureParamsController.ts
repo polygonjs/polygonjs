@@ -1,3 +1,4 @@
+import {Constructor, PolyDictionary} from '../../../../types/GlobalTypes';
 import {TypedCopNode} from '../_Base';
 import {Texture} from 'three/src/textures/Texture';
 import {
@@ -73,7 +74,7 @@ const ENCODINGS = [
 	{BasicDepthPacking},
 	{RGBADepthPacking},
 ];
-const WRAPPINGS: Dictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
+const WRAPPINGS: PolyDictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {CopRendererController} from './RendererController';

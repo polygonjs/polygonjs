@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

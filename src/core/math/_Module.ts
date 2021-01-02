@@ -1,7 +1,8 @@
+import {LngLatLike, Vector2Like} from '../../types/GlobalTypes';
 import {Vector3} from 'three/src/math/Vector3';
 import {Triangle} from 'three/src/math/Triangle';
 import {Easing} from './Easing';
-import { CoreType } from '../Type';
+import {CoreType} from '../Type';
 
 const RAD_DEG_RATIO = Math.PI / 180;
 const RAND_A = 12.9898;

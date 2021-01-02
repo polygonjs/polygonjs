@@ -5,6 +5,7 @@
  * This material only emits a color and does not react to light. It is therefore the less resource intensive material.
  *
  */
+import {Constructor} from '../../../types/GlobalTypes';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';

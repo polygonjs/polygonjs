@@ -5,13 +5,14 @@ import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry
 import {IUniformsWithTime, IUniformsWithResolution} from '../../../../../scene/utils/UniformsController';
 import {GlParamConfig} from '../../utils/ParamConfig';
 import {Poly} from '../../../../../Poly';
+import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
 export interface PersistedConfigBaseMaterialData {
 	material: object;
 	param_uniform_pairs: [string, string][];
 	uniforms_time_dependent?: boolean;
 	uniforms_resolution_dependent?: boolean;
-	custom_materials?: Dictionary<object>;
+	custom_materials?: PolyDictionary<object>;
 }
 
 // potential bug with Material Loader
@@ -30,7 +31,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		}
 
 		// custom materials
-		const custom_materials_data: Dictionary<object> = {};
+		const custom_materials_data: PolyDictionary<object> = {};
 		const custom_materials = this.node.material.custom_materials;
 		if (custom_materials) {
 			const custom_material_names: CustomMaterialName[] = Object.keys(custom_materials) as CustomMaterialName[];

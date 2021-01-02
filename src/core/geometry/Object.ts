@@ -1,3 +1,4 @@
+import {Number3, AttribValue, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
@@ -187,7 +188,7 @@ export class CoreObject extends CoreEntity {
 		return CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[this._object.constructor.name];
 	}
 	attribTypes() {
-		const h: Dictionary<AttribType> = {};
+		const h: PolyDictionary<AttribType> = {};
 		for (let attrib_name of this.attribNames()) {
 			const type = this.attribType(attrib_name);
 			if (type != null) {
@@ -205,7 +206,7 @@ export class CoreObject extends CoreEntity {
 		}
 	}
 	attribSizes() {
-		const h: Dictionary<AttribSize> = {};
+		const h: PolyDictionary<AttribSize> = {};
 		for (let attrib_name of this.attribNames()) {
 			const size = this.attribSize(attrib_name);
 			if (size != null) {

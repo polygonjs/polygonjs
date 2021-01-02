@@ -1,11 +1,11 @@
 import {TypedMultipleParam} from './_Multiple';
-
+import {Number2, StringOrNumber2} from '../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR2: Readonly<string[]> = ['x', 'y'];
 export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {

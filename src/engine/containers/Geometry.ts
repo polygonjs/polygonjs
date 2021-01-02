@@ -12,6 +12,7 @@ import {ContainableMap} from './utils/ContainableMap';
 import {CoreObject} from '../../core/geometry/Object';
 import {AttribType, ObjectData} from '../../core/geometry/Constant';
 import {NodeContext} from '../poly/NodeContext';
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
@@ -60,7 +61,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return count;
 	}
 	objects_count_by_type() {
-		const count_by_type: Dictionary<number> = {};
+		const count_by_type: PolyDictionary<number> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
 			for (let core_object of core_group.coreObjects()) {
@@ -74,7 +75,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return count_by_type;
 	}
 	objects_names_by_type() {
-		const names_by_type: Dictionary<string[]> = {};
+		const names_by_type: PolyDictionary<string[]> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
 			for (let core_object of core_group.coreObjects()) {
@@ -95,7 +96,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return names;
 	}
 	point_attribute_sizes_by_name() {
-		let sizes_by_name: Dictionary<number> = {};
+		let sizes_by_name: PolyDictionary<number> = {};
 		const geometry = this.first_geometry();
 		if (geometry) {
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
@@ -106,7 +107,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return sizes_by_name;
 	}
 	object_attribute_sizes_by_name() {
-		let sizes_by_name: Dictionary<number> = {};
+		let sizes_by_name: PolyDictionary<number> = {};
 		const core_object = this.first_core_object();
 		if (core_object) {
 			for (let name of core_object.attribNames()) {
@@ -119,7 +120,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return sizes_by_name;
 	}
 	point_attribute_types_by_name() {
-		let types_by_name: Dictionary<AttribType> = {};
+		let types_by_name: PolyDictionary<AttribType> = {};
 		const geometry = this.first_geometry();
 		if (geometry) {
 			const core_geo = new CoreGeometry(geometry);
@@ -130,7 +131,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return types_by_name;
 	}
 	object_attribute_types_by_name() {
-		let types_by_name: Dictionary<AttribType> = {};
+		let types_by_name: PolyDictionary<AttribType> = {};
 		const core_object = this.first_core_object();
 		if (core_object) {
 			for (let name of core_object.attribNames()) {

@@ -16,7 +16,7 @@ import {StrIndexExpression} from '../../../expressions/methods/strIndex';
 import {StrSubExpression} from '../../../expressions/methods/strSub';
 
 import {BaseMethod} from '../../../expressions/methods/_Base';
-export interface ExpressionMap extends Dictionary<typeof BaseMethod> {
+export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	asset: typeof AssetExpression;
 	bbox: typeof BboxExpression;
 	centroid: typeof CentroidExpression;
@@ -36,6 +36,7 @@ export interface ExpressionMap extends Dictionary<typeof BaseMethod> {
 }
 
 import {Poly} from '../../../Poly';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllExpressionsRegister {
 	static run(poly: Poly) {
 		poly.expressionsRegister.register(AssetExpression, 'asset');

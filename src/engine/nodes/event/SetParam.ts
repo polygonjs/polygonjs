@@ -4,6 +4,7 @@
  *
  *
  */
+import {Number2, Number3, Number4} from '../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';

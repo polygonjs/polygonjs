@@ -9,6 +9,7 @@ import {CoreGroup} from './Group';
 import {CoreGeometry} from './Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreType} from '../Type';
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 const DEFAULT = {
 	SCALE: new Vector3(1, 1, 1),
@@ -35,7 +36,7 @@ export class CoreInstancer {
 	private _is_normal_present: boolean;
 	private _is_up_present: boolean;
 	private _do_rotate_matrices: boolean;
-	private _matrices: Dictionary<Matrix4> = {};
+	private _matrices: PolyDictionary<Matrix4> = {};
 
 	constructor(private _group_wrapper: CoreGroup) {
 		this._is_pscale_present = this._group_wrapper.hasAttrib('pscale');

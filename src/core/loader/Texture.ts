@@ -361,7 +361,7 @@ export class CoreTextureLoader {
 		// // as firefox was seen hanging trying to load multiple glb files
 		// // limit to 1 for safari,
 		// if (name) {
-		// 	const loads_count_by_browser: Dictionary<number> = {
+		// 	const loads_count_by_browser: PolyDictionary<number> = {
 		// 		Chrome: 10,
 		// 		Firefox: 4,
 		// 	};
@@ -378,7 +378,7 @@ export class CoreTextureLoader {
 		// const name = parser.getBrowser().name;
 		// // add a delay for browsers other than Chrome and Firefox
 		// if (name) {
-		// 	const delay_by_browser: Dictionary<number> = {
+		// 	const delay_by_browser: PolyDictionary<number> = {
 		// 		Chrome: 0,
 		// 		Firefox: 10,
 		// 	};

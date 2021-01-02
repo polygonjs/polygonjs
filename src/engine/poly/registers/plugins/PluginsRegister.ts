@@ -2,10 +2,11 @@ import {Poly} from '../../../Poly';
 import {PolyPlugin} from './Plugin';
 import {BaseNodeConstructor, BaseOperationConstructor} from '../nodes/NodesRegister';
 import {NodeContext} from '../../NodeContext';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface PluginsRegisterData {
-	nodes: Dictionary<Dictionary<string>>;
-	operations: Dictionary<Dictionary<string>>;
+	nodes: PolyDictionary<PolyDictionary<string>>;
+	operations: PolyDictionary<PolyDictionary<string>>;
 }
 
 export class PluginsRegister {

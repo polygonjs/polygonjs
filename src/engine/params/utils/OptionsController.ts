@@ -8,6 +8,7 @@ import {ColorConversion} from '../../../core/Color';
 import {CoreType} from '../../../core/Type';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
+import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
 
 const CALLBACK_OPTION = 'callback';
 const CALLBACK_STRING_OPTION = 'callbackString';
@@ -59,7 +60,7 @@ export enum FileType {
 	GEOMETRY = 'geometry',
 }
 
-export type VisibleIfParamOptions = Dictionary<number | boolean>;
+export type VisibleIfParamOptions = PolyDictionary<number | boolean>;
 interface BaseParamOptions {
 	// cook
 	cook?: boolean;

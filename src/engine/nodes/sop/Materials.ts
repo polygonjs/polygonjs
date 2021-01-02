@@ -2,6 +2,7 @@
  * A subnet to create Material nodes
  *
  */
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {ParamLessBaseNetworkSopNode} from './_Base';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';

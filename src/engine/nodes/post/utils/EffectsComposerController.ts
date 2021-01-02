@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../../types/GlobalTypes';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
 import {EffectComposer} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';

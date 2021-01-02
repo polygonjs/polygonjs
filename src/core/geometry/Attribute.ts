@@ -1,6 +1,7 @@
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 export enum Attribute {
 	POSITION = 'position',
@@ -8,7 +9,7 @@ export enum Attribute {
 	TANGENT = 'tangent',
 }
 
-const ATTRIB_NAME_MAP: Dictionary<string> = {
+const ATTRIB_NAME_MAP: PolyDictionary<string> = {
 	P: 'position',
 	N: 'normal',
 	Cd: 'color',
@@ -20,7 +21,7 @@ export class CoreAttribute {
 	}
 
 	static array_to_indexed_arrays(array: string[]) {
-		const index_by_value: Dictionary<number> = {};
+		const index_by_value: PolyDictionary<number> = {};
 		let current_index = 0;
 		const indices = [];
 		const values = [];

@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../../types/GlobalTypes';
 import {TypedNode} from '../../_Base';
 import {BaseJsFunctionAssembler} from './assemblers/_Base';
 import {OutputJsNode} from '../Output';

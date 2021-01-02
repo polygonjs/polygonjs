@@ -1,3 +1,4 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {Material} from 'three/src/materials/Material';

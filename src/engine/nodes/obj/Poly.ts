@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export function create_poly_obj_node(node_type: string, definition: PolyNodeDefinition) {
 	class PolyObjParamConfig extends NodeParamsConfig {

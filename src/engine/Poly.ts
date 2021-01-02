@@ -16,6 +16,7 @@ import {BaseOperation} from '../core/operations/_Base';
 import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
 import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPlugin} from './poly/registers/plugins/Plugin';
+import {PolyDictionary} from '../types/GlobalTypes';
 
 export class Poly {
 	static _instance: Poly | undefined;
@@ -27,7 +28,7 @@ export class Poly {
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
-	scenes_by_uuid: Dictionary<PolyScene> = {};
+	scenes_by_uuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;
 	private _logger: BaseCoreLogger | null = null;
@@ -56,7 +57,7 @@ export class Poly {
 	registerPlugin(plugin: PolyPlugin) {
 		this.pluginsRegister.register(plugin);
 	}
-	registeredNodes(parent_context: NodeContext, type: string): Dictionary<typeof BaseNodeClass> {
+	registeredNodes(parent_context: NodeContext, type: string): PolyDictionary<typeof BaseNodeClass> {
 		return this.nodesRegister.registeredNodes(parent_context, type);
 	}
 	registeredOperation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {

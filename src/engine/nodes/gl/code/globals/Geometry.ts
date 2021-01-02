@@ -11,8 +11,9 @@ import {MapUtils} from '../../../../../core/MapUtils';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {PolyDictionary} from '../../../../../types/GlobalTypes';
 
-const VARIABLE_CONFIG_DEFAULT_BY_NAME: Dictionary<string> = {
+const VARIABLE_CONFIG_DEFAULT_BY_NAME: PolyDictionary<string> = {
 	position: 'vec3( position )',
 };
 

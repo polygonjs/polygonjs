@@ -27,6 +27,7 @@ import {SopSwitch} from '../../examples/engine/nodes/sop/Switch';
 import {SopTetrahedron} from '../../examples/engine/nodes/sop/Tetrahedron';
 import {SopTorus} from '../../examples/engine/nodes/sop/Torus';
 import {SopTorusKnot} from '../../examples/engine/nodes/sop/TorusKnot';
+import {PolyDictionary} from '../types/GlobalTypes';
 
 const ANIM = [AnimPosition];
 const MAT = [MatMeshBasic, MatMeshLambert];
@@ -57,7 +58,7 @@ interface SceneBuilderResult {
 	scene: PolyScene;
 	camera: PerspectiveCameraObjNode;
 	nodes: BaseNodeType[];
-	htmlNodes?: Dictionary<BaseNodeType>;
+	htmlNodes?: PolyDictionary<BaseNodeType>;
 }
 
 const result: SceneBuilderResult = SopRoundedBox();

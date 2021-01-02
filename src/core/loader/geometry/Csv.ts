@@ -5,6 +5,7 @@ import {CoreAttribute} from '../../geometry/Attribute';
 import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {CoreType} from '../../Type';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 type CsvValue = string | number | number[];
 const POSITION = 'position';
@@ -16,10 +17,10 @@ export class CsvLoader {
 	private attribute_names_from_first_line: boolean = false;
 	private lines: string[] = [];
 	private points_count: number = 0;
-	private attribute_values_by_name: Dictionary<CsvValue[]> = {};
-	// const attribute_types_by_name: Dictionary<AttribType> = {};
-	// const attribute_sizes_by_name:Dictionary<1|2|3|4> = {};
-	private attribute_data_by_name: Dictionary<CoreAttributeData> = {};
+	private attribute_values_by_name: PolyDictionary<CsvValue[]> = {};
+	// const attribute_types_by_name: PolyDictionary<AttribType> = {};
+	// const attribute_sizes_by_name: PolyDictionary<1|2|3|4> = {};
+	private attribute_data_by_name: PolyDictionary<CoreAttributeData> = {};
 	private _loading = false;
 
 	constructor(private attribute_names?: string[]) {

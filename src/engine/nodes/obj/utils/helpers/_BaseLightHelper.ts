@@ -1,6 +1,6 @@
+import {Constructor} from '../../../../../types/GlobalTypes';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
 import {TypedObjNode} from '../../_Base';
 import {Group} from 'three/src/objects/Group';

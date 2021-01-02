@@ -18,6 +18,7 @@ import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	/** @param toggle off to hide */
 	display = ParamConfig.BOOLEAN(1);

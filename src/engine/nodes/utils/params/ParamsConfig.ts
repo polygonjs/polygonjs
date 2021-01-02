@@ -1,4 +1,5 @@
 // import {BaseNode} from '../../_Base';
+import {Number2, Number3, Number4, PolyDictionary} from '../../../../types/GlobalTypes';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {RampParam} from '../../../params/Ramp';
@@ -219,7 +220,7 @@ export class ParamConfig {
 	}
 }
 
-export class NodeParamsConfig implements Dictionary<ParamTemplate<ParamType>> {
+export class NodeParamsConfig implements PolyDictionary<ParamTemplate<ParamType>> {
 	[name: string]: ParamTemplate<ParamType>;
 }
 // export class NodeParamsConfig {}

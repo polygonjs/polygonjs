@@ -72,7 +72,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		if (params.tanisotropy) {
 			await this._update_anisotropy(texture, params);
 		}
-		if (params.tminfilter || params.tmaxfilter) {
+		if (params.tminFilter || params.tmagFilter) {
 			this._update_filter(texture, params);
 		}
 	}
@@ -88,10 +88,10 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		}
 	}
 	private _update_filter(texture: Texture, params: TexturePropertiesSopParams) {
-		if (params.tminfilter) {
+		if (params.tminFilter) {
 			texture.minFilter = params.minFilter;
 		}
-		if (params.tmagfilter) {
+		if (params.tmagFilter) {
 			texture.magFilter = params.magFilter;
 		}
 	}

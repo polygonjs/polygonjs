@@ -1,3 +1,4 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';

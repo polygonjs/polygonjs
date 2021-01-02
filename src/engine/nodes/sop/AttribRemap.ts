@@ -14,6 +14,7 @@ import {AttribSize} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../poly/Assert';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to remap */
 	name = ParamConfig.STRING();

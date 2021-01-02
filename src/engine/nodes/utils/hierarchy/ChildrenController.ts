@@ -1,3 +1,4 @@
+import {Constructor, PolyDictionary} from '../../../../types/GlobalTypes';
 import {CoreString} from '../../../../core/String';
 import {BaseNodeType} from '../../_Base';
 import {NodeEvent} from '../../../poly/NodeEvent';
@@ -14,9 +15,9 @@ import {BaseSopOperation} from '../../../../core/operations/sop/_Base';
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 
 export class HierarchyChildrenController {
-	private _children: Dictionary<BaseNodeType> = {};
-	private _children_by_type: Dictionary<CoreGraphNodeId[]> = {};
-	private _children_and_grandchildren_by_context: Dictionary<CoreGraphNodeId[]> = {};
+	private _children: PolyDictionary<BaseNodeType> = {};
+	private _children_by_type: PolyDictionary<CoreGraphNodeId[]> = {};
+	private _children_and_grandchildren_by_context: PolyDictionary<CoreGraphNodeId[]> = {};
 
 	private _selection: CoreNodeSelection | undefined;
 	get selection(): CoreNodeSelection {

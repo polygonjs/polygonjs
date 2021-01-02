@@ -16,7 +16,7 @@ export interface NodeSerializerData {
 	named_input_connection_points: BaseConnectionPointData[];
 	named_output_connection_points: BaseConnectionPointData[];
 	param_ids: CoreGraphNodeId[];
-	// spare_params: Dictionary<string>;
+	// spare_params: PolyDictionary<string>;
 	override_cloned_state_allowed: boolean;
 	inputs_clone_required_states: boolean | boolean[];
 	flags?: {
@@ -99,7 +99,7 @@ export class NodeSerializer {
 		return param_names.map((param_name) => {
 			return this.node.params.get(param_name)!.graph_node_id;
 		});
-		// const params_json_by_name: Dictionary<string> = {};
+		// const params_json_by_name: PolyDictionary<string> = {};
 		// for (let param_name of param_names) {
 		// 	const param = this.node.params.get(param_name);
 		// 	if (param) {

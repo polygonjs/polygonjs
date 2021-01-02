@@ -1,3 +1,4 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';

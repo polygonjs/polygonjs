@@ -1,3 +1,4 @@
+import {StringOrNumber} from '../../types/GlobalTypes';
 import {TypedParam} from './_Base';
 import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';

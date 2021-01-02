@@ -10,6 +10,7 @@
 // import {Vector2Param} from '../Vector2';
 // import {Vector3Param} from '../Vector3';
 // import {Vector4Param} from '../Vector4';
+import {Number2, Number3, Number4} from '../../../types/GlobalTypes';
 import {RampValueJson} from '../ramp/RampValue';
 import {ParamType} from '../../poly/ParamType';
 import {ParamInitValuesTypeMap} from './ParamInitValuesTypeMap';

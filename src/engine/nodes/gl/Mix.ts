@@ -1,7 +1,8 @@
 import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
-const DefaultValues: Dictionary<number> = {
+const DefaultValues: PolyDictionary<number> = {
 	blend: 0.5,
 };
 export class MixGlNode extends BaseGlMathFunctionGlNode {

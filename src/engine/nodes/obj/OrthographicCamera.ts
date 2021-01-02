@@ -3,6 +3,7 @@
  *
  *
  */
+import {Constructor} from '../../../types/GlobalTypes';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {
 	TypedThreejsCameraObjNode,

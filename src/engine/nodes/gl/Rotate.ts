@@ -1,3 +1,4 @@
+import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import {TypedGlNode} from './_Base';
 import Quaternion from './gl/quaternion.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
@@ -29,7 +30,7 @@ const InputTypesByMode: ConnectionTypeArrayByMode = {
 	[GlRotateMode.QUAT]: [GlConnectionPointType.VEC3, GlConnectionPointType.VEC4],
 };
 
-const DefaultValues: Dictionary<Number3> = {
+const DefaultValues: PolyDictionary<Number3> = {
 	vector: [0, 0, 1],
 	axis: [0, 1, 0],
 };

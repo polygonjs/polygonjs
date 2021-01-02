@@ -1,3 +1,11 @@
+import {
+	ColorLike,
+	NumericAttribValue,
+	PolyDictionary,
+	Vector2Like,
+	Vector3Like,
+	Vector4Like,
+} from '../../types/GlobalTypes';
 import {Vector3} from 'three/src/math/Vector3';
 import {Int32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
@@ -96,7 +104,7 @@ export class CoreGeometry {
 		return Object.keys(this._geometry.attributes);
 	}
 	attribSizes() {
-		const h: Dictionary<AttribSize> = {};
+		const h: PolyDictionary<AttribSize> = {};
 		for (let attrib_name of this.attribNames()) {
 			h[attrib_name] = this._geometry.attributes[attrib_name].itemSize;
 		}

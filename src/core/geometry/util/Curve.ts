@@ -3,6 +3,7 @@ import {CorePoint} from '../Point';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Vector2} from 'three/src/math/Vector2';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryUtilCurve {
 	static accumulated_curve_point_indices(indices: number[]) {
@@ -49,12 +50,12 @@ export class CoreGeometryUtilCurve {
 		points: CorePoint[],
 		indices: number[],
 		attrib_names: string[],
-		attrib_sizes_by_name: Dictionary<number>
+		attrib_sizes_by_name: PolyDictionary<number>
 	) {
 		// let new_positions: number[] = []
 		const new_indices: number[] = [];
 
-		const new_attribute_values_by_name: Dictionary<number[]> = {};
+		const new_attribute_values_by_name: PolyDictionary<number[]> = {};
 		attrib_names.forEach((attrib_name) => {
 			new_attribute_values_by_name[attrib_name] = [];
 		});

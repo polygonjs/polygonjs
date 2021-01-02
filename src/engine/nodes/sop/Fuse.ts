@@ -16,6 +16,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
 import {objectTypeFromConstructor} from '../../../core/geometry/Constant';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 class FuseSopParamsConfig extends NodeParamsConfig {
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.1, {
@@ -63,7 +64,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		const points = core_object.points();
 
 		const precision = this.pv.dist;
-		const points_by_position: Dictionary<CorePoint[]> = {};
+		const points_by_position: PolyDictionary<CorePoint[]> = {};
 		for (let point of points) {
 			const position = point.position();
 			const rounded_position = new Vector3(

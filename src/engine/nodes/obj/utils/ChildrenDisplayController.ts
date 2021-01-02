@@ -2,6 +2,7 @@ import {BaseObjNodeClass} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {Group} from 'three/src/objects/Group';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 const DISPLAY_PARAM_NAME = 'display';
 
@@ -10,7 +11,7 @@ interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 }
 
 export class ChildrenDisplayController {
-	_children_uuids_dict: Dictionary<boolean> = {};
+	_children_uuids_dict: PolyDictionary<boolean> = {};
 	_children_length: number = 0;
 	private _sop_group = this._create_sop_group();
 

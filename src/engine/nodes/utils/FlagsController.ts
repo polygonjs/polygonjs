@@ -1,3 +1,4 @@
+import {Constructor} from '../../../types/GlobalTypes';
 import {BaseNodeType} from '../_Base';
 import {BypassFlag} from './flags/Bypass';
 import {DisplayFlag} from './flags/Display';

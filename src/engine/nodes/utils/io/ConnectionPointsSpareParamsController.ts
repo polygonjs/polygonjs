@@ -1,3 +1,4 @@
+import {Number2} from '../../../../types/GlobalTypes';
 import {
 	ConnectionPointTypeMap,
 	ConnectionPointEnumMap,
@@ -5,10 +6,7 @@ import {
 	create_connection_point,
 } from './connections/ConnectionMap';
 import {ParamType} from '../../../poly/ParamType';
-// import {ParamValueToDefaultConverter} from '../../utils/params/ParamValueToDefaultConverter';
-// import {NodeEvent} from '../../../poly/NodeEvent';
 import {ParamsUpdateOptions} from '../params/ParamsController';
-// import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';

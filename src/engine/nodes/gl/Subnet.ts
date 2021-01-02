@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

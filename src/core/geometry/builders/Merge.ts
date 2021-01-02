@@ -2,6 +2,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
 import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderMerge {
 	static merge(geometries: BufferGeometry[]) {
@@ -22,9 +23,9 @@ export class CoreGeometryBuilderMerge {
 		const core_geometries = geometries.map((geometry) => new CoreGeometry(geometry));
 		const indexed_attribute_names = core_geometries[0].indexedAttributeNames();
 
-		const new_values_by_attribute_name: Dictionary<string[]> = {};
+		const new_values_by_attribute_name: PolyDictionary<string[]> = {};
 		for (let indexed_attribute_name of indexed_attribute_names) {
-			const index_by_values: Dictionary<number> = {};
+			const index_by_values: PolyDictionary<number> = {};
 			const all_geometries_points = [];
 			for (let core_geometry of core_geometries) {
 				const geometry_points = core_geometry.points();

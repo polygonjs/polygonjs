@@ -1,8 +1,9 @@
+import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import Quaternion from './gl/quaternion.glsl';
 import {MathFunctionArg3Factory} from './_Math_Arg3';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
-const DefaultValues: Dictionary<Number3> = {
+const DefaultValues: PolyDictionary<Number3> = {
 	start: [0, 0, 1],
 	end: [1, 0, 0],
 	up: [0, 1, 0],

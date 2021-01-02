@@ -5,6 +5,7 @@
  * This can be linked to a camera's controls parameter
  *
  */
+import {Number3} from '../../../types/GlobalTypes';
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -7,6 +7,7 @@ import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export class EventsSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {

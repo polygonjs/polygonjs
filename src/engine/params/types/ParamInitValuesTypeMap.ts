@@ -6,6 +6,7 @@
 // import {OperatorPathParam} from '../OperatorPath';
 // import {RampParam} from '../Ramp';
 // import {SeparatorParam} from '../Separator';
+import {StringOrNumber, StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';

@@ -178,6 +178,7 @@ export interface WebGLRendererWithSampling extends WebGLRenderer {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
@@ -242,7 +243,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 		return RopType.WEBGL;
 	}
 
-	private _renderers_by_canvas_id: Dictionary<WebGLRenderer> = {};
+	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
 	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRendererWithSampling {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<

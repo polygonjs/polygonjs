@@ -120,7 +120,7 @@
 // 	}
 
 // 	_convert_shader_materials(group: Group) {
-// 		const new_material_by_uuid: Dictionary<ShaderMaterialWithIsShaderMaterial> = {};
+// 		const new_material_by_uuid: PolyDictionary<ShaderMaterialWithIsShaderMaterial> = {};
 // 		let material:ShaderMaterialWithIsShaderMaterial;
 // 		group.traverse((object3d: Object3D) => {
 // 			const object = object3d as Mesh

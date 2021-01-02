@@ -1,3 +1,4 @@
+import {PolyDictionary} from '../../../types/GlobalTypes';
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
@@ -86,7 +87,7 @@ export class MaxGlNode extends MathFunctionArg2Factory('max') {}
 export class MinGlNode extends MathFunctionArg2Factory('min') {}
 export class ModGlNode extends MathFunctionArg2Factory('mod') {
 	param_default_value(name: string) {
-		return ({in1: 1} as Dictionary<number>)[name];
+		return ({in1: 1} as PolyDictionary<number>)[name];
 	}
 }
 export class PowGlNode extends MathFunctionArg2Factory('pow', {in: ['x', 'y']}) {}

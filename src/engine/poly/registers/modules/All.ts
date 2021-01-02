@@ -12,7 +12,7 @@ import {RGBELoader} from '../../../../modules/three/examples/jsm/loaders/RGBELoa
 import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
 
-export interface ModulesMap extends Dictionary<any> {
+export interface ModulesMap extends PolyDictionary<any> {
 	[ModuleName.BasisTextureLoader]: {BasisTextureLoader: typeof BasisTextureLoader};
 	[ModuleName.DRACOLoader]: {DRACOLoader: typeof DRACOLoader};
 	[ModuleName.EXRLoader]: {EXRLoader: typeof EXRLoader};
@@ -27,6 +27,7 @@ export interface ModulesMap extends Dictionary<any> {
 }
 
 import {Poly} from '../../../Poly';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllModulesRegister {
 	// paths are not dynamic for esbuild
 	static run(poly: Poly) {

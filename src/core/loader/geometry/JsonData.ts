@@ -12,6 +12,7 @@ import {CoreAttribute} from '../../geometry/Attribute';
 import {Poly} from '../../../engine/Poly';
 import {CoreType} from '../../Type';
 import {ObjectUtils} from '../../ObjectUtils';
+import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 
@@ -24,7 +25,7 @@ export interface JsonDataLoaderOptions {
 
 export class JsonDataLoader {
 	_json: any[] | undefined;
-	_attribute_datas_by_name: Dictionary<CoreAttributeData> = {};
+	_attribute_datas_by_name: PolyDictionary<CoreAttributeData> = {};
 	private _options: JsonDataLoaderOptions = {};
 
 	constructor(options: JsonDataLoaderOptions = {}) {
@@ -170,7 +171,7 @@ export class JsonDataLoader {
 
 	private _attribute_values_for_name(attrib_name: string): StringOrNumber[] {
 		if (this._json) {
-			return this._json.map((json_element: Dictionary<any>) => {
+			return this._json.map((json_element: PolyDictionary<any>) => {
 				const prefix = attrib_name.split(DEEP_ATTRIB_SEPARATOR)[0];
 				const value = json_element[prefix];
 				if (this._value_has_subentries(value)) {

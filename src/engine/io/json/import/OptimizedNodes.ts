@@ -8,6 +8,7 @@ import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {SopOperationContainer} from '../../../../core/operations/container/sop';
 import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operations/_Base';
 import {CoreType} from '../../../../core/Type';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -26,7 +27,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		return this._nodes;
 	}
 
-	process_data(scene_importer: SceneJsonImporter, data?: Dictionary<NodeJsonExporterData>) {
+	process_data(scene_importer: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
 		if (!data) {
 			return;
 		}
@@ -90,7 +91,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	private _add_optimized_node_inputs(
 		scene_importer: SceneJsonImporter,
 		node: OperationsComposerSopNode,
-		data: Dictionary<NodeJsonExporterData>,
+		data: PolyDictionary<NodeJsonExporterData>,
 		node_name: string,
 		current_operation_container: SopOperationContainer
 	) {
@@ -152,7 +153,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	static child_names_by_optimized_state(data: Dictionary<NodeJsonExporterData>) {
+	static child_names_by_optimized_state(data: PolyDictionary<NodeJsonExporterData>) {
 		const node_names = Object.keys(data);
 		const optimized_names: string[] = [];
 		const non_optimized_names: string[] = [];
@@ -169,7 +170,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	}
 
 	// private _optimized_names_for_root(
-	// 	data: Dictionary<NodeJsonExporterData>,
+	// 	data: PolyDictionary<NodeJsonExporterData>,
 	// 	current_node_name: string,
 	// 	current_node_data: NodeJsonExporterData,
 	// 	input_names: string[] = []
@@ -210,7 +211,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 		return false;
 	}
-	static is_optimized_root_node(data: Dictionary<NodeJsonExporterData>, current_node_name: string) {
+	static is_optimized_root_node(data: PolyDictionary<NodeJsonExporterData>, current_node_name: string) {
 		const output_names = this.node_outputs(data, current_node_name);
 
 		let non_optimized_count = 0;
@@ -246,7 +247,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	}
 
 	static node_outputs(
-		data: Dictionary<NodeJsonExporterData>,
+		data: PolyDictionary<NodeJsonExporterData>,
 		current_node_name: string
 		// current_node_data: NodeJsonExporterData
 	) {

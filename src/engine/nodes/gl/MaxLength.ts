@@ -2,13 +2,14 @@ import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import MaxLength from './gl/max_length.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 //
 //
 // MAX LENGTH
 //
 //
-const MaxLengthDefaultValues: Dictionary<number> = {
+const MaxLengthDefaultValues: PolyDictionary<number> = {
 	max: 1,
 };
 

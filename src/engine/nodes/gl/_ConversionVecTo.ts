@@ -1,3 +1,4 @@
+import {Number2, Number3, Number4} from '../../../types/GlobalTypes';
 import {TypedGlNode} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

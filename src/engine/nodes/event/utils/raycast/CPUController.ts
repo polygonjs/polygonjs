@@ -1,3 +1,4 @@
+import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';

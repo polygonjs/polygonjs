@@ -1,3 +1,4 @@
+import {PolyDictionary} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
 import {Object3D} from 'three/src/core/Object3D';
 import {ObjectsManagerNode} from '../../nodes/manager/ObjectsManager';
@@ -11,8 +12,8 @@ export class NodesController {
 	constructor(private scene: PolyScene) {}
 
 	_root!: ObjectsManagerNode;
-	_node_context_signatures: Dictionary<boolean> = {};
-	_instanciated_nodes_by_context_and_type: Dictionary<Dictionary<Dictionary<BaseNodeType>>> = {};
+	_node_context_signatures: PolyDictionary<boolean> = {};
+	_instanciated_nodes_by_context_and_type: PolyDictionary<PolyDictionary<PolyDictionary<BaseNodeType>>> = {};
 
 	init() {
 		this._root = new ObjectsManagerNode(this.scene);

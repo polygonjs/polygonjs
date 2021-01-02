@@ -1,8 +1,8 @@
+import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {BaseMatNodeType} from '../_Base';
-
 import {ParamConfig} from '../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../poly/NodeContext';
 import {BaseCopNodeType} from '../../cop/_Base';

@@ -1,12 +1,11 @@
+import {AttribValue, ColorLike, NumericAttribValue, Vector2Like, Vector3Like} from '../../types/GlobalTypes';
 import {Vector4} from 'three/src/math/Vector4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-// const THREE = {BufferGeometry, Vector2, Vector3, Vector4}
 import {CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
-// import Geometry from './Geometry';
 
 const ATTRIB_NAMES = {
 	POSITION: 'position',

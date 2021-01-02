@@ -2,13 +2,14 @@ import {BaseNodeGlMathFunctionArg5GlNode} from './_BaseMathFunction';
 import {BaseNodeGlMathFunctionArg3GlNode} from './_BaseMathFunction';
 import FitMethods from './gl/fit.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 //
 //
 // FIT
 //
 //
-const FitDefaultValues: Dictionary<number> = {
+const FitDefaultValues: PolyDictionary<number> = {
 	srcMin: 0,
 	srcMax: 1,
 	destMin: 0,
@@ -40,7 +41,7 @@ export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
 // FIT TO 01
 //
 //
-const FitTo01DefaultValues: Dictionary<number> = {
+const FitTo01DefaultValues: PolyDictionary<number> = {
 	srcMin: 0,
 	srcMax: 1,
 };
@@ -70,7 +71,7 @@ export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 // FIT FROM 01
 //
 //
-const FitFrom01DefaultValues: Dictionary<number> = {
+const FitFrom01DefaultValues: PolyDictionary<number> = {
 	destMin: 0,
 	destMax: 1,
 };
@@ -100,7 +101,7 @@ export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 // FIT FROM 01 TO VARIANCE
 //
 //
-const FitFrom01ToVarianceDefaultValues: Dictionary<number> = {
+const FitFrom01ToVarianceDefaultValues: PolyDictionary<number> = {
 	center: 0.5,
 	variance: 0.5,
 };

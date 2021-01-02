@@ -2,6 +2,7 @@ import {BaseNodeClass} from '../../../nodes/_Base';
 import {BaseOperation} from '../../../../core/operations/_Base';
 import {NodeContext} from '../../NodeContext';
 import {Poly} from '../../../Poly';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface RegisterOptions {
 	only?: string[];
@@ -104,8 +105,8 @@ export class NodesRegister {
 			return [];
 		}
 	}
-	registeredNodes(context: NodeContext, parent_node_type: string): Dictionary<BaseNodeConstructor> {
-		const nodesByType: Dictionary<BaseNodeConstructor> = {};
+	registeredNodes(context: NodeContext, parent_node_type: string): PolyDictionary<BaseNodeConstructor> {
+		const nodesByType: PolyDictionary<BaseNodeConstructor> = {};
 		const nodes = this.registered_nodes_for_context_and_parent_type(context, parent_node_type);
 		for (let node of nodes) {
 			const type = node.type();

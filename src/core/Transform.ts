@@ -1,5 +1,4 @@
-/// <reference path="../../custom_typings/math.d.ts" />
-
+import {Number3} from '../types/GlobalTypes';
 import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {Object3D} from 'three/src/core/Object3D';
@@ -56,7 +55,6 @@ export class CoreTransform {
 			update_scale = true;
 		}
 
-
 		matrix.decompose(
 			this.set_params_from_matrix_position,
 			this.set_params_from_matrix_quaternion,
@@ -80,7 +78,6 @@ export class CoreTransform {
 			}
 		});
 	}
-
 
 	static set_params_from_object_position_array: Number3 = [0, 0, 0];
 	static set_params_from_object_rotation_deg = new Vector3();

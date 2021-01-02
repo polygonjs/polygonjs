@@ -11,8 +11,9 @@ import {AttributeGlNode} from '../../Attribute';
 import {GlobalsGlNode} from '../../Globals';
 import {OutputGlNode} from '../../Output';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {PolyDictionary} from '../../../../../types/GlobalTypes';
 
-export type TextureAllocationsControllerData = Dictionary<TextureAllocationData>[];
+export type TextureAllocationsControllerData = PolyDictionary<TextureAllocationData>[];
 const OUTPUT_NAME_ATTRIBUTES = ['position', 'normal', 'color', 'uv'];
 
 export class TextureAllocationsController {

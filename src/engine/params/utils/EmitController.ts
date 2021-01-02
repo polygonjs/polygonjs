@@ -1,10 +1,11 @@
 import {BaseParamType} from '../_Base';
 import {ParamEvent} from '../../poly/ParamEvent';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class EmitController {
 	_blocked_emit: boolean = false;
 	_blocked_parent_emit: boolean = false;
-	_count_by_event_name: Dictionary<number> = {};
+	_count_by_event_name: PolyDictionary<number> = {};
 	constructor(protected param: BaseParamType) {}
 
 	get emit_allowed(): boolean {

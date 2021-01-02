@@ -12,7 +12,7 @@
 In a future version of this node, it will also be possible to link it to a video tag that could already be in your html DOM. This way, you could sets multiple source tags (one with mp4 and one with ogv) instead of a single url.
 
  */
-
+import {Constructor} from '../../../types/GlobalTypes';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedCopNode} from './_Base';

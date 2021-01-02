@@ -7,13 +7,14 @@
  *
  */
 
-import {TypedSopNode} from './_Base';
-import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
-
 // SPECS:
 // - simulation shaders should update the particles at any frame, and resimulate accordingly when at later frames
 // - render material should update at any frame, without having to resimulate
 // - changing the input will recompute, when on first frame only (otherwise an animated geo could make it recompute all the time)
+
+import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {TypedSopNode} from './_Base';
+import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';

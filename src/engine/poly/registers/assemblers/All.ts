@@ -8,7 +8,7 @@ import {ShaderAssemblerParticles} from '../../../nodes/gl/code/assemblers/partic
 import {ShaderAssemblerTexture} from '../../../nodes/gl/code/assemblers/textures/Texture';
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
 
-export interface AssemblersMap extends Dictionary<ControllerAssemblerPair> {
+export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_BASIC]: {
 		controller: GlAssemblerController<ShaderAssemblerBasic>;
 		assembler: typeof ShaderAssemblerBasic;
@@ -40,6 +40,7 @@ export interface AssemblersMap extends Dictionary<ControllerAssemblerPair> {
 }
 
 import {Poly} from '../../../Poly';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllAssemblersRegister {
 	static run(poly: Poly) {
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_BASIC, GlAssemblerController, ShaderAssemblerBasic);

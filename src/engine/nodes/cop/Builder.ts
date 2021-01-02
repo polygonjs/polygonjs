@@ -3,6 +3,7 @@
  *
  *
  */
+import {Constructor, valueof, Number2} from '../../../types/GlobalTypes';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Scene} from 'three/src/scenes/Scene';

@@ -4,9 +4,10 @@ import {TextureAllocationsController, TextureAllocationsControllerData} from '..
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Poly} from '../../../../../Poly';
+import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
 export interface PersistedConfigBaseParticlesData {
-	shaders_by_name: Dictionary<string>;
+	shaders_by_name: PolyDictionary<string>;
 	texture_allocations: TextureAllocationsControllerData;
 	param_uniform_pairs: [string, string][];
 	uniforms_owner: object;
@@ -22,7 +23,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		if (!this.node.assembler_controller) {
 			return;
 		}
-		const shaders_by_name: Dictionary<string> = {};
+		const shaders_by_name: PolyDictionary<string> = {};
 		const node_shaders_by_name = this.node.shaders_by_name();
 		node_shaders_by_name.forEach((shader, shader_name) => {
 			shaders_by_name[shader_name] = shader;

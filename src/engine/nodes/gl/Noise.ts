@@ -127,7 +127,7 @@ const OUTPUT_NAME = 'noise';
 const default_noise_type = NOISE_NAMES.indexOf(NoiseName.NOISE_3D);
 const default_output_type = OUTPUT_TYPE.NoChange;
 
-const DefaultValues: Dictionary<number> = {
+const DefaultValues: PolyDictionary<number> = {
 	amp: 1,
 	freq: 1,
 };
@@ -143,6 +143,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 class NoiseGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(default_noise_type, {
 		menu: {

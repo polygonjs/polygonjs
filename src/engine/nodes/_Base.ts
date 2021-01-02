@@ -35,7 +35,7 @@ export interface EmitDataByNodeEventMap extends EmitDataByNodeEventMapGeneric {
 }
 export interface IntegrationData {
 	name: string;
-	data: Dictionary<string>;
+	data: PolyDictionary<string>;
 }
 
 // import {ContainerMap, ContainerType} from '../containers/utils/ContainerMap';
@@ -50,6 +50,7 @@ import {BasePersistedConfig} from './utils/PersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 import {PolyNodeController} from './utils/poly/PolyNodeController';
 import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
 	container_controller: TypedContainerController<NC> = new TypedContainerController<NC>(this);

@@ -7,6 +7,7 @@ import {CoreObject} from '../../geometry/Object';
 import {CorePoint} from '../../geometry/Point';
 import {CoreString} from '../../String';
 import {ArrayUtils} from '../../ArrayUtils';
+import {NumericAttribValue, PolyDictionary} from '../../../types/GlobalTypes';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	classFrom: number;
 	classTo: number;
@@ -34,8 +35,8 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 
 	private _core_group: CoreGroup | undefined;
 	private _core_object: CoreObject | undefined;
-	private _values_per_attrib_name: Dictionary<NumericAttribValue[]> = {};
-	private _filtered_values_per_attrib_name: Dictionary<NumericAttribValue | undefined> = {};
+	private _values_per_attrib_name: PolyDictionary<NumericAttribValue[]> = {};
+	private _filtered_values_per_attrib_name: PolyDictionary<NumericAttribValue | undefined> = {};
 	cook(input_contents: CoreGroup[], params: AttribPromoteSopParams) {
 		this._core_group = input_contents[0];
 

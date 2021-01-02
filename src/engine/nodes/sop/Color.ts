@@ -20,10 +20,11 @@ import {Mesh} from 'three/src/objects/Mesh';
 const DEFAULT_COLOR = new Color(1, 1, 1);
 const COLOR_ATTRIB_NAME = 'color';
 
-type ValueArrayByName = Dictionary<number[]>;
+type ValueArrayByName = PolyDictionary<number[]>;
 
 import {ColorSopOperation} from '../../../core/operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if the color should be copied from another attribute */

@@ -9,12 +9,13 @@ import {NodeJsonImporter} from '../../../io/json/import/Node';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {create_poly_sop_node} from '../../sop/Poly';
 import {create_poly_obj_node} from '../../obj/Poly';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface PolyNodeDefinition {
 	node_context: NodeContext;
 	inputs?: [number, number];
 	params?: ParamOptionToAdd<ParamType>[];
-	nodes?: Dictionary<NodeJsonExporterData>;
+	nodes?: PolyDictionary<NodeJsonExporterData>;
 }
 
 export class PolyNodeController {

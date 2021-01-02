@@ -9,6 +9,7 @@ import {ObjNodeRenderOrder} from './_Base';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export class EventsObjNode extends ParamLessBaseManagerObjNode {
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;

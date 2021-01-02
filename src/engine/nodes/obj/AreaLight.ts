@@ -5,6 +5,7 @@
  * An area light can be expensive to compute but can give a good result.
  *
  */
+import {Constructor} from '../../../types/GlobalTypes';
 import {RectAreaLight} from 'three/src/lights/RectAreaLight';
 import {RectAreaLightUniformsLib} from '../../../modules/three/examples/jsm/lights/RectAreaLightUniformsLib';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';

@@ -1,5 +1,5 @@
+import {Number2, Boolean2} from '../../../../types/GlobalTypes';
 import {PolyScene} from '../../../scene/PolyScene';
-// import {JsonExporterVisitor} from './Visitor';
 import {CoreString} from '../../../../core/String';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';

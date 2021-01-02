@@ -8,6 +8,7 @@ import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
 import {NodeParamsConfig} from '../../../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {ParamsInitData} from '../../../utils/io/IOController';
+import {Constructor, valueof} from '../../../../../types/GlobalTypes';
 
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
 	initialize_base_node() {

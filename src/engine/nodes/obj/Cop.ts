@@ -8,6 +8,7 @@ import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {CopNodeChildrenMap} from '../../poly/registers/nodes/Cop';
 import {BaseCopNodeType} from '../cop/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export class CopObjNode extends ParamLessBaseManagerObjNode {
 	static type() {

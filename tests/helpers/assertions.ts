@@ -1,4 +1,5 @@
 import 'qunit';
+import {Number3} from '../../src/types/GlobalTypes';
 import {Vector3} from 'three/src/math/Vector3';
 // https://qunitjs.com/cookbook/#custom-assertions
 

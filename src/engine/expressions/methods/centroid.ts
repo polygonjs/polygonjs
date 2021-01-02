@@ -2,6 +2,7 @@ import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 // import Walker from 'src/core/Walker';
 import {GeometryContainer} from '../../containers/Geometry';
+import {Vector3Like} from '../../../types/GlobalTypes';
 
 export class CentroidExpression extends BaseMethod {
 	protected _require_dependency = true;

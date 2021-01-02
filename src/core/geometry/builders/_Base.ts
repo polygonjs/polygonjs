@@ -4,6 +4,7 @@ import {CoreGeometry} from '../Geometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
 import {ArrayUtils} from '../../ArrayUtils';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export abstract class CoreGeometryBuilderBase {
 	from_points(points: CorePoint[]) {
@@ -17,7 +18,7 @@ export abstract class CoreGeometryBuilderBase {
 			const old_core_geometry = first_point.core_geometry();
 
 			// index
-			const new_index_by_old_index: Dictionary<number> = {};
+			const new_index_by_old_index: PolyDictionary<number> = {};
 			for (let i = 0; i < points.length; i++) {
 				new_index_by_old_index[points[i].index] = i;
 			}
@@ -38,7 +39,7 @@ export abstract class CoreGeometryBuilderBase {
 					const new_values: string[] = ArrayUtils.uniq(
 						points.map((point) => point.indexedAttribValue(attribute_name))
 					);
-					const new_index_by_value: Dictionary<number> = {};
+					const new_index_by_value: PolyDictionary<number> = {};
 					new_values.forEach((new_value, i) => (new_index_by_value[new_value] = i));
 
 					core_geometry.userDataAttribs()[attribute_name] = new_values;
@@ -80,7 +81,7 @@ export abstract class CoreGeometryBuilderBase {
 
 	protected abstract _filter_points(points: CorePoint[]): CorePoint[];
 	protected abstract _indices_from_points(
-		new_index_by_old_index: Dictionary<number>,
+		new_index_by_old_index: PolyDictionary<number>,
 		old_geometry: BufferGeometry
 	): number[] | undefined;
 }

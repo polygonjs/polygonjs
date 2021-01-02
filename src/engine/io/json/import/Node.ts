@@ -16,6 +16,7 @@ import {Poly} from '../../../Poly';
 import {CoreType} from '../../../../core/Type';
 import {ObjectUtils} from '../../../../core/ObjectUtils';
 import {CoreString} from '../../../../core/String';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
 
@@ -83,7 +84,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	create_nodes(scene_importer: SceneJsonImporter, data?: Dictionary<NodeJsonExporterData>) {
+	create_nodes(scene_importer: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
 		if (!data) {
 			return;
 		}
@@ -161,7 +162,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	process_nodes_ui_data(scene_importer: SceneJsonImporter, data: Dictionary<NodeJsonExporterUIData>) {
+	process_nodes_ui_data(scene_importer: SceneJsonImporter, data: PolyDictionary<NodeJsonExporterUIData>) {
 		if (!data) {
 			return;
 		}
@@ -185,7 +186,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	// PARAMS
 	//
 	//
-	set_params(data?: Dictionary<ParamJsonExporterData<ParamType>>) {
+	set_params(data?: PolyDictionary<ParamJsonExporterData<ParamType>>) {
 		if (!data) {
 			return;
 		}

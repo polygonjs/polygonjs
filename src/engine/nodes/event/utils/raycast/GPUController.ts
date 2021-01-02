@@ -9,6 +9,7 @@ import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Number2, Number4} from '../../../../../types/GlobalTypes';
 
 interface SceneRestoreContext {
 	overrideMaterial: Material | null;

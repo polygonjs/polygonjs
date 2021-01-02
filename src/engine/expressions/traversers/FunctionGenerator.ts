@@ -9,8 +9,8 @@ import {CoreAttribute} from '../../../core/geometry/Attribute';
 import jsep from 'jsep';
 
 // import {Vector3} from 'three/src/math/Vector3'
-type LiteralConstructDictionary = Dictionary<LiteralConstructMethod>;
-type AnyDictionary = Dictionary<any>;
+type LiteralConstructDictionary = PolyDictionary<LiteralConstructMethod>;
+type AnyDictionary = PolyDictionary<any>;
 
 const NATIVE_MATH_METHODS = [
 	'abs',
@@ -78,7 +78,7 @@ const LITERAL_CONSTRUCT: LiteralConstructDictionary = {
 	if: LiteralConstructsController.if,
 };
 
-const GLOBAL_CONSTANTS: Dictionary<string> = {};
+const GLOBAL_CONSTANTS: PolyDictionary<string> = {};
 NATIVE_MATH_CONSTANTS.forEach((name) => {
 	GLOBAL_CONSTANTS[name] = `Math.${name}`;
 });
@@ -107,6 +107,7 @@ import {CoreString} from '../../../core/String';
 // import {AsyncFunction} from '../../../core/AsyncFunction';
 import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;

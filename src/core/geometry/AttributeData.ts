@@ -1,4 +1,4 @@
-import { CoreType } from '../Type';
+import {CoreType} from '../Type';
 import {AttribType} from './Constant';
 
 export class CoreAttributeData {

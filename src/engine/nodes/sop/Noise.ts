@@ -37,6 +37,7 @@ const ATTRIB_NORMAL = 'normal';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreType} from '../../../core/Type';
+import {NumericAttribValue} from '../../../types/GlobalTypes';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);

@@ -1,3 +1,4 @@
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedSopNode} from './_Base';
 // import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
 import {InputCloneMode} from '../../poly/InputCloneMode';

@@ -2,6 +2,7 @@ import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {Vector3} from 'three/src/math/Vector3';
 import {GeometryContainer} from '../../containers/Geometry';
+import {Vector3Like} from '../../../types/GlobalTypes';
 
 // import Walker from 'src/core/Walker';
 
