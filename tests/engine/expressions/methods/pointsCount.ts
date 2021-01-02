@@ -1,18 +1,18 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 
-QUnit.test('expression points_count works with path', async (assert) => {
+QUnit.test('expression pointsCount works with path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.p.size.set(`points_count('../${box1.name}')`);
+	box2.p.size.set(`pointsCount('../${box1.name}')`);
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 24);
 });
 
-QUnit.test('expression points_count works with input index', async (assert) => {
+QUnit.test('expression pointsCount works with input index', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -20,13 +20,13 @@ QUnit.test('expression points_count works with input index', async (assert) => {
 
 	box2.setInput(0, box1);
 
-	box2.p.size.set('points_count(0)');
+	box2.p.size.set('pointsCount(0)');
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 24);
 });
 
-QUnit.test('expression points_count updates when dependency changes', async (assert) => {
+QUnit.test('expression pointsCount updates when dependency changes', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -36,7 +36,7 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 
 	box1.p.divisions.set(1);
 
-	box2.p.size.set("points_count('../box1')");
+	box2.p.size.set("pointsCount('../box1')");
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 24);
@@ -68,22 +68,22 @@ QUnit.test('expression points_count updates when dependency changes', async (ass
 	assert.ok(!box2.is_dirty);
 });
 
-QUnit.skip('expression points_count cannot create infinite loop if scene is loaded', async (assert) => {
+QUnit.skip('expression pointsCount cannot create infinite loop if scene is loaded', async (assert) => {
 	// const geo1 = window.geo1
 	// window.scene.mark_as_loaded();
 	// const box1 = geo1.createNode('box');
 	// const box2 = geo1.createNode('box');
 	// box1.p.divisions.set(1);
-	// box2.p.size.set("points_count('../box1')");
+	// box2.p.size.set("pointsCount('../box1')");
 	// box2.requestContainer_p().then(() => {
 	// 	assert.notOk(b.error_message());
-	// 	box1.p.size.set("points_count('../box2')");
+	// 	box1.p.size.set("pointsCount('../box2')");
 	// 	box1.p.size.compute().then(val=> {
 	// 		console.logx1.p.size.error_message(), val);
-	// 		assert.equal(box1.p.size.error_message(), "expression points_count error: cannot create infinite graph");
+	// 		assert.equal(box1.p.size.error_message(), "expression pointsCount error: cannot create infinite graph");
 	// 		console.log("THIS DOES NOT RETURN, because the points_cloud method fails to connect to the node, as the graph is then cyclic. and the throw call fucks up somewhere in the callbacks...")
 	// 		box1.requestContainer_p().then(() => {
-	// 			assert.equal(box1.error_message(), "param 'size' error: expression points_count error: cannot create infinite graph");
+	// 			assert.equal(box1.error_message(), "param 'size' error: expression pointsCount error: cannot create infinite graph");
 	// 			done()
 	// 		});
 	// 	});
@@ -91,7 +91,7 @@ QUnit.skip('expression points_count cannot create infinite loop if scene is load
 	//done();
 });
 
-QUnit.test('expression points_count fails with bad path', async (assert) => {
+QUnit.test('expression pointsCount fails with bad path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -99,18 +99,18 @@ QUnit.test('expression points_count fails with bad path', async (assert) => {
 
 	box2.setInput(0, box1);
 
-	box2.p.size.set("points_count('../doesnotexist')");
+	box2.p.size.set("pointsCount('../doesnotexist')");
 
 	await box2.p.size.compute();
 	assert.ok(!box2.states.error.active);
 	await box2.requestContainer();
 	assert.equal(
 		box2.states.error.message,
-		"param 'size' error: expression error: \"points_count('../doesnotexist')\" (invalid input (../doesnotexist))"
+		"param 'size' error: expression error: \"pointsCount('../doesnotexist')\" (invalid input (../doesnotexist))"
 	);
 });
 
-QUnit.test('expression points_count fails with bad input index 1', async (assert) => {
+QUnit.test('expression pointsCount fails with bad input index 1', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -118,18 +118,18 @@ QUnit.test('expression points_count fails with bad input index 1', async (assert
 
 	box2.setInput(0, box1);
 
-	box2.p.size.set('points_count(1)');
+	box2.p.size.set('pointsCount(1)');
 
 	await box2.p.size.compute();
 	assert.ok(!box2.states.error.active);
 	await box2.requestContainer();
 	assert.equal(
 		box2.states.error.message,
-		'param \'size\' error: expression error: "points_count(1)" (invalid input (1))'
+		'param \'size\' error: expression error: "pointsCount(1)" (invalid input (1))'
 	);
 });
 
-QUnit.test('expression points_count fails with bad input index 0', async (assert) => {
+QUnit.test('expression pointsCount fails with bad input index 0', async (assert) => {
 	const geo1 = window.geo1;
 	const dummy = geo1.createNode('plane');
 	dummy.flags.display.set(true);
@@ -139,16 +139,16 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.p.size.set('points_count(0)');
+	box2.p.size.set('pointsCount(0)');
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 1);
-	assert.equal(box2.p.size.states.error.message, 'expression error: "points_count(0)" (invalid input (0))');
+	assert.equal(box2.p.size.states.error.message, 'expression error: "pointsCount(0)" (invalid input (0))');
 	assert.ok(!box2.states.error.active);
 	await box2.requestContainer();
 	assert.equal(
 		box2.states.error.message,
-		'param \'size\' error: expression error: "points_count(0)" (invalid input (0))'
+		'param \'size\' error: expression error: "pointsCount(0)" (invalid input (0))'
 	);
 
 	await box2.requestContainer();
@@ -168,13 +168,13 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 // box2 = geo1.createNode('box')
 // console.log(box1.fullPath(), box2.fullPath())
 
-// box2.p.size.set("points_count(0)")
+// box2.p.size.set("pointsCount(0)")
 
 // box2.p.size.eva>
-// 	assert.equal box2.p.size.error_message(), "expression points_count error: no node found for argument 0"
+// 	assert.equal box2.p.size.error_message(), "expression pointsCount error: no node found for argument 0"
 // 	assert !box2.is_errored()
 // 	box2.requestContainer =>
-// 		assert.equal box2.error_message(), "param 'size' error: expression points_count error: no node found for argument 0"
+// 		assert.equal box2.error_message(), "param 'size' error: expression pointsCount error: no node found for argument 0"
 
 // 		console.log("==========")
 // 		box2.setInput(0, box1)
@@ -182,7 +182,7 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 // 		box2.p.size.eval =>
 
 // 			assert.notOk box2.p.size.error_message()
-// 			assert.equal box2.error_message(), "param 'size' error: expression points_count error: no node found for argument 0"
+// 			assert.equal box2.error_message(), "param 'size' error: expression pointsCount error: no node found for argument 0"
 
 // 			box2.requestContainer (container)=>
 // 				console.log(container)
@@ -191,13 +191,13 @@ QUnit.test('expression points_count fails with bad input index 0', async (assert
 
 // 				done()
 
-QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (assert) => {
+QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.p.size.set("points_count('../box1')");
+	box2.p.size.set("pointsCount('../box1')");
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 24);
@@ -221,7 +221,7 @@ QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (a
 	assert.equal(box2.p.size.value, 24);
 	assert.equal(
 		box2.p.size.states.error.message,
-		'expression error: "points_count(\'../box1\')" (invalid input (../box1))'
+		'expression error: "pointsCount(\'../box1\')" (invalid input (../box1))'
 	);
 	// assert.equal(box2.states.error.message, 'bla');
 
@@ -238,7 +238,7 @@ QUnit.test('points_count: if dependent is deleted, node becomes dirty', async (a
 	// 		assert.equal val, 24
 });
 
-QUnit.test('points_count: if the points count of input changes, the param gets updated', async (assert) => {
+QUnit.test('pointsCount: if the points count of input changes, the param gets updated', async (assert) => {
 	const geo1 = window.geo1;
 
 	// create a sphere that would have the display flag
@@ -252,7 +252,7 @@ QUnit.test('points_count: if the points count of input changes, the param gets u
 	const box2 = geo1.createNode('box');
 
 	const param = box2.p.size;
-	param.set('points_count(0)');
+	param.set('pointsCount(0)');
 
 	box2.setInput(0, box1);
 	assert.equal(box1.p.divisions.value, 1);

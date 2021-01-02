@@ -1,6 +1,5 @@
-
 import jsep from 'jsep';
-import { CoreType } from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 jsep.addUnaryOp('@');
 // self.jsep = jsep
 let precedence = 10;
@@ -74,7 +73,7 @@ export class ParsedTree {
 				arguments: nodes,
 				callee: {
 					type: JSEP_IDENTIFIER,
-					name: 'str_concat',
+					name: 'strConcat',
 				},
 			}) as jsep.Compound;
 		} catch (e) {
