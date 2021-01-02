@@ -17,7 +17,7 @@ interface PixelPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PixelPostParamsConfig extends NodeParamsConfig {
-	pixel_size = ParamConfig.INTEGER(16, {
+	pixelSize = ParamConfig.INTEGER(16, {
 		range: [1, 50],
 		rangeLocked: [true, false],
 		...PostParamOptions,
@@ -39,6 +39,6 @@ export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostPar
 		return pass;
 	}
 	update_pass(pass: PixelPassWithUniforms) {
-		pass.uniforms.pixelSize.value = this.pv.pixel_size;
+		pass.uniforms.pixelSize.value = this.pv.pixelSize;
 	}
 }

@@ -38,8 +38,8 @@ export class HemisphereLightHelper extends BaseLightHelper<HemisphereLight, Hemi
 		this._object.position.copy(this.node.pv.position).multiplyScalar(-1);
 		this._quat.setFromUnitVectors(this._default_position, this.node.pv.position);
 		this._object.setRotationFromQuaternion(this._quat);
-		this._object.scale.setScalar(this.node.pv.helper_size);
-		this._object.updateMatrix()
+		this._object.scale.setScalar(this.node.pv.helperSize);
+		this._object.updateMatrix();
 
 		const colors = this._geometry.getAttribute('color') as BufferAttribute;
 

@@ -10,18 +10,18 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
-	focal_depth = ParamConfig.FLOAT(10, {
+	focalDepth = ParamConfig.FLOAT(10, {
 		range: [0, 50],
 		rangeLocked: [true, false],
 		step: 0.001,
 		...PostParamOptions,
 	});
-	f_stop = ParamConfig.FLOAT(10, {
+	fStep = ParamConfig.FLOAT(10, {
 		range: [0.1, 22],
 		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
-	max_blur = ParamConfig.FLOAT(2, {
+	maxBlur = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		...PostParamOptions,
@@ -29,7 +29,7 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	vignetting = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
-	depth_blur = ParamConfig.BOOLEAN(0, {
+	depthBlur = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
 	threshold = ParamConfig.FLOAT(0.5, {
@@ -78,7 +78,7 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
-	clear_color = ParamConfig.COLOR([1, 1, 1], {
+	clearColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
 }
@@ -122,7 +122,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 				core_graph_node.add_graph_input(camera_node.p.near);
 				core_graph_node.add_graph_input(camera_node.p.far);
 				core_graph_node.add_graph_input(camera_node.p.fov);
-				core_graph_node.add_graph_input(this.p.focal_depth);
+				core_graph_node.add_graph_input(this.p.focalDepth);
 				core_graph_node.add_post_dirty_hook('post/DOF', () => {
 					this.update_pass_from_camera_node(pass, camera_node);
 				});
@@ -135,8 +135,8 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		pass.update_camera_uniforms_with_node(this, camera.object);
 	}
 	update_pass(pass: BokehPass2) {
-		pass.bokeh_uniforms['fstop'].value = this.pv.f_stop;
-		pass.bokeh_uniforms['maxblur'].value = this.pv.max_blur;
+		pass.bokeh_uniforms['fstop'].value = this.pv.fStep;
+		pass.bokeh_uniforms['maxblur'].value = this.pv.maxBlur;
 
 		pass.bokeh_uniforms['threshold'].value = this.pv.threshold;
 		pass.bokeh_uniforms['gain'].value = this.pv.gain;
@@ -148,7 +148,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		pass.bokeh_uniforms['noise'].value = this.pv.noise ? 1 : 0;
 		pass.bokeh_uniforms['pentagon'].value = this.pv.pentagon ? 1 : 0;
 		pass.bokeh_uniforms['vignetting'].value = this.pv.vignetting ? 1 : 0;
-		pass.bokeh_uniforms['depthblur'].value = this.pv.depth_blur ? 1 : 0;
+		pass.bokeh_uniforms['depthblur'].value = this.pv.depthBlur ? 1 : 0;
 
 		// debug
 		pass.bokeh_uniforms['shaderFocus'].value = 0;
@@ -160,6 +160,6 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		pass.bokeh_material.defines['SAMPLES'] = this.pv.samples;
 		pass.bokeh_material.needsUpdate = true;
 
-		pass.clear_color.copy(this.pv.clear_color);
+		pass.clear_color.copy(this.pv.clearColor);
 	}
 }

@@ -22,7 +22,7 @@ class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	/** @param toggle off to hide */
 	display = ParamConfig.BOOLEAN(1);
 	/** @param set render order */
-	render_order = ParamConfig.INTEGER(0, {
+	renderOrder = ParamConfig.INTEGER(0, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
@@ -116,7 +116,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	cook() {
 		this.transform_controller.update();
 		this.object.visible = this.pv.display;
-		this.object.renderOrder = this.pv.render_order;
+		this.object.renderOrder = this.pv.renderOrder;
 		this.cook_controller.end_cook();
 	}
 }

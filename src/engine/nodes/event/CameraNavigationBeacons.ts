@@ -77,7 +77,7 @@ class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	/** @param toogle on to initialize to a specific camera */
 	init = ParamConfig.BOOLEAN(0);
 	/** @param the camera to initialize to */
-	init_camera = ParamConfig.OPERATOR_PATH('/perspective_camera_0', {
+	initCamera = ParamConfig.OPERATOR_PATH('/perspective_camera_0', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
@@ -87,13 +87,13 @@ class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	/** @param duration of movement from one navigation point to another */
 	duration = ParamConfig.FLOAT(2);
 	/** @param time for the camera rotation animation to start, relative to translation animation */
-	rotation_delay = ParamConfig.FLOAT(1);
+	rotationDelay = ParamConfig.FLOAT(1);
 	/** @param time for the camera projection matrix animation to start, relative to translation animation */
-	projection_matrix_delay = ParamConfig.FLOAT(0);
+	projectionMatrixDelay = ParamConfig.FLOAT(0);
 	/** @param toggle on if the camera should move to the nearest position. Toggle off if the camera should move to the current target camera position */
-	to_neares_pos = ParamConfig.BOOLEAN(0);
+	toNearesPos = ParamConfig.BOOLEAN(0);
 	/** @param toggle on to hide the current beacon and ensure it does not block the view */
-	hide_current_beacon = ParamConfig.BOOLEAN(1);
+	hideCurrentBeacon = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new CameraNavigationBeaconsEventParamsConfig();
 
@@ -170,7 +170,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		src_camera_object.updateProjectionMatrix();
 
 		// toggle objects scales
-		if (this.pv.hide_current_beacon) {
+		if (this.pv.hideCurrentBeacon) {
 			this._prev_nav_beacons = this._current_nav_beacons;
 			this._current_nav_beacons = this._get_all_nav_beacon_objects(target_camera.name);
 			for (let object of this._prev_nav_beacons) {
@@ -222,7 +222,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 
 		CameraNavigationBeaconsEventNode._store_cam_data(src_camera, this._src_data);
 		CameraNavigationBeaconsEventNode._store_cam_data(target_camera, this._dest_data);
-		if (this.pv.to_neares_pos) {
+		if (this.pv.toNearesPos) {
 			this._compute_neares_pos();
 		}
 
@@ -299,7 +299,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 						src_camera_object.quaternion.copy(this._src_data.q).slerp(this._dest_data.q, this._cam_proxy.q);
 					},
 				},
-				this.pv.rotation_delay
+				this.pv.rotationDelay
 			);
 			// fov timeline
 			timeline.to(
@@ -316,7 +316,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 						src_camera_object.updateProjectionMatrix();
 					},
 				},
-				this.pv.projection_matrix_delay
+				this.pv.projectionMatrixDelay
 			);
 		});
 	}
@@ -325,7 +325,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		return this.p.camera.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE);
 	}
 	private _get_init_camera() {
-		return this.p.init_camera.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE);
+		return this.p.initCamera.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE);
 	}
 
 	private _get_clicked_camera(context: EventContext<MouseEvent>) {

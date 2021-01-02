@@ -12,7 +12,7 @@ import {CopRendererController} from './utils/RendererController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	use_camera_renderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
@@ -49,7 +49,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			// pmremGenerator.dispose();
 			// texture.dispose();
 
-			if (this.pv.use_camera_renderer) {
+			if (this.pv.useCameraRenderer) {
 				this.set_texture(exrCubeRenderTarget.texture);
 			} else {
 				this._data_texture_controller =

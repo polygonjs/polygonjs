@@ -51,9 +51,9 @@ import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		set_master_camera = ParamConfig.BUTTON(null, {
+		setMasterCamera = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
-				BaseCameraObjNodeClass.PARAM_CALLBACK_set_master_camera(node as BaseCameraObjNodeType);
+				BaseCameraObjNodeClass.PARAM_CALLBACK_setMasterCamera(node as BaseCameraObjNodeType);
 			},
 		});
 	};
@@ -67,7 +67,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 				context: NodeContext.EVENT,
 			},
 		});
-		update_from_controls_mode = ParamConfig.INTEGER(
+		updateFromControlsMode = ParamConfig.INTEGER(
 			UPDATE_FROM_CONTROLS_MODES.indexOf(UpdateFromControlsMode.ON_END),
 			{
 				menu: {
@@ -77,7 +77,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 				},
 			}
 		);
-		allow_update_from_controls = ParamConfig.BOOLEAN(1);
+		allowUpdateFromControls = ParamConfig.BOOLEAN(1);
 
 		// target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
@@ -146,7 +146,7 @@ export abstract class TypedCameraObjNode<
 	}
 	update_camera() {}
 
-	static PARAM_CALLBACK_set_master_camera(node: BaseCameraObjNodeType) {
+	static PARAM_CALLBACK_setMasterCamera(node: BaseCameraObjNodeType) {
 		node.set_as_master_camera();
 	}
 	set_as_master_camera() {

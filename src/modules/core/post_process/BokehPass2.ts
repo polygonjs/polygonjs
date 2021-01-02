@@ -225,7 +225,7 @@ export class BokehPass2 {
 		this.bokeh_uniforms['zfar'].value = camera.far;
 
 		// focal length
-		var sdistance = DepthOfFieldPostNode.smoothstep(camera.near, camera.far, node.pv.focal_depth);
+		var sdistance = DepthOfFieldPostNode.smoothstep(camera.near, camera.far, node.pv.focalDepth);
 		var ldistance = DepthOfFieldPostNode.linearize(1 - sdistance, camera.near, camera.far);
 		this.bokeh_uniforms['focalDepth'].value = ldistance; //this._param_focal_depth
 

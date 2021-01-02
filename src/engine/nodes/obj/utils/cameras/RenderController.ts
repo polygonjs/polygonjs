@@ -21,30 +21,30 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 	return class Mixin extends Base {
 		render = ParamConfig.FOLDER();
 
-		set_scene = ParamConfig.BOOLEAN(0);
+		setScene = ParamConfig.BOOLEAN(0);
 		/** @param override rendered scene */
 		scene = ParamConfig.OPERATOR_PATH('/scene1', {
-			visibleIf: {set_scene: 1},
+			visibleIf: {setScene: 1},
 			nodeSelection: {
 				context: NodeContext.OBJ,
 				types: [SceneObjNode.type()],
 			},
 		});
 
-		set_renderer = ParamConfig.BOOLEAN(0);
+		setRenderer = ParamConfig.BOOLEAN(0);
 		/** @param override renderer used */
 		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webGlRenderer1', {
-			visibleIf: {set_renderer: 1},
+			visibleIf: {setRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
 				types: [WebGlRendererRopNode.type()],
 			},
 		});
 
-		set_css_renderer = ParamConfig.BOOLEAN(0);
+		setCssRenderer = ParamConfig.BOOLEAN(0);
 		/** @param add a css renderer */
-		css_renderer = ParamConfig.OPERATOR_PATH('./renderers1/css2DRenderer1', {
-			visibleIf: {set_css_renderer: 1},
+		cssRenderer = ParamConfig.OPERATOR_PATH('./renderers1/css2DRenderer1', {
+			visibleIf: {setCssRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
 				types: [RopType.CSS2D, RopType.CSS3D],
@@ -58,7 +58,7 @@ export class RenderController {
 	private _resolution_by_canvas_id: Dictionary<Vector2> = {};
 	private _resolved_scene: Scene | undefined;
 	private _resolved_renderer_rop: WebGlRendererRopNode | undefined;
-	private _resolved_css_renderer_rop: Css2DRendererRopNode | Css3DRendererRopNode | undefined;
+	private _resolved_cssRenderer_rop: Css2DRendererRopNode | Css3DRendererRopNode | undefined;
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
@@ -74,10 +74,10 @@ export class RenderController {
 			this.render_with_renderer(canvas);
 		}
 
-		if (this._resolved_css_renderer_rop && this._resolved_scene && this.node.pv.set_css_renderer) {
-			const css_renderer = this.css_renderer(canvas);
-			if (css_renderer) {
-				css_renderer.render(this._resolved_scene, this.node.object);
+		if (this._resolved_cssRenderer_rop && this._resolved_scene && this.node.pv.setCssRenderer) {
+			const cssRenderer = this.cssRenderer(canvas);
+			if (cssRenderer) {
+				cssRenderer.render(this._resolved_scene, this.node.object);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ export class RenderController {
 	async update() {
 		this.update_scene();
 		this.update_renderer();
-		this.update_css_renderer();
+		this.update_cssRenderer();
 	}
 
 	//
@@ -106,7 +106,7 @@ export class RenderController {
 		return this._resolved_scene;
 	}
 	private update_scene() {
-		if (this.node.pv.set_scene) {
+		if (this.node.pv.setScene) {
 			const param = this.node.p.scene;
 			if (param.is_dirty) {
 				param.find_target();
@@ -130,7 +130,7 @@ export class RenderController {
 	//
 	//
 	private update_renderer() {
-		if (this.node.pv.set_renderer) {
+		if (this.node.pv.setRenderer) {
 			const param = this.node.p.renderer;
 			if (param.is_dirty) {
 				param.find_target();
@@ -140,33 +140,33 @@ export class RenderController {
 			this._resolved_renderer_rop = undefined;
 		}
 	}
-	private update_css_renderer() {
-		if (this.node.pv.set_css_renderer) {
-			const param = this.node.p.css_renderer;
+	private update_cssRenderer() {
+		if (this.node.pv.setCssRenderer) {
+			const param = this.node.p.cssRenderer;
 			if (param.is_dirty) {
 				param.find_target();
 			}
-			this._resolved_css_renderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, [
+			this._resolved_cssRenderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, [
 				RopType.CSS2D,
 				RopType.CSS3D,
 			]);
 		} else {
-			if (this._resolved_css_renderer_rop) {
+			if (this._resolved_cssRenderer_rop) {
 				// TODO: not yet sure how to remove it so that it can be easily added again
-				// const renderer = this.css_renderer()
+				// const renderer = this.cssRenderer()
 				// const dom
-				// this._resolved_css_renderer_rop.remove_renderer_element(canvas);
+				// this._resolved_cssRenderer_rop.remove_renderer_element(canvas);
 			}
-			this._resolved_css_renderer_rop = undefined;
+			this._resolved_cssRenderer_rop = undefined;
 		}
 	}
 
 	renderer(canvas: HTMLCanvasElement) {
 		return this._renderers_by_canvas_id[canvas.id];
 	}
-	css_renderer(canvas: HTMLCanvasElement) {
-		if (this._resolved_css_renderer_rop && this.node.pv.set_css_renderer) {
-			return this._resolved_css_renderer_rop.renderer(canvas);
+	cssRenderer(canvas: HTMLCanvasElement) {
+		if (this._resolved_cssRenderer_rop && this.node.pv.setCssRenderer) {
+			return this._resolved_cssRenderer_rop.renderer(canvas);
 		}
 	}
 
@@ -179,7 +179,7 @@ export class RenderController {
 		}
 
 		let renderer: WebGLRendererWithSampling | undefined;
-		if (this.node.pv.set_renderer) {
+		if (this.node.pv.setRenderer) {
 			this.update_renderer();
 			if (this._resolved_renderer_rop) {
 				renderer = this._resolved_renderer_rop.create_renderer(canvas, gl);
@@ -252,10 +252,10 @@ export class RenderController {
 			renderer.setSize(size.x, size.y, update_style);
 		}
 
-		if (this._resolved_css_renderer_rop) {
-			const css_renderer = this.css_renderer(canvas);
-			if (css_renderer) {
-				css_renderer.setSize(size.x, size.y);
+		if (this._resolved_cssRenderer_rop) {
+			const cssRenderer = this.cssRenderer(canvas);
+			if (cssRenderer) {
+				cssRenderer.setSize(size.x, size.y);
 			}
 		}
 	}

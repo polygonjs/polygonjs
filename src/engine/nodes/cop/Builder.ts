@@ -49,7 +49,7 @@ class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	use_camera_renderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
 
 const ParamsConfig = new BuilderCopParamsConfig();
@@ -243,7 +243,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		renderer.setRenderTarget(prev_target);
 
 		if (this._render_target.texture) {
-			if (this.pv.use_camera_renderer) {
+			if (this.pv.useCameraRenderer) {
 				this.set_texture(this._render_target.texture);
 			} else {
 				// const w = this.pv.resolution.x;

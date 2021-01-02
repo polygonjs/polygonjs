@@ -31,33 +31,33 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 
 	// shadows
 	/** @param toggle on to cast shadows */
-	cast_shadows = ParamConfig.BOOLEAN(1);
+	castShadows = ParamConfig.BOOLEAN(1);
 	/** @param shadows res */
-	shadow_res = ParamConfig.VECTOR2([1024, 1024], {
-		visibleIf: {cast_shadows: 1},
+	shadowRes = ParamConfig.VECTOR2([1024, 1024], {
+		visibleIf: {castShadows: 1},
 	});
 	/** @param shadows bias */
-	shadow_bias = ParamConfig.FLOAT(0.001, {
-		visibleIf: {cast_shadows: 1},
+	shadowBias = ParamConfig.FLOAT(0.001, {
+		visibleIf: {castShadows: 1},
 		range: [-0.01, 0.01],
 		rangeLocked: [false, false],
 	});
 	// shadow_near = ParamConfig.FLOAT(0.1, {
-	// 	visibleIf: {cast_shadows: 1},
+	// 	visibleIf: {castShadows: 1},
 	// 	range: [0, 100],
 	// 	rangeLocked: [true, false],
 	// });
 	// shadow_far = ParamConfig.FLOAT(100, {
-	// 	visibleIf: {cast_shadows: 1},
+	// 	visibleIf: {castShadows: 1},
 	// 	range: [0, 100],
 	// 	rangeLocked: [true, false],
 	// });
 
 	// helper
 	/** @param toggle on to show helper */
-	show_helper = ParamConfig.BOOLEAN(0);
+	showHelper = ParamConfig.BOOLEAN(0);
 	/** @param helper size */
-	helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
+	helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 
@@ -117,11 +117,11 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
-		this.light.castShadow = this.pv.cast_shadows;
-		this.light.shadow.mapSize.copy(this.pv.shadow_res);
+		this.light.castShadow = this.pv.castShadows;
+		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		// that doesn't seem to have any effect
 		// this.light.shadow.camera.near = this.pv.shadow_near;
 		// this.light.shadow.camera.far = this.pv.shadow_far;
-		this.light.shadow.bias = this.pv.shadow_bias;
+		this.light.shadow.bias = this.pv.shadowBias;
 	}
 }

@@ -12,16 +12,16 @@ import {ColorConversion} from '../../../core/Color';
 import {Color} from 'three/src/math/Color';
 
 const DEFAULT = {
-	sky_color: new Color(1, 1, 1),
-	ground_color: new Color(0, 0, 0),
+	skyColor: new Color(1, 1, 1),
+	groundColor: new Color(0, 0, 0),
 };
 class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 	/** @param sky color */
-	sky_color = ParamConfig.COLOR(DEFAULT.sky_color, {
+	skyColor = ParamConfig.COLOR(DEFAULT.skyColor, {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param ground color */
-	ground_color = ParamConfig.COLOR(DEFAULT.ground_color, {
+	groundColor = ParamConfig.COLOR(DEFAULT.groundColor, {
 		conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param light intensity */
@@ -29,9 +29,9 @@ class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 	/** @param light position */
 	position = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param toggle to show helper */
-	show_helper = ParamConfig.BOOLEAN(0);
+	showHelper = ParamConfig.BOOLEAN(0);
 	/** @param helper size */
-	helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
+	helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 }
 const ParamsConfig = new HemisphereLightObjParamsConfig();
 
@@ -50,8 +50,8 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		const light = new HemisphereLight();
 		light.matrixAutoUpdate = false;
 		// make sure the light is initialized with same defaults as the node parameters
-		light.color.copy(DEFAULT.sky_color);
-		light.groundColor.copy(DEFAULT.ground_color);
+		light.color.copy(DEFAULT.skyColor);
+		light.groundColor.copy(DEFAULT.groundColor);
 		return light;
 	}
 	initialize_node() {
@@ -60,8 +60,8 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 	}
 
 	update_light_params() {
-		this.light.color = this.pv.sky_color;
-		this.light.groundColor = this.pv.ground_color;
+		this.light.color = this.pv.skyColor;
+		this.light.groundColor = this.pv.groundColor;
 		this.light.position.copy(this.pv.position);
 		this.light.intensity = this.pv.intensity;
 

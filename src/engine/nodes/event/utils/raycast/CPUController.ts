@@ -57,7 +57,7 @@ export class RaycastCPUController {
 	process_event(context: EventContext<MouseEvent>) {
 		this._prepare_raycaster(context);
 
-		const type = CPU_INTERSECT_WITH_OPTIONS[this._node.pv.intersect_with];
+		const type = CPU_INTERSECT_WITH_OPTIONS[this._node.pv.intersectWith];
 		switch (type) {
 			case CPUIntersectWith.GEOMETRY: {
 				return this._intersect_with_geometry(context);
@@ -72,8 +72,8 @@ export class RaycastCPUController {
 	private _plane = new Plane();
 	private _plane_intersect_target = new Vector3();
 	private _intersect_with_plane(context: EventContext<MouseEvent>) {
-		this._plane.normal.copy(this._node.pv.plane_direction);
-		this._plane.constant = this._node.pv.plane_offset;
+		this._plane.normal.copy(this._node.pv.planeDirection);
+		this._plane.constant = this._node.pv.planeOffset;
 		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
 
 		this._set_position_param(this._plane_intersect_target);
@@ -91,7 +91,7 @@ export class RaycastCPUController {
 			if (intersection) {
 				this._set_position_param(intersection.point);
 
-				if (this._node.pv.geo_attribute == true) {
+				if (this._node.pv.geoAttribute == true) {
 					this._resolve_geometry_attribute(intersection);
 				}
 				context.value = {intersect: intersection};
@@ -102,21 +102,21 @@ export class RaycastCPUController {
 		}
 	}
 	private _resolve_geometry_attribute(intersection: Intersection) {
-		const attrib_type = ATTRIBUTE_TYPES[this._node.pv.geo_attribute_type];
+		const attrib_type = ATTRIBUTE_TYPES[this._node.pv.geoAttributeType];
 		const val = RaycastCPUController.resolve_geometry_attribute(
 			intersection,
-			this._node.pv.geo_attribute_name,
+			this._node.pv.geoAttributeName,
 			attrib_type
 		);
 		if (val != null) {
 			switch (attrib_type) {
 				case AttribType.NUMERIC: {
-					this._node.p.geo_attribute_value1.set(val);
+					this._node.p.geoAttributeValue1.set(val);
 					return;
 				}
 				case AttribType.STRING: {
 					if (CoreType.isString(val)) {
-						this._node.p.geo_attribute_values.set(val);
+						this._node.p.geoAttributeValues.set(val);
 					}
 					return;
 				}
@@ -221,16 +221,16 @@ export class RaycastCPUController {
 	private _hit_position_array: Number3 = [0, 0, 0];
 	private _set_position_param(hit_position: Vector3) {
 		hit_position.toArray(this._hit_position_array);
-		if (this._node.pv.tposition_target) {
+		if (this._node.pv.tpositionTarget) {
 			if (Poly.instance().player_mode()) {
 				this._found_position_target_param =
 					this._found_position_target_param ||
-					this._node.p.position_target.found_param_with_type(ParamType.VECTOR3);
+					this._node.p.positionTarget.found_param_with_type(ParamType.VECTOR3);
 			} else {
 				// Do not cache the param in the editor, but fetch it directly from the operator_path.
 				// The reason is that params are very prone to disappear and be re-generated,
 				// Such as spare params created by Gl Builders
-				const target_param = this._node.p.position_target;
+				const target_param = this._node.p.positionTarget;
 				this._found_position_target_param = target_param.found_param_with_type(ParamType.VECTOR3);
 			}
 			if (this._found_position_target_param) {
@@ -246,14 +246,14 @@ export class RaycastCPUController {
 	private _prepare_raycaster(context: EventContext<MouseEvent>) {
 		const points_param = this._raycaster.params.Points;
 		if (points_param) {
-			points_param.threshold = this._node.pv.points_threshold;
+			points_param.threshold = this._node.pv.pointsThreshold;
 		}
 
 		let camera_node: Readonly<BaseCameraObjNodeType> | undefined = context.camera_node;
-		if (this._node.pv.override_camera) {
-			if (this._node.pv.override_ray) {
-				this._raycaster.ray.origin.copy(this._node.pv.ray_origin);
-				this._raycaster.ray.direction.copy(this._node.pv.ray_direction);
+		if (this._node.pv.overrideCamera) {
+			if (this._node.pv.overrideRay) {
+				this._raycaster.ray.origin.copy(this._node.pv.rayOrigin);
+				this._raycaster.ray.direction.copy(this._node.pv.rayDirection);
 			} else {
 				const found_camera_node = this._node.p.camera.found_node_with_context(NodeContext.OBJ);
 				if (found_camera_node) {
@@ -262,7 +262,7 @@ export class RaycastCPUController {
 			}
 		}
 
-		if (camera_node && !this._node.pv.override_ray) {
+		if (camera_node && !this._node.pv.overrideRay) {
 			if (camera_node) {
 				camera_node.prepare_raycaster(this._mouse, this._raycaster);
 			}
@@ -273,7 +273,7 @@ export class RaycastCPUController {
 		const node = this._node.p.target.found_node() as BaseObjNodeType;
 		if (node) {
 			if (node.node_context() == NodeContext.OBJ) {
-				this._resolved_target = this._node.pv.traverse_children
+				this._resolved_target = this._node.pv.traverseChildren
 					? node.object
 					: (node as GeoObjNode).children_display_controller.sop_group;
 			} else {
@@ -285,8 +285,8 @@ export class RaycastCPUController {
 	}
 
 	async update_position_target() {
-		if (this._node.p.position_target.is_dirty) {
-			await this._node.p.position_target.compute();
+		if (this._node.p.positionTarget.is_dirty) {
+			await this._node.p.positionTarget.compute();
 		}
 	}
 	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {

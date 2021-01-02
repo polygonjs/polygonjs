@@ -18,7 +18,7 @@ export function TransformedParamConfig<TBase extends Constructor>(
 	return class Mixin extends Base {
 		transform = ParamConfig.FOLDER();
 		/** @param toggle on to keep world position when adding a parent or removing from one */
-		keep_pos_when_parenting = ParamConfig.BOOLEAN(0);
+		keepPosWhenParenting = ParamConfig.BOOLEAN(0);
 		/** @param rotation order */
 		rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
 			menu: {
@@ -37,17 +37,17 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		scale = ParamConfig.FLOAT(1);
 		// pivot = ParamConfig.VECTOR3([0, 0, 0]);
 		/** @param set for the matrix to be updated every frame */
-		matrix_auto_update = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
-		tlook_at = ParamConfig.BOOLEAN(0);
-		look_at_pos = ParamConfig.VECTOR3([0, 0, 0], {
-			visibleIf: {tlook_at: 1},
+		matrixAutoUpdate = ParamConfig.BOOLEAN(matrix_auto_update ? 1 : 0);
+		tlookAt = ParamConfig.BOOLEAN(0);
+		lookAtPos = ParamConfig.VECTOR3([0, 0, 0], {
+			visibleIf: {tlookAt: 1},
 		});
 		// look_at = ParamConfig.OPERATOR_PATH('', {
-		// 	visibleIf: {tlook_at: 1},
+		// 	visibleIf: {tlookAt: 1},
 		// 	nodeSelection: {context: NodeContext.OBJ},
 		// });
 		up = ParamConfig.VECTOR3([0, 1, 0], {
-			visibleIf: {tlook_at: 1},
+			visibleIf: {tlookAt: 1},
 		});
 	};
 }
@@ -74,7 +74,7 @@ export class TransformController {
 	update() {
 		this.update_transform_with_matrix();
 		const object = this.node.object;
-		object.matrixAutoUpdate = this.node.pv.matrix_auto_update;
+		object.matrixAutoUpdate = this.node.pv.matrixAutoUpdate;
 	}
 
 	update_transform_with_matrix(matrix?: Matrix4) {
@@ -124,11 +124,11 @@ export class TransformController {
 	// private _look_at_target_s = new Vector3();
 	private _apply_look_at() {
 		const pv = this.node.pv;
-		if (!pv.tlook_at) {
+		if (!pv.tlookAt) {
 			return;
 		}
 		this.node.object.up.copy(pv.up);
-		this.node.object.lookAt(pv.look_at_pos);
+		this.node.object.lookAt(pv.lookAtPos);
 		// const target_node = this.node.p.look_at.found_node_with_context(NodeContext.OBJ);
 		// if (target_node) {
 		// 	const target_object = target_node.object;
@@ -157,7 +157,7 @@ export class TransformController {
 	private _keep_pos_when_parenting_m_object = new Matrix4();
 	private _keep_pos_when_parenting_m_new_parent_inv = new Matrix4();
 	update_node_transform_params_if_required(new_parent_object: Object3D) {
-		if (!this.node.pv.keep_pos_when_parenting) {
+		if (!this.node.pv.keepPosWhenParenting) {
 			return;
 		}
 		if (!this.node.scene.loading_controller.loaded) {

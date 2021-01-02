@@ -20,7 +20,7 @@ enum LimitEventOutput {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class LimitEventParamsConfig extends NodeParamsConfig {
 	/** @param max number of events that can be processed */
-	max_count = ParamConfig.INTEGER(5, {
+	maxCount = ParamConfig.INTEGER(5, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
@@ -64,7 +64,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 	process_event(event_context: EventContext<Event>) {}
 
 	private process_event_trigger(event_context: EventContext<Event>) {
-		if (this._process_count < this.pv.max_count) {
+		if (this._process_count < this.pv.maxCount) {
 			this._process_count += 1;
 			this.dispatch_event_to_output(LimitEventOutput.OUT, event_context);
 		} else {

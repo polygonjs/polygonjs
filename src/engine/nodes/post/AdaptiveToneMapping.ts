@@ -34,20 +34,20 @@ import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postp
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AdaptiveToneMappingPostParamsConfig extends NodeParamsConfig {
-	adaptative = ParamConfig.BOOLEAN(1, {
+	adaptive = ParamConfig.BOOLEAN(1, {
 		...PostParamOptions,
 	});
-	average_luminance = ParamConfig.FLOAT(0.7, {
+	averageLuminance = ParamConfig.FLOAT(0.7, {
 		...PostParamOptions,
 	});
-	mid_grey = ParamConfig.FLOAT(0.04, {
+	midGrey = ParamConfig.FLOAT(0.04, {
 		...PostParamOptions,
 	});
-	max_luminance = ParamConfig.FLOAT(16, {
+	maxLuminance = ParamConfig.FLOAT(16, {
 		range: [0, 20],
 		...PostParamOptions,
 	});
-	adaption_rage = ParamConfig.FLOAT(2, {
+	adaptiveRange = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		...PostParamOptions,
 	});
@@ -63,17 +63,17 @@ export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {
-		const pass = new AdaptiveToneMappingPass(this.pv.adaptative, context.resolution.x);
+		const pass = new AdaptiveToneMappingPass(this.pv.adaptive, context.resolution.x);
 		this.update_pass(pass);
 		return pass;
 	}
 	update_pass(pass: AdaptiveToneMappingPass) {
-		pass.setMaxLuminance(this.pv.max_luminance);
-		pass.setMiddleGrey(this.pv.mid_grey);
-		pass.setAverageLuminance(this.pv.average_luminance);
+		pass.setMaxLuminance(this.pv.maxLuminance);
+		pass.setMiddleGrey(this.pv.midGrey);
+		pass.setAverageLuminance(this.pv.averageLuminance);
 
 		// if(pass.adaptive){
-		// 	pass.setAdaptionRate( this.pv.adaption_rage );
+		// 	pass.setAdaptionRate( this.pv.adaptiveRange );
 		// 	ADAPTIVE_LUMINANCE_MAT.uniforms[ "map" ].value = pass.luminanceRT;
 		// 	CURRENT_LUMINANCE_MAT.uniforms[ "map" ].value = pass.currentLuminanceRT;
 		// }

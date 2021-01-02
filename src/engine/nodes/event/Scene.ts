@@ -11,10 +11,10 @@ import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 
 enum SceneNodeInput {
-	SET_FRAME = 'set_frame',
+	SET_FRAME = 'setFrame',
 }
 enum SceneNodeOutput {
-	TIME_REACHED = 'time_reached',
+	TIME_REACHED = 'timeReached',
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
@@ -27,7 +27,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	});
 	sep = ParamConfig.SEPARATOR(null, {visibleIf: {active: true}});
 	/** @param toggle on to trigger an event when the scene has loaded. This can be useful to initialize other nodes */
-	scene_loaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
+	sceneLoaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene starts playing */
 	play = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene pauses */
@@ -36,23 +36,23 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	tick = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	sep0 = ParamConfig.SEPARATOR();
 	/** @param toggle on to trigger an event on every tick */
-	treached_time = ParamConfig.BOOLEAN(0, {
+	treachedTime = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType) => {
 			SceneEventNode.PARAM_CALLBACK_update_time_dependency(node as SceneEventNode);
 		},
 	});
 	/** @param time to trigger an event */
-	reached_time = ParamConfig.INTEGER(10, {
-		visibleIf: {treached_time: 1},
+	reachedTime = ParamConfig.INTEGER(10, {
+		visibleIf: {treachedTime: 1},
 		range: [0, 100],
 	});
 	sep1 = ParamConfig.SEPARATOR();
 	/** @param frame to set */
-	set_frame_value = ParamConfig.INTEGER(1, {
+	setFrameValue = ParamConfig.INTEGER(1, {
 		range: [0, 100],
 	});
 	/** @param button to set a specific frame */
-	set_frame = ParamConfig.BUTTON(null, {
+	setFrame = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			SceneEventNode.PARAM_CALLBACK_setFrame(node as SceneEventNode);
 		},
@@ -93,16 +93,16 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 	}
 
 	private onSetFrame(event_context: EventContext<Event>) {
-		this.scene.setFrame(this.pv.set_frame_value);
+		this.scene.setFrame(this.pv.setFrameValue);
 	}
 
 	private on_frame_update() {
-		if (this.scene.time >= this.pv.reached_time) {
+		if (this.scene.time >= this.pv.reachedTime) {
 			this.dispatch_event_to_output(SceneNodeOutput.TIME_REACHED, {});
 		}
 	}
 	private update_time_dependency() {
-		if (this.pv.treached_time) {
+		if (this.pv.treachedTime) {
 			this.graph_node = this.graph_node || new CoreGraphNode(this.scene, 'scene_node_time_graph_node');
 			this.graph_node.add_graph_input(this.scene.time_controller.graph_node);
 			this.graph_node.add_post_dirty_hook('time_update', this.on_frame_update.bind(this));

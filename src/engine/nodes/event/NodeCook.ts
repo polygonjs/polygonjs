@@ -28,7 +28,7 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 	/** @param forces cook of nodes mentioned in the mask param */
 	force = ParamConfig.BOOLEAN(0);
 	/** @param defines if the nodes should cook one after the other or in parallel */
-	cook_mode = ParamConfig.INTEGER(COOK_MODES.indexOf(CookMode.ALL_TOGETHER), {
+	cookMode = ParamConfig.INTEGER(COOK_MODES.indexOf(CookMode.ALL_TOGETHER), {
 		menu: {
 			entries: COOK_MODES.map((name, value) => {
 				return {name, value};
@@ -36,16 +36,16 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param batch size */
-	batch_size = ParamConfig.INTEGER(1, {visibleIf: {cook_mode: COOK_MODES.indexOf(CookMode.BATCH)}});
+	batchSize = ParamConfig.INTEGER(1, {visibleIf: {cookMode: COOK_MODES.indexOf(CookMode.BATCH)}});
 	sep = ParamConfig.SEPARATOR();
 	/** @param updates the list of nodes from the mask parameter. This can be useful if nodes are added or removed from the scene */
-	update_resolve = ParamConfig.BUTTON(null, {
+	updateResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			NodeCookEventNode.PARAM_CALLBACK_update_resolve(node as NodeCookEventNode);
 		},
 	});
 	/** @param prints the list of nodes the mask resolves to to the console. Useful for debugging */
-	print_resolve = ParamConfig.BUTTON(null, {
+	printResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			NodeCookEventNode.PARAM_CALLBACK_print_resolve(node as NodeCookEventNode);
 		},
@@ -97,7 +97,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 	private _cook_nodes_with_mode() {
 		this._update_resolved_nodes(); // necesarry when triggered on scene load
-		const mode = COOK_MODES[this.pv.cook_mode];
+		const mode = COOK_MODES[this.pv.cookMode];
 		switch (mode) {
 			case CookMode.ALL_TOGETHER:
 				return this._cook_nodes_all_together();
@@ -110,7 +110,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		this._cook_nodes(this._resolved_nodes);
 	}
 	private async _cook_nodes_batch() {
-		const batch_size = this.pv.batch_size;
+		const batch_size = this.pv.batchSize;
 		const batches_count = Math.ceil(this._resolved_nodes.length / batch_size);
 
 		for (let i = 0; i < batches_count; i++) {

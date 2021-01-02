@@ -20,18 +20,18 @@ interface MaskPassWithContext extends MaskPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class MaskPostParamsConfig extends NodeParamsConfig {
-	override_scene = ParamConfig.BOOLEAN(0, PostParamOptions);
+	overrideScene = ParamConfig.BOOLEAN(0, PostParamOptions);
 	scene = ParamConfig.OPERATOR_PATH('/scene1', {
-		visibleIf: {override_scene: 1},
+		visibleIf: {overrideScene: 1},
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [SceneObjNode.type()],
 		},
 		...PostParamOptions,
 	});
-	override_camera = ParamConfig.BOOLEAN(0, PostParamOptions);
+	overrideCamera = ParamConfig.BOOLEAN(0, PostParamOptions);
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
-		visibleIf: {override_camera: 1},
+		visibleIf: {overrideCamera: 1},
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
@@ -62,7 +62,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 		this._update_camera(pass);
 	}
 	private async _update_scene(pass: MaskPassWithContext) {
-		if (this.pv.override_scene) {
+		if (this.pv.overrideScene) {
 			if (this.p.scene.is_dirty) {
 				await this.p.scene.compute();
 			}
@@ -75,7 +75,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 		pass.scene = pass.context.scene;
 	}
 	private async _update_camera(pass: MaskPassWithContext) {
-		if (this.pv.override_camera) {
+		if (this.pv.overrideCamera) {
 			if (this.p.camera.is_dirty) {
 				await this.p.camera.compute();
 			}

@@ -18,7 +18,7 @@ class EasingAnimParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param defines if the easing is 'in', 'out' or 'in-out' */
-	in_out = ParamConfig.INTEGER(IN_OUT_MODES.indexOf(InOutMode.OUT), {
+	inOut = ParamConfig.INTEGER(IN_OUT_MODES.indexOf(InOutMode.OUT), {
 		menu: {
 			entries: IN_OUT_MODES.map((name, value) => {
 				return {name, value};
@@ -39,7 +39,7 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.name, this.p.in_out], () => {
+				this.params.label.init([this.p.name, this.p.inOut], () => {
 					return this.easing_full_name();
 				});
 			});
@@ -51,7 +51,7 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 		if (easing == AnimNodeEasing.NONE) {
 			return easing;
 		}
-		const in_out = IN_OUT_MODES[this.pv.in_out];
+		const in_out = IN_OUT_MODES[this.pv.inOut];
 		const easing_full_name = `${easing}.${in_out}`;
 		return easing_full_name;
 	}

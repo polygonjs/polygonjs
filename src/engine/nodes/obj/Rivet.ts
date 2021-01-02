@@ -41,7 +41,7 @@ class RivetObjParamConfig extends NodeParamsConfig {
 			RivetObjNode.PARAM_CALLBACK_update_resolved_object(node as RivetObjNode);
 		},
 	});
-	point_index = ParamConfig.INTEGER(0, {
+	pointIndex = ParamConfig.INTEGER(0, {
 		range: [0, 100],
 		// callback: (node: BaseNodeType) => {
 		// 	RivetObjNode.PARAM_CALLBACK_update_object_position(node as RivetObjNode);
@@ -52,9 +52,9 @@ class RivetObjParamConfig extends NodeParamsConfig {
 	// 		RivetObjNode.PARAM_CALLBACK_update_active_state(node as RivetObjNode);
 	// 	},
 	// });
-	update_mode = ParamConfig.INTEGER(UPDATE_MODES.indexOf(RivetUpdateMode.ON_RENDER), {
+	updateMode = ParamConfig.INTEGER(UPDATE_MODES.indexOf(RivetUpdateMode.ON_RENDER), {
 		callback: (node: BaseNodeType) => {
-			RivetObjNode.PARAM_CALLBACK_update_update_mode(node as RivetObjNode);
+			RivetObjNode.PARAM_CALLBACK_update_updateMode(node as RivetObjNode);
 		},
 		menu: {
 			entries: UPDATE_MODES.map((name, value) => {
@@ -67,7 +67,7 @@ class RivetObjParamConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType) => {
 			RivetObjNode.PARAM_CALLBACK_update(node as RivetObjNode);
 		},
-		visibleIf: {update_mode: UPDATE_MODES.indexOf(RivetUpdateMode.MANUAL)},
+		visibleIf: {updateMode: UPDATE_MODES.indexOf(RivetUpdateMode.MANUAL)},
 	});
 	// update = ParamConfig.BUTTON(null, {
 	// 	callback: (node: BaseNodeType) => {
@@ -134,7 +134,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	async cook() {
 		await this._update_resolved_object();
 		this._update_render_hook();
-		// this._update_update_mode();
+		// this._update_updateMode();
 		this.cook_controller.end_cook();
 	}
 	// private _remove_render_hook() {
@@ -143,7 +143,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	// 	}
 	// }
 
-	// private _update_update_mode(){
+	// private _update_updateMode(){
 	// The problem with a frame dependency is that if there is a hierarchy
 	// of rivets, the update chain will be in the wrong order, and therefore wrong.
 	// It is then better to update it via a code node.
@@ -171,7 +171,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	// }
 
 	private _update_render_hook() {
-		const mode = UPDATE_MODES[this.pv.update_mode];
+		const mode = UPDATE_MODES[this.pv.updateMode];
 		switch (mode) {
 			case RivetUpdateMode.ON_RENDER: {
 				return this._add_render_hook();
@@ -212,7 +212,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 				const position_attrib = geometry.attributes['position'];
 				if (position_attrib) {
 					const position_array = position_attrib.array;
-					this._found_point_post.fromArray(position_array, this.pv.point_index * 3);
+					this._found_point_post.fromArray(position_array, this.pv.pointIndex * 3);
 					// ensures that parent objects have their matrices up to date
 					resolved_object.updateWorldMatrix(true, false);
 					resolved_object.localToWorld(this._found_point_post);
@@ -268,7 +268,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	// ACTIVE
 	//
 	//
-	static PARAM_CALLBACK_update_update_mode(node: RivetObjNode) {
+	static PARAM_CALLBACK_update_updateMode(node: RivetObjNode) {
 		node._update_render_hook();
 	}
 	// private async _update_active_state() {

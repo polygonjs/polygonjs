@@ -59,12 +59,12 @@ export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 			},
 		});
 		/** @param set the video time */
-		video_time = ParamConfig.FLOAT(0, {
+		videoTime = ParamConfig.FLOAT(0, {
 			cook: false,
-			// do not use video_time, as calling "this._video.currentTime =" every frame is really expensive
+			// do not use videoTime, as calling "this._video.currentTime =" every frame is really expensive
 		});
 		/** @param seek the video at the time specified in vide_time */
-		set_video_time = ParamConfig.BUTTON(null, {
+		setVideoTime = ParamConfig.BUTTON(null, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
 				VideoCopNode.PARAM_CALLBACK_video_update_time(node as VideoCopNode);
@@ -153,7 +153,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	}
 	private async video_update_time() {
 		if (this._video) {
-			const param = this.p.video_time;
+			const param = this.p.videoTime;
 			if (param.is_dirty) {
 				await param.compute();
 			}

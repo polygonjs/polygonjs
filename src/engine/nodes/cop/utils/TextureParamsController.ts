@@ -112,7 +112,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to allow updating the texture wrap */
 		twrap = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture wrapS */
-		wrap_s = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
+		wrapS = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
 			visibleIf: {twrap: 1},
 			menu: {
 				entries: WRAPPINGS.map((m) => {
@@ -124,7 +124,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 			},
 		});
 		/** @param sets the texture wrapT */
-		wrap_t = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
+		wrapT = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
 			visibleIf: {twrap: 1},
 			menu: {
 				entries: WRAPPINGS.map((m) => {
@@ -135,13 +135,13 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				}),
 			},
 		});
-		wrap_sep = ParamConfig.SEPARATOR(null, {
+		wrapSep = ParamConfig.SEPARATOR(null, {
 			visibleIf: {twrap: 1},
 		});
 		/** @param toggle on to allow updating the texture min filter */
 		tminfilter = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture min filter */
-		min_filter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
+		minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
 			visibleIf: {tminfilter: 1},
 			menu: {
 				entries: MIN_FILTER_MENU_ENTRIES,
@@ -150,7 +150,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to allow updating the texture mag filter */
 		tmagfilter = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture mag filter */
-		mag_filter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
+		magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
 			visibleIf: {tmagfilter: 1},
 			menu: {
 				entries: MAG_FILTER_MENU_ENTRIES,
@@ -159,26 +159,26 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to allow updating the texture anisotropy */
 		tanisotropy = ParamConfig.BOOLEAN(0);
 		/** @param sets the anisotropy from the max value allowed by the renderer */
-		use_renderer_max_anisotropy = ParamConfig.BOOLEAN(1, {
+		useRendererMaxAnisotropy = ParamConfig.BOOLEAN(1, {
 			visibleIf: {tanisotropy: 1},
 		});
 		/** @param sets the anisotropy manually */
 		anisotropy = ParamConfig.INTEGER(1, {
-			visibleIf: {tanisotropy: 1, use_renderer_max_anisotropy: 0},
+			visibleIf: {tanisotropy: 1, useRendererMaxAnisotropy: 0},
 			range: [0, 32],
 			rangeLocked: [true, false],
 		});
 		/** @param TBD */
-		use_camera_renderer = ParamConfig.BOOLEAN(0, {
-			visibleIf: {tanisotropy: 1, use_renderer_max_anisotropy: 1},
+		useCameraRenderer = ParamConfig.BOOLEAN(0, {
+			visibleIf: {tanisotropy: 1, useRendererMaxAnisotropy: 1},
 		});
-		anisotropy_sep = ParamConfig.SEPARATOR(null, {
+		anisotropySep = ParamConfig.SEPARATOR(null, {
 			visibleIf: {tanisotropy: 1},
 		});
 		/** @param Toggle on to update the flipY */
-		tflip_y = ParamConfig.BOOLEAN(0);
+		tflipY = ParamConfig.BOOLEAN(0);
 		/** @param sets the flipY */
-		flip_y = ParamConfig.BOOLEAN(0, {visibleIf: {tflip_y: 1}});
+		flipY = ParamConfig.BOOLEAN(0, {visibleIf: {tflipY: 1}});
 		/** @param toggle on to update the texture transform */
 		ttransform = ParamConfig.BOOLEAN(0);
 		/** @param updates the texture offset */
@@ -235,21 +235,21 @@ export class TextureParamsController {
 			texture.mapping = pv.mapping;
 		}
 		if (pv.twrap) {
-			texture.wrapS = pv.wrap_s;
-			texture.wrapT = pv.wrap_t;
+			texture.wrapS = pv.wrapS;
+			texture.wrapT = pv.wrapT;
 		}
 		if (pv.tminfilter) {
-			texture.minFilter = pv.min_filter;
+			texture.minFilter = pv.minFilter;
 		}
 		if (pv.tminfilter) {
-			texture.magFilter = pv.mag_filter;
+			texture.magFilter = pv.magFilter;
 		}
 		this._update_anisotropy(texture);
 
 		// do not have this in an if block,
 		// as to be sure this is set to false in case it is set to true
 		// by the texture loader
-		texture.flipY = pv.tflip_y && pv.flip_y;
+		texture.flipY = pv.tflipY && pv.flipY;
 		this._update_texture_transform(texture);
 	}
 	private _renderer_controller: CopRendererController | undefined;
@@ -258,7 +258,7 @@ export class TextureParamsController {
 		if (!pv.tanisotropy) {
 			return;
 		}
-		if (pv.use_renderer_max_anisotropy) {
+		if (pv.useRendererMaxAnisotropy) {
 			this._renderer_controller = this._renderer_controller || new CopRendererController(this.node);
 			const renderer = await this._renderer_controller.renderer();
 			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();

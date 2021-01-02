@@ -2,7 +2,7 @@ import {BaseSceneEventsController} from './_BaseEventsController';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 
 export enum SceneEventType {
-	LOADED = 'scene_loaded',
+	LOADED = 'sceneLoaded',
 	PLAY = 'play',
 	PAUSE = 'pause',
 	TICK = 'tick',

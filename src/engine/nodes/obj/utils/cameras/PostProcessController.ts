@@ -18,10 +18,10 @@ const POST_PROCESS_PARAM_OPTIONS = {
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		do_post_process = ParamConfig.BOOLEAN(0);
-		post_process_node = ParamConfig.NODE_PATH('./postProcess1', {
+		doPostProcess = ParamConfig.BOOLEAN(0);
+		postProcessNode = ParamConfig.NODE_PATH('./postProcess1', {
 			visibleIf: {
-				do_post_process: 1,
+				doPostProcess: 1,
 			},
 			nodeSelection: {
 				types: [NetworkNodeType.POST],
@@ -31,12 +31,12 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 		});
 		// prepend_render_pass = ParamConfig.BOOLEAN(1, {
 		// 	visibleIf: {
-		// 		do_post_process: 1,
+		// 		doPostProcess: 1,
 		// 	},
 		// });
 		// use_render_target = ParamConfig.BOOLEAN(0, {
 		// 	visibleIf: {
-		// 		do_post_process: 1,
+		// 		doPostProcess: 1,
 		// 	},
 		// 	...POST_PROCESS_PARAM_OPTIONS,
 		// });
@@ -47,7 +47,7 @@ export class PostProcessController {
 	private _composers_by_canvas_id: Dictionary<EffectComposer> = {};
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {
-		if (this.node.p.post_process_node) {
+		if (this.node.p.postProcessNode) {
 			this._add_param_dirty_hook();
 		} else {
 			this.node.params.on_params_created('post process add param dirty hook', () => {
@@ -56,7 +56,7 @@ export class PostProcessController {
 		}
 	}
 	private _add_param_dirty_hook() {
-		this.node.p.post_process_node.add_post_dirty_hook('on_post_node_dirty', () => {
+		this.node.p.postProcessNode.add_post_dirty_hook('on_post_node_dirty', () => {
 			this.reset();
 		});
 	}
@@ -95,7 +95,7 @@ export class PostProcessController {
 			const scene = this.node.render_controller.resolved_scene || this.node.scene.defaultScene;
 			const camera = this.node.object;
 
-			const found_node = this.node.p.post_process_node.value.node();
+			const found_node = this.node.p.postProcessNode.value.node();
 			if (found_node) {
 				if (found_node.type == NetworkNodeType.POST) {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;

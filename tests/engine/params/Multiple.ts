@@ -40,7 +40,7 @@ QUnit.test('color keep their default and also for their components', async (asse
 
 	const hemisphere_light1 = scene.root.createNode('hemisphereLight');
 
-	const param = hemisphere_light1.p.sky_color;
+	const param = hemisphere_light1.p.skyColor;
 	assert.deepEqual(param.value_pre_conversion.toArray(), [1, 1, 1]);
 	assert.equal(param.value_pre_conversion.r, 1);
 	assert.equal(param.value_pre_conversion.g, 1);

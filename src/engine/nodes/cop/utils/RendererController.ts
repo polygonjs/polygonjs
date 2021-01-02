@@ -5,7 +5,7 @@ import {TypedCopNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Poly} from '../../../Poly';
 class BaseCopRendererCopParamsConfig extends NodeParamsConfig {
-	use_camera_renderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new BaseCopRendererCopParamsConfig();
 export class BaseCopRendererCopNode extends TypedCopNode<BaseCopRendererCopParamsConfig> {
@@ -18,7 +18,7 @@ export class CopRendererController {
 	constructor(private node: BaseCopRendererCopNode) {}
 
 	async renderer() {
-		if (this.node.pv.use_camera_renderer) {
+		if (this.node.pv.useCameraRenderer) {
 			return await this.camera_renderer();
 		} else {
 			return (this._renderer = this._renderer || this._create_renderer());

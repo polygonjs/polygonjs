@@ -11,20 +11,20 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	assert.equal(hemisphere_light1.name, 'hemisphereLight1');
 	assert.equal(main_group.children.length, 3);
 
-	assert.deepEqual(hemisphere_light1.p.sky_color.value_pre_conversion_serialized, [1, 1, 1]);
-	assert.deepEqual(hemisphere_light1.p.ground_color.value_pre_conversion_serialized, [0, 0, 0]);
+	assert.deepEqual(hemisphere_light1.p.skyColor.value_pre_conversion_serialized, [1, 1, 1]);
+	assert.deepEqual(hemisphere_light1.p.groundColor.value_pre_conversion_serialized, [0, 0, 0]);
 
-	hemisphere_light1.p.sky_color.set([0.2, 0.7, 1]);
-	hemisphere_light1.p.ground_color.set([0.1, 0.1, 0.25]);
-	assert.deepEqual(hemisphere_light1.p.sky_color.value_pre_conversion_serialized, [0.2, 0.7, 1]);
-	assert.deepEqual(hemisphere_light1.p.ground_color.value_pre_conversion_serialized, [0.1, 0.1, 0.25]);
+	hemisphere_light1.p.skyColor.set([0.2, 0.7, 1]);
+	hemisphere_light1.p.groundColor.set([0.1, 0.1, 0.25]);
+	assert.deepEqual(hemisphere_light1.p.skyColor.value_pre_conversion_serialized, [0.2, 0.7, 1]);
+	assert.deepEqual(hemisphere_light1.p.groundColor.value_pre_conversion_serialized, [0.1, 0.1, 0.25]);
 	const tmp = new Color();
-	tmp.copy(hemisphere_light1.p.sky_color.value_pre_conversion);
+	tmp.copy(hemisphere_light1.p.skyColor.value_pre_conversion);
 	tmp.convertSRGBToLinear();
-	assert.deepEqual(hemisphere_light1.pv.sky_color.toArray(), tmp.toArray());
-	tmp.copy(hemisphere_light1.p.ground_color.value_pre_conversion);
+	assert.deepEqual(hemisphere_light1.pv.skyColor.toArray(), tmp.toArray());
+	tmp.copy(hemisphere_light1.p.groundColor.value_pre_conversion);
 	tmp.convertSRGBToLinear();
-	assert.deepEqual(hemisphere_light1.pv.ground_color.toArray(), tmp.toArray());
+	assert.deepEqual(hemisphere_light1.pv.groundColor.toArray(), tmp.toArray());
 
 	const hemisphere_light2 = scene.root.createNode('hemisphereLight');
 	assert.equal(hemisphere_light2.name, 'hemisphereLight2');
@@ -54,7 +54,7 @@ QUnit.test('hemisphere light params update as expected', async (assert) => {
 	const root = scene.root;
 	const hemisphere_light = root.createNode('hemisphereLight');
 	assert.equal(hemisphere_light.light.color.r, 1);
-	hemisphere_light.p.sky_color.r.set(0.5);
+	hemisphere_light.p.skyColor.r.set(0.5);
 	await scene.wait_for_cooks_completed();
 	assert.in_delta(hemisphere_light.light.color.r, 0.21, 0.05);
 });

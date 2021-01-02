@@ -29,7 +29,7 @@ export class HelperController<L extends Light> {
 		}
 	}
 	get visible() {
-		return this.node.flags.display.active && this.node.pv.show_helper;
+		return this.node.flags.display.active && this.node.pv.showHelper;
 	}
 
 	private _create_helper(): BaseLightHelper<L, BaseLightHelperObjNode<L>> {

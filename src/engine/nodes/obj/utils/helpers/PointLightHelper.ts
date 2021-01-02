@@ -14,7 +14,7 @@ export class PointLightHelper extends BaseLightHelper<PointLight, PointLightObjN
 
 	private _matrix_scale = new Vector3(1, 1, 1);
 	update() {
-		const size = this.node.pv.helper_size;
+		const size = this.node.pv.helperSize;
 		this._matrix_scale.set(size, size, size);
 		this._object.matrix.identity();
 		this._object.matrix.scale(this._matrix_scale);

@@ -22,27 +22,27 @@ import {
 } from '../../../../core/cop/ConstantFilter';
 export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 	prepend_render_pass = ParamConfig.BOOLEAN(1);
-	use_render_target = ParamConfig.BOOLEAN(1);
-	tmag_filter = ParamConfig.BOOLEAN(0, {
-		visibleIf: {use_render_target: 1},
+	useRenderTarget = ParamConfig.BOOLEAN(1);
+	tmagFilter = ParamConfig.BOOLEAN(0, {
+		visibleIf: {useRenderTarget: 1},
 	});
-	mag_filter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
-		visibleIf: {use_render_target: 1, tmag_filter: 1},
+	magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
+		visibleIf: {useRenderTarget: 1, tmagFilter: 1},
 		menu: {
 			entries: MAG_FILTER_MENU_ENTRIES,
 		},
 	});
-	tmin_filter = ParamConfig.BOOLEAN(0, {
-		visibleIf: {use_render_target: 1},
+	tminFilter = ParamConfig.BOOLEAN(0, {
+		visibleIf: {useRenderTarget: 1},
 	});
-	min_filter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
-		visibleIf: {use_render_target: 1, tmin_filter: 1},
+	minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
+		visibleIf: {useRenderTarget: 1, tminFilter: 1},
 		menu: {
 			entries: MIN_FILTER_MENU_ENTRIES,
 		},
 	});
-	stencil_buffer = ParamConfig.BOOLEAN(0, {
-		visibleIf: {use_render_target: 1},
+	stencilBuffer = ParamConfig.BOOLEAN(0, {
+		visibleIf: {useRenderTarget: 1},
 	});
 	sampling = ParamConfig.INTEGER(1, {
 		range: [1, 4],
@@ -67,7 +67,7 @@ interface CreateEffectsComposerOptions {
 	// render_target?: WebGLRenderTarget;
 	requester: BaseNodeType;
 	camera_node?: BaseCameraObjNodeType;
-	// use_render_target?: boolean;
+	// useRenderTarget?: boolean;
 	// prepend_render_pass?: boolean;
 }
 
@@ -90,7 +90,7 @@ export class EffectsComposerController {
 		const renderer = options.renderer;
 
 		let composer: EffectComposer;
-		if (this.node.pv.use_render_target) {
+		if (this.node.pv.useRenderTarget) {
 			const render_target = this._create_render_target(renderer);
 			composer = new EffectComposer(renderer, render_target);
 		} else {
@@ -116,13 +116,13 @@ export class EffectsComposerController {
 		const parameters: WebGLRenderTargetOptions = {
 			// format: RGBFormat,
 			format: RGBFormat,
-			stencilBuffer: this.node.pv.stencil_buffer,
+			stencilBuffer: this.node.pv.stencilBuffer,
 		};
 		if (this.node.pv.tminfilter) {
-			parameters.minFilter = this.node.pv.min_filter;
+			parameters.minFilter = this.node.pv.minFilter;
 		}
 		if (this.node.pv.tminfilter) {
-			parameters.magFilter = this.node.pv.mag_filter;
+			parameters.magFilter = this.node.pv.magFilter;
 		}
 
 		renderer.getDrawingBufferSize(this._renderer_size);

@@ -42,7 +42,7 @@ QUnit.test('obj nodes can keep their position on input change', async (assert) =
 	await scene.wait_for_cooks_completed();
 	assert.deepEqual(geo1.object.position.toArray(), [0, -0.6, 2]);
 
-	geo1.p.keep_pos_when_parenting.set(1);
+	geo1.p.keepPosWhenParenting.set(1);
 	// we remove input so that we parent under _WORLD_
 	geo1.setInput(0, null);
 	await scene.wait_for_cooks_completed();

@@ -16,7 +16,7 @@ const INPUT_NAME = 'trigger';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PassEventParamsConfig extends NodeParamsConfig {
 	/** @param number of possible outputs */
-	outputs_count = ParamConfig.INTEGER(5, {
+	outputsCount = ParamConfig.INTEGER(5, {
 		range: [1, 10],
 		rangeLocked: [true, false],
 	});
@@ -45,7 +45,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 		this.io.connection_points.set_output_name_function(this._output_name.bind(this));
 	}
 	private _expected_output_types() {
-		const list: EventConnectionPointType[] = new Array(this.pv.outputs_count);
+		const list: EventConnectionPointType[] = new Array(this.pv.outputsCount);
 		list.fill(EventConnectionPointType.BASE);
 		return list;
 	}
@@ -54,7 +54,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 	}
 
 	process_event(event_context: EventContext<Event>) {
-		const count = this.pv.outputs_count;
+		const count = this.pv.outputsCount;
 		for (let i = 0; i < count; i++) {
 			const connection_point = this.io.outputs.named_output_connection_points[i];
 			this.dispatch_event_to_output(connection_point.name, event_context);

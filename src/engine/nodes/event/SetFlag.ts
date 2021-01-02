@@ -26,7 +26,7 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the display flag */
 	tdisplay = ParamConfig.BOOLEAN(0);
 	/** @param sets how the display flag will be updated (set to a value or toggle) */
-	display_mode = ParamConfig.INTEGER(FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET), {
+	displayMode = ParamConfig.INTEGER(FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET), {
 		visibleIf: {tdisplay: 1},
 		menu: {
 			entries: FLAG_UPDATE_MODES.map((name, value) => {
@@ -36,13 +36,13 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	});
 	/** @param new display flag state */
 	display = ParamConfig.BOOLEAN(0, {
-		visibleIf: {tdisplay: 1, display_mode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
+		visibleIf: {tdisplay: 1, displayMode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
 	});
 	sep1 = ParamConfig.SEPARATOR();
 	/** @param toggle on to update the bypass flag */
 	tbypass = ParamConfig.BOOLEAN(0);
 	/** @param sets how the bypass flag will be updated (set to a value or toggle) */
-	bypass_mode = ParamConfig.INTEGER(FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET), {
+	bypassMode = ParamConfig.INTEGER(FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET), {
 		visibleIf: {tbypass: 1},
 		menu: {
 			entries: FLAG_UPDATE_MODES.map((name, value) => {
@@ -52,7 +52,7 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	});
 	/** @param new bypass flag state */
 	bypass = ParamConfig.BOOLEAN(0, {
-		visibleIf: {tbypass: 1, display_mode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
+		visibleIf: {tbypass: 1, displayMode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
 	});
 	/** @param button to trigger the node. Useful to debug */
 	execute = ParamConfig.BUTTON(null, {
@@ -105,7 +105,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		if (!display_flag) {
 			return;
 		}
-		const mode = FLAG_UPDATE_MODES[this.pv.display_mode];
+		const mode = FLAG_UPDATE_MODES[this.pv.displayMode];
 		switch (mode) {
 			case FlagUpdateMode.SET: {
 				display_flag.set(this.pv.display);
@@ -129,7 +129,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		if (!bypass_flag) {
 			return;
 		}
-		const mode = FLAG_UPDATE_MODES[this.pv.bypass_mode];
+		const mode = FLAG_UPDATE_MODES[this.pv.bypassMode];
 		switch (mode) {
 			case FlagUpdateMode.SET: {
 				bypass_flag.set(this.pv.bypass);

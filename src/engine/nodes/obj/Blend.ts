@@ -44,12 +44,12 @@ class BlendObjParamConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [false, false],
 	});
-	blend_t = ParamConfig.FLOAT(0, {
+	blendT = ParamConfig.FLOAT(0, {
 		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
 		rangeLocked: [false, false],
 	});
-	blend_r = ParamConfig.FLOAT(0, {
+	blendR = ParamConfig.FLOAT(0, {
 		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
 		rangeLocked: [false, false],
@@ -122,8 +122,8 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	}
 	private _blend_separately(object0: Object3D, object1: Object3D) {
 		this._decompose_matrices(object0, object1);
-		this._object.position.copy(this._t0).lerp(this._t1, this.pv.blend_t);
-		this._object.quaternion.copy(this._q0).slerp(this._q1, this.pv.blend_r);
+		this._object.position.copy(this._t0).lerp(this._t1, this.pv.blendT);
+		this._object.quaternion.copy(this._q0).slerp(this._q1, this.pv.blendR);
 		if (!this._object.matrixAutoUpdate) {
 			this._object.updateMatrix();
 		}

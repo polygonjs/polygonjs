@@ -89,7 +89,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 // }
 
 class PostProcessCopNetworkParamsConfig extends PostProcessNetworkParamsConfig {
-	use_camera_renderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
 
 const ParamsConfig = new PostProcessCopNetworkParamsConfig();

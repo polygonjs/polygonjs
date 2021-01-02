@@ -135,7 +135,7 @@ export class ThreejsCameraControlsController {
 		// this.controls_start_listener = () => {
 		// 	this.on_controls_start(controls);
 		// };
-		const update_mode = UPDATE_FROM_CONTROLS_MODES[this.node.pv.update_from_controls_mode];
+		const update_mode = UPDATE_FROM_CONTROLS_MODES[this.node.pv.updateFromControlsMode];
 		switch (update_mode) {
 			case UpdateFromControlsMode.ON_END:
 				return this._set_controls_events_to_update_on_end(controls);

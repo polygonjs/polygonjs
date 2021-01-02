@@ -29,7 +29,7 @@ class MergeAnimParamsConfig extends NodeParamsConfig {
 		range: [-1, 1],
 	});
 	/** @param override the position */
-	override_positions = ParamConfig.BOOLEAN(0);
+	overridePositions = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new MergeAnimParamsConfig();
 
@@ -82,7 +82,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 	}
 	private _set_play_all_together(timeline_builder: TimelineBuilder) {
 		let position = timeline_builder.position();
-		if (!position || this.pv.override_positions) {
+		if (!position || this.pv.overridePositions) {
 			position = new AnimationPosition();
 			position.set_mode(AnimationPositionMode.RELATIVE);
 			position.set_relative_to(AnimationPositionRelativeTo.START);
@@ -92,7 +92,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 	}
 	private _set_play_one_at_a_time(timeline_builder: TimelineBuilder) {
 		let position = timeline_builder.position();
-		if (!position || this.pv.override_positions) {
+		if (!position || this.pv.overridePositions) {
 			position = new AnimationPosition();
 			position.set_mode(AnimationPositionMode.RELATIVE);
 			position.set_relative_to(AnimationPositionRelativeTo.END);

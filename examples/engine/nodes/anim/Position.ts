@@ -32,8 +32,8 @@ export function AnimPosition() {
 	// In this case, we target all objects of the THREE scene graph
 	// which care called "anim_target" (which is how we call them with the objectProperties above)
 	const target = animations.createNode('target');
-	target.p.object_mask.set('animTarget');
-	target.p.update_matrix.set(1);
+	target.p.objectMask.set('animTarget');
+	target.p.updateMatrix.set(1);
 	// set the name of the property updated by the animation.
 	// In this case, we will update the Y axis of the rotation
 	const propertyName = animations.createNode('propertyName');

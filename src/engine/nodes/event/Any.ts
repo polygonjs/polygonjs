@@ -16,7 +16,7 @@ class AnyEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to ensure events are transfered */
 	active = ParamConfig.BOOLEAN(1);
 	/** @param number of possible events */
-	inputs_count = ParamConfig.INTEGER(5, {
+	inputsCount = ParamConfig.INTEGER(5, {
 		range: [1, 10],
 		rangeLocked: [true, false],
 	});
@@ -36,7 +36,7 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [EventConnectionPointType.BASE]);
 	}
 	private _expected_input_types() {
-		const list: EventConnectionPointType[] = new Array(this.pv.inputs_count);
+		const list: EventConnectionPointType[] = new Array(this.pv.inputsCount);
 		list.fill(EventConnectionPointType.BASE);
 		return list;
 	}

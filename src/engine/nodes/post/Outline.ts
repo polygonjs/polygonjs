@@ -6,36 +6,36 @@ import {CoreString} from '../../../core/String';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class OutlinePostParamsConfig extends NodeParamsConfig {
-	objects_mask = ParamConfig.STRING('*outlined*', {
+	objectsMask = ParamConfig.STRING('*outlined*', {
 		...PostParamOptions,
 	});
-	refresh_objects = ParamConfig.BUTTON(null, {
+	refreshObjects = ParamConfig.BUTTON(null, {
 		...PostParamOptions,
 	});
-	edge_strength = ParamConfig.FLOAT(3, {
+	edgeStrength = ParamConfig.FLOAT(3, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	edge_thickness = ParamConfig.FLOAT(0, {
+	edgeThickness = ParamConfig.FLOAT(0, {
 		range: [0, 4],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	edge_glow = ParamConfig.FLOAT(0, {
+	edgeGlow = ParamConfig.FLOAT(0, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	pulse_period = ParamConfig.FLOAT(0, {
+	pulsePeriod = ParamConfig.FLOAT(0, {
 		range: [0, 5],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	visible_edge_color = ParamConfig.COLOR([1, 1, 1], {
+	visibleEdgeColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
-	hidden_edge_color = ParamConfig.COLOR([0, 0, 0], {
+	hiddenEdgeColor = ParamConfig.COLOR([0, 0, 0], {
 		...PostParamOptions,
 	});
 }
@@ -57,18 +57,18 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 		return pass;
 	}
 	update_pass(pass: OutlinePass) {
-		pass.edgeStrength = this.pv.edge_strength;
-		pass.edgeThickness = this.pv.edge_thickness;
-		pass.edgeGlow = this.pv.edge_glow;
-		pass.pulsePeriod = this.pv.pulse_period;
-		pass.visibleEdgeColor = this.pv.visible_edge_color;
-		pass.hiddenEdgeColor = this.pv.hidden_edge_color;
+		pass.edgeStrength = this.pv.edgeStrength;
+		pass.edgeThickness = this.pv.edgeThickness;
+		pass.edgeGlow = this.pv.edgeGlow;
+		pass.pulsePeriod = this.pv.pulsePeriod;
+		pass.visibleEdgeColor = this.pv.visibleEdgeColor;
+		pass.hiddenEdgeColor = this.pv.hiddenEdgeColor;
 
 		this._set_selected_objects(pass);
 	}
 	private _set_selected_objects(pass: OutlinePass) {
 		const objects: Object3D[] = [];
-		const mask = this.pv.objects_mask;
+		const mask = this.pv.objectsMask;
 		this.scene.defaultScene.traverse((object) => {
 			if (CoreString.match_mask(object.name, mask)) {
 				objects.push(object);

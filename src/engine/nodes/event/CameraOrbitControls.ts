@@ -26,11 +26,11 @@ const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
 
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow pan */
-	allow_pan = ParamConfig.BOOLEAN(1);
+	allowPan = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow rotate */
-	allow_rotate = ParamConfig.BOOLEAN(1);
+	allowRotate = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow zoom */
-	allow_zoom = ParamConfig.BOOLEAN(1);
+	allowZoom = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to have damping */
 	tdamping = ParamConfig.BOOLEAN(1);
 	/** @param damping value */
@@ -38,27 +38,27 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		visibleIf: {tdamping: true},
 	});
 	/** @param toggle on to have the pan in screen space */
-	screen_space_panning = ParamConfig.BOOLEAN(1);
+	screenSpacePanning = ParamConfig.BOOLEAN(1);
 	/** @param rotation speed */
-	rotate_speed = ParamConfig.FLOAT(0.5);
+	rotateSpeed = ParamConfig.FLOAT(0.5);
 	/** @param smallest distance the camera can go to the target */
-	min_distance = ParamConfig.FLOAT(1, {
+	minDistance = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
 	/** @param max distance the camera can go away the target */
-	max_distance = ParamConfig.FLOAT(50, {
+	maxDistance = ParamConfig.FLOAT(50, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
 	/** @param toggle on to limit the azimuth (up-down) angle */
-	limit_azimuth_angle = ParamConfig.BOOLEAN(0);
+	limitAzimuthAngle = ParamConfig.BOOLEAN(0);
 	/** @param azimuth angle range */
-	azimuth_angle_range = ParamConfig.VECTOR2(['-2*$PI', '2*$PI'], {
-		visibleIf: {limit_azimuth_angle: 1},
+	azimuthAngleRange = ParamConfig.VECTOR2(['-2*$PI', '2*$PI'], {
+		visibleIf: {limitAzimuthAngle: 1},
 	});
 	/** @param polar (left-right) angle range */
-	polar_angle_range = ParamConfig.VECTOR2([0, '$PI']);
+	polarAngleRange = ParamConfig.VECTOR2([0, '$PI']);
 	/** @param target position. This is updated automatically as the camera is controlled by user events */
 	target = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
@@ -68,10 +68,10 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param toggle on to enable keys */
-	enable_keys = ParamConfig.BOOLEAN(0);
+	enableKeys = ParamConfig.BOOLEAN(0);
 	/** @param key modes (pan or rotate) */
-	keys_mode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
-		visibleIf: {enable_keys: 1},
+	keysMode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
+		visibleIf: {enableKeys: 1},
 		menu: {
 			entries: KEYS_MODES.map((name, value) => {
 				return {name, value};
@@ -79,22 +79,22 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param keys pan speed */
-	keys_pan_speed = ParamConfig.FLOAT(7, {
+	keysPanSpeed = ParamConfig.FLOAT(7, {
 		range: [0, 10],
 		rangeLocked: [false, false],
-		visibleIf: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.PAN)},
+		visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.PAN)},
 	});
 	/** @param keys rotate speed vertical */
-	keys_rotate_speed_vertical = ParamConfig.FLOAT(1, {
+	keysRotateSpeedVertical = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		rangeLocked: [false, false],
-		visibleIf: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+		visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
 	});
 	/** @param keys rotate speed horizontal */
-	keys_rotate_speed_horizontal = ParamConfig.FLOAT(1, {
+	keysRotateSpeedHorizontal = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		rangeLocked: [false, false],
-		visibleIf: {enable_keys: 1, keys_mode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+		visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
 	});
 }
 const ParamsConfig = new CameraOrbitEventParamsConfig();
@@ -137,38 +137,38 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	}
 
 	setup_controls(controls: OrbitControls) {
-		controls.enablePan = this.pv.allow_pan;
-		controls.enableRotate = this.pv.allow_rotate;
-		controls.enableZoom = this.pv.allow_zoom;
+		controls.enablePan = this.pv.allowPan;
+		controls.enableRotate = this.pv.allowRotate;
+		controls.enableZoom = this.pv.allowZoom;
 
 		controls.enableDamping = this.pv.tdamping;
 		controls.dampingFactor = this.pv.damping;
 
-		controls.rotateSpeed = this.pv.rotate_speed;
+		controls.rotateSpeed = this.pv.rotateSpeed;
 
-		controls.screenSpacePanning = this.pv.screen_space_panning;
+		controls.screenSpacePanning = this.pv.screenSpacePanning;
 
-		controls.minDistance = this.pv.min_distance;
-		controls.maxDistance = this.pv.max_distance;
+		controls.minDistance = this.pv.minDistance;
+		controls.maxDistance = this.pv.maxDistance;
 
 		this._set_azimuth_angle(controls);
-		controls.minPolarAngle = this.pv.polar_angle_range.x;
-		controls.maxPolarAngle = this.pv.polar_angle_range.y;
+		controls.minPolarAngle = this.pv.polarAngleRange.x;
+		controls.maxPolarAngle = this.pv.polarAngleRange.y;
 		controls.target.copy(this.pv.target);
 		controls.update(); // necessary if target is not 0,0,0
 
-		controls.enableKeys = this.pv.enable_keys;
+		controls.enableKeys = this.pv.enableKeys;
 		if (controls.enableKeys) {
-			controls.keyMode = KEYS_MODES[this.pv.keys_mode];
-			controls.keyRotateSpeedVertical = this.pv.keys_rotate_speed_vertical;
-			controls.keyRotateSpeedHorizontal = this.pv.keys_rotate_speed_horizontal;
-			controls.keyPanSpeed = this.pv.keys_pan_speed;
+			controls.keyMode = KEYS_MODES[this.pv.keysMode];
+			controls.keyRotateSpeedVertical = this.pv.keysRotateSpeedVertical;
+			controls.keyRotateSpeedHorizontal = this.pv.keysRotateSpeedHorizontal;
+			controls.keyPanSpeed = this.pv.keysPanSpeed;
 		}
 	}
 	private _set_azimuth_angle(controls: OrbitControls) {
-		if (this.pv.limit_azimuth_angle) {
-			controls.minAzimuthAngle = this.pv.azimuth_angle_range.x;
-			controls.maxAzimuthAngle = this.pv.azimuth_angle_range.y;
+		if (this.pv.limitAzimuthAngle) {
+			controls.minAzimuthAngle = this.pv.azimuthAngleRange.x;
+			controls.maxAzimuthAngle = this.pv.azimuthAngleRange.y;
 		} else {
 			controls.minAzimuthAngle = Infinity;
 			controls.minAzimuthAngle = Infinity;
@@ -187,7 +187,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 
 	private _target_array: Number3 = [0, 0, 0];
 	private _on_controls_end(controls: OrbitControls) {
-		if (!this.pv.allow_pan) {
+		if (!this.pv.allowPan) {
 			// target should not be updated if pan is not allowed
 			return;
 		}

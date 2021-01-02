@@ -23,7 +23,7 @@ class PositionAnimParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param if sets to relative, sets if it is relative to the start or end */
-	relative_to = ParamConfig.INTEGER(0, {
+	relativeTo = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: ANIMATION_POSITION_RELATIVE_TOS.map((name, value) => {
 				return {name, value};
@@ -46,7 +46,7 @@ export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
 
 		this.scene.dispatch_controller.on_add_listener(() => {
 			this.params.on_params_created('params_label', () => {
-				this.params.label.init([this.p.mode, this.p.relative_to, this.p.offset], () => {
+				this.params.label.init([this.p.mode, this.p.relativeTo, this.p.offset], () => {
 					const mode = ANIMATION_POSITION_MODES[this.pv.mode];
 					switch (mode) {
 						case AnimationPositionMode.RELATIVE:
@@ -60,7 +60,7 @@ export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
 	}
 	private _relative_label() {
 		const after_before = this.pv.offset > 0 ? 'after' : 'before';
-		const relative_to = ANIMATION_POSITION_RELATIVE_TOS[this.pv.relative_to];
+		const relative_to = ANIMATION_POSITION_RELATIVE_TOS[this.pv.relativeTo];
 		return `${Math.abs(this.pv.offset)} ${after_before} ${relative_to}`;
 	}
 	private _absolute_label() {
@@ -72,7 +72,7 @@ export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
 
 		const position = new AnimationPosition();
 		position.set_mode(ANIMATION_POSITION_MODES[this.pv.mode]);
-		position.set_relative_to(ANIMATION_POSITION_RELATIVE_TOS[this.pv.relative_to]);
+		position.set_relative_to(ANIMATION_POSITION_RELATIVE_TOS[this.pv.relativeTo]);
 		position.set_offset(this.pv.offset);
 		timeline_builder.setPosition(position);
 

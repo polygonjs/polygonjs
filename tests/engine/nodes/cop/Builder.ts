@@ -27,7 +27,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	// const MAT = window.MAT
 	const builder1 = COP.createNode('builder');
 	const {output1, globals1} = create_required_nodes(builder1);
-	builder1.p.use_camera_renderer.set(1);
+	builder1.p.useCameraRenderer.set(1);
 	// currently no need to tie it to a material to have it recook
 	// currently use a mat to have the builder recook
 	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')

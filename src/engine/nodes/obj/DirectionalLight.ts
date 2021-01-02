@@ -31,17 +31,17 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		distance = ParamConfig.FLOAT(100, {range: [0, 100]});
 		// shadows
 		/** @param toggle on to cast shadows */
-		cast_shadows = ParamConfig.BOOLEAN(1);
+		castShadows = ParamConfig.BOOLEAN(1);
 		/** @param shadow resolution */
-		shadow_res = ParamConfig.VECTOR2([1024, 1024]);
+		shadowRes = ParamConfig.VECTOR2([1024, 1024]);
 		/** @param shadow bias */
-		shadow_bias = ParamConfig.FLOAT(0.001);
+		shadowBias = ParamConfig.FLOAT(0.001);
 
 		// helper
 		/** @param toggle to show helper */
-		show_helper = ParamConfig.BOOLEAN(0);
+		showHelper = ParamConfig.BOOLEAN(0);
 		/** @param helper size */
-		helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
+		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 	};
 }
 
@@ -106,11 +106,11 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
-		this.light.castShadow = this.pv.cast_shadows;
-		this.light.shadow.mapSize.copy(this.pv.shadow_res);
+		this.light.castShadow = this.pv.castShadows;
+		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		// object.shadow.camera.near = this.pv.shadow_near
 		// object.shadow.camera.far = this.pv.shadow_far
-		this.light.shadow.bias = this.pv.shadow_bias;
+		this.light.shadow.bias = this.pv.shadowBias;
 
 		// updating the camera matrix is not necessary for point light
 		// so probably should not for this

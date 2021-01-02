@@ -12,7 +12,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ViewerParamsConfig extends NodeParamsConfig {
 	/** @param sets the class of the viewer */
-	class_name = ParamConfig.STRING('active');
+	className = ParamConfig.STRING('active');
 }
 const ParamsConfig = new ViewerParamsConfig();
 
@@ -33,14 +33,14 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 	private _process_trigger_set(context: EventContext<MouseEvent>) {
 		const canvas = context.canvas;
 		if (canvas) {
-			canvas.classList.add(this.pv.class_name);
+			canvas.classList.add(this.pv.className);
 		}
 	}
 
 	private _process_trigger_unset(context: EventContext<MouseEvent>) {
 		const canvas = context.canvas;
 		if (canvas) {
-			canvas.classList.remove(this.pv.class_name);
+			canvas.classList.remove(this.pv.className);
 		}
 	}
 }

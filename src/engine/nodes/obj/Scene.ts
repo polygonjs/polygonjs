@@ -37,11 +37,11 @@ const FOG_TYPES: FogType[] = [FogType.LINEAR, FogType.EXPONENTIAL];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class SceneObjParamConfig extends NodeParamsConfig {
 	/** @param autoUpdate */
-	auto_update = ParamConfig.BOOLEAN(1);
+	autoUpdate = ParamConfig.BOOLEAN(1);
 
 	// background
 	/** @param set background mode (none, color or texture) */
-	background_mode = ParamConfig.INTEGER(BACKGROUND_MODES.indexOf(BackgroundMode.NONE), {
+	backgroundMode = ParamConfig.INTEGER(BACKGROUND_MODES.indexOf(BackgroundMode.NONE), {
 		menu: {
 			entries: BACKGROUND_MODES.map((mode, i) => {
 				return {name: mode, value: i};
@@ -49,12 +49,12 @@ class SceneObjParamConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param background color */
-	bg_color = ParamConfig.COLOR([0, 0, 0], {
-		visibleIf: {background_mode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
+	bgColor = ParamConfig.COLOR([0, 0, 0], {
+		visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
 	});
 	/** @param background texture */
-	bg_texture = ParamConfig.OPERATOR_PATH('', {
-		visibleIf: {background_mode: BACKGROUND_MODES.indexOf(BackgroundMode.TEXTURE)},
+	bgTexture = ParamConfig.OPERATOR_PATH('', {
+		visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.TEXTURE)},
 		nodeSelection: {
 			context: NodeContext.COP,
 		},
@@ -63,10 +63,10 @@ class SceneObjParamConfig extends NodeParamsConfig {
 
 	// environment
 	/** @param toggle on to use an environment map */
-	use_environment = ParamConfig.BOOLEAN(0);
+	useEnvironment = ParamConfig.BOOLEAN(0);
 	/** @param environment map */
 	environment = ParamConfig.OPERATOR_PATH('', {
-		visibleIf: {use_environment: 1},
+		visibleIf: {useEnvironment: 1},
 		nodeSelection: {
 			context: NodeContext.COP,
 		},
@@ -75,10 +75,10 @@ class SceneObjParamConfig extends NodeParamsConfig {
 
 	// fog
 	/** @param toggle on to use fog */
-	use_fog = ParamConfig.BOOLEAN(0);
+	useFog = ParamConfig.BOOLEAN(0);
 	/** @param fog type */
-	fog_type = ParamConfig.INTEGER(FOG_TYPES.indexOf(FogType.EXPONENTIAL), {
-		visibleIf: {use_fog: 1},
+	fogType = ParamConfig.INTEGER(FOG_TYPES.indexOf(FogType.EXPONENTIAL), {
+		visibleIf: {useFog: 1},
 		menu: {
 			entries: FOG_TYPES.map((mode, i) => {
 				return {name: mode, value: i};
@@ -86,30 +86,30 @@ class SceneObjParamConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param fog color */
-	fog_color = ParamConfig.COLOR([1, 1, 1], {visibleIf: {use_fog: 1}});
+	fogColor = ParamConfig.COLOR([1, 1, 1], {visibleIf: {useFog: 1}});
 	/** @param fog near */
-	fog_near = ParamConfig.FLOAT(1, {
+	fogNear = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		rangeLocked: [true, false],
-		visibleIf: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.LINEAR)},
+		visibleIf: {useFog: 1, fogType: FOG_TYPES.indexOf(FogType.LINEAR)},
 	});
 	/** @param fog far */
-	fog_far = ParamConfig.FLOAT(100, {
+	fogFar = ParamConfig.FLOAT(100, {
 		range: [0, 100],
 		rangeLocked: [true, false],
-		visibleIf: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.LINEAR)},
+		visibleIf: {useFog: 1, fogType: FOG_TYPES.indexOf(FogType.LINEAR)},
 	});
 	/** @param fog density */
-	fog_density = ParamConfig.FLOAT(0.00025, {
-		visibleIf: {use_fog: 1, fog_type: FOG_TYPES.indexOf(FogType.EXPONENTIAL)},
+	fogDensity = ParamConfig.FLOAT(0.00025, {
+		visibleIf: {useFog: 1, fogType: FOG_TYPES.indexOf(FogType.EXPONENTIAL)},
 	});
 
 	// override material
 	/** @param toggle on to override all materials */
-	use_override_material = ParamConfig.BOOLEAN(0);
+	useOverrideMaterial = ParamConfig.BOOLEAN(0);
 	/** @param material */
-	override_material = ParamConfig.OPERATOR_PATH('/MAT/mesh_standard1', {
-		visibleIf: {use_override_material: 1},
+	overrideMaterial = ParamConfig.OPERATOR_PATH('/MAT/mesh_standard1', {
+		visibleIf: {useOverrideMaterial: 1},
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},
@@ -154,8 +154,8 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	// }
 
 	cook() {
-		if (this.pv.auto_update != this.object.autoUpdate) {
-			this.object.autoUpdate = this.pv.auto_update;
+		if (this.pv.autoUpdate != this.object.autoUpdate) {
+			this.object.autoUpdate = this.pv.autoUpdate;
 		}
 
 		this._update_background();
@@ -172,23 +172,23 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_background() {
-		if (this.pv.background_mode == BACKGROUND_MODES.indexOf(BackgroundMode.NONE)) {
+		if (this.pv.backgroundMode == BACKGROUND_MODES.indexOf(BackgroundMode.NONE)) {
 			this.object.background = null;
 		} else {
-			if (this.pv.background_mode == BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)) {
-				this.object.background = this.pv.bg_color;
+			if (this.pv.backgroundMode == BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)) {
+				this.object.background = this.pv.bgColor;
 			} else {
-				const node = this.p.bg_texture.found_node();
+				const node = this.p.bgTexture.found_node();
 				if (node) {
 					if (node.node_context() == NodeContext.COP) {
 						(node as BaseCopNodeType).requestContainer().then((container) => {
 							this.object.background = container.texture();
 						});
 					} else {
-						this.states.error.set('bg_texture node is not a texture');
+						this.states.error.set('bgTexture node is not a texture');
 					}
 				} else {
-					this.states.error.set('bg_texture node not found');
+					this.states.error.set('bgTexture node not found');
 				}
 			}
 		}
@@ -200,16 +200,16 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_fog() {
-		if (this.pv.use_fog) {
-			if (this.pv.fog_type == FOG_TYPES.indexOf(FogType.LINEAR)) {
+		if (this.pv.useFog) {
+			if (this.pv.fogType == FOG_TYPES.indexOf(FogType.LINEAR)) {
 				this.object.fog = this.fog;
-				this.fog.color = this.pv.fog_color;
-				this.fog.near = this.pv.fog_near;
-				this.fog.far = this.pv.fog_far;
+				this.fog.color = this.pv.fogColor;
+				this.fog.near = this.pv.fogNear;
+				this.fog.far = this.pv.fogFar;
 			} else {
 				this.object.fog = this.fog_exp2;
-				this.fog_exp2.color = this.pv.fog_color;
-				this.fog_exp2.density = this.pv.fog_density;
+				this.fog_exp2.color = this.pv.fogColor;
+				this.fog_exp2.density = this.pv.fogDensity;
 			}
 		} else {
 			const current_fog = this.object.fog;
@@ -219,10 +219,10 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		}
 	}
 	get fog() {
-		return (this._fog = this._fog || new Fog(0xffffff, this.pv.fog_near, this.pv.fog_far));
+		return (this._fog = this._fog || new Fog(0xffffff, this.pv.fogNear, this.pv.fogFar));
 	}
 	get fog_exp2() {
-		return (this._fog_exp2 = this._fog_exp2 || new FogExp2(0xffffff, this.pv.fog_density));
+		return (this._fog_exp2 = this._fog_exp2 || new FogExp2(0xffffff, this.pv.fogDensity));
 	}
 
 	//
@@ -231,7 +231,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_enviromment() {
-		if (this.pv.use_environment) {
+		if (this.pv.useEnvironment) {
 			const node = this.p.environment.found_node();
 			if (node) {
 				if (node.node_context() == NodeContext.COP) {
@@ -239,10 +239,10 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 						this.object.environment = container.texture();
 					});
 				} else {
-					this.states.error.set('bg_texture node is not a texture');
+					this.states.error.set('bgTexture node is not a texture');
 				}
 			} else {
-				this.states.error.set('bg_texture node not found');
+				this.states.error.set('bgTexture node not found');
 			}
 		} else {
 			this.object.environment = null;
@@ -255,18 +255,18 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_material_override() {
-		if (this.pv.use_override_material) {
-			const node = this.p.override_material.found_node();
+		if (this.pv.useOverrideMaterial) {
+			const node = this.p.overrideMaterial.found_node();
 			if (node) {
 				if (node.node_context() == NodeContext.MAT) {
 					(node as BaseMatNodeType).requestContainer().then((container) => {
 						this.object.overrideMaterial = container.material();
 					});
 				} else {
-					this.states.error.set('bg_texture node is not a material');
+					this.states.error.set('bgTexture node is not a material');
 				}
 			} else {
-				this.states.error.set('bg_texture node not found');
+				this.states.error.set('bgTexture node not found');
 			}
 		} else {
 			this.object.overrideMaterial = null;

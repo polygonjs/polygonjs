@@ -37,7 +37,7 @@ export class SpotLightHelper extends BaseLightHelper<SpotLight, SpotLightObjNode
 
 	private _matrix_scale = new Vector3();
 	update() {
-		const coneLength = (this.node.light.distance ? this.node.light.distance : 1000) * this.node.pv.helper_size;
+		const coneLength = (this.node.light.distance ? this.node.light.distance : 1000) * this.node.pv.helperSize;
 		const coneWidth = coneLength * Math.tan(this.node.light.angle);
 
 		this._matrix_scale.set(coneWidth, coneWidth, coneLength);

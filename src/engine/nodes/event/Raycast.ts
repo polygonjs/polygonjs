@@ -28,12 +28,12 @@ function visible_for_cpu(options: VisibleIfParamOptions = {}): ParamOptions {
 }
 function visible_for_cpu_geometry(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
-	options['intersect_with'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY);
+	options['intersectWith'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY);
 	return {visibleIf: options};
 }
 function visible_for_cpu_plane(options: VisibleIfParamOptions = {}): ParamOptions {
 	options['mode'] = RAYCAST_MODES.indexOf(RaycastMode.CPU);
-	options['intersect_with'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.PLANE);
+	options['intersectWith'] = CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.PLANE);
 	return {visibleIf: options};
 }
 function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
@@ -63,12 +63,12 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param mouse coordinates (0,0) being the center of the screen, (-1,-1) being the bottom left corner and (1,1) being the top right corner */
 	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
 	/** @param by default the ray is sent from the current camera, but this allows to set another camera */
-	override_camera = ParamConfig.BOOLEAN(0);
+	overrideCamera = ParamConfig.BOOLEAN(0);
 	/** @param by default the ray is sent from the current camera, but this allows to set a custom ray */
-	override_ray = ParamConfig.BOOLEAN(0, {
+	overrideRay = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
 			mode: RAYCAST_MODES.indexOf(RaycastMode.CPU),
-			override_camera: 1,
+			overrideCamera: 1,
 		},
 	});
 	/** @param the camera to override to */
@@ -78,22 +78,22 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		dependentOnFoundNode: false,
 		visibleIf: {
-			override_camera: 1,
-			override_ray: 0,
+			overrideCamera: 1,
+			overrideRay: 0,
 		},
 	});
 	/** @param the ray origin */
-	ray_origin = ParamConfig.VECTOR3([0, 0, 0], {
+	rayOrigin = ParamConfig.VECTOR3([0, 0, 0], {
 		visibleIf: {
-			override_camera: 1,
-			override_ray: 1,
+			overrideCamera: 1,
+			overrideRay: 1,
 		},
 	});
 	/** @param the ray direction */
-	ray_direction = ParamConfig.VECTOR3([0, 0, 1], {
+	rayDirection = ParamConfig.VECTOR3([0, 0, 1], {
 		visibleIf: {
-			override_camera: 1,
-			override_ray: 1,
+			overrideCamera: 1,
+			overrideRay: 1,
 		},
 	});
 
@@ -114,12 +114,12 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_gpu(),
 	});
 	/** @param the current pixel value being read */
-	pixel_value = ParamConfig.VECTOR4([0, 0, 0, 0], {
+	pixelValue = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		cook: false,
 		...visible_for_gpu(),
 	});
 	/** @param the value threshold for which a hit is detected */
-	hit_threshold = ParamConfig.FLOAT(0.5, {
+	hitThreshold = ParamConfig.FLOAT(0.5, {
 		cook: false,
 		...visible_for_gpu(),
 	});
@@ -130,7 +130,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param defines the hit it tested against geometry or just a plane */
-	intersect_with = ParamConfig.INTEGER(CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY), {
+	intersectWith = ParamConfig.INTEGER(CPU_INTERSECT_WITH_OPTIONS.indexOf(CPUIntersectWith.GEOMETRY), {
 		menu: {
 			entries: CPU_INTERSECT_WITH_OPTIONS.map((name, value) => {
 				return {name, value};
@@ -139,7 +139,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_cpu(),
 	});
 	/** @param threshold used to test hit with points */
-	points_threshold = ParamConfig.FLOAT(1, {
+	pointsThreshold = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 		...visible_for_cpu(),
@@ -150,11 +150,11 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param plane direction if the hit is tested against a plane */
-	plane_direction = ParamConfig.VECTOR3([0, 1, 0], {
+	planeDirection = ParamConfig.VECTOR3([0, 1, 0], {
 		...visible_for_cpu_plane(),
 	});
 	/** @param plane offset if the hit is tested against a plane */
-	plane_offset = ParamConfig.FLOAT(0, {
+	planeOffset = ParamConfig.FLOAT(0, {
 		...visible_for_cpu_plane(),
 	});
 
@@ -175,7 +175,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_cpu_geometry(),
 	});
 	/** @param toggle to hit is tested against children */
-	traverse_children = ParamConfig.BOOLEAN(0, {
+	traverseChildren = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
@@ -191,19 +191,19 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param toggle on to set the param to the hit position */
-	tposition_target = ParamConfig.BOOLEAN(0, {
+	tpositionTarget = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		...visible_for_cpu(),
 	});
 	/** @param this will be set to the hit position */
 	position = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
-		...visible_for_cpu({tposition_target: 0}),
+		...visible_for_cpu({tpositionTarget: 0}),
 	});
 	/** @param this parameter will be set to the hit position */
-	position_target = ParamConfig.OPERATOR_PATH('', {
+	positionTarget = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
-		...visible_for_cpu({tposition_target: 1}),
+		...visible_for_cpu({tpositionTarget: 1}),
 		paramSelection: ParamType.VECTOR3,
 		computeOnDirty: true,
 	});
@@ -215,19 +215,19 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		// },
 	});
 	/** @param toggle on to set the param to the mouse velocity */
-	tvelocity_target = ParamConfig.BOOLEAN(0, {
+	tvelocityTarget = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		...visible_for_cpu({tvelocity: 1}),
 	});
 	/** @param this will be set to the mouse velocity */
 	velocity = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
-		...visible_for_cpu({tvelocity: 1, tvelocity_target: 0}),
+		...visible_for_cpu({tvelocity: 1, tvelocityTarget: 0}),
 	});
 	/** @param this will be set to the mouse velocity */
-	velocity_target = ParamConfig.OPERATOR_PATH('', {
+	velocityTarget = ParamConfig.OPERATOR_PATH('', {
 		cook: false,
-		...visible_for_cpu({tvelocity: 1, tvelocity_target: 1}),
+		...visible_for_cpu({tvelocity: 1, tvelocityTarget: 1}),
 		paramSelection: ParamType.VECTOR3,
 		computeOnDirty: true,
 	});
@@ -237,32 +237,32 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param for geometry hit tests, a vertex attribute can be read */
-	geo_attribute = ParamConfig.BOOLEAN(0, visible_for_cpu_geometry());
+	geoAttribute = ParamConfig.BOOLEAN(0, visible_for_cpu_geometry());
 	/** @param geometry vertex attribute to read */
-	geo_attribute_name = ParamConfig.STRING('id', {
+	geoAttributeName = ParamConfig.STRING('id', {
 		cook: false,
-		...visible_for_cpu_geometry({geo_attribute: 1}),
+		...visible_for_cpu_geometry({geoAttribute: 1}),
 	});
 	/** @param type of attribute */
-	geo_attribute_type = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
+	geoAttributeType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
 			entries: AttribTypeMenuEntries,
 		},
-		...visible_for_cpu_geometry({geo_attribute: 1}),
+		...visible_for_cpu_geometry({geoAttribute: 1}),
 	});
 	/** @param attribute value for float */
-	geo_attribute_value1 = ParamConfig.FLOAT(0, {
+	geoAttributeValue1 = ParamConfig.FLOAT(0, {
 		cook: false,
 		...visible_for_cpu_geometry({
-			geo_attribute: 1,
-			geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
+			geoAttribute: 1,
+			geoAttributeType: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
 		}),
 	});
 	/** @param attribute value for string */
-	geo_attribute_values = ParamConfig.STRING('', {
+	geoAttributeValues = ParamConfig.STRING('', {
 		...visible_for_cpu_geometry({
-			geo_attribute: 1,
-			geo_attribute_type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING),
+			geoAttribute: 1,
+			geoAttributeType: ATTRIBUTE_TYPES.indexOf(AttribType.STRING),
 		}),
 	});
 }

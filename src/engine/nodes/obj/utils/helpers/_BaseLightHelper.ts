@@ -8,8 +8,8 @@ import {Light} from 'three/src/lights/Light';
 import {FlagsControllerD} from '../../../utils/FlagsController';
 export function BaseLightHelperParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		show_helper = ParamConfig.BOOLEAN(0);
-		helper_size = ParamConfig.FLOAT(1, {visibleIf: {show_helper: 1}});
+		showHelper = ParamConfig.BOOLEAN(0);
+		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 	};
 }
 class BaseLightHelperParamsConfig extends BaseLightHelperParamConfig(NodeParamsConfig) {}
