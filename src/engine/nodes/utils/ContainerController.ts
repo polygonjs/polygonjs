@@ -18,53 +18,54 @@ export class TypedContainerController<NC extends NodeContext> {
 		return this._container;
 	}
 
-	requestContainer(): Promise<ContainerMap[NC]> | ContainerMap[NC] {
-		if (this.node.is_dirty || this.node.flags?.bypass?.active) {
-			// console.log(performance.now(), 'requestContainer', this.node.fullPath());
+	async requestContainer(): Promise<ContainerMap[NC]> {
+		if (this.node.flags?.bypass?.active) {
+			return (await this.requestInputContainer(0)) || this._container;
+		}
+		if (this.node.is_dirty) {
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve);
-				// console.log(performance.now(), 'promise start', this.node.fullPath());
-				this.node.scene.cook_controller.add_node(this.node);
-
-				// setTimeout(this.process_container_request.bind(this), 0);
-				this.process_container_request();
-			});
-		} else {
-			return this.container;
-		}
-	}
-	// TODO: should I merge this into the method above?
-	process_container_request() {
-		if (this.node.flags?.bypass?.active) {
-			const input_index = 0;
-			this.request_input_container(input_index).then((container) => {
-				this.node.remove_dirty_state();
-				if (container) {
-					this.notify_requesters(container);
-				} else {
-					this.node.states.error.set('input invalid');
-				}
-			});
-		} else {
-			if (this.node.is_dirty) {
-				// this.node.container_controller.container.reset_caches();
 				this.node.cook_controller.cook_main();
-			} else {
-				this.notify_requesters();
-			}
+			});
 		}
+		return this._container;
 	}
+	// async requestContainerTEST(): Promise<ContainerMap[NC]> {
+	// 	if (this.node.flags?.bypass?.active) {
+	// 		const container = await this.requestInputContainer(0);
+	// 		return container || this._container;
+	// 	}
+	// 	if (this.node.is_dirty) {
+	// 		await this.node.cook_controller.cook_main();
+	// 	}
+	// 	return this._container;
+	// }
 
-	async request_input_container(input_index: number) {
+	// TODO: should I merge this into the method above?
+	// private process_container_request() {
+	// 	if (this.node.flags?.bypass?.active) {
+	// 		const input_index = 0;
+	// 		this.requestInputContainer(input_index).then((container) => {
+	// 			this.node.remove_dirty_state();
+	// 			if (container) {
+	// 				this.notify_requesters(container);
+	// 			} else {
+	// 				this.node.states.error.set('input invalid');
+	// 			}
+	// 		});
+	// 	} else {
+	// 		if (this.node.is_dirty) {
+	// 			this.node.cook_controller.cook_main();
+	// 		} else {
+	// 			this.notify_requesters();
+	// 		}
+	// 	}
+	// }
+
+	async requestInputContainer(input_index: number) {
 		const input_node = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
 		if (input_node) {
-			// input_node.processing_context.copy(this.node.processing_context);
-			if (input_node.is_dirty || input_node.flags?.bypass?.active) {
-				const container = await input_node.container_controller.requestContainer();
-				return container;
-			} else {
-				return input_node.container_controller.container;
-			}
+			return await input_node.requestContainer();
 		} else {
 			this.node.states.error.set(`input ${input_index} required`);
 			this.notify_requesters();
@@ -72,18 +73,12 @@ export class TypedContainerController<NC extends NodeContext> {
 		}
 	}
 	notify_requesters(container?: ContainerMap[NC]) {
-		// console.log(performance.now(), 'notify_requesters start', this.node.fullPath());
 		// make a copy of the callbacks first,
 		// to ensure that new ones are not added to this list
 		// in side effects from those callbacks
 		// (the test suite for the File SOP is a good test for this)
-		// const callbacks = [];
 		this._callbacks_tmp = this._callbacks.slice(); // clone
 		this._callbacks.splice(0, this._callbacks.length); // empty
-		// while ((callback = this._callbacks.pop())) {
-
-		// 	callbacks.push(callback);
-		// }
 
 		if (!container) {
 			container = this.node.container_controller.container;
@@ -93,7 +88,6 @@ export class TypedContainerController<NC extends NodeContext> {
 			callback(container);
 		}
 		this.node.scene.cook_controller.remove_node(this.node);
-		// console.log(performance.now(), 'notify_requesters end', this.node.fullPath());
 	}
 }
 

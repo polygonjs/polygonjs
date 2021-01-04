@@ -57,12 +57,12 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 
 	async cook_main() {
-		// console.log(performance.now(), 'cook main start', this.node.fullPath());
 		if (this.is_cooking) {
 			return;
 		}
 		this._init_cooking_state();
 		this.node.states.error.clear();
+		this.node.scene.cook_controller.add_node(this.node);
 
 		let input_contents: ContainableMap[NC][];
 		if (this._inputs_evaluation_required) {
@@ -74,7 +74,6 @@ export class NodeCookController<NC extends NodeContext> {
 			await this._evaluate_params();
 		}
 		this._start_cook_if_no_errors(input_contents);
-		// console.log(performance.now(), 'cook main end', this.node.fullPath());
 	}
 	async cook_main_without_inputs() {
 		this.node.scene.cook_controller.add_node(this.node);
@@ -121,35 +120,29 @@ export class NodeCookController<NC extends NodeContext> {
 	private async _evaluate_inputs(): Promise<ContainableMap[NC][]> {
 		this._performance_controller.record_inputs_start();
 
-		// console.log(performance.now(), '_evaluate_inputs 0', this.node.fullPath());
 		let input_containers: (ContainerMap[NC] | null)[] = [];
 		const io_inputs = this.node.io.inputs;
 		if (this._inputs_evaluation_required) {
 			if (io_inputs.is_any_input_dirty()) {
 				input_containers = await io_inputs.eval_required_inputs();
 			} else {
-				input_containers = io_inputs.containers_without_evaluation();
+				input_containers = await io_inputs.containers_without_evaluation();
 			}
 		}
-		// console.log(performance.now(), '_evaluate_inputs 1', this.node.fullPath());
 
 		const inputs = io_inputs.inputs();
 		const input_contents: ContainableMap[NC][] = [];
-		// if (input_containers) {
 		let input_container: ContainerMap[NC] | null;
 		for (let i = 0; i < inputs.length; i++) {
 			input_container = input_containers[i];
 			if (input_container) {
 				if (io_inputs.clone_required(i)) {
-					// console.log('cloned');
 					input_contents[i] = input_container.coreContentCloned() as ContainableMap[NC];
 				} else {
 					input_contents[i] = input_container.coreContent() as ContainableMap[NC];
 				}
 			}
 		}
-		// }
-		// console.log(performance.now(), '_evaluate_inputs 2', this.node.fullPath());
 		this._performance_controller.record_inputs_end();
 		return input_contents;
 	}

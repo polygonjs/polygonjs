@@ -43,7 +43,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 		const parent = this.parent;
 		if (parent) {
 			if (parent.io.inputs.has_input(input_index)) {
-				const container = await parent.container_controller.request_input_container(input_index);
+				const container = await parent.container_controller.requestInputContainer(input_index);
 				if (container) {
 					const core_group = container.coreContent();
 					if (core_group) {

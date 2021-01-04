@@ -160,10 +160,15 @@ export class InputsController<NC extends NodeContext> {
 		// 	return false;
 		// }
 	}
-	containers_without_evaluation() {
-		const containers: Array<ContainerMap[NC] | null | undefined> = [];
+	async containers_without_evaluation() {
+		const containers: Array<ContainerMap[NC] | undefined> = [];
 		for (let i = 0; i < this._inputs.length; i++) {
-			containers.push(this._inputs[i]?.container_controller.container as ContainerMap[NC]);
+			const input_node = this._inputs[i];
+			let container: ContainerMap[NC] | undefined = undefined;
+			if (input_node) {
+				container = (await input_node.requestContainer()) as ContainerMap[NC];
+			}
+			containers.push(container);
 		}
 		return containers;
 	}
@@ -212,14 +217,19 @@ export class InputsController<NC extends NodeContext> {
 	}
 
 	async eval_required_input(input_index: number) {
-		let container: ContainerMap[NC] | null;
+		let container: ContainerMap[NC] | undefined = undefined;
 		const input_node = this.input(input_index);
-		if (input_node && !input_node.is_dirty) {
-			container = input_node.container_controller.container as ContainerMap[NC] | null;
-		} else {
-			container = await this.node.container_controller.request_input_container(input_index);
+		// if (input_node && !input_node.is_dirty) {
+		// 	container = input_node.container_controller.container as ContainerMap[NC] | null;
+		// } else {
+		// 	container = await this.node.container_controller.requestInputContainer(input_index);
+		// 	this._graph_node_inputs[input_index].remove_dirty_state();
+		// }
+		if (input_node) {
+			container = (await input_node.requestContainer()) as ContainerMap[NC];
 			this._graph_node_inputs[input_index].remove_dirty_state();
 		}
+
 		// we do not clone here, as we just check if a group is present
 		if (container && container.coreContent()) {
 			// return container;
