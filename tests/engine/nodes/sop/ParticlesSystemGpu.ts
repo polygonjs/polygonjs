@@ -26,7 +26,7 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	const {renderer} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer, 'renderer created');
 
@@ -90,7 +90,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	const {renderer} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer, 'renderer created');
 
@@ -177,7 +177,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	await AssemblersUtils.with_unregistered_assembler(particles1.used_assembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 
 		const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
 		assert.notOk(new_particles1.assembler_controller);

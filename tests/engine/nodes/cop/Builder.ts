@@ -16,7 +16,7 @@ function create_required_nodes(node: BuilderCopNode) {
 
 QUnit.test('COP builder simple with render target', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	// create a renderer first
 	const {renderer} = await RendererUtils.wait_for_renderer();
@@ -67,7 +67,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 
 QUnit.test('COP builder simple with data texture', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	const COP = window.COP;
 	const builder1 = COP.createNode('builder');
@@ -103,7 +103,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 
 QUnit.test('COP builder with persisted_config', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	const COP = window.COP;
 	const builder1 = COP.createNode('builder');
@@ -123,7 +123,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 	await AssemblersUtils.with_unregistered_assembler(builder1.used_assembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 
 		const new_builder1 = scene2.node('/COP/builder1') as BuilderCopNode;
 		assert.notOk(new_builder1.assembler_controller);

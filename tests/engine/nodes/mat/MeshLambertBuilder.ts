@@ -30,7 +30,7 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 	await AssemblersUtils.with_unregistered_assembler(mesh_lambert1.used_assembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 
 		const new_mesh_lambert1 = scene2.node('/MAT/meshLambertBuilder1') as BaseBuilderMatNodeType;
 		assert.notOk(new_mesh_lambert1.assembler_controller);

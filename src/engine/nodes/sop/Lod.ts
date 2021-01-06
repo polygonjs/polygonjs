@@ -23,7 +23,7 @@ class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param updates which object is displayed manually */
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			LODSopNode.PARAM_CALLBACK_update(node as LODSopNode);
+			LodSopNode.PARAM_CALLBACK_update(node as LodSopNode);
 		},
 	});
 	/** @param sets which camera will be used when the switch is to be done manually */
@@ -34,7 +34,7 @@ class LODSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LODSopParamsConfig();
 
-export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
+export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
 		return 'lod';
@@ -103,7 +103,7 @@ export class LODSopNode extends TypedSopNode<LODSopParamsConfig> {
 		while (this._lod.levels.pop()) {}
 	}
 
-	static PARAM_CALLBACK_update(node: LODSopNode) {
+	static PARAM_CALLBACK_update(node: LodSopNode) {
 		node._update_lod();
 	}
 	private async _update_lod() {

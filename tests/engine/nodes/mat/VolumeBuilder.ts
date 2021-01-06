@@ -79,7 +79,7 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 	await AssemblersUtils.with_unregistered_assembler(volume1.used_assembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 
 		const new_volume1 = scene2.node('/MAT/volumeBuilder1') as VolumeBuilderMatNode;
 		assert.notOk(new_volume1.assembler_controller);

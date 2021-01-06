@@ -52,7 +52,7 @@ import {JitterSopNode} from '../../../nodes/sop/Jitter';
 import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LineSopNode} from '../../../nodes/sop/Line';
-import {LODSopNode} from '../../../nodes/sop/LOD';
+import {LodSopNode} from '../../../nodes/sop/Lod';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
 import {MaterialsSopNode} from '../../../nodes/sop/Materials';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
@@ -143,7 +143,7 @@ export interface GeoNodeChildrenMap {
 	jsPoint: JsPointSopNode;
 	layer: LayerSopNode;
 	line: LineSopNode;
-	lod: LODSopNode;
+	lod: LodSopNode;
 	material: MaterialSopNode;
 	materials: MaterialsSopNode;
 	merge: MergeSopNode;
@@ -301,7 +301,7 @@ export class SopRegister {
 		poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
-		poly.registerNode(LODSopNode, CATEGORY_SOP.ADVANCED);
+		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MaterialsSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);

@@ -8,7 +8,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	const COP = window.COP;
 	const MAT = window.MAT;
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	const file_diffuse1 = COP.createNode('image');
 	const file_diffuse2 = COP.createNode('image');
@@ -50,31 +50,31 @@ QUnit.test('COP switch simple', async (assert) => {
 	const material = mesh_standard1.material;
 
 	await mesh_standard1.requestContainer();
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(mesh_standard1.cook_controller.cooks_count, 1);
 	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
 	assert.equal(material.envMap!.uuid, texture_env1.uuid);
 
 	switch_diffuse.p.input.set(1);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(500);
 	assert.equal(mesh_standard1.cook_controller.cooks_count, 1);
 	assert.equal(material.map!.uuid, texture_diffuse2.uuid);
 
 	switch_env.p.input.set(1);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	assert.equal(mesh_standard1.cook_controller.cooks_count, 1);
 	assert.equal(material.envMap!.uuid, texture_env2.uuid);
 
 	switch_diffuse.p.input.set(0);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	assert.equal(mesh_standard1.cook_controller.cooks_count, 1);
 	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
 
 	switch_env.p.input.set(0);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	assert.equal(mesh_standard1.cook_controller.cooks_count, 1);
 	assert.equal(material.envMap!.uuid, texture_env1.uuid);
@@ -82,7 +82,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	// and finally change the path of a file node, to renew its texture completely
 	file_diffuse1.p.url.set('/examples/textures/equirectangular.png');
 	const file_diffuse1_old_uuid = texture_diffuse1.uuid;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	const texture_diffuse1B = (await file_diffuse1.requestContainer()).texture();
 	assert.notEqual(file_diffuse1_old_uuid, texture_diffuse1B.uuid);
@@ -92,7 +92,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	// and the env node
 	file_env1.p.url.set('/examples/textures/equirectangular.png');
 	const file_env1_old_uuid = texture_env1.uuid;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	const texture_env1B = (await file_env1.requestContainer()).texture();
 	assert.notEqual(file_env1_old_uuid, texture_env1B.uuid);

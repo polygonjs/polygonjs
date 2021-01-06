@@ -27,7 +27,7 @@ QUnit.test('root adds objects to hierarchy when created with api', async (assert
 	const scene = create_scene();
 	assert.ok(!scene.loading_controller.is_loading);
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(scene.defaultScene.children[0].children.length, 3);
 	assert.deepEqual(scene.defaultScene.children[0].children.map((n) => n.name).sort(), [
 		'/ambientLight1',

@@ -74,10 +74,10 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		const result_normal = this.gl_var_name(this.gl_output_name_normal());
 		body_lines.push(`vec3 ${result_position} = vec3(${position})`);
 		body_lines.push(`${result_position} *= ${instanceScale}`);
-		body_lines.push(`${result_position} = rotate_with_quat( ${result_position}, ${instanceOrientation} )`);
+		body_lines.push(`${result_position} = rotateWithQuat( ${result_position}, ${instanceOrientation} )`);
 		body_lines.push(`${result_position} += ${instancePosition}`);
 		body_lines.push(`vec3 ${result_normal} = vec3(${normal})`);
-		body_lines.push(`${result_normal} = rotate_with_quat( ${result_normal}, ${instanceOrientation} )`);
+		body_lines.push(`${result_normal} = rotateWithQuat( ${result_normal}, ${instanceOrientation} )`);
 
 		shaders_collection_controller.add_body_lines(this, body_lines);
 		shaders_collection_controller.add_definitions(this, function_declaration_lines);

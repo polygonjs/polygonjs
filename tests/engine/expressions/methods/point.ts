@@ -66,7 +66,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 	const point2 = scene2.node(point1.fullPath()) as PointSopNode;
 	console.log('loaded point2');
 	container = await point2.requestContainer();

@@ -77,7 +77,7 @@ export class HierarchyChildrenController {
 			this._children[new_name] = node;
 			node.name_controller.update_name_from_parent(new_name);
 			this._add_to_nodesByType(node);
-			this.node.scene.nodes_controller.add_to_instanciated_node(node);
+			this.node.scene.nodesController.addToInstanciatedNode(node);
 		}
 	}
 
@@ -232,7 +232,7 @@ export class HierarchyChildrenController {
 			child_node.set_parent(null);
 			delete this._children[child_node.name];
 			this._remove_from_nodesByType(child_node);
-			this.node.scene.nodes_controller.remove_from_instanciated_node(child_node);
+			this.node.scene.nodesController.removeFromInstanciatedNode(child_node);
 
 			// set other dependencies dirty
 			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input

@@ -8,7 +8,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('Post nodes simple', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	const {renderer, canvas} = await RendererUtils.wait_for_renderer();
 	assert.ok(renderer);

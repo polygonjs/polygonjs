@@ -70,7 +70,7 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 		const objects: Object3D[] = [];
 		const mask = this.pv.objectsMask;
 		this.scene.defaultScene.traverse((object) => {
-			if (CoreString.match_mask(object.name, mask)) {
+			if (CoreString.matchMask(object.name, mask)) {
 				objects.push(object);
 			}
 		});

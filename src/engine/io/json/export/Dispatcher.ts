@@ -25,7 +25,7 @@ export class JsonExportDispatcher {
 	static dispatch_node(node: BaseNodeType) {
 		// using PolySopNode and PolyObjNode seem to create circular dependency with webpack
 		// if (node instanceof PolySopNode || node instanceof PolyObjNode)
-		if (node.poly_node_controller) {
+		if (node.polyNodeController) {
 			return new PolyNodeJsonExporter(node);
 		}
 		return new NodeJsonExporter(node);

@@ -21,8 +21,8 @@ const InputNamesByMode: StringArrayByMode = {
 	[GlRotateMode.QUAT]: ['vector', 'quat'],
 };
 const MethodNameByMode: StringByMode = {
-	[GlRotateMode.AXIS]: 'rotate_with_axis_angle',
-	[GlRotateMode.QUAT]: 'rotate_with_quat',
+	[GlRotateMode.AXIS]: 'rotateWithAxisAngle',
+	[GlRotateMode.QUAT]: 'rotateWithQuat',
 };
 type ConnectionTypeArrayByMode = {[key in GlRotateMode]: GlConnectionPointType[]};
 const InputTypesByMode: ConnectionTypeArrayByMode = {

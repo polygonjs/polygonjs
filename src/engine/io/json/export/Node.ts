@@ -49,13 +49,17 @@ export interface NodeJsonExporterUIData {
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
+export interface DataRequestOption {
+	showPolyNodesData?: boolean;
+}
+
 export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	private _data: NodeJsonExporterData | undefined; // = {} as NodeJsonExporterData;
 	constructor(protected _node: T) {}
 
-	data(): NodeJsonExporterData {
+	data(options: DataRequestOption = {}): NodeJsonExporterData {
 		if (!this.is_root()) {
-			this._node.scene.nodes_controller.register_node_context_signature(this._node);
+			this._node.scene.nodesController.register_node_context_signature(this._node);
 		}
 		this._data = {
 			type: this._node.type,
@@ -66,7 +70,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		// 	this._data['required_imports'] = required_imports
 		// }
 
-		const nodes_data = this.nodes_data();
+		const nodes_data = this.nodes_data(options);
 		if (Object.keys(nodes_data).length > 0) {
 			this._data['nodes'] = nodes_data;
 
@@ -164,7 +168,20 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return this._data;
 	}
 
-	ui_data(): NodeJsonExporterUIData {
+	ui_data(options: DataRequestOption = {}): NodeJsonExporterUIData {
+		const data: NodeJsonExporterUIData = this.ui_data_without_children();
+		const children = this._node.children();
+		if (children.length > 0) {
+			data['nodes'] = {};
+			children.forEach((child) => {
+				const node_exporter = JsonExportDispatcher.dispatch_node(child); //.visit(JsonExporterVisitor); //.json_exporter()
+				data['nodes'][child.name] = node_exporter.ui_data(options);
+			});
+		}
+
+		return data;
+	}
+	protected ui_data_without_children(): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = {} as NodeJsonExporterUIData;
 		if (!this.is_root()) {
 			const ui_data = this._node.uiData;
@@ -174,15 +191,6 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				data['comment'] = SceneJsonExporter.sanitize_string(comment);
 			}
 		}
-		const children = this._node.children();
-		if (children.length > 0) {
-			data['nodes'] = {};
-			children.forEach((child) => {
-				const node_exporter = JsonExportDispatcher.dispatch_node(child); //.visit(JsonExporterVisitor); //.json_exporter()
-				data['nodes'][child.name] = node_exporter.ui_data();
-			});
-		}
-
 		return data;
 	}
 
@@ -262,11 +270,11 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return data;
 	}
 
-	protected nodes_data() {
+	protected nodes_data(options: DataRequestOption = {}) {
 		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
 			const node_exporter = JsonExportDispatcher.dispatch_node(child); //.json_exporter()
-			data[child.name] = node_exporter.data();
+			data[child.name] = node_exporter.data(options);
 		}
 		return data;
 	}

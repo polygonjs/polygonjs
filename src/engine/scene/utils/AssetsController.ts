@@ -29,10 +29,10 @@ export class SceneAssetsController {
 	// ASSETS ROOT
 	//
 	//
-	assets_root() {
+	root() {
 		return this._assets_root;
 	}
-	set_assets_root(url: string | null) {
+	setRoot(url: string | null) {
 		if (url == '') {
 			url = null;
 		}

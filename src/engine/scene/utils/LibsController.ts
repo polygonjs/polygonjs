@@ -4,7 +4,7 @@ export class SceneLibsController {
 	root() {
 		return this._root;
 	}
-	set_root(url: string | null) {
+	setRoot(url: string | null) {
 		if (url == '') {
 			url = null;
 		}

@@ -364,7 +364,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		src_camera_node: PerspectiveCameraObjNode,
 		target_camera_node: PerspectiveCameraObjNode
 	) {
-		this.scene.batch_update(() => {
+		this.scene.batchUpdates(() => {
 			src_camera_node.transform_controller.update_node_transform_params_from_object();
 			src_camera_node.p.fov.set(this._dest_data.fov);
 			src_camera_node.p.near.set(this._dest_data.near);

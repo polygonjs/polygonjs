@@ -271,7 +271,8 @@ export class FunctionGenerator extends BaseTraverser {
 			}
 
 			// indirect methods (points_count, asset...)
-			const indirect_method = Poly.instance().expressionsRegister.get_method(method_name);
+			const expressionRegister = Poly.instance().expressionsRegister;
+			const indirect_method = expressionRegister.get_method(method_name);
 			if (indirect_method) {
 				const path_node = node.arguments[0];
 				// const path_argument = this.string_generator.traverse_node(path_node)
@@ -291,6 +292,10 @@ export class FunctionGenerator extends BaseTraverser {
 
 				this._create_method_and_dependencies(method_name, path_argument, path_node);
 				return `(await methods[${this.method_index}].process_arguments([${arguments_joined}]))`;
+			} else {
+				const available_methods = expressionRegister.availableMethods().join(', ');
+				const message = `method not found (${method_name}), available methods are: ${available_methods}`;
+				Poly.warn(message);
 			}
 		}
 
@@ -441,9 +446,13 @@ export class FunctionGenerator extends BaseTraverser {
 		path_argument: number | string,
 		path_node?: jsep.Expression
 	) {
-		const method_constructor = Poly.instance().expressionsRegister.get_method(method_name);
+		const expressionRegister = Poly.instance().expressionsRegister;
+		const method_constructor = expressionRegister.get_method(method_name);
 		if (!method_constructor) {
-			this.set_error(`method not found (${method_name})`);
+			const available_methods = expressionRegister.availableMethods();
+			const message = `method not found (${method_name}), available methods are: ${available_methods.join(', ')}`;
+			this.set_error(message);
+			Poly.warn(message);
 			return;
 		}
 		const method = new method_constructor(this.param) as BaseMethod;

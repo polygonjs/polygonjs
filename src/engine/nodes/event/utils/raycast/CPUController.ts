@@ -223,7 +223,7 @@ export class RaycastCPUController {
 	private _set_position_param(hit_position: Vector3) {
 		hit_position.toArray(this._hit_position_array);
 		if (this._node.pv.tpositionTarget) {
-			if (Poly.instance().player_mode()) {
+			if (Poly.instance().playerMode()) {
 				this._found_position_target_param =
 					this._found_position_target_param ||
 					this._node.p.positionTarget.found_param_with_type(ParamType.VECTOR3);

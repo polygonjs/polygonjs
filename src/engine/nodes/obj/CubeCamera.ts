@@ -68,7 +68,7 @@
 // 		this.transform_controller.update(matrix);
 
 // 		this._cube_camera_scene = this._cube_camera_scene || new Scene();
-// 		this._cube_camera_objects = this.scene.nodes_controller.objects_from_mask(this._param_object_mask);
+// 		this._cube_camera_objects = this.scene.nodesController.objectsFromMask(this._param_object_mask);
 
 // 		// re-create the cube_camera
 // 		let camera_recreate_required = false;

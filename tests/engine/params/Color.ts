@@ -21,7 +21,7 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 	color.b.set(0.7);
 	assert.deepEqual(color.value.toArray(), [0, 0.5, 0.7]);
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	color.r.set('5*2');
 	assert.ok(color.r.is_dirty);
@@ -74,7 +74,7 @@ QUnit.test(
 		const data = new SceneJsonExporter(scene).data();
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.p.color;
 		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
@@ -98,7 +98,7 @@ QUnit.test(
 		const data = new SceneJsonExporter(scene).data();
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.params.get('color2')! as ColorParam;
 		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);

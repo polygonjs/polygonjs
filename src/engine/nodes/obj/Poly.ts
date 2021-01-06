@@ -13,7 +13,7 @@ import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeCont
 import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 
-export function create_poly_obj_node(node_type: string, definition: PolyNodeDefinition) {
+export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition) {
 	class PolyObjParamConfig extends NodeParamsConfig {
 		display = ParamConfig.BOOLEAN(1);
 		template = ParamConfig.OPERATOR_PATH('../template');
@@ -98,7 +98,7 @@ export function create_poly_obj_node(node_type: string, definition: PolyNodeDefi
 		// POLY
 		//
 		//
-		public readonly poly_node_controller: PolyNodeController = new PolyNodeController(this, definition);
+		public readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
 
 		//
 		//
@@ -110,11 +110,11 @@ export function create_poly_obj_node(node_type: string, definition: PolyNodeDefi
 		}
 
 		private _debug() {
-			this.poly_node_controller.debug(this.p.template);
+			this.polyNodeController.debug(this.p.template);
 		}
 	}
 	return BasePolyObjNode;
 }
 
-const BasePolyObjNode = create_poly_obj_node('poly', {node_context: NodeContext.OBJ});
+const BasePolyObjNode = createPolyObjNode('poly', {node_context: NodeContext.OBJ});
 export class PolyObjNode extends BasePolyObjNode {}

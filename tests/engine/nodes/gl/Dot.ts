@@ -71,11 +71,11 @@ QUnit.test('gl dot updates its output type and param correctly when scene is loa
 	dot1.setInput(0, constant1, 'val');
 	dot1.params.get('vec1')!.set([1, 2]);
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	const data = new SceneJsonExporter(scene).data();
 
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 
 	const dot2 = scene2.node('/MAT/meshBasicBuilder1/dot1')! as BaseGlNodeType;
 	const input_connection_points = dot2.io.inputs.named_input_connection_points;

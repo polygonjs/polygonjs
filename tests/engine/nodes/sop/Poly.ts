@@ -34,7 +34,7 @@ const definition: PolyNodeDefinition = {
 		},
 	},
 };
-const node_class = PolyNodeController.create_node_class('poly_sop_test', NodeContext.SOP, definition);
+const node_class = PolyNodeController.createNodeClass('poly_sop_test', NodeContext.SOP, definition);
 if (node_class) {
 	Poly.instance().registerNode(node_class);
 }

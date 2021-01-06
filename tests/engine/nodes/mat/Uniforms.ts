@@ -17,7 +17,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	file1.setName(cop_file_name);
 	const container = await file1.requestContainer();
 	const file1_texture = container.texture();
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -81,7 +81,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(500);
 
 	const file2 = scene2.node(file1.fullPath()) as ImageCopNode;

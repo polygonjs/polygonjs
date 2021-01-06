@@ -13,7 +13,7 @@ QUnit.test('event set_param simple', async (assert) => {
 	switch1.setInput(0, box1);
 	switch1.setInput(1, sphere1);
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	switch1.p.input.set(0);
 	let container = await switch1.requestContainer();
@@ -48,7 +48,7 @@ QUnit.test('event set_param simple', async (assert) => {
 	const data = new SceneJsonExporter(scene).data();
 	console.log('loading...', data);
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 
 	await CoreSleep.sleep(100);
 

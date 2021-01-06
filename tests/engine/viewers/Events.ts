@@ -4,7 +4,7 @@ import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 
 QUnit.test('mouse event nodes update the viewer event listeners', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loading_controller.is_loading, 'scene is loaded');
 
 	const element = document.createElement('div');
@@ -86,7 +86,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 
 QUnit.test('mouse event are set correctly when saving/loading the scene', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loading_controller.is_loading, 'scene is loaded');
 
 	const element = document.createElement('div');
@@ -115,7 +115,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	const data = new SceneJsonExporter(scene).data();
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 	const element2 = document.createElement('div');
 	document.body.appendChild(element2);
 	const perspective_camera2 = scene2.root.nodesByType('perspectiveCamera')[0];
@@ -149,7 +149,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 
 QUnit.test('keyboard event nodes update the viewer event listeners', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loading_controller.is_loading);
 
 	const element = document.createElement('div');
@@ -213,7 +213,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 
 QUnit.test('scene event nodes do not add events to the viewer', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loading_controller.is_loading);
 
 	const element = document.createElement('div');

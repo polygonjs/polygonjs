@@ -1,10 +1,8 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
-import {Object3D} from 'three/src/core/Object3D';
 import {ObjectsManagerNode} from '../../nodes/manager/ObjectsManager';
 import {CoreString} from '../../../core/String';
 import {BaseNodeType} from '../../nodes/_Base';
-import {BaseObjNodeType} from '../../nodes/obj/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeChildrenMapByContext} from '../../poly/registers/nodes/All';
 
@@ -25,19 +23,19 @@ export class NodesController {
 	get root() {
 		return this._root;
 	}
-	objects_from_mask(mask: string): Object3D[] {
-		const masks = mask.split(' ');
-		const child_nodes = this.root.children() as BaseObjNodeType[];
-		const objects: Object3D[] = [];
-		for (let child_node of child_nodes) {
-			if (CoreString.matches_one_mask(child_node.name, masks)) {
-				if (child_node.object) {
-					objects.push(child_node.object);
-				}
-			}
-		}
-		return objects;
-	}
+	// objectsFromMask(mask: string): Object3D[] {
+	// 	const masks = mask.split(' ');
+	// 	const child_nodes = this.root.children() as BaseObjNodeType[];
+	// 	const objects: Object3D[] = [];
+	// 	for (let child_node of child_nodes) {
+	// 		if (CoreString.matchesOneMask(child_node.name, masks)) {
+	// 			if (child_node.object) {
+	// 				objects.push(child_node.object);
+	// 			}
+	// 		}
+	// 	}
+	// 	return objects;
+	// }
 	clear() {
 		const children = this.root.children();
 		for (let child of children) {
@@ -55,7 +53,7 @@ export class NodesController {
 			return this.root.node(path);
 		}
 	}
-	all_nodes() {
+	allNodes() {
 		let nodes: BaseNodeType[] = [this.root];
 		let current_parents: BaseNodeType[] = [this.root];
 		let cmptr = 0;
@@ -75,12 +73,12 @@ export class NodesController {
 		}
 		return nodes.flat();
 	}
-	nodes_from_mask(mask: string) {
-		const nodes = this.all_nodes();
+	nodesFromMask(mask: string) {
+		const nodes = this.allNodes();
 		const matching_nodes: BaseNodeType[] = [];
 		for (let node of nodes) {
 			const path = node.fullPath();
-			if (CoreString.match_mask(path, mask)) {
+			if (CoreString.matchMask(path, mask)) {
 				matching_nodes.push(node);
 			}
 		}
@@ -101,7 +99,7 @@ export class NodesController {
 			.map((s) => s.toLowerCase());
 	}
 
-	add_to_instanciated_node(node: BaseNodeType) {
+	addToInstanciatedNode(node: BaseNodeType) {
 		const context = node.node_context();
 		const node_type = node.type;
 		this._instanciated_nodes_by_context_and_type[context] =
@@ -111,7 +109,7 @@ export class NodesController {
 		this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id] = node;
 	}
 
-	remove_from_instanciated_node(node: BaseNodeType) {
+	removeFromInstanciatedNode(node: BaseNodeType) {
 		const context = node.node_context();
 		const node_type = node.type;
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];

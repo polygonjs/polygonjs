@@ -246,7 +246,7 @@ export class CoreGroup {
 				return ArrayUtils.compact([this.coreObjects()[index]]);
 			} else {
 				return this.coreObjects().filter((core_object) => {
-					return CoreString.match_mask(group_name, core_object.name());
+					return CoreString.matchMask(group_name, core_object.name());
 				});
 			}
 		} else {
@@ -394,7 +394,7 @@ export class CoreGroup {
 		const matching_attrib_names: string[] = [];
 		for (let attrib_name of this.attribNames()) {
 			for (let mask of masks) {
-				if (CoreString.match_mask(attrib_name, mask)) {
+				if (CoreString.matchMask(attrib_name, mask)) {
 					matching_attrib_names.push(attrib_name);
 				}
 			}

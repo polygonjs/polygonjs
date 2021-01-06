@@ -3,7 +3,7 @@ import {ParamType} from '../poly/ParamType';
 import {CoreString} from '../../core/String';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static type() {
@@ -43,10 +43,10 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 				return raw_val >= 1;
 			} else {
 				if (CoreType.isString(raw_val)) {
-					if (CoreString.is_boolean(raw_val)) {
-						return CoreString.to_boolean(raw_val);
+					if (CoreString.isBoolean(raw_val)) {
+						return CoreString.toBoolean(raw_val);
 					} else {
-						if (CoreString.is_number(raw_val)) {
+						if (CoreString.isNumber(raw_val)) {
 							const parsed = parseFloat(raw_val);
 							return parsed >= 1;
 						}

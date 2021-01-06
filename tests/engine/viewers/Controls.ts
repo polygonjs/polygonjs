@@ -2,7 +2,7 @@ import {CoreSleep} from '../../../src/core/Sleep';
 
 QUnit.test('viewer controls are updated as expected', async (assert) => {
 	const scene = window.scene;
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loading_controller.is_loading);
 
 	const perspective_camera1 = window.perspective_camera1;

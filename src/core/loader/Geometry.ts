@@ -77,7 +77,7 @@ export class CoreLoaderGeometry {
 			// do not add '?' here. Let the requester do it if necessary
 			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 			if (url[0] != 'h') {
-				const assets_root = this.scene.assets_controller.assets_root();
+				const assets_root = this.scene.assets.root();
 				if (assets_root) {
 					url = `${assets_root}${url}`;
 				}
@@ -229,7 +229,7 @@ export class CoreLoaderGeometry {
 		const module = await Poly.instance().modulesRegister.module(ModuleName.DRACOLoader);
 		if (module) {
 			const draco_loader = new module.DRACOLoader();
-			const root = this.scene.libs_controller.root();
+			const root = this.scene.libs.root();
 			const decoder_path = `${root}/draco/`;
 			draco_loader.setDecoderPath(decoder_path);
 			draco_loader.setDecoderConfig({type: 'js'});
@@ -257,7 +257,7 @@ export class CoreLoaderGeometry {
 		if (gltf_module && draco_module) {
 			this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
 			this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
-			const root = scene.libs_controller.root();
+			const root = scene.libs.root();
 			const decoder_path = `${root}/draco/gltf/`;
 			this.draco_loader.setDecoderPath(decoder_path);
 			// not having this uses wasm if the relevant libraries are found

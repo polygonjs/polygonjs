@@ -112,7 +112,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
@@ -142,7 +142,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 
 	const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 	await new_mesh_basic1.requestContainer();
@@ -310,7 +310,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	await AssemblersUtils.with_unregistered_assembler(mesh_basic1.used_assembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 		assert.notOk(new_mesh_basic1.assembler_controller);

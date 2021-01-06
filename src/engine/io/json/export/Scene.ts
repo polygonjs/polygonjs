@@ -23,7 +23,7 @@ export class SceneJsonExporter {
 	constructor(private _scene: PolyScene) {}
 
 	data(): SceneJsonExporterData {
-		this._scene.nodes_controller.reset_node_context_signatures();
+		this._scene.nodesController.reset_node_context_signatures();
 		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root);
 		const nodes_data = root_exporter.data();
 		const ui_data = root_exporter.ui_data();
@@ -48,7 +48,7 @@ export class SceneJsonExporter {
 
 	static sanitize_string(word: string): string {
 		word = word.replace(/'/g, "'"); // escapes ' (used to be with 2 /, but now only one to have Ian's Mediation saved and loaded correctly - but is actually 2 in Code Exporter)
-		word = CoreString.escape_line_breaks(word);
+		word = CoreString.escapeLineBreaks(word);
 		return word;
 	}
 }

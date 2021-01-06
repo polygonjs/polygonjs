@@ -38,7 +38,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					nodes.push(node);
 				}
 			} catch (e) {
-				const nodeType = CoreString.camel_case(node_type);
+				const nodeType = CoreString.camelCase(node_type);
 				try {
 					// try with camelCased type
 					const node = this._node.createNode(nodeType, non_spare_params_data);

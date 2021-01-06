@@ -100,7 +100,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		}
 	}
 	private _url() {
-		const assets_root = this.scene.assets_controller.assets_root();
+		const assets_root = this.scene.assets.root();
 		if (assets_root) {
 			return `${assets_root}${this.pv.url}`;
 		} else {

@@ -18,8 +18,14 @@ import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPlugin} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
 
+declare global {
+	interface Window {
+		__POLYGONJS_POLY_INSTANCE__: Poly;
+	}
+}
+
 export class Poly {
-	static _instance: Poly | undefined;
+	// static _instance: Poly | undefined;
 	public readonly renderers_controller: RenderersController = new RenderersController();
 	public readonly nodesRegister: NodesRegister = new NodesRegister(this);
 	public readonly operationsRegister: OperationsRegister = new OperationsRegister(this);
@@ -34,14 +40,25 @@ export class Poly {
 	private _logger: BaseCoreLogger | null = null;
 
 	static instance() {
-		return (this._instance = this._instance || new Poly());
+		// we are using a window globals to ensure 2 instances can never be created
+		// even when the js are compiled by different means,
+		// which can happen in the editor.
+		if (window.__POLYGONJS_POLY_INSTANCE__) {
+			return window.__POLYGONJS_POLY_INSTANCE__;
+		} else {
+			const instance = new Poly();
+			window.__POLYGONJS_POLY_INSTANCE__ = instance;
+			// this._instance = instance
+			return window.__POLYGONJS_POLY_INSTANCE__;
+		}
+		// return (this._instance = this._instance || new Poly());
 	}
 	private constructor() {}
 
-	set_player_mode(mode: boolean) {
+	setPlayerMode(mode: boolean) {
 		this._player_mode = mode;
 	}
-	player_mode() {
+	playerMode() {
 		return this._player_mode;
 	}
 
@@ -89,7 +106,7 @@ export class Poly {
 	// LOGGER
 	//
 	//
-	set_logger(logger: BaseCoreLogger | null) {
+	setLogger(logger: BaseCoreLogger | null) {
 		this._logger = logger;
 	}
 	get logger() {

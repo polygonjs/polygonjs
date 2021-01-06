@@ -94,7 +94,7 @@ export class CoreTextureLoader {
 			// url = this._resolve_url(url)
 			const ext = CoreTextureLoader.get_extension(url);
 			if (url[0] != 'h') {
-				const assets_root = this._node.scene.assets_controller.assets_root();
+				const assets_root = this._node.scene.assets.root();
 				if (assets_root) {
 					url = `${assets_root}${url}`;
 				}

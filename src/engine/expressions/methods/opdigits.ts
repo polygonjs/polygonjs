@@ -28,7 +28,7 @@ export class OpdigitsExpression extends BaseMethod {
 				const node = this.get_referenced_node(index_or_path);
 				if (node) {
 					const name = node.name;
-					const value = CoreString.tail_digits(name);
+					const value = CoreString.tailDigits(name);
 					resolve(value);
 				} else {
 					resolve(0);

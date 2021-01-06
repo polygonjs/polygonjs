@@ -3,7 +3,7 @@ import {ParamType} from '../poly/ParamType';
 import {CoreString} from '../../core/String';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
@@ -25,7 +25,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
-		if (CoreType.isString(raw_input) && CoreString.is_number(raw_input)) {
+		if (CoreType.isString(raw_input) && CoreString.isNumber(raw_input)) {
 			return parseInt(raw_input);
 		}
 		return raw_input;
@@ -47,7 +47,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 			if (CoreType.isBoolean(raw_val)) {
 				return raw_val ? 1 : 0;
 			} else {
-				if (CoreString.is_number(raw_val)) {
+				if (CoreString.isNumber(raw_val)) {
 					const parsed = parseInt(raw_val);
 					if (CoreType.isNumber(parsed)) {
 						return parsed;

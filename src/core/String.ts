@@ -27,17 +27,17 @@ export class CoreString {
 	// 	const match = word.match(TAIL_DIGIT_MATCH_REGEXP)
 	// 	return (match != null)
 	// }
-	static is_boolean(word: string): boolean {
+	static isBoolean(word: string): boolean {
 		return word == BooleanString.TRUE || word == BooleanString.FALSE;
 	}
-	static to_boolean(word: string): boolean {
+	static toBoolean(word: string): boolean {
 		return word == BooleanString.TRUE;
 	}
-	static is_number(word: string): boolean {
+	static isNumber(word: string): boolean {
 		return NUM_REGEXP.test(word);
 	}
 
-	static tail_digits(word: string): number {
+	static tailDigits(word: string): number {
 		const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
 		if (match) {
 			return parseInt(match[0]);
@@ -81,15 +81,27 @@ export class CoreString {
 		}
 	}
 
-	// inspired from https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
-	static camel_case(str: string): string {
-		return str.replace(/_/g, ' ').replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-			if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
-			return index === 0 ? match.toLowerCase() : match.toUpperCase();
-		});
+	static camelCase(str: string): string {
+		const elements = str.replace(/_/g, ' ').split(' ');
+		let newWord = '';
+		for (let i = 0; i < elements.length; i++) {
+			let element = elements[i].toLowerCase();
+			if (i > 0) {
+				element = this.upperFirst(element);
+			}
+			newWord += element;
+		}
+		return newWord;
+
+		// inspired from https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
+		// return str.replace(/_/g, ' ').replace(/(?:^\w|[A-Z0-9]|\b\w|\s+)/g, function (match, index) {
+		// 	console.log('match', match, index);
+		// 	if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+		// 	return index === 0 ? match.toLowerCase() : match.toUpperCase();
+		// });
 	}
 
-	static upper_first(word: string): string {
+	static upperFirst(word: string): string {
 		const newString = word[0].toUpperCase() + word.substr(1);
 		return newString;
 	}
@@ -103,22 +115,22 @@ export class CoreString {
 	// }
 	static titleize(word: string): string {
 		const elements = word.split(/\s|_/g);
-		const newElements = elements.map((elem) => this.upper_first(elem));
+		const newElements = elements.map((elem) => this.upperFirst(elem));
 		return newElements.join(' ');
 	}
 
 	// static type_to_class_name(word: string): string {
-	// 	return this.upper_first(this.camel_case(word));
+	// 	return this.upperFirst(this.camelCase(word));
 	// }
 
-	static timestamp_to_seconds(word: string): number {
-		return Date.parse(word) / 1000;
-	}
-	static seconds_to_timestamp(seconds: number): string {
-		const d = new Date();
-		d.setTime(seconds * 1000);
-		return d.toISOString().substr(11, 8);
-	}
+	// static timestamp_to_seconds(word: string): number {
+	// 	return Date.parse(word) / 1000;
+	// }
+	// static seconds_to_timestamp(seconds: number): string {
+	// 	const d = new Date();
+	// 	d.setTime(seconds * 1000);
+	// 	return d.toISOString().substr(11, 8);
+	// }
 
 	static precision(val: number, decimals: number = 2): string {
 		decimals = Math.max(decimals, 0);
@@ -143,7 +155,7 @@ export class CoreString {
 		}
 	}
 
-	static ensure_float(num: number): string {
+	static ensureFloat(num: number): string {
 		// const integer = Math.floor(num)
 		// const delta = num - integer
 		// if(delta)
@@ -157,14 +169,14 @@ export class CoreString {
 	}
 
 	// https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
-	static match_mask(word: string, mask: string) {
+	static matchMask(word: string, mask: string) {
 		if (mask === '*') {
 			return true;
 		}
 		const elements = mask.split(SPACE);
 		if (elements.length > 1) {
 			for (let element of elements) {
-				const match = this.match_mask(word, element);
+				const match = this.matchMask(word, element);
 				if (match) {
 					return true;
 				}
@@ -186,10 +198,10 @@ export class CoreString {
 		// Returns true if it finds a match, otherwise it returns false
 		return regex.test(word);
 	}
-	static matches_one_mask(word: string, masks: string[]): boolean {
+	static matchesOneMask(word: string, masks: string[]): boolean {
 		let matches_one_mask = false;
 		for (let mask of masks) {
-			if (CoreString.match_mask(word, mask)) {
+			if (CoreString.matchMask(word, mask)) {
 				matches_one_mask = true;
 			}
 		}
@@ -212,25 +224,6 @@ export class CoreString {
 			i++;
 		});
 		return names;
-	}
-	static to_id(val: string): number {
-		if (val == null) {
-			return 0;
-		}
-
-		const elements = val.split('').reverse();
-		let id = 0;
-		let exp = 0;
-		elements.forEach((element, i) => {
-			let index = element.charCodeAt(0);
-
-			if (index >= 0) {
-				exp = i % 10;
-				id += index * 10 ** exp;
-				id = id % Number.MAX_SAFE_INTEGER;
-			}
-		});
-		return id;
 	}
 
 	static indices(indices_string: string): number[] {
@@ -259,7 +252,7 @@ export class CoreString {
 		}
 	}
 
-	static escape_line_breaks(word: string): string {
+	static escapeLineBreaks(word: string): string {
 		return word.replace(/(\r\n|\n|\r)/gm, '\\n');
 	}
 }

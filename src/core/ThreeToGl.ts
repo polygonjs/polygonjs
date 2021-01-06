@@ -3,7 +3,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {Color} from 'three/src/math/Color';
-import { CoreType } from './Type';
+import {CoreType} from './Type';
 
 export class ThreeToGl {
 	static any(value: any): string {
@@ -14,7 +14,7 @@ export class ThreeToGl {
 			return `${value}`;
 		}
 		if (CoreType.isNumber(value)) {
-			return `${CoreString.ensure_float(value)}`;
+			return `${CoreString.ensureFloat(value)}`;
 		}
 		if (CoreType.isArray(value)) {
 			return this.numeric_array(value);
@@ -33,7 +33,7 @@ export class ThreeToGl {
 	static numeric_array(values: number[]): string {
 		const values_str = new Array(values.length);
 		for (let i = 0; i < values.length; i++) {
-			values_str[i] = `${CoreString.ensure_float(values[i])}`;
+			values_str[i] = `${CoreString.ensureFloat(values[i])}`;
 		}
 		const gl_type = `vec${values.length}`;
 		return `${gl_type}(${values_str.join(', ')})`;
@@ -43,7 +43,7 @@ export class ThreeToGl {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensure_float(v)}`;
+			return `${CoreString.ensureFloat(v)}`;
 		});
 		return `vec4(${values.join(', ')})`;
 	}
@@ -52,7 +52,7 @@ export class ThreeToGl {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensure_float(v)}`;
+			return `${CoreString.ensureFloat(v)}`;
 		});
 		return `vec3(${values.join(', ')})`;
 	}
@@ -61,57 +61,57 @@ export class ThreeToGl {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensure_float(v)}`;
+			return `${CoreString.ensureFloat(v)}`;
 		});
 		return `vec2(${values.join(', ')})`;
 	}
 
 	static vector3_float(vec: Vector3 | string, num: number | string): string {
 		if (!CoreType.isString(num)) {
-			num = CoreString.ensure_float(num);
+			num = CoreString.ensureFloat(num);
 		}
 		return `vec4(${this.vector3(vec)}, ${num})`;
 	}
 
 	static float4(x: number | string, y: number | string, z: number | string, w: number | string) {
 		if (!CoreType.isString(x)) {
-			x = CoreString.ensure_float(x);
+			x = CoreString.ensureFloat(x);
 		}
 		if (!CoreType.isString(y)) {
-			y = CoreString.ensure_float(y);
+			y = CoreString.ensureFloat(y);
 		}
 		if (!CoreType.isString(z)) {
-			z = CoreString.ensure_float(z);
+			z = CoreString.ensureFloat(z);
 		}
 		if (!CoreType.isString(w)) {
-			w = CoreString.ensure_float(w);
+			w = CoreString.ensureFloat(w);
 		}
 		return `vec4(${x}, ${y}, ${z}, ${w})`;
 	}
 	static float3(x: number | string, y: number | string, z: number | string) {
 		if (!CoreType.isString(x)) {
-			x = CoreString.ensure_float(x);
+			x = CoreString.ensureFloat(x);
 		}
 		if (!CoreType.isString(y)) {
-			y = CoreString.ensure_float(y);
+			y = CoreString.ensureFloat(y);
 		}
 		if (!CoreType.isString(z)) {
-			z = CoreString.ensure_float(z);
+			z = CoreString.ensureFloat(z);
 		}
 		return `vec3(${x}, ${y}, ${z})`;
 	}
 	static float2(x: number | string, y: number | string) {
 		if (!CoreType.isString(x)) {
-			x = CoreString.ensure_float(x);
+			x = CoreString.ensureFloat(x);
 		}
 		if (!CoreType.isString(y)) {
-			y = CoreString.ensure_float(y);
+			y = CoreString.ensureFloat(y);
 		}
 		return `vec2(${x}, ${y})`;
 	}
 	static float(x: number | string) {
 		if (!CoreType.isString(x)) {
-			x = CoreString.ensure_float(x);
+			x = CoreString.ensureFloat(x);
 		}
 		return `${x}`;
 	}

@@ -1,14 +1,14 @@
 import {OperatorPathParam} from '../../../params/OperatorPath';
 import {ParamOptionToAdd} from '../params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
-import {NodeJsonExporterData} from '../../../io/json/export/Node';
+import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../../io/json/export/Node';
 import {BaseNodeType, TypedNode} from '../../_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeJsonImporter} from '../../../io/json/import/Node';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {create_poly_sop_node} from '../../sop/Poly';
-import {create_poly_obj_node} from '../../obj/Poly';
+import {createPolySopNode} from '../../sop/Poly';
+import {createPolyObjNode} from '../../obj/Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface PolyNodeDefinition {
@@ -16,6 +16,7 @@ export interface PolyNodeDefinition {
 	inputs?: [number, number];
 	params?: ParamOptionToAdd<ParamType>[];
 	nodes?: PolyDictionary<NodeJsonExporterData>;
+	ui?: PolyDictionary<NodeJsonExporterUIData>;
 }
 
 export class PolyNodeController {
@@ -31,7 +32,7 @@ export class PolyNodeController {
 
 		this.node.lifecycle.add_on_create_hook(() => {
 			this.create_params_from_definition();
-			this.create_child_nodes_from_definition();
+			this.createChildNodesFromDefinition();
 		});
 	}
 
@@ -55,7 +56,7 @@ export class PolyNodeController {
 		this.node.params.update_params({to_add: params_data});
 	}
 
-	create_child_nodes_from_definition() {
+	createChildNodesFromDefinition() {
 		const nodes_data = this._definition.nodes;
 		if (!nodes_data) {
 			return;
@@ -73,6 +74,11 @@ export class PolyNodeController {
 		const node_importer = new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
 		node_importer.create_nodes(scene_importer, nodes_data);
 
+		const ui_data = this._definition.ui;
+		if (ui_data) {
+			node_importer.process_nodes_ui_data(scene_importer, ui_data);
+		}
+
 		if (current_scene_loaded_state) {
 			this.node.scene.loading_controller.mark_as_loaded();
 		}
@@ -82,17 +88,25 @@ export class PolyNodeController {
 		const node = param.found_node();
 		if (node) {
 			const root_exporter = JsonExportDispatcher.dispatch_node(node);
-			const nodes_data = root_exporter.data();
-			console.log(JSON.stringify(nodes_data.nodes));
+			const nodes_data = root_exporter.data({showPolyNodesData: true});
+			const ui_data = root_exporter.ui_data({showPolyNodesData: true});
+			const data: PolyNodeDefinition = {
+				node_context: node.node_context(),
+				inputs: [0, 0],
+				params: [],
+				nodes: nodes_data.nodes,
+				ui: ui_data.nodes,
+			};
+			console.log(JSON.stringify(data));
 		}
 	}
 
-	static create_node_class(node_type: string, node_context: NodeContext, definition: PolyNodeDefinition) {
+	static createNodeClass(node_type: string, node_context: NodeContext, definition: PolyNodeDefinition) {
 		switch (node_context) {
 			case NodeContext.SOP:
-				return create_poly_sop_node(node_type, definition);
+				return createPolySopNode(node_type, definition);
 			case NodeContext.OBJ:
-				return create_poly_obj_node(node_type, definition);
+				return createPolyObjNode(node_type, definition);
 		}
 	}
 }

@@ -103,7 +103,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 	}
 
 	material(): ShaderMaterialWithCustomMaterials | undefined {
-		if (Poly.instance().player_mode()) {
+		if (Poly.instance().playerMode()) {
 			return this._material;
 		}
 	}

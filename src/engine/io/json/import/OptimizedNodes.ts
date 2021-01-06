@@ -159,7 +159,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		const non_optimized_names: string[] = [];
 		for (let node_name of node_names) {
 			const node_data = data[node_name];
-			const optimized_state = Poly.instance().player_mode() && this.is_node_optimized(node_data);
+			const optimized_state = Poly.instance().playerMode() && this.is_node_optimized(node_data);
 			if (optimized_state) {
 				optimized_names.push(node_name);
 			} else {

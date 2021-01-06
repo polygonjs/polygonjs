@@ -9,7 +9,7 @@ export class PolySceneSerializer {
 		const nodes_by_graph_node_id: PolyDictionary<object> = {};
 		const params_by_graph_node_id: PolyDictionary<object> = {};
 
-		for (let node of this.scene.nodes_controller.all_nodes()) {
+		for (let node of this.scene.nodesController.allNodes()) {
 			const node_serializer = new NodeSerializer(node);
 			nodes_by_graph_node_id[node.graph_node_id] = node_serializer.toJSON(include_node_param_components);
 

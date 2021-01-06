@@ -41,7 +41,7 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	const light_object1 = main_group.children[2];
 	const light_from_light_object1 = light_object1.children[1];
 	hemisphere_light1.p.intensity.set(2);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(light_from_light_object1.uuid, hemisphere_light1.light.uuid);
 	assert.equal(hemisphere_light1.light.intensity, 2, 'intensity should be 2');
 	assert.equal(hemisphere_light1.cook_controller.cooks_count, 2, 'cooks count should be 2');
@@ -55,6 +55,6 @@ QUnit.test('hemisphere light params update as expected', async (assert) => {
 	const hemisphere_light = root.createNode('hemisphereLight');
 	assert.equal(hemisphere_light.light.color.r, 1);
 	hemisphere_light.p.skyColor.r.set(0.5);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.in_delta(hemisphere_light.light.color.r, 0.21, 0.05);
 });

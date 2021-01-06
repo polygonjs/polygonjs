@@ -81,9 +81,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 			}
 		}
 	}
-	// readonly p: ParamsAccessor<K> = new ParamsAccessor<K>(this);
 
-	// private _processing_context: ProcessingContext | undefined;
 	private _name_controller: NameController | undefined;
 	get parent_controller(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
@@ -159,8 +157,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 			this.initialize_base_node(); // for base classes of Sop, Obj...
 			this.initialize_node(); // for Derivated node clases, like BoxSop, TransformSop...
-			if (this.poly_node_controller) {
-				this.poly_node_controller.initialize_node();
+			if (this.polyNodeController) {
+				this.polyNodeController.initialize_node();
 			}
 		} else {
 			console.warn('node already initialized');
@@ -324,7 +322,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	public integration_data(): IntegrationData | void {}
 
 	// poly nodes
-	public readonly poly_node_controller: PolyNodeController | undefined;
+	public readonly polyNodeController: PolyNodeController | undefined;
 }
 
 export type BaseNodeType = TypedNode<any, any>;

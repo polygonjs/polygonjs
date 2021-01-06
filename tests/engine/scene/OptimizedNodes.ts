@@ -13,13 +13,13 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 
 	const data = new SceneJsonExporter(scene).data();
 
-	Poly.instance().set_player_mode(false);
+	Poly.instance().setPlayerMode(false);
 	const scene_no_player = await SceneJsonImporter.load_data(data);
 
-	Poly.instance().set_player_mode(true);
+	Poly.instance().setPlayerMode(true);
 	const scene_player = await SceneJsonImporter.load_data(data);
 	assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 8);
-	assert.equal(scene_player.nodes_controller.all_nodes().length, scene_no_player.nodes_controller.all_nodes().length);
+	assert.equal(scene_player.nodesController.allNodes().length, scene_no_player.nodesController.allNodes().length);
 
 	const box1_player = scene_player.node(box1.fullPath()) as BoxSopNode;
 	assert.equal(box1_player.type, OperationsComposerSopNode.type());
@@ -42,16 +42,13 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 
 	const data = new SceneJsonExporter(scene).data();
 
-	Poly.instance().set_player_mode(false);
+	Poly.instance().setPlayerMode(false);
 	const scene_no_player = await SceneJsonImporter.load_data(data);
 
-	Poly.instance().set_player_mode(true);
+	Poly.instance().setPlayerMode(true);
 	const scene_player = await SceneJsonImporter.load_data(data);
 	assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 33);
-	assert.equal(
-		scene_player.nodes_controller.all_nodes().length,
-		scene_no_player.nodes_controller.all_nodes().length - 1
-	);
+	assert.equal(scene_player.nodesController.allNodes().length, scene_no_player.nodesController.allNodes().length - 1);
 
 	const transform1_player = scene_player.node(transform1.fullPath()) as TransformSopNode;
 	assert.equal(transform1_player.type, OperationsComposerSopNode.type());
@@ -92,15 +89,15 @@ QUnit.test(
 
 		const data = new SceneJsonExporter(scene).data();
 
-		Poly.instance().set_player_mode(false);
+		Poly.instance().setPlayerMode(false);
 		const scene_no_player = await SceneJsonImporter.load_data(data);
 
-		Poly.instance().set_player_mode(true);
+		Poly.instance().setPlayerMode(true);
 		const scene_player = await SceneJsonImporter.load_data(data);
 		assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 72);
 		assert.equal(
-			scene_player.nodes_controller.all_nodes().length,
-			scene_no_player.nodes_controller.all_nodes().length - 4
+			scene_player.nodesController.allNodes().length,
+			scene_no_player.nodesController.allNodes().length - 4
 		);
 
 		const merge2_player = scene_player.node(merge2.fullPath()) as TransformSopNode;

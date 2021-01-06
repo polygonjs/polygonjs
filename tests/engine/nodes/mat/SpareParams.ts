@@ -15,7 +15,7 @@ QUnit.test(
 	async (assert) => {
 		const scene = window.scene;
 		const MAT = window.MAT;
-		await scene.wait_for_cooks_completed();
+		await scene.waitForCooksCompleted();
 
 		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 		mesh_basic1.createNode('output');
@@ -125,7 +125,7 @@ QUnit.test(
 
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.load_data(data);
-		await scene2.wait_for_cooks_completed();
+		await scene2.waitForCooksCompleted();
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 		await new_mesh_basic1.requestContainer();
@@ -162,7 +162,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
@@ -206,7 +206,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
 	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name}`)! as MeshBasicBuilderMatNode;
 	const vec3_spare_param2 = mesh_basic2.params.get(param_name)! as Vector3Param;
@@ -240,7 +240,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	mesh_basic1.createNode('globals');
 	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compile required');
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), [], 'no spare params');
 	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compile not required');
@@ -284,7 +284,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	// the param is not saved in the export data, since it will be re-created
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name}`)! as MeshBasicBuilderMatNode;
 	const vec3_spare_param2 = mesh_basic2.params.get(param_name)! as ColorParam;

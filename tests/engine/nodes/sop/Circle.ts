@@ -14,7 +14,7 @@ QUnit.test('circle simple', async (assert) => {
 	assert.equal(container.pointsCount(), 14);
 	assert.equal(container.boundingBox().min.x, -1);
 
-	scene.batch_update(() => {
+	scene.batchUpdates(() => {
 		circle1.p.radius.set(2);
 		circle1.p.segments.set(50);
 	});

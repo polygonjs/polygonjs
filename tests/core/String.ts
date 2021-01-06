@@ -1,11 +1,11 @@
 import {CoreString} from '../../src/core/String';
 import '../../tests/helpers/assertions';
 
-QUnit.test('string timestamp', (assert) => {
-	assert.equal(CoreString.timestamp_to_seconds('2018-09-28 10:44:32'), 1538127872);
+// QUnit.test('string timestamp', (assert) => {
+// 	assert.equal(CoreString.timestamp_to_seconds('2018-09-28 10:44:32'), 1538127872);
 
-	assert.equal(CoreString.seconds_to_timestamp(1538127872), '09:44:32');
-});
+// 	assert.equal(CoreString.seconds_to_timestamp(1538127872), '09:44:32');
+// });
 
 QUnit.test('string pluralize', (assert) => {
 	assert.equal(CoreString.pluralize('node'), 'nodes');
@@ -31,12 +31,12 @@ QUnit.test('string precision', (assert) => {
 	assert.equal(CoreString.precision(12.56, -2), '12');
 });
 
-QUnit.test('string match_mask', (assert) => {
-	assert.ok(CoreString.match_mask('abc', 'a*'));
-	assert.notOk(CoreString.match_mask('abc', 'e*'));
+QUnit.test('string matchMask', (assert) => {
+	assert.ok(CoreString.matchMask('abc', 'a*'));
+	assert.notOk(CoreString.matchMask('abc', 'e*'));
 
-	assert.ok(CoreString.match_mask('abc', 'a* d*'));
-	assert.notOk(CoreString.match_mask('abc', 'e* d*'));
+	assert.ok(CoreString.matchMask('abc', 'a* d*'));
+	assert.notOk(CoreString.matchMask('abc', 'e* d*'));
 });
 
 QUnit.test('string attrib_names', (assert) => {
@@ -46,22 +46,6 @@ QUnit.test('string attrib_names', (assert) => {
 	assert.deepEqual(CoreString.attribNames('position,		  normal'), ['position', 'normal']);
 	assert.deepEqual(CoreString.attribNames('  position  ,		  normal  '), ['position', 'normal']);
 	assert.deepEqual(CoreString.attribNames('position,normal,'), ['position', 'normal']);
-});
-QUnit.test('string utils to_id', (assert) => {
-	assert.equal(CoreString.to_id('ab'), 1068);
-	assert.equal(CoreString.to_id('ba'), 1077);
-
-	assert.equal(CoreString.to_id('a'), 97);
-	assert.equal(CoreString.to_id('b'), 98);
-	assert.equal(CoreString.to_id('c'), 99);
-	assert.equal(CoreString.to_id('e'), 101);
-	assert.equal(CoreString.to_id('bb'), 1078);
-	assert.equal(CoreString.to_id('cab'), 10968);
-	assert.equal(CoreString.to_id('auniqueid'), 10991758250);
-	assert.equal(CoreString.to_id('auniqueid'), 10991758250);
-	assert.equal(CoreString.to_id('anotherid'), 10923753550);
-	assert.equal(CoreString.to_id('Clerkenwell Rd'), 118330371044);
-	assert.equal(CoreString.to_id('אליהו בן חור'), 1661326144322);
 });
 
 QUnit.test('string increment name', (assert) => {
@@ -121,20 +105,20 @@ QUnit.test('indices', (assert) => {
 });
 
 QUnit.test('number conversion', (assert) => {
-	assert.ok(CoreString.is_number('1'));
-	assert.ok(CoreString.is_number('1.'));
-	assert.ok(CoreString.is_number('1.1'));
-	assert.ok(CoreString.is_number('001.1'));
-	assert.notOk(CoreString.is_number('1+1'));
-	assert.notOk(CoreString.is_number('1.1A'));
-	assert.notOk(CoreString.is_number('A'));
-	assert.notOk(CoreString.is_number('A1.'));
+	assert.ok(CoreString.isNumber('1'));
+	assert.ok(CoreString.isNumber('1.'));
+	assert.ok(CoreString.isNumber('1.1'));
+	assert.ok(CoreString.isNumber('001.1'));
+	assert.notOk(CoreString.isNumber('1+1'));
+	assert.notOk(CoreString.isNumber('1.1A'));
+	assert.notOk(CoreString.isNumber('A'));
+	assert.notOk(CoreString.isNumber('A1.'));
 });
 
-QUnit.test('CoreString.upper_first', (assert) => {
-	assert.equal(CoreString.upper_first('abcde'), 'Abcde');
-	assert.equal(CoreString.upper_first('Abcde'), 'Abcde');
-	assert.equal(CoreString.upper_first('1bcde'), '1bcde');
+QUnit.test('CoreString.upperFirst', (assert) => {
+	assert.equal(CoreString.upperFirst('abcde'), 'Abcde');
+	assert.equal(CoreString.upperFirst('Abcde'), 'Abcde');
+	assert.equal(CoreString.upperFirst('1bcde'), '1bcde');
 });
 QUnit.test('CoreString.titleize', (assert) => {
 	assert.equal(CoreString.titleize('spring_torus'), 'Spring Torus');
@@ -143,14 +127,16 @@ QUnit.test('CoreString.titleize', (assert) => {
 	assert.equal(CoreString.titleize('Abcde'), 'Abcde');
 	assert.equal(CoreString.titleize('1bcde'), '1bcde');
 });
-QUnit.test('CoreString.camel_case', (assert) => {
-	assert.equal(CoreString.camel_case('spring torus'), 'springTorus');
-	assert.equal(CoreString.camel_case('spring_torus'), 'springTorus');
-	assert.equal(CoreString.camel_case('hemisphere_light'), 'hemisphereLight');
-	assert.equal(CoreString.camel_case('mesh_basic_builder'), 'meshBasicBuilder');
-	assert.equal(CoreString.camel_case('abcde'), 'abcde');
-	assert.equal(CoreString.camel_case('Abcde'), 'abcde');
-	assert.equal(CoreString.camel_case('1bcde'), '1bcde');
+QUnit.test('CoreString.camelCase', (assert) => {
+	assert.equal(CoreString.camelCase('spring torus'), 'springTorus');
+	assert.equal(CoreString.camelCase('spring_torus'), 'springTorus');
+	assert.equal(CoreString.camelCase('hemisphere_light'), 'hemisphereLight');
+	assert.equal(CoreString.camelCase('mesh_basic_builder'), 'meshBasicBuilder');
+	assert.equal(CoreString.camelCase('abcde'), 'abcde');
+	assert.equal(CoreString.camelCase('Abcde'), 'abcde');
+	assert.equal(CoreString.camelCase('1bcde'), '1bcde');
+	assert.equal(CoreString.camelCase('fit_from_01'), 'fitFrom01');
+	assert.equal(CoreString.camelCase('fit_from_01_to_variance'), 'fitFrom01ToVariance');
 });
 // QUnit.test('CoreString.snake_case', (assert) => {
 // 	assert.equal(CoreString.snake_case('StringTorus'), 'spring_torus');

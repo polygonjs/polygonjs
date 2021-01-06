@@ -84,7 +84,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 				}
 			}
 		}
-		const nodes = this.scene.nodes_controller.nodes_from_mask(mask);
+		const nodes = this.scene.nodesController.nodesFromMask(mask);
 
 		for (let node of nodes) {
 			this._update_node_flags(node);

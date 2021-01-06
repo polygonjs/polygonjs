@@ -19,7 +19,7 @@ QUnit.test('event node_cook simple', async (assert) => {
 	const switch1 = geo1.createNode('switch');
 	const switch2 = geo1.createNode('switch');
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	const node_cook1 = events.createNode('nodeCook');
 	const set_param1 = events.createNode('setParam');
@@ -57,7 +57,7 @@ QUnit.test('event node_cook simple', async (assert) => {
 
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 	const scatter1_2 = scene2.node(scatter1.fullPath()) as ScatterSopNode;
 	const merge1_2 = scene2.node(merge1.fullPath()) as MergeSopNode;
 	const switch1_2 = scene2.node(switch1.fullPath()) as SwitchSopNode;

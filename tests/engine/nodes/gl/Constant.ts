@@ -33,7 +33,7 @@ QUnit.test('gl constant updates its output type correctly when scene is loaded',
 
 	const data = new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.load_data(data);
-	await scene2.wait_for_cooks_completed();
+	await scene2.waitForCooksCompleted();
 
 	const material_basic_builder2 = scene.node('/MAT/meshBasicBuilder1')!;
 	assert.ok(material_basic_builder2);

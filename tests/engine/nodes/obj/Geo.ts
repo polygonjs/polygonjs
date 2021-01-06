@@ -16,7 +16,7 @@ QUnit.test('geo obj simple', async (assert) => {
 	assert.equal(geo1.cook_controller.cooks_count, 0, 'should not have counted cooks yet');
 
 	geo1.p.t.x.set(12);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(geo1.cook_controller.cooks_count, 1, 'should have cooked only once');
 	assert.deepEqual(
 		obj.matrix.toArray(),
@@ -72,11 +72,11 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 
 	assert.equal(geo1.cook_controller.cooks_count, 0);
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
-	scene.batch_update(() => {
+	scene.batchUpdates(() => {
 		geo1.p.t.x.set(2);
 		geo1.p.s.y.set(4);
 	});
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(geo1.object.uuid, obj.uuid);
 	assert.deepEqual(
 		obj.matrix.toArray(),
@@ -102,7 +102,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	file1.p.url.set('/examples/models/wolf.obj');
 
 	file1.flags.display.set(true);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	await file1.requestContainer();
 	await CoreSleep.sleep(10);
 	assert.equal(obj.children.length, 2);
@@ -112,7 +112,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	const scene = window.scene;
 	scene.performance.start();
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	const geo1 = window.geo1;
 	assert.ok(geo1.is_dirty, 'geo1 is dirty');
 	await geo1.requestContainer();
@@ -124,13 +124,13 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	geo1.p.r.y.set('$F+10');
 
 	assert.ok(geo1.is_dirty);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(geo1.cook_controller.cooks_count, 2);
 	assert.notOk(geo1.is_dirty);
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
 
 	scene.setFrame(37);
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 	assert.equal(geo1.cook_controller.cooks_count, 3);
 	assert.notOk(geo1.is_dirty);
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);

@@ -57,17 +57,17 @@ export class PolyScene {
 	// 	return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
 	// }
 	private _assets_controller: SceneAssetsController | undefined;
-	get assets_controller() {
+	get assets() {
 		return (this._assets_controller = this._assets_controller || new SceneAssetsController());
 	}
 	private _libs_controller: SceneLibsController | undefined;
-	get libs_controller() {
+	get libs() {
 		return (this._libs_controller = this._libs_controller || new SceneLibsController());
 	}
 
 	public readonly cook_controller = new CookController();
-	async wait_for_cooks_completed() {
-		return this.cook_controller.wait_for_cooks_completed();
+	async waitForCooksCompleted() {
+		return this.cook_controller.waitForCooksCompleted();
 	}
 
 	private _dispatch_controller: DispatchController | undefined;
@@ -105,7 +105,7 @@ export class PolyScene {
 	}
 
 	protected _nodes_controller = new NodesController(this);
-	get nodes_controller() {
+	get nodesController() {
 		return this._nodes_controller;
 	}
 
@@ -212,7 +212,7 @@ export class PolyScene {
 		// this.mark_as_loaded()
 		this._graph.set_scene(this);
 		// this.time_controller.init();
-		this.nodes_controller.init();
+		this.nodesController.init();
 	}
 
 	//
@@ -220,7 +220,7 @@ export class PolyScene {
 	// cooker
 	//
 	//
-	batch_update(callback: () => void) {
+	batchUpdates(callback: () => void) {
 		this._cooker.block();
 
 		callback();
@@ -234,9 +234,9 @@ export class PolyScene {
 	//
 	//
 	node(path: string) {
-		return this.nodes_controller.node(path);
+		return this.nodesController.node(path);
 	}
 	get root() {
-		return this.nodes_controller.root;
+		return this.nodesController.root;
 	}
 }

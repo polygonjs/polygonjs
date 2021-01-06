@@ -26,7 +26,7 @@ export class CookController {
 		}
 	}
 
-	async wait_for_cooks_completed(): Promise<void> {
+	async waitForCooksCompleted(): Promise<void> {
 		if (this._cooking_nodes_by_id.size == 0) {
 			return;
 		} else {

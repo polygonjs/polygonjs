@@ -108,7 +108,7 @@ QUnit.test('an absolute path in a operator path param gets updated when ref chan
 	const camera = root.createNode('perspectiveCamera');
 	const controls_param = camera.p.controls;
 
-	await scene.wait_for_cooks_completed();
+	await scene.waitForCooksCompleted();
 
 	controls_param.set(orbit.fullPath());
 
@@ -153,7 +153,7 @@ QUnit.test(
 		mesh_basic_builder1.createNode('output');
 		mesh_basic_builder1.createNode('globals');
 
-		await scene.wait_for_cooks_completed();
+		await scene.waitForCooksCompleted();
 
 		param_operator_path_param.set(`${mesh_basic_builder1.fullPath()}/test_param`);
 		await param_operator_path_param.compute();

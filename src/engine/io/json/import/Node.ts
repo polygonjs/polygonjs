@@ -28,7 +28,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		this.set_connection_points(data['connection_points']);
 
 		// rather than having the children creation dependent on the persisted config and player mode, use the children_allowed() method
-		// const skip_create_children = Poly.instance().player_mode() && data.persisted_config;
+		// const skip_create_children = Poly.instance().playerMode() && data.persisted_config;
 		if (this._node.children_allowed()) {
 			this.create_nodes(scene_importer, data['nodes']);
 		}
@@ -66,7 +66,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		if (Poly.instance().player_mode()) {
+		if (Poly.instance().playerMode()) {
 			return;
 		}
 		const ui_data = this._node.uiData;
@@ -166,19 +166,19 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		if (Poly.instance().player_mode()) {
+		if (Poly.instance().playerMode()) {
 			return;
 		}
 
 		const node_names = Object.keys(data);
-		node_names.forEach((node_name) => {
+		for (let node_name of node_names) {
 			const node = this._node.node(node_name);
 			if (node) {
 				const node_data = data[node_name];
 				JsonImportDispatcher.dispatch_node(node).process_ui_data(scene_importer, node_data);
 				// node.visit(JsonImporterVisitor).process_ui_data(node_data);
 			}
-		});
+		}
 	}
 
 	//
@@ -199,8 +199,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			// const is_spare = options && options['spare'] === true;
 
 			// make camelCase if required
-			if (false && param_name.includes('_')) {
-				param_name = CoreString.camel_case(param_name);
+			if (true && param_name.includes('_')) {
+				param_name = CoreString.camelCase(param_name);
 			}
 
 			const param_type = param_data['type']!;

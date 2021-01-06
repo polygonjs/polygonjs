@@ -9,7 +9,7 @@ function create_required_nodes(node: SubnetSopNode) {
 }
 
 QUnit.test('subnet simple', async (assert) => {
-	await window.scene.wait_for_cooks_completed();
+	await window.scene.waitForCooksCompleted();
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const subnet1 = geo1.createNode('subnet');
@@ -58,7 +58,7 @@ QUnit.test('subnet simple', async (assert) => {
 
 QUnit.test('subnet errors without subnetOutput child node', async (assert) => {
 	const geo1 = window.geo1;
-	await window.scene.wait_for_cooks_completed();
+	await window.scene.waitForCooksCompleted();
 	const subnet1 = geo1.createNode('subnet');
 
 	assert.equal(subnet1.children().length, 0);

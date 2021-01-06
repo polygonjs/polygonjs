@@ -57,7 +57,7 @@ export class DispatchController {
 			this._events_listener != null &&
 			this.scene.loading_controller.loaded &&
 			this.scene.loading_controller.auto_updating //&&
-			// !Poly.instance().player_mode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
+			// !Poly.instance().playerMode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
 		);
 	}
 	// store_commit(event_name: string, payload: any = this) {

@@ -30,7 +30,7 @@ export class PropertyTarget {
 			return;
 		}
 		scene.defaultScene.traverse((object) => {
-			if (CoreString.match_mask(object.name, mask)) {
+			if (CoreString.matchMask(object.name, mask)) {
 				objects.push(object);
 			}
 		});

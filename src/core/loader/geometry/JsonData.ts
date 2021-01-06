@@ -109,7 +109,7 @@ export class JsonDataLoader {
 					// 	attrib_values as string[]
 					// )
 
-					if (this._options.doConvert && CoreString.matches_one_mask(attrib_name, convert_to_numeric_masks)) {
+					if (this._options.doConvert && CoreString.matchesOneMask(attrib_name, convert_to_numeric_masks)) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
 							if (CoreType.isString(v)) {
 								return parseFloat(v) || 0;
@@ -153,14 +153,14 @@ export class JsonDataLoader {
 							const deep_attrib_name = [attrib_name, key].join(DEEP_ATTRIB_SEPARATOR);
 							const deep_attrib_value = attrib_value[attrib_name];
 
-							if (!CoreString.matches_one_mask(deep_attrib_name, masks)) {
+							if (!CoreString.matchesOneMask(deep_attrib_name, masks)) {
 								this._attribute_datas_by_name[deep_attrib_name] = CoreAttributeData.from_value(
 									deep_attrib_value
 								);
 							}
 						}
 					} else {
-						if (!CoreString.matches_one_mask(attrib_name, masks)) {
+						if (!CoreString.matchesOneMask(attrib_name, masks)) {
 							this._attribute_datas_by_name[attrib_name] = CoreAttributeData.from_value(attrib_value);
 						}
 					}

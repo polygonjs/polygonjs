@@ -83,7 +83,7 @@ export abstract class TypedBuilderMatNode<
 		a temporary display of a scene will the whole engine player will have an assembler and will therefore recompile.
 		UPDATE: the creation of children is not tied to the player mode anymore, only to the presence of the assembler.
 		*/
-		// if (Poly.instance().player_mode()) {
+		// if (Poly.instance().playerMode()) {
 		// 	return;
 		// }
 		if (this.assembler_controller?.compile_required()) {

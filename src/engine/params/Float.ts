@@ -3,7 +3,7 @@ import {ParamType} from '../poly/ParamType';
 import {CoreString} from '../../core/String';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	static type() {
 		return ParamType.FLOAT;
@@ -24,7 +24,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
-		if (CoreType.isString(raw_input) && CoreString.is_number(raw_input)) {
+		if (CoreType.isString(raw_input) && CoreString.isNumber(raw_input)) {
 			return parseFloat(raw_input);
 		}
 		return raw_input;
@@ -46,7 +46,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 			if (CoreType.isBoolean(raw_val)) {
 				return raw_val ? 1 : 0;
 			} else {
-				if (CoreString.is_number(raw_val)) {
+				if (CoreString.isNumber(raw_val)) {
 					const parsed = parseFloat(raw_val);
 					if (CoreType.isNumber(parsed)) {
 						return parsed;
