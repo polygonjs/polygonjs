@@ -12,7 +12,7 @@ import {Vector4} from 'three/src/math/Vector4';
 import {Color} from 'three/src/math/Color';
 import {RampValue} from '../ramp/RampValue';
 import {ParamType} from '../../poly/ParamType';
-import {TypedPathParamValue} from '../../../core/Walker';
+import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../../core/Walker';
 
 type ParamValuesTypeMapGeneric = {[key in ParamType]: any};
 export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
@@ -23,7 +23,8 @@ export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
 	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: number;
 	[ParamType.OPERATOR_PATH]: string;
-	[ParamType.NODE_PATH]: TypedPathParamValue;
+	[ParamType.PARAM_PATH]: TypedParamPathParamValue;
+	[ParamType.NODE_PATH]: TypedNodePathParamValue;
 	[ParamType.RAMP]: RampValue;
 	[ParamType.SEPARATOR]: null;
 	[ParamType.STRING]: string;

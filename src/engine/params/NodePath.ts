@@ -1,22 +1,20 @@
-import {TypedParam} from './_Base';
+import {TypedPathParam} from './_BasePath';
 import {CoreWalker} from '../../core/Walker';
 import {BaseNodeType} from '../nodes/_Base';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {DecomposedPath} from '../../core/DecomposedPath';
-import {TypedPathParamValue} from '../../core/Walker';
+import {TypedNodePathParamValue} from '../../core/Walker';
 
-export class NodePathParam extends TypedParam<ParamType.NODE_PATH> {
+export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	private _found_node: BaseNodeType | null = null;
-	public readonly decomposed_path = new DecomposedPath();
 
 	static type() {
 		return ParamType.NODE_PATH;
 	}
 	initialize_param() {
-		this._value = new TypedPathParamValue();
+		this._value = new TypedNodePathParamValue();
 	}
 
 	get default_value_serialized() {

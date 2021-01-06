@@ -3,7 +3,7 @@ import {BaseCameraControlsEventNodeType, CameraControls} from '../../../event/_B
 import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
 import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
-import {CAMERA_CONTROLS_NODE_TYPES, NodeContext} from '../../../../poly/NodeContext';
+import {CAMERA_CONTROLS_NODE_TYPES} from '../../../../poly/NodeContext';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
@@ -34,7 +34,7 @@ export class ThreejsCameraControlsController {
 			if (controls_param.is_dirty) {
 				await controls_param.compute();
 			}
-			const node = controls_param.found_node_with_context(NodeContext.EVENT);
+			const node = controls_param.value.node();
 			if (node) {
 				if (CAMERA_CONTROLS_NODE_TYPES.includes(node.type)) {
 					return node as BaseCameraControlsEventNodeType;
@@ -142,26 +142,38 @@ export class ThreejsCameraControlsController {
 			case UpdateFromControlsMode.ALWAYS:
 				return this._set_controls_events_to_update_always(controls);
 			case UpdateFromControlsMode.NEVER:
-				return;
+				return this._reset(controls);
 		}
 		TypeAssert.unreachable(update_mode);
 	}
+	private _reset(controls: CameraControls) {
+		if (this.controls_change_listener) {
+			controls.removeEventListener('change', this.controls_change_listener);
+			this.controls_change_listener = undefined;
+		}
+		if (this.controls_end_listener) {
+			controls.removeEventListener('end', this.controls_end_listener);
+			this.controls_end_listener = undefined;
+		}
+	}
 	private _set_controls_events_to_update_on_end(controls: CameraControls) {
+		this._reset(controls);
 		this.controls_end_listener = () => {
-			this._update_camera_params();
+			this.node.update_transform_params_from_object();
 		};
 		controls.addEventListener('end', this.controls_end_listener);
 	}
 	private _set_controls_events_to_update_always(controls: CameraControls) {
+		this._reset(controls);
 		this.controls_change_listener = () => {
-			this._update_camera_params();
+			this.node.update_transform_params_from_object();
 		};
 		controls.addEventListener('change', this.controls_change_listener);
 	}
 
-	private _update_camera_params() {
-		if (this.node.pv.allow_update_from_controls) {
-			this.node.update_transform_params_from_object();
-		}
-	}
+	// private _update_camera_params() {
+	// 	if (this.node.pv.allowUpdateFromControls) {
+	// 		this.node.update_transform_params_from_object();
+	// 	}
+	// }
 }

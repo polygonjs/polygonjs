@@ -199,7 +199,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			// const is_spare = options && options['spare'] === true;
 
 			// make camelCase if required
-			if (true && param_name.includes('_')) {
+			if (false && param_name.includes('_')) {
 				param_name = CoreString.camelCase(param_name);
 			}
 

@@ -13,7 +13,7 @@ export const NODE_PATH_DEFAULT = {
 	},
 };
 
-export class TypedPathParamValue {
+export class TypedNodePathParamValue {
 	private _node: BaseNodeType | null = null;
 	constructor(private _path: string = '') {}
 	set_path(path: string) {
@@ -34,7 +34,7 @@ export class TypedPathParamValue {
 	}
 
 	clone() {
-		const cloned = new TypedPathParamValue(this._path);
+		const cloned = new TypedNodePathParamValue(this._path);
 		cloned.set_node(this._node);
 		return cloned;
 	}
@@ -55,6 +55,33 @@ export class TypedPathParamValue {
 			error_state?.set(`expected ${context} node, but got a ${node_context}`);
 			return;
 		}
+	}
+}
+
+export class TypedParamPathParamValue {
+	private _param: BaseParamType | null = null;
+	constructor(private _path: string = '') {}
+	set_path(path: string) {
+		this._path = path;
+	}
+	set_param(param: BaseParamType | null) {
+		this._param = param;
+	}
+	path() {
+		return this._path;
+	}
+	param() {
+		return this._param;
+	}
+
+	resolve(node_start: BaseNodeType) {
+		this._param = CoreWalker.find_param(node_start, this._path);
+	}
+
+	clone() {
+		const cloned = new TypedParamPathParamValue(this._path);
+		cloned.set_param(this._param);
+		return cloned;
 	}
 }
 

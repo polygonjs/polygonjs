@@ -85,7 +85,7 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	// save
 	const data = new SceneJsonExporter(scene).data();
 	console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const add2 = scene2.node(add1.fullPath())! as AddSopNode;
 	const plane2 = scene2.node(plane1.fullPath())! as PlaneSopNode;

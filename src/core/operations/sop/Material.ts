@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../geometry/Group';
-import {TypedPathParamValue} from '../../Walker';
+import {TypedNodePathParamValue} from '../../Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
 import {CoreMaterial} from '../../geometry/Material';
@@ -16,7 +16,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
 	assignMat: boolean;
-	material: TypedPathParamValue;
+	material: TypedNodePathParamValue;
 	applyToChildren: boolean;
 	cloneMat: boolean;
 	shareUniforms: boolean;
@@ -29,7 +29,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
 		assignMat: true,
-		material: new TypedPathParamValue('/MAT/mesh_standard1'),
+		material: new TypedNodePathParamValue('/MAT/mesh_standard1'),
 		applyToChildren: true,
 		cloneMat: false,
 		shareUniforms: true,

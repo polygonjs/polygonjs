@@ -67,7 +67,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	add1.params.get('add1')!.set([1, 2, 3]);
 
 	const data = new SceneJsonExporter(scene).data();
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
 	const material_basic_builder2 = scene.node('/MAT/meshBasicBuilder1')!;

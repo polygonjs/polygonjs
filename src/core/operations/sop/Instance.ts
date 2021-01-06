@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../geometry/Group';
-import {TypedPathParamValue} from '../../Walker';
+import {TypedNodePathParamValue} from '../../Walker';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectTypeByObject} from '../../geometry/Constant';
@@ -16,14 +16,14 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 interface InstanceSopParams extends DefaultOperationParams {
 	attributesToCopy: string;
 	applyMaterial: boolean;
-	material: TypedPathParamValue;
+	material: TypedNodePathParamValue;
 }
 
 export class InstanceSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: InstanceSopParams = {
 		attributesToCopy: 'instance*',
 		applyMaterial: true,
-		material: new TypedPathParamValue(''),
+		material: new TypedNodePathParamValue(''),
 	};
 	static readonly INPUT_CLONED_STATE = [InputCloneMode.ALWAYS, InputCloneMode.NEVER];
 	static type(): Readonly<'instance'> {

@@ -5,8 +5,7 @@
  * This node is still experimental.
  *
  */
-import {TypedEventNode} from './_Base';
-import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import {TypedAnimNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
@@ -17,7 +16,7 @@ import gsap from 'gsap/gsap-core';
 import {CoreObject} from '../../../core/geometry/Object';
 import {AnimNodeEasing, InOutMode} from '../../../core/animation/Constant';
 import {BaseCameraControlsEventNodeType} from '../event/_BaseCameraControls';
-import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
+import {CameraOrbitControlsEventNode} from '../event/CameraOrbitControls';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreMath} from '../../../core/math/_Module';
 
@@ -64,25 +63,33 @@ const ATTRIB_NAME = {CAMERA: 'camera'};
 
 const EASING = `${AnimNodeEasing.POWER2}.${InOutMode.IN_OUT}`;
 
+enum TargetPositionMode {
+	CAMERA = 'camera',
+	NEAREST = 'nearest',
+	FURTHERST = 'furthest',
+}
+const TARGET_POSITION_MODES: TargetPositionMode[] = [
+	TargetPositionMode.CAMERA,
+	TargetPositionMode.NEAREST,
+	TargetPositionMode.FURTHERST,
+];
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreSleep} from '../../../core/Sleep';
-class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
-	/** @param sets the camera */
-	camera = ParamConfig.OPERATOR_PATH('/perspective_camera_MASTER', {
+class CameraTransitionAnimParamsConfig extends NodeParamsConfig {
+	/** @param the camera that will be moved */
+	camera = ParamConfig.NODE_PATH('/perspectiveCamera1', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
 		},
 	});
-	/** @param toogle on to initialize to a specific camera */
-	init = ParamConfig.BOOLEAN(0);
-	/** @param the camera to initialize to */
-	initCamera = ParamConfig.OPERATOR_PATH('/perspective_camera_0', {
+	/** @param sets the camera target that will move to*/
+	cameraTarget = ParamConfig.NODE_PATH('/perspectiveCamera2', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [CameraNodeType.PERSPECTIVE],
 		},
-		visibleIf: {init: 1},
 	});
 	/** @param duration of movement from one navigation point to another */
 	duration = ParamConfig.FLOAT(2);
@@ -90,17 +97,21 @@ class CameraNavigationBeaconsEventParamsConfig extends NodeParamsConfig {
 	rotationDelay = ParamConfig.FLOAT(1);
 	/** @param time for the camera projection matrix animation to start, relative to translation animation */
 	projectionMatrixDelay = ParamConfig.FLOAT(0);
-	/** @param toggle on if the camera should move to the nearest position. Toggle off if the camera should move to the current target camera position */
-	toNearesPos = ParamConfig.BOOLEAN(0);
-	/** @param toggle on to hide the current beacon and ensure it does not block the view */
-	hideCurrentBeacon = ParamConfig.BOOLEAN(1);
+	/** @param sets how the target position will be defined */
+	targetPositionMode = ParamConfig.INTEGER(TARGET_POSITION_MODES.indexOf(TargetPositionMode.CAMERA), {
+		menu: {
+			entries: TARGET_POSITION_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
 }
-const ParamsConfig = new CameraNavigationBeaconsEventParamsConfig();
+const ParamsConfig = new CameraTransitionAnimParamsConfig();
 
-export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavigationBeaconsEventParamsConfig> {
+export class CameraTransitionAnimNode extends TypedAnimNode<CameraTransitionAnimParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'cameraNavigationBeacons';
+		return 'cameraTransition';
 	}
 
 	private _src_data: CamData = init_cam_data();
@@ -116,24 +127,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		prev: {val: 0},
 		current: {val: 0},
 	};
-	initialize_node() {
-		this.io.inputs.set_named_input_connection_points([
-			new EventConnectionPoint(
-				CameraNavigationBeaconsEventInput.INIT,
-				EventConnectionPointType.BASE,
-				this._process_init_event.bind(this)
-			),
-			new EventConnectionPoint(
-				CameraNavigationBeaconsEventInput.TRIGGER,
-				EventConnectionPointType.BASE,
-				this._process_trigger_event.bind(this)
-			),
-		]);
-		this.io.outputs.set_named_output_connection_points([
-			new EventConnectionPoint(CameraNavigationBeaconsEventOutput.AFTER_INIT, EventConnectionPointType.BASE),
-			new EventConnectionPoint(CameraNavigationBeaconsEventOutput.AFTER_ANIM, EventConnectionPointType.BASE),
-		]);
-	}
+	initialize_node() {}
 
 	//
 	//
@@ -153,7 +147,7 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 			return;
 		}
 
-		CameraNavigationBeaconsEventNode._store_cam_data(target_camera, this._dest_data);
+		CameraTransitionAnimNode._store_cam_data(target_camera, this._dest_data);
 
 		await this._remove_current_camera_controls(src_camera);
 
@@ -384,7 +378,9 @@ export class CameraNavigationBeaconsEventNode extends TypedEventNode<CameraNavig
 		data.near = camera_object.near;
 		data.far = camera_object.far;
 
-		data.controls.node = camera_node.pv.controls.node() as BaseCameraControlsEventNodeType;
+		data.controls.node = camera_node.p.controls.found_node_with_context(
+			NodeContext.EVENT
+		) as BaseCameraControlsEventNodeType;
 	}
 
 	private _dest_delta = new Vector3();

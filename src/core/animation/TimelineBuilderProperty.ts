@@ -2,6 +2,7 @@ import {Number2, Number3, Number4} from '../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
+import {Quaternion} from 'three/src/math/Quaternion';
 import {Object3D} from 'three/src/core/Object3D';
 import {TimelineBuilder, Operation} from './TimelineBuilder';
 import {PropertyTarget} from './PropertyTarget';
@@ -18,7 +19,7 @@ import {AnimNodeEasing} from './Constant';
 import {Poly} from '../../engine/Poly';
 import {CoreType} from '../Type';
 
-export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4;
+export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4 | Quaternion;
 
 interface Object3DProps {
 	target_property: AnimPropertyTargetValue;
@@ -97,9 +98,7 @@ export class TimelineBuilderProperty {
 			// let to_target: object | null = null;
 			const props = this._scene_graph_props(object3d, this._property_name);
 			if (props) {
-				const target_property = props.target_property;
-				const to_target = props.to_target;
-				const property_names = props.property_names;
+				let {target_property, to_target, property_names} = props;
 				const vars = this._common_vars(timeline_builder);
 
 				// add update_matrix
@@ -111,6 +110,18 @@ export class TimelineBuilderProperty {
 					vars.onComplete = () => {
 						object3d.matrixAutoUpdate = old_matrix_auto_update;
 					};
+				}
+				// handle quaternions as a special case
+				if (target_property instanceof Quaternion && this._target_value instanceof Quaternion) {
+					const proxy = {value: 0};
+					const qTarget = target_property;
+					const qStart = new Quaternion().copy(target_property);
+					const qEnd = this._target_value;
+					vars.onUpdate = () => {
+						Quaternion.slerp(qStart, qEnd, qTarget, proxy.value);
+					};
+					to_target = proxy;
+					vars.value = 1;
 				}
 
 				if (CoreType.isNumber(this._target_value)) {
@@ -163,6 +174,9 @@ export class TimelineBuilderProperty {
 				}
 				if (this._target_value instanceof Vector4) {
 					property_names.push('x', 'y', 'z', 'w');
+				}
+				if (this._target_value instanceof Quaternion) {
+					// is_quaternion = true;
 				}
 			}
 			return {

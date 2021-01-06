@@ -122,7 +122,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.with_unregistered_assembler(builder1.used_assembler(), async () => {
 		console.log('************ LOAD **************');
-		const scene2 = await SceneJsonImporter.load_data(data);
+		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
 		const new_builder1 = scene2.node('/COP/builder1') as BuilderCopNode;

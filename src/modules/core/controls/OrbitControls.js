@@ -136,6 +136,7 @@ var OrbitControls = function (object, domElement) {
 		var lastQuaternion = new Quaternion();
 
 		var twoPI = 2 * Math.PI;
+		var dampingEndEventSent = false;
 
 		return function update() {
 			var position = scope.object.position;
@@ -153,8 +154,23 @@ var OrbitControls = function (object, domElement) {
 			}
 
 			if (scope.enableDamping) {
-				spherical.theta += sphericalDelta.theta * scope.dampingFactor;
-				spherical.phi += sphericalDelta.phi * scope.dampingFactor;
+				// when the damping has done moving the camera, we send another endEvent.
+				// so that cameras using it can again update their transform params
+				// UPDATE:
+				// if using a return statement, this has actually side effects, where it seems that the controls
+				// stops working on some occasion.
+				const thetaDelta = sphericalDelta.theta * scope.dampingFactor;
+				const phiDelta = sphericalDelta.phi * scope.dampingFactor;
+				if (thetaDelta < EPS && phiDelta < EPS) {
+					if (!dampingEndEventSent) {
+						scope.dispatchEvent(endEvent);
+						dampingEndEventSent = true;
+					}
+				} else {
+					dampingEndEventSent = false;
+				}
+				spherical.theta += thetaDelta;
+				spherical.phi += phiDelta;
 			} else {
 				spherical.theta += sphericalDelta.theta;
 				spherical.phi += sphericalDelta.phi;

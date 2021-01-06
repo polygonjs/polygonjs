@@ -20,7 +20,7 @@ QUnit.test('scene save simple', async (assert) => {
 	geo1.p.r.y.set('$F+20');
 
 	const data = new SceneJsonExporter(scene).data();
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const camera_node = scene2.camerasController.masterCameraNode as PerspectiveCameraObjNode;
 	assert.deepEqual(camera_node.pv.t.toArray(), [0, 0, 10]);

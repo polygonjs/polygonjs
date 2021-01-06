@@ -26,6 +26,8 @@ enum KeysMode {
 const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
 
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
+	/** @param enable/disable */
+	enabled = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow pan */
 	allowPan = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow rotate */
@@ -138,6 +140,8 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	}
 
 	setup_controls(controls: OrbitControls) {
+		controls.enabled = this.pv.enabled;
+
 		controls.enablePan = this.pv.allowPan;
 		controls.enableRotate = this.pv.allowRotate;
 		controls.enableZoom = this.pv.allowZoom;
@@ -156,7 +160,9 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		controls.minPolarAngle = this.pv.polarAngleRange.x;
 		controls.maxPolarAngle = this.pv.polarAngleRange.y;
 		controls.target.copy(this.pv.target);
-		controls.update(); // necessary if target is not 0,0,0
+		if (controls.enabled) {
+			controls.update(); // necessary if target is not 0,0,0
+		}
 
 		controls.enableKeys = this.pv.enableKeys;
 		if (controls.enableKeys) {

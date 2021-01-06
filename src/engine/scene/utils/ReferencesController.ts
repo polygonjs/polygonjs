@@ -11,12 +11,12 @@ type BasePathParam = TypedPathParam<any>;
 // class BasePathParam extends Typ
 
 export class ReferencesController {
-	private _referenced_nodes_by_src_param_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
+	private _referenced_nodes_by_src_param_id: Map<CoreGraphNodeId, BaseNodeType | BaseParamType> = new Map();
 	private _referencing_params_by_referenced_node_id: Map<CoreGraphNodeId, BasePathParam[]> = new Map();
 	private _referencing_params_by_all_named_node_ids: Map<CoreGraphNodeId, BasePathParam[]> = new Map();
 	constructor(protected scene: PolyScene) {}
 
-	set_reference_from_param(src_param: BasePathParam, referenced_node: BaseNodeType) {
+	set_reference_from_param(src_param: BasePathParam, referenced_node: BaseNodeType | BaseParamType) {
 		this._referenced_nodes_by_src_param_id.set(src_param.graph_node_id, referenced_node);
 		MapUtils.push_on_array_at_entry(
 			this._referencing_params_by_referenced_node_id,

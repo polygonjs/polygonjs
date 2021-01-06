@@ -169,12 +169,16 @@ export class TimelineBuilder {
 	}
 
 	setPropertyName(name: string) {
-		this._property = this._property || new TimelineBuilderProperty();
-		this._property.setName(name);
+		this.property().setName(name);
+	}
+	property() {
+		return (this._property = this._property || new TimelineBuilderProperty());
+	}
+	propertyName() {
+		return this.property().name();
 	}
 	setPropertyValue(value: AnimPropertyTargetValue) {
-		this._property = this._property || new TimelineBuilderProperty();
-		this._property.set_target_value(value);
+		this.property().set_target_value(value);
 	}
 
 	populate(timeline: gsap.core.Timeline, scene: PolyScene) {

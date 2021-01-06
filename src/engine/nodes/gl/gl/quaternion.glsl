@@ -129,7 +129,7 @@ vec4 vectorAlign(vec3 start, vec3 dest){
 
 	return quatFromAxisAngle(axis, angle);
 }
-vec4 vectorAlignQithUp(vec3 start, vec3 dest, vec3 up){
+vec4 vectorAlignWithUp(vec3 start, vec3 dest, vec3 up){
 	vec4 rot1 = vectorAlign(start, dest);
 	up = normalize(up);
 

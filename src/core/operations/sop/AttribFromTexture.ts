@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {TypedPathParamValue, NODE_PATH_DEFAULT} from '../../Walker';
+import {TypedNodePathParamValue, NODE_PATH_DEFAULT} from '../../Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {AttribFromTexture} from '../../geometry/operation/AttribFromTexture';
 import {CoreObject} from '../../geometry/Object';
@@ -9,7 +9,7 @@ import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface AttribFromTextureSopParams extends DefaultOperationParams {
-	texture: TypedPathParamValue;
+	texture: TypedNodePathParamValue;
 	uvAttrib: string;
 	attrib: string;
 	add: number;
@@ -18,7 +18,7 @@ interface AttribFromTextureSopParams extends DefaultOperationParams {
 
 export class AttribFromTextureSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribFromTextureSopParams = {
-		texture: new TypedPathParamValue(NODE_PATH_DEFAULT.NODE.UV),
+		texture: new TypedNodePathParamValue(NODE_PATH_DEFAULT.NODE.UV),
 		uvAttrib: 'uv',
 		attrib: 'pscale',
 		add: 0,

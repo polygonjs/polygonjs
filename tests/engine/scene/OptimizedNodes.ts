@@ -14,10 +14,10 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	const data = new SceneJsonExporter(scene).data();
 
 	Poly.instance().setPlayerMode(false);
-	const scene_no_player = await SceneJsonImporter.load_data(data);
+	const scene_no_player = await SceneJsonImporter.loadData(data);
 
 	Poly.instance().setPlayerMode(true);
-	const scene_player = await SceneJsonImporter.load_data(data);
+	const scene_player = await SceneJsonImporter.loadData(data);
 	assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 8);
 	assert.equal(scene_player.nodesController.allNodes().length, scene_no_player.nodesController.allNodes().length);
 
@@ -43,10 +43,10 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	const data = new SceneJsonExporter(scene).data();
 
 	Poly.instance().setPlayerMode(false);
-	const scene_no_player = await SceneJsonImporter.load_data(data);
+	const scene_no_player = await SceneJsonImporter.loadData(data);
 
 	Poly.instance().setPlayerMode(true);
-	const scene_player = await SceneJsonImporter.load_data(data);
+	const scene_player = await SceneJsonImporter.loadData(data);
 	assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 33);
 	assert.equal(scene_player.nodesController.allNodes().length, scene_no_player.nodesController.allNodes().length - 1);
 
@@ -90,10 +90,10 @@ QUnit.test(
 		const data = new SceneJsonExporter(scene).data();
 
 		Poly.instance().setPlayerMode(false);
-		const scene_no_player = await SceneJsonImporter.load_data(data);
+		const scene_no_player = await SceneJsonImporter.loadData(data);
 
 		Poly.instance().setPlayerMode(true);
-		const scene_player = await SceneJsonImporter.load_data(data);
+		const scene_player = await SceneJsonImporter.loadData(data);
 		assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 72);
 		assert.equal(
 			scene_player.nodesController.allNodes().length,

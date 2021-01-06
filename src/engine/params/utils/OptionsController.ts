@@ -530,7 +530,7 @@ export class OptionsController {
 		}
 		let predecessor_names: string[] = [];
 		if (CoreType.isArray(visibility_options)) {
-			predecessor_names = visibility_options.map((options) => Object.keys(options)).flat();
+			predecessor_names = ArrayUtils.uniq(visibility_options.map((options) => Object.keys(options)).flat());
 		} else {
 			predecessor_names = Object.keys(visibility_options);
 		}
@@ -579,7 +579,11 @@ export class OptionsController {
 		const options = this._options[VISIBLE_IF_OPTION];
 		if (options) {
 			const params = this.visibility_predecessors();
-			const promises = params.map((p) => p.compute());
+			const promises = params.map((p) => {
+				if (p.is_dirty) {
+					p.compute();
+				}
+			});
 			this._programatic_visible_state = false;
 			await Promise.all(promises);
 

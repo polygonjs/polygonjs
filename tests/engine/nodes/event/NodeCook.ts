@@ -56,7 +56,7 @@ QUnit.test('event node_cook simple', async (assert) => {
 	const data = new SceneJsonExporter(scene).data();
 
 	console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const scatter1_2 = scene2.node(scatter1.fullPath()) as ScatterSopNode;
 	const merge1_2 = scene2.node(merge1.fullPath()) as MergeSopNode;

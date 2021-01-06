@@ -16,7 +16,7 @@ uniform float opacity;
 
 
 // https://github.com/mattatz/ShibuyaCrowd/blob/master/source/shaders/common/quaternion.glsl
-vec4 quat_mult(vec4 q1, vec4 q2)
+vec4 quatMult(vec4 q1, vec4 q2)
 {
 	return vec4(
 	q1.w * q2.x + q1.x * q2.w + q1.z * q2.y - q1.y * q2.z,
@@ -54,7 +54,7 @@ mat4 rotationMatrix(vec3 axis, float angle)
 }
 
 // https://www.geeks3d.com/20141201/how-to-rotate-a-vertex-by-a-quaternion-in-glsl/
-vec4 quat_from_axis_angle(vec3 axis, float angle)
+vec4 quatFromAxisAngle(vec3 axis, float angle)
 {
 	vec4 qr;
 	float half_angle = (angle * 0.5); // * 3.14159 / 180.0;
@@ -65,16 +65,16 @@ vec4 quat_from_axis_angle(vec3 axis, float angle)
 	qr.w = cos(half_angle);
 	return qr;
 }
-vec3 rotate_with_axis_angle(vec3 position, vec3 axis, float angle)
+vec3 rotateWithAxisAngle(vec3 position, vec3 axis, float angle)
 {
-	vec4 q = quat_from_axis_angle(axis, angle);
+	vec4 q = quatFromAxisAngle(axis, angle);
 	vec3 v = position.xyz;
 	return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
 }
 // vec3 applyQuaternionToVector( vec4 q, vec3 v ){
 // 	return v + 2.0 * cross( q.xyz, cross( q.xyz, v ) + q.w * v );
 // }
-vec3 rotate_with_quat( vec3 v, vec4 q )
+vec3 rotateWithQuat( vec3 v, vec4 q )
 {
 	// vec4 qv = multQuat( quat, vec4(vec, 0.0) );
 	// return multQuat( qv, vec4(-quat.x, -quat.y, -quat.z, quat.w) ).xyz;
@@ -98,7 +98,7 @@ vec3 rotate_with_quat( vec3 v, vec4 q )
 // 	return mat3(uu, vv, ww);
 // }
 
-float vector_angle(vec3 start, vec3 dest){
+float vectorAngle(vec3 start, vec3 dest){
 	start = normalize(start);
 	dest = normalize(dest);
 
@@ -113,7 +113,7 @@ float vector_angle(vec3 start, vec3 dest){
 }
 
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/#i-need-an-equivalent-of-glulookat-how-do-i-orient-an-object-towards-a-point-
-vec4 vector_align(vec3 start, vec3 dest){
+vec4 vectorAlign(vec3 start, vec3 dest){
 	start = normalize(start);
 	dest = normalize(dest);
 
@@ -142,10 +142,10 @@ vec4 vector_align(vec3 start, vec3 dest){
 
 	float angle = acos(cosTheta);
 
-	return quat_from_axis_angle(axis, angle);
+	return quatFromAxisAngle(axis, angle);
 }
-vec4 vector_align_with_up(vec3 start, vec3 dest, vec3 up){
-	vec4 rot1 = vector_align(start, dest);
+vec4 vectorAlignWithUp(vec3 start, vec3 dest, vec3 up){
+	vec4 rot1 = vectorAlign(start, dest);
 	up = normalize(up);
 
 	// Recompute desiredUp so that it's perpendicular to the direction
@@ -155,8 +155,8 @@ vec4 vector_align_with_up(vec3 start, vec3 dest, vec3 up){
 
 	// Because of the 1rst rotation, the up is probably completely screwed up.
 	// Find the rotation between the "up" of the rotated object, and the desired up
-	vec3 newUp = rotate_with_quat(vec3(0.0, 1.0, 0.0), rot1);//rot1 * vec3(0.0, 1.0, 0.0);
-	vec4 rot2 = vector_align(up, newUp);
+	vec3 newUp = rotateWithQuat(vec3(0.0, 1.0, 0.0), rot1);//rot1 * vec3(0.0, 1.0, 0.0);
+	vec4 rot2 = vectorAlign(up, newUp);
 
 	// return rot1;
 	return rot2;
@@ -166,10 +166,10 @@ vec4 vector_align_with_up(vec3 start, vec3 dest, vec3 up){
 }
 
 // https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
-float quat_to_angle(vec4 q){
+float quatToAngle(vec4 q){
 	return 2.0 * acos(q.w);
 }
-vec3 quat_to_axis(vec4 q){
+vec3 quatToAxis(vec4 q){
 	return vec3(
 		q.x / sqrt(1.0-q.w*q.w),
 		q.y / sqrt(1.0-q.w*q.w),
@@ -180,7 +180,7 @@ vec3 quat_to_axis(vec4 q){
 vec4 align(vec3 dir, vec3 up){
 	vec3 start_dir = vec3(0.0, 0.0, 1.0);
 	vec3 start_up = vec3(0.0, 1.0, 0.0);
-	vec4 rot1 = vector_align(start_dir, dir);
+	vec4 rot1 = vectorAlign(start_dir, dir);
 	up = normalize(up);
 
 	// Recompute desiredUp so that it's perpendicular to the direction
@@ -193,11 +193,11 @@ vec4 align(vec3 dir, vec3 up){
 
 	// Because of the 1rst rotation, the up is probably completely screwed up.
 	// Find the rotation between the "up" of the rotated object, and the desired up
-	vec3 newUp = rotate_with_quat(start_up, rot1);//rot1 * vec3(0.0, 1.0, 0.0);
-	vec4 rot2 = vector_align(normalize(newUp), up);
+	vec3 newUp = rotateWithQuat(start_up, rot1);//rot1 * vec3(0.0, 1.0, 0.0);
+	vec4 rot2 = vectorAlign(normalize(newUp), up);
 
 	// return rot1;
-	return quat_mult(rot1, rot2);
+	return quatMult(rot1, rot2);
 	// return rot2 * rot1;
 
 }
@@ -251,7 +251,7 @@ void main() {
 		vec3 v_POLY_ifThen1_subnetInput1_position = v_POLY_globals1_position;
 	
 		// /MAT/meshBasicBuilder1/ifThen1/rotate1
-		vec3 v_POLY_ifThen1_rotate1_val = rotate_with_axis_angle(v_POLY_ifThen1_subnetInput1_position, vec3(0.0, 1.0, 0.0), 0.0);
+		vec3 v_POLY_ifThen1_rotate1_val = rotateWithAxisAngle(v_POLY_ifThen1_subnetInput1_position, vec3(0.0, 1.0, 0.0), 0.0);
 	
 		// /MAT/meshBasicBuilder1/ifThen1/subnetOutput1
 		v_POLY_ifThen1_position = v_POLY_ifThen1_rotate1_val;

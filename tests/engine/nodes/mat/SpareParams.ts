@@ -124,7 +124,7 @@ QUnit.test(
 		// the param is not saved in the export data, since it will be re-created
 
 		console.log('************ LOAD **************');
-		const scene2 = await SceneJsonImporter.load_data(data);
+		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
@@ -205,7 +205,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	// the param is not saved in the export data, since it will be re-created
 
 	console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
 	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name}`)! as MeshBasicBuilderMatNode;
@@ -283,7 +283,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 
 	// the param is not saved in the export data, since it will be re-created
 	console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name}`)! as MeshBasicBuilderMatNode;

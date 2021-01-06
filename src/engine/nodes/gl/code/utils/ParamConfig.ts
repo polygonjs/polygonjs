@@ -81,6 +81,8 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 				return {value: 0};
 			case ParamType.NODE_PATH:
 				return {value: 0};
+			case ParamType.PARAM_PATH:
+				return {value: 0};
 			// case ParamType.STRING: return {type: 't', value: null} // new Texture()}
 			case ParamType.RAMP:
 				return {value: null}; // new Texture()}

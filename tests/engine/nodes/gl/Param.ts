@@ -33,7 +33,7 @@ QUnit.test('gl param updates its output type correctly when scene is loaded', as
 	assert.equal(param1.pv.type, 3);
 
 	const data = new SceneJsonExporter(scene).data();
-	const scene2 = await SceneJsonImporter.load_data(data);
+	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
 	const material_basic_builder2 = scene.node('/MAT/meshBasicBuilder1')!;

@@ -10,7 +10,7 @@ export class SceneJsonImporter {
 	private _base_operations_composer_nodes_with_resolve_required: OperationsComposerSopNode[] | undefined;
 	constructor(private _data: SceneJsonExporterData) {}
 
-	static async load_data(data: SceneJsonExporterData) {
+	static async loadData(data: SceneJsonExporterData) {
 		const importer = new SceneJsonImporter(data);
 		return await importer.scene();
 	}

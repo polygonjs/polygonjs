@@ -8,10 +8,13 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
 import {DeviceOrientationControls} from '../../../modules/three/examples/jsm/controls/DeviceOrientationControls';
-
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
-class CameraDeviceOrientationControlsEventParamsConfig extends NodeParamsConfig {}
+
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class CameraDeviceOrientationControlsEventParamsConfig extends NodeParamsConfig {
+	/** @param enable/disable */
+	enabled = ParamConfig.BOOLEAN(1);
+}
 const ParamsConfig = new CameraDeviceOrientationControlsEventParamsConfig();
 
 export class CameraDeviceOrientationControlsEventNode extends TypedCameraControlsEventNode<CameraDeviceOrientationControlsEventParamsConfig> {
@@ -29,7 +32,9 @@ export class CameraDeviceOrientationControlsEventNode extends TypedCameraControl
 		return controls;
 	}
 
-	setup_controls(controls: CameraControls) {}
+	setup_controls(controls: CameraControls) {
+		controls.enabled = this.pv.enabled;
+	}
 
 	update_required() {
 		return true;

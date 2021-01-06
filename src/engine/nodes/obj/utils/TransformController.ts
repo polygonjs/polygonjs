@@ -6,6 +6,7 @@ import {Object3D} from 'three/src/core/Object3D';
 // import {Vector3} from 'three/src/math/Vector3';
 // import {Quaternion} from 'three/src/math/Quaternion';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {BaseNodeType} from '../../_Base';
 
 interface TransformedParamConfigDefaultParams {
 	matrixAutoUpdate?: boolean;
@@ -39,6 +40,11 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		// pivot = ParamConfig.VECTOR3([0, 0, 0]);
 		/** @param set for the matrix to be updated every frame */
 		matrixAutoUpdate = ParamConfig.BOOLEAN(matrixAutoUpdate ? 1 : 0);
+		updateTransformFromObject = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType) => {
+				TransformController.PARAM_CALLBACK_update_transform_from_object(node as TransformedObjNode);
+			},
+		});
 		tlookAt = ParamConfig.BOOLEAN(0);
 		lookAtPos = ParamConfig.VECTOR3([0, 0, 0], {
 			visibleIf: {tlookAt: 1},
@@ -184,5 +190,14 @@ export class TransformController {
 			object.updateMatrixWorld(true);
 		}
 		CoreTransform.set_params_from_matrix(object.matrixWorld, this.node, {scale: true});
+	}
+
+	//
+	//
+	// CALLBACK
+	//
+	//
+	static PARAM_CALLBACK_update_transform_from_object(node: TransformedObjNode) {
+		node.transform_controller.update_node_transform_params_from_object();
 	}
 }

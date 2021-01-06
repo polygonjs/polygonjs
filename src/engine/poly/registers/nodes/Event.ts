@@ -7,6 +7,7 @@ import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/Cam
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraNavigationBeaconsEventNode} from '../../../nodes/event/CameraNavigationBeacons';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
+import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
@@ -31,6 +32,7 @@ export interface EventNodeChildrenMap {
 	cameraMapControls: CameraOrbitControlsEventNode;
 	cameraNavigationBeacons: CameraNavigationBeaconsEventNode;
 	cameraOrbitControls: CameraMapControlsEventNode;
+	delay: DelayEventNode;
 	// code: CodeEventNode;
 	keyboard: KeyboardEventNode;
 	limit: LimitEventNode;
@@ -58,6 +60,7 @@ export class EventRegister {
 		poly.registerNode(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraNavigationBeaconsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(DelayEventNode, CATEGORY_EVENT.MISC);
 		// poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.registerNode(KeyboardEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(LimitEventNode, CATEGORY_EVENT.MISC);

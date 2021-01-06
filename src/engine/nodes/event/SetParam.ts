@@ -51,7 +51,7 @@ const TYPE_STRING = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.STRING);
 const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
 	/** @param the parameter to update */
-	param = ParamConfig.OPERATOR_PATH('/geo1/display', {
+	param = ParamConfig.PARAM_PATH('/geo1/display', {
 		paramSelection: true,
 		computeOnDirty: true,
 	});
@@ -131,7 +131,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		if (this.p.param.is_dirty) {
 			await this.p.param.compute();
 		}
-		const param = this.p.param.found_param();
+		const param = this.p.param.value.param();
 		if (param) {
 			const new_value = await this._new_param_value(param);
 			if (new_value != null) {

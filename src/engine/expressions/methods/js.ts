@@ -14,14 +14,17 @@ export class JsExpression extends BaseMethod {
 			this._function = this._function || this._create_function(arg);
 			if (this._function) {
 				try {
-					val = this._function();
-				} catch (e) {}
+					val = this._function(this.param.scene, this.param.node, this.param);
+				} catch (e) {
+					console.warn(`expression error`);
+					console.warn(e);
+				}
 			}
 		}
 		return val;
 	}
 
 	private _create_function(content: string) {
-		return new Function(`return ${content}`);
+		return new Function('scene', 'node', 'param', `return ${content}`);
 	}
 }

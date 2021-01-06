@@ -218,6 +218,12 @@ export class ParamConfig {
 	) {
 		return new ParamTemplate<ParamType.NODE_PATH>(ParamType.NODE_PATH, init_value, options);
 	}
+	static PARAM_PATH(
+		init_value: ParamInitValuesTypeMap[ParamType.PARAM_PATH],
+		options?: ParamOptionsByTypeMap[ParamType.PARAM_PATH]
+	) {
+		return new ParamTemplate<ParamType.PARAM_PATH>(ParamType.PARAM_PATH, init_value, options);
+	}
 }
 
 export class NodeParamsConfig implements PolyDictionary<ParamTemplate<ParamType>> {

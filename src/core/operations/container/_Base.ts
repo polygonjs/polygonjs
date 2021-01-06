@@ -4,7 +4,7 @@ import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
-import {TypedPathParamValue} from '../../Walker';
+import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../Walker';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {BaseOperation, DefaultOperationParams, DefaultOperationParam} from '../_Base';
 import {ParamInitValueSerializedTypeMap} from '../../../engine/params/types/ParamInitValueSerializedTypeMap';
@@ -15,7 +15,7 @@ type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerialized
 
 export class BaseOperationContainer {
 	protected params: DefaultOperationParams = {};
-	private _path_params: TypedPathParamValue[] | undefined;
+	private _path_params: TypedNodePathParamValue[] | undefined;
 
 	constructor(protected operation: BaseOperation, protected name: string, init_params: ParamsInitData) {
 		this._apply_default_params();
@@ -75,7 +75,7 @@ export class BaseOperationContainer {
 		if (CoreType.isNumber(param_data) || CoreType.isBoolean(param_data) || CoreType.isString(param_data)) {
 			return param_data;
 		}
-		if (param_data instanceof TypedPathParamValue) {
+		if (param_data instanceof TypedNodePathParamValue) {
 			const cloned = param_data.clone();
 			if (!this._path_params) {
 				this._path_params = [];
@@ -108,8 +108,13 @@ export class BaseOperationContainer {
 			}
 		}
 		if (CoreType.isString(param_data)) {
-			if (default_param && default_param instanceof TypedPathParamValue) {
-				return default_param.set_path(param_data);
+			if (default_param) {
+				if (default_param instanceof TypedNodePathParamValue) {
+					return default_param.set_path(param_data);
+				}
+				if (default_param instanceof TypedParamPathParamValue) {
+					return default_param.set_path(param_data);
+				}
 			} else {
 				return param_data;
 			}

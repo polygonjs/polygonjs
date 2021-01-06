@@ -1,19 +1,24 @@
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+
 export class CoreType {
-
-	static isNumber(value: any): value is number{
-		return typeof value == 'number'
+	static isNumber(value: any): value is number {
+		return typeof value == 'number';
 	}
-	static isString(value:any): value is string{
-		return typeof value == 'string'
+	static isVector(value: any): value is Vector2 | Vector3 | Vector4 {
+		return value instanceof Vector2 || value instanceof Vector3 || value instanceof Vector4;
 	}
-	static isBoolean(value:any): value is boolean{
-		return value === true || value === false
+	static isString(value: any): value is string {
+		return typeof value == 'string';
 	}
-	static isNaN(value:any): boolean{
-		return isNaN(value)
+	static isBoolean(value: any): value is boolean {
+		return value === true || value === false;
 	}
-	static isArray(value:any): value is any[]{
-		return Array.isArray(value)
+	static isNaN(value: any): boolean {
+		return isNaN(value);
 	}
-
+	static isArray(value: any): value is any[] {
+		return Array.isArray(value);
+	}
 }

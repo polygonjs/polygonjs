@@ -73,7 +73,7 @@ QUnit.test(
 
 		const data = new SceneJsonExporter(scene).data();
 		console.log('************ LOAD **************');
-		const scene2 = await SceneJsonImporter.load_data(data);
+		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.p.color;
@@ -97,7 +97,7 @@ QUnit.test(
 
 		const data = new SceneJsonExporter(scene).data();
 		console.log('************ LOAD **************');
-		const scene2 = await SceneJsonImporter.load_data(data);
+		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.params.get('color2')! as ColorParam;
