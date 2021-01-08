@@ -59,16 +59,16 @@ export class TimeController {
 	setFrameRange(start_frame: number, end_frame: number) {
 		this._frame_range[0] = Math.floor(start_frame);
 		this._frame_range[1] = Math.floor(end_frame);
-		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	setFrameRange_locked(start_locked: boolean, end_locked: boolean) {
 		this._frameRangeLocked[0] = start_locked;
 		this._frameRangeLocked[1] = end_locked;
-		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
 	set_realtimeState(state: boolean) {
 		this._realtimeState = state;
-		this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.REALTIME_STATUS_UPDATED);
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.REALTIME_STATUS_UPDATED);
 	}
 	// set_fps(fps: number) {
 	// 	this._fps = Math.floor(fps);
@@ -90,7 +90,7 @@ export class TimeController {
 			}
 
 			// update time dependents
-			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
+			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
 			this.scene.uniforms_controller.update_time_dependent_uniform_owners();
 
 			// we block updates here, so that dependent nodes only cook once
@@ -99,7 +99,7 @@ export class TimeController {
 			this.scene.cooker.unblock();
 
 			// dispatch events after nodes have cooked
-			this.scene.events_dispatcher.scene_events_controller.process_event(this.TICK_EVENT_CONTEXT);
+			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.TICK_EVENT_CONTEXT);
 		}
 	}
 
@@ -149,16 +149,16 @@ export class TimeController {
 		if (this._playing == true) {
 			this._playing = false;
 			// TODO: try and unify the dispatch controller and events dispatcher
-			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.events_dispatcher.scene_events_controller.process_event(this.PAUSE_EVENT_CONTEXT);
+			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.PAUSE_EVENT_CONTEXT);
 		}
 	}
 	play() {
 		if (this._playing !== true) {
 			this._playing = true;
 			this._prev_performance_now = performance.now();
-			this.scene.dispatch_controller.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.events_dispatcher.scene_events_controller.process_event(this.PLAY_EVENT_CONTEXT);
+			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.PLAY_EVENT_CONTEXT);
 		}
 	}
 	toggle_play_pause() {

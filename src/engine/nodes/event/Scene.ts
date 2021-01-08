@@ -104,7 +104,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 	private update_time_dependency() {
 		if (this.pv.treachedTime) {
 			this.graph_node = this.graph_node || new CoreGraphNode(this.scene, 'scene_node_time_graph_node');
-			this.graph_node.add_graph_input(this.scene.time_controller.graph_node);
+			this.graph_node.add_graph_input(this.scene.timeController.graph_node);
 			this.graph_node.add_post_dirty_hook('time_update', this.on_frame_update.bind(this));
 		} else {
 			if (this.graph_node) {

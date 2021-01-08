@@ -42,7 +42,7 @@ export class MouseEventsController extends BaseSceneEventsController<MouseEvent,
 	type() {
 		return 'mouse';
 	}
-	accepted_event_types() {
+	acceptedEventTypes() {
 		return ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`);
 	}
 	// accepts_event(event: MouseEvent) {

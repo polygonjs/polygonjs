@@ -257,7 +257,6 @@ export class SopRegister {
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
-		poly.registerNode(AnimationsSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
@@ -278,7 +277,6 @@ export class SopRegister {
 		// poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
-		poly.registerNode(CopSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(Css2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
@@ -287,7 +285,6 @@ export class SopRegister {
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(EventsSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FuseSopNode, CATEGORY_SOP.MODIFIER);
@@ -303,7 +300,6 @@ export class SopRegister {
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(MaterialsSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
@@ -317,9 +313,7 @@ export class SopRegister {
 		poly.registerNode(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PolySopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(PolywireSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(PostProcessSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(RaySopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(RenderersSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(ResampleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(RestAttributesSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.INPUT);
@@ -354,5 +348,12 @@ export class SopRegister {
 		poly.registerNode(TransformResetSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
+		// networks
+		poly.registerNode(AnimationsSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(CopSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(EventsSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(MaterialsSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(PostProcessSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(RenderersSopNode, CATEGORY_SOP.NETWORK);
 	}
 }

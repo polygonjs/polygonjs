@@ -3,8 +3,8 @@
  *
  */
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {BaseNetworkSopNode} from './_Base';
-import {NodeContext} from '../../poly/NodeContext';
+import {BaseNetworkSopNode} from './_BaseManager';
+import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
@@ -14,7 +14,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 export class PostProcessSopNode extends BaseNetworkSopNode<PostProcessNetworkParamsConfig> {
 	params_config = new PostProcessNetworkParamsConfig();
 	static type() {
-		return 'postProcess';
+		return NetworkNodeType.POST;
 	}
 	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
 	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(

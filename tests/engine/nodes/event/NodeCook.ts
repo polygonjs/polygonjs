@@ -32,7 +32,7 @@ QUnit.test('event node_cook simple', async (assert) => {
 	merge1.setInput(1, scatter2);
 	merge1.setInput(2, scatter3);
 
-	assert.ok(scene.loading_controller.loaded);
+	assert.ok(scene.loadingController.loaded());
 	node_cook1.p.mask.set('*scatter*');
 	set_param1.p.param.set(switch1.p.input.fullPath());
 	set_param1.p.number.set(1);

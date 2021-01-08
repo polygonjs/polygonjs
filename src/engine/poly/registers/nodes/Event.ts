@@ -1,22 +1,28 @@
 import {CATEGORY_EVENT} from './Category';
 
 import {AnimationEventNode} from '../../../nodes/event/Animation';
+import {AnimationsEventNode} from '../../../nodes/event/Animations';
 import {AnyEventNode} from '../../../nodes/event/Any';
 import {ButtonEventNode} from '../../../nodes/event/Button';
 import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraNavigationBeaconsEventNode} from '../../../nodes/event/CameraNavigationBeacons';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
+import {CopEventNode} from '../../../nodes/event/Cop';
 import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
+import {EventsEventNode} from '../../../nodes/event/Events';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
+import {MaterialsEventNode} from '../../../nodes/event/Materials';
 import {MessageEventNode} from '../../../nodes/event/Message';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {NullEventNode} from '../../../nodes/event/Null';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
+import {PostProcessEventNode} from '../../../nodes/event/PostProcess';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
+import {RenderersEventNode} from '../../../nodes/event/Renderers';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
@@ -48,6 +54,14 @@ export interface EventNodeChildrenMap {
 	sequence: SequenceEventNode;
 	timer: TimerEventNode;
 	viewer: ViewerEventNode;
+
+	// networks
+	animations: AnimationsEventNode;
+	cop: CopEventNode;
+	events: EventsEventNode;
+	materials: MaterialsEventNode;
+	postProcess: PostProcessEventNode;
+	renderers: RenderersEventNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -76,5 +90,11 @@ export class EventRegister {
 		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
+		// networks
+		poly.registerNode(AnimationsEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(CopEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(EventsEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(MaterialsEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(PostProcessEventNode, CATEGORY_EVENT.NETWORK);
 	}
 }

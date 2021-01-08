@@ -8,12 +8,12 @@ export class EmitController {
 	_count_by_event_name: PolyDictionary<number> = {};
 	constructor(protected param: BaseParamType) {}
 
-	get emit_allowed(): boolean {
+	emitAllowed(): boolean {
 		if (this._blocked_emit === true) {
 			return false;
 		}
 
-		if (this.param.scene.loading_controller.is_loading) {
+		if (this.param.scene.loadingController.isLoading()) {
 			return false;
 		}
 		// TODO: should I also prevent nodes from updating
@@ -21,42 +21,46 @@ export class EmitController {
 		//node = this.node()
 		//node? && !node.is_cooking() && this.scene().emit_allowed() # this prevents a camera from updating its param for instance
 		// although maybe I should send a dirty to the store, and then that store queries the param?
-		return this.param.scene.dispatch_controller.emit_allowed;
+		return this.param.scene.dispatchController.emitAllowed();
 	}
 
-	block_emit() {
+	blockEmit() {
 		this._blocked_emit = true;
 		if (this.param.is_multiple && this.param.components) {
-			this.param.components.forEach((c) => c.emit_controller.block_emit());
+			for (let component of this.param.components) {
+				component.emitController.blockEmit();
+			}
 		}
 		return true;
 	}
-	unblock_emit() {
+	unblockEmit() {
 		this._blocked_emit = false;
 		if (this.param.is_multiple && this.param.components) {
-			this.param.components.forEach((c) => c.emit_controller.unblock_emit());
+			for (let component of this.param.components) {
+				component.emitController.unblockEmit();
+			}
 		}
 		return true;
 	}
-	block_parent_emit() {
+	blockParentEmit() {
 		this._blocked_parent_emit = true;
 		return true;
 	}
-	unblock_parent_emit() {
+	unblockParentEmit() {
 		this._blocked_parent_emit = false;
 		return true;
 	}
 
-	increment_count(event_name: ParamEvent) {
+	incrementCount(event_name: ParamEvent) {
 		this._count_by_event_name[event_name] = this._count_by_event_name[event_name] || 0;
 		this._count_by_event_name[event_name] += 1;
 	}
-	events_count(event_name: ParamEvent): number {
+	eventsCount(event_name: ParamEvent): number {
 		return this._count_by_event_name[event_name] || 0;
 	}
 
 	emit(event: ParamEvent) {
-		if (this.emit_allowed) {
+		if (this.emitAllowed()) {
 			this.param.emit(event);
 
 			if (this.param.parent_param != null && this._blocked_parent_emit !== true) {
@@ -64,18 +68,4 @@ export class EmitController {
 			}
 		}
 	}
-	// emit_param_updated() {
-	// 	console.log('emit_param_updated', this.param.name, this.emit_allowed);
-	// 	if (this.emit_allowed) {
-	// 		this.param.emit(ParamEvent.UPDATED);
-
-	// 		if (this.param.parent_param != null && this._blocked_parent_emit !== true) {
-	// 			this.param.parent_param.emit(ParamEvent.UPDATED);
-	// 		}
-	// 	}
-	// 	//else
-	// 	//	this.emit('param_updated')
-
-	// 	// return null
-	// }
 }

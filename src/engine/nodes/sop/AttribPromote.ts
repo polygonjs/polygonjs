@@ -53,7 +53,7 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 		this.io.inputs.init_inputs_cloned_state(AttribPromoteSopOperation.INPUT_CLONED_STATE);
 		// this.uiData.set_icon('sort-amount-up');
 
-		this.scene.dispatch_controller.on_add_listener(() => {
+		this.scene.dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name, this.p.classFrom, this.p.classTo], () => {
 					if (this.pv.name != '') {

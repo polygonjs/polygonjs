@@ -24,7 +24,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	private static _next_viewer_id = 0;
 	private _id: Readonly<number>;
 
-	get active() {
+	active() {
 		return this._active;
 	}
 	activate() {
@@ -35,43 +35,39 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	}
 
 	protected _cameras_controller: ViewerCamerasController | undefined;
-	get cameras_controller(): ViewerCamerasController {
+	get camerasController(): ViewerCamerasController {
 		return (this._cameras_controller = this._cameras_controller || new ViewerCamerasController(this));
 	}
 	protected _controls_controller: ViewerControlsController | undefined;
-	get controls_controller() {
+	get controlsController() {
 		return this._controls_controller;
 	}
 	protected _events_controller: ViewerEventsController | undefined;
-	get events_controller(): ViewerEventsController {
+	get eventsController(): ViewerEventsController {
 		return (this._events_controller = this._events_controller || new ViewerEventsController(this));
 	}
 	protected _webgl_controller: WebGLController | undefined;
-	get webgl_controller(): WebGLController {
+	get webglController(): WebGLController {
 		return (this._webgl_controller = this._webgl_controller || new WebGLController(this));
 	}
 
 	constructor(protected _container: HTMLElement, protected _scene: PolyScene, protected _camera_node: C) {
-		// this._display_scene = this._scene.defaultScene;
-		// this._init_from_scene(this._camera_node).then(() => {
-		// this._build();
-		// });
 		this._id = TypedViewer._next_viewer_id++;
-		this._scene.viewers_register.register_viewer(this);
+		this._scene.viewersRegister.registerViewer(this);
 	}
-	get container() {
+	container() {
 		return this._container;
 	}
 	get scene() {
 		return this._scene;
 	}
-	get canvas() {
+	canvas() {
 		return this._canvas;
 	}
-	get camera_node() {
+	cameraNode() {
 		return this._camera_node;
 	}
-	get camera_controls_controller(): ThreejsCameraControlsController | undefined {
+	get cameraControlsController(): ThreejsCameraControlsController | undefined {
 		return undefined;
 	}
 	get id() {
@@ -85,8 +81,8 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// }
 	// protected abstract _build(): void;
 	dispose() {
-		this._scene.viewers_register.unregister_viewer(this);
-		this.events_controller.dispose();
+		this._scene.viewersRegister.unregisterViewer(this);
+		this.eventsController.dispose();
 		let child: Element;
 		while ((child = this._container.children[0])) {
 			this._container.removeChild(child);
@@ -94,11 +90,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	}
 
 	// html container class
-	reset_container_class() {
-		this.container.classList.remove(HOVERED_CLASS_NAME);
+	resetContainerClass() {
+		this.container().classList.remove(HOVERED_CLASS_NAME);
 	}
-	set_container_class_hovered() {
-		this.container.classList.add(HOVERED_CLASS_NAME);
+	setContainerClassHovered() {
+		this.container().classList.add(HOVERED_CLASS_NAME);
 	}
 }
 

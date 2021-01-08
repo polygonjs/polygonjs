@@ -30,7 +30,7 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 
-		this.scene.dispatch_controller.on_add_listener(() => {
+		this.scene.dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});

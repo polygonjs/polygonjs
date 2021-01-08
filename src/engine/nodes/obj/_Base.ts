@@ -51,7 +51,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// TODO call set_used_in_scene(false) when node is deleted
 	// set_used_in_scene(state: boolean) {
 	// 	this._used_in_scene = state;
-	// 	if (!this.scene.loading_controller.is_loading) {
+	// 	if (!this.scene.loading_controller.isLoading()) {
 	// 		const root = this.parent as ObjectsManagerNode;
 	// 		if (root) {
 	// 			root.update_object(this);

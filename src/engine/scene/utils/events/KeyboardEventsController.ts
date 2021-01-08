@@ -18,7 +18,7 @@ export class KeyboardEventsController extends BaseSceneEventsController<Keyboard
 	type() {
 		return 'keyboard';
 	}
-	accepted_event_types() {
+	acceptedEventTypes() {
 		return ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`);
 	}
 	// accepts_event(event: MouseEvent) {

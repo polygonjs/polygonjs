@@ -152,7 +152,7 @@ import './engine/nodes/sop/InstancesCount';
 import './engine/nodes/sop/Jitter';
 import './engine/nodes/sop/Layer';
 import './engine/nodes/sop/Line';
-import './engine/nodes/sop/LOD';
+import './engine/nodes/sop/Lod';
 import './engine/nodes/sop/Material';
 import './engine/nodes/sop/Merge';
 import './engine/nodes/sop/Noise';

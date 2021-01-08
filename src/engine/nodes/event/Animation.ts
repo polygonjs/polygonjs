@@ -16,7 +16,7 @@ enum AnimationEventInput {
 	STOP = 'stop',
 	UPDATE = 'update',
 }
-enum AnimationEventOutput {
+export enum AnimationEventOutput {
 	START = 'start',
 	COMPLETE = 'completed',
 }
@@ -24,7 +24,7 @@ enum AnimationEventOutput {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AnimationEventParamsConfig extends NodeParamsConfig {
 	/** @parm animation node */
-	animation = ParamConfig.OPERATOR_PATH('/ANIM/OUT', {
+	animation = ParamConfig.NODE_PATH('/ANIM/OUT', {
 		nodeSelection: {context: NodeContext.ANIM},
 		dependentOnFoundNode: false,
 	});
@@ -80,7 +80,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (param.is_dirty) {
 			await param.compute();
 		}
-		const node = param.found_node_with_context(NodeContext.ANIM);
+		const node = param.value.ensure_node_context(NodeContext.ANIM);
 		if (!node) {
 			return;
 		}

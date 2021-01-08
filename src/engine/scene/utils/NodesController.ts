@@ -23,6 +23,21 @@ export class NodesController {
 	get root() {
 		return this._root;
 	}
+	private _traverseNode(parent: BaseNodeType, callback: (node: BaseNodeType) => void) {
+		const nodes = parent.children();
+		if (!nodes || nodes.length == 0) {
+			return;
+		}
+
+		for (let node of nodes) {
+			callback(node);
+
+			if (node.children_controller) {
+				this._traverseNode(node, callback);
+			}
+		}
+	}
+
 	// objectsFromMask(mask: string): Object3D[] {
 	// 	const masks = mask.split(' ');
 	// 	const child_nodes = this.root.children() as BaseObjNodeType[];
@@ -114,48 +129,59 @@ export class NodesController {
 		const node_type = node.type;
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];
 	}
+	nodesByType(type: string): BaseNodeType[] {
+		const list: BaseNodeType[] = [];
 
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.ANIM]>(
+		this._traverseNode(this.scene.root, (node) => {
+			if (node.type == type) {
+				list.push(node);
+			}
+		});
+
+		return list;
+	}
+
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.ANIM]>(
 		context: NodeContext.ANIM,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.ANIM][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.COP]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.COP]>(
 		context: NodeContext.COP,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.COP][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.EVENT]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.EVENT]>(
 		context: NodeContext.EVENT,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.EVENT][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.GL]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.GL]>(
 		context: NodeContext.GL,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.GL][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.JS]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.JS]>(
 		context: NodeContext.JS,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.JS][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.MAT]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.MAT]>(
 		context: NodeContext.MAT,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.MAT][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.OBJ]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.OBJ]>(
 		context: NodeContext.OBJ,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.OBJ][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.POST]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.POST]>(
 		context: NodeContext.POST,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.POST][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.ROP]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.ROP]>(
 		context: NodeContext.ROP,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.ROP][T][];
-	instanciated_nodes<T extends keyof NodeChildrenMapByContext[NodeContext.SOP]>(
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.SOP]>(
 		context: NodeContext.SOP,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.SOP][T][];
-	instanciated_nodes<NC extends NodeContext>(context: NC, node_type: string) {
+	nodesByContextAndType<NC extends NodeContext>(context: NC, node_type: string) {
 		const nodes = [];
 		const nodes_for_context = this._instanciated_nodes_by_context_and_type[context];
 		if (nodes_for_context) {

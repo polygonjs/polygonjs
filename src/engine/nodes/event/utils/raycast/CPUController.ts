@@ -43,7 +43,7 @@ export class RaycastCPUController {
 	}
 
 	update_mouse(context: EventContext<MouseEvent>) {
-		if (!(context.canvas && context.camera_node)) {
+		if (!(context.canvas && context.cameraNode)) {
 			return;
 		}
 		if (context.event instanceof MouseEvent) {
@@ -52,7 +52,7 @@ export class RaycastCPUController {
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
 		}
-		this._raycaster.setFromCamera(this._mouse, context.camera_node.object);
+		this._raycaster.setFromCamera(this._mouse, context.cameraNode.object);
 	}
 
 	process_event(context: EventContext<MouseEvent>) {
@@ -250,7 +250,7 @@ export class RaycastCPUController {
 			points_param.threshold = this._node.pv.pointsThreshold;
 		}
 
-		let camera_node: Readonly<BaseCameraObjNodeType> | undefined = context.camera_node;
+		let camera_node: Readonly<BaseCameraObjNodeType> | undefined = context.cameraNode;
 		if (this._node.pv.overrideCamera) {
 			if (this._node.pv.overrideRay) {
 				this._raycaster.ray.origin.copy(this._node.pv.rayOrigin);

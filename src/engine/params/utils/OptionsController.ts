@@ -269,7 +269,7 @@ export class OptionsController {
 		// we only allow execution when scene is loaded
 		// to avoid errors such as an operator_path param
 		// executing its callback before the node it points to is created
-		if (!this.node.scene.loading_controller.loaded) {
+		if (!this.node.scene.loadingController.loaded()) {
 			return;
 		}
 		const callback = this.get_callback();

@@ -12,8 +12,8 @@ export class ViewerCamerasController {
 
 	constructor(private _viewer: BaseViewerType) {}
 
-	get camera_node() {
-		return this._viewer.camera_node;
+	cameraNode() {
+		return this._viewer.cameraNode();
 	}
 	get size() {
 		return this._size;
@@ -22,32 +22,31 @@ export class ViewerCamerasController {
 		return this._aspect;
 	}
 
-	compute_size_and_aspect() {
+	computeSizeAndAspect() {
 		this._update_size();
-		this.camera_node.scene.uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
+		this.cameraNode().scene.uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
 		this._aspect = this._get_aspect();
 	}
 
 	private _update_size() {
-		this._size.x = this._viewer.container.offsetWidth;
-		this._size.y = this._viewer.container.offsetHeight;
+		this._size.x = this._viewer.container().offsetWidth;
+		this._size.y = this._viewer.container().offsetHeight;
 	}
 	private _get_aspect(): number {
 		return this._size.x / this._size.y;
 	}
 
-	update_camera_aspect() {
-		this.camera_node.setup_for_aspect_ratio(this._aspect);
+	updateCameraAspect() {
+		this.cameraNode().setup_for_aspect_ratio(this._aspect);
 	}
 
-	async prepare_current_camera() {
-		await this.camera_node.requestContainer(); // ensure the camera is cooked
+	async prepareCurrentCamera() {
+		await this.cameraNode().requestContainer(); // ensure the camera is cooked
 		await this._update_from_camera_container(); //container, graph_node_id)
 	}
 
 	async _update_from_camera_container() {
-		this.update_camera_aspect();
-
-		await this._viewer.controls_controller?.create_controls();
+		this.updateCameraAspect();
+		await this._viewer.controlsController?.create_controls();
 	}
 }

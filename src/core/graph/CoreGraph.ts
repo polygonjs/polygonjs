@@ -62,7 +62,7 @@ export class CoreGraph {
 			// this can be useful when we know that the connection will not create a cycle,
 			// such as when connecting params or inputs to a node
 			if (check_if_graph_may_have_cycle) {
-				const scene_loading = this._scene ? this._scene.loading_controller.is_loading : true;
+				const scene_loading = this._scene ? this._scene.loadingController.isLoading() : true;
 				check_if_graph_may_have_cycle = !scene_loading;
 			}
 			let graph_would_have_cycle = false;

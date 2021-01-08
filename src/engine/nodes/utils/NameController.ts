@@ -54,10 +54,10 @@ export class NameController {
 		}
 
 		if (this.node.lifecycle.creation_completed) {
-			this.node.scene.missing_expression_references_controller.check_for_missing_references(this.node);
-			this.node.scene.expressions_controller.regenerate_referring_expressions(this.node);
+			this.node.scene.missingExpressionReferencesController.check_for_missing_references(this.node);
+			this.node.scene.expressionsController.regenerate_referring_expressions(this.node);
 		}
-		this.node.scene.references_controller.notify_name_updated(this.node);
+		this.node.scene.referencesController.notify_name_updated(this.node);
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 

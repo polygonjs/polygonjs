@@ -11,7 +11,7 @@ export class ErrorState {
 			if (this._message) {
 				console.warn(this.param.fullPath(), this._message);
 			}
-			this.param.emit_controller.emit(ParamEvent.ERROR_UPDATED);
+			this.param.emitController.emit(ParamEvent.ERROR_UPDATED);
 		}
 	}
 	get message() {

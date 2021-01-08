@@ -29,7 +29,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		if (converted != null) {
 			if (this._expression_controller) {
 				this._expression_controller.set_expression(undefined, false);
-				this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
+				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
 			}
 			if (converted != this._value) {
 				this._update_value(converted);
@@ -40,7 +40,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 				this._expression_controller = this._expression_controller || new ExpressionController(this);
 				if (this._raw_input != this._expression_controller.expression) {
 					this._expression_controller.set_expression(this._raw_input);
-					this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED);
+					this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 				}
 			} else {
 				this.states.error.set(`param input is invalid (${this.fullPath()})`);
@@ -75,7 +75,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 			this.parent_param.set_value_from_components();
 		}
 		this.options.execute_callback();
-		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		this.remove_dirty_state();
 	}
 }

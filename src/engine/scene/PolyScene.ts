@@ -71,11 +71,11 @@ export class PolyScene {
 	}
 
 	private _dispatch_controller: DispatchController | undefined;
-	get dispatch_controller() {
+	get dispatchController() {
 		return (this._dispatch_controller = this._dispatch_controller || new DispatchController(this));
 	}
 	private _events_dispatcher: SceneEventsDispatcher | undefined;
-	get events_dispatcher() {
+	get eventsDispatcher() {
 		return (this._events_dispatcher = this._events_dispatcher || new SceneEventsDispatcher(this));
 	}
 
@@ -85,22 +85,22 @@ export class PolyScene {
 	}
 
 	private _lifecycle_controller: LifeCycleController | undefined;
-	get lifecycle_controller() {
+	get lifecycleController() {
 		return (this._lifecycle_controller = this._lifecycle_controller || new LifeCycleController(this));
 	}
 	private _loading_controller: LoadingController | undefined;
-	get loading_controller() {
+	get loadingController() {
 		return (this._loading_controller = this._loading_controller || new LoadingController(this));
 	}
 
 	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController(
 		this
 	);
-	get missing_expression_references_controller() {
+	get missingExpressionReferencesController() {
 		return this._missing_expression_references_controller;
 	}
 	private _expressions_controller: ExpressionsController = new ExpressionsController();
-	get expressions_controller() {
+	get expressionsController() {
 		return this._expressions_controller;
 	}
 
@@ -108,9 +108,12 @@ export class PolyScene {
 	get nodesController() {
 		return this._nodes_controller;
 	}
+	nodesByType(type: string) {
+		return this.nodesController.nodesByType(type);
+	}
 
 	protected _references_controller = new ReferencesController(this);
-	get references_controller() {
+	get referencesController() {
 		return this._references_controller;
 	}
 
@@ -120,7 +123,7 @@ export class PolyScene {
 	}
 
 	protected _viewers_register: ViewersRegister | undefined;
-	get viewers_register() {
+	get viewersRegister() {
 		return (this._viewers_register = this._viewers_register || new ViewersRegister(this));
 	}
 
@@ -130,27 +133,27 @@ export class PolyScene {
 	//
 	//
 	protected _time_controller = new TimeController(this);
-	get time_controller() {
+	get timeController() {
 		return this._time_controller;
 	}
 	setFrame(frame: number) {
-		this.time_controller.setFrame(frame);
+		this.timeController.setFrame(frame);
 	}
 
 	get frame() {
-		return this.time_controller.frame;
+		return this.timeController.frame;
 	}
 	get time() {
-		return this.time_controller.time;
+		return this.timeController.time;
 	}
 	get frame_range() {
-		return this.time_controller.frame_range;
+		return this.timeController.frame_range;
 	}
 	play() {
-		this.time_controller.play();
+		this.timeController.play();
 	}
 	pause() {
-		this.time_controller.pause();
+		this.timeController.pause();
 	}
 
 	//

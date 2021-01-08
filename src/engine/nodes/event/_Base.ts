@@ -6,6 +6,7 @@ import {BaseEventConnectionPoint} from '../utils/io/connections/Event';
 import {MapUtils} from '../../../core/MapUtils';
 
 type DispatchHook = (event_context: EventContext<Event>) => void;
+
 export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.EVENT, K> {
 	static node_context(): NodeContext {
 		return NodeContext.EVENT;

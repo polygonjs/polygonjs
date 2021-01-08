@@ -14,18 +14,18 @@ export class LoadingController {
 	_auto_updating: boolean = true;
 	_first_object_loaded: boolean = false;
 
-	mark_as_loading() {
+	markAsLoading() {
 		this._set_loading_state(true);
 	}
-	async mark_as_loaded() {
-		this.scene.missing_expression_references_controller.resolve_missing_references();
+	async markAsLoaded() {
+		this.scene.missingExpressionReferencesController.resolve_missing_references();
 		await this._set_loading_state(false);
 		this.trigger_loaded_event();
 	}
 	trigger_loaded_event() {
 		// we only dispatch events in the browser. If this is run from nodejs, we do not.
 		if (globalThis.Event) {
-			this.scene.events_dispatcher.scene_events_controller.process_event(this.LOADED_EVENT_CONTEXT);
+			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.LOADED_EVENT_CONTEXT);
 		}
 	}
 
@@ -33,13 +33,13 @@ export class LoadingController {
 		this._loading_state = state;
 		await this.set_auto_update(!this._loading_state);
 	}
-	get is_loading() {
+	isLoading() {
 		return this._loading_state;
 	}
-	get loaded() {
+	loaded() {
 		return !this._loading_state;
 	}
-	get auto_updating() {
+	autoUpdating() {
 		return this._auto_updating;
 	}
 	async set_auto_update(new_state: boolean) {

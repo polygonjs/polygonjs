@@ -26,14 +26,14 @@ QUnit.test('event set_param simple', async (assert) => {
 	set_param1.p.number.set(1);
 
 	// manual trigger
-	await set_param1.p.execute.press_button();
+	await set_param1.p.execute.pressButton();
 	await CoreSleep.sleep(100);
 	assert.equal(switch1.pv.input, 1, 'switch input is set to 1');
 	container = await switch1.requestContainer();
 	assert.equal(container.pointsCount(), 961);
 
 	set_param1.p.number.set(0);
-	await set_param1.p.execute.press_button();
+	await set_param1.p.execute.pressButton();
 	await CoreSleep.sleep(100);
 	assert.equal(switch1.pv.input, 0, 'switch input is set to 0');
 	container = await switch1.requestContainer();

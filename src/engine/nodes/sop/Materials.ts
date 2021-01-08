@@ -3,7 +3,7 @@
  *
  */
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {ParamLessBaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';

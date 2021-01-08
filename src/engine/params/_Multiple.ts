@@ -109,7 +109,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		cooker.block();
 		const components = this.components;
 		for (let c of components) {
-			c.emit_controller.block_parent_emit();
+			c.emitController.blockParentEmit();
 		}
 
 		// if (CoreType.isArray(values)) {
@@ -147,11 +147,11 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		cooker.unblock();
 
 		for (let i = 0; i < components.length; i++) {
-			components[i].emit_controller.unblock_parent_emit();
+			components[i].emitController.unblockParentEmit();
 		}
 		// this.emit(ParamEvent.UPDATED);
 
-		this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 	}
 }
 

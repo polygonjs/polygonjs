@@ -52,7 +52,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			this._value.set_path(this._raw_input);
 			this.find_target();
 			this.set_dirty();
-			this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
 	protected async process_computation() {
@@ -66,7 +66,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		let node: BaseNodeType | null = null;
 		const path_non_empty = path != null && path !== '';
 
-		this.scene.references_controller.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.scene.referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			node = CoreWalker.find_node(this.node, path, this.decomposed_path);
@@ -75,9 +75,9 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		const current_found_entity = this._found_node;
 		const newly_found_entity = node;
 
-		this.scene.references_controller.set_named_nodes_from_param(this);
+		this.scene.referencesController.set_named_nodes_from_param(this);
 		if (node) {
-			this.scene.references_controller.set_reference_from_param(this, node);
+			this.scene.referencesController.set_reference_from_param(this, node);
 		}
 
 		if (current_found_entity?.graph_node_id !== newly_found_entity?.graph_node_id) {

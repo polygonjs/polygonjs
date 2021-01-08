@@ -27,25 +27,26 @@ import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
 
 export interface ObjNodeChildrenMap {
 	ambientLight: AmbientLightObjNode;
-	animations: AnimationsObjNode;
 	areaLight: AreaLightObjNode;
 	blend: BlendObjNode;
-	cop: CopObjNode;
 	directionalLight: DirectionalLightObjNode;
-	events: EventsObjNode;
 	geo: GeoObjNode;
 	hemisphereLight: HemisphereLightObjNode;
-	materials: MaterialsObjNode;
 	null: NullObjNode;
 	orthographicCamera: OrthographicCameraObjNode;
 	perspectiveCamera: PerspectiveCameraObjNode;
 	pointLight: PointLightObjNode;
 	poly: PolyObjNode;
-	postProcess: PostProcessObjNode;
-	renderers: RenderersObjNode;
 	rivet: RivetObjNode;
 	scene: SceneObjNode;
 	spotLight: SpotLightObjNode;
+	// networks
+	animations: AnimationsObjNode;
+	cop: CopObjNode;
+	events: EventsObjNode;
+	materials: MaterialsObjNode;
+	postProcess: PostProcessObjNode;
+	renderers: RenderersObjNode;
 }
 
 import {Poly} from '../../../Poly';
@@ -58,13 +59,6 @@ export class ObjRegister {
 		poly.registerNode(PointLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 
-		poly.registerNode(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(CopObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(EventsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(RenderersObjNode, CATEGORY_OBJ.NETWORK);
-
 		poly.registerNode(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
 		poly.registerNode(NullObjNode, CATEGORY_OBJ.TRANSFORM);
@@ -75,5 +69,13 @@ export class ObjRegister {
 		poly.registerNode(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.registerNode(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
 		// poly.registerNode(CubeCameraObj, CATEGORY_OBJ.CAMERA)
+
+		// networks
+		poly.registerNode(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(CopObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(EventsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(RenderersObjNode, CATEGORY_OBJ.NETWORK);
 	}
 }

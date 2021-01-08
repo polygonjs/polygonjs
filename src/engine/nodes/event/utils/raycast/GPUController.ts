@@ -54,11 +54,11 @@ export class RaycastGPUController {
 	}
 
 	process_event(context: EventContext<MouseEvent>) {
-		if (!(context.canvas && context.camera_node)) {
+		if (!(context.canvas && context.cameraNode)) {
 			return;
 		}
 
-		const camera_node = context.camera_node;
+		const camera_node = context.cameraNode;
 		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).render_controller;
 
 		if (renderer_controller) {

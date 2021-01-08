@@ -167,7 +167,7 @@ export class TransformController {
 		if (!this.node.pv.keepPosWhenParenting) {
 			return;
 		}
-		if (!this.node.scene.loading_controller.loaded) {
+		if (!this.node.scene.loadingController.loaded()) {
 			return;
 		}
 		if (new_parent_object == this.node.object.parent) {

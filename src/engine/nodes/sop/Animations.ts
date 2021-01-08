@@ -2,12 +2,13 @@
  * A subnet to create animation nodes
  *
  */
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {ParamLessBaseNetworkSopNode} from './_Base';
+
+import {ParamLessBaseNetworkSopNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export class AnimationsSopNode extends ParamLessBaseNetworkSopNode {
 	static type() {

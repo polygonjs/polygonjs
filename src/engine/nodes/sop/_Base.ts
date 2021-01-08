@@ -22,19 +22,19 @@ enum MESSAGE {
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
-class ParamLessNetworkSopParamsConfig extends NodeParamsConfig {}
-export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
-	static node_context(): NodeContext {
-		return NodeContext.SOP;
-	}
-	// initialize_base_node() {
-	// 	this.children_controller?.init({dependent: false});
-	// }
-	cook() {
-		this.cook_controller.end_cook();
-	}
-}
-export class ParamLessBaseNetworkSopNode extends BaseNetworkSopNode<ParamLessNetworkSopParamsConfig> {}
+// class ParamLessNetworkSopParamsConfig extends NodeParamsConfig {}
+// export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
+// 	static node_context(): NodeContext {
+// 		return NodeContext.SOP;
+// 	}
+// 	// initialize_base_node() {
+// 	// 	this.children_controller?.init({dependent: false});
+// 	// }
+// 	cook() {
+// 		this.cook_controller.end_cook();
+// 	}
+// }
+// export class ParamLessBaseNetworkSopNode extends BaseNetworkSopNode<ParamLessNetworkSopParamsConfig> {}
 
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
 	static node_context(): NodeContext {

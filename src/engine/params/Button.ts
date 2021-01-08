@@ -26,7 +26,7 @@ export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.BUTTON], val2: ParamValuesTypeMap[ParamType.BUTTON]) {
 		return true;
 	}
-	async press_button() {
+	async pressButton() {
 		// cook the node in case it requires it, since the callback will not be ran if the node is cooking
 		if (this.node.is_dirty || this.node.cook_controller.is_cooking) {
 			await this.node.requestContainer();

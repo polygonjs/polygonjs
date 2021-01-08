@@ -8,7 +8,7 @@ function create_scene() {
 	scene.setName('create_scene');
 	scene.root.createNode('ambientLight');
 
-	scene.loading_controller.mark_as_loaded();
+	scene.loadingController.markAsLoaded();
 
 	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
 	scene.camerasController.setMasterCameraNodePath(perspective_camera1.fullPath());
@@ -25,7 +25,7 @@ function create_scene() {
 
 QUnit.test('root adds objects to hierarchy when created with api', async (assert) => {
 	const scene = create_scene();
-	assert.ok(!scene.loading_controller.is_loading);
+	assert.ok(!scene.loadingController.isLoading());
 
 	await scene.waitForCooksCompleted();
 	assert.equal(scene.defaultScene.children[0].children.length, 3);
@@ -38,12 +38,12 @@ QUnit.test('root adds objects to hierarchy when created with api', async (assert
 
 QUnit.test('root adds objects to hierarchy when loaded from json', async (assert) => {
 	const scene = create_scene();
-	assert.ok(!scene.loading_controller.is_loading);
+	assert.ok(!scene.loadingController.isLoading());
 
 	const data = new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.loadData(data);
-	assert.ok(scene2.loading_controller.loaded, 'scene is loaded');
-	assert.ok(scene2.loading_controller.auto_updating, 'scene is auto updating');
+	assert.ok(scene2.loadingController.loaded(), 'scene is loaded');
+	assert.ok(scene2.loadingController.autoUpdating(), 'scene is auto updating');
 	scene2.setName('from_load');
 
 	await CoreSleep.sleep(2000);

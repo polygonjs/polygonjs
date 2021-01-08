@@ -52,7 +52,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
 
 	initialize_node() {
-		this.scene.dispatch_controller.on_add_listener(() => {
+		this.scene.dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.url], () => {
 					const url = this.pv.url;

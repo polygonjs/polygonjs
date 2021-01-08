@@ -59,7 +59,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		if (this._value != this._raw_input) {
 			this._value = this._raw_input;
 			this.set_dirty();
-			this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
 	protected async process_computation() {
@@ -77,7 +77,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			? OperatorPathMode.PARAM
 			: OperatorPathMode.NODE;
 
-		this.scene.references_controller.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.scene.referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			if (mode == OperatorPathMode.PARAM) {
@@ -90,9 +90,9 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		const current_found_entity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
 		const newly_found_entity = mode == OperatorPathMode.PARAM ? param : node;
 
-		this.scene.references_controller.set_named_nodes_from_param(this);
+		this.scene.referencesController.set_named_nodes_from_param(this);
 		if (node) {
-			this.scene.references_controller.set_reference_from_param(this, node);
+			this.scene.referencesController.set_reference_from_param(this, node);
 		}
 
 		if (current_found_entity?.graph_node_id !== newly_found_entity?.graph_node_id) {

@@ -3,7 +3,7 @@
  *
  * @remarks
  * TIP: to ensure that your video starts as soon as possible, make sure to pre-process it with a tool like qt-faststart. There are many places where you can find it, but here are some suggestions:
- * 
+ *
  * - download it from [https://pypi.org/project/qtfaststart/](https://pypi.org/project/qtfaststart/)
  * - download it from [https://manpages.debian.org/stretch/ffmpeg/qt-faststart.1.en.html](https://manpages.debian.org/stretch/ffmpeg/qt-faststart.1.en.html)
  * - with ffmpeg, you can use the following command line: `ffmpeg -i in.mp4 -c copy -map 0 -movflags +faststart out.mp4
@@ -96,7 +96,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
 
 	initialize_node() {
-		this.scene.dispatch_controller.on_add_listener(() => {
+		this.scene.dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.url], () => {
 					const url = this.pv.url;

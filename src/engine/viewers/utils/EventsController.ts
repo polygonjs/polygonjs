@@ -17,8 +17,9 @@ export class ViewerEventsController {
 
 	constructor(protected viewer: BaseViewerType) {}
 
-	update_events(events_controller: BaseSceneEventsControllerType) {
-		if (!this.canvas) {
+	updateEvents(events_controller: BaseSceneEventsControllerType) {
+		const canvas = this.canvas();
+		if (!canvas) {
 			return;
 		}
 		const controller_type = events_controller.type();
@@ -28,37 +29,36 @@ export class ViewerEventsController {
 			this._bound_listener_map_by_event_controller_type.set(controller_type, map);
 		}
 		map.forEach((listener, event_type) => {
-			this.canvas?.removeEventListener(event_type, listener);
-			// map?.delete(event_type);
+			canvas.removeEventListener(event_type, listener);
 		});
 		map.clear();
 
 		const listener = (event: Event) => {
 			this.process_event(event, events_controller);
 		};
-		for (let event_type of events_controller.active_event_types()) {
-			this.canvas.addEventListener(event_type, listener);
+		for (let event_type of events_controller.activeEventTypes()) {
+			canvas.addEventListener(event_type, listener);
 			map.set(event_type, listener);
 		}
 	}
 
-	get camera_node() {
-		return this.viewer.cameras_controller.camera_node;
+	cameraNode() {
+		return this.viewer.camerasController.cameraNode();
 	}
-	get canvas() {
-		return this.viewer.canvas;
+	canvas() {
+		return this.viewer.canvas();
 	}
 
 	init() {
 		if (!this.canvas) {
 			return;
 		}
-		this.viewer.scene.events_dispatcher.traverse_controllers((controller) => {
-			this.update_events(controller);
+		this.viewer.scene.eventsDispatcher.traverseControllers((controller) => {
+			this.updateEvents(controller);
 		});
 	}
 
-	registered_event_types(): string[] {
+	registeredEventTypes(): string[] {
 		const list: string[] = [];
 		this._bound_listener_map_by_event_controller_type.forEach((map) => {
 			map.forEach((listener, event_type) => {
@@ -69,22 +69,26 @@ export class ViewerEventsController {
 	}
 
 	dispose() {
+		const canvas = this.canvas();
 		this._bound_listener_map_by_event_controller_type.forEach((map) => {
-			map.forEach((listener, event_type) => {
-				this.canvas?.removeEventListener(event_type, listener);
-			});
+			if (canvas) {
+				map.forEach((listener, event_type) => {
+					canvas.removeEventListener(event_type, listener);
+				});
+			}
 		});
 	}
 
 	private process_event(event: Event, controller: BaseSceneEventsControllerType) {
-		if (!this.canvas) {
+		const canvas = this.canvas();
+		if (!canvas) {
 			return;
 		}
 		const event_context: EventContext<Event> = {
 			event: event,
-			canvas: this.canvas,
-			camera_node: this.camera_node,
+			canvas: canvas,
+			cameraNode: this.cameraNode(),
 		};
-		controller.process_event(event_context);
+		controller.processEvent(event_context);
 	}
 }

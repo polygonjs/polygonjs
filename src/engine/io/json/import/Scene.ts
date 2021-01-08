@@ -17,21 +17,21 @@ export class SceneJsonImporter {
 
 	async scene(): Promise<PolyScene> {
 		const scene = new PolyScene();
-		scene.loading_controller.mark_as_loading();
+		scene.loadingController.markAsLoading();
 
 		// scene.set_js_version(this._data['__js_version'])
 		const properties = this._data['properties'];
 		if (properties) {
 			// scene.setName(properties['name'])
 			const frame_range = properties['frame_range'] || [];
-			scene.time_controller.setFrameRange(frame_range[0] || 1, frame_range[1] || 100);
+			scene.timeController.setFrameRange(frame_range[0] || 1, frame_range[1] || 100);
 			const frameRangeLocked = properties['frameRangeLocked'];
 			if (frameRangeLocked) {
-				scene.time_controller.setFrameRange_locked(frameRangeLocked[0], frameRangeLocked[1]);
+				scene.timeController.setFrameRange_locked(frameRangeLocked[0], frameRangeLocked[1]);
 			}
 			const realtimeState = properties['realtimeState'];
 			if (realtimeState != null) {
-				scene.time_controller.set_realtimeState(realtimeState);
+				scene.timeController.set_realtimeState(realtimeState);
 			}
 			// set frame after the range has been set, to avoid clamping
 			scene.setFrame(properties['frame'] || 1);
@@ -59,7 +59,7 @@ export class SceneJsonImporter {
 
 		this._resolve_operation_containers_with_path_param_resolve();
 
-		await scene.loading_controller.mark_as_loaded();
+		await scene.loadingController.markAsLoaded();
 		scene.cooker.unblock();
 		// DO NOT wait for cooks here,
 		// as a viewer will only be created once everything has cooked

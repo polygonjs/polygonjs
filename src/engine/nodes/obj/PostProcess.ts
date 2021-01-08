@@ -5,7 +5,7 @@
  */
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseManagerObjNode} from './_BaseManager';
-import {NodeContext} from '../../poly/NodeContext';
+import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
@@ -15,7 +15,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 export class PostProcessObjNode extends BaseManagerObjNode<PostProcessNetworkParamsConfig> {
 	params_config = new PostProcessNetworkParamsConfig();
 	static type() {
-		return 'postProcess';
+		return NetworkNodeType.POST;
 	}
 	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
 

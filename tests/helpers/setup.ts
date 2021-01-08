@@ -39,7 +39,7 @@ QUnit.testStart(async () => {
 	window.scene.setUuid('test');
 	Poly.instance().set_env('test');
 
-	window.scene.loading_controller.mark_as_loading();
+	window.scene.loadingController.markAsLoading();
 	window.scene.cooker.block();
 	const root = window.scene.root;
 	window.root = root;
@@ -52,7 +52,7 @@ QUnit.testStart(async () => {
 	window.COP = root.createNode('cop');
 	window.COP.setName('COP');
 
-	window.scene.loading_controller.set_auto_update(true);
-	await window.scene.loading_controller.mark_as_loaded();
+	window.scene.loadingController.set_auto_update(true);
+	await window.scene.loadingController.markAsLoaded();
 	window.scene.cooker.unblock();
 });

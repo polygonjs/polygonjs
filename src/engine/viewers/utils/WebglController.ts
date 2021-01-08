@@ -6,7 +6,7 @@ export class WebGLController {
 	constructor(protected viewer: BaseViewerType) {}
 
 	init() {
-		const canvas = this.viewer.canvas;
+		const canvas = this.viewer.canvas();
 		if (canvas) {
 			canvas.onwebglcontextlost = this._on_webglcontextlost.bind(this);
 			canvas.onwebglcontextrestored = this._on_webglcontextrestored.bind(this);

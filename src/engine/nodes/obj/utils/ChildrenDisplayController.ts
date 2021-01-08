@@ -79,7 +79,7 @@ export class ChildrenDisplayController {
 	}
 
 	async request_display_node_container() {
-		if (!this.node.scene.loading_controller.loaded) {
+		if (!this.node.scene.loadingController.loaded()) {
 			return;
 		}
 		if (this.used_in_scene) {

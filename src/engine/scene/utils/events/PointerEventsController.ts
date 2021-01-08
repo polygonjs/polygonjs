@@ -18,7 +18,7 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 	type() {
 		return 'pointer';
 	}
-	accepted_event_types() {
+	acceptedEventTypes() {
 		return ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`);
 	}
 }

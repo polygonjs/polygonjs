@@ -36,7 +36,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return (this._options = this._options || new OptionsController(this));
 	}
 	private _emit_controller: EmitController = new EmitController(this);
-	get emit_controller(): EmitController {
+	get emitController(): EmitController {
 		return (this._emit_controller = this._emit_controller || new EmitController(this));
 	}
 	protected _expression_controller: ExpressionController<T> | undefined;
@@ -131,7 +131,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
 		this._raw_input = this._clone_raw_input(this._prefilter_invalid_raw_input(raw_input));
-		this.emit_controller.emit(ParamEvent.RAW_INPUT_UPDATED);
+		this.emitController.emit(ParamEvent.RAW_INPUT_UPDATED);
 		this.process_raw_input();
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
@@ -150,7 +150,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected process_raw_input() {}
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
-		if (this.scene.loading_controller.is_loading) {
+		if (this.scene.loadingController.isLoading()) {
 			console.warn(`param attempt to compute ${this.fullPath()}`);
 		}
 
@@ -240,9 +240,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 	// emit
 	emit(event_name: ParamEvent): void {
-		if (this.emit_controller.emit_allowed) {
-			this.emit_controller.increment_count(event_name);
-			this.scene.dispatch_controller.dispatch(this, event_name);
+		if (this.emitController.emitAllowed()) {
+			this.emitController.incrementCount(event_name);
+			this.scene.dispatchController.dispatch(this, event_name);
 		}
 	}
 

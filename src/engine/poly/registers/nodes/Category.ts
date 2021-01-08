@@ -1,8 +1,11 @@
+const NETWORK = 'networks';
+
 export const CATEGORY_ANIM = {
-	PROP: 'prop',
-	TIMING: 'timing',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
+	NETWORK,
+	PROP: 'prop',
+	TIMING: 'timing',
 };
 
 export const CATEGORY_COP = {
@@ -10,6 +13,7 @@ export const CATEGORY_COP = {
 	FILTER: 'filters',
 	INPUT: 'inputs',
 	MISC: 'misc',
+	NETWORK,
 };
 export const CATEGORY_EVENT = {
 	ADVANCED: 'advanced',
@@ -17,6 +21,7 @@ export const CATEGORY_EVENT = {
 	CAMERA: 'cameras',
 	INPUT: 'inputs',
 	MISC: 'misc',
+	NETWORK,
 };
 export const CATEGORY_GL = {
 	COLOR: 'color',
@@ -47,23 +52,25 @@ export const CATEGORY_JS = {
 };
 export const CATEGORY_MAT = {
 	ADVANCED: 'advanced',
-	MESH: 'meshes',
-	POINTS: 'points',
-	LINE: 'lines',
-	VOLUME: 'volumes',
 	INSTANCE: 'instances',
+	LINE: 'lines',
+	MESH: 'meshes',
+	NETWORK,
+	POINTS: 'points',
+	VOLUME: 'volumes',
 };
 export const CATEGORY_OBJ = {
 	ADVANCED: 'advanced',
 	CAMERA: 'cameras',
 	GEOMETRY: 'geometries',
 	LIGHT: 'lights',
-	NETWORK: 'networks',
+	NETWORK,
 	TRANSFORM: 'transform',
 };
 export const CATEGORY_ROP = {
-	WEBGL: 'webgl',
 	CSS: 'css',
+	NETWORK,
+	WEBGL: 'webgl',
 };
 
 export const CATEGORY_SOP = {
@@ -75,7 +82,7 @@ export const CATEGORY_SOP = {
 	MAP: 'maps',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',
-	NETWORK: 'networks',
+	NETWORK,
 	PHYSICS: 'physics',
 	PRIMITIVES: 'primitives',
 	RENDER: 'render',
@@ -83,6 +90,7 @@ export const CATEGORY_SOP = {
 export const CATEGORY_POST = {
 	BLUR: 'blur',
 	COLOR: 'color',
-	MISC: 'misc',
 	EFFECT: 'effect',
+	MISC: 'misc',
+	NETWORK,
 };

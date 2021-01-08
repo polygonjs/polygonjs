@@ -18,7 +18,7 @@ export class DispatchController {
 
 	private _events_listener: EventsListener | undefined;
 
-	set_listener(events_listener: EventsListener) {
+	setListener(events_listener: EventsListener) {
 		// let's have a single listener for now
 		// which is a constraint I've added when adding on_add_listener
 		if (!this._events_listener) {
@@ -29,7 +29,7 @@ export class DispatchController {
 		}
 		// this._store.scene = this;
 	}
-	on_add_listener(callback: OnAddListenerCallback) {
+	onAddListener(callback: OnAddListenerCallback) {
 		if (this._events_listener) {
 			callback();
 		} else {
@@ -46,17 +46,17 @@ export class DispatchController {
 			this._on_add_listener_callbacks = undefined;
 		}
 	}
-	get events_listener() {
+	get eventsListener() {
 		return this._events_listener;
 	}
 	dispatch(emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {
 		this._events_listener?.process_events(emitter, event_name, data);
 	}
-	get emit_allowed(): boolean {
+	emitAllowed(): boolean {
 		return (
 			this._events_listener != null &&
-			this.scene.loading_controller.loaded &&
-			this.scene.loading_controller.auto_updating //&&
+			this.scene.loadingController.loaded() &&
+			this.scene.loadingController.autoUpdating() //&&
 			// !Poly.instance().playerMode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
 		);
 	}

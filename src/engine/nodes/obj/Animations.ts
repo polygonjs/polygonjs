@@ -1,19 +1,18 @@
 /**
- * Parent for animation nodes
- *
+ * A subnet to create animation nodes
  *
  */
-import {Constructor, valueof} from '../../../types/GlobalTypes';
+
 import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
-import {ObjNodeRenderOrder} from './_Base';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {ObjNodeRenderOrder} from './_Base';
 
-export class AnimationsObjNode extends ParamLessBaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
-	static type(): Readonly<NetworkNodeType.ANIM> {
+class BaseAnimationsObjNode extends ParamLessBaseManagerObjNode {
+	static type() {
 		return NetworkNodeType.ANIM;
 	}
 
@@ -27,11 +26,11 @@ export class AnimationsObjNode extends ParamLessBaseManagerObjNode {
 		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
 	): K;
-	createNode<S extends keyof AnimNodeChildrenMap, K extends valueof<AnimNodeChildrenMap>>(
-		node_class: S | Constructor<K>,
+	createNode<K extends valueof<AnimNodeChildrenMap>>(
+		node_class: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
-	): K | AnimNodeChildrenMap[S] {
-		return super.createNode(node_class, params_init_value_overrides) as K | AnimNodeChildrenMap[S];
+	): K {
+		return super.createNode(node_class, params_init_value_overrides) as K;
 	}
 	children() {
 		return super.children() as BaseAnimNodeType[];
@@ -39,4 +38,7 @@ export class AnimationsObjNode extends ParamLessBaseManagerObjNode {
 	nodesByType<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K][] {
 		return super.nodesByType(type) as AnimNodeChildrenMap[K][];
 	}
+}
+export class AnimationsObjNode extends BaseAnimationsObjNode {
+	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
 }

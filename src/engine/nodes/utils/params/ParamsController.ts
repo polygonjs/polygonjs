@@ -146,7 +146,7 @@ export class ParamsController {
 		if (has_deleted_a_param || has_created_a_param) {
 			this.post_create_spare_params();
 			// param.emit(ParamEvent.DELETED);
-			this.node.scene.references_controller.notify_params_updated(this.node);
+			this.node.scene.referencesController.notify_params_updated(this.node);
 			this.node.emit(NodeEvent.PARAMS_UPDATED);
 		}
 	}

@@ -38,7 +38,7 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(HierarchySopOperation.INPUT_CLONED_STATE);
 
-		this.scene.dispatch_controller.on_add_listener(() => {
+		this.scene.dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.mode, this.p.levels], () => {
 					return `${HIERARCHY_MODES[this.pv.mode]} ${this.pv.levels}`;

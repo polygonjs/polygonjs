@@ -179,7 +179,7 @@ export class HierarchyChildrenController {
 			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
-		if (this.node.scene.lifecycle_controller.on_create_hook_allowed()) {
+		if (this.node.scene.lifecycleController.onCreateHookAllowed()) {
 			child_node.lifecycle.run_on_create_hooks();
 		}
 		child_node.lifecycle.run_on_add_hooks();
@@ -190,7 +190,7 @@ export class HierarchyChildrenController {
 			this.node.scene.webgl_controller.set_require_webgl2();
 		}
 
-		this.node.scene.missing_expression_references_controller.check_for_missing_references(child_node);
+		this.node.scene.missingExpressionReferencesController.check_for_missing_references(child_node);
 
 		return child_node;
 	}

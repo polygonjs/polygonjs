@@ -1,3 +1,5 @@
+import {ParamType} from '../../../src/engine/poly/ParamType';
+
 QUnit.test('an expression refers to a node that is later added', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -103,41 +105,85 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root;
+	const geo = window.geo1;
+	const box = geo.createNode('box');
+	const event = root.createNode('events');
+	const raycast = event.createNode('raycast');
+	const param = raycast.p.target;
+
+	assert.equal(param.type, ParamType.OPERATOR_PATH);
+
+	await scene.waitForCooksCompleted();
+
+	param.set(box.fullPath());
+
+	await param.compute();
+	assert.equal(param.value, '/geo1/box1');
+
+	box.setName('new_name');
+	// assert.ok(param.is_dirty, 'is dirty on renamed 1');
+	// await param.compute();
+	// assert.notOk(param.is_dirty);
+	assert.equal(param.value, '/geo1/new_name');
+
+	box.setName('new_name2');
+	// assert.ok(param.is_dirty, 'is dirty on renamed 2');
+	// await param.compute();
+	// assert.notOk(param.is_dirty);
+	assert.equal(param.value, '/geo1/new_name2');
+
+	geo.setName('new_event');
+	// assert.ok(param.is_dirty);
+	// await param.compute();
+	// assert.notOk(param.is_dirty);
+	assert.equal(param.value, '/new_event/new_name2');
+
+	box.setName('new_name_again');
+	// assert.ok(param.is_dirty);
+	// await param.compute();
+	// assert.notOk(param.is_dirty);
+	assert.equal(param.value, '/new_event/new_name_again');
+});
+
+QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
+	const scene = window.scene;
+	const root = scene.root;
 	const event = root.createNode('events');
 	const orbit = event.createNode('cameraOrbitControls');
 	const camera = root.createNode('perspectiveCamera');
 	const controls_param = camera.p.controls;
+	assert.equal(controls_param.type, ParamType.NODE_PATH);
 
 	await scene.waitForCooksCompleted();
 
 	controls_param.set(orbit.fullPath());
 
 	await controls_param.compute();
-	assert.equal(controls_param.value, '/events1/cameraOrbitControls1');
+	assert.equal(controls_param.value.path(), '/events1/cameraOrbitControls1');
 
 	orbit.setName('new_name');
 	assert.ok(controls_param.is_dirty, 'is dirty on renamed 1');
 	await controls_param.compute();
 	assert.notOk(controls_param.is_dirty);
-	assert.equal(controls_param.value, '/events1/new_name');
+	assert.equal(controls_param.value.path(), '/events1/new_name');
 
 	orbit.setName('new_name2');
 	assert.ok(controls_param.is_dirty, 'is dirty on renamed 2');
 	await controls_param.compute();
 	assert.notOk(controls_param.is_dirty);
-	assert.equal(controls_param.value, '/events1/new_name2');
+	assert.equal(controls_param.value.path(), '/events1/new_name2');
 
 	event.setName('new_event');
 	assert.ok(controls_param.is_dirty);
 	await controls_param.compute();
 	assert.notOk(controls_param.is_dirty);
-	assert.equal(controls_param.value, '/new_event/new_name2');
+	assert.equal(controls_param.value.path(), '/new_event/new_name2');
 
 	orbit.setName('new_name_again');
 	assert.ok(controls_param.is_dirty);
 	await controls_param.compute();
 	assert.notOk(controls_param.is_dirty);
-	assert.equal(controls_param.value, '/new_event/new_name_again');
+	assert.equal(controls_param.value.path(), '/new_event/new_name_again');
 });
 
 QUnit.test(
@@ -157,7 +203,7 @@ QUnit.test(
 
 		param_operator_path_param.set(`${mesh_basic_builder1.fullPath()}/test_param`);
 		await param_operator_path_param.compute();
-		assert.notOk(param_operator_path_param.found_param());
+		assert.notOk(param_operator_path_param.value.param());
 
 		const init_params_count = mesh_basic_builder1.params.all.length;
 		assert.equal(init_params_count, 13);
@@ -165,14 +211,14 @@ QUnit.test(
 		await mesh_basic_builder1.requestContainer();
 		assert.equal(mesh_basic_builder1.params.all.length, 14);
 		assert.equal(mesh_basic_builder1.params.all[13].name, 'param1');
-		assert.notOk(param_operator_path_param.found_param());
+		assert.notOk(param_operator_path_param.value.param());
 
 		param1.p.name.set('test_param');
 		await mesh_basic_builder1.requestContainer();
 		assert.equal(mesh_basic_builder1.params.all[13].name, 'test_param', 'last param is called test_param');
-		assert.ok(param_operator_path_param.found_param(), 'a param is found');
+		assert.ok(param_operator_path_param.value.param(), 'a param is found');
 		assert.equal(
-			param_operator_path_param.found_param()!.graph_node_id,
+			param_operator_path_param.value.param()!.graph_node_id,
 			mesh_basic_builder1.params.get('test_param')!.graph_node_id,
 			'the found param is test_param'
 		);

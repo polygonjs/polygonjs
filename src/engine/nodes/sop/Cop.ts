@@ -3,7 +3,7 @@
  *
  */
 
-import {ParamLessBaseNetworkSopNode} from './_Base';
+import {ParamLessBaseNetworkSopNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {CopNodeChildrenMap} from '../../poly/registers/nodes/Cop';
 import {BaseCopNodeType} from '../cop/_Base';

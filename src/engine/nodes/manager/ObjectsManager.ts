@@ -108,7 +108,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	private _update_object(node: BaseObjNodeType) {
-		if (!this.scene.loading_controller.auto_updating) {
+		if (!this.scene.loadingController.autoUpdating()) {
 			return this._add_to_queue(node);
 		} else {
 			return this._add_to_scene(node);

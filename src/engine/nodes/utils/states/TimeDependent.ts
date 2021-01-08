@@ -28,13 +28,13 @@ export class TimeDependentState extends BaseState {
 
 	force_time_dependent() {
 		const predecessor_ids = this.node.graph_predecessors().map((n) => n.graph_node_id);
-		const frame_node = this.node.scene.time_controller.graph_node;
+		const frame_node = this.node.scene.timeController.graph_node;
 		if (!predecessor_ids.includes(frame_node.graph_node_id)) {
 			this.node.add_graph_input(frame_node, false);
 		}
 	}
 	unforce_time_dependent() {
-		const frame_node = this.node.scene.time_controller.graph_node;
+		const frame_node = this.node.scene.timeController.graph_node;
 		this.node.remove_graph_input(frame_node);
 	}
 }

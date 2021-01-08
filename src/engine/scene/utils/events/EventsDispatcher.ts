@@ -21,25 +21,25 @@ export class SceneEventsDispatcher {
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
-	register_event_node(node: BaseInputEventNodeType) {
+	registerEventNode(node: BaseInputEventNodeType) {
 		const controller = this._find_or_create_controller_for_node(node);
 		if (controller) {
-			controller.register_node(node);
+			controller.registerNode(node);
 		}
 	}
-	unregister_event_node(node: BaseInputEventNodeType) {
+	unregisterEventNode(node: BaseInputEventNodeType) {
 		const controller = this._find_or_create_controller_for_node(node);
 		if (controller) {
-			controller.unregister_node(node);
+			controller.unregisterNode(node);
 		}
 	}
-	update_viewer_event_listeners(node: BaseInputEventNodeType) {
+	updateViewerEventListeners(node: BaseInputEventNodeType) {
 		const controller = this._find_or_create_controller_for_node(node);
 		if (controller) {
-			controller.update_viewer_event_listeners();
+			controller.updateViewerEventListeners();
 		}
 	}
-	traverse_controllers(callback: (controller: BaseSceneEventsController<Event, BaseInputEventNodeType>) => void) {
+	traverseControllers(callback: (controller: BaseSceneEventsController<Event, BaseInputEventNodeType>) => void) {
 		for (let controller of this._controllers) {
 			callback(controller);
 		}
@@ -62,29 +62,29 @@ export class SceneEventsDispatcher {
 	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
 		switch (node.type) {
 			case KeyboardEventNode.type():
-				return this.keyboard_events_controller;
+				return this.keyboardEventsController;
 			case MouseEventNode.type():
-				return this.mouse_events_controller;
+				return this.mouseEventsController;
 			case PointerEventNode.type():
-				return this.pointer_events_controller;
+				return this.pointerEventsController;
 			case SceneEventNode.type():
-				return this.scene_events_controller;
+				return this.sceneEventsController;
 		}
 	}
 
-	get keyboard_events_controller() {
+	get keyboardEventsController() {
 		return (this._keyboard_events_controller =
 			this._keyboard_events_controller || this._create_controller(KeyboardEventsController));
 	}
-	get mouse_events_controller() {
+	get mouseEventsController() {
 		return (this._mouse_events_controller =
 			this._mouse_events_controller || this._create_controller(MouseEventsController));
 	}
-	get pointer_events_controller() {
+	get pointerEventsController() {
 		return (this._pointer_events_controller =
 			this._pointer_events_controller || this._create_controller(PointerEventsController));
 	}
-	get scene_events_controller() {
+	get sceneEventsController() {
 		return (this._scene_events_controller =
 			this._scene_events_controller || this._create_controller(SceneEventsController));
 	}

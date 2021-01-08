@@ -102,7 +102,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	//
 
 	_on_child_add(node: BaseNodeType) {
-		if (this.scene.loading_controller.loaded) {
+		if (this.scene.loadingController.loaded()) {
 			if (this.children().length == 1) {
 				node.flags?.display?.set(true);
 			}

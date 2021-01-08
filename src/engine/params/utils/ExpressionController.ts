@@ -59,8 +59,8 @@ export class ExpressionController<T extends ParamType> {
 	// }
 
 	set_expression(expression: string | undefined, set_dirty: boolean = true) {
-		this.param.scene.missing_expression_references_controller.deregister_param(this.param);
-		this.param.scene.expressions_controller.deregister_param(this.param);
+		this.param.scene.missingExpressionReferencesController.deregister_param(this.param);
+		this.param.scene.expressionsController.deregister_param(this.param);
 
 		if (this._expression != expression) {
 			this._expression = expression;

@@ -45,7 +45,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this._build();
 		this._set_events();
 	}
-	get controls_controller(): ViewerControlsController {
+	get controlsController(): ViewerControlsController {
 		return (this._controls_controller = this._controls_controller || new ViewerControlsController(this));
 	}
 
@@ -56,29 +56,30 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	dispose() {
 		this._cancel_animate();
-		this.controls_controller.dispose();
+		this.controlsController.dispose();
 		// TODO: also dispose the renderer
 		super.dispose();
 	}
-	get camera_controls_controller() {
+	get cameraControlsController() {
 		return this._camera_node.controls_controller;
 	}
 
 	private _set_events() {
-		this.events_controller.init();
-		this.webgl_controller.init();
+		this.eventsController.init();
+		this.webglController.init();
 
 		window.onresize = () => {
-			this.on_resize();
+			this.onResize();
 		};
 	}
-	on_resize() {
-		if (!this.canvas) {
+	onResize() {
+		const canvas = this.canvas();
+		if (!canvas) {
 			return;
 		}
-		this.cameras_controller.compute_size_and_aspect();
-		this._camera_node.render_controller.set_renderer_size(this.canvas, this.cameras_controller.size);
-		this.cameras_controller.update_camera_aspect();
+		this.camerasController.computeSizeAndAspect();
+		this._camera_node.render_controller.set_renderer_size(canvas, this.camerasController.size);
+		this.camerasController.updateCameraAspect();
 	}
 
 	private _init_display() {
@@ -86,8 +87,8 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			console.warn('no canvas found for viewer');
 			return;
 		}
-		this.cameras_controller.compute_size_and_aspect();
-		const size: Vector2 = this.cameras_controller.size;
+		this.camerasController.computeSizeAndAspect();
+		const size: Vector2 = this.camerasController.size;
 
 		this._camera_node.render_controller.create_renderer(this._canvas, size);
 		// this.canvas_context = canvas.getContext('2d')
@@ -118,12 +119,12 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		// window.viewer_renderer = renderer
 		// POLY.renderers_controller.register_renderer(renderer)
 
-		this.cameras_controller.prepare_current_camera();
+		this.camerasController.prepareCurrentCamera();
 
 		this.animate();
 	}
 
-	set_auto_render(state = true) {
+	setAutoRender(state = true) {
 		this._do_render = state;
 		if (this._do_render) {
 			this.animate();
@@ -133,7 +134,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	animate() {
 		if (this._do_render) {
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
-			this._scene.time_controller.increment_time_if_playing();
+			this._scene.timeController.increment_time_if_playing();
 			this.render();
 			this._controls_controller?.update();
 		}
@@ -150,9 +151,9 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 
 	render() {
-		if (this.cameras_controller.camera_node && this._canvas) {
-			const size = this.cameras_controller.size;
-			const aspect = this.cameras_controller.aspect;
+		if (this.camerasController.cameraNode && this._canvas) {
+			const size = this.camerasController.size;
+			const aspect = this.camerasController.aspect;
 			this._camera_node.render_controller.render(this._canvas, size, aspect);
 		} else {
 			console.warn('no camera to render with');

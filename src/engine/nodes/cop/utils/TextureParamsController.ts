@@ -259,12 +259,14 @@ export class TextureParamsController {
 		if (!pv.tanisotropy) {
 			return;
 		}
+		this._renderer_controller = this._renderer_controller || new CopRendererController(this.node);
+		const renderer = await this._renderer_controller.renderer();
+		const max_anisotropy = renderer.capabilities.getMaxAnisotropy();
+
 		if (pv.useRendererMaxAnisotropy) {
-			this._renderer_controller = this._renderer_controller || new CopRendererController(this.node);
-			const renderer = await this._renderer_controller.renderer();
-			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			texture.anisotropy = max_anisotropy;
 		} else {
-			texture.anisotropy = pv.anisotropy;
+			texture.anisotropy = Math.min(pv.anisotropy, max_anisotropy);
 		}
 	}
 

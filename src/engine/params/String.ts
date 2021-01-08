@@ -5,7 +5,7 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 export class StringParam extends TypedParam<ParamType.STRING> {
 	static type() {
@@ -58,18 +58,18 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 			if (this._raw_input != this._expression_controller.expression) {
 				this._expression_controller.set_expression(this._raw_input);
 				this.set_dirty();
-				this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED);
+				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 			}
 		} else {
 			if (this._raw_input != this._value) {
 				this._value = this._raw_input;
 				this.remove_dirty_state();
 				this.set_successors_dirty(this);
-				this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+				this.emitController.emit(ParamEvent.VALUE_UPDATED);
 				this.options.execute_callback();
 				if (this._expression_controller) {
 					this._expression_controller.set_expression(undefined, false);
-					this.emit_controller.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
+					this.emitController.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
 				}
 			}
 		}
@@ -85,7 +85,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 				// as the empty string '' evals to false...
 				if (converted != null) {
 					this._value = converted;
-					this.emit_controller.emit(ParamEvent.VALUE_UPDATED);
+					this.emitController.emit(ParamEvent.VALUE_UPDATED);
 					this.options.execute_callback();
 				} else {
 					this.states.error.set(`expression returns an invalid type (${expression_result})`);

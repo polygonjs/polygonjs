@@ -80,30 +80,30 @@ class EventsListener {
 QUnit.test('emit only the minimum times', (assert) => {
 	const geo1 = window.geo1;
 
-	window.scene.dispatch_controller.set_listener(new EventsListener());
+	window.scene.dispatchController.setListener(new EventsListener());
 
 	const t = geo1.p.t;
 	const tx = t.x;
 	const ty = t.y;
 
-	t.emit_controller.unblock_emit();
-	tx.emit_controller.unblock_emit();
+	t.emitController.unblockEmit();
+	tx.emitController.unblockEmit();
 
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 0);
-	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 0);
+	assert.equal(t.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 0);
+	assert.equal(tx.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 0);
 
 	tx.set(1);
-	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
-	assert.equal(ty.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 0);
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
+	assert.equal(tx.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 1);
+	assert.equal(ty.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 0);
+	assert.equal(t.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 1);
 
 	t.set([2, 3, 7]);
-	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
-	assert.equal(ty.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 1);
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
+	assert.equal(tx.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 2);
+	assert.equal(ty.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 1);
+	assert.equal(t.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 2);
 
 	ty.set(2.5);
-	assert.equal(tx.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
-	assert.equal(ty.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 2);
-	assert.equal(t.emit_controller.events_count(ParamEvent.VALUE_UPDATED), 3);
+	assert.equal(tx.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 2);
+	assert.equal(ty.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 2);
+	assert.equal(t.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 3);
 });

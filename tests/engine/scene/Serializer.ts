@@ -2,12 +2,13 @@ import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {PerspectiveCameraObjNode} from '../../../src/engine/nodes/obj/PerspectiveCamera';
+import {GeoObjNode} from '../../../src/engine/nodes/obj/Geo';
 
 QUnit.test('scene save simple', async (assert) => {
 	const scene = new PolyScene();
 	scene.root.createNode('ambientLight');
 
-	scene.loading_controller.mark_as_loaded();
+	scene.loadingController.markAsLoaded();
 
 	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
 	scene.camerasController.setMasterCameraNodePath(perspective_camera1.fullPath());
@@ -24,9 +25,9 @@ QUnit.test('scene save simple', async (assert) => {
 	await scene2.waitForCooksCompleted();
 	const camera_node = scene2.camerasController.masterCameraNode as PerspectiveCameraObjNode;
 	assert.deepEqual(camera_node.pv.t.toArray(), [0, 0, 10]);
-	assert.ok(scene2.loading_controller.loaded);
+	assert.ok(scene2.loadingController.loaded());
 
-	const new_geo1 = scene2.node('/geo1')!;
+	const new_geo1 = scene2.node('/geo1')! as GeoObjNode;
 	assert.ok(new_geo1.p.r.y.has_expression());
 	assert.equal(new_geo1.p.r.y.raw_input, '$F+20');
 	assert.equal(new_geo1.p.r.y.expression_controller?.expression, '$F+20');

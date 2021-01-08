@@ -20,7 +20,7 @@ QUnit.test('cache static', async (assert) => {
 	// json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 8109); // still same length
 
-	cache1.p.reset.press_button();
+	cache1.p.reset.pressButton();
 	container = await cache1.requestContainer();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 4); // not same points_count anymore

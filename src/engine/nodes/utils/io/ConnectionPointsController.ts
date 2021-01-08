@@ -135,7 +135,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 
 			// no need to update the successors when loading,
 			// since the connection point types are stored in the scene data
-			if (!this.node.scene.loading_controller.is_loading) {
+			if (!this.node.scene.loadingController.isLoading()) {
 				this.make_successors_update_signatures();
 			}
 		}
@@ -231,7 +231,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	//   which in turn allows connected nodes to not lose their connections.
 	//
 	private _wrapped_expected_input_types_function() {
-		if (this.node.scene.loading_controller.is_loading) {
+		if (this.node.scene.loadingController.isLoading()) {
 			const in_data = this.node.io.saved_connection_points_data.in();
 			if (in_data) {
 				return in_data.map((d) => d.type as ConnectionPointEnumMap[NC]);
@@ -240,7 +240,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._expected_input_types_function();
 	}
 	private _wrapped_expected_output_types_function() {
-		if (this.node.scene.loading_controller.is_loading) {
+		if (this.node.scene.loadingController.isLoading()) {
 			const out_data = this.node.io.saved_connection_points_data.out();
 			if (out_data) {
 				return out_data.map((d) => d.type as ConnectionPointEnumMap[NC]);
@@ -249,7 +249,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._expected_output_types_function();
 	}
 	private _wrapped_input_name_function(index: number) {
-		if (this.node.scene.loading_controller.is_loading) {
+		if (this.node.scene.loadingController.isLoading()) {
 			const in_data = this.node.io.saved_connection_points_data.in();
 			if (in_data) {
 				return in_data[index].name;
@@ -258,7 +258,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._input_name_function(index);
 	}
 	private _wrapped_output_name_function(index: number) {
-		if (this.node.scene.loading_controller.is_loading) {
+		if (this.node.scene.loadingController.isLoading()) {
 			const out_data = this.node.io.saved_connection_points_data.out();
 			if (out_data) {
 				return out_data[index].name;

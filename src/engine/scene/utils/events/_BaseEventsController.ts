@@ -13,7 +13,7 @@ interface EventContextValue {
 export interface EventContext<E extends Event> {
 	event?: Readonly<E>;
 	canvas?: Readonly<HTMLCanvasElement>;
-	camera_node?: Readonly<BaseCameraObjNodeType>;
+	cameraNode?: Readonly<BaseCameraObjNodeType>;
 	value?: EventContextValue;
 }
 
@@ -22,37 +22,37 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	protected _require_canvas_event_listeners: boolean = false;
 	constructor(private dispatcher: SceneEventsDispatcher) {}
 
-	register_node(node: T) {
+	registerNode(node: T) {
 		this._nodes_by_graph_node_id.set(node.graph_node_id, node);
-		this.update_viewer_event_listeners();
+		this.updateViewerEventListeners();
 	}
-	unregister_node(node: T) {
+	unregisterNode(node: T) {
 		this._nodes_by_graph_node_id.delete(node.graph_node_id);
-		this.update_viewer_event_listeners();
+		this.updateViewerEventListeners();
 	}
 	abstract type(): string;
-	abstract accepted_event_types(): string[];
+	abstract acceptedEventTypes(): string[];
 	// abstract accepts_event(event: Event): boolean;
 
-	process_event(event_context: EventContext<E>) {
+	processEvent(event_context: EventContext<E>) {
 		if (this._active_event_types.length == 0) {
 			return;
 		}
 		this._nodes_by_graph_node_id.forEach((node) => node.process_event(event_context));
 	}
 
-	update_viewer_event_listeners() {
+	updateViewerEventListeners() {
 		this._update_active_event_types();
 
 		if (this._require_canvas_event_listeners) {
-			this.dispatcher.scene.viewers_register.traverse_viewers((viewer) => {
-				viewer.events_controller.update_events(this);
+			this.dispatcher.scene.viewersRegister.traverseViewers((viewer) => {
+				viewer.eventsController.updateEvents(this);
 			});
 		}
 	}
 
 	private _active_event_types: string[] = [];
-	active_event_types() {
+	activeEventTypes() {
 		return this._active_event_types;
 	}
 	private _update_active_event_types() {
@@ -78,7 +78,7 @@ export class BaseSceneEventsControllerClass extends BaseSceneEventsController<Ev
 	type() {
 		return '';
 	}
-	accepted_event_types(): string[] {
+	acceptedEventTypes(): string[] {
 		return [];
 	}
 }

@@ -89,7 +89,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 	// Create spare params on gl nodes
 	//
 	create_spare_parameters() {
-		if (this.node.scene.loading_controller.is_loading) {
+		if (this.node.scene.loadingController.isLoading()) {
 			return;
 		}
 
@@ -163,7 +163,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				}
 			}
 		}
-		// if (!this.node.scene.loading_controller.is_loading) {
+		// if (!this.node.scene.loading_controller.isLoading()) {
 		this.node.params.update_params(params_update_options);
 
 		for (let spare_param of this.node.params.spare) {

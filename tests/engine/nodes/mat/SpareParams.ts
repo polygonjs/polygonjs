@@ -107,7 +107,7 @@ QUnit.test(
 		await spare_param.compute();
 		assert.equal(spare_param.value, 35, 'param is 35');
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 35, 'uniforrm is 35');
-		scene.time_controller.setFrameRange(0, 1000);
+		scene.timeController.setFrameRange(0, 1000);
 		scene.setFrame(124);
 		await spare_param.compute();
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 124, 'frame is 124');

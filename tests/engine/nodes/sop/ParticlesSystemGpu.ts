@@ -121,7 +121,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
-	particles1.p.reset.press_button();
+	particles1.p.reset.pressButton();
 	await particles1.requestContainer();
 
 	const render_material = particles1.render_controller.render_material()!;
@@ -187,7 +187,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 		assert.deepEqual(test_param2.value.toArray(), [1, 0, 0], 'test param is read back with expected value');
 		assert.equal(scene2.frame, 1);
-		new_particles1.p.reset.press_button();
+		new_particles1.p.reset.pressButton();
 		await new_particles1.requestContainer();
 
 		render_target1 = new_particles1.gpu_controller.getCurrentRenderTarget(ShaderName.PARTICLES_0)!;

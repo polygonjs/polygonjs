@@ -16,8 +16,8 @@ export class ViewerControlsController {
 	get active() {
 		return this._active;
 	}
-	get camera_node() {
-		return this.viewer.camera_node;
+	get cameraNode() {
+		return this.viewer.cameraNode;
 	}
 	get controls() {
 		return this._controls;
@@ -25,17 +25,18 @@ export class ViewerControlsController {
 
 	async create_controls() {
 		this._dispose_controls();
+		const canvas = this.viewer.canvas();
 
-		if (!this.viewer.canvas) {
+		if (!canvas) {
 			return;
 		}
 
-		this._config = await this.viewer?.camera_controls_controller?.apply_controls(this.viewer.canvas);
+		this._config = await this.viewer?.cameraControlsController?.apply_controls(canvas);
 		if (this._config) {
 			this._controls = this._config.controls;
 
 			if (this._controls) {
-				if (this.viewer.active) {
+				if (this.viewer.active()) {
 					this._controls.addEventListener('start', this._bound_on_controls_start);
 					this._controls.addEventListener('end', this._bound_on_controls_end);
 				} else {
@@ -58,8 +59,9 @@ export class ViewerControlsController {
 	}
 	private _dispose_controls() {
 		if (this._controls) {
-			if (this.viewer.canvas) {
-				this.viewer?.camera_controls_controller.dispose_controls(this.viewer.canvas);
+			const canvas = this.viewer.canvas();
+			if (canvas) {
+				this.viewer?.cameraControlsController.dispose_controls(canvas);
 			}
 
 			if (this._bound_on_controls_start) {
@@ -82,7 +84,7 @@ export class ViewerControlsController {
 
 	private _graph_node: CoreGraphNode | undefined;
 	private _update_graph_node() {
-		const controls_param = this.viewer.camera_node.p.controls;
+		const controls_param = this.viewer.cameraNode().p.controls;
 		this._graph_node = this._graph_node || this._create_graph_node();
 		if (!this._graph_node) {
 			return;
@@ -91,9 +93,9 @@ export class ViewerControlsController {
 		this._graph_node.add_graph_input(controls_param);
 	}
 	private _create_graph_node() {
-		const node = new CoreGraphNode(this.viewer.camera_node.scene, 'viewer-controls');
+		const node = new CoreGraphNode(this.viewer.cameraNode().scene, 'viewer-controls');
 		node.add_post_dirty_hook('this.viewer.controls_controller', async () => {
-			await this.viewer.controls_controller.create_controls();
+			await this.viewer.controlsController.create_controls();
 		});
 		return node;
 	}

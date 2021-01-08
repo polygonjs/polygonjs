@@ -308,7 +308,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	emit(event_name: NodeEvent.FLAG_OPTIMIZE_UPDATED): void;
 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
-		this.scene.dispatch_controller.dispatch(this, event_name, data);
+		this.scene.dispatchController.dispatch(this, event_name, data);
 	}
 
 	// serializer

@@ -58,7 +58,7 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		this.io.inputs.set_count(1, 2);
 		this.io.inputs.init_inputs_cloned_state(AttribCopySopOperation.INPUT_CLONED_STATE);
 
-		this.scene.dispatch_controller.on_add_listener(() => {
+		this.scene.dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name, this.p.tnewName, this.p.newName], () => {
 					return this.pv.tnewName ? `${this.pv.name} -> ${this.pv.newName}` : this.pv.name;

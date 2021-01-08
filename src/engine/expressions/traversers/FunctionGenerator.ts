@@ -402,16 +402,16 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	//
 	protected traverse_Identifier_F(): string {
-		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
-		return `param.scene.time_controller.frame`;
+		this.immutable_dependencies.push(this.param.scene.timeController.graph_node);
+		return `param.scene.timeController.frame`;
 	}
 	protected traverse_Identifier_FPS(): string {
-		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
-		return `param.scene.time_controller.fps`;
+		this.immutable_dependencies.push(this.param.scene.timeController.graph_node);
+		return `param.scene.timeController.fps`;
 	}
 	protected traverse_Identifier_T(): string {
-		this.immutable_dependencies.push(this.param.scene.time_controller.graph_node);
-		return `param.scene.time_controller.time`;
+		this.immutable_dependencies.push(this.param.scene.timeController.graph_node);
+		return `param.scene.timeController.time`;
 	}
 	protected traverse_Identifier_CH(): string {
 		return `${QUOTE}${this.param.name}${QUOTE}`;
@@ -468,7 +468,7 @@ export class FunctionGenerator extends BaseTraverser {
 				this.method_dependencies.push(method_dependency);
 			} else {
 				if (path_node && CoreType.isString(path_argument)) {
-					this.param.scene.missing_expression_references_controller.register(
+					this.param.scene.missingExpressionReferencesController.register(
 						this.param,
 						path_node,
 						path_argument
