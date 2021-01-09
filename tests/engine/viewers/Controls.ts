@@ -20,28 +20,28 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 
 	// no controls initially
 	CoreSleep.sleep(100);
-	assert.ok(!viewer.controls_controller.controls);
+	assert.ok(!viewer.controlsController.controls());
 
 	// set controls to the first camera_orbit_controls
 	perspective_camera1.p.controls.set(camera_orbit_controls1.fullPath());
 	await CoreSleep.sleep(100);
-	assert.ok(viewer.controls_controller.controls);
-	const id1 = viewer.controls_controller.controls?.name;
+	assert.ok(viewer.controlsController.controls());
+	const id1 = viewer.controlsController.controls()?.name;
 	assert.ok(id1);
 
 	// change control node
 	perspective_camera1.p.controls.set(camera_orbit_controls2.fullPath());
 	await CoreSleep.sleep(100);
-	assert.ok(viewer.controls_controller.controls);
-	const id2 = viewer.controls_controller.controls?.name;
+	assert.ok(viewer.controlsController.controls());
+	const id2 = viewer.controlsController.controls()?.name;
 	assert.ok(id2);
 	assert.notEqual(id1, id2);
 
 	// update the currently use control node
 	camera_orbit_controls2.p.tdamping.set(1);
 	await CoreSleep.sleep(100);
-	assert.ok(viewer.controls_controller.controls);
-	const id3 = viewer.controls_controller.controls?.name;
+	assert.ok(viewer.controlsController.controls());
+	const id3 = viewer.controlsController.controls()?.name;
 	assert.ok(id3);
 	assert.notEqual(id1, id3);
 	assert.notEqual(id2, id3);
@@ -49,7 +49,7 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	// remove controls path
 	perspective_camera1.p.controls.set('');
 	await CoreSleep.sleep(100);
-	assert.ok(!viewer.controls_controller.controls);
+	assert.ok(!viewer.controlsController.controls());
 
 	viewer.dispose();
 	document.body.removeChild(element);

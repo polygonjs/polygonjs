@@ -41,20 +41,22 @@ export class RaycastGPUController {
 	private _param_read: Number4 = [0, 0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
 	update_mouse(context: EventContext<MouseEvent>) {
-		if (!(context.canvas && context.event)) {
+		const canvas = context.viewer?.canvas();
+		if (!(canvas && context.event)) {
 			return;
 		}
 
 		if (context.event instanceof MouseEvent) {
-			this._mouse.x = context.event.offsetX / context.canvas.offsetWidth;
-			this._mouse.y = 1 - context.event.offsetY / context.canvas.offsetHeight;
+			this._mouse.x = context.event.offsetX / canvas.offsetWidth;
+			this._mouse.y = 1 - context.event.offsetY / canvas.offsetHeight;
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
 		}
 	}
 
 	process_event(context: EventContext<MouseEvent>) {
-		if (!(context.canvas && context.cameraNode)) {
+		const canvas = context.viewer?.canvas();
+		if (!(canvas && context.cameraNode)) {
 			return;
 		}
 
@@ -62,7 +64,6 @@ export class RaycastGPUController {
 		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).render_controller;
 
 		if (renderer_controller) {
-			const canvas = context.canvas;
 			this._render_target =
 				this._render_target ||
 				new WebGLRenderTarget(canvas.offsetWidth, canvas.offsetHeight, {

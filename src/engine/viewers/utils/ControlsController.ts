@@ -13,25 +13,19 @@ export class ViewerControlsController {
 		this._update_graph_node();
 	}
 
-	get active() {
-		return this._active;
-	}
-	get cameraNode() {
-		return this.viewer.cameraNode;
-	}
-	get controls() {
+	controls() {
 		return this._controls;
 	}
 
 	async create_controls() {
-		this._dispose_controls();
+		this.dispose_controls();
 		const canvas = this.viewer.canvas();
 
 		if (!canvas) {
 			return;
 		}
 
-		this._config = await this.viewer?.cameraControlsController?.apply_controls(canvas);
+		this._config = await this.viewer.cameraControlsController?.apply_controls(this.viewer);
 		if (this._config) {
 			this._controls = this._config.controls;
 
@@ -40,7 +34,7 @@ export class ViewerControlsController {
 					this._controls.addEventListener('start', this._bound_on_controls_start);
 					this._controls.addEventListener('end', this._bound_on_controls_end);
 				} else {
-					this._dispose_controls();
+					this.dispose_controls();
 				}
 			}
 		}
@@ -55,9 +49,9 @@ export class ViewerControlsController {
 
 	dispose() {
 		this._graph_node?.graph_disconnect_predecessors();
-		this._dispose_controls();
+		this.dispose_controls();
 	}
-	private _dispose_controls() {
+	dispose_controls() {
 		if (this._controls) {
 			const canvas = this.viewer.canvas();
 			if (canvas) {

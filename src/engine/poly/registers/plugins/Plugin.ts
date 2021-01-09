@@ -4,7 +4,10 @@ type PolyPluginCallback = (poly: Poly) => void;
 interface PolyPluginOptions {
 	libraryName: string;
 }
-
+export interface PolyPluginData {
+	name: string;
+	libraryName: string;
+}
 export class PolyPlugin {
 	constructor(private _name: string, private _callback: PolyPluginCallback, private _options: PolyPluginOptions) {}
 
@@ -17,5 +20,12 @@ export class PolyPlugin {
 
 	init(poly: Poly) {
 		this._callback(poly);
+	}
+
+	toJSON(): PolyPluginData {
+		return {
+			name: this._name,
+			libraryName: this.libraryName(),
+		};
 	}
 }

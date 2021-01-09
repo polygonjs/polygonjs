@@ -8,7 +8,7 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {TypedNodePathParamValue} from '../../core/Walker';
 
 export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
-	private _found_node: BaseNodeType | null = null;
+	// private _found_node: BaseNodeType | null = null;
 
 	static type() {
 		return ParamType.NODE_PATH;
@@ -72,7 +72,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			node = CoreWalker.find_node(this.node, path, this.decomposed_path);
 		}
 
-		const current_found_entity = this._found_node;
+		const current_found_entity = this._value.node();
 		const newly_found_entity = node;
 
 		this.scene.referencesController.set_named_nodes_from_param(this);

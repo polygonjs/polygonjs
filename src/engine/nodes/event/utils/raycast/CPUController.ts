@@ -43,12 +43,13 @@ export class RaycastCPUController {
 	}
 
 	update_mouse(context: EventContext<MouseEvent>) {
-		if (!(context.canvas && context.cameraNode)) {
+		const canvas = context.viewer?.canvas();
+		if (!(canvas && context.cameraNode)) {
 			return;
 		}
 		if (context.event instanceof MouseEvent) {
-			this._mouse.x = (context.event.offsetX / context.canvas.offsetWidth) * 2 - 1;
-			this._mouse.y = -(context.event.offsetY / context.canvas.offsetHeight) * 2 + 1;
+			this._mouse.x = (context.event.offsetX / canvas.offsetWidth) * 2 - 1;
+			this._mouse.y = -(context.event.offsetY / canvas.offsetHeight) * 2 + 1;
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
 		}

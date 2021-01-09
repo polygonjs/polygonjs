@@ -85,8 +85,8 @@ export class ViewerEventsController {
 			return;
 		}
 		const event_context: EventContext<Event> = {
+			viewer: this.viewer,
 			event: event,
-			canvas: canvas,
 			cameraNode: this.cameraNode(),
 		};
 		controller.processEvent(event_context);

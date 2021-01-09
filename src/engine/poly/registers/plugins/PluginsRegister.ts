@@ -1,10 +1,11 @@
 import {Poly} from '../../../Poly';
-import {PolyPlugin} from './Plugin';
+import {PolyPlugin, PolyPluginData} from './Plugin';
 import {BaseNodeConstructor, BaseOperationConstructor} from '../nodes/NodesRegister';
 import {NodeContext} from '../../NodeContext';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface PluginsRegisterData {
+	plugins: PolyDictionary<PolyPluginData>;
 	nodes: PolyDictionary<PolyDictionary<string>>;
 	operations: PolyDictionary<PolyDictionary<string>>;
 }
@@ -56,9 +57,14 @@ export class PluginsRegister {
 
 	toJson() {
 		const data: PluginsRegisterData = {
+			plugins: {},
 			nodes: {},
 			operations: {},
 		};
+
+		this._plugins_by_name.forEach((plugin, name) => {
+			data.plugins[name] = plugin.toJSON();
+		});
 
 		this._plugin_name_by_node_context_by_type.forEach((map_for_context, context) => {
 			data.nodes[context] = {};

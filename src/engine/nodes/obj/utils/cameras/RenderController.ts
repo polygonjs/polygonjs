@@ -12,7 +12,7 @@ import {
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
-} from '../../../rop/WebglRenderer';
+} from '../../../rop/WebGlRenderer';
 import {Css2DRendererRopNode} from '../../../rop/Css2DRenderer';
 import {Css3DRendererRopNode} from '../../../rop/Css3DRenderer';
 import {RopType} from '../../../../poly/registers/nodes/Rop';

@@ -23,13 +23,13 @@ class Css2DRendererRopParamsConfig extends NodeParamsConfig {
 	fogNear = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		rangeLocked: [true, false],
-		visibleIf: {use_fog: 1},
+		visibleIf: {useFog: 1},
 	});
 	/** @param fog far */
 	fogFar = ParamConfig.FLOAT(100, {
 		range: [0, 100],
 		rangeLocked: [true, false],
-		visibleIf: {use_fog: 1},
+		visibleIf: {useFog: 1},
 	});
 }
 const ParamsConfig = new Css2DRendererRopParamsConfig();

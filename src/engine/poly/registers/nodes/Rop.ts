@@ -8,7 +8,7 @@ import {EventsRopNode} from '../../../nodes/rop/Events';
 import {MaterialsRopNode} from '../../../nodes/rop/Materials';
 import {PostProcessRopNode} from '../../../nodes/rop/PostProcess';
 import {RenderersRopNode} from '../../../nodes/rop/Renderers';
-import {WebGlRendererRopNode} from '../../../nodes/rop/WebglRenderer';
+import {WebGlRendererRopNode} from '../../../nodes/rop/WebGlRenderer';
 
 export enum RopType {
 	CSS2D = 'css2DRenderer',

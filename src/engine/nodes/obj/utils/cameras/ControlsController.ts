@@ -4,6 +4,7 @@ import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
 import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
 import {CAMERA_CONTROLS_NODE_TYPES} from '../../../../poly/NodeContext';
+import {BaseViewerType} from '../../../../viewers/_Base';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
@@ -59,25 +60,29 @@ export class ThreejsCameraControlsController {
 		this._controls_node = controls_node;
 	}
 
-	async apply_controls(html_element: HTMLElement) {
+	async apply_controls(viewer: BaseViewerType) {
+		const canvas = viewer.canvas();
+		if (!canvas) {
+			return;
+		}
 		const controls_node = await this.controls_node();
 		if (controls_node) {
 			const controls_id = controls_node.controls_id();
 			let controls_aleady_applied = false;
 
-			let map_for_element = this._applied_controls_by_element_id.get(html_element.id);
+			let map_for_element = this._applied_controls_by_element_id.get(canvas.id);
 			if (map_for_element && map_for_element.get(controls_id)) {
 				controls_aleady_applied = true;
 			}
 			if (!controls_aleady_applied) {
 				// this._last_control_node_id = controls_id;
 				map_for_element = new Map();
-				this._applied_controls_by_element_id.set(html_element.id, map_for_element);
+				this._applied_controls_by_element_id.set(canvas.id, map_for_element);
 				map_for_element.set(controls_id, controls_node);
 
 				// requestContainer forces a cook
 				//controls_node.requestContainer (controls_container)=>
-				const controls = await controls_node.apply_controls(this.node.object, html_element);
+				const controls = await controls_node.apply_controls(this.node.object, viewer);
 				const config = new CameraControlsConfig(this.node.graph_node_id, controls_node, controls);
 				// controls_node.set_from_camera_node(controls, this.node);
 				this.set_controls_events(controls);

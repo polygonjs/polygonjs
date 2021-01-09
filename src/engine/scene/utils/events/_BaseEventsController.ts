@@ -4,6 +4,7 @@ import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three/src/core/Raycaster';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
+import {BaseViewerType} from '../../../viewers/_Base';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -11,8 +12,8 @@ interface EventContextValue {
 }
 
 export interface EventContext<E extends Event> {
+	viewer?: Readonly<BaseViewerType>;
 	event?: Readonly<E>;
-	canvas?: Readonly<HTMLCanvasElement>;
 	cameraNode?: Readonly<BaseCameraObjNodeType>;
 	value?: EventContextValue;
 }

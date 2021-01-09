@@ -5,6 +5,7 @@ import {TypedEventNode} from './_Base';
 
 // import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {BaseViewerType} from '../../viewers/_Base';
 
 export type CameraControls = any;
 // export interface CameraControls extends OrbitControls {
@@ -17,14 +18,24 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 	// controls() {
 	// 	return this._controls;
 	// }
+	private _controls_by_viewer: Map<BaseViewerType, CameraControls> = new Map();
 
-	async apply_controls(camera: Camera, html_element: HTMLElement) {
+	async apply_controls(camera: Camera, viewer: BaseViewerType) {
 		// I don't think I can just assign the camera at the moment
 		// so the controls may need to be re-created everytime
 		// TODO: the controls should be created (and disposed?) by the viewer
 		//this.dispose_controls()
-
-		const controls = await this.create_controls_instance(camera, html_element);
+		viewer.controlsController?.dispose_controls();
+		const canvas = viewer.canvas();
+		if (!canvas) {
+			return;
+		}
+		const controls = await this.create_controls_instance(camera, canvas);
+		const current_controls = this._controls_by_viewer.get(viewer);
+		if (current_controls) {
+			current_controls.dispose();
+		}
+		this._controls_by_viewer.set(viewer, controls);
 		const timestamp = performance.now();
 		controls.name = `${this.fullPath()}:${camera.name}:${timestamp}:${this.controls_id()}`;
 		await this.params.eval_all();
