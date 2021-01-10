@@ -307,13 +307,13 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private async _load_ttf_loader() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.TTFLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.TTFLoader);
 		if (module) {
 			return new module.TTFLoader();
 		}
 	}
 	private async _load_svg_loader() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.SVGLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.SVGLoader);
 		if (module) {
 			return module.SVGLoader;
 		}

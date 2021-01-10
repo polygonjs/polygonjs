@@ -61,7 +61,7 @@ export class RaycastGPUController {
 		}
 
 		const camera_node = context.cameraNode;
-		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).render_controller;
+		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).renderController;
 
 		if (renderer_controller) {
 			this._render_target =

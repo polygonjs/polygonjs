@@ -1,4 +1,4 @@
-export class SceneLibsController {
+export class PolyLibsController {
 	private _root: string | null = '/three/js/libs';
 
 	root() {

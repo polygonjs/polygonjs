@@ -50,7 +50,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		};
 	}
 	load(data: PersistedConfigBaseParticlesData) {
-		if (!Poly.instance().playerMode()) {
+		if (!Poly.playerMode()) {
 			return;
 		}
 		this._loaded_data = data;

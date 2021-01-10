@@ -38,7 +38,7 @@ export class RaycastCPUVelocityController {
 		this._hit_velocity.toArray(this._hit_velocity_array);
 
 		if (this._node.pv.tvelocityTarget) {
-			if (Poly.instance().playerMode()) {
+			if (Poly.playerMode()) {
 				this._found_velocity_target_param =
 					this._found_velocity_target_param ||
 					this._node.p.velocityTarget.found_param_with_type(ParamType.VECTOR3);

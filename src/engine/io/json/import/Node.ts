@@ -28,7 +28,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		this.set_connection_points(data['connection_points']);
 
 		// rather than having the children creation dependent on the persisted config and player mode, use the children_allowed() method
-		// const skip_create_children = Poly.instance().playerMode() && data.persisted_config;
+		// const skip_create_children = Poly.playerMode() && data.persisted_config;
 		if (this._node.children_allowed()) {
 			this.create_nodes(scene_importer, data['nodes']);
 		}
@@ -66,7 +66,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		if (Poly.instance().playerMode()) {
+		if (Poly.playerMode()) {
 			return;
 		}
 		const ui_data = this._node.uiData;
@@ -166,7 +166,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		if (Poly.instance().playerMode()) {
+		if (Poly.playerMode()) {
 			return;
 		}
 

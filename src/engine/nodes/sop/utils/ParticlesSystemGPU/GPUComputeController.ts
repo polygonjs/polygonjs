@@ -154,7 +154,7 @@ export class ParticlesSystemGpuComputeController {
 		// we need to recreate the material if the texture allocation changes
 		this.node.render_controller.reset_render_material();
 
-		const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+		const renderer = await Poly.renderersController.waitForRenderer();
 		if (renderer) {
 			this._renderer = renderer;
 		} else {

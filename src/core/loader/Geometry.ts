@@ -226,10 +226,10 @@ export class CoreLoaderGeometry {
 		}
 	}
 	async loader_for_drc() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.DRACOLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (module) {
 			const draco_loader = new module.DRACOLoader();
-			const root = this.scene.libs.root();
+			const root = Poly.libs.root();
 			const decoder_path = `${root}/draco/`;
 			draco_loader.setDecoderPath(decoder_path);
 			draco_loader.setDecoderConfig({type: 'js'});
@@ -237,13 +237,13 @@ export class CoreLoaderGeometry {
 		}
 	}
 	async loader_for_fbx() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.FBXLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.FBXLoader);
 		if (module) {
 			return new module.FBXLoader();
 		}
 	}
 	async loader_for_gltf() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.GLTFLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.GLTFLoader);
 		if (module) {
 			return new module.GLTFLoader();
 		}
@@ -252,12 +252,12 @@ export class CoreLoaderGeometry {
 	private static gltf_loader: GLTFLoader | undefined;
 	private static draco_loader: DRACOLoader | undefined;
 	static async loader_for_glb(scene: PolyScene) {
-		const gltf_module = await Poly.instance().modulesRegister.module(ModuleName.GLTFLoader);
-		const draco_module = await Poly.instance().modulesRegister.module(ModuleName.DRACOLoader);
+		const gltf_module = await Poly.modulesRegister.module(ModuleName.GLTFLoader);
+		const draco_module = await Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (gltf_module && draco_module) {
 			this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
 			this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
-			const root = scene.libs.root();
+			const root = Poly.libs.root();
 			const decoder_path = `${root}/draco/gltf/`;
 			this.draco_loader.setDecoderPath(decoder_path);
 			// not having this uses wasm if the relevant libraries are found
@@ -271,19 +271,19 @@ export class CoreLoaderGeometry {
 	}
 
 	async loader_for_obj() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.OBJLoader2);
+		const module = await Poly.modulesRegister.module(ModuleName.OBJLoader2);
 		if (module) {
 			return new module.OBJLoader2();
 		}
 	}
 	async loader_for_pdb() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.PDBLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.PDBLoader);
 		if (module) {
 			return new module.PDBLoader();
 		}
 	}
 	async loader_for_ply() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.PLYLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.PLYLoader);
 		if (module) {
 			return new module.PLYLoader();
 		}

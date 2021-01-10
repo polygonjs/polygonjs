@@ -219,9 +219,9 @@ import {TorusSopOperation} from '../../../../core/operations/sop/Torus';
 import {TorusKnotSopOperation} from '../../../../core/operations/sop/TorusKnot';
 import {TransformSopOperation} from '../../../../core/operations/sop/Transform';
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class SopRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerOperation(AddSopOperation);
 		poly.registerOperation(AttribAddMultSopOperation);
 		poly.registerOperation(AttribCopySopOperation);

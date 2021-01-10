@@ -12,11 +12,10 @@ export class AllRegister {
 			return;
 		}
 		this._started = true;
-		const poly = Poly.instance();
-		AllNodesRegister.run(poly);
-		AllCamerasRegister.run(poly);
-		AllExpressionsRegister.run(poly);
-		AllModulesRegister.run(poly);
-		AllAssemblersRegister.run(poly);
+		AllNodesRegister.run(Poly);
+		AllCamerasRegister.run(Poly);
+		AllExpressionsRegister.run(Poly);
+		AllModulesRegister.run(Poly);
+		AllAssemblersRegister.run(Poly);
 	}
 }

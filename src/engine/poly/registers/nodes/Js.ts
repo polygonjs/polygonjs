@@ -12,9 +12,9 @@ export interface JsNodeChildrenMap {
 	param: ParamJsNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class JsRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS);

@@ -36,7 +36,7 @@ const definition: PolyNodeDefinition = {
 };
 const node_class = PolyNodeController.createNodeClass('poly_sop_test', NodeContext.SOP, definition);
 if (node_class) {
-	Poly.instance().registerNode(node_class);
+	Poly.registerNode(node_class);
 }
 
 QUnit.test('poly sop simple', async (assert) => {

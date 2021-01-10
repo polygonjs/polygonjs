@@ -39,10 +39,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	};
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllAssemblersRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_BASIC, GlAssemblerController, ShaderAssemblerBasic);
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_LAMBERT, GlAssemblerController, ShaderAssemblerLambert);
 		poly.assemblersRegister.register(

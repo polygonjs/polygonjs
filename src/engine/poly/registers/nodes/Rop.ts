@@ -29,9 +29,9 @@ export interface RopNodeChildrenMap {
 	renderers: RenderersRopNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class RopRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(Css2DRendererRopNode, CATEGORY_ROP.CSS);
 		// poly.registerNode(Css3DRendererRopNode, CATEGORY_ROP.CSS); // not registering, since sop/css3d_object is not yet working
 		poly.registerNode(WebGlRendererRopNode, CATEGORY_ROP.WEBGL);

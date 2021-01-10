@@ -64,9 +64,9 @@ export interface EventNodeChildrenMap {
 	renderers: RenderersEventNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class EventRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.ANIMATION);
 		poly.registerNode(AnyEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ButtonEventNode, CATEGORY_EVENT.MISC);

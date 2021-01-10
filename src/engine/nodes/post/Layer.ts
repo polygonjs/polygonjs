@@ -101,12 +101,12 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 			format: RGBAFormat,
 			stencilBuffer: true,
 		};
-		const render_target1 = Poly.instance().renderers_controller.render_target(
+		const render_target1 = Poly.renderersController.renderTarget(
 			renderer.domElement.offsetWidth,
 			renderer.domElement.offsetHeight,
 			parameters
 		);
-		const render_target2 = Poly.instance().renderers_controller.render_target(
+		const render_target2 = Poly.renderersController.renderTarget(
 			renderer.domElement.offsetWidth,
 			renderer.domElement.offsetHeight,
 			parameters

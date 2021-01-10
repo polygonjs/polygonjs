@@ -1,6 +1,6 @@
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 
-type PolyPluginCallback = (poly: Poly) => void;
+type PolyPluginCallback = (poly: PolyEngine) => void;
 interface PolyPluginOptions {
 	libraryName: string;
 }
@@ -18,7 +18,7 @@ export class PolyPlugin {
 		return this._options.libraryName;
 	}
 
-	init(poly: Poly) {
+	init(poly: PolyEngine) {
 		this._callback(poly);
 	}
 

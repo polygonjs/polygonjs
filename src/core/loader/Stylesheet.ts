@@ -9,7 +9,7 @@ export class CoreStylesheetLoader {
 			url = `${url}.css`;
 		}
 
-		if (!Poly.instance().in_worker_thread()) {
+		if (!Poly.inWorkerThread()) {
 			const id = url.replace(/[\W_]+/g, '_');
 			let stylesheet: HTMLLinkElement = document.getElementById(id) as HTMLLinkElement;
 

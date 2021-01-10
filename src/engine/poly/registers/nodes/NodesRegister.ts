@@ -1,7 +1,7 @@
 import {BaseNodeClass} from '../../../nodes/_Base';
 import {BaseOperation} from '../../../../core/operations/_Base';
 import {NodeContext} from '../../NodeContext';
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface RegisterOptions {
@@ -29,7 +29,7 @@ export class NodesRegister {
 	private _node_register_categories: TabMenuByTypeByContext = new Map();
 	private _node_register_options: RegisterOptionsByTypeByContext = new Map();
 
-	constructor(private poly: Poly) {}
+	constructor(private poly: PolyEngine) {}
 
 	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		const context = node.node_context();
@@ -126,7 +126,7 @@ export class NodesRegister {
 export class OperationsRegister {
 	private _operation_register: OperationConstructorByTypeByContext = new Map();
 
-	constructor(private poly: Poly) {}
+	constructor(private poly: PolyEngine) {}
 
 	register(operation: BaseOperationConstructor) {
 		const context = operation.context();

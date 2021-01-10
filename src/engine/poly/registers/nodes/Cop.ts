@@ -37,9 +37,9 @@ export interface CopNodeChildrenMap {
 	renderers: RenderersCopNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class CopRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(BuilderCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);

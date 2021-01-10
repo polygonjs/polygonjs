@@ -39,12 +39,12 @@ export class RenderersController {
 
 	constructor() {}
 
-	set_require_webgl2() {
+	setRequireWebGL2() {
 		if (!this._require_webgl2) {
 			this._require_webgl2 = true;
 		}
 	}
-	webgl2_available() {
+	webgl2Available() {
 		if (this._webgl2_available === undefined) {
 			this._webgl2_available = this._set_webgl2_available();
 		}
@@ -55,7 +55,7 @@ export class RenderersController {
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
 	}
 
-	rendering_context(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
+	renderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
 		let gl: WebGLRenderingContext | null = null;
 		if (this._require_webgl2) {
 			gl = this._rendering_context_webgl(canvas, true);
@@ -76,7 +76,7 @@ export class RenderersController {
 	}
 	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | null {
 		let context_name: WebGLContext;
-		if (this.webgl2_available()) {
+		if (this.webgl2Available()) {
 			context_name = WebGLContext.WEBGL2;
 		} else {
 			context_name = webgl2 ? WebGLContext.WEBGL2 : WebGLContext.WEBGL;
@@ -89,7 +89,7 @@ export class RenderersController {
 		return gl as WebGLRenderingContext | null;
 	}
 
-	register_renderer(renderer: WebGLRenderer) {
+	registerRenderer(renderer: WebGLRenderer) {
 		if ((renderer as POLYWebGLRenderer)._polygon_id) {
 			throw new Error('render already registered');
 		}
@@ -114,11 +114,11 @@ export class RenderersController {
 			this.flush_callbacks_with_renderer(renderer);
 		}
 	}
-	deregister_renderer(renderer: WebGLRenderer) {
+	deregisterRenderer(renderer: WebGLRenderer) {
 		delete this._renderers[(renderer as POLYWebGLRenderer)._polygon_id];
 		renderer.dispose();
 	}
-	first_renderer(): WebGLRenderer | null {
+	firstRenderer(): WebGLRenderer | null {
 		const first_id = Object.keys(this._renderers)[0];
 		if (first_id) {
 			return this._renderers[first_id];
@@ -136,8 +136,8 @@ export class RenderersController {
 		}
 	}
 
-	async wait_for_renderer(): Promise<WebGLRenderer> {
-		const renderer = this.first_renderer();
+	async waitForRenderer(): Promise<WebGLRenderer> {
+		const renderer = this.firstRenderer();
 		if (renderer) {
 			return renderer;
 		} else {
@@ -147,8 +147,8 @@ export class RenderersController {
 		}
 	}
 
-	render_target(width: number, height: number, parameters: WebGLRenderTargetOptions) {
-		if (this.webgl2_available()) {
+	renderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
+		if (this.webgl2Available()) {
 			return new WebGLMultisampleRenderTarget(width, height, parameters);
 		} else {
 			return new WebGLRenderTarget(width, height, parameters);

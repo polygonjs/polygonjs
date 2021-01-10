@@ -9,7 +9,7 @@ import {PostRegister, PostNodeChildrenMap} from './Post';
 import {RopRegister, RopNodeChildrenMap} from './Rop';
 import {SopRegister, GeoNodeChildrenMap} from './Sop';
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 import {NodeContext} from '../../NodeContext';
 
 export interface NodeChildrenMapByContext {
@@ -26,7 +26,7 @@ export interface NodeChildrenMapByContext {
 }
 
 export class AllNodesRegister {
-	static async run(poly: Poly) {
+	static async run(poly: PolyEngine) {
 		AnimRegister.run(poly);
 		CopRegister.run(poly);
 		EventRegister.run(poly);

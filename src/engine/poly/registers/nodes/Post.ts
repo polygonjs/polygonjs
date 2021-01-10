@@ -73,9 +73,9 @@ export interface PostNodeChildrenMap {
 	renderers: RenderersPostNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class PostRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(AdaptiveToneMappingPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(AfterImagePostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(BleachPostNode, CATEGORY_POST.COLOR);

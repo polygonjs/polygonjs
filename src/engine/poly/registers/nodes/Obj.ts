@@ -49,9 +49,9 @@ export interface ObjNodeChildrenMap {
 	renderers: RenderersObjNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class ObjRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(AmbientLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(AreaLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(DirectionalLightObjNode, CATEGORY_OBJ.LIGHT);

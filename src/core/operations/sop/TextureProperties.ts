@@ -79,7 +79,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 
 	private async _update_anisotropy(texture: Texture, params: TexturePropertiesSopParams) {
 		if (params.useRendererMaxAnisotropy) {
-			const renderer = await Poly.instance().renderers_controller.first_renderer();
+			const renderer = await Poly.renderersController.firstRenderer();
 			if (renderer) {
 				texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 			}

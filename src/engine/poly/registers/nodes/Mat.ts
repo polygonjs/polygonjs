@@ -47,9 +47,9 @@ export interface MatNodeChildrenMap {
 	renderers: RenderersMatNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class MatRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(LineBasicMatNode, CATEGORY_MAT.LINE);
 		poly.registerNode(MeshBasicMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshBasicBuilderMatNode, CATEGORY_MAT.ADVANCED);

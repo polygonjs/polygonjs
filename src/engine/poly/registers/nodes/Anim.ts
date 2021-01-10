@@ -43,9 +43,9 @@ export interface AnimNodeChildrenMap {
 	renderers: RenderersAnimNode;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 export class AnimRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.registerNode(DelayAnimNode, CATEGORY_ANIM.TIMING);
 		poly.registerNode(DurationAnimNode, CATEGORY_ANIM.MODIFIER);

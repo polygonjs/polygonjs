@@ -1,6 +1,7 @@
 import {BaseNodeClass} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
+import {PolyLibsController} from './poly/PolyLibsController';
 import {
 	NodesRegister,
 	RegisterOptions,
@@ -20,13 +21,13 @@ import {PolyDictionary} from '../types/GlobalTypes';
 
 declare global {
 	interface Window {
-		__POLYGONJS_POLY_INSTANCE__: Poly;
+		__POLYGONJS_POLY_INSTANCE__: PolyEngine;
 	}
 }
 
-export class Poly {
+export class PolyEngine {
 	// static _instance: Poly | undefined;
-	public readonly renderers_controller: RenderersController = new RenderersController();
+	public readonly renderersController: RenderersController = new RenderersController();
 	public readonly nodesRegister: NodesRegister = new NodesRegister(this);
 	public readonly operationsRegister: OperationsRegister = new OperationsRegister(this);
 	public readonly expressionsRegister: ExpressionRegister = new ExpressionRegister();
@@ -34,19 +35,19 @@ export class Poly {
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
-	scenes_by_uuid: PolyDictionary<PolyScene> = {};
+	scenesByUuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;
 	private _logger: BaseCoreLogger | null = null;
 
-	static instance() {
+	static _instance_() {
 		// we are using a window globals to ensure 2 instances can never be created
 		// even when the js are compiled by different means,
 		// which can happen in the editor.
 		if (window.__POLYGONJS_POLY_INSTANCE__) {
 			return window.__POLYGONJS_POLY_INSTANCE__;
 		} else {
-			const instance = new Poly();
+			const instance = new PolyEngine();
 			window.__POLYGONJS_POLY_INSTANCE__ = instance;
 			// this._instance = instance
 			return window.__POLYGONJS_POLY_INSTANCE__;
@@ -84,17 +85,27 @@ export class Poly {
 		return this.camerasRegister.registeredTypes();
 	}
 
-	in_worker_thread() {
+	inWorkerThread() {
 		return false;
 	}
-	desktop_controller(): any {}
+	desktopController(): any {}
+
+	//
+	//
+	// LIBS
+	//
+	//
+	private _libs_controller: PolyLibsController | undefined;
+	get libs() {
+		return (this._libs_controller = this._libs_controller || new PolyLibsController());
+	}
 
 	//
 	//
 	// ENV
 	//
 	//
-	set_env(env: string) {
+	setEnv(env: string) {
 		this._env = env;
 	}
 	get env() {
@@ -113,13 +124,15 @@ export class Poly {
 		return this._logger;
 	}
 
-	static log(message?: any, ...optionalParams: any[]) {
-		this.instance().logger?.log(...[message, ...optionalParams]);
+	log(message?: any, ...optionalParams: any[]) {
+		this.logger?.log(...[message, ...optionalParams]);
 	}
-	static warn(message?: any, ...optionalParams: any[]) {
-		this.instance().logger?.warn(...[message, ...optionalParams]);
+	warn(message?: any, ...optionalParams: any[]) {
+		this.logger?.warn(...[message, ...optionalParams]);
 	}
-	static error(message?: any, ...optionalParams: any[]) {
-		this.instance().logger?.error(...[message, ...optionalParams]);
+	error(message?: any, ...optionalParams: any[]) {
+		this.logger?.error(...[message, ...optionalParams]);
 	}
 }
+
+export const Poly = PolyEngine._instance_();

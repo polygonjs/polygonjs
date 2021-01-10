@@ -271,7 +271,7 @@ export class FunctionGenerator extends BaseTraverser {
 			}
 
 			// indirect methods (points_count, asset...)
-			const expressionRegister = Poly.instance().expressionsRegister;
+			const expressionRegister = Poly.expressionsRegister;
 			const indirect_method = expressionRegister.get_method(method_name);
 			if (indirect_method) {
 				const path_node = node.arguments[0];
@@ -446,7 +446,7 @@ export class FunctionGenerator extends BaseTraverser {
 		path_argument: number | string,
 		path_node?: jsep.Expression
 	) {
-		const expressionRegister = Poly.instance().expressionsRegister;
+		const expressionRegister = Poly.expressionsRegister;
 		const method_constructor = expressionRegister.get_method(method_name);
 		if (!method_constructor) {
 			const available_methods = expressionRegister.availableMethods();

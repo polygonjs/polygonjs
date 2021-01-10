@@ -127,11 +127,7 @@ export class EffectsComposerController {
 		}
 
 		renderer.getDrawingBufferSize(this._renderer_size);
-		render_target = Poly.instance().renderers_controller.render_target(
-			this._renderer_size.x,
-			this._renderer_size.y,
-			parameters
-		);
+		render_target = Poly.renderersController.renderTarget(this._renderer_size.x, this._renderer_size.y, parameters);
 		return render_target;
 	}
 

@@ -13,7 +13,7 @@ export class WebGLController {
 	set_require_webgl2() {
 		if (!this._require_webgl2) {
 			this._require_webgl2 = true;
-			Poly.instance().renderers_controller.set_require_webgl2();
+			Poly.renderersController.setRequireWebGL2();
 		}
 	}
 }

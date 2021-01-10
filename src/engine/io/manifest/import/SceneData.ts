@@ -2,7 +2,7 @@ import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../json/export/Node';
 import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json/export/Scene';
 
-export type ManifestNodesData = Dictionary<string>;
+export type ManifestNodesData = PolyDictionary<string>;
 export interface ManifestContent {
 	properties: string;
 	root: string;

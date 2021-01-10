@@ -216,7 +216,7 @@ export interface GlNodeChildrenMap {
 }
 
 import {NodeContext} from '../../NodeContext';
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 
 const SUBNET_CHILD_OPTION = {
 	only: [
@@ -226,7 +226,7 @@ const SUBNET_CHILD_OPTION = {
 	],
 };
 export class GlRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.registerNode(AbsGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(AccelerationGlNode, CATEGORY_GL.PHYSICS);
 		poly.registerNode(AcosGlNode, CATEGORY_GL.TRIGO);

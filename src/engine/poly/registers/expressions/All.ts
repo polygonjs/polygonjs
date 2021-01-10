@@ -35,10 +35,10 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	strSub: typeof StrSubExpression;
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllExpressionsRegister {
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.expressionsRegister.register(AssetExpression, 'asset');
 		poly.expressionsRegister.register(BboxExpression, 'bbox');
 		poly.expressionsRegister.register(CentroidExpression, 'centroid');

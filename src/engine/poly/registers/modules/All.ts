@@ -26,11 +26,11 @@ export interface ModulesMap extends PolyDictionary<any> {
 	[ModuleName.SVGLoader]: {SVGLoader: typeof SVGLoader};
 }
 
-import {Poly} from '../../../Poly';
+import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllModulesRegister {
 	// paths are not dynamic for esbuild
-	static run(poly: Poly) {
+	static run(poly: PolyEngine) {
 		poly.modulesRegister.register(
 			ModuleName.BasisTextureLoader,
 			import('../../../../modules/three/examples/jsm/loaders/BasisTextureLoader')

@@ -37,7 +37,7 @@ QUnit.testStart(async () => {
 	window.scene = new PolyScene();
 	window.scene.setName('test scene');
 	window.scene.setUuid('test');
-	Poly.instance().set_env('test');
+	Poly.setEnv('test');
 
 	window.scene.loadingController.markAsLoading();
 	window.scene.cooker.block();

@@ -184,7 +184,7 @@ export class TypedThreejsCameraObjNode<
 		return (this._layers_controller = this._layers_controller || new LayersController(this));
 	}
 	protected _render_controller: RenderController | undefined;
-	get render_controller(): RenderController {
+	get renderController(): RenderController {
 		return (this._render_controller = this._render_controller || new RenderController(this));
 	}
 	protected _post_process_controller: PostProcessController | undefined;
@@ -242,7 +242,7 @@ export class TypedThreejsCameraObjNode<
 
 		this.update_near_far();
 
-		this.render_controller.update();
+		this.renderController.update();
 		this.update_camera();
 		this.controls_controller.update_controls();
 

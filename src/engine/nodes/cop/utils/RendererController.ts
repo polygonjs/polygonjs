@@ -30,11 +30,11 @@ export class CopRendererController {
 	}
 
 	async camera_renderer() {
-		let renderer = Poly.instance().renderers_controller.first_renderer();
+		let renderer = Poly.renderersController.firstRenderer();
 		if (renderer) {
 			return renderer;
 		} else {
-			return await Poly.instance().renderers_controller.wait_for_renderer();
+			return await Poly.renderersController.waitForRenderer();
 		}
 	}
 

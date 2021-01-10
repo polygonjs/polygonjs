@@ -96,7 +96,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 		// this._process_queue_start = performance.now();
 		// Promise.all(promises).then(() => {
-		// 	// Poly.instance().log(`SCENE LOADED '${this.scene.name}`);
+		// 	// Poly.log(`SCENE LOADED '${this.scene.name}`);
 		// 	// `SCENE LOADED '${this.scene.name}' in ${performance.now() - this._process_queue_start}`
 		// 	// this.scene().performance().print()
 		// 	// do the update here if there are no objects to load

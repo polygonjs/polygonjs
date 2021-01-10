@@ -157,13 +157,13 @@ export class CoreTextureLoader {
 	}
 
 	private async _exr_loader() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.EXRLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.EXRLoader);
 		if (module) {
 			return new module.EXRLoader();
 		}
 	}
 	private async _hdr_loader() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.RGBELoader);
+		const module = await Poly.modulesRegister.module(ModuleName.RGBELoader);
 		if (module) {
 			const loader = new module.RGBELoader();
 			loader.setDataType(UnsignedByteType);
@@ -171,11 +171,11 @@ export class CoreTextureLoader {
 		}
 	}
 	private async _basis_loader() {
-		const module = await Poly.instance().modulesRegister.module(ModuleName.BasisTextureLoader);
+		const module = await Poly.modulesRegister.module(ModuleName.BasisTextureLoader);
 		if (module) {
 			const loader = new module.BasisTextureLoader();
 			loader.setTranscoderPath('/three/js/libs/basis/');
-			const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+			const renderer = await Poly.renderersController.waitForRenderer();
 			if (renderer) {
 				loader.detectSupport(renderer);
 			} else {

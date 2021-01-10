@@ -172,8 +172,8 @@ export class RenderController {
 	}
 
 	private _super_sampling_size = new Vector2();
-	create_renderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | undefined {
-		const gl = Poly.instance().renderers_controller.rendering_context(canvas);
+	createRenderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | undefined {
+		const gl = Poly.renderersController.renderingContext(canvas);
 		if (!gl) {
 			console.error('failed to create webgl context');
 			return;
@@ -201,7 +201,7 @@ export class RenderController {
 		// renderer.extensions.get( 'WEBGL_color_buffer_float' );
 		// renderer.extensions.get( 'WEBGL_draw_buffers' );
 
-		Poly.instance().renderers_controller.register_renderer(renderer);
+		Poly.renderersController.registerRenderer(renderer);
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		this._super_sampling_size.copy(size);
 		if (renderer.sampling) {
@@ -237,7 +237,7 @@ export class RenderController {
 	delete_renderer(canvas: HTMLCanvasElement) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			Poly.instance().renderers_controller.deregister_renderer(renderer);
+			Poly.renderersController.deregisterRenderer(renderer);
 		}
 	}
 	canvas_resolution(canvas: HTMLCanvasElement) {

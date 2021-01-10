@@ -15,8 +15,8 @@ export class RendererUtils {
 			const canvas = document.createElement('canvas');
 			document.body.appendChild(canvas);
 			const size = new Vector2(canvas.width, canvas.height);
-			const viewer = window.perspective_camera1.render_controller.create_renderer(canvas, size);
-			const renderer = await Poly.instance().renderers_controller.wait_for_renderer();
+			const viewer = window.perspective_camera1.renderController.createRenderer(canvas, size);
+			const renderer = await Poly.renderersController.waitForRenderer();
 			const config = {canvas, viewer, renderer};
 			this._configs.push(config);
 			resolve(config);
