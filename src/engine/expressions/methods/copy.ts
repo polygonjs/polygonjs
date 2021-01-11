@@ -1,3 +1,20 @@
+/**
+ * The copy expression allows the copy SOP node to evaluates its input graph multiple times, and vary its result each time.
+ *
+ * @remarks
+ * It takes 2 or 3 arguments
+ *
+ * copy(<input_index_or_node_path\>, <default_value/>, <attribute_name/>)
+ *
+ * - **<input_index_or_node_path\>** is a number or a string
+ * - **<default_value\>** is a number
+ * - **<attribute_name\>** is the attribute that will be stamped
+ *
+ * ## Usage
+ *
+ * - `copy('../copy1', 0, 'i')` - returns the index of each evaluation
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {CoreWalker} from '../../../core/Walker';

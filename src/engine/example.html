@@ -26,12 +26,10 @@
 
 
 	<div style='position:absolute; border: 1px solid lightgray; margin: 10px; padding: 10px;'>
+		<p>The torus's radius is linked to the bounding box of the sphere and the box.</p>
 		<p>
-			<label>Plane Size</label>
-			<input type='range' min=0 max=10 step=1 value=4 oninput='plane.p.size.set([event.target.value, event.target.value])'></input>
-		</p>
-		<p>
-			<input value='Reset' type='button' onclick='scene.setFrame(1);'></input>
+			<label>Box Center</label>
+			<input type='range' min=0 max=10 step=0.01 value=3 oninput='box.p.center.x.set(event.target.value)'></input>
 		</p>
 	</div>
 

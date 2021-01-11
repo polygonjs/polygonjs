@@ -1,11 +1,26 @@
+/**
+ * Returns the resolution of a texture of a COP node.
+ *
+ * @remarks
+ * It takes 1 or 2 arguments
+ *
+ * copRes(<input_index_or_node_path\>, <vector_component/>)
+ *
+ * - **<input_index_or_node_path\>** is a number or a string
+ * - **<vector_component\>** is a string or number, either 'x', 'y', 0 or 1
+ *
+ * ## Usage
+ *
+ * - `copRes('/COP/image1')` - returns the size of the texture, as a THREE.Vector2
+ * - `copRes('/COP/image1', 'x')` - returns the x component of the size of the texture, as a number
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {TextureContainer} from '../../containers/Texture';
 
 export class CopResExpression extends BaseMethod {
 	protected _require_dependency = true;
-	// cop_res(0, 'x')
-	// cop_res('../REF_bbox', 'x')
 	static required_arguments() {
 		return [
 			['string', 'path to node'],

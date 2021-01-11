@@ -1,7 +1,22 @@
+/**
+ * Returns the number of objects in a geometry.
+ *
+ * @remarks
+ * It takes 1 arguments.
+ *
+ * objectsCount(<input_index_or_node_path\>)
+ *
+ * - **<input_index_or_node_path\>** returns the number of objects, as a number
+ *
+ * ## Usage
+ *
+ * - `objectsCount(0)` - returns the number of objects in the input node.
+ * - `objectsCount('/geo/merge1')` - returns the number of objects in the node /geo/merge1
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
-// import {CoreGroup} from '../../../core/Geometry/Group';
 
 export class ObjectsCountExpression extends BaseMethod {
 	protected _require_dependency = true;

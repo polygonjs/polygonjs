@@ -1,3 +1,18 @@
+/**
+ * returns the number of character of a word
+ *
+ * @remarks
+ * It takes 1 arguments.
+ *
+ * strCharCount(<word\>)
+ *
+ * - **<word\>** - word to returns the number of characters of
+ *
+ * ## Usage
+ *
+ * - `strCharCount('a word')` - returns 6
+ *
+ */
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 

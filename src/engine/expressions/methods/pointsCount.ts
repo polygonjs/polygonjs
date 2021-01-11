@@ -1,3 +1,19 @@
+/**
+ * Returns the number of points in a geometry.
+ *
+ * @remarks
+ * It takes 1 arguments.
+ *
+ * pointsCount(<input_index_or_node_path\>)
+ *
+ * - **<input_index_or_node_path\>** returns the number of points, as a number
+ *
+ * ## Usage
+ *
+ * - `pointsCount(0)` - returns the number of points in the input node.
+ * - `pointsCount('/geo/merge1')` - returns the number of points in the node /geo/merge1
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';

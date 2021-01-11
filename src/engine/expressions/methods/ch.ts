@@ -1,8 +1,22 @@
-
+/**
+ * Returns the value of another parameter
+ *
+ * @remarks
+ * It takes 1 argument, the path to the parameter.
+ *
+ * ch(<param_path\>)
+ *
+ * - **<param_path\>** is a string, which can be the absolute or relative path
+ *
+ * ## Usage
+ *
+ * - `ch('./tx')` - returns the value of the parameter tx of the same node
+ * - `ch('/geo1/tx')` - returns the value of the tx of the node /geo1
+ *
+ */
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from '../../../core/DecomposedPath';
 import {MethodDependency} from '../MethodDependency';
-// import Walker from 'src/core/Walker';
 
 export class ChExpression extends BaseMethod {
 	protected _require_dependency = true;
@@ -11,10 +25,6 @@ export class ChExpression extends BaseMethod {
 		return [['string', 'path to param']];
 	}
 
-	// dependencies(args: any[]): any[]{
-	// 	const path = args[0]
-	// 	return [this.get_referenced_param(path)]
-	// }
 	find_dependency(index_or_path: number | string): MethodDependency | null {
 		const decomposed_path = new DecomposedPath();
 		const param = this.get_referenced_param(index_or_path as string, decomposed_path);
@@ -22,18 +32,7 @@ export class ChExpression extends BaseMethod {
 			return this.create_dependency(param, index_or_path, decomposed_path);
 		}
 		return null;
-		// const reference_search_result = new ReferenceSearchResult()
-		// const param = this.get_referenced_param(index_or_path)
-		// if(param){
-		// 	reference_search_result.set_found_graph_nodes([param])
-		// } else {
-		// 	reference_search_result.set_missing_paths([path])
-		// }
-
-		// return reference_search_result
 	}
-	// find_dependencies(index_or_path: number|string): MethodDependency{
-	// }
 
 	async process_arguments(args: any[]): Promise<any> {
 		let val: any = 0;
@@ -54,10 +53,4 @@ export class ChExpression extends BaseMethod {
 		}
 		return val;
 	}
-
-	// _get_param_value(path, callback){
-	// 	return this.get_referenced_param(path).eval(val=> {
-	// 		return callback(val);
-	// 	});
-	// }
 }

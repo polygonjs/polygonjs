@@ -1,10 +1,29 @@
+/**
+ * Returns the bbox of a geometry, or a component of the bbox.
+ *
+ * @remarks
+ * It takes 1, 2 or 3 arguments.
+ *
+ * bbox(<input_index_or_node_path\>, <bbox_vector\>, <vector_component\>)
+ *
+ * - **<input_index_or_node_path\>** is a number or a string
+ * - **<bbox_vector\>** is a string, either 'min' or 'max'
+ * - **<vector_component\>** is a string, either 'x', 'y' or 'z'
+ *
+ * ## Usage
+ *
+ * - `bbox(0)` - returns the bbox of the input node, as a THREE.Box3
+ * - `bbox('/geo1/box')` - returns the bbox of the node /geo1/box, as a THREE.Box3
+ * - `bbox('/geo1/box', 'min')` - returns the min vector of the bbox, as a THREE.Vector3
+ * - `bbox('/geo1/box', 'min', 'x')` - returns the x component of min vector of the bbox, as a number
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {Vector3} from 'three/src/math/Vector3';
 import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
-
-// import Walker from 'src/core/Walker';
+import {Box3} from 'three/src/math/Box3';
 
 interface BoxComponents {
 	min: Vector3;
@@ -18,8 +37,6 @@ const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 export class BboxExpression extends BaseMethod {
 	protected _require_dependency = true;
-	// bbox(0).min.x
-	// bbox('../REF_bbox').min.x
 	static required_arguments() {
 		return [
 			['string', 'path to node'],
@@ -33,12 +50,12 @@ export class BboxExpression extends BaseMethod {
 	}
 
 	process_arguments(args: any[]): Promise<any> {
-		let value = 0;
+		let value: number | Vector3 | Box3 = 0;
 		return new Promise(async (resolve, reject) => {
-			if (args.length == 3) {
+			if (args.length >= 1) {
 				const index_or_path = args[0];
-				const vector_name = args[1];
-				const component_name = args[2];
+				const vector_name: undefined | keyof BoxComponents = args[1];
+				const component_name: undefined | keyof Vector3Like = args[2];
 
 				let container: GeometryContainer | null = null;
 				try {
@@ -58,12 +75,14 @@ export class BboxExpression extends BaseMethod {
 
 	private _get_value_from_container(
 		container: GeometryContainer,
-		vector_name: keyof BoxComponents,
-		component_name: keyof Vector3Like
+		vector_name: undefined | keyof BoxComponents,
+		component_name: undefined | keyof Vector3Like
 	) {
+		const bbox = container.boundingBox();
+		if (!vector_name) {
+			return bbox;
+		}
 		if (VECTOR_NAMES.indexOf(vector_name) >= 0) {
-			const bbox = container.boundingBox();
-
 			let vector = new Vector3();
 			switch (vector_name) {
 				case 'size':
@@ -76,8 +95,11 @@ export class BboxExpression extends BaseMethod {
 					vector = bbox[vector_name];
 			}
 
+			if (!component_name) {
+				return vector;
+			}
+
 			if (COMPONENT_NAMES.indexOf(component_name) >= 0) {
-				//(value = vector[component_name])?
 				return vector[component_name];
 			} else {
 				return -1;

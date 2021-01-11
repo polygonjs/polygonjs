@@ -24,6 +24,8 @@ class TorusSopParamsConfig extends NodeParamsConfig {
 		range: [1, 50],
 		rangeLocked: [true, false],
 	});
+	/** @param axis perpendicular to the torus */
+	direction = ParamConfig.VECTOR3(DEFAULT.direction);
 	/** @param center of the torus */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }

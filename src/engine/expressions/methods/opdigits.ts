@@ -1,3 +1,20 @@
+/**
+ * Returns the number at the end of a string
+ *
+ * @remarks
+ * It takes 1 arguments.
+ *
+ * opdigits(<word\>)
+ *
+ * - **<word\>** returns the number at the end of word
+ *
+ * ## Usage
+ *
+ * - `opdigits('/geo1')` - returns 1
+ * - `opdigits($OS)` - returns the number at the end of the name of the current node
+ *
+ */
+
 import {BaseMethod} from './_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';

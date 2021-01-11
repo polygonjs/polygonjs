@@ -1,3 +1,110 @@
+/**
+ * The following expressions are available to use in most parameters:
+ *
+ * ## variables
+ *
+ * - $F: current frame
+ * - $T: current time
+ * - $CH: current param name
+ * - $CEX: input centroid x component
+ * - $CEY: input centroid y component
+ * - $CEZ: input centroid z component
+ *
+ * Those variables are aliases to the javascript math module:
+ *
+ * - $E
+ * - $LN2
+ * - $LN10
+ * - $LOG10E
+ * - $LOG2E
+ * - $PI
+ * - $SQRT1_2
+ * - $SQRT2
+ *
+ * ## math expressions
+ *
+ * The following are native javascript functions:
+ *
+ * - abs
+ * - acos
+ * - acosh
+ * - asin
+ * - asinh
+ * - atan
+ * - atan2
+ * - atanh
+ * - ceil
+ * - cos
+ * - cosh
+ * - exp
+ * - expm1
+ * - floor
+ * - log
+ * - log1p
+ * - log2
+ * - log10
+ * - max
+ * - min
+ * - pow
+ * - random (which aliases to Math.rand())
+ * - round
+ * - sign
+ * - sin
+ * - sinh
+ * - sqrt
+ * - tan
+ * - tanh
+ *
+ * If you are targetting ES6 (available in modern browsers), you can also have:
+ *
+ * - cbrt
+ * - hypot
+ * - log10
+ * - trunc
+ *
+ * The following are aliases from the [Polygonjs CoreMath](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/math/_Module.ts) module:
+ *
+ * - fit
+ * - fit01
+ * - fract
+ * - deg2rad
+ * - rad2deg
+ * - rand
+ * - clamp
+ *
+ * And the following are alias to the [Polygonjs Easing](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/math/Easing.ts) module:
+ *
+ * - linear
+ * - ease_i
+ * - ease_o
+ * - ease_io
+ * - ease_i2
+ * - ease_o2
+ * - ease_io2
+ * - ease_i3
+ * - ease_o3
+ * - ease_io3
+ * - ease_i4
+ * - ease_o4
+ * - ease_io4
+ * - ease_i_sin
+ * - ease_o_sin
+ * - ease_io_sin
+ * - ease_i_elastic
+ * - ease_o_elastic
+ * - ease_io_elastic
+ *
+ *
+ * ## string expressions:
+ *
+ * - precision (alias to the [CoreString](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/String.ts) module precision method)
+ * - [strCharsCount](/docs/expressions/strCharsCount)
+ * - [strConcat](/docs/expressions/strConcat)
+ * - [strIndex](/docs/expressions/strIndex)
+ * - [strSub](/docs/expressions/strSub)
+ *
+ *  */
+
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
@@ -272,7 +379,7 @@ export class FunctionGenerator extends BaseTraverser {
 
 			// indirect methods (points_count, asset...)
 			const expressionRegister = Poly.expressionsRegister;
-			const indirect_method = expressionRegister.get_method(method_name);
+			const indirect_method = expressionRegister.getMethod(method_name);
 			if (indirect_method) {
 				const path_node = node.arguments[0];
 				// const path_argument = this.string_generator.traverse_node(path_node)
@@ -447,7 +554,7 @@ export class FunctionGenerator extends BaseTraverser {
 		path_node?: jsep.Expression
 	) {
 		const expressionRegister = Poly.expressionsRegister;
-		const method_constructor = expressionRegister.get_method(method_name);
+		const method_constructor = expressionRegister.getMethod(method_name);
 		if (!method_constructor) {
 			const available_methods = expressionRegister.availableMethods();
 			const message = `method not found (${method_name}), available methods are: ${available_methods.join(', ')}`;

@@ -1,3 +1,19 @@
+/**
+ * returns the index of a character inside a string
+ *
+ * @remarks
+ * It takes 2 arguments
+ *
+ * strIndex(<word\>, <character\>)
+ *
+ * - **<word\>** - a string
+ * - **<character\>** - a string
+ *
+ * ## Usage
+ *
+ * - `strIndex('abcd ', 'c')` - returns 2
+ *
+ */
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 

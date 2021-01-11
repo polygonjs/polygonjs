@@ -1,3 +1,4 @@
+import {PolyDictionary} from '../types/GlobalTypes';
 import {PolyScene} from './index_all';
 import {BaseNodeType} from './nodes/_Base';
 import {PerspectiveCameraObjNode} from './nodes/obj/PerspectiveCamera';
@@ -27,7 +28,9 @@ import {SopSwitch} from '../../examples/engine/nodes/sop/Switch';
 import {SopTetrahedron} from '../../examples/engine/nodes/sop/Tetrahedron';
 import {SopTorus} from '../../examples/engine/nodes/sop/Torus';
 import {SopTorusKnot} from '../../examples/engine/nodes/sop/TorusKnot';
-import {PolyDictionary} from '../types/GlobalTypes';
+// expressions
+import {ExpressionBbox} from '../../examples/engine/expressions/bbox';
+import {ExpressionCentroid} from '../../examples/engine/expressions/centroid';
 
 const ANIM = [AnimPosition];
 const MAT = [MatMeshBasic, MatMeshLambert];
@@ -50,9 +53,11 @@ const SOP = [
 	SopTorus,
 	SopTorusKnot,
 ];
+const EXPRESSION = [ExpressionBbox, ExpressionCentroid];
 console.log('ANIM', ANIM.length);
 console.log('MAT', MAT.length);
 console.log('SOP', SOP.length);
+console.log('EXPRESSION', EXPRESSION.length);
 
 interface SceneBuilderResult {
 	scene: PolyScene;
@@ -61,7 +66,7 @@ interface SceneBuilderResult {
 	htmlNodes?: PolyDictionary<BaseNodeType>;
 }
 
-const result: SceneBuilderResult = SopRoundedBox();
+const result: SceneBuilderResult = ExpressionCentroid();
 (window as any).scene = result.scene;
 
 const htmlNodes = result.htmlNodes;

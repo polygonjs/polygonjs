@@ -1,13 +1,27 @@
+/**
+ * Returns the centroid of a geometry, or the component of the centroid.
+ *
+ * @remarks
+ * It takes 1 or 2 arguments.
+ *
+ * centroid(<input_index_or_node_path\>, <vector_component\>)
+ *
+ * - **<input_index_or_node_path\>** is a number or a string
+ * - **<vector_component\>** is a string, either 'x', 'y' or 'z'
+ *
+ * ## Usage
+ *
+ * - `centroid(0)` - returns the centroid of the input node, as a THREE.Box3
+ * - `centroid('/geo1/box')` - returns the centroid of the node /geo1/box, as a THREE.Box3
+ * - `centroid('/geo1/box', 'x')` - returns the x component of centroid of the bbox, as a number
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-// import Walker from 'src/core/Walker';
 import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
-
 export class CentroidExpression extends BaseMethod {
 	protected _require_dependency = true;
-	// bbox(0).min.x
-	// bbox('../REF_bbox').min.x
 	static required_arguments() {
 		return [
 			['string', 'path to node'],
@@ -21,13 +35,9 @@ export class CentroidExpression extends BaseMethod {
 
 	process_arguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			// const path = args
-			// this.get_referenced_param(path).eval_p().then(val=>{
-			// 	resolve(val)
-			// })
-			if (args.length == 2) {
+			if (args.length >= 1) {
 				const index_or_path = args[0];
-				const component_name = args[1] as keyof Vector3Like;
+				const component_name: undefined | keyof Vector3Like = args[1];
 				let container: GeometryContainer | null = null;
 				try {
 					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
@@ -39,32 +49,20 @@ export class CentroidExpression extends BaseMethod {
 					const bbox = container.boundingBox();
 					const center = bbox.min.clone().add(bbox.max).multiplyScalar(0.5);
 
-					const value = center[component_name];
-					if (value != null) {
-						resolve(value);
+					if (component_name) {
+						const value = center[component_name];
+						if (value != null) {
+							resolve(value);
+						} else {
+							resolve(0);
+						}
 					} else {
-						// throw "only component names are x, y and z";
-						resolve(0);
+						resolve(center);
 					}
 				}
 			} else {
 				resolve(0);
 			}
 		});
-		// return this._get_param_value(args[0], args[1], callback);
 	}
-
-	// _get_param_value(index_or_path, component_name, callback){
-	// 	return this.get_referenced_node_container(index_or_path, container=> {
-	// 		let value;
-	// 		const bbox = container.boundingBox();
-	// 		const size = bbox.min.clone().add(bbox.max).multiplyScalar(0.5);
-
-	// 		if ((value = size[component_name]) != null) {
-	// 			return callback(value);
-	// 		} else {
-	// 			throw "only component names are x, y and z";
-	// 		}
-	// 	});
-	// }
 }

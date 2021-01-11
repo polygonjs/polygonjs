@@ -1,3 +1,20 @@
+/**
+ * Returns the value of a vertex attribute
+ *
+ * @remarks
+ * It takes 3 arguments.
+ *
+ * points(<input_index_or_node_path\>, <attrib_name\>, <point_index\>)
+ *
+ * - **<input_index_or_node_path\>** is a number or a string
+ * - **<attrib_name\>** is a string, the name of the attribute
+ * - **<point_index\>** index of the point to fetch
+ *
+ * ## Usage
+ *
+ * - `point(0, 'position', 0)` - returns the position of the first point of the first input, as a THREE.Vector3
+ *
+ */
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';

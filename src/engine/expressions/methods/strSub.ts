@@ -1,3 +1,21 @@
+/**
+ * returns the substr from a larger word
+ *
+ * @remarks
+ * It takes 3 arguments
+ *
+ * strSub(<word\>, <start\>, <size\>)
+ *
+ * - **<word\>** - a string
+ * - **<start\>** - the start position as a number
+ * - **<size\>** - the number of characters to take, as a number
+ *
+ * ## Usage
+ *
+ * - `strSub('this is a word', 1, 2)` - returns 'hi'
+ *
+ */
+
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 

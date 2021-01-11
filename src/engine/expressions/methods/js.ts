@@ -1,5 +1,19 @@
+/**
+ * The js expression allows to execute a javascript expression. This is very useful when you have specific requirements that are not addressed by the expressions available here.
+ *
+ * @remarks
+ * It takes 1 arguments.
+ *
+ * js(<js_expression\>)
+ *
+ * - **<js_expression\>** is a a string
+ *
+ * ## Usage
+ *
+ * - `js('Date.now()')` - returns the current time.
+ *
+ */
 import {BaseMethod} from './_Base';
-
 export class JsExpression extends BaseMethod {
 	private _function: Function | undefined;
 
