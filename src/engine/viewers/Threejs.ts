@@ -14,7 +14,7 @@ declare global {
 }
 
 export interface ThreejsViewerProperties {
-	auto_render: boolean;
+	autoRender: boolean;
 }
 
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
@@ -31,7 +31,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	) {
 		super(_container, _scene, _camera_node);
 
-		this._do_render = this._properties != null ? this._properties.auto_render : true;
+		this._do_render = this._properties != null ? this._properties.autoRender : true;
 
 		this._canvas = document.createElement('canvas');
 		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');

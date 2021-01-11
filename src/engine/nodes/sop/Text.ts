@@ -18,7 +18,8 @@ import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
-const DEFAULT_FONT_URL = '/fonts/droid_sans_regular.typeface.json';
+const GIT_URL = 'https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master';
+const DEFAULT_FONT_URL = `${GIT_URL}/fonts/droid_sans_regular.typeface.json`;
 
 export enum TEXT_TYPE {
 	MESH = 'mesh',

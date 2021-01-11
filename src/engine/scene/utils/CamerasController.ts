@@ -9,12 +9,16 @@ export class CamerasController {
 	setMasterCameraNodePath(camera_node_path: string) {
 		this._masterCameraNodePath = camera_node_path;
 	}
-	get masterCameraNodePath() {
+	masterCameraNodePath() {
 		return this._masterCameraNodePath;
 	}
-	get masterCameraNode(): BaseCameraObjNodeType | null {
+	masterCameraNode(): BaseCameraObjNodeType | null {
 		if (this.masterCameraNodePath) {
-			const camera_node = this.scene.node(this.masterCameraNodePath) as BaseCameraObjNodeType | null;
+			const path = this.masterCameraNodePath();
+			if (!path) {
+				return this._find_any_camera();
+			}
+			const camera_node = this.scene.node(path) as BaseCameraObjNodeType | null;
 			return camera_node;
 		} else {
 			console.warn('master camera node not found');

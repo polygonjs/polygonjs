@@ -45,6 +45,9 @@ export class PolyScene {
 	get camerasController() {
 		return this._cameras_controller;
 	}
+	masterCameraNode() {
+		return this.camerasController.masterCameraNode();
+	}
 
 	private _cooker = new Cooker(this);
 	get cooker() {

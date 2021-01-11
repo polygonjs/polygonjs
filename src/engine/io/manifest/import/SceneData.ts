@@ -9,7 +9,7 @@ export interface ManifestContent {
 	nodes: ManifestNodesData;
 }
 interface ImportData {
-	url_prefix: string;
+	urlPrefix: string;
 	manifest: ManifestContent;
 	editor_mode?: boolean;
 }
@@ -25,22 +25,22 @@ export class SceneDataManifestImporter {
 		if (import_data.editor_mode == null) {
 			import_data.editor_mode = false;
 		}
-		const {manifest, url_prefix} = import_data;
+		const {manifest, urlPrefix} = import_data;
 		const node_paths = Object.keys(manifest.nodes);
 		const node_urls: string[] = [];
 		for (let node_path of node_paths) {
 			const timestamp = manifest.nodes[node_path];
-			const url = `${url_prefix}/root/${node_path}.json?t=${timestamp}`;
+			const url = `${urlPrefix}/root/${node_path}.json?t=${timestamp}`;
 			node_urls.push(url);
 		}
-		const root_url = `${url_prefix}/root.json?t=${manifest.root}`;
-		const properties_url = `${url_prefix}/properties.json?t=${manifest.properties}`;
+		const root_url = `${urlPrefix}/root.json?t=${manifest.root}`;
+		const properties_url = `${urlPrefix}/properties.json?t=${manifest.properties}`;
 		const all_urls = [root_url, properties_url];
 
 		// add editor urls if needed
 		if (import_data.editor_mode) {
 			const now = Date.now();
-			all_urls.push(`${url_prefix}/ui.json?t=${now}`);
+			all_urls.push(`${urlPrefix}/ui.json?t=${now}`);
 			//all_urls.push(`${url_prefix}/editor.json?t=${now}`);
 		}
 
