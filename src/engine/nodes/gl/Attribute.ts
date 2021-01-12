@@ -7,7 +7,7 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
+export const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 	GlConnectionPointType.FLOAT,
 	GlConnectionPointType.VEC2,
 	GlConnectionPointType.VEC3,

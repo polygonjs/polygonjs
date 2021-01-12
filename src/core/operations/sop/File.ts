@@ -5,14 +5,16 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreLoaderGeometry} from '../../loader/Geometry';
+import {ASSETS_ROOT} from '../../../../tests/helpers/AssetsUtils';
 
 interface FileSopParams extends DefaultOperationParams {
 	url: string;
 }
 
+const DEFAULT_URL = `${ASSETS_ROOT}/models/wolf.obj`;
 export class FileSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: FileSopParams = {
-		url: '/examples/models/wolf.obj',
+		url: DEFAULT_URL,
 	};
 	static type(): Readonly<'file'> {
 		return 'file';

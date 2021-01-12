@@ -17,9 +17,11 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
+import {Poly} from '../../Poly';
+import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
 
-const GIT_URL = 'https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master';
-const DEFAULT_FONT_URL = `${GIT_URL}/fonts/droid_sans_regular.typeface.json`;
+const DEFAULT_FONT_URL = `${DEMO_ASSETS_ROOT_URL}/fonts/droid_sans_regular.typeface.json`;
 
 export enum TEXT_TYPE {
 	MESH = 'mesh',
@@ -36,8 +38,6 @@ interface FontByUrl {
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
-import {Poly} from '../../Poly';
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
 	font = ParamConfig.STRING(DEFAULT_FONT_URL);

@@ -13,6 +13,7 @@ import {BaseNodeType} from '../_Base';
 import {CsvLoader} from '../../../core/loader/geometry/Csv';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {ASSETS_ROOT} from '../../../../tests/helpers/AssetsUtils';
 
 export enum DataType {
 	JSON = 'json',
@@ -20,6 +21,7 @@ export enum DataType {
 }
 export const DATA_TYPES: DataType[] = [DataType.JSON, DataType.CSV];
 
+const DEFAULT_URL = `${ASSETS_ROOT}/nodes/sop/DataUrl/basic.json`;
 class DataUrlSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if the data is interpreted as json or csv */
 	dataType = ParamConfig.INTEGER(DATA_TYPES.indexOf(DataType.JSON), {
@@ -33,7 +35,7 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param the url to fetch the data from */
-	url = ParamConfig.STRING('/examples/sop/data_url/basic.json');
+	url = ParamConfig.STRING(DEFAULT_URL);
 
 	//
 	// JSON params
