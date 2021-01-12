@@ -11,7 +11,7 @@ export interface ManifestContent {
 interface ImportData {
 	urlPrefix: string;
 	manifest: ManifestContent;
-	editor_mode?: boolean;
+	editorMode?: boolean;
 }
 
 export interface SceneDataElements {
@@ -22,8 +22,8 @@ export interface SceneDataElements {
 
 export class SceneDataManifestImporter {
 	static async importSceneData(import_data: ImportData): Promise<SceneJsonExporterData> {
-		if (import_data.editor_mode == null) {
-			import_data.editor_mode = false;
+		if (import_data.editorMode == null) {
+			import_data.editorMode = false;
 		}
 		const {manifest, urlPrefix} = import_data;
 		const node_paths = Object.keys(manifest.nodes);
@@ -38,7 +38,7 @@ export class SceneDataManifestImporter {
 		const all_urls = [root_url, properties_url];
 
 		// add editor urls if needed
-		if (import_data.editor_mode) {
+		if (import_data.editorMode) {
 			const now = Date.now();
 			all_urls.push(`${urlPrefix}/ui.json?t=${now}`);
 			//all_urls.push(`${url_prefix}/editor.json?t=${now}`);
@@ -62,7 +62,7 @@ export class SceneDataManifestImporter {
 			properties: jsons[1],
 		};
 		let response_offset = 2;
-		if (import_data.editor_mode) {
+		if (import_data.editorMode) {
 			assemble_data['ui'] = jsons[2];
 			response_offset += 1;
 		}
