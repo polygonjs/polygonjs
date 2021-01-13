@@ -60,12 +60,12 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 		}
 	}
 	private _process_trigger_createControls(context: EventContext<MouseEvent>) {
-		this.scene.viewersRegister.traverseViewers((v) => {
+		this.scene().viewersRegister.traverseViewers((v) => {
 			v.controlsController?.create_controls();
 		});
 	}
 	private _process_trigger_disposeControls(context: EventContext<MouseEvent>) {
-		this.scene.viewersRegister.traverseViewers((v) => {
+		this.scene().viewersRegister.traverseViewers((v) => {
 			v.controlsController?.dispose_controls();
 		});
 	}

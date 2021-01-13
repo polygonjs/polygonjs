@@ -4,7 +4,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 export abstract class CoreEntity {
 	constructor(protected _index: number) {}
-	get index() {
+	index() {
 		return this._index;
 	}
 

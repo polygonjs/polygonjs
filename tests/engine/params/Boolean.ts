@@ -90,8 +90,8 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 
 	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F', {spare: true})!;
 	assert.deepEqual(
-		spare_boolean.graph_all_predecessors().map((n: CoreGraphNode) => n.graph_node_id),
-		[scene.timeController.graph_node.graph_node_id]
+		spare_boolean.graphAllPredecessors().map((n: CoreGraphNode) => n.graphNodeId()),
+		[scene.timeController.graph_node.graphNodeId()]
 	);
 	assert.ok(spare_boolean.has_expression(), 'has expr');
 	assert.ok(spare_boolean.is_default, 'spare is default');

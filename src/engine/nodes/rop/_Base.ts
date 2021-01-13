@@ -12,7 +12,7 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	// protected _renderer: R = this._create_renderer();
 
 	initialize_base_node() {
-		this.dirty_controller.add_post_dirty_hook('cook_immediately', () => {
+		this.dirtyController.addPostDirtyHook('cook_immediately', () => {
 			this.cook_controller.cook_main_without_inputs();
 		});
 	}

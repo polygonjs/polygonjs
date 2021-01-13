@@ -21,7 +21,7 @@ export class BaseFlag {
 			this.run_hooks();
 		}
 	}
-	get active() {
+	active() {
 		return this._state;
 	}
 	toggle() {

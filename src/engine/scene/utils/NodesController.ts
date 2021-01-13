@@ -121,13 +121,13 @@ export class NodesController {
 			this._instanciated_nodes_by_context_and_type[context] || {};
 		this._instanciated_nodes_by_context_and_type[context][node_type] =
 			this._instanciated_nodes_by_context_and_type[context][node_type] || {};
-		this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id] = node;
+		this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()] = node;
 	}
 
 	removeFromInstanciatedNode(node: BaseNodeType) {
 		const context = node.node_context();
 		const node_type = node.type;
-		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graph_node_id];
+		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()];
 	}
 	nodesByType(type: string): BaseNodeType[] {
 		const list: BaseNodeType[] = [];

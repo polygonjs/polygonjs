@@ -7,10 +7,10 @@ export class ExpressionsController {
 	constructor() {}
 
 	register_param(param: BaseParamType) {
-		this._params_by_id.set(param.graph_node_id, param);
+		this._params_by_id.set(param.graphNodeId(), param);
 	}
 	deregister_param(param: BaseParamType) {
-		this._params_by_id.delete(param.graph_node_id);
+		this._params_by_id.delete(param.graphNodeId());
 	}
 
 	//
@@ -18,6 +18,6 @@ export class ExpressionsController {
 	//
 	//
 	regenerate_referring_expressions(node: BaseNodeType) {
-		node.name_controller.graph_node.set_successors_dirty(node);
+		node.name_controller.graph_node.setSuccessorsDirty(node);
 	}
 }

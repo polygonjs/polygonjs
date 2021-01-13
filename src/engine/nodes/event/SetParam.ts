@@ -121,14 +121,14 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.param]);
 			});
 		});
 	}
 	async process_event(event_context: EventContext<Event>) {
-		if (this.p.param.is_dirty) {
+		if (this.p.param.isDirty()) {
 			await this.p.param.compute();
 		}
 		const param = this.p.param.value.param();
@@ -237,7 +237,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 	private async _compute_params_if_dirty(params: BaseParamType[]) {
 		const dirty_params = [];
 		for (let param of params) {
-			if (param.is_dirty) {
+			if (param.isDirty()) {
 				dirty_params.push(param);
 			}
 		}

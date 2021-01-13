@@ -15,8 +15,8 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	const geo1 = window.geo1;
 	assert.equal(geo1.children().length, 0);
 	const box1 = geo1.createNode('box');
-	assert.ok(box1.flags.display.active, 'display flag is set on');
-	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, box1.graph_node_id, 'display node is box');
+	assert.ok(box1.flags.display.active(), 'display flag is set on');
+	assert.equal(geo1.display_node_controller.display_node?.graphNodeId(), box1.graphNodeId(), 'display node is box');
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
 	assert.equal(
@@ -93,8 +93,8 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 
 	const box1 = geo1.createNode('box');
 	await scene.waitForCooksCompleted();
-	assert.ok(box1.flags.display.active, 'display flag is set on');
-	assert.equal(geo1.display_node_controller.display_node?.graph_node_id, box1.graph_node_id, 'display node is box');
+	assert.ok(box1.flags.display.active(), 'display flag is set on');
+	assert.equal(geo1.display_node_controller.display_node?.graphNodeId(), box1.graphNodeId(), 'display node is box');
 	assert.equal(box1.cook_controller.cooks_count, 0, 'box has not cooked');
 	assert.equal(geo1.children_display_controller.sop_group.children.length, 0, 'sop_group is empty');
 
@@ -142,7 +142,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 
 	// display the plane
 	plane1.flags.display.set(true);
-	assert.notOk(box1.flags.display.active);
+	assert.notOk(box1.flags.display.active());
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2);

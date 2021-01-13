@@ -80,9 +80,9 @@ export class CoreTextureLoader {
 
 		// NOTE: if this._param gets its value from an expression like `ch('/CONTROL/photo_url')`
 		// then found_node will be null, so the graph should not be changed
-		if (found_node && this._param.graph_predecessors()[0] != found_node) {
-			this._param.graph_disconnect_predecessors();
-			this._param.add_graph_input(found_node);
+		if (found_node && this._param.graphPredecessors()[0] != found_node) {
+			this._param.graphDisconnectPredecessors();
+			this._param.addGraphInput(found_node);
 		}
 
 		// this._assign_texture(attrib, texture)
@@ -94,7 +94,7 @@ export class CoreTextureLoader {
 			// url = this._resolve_url(url)
 			const ext = CoreTextureLoader.get_extension(url);
 			if (url[0] != 'h') {
-				const assets_root = this._node.scene.assets.root();
+				const assets_root = this._node.scene().assets.root();
 				if (assets_root) {
 					url = `${assets_root}${url}`;
 				}

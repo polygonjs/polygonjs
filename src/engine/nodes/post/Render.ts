@@ -60,7 +60,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 
 	private async _update_camera(pass: RenderPassWithContext) {
 		if (this.pv.overrideCamera) {
-			if (this.p.camera.is_dirty) {
+			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
 			}
 			const obj_node = this.p.camera.found_node_with_context(NodeContext.OBJ);
@@ -77,7 +77,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 
 	private async _update_scene(pass: RenderPassWithContext) {
 		if (this.pv.overrideScene) {
-			if (this.p.camera.is_dirty) {
+			if (this.p.camera.isDirty()) {
 				await this.p.scene.compute();
 			}
 			const obj_node = this.p.scene.found_node_with_context(NodeContext.OBJ);

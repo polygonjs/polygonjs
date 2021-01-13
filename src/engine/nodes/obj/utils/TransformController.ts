@@ -68,8 +68,8 @@ export class TransformController {
 	constructor(private node: TransformedObjNode) {}
 
 	initialize_node() {
-		if (!this.node.dirty_controller.has_hook(HOOK_NAME)) {
-			this.node.dirty_controller.add_post_dirty_hook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
+		if (!this.node.dirtyController.has_hook(HOOK_NAME)) {
+			this.node.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
 		}
 	}
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
@@ -167,7 +167,7 @@ export class TransformController {
 		if (!this.node.pv.keepPosWhenParenting) {
 			return;
 		}
-		if (!this.node.scene.loadingController.loaded()) {
+		if (!this.node.scene().loadingController.loaded()) {
 			return;
 		}
 		if (new_parent_object == this.node.object.parent) {

@@ -65,7 +65,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	private _add_to_queue(node: BaseObjNodeType) {
-		const id = node.graph_node_id;
+		const id = node.graphNodeId();
 		if (!this._queued_nodes_by_id.has(id)) {
 			this._queued_nodes_by_id.set(id, node);
 		}
@@ -108,7 +108,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	private _update_object(node: BaseObjNodeType) {
-		if (!this.scene.loadingController.autoUpdating()) {
+		if (!this.scene().loadingController.autoUpdating()) {
 			return this._add_to_queue(node);
 		} else {
 			return this._add_to_scene(node);
@@ -166,7 +166,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 				// 	// one referencing the other with an expression, and that
 				// 	// expression be evaluated before the second was created
 				// 	// which led to an error. This should not happen
-				// 	node.children_controller.traverse_children((child) => child.set_dirty());
+				// 	node.children_controller.traverse_children((child) => child.setDirty());
 				// });
 			}
 		}
@@ -191,7 +191,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// 	for (let geo_node of geo_nodes) {
 	// 		const is_displayed = await geo_node.is_displayed();
 	// 		if (is_displayed) {
-	// 			node_by_id[geo_node.graph_node_id] = geo_node;
+	// 			node_by_id[geo_node.graphNodeId()] = geo_node;
 	// 		}
 	// 	}
 	// 	return node_by_id;

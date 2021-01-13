@@ -32,7 +32,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	initialize_node() {
-		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
+		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initialize_node();
 
@@ -44,7 +44,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [
 			VARYING_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});

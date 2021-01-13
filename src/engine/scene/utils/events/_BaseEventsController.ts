@@ -24,11 +24,11 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	constructor(private dispatcher: SceneEventsDispatcher) {}
 
 	registerNode(node: T) {
-		this._nodes_by_graph_node_id.set(node.graph_node_id, node);
+		this._nodes_by_graph_node_id.set(node.graphNodeId(), node);
 		this.updateViewerEventListeners();
 	}
 	unregisterNode(node: T) {
-		this._nodes_by_graph_node_id.delete(node.graph_node_id);
+		this._nodes_by_graph_node_id.delete(node.graphNodeId());
 		this.updateViewerEventListeners();
 	}
 	abstract type(): string;

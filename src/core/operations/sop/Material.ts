@@ -62,7 +62,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		const material_node = params.material.ensure_node_context(NodeContext.MAT, this.states?.error);
 		if (material_node) {
 			const material = material_node.material;
-			const assembler_controller = (material_node as BaseBuilderMatNodeType).assembler_controller;
+			const assembler_controller = (material_node as BaseBuilderMatNodeType).assemblerController;
 			if (assembler_controller) {
 				assembler_controller.set_assembler_globals_handler(this._globals_handler);
 			}
@@ -80,7 +80,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 				}
 				return core_group;
 			} else {
-				this.states?.error.set(`material invalid. (error: '${material_node.states.error.message}')`);
+				this.states?.error.set(`material invalid. (error: '${material_node.states.error.message()}')`);
 			}
 		} else {
 			this.states?.error.set(`no material node found`);

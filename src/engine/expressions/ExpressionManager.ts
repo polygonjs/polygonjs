@@ -40,7 +40,7 @@ export class ExpressionManager {
 		}
 		this.function_generator.parse_tree(this.parsed_tree);
 
-		if (this.function_generator.error_message == null) {
+		if (this.function_generator.error_message() == null) {
 			this.dependencies_controller.update(this.function_generator);
 			if (this.dependencies_controller.error_message) {
 				this.param.states.error.set(this.dependencies_controller.error_message);
@@ -81,11 +81,11 @@ export class ExpressionManager {
 		this.function_generator.reset();
 	}
 
-	get is_errored(): boolean {
-		return this.function_generator.is_errored;
+	is_errored(): boolean {
+		return this.function_generator.is_errored();
 	}
-	get error_message() {
-		return this.function_generator.error_message;
+	error_message() {
+		return this.function_generator.error_message();
 	}
 
 	private compute_allowed(): boolean {

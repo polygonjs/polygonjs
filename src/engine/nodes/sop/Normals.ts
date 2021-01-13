@@ -109,13 +109,13 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		if (this.pv.updateX) {
 			if (this.p.x.has_expression() && this.p.x.expression_controller) {
 				await this.p.x.expression_controller.compute_expression_for_points(points, (point, value) => {
-					array[point.index * 3 + 0] = value;
+					array[point.index() * 3 + 0] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					array[point.index * 3 + 0] = this.pv.x;
+					array[point.index() * 3 + 0] = this.pv.x;
 				}
 			}
 		}
@@ -123,13 +123,13 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		if (this.pv.updateY) {
 			if (this.p.y.has_expression() && this.p.y.expression_controller) {
 				await this.p.y.expression_controller.compute_expression_for_points(points, (point, value) => {
-					array[point.index * 3 + 1] = value;
+					array[point.index() * 3 + 1] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					array[point.index * 3 + 1] = this.pv.y;
+					array[point.index() * 3 + 1] = this.pv.y;
 				}
 			}
 		}
@@ -137,13 +137,13 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		if (this.pv.updateZ) {
 			if (this.p.z.has_expression() && this.p.z.expression_controller) {
 				await this.p.z.expression_controller.compute_expression_for_points(points, (point, value) => {
-					array[point.index * 3 + 2] = value;
+					array[point.index() * 3 + 2] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					array[point.index * 3 + 2] = this.pv.z;
+					array[point.index() * 3 + 2] = this.pv.z;
 				}
 			}
 		}

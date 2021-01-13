@@ -79,10 +79,10 @@ export class EffectsComposerController {
 		return {
 			on_display_node_remove: () => {},
 			on_display_node_set: () => {
-				this.node.set_dirty();
+				this.node.setDirty();
 			},
 			on_display_node_update: () => {
-				this.node.set_dirty();
+				this.node.setDirty();
 			},
 		};
 	}

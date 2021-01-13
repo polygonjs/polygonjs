@@ -180,7 +180,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 		await scene2.waitForCooksCompleted();
 
 		const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
-		assert.notOk(new_particles1.assembler_controller);
+		assert.notOk(new_particles1.assemblerController);
 		assert.ok(new_particles1.persisted_config);
 		const test_param2 = new_particles1.params.get('test_param') as Vector3Param;
 		assert.ok(test_param2);

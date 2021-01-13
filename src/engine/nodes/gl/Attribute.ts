@@ -46,12 +46,12 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initialize_node() {
-		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
+		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initialize_node();
 
 		this.io.connection_points.set_expected_input_types_function(() => {
-			if (this.material_node?.assembler_controller?.allow_attribute_exports()) {
+			if (this.material_node?.assemblerController?.allow_attribute_exports()) {
 				return [ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type]];
 			} else {
 				return [];
@@ -65,8 +65,8 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-		// this.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
-		this.scene.dispatchController.onAddListener(() => {
+		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name, this.p.export_when_connected], () => {
 					return this.pv.export_when_connected ? `${this.pv.name} (EXPORTED)` : this.pv.name;
@@ -74,7 +74,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			});
 		});
 		this.params.add_on_scene_load_hook('prepare params', () => {
-			if (this.material_node?.assembler_controller?.allow_attribute_exports()) {
+			if (this.material_node?.assemblerController?.allow_attribute_exports()) {
 				this.p.texport_when_connected.set(1);
 			}
 		});
@@ -102,7 +102,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		this.material_node?.assembler_controller?.assembler.set_node_lines_attribute(
+		this.material_node?.assemblerController?.assembler.set_node_lines_attribute(
 			this,
 			shaders_collection_controller
 		);
@@ -192,7 +192,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
 	// 		this.update_input_and_output_types();
-	// 		this.remove_dirty_state();
+	// 		this.removeDirtyState();
 	// 		this.make_output_nodes_dirty();
 	// 	}
 	// 	this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);

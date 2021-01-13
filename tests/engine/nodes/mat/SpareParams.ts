@@ -20,24 +20,24 @@ QUnit.test(
 		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 		mesh_basic1.createNode('output');
 		mesh_basic1.createNode('globals');
-		assert.ok(mesh_basic1.assembler_controller, 'assembler controller is present');
-		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController, 'assembler controller is present');
+		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 
 		await mesh_basic1.requestContainer();
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
+		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compile is not required');
 
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 		const param1 = mesh_basic1.createNode('param');
 		CoreSleep.sleep(10);
-		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		const param_name = param1.p.name.value;
 		param1.set_gl_type(GlConnectionPointType.FLOAT);
 
-		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		CoreSleep.sleep(10);
 		await mesh_basic1.requestContainer();
-		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is NOT required');
+		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is NOT required');
 
 		// param should already exist, and also uniform on mat
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
@@ -55,9 +55,9 @@ QUnit.test(
 
 		// updating the param updates the uniform, without having to cook the material node
 		output1.setInput('alpha', param1);
-		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		await mesh_basic1.requestContainer();
-		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		const uniform_name = param1.uniform_name();
 		assert.equal(mesh_basic1.params.get(param_name)!.value, 0);
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
@@ -100,9 +100,9 @@ QUnit.test(
 		assert.equal(spare_param.type, ParamType.INTEGER);
 		await CoreSleep.sleep(10);
 		assert.equal(spare_param.raw_input, '$F');
-		assert.notOk(spare_param.is_dirty, 'param not dirty');
+		assert.notOk(spare_param.isDirty(), 'param not dirty');
 		scene.setFrame(35);
-		assert.ok(spare_param.is_dirty, 'param is dirty');
+		assert.ok(spare_param.isDirty(), 'param is dirty');
 		assert.equal(scene.frame, 35, 'scene frame is 35');
 		await spare_param.compute();
 		assert.equal(spare_param.value, 35, 'param is 35');
@@ -129,8 +129,8 @@ QUnit.test(
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 		await new_mesh_basic1.requestContainer();
-		assert.ok(new_mesh_basic1.assembler_controller, 'assembler_controller is present');
-		assert.notOk(new_mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
+		assert.ok(new_mesh_basic1.assemblerController, 'assembler_controller is present');
+		assert.notOk(new_mesh_basic1.assemblerController?.compile_required(), 'compile is not required');
 		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
 		assert.equal(new_mesh_basic1.params.get(param_name)?.raw_input, '$F', 'param raw input is $F');
 		await CoreSleep.sleep(100);
@@ -166,11 +166,11 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required());
+	assert.notOk(mesh_basic1.assemblerController?.compile_required());
 
 	// const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 
 	const param1 = mesh_basic1.createNode('param');
 	const param_name = param1.p.name.value;
@@ -238,12 +238,12 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compile required');
+	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compile required');
 
 	await scene.waitForCooksCompleted();
 	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), [], 'no spare params');
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compile not required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compile not required');
 
 	// const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 

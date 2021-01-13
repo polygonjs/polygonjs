@@ -20,13 +20,14 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	toJSON(): PersistedConfigBaseTextureData | undefined {
-		if (!this.node.assembler_controller) {
+		const assemblerController = this.node.assemblerController;
+		if (!assemblerController) {
 			return;
 		}
 
 		// params updating uniforms
 		const param_uniform_pairs: [string, string][] = [];
-		const param_configs = this.node.assembler_controller.assembler.param_configs();
+		const param_configs = assemblerController.assembler.param_configs();
 		for (let param_config of param_configs) {
 			param_uniform_pairs.push([param_config.name, param_config.uniform_name]);
 		}
@@ -35,8 +36,8 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			fragment_shader: this.node.texture_material.fragmentShader,
 			uniforms: this.node.texture_material.uniforms,
 			param_uniform_pairs: param_uniform_pairs,
-			uniforms_time_dependent: this.node.assembler_controller.assembler.uniforms_time_dependent(),
-			uniforms_resolution_dependent: this.node.assembler_controller.assembler.resolution_dependent(),
+			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
+			uniforms_resolution_dependent: assemblerController.assembler.resolution_dependent(),
 		};
 
 		return data;

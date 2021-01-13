@@ -16,7 +16,7 @@ export class CoreGeometryBuilderLineSegments extends CoreGeometryBuilderBase {
 			if (indices) {
 				const points_by_index: PolyDictionary<CorePoint> = {};
 				for (let point of points) {
-					points_by_index[point.index] = point;
+					points_by_index[point.index()] = point;
 				}
 				const filtered_points: CorePoint[] = [];
 

@@ -90,9 +90,9 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	const add2 = scene2.node(add1.fullPath())! as AddSopNode;
 	const plane2 = scene2.node(plane1.fullPath())! as PlaneSopNode;
 	const merge2 = scene2.node(merge1.fullPath())! as MergeSopNode;
-	assert.equal(merge2.io.inputs.input(0)?.graph_node_id, add2.graph_node_id, 'input 0 is add node');
-	assert.equal(merge2.io.inputs.input(1)?.graph_node_id, null, 'input 1 is empty');
-	assert.equal(merge2.io.inputs.input(2)?.graph_node_id, plane2.graph_node_id, 'input 2 is plane node');
+	assert.equal(merge2.io.inputs.input(0)?.graphNodeId(), add2.graphNodeId(), 'input 0 is add node');
+	assert.equal(merge2.io.inputs.input(1)?.graphNodeId(), null, 'input 1 is empty');
+	assert.equal(merge2.io.inputs.input(2)?.graphNodeId(), plane2.graphNodeId(), 'input 2 is plane node');
 
 	container = await merge1.requestContainer();
 	core_group = container.coreContent()!;

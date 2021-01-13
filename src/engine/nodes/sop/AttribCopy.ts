@@ -58,7 +58,7 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		this.io.inputs.set_count(1, 2);
 		this.io.inputs.init_inputs_cloned_state(AttribCopySopOperation.INPUT_CLONED_STATE);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name, this.p.tnewName, this.p.newName], () => {
 					return this.pv.tnewName ? `${this.pv.name} -> ${this.pv.newName}` : this.pv.name;
@@ -69,7 +69,7 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 
 	private _operation: AttribCopySopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new AttribCopySopOperation(this.scene, this.states);
+		this._operation = this._operation || new AttribCopySopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

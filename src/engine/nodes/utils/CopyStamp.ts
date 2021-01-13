@@ -11,8 +11,8 @@ export class BaseCopyStamp extends CoreGraphNode {
 
 	set_global_index(index: number) {
 		this._global_index = index;
-		this.set_dirty();
-		this.remove_dirty_state();
+		this.setDirty();
+		this.removeDirtyState();
 	}
 
 	value(attrib_name?: string): AttribValue {

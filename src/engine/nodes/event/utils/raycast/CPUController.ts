@@ -285,7 +285,7 @@ export class RaycastCPUController {
 	}
 
 	async update_position_target() {
-		if (this._node.p.positionTarget.is_dirty) {
+		if (this._node.p.positionTarget.isDirty()) {
 			await this._node.p.positionTarget.compute();
 		}
 	}

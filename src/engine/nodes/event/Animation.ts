@@ -77,7 +77,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 
 	private async _play(event_context: EventContext<Event>) {
 		const param = this.p.animation;
-		if (param.is_dirty) {
+		if (param.isDirty()) {
 			await param.compute();
 		}
 		const node = param.value.ensure_node_context(NodeContext.ANIM);
@@ -97,7 +97,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		}
 		this._timeline = gsap.timeline();
 
-		this._timeline_builder.populate(this._timeline, this.scene);
+		this._timeline_builder.populate(this._timeline, this.scene());
 
 		this._timeline.vars.onStart = () => {
 			this.trigger_animation_started(event_context);

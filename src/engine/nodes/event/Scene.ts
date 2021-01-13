@@ -93,22 +93,22 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 	}
 
 	private onSetFrame(event_context: EventContext<Event>) {
-		this.scene.setFrame(this.pv.setFrameValue);
+		this.scene().setFrame(this.pv.setFrameValue);
 	}
 
 	private on_frame_update() {
-		if (this.scene.time >= this.pv.reachedTime) {
+		if (this.scene().time >= this.pv.reachedTime) {
 			this.dispatch_event_to_output(SceneNodeOutput.TIME_REACHED, {});
 		}
 	}
 	private update_time_dependency() {
 		if (this.pv.treachedTime) {
-			this.graph_node = this.graph_node || new CoreGraphNode(this.scene, 'scene_node_time_graph_node');
-			this.graph_node.add_graph_input(this.scene.timeController.graph_node);
-			this.graph_node.add_post_dirty_hook('time_update', this.on_frame_update.bind(this));
+			this.graph_node = this.graph_node || new CoreGraphNode(this.scene(), 'scene_node_time_graph_node');
+			this.graph_node.addGraphInput(this.scene().timeController.graph_node);
+			this.graph_node.addPostDirtyHook('time_update', this.on_frame_update.bind(this));
 		} else {
 			if (this.graph_node) {
-				this.graph_node.graph_disconnect_predecessors();
+				this.graph_node.graphDisconnectPredecessors();
 			}
 		}
 	}

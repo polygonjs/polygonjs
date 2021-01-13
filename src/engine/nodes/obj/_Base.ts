@@ -116,7 +116,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 
 	is_displayed(): boolean {
-		return this.flags?.display?.active || false;
+		return this.flags?.display?.active() || false;
 	}
 }
 

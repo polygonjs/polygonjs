@@ -69,7 +69,7 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 		this._update_map(pass);
 	}
 	private async _update_map(pass: ShaderPassWithRequiredUniforms) {
-		if (this.p.map.is_dirty) {
+		if (this.p.map.isDirty()) {
 			await this.p.map.compute();
 		}
 		const found_node = this.p.map.found_node();

@@ -51,13 +51,13 @@ export class CodeBuilder {
 		// ensure nodes are not added if already present
 		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 		for (let node of sorted_nodes) {
-			sorted_node_ids.set(node.graph_node_id, true);
+			sorted_node_ids.set(node.graphNodeId(), true);
 		}
 
 		for (let root_node of root_nodes) {
-			if (!sorted_node_ids.get(root_node.graph_node_id)) {
+			if (!sorted_node_ids.get(root_node.graphNodeId())) {
 				sorted_nodes.push(root_node);
-				sorted_node_ids.set(root_node.graph_node_id, true);
+				sorted_node_ids.set(root_node.graphNodeId(), true);
 			}
 		}
 		for (let node of sorted_nodes) {
@@ -194,7 +194,7 @@ export class CodeBuilder {
 			const definitions_by_node_id: Map<CoreGraphNodeId, BaseGLDefinition[]> = new Map();
 			const node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 			for (let definition of uniq_definitions) {
-				const node_id = definition.node.graph_node_id;
+				const node_id = definition.node.graphNodeId();
 				if (!node_ids.has(node_id)) {
 					node_ids.set(node_id, true);
 				}

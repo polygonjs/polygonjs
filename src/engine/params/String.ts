@@ -55,16 +55,16 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 
 		if (this._value_elements(this._raw_input).length >= 3) {
 			this._expression_controller = this._expression_controller || new ExpressionController(this);
-			if (this._raw_input != this._expression_controller.expression) {
+			if (this._raw_input != this._expression_controller.expression()) {
 				this._expression_controller.set_expression(this._raw_input);
-				this.set_dirty();
+				this.setDirty();
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 			}
 		} else {
 			if (this._raw_input != this._value) {
 				this._value = this._raw_input;
-				this.remove_dirty_state();
-				this.set_successors_dirty(this);
+				this.removeDirtyState();
+				this.setSuccessorsDirty(this);
 				this.emitController.emit(ParamEvent.VALUE_UPDATED);
 				this.options.execute_callback();
 				if (this._expression_controller) {
@@ -75,10 +75,10 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 		}
 	}
 	protected async process_computation(): Promise<void> {
-		if (this.expression_controller?.active && !this.expression_controller.requires_entities) {
+		if (this.expression_controller?.active() && !this.expression_controller.requires_entities()) {
 			const expression_result = await this.expression_controller.compute_expression();
-			if (this.expression_controller.is_errored) {
-				this.states.error.set(`expression error: ${this.expression_controller.error_message}`);
+			if (this.expression_controller.is_errored()) {
+				this.states.error.set(`expression error: ${this.expression_controller.error_message()}`);
 			} else {
 				const converted = this.convert(expression_result);
 				// we need to check if equal nulls explicitely
@@ -90,7 +90,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 				} else {
 					this.states.error.set(`expression returns an invalid type (${expression_result})`);
 				}
-				this.remove_dirty_state();
+				this.removeDirtyState();
 			}
 		}
 	}

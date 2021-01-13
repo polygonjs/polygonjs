@@ -70,8 +70,9 @@ export class InstanceSopOperation extends BaseSopOperation {
 			if (material_node) {
 				this._globals_handler = this._globals_handler || new GlobalsGeometryHandler();
 				const mat_builder_node = material_node as BaseBuilderMatNodeType;
-				if (mat_builder_node.assembler_controller) {
-					mat_builder_node.assembler_controller.set_assembler_globals_handler(this._globals_handler);
+				const matNodeAssemblerController = mat_builder_node.assemblerController;
+				if (matNodeAssemblerController) {
+					matNodeAssemblerController.set_assembler_globals_handler(this._globals_handler);
 				}
 
 				const container = await material_node.requestContainer();

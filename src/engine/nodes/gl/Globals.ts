@@ -28,13 +28,13 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		super.initialize_node();
 
 		this.lifecycle.add_on_add_hook(() => {
-			this.material_node?.assembler_controller?.add_globals_outputs(this);
+			this.material_node?.assemblerController?.add_globals_outputs(this);
 		});
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
 		// if (lines_controller.shader_name) {
-		this.material_node?.assembler_controller?.assembler.set_node_lines_globals(this, shaders_collection_controller);
+		this.material_node?.assemblerController?.assembler.set_node_lines_globals(this, shaders_collection_controller);
 		// }
 		// const vertex_definitions = []
 		// const fragment_definitions = []

@@ -117,6 +117,6 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 		return style;
 	}
 	private _css_element_id() {
-		return `css_2d_renderer-${this.graph_node_id}`;
+		return `css_2d_renderer-${this.graphNodeId()}`;
 	}
 }

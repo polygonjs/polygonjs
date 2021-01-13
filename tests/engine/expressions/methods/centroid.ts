@@ -48,5 +48,5 @@ QUnit.test('using $CEX on a node without inputs fails correctly', async (assert)
 	box1.p.size.set('$CEX');
 	await box1.p.size.compute();
 	assert.equal(box1.p.size.value, 1);
-	assert.equal(box1.p.size.states.error.message, 'expression error: "$CEX" (invalid input (0))');
+	assert.equal(box1.p.size.states.error.message(), 'expression error: "$CEX" (invalid input (0))');
 });

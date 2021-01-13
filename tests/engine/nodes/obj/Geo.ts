@@ -114,25 +114,25 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	scene.performance.start();
 	await scene.waitForCooksCompleted();
 	const geo1 = window.geo1;
-	assert.ok(geo1.is_dirty, 'geo1 is dirty');
+	assert.ok(geo1.isDirty(), 'geo1 is dirty');
 	await geo1.requestContainer();
-	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
+	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	scene.setFrame(1);
 	scene.setFrame(3);
 	assert.equal(geo1.cook_controller.cooks_count, 1);
-	assert.notOk(geo1.is_dirty, 'geo1 is not dirty');
+	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	geo1.p.r.y.set('$F+10');
 
-	assert.ok(geo1.is_dirty);
+	assert.ok(geo1.isDirty());
 	await scene.waitForCooksCompleted();
 	assert.equal(geo1.cook_controller.cooks_count, 2);
-	assert.notOk(geo1.is_dirty);
+	assert.notOk(geo1.isDirty());
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
 
 	scene.setFrame(37);
 	await scene.waitForCooksCompleted();
 	assert.equal(geo1.cook_controller.cooks_count, 3);
-	assert.notOk(geo1.is_dirty);
+	assert.notOk(geo1.isDirty());
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);
 
 	window.scene.performance.stop();

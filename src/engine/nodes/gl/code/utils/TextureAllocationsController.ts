@@ -26,7 +26,7 @@ export class TextureAllocationsController {
 
 		// TODO: let's go through the output node first, in case there is a name conflict, it will have priority
 		for (let node of root_nodes) {
-			const node_id = node.graph_node_id;
+			const node_id = node.graphNodeId();
 			switch (node.type) {
 				case OutputGlNode.type(): {
 					for (let connection_point of node.io.inputs.named_input_connection_points) {
@@ -65,7 +65,7 @@ export class TextureAllocationsController {
 			}
 		}
 		for (let node of leaf_nodes) {
-			const node_id = node.graph_node_id;
+			const node_id = node.graphNodeId();
 			switch (node.type) {
 				case GlobalsGlNode.type(): {
 					const globals_node = node as GlobalsGlNode;

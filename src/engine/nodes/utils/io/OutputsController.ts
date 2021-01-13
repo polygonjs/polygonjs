@@ -90,11 +90,11 @@ export class OutputsController<NC extends NodeContext> {
 
 		// update connections
 		this._named_output_connection_points = connection_points;
-		if (set_dirty && this.node.scene) {
+		if (set_dirty && this.node.scene()) {
 			// why do I need this set dirty here?
 			// I currently have to have a flag to optionally prevent this,
 			// for instance from gl nodes which have their outputs updated in a post dirty hook
-			this.node.set_dirty(this.node);
+			this.node.setDirty(this.node);
 		}
 		this.node.emit(NodeEvent.NAMED_OUTPUTS_UPDATED);
 	}

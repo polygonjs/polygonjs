@@ -60,7 +60,7 @@ export class ChildrenDisplayController {
 		if (display_flag) {
 			display_flag.add_hook(() => {
 				this._sop_group.visible = this.used_in_scene;
-				if (display_flag.active) {
+				if (display_flag.active()) {
 					this.request_display_node_container();
 				}
 			});
@@ -72,14 +72,14 @@ export class ChildrenDisplayController {
 		const is_active_param_on = this.node.params.boolean(DISPLAY_PARAM_NAME);
 
 		const used_in_scene = this.node.used_in_scene;
-		const display_flag_on = this.node.flags?.display?.active || false;
+		const display_flag_on = this.node.flags?.display?.active() || false;
 		const param_active_on = !has_active_param || is_active_param_on;
 
 		return used_in_scene && display_flag_on && param_active_on;
 	}
 
 	async request_display_node_container() {
-		if (!this.node.scene.loadingController.loaded()) {
+		if (!this.node.scene().loadingController.loaded()) {
 			return;
 		}
 		if (this.used_in_scene) {
@@ -103,7 +103,7 @@ export class ChildrenDisplayController {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
 		const display_node = this.node.display_node_controller.display_node;
-		if (display_node && display_node.parent?.graph_node_id == this.node.graph_node_id) {
+		if (display_node && display_node.parent?.graphNodeId() == this.node.graphNodeId()) {
 			const container = await display_node.requestContainer();
 			const core_group = container.coreContent();
 			if (core_group) {

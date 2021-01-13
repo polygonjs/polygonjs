@@ -3,7 +3,7 @@ import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
 import {BaseNodeType} from '../nodes/_Base';
 import jsep from 'jsep';
-import { CoreType } from '../../core/Type';
+import {CoreType} from '../../core/Type';
 
 export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
@@ -16,9 +16,9 @@ export class MethodDependency extends CoreGraphNode {
 		public path_argument: number | string,
 		public decomposed_path?: DecomposedPath
 	) {
-		super(param.scene, 'MethodDependency');
+		super(param.scene(), 'MethodDependency');
 
-		this.add_post_dirty_hook('_update_from_name_change', this._update_from_name_change_bound);
+		this.addPostDirtyHook('_update_from_name_change', this._update_from_name_change_bound);
 	}
 	_update_from_name_change(trigger?: CoreGraphNode) {
 		if (trigger && this.decomposed_path) {
@@ -37,7 +37,7 @@ export class MethodDependency extends CoreGraphNode {
 		}
 	}
 	reset() {
-		this.graph_disconnect_predecessors();
+		this.graphDisconnectPredecessors();
 	}
 
 	listen_for_name_changes() {
@@ -46,7 +46,7 @@ export class MethodDependency extends CoreGraphNode {
 				if (node_in_path) {
 					const node = node_in_path as BaseNodeType;
 					if (node.name_controller) {
-						this.add_graph_input(node.name_controller.graph_node);
+						this.addGraphInput(node.name_controller.graph_node);
 					}
 				}
 			}

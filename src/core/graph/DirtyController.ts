@@ -16,16 +16,16 @@ export class DirtyController {
 
 	constructor(private node: CoreGraphNode) {}
 
-	get is_dirty(): boolean {
+	isDirty(): boolean {
 		return this._dirty === true;
 	}
-	get dirty_timestamp() {
+	dirtyTimestamp() {
 		return this._dirty_timestamp;
 	}
-	get dirty_count(): number {
+	dirtyCount(): number {
 		return this._dirty_count;
 	}
-	add_post_dirty_hook(name: string, method: PostDirtyHook) {
+	addPostDirtyHook(name: string, method: PostDirtyHook) {
 		this._post_dirty_hook_names = this._post_dirty_hook_names || [];
 		this._post_dirty_hooks = this._post_dirty_hooks || [];
 
@@ -36,7 +36,7 @@ export class DirtyController {
 			console.warn(`hook with name ${name} already exists`, this.node);
 		}
 	}
-	remove_post_dirty_hook(name: string) {
+	removePostDirtyHook(name: string) {
 		if (this._post_dirty_hook_names && this._post_dirty_hooks) {
 			const index = this._post_dirty_hook_names.indexOf(name);
 			if (index >= 0) {
@@ -52,11 +52,11 @@ export class DirtyController {
 		return false;
 	}
 
-	remove_dirty_state(): void {
+	removeDirtyState(): void {
 		this._dirty = false;
 	}
 	set_forbidden_trigger_nodes(nodes: CoreGraphNode[]) {
-		this._forbidden_trigger_nodes = nodes.map((n) => n.graph_node_id);
+		this._forbidden_trigger_nodes = nodes.map((n) => n.graphNodeId());
 	}
 
 	set_dirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
@@ -66,7 +66,7 @@ export class DirtyController {
 		if (
 			original_trigger_graph_node &&
 			this._forbidden_trigger_nodes &&
-			this._forbidden_trigger_nodes.includes(original_trigger_graph_node.graph_node_id)
+			this._forbidden_trigger_nodes.includes(original_trigger_graph_node.graphNodeId())
 		) {
 			return;
 		}
@@ -88,7 +88,7 @@ export class DirtyController {
 
 	run_post_dirty_hooks(original_trigger_graph_node?: CoreGraphNode) {
 		if (this._post_dirty_hooks) {
-			const cooker = this.node.scene.cooker;
+			const cooker = this.node.scene().cooker;
 			if (cooker.blocked) {
 				cooker.enqueue(this.node, original_trigger_graph_node);
 			} else {
@@ -101,10 +101,10 @@ export class DirtyController {
 
 	set_successors_dirty(original_trigger_graph_node?: CoreGraphNode): void {
 		const propagate = false;
-		this._cached_successors = this._cached_successors || this.node.graph_all_successors();
+		this._cached_successors = this._cached_successors || this.node.graphAllSuccessors();
 
 		for (let successor of this._cached_successors) {
-			successor.dirty_controller.set_dirty(original_trigger_graph_node, propagate);
+			successor.dirtyController.set_dirty(original_trigger_graph_node, propagate);
 		}
 	}
 
@@ -113,8 +113,8 @@ export class DirtyController {
 	}
 	clear_successors_cache_with_predecessors() {
 		this.clear_successors_cache();
-		for (let predecessor of this.node.graph_all_predecessors()) {
-			predecessor.dirty_controller.clear_successors_cache();
+		for (let predecessor of this.node.graphAllPredecessors()) {
+			predecessor.dirtyController.clear_successors_cache();
 		}
 	}
 }

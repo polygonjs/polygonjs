@@ -7,7 +7,7 @@ QUnit.test('data_url json', async (assert) => {
 
 	let container;
 	container = await data_url1.requestContainer();
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
 	await window.scene.root.process_queue();
@@ -15,23 +15,23 @@ QUnit.test('data_url json', async (assert) => {
 	data_url1.p.url.set('/examples/sop/data_url/default.json');
 	container = await data_url1.requestContainer();
 
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 8);
 
 	data_url1.p.url.set('/examples/sop/data_url/basic.json');
 	container = await data_url1.requestContainer();
 
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
 	// and a non existing
 	data_url1.p.url.set('/dataurl_doesnotexist.json');
 	container = await data_url1.requestContainer();
 
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 0);
 	assert.equal(
-		data_url1.states.error.message,
+		data_url1.states.error.message(),
 		'could not load geometry from /dataurl_doesnotexist.json (SyntaxError: Unexpected token < in JSON at position 0)'
 	);
 
@@ -52,7 +52,7 @@ QUnit.test('data_url csv without reading names from file', async (assert) => {
 
 	let container;
 	container = await data_url1.requestContainer();
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const point0 = core_group.points()[0];
@@ -79,7 +79,7 @@ QUnit.test('data_url csv with reading names from file', async (assert) => {
 	data_url1.p.readAttribNamesFromFile.set(1);
 
 	let container = await data_url1.requestContainer();
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const point0 = core_group.points()[0];
@@ -109,7 +109,7 @@ QUnit.test('data_url csv with empty line', async (assert) => {
 	data_url1.p.readAttribNamesFromFile.set(1);
 
 	let container = await data_url1.requestContainer();
-	assert.ok(!data_url1.is_dirty);
+	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;

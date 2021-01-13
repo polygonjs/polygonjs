@@ -40,12 +40,12 @@ export class CorePerformance {
 		this._nodes_cook_data = {};
 	}
 
-	get started(): boolean {
+	started(): boolean {
 		return this._started;
 	}
 
 	record_node_cook_data(node: BaseNodeType, performance_data: NodePerformanceData) {
-		const id = node.graph_node_id;
+		const id = node.graphNodeId();
 		if (this._nodes_cook_data[id] == null) {
 			this._nodes_cook_data[id] = new PerformanceNode(node);
 		}
@@ -53,7 +53,7 @@ export class CorePerformance {
 	}
 
 	record(name: string) {
-		if (!this.started) {
+		if (!this.started()) {
 			this.start();
 		}
 
@@ -78,9 +78,8 @@ export class CorePerformance {
 
 	print_node_cook_data() {
 		let performance_nodes = Object.values(this._nodes_cook_data);
-		performance_nodes = ArrayUtils.sortBy(
-			performance_nodes,
-			(performance_node) => performance_node.total_cook_time
+		performance_nodes = ArrayUtils.sortBy(performance_nodes, (performance_node) =>
+			performance_node.total_cook_time()
 		);
 
 		const print_objects = performance_nodes.map((performance_node) => performance_node.print_object());

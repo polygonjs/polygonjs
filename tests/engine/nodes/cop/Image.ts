@@ -9,7 +9,7 @@ QUnit.test('COP image simple default', async (assert) => {
 	let container, texture;
 
 	container = await file1.requestContainer();
-	assert.ok(!file1.states.error.message);
+	assert.ok(!file1.states.error.message());
 	texture = container.texture();
 	assert.equal(texture.image.width, 512);
 	assert.equal(texture.image.height, 512);
@@ -24,7 +24,7 @@ QUnit.test('COP image simple with bad path', async (assert) => {
 	// let container, texture;
 
 	/*container = */ await file1.requestContainer();
-	assert.equal(file1.states.error.message, "could not load texture '/doesnotexists.jpg'");
+	assert.equal(file1.states.error.message(), "could not load texture '/doesnotexists.jpg'");
 	// texture = container.texture();
 	// assert.equal(texture.image.width, 512);
 	// assert.equal(texture.image.height, 512);
@@ -39,7 +39,7 @@ QUnit.test('COP image simple exr', async (assert) => {
 	let container, texture;
 
 	container = await file1.requestContainer();
-	assert.ok(!file1.states.error.message);
+	assert.ok(!file1.states.error.message());
 	texture = container.texture();
 	assert.equal(texture.image.width, 1024);
 	assert.equal(texture.image.height, 512);
@@ -58,7 +58,7 @@ QUnit.test('COP image simple basis', async (assert) => {
 	let container, texture;
 
 	container = await file1.requestContainer();
-	assert.ok(!file1.states.error.message);
+	assert.ok(!file1.states.error.message());
 	texture = container.texture();
 	assert.equal(texture.image.width, 2048);
 	assert.equal(texture.image.height, 2048);
@@ -75,7 +75,7 @@ QUnit.test('COP image simple hdr', async (assert) => {
 	let container, texture;
 
 	container = await file1.requestContainer();
-	assert.ok(!file1.states.error.message);
+	assert.ok(!file1.states.error.message());
 	texture = container.texture();
 	assert.equal(texture.image.width, 1024);
 	assert.equal(texture.image.height, 512);

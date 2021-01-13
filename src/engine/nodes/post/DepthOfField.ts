@@ -118,12 +118,12 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 				// or when the camera is deleted
 				// and maybe the graph node should be on the pass itself?
 				// so that it can be called when we call .dispose() on it?
-				const core_graph_node = new CoreGraphNode(this.scene, 'DOF');
-				core_graph_node.add_graph_input(camera_node.p.near);
-				core_graph_node.add_graph_input(camera_node.p.far);
-				core_graph_node.add_graph_input(camera_node.p.fov);
-				core_graph_node.add_graph_input(this.p.focalDepth);
-				core_graph_node.add_post_dirty_hook('post/DOF', () => {
+				const core_graph_node = new CoreGraphNode(this.scene(), 'DOF');
+				core_graph_node.addGraphInput(camera_node.p.near);
+				core_graph_node.addGraphInput(camera_node.p.far);
+				core_graph_node.addGraphInput(camera_node.p.fov);
+				core_graph_node.addGraphInput(this.p.focalDepth);
+				core_graph_node.addPostDirtyHook('post/DOF', () => {
 					this.update_pass_from_camera_node(pass, camera_node);
 				});
 

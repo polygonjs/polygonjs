@@ -225,7 +225,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	// container
 	async requestContainer() {
-		if (!this.is_dirty) {
+		if (!this.isDirty()) {
 			return this.container_controller.container;
 		} else {
 			return await this.container_controller.requestContainer();
@@ -308,7 +308,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	emit(event_name: NodeEvent.FLAG_OPTIMIZE_UPDATED): void;
 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
-		this.scene.dispatchController.dispatch(this, event_name, data);
+		this.scene().dispatchController.dispatch(this, event_name, data);
 	}
 
 	// serializer

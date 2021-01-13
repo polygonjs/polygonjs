@@ -99,7 +99,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(AttribCreateSopOperation.INPUT_CLONED_STATE);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
@@ -118,7 +118,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				this.states.error.set('attribute name is not valid');
 			}
 		} else {
-			this._operation = this._operation || new AttribCreateSopOperation(this.scene, this.states);
+			this._operation = this._operation || new AttribCreateSopOperation(this.scene(), this.states);
 			const core_group = this._operation.cook(input_contents, this.pv);
 			this.setCoreGroup(core_group);
 		}
@@ -186,7 +186,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			if (this.pv.size == 1) {
 				if (this.p.value1.expression_controller) {
 					await this.p.value1.expression_controller.compute_expression_for_points(points, (point, value) => {
-						array[point.index * this.pv.size + 0] = value;
+						array[point.index() * this.pv.size + 0] = value;
 					});
 				}
 			} else {
@@ -214,13 +214,13 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 							points,
 							(point, value) => {
 								// array[point.index()*this.pv.size+i] = value
-								tmp_arrays[i][point.index] = value;
+								tmp_arrays[i][point.index()] = value;
 							}
 						);
 					} else {
 						const value = component_param.value;
 						for (let point of points) {
-							array[point.index * this.pv.size + i] = value;
+							array[point.index() * this.pv.size + i] = value;
 						}
 					}
 				}
@@ -259,7 +259,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				// 	values.push(component_param.value);
 				// }
 				for (let core_object of core_objects) {
-					values_by_core_object_index[core_object.index] = (<unknown>[]) as NumericAttribValueAsArray;
+					values_by_core_object_index[core_object.index()] = (<unknown>[]) as NumericAttribValueAsArray;
 				}
 				for (let component_index = 0; component_index < params.length; component_index++) {
 					const component_param = params[component_index];
@@ -267,18 +267,18 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 						await component_param.expression_controller.compute_expression_for_objects(
 							core_objects,
 							(core_object, value) => {
-								values_by_core_object_index[core_object.index][component_index] = value;
+								values_by_core_object_index[core_object.index()][component_index] = value;
 							}
 						);
 					} else {
 						for (let core_object of core_objects) {
-							values_by_core_object_index[core_object.index][component_index] = component_param.value;
+							values_by_core_object_index[core_object.index()][component_index] = component_param.value;
 						}
 					}
 				}
 				for (let i = 0; i < core_objects.length; i++) {
 					const core_object = core_objects[i];
-					const value = values_by_core_object_index[core_object.index];
+					const value = values_by_core_object_index[core_object.index()];
 					core_object.setAttribValue(this.pv.name, value);
 				}
 			}
@@ -317,7 +317,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const string_values: string[] = new Array(points.length);
 		if (param.has_expression() && param.expression_controller) {
 			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
-				string_values[point.index] = value;
+				string_values[point.index()] = value;
 			});
 		} else {
 			// no need to do work here, as this will be done in the operation

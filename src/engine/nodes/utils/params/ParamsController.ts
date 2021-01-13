@@ -75,9 +75,9 @@ export class ParamsController {
 	private init_dependency_node() {
 		if (!this._params_node) {
 			// TODO: consider not having a params_node for nodes which have no parameters
-			this._params_node = new CoreGraphNode(this.node.scene, NODE_SIMPLE_NAME);
+			this._params_node = new CoreGraphNode(this.node.scene(), NODE_SIMPLE_NAME);
 			// this._params_node.set_scene(this.node.scene);
-			this.node.add_graph_input(this._params_node, false);
+			this.node.addGraphInput(this._params_node, false);
 		}
 	}
 
@@ -146,7 +146,7 @@ export class ParamsController {
 		if (has_deleted_a_param || has_created_a_param) {
 			this.post_create_spare_params();
 			// param.emit(ParamEvent.DELETED);
-			this.node.scene.referencesController.notify_params_updated(this.node);
+			this.node.scene().referencesController.notify_params_updated(this.node);
 			this.node.emit(NodeEvent.PARAMS_UPDATED);
 		}
 	}
@@ -169,7 +169,7 @@ export class ParamsController {
 		// with a non default t (ie: [2,2,0]), it would not be positionned correctly and would require
 		// a cook
 		if (init_values_used) {
-			this.node.set_dirty();
+			this.node.setDirty();
 		}
 		this.node.params_init_value_overrides = undefined;
 	}
@@ -180,7 +180,7 @@ export class ParamsController {
 		current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
 
 		for (let param of this.all) {
-			const is_spare: boolean = param.options.is_spare;
+			const is_spare: boolean = param.options.is_spare();
 
 			const param_not_yet_in_accessors = !current_names_in_accessor.includes(param.name);
 
@@ -344,7 +344,7 @@ export class ParamsController {
 		const param = this._params_by_name[param_name];
 		if (param) {
 			if (this._params_node) {
-				this._params_node.remove_graph_input(this._params_by_name[param_name]);
+				this._params_node.removeGraphInput(this._params_by_name[param_name]);
 			}
 			param._set_node_owner(null);
 			delete this._params_by_name[param_name];
@@ -380,7 +380,7 @@ export class ParamsController {
 				}) param '${param_name}' cannot be created outside of create_params`
 			);
 		}
-		if (this.node.scene == null) {
+		if (this.node.scene() == null) {
 			Poly.warn(`node ${this.node.fullPath()} (${this.node.type}) has no scene assigned`);
 		}
 
@@ -399,7 +399,7 @@ export class ParamsController {
 					Poly.warn(`a param named ${param_name} already exists`, this.node);
 				}
 			}
-			const param: ParamConstructorMap[T] = new constructor(this.node.scene);
+			const param: ParamConstructorMap[T] = new constructor(this.node.scene());
 			param.options.set(options);
 
 			param.setName(param_name);
@@ -411,7 +411,7 @@ export class ParamsController {
 				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
 				// Otherwise, as it would fail if the attribute was a vector
 				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
-				if (param.options.is_expression_for_entities) {
+				if (param.options.is_expression_for_entities()) {
 					param.set(default_value as never);
 				}
 				if (init_data.raw_input != null) {
@@ -458,13 +458,13 @@ export class ParamsController {
 	private _update_caches() {
 		this._params_list = Object.values(this._params_by_name);
 		this._param_names = Object.keys(this._params_by_name);
-		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.is_spare);
-		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.is_spare);
+		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.is_spare());
+		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.is_spare());
 		this._non_spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => !p.options.is_spare)
+			.filter((p) => !p.options.is_spare())
 			.map((p) => p.name);
 		this._spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => p.options.is_spare)
+			.filter((p) => p.options.is_spare())
 			.map((p) => p.name);
 	}
 
@@ -472,11 +472,11 @@ export class ParamsController {
 		// return new Promise((resolve, reject)=> {
 		// const param_cache_name = this.param_cache_name(param.name());
 		// const cached_value = this[param_cache_name] || null;
-		if (/*cached_value == null ||*/ param.is_dirty /* || param.is_errored()*/) {
+		if (/*cached_value == null ||*/ param.isDirty() /* || param.is_errored()*/) {
 			/*const param_value =*/ await param.compute(); //.then(param_value=>{
 			// this[param_cache_name] = param_value;
-			if (param.states.error.active) {
-				this.node.states.error.set(`param '${param.name}' error: ${param.states.error.message}`);
+			if (param.states.error.active()) {
+				this.node.states.error.set(`param '${param.name}' error: ${param.states.error.message()}`);
 			}
 			// return param_value;
 		} else {
@@ -488,25 +488,25 @@ export class ParamsController {
 	async eval_params(params: BaseParamType[]) {
 		const promises = [];
 		for (let i = 0; i < params.length; i++) {
-			if (params[i].is_dirty) {
+			if (params[i].isDirty()) {
 				promises.push(this._eval_param(params[i]));
 			}
 		}
 		await Promise.all(promises);
 
-		if (this.node.states.error.active) {
+		if (this.node.states.error.active()) {
 			this.node.set_container(null);
 		}
 	}
 
 	params_eval_required() {
-		return this._params_node && (this._params_node.is_dirty || this._params_added_since_last_params_eval);
+		return this._params_node && (this._params_node.isDirty() || this._params_added_since_last_params_eval);
 	}
 	async eval_all() {
 		if (this.params_eval_required()) {
 			await this.eval_params(this._params_list);
 
-			this._params_node?.remove_dirty_state();
+			this._params_node?.removeDirtyState();
 			this._params_added_since_last_params_eval = false;
 		}
 	}

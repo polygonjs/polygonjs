@@ -20,7 +20,8 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	toJSON(): PersistedConfigBaseParticlesData | undefined {
-		if (!this.node.assembler_controller) {
+		const assemblerController = this.node.assemblerController;
+		if (!assemblerController) {
 			return;
 		}
 		const shaders_by_name: PolyDictionary<string> = {};
@@ -29,14 +30,14 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			shaders_by_name[shader_name] = shader;
 		});
 
-		const texture_allocations_data = this.node.assembler_controller.assembler.texture_allocations_controller.toJSON(
-			this.node.scene
+		const texture_allocations_data = assemblerController.assembler.texture_allocations_controller.toJSON(
+			this.node.scene()
 		);
 
 		// params updating uniforms
 		const param_uniform_pairs: [string, string][] = [];
 		const uniforms_owner = new ShaderMaterial();
-		const param_configs = this.node.assembler_controller.assembler.param_configs();
+		const param_configs = assemblerController.assembler.param_configs();
 		for (let param_config of param_configs) {
 			param_uniform_pairs.push([param_config.name, param_config.uniform_name]);
 			uniforms_owner.uniforms[param_config.uniform_name] = param_config.uniform;

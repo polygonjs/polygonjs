@@ -33,7 +33,7 @@ export class BaseGlParentNode extends TypedNode<any, any> {
 	}
 }
 export class AssemblerControllerNode extends BaseGlParentNode {
-	assembler_controller: GlAssemblerController<BaseGlShaderAssembler> | undefined;
+	assemblerController: GlAssemblerController<BaseGlShaderAssembler> | undefined;
 }
 
 type BaseGlShaderAssemblerConstructor<A extends BaseGlShaderAssembler> = new (...args: any[]) => A;
@@ -79,7 +79,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	}
 	set_compilation_required_and_dirty(trigger_node?: BaseGlNodeType) {
 		this.set_compilation_required();
-		this.node.set_dirty(trigger_node);
+		this.node.setDirty(trigger_node);
 	}
 	compile_required(): boolean {
 		return this._compile_required;

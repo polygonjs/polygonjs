@@ -41,16 +41,16 @@ export class ScatterSopOperation extends BaseSopOperation {
 		const area_by_face_index: Map<number, number> = new Map();
 
 		for (let face of faces) {
-			const area = face.area;
-			area_by_face_index.set(face.index, area);
+			const area = face.area();
+			area_by_face_index.set(face.index(), area);
 		}
 		const sorted_faces = ArrayUtils.sortBy(faces, (f) => {
-			return area_by_face_index.get(f.index) || -1;
+			return area_by_face_index.get(f.index()) || -1;
 		});
 
 		let i = 0;
 		for (let face of sorted_faces) {
-			area_sum += area_by_face_index.get(face.index) as number;
+			area_sum += area_by_face_index.get(face.index()) as number;
 			areas_thresholds[i] = area_sum;
 			i++;
 		}

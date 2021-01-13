@@ -56,7 +56,7 @@ export class PostProcessController {
 		}
 	}
 	private _add_param_dirty_hook() {
-		this.node.p.postProcessNode.add_post_dirty_hook('on_post_node_dirty', () => {
+		this.node.p.postProcessNode.addPostDirtyHook('on_post_node_dirty', () => {
 			this.reset();
 		});
 	}
@@ -92,7 +92,7 @@ export class PostProcessController {
 	private _create_composer(canvas: HTMLCanvasElement) {
 		const renderer = this.node.renderController.renderer(canvas);
 		if (renderer) {
-			const scene = this.node.renderController.resolved_scene || this.node.scene.defaultScene;
+			const scene = this.node.renderController.resolved_scene || this.node.scene().defaultScene;
 			const camera = this.node.object;
 
 			const found_node = this.node.p.postProcessNode.value.node();

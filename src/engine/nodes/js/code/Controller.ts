@@ -71,7 +71,7 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 	}
 	set_compilation_required_and_dirty(trigger_node?: BaseJsNodeType) {
 		this.set_compilation_required();
-		this.node.set_dirty(trigger_node);
+		this.node.setDirty(trigger_node);
 	}
 	compile_required(): boolean {
 		return this._compile_required;

@@ -29,7 +29,7 @@ export abstract class TypedBuilderMatNode<
 			material = this.persisted_config.material();
 		}
 		if (!material) {
-			material = this.assembler_controller?.assembler.create_material() as ShaderMaterialWithCustomMaterials;
+			material = this.assemblerController?.assembler.create_material() as ShaderMaterialWithCustomMaterials;
 		}
 		return material;
 	}
@@ -38,7 +38,7 @@ export abstract class TypedBuilderMatNode<
 	// ASSEMBLER
 	//
 	//
-	get assembler_controller() {
+	get assemblerController() {
 		return (this._assembler_controller = this._assembler_controller || this._create_assembler_controller());
 	}
 	protected abstract _create_assembler_controller(): GlAssemblerController<A> | undefined;
@@ -64,10 +64,10 @@ export abstract class TypedBuilderMatNode<
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	children_allowed() {
-		if (this.assembler_controller) {
+		if (this.assemblerController) {
 			return super.children_allowed();
 		}
-		this.scene.mark_as_read_only(this);
+		this.scene().mark_as_read_only(this);
 		return false;
 	}
 
@@ -86,14 +86,15 @@ export abstract class TypedBuilderMatNode<
 		// if (Poly.playerMode()) {
 		// 	return;
 		// }
-		if (this.assembler_controller?.compile_required()) {
+		if (this.assemblerController?.compile_required()) {
 			this._compile();
 		}
 	}
 	protected _compile() {
-		if (this.material && this.assembler_controller) {
-			this.assembler_controller.assembler.compile_material(this.material);
-			this.assembler_controller.post_compile();
+		const assemblerController = this.assemblerController;
+		if (this.material && assemblerController) {
+			assemblerController.assembler.compile_material(this.material);
+			assemblerController.post_compile();
 		}
 	}
 }

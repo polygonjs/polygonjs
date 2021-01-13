@@ -29,7 +29,7 @@ export class DependenciesController {
 	}
 
 	reset() {
-		this.param.graph_disconnect_predecessors();
+		this.param.graphDisconnectPredecessors();
 
 		this.method_dependencies.forEach((method_dependency) => {
 			method_dependency.reset();
@@ -69,7 +69,7 @@ export class DependenciesController {
 	private connect_immutable_dependencies(function_generator: FunctionGenerator) {
 		function_generator.immutable_dependencies.forEach((dependency) => {
 			if (this.cyclic_graph_detected == false) {
-				if (this.param.add_graph_input(dependency) == false) {
+				if (this.param.addGraphInput(dependency) == false) {
 					this.cyclic_graph_detected = true;
 					this.set_error('cannot create expression, infinite graph detected');
 					this.reset();
@@ -95,7 +95,7 @@ export class DependenciesController {
 			// const names_listener = new NamesListener(this.param, node_simple, jsep_node)
 			// TODO: test that it is no longer active if expression is updated
 
-			if (!this.param.add_graph_input(node_simple)) {
+			if (!this.param.addGraphInput(node_simple)) {
 				this.cyclic_graph_detected = true;
 				this.set_error('cannot create expression, infinite graph detected');
 				this.reset();

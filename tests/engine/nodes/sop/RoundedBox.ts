@@ -9,12 +9,12 @@ QUnit.test('rounded_box simple', async (assert) => {
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 2700);
 	assert.equal(container.boundingBox().min.y, -0.5);
-	assert.notOk(rounded_box1.is_dirty, 'box is dirty');
+	assert.notOk(rounded_box1.isDirty(), 'box is dirty');
 
 	rounded_box1.p.size.set(2);
-	assert.ok(rounded_box1.is_dirty, 'box is dirty');
+	assert.ok(rounded_box1.isDirty(), 'box is dirty');
 	container = await rounded_box1.requestContainer();
-	assert.ok(!rounded_box1.is_dirty, 'box is not dirty anymore');
+	assert.ok(!rounded_box1.isDirty(), 'box is not dirty anymore');
 	assert.equal(container.boundingBox().min.y, -1.0);
 
 	rounded_box1.p.divisions.set(10);
@@ -33,17 +33,17 @@ QUnit.test('rounded_box with input', async (assert) => {
 	transform1.io.inputs.setInput(0, rounded_box1);
 
 	const rounded_box2 = geo1.createNode('roundedBox');
-	assert.ok(rounded_box2.is_dirty);
+	assert.ok(rounded_box2.isDirty());
 	let container;
 	await rounded_box2.requestContainer();
-	assert.notOk(rounded_box2.is_dirty);
+	assert.notOk(rounded_box2.isDirty());
 	rounded_box2.io.inputs.setInput(0, transform1);
-	assert.ok(rounded_box2.is_dirty);
+	assert.ok(rounded_box2.isDirty());
 	await rounded_box2.requestContainer();
-	assert.notOk(rounded_box2.is_dirty);
+	assert.notOk(rounded_box2.isDirty());
 
 	transform1.p.scale.set(3);
-	assert.ok(rounded_box2.is_dirty);
+	assert.ok(rounded_box2.isDirty());
 
 	container = await rounded_box2.requestContainer();
 	const group = container.coreContent()!;

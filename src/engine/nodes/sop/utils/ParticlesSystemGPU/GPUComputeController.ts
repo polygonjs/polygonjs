@@ -85,14 +85,14 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	compute_similation_if_required() {
-		const frame = this.node.scene.frame;
+		const frame = this.node.scene().frame;
 		const start_frame: number = this.node.pv.startFrame;
 		if (frame >= start_frame) {
 			if (this._last_simulated_frame == null) {
 				this._last_simulated_frame = start_frame - 1;
 			}
 			if (this._last_simulated_time == null) {
-				this._last_simulated_time = this.node.scene.time;
+				this._last_simulated_time = this.node.scene().time;
 			}
 			if (frame > this._last_simulated_frame) {
 				this._compute_simulation(frame - this._last_simulated_frame);
@@ -111,9 +111,9 @@ export class ParticlesSystemGpuComputeController {
 			this._gpu_compute.compute();
 		}
 		this.node.render_controller.update_render_material_uniforms();
-		this._last_simulated_frame = this.node.scene.frame;
+		this._last_simulated_frame = this.node.scene().frame;
 
-		const time = this.node.scene.time;
+		const time = this.node.scene().time;
 		this._delta_time = time - this._last_simulated_time;
 		this._last_simulated_time = time;
 	}
@@ -231,14 +231,14 @@ export class ParticlesSystemGpuComputeController {
 		// But we need to be sure that on first frame, we are still recooking the whole node
 		// this.node.states.time_dependent.force_time_dependent();
 		if (!this._graph_node) {
-			this._graph_node = new CoreGraphNode(this.node.scene, 'gpu_compute');
-			this._graph_node.add_graph_input(this.node.scene.timeController.graph_node);
-			this._graph_node.add_post_dirty_hook('on_time_change', this._on_graph_node_dirty.bind(this));
+			this._graph_node = new CoreGraphNode(this.node.scene(), 'gpu_compute');
+			this._graph_node.addGraphInput(this.node.scene().timeController.graph_node);
+			this._graph_node.addPostDirtyHook('on_time_change', this._on_graph_node_dirty.bind(this));
 		}
 	}
 	private _on_graph_node_dirty() {
 		if (this.node.is_on_frame_start()) {
-			this.node.set_dirty();
+			this.node.setDirty();
 			return;
 		} else {
 			this.compute_similation_if_required();
@@ -246,7 +246,8 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private create_simulation_material_uniforms() {
-		const assembler = this.node.assembler_controller?.assembler;
+		const assemblerController = this.node.assemblerController;
+		const assembler = assemblerController?.assembler;
 		if (!assembler && !this._persisted_texture_allocations_controller) {
 			return;
 		}
@@ -256,8 +257,8 @@ export class ParticlesSystemGpuComputeController {
 			all_materials.push(variable.material);
 		});
 		for (let material of all_materials) {
-			material.uniforms[GlConstant.TIME] = {value: this.node.scene.time};
-			material.uniforms[GlConstant.DELTA_TIME] = {value: this.node.scene.time};
+			material.uniforms[GlConstant.TIME] = {value: this.node.scene().time};
+			material.uniforms[GlConstant.DELTA_TIME] = {value: this.node.scene().time};
 		}
 
 		if (assembler) {
@@ -294,7 +295,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 	private update_simulation_material_uniforms() {
 		for (let variable of this._all_variables) {
-			variable.material.uniforms[GlConstant.TIME].value = this.node.scene.time;
+			variable.material.uniforms[GlConstant.TIME].value = this.node.scene().time;
 			variable.material.uniforms[GlConstant.DELTA_TIME].value = this._delta_time;
 		}
 	}
@@ -333,7 +334,8 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private _fill_textures() {
-		const assembler = this.node.assembler_controller?.assembler;
+		const assemblerController = this.node.assemblerController;
+		const assembler = assemblerController?.assembler;
 		const texture_allocations_controller = assembler
 			? assembler.texture_allocations_controller
 			: this._persisted_texture_allocations_controller;
@@ -386,7 +388,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 	reset_gpu_compute_and_set_dirty() {
 		this.reset_gpu_compute();
-		this.node.set_dirty();
+		this.node.setDirty();
 	}
 	reset_particle_groups() {
 		this._particles_core_group = undefined;

@@ -92,10 +92,10 @@ export class BaseTextureMapController extends BaseController {
 	}
 
 	protected add_hooks(use_map_param: BooleanParam, path_param: OperatorPathParam) {
-		use_map_param.add_post_dirty_hook('TextureController', () => {
+		use_map_param.addPostDirtyHook('TextureController', () => {
 			this.update();
 		});
-		path_param.add_post_dirty_hook('TextureController', () => {
+		path_param.addPostDirtyHook('TextureController', () => {
 			this.update();
 		});
 	}
@@ -260,13 +260,13 @@ export class BaseTextureMapController extends BaseController {
 		update_callback: TextureUpdateCallback<O>,
 		remove_callback: TextureRemoveCallback<O>
 	) {
-		if (use_map_param.is_dirty) {
+		if (use_map_param.isDirty()) {
 			await use_map_param.compute();
 		}
 		const use_map: boolean = use_map_param.value;
 
 		if (use_map) {
-			if (path_param.is_dirty) {
+			if (path_param.isDirty()) {
 				await path_param.compute();
 			}
 

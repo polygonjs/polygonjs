@@ -59,7 +59,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 
 	data(options: DataRequestOption = {}): NodeJsonExporterData {
 		if (!this.is_root()) {
-			this._node.scene.nodesController.register_node_context_signature(this._node);
+			this._node.scene().nodesController.register_node_context_signature(this._node);
 		}
 		this._data = {
 			type: this._node.type,
@@ -102,21 +102,21 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			const flags_data: FlagsData = {};
 			if (this._node.flags.has_bypass() || this._node.flags.has_display() || this._node.flags.has_optimize()) {
 				if (this._node.flags.has_bypass()) {
-					if (this._node.flags.bypass?.active) {
-						flags_data['bypass'] = this._node.flags.bypass.active;
+					if (this._node.flags.bypass?.active()) {
+						flags_data['bypass'] = this._node.flags.bypass.active();
 					}
 				}
 				if (this._node.flags.has_display()) {
 					// only save the display flag if it is true, or if the parent does not have a display_node_controller
 					// This will then always save it for OBJ
 					// And only if true for SOP
-					if (this._node.flags.display?.active || !this._node.parent?.display_node_controller) {
-						flags_data['display'] = this._node.flags.display?.active;
+					if (this._node.flags.display?.active() || !this._node.parent?.display_node_controller) {
+						flags_data['display'] = this._node.flags.display?.active();
 					}
 				}
 				if (this._node.flags.has_optimize()) {
-					if (this._node.flags.optimize?.active) {
-						flags_data['optimize'] = this._node.flags.optimize?.active;
+					if (this._node.flags.optimize?.active()) {
+						flags_data['optimize'] = this._node.flags.optimize?.active();
 					}
 				}
 			}
@@ -132,10 +132,10 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				const selected_children: BaseNodeTypeWithIO[] = [];
 				const selected_ids: PolyDictionary<boolean> = {};
 				for (let selected_node of selection.nodes()) {
-					selected_ids[selected_node.graph_node_id] = true;
+					selected_ids[selected_node.graphNodeId()] = true;
 				}
 				for (let child of this._node.children()) {
-					if (child.graph_node_id in selected_ids) {
+					if (child.graphNodeId() in selected_ids) {
 						selected_children.push(child);
 					}
 				}
@@ -185,8 +185,8 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		const data: NodeJsonExporterUIData = {} as NodeJsonExporterUIData;
 		if (!this.is_root()) {
 			const ui_data = this._node.uiData;
-			data['pos'] = ui_data.position.toArray() as Number2;
-			const comment = ui_data.comment;
+			data['pos'] = ui_data.position().toArray() as Number2;
+			const comment = ui_data.comment();
 			if (comment) {
 				data['comment'] = SceneJsonExporter.sanitize_string(comment);
 			}
@@ -195,7 +195,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	}
 
 	private is_root() {
-		return this._node.parent === null && this._node.graph_node_id == this._node.root.graph_node_id;
+		return this._node.parent === null && this._node.graphNodeId() == this._node.root.graphNodeId();
 	}
 
 	protected inputs_data() {
@@ -260,7 +260,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			const param = this._node.params.get(param_name);
 			if (param && !param.parent_param) {
 				const param_exporter = JsonExportDispatcher.dispatch_param(param);
-				if (param_exporter.required) {
+				if (param_exporter.required()) {
 					const params_data = param_exporter.data();
 					data[param.name] = params_data;
 				}

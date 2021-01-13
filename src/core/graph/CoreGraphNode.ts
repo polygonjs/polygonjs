@@ -18,13 +18,13 @@ export class CoreGraphNode {
 		this._name = name;
 	}
 
-	get scene() {
+	scene() {
 		return this._scene;
 	}
-	get graph() {
-		return this._graph;
-	}
-	get graph_node_id(): CoreGraphNodeId {
+	// graph() {
+	// 	return this._graph;
+	// }
+	graphNodeId(): CoreGraphNodeId {
 		return this._graph_node_id;
 	}
 
@@ -33,24 +33,24 @@ export class CoreGraphNode {
 	// DIRTY CONTROLLER
 	//
 	//
-	get dirty_controller() {
+	get dirtyController() {
 		return this._dirty_controller;
 	}
-	set_dirty(trigger?: CoreGraphNode | null) {
+	setDirty(trigger?: CoreGraphNode | null) {
 		trigger = trigger || this;
 		this._dirty_controller.set_dirty(trigger);
 	}
-	set_successors_dirty(trigger?: CoreGraphNode) {
+	setSuccessorsDirty(trigger?: CoreGraphNode) {
 		this._dirty_controller.set_successors_dirty(trigger);
 	}
-	remove_dirty_state() {
-		this._dirty_controller.remove_dirty_state();
+	removeDirtyState() {
+		this._dirty_controller.removeDirtyState();
 	}
-	get is_dirty() {
-		return this._dirty_controller.is_dirty;
+	isDirty() {
+		return this._dirty_controller.isDirty();
 	}
-	add_post_dirty_hook(name: string, callback: PostDirtyHook) {
-		this._dirty_controller.add_post_dirty_hook(name, callback);
+	addPostDirtyHook(name: string, callback: PostDirtyHook) {
+		this._dirty_controller.addPostDirtyHook(name, callback);
 	}
 
 	//
@@ -59,37 +59,37 @@ export class CoreGraphNode {
 	//
 	//
 
-	graph_remove() {
-		this.graph.remove_node(this);
+	graphRemove() {
+		this._graph.remove_node(this);
 	}
 
-	add_graph_input(src: CoreGraphNode, check_if_graph_has_cycle = true): boolean {
-		return this.graph.connect(src, this, check_if_graph_has_cycle);
+	addGraphInput(src: CoreGraphNode, check_if_graph_has_cycle = true): boolean {
+		return this._graph.connect(src, this, check_if_graph_has_cycle);
 	}
-	remove_graph_input(src: CoreGraphNode) {
-		this.graph.disconnect(src, this);
-	}
-
-	graph_disconnect_predecessors() {
-		this.graph.disconnect_predecessors(this);
-	}
-	graph_disconnect_successors() {
-		this.graph.disconnect_successors(this);
+	removeGraphInput(src: CoreGraphNode) {
+		this._graph.disconnect(src, this);
 	}
 
-	graph_predecessor_ids(): CoreGraphNodeId[] {
-		return this.graph.predecessor_ids(this._graph_node_id) || [];
+	graphDisconnectPredecessors() {
+		this._graph.disconnect_predecessors(this);
 	}
-	graph_predecessors(): CoreGraphNode[] {
-		return this.graph.predecessors(this);
+	graphDisconnectSuccessors() {
+		this._graph.disconnect_successors(this);
 	}
-	graph_successors(): CoreGraphNode[] {
-		return this.graph.successors(this);
+
+	graphPredecessorIds(): CoreGraphNodeId[] {
+		return this._graph.predecessor_ids(this._graph_node_id) || [];
 	}
-	graph_all_predecessors(): CoreGraphNode[] {
-		return this.graph.all_predecessors(this);
+	graphPredecessors(): CoreGraphNode[] {
+		return this._graph.predecessors(this);
 	}
-	graph_all_successors(): CoreGraphNode[] {
-		return this.graph.all_successors(this);
+	graphSuccessors(): CoreGraphNode[] {
+		return this._graph.successors(this);
+	}
+	graphAllPredecessors(): CoreGraphNode[] {
+		return this._graph.all_predecessors(this);
+	}
+	graphAllSuccessors(): CoreGraphNode[] {
+		return this._graph.all_successors(this);
 	}
 }

@@ -45,7 +45,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initialize_node() {
-		this.add_post_dirty_hook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
+		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initialize_node();
 
@@ -53,8 +53,8 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [GL_CONNECTION_POINT_TYPES[this.pv.type]]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-		// this.add_post_dirty_hook('_update_if_type_changed', this._update_signature_if_required_bound);
-		this.scene.dispatchController.onAddListener(() => {
+		// this.addPostDirtyHook('_update_if_type_changed', this._update_signature_if_required_bound);
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
@@ -63,7 +63,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	// private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
 	// 		this.update_output_type();
-	// 		this.remove_dirty_state();
+	// 		this.removeDirtyState();
 	// 		this.make_output_nodes_dirty();
 	// 	}
 	// }

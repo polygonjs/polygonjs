@@ -95,7 +95,7 @@ export class TimeController {
 
 			// we block updates here, so that dependent nodes only cook once
 			this.scene.cooker.block();
-			this.graph_node.set_successors_dirty();
+			this.graph_node.setSuccessorsDirty();
 			this.scene.cooker.unblock();
 
 			// dispatch events after nodes have cooked

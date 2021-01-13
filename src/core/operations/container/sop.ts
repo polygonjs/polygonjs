@@ -26,14 +26,14 @@ export class SopOperationContainer extends BaseOperationContainer {
 
 	private _compute_result: CoreGroup | undefined;
 	private _dirty: boolean = true;
-	set_dirty() {
+	setDirty() {
 		if (this._dirty) {
 			return;
 		}
 		this._compute_result = undefined;
 		for (let i = 0; i < this._inputs.length; i++) {
 			const input_operation = this._inputs[i];
-			input_operation.set_dirty();
+			input_operation.setDirty();
 		}
 	}
 

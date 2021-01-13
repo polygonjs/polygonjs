@@ -70,7 +70,7 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	scene.timeController.setFrame(3);
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 81 end');
-	assert.equal(text2_param.graph_predecessors().length, 2);
+	assert.equal(text2_param.graphPredecessors().length, 2);
 
 	// test updating the string param
 	const text3 = geo1.createNode('text');
@@ -79,7 +79,7 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	text2_param.set('text3: `ch("../' + text3_name + '/text")` middle `$F*3` end');
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'text3:  - this is text3 -  middle 9 end');
-	// assert.equal(text2_param.graph_predecessors().length, 2);
+	// assert.equal(text2_param.graphPredecessors().length, 2);
 
 	// // now just the frame
 	// text2_param.set('`$F`');
@@ -88,11 +88,11 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	// scene.time_controller.increment_frame();
 	// await text2_param.compute();
 	// assert.equal(text2_param.value, '4');
-	// assert.equal(text2_param.graph_predecessors().length, 1);
+	// assert.equal(text2_param.graphPredecessors().length, 1);
 
 	// // test removing expressions from the string param
 	// text2_param.set('a simple string');
-	// assert.equal(text2_param.graph_predecessors().length, 0);
+	// assert.equal(text2_param.graphPredecessors().length, 0);
 	// await text2_param.compute();
 	// assert.equal(text2_param.value, 'a simple string');
 });

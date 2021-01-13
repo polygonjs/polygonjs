@@ -40,16 +40,16 @@ export class NodeSerializer {
 		// const spare_params_json_by_name = {};
 		// lodash_each(this.node.spare_param_names(), param_name=> {
 		// 	const param = this.node.spare_param(param_name);
-		// 	spare_params_json_by_name[param_name] = param.graph_node_id;
+		// 	spare_params_json_by_name[param_name] = param.graphNodeId();
 		// });
 
 		const data = {
 			name: this.node.name,
 			type: this.node.type,
-			graph_node_id: this.node.graph_node_id,
-			is_dirty: this.node.is_dirty,
+			graph_node_id: this.node.graphNodeId(),
+			is_dirty: this.node.isDirty(),
 			ui_data_json: this.node.uiData.toJSON(),
-			error_message: this.node.states.error.message,
+			error_message: this.node.states.error.message(),
 			children: this.children_ids(),
 			inputs: this.input_ids(),
 			input_connection_output_indices: this.input_connection_output_indices(),
@@ -61,9 +61,9 @@ export class NodeSerializer {
 			inputs_clone_required_states: this.node.io.inputs.clone_required_states(),
 			flags: {
 				//has_display: this.has_display_flag()
-				display: this.node.flags?.display?.active,
-				bypass: this.node.flags?.bypass?.active,
-				optimize: this.node.flags?.optimize?.active,
+				display: this.node.flags?.display?.active(),
+				bypass: this.node.flags?.bypass?.active(),
+				optimize: this.node.flags?.optimize?.active(),
 			},
 			selection: undefined as CoreGraphNodeId[] | undefined,
 		};
@@ -76,11 +76,11 @@ export class NodeSerializer {
 	}
 
 	children_ids() {
-		return this.node.children().map((node) => node.graph_node_id);
+		return this.node.children().map((node) => node.graphNodeId());
 	}
 
 	input_ids(): (CoreGraphNodeId | undefined)[] {
-		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graph_node_id : undefined));
+		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graphNodeId() : undefined));
 	}
 
 	input_connection_output_indices() {
@@ -97,17 +97,17 @@ export class NodeSerializer {
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {
 		return param_names.map((param_name) => {
-			return this.node.params.get(param_name)!.graph_node_id;
+			return this.node.params.get(param_name)!.graphNodeId();
 		});
 		// const params_json_by_name: PolyDictionary<string> = {};
 		// for (let param_name of param_names) {
 		// 	const param = this.node.params.get(param_name);
 		// 	if (param) {
-		// 		params_json_by_name[param_name] = param.graph_node_id;
+		// 		params_json_by_name[param_name] = param.graphNodeId();
 
 		// 		if (include_components && param.is_multiple && param.components) {
 		// 			for (let component of param.components) {
-		// 				params_json_by_name[component.name] = component.graph_node_id;
+		// 				params_json_by_name[component.name] = component.graphNodeId();
 		// 			}
 		// 		}
 		// 	}

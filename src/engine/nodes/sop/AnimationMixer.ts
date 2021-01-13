@@ -61,7 +61,7 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 	}
 
 	private async _create_mixer(object: Object3D) {
-		if (this.p.clip.is_dirty) {
+		if (this.p.clip.isDirty()) {
 			await this.p.clip.compute();
 		}
 		const anim_node = this.p.clip.found_node_with_context(NodeContext.ANIM);
@@ -90,12 +90,12 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 	}
 
 	static PARAM_CALLBACK_reset(node: AnimationMixerSopNode, param: BaseParamType) {
-		param.set_dirty();
+		param.setDirty();
 		node.reset_animation_mixer();
 	}
 	async reset_animation_mixer() {
 		this._mixer = undefined;
 		this._previous_time = undefined;
-		this.set_dirty();
+		this.setDirty();
 	}
 }

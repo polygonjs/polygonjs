@@ -58,7 +58,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	container() {
 		return this._container;
 	}
-	get scene() {
+	scene() {
 		return this._scene;
 	}
 	canvas() {
@@ -70,7 +70,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	get cameraControlsController(): ThreejsCameraControlsController | undefined {
 		return undefined;
 	}
-	get id() {
+	id() {
 		return this._id;
 	}
 

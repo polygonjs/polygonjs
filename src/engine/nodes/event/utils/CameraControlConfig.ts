@@ -30,7 +30,7 @@ export class CameraControlsConfig {
 	is_equal(other_config: CameraControlsConfig): boolean {
 		return (
 			other_config.camera_node_id == this._camera_node_id &&
-			other_config.controls_node.graph_node_id == this._controls_node.graph_node_id
+			other_config.controls_node.graphNodeId() == this._controls_node.graphNodeId()
 		);
 	}
 }

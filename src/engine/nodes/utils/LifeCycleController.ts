@@ -21,7 +21,7 @@ export class LifeCycleController {
 		}
 	}
 	get creation_completed() {
-		return this.node.scene.loadingController.loaded() && this._creation_completed;
+		return this.node.scene().loadingController.loaded() && this._creation_completed;
 	}
 	//
 	//

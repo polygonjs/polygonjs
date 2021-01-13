@@ -18,12 +18,12 @@ export class MissingReferencesController {
 	register(param: BaseParamType, jsep_node: jsep.Expression, path_argument: string): MissingExpressionReference {
 		const missing_expression_reference = new MissingExpressionReference(param, path_argument);
 
-		MapUtils.push_on_array_at_entry(this.references, param.graph_node_id, missing_expression_reference);
+		MapUtils.push_on_array_at_entry(this.references, param.graphNodeId(), missing_expression_reference);
 
 		return missing_expression_reference;
 	}
 	deregister_param(param: BaseParamType) {
-		this.references.delete(param.graph_node_id);
+		this.references.delete(param.graphNodeId());
 	}
 
 	//
@@ -75,7 +75,7 @@ export class MissingReferencesController {
 		}
 	}
 	private _check_for_missing_references_for_node(node: BaseNodeType) {
-		const id = node.graph_node_id;
+		const id = node.graphNodeId();
 
 		this.references.forEach((missing_references, node_id) => {
 			let match_found = false;
@@ -91,7 +91,7 @@ export class MissingReferencesController {
 		});
 	}
 	private _check_for_missing_references_for_param(param: BaseParamType) {
-		const id = param.graph_node_id;
+		const id = param.graphNodeId();
 
 		this.references.forEach((missing_references, node_id) => {
 			let match_found = false;

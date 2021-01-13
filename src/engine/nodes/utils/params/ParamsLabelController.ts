@@ -43,7 +43,7 @@ export class ParamsLabelController {
 					return this._handle_number_param(param as IntegerParam);
 			}
 		}
-		// this.graph_node.add_graph_input(this._param, false);
+		// this.graph_node.addGraphInput(this._param, false);
 	}
 
 	private _handle_string_param(param: StringParam) {
@@ -74,7 +74,7 @@ export class ParamsLabelController {
 
 	// set_callback(params: BaseParamType[], callback: LabelControllerCallback) {
 	// 	// for (let param of params) {
-	// 	// 	this.graph_node.add_graph_input(param, false);
+	// 	// 	this.graph_node.addGraphInput(param, false);
 	// 	// }
 	// 	this._params = params
 	// 	this._callback = callback;
@@ -85,7 +85,7 @@ export class ParamsLabelController {
 	// }
 	// private _create_graph_node() {
 	// 	const graph_node = new CoreGraphNode(this.params_controller.node.scene, 'ParamsLabelController');
-	// 	graph_node.add_post_dirty_hook('update_param_label', () => {
+	// 	graph_node.addPostDirtyHook('update_param_label', () => {
 	// 		console.log('dirty');
 	// 		if (this._callback) {
 	// 			console.log(this._callback());

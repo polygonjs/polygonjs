@@ -78,7 +78,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		return val1.is_equal(val2);
 	}
 	// initialize_param() {
-	// 	this.add_post_dirty_hook(
+	// 	this.addPostDirtyHook(
 	// 		'_reset_ramp_interpolant_and_texture',
 	// 		this.reset_ramp_interpolant.bind(this)
 	// 	);
@@ -112,7 +112,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		this._update_ramp_texture();
 		this.options.execute_callback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);
-		this.set_successors_dirty(this);
+		this.setSuccessorsDirty(this);
 	}
 
 	// convert_value(v) {

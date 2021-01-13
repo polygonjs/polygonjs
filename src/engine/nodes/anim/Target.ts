@@ -57,7 +57,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.type, this.p.nodePath, this.p.objectMask], () => {
 					const type = TARGET_TYPES[this.pv.type];
@@ -125,10 +125,10 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		const target = this._create_target(timeline_builder);
 		switch (type) {
 			case TargetType.NODE: {
-				return console.log(target.node(this.scene));
+				return console.log(target.node(this.scene()));
 			}
 			case TargetType.SCENE_GRAPH: {
-				return console.log(target.objects(this.scene));
+				return console.log(target.objects(this.scene()));
 			}
 		}
 	}

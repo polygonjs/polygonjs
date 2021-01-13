@@ -41,7 +41,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		return 'image';
 	}
 	async required_modules() {
-		if (this.p.url.is_dirty) {
+		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
 		const ext = CoreTextureLoader.get_extension(this.pv.url || '');
@@ -52,7 +52,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
 
 	initialize_node() {
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.url], () => {
 					const url = this.pv.url;
@@ -100,7 +100,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	private param_callback_reload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
-		this.p.url.set_dirty();
+		this.p.url.setDirty();
 	}
 
 	private async _load_texture(url: string) {

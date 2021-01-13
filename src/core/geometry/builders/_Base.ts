@@ -20,7 +20,7 @@ export abstract class CoreGeometryBuilderBase {
 			// index
 			const new_index_by_old_index: PolyDictionary<number> = {};
 			for (let i = 0; i < points.length; i++) {
-				new_index_by_old_index[points[i].index] = i;
+				new_index_by_old_index[points[i].index()] = i;
 			}
 
 			const indices = this._indices_from_points(new_index_by_old_index, old_geometry);

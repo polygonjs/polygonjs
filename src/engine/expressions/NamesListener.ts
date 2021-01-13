@@ -10,7 +10,7 @@ export class NamesListener extends CoreGraphNode {
 	// private nodes_in_path: NodeOrParam[] = []
 
 	constructor(public param: BaseParamType, public node_simple: CoreGraphNode, public jsep_node: jsep.Expression) {
-		super(param.scene, 'NamesListener');
+		super(param.scene(), 'NamesListener');
 
 		// this.set_scene(this.param.scene);
 		this.connect_to_nodes_in_path();

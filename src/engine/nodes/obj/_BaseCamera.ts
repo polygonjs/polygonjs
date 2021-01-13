@@ -151,7 +151,7 @@ export abstract class TypedCameraObjNode<
 		node.set_as_master_camera();
 	}
 	set_as_master_camera() {
-		this.scene.camerasController.setMasterCameraNodePath(this.fullPath());
+		this.scene().camerasController.setMasterCameraNodePath(this.fullPath());
 	}
 
 	setup_for_aspect_ratio(aspect: number) {}
@@ -276,7 +276,7 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	createViewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
-		return new ThreejsViewer(element, this.scene, this, viewer_properties);
+		return new ThreejsViewer(element, this.scene(), this, viewer_properties);
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.post_process_controller.reset();

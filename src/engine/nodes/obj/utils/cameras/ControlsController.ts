@@ -32,7 +32,7 @@ export class ThreejsCameraControlsController {
 		const controls_param = this.node.p.controls;
 		const raw_input = controls_param.raw_input;
 		if (raw_input && raw_input != '') {
-			if (controls_param.is_dirty) {
+			if (controls_param.isDirty()) {
 				await controls_param.compute();
 			}
 			const node = controls_param.value.node();
@@ -83,7 +83,7 @@ export class ThreejsCameraControlsController {
 				// requestContainer forces a cook
 				//controls_node.requestContainer (controls_container)=>
 				const controls = await controls_node.apply_controls(this.node.object, viewer);
-				const config = new CameraControlsConfig(this.node.graph_node_id, controls_node, controls);
+				const config = new CameraControlsConfig(this.node.graphNodeId(), controls_node, controls);
 				// controls_node.set_from_camera_node(controls, this.node);
 				this.set_controls_events(controls);
 				return config;

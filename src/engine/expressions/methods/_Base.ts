@@ -21,7 +21,7 @@ export class BaseMethod {
 	// since the param may not have a node yet, especially when the param's value
 	// is set on node creation
 	private _node: BaseNodeType | undefined;
-	protected get node(): BaseNodeType | undefined {
+	protected node(): BaseNodeType | undefined {
 		return (this._node = this._node || this.param.node);
 	}
 
@@ -52,7 +52,7 @@ export class BaseMethod {
 		if (referenced_node) {
 			// const time_start = performance.now();
 			let container: ContainerMap[NodeContext];
-			if (referenced_node.is_dirty) {
+			if (referenced_node.isDirty()) {
 				container = await referenced_node.requestContainer();
 			} else {
 				container = referenced_node.container_controller.container;
@@ -70,16 +70,17 @@ export class BaseMethod {
 	}
 
 	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
-		if (this.node) {
-			return CoreWalker.find_param(this.node, path, decomposed_path);
+		const node = this.node();
+		if (node) {
+			return CoreWalker.find_param(node, path, decomposed_path);
 		}
 
 		// if (referenced_param != null) {
 
 		// 	if (this.update_dependencies_mode()) {
 
-		// 		//param_connect_result = this.param().add_graph_input(referenced_param)
-		// 		const expression_node_connect_result = this.jsep_node()._graph_node.add_graph_input(referenced_param);
+		// 		//param_connect_result = this.param().addGraphInput(referenced_param)
+		// 		const expression_node_connect_result = this.jsep_node()._graph_node.addGraphInput(referenced_param);
 		// 		//if !(param_connect_result && expression_node_connect_result)
 		// 		if (!expression_node_connect_result) {
 		// 			throw "cannot create infinite graph";
@@ -98,8 +99,9 @@ export class BaseMethod {
 		// let node
 		if (is_index) {
 			const index = index_or_path as number;
-			if (this.node) {
-				const input_graph_node = this.node.io.inputs.input_graph_node(index);
+			const node = this.node();
+			if (node) {
+				const input_graph_node = node.io.inputs.input_graph_node(index);
 				return input_graph_node;
 			}
 		} else {
@@ -117,15 +119,16 @@ export class BaseMethod {
 		// 	return node;
 		// } else {
 		let node: BaseNodeType | null = null;
+		const current_node = this.node();
 		if (CoreType.isString(index_or_path)) {
-			if (this.node) {
+			if (current_node) {
 				const path = index_or_path;
-				node = CoreWalker.find_node(this.node, path, decomposed_path);
+				node = CoreWalker.find_node(current_node, path, decomposed_path);
 			}
 		} else {
-			if (this.node) {
+			if (current_node) {
 				const index = index_or_path;
-				node = this.node.io.inputs.input(index);
+				node = current_node.io.inputs.input(index);
 			}
 		}
 		// this._node_by_path.set(index_or_path, node);

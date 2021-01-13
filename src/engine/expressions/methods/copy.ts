@@ -56,7 +56,8 @@ export class CopyExpression extends BaseMethod {
 				const default_value = args[1];
 				const attribute_name = args[2];
 
-				const node = this.node ? CoreWalker.find_node(this.node, path) : null;
+				const current_node = this.node();
+				const node = current_node ? CoreWalker.find_node(current_node, path) : null;
 
 				let value;
 				if (node && node.type == CopySopNode.type()) {
@@ -76,7 +77,7 @@ export class CopyExpression extends BaseMethod {
 		});
 	}
 	// update_dependencies() {
-	// 	return this.jsep_node()._graph_node.add_graph_input( this.copy_sop.stamp_node() );
+	// 	return this.jsep_node()._graph_node.addGraphInput( this.copy_sop.stamp_node() );
 	// }
 
 	// process_arguments(args, callback){

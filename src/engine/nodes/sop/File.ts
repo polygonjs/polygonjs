@@ -35,7 +35,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		return 'file';
 	}
 	async required_modules() {
-		if (this.p.url.is_dirty) {
+		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
 		const ext = CoreLoaderGeometry.get_extension(this.pv.url || '');
@@ -43,7 +43,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 
 	initialize_node() {
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.url], () => {
 					const url = this.pv.url;
@@ -61,7 +61,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSopOperation | undefined;
 	async cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new FileSopOperation(this.scene, this.states);
+		this._operation = this._operation || new FileSopOperation(this.scene(), this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}
@@ -71,7 +71,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 	private param_callback_reload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
-		this.p.url.set_dirty();
-		// this.set_dirty()
+		this.p.url.setDirty();
+		// this.setDirty()
 	}
 }

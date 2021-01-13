@@ -244,7 +244,7 @@ export class FunctionGenerator extends BaseTraverser {
 				// this.function_pre_body = ''
 				if (parsed_tree.node) {
 					const function_main_string = this.traverse_node(parsed_tree.node);
-					if (function_main_string && !this.is_errored) {
+					if (function_main_string && !this.is_errored()) {
 						this.function_main_string = function_main_string;
 					}
 				} else {
@@ -294,13 +294,13 @@ export class FunctionGenerator extends BaseTraverser {
 	}
 
 	function_body() {
-		if (this.param.options.is_expression_for_entities) {
+		if (this.param.options.is_expression_for_entities()) {
 			return `
-			const entities = param.expression_controller.entities;
+			const entities = param.expression_controller.entities();
 			if(entities){
 				return new Promise( async (resolve, reject)=>{
 					let entity;
-					const entity_callback = param.expression_controller.entity_callback;
+					const entity_callback = param.expression_controller.entity_callback();
 					${this._attribute_requirements_controller.assign_attributes_lines()}
 					if( ${this._attribute_requirements_controller.attribute_presence_check_line()} ){
 						${this._attribute_requirements_controller.assign_arrays_lines()}
@@ -452,7 +452,7 @@ export class FunctionGenerator extends BaseTraverser {
 			if (attribute_name) {
 				attribute_name = CoreAttribute.remap_name(attribute_name);
 				if (attribute_name == 'ptnum') {
-					return '((entity != null) ? entity.index : 0)';
+					return '((entity != null) ? entity.index() : 0)';
 				} else {
 					const var_attribute_size = this._attribute_requirements_controller.var_attribute_size(
 						attribute_name
@@ -461,9 +461,9 @@ export class FunctionGenerator extends BaseTraverser {
 					this._attribute_requirements_controller.add(attribute_name);
 					if (property) {
 						const property_offset = PROPERTY_OFFSETS[property];
-						return `${var_array}[entity.index*${var_attribute_size}+${property_offset}]`;
+						return `${var_array}[entity.index()*${var_attribute_size}+${property_offset}]`;
 					} else {
-						return `${var_array}[entity.index*${var_attribute_size}]`;
+						return `${var_array}[entity.index()*${var_attribute_size}]`;
 					}
 				}
 			} else {
@@ -509,16 +509,16 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	//
 	protected traverse_Identifier_F(): string {
-		this.immutable_dependencies.push(this.param.scene.timeController.graph_node);
-		return `param.scene.timeController.frame`;
+		this.immutable_dependencies.push(this.param.scene().timeController.graph_node);
+		return `param.scene().timeController.frame`;
 	}
 	protected traverse_Identifier_FPS(): string {
-		this.immutable_dependencies.push(this.param.scene.timeController.graph_node);
-		return `param.scene.timeController.fps`;
+		this.immutable_dependencies.push(this.param.scene().timeController.graph_node);
+		return `param.scene().timeController.fps`;
 	}
 	protected traverse_Identifier_T(): string {
-		this.immutable_dependencies.push(this.param.scene.timeController.graph_node);
-		return `param.scene.timeController.time`;
+		this.immutable_dependencies.push(this.param.scene().timeController.graph_node);
+		return `param.scene().timeController.time`;
 	}
 	protected traverse_Identifier_CH(): string {
 		return `${QUOTE}${this.param.name}${QUOTE}`;
@@ -575,11 +575,9 @@ export class FunctionGenerator extends BaseTraverser {
 				this.method_dependencies.push(method_dependency);
 			} else {
 				if (path_node && CoreType.isString(path_argument)) {
-					this.param.scene.missingExpressionReferencesController.register(
-						this.param,
-						path_node,
-						path_argument
-					);
+					this.param
+						.scene()
+						.missingExpressionReferencesController.register(this.param, path_node, path_argument);
 				}
 			}
 		}

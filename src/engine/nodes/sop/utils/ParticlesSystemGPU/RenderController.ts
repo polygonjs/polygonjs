@@ -93,13 +93,13 @@ export class ParticlesSystemGpuRenderController {
 		}
 	}
 	async init_render_material() {
-		const assembler = this.node.assembler_controller?.assembler;
+		const assembler = this.node.assemblerController?.assembler;
 
 		if (this._render_material) {
 			return;
 		}
 
-		if (this.node.p.material.is_dirty) {
+		if (this.node.p.material.isDirty()) {
 			await this.node.p.material.compute();
 		}
 		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType;
@@ -107,12 +107,13 @@ export class ParticlesSystemGpuRenderController {
 		if (mat_node) {
 			if (assembler) {
 				const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.toJSON(
-					this.node.scene
+					this.node.scene()
 				);
 
-				if (mat_node.assembler_controller) {
+				const matNodeAssemblerController = mat_node.assemblerController;
+				if (matNodeAssemblerController) {
 					this.globals_handler.set_texture_allocations_controller(assembler.texture_allocations_controller);
-					mat_node.assembler_controller.set_assembler_globals_handler(this.globals_handler);
+					matNodeAssemblerController.set_assembler_globals_handler(this.globals_handler);
 				}
 
 				if (
@@ -126,8 +127,8 @@ export class ParticlesSystemGpuRenderController {
 					this._texture_allocations_json = ObjectUtils.cloneDeep(new_texture_allocations_json);
 					// setting the material to dirty is not enough. We need to make it clear a recompile is required.
 					// This is necessary since if inputs of output or any export note are changed, the texture allocation will change. If the mat node was to not recompile, it would fetch attributes such as position from an incorrect or non existing texture.
-					if (mat_node.assembler_controller) {
-						mat_node.assembler_controller.set_compilation_required_and_dirty();
+					if (matNodeAssemblerController) {
+						matNodeAssemblerController.set_compilation_required_and_dirty();
 					}
 				}
 			}

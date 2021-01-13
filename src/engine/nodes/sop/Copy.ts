@@ -229,12 +229,12 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		return (this._stamp_node = this._stamp_node || this.create_stamp_node());
 	}
 	private create_stamp_node() {
-		const stamp_node = new CopyStamp(this.scene);
-		this.dirty_controller.set_forbidden_trigger_nodes([stamp_node]);
+		const stamp_node = new CopyStamp(this.scene());
+		this.dirtyController.set_forbidden_trigger_nodes([stamp_node]);
 		return stamp_node;
 	}
 
 	// private set_dirty_allowed(original_trigger_graph_node: CoreGraphNode): boolean {
-	// 	return original_trigger_graph_node.graph_node_id !== this.stamp_node.graph_node_id;
+	// 	return original_trigger_graph_node.graphNodeId() !== this.stamp_node.graphNodeId();
 	// }
 }

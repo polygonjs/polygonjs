@@ -229,14 +229,14 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	}
 	// same algo as is_optimized_root_node, but for a node
 	static is_optimized_root_node_from_node<NC extends NodeContext>(node: TypedNode<NC, any>) {
-		if (!node.flags?.optimize?.active) {
+		if (!node.flags?.optimize?.active()) {
 			return false;
 		}
 
 		const output_nodes = node.io.connections.output_connections().map((c) => c.node_dest);
 		let non_optimized_count = 0;
 		for (let output_node of output_nodes) {
-			if (!output_node.flags?.optimize?.active) {
+			if (!output_node.flags?.optimize?.active()) {
 				non_optimized_count++;
 			}
 		}

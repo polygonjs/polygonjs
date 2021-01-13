@@ -45,7 +45,7 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 	}
 
 	async process_event(event_context: EventContext<Event>) {
-		if (this.p.active.is_dirty) {
+		if (this.p.active.isDirty()) {
 			await this.p.active.compute();
 		}
 		if (this.pv.active) {

@@ -47,7 +47,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	initialize_node() {
 		this.flags.display.set(false);
 		this.flags.display.add_hook(() => {
-			if (this.flags.display.active) {
+			if (this.flags.display.active()) {
 				const parent = this.parent;
 				if (parent && parent.display_node_controller) {
 					parent.display_node_controller.set_display_node(this);
@@ -68,12 +68,12 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	setup_composer(context: TypedPostNodeContext): void {
 		this._add_pass_from_input(0, context);
 
-		if (!this.flags.bypass.active) {
-			let pass = this._passes_by_requester_id.get(context.requester.graph_node_id);
+		if (!this.flags.bypass.active()) {
+			let pass = this._passes_by_requester_id.get(context.requester.graphNodeId());
 			if (!pass) {
 				pass = this._create_pass(context);
 				if (pass) {
-					this._passes_by_requester_id.set(context.requester.graph_node_id, pass);
+					this._passes_by_requester_id.set(context.requester.graphNodeId(), pass);
 				}
 			}
 			if (pass) {

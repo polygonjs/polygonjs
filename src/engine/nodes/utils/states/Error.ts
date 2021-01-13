@@ -14,13 +14,13 @@ export class ErrorState extends BaseState {
 			this.on_update();
 		}
 	}
-	get message() {
+	message() {
 		return this._message;
 	}
 	clear() {
 		this.set(undefined);
 	}
-	get active(): boolean {
+	active(): boolean {
 		return this._message != null;
 	}
 

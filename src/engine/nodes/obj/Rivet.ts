@@ -113,12 +113,12 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// });
 
 		// setup frame dependency to update the matrix
-		// this._time_graph_node.add_post_dirty_hook('rivet_on_frame_change', () => {
+		// this._time_graph_node.addPostDirtyHook('rivet_on_frame_change', () => {
 		// 	setTimeout(() => {
 		// 		this.update_object_position();
 		// 	}, 0);
 		// });
-		this.add_post_dirty_hook('rivet_on_dirty', () => {
+		this.addPostDirtyHook('rivet_on_dirty', () => {
 			this.cook_controller.cook_main_without_inputs();
 		});
 		// this.params.set_post_create_params_hook(() => {
@@ -128,7 +128,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// helper
 		this.object.add(this._helper);
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active;
+			this._helper.visible = this.flags.display.active();
 		});
 	}
 	async cook() {
@@ -163,11 +163,11 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 
 	// private _remove_frame_dependency(){
 	// 	const frame_graph_node = this.scene.time_controller.graph_node
-	// 	this.remove_graph_input(frame_graph_node)
+	// 	this.removeGraphInput(frame_graph_node)
 	// }
 	// private _add_frame_depedency(){
 	// 	const frame_graph_node = this.scene.time_controller.graph_node
-	// 	this.add_graph_input(frame_graph_node)
+	// 	this.addGraphInput(frame_graph_node)
 	// }
 
 	private _update_render_hook() {
@@ -235,7 +235,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		node._update_resolved_object();
 	}
 	private async _update_resolved_object() {
-		if (this.p.object.is_dirty) {
+		if (this.p.object.isDirty()) {
 			await this.p.object.compute();
 		}
 

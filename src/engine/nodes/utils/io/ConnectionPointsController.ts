@@ -112,7 +112,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			'_update_signature_if_required_bound',
 			this._update_signature_if_required_bound
 		);
-		this.node.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+		this.node.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 
 		if (!this._spare_params_controller.initialized()) {
 			this._spare_params_controller.initialize_node();
@@ -131,18 +131,18 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 		if (!this.node.lifecycle.creation_completed || !this._connections_match_inputs()) {
 			this.update_connection_types();
-			this.node.remove_dirty_state();
+			this.node.removeDirtyState();
 
 			// no need to update the successors when loading,
 			// since the connection point types are stored in the scene data
-			if (!this.node.scene.loadingController.isLoading()) {
+			if (!this.node.scene().loadingController.isLoading()) {
 				this.make_successors_update_signatures();
 			}
 		}
 	}
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
 	private make_successors_update_signatures() {
-		const successors = this.node.graph_all_successors();
+		const successors = this.node.graphAllSuccessors();
 		if (this.node.children_allowed()) {
 			const subnet_inputs = this.node.nodesByType(NetworkChildNodeType.INPUT);
 			const subnet_outputs = this.node.nodesByType(NetworkChildNodeType.OUTPUT);
@@ -231,7 +231,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	//   which in turn allows connected nodes to not lose their connections.
 	//
 	private _wrapped_expected_input_types_function() {
-		if (this.node.scene.loadingController.isLoading()) {
+		if (this.node.scene().loadingController.isLoading()) {
 			const in_data = this.node.io.saved_connection_points_data.in();
 			if (in_data) {
 				return in_data.map((d) => d.type as ConnectionPointEnumMap[NC]);
@@ -240,7 +240,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._expected_input_types_function();
 	}
 	private _wrapped_expected_output_types_function() {
-		if (this.node.scene.loadingController.isLoading()) {
+		if (this.node.scene().loadingController.isLoading()) {
 			const out_data = this.node.io.saved_connection_points_data.out();
 			if (out_data) {
 				return out_data.map((d) => d.type as ConnectionPointEnumMap[NC]);
@@ -249,7 +249,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._expected_output_types_function();
 	}
 	private _wrapped_input_name_function(index: number) {
-		if (this.node.scene.loadingController.isLoading()) {
+		if (this.node.scene().loadingController.isLoading()) {
 			const in_data = this.node.io.saved_connection_points_data.in();
 			if (in_data) {
 				return in_data[index].name;
@@ -258,7 +258,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._input_name_function(index);
 	}
 	private _wrapped_output_name_function(index: number) {
-		if (this.node.scene.loadingController.isLoading()) {
+		if (this.node.scene().loadingController.isLoading()) {
 			const out_data = this.node.io.saved_connection_points_data.out();
 			if (out_data) {
 				return out_data[index].name;

@@ -3,21 +3,21 @@ import {ParamType} from '../../../poly/ParamType';
 
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {OverridenOptions, ComplexParamJsonExporterData} from '../../../nodes/utils/io/IOController';
-import { CoreType } from '../../../../core/Type';
+import {CoreType} from '../../../../core/Type';
 
 export class ParamJsonExporter<T extends BaseParamType> {
 	// protected _simple_data: SimpleParamJsonExporterData<ParamType>=0;
 	protected _complex_data: ComplexParamJsonExporterData<ParamType> = {};
 	constructor(protected _param: T) {}
 
-	get required(): boolean {
-		const is_spare_and_not_component = this._param.options.is_spare && !this._param.parent_param;
+	required(): boolean {
+		const is_spare_and_not_component = this._param.options.is_spare() && !this._param.parent_param;
 
 		// we should not need to check if it has an expression anymore,
 		// as it could have an expression AND be of default value
 		const value_changed = !this._param.is_default; //|| this._param.has_expression();
 		// const referencing_asset = this._param.is_referencing_asset()
-		return is_spare_and_not_component || value_changed || this._param.options.has_options_overridden;
+		return is_spare_and_not_component || value_changed || this._param.options.has_options_overridden();
 	}
 
 	data() {
@@ -40,19 +40,19 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	private _data_complex() {
 		this._complex_data = {};
 
-		if (this._param.options.is_spare && !this._param.parent_param) {
+		if (this._param.options.is_spare() && !this._param.parent_param) {
 			this._complex_data['type'] = this._param.type;
 			this._complex_data['default_value'] = this._param.default_value_serialized;
-			this._complex_data['options'] = this._param.options.current;
+			this._complex_data['options'] = this._param.options.current();
 		}
 
 		if (!this._param.is_default) {
 			this._complex_data['raw_input'] = this._param.raw_input_serialized;
 		}
 
-		if (this._param.options.has_options_overridden) {
+		if (this._param.options.has_options_overridden()) {
 			const overridden_options: OverridenOptions = {};
-			const options_overridden = this._param.options.overridden_options;
+			const options_overridden = this._param.options.overridden_options();
 			for (let option_name of Object.keys(options_overridden)) {
 				const option_value = options_overridden[option_name as keyof ParamOptions];
 				if (CoreType.isString(option_value) || CoreType.isNumber(option_value)) {
@@ -67,10 +67,10 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	}
 
 	protected _require_data_complex() {
-		if (this._param.options.is_spare) {
+		if (this._param.options.is_spare()) {
 			return true;
 		}
-		if (this._param.options.has_options_overridden) {
+		if (this._param.options.has_options_overridden()) {
 			return true;
 		}
 		return false;

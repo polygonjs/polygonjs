@@ -75,7 +75,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	get assembler_controller() {
+	get assemblerController() {
 		return this._assembler_controller;
 	}
 
@@ -102,11 +102,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 		// this ensures the builder recooks when its children are changed
 		// and not just when a material that use it requests it
-		this.add_post_dirty_hook('_cook_main_without_inputs_when_dirty', () => {
+		this.addPostDirtyHook('_cook_main_without_inputs_when_dirty', () => {
 			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
 		});
 
-		// this.dirty_controller.add_post_dirty_hook(
+		// this.dirtyController.addPostDirtyHook(
 		// 	'_reset_if_resolution_changed',
 		// 	this._reset_if_resolution_changed.bind(this)
 		// );
@@ -136,10 +136,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	children_allowed() {
-		if (this.assembler_controller) {
+		if (this.assemblerController) {
 			return super.children_allowed();
 		}
-		this.scene.mark_as_read_only(this);
+		this.scene().mark_as_read_only(this);
 		return false;
 	}
 
@@ -149,7 +149,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	// private _reset_if_resolution_changed(trigger?: CoreGraphNode) {
-	// 	if (trigger && trigger.graph_node_id == this.p.resolution.graph_node_id) {
+	// 	if (trigger && trigger.graphNodeId() == this.p.resolution.graphNodeId()) {
 	// 		this._reset();
 	// 	}
 	// }
@@ -166,12 +166,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	compile_if_required() {
-		if (this.assembler_controller?.compile_required()) {
+		if (this.assemblerController?.compile_required()) {
 			this.compile();
 		}
 	}
 	private compile() {
-		if (!this.assembler_controller) {
+		const assemblerController = this.assemblerController;
+		if (!assemblerController) {
 			return;
 		}
 		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this);
@@ -183,20 +184,20 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (output_node) {
 			//const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
 			const root_nodes = output_nodes; //.concat(param_nodes);
-			this.assembler_controller.assembler.set_root_nodes(root_nodes);
+			assemblerController.assembler.set_root_nodes(root_nodes);
 
 			// main compilation
-			this.assembler_controller.assembler.update_fragment_shader();
+			assemblerController.assembler.update_fragment_shader();
 
 			// receives fragment and uniforms
-			const fragment_shader = this.assembler_controller.assembler.fragment_shader();
-			const uniforms = this.assembler_controller.assembler.uniforms();
+			const fragment_shader = assemblerController.assembler.fragment_shader();
+			const uniforms = assemblerController.assembler.uniforms();
 			if (fragment_shader && uniforms) {
 				this._fragment_shader = fragment_shader;
 				this._uniforms = uniforms;
 			}
 
-			BuilderCopNode.handle_dependencies(this, this.assembler_controller.assembler.uniforms_time_dependent());
+			BuilderCopNode.handle_dependencies(this, assemblerController.assembler.uniforms_time_dependent());
 		}
 
 		if (this._fragment_shader && this._uniforms) {
@@ -207,13 +208,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				value: this.pv.resolution,
 			};
 		}
-		this.assembler_controller?.post_compile();
+		assemblerController.post_compile();
 	}
 
 	static handle_dependencies(node: BuilderCopNode, time_dependent: boolean, uniforms?: IUniformsWithTime) {
 		// That's actually useless, since this doesn't make the texture recook
-		const scene = node.scene;
-		const id = node.graph_node_id;
+		const scene = node.scene();
+		const id = node.graphNodeId();
 		const id_s = `${id}`;
 		if (time_dependent) {
 			// TODO: remove this once the scene knows how to re-render

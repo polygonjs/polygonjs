@@ -136,7 +136,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	}
 
 	initialize_node() {
-		// this.dirty_controller.add_post_dirty_hook(
+		// this.dirtyController.addPostDirtyHook(
 		// 	'_cook_main_without_inputs_when_dirty',
 		// 	this._cook_main_without_inputs_when_dirty_bound
 		// );

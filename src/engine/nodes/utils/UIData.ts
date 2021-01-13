@@ -47,7 +47,7 @@ export class UIData {
 		this._comment = comment;
 		this.node.emit(NodeEvent.UI_DATA_COMMENT_UPDATED);
 	}
-	get comment(): string | undefined {
+	comment(): string | undefined {
 		return this._comment;
 	}
 	setColor(color: Color) {
@@ -70,11 +70,11 @@ export class UIData {
 	}
 
 	copy(ui_data: UIData) {
-		this._position.copy(ui_data.position);
+		this._position.copy(ui_data.position());
 		this._color.copy(ui_data.color());
 	}
 
-	get position() {
+	position() {
 		return this._position;
 	}
 

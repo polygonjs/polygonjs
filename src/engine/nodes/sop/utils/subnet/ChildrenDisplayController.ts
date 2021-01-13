@@ -59,8 +59,8 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 			if (core_content) {
 				this.setCoreGroup(core_content);
 			} else {
-				if (child_output_node.states.error.active) {
-					this.states.error.set(child_output_node.states.error.message);
+				if (child_output_node.states.error.active()) {
+					this.states.error.set(child_output_node.states.error.message());
 				} else {
 					this.setObjects([]);
 				}
@@ -80,13 +80,13 @@ export class SopSubnetChildrenDisplayController {
 	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
 		return {
 			on_display_node_remove: () => {
-				this.node.set_dirty();
+				this.node.setDirty();
 			},
 			on_display_node_set: () => {
-				this.node.set_dirty();
+				this.node.setDirty();
 			},
 			on_display_node_update: () => {
-				this.node.set_dirty();
+				this.node.setDirty();
 			},
 		};
 	}
@@ -102,19 +102,19 @@ export class SopSubnetChildrenDisplayController {
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
 			display_flag.add_hook(() => {
-				if (display_flag.active) {
-					this.node.set_dirty();
+				if (display_flag.active()) {
+					this.node.setDirty();
 				}
 			});
 		}
 
 		this.node.lifecycle.add_on_child_add_hook(() => {
 			this._output_node_needs_update = true;
-			this.node.set_dirty();
+			this.node.setDirty();
 		});
 		this.node.lifecycle.add_on_child_remove_hook(() => {
 			this._output_node_needs_update = true;
-			this.node.set_dirty();
+			this.node.setDirty();
 		});
 	}
 
@@ -123,10 +123,10 @@ export class SopSubnetChildrenDisplayController {
 		if (
 			this._output_node == null ||
 			found_node == null ||
-			this._output_node.graph_node_id != found_node.graph_node_id
+			this._output_node.graphNodeId() != found_node.graphNodeId()
 		) {
 			if (this._graph_node && this._output_node) {
-				this._graph_node.remove_graph_input(this._output_node);
+				this._graph_node.removeGraphInput(this._output_node);
 			}
 
 			this._output_node = found_node;
@@ -134,15 +134,15 @@ export class SopSubnetChildrenDisplayController {
 			if (this._output_node) {
 				this._graph_node = this._graph_node || this._create_graph_node();
 
-				this._graph_node.add_graph_input(this._output_node);
+				this._graph_node.addGraphInput(this._output_node);
 			}
 		}
 	}
 
 	private _create_graph_node() {
-		const graph_node = new CoreGraphNode(this.node.scene, 'subnet_children_display_controller');
-		graph_node.add_post_dirty_hook('subnet_children_display_controller', () => {
-			this.node.set_dirty();
+		const graph_node = new CoreGraphNode(this.node.scene(), 'subnet_children_display_controller');
+		graph_node.addPostDirtyHook('subnet_children_display_controller', () => {
+			this.node.setDirty();
 		});
 		return graph_node;
 	}

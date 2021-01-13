@@ -17,10 +17,10 @@ export class ReferencesController {
 	constructor(protected scene: PolyScene) {}
 
 	set_reference_from_param(src_param: BasePathParam, referenced_node: BaseNodeType | BaseParamType) {
-		this._referenced_nodes_by_src_param_id.set(src_param.graph_node_id, referenced_node);
+		this._referenced_nodes_by_src_param_id.set(src_param.graphNodeId(), referenced_node);
 		MapUtils.push_on_array_at_entry(
 			this._referencing_params_by_referenced_node_id,
-			referenced_node.graph_node_id,
+			referenced_node.graphNodeId(),
 			src_param
 		);
 	}
@@ -29,41 +29,41 @@ export class ReferencesController {
 		for (let named_node of named_nodes) {
 			MapUtils.push_on_array_at_entry(
 				this._referencing_params_by_all_named_node_ids,
-				named_node.graph_node_id,
+				named_node.graphNodeId(),
 				src_param
 			);
 		}
 	}
 	reset_reference_from_param(src_param: BasePathParam) {
-		const referenced_node = this._referenced_nodes_by_src_param_id.get(src_param.graph_node_id);
+		const referenced_node = this._referenced_nodes_by_src_param_id.get(src_param.graphNodeId());
 		if (referenced_node) {
 			MapUtils.pop_from_array_at_entry(
 				this._referencing_params_by_referenced_node_id,
-				referenced_node.graph_node_id,
+				referenced_node.graphNodeId(),
 				src_param
 			);
 			const named_nodes: BaseNodeType[] = src_param.decomposed_path.named_nodes();
 			for (let named_node of named_nodes) {
 				MapUtils.pop_from_array_at_entry(
 					this._referencing_params_by_all_named_node_ids,
-					named_node.graph_node_id,
+					named_node.graphNodeId(),
 					src_param
 				);
 			}
-			this._referenced_nodes_by_src_param_id.delete(src_param.graph_node_id);
+			this._referenced_nodes_by_src_param_id.delete(src_param.graphNodeId());
 		}
 	}
 
 	referencing_params(node: BaseNodeType) {
-		return this._referencing_params_by_referenced_node_id.get(node.graph_node_id);
+		return this._referencing_params_by_referenced_node_id.get(node.graphNodeId());
 	}
 	referencing_nodes(node: BaseNodeType) {
-		const params = this._referencing_params_by_referenced_node_id.get(node.graph_node_id);
+		const params = this._referencing_params_by_referenced_node_id.get(node.graphNodeId());
 		if (params) {
 			const node_by_node_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
 			for (let param of params) {
 				const node = param.node;
-				node_by_node_id.set(node.graph_node_id, node);
+				node_by_node_id.set(node.graphNodeId(), node);
 			}
 			const nodes: BaseNodeType[] = [];
 			node_by_node_id.forEach((node) => {
@@ -86,7 +86,7 @@ export class ReferencesController {
 			this._check_param(path_param, nodes_by_id, params);
 		}
 		for (let param of params) {
-			nodes_by_id.set(param.node.graph_node_id, param.node);
+			nodes_by_id.set(param.node.graphNodeId(), param.node);
 		}
 		const nodes: BaseNodeType[] = [];
 		nodes_by_id.forEach((node) => {
@@ -103,7 +103,7 @@ export class ReferencesController {
 			const found_node = param.found_node();
 			const found_param = param.found_param();
 			if (found_node) {
-				nodes_by_id.set(found_node.graph_node_id, found_node);
+				nodes_by_id.set(found_node.graphNodeId(), found_node);
 			}
 			if (found_param) {
 				params.push(found_param);
@@ -118,7 +118,7 @@ export class ReferencesController {
 	//
 	//
 	notify_name_updated(node: BaseNodeType) {
-		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graph_node_id);
+		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
 		if (referencing_params) {
 			for (let referencing_param of referencing_params) {
 				referencing_param.notify_path_rebuild_required(node);
@@ -138,7 +138,7 @@ export class ReferencesController {
 	//
 	//
 	notify_params_updated(node: BaseNodeType) {
-		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graph_node_id);
+		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
 		if (referencing_params) {
 			for (let referencing_param of referencing_params) {
 				if (referencing_param.options.is_selecting_param()) {

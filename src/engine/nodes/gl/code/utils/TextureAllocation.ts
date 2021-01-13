@@ -39,7 +39,7 @@ export class TextureAllocation {
 		return this._variables;
 	}
 	variables_for_input_node(root_node: BaseGlNodeType): TextureVariable[] | undefined {
-		return this._variables?.filter((variable) => variable.graph_node_ids?.has(root_node.graph_node_id) || false);
+		return this._variables?.filter((variable) => variable.graph_node_ids?.has(root_node.graphNodeId()) || false);
 	}
 	input_names_for_node(root_node: BaseGlNodeType): string[] | undefined {
 		const variables = this.variables_for_input_node(root_node);

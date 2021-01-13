@@ -11,19 +11,19 @@ export class LinesController {
 
 	add_definitions(node: BaseJsNodeType, definitions: BaseJsDefinition[]) {
 		for (let definition of definitions) {
-			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graph_node_id, definition);
+			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graphNodeId(), definition);
 		}
 	}
 	definitions(node: BaseJsNodeType): BaseJsDefinition[] | undefined {
-		return this._definitions_by_node_id.get(node.graph_node_id);
+		return this._definitions_by_node_id.get(node.graphNodeId());
 	}
 
 	add_body_lines(node: BaseJsNodeType, lines: string[]) {
 		for (let line of lines) {
-			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graph_node_id, line);
+			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graphNodeId(), line);
 		}
 	}
 	body_lines(node: BaseJsNodeType): string[] | undefined {
-		return this._body_lines_by_node_id.get(node.graph_node_id);
+		return this._body_lines_by_node_id.get(node.graphNodeId());
 	}
 }

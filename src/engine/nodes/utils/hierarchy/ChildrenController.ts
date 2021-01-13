@@ -56,7 +56,7 @@ export class HierarchyChildrenController {
 
 		if ((current_child_with_name = this._children[new_name]) != null) {
 			// only return if found node is same as argument node, and if new_name is same as current_name
-			if (node.name === new_name && current_child_with_name.graph_node_id === node.graph_node_id) {
+			if (node.name === new_name && current_child_with_name.graphNodeId() === node.graphNodeId()) {
 				return;
 			}
 
@@ -77,7 +77,7 @@ export class HierarchyChildrenController {
 			this._children[new_name] = node;
 			node.name_controller.update_name_from_parent(new_name);
 			this._add_to_nodesByType(node);
-			this.node.scene.nodesController.addToInstanciatedNode(node);
+			this.node.scene().nodesController.addToInstanciatedNode(node);
 		}
 	}
 
@@ -128,7 +128,7 @@ export class HierarchyChildrenController {
 		params_init_value_overrides?: ParamsInitData,
 		node_type = ''
 	) {
-		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
+		const child_node = new node_class(this.node.scene(), `child_node_${node_type}`, params_init_value_overrides);
 		child_node.initialize_base_and_node();
 		this.add_node(child_node);
 		child_node.lifecycle.set_creation_completed();
@@ -158,7 +158,7 @@ export class HierarchyChildrenController {
 			console.error(message);
 			throw message;
 		} else {
-			const operation = new operation_class(this.node.scene) as BaseSopOperation;
+			const operation = new operation_class(this.node.scene()) as BaseSopOperation;
 			const operation_container = new SopOperationContainer(
 				operation,
 				operation_container_name,
@@ -179,7 +179,7 @@ export class HierarchyChildrenController {
 			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
-		if (this.node.scene.lifecycleController.onCreateHookAllowed()) {
+		if (this.node.scene().lifecycleController.onCreateHookAllowed()) {
 			child_node.lifecycle.run_on_create_hooks();
 		}
 		child_node.lifecycle.run_on_add_hooks();
@@ -187,10 +187,10 @@ export class HierarchyChildrenController {
 		this.node.lifecycle.run_on_child_add_hooks(child_node);
 
 		if (child_node.require_webgl2()) {
-			this.node.scene.webgl_controller.set_require_webgl2();
+			this.node.scene().webgl_controller.set_require_webgl2();
 		}
 
-		this.node.scene.missingExpressionReferencesController.check_for_missing_references(child_node);
+		this.node.scene().missingExpressionReferencesController.check_for_missing_references(child_node);
 
 		return child_node;
 	}
@@ -232,7 +232,7 @@ export class HierarchyChildrenController {
 			child_node.set_parent(null);
 			delete this._children[child_node.name];
 			this._remove_from_nodesByType(child_node);
-			this.node.scene.nodesController.removeFromInstanciatedNode(child_node);
+			this.node.scene().nodesController.removeFromInstanciatedNode(child_node);
 
 			// set other dependencies dirty
 			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input
@@ -240,18 +240,18 @@ export class HierarchyChildrenController {
 			// if (this._is_dependent_on_children && this._children_node) {
 			// 	this._children_node.set_successors_dirty(this.node);
 			// }
-			child_node.set_successors_dirty(this.node);
+			child_node.setSuccessorsDirty(this.node);
 			// disconnect successors
-			child_node.graph_disconnect_successors();
+			child_node.graphDisconnectSuccessors();
 
 			this.node.lifecycle.run_on_child_remove_hooks(child_node);
 			child_node.lifecycle.run_on_delete_hooks();
-			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graph_node_id});
+			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graphNodeId()});
 		}
 	}
 
 	_add_to_nodesByType(node: BaseNodeType) {
-		const node_id = node.graph_node_id;
+		const node_id = node.graphNodeId();
 		const type = node.type;
 		this._children_by_type[type] = this._children_by_type[type] || [];
 		if (!this._children_by_type[type].includes(node_id)) {
@@ -260,7 +260,7 @@ export class HierarchyChildrenController {
 		this.add_to_children_and_grandchildren_by_context(node);
 	}
 	_remove_from_nodesByType(node: BaseNodeType) {
-		const node_id = node.graph_node_id;
+		const node_id = node.graphNodeId();
 		const type = node.type;
 		if (this._children_by_type[type]) {
 			const index = this._children_by_type[type].indexOf(node_id);
@@ -274,7 +274,7 @@ export class HierarchyChildrenController {
 		this.remove_from_children_and_grandchildren_by_context(node);
 	}
 	add_to_children_and_grandchildren_by_context(node: BaseNodeType) {
-		const node_id = node.graph_node_id;
+		const node_id = node.graphNodeId();
 		const type = node.node_context();
 		this._children_and_grandchildren_by_context[type] = this._children_and_grandchildren_by_context[type] || [];
 		if (!this._children_and_grandchildren_by_context[type].includes(node_id)) {
@@ -285,7 +285,7 @@ export class HierarchyChildrenController {
 		}
 	}
 	remove_from_children_and_grandchildren_by_context(node: BaseNodeType) {
-		const node_id = node.graph_node_id;
+		const node_id = node.graphNodeId();
 		const type = node.node_context();
 		if (this._children_and_grandchildren_by_context[type]) {
 			const index = this._children_and_grandchildren_by_context[type].indexOf(node_id);
@@ -303,7 +303,7 @@ export class HierarchyChildrenController {
 
 	nodesByType(type: string): BaseNodeType[] {
 		const node_ids = this._children_by_type[type] || [];
-		const graph = this.node.scene.graph;
+		const graph = this.node.scene().graph;
 		const nodes: BaseNodeType[] = [];
 		for (let node_id of node_ids) {
 			const node = graph.node_from_id(node_id) as BaseNodeType;

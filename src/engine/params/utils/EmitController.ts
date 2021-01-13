@@ -13,7 +13,7 @@ export class EmitController {
 			return false;
 		}
 
-		if (this.param.scene.loadingController.isLoading()) {
+		if (this.param.scene().loadingController.isLoading()) {
 			return false;
 		}
 		// TODO: should I also prevent nodes from updating
@@ -21,7 +21,7 @@ export class EmitController {
 		//node = this.node()
 		//node? && !node.is_cooking() && this.scene().emit_allowed() # this prevents a camera from updating its param for instance
 		// although maybe I should send a dirty to the store, and then that store queries the param?
-		return this.param.scene.dispatchController.emitAllowed();
+		return this.param.scene().dispatchController.emitAllowed();
 	}
 
 	blockEmit() {

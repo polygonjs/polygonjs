@@ -53,7 +53,7 @@ export class ViewerEventsController {
 		if (!this.canvas) {
 			return;
 		}
-		this.viewer.scene.eventsDispatcher.traverseControllers((controller) => {
+		this.viewer.scene().eventsDispatcher.traverseControllers((controller) => {
 			this.updateEvents(controller);
 		});
 	}

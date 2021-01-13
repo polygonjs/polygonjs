@@ -54,9 +54,9 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		}
 
 		is_display_node_cooking(): boolean {
-			if (this.flags.display.active) {
+			if (this.flags.display.active()) {
 				const display_node = this.display_node_controller.display_node;
-				return display_node ? display_node.is_dirty : false;
+				return display_node ? display_node.isDirty() : false;
 			} else {
 				return false;
 			}

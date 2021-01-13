@@ -296,7 +296,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 	}
 
 	private _traverse_scene_and_update_materials() {
-		this.scene.defaultScene.traverse((object) => {
+		this.scene().defaultScene.traverse((object) => {
 			const material = (object as Mesh).material;
 			if (material) {
 				if (CoreType.isArray(material)) {

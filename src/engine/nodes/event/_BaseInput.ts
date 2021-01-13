@@ -16,10 +16,10 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 		super.initialize_base_node();
 
 		const register = () => {
-			this.scene.eventsDispatcher.registerEventNode(this);
+			this.scene().eventsDispatcher.registerEventNode(this);
 		};
 		const unregister = () => {
-			this.scene.eventsDispatcher.unregisterEventNode(this);
+			this.scene().eventsDispatcher.unregisterEventNode(this);
 		};
 		this.lifecycle.add_on_add_hook(register);
 		// this.lifecycle.add_on_creation_completed_hook(register);
@@ -45,7 +45,7 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 	}
 	private _update_register() {
 		this._update_active_event_names();
-		this.scene.eventsDispatcher.updateViewerEventListeners(this);
+		this.scene().eventsDispatcher.updateViewerEventListeners(this);
 	}
 
 	private _active_event_names: string[] = [];

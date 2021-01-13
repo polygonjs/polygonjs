@@ -19,10 +19,10 @@ export class TypedContainerController<NC extends NodeContext> {
 	}
 
 	async requestContainer(): Promise<ContainerMap[NC]> {
-		if (this.node.flags?.bypass?.active) {
+		if (this.node.flags?.bypass?.active()) {
 			return (await this.requestInputContainer(0)) || this._container;
 		}
-		if (this.node.is_dirty) {
+		if (this.node.isDirty()) {
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve);
 				this.node.cook_controller.cook_main();
@@ -31,11 +31,11 @@ export class TypedContainerController<NC extends NodeContext> {
 		return this._container;
 	}
 	// async requestContainerTEST(): Promise<ContainerMap[NC]> {
-	// 	if (this.node.flags?.bypass?.active) {
+	// 	if (this.node.flags?.bypass?.active()) {
 	// 		const container = await this.requestInputContainer(0);
 	// 		return container || this._container;
 	// 	}
-	// 	if (this.node.is_dirty) {
+	// 	if (this.node.isDirty()) {
 	// 		await this.node.cook_controller.cook_main();
 	// 	}
 	// 	return this._container;
@@ -43,10 +43,10 @@ export class TypedContainerController<NC extends NodeContext> {
 
 	// TODO: should I merge this into the method above?
 	// private process_container_request() {
-	// 	if (this.node.flags?.bypass?.active) {
+	// 	if (this.node.flags?.bypass?.active()) {
 	// 		const input_index = 0;
 	// 		this.requestInputContainer(input_index).then((container) => {
-	// 			this.node.remove_dirty_state();
+	// 			this.node.removeDirtyState();
 	// 			if (container) {
 	// 				this.notify_requesters(container);
 	// 			} else {
@@ -54,7 +54,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	// 			}
 	// 		});
 	// 	} else {
-	// 		if (this.node.is_dirty) {
+	// 		if (this.node.isDirty()) {
 	// 			this.node.cook_controller.cook_main();
 	// 		} else {
 	// 			this.notify_requesters();
@@ -87,7 +87,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		while ((callback = this._callbacks_tmp.pop())) {
 			callback(container);
 		}
-		this.node.scene.cook_controller.remove_node(this.node);
+		this.node.scene().cook_controller.remove_node(this.node);
 	}
 }
 

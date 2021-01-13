@@ -35,7 +35,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	// mesh_basic_builder1.p.map.set(builder1.fullPath())
 
 	let container = await builder1.requestContainer();
-	assert.ok(!builder1.states.error.message);
+	assert.ok(!builder1.states.error.message());
 	let texture = container.texture();
 	assert.equal(texture.image.width, 256);
 	assert.equal(texture.image.height, 256);
@@ -79,7 +79,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	// mesh_basic_builder1.p.map.set(builder1.fullPath())
 
 	let container = await builder1.requestContainer();
-	assert.ok(!builder1.states.error.message);
+	assert.ok(!builder1.states.error.message());
 	let texture = container.texture();
 	assert.equal(texture.image.width, 256);
 	assert.equal(texture.image.height, 256);
@@ -126,7 +126,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 		await scene2.waitForCooksCompleted();
 
 		const new_builder1 = scene2.node('/COP/builder1') as BuilderCopNode;
-		assert.notOk(new_builder1.assembler_controller);
+		assert.notOk(new_builder1.assemblerController);
 		assert.ok(new_builder1.persisted_config);
 		const float_param = new_builder1.params.get('float_param') as FloatParam;
 		const vec3_param = new_builder1.params.get('vec3_param') as Vector3Param;

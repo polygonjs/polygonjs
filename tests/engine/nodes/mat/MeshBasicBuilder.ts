@@ -116,7 +116,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	await mesh_basic1.requestContainer();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required());
+	assert.notOk(mesh_basic1.assemblerController?.compile_required());
 
 	const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 	const attribute1 = mesh_basic1.createNode('attribute');
@@ -130,9 +130,9 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	// await CoreSleep.sleep(50);
 
-	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	await mesh_basic1.requestContainer();
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	// mesh_basic1.param_names();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
 	assert.equal(mesh_basic1.p.textureMap.value, '/COP/imageUv', 'textureMap value is "/COP/imageUv"');
@@ -146,7 +146,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 	await new_mesh_basic1.requestContainer();
-	assert.notOk(new_mesh_basic1.assembler_controller?.compile_required(), 'compile is not required');
+	assert.notOk(new_mesh_basic1.assemblerController?.compile_required(), 'compile is not required');
 	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
 	assert.equal(new_mesh_basic1.params.get('textureMap')?.value, '/COP/file2', 'textureMap value is "/COP/file_uv"');
 });
@@ -170,9 +170,9 @@ QUnit.test(
 		float_to_vec31.setInput('z', vec2ToFloat1, 'y');
 		output1.setInput('position', float_to_vec31);
 
-		assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		await mesh_basic1.requestContainer();
-		assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert);
 		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInVertex.frag);
 
@@ -215,9 +215,9 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	multAdd1.params.get('mult')!.set([2, 2, 2]);
 	ifThen_subnetOutput1.setInput(0, multAdd1);
 
-	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	await mesh_basic1.requestContainer();
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag);
 
@@ -225,9 +225,9 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	const rotate1 = ifThen1.createNode('rotate');
 	rotate1.setInput(0, ifThen_subnetInput1);
 	ifThen_subnetOutput1.setInput(0, rotate1);
-	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	await mesh_basic1.requestContainer();
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag);
 });
@@ -252,9 +252,9 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	add1.setInput(0, forLoop_subnetInput1);
 	add1.params.get('add1')!.set([0.1, 0.1, 0.1]);
 
-	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	await mesh_basic1.requestContainer();
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
 });
@@ -279,9 +279,9 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	add1.setInput(0, subnet_subnetInput1);
 	add1.params.get('add1')!.set([1.0, 0.5, 0.25]);
 
-	assert.ok(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	await mesh_basic1.requestContainer();
-	assert.notOk(mesh_basic1.assembler_controller?.compile_required(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
 });
@@ -313,7 +313,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 		await scene2.waitForCooksCompleted();
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-		assert.notOk(new_mesh_basic1.assembler_controller);
+		assert.notOk(new_mesh_basic1.assemblerController);
 		assert.ok(new_mesh_basic1.persisted_config);
 		const float_param = new_mesh_basic1.params.get('float_param') as FloatParam;
 		const vec3_param = new_mesh_basic1.params.get('vec3_param') as Vector3Param;

@@ -89,7 +89,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 	// Create spare params on gl nodes
 	//
 	create_spare_parameters() {
-		if (this.node.scene.loadingController.isLoading()) {
+		if (this.node.scene().loadingController.isLoading()) {
 			return;
 		}
 

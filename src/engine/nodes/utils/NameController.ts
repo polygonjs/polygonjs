@@ -11,7 +11,7 @@ export class NameController {
 	private _on_set_fullPath_hooks: Callback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {
-		this._graph_node = new CoreGraphNode(node.scene, 'node_name_controller');
+		this._graph_node = new CoreGraphNode(node.scene(), 'node_name_controller');
 		// this._graph_node.set_scene(this.node.scene);
 	}
 	get graph_node() {
@@ -54,10 +54,10 @@ export class NameController {
 		}
 
 		if (this.node.lifecycle.creation_completed) {
-			this.node.scene.missingExpressionReferencesController.check_for_missing_references(this.node);
-			this.node.scene.expressionsController.regenerate_referring_expressions(this.node);
+			this.node.scene().missingExpressionReferencesController.check_for_missing_references(this.node);
+			this.node.scene().expressionsController.regenerate_referring_expressions(this.node);
 		}
-		this.node.scene.referencesController.notify_name_updated(this.node);
+		this.node.scene().referencesController.notify_name_updated(this.node);
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 

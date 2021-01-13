@@ -29,10 +29,10 @@ export class CoreFace {
 	constructor(private _core_geometry: CoreGeometry, private _index: number) {
 		this._geometry = this._core_geometry.geometry();
 	}
-	get index() {
+	index() {
 		return this._index;
 	}
-	get points() {
+	points() {
 		return (this._points = this._points || this._get_points());
 	}
 	private _get_points(): CorePointArray3 {
@@ -44,32 +44,33 @@ export class CoreFace {
 			new CorePoint(this._core_geometry, index_array[start + 2]),
 		];
 	}
-	get positions() {
+	positions() {
 		return (this._positions = this._positions || this._get_positions());
 	}
 	private _get_positions(): Vector3Array3 {
-		const points = this.points;
+		const points = this.points();
 		return [points[0].position(), points[1].position(), points[2].position()];
 	}
-	get triangle() {
+	triangle() {
 		return (this._triangle = this._triangle || this._get_triangle());
 	}
 	private _get_triangle(): Triangle {
-		const positions = this.positions;
+		const positions = this.positions();
 		return new Triangle(positions[0], positions[1], positions[2]);
 	}
-	get deltas() {
+	deltas() {
 		return (this._deltas = this._deltas || this._get_deltas());
 	}
 	private _get_deltas(): Vector3Array2 {
-		return [this.positions[1].clone().sub(this.positions[0]), this.positions[2].clone().sub(this.positions[0])];
+		const positions = this.positions();
+		return [positions[1].clone().sub(positions[0]), positions[2].clone().sub(positions[0])];
 	}
 
-	get area(): number {
-		return this.triangle.getArea();
+	area(): number {
+		return this.triangle().getArea();
 	}
 	center(target: Vector3) {
-		const positions = this.positions;
+		const positions = this.positions();
 		target.x = (positions[0].x + positions[1].x + positions[2].x) / 3;
 		target.y = (positions[0].y + positions[1].y + positions[2].y) / 3;
 		target.z = (positions[0].z + positions[1].z + positions[2].z) / 3;
@@ -85,10 +86,10 @@ export class CoreFace {
 			weights[1] = 1 - weights[1];
 		}
 
-		return this.positions[0]
+		return this.positions()[0]
 			.clone()
-			.add(this.deltas[0].clone().multiplyScalar(weights[0]))
-			.add(this.deltas[1].clone().multiplyScalar(weights[1]));
+			.add(this.deltas()[0].clone().multiplyScalar(weights[0]))
+			.add(this.deltas()[1].clone().multiplyScalar(weights[1]));
 	}
 	// random_position(seed: number){
 	// 	let weights = [
@@ -109,12 +110,12 @@ export class CoreFace {
 	attrib_value_at_position(attrib_name: string, position: Vector3) {
 		// const weights = CoreInterpolate._weights_from_3(position, this._positions)
 		const barycentric_coordinates = new Vector3();
-		this.triangle.getBarycoord(position, barycentric_coordinates);
+		this.triangle().getBarycoord(position, barycentric_coordinates);
 		const weights = barycentric_coordinates.toArray();
 
 		const attrib = this._geometry.attributes[attrib_name];
 		const attrib_size = attrib.itemSize;
-		const point_values = this.points.map((point) => point.attribValue(attrib_name));
+		const point_values = this.points().map((point) => point.attribValue(attrib_name));
 
 		let new_attrib_value;
 		let sum;

@@ -66,7 +66,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		this.io.inputs.set_count(1);
 		this.io.inputs.init_inputs_cloned_state(TransformSopOperation.INPUT_CLONED_STATE);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.applyOn], () => {
 					return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
@@ -77,7 +77,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 
 	private _operation: TransformSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new TransformSopOperation(this.scene, this.states);
+		this._operation = this._operation || new TransformSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

@@ -49,7 +49,7 @@ QUnit.test('text with a non existing font', async (assert) => {
 
 	let container = await text1.requestContainer();
 	assert.ok(container, 'container exists');
-	assert.equal(text1.states.error.message, 'count not load font (/fonts/doesnotexist.ttf)');
+	assert.equal(text1.states.error.message(), 'count not load font (/fonts/doesnotexist.ttf)');
 	assert.equal(container.pointsCount(), 0);
 });
 
@@ -81,27 +81,27 @@ QUnit.test('text as different types', async (assert) => {
 	let container;
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.MESH));
-	assert.ok(text1.is_dirty);
+	assert.ok(text1.isDirty());
 	container = await text1.requestContainer();
-	assert.notOk(text1.is_dirty);
+	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 4776);
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.FLAT));
-	assert.ok(text1.is_dirty);
+	assert.ok(text1.isDirty());
 	container = await text1.requestContainer();
-	assert.notOk(text1.is_dirty);
+	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 3773);
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.LINE));
-	assert.ok(text1.is_dirty);
+	assert.ok(text1.isDirty());
 	container = await text1.requestContainer();
-	assert.notOk(text1.is_dirty);
+	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 3792);
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.STROKE));
-	assert.ok(text1.is_dirty);
+	assert.ok(text1.isDirty());
 	container = await text1.requestContainer();
-	assert.notOk(text1.is_dirty);
+	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 22746);
 });
 
@@ -118,17 +118,17 @@ QUnit.test('text can recover from generation errors', async (assert) => {
 
 	text1.p.text.set('test');
 	container = await text1.requestContainer();
-	assert.notOk(text1.states.error.active);
+	assert.notOk(text1.states.error.active());
 	assert.equal(container.pointsCount(), 4200);
 
 	text1.p.text.set('test!!');
 	container = await text1.requestContainer();
-	assert.ok(text1.states.error.active);
-	assert.equal(text1.states.error.message, 'failed to generate geometry. Try to remove some characters');
+	assert.ok(text1.states.error.active());
+	assert.equal(text1.states.error.message(), 'failed to generate geometry. Try to remove some characters');
 	assert.equal(container.pointsCount(), 0);
 
 	text1.p.text.set('test');
 	container = await text1.requestContainer();
-	assert.notOk(text1.states.error.active);
+	assert.notOk(text1.states.error.active());
 	assert.equal(container.pointsCount(), 4200);
 });

@@ -11,11 +11,11 @@ export class SceneAssetsController {
 	//
 	//
 	register_param(param: StringParam) {
-		this._params_by_id.set(param.graph_node_id, param);
+		this._params_by_id.set(param.graphNodeId(), param);
 	}
 
 	deregister_param(param: StringParam) {
-		this._params_by_id.delete(param.graph_node_id);
+		this._params_by_id.delete(param.graphNodeId());
 	}
 
 	traverse_params(callback: (param: StringParam) => void) {

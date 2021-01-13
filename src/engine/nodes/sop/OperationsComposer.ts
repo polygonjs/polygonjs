@@ -66,7 +66,7 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 
 	async cook(input_contents: CoreGroup[]) {
 		if (this._output_operation_container) {
-			this._output_operation_container.set_dirty();
+			this._output_operation_container.setDirty();
 
 			const core_group = await this._output_operation_container.compute(
 				input_contents,

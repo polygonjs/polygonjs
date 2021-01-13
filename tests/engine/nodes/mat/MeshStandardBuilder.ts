@@ -33,7 +33,7 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 		await scene2.waitForCooksCompleted();
 
 		const new_mesh_standard1 = scene2.node('/MAT/meshStandardBuilder1') as BaseBuilderMatNodeType;
-		assert.notOk(new_mesh_standard1.assembler_controller);
+		assert.notOk(new_mesh_standard1.assemblerController);
 		assert.ok(new_mesh_standard1.persisted_config);
 		const float_param = new_mesh_standard1.params.get('float_param') as FloatParam;
 		const vec3_param = new_mesh_standard1.params.get('vec3_param') as Vector3Param;

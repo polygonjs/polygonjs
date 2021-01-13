@@ -14,13 +14,13 @@ export class ErrorState {
 			this.param.emitController.emit(ParamEvent.ERROR_UPDATED);
 		}
 	}
-	get message() {
+	message() {
 		return this._message;
 	}
 	clear() {
 		this.set(undefined);
 	}
-	get active(): boolean {
+	active(): boolean {
 		return this._message != null;
 	}
 }

@@ -103,7 +103,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	static set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
 		const found_node = param.found_node();
 		if (found_node) {
-			if (found_node.is_dirty) {
+			if (found_node.isDirty()) {
 				found_node.requestContainer().then((container) => {
 					const texture = container.texture();
 					uniform.value = texture;

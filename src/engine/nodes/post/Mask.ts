@@ -63,7 +63,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 	}
 	private async _update_scene(pass: MaskPassWithContext) {
 		if (this.pv.overrideScene) {
-			if (this.p.scene.is_dirty) {
+			if (this.p.scene.isDirty()) {
 				await this.p.scene.compute();
 			}
 			const scene_node = this.p.scene.found_node_with_expected_type() as SceneObjNode;
@@ -76,7 +76,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 	}
 	private async _update_camera(pass: MaskPassWithContext) {
 		if (this.pv.overrideCamera) {
-			if (this.p.camera.is_dirty) {
+			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
 			}
 			const camera_node = this.p.camera.found_node_with_expected_type() as BaseCameraObjNodeType;

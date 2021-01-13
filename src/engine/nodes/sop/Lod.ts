@@ -112,7 +112,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		}
 
 		const camera_param = this.p.camera;
-		if (camera_param.is_dirty) {
+		if (camera_param.isDirty()) {
 			await camera_param.compute();
 		}
 		let camera_node =

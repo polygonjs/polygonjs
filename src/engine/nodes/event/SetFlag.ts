@@ -84,7 +84,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 				}
 			}
 		}
-		const nodes = this.scene.nodesController.nodesFromMask(mask);
+		const nodes = this.scene().nodesController.nodesFromMask(mask);
 
 		for (let node of nodes) {
 			this._update_node_flags(node);
@@ -112,7 +112,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 				return;
 			}
 			case FlagUpdateMode.TOGGLE: {
-				display_flag.set(!display_flag.active);
+				display_flag.set(!display_flag.active());
 				return;
 			}
 		}
@@ -136,7 +136,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 				return;
 			}
 			case FlagUpdateMode.TOGGLE: {
-				bypass_flag.set(!bypass_flag.active);
+				bypass_flag.set(!bypass_flag.active());
 				return;
 			}
 		}

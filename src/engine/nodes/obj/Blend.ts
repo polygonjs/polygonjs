@@ -75,14 +75,14 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		this.hierarchy_controller.initialize_node();
 		this.io.inputs.set_count(0);
 
-		this.add_post_dirty_hook('blend_on_dirty', () => {
+		this.addPostDirtyHook('blend_on_dirty', () => {
 			this.cook_controller.cook_main_without_inputs();
 		});
 
 		// helper
 		this.object.add(this._helper);
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active;
+			this._helper.visible = this.flags.display.active();
 		});
 	}
 	cook() {

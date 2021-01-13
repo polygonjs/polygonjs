@@ -27,40 +27,40 @@ export class ExpressionController<T extends ParamType> {
 	protected _manager: ExpressionManager | undefined;
 	// private _reset_bound = this.reset.bind(this);
 	constructor(protected param: BaseParamType) {
-		// this.param.dirty_controller.add_post_dirty_hook('expression_controller_reset', this._reset_bound);
+		// this.param.dirtyController.addPostDirtyHook('expression_controller_reset', this._reset_bound);
 	}
 	// remove_dirty_hook() {
-	// 	// this.param.dirty_controller.remove_post_dirty_hook('expression_controller_reset');
+	// 	// this.param.dirtyController.removePostDirtyHook('expression_controller_reset');
 	// }
 
-	get active() {
+	active() {
 		return this._expression != null;
 	}
-	get expression() {
+	expression() {
 		return this._expression;
 	}
-	get is_errored() {
+	is_errored() {
 		if (this._manager) {
-			return this._manager.is_errored;
+			return this._manager.is_errored();
 		}
 		return false;
 	}
-	get error_message() {
+	error_message() {
 		if (this._manager) {
-			return this._manager.error_message;
+			return this._manager.error_message();
 		}
 		return null;
 	}
-	get requires_entities() {
-		return this.param.options.is_expression_for_entities;
+	requires_entities() {
+		return this.param.options.is_expression_for_entities();
 	}
 	// private reset() {
 	// 	this._manager?.clear_error();
 	// }
 
 	set_expression(expression: string | undefined, set_dirty: boolean = true) {
-		this.param.scene.missingExpressionReferencesController.deregister_param(this.param);
-		this.param.scene.expressionsController.deregister_param(this.param);
+		this.param.scene().missingExpressionReferencesController.deregister_param(this.param);
+		this.param.scene().expressionsController.deregister_param(this.param);
 
 		if (this._expression != expression) {
 			this._expression = expression;
@@ -73,19 +73,19 @@ export class ExpressionController<T extends ParamType> {
 			}
 
 			if (set_dirty) {
-				this.param.set_dirty();
+				this.param.setDirty();
 			}
 		}
 	}
 
 	update_from_method_dependency_name_change() {
-		if (this._manager && this.active) {
+		if (this._manager && this.active()) {
 			this._manager.update_from_method_dependency_name_change();
 		}
 	}
 
 	async compute_expression() {
-		if (this._manager && this.active) {
+		if (this._manager && this.active()) {
 			const result = await this._manager.compute_function();
 			return result;
 		}
@@ -93,8 +93,8 @@ export class ExpressionController<T extends ParamType> {
 	async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
 		await this.compute_expression();
-		if (this._manager?.error_message) {
-			this.param.node.states.error.set(`expression evalution error: ${this._manager?.error_message}`);
+		if (this._manager?.error_message()) {
+			this.param.node.states.error.set(`expression evalution error: ${this._manager?.error_message()}`);
 		}
 
 		this.reset_entities();
@@ -105,10 +105,10 @@ export class ExpressionController<T extends ParamType> {
 	compute_expression_for_objects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
 		return this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
 	}
-	get entities() {
+	entities() {
 		return this._entities;
 	}
-	get entity_callback() {
+	entity_callback() {
 		return this._entity_callback;
 	}
 	set_entities(entities: CoreEntity[], callback: EntityCallback<T>) {

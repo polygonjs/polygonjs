@@ -57,7 +57,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	point1.p.y.set("(point(0, 'P', 0).y + point(0, 'P', 1).y) * 0.5");
 
 	let container = await point1.requestContainer();
-	assert.notOk(point1.states.error.active);
+	assert.notOk(point1.states.error.active());
 	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	let positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
@@ -71,7 +71,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	console.log('loaded point2');
 	container = await point2.requestContainer();
 	console.log('container', container);
-	assert.notOk(point2.states.error.active);
+	assert.notOk(point2.states.error.active());
 	geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));

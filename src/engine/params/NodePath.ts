@@ -51,7 +51,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
 			this.find_target();
-			this.set_dirty();
+			this.setDirty();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
@@ -66,7 +66,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		let node: BaseNodeType | null = null;
 		const path_non_empty = path != null && path !== '';
 
-		this.scene.referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.scene().referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			node = CoreWalker.find_node(this.node, path, this.decomposed_path);
@@ -75,18 +75,18 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		const current_found_entity = this._value.node();
 		const newly_found_entity = node;
 
-		this.scene.referencesController.set_named_nodes_from_param(this);
+		this.scene().referencesController.set_named_nodes_from_param(this);
 		if (node) {
-			this.scene.referencesController.set_reference_from_param(this, node);
+			this.scene().referencesController.set_reference_from_param(this, node);
 		}
 
-		if (current_found_entity?.graph_node_id !== newly_found_entity?.graph_node_id) {
+		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependent_on_found_node();
 
 			const previously_found_node = this._value.node();
 			if (previously_found_node) {
 				if (dependent_on_found_node) {
-					this.remove_graph_input(previously_found_node);
+					this.removeGraphInput(previously_found_node);
 				} else {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
 				}
@@ -100,7 +100,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 
 			this.options.execute_callback();
 		}
-		this.remove_dirty_state();
+		this.removeDirtyState();
 	}
 
 	private _assign_found_node(node: BaseNodeType) {
@@ -109,7 +109,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			if (this._is_node_expected_type(node)) {
 				this._value.set_node(node);
 				if (dependent_on_found_node) {
-					this.add_graph_input(node);
+					this.addGraphInput(node);
 				}
 			} else {
 				this.states.error.set(
@@ -126,7 +126,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	}
 
 	private _expected_context() {
-		return this.options.node_selection_context;
+		return this.options.node_selection_context();
 	}
 	private _is_node_expected_context(node: BaseNodeType) {
 		const expected_context = this._expected_context();
@@ -137,7 +137,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		return expected_context == node_context;
 	}
 	private _expected_node_types() {
-		return this.options.node_selection_types;
+		return this.options.node_selection_types();
 	}
 
 	private _is_node_expected_type(node: BaseNodeType) {
@@ -154,6 +154,6 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		this.set(new_path);
 	}
 	notify_target_param_owner_params_updated(node: BaseNodeType) {
-		this.set_dirty();
+		this.setDirty();
 	}
 }

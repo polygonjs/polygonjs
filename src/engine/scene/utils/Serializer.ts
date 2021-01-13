@@ -11,11 +11,11 @@ export class PolySceneSerializer {
 
 		for (let node of this.scene.nodesController.allNodes()) {
 			const node_serializer = new NodeSerializer(node);
-			nodes_by_graph_node_id[node.graph_node_id] = node_serializer.toJSON(include_node_param_components);
+			nodes_by_graph_node_id[node.graphNodeId()] = node_serializer.toJSON(include_node_param_components);
 
 			const params = node.params.all;
 			for (let param of params) {
-				params_by_graph_node_id[param.graph_node_id] = param.toJSON();
+				params_by_graph_node_id[param.graphNodeId()] = param.toJSON();
 			}
 		}
 

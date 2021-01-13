@@ -9,10 +9,10 @@ export class CookController {
 	constructor() {}
 
 	add_node(node: BaseNodeType) {
-		this._cooking_nodes_by_id.set(node.graph_node_id, node);
+		this._cooking_nodes_by_id.set(node.graphNodeId(), node);
 	}
 	remove_node(node: BaseNodeType) {
-		this._cooking_nodes_by_id.delete(node.graph_node_id);
+		this._cooking_nodes_by_id.delete(node.graphNodeId());
 
 		if (this._cooking_nodes_by_id.size == 0) {
 			this.flush();

@@ -60,7 +60,7 @@
 // 		);
 // 		this.add_param(ParamType.VECTOR2, "resolution", [256, 256]);
 // 		this.add_param(ParamType.BUTTON, "update", "", {
-// 			callback: () => this.set_dirty()
+// 			callback: () => this.setDirty()
 // 		});
 // 	}
 

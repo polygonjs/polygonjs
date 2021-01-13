@@ -5,33 +5,33 @@ import {CoreGraphNodeId} from './graph/CoreGraph';
 type NodeOrParam = BaseNodeType | BaseParamType;
 
 export class DecomposedPath {
-	private index = -1;
-	private path_elements: (string | null)[] = [];
+	private _index = -1;
+	private _path_elements: (string | null)[] = [];
 	private _named_nodes: (NodeOrParam | null)[] = [];
-	private graph_node_ids: CoreGraphNodeId[] = [];
-	private node_element_by_graph_node_id: Map<CoreGraphNodeId, string> = new Map();
+	private _graph_node_ids: CoreGraphNodeId[] = [];
+	private _node_element_by_graph_node_id: Map<CoreGraphNodeId, string> = new Map();
 
 	constructor() {}
 	reset() {
-		this.index = -1;
-		this.path_elements = [];
+		this._index = -1;
+		this._path_elements = [];
 		this._named_nodes = [];
-		this.graph_node_ids = [];
-		this.node_element_by_graph_node_id.clear();
+		this._graph_node_ids = [];
+		this._node_element_by_graph_node_id.clear();
 	}
 
 	add_node(name: string, node: NodeOrParam) {
-		this.index += 1;
+		this._index += 1;
 		if (name == node.name) {
-			this._named_nodes[this.index] = node;
+			this._named_nodes[this._index] = node;
 		}
 
-		this.graph_node_ids[this.index] = node.graph_node_id;
-		this.node_element_by_graph_node_id.set(node.graph_node_id, name);
+		this._graph_node_ids[this._index] = node.graphNodeId();
+		this._node_element_by_graph_node_id.set(node.graphNodeId(), name);
 	}
 	add_path_element(path_element: string) {
-		this.index += 1;
-		this.path_elements[this.index] = path_element;
+		this._index += 1;
+		this._path_elements[this._index] = path_element;
 	}
 
 	named_graph_nodes() {
@@ -51,24 +51,24 @@ export class DecomposedPath {
 	}
 
 	update_from_name_change(node: NodeOrParam) {
-		const named_graph_node_ids = this._named_nodes.map((n) => n?.graph_node_id);
+		const named_graph_node_ids = this._named_nodes.map((n) => n?.graphNodeId());
 
-		if (named_graph_node_ids.includes(node.graph_node_id)) {
-			this.node_element_by_graph_node_id.set(node.graph_node_id, node.name);
+		if (named_graph_node_ids.includes(node.graphNodeId())) {
+			this._node_element_by_graph_node_id.set(node.graphNodeId(), node.name);
 		}
 	}
 
 	to_path(): string {
-		const elements = new Array<string>(this.index);
-		for (let i = 0; i <= this.index; i++) {
+		const elements = new Array<string>(this._index);
+		for (let i = 0; i <= this._index; i++) {
 			const node = this._named_nodes[i];
 			if (node) {
-				const node_name = this.node_element_by_graph_node_id.get(node.graph_node_id);
+				const node_name = this._node_element_by_graph_node_id.get(node.graphNodeId());
 				if (node_name) {
 					elements[i] = node_name;
 				}
 			} else {
-				const path_element = this.path_elements[i];
+				const path_element = this._path_elements[i];
 				if (path_element) {
 					elements[i] = path_element;
 				}

@@ -40,7 +40,7 @@ export class ChExpression extends BaseMethod {
 			const path = args[0];
 			const ref = this.get_referenced_param(path);
 			if (ref) {
-				if (ref.is_dirty) {
+				if (ref.isDirty()) {
 					await ref.compute();
 				}
 				const result = ref.value;

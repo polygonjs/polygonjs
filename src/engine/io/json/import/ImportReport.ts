@@ -4,7 +4,7 @@ export class ImportReport {
 	private _warnings: string[] = [];
 	constructor(_scene_importer: SceneJsonImporter) {}
 
-	get warnings() {
+	warnings() {
 		return this._warnings;
 	}
 

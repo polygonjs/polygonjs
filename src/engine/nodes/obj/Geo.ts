@@ -66,9 +66,9 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	}
 
 	is_display_node_cooking(): boolean {
-		if (this.flags.display.active) {
+		if (this.flags.display.active()) {
 			const display_node = this.display_node_controller.display_node;
-			return display_node ? display_node.is_dirty : false;
+			return display_node ? display_node.isDirty() : false;
 		} else {
 			return false;
 		}
@@ -102,7 +102,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	//
 
 	_on_child_add(node: BaseNodeType) {
-		if (this.scene.loadingController.loaded()) {
+		if (this.scene().loadingController.loaded()) {
 			if (this.children().length == 1) {
 				node.flags?.display?.set(true);
 			}

@@ -1,32 +1,27 @@
+QUnit.skip('a geo node getting dirty gets evaluated on request', (assert) => {});
 
-QUnit.skip( "a geo node getting dirty gets evaluated on request", ( assert ) => {})
+// assert geo1.isDirty()()
+// tx = geo1.param('tx')
+// tx.set(12)
+// assert tx.isDirty()()
+// assert geo1.isDirty()()
 
-	// assert geo1.is_dirty()
-	// tx = geo1.param('tx')
-	// tx.set(12)
-	// assert tx.is_dirty()
-	// assert geo1.is_dirty()
+// assert.equal geo1.cooks_count(), 0
+// #geo1.parent().update_object(geo1)
 
-	// assert.equal geo1.cooks_count(), 0
-	// #geo1.parent().update_object(geo1)
+// await sleep 500
 
-	// await sleep 500
+// assert.equal geo1.cooks_count(), 0
+// assert !tx.isDirty()()
+// assert !geo1.isDirty()()
 
-	// assert.equal geo1.cooks_count(), 0
-	// assert !tx.is_dirty()
-	// assert !geo1.is_dirty()
+// tx.set(354)
+// assert tx.isDirty()()
+// assert geo1.isDirty()()
 
+// await sleep 500
 
-	// tx.set(354)
-	// assert tx.is_dirty()
-	// assert geo1.is_dirty()
-	
-	// await sleep 500
-
-	// assert.equal geo1.cooks_count(), 0
-	// assert !tx.is_dirty()
-	// assert !geo1.is_dirty()
-	// done()
-			
-
-	
+// assert.equal geo1.cooks_count(), 0
+// assert !tx.isDirty()()
+// assert !geo1.isDirty()()
+// done()

@@ -13,17 +13,17 @@ QUnit.test('point without expressions', async (assert) => {
 	assert.vector3_in_delta(bbox.max, [0.5, 0, 0.5]);
 
 	const point1 = geo1.createNode('point');
-	assert.equal(point1.dirty_controller.dirty_count, 0);
+	assert.equal(point1.dirtyController.dirtyCount(), 0);
 
 	point1.setInput(0, plane1);
-	assert.equal(point1.dirty_controller.dirty_count, 1);
+	assert.equal(point1.dirtyController.dirtyCount(), 1);
 	point1.p.updateY.set(1);
 	point1.p.y.set(1);
-	assert.equal(point1.dirty_controller.dirty_count, 3);
+	assert.equal(point1.dirtyController.dirtyCount(), 3);
 
 	container = await point1.requestContainer();
 
-	assert.equal(point1.dirty_controller.dirty_count, 3);
+	assert.equal(point1.dirtyController.dirtyCount(), 3);
 	// const core_group = container.coreContent()!;
 	// const {geometry} = core_group.objects()[0];
 

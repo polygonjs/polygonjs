@@ -23,7 +23,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 		this.flags.display.add_hook(() => {
 			this.update_light_attachment();
 		});
-		this.dirty_controller.add_post_dirty_hook(
+		this.dirtyController.addPostDirtyHook(
 			'_cook_main_without_inputs_when_dirty',
 			this._cook_main_without_inputs_when_dirty_bound
 		);
@@ -44,7 +44,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	}
 
 	private update_light_attachment() {
-		if (this.flags.display.active) {
+		if (this.flags.display.active()) {
 			this.object.add(this.light);
 			this._cook_main_without_inputs_when_dirty();
 		} else {
@@ -109,7 +109,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 		return this._color_with_intensity;
 	}
 	get active(): boolean {
-		return this.flags.display.active;
+		return this.flags.display.active();
 	}
 }
 

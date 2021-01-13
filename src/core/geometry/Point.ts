@@ -39,8 +39,8 @@ export class CorePoint extends CoreEntity {
 	_position: Vector3 | undefined;
 	_normal: Vector3 | undefined;
 
-	constructor(private _core_geometry: CoreGeometry, index: number) {
-		super(index);
+	constructor(private _core_geometry: CoreGeometry, _index: number) {
+		super(_index);
 		this._geometry = this._core_geometry.geometry();
 	}
 
@@ -63,7 +63,7 @@ export class CorePoint extends CoreEntity {
 
 	attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		if (name === PTNUM) {
-			return this.index;
+			return this.index();
 		} else {
 			let component_name = null;
 			let component_index = null;

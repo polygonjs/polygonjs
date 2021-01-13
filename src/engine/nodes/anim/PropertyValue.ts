@@ -126,7 +126,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		const mask = this.pv.objectMask;
 		let found_object: Object3D | undefined = undefined;
 		try {
-			this.scene.defaultScene.traverse((object) => {
+			this.scene().defaultScene.traverse((object) => {
 				if (CoreString.matchMask(object.name, mask)) {
 					found_object = object;
 					// we throw an exception here to not have to traverse the whole scene
@@ -158,7 +158,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		if (!param) {
 			return;
 		}
-		if (param.is_dirty) {
+		if (param.isDirty()) {
 			await param.compute();
 		}
 		const value = param.value;

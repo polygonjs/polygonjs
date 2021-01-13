@@ -53,7 +53,7 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 		this.io.inputs.init_inputs_cloned_state(AttribPromoteSopOperation.INPUT_CLONED_STATE);
 		// this.uiData.set_icon('sort-amount-up');
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name, this.p.classFrom, this.p.classTo], () => {
 					if (this.pv.name != '') {
@@ -71,7 +71,7 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 
 	private _operation: AttribPromoteSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new AttribPromoteSopOperation(this.scene, this.states);
+		this._operation = this._operation || new AttribPromoteSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

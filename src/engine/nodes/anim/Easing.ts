@@ -37,7 +37,7 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.name, this.p.inOut], () => {
 					return this.easing_full_name();

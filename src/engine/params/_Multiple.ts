@@ -45,7 +45,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		let index = 0;
 		this._components = new Array(this.component_names.length);
 		for (let component_name of this.component_names) {
-			const component = new this._components_contructor(this.scene); //, `${this.name}${name}`);
+			const component = new this._components_contructor(this.scene()); //, `${this.name}${name}`);
 			let default_val;
 			if (CoreType.isArray(this._default_value)) {
 				default_val = this._default_value[index];
@@ -59,7 +59,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			component.setName(`${this.name}${component_name}`);
 			component.set_parent_param(this);
 
-			// this.add_graph_input(component, false); // already called in set_parent_param
+			// this.addGraphInput(component, false); // already called in set_parent_param
 			// component.initialize();
 			this._components[index] = component;
 			index++;
@@ -76,7 +76,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 	has_expression() {
 		for (let c of this.components) {
-			if (c.expression_controller?.active) {
+			if (c.expression_controller?.active()) {
 				return true;
 			}
 		}
@@ -87,12 +87,12 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		const components = this.components;
 		const promises = [];
 		for (let c of components) {
-			if (c.is_dirty) {
+			if (c.isDirty()) {
 				promises.push(c.compute());
 			}
 		}
 		await Promise.all(promises);
-		this.remove_dirty_state();
+		this.removeDirtyState();
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {
@@ -105,7 +105,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	}
 
 	protected process_raw_input() {
-		const cooker = this.scene.cooker;
+		const cooker = this.scene().cooker;
 		cooker.block();
 		const components = this.components;
 		for (let c of components) {

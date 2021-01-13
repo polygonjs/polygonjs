@@ -16,7 +16,7 @@ QUnit.test('ambient light simple', async (assert) => {
 	assert.equal(main_group.children[2].name, '/ambientLight1');
 	assert.equal(main_group.children[3].name, '/ambientLight2');
 
-	assert.equal(ambient_light1.graph_all_successors().length, 0);
+	assert.equal(ambient_light1.graphAllSuccessors().length, 0);
 
 	window.scene.performance.start();
 

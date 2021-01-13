@@ -6,8 +6,8 @@ export class CopyStamp extends BaseCopyStamp {
 
 	set_point(point: CorePoint) {
 		this._point = point;
-		this.set_dirty();
-		this.remove_dirty_state();
+		this.setDirty();
+		this.removeDirtyState();
 	}
 
 	value(attrib_name?: string) {
@@ -15,7 +15,7 @@ export class CopyStamp extends BaseCopyStamp {
 			if (attrib_name) {
 				return this._point.attribValue(attrib_name);
 			} else {
-				return this._point.index;
+				return this._point.index();
 			}
 		} else {
 			return this._global_index;

@@ -221,7 +221,7 @@ export class CoreWalker {
 		let found_parent = null;
 
 		for (let i = 0; i < min_depth; i++) {
-			if (parents1[i].graph_node_id == parents2[i].graph_node_id) {
+			if (parents1[i].graphNodeId() == parents2[i].graphNodeId()) {
 				found_parent = parents1[i];
 			}
 		}
@@ -239,12 +239,12 @@ export class CoreWalker {
 	static distance_to_parent(graph_node: Readonly<NodeOrParam>, dest: Readonly<BaseNodeType>): number {
 		let distance = 0;
 		let current: Readonly<NodeOrParam | null> = graph_node;
-		const dest_id = dest.graph_node_id;
-		while (current && current.graph_node_id != dest_id) {
+		const dest_id = dest.graphNodeId();
+		while (current && current.graphNodeId() != dest_id) {
 			distance += 1;
 			current = current.parent;
 		}
-		if (current && current.graph_node_id == dest_id) {
+		if (current && current.graphNodeId() == dest_id) {
 			return distance;
 		} else {
 			return -1;

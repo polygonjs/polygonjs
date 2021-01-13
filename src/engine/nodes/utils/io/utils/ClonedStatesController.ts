@@ -4,7 +4,7 @@ import {InputsController} from '../InputsController';
 import {TypeAssert} from '../../../../poly/Assert';
 import {NodeEvent} from '../../../../poly/NodeEvent';
 import {TypedNode} from '../../../_Base';
-import { CoreType } from '../../../../../core/Type';
+import {CoreType} from '../../../../../core/Type';
 
 export class ClonedStatesController<NC extends NodeContext> {
 	// private _user_inputs_clonable_states: InputCloneMode[] | undefined;
@@ -99,7 +99,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 		this._overridden = state;
 		this._update_clone_required_state();
 		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
-		this.node.set_dirty();
+		this.node.setDirty();
 	}
 	overriden() {
 		return this._overridden;

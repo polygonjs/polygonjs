@@ -34,7 +34,7 @@ export class OperationAnimNode extends TypedAnimNode<OperationAnimParamsConfig> 
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.operation], () => {
 					return OPERATIONS[this.pv.operation];

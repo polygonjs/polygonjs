@@ -37,7 +37,7 @@ export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsCon
 
 	private _operation: AttribAddMultSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new AttribAddMultSopOperation(this.scene, this.states);
+		this._operation = this._operation || new AttribAddMultSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

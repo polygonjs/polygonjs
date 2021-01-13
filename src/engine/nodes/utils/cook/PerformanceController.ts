@@ -26,7 +26,7 @@ export class NodeCookPerformanceformanceController {
 		return this._data;
 	}
 
-	get active() {
+	active() {
 		return this.cook_controller.performance_record_started;
 	}
 
@@ -34,12 +34,12 @@ export class NodeCookPerformanceformanceController {
 	// INPUTS
 	//
 	record_inputs_start() {
-		if (this.active) {
+		if (this.active()) {
 			this._inputs_start = performance.now();
 		}
 	}
 	record_inputs_end() {
-		if (this.active) {
+		if (this.active()) {
 			this._data.inputs_time = performance.now() - this._inputs_start;
 		}
 	}
@@ -47,12 +47,12 @@ export class NodeCookPerformanceformanceController {
 	// PARAMS
 	//
 	record_params_start() {
-		if (this.active) {
+		if (this.active()) {
 			this._params_start = performance.now();
 		}
 	}
 	record_params_end() {
-		if (this.active) {
+		if (this.active()) {
 			this._data.params_time = performance.now() - this._params_start;
 		}
 	}
@@ -60,12 +60,12 @@ export class NodeCookPerformanceformanceController {
 	// COOK
 	//
 	record_cook_start() {
-		if (this.active) {
+		if (this.active()) {
 			this._cook_start = performance.now();
 		}
 	}
 	record_cook_end() {
-		if (this.active) {
+		if (this.active()) {
 			this._data.cook_time = performance.now() - this._cook_start;
 			this._cooks_count += 1;
 		}

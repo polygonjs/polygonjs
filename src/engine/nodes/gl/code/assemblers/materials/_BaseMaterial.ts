@@ -159,9 +159,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			material.needsUpdate = true;
 		}
 
-		const scene = this._gl_parent_node.scene;
+		const scene = this._gl_parent_node.scene();
 		if (this.uniforms_time_dependent()) {
-			// make sure not to use this._gl_parent_node.graph_node_id() as the id,
+			// make sure not to use this._gl_parent_node.graphNodeId() as the id,
 			// as we need several materials:
 			// - the visible one
 			// - the multiple shadow ones

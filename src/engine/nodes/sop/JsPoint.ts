@@ -20,7 +20,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	// protected _assembler_controller: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
 	// 	ShaderAssemblerParticles
 	// >(this, ShaderAssemblerParticles);
-	// get assembler_controller() {
+	// get assemblerController() {
 	// 	return this._assembler_controller;
 	// }
 
@@ -40,7 +40,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// otherwise the input is cloned on every frame inside cook_main()
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 
-		// this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
+		// this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
 		// this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
 		// this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);

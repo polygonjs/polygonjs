@@ -16,11 +16,11 @@ export class LinesController {
 
 	add_definitions(node: BaseGlNodeType, definitions: BaseGLDefinition[]) {
 		for (let definition of definitions) {
-			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graph_node_id, definition);
+			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graphNodeId(), definition);
 		}
 	}
 	definitions(node: BaseGlNodeType): BaseGLDefinition[] | undefined {
-		return this._definitions_by_node_id.get(node.graph_node_id);
+		return this._definitions_by_node_id.get(node.graphNodeId());
 	}
 	// all_definition_nodes(scene: PolyScene) {
 	// 	const nodes: BaseGlNodeType[] = [];
@@ -33,11 +33,11 @@ export class LinesController {
 
 	add_body_lines(node: BaseGlNodeType, lines: string[]) {
 		for (let line of lines) {
-			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graph_node_id, line);
+			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graphNodeId(), line);
 		}
 	}
 	body_lines(node: BaseGlNodeType): string[] | undefined {
-		return this._body_lines_by_node_id.get(node.graph_node_id);
+		return this._body_lines_by_node_id.get(node.graphNodeId());
 	}
 	// all_body_line_nodes(scene: PolyScene) {
 	// 	const nodes: BaseGlNodeType[] = [];

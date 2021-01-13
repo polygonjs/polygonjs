@@ -217,7 +217,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 
 		this._marked_for_deletion_per_object_index = new Map();
 		for (let core_object of core_objects) {
-			this._marked_for_deletion_per_object_index.set(core_object.index, false);
+			this._marked_for_deletion_per_object_index.set(core_object.index(), false);
 		}
 
 		if (this.pv.byExpression) {

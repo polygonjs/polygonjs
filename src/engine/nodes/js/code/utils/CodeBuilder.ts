@@ -15,7 +15,7 @@ import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
-import { ArrayUtils } from '../../../../../core/ArrayUtils';
+import {ArrayUtils} from '../../../../../core/ArrayUtils';
 
 export class JsCodeBuilder {
 	_param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> = new ParamConfigsController();
@@ -53,13 +53,13 @@ export class JsCodeBuilder {
 		// ensure nodes are not added if already present
 		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 		for (let node of sorted_nodes) {
-			sorted_node_ids.set(node.graph_node_id, true);
+			sorted_node_ids.set(node.graphNodeId(), true);
 		}
 
 		for (let root_node of root_nodes) {
-			if (!sorted_node_ids.get(root_node.graph_node_id)) {
+			if (!sorted_node_ids.get(root_node.graphNodeId())) {
 				sorted_nodes.push(root_node);
-				sorted_node_ids.set(root_node.graph_node_id, true);
+				sorted_node_ids.set(root_node.graphNodeId(), true);
 			}
 		}
 		for (let node of sorted_nodes) {
@@ -73,7 +73,7 @@ export class JsCodeBuilder {
 		this._lines_controller = new LinesController();
 		this.reset();
 		for (let shader_name of this.shader_names()) {
-			const nodes = ArrayUtils.uniq(nodes_by_shader_name.get(shader_name)||[]);
+			const nodes = ArrayUtils.uniq(nodes_by_shader_name.get(shader_name) || []);
 			if (nodes) {
 				for (let node of nodes) {
 					// node.set_shader_name(shader_name);
@@ -178,7 +178,7 @@ export class JsCodeBuilder {
 			const definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
 			const node_ids: Map<CoreGraphNodeId, boolean> = new Map();
 			for (let definition of uniq_definitions) {
-				const node_id = definition.node.graph_node_id;
+				const node_id = definition.node.graphNodeId();
 				if (!node_ids.has(node_id)) {
 					node_ids.set(node_id, true);
 				}

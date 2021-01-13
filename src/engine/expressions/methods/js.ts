@@ -28,7 +28,7 @@ export class JsExpression extends BaseMethod {
 			this._function = this._function || this._create_function(arg);
 			if (this._function) {
 				try {
-					val = this._function(this.param.scene, this.param.node, this.param);
+					val = this._function(this.param.scene(), this.param.node, this.param);
 				} catch (e) {
 					console.warn(`expression error`);
 					console.warn(e);

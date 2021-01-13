@@ -69,7 +69,7 @@ export class CoreTransform {
 		this.set_params_from_matrix_rotation.toArray(this.set_params_from_matrix_r);
 		this.set_params_from_matrix_scale.toArray(this.set_params_from_matrix_s);
 
-		node.scene.batchUpdates(() => {
+		node.scene().batchUpdates(() => {
 			node.params.set_vector3('t', this.set_params_from_matrix_t);
 			node.params.set_vector3('r', this.set_params_from_matrix_r);
 			node.params.set_vector3('s', this.set_params_from_matrix_s);
@@ -90,7 +90,7 @@ export class CoreTransform {
 		this.set_params_from_object_rotation_deg.multiplyScalar(180 / Math.PI);
 		this.set_params_from_object_rotation_deg.toArray(this.set_params_from_object_rotation_array);
 
-		node.scene.batchUpdates(() => {
+		node.scene().batchUpdates(() => {
 			node.params.set_vector3('t', this.set_params_from_object_position_array);
 			node.params.set_vector3('r', this.set_params_from_object_rotation_array);
 		});

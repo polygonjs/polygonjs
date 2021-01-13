@@ -24,13 +24,13 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 	await scene.waitForCooksCompleted();
 
 	color.r.set('5*2');
-	assert.ok(color.r.is_dirty);
-	assert.ok(color.is_dirty);
+	assert.ok(color.r.isDirty());
+	assert.ok(color.isDirty());
 	assert.ok(color.r.has_expression());
 	assert.ok(color.has_expression());
 	await color.compute();
-	assert.notOk(color.r.is_dirty, 'red is dirty');
-	assert.notOk(color.is_dirty, 'color is dirty');
+	assert.notOk(color.r.isDirty(), 'red is dirty');
+	assert.notOk(color.isDirty(), 'color is dirty');
 	assert.deepEqual(color.r.value, 10, 'value is 10');
 	assert.deepEqual(color.value.toArray(), [10, 0.5, 0.7], 'red is 10');
 });

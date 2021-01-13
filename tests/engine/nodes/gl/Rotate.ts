@@ -20,7 +20,7 @@ QUnit.test('gl rotate has his input updated when mode changes', async (assert) =
 
 	rotate1.setInput(2, constant1);
 	assert.ok(rotate1.io.inputs.input(2));
-	assert.equal(rotate1.io.inputs.input(2)?.graph_node_id, constant1.graph_node_id);
+	assert.equal(rotate1.io.inputs.input(2)?.graphNodeId(), constant1.graphNodeId());
 
 	// check that the input is removed
 	rotate1.set_signature(GlRotateMode.QUAT);

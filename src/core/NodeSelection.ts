@@ -16,14 +16,14 @@ export class CoreNodeSelection {
 	}
 
 	nodes(): BaseNodeType[] {
-		return this._node.scene.graph.nodes_from_ids(this._node_ids) as BaseNodeType[];
+		return this._node.scene().graph.nodes_from_ids(this._node_ids) as BaseNodeType[];
 	}
 
 	contains(node: BaseNodeType): boolean {
-		return this._node_ids.includes(node.graph_node_id);
+		return this._node_ids.includes(node.graphNodeId());
 	}
 	equals(nodes: BaseNodeType[]): boolean {
-		const node_ids = nodes.map((node) => node.graph_node_id).sort();
+		const node_ids = nodes.map((node) => node.graphNodeId()).sort();
 		return ArrayUtils.isEqual(node_ids, this._node_ids);
 	}
 
@@ -38,14 +38,14 @@ export class CoreNodeSelection {
 	}
 
 	add(nodes_to_add: BaseNodeType[]) {
-		const node_ids_to_add = nodes_to_add.map((node) => node.graph_node_id);
+		const node_ids_to_add = nodes_to_add.map((node) => node.graphNodeId());
 		this._node_ids = ArrayUtils.union(this._node_ids, node_ids_to_add);
 
 		this.send_update_event();
 	}
 
 	remove(nodes_to_remove: BaseNodeType[]) {
-		const node_ids_to_remove = nodes_to_remove.map((node) => node.graph_node_id);
+		const node_ids_to_remove = nodes_to_remove.map((node) => node.graphNodeId());
 		this._node_ids = ArrayUtils.difference(this._node_ids, node_ids_to_remove);
 
 		this.send_update_event();

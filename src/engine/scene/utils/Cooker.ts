@@ -35,7 +35,7 @@ export class Cooker {
 	}
 
 	enqueue(node: CoreGraphNode, original_trigger_graph_node?: CoreGraphNode) {
-		this._queue.set(node.graph_node_id, original_trigger_graph_node);
+		this._queue.set(node.graphNodeId(), original_trigger_graph_node);
 	}
 
 	process_queue() {
@@ -50,7 +50,7 @@ export class Cooker {
 		// 	node = this._queue[id];
 		// 	if (node) {
 		// 		delete this._queue[id];
-		// 		node.dirty_controller.run_post_dirty_hooks();
+		// 		node.dirtyController.run_post_dirty_hooks();
 		// 	}
 		// }
 	}
@@ -58,7 +58,7 @@ export class Cooker {
 		const node = this._scene.graph.node_from_id(id);
 		if (node) {
 			this._queue.delete(id);
-			node.dirty_controller.run_post_dirty_hooks(original_trigger_graph_node);
+			node.dirtyController.run_post_dirty_hooks(original_trigger_graph_node);
 		}
 	}
 }

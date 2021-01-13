@@ -109,19 +109,19 @@ export class RenderController {
 	private update_scene() {
 		if (this.node.pv.setScene) {
 			const param = this.node.p.scene;
-			if (param.is_dirty) {
+			if (param.isDirty()) {
 				param.find_target();
 			}
 			const node = param.found_node_with_context_and_type(NodeContext.OBJ, SceneObjNode.type());
 			if (node) {
 				// it's probably weird to cook the node here, but that works for now
-				if (node.is_dirty) {
+				if (node.isDirty()) {
 					node.cook_controller.cook_main_without_inputs();
 				}
 				this._resolved_scene = node.object;
 			}
 		} else {
-			this._resolved_scene = this.node.scene.defaultScene;
+			this._resolved_scene = this.node.scene().defaultScene;
 		}
 	}
 
@@ -133,7 +133,7 @@ export class RenderController {
 	private update_renderer() {
 		if (this.node.pv.setRenderer) {
 			const param = this.node.p.renderer;
-			if (param.is_dirty) {
+			if (param.isDirty()) {
 				param.find_target();
 			}
 			this._resolved_renderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, RopType.WEBGL);
@@ -144,7 +144,7 @@ export class RenderController {
 	private update_cssRenderer() {
 		if (this.node.pv.setCssRenderer) {
 			const param = this.node.p.cssRenderer;
-			if (param.is_dirty) {
+			if (param.isDirty()) {
 				param.find_target();
 			}
 			this._resolved_cssRenderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, [

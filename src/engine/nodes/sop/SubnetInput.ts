@@ -65,13 +65,13 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 	}
 	private set_parent_input_dependency() {
 		if (this._current_parent_input_graph_node) {
-			this.remove_graph_input(this._current_parent_input_graph_node);
+			this.removeGraphInput(this._current_parent_input_graph_node);
 		}
 
 		const parent = this.parent;
 		if (parent) {
 			this._current_parent_input_graph_node = parent.io.inputs.input_graph_node(this.pv.input);
-			this.add_graph_input(this._current_parent_input_graph_node);
+			this.addGraphInput(this._current_parent_input_graph_node);
 		}
 	}
 }

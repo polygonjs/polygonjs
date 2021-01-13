@@ -22,7 +22,7 @@ export class DisplayNodeController {
 	// at least there should be a way to infer that it is a node
 	// with children that have a display flag. This would avoid all the flags?.display?... below
 	constructor(protected node: BaseNodeType, callbacks: DisplayNodeControllerCallbacks) {
-		this._graph_node = new CoreGraphNode(node.scene, 'DisplayNodeController');
+		this._graph_node = new CoreGraphNode(node.scene(), 'DisplayNodeController');
 		(this._graph_node as any).node = node;
 		this._on_display_node_remove_callback = callbacks.on_display_node_remove;
 		this._on_display_node_set_callback = callbacks.on_display_node_set;
@@ -46,7 +46,7 @@ export class DisplayNodeController {
 			}
 		});
 		this.node.lifecycle.add_on_child_remove_hook((child_node) => {
-			if (child_node.graph_node_id == this._display_node?.graph_node_id) {
+			if (child_node.graphNodeId() == this._display_node?.graphNodeId()) {
 				const children = this.node.children();
 				const last_child = children[children.length - 1];
 				if (last_child) {
@@ -56,7 +56,7 @@ export class DisplayNodeController {
 				}
 			}
 		});
-		this._graph_node.dirty_controller.add_post_dirty_hook('_request_display_node_container', () => {
+		this._graph_node.dirtyController.addPostDirtyHook('_request_display_node_container', () => {
 			this._on_display_node_update_callback();
 		});
 	}
@@ -70,12 +70,12 @@ export class DisplayNodeController {
 			const old_display_node = this._display_node;
 			if (old_display_node) {
 				old_display_node.flags.display.set(false);
-				this._graph_node.remove_graph_input(old_display_node);
+				this._graph_node.removeGraphInput(old_display_node);
 				this._on_display_node_remove_callback();
 			}
 			this._display_node = new_display_node;
 			if (this._display_node) {
-				this._graph_node.add_graph_input(this._display_node);
+				this._graph_node.addGraphInput(this._display_node);
 				this._on_display_node_set_callback();
 			}
 		}

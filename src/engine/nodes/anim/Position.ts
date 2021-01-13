@@ -44,7 +44,7 @@ export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
 	initialize_node() {
 		this.io.inputs.set_count(0, 1);
 
-		this.scene.dispatchController.onAddListener(() => {
+		this.scene().dispatchController.onAddListener(() => {
 			this.params.on_params_created('params_label', () => {
 				this.params.label.init([this.p.mode, this.p.relativeTo, this.p.offset], () => {
 					const mode = ANIMATION_POSITION_MODES[this.pv.mode];

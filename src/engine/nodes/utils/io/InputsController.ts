@@ -116,14 +116,14 @@ export class InputsController<NC extends NodeContext> {
 		}
 	}
 	private _create_graph_node_input(index: number): CoreGraphNode {
-		const graph_input_node = new CoreGraphNode(this.node.scene, `input_${index}`);
+		const graph_input_node = new CoreGraphNode(this.node.scene(), `input_${index}`);
 		// graph_input_node.set_scene(this.node.scene);
 		if (!this._graph_node) {
-			this._graph_node = new CoreGraphNode(this.node.scene, 'inputs');
-			this.node.add_graph_input(this._graph_node, false);
+			this._graph_node = new CoreGraphNode(this.node.scene(), 'inputs');
+			this.node.addGraphInput(this._graph_node, false);
 		}
 
-		this._graph_node.add_graph_input(graph_input_node, false);
+		this._graph_node.addGraphInput(graph_input_node, false);
 		return graph_input_node;
 	}
 
@@ -149,10 +149,10 @@ export class InputsController<NC extends NodeContext> {
 	}
 
 	is_any_input_dirty() {
-		return this._graph_node?.is_dirty || false;
+		return this._graph_node?.isDirty() || false;
 		// if (this._max_inputs_count > 0) {
 		// 	for (let i = 0; i < this._inputs.length; i++) {
-		// 		if (this._inputs[i]?.is_dirty) {
+		// 		if (this._inputs[i]?.isDirty()) {
 		// 			return true;
 		// 		}
 		// 	}
@@ -200,7 +200,7 @@ export class InputsController<NC extends NodeContext> {
 						if (input) {
 							// I tried here to only use a promise for dirty inputs,
 							// but that messes up with the order
-							// if (input.is_dirty) {
+							// if (input.isDirty()) {
 							// 	containers.push(input.container_controller.container as ContainerMap[NC]);
 							// } else {
 							promises.push(this.eval_required_input(i) as Promise<ContainerMap[NC]>);
@@ -209,7 +209,7 @@ export class InputsController<NC extends NodeContext> {
 					}
 					containers = await Promise.all(promises);
 					// containers = containers.concat(promised_containers);
-					this._graph_node?.remove_dirty_state();
+					this._graph_node?.removeDirtyState();
 				}
 			}
 		}
@@ -219,15 +219,15 @@ export class InputsController<NC extends NodeContext> {
 	async eval_required_input(input_index: number) {
 		let container: ContainerMap[NC] | undefined = undefined;
 		const input_node = this.input(input_index);
-		// if (input_node && !input_node.is_dirty) {
+		// if (input_node && !input_node.isDirty()) {
 		// 	container = input_node.container_controller.container as ContainerMap[NC] | null;
 		// } else {
 		// 	container = await this.node.container_controller.requestInputContainer(input_index);
-		// 	this._graph_node_inputs[input_index].remove_dirty_state();
+		// 	this._graph_node_inputs[input_index].removeDirtyState();
 		// }
 		if (input_node) {
 			container = (await input_node.requestContainer()) as ContainerMap[NC];
-			this._graph_node_inputs[input_index].remove_dirty_state();
+			this._graph_node_inputs[input_index].removeDirtyState();
 		}
 
 		// we do not clone here, as we just check if a group is present
@@ -236,7 +236,7 @@ export class InputsController<NC extends NodeContext> {
 		} else {
 			const input_node = this.input(input_index);
 			if (input_node) {
-				const input_error_message = input_node.states.error.message;
+				const input_error_message = input_node.states.error.message();
 				if (input_error_message) {
 					this.node.states.error.set(`input ${input_index} is invalid (error: ${input_error_message})`);
 				}
@@ -321,17 +321,17 @@ export class InputsController<NC extends NodeContext> {
 			// TODO: test: add test to make sure this is necessary
 			if (old_input_node != null) {
 				if (this._depends_on_inputs) {
-					graph_input_node.remove_graph_input(old_input_node);
+					graph_input_node.removeGraphInput(old_input_node);
 				}
 			}
 
 			if (node != null) {
-				if (graph_input_node.add_graph_input(node)) {
+				if (graph_input_node.addGraphInput(node)) {
 					// we do test if we can create the graph connection
 					// to ensure we are not in a cyclical graph,
 					// but we delete it right after
 					if (!this._depends_on_inputs) {
-						graph_input_node.remove_graph_input(node);
+						graph_input_node.removeGraphInput(node);
 					}
 
 					//this._input_connections[input_index] = new NodeConnection(node, this.self, output_index, input_index);
@@ -357,7 +357,7 @@ export class InputsController<NC extends NodeContext> {
 			}
 
 			this._run_on_set_input_hooks();
-			graph_input_node.set_successors_dirty();
+			graph_input_node.setSuccessorsDirty();
 			// this.node.set_dirty(node);
 			this.node.emit(NodeEvent.INPUTS_UPDATED);
 		}
@@ -369,7 +369,7 @@ export class InputsController<NC extends NodeContext> {
 		for (let i = 0; i < inputs.length; i++) {
 			input = inputs[i];
 			if (input != null && node != null) {
-				if (input.graph_node_id === node.graph_node_id) {
+				if (input.graphNodeId() === node.graphNodeId()) {
 					this.setInput(i, null);
 				}
 			}

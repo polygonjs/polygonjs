@@ -33,7 +33,7 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	assert.equal(main_group.children[2].name, '/hemisphereLight1');
 	assert.equal(main_group.children[3].name, '/hemisphereLight2');
 
-	assert.equal(hemisphere_light1.graph_all_successors().length, 0);
+	assert.equal(hemisphere_light1.graphAllSuccessors().length, 0);
 
 	window.scene.performance.start();
 

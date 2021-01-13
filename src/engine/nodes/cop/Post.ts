@@ -141,7 +141,7 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		this._texture_camera.position.z = 1;
 
 		// when receiving dirty from children
-		this.dirty_controller.add_post_dirty_hook('reset', () => {
+		this.dirtyController.addPostDirtyHook('reset', () => {
 			this.reset();
 		});
 	}

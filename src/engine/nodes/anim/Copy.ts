@@ -25,7 +25,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 	async cook(input_contents: TimelineBuilder[]) {
 		const builder = new TimelineBuilder();
 		for (let i = 0; i < this.pv.count; i++) {
-			this.stamp_node.set_global_index(i);
+			this.stampNode().set_global_index(i);
 			const container = await this.container_controller.requestInputContainer(0);
 			if (container) {
 				const stamped_builder = container.coreContentCloned();
@@ -43,14 +43,14 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 	//
 	//
 	stamp_value(attrib_name?: string) {
-		return this.stamp_node.value(attrib_name);
+		return this.stampNode().value(attrib_name);
 	}
-	get stamp_node() {
+	stampNode() {
 		return (this._stamp_node = this._stamp_node || this.create_stamp_node());
 	}
 	private create_stamp_node() {
-		const stamp_node = new CopyStamp(this.scene);
-		this.dirty_controller.set_forbidden_trigger_nodes([stamp_node]);
+		const stamp_node = new CopyStamp(this.scene());
+		this.dirtyController.set_forbidden_trigger_nodes([stamp_node]);
 		return stamp_node;
 	}
 }

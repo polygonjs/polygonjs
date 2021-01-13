@@ -102,7 +102,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		}
 	}
 	private _url() {
-		const assets_root = this.scene.assets.root();
+		const assets_root = this.scene().assets.root();
 		if (assets_root) {
 			return `${assets_root}${this.pv.url}`;
 		} else {
@@ -164,7 +164,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		// this._previous_param_url = null
 
 		// set the param dirty is preferable, in case this is used to refresh a local asset
-		this.p.url.set_dirty();
-		// this.set_dirty()
+		this.p.url.setDirty();
+		// this.setDirty()
 	}
 }

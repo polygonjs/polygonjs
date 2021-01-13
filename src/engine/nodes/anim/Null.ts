@@ -58,7 +58,7 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			}
 			this._timeline = gsap.timeline({onComplete: resolve});
 
-			this._timeline_builder.populate(this._timeline, this.scene);
+			this._timeline_builder.populate(this._timeline, this.scene());
 		});
 	}
 	async pause() {

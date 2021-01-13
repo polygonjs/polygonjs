@@ -99,7 +99,7 @@
 // 			this.object.add(this._cube_camera);
 // 			// update nodes
 // 			for (let node of this.dependencies_controller.param_nodes_referree()) {
-// 				node.set_dirty();
+// 				node.setDirty();
 // 			}
 // 		}
 

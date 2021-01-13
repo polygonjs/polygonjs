@@ -88,10 +88,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 
 	get globals_handler(): GlobalsBaseController | undefined {
-		return this._gl_parent_node.assembler_controller?.globals_handler;
+		return this._gl_parent_node.assemblerController?.globals_handler;
 	}
 	compile_allowed(): boolean {
-		return this._gl_parent_node.assembler_controller?.globals_handler != null;
+		return this._gl_parent_node.assemblerController?.globals_handler != null;
 	}
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -129,7 +129,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		if (this.uniforms_time_dependent()) {
 			current_uniforms['time'] = {
 				// type: '1f',
-				value: this._gl_parent_node.scene.time,
+				value: this._gl_parent_node.scene().time,
 			};
 		}
 		if (this.resolution_dependent()) {

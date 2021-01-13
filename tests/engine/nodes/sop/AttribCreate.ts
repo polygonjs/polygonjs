@@ -88,12 +88,12 @@ QUnit.test('attrib create expression from a non existing attribute', async (asse
 	attrib_create1.setInput(0, sphere1);
 
 	await attrib_create1.requestContainer();
-	assert.ok(attrib_create1.states.error.active);
-	assert.equal(attrib_create1.states.error.message, 'expression evalution error: attribute not found');
+	assert.ok(attrib_create1.states.error.active());
+	assert.equal(attrib_create1.states.error.message(), 'expression evalution error: attribute not found');
 
 	attrib_create1.p.value1.set('@P.y > 0');
 	await attrib_create1.requestContainer();
-	assert.ok(!attrib_create1.states.error.active);
+	assert.ok(!attrib_create1.states.error.active());
 });
 
 QUnit.test('attrib create simple vector2 vertex', async (assert) => {
@@ -267,9 +267,9 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 
 	attrib_create1.p.value2.x.set('$F*2+1.5');
 	scene.setFrame(10);
-	assert.ok(attrib_create1.p.value2.x.is_dirty);
-	assert.ok(attrib_create1.p.value2.is_dirty);
-	assert.ok(attrib_create1.is_dirty);
+	assert.ok(attrib_create1.p.value2.x.isDirty());
+	assert.ok(attrib_create1.p.value2.isDirty());
+	assert.ok(attrib_create1.isDirty());
 	container = await attrib_create1.requestContainer();
 	core_group = container.coreContent()!;
 	object = core_group.objects()[0];

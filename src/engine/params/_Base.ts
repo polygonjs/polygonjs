@@ -62,7 +62,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this.initialize_param();
 	}
 	initialize_param() {}
-	// 	// this.add_post_dirty_hook(this._remove_node_param_cache.bind(this))
+	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {
 	// 	this.init_components();
@@ -150,11 +150,11 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected process_raw_input() {}
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
-		if (this.scene.loadingController.isLoading()) {
+		if (this.scene().loadingController.isLoading()) {
 			console.warn(`param attempt to compute ${this.fullPath()}`);
 		}
 
-		if (this.is_dirty) {
+		if (this.isDirty()) {
 			if (!this._is_computing) {
 				this._is_computing = true;
 				await this.process_computation();
@@ -198,12 +198,12 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	_set_node_owner(node: BaseNodeType | null) {
 		if (!node) {
 			if (this._node) {
-				this._node.params.params_node?.remove_graph_input(this);
+				this._node.params.params_node?.removeGraphInput(this);
 			}
 		} else {
 			this._node = node;
 			if (this.options.makes_node_dirty_when_dirty() && !this.parent_param) {
-				node.params.params_node?.add_graph_input(this, false);
+				node.params.params_node?.addGraphInput(this, false);
 			}
 		}
 
@@ -222,7 +222,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 	// hierarchy
 	set_parent_param(param: TypedMultipleParam<any>) {
-		param.add_graph_input(this, false);
+		param.addGraphInput(this, false);
 		this._parent_param = param;
 	}
 	get parent_param(): TypedMultipleParam<any> | undefined {
@@ -242,7 +242,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	emit(event_name: ParamEvent): void {
 		if (this.emitController.emitAllowed()) {
 			this.emitController.incrementCount(event_name);
-			this.scene.dispatchController.dispatch(this, event_name);
+			this.scene().dispatchController.dispatch(this, event_name);
 		}
 	}
 
@@ -264,7 +264,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	this.expression_controller.set_expression(expression);
 	// }
 	has_expression(): boolean {
-		return this.expression_controller != null && this.expression_controller.active; // use this._expression_controller to avoid creating it
+		return this.expression_controller != null && this.expression_controller.active(); // use this._expression_controller to avoid creating it
 	}
 
 	// serialize

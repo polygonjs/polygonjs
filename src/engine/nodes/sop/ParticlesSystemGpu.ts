@@ -74,7 +74,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	static type() {
 		return 'particlesSystemGpu';
 	}
-	get assembler_controller() {
+	get assemblerController() {
 		return this._assembler_controller;
 	}
 	public used_assembler(): Readonly<AssemblerName.GL_PARTICLES> {
@@ -116,7 +116,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		// otherwise the input is cloned on every frame inside cook_main()
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 
-		this.add_post_dirty_hook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
+		this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 	}
 
 	createNode<S extends keyof GlNodeChildrenMap>(
@@ -140,15 +140,15 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	children_allowed() {
-		if (this.assembler_controller) {
+		if (this.assemblerController) {
 			return super.children_allowed();
 		}
-		this.scene.mark_as_read_only(this);
+		this.scene().mark_as_read_only(this);
 		return false;
 	}
 
 	async _reset_material_if_dirty() {
-		if (this.p.material.is_dirty) {
+		if (this.p.material.isDirty()) {
 			this.render_controller.reset_render_material();
 			if (!this.is_on_frame_start()) {
 				await this.render_controller.init_render_material();
@@ -157,7 +157,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	is_on_frame_start(): boolean {
-		return this.scene.frame == this.pv.startFrame;
+		return this.scene().frame == this.pv.startFrame;
 	}
 
 	async cook(input_contents: CoreGroup[]) {
@@ -189,25 +189,26 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 	}
 	async compile_if_required() {
-		if (this.assembler_controller?.compile_required()) {
+		if (this.assemblerController?.compile_required()) {
 			await this.run_assembler();
 		}
 	}
 	async run_assembler() {
-		if (!this.assembler_controller) {
+		const assemblerController = this.assemblerController;
+		if (!assemblerController) {
 			return;
 		}
 		const export_nodes = this._find_export_nodes();
 		if (export_nodes.length > 0) {
 			const root_nodes = export_nodes;
-			this.assembler_controller.set_assembler_globals_handler(this.globals_handler);
-			this.assembler_controller.assembler.set_root_nodes(root_nodes);
+			assemblerController.set_assembler_globals_handler(this.globals_handler);
+			assemblerController.assembler.set_root_nodes(root_nodes);
 
-			this.assembler_controller.assembler.compile();
-			this.assembler_controller.post_compile();
+			assemblerController.assembler.compile();
+			assemblerController.post_compile();
 		}
 
-		const shaders_by_name = this.assembler_controller.assembler.shaders_by_name();
+		const shaders_by_name = assemblerController.assembler.shaders_by_name();
 		this._set_shader_names(shaders_by_name);
 	}
 

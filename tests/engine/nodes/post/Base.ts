@@ -18,7 +18,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	const post_process1 = camera.createNode('postProcess');
 	const horizontal_blur1 = post_process1.createNode('horizontalBlur');
 
-	assert.ok(horizontal_blur1.flags?.display?.active, 'first node created has display flag on');
+	assert.ok(horizontal_blur1.flags?.display?.active(), 'first node created has display flag on');
 
 	camera.p.doPostProcess.set(1);
 	camera.p.postProcessNode.set(post_process1.fullPath());

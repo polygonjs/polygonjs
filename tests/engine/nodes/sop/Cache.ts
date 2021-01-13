@@ -46,9 +46,9 @@ QUnit.test('cache static', async (assert) => {
 // 	assert.equal transform1.cooks_count(), 1
 
 // 	scene.increment_frame()
-// 	assert !box1.is_dirty()
-// 	assert transform1.is_dirty()
-// 	assert !cache1.is_dirty()
+// 	assert !box1.isDirty()()
+// 	assert transform1.isDirty()()
+// 	assert !cache1.isDirty()()
 
 // 	cache1.requestContainer (container)=>
 // 		group = container.group()
@@ -57,8 +57,8 @@ QUnit.test('cache static', async (assert) => {
 // 		assert.equal box1.cooks_count(), 1
 // 		assert.equal transform1.cooks_count(), 1
 
-// 		assert !box1.is_dirty()
-// 		assert transform1.is_dirty()
+// 		assert !box1.isDirty()()
+// 		assert transform1.isDirty()()
 
 // 		done()
 
@@ -82,9 +82,9 @@ QUnit.skip('cache animated', () => {});
 // 	assert.equal transform1.cooks_count(), 1
 
 // 	scene.increment_frame()
-// 	assert !box1.is_dirty()
-// 	assert transform1.is_dirty()
-// 	assert cache1.is_dirty()
+// 	assert !box1.isDirty()()
+// 	assert transform1.isDirty()()
+// 	assert cache1.isDirty()()
 
 // 	cache1.requestContainer (container)=>
 // 		group = container.group()
@@ -93,13 +93,13 @@ QUnit.skip('cache animated', () => {});
 // 		assert.equal box1.cooks_count(), 1
 // 		assert.equal transform1.cooks_count(), 2
 
-// 		assert !box1.is_dirty()
-// 		assert !transform1.is_dirty()
+// 		assert !box1.isDirty()()
+// 		assert !transform1.isDirty()()
 
 // 		scene.setFrame( scene.frame()-1 )
-// 		assert !box1.is_dirty()
-// 		assert transform1.is_dirty()
-// 		assert cache1.is_dirty()
+// 		assert !box1.isDirty()()
+// 		assert transform1.isDirty()()
+// 		assert cache1.isDirty()()
 
 // 		cache1.requestContainer (container)=>
 // 			group = container.group()
@@ -108,8 +108,8 @@ QUnit.skip('cache animated', () => {});
 // 			assert.equal box1.cooks_count(), 1
 // 			assert.equal transform1.cooks_count(), 2
 
-// 			assert !box1.is_dirty()
-// 			assert transform1.is_dirty()
-// 			assert !cache1.is_dirty()
+// 			assert !box1.isDirty()()
+// 			assert transform1.isDirty()()
+// 			assert !cache1.isDirty()()
 
 // 			done()

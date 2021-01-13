@@ -5,7 +5,7 @@ import {TypedNode, BaseNodeType} from '../../_Base';
 import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
-import { ArrayUtils } from '../../../../core/ArrayUtils';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 // type NumberByString = Map<string, number>;
 type NumberByCoreGraphNodeId = Map<CoreGraphNodeId, number>;
@@ -33,7 +33,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		private _shader_names: ShaderName[],
 		private _input_names_for_shader_name_method: InputNamesByShaderNameMethod<NC>
 	) {
-		this._graph = this._parent_node.scene.graph;
+		this._graph = this._parent_node.scene().graph;
 	}
 
 	private reset() {
@@ -147,9 +147,9 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		accumulated_nodes: NodeTypeMap[NC][],
 		shader_name?: ShaderName
 	) {
-		if (!node_id_used_state.get(node.graph_node_id)) {
+		if (!node_id_used_state.get(node.graphNodeId())) {
 			accumulated_nodes.push(node);
-			node_id_used_state.set(node.graph_node_id, true);
+			node_id_used_state.set(node.graphNodeId(), true);
 		}
 
 		if (node.type == NetworkChildNodeType.INPUT) {
@@ -159,7 +159,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 					shader_name
 				);
 				for (let child_node of nodes_with_same_parent_as_subnet_input) {
-					if (child_node.graph_node_id != node.graph_node_id) {
+					if (child_node.graphNodeId() != node.graphNodeId()) {
 						this.add_nodes_with_children(child_node, node_id_used_state, accumulated_nodes, shader_name);
 					}
 				}
@@ -199,7 +199,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private find_leaves_from_root_node(root_node: NodeTypeMap[NC]) {
-		this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graph_node_id, true);
+		this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graphNodeId(), true);
 
 		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
 		if (input_names) {
@@ -208,8 +208,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 				if (input) {
 					MapUtils.push_on_array_at_entry(
 						this._outputs_by_graph_id,
-						input.graph_node_id,
-						root_node.graph_node_id
+						input.graphNodeId(),
+						root_node.graphNodeId()
 					);
 					this.find_leaves(input);
 				}
@@ -222,22 +222,22 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private find_leaves(node: NodeTypeMap[NC]) {
-		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graph_node_id, true);
+		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graphNodeId(), true);
 
 		const inputs = this._find_inputs_or_children(node) as NodeTypeMap[NC][];
 		const compact_inputs: NodeTypeMap[NC][] = ArrayUtils.compact(inputs);
-		const input_graph_ids = ArrayUtils.uniq(compact_inputs.map((n) => n.graph_node_id));
+		const input_graph_ids = ArrayUtils.uniq(compact_inputs.map((n) => n.graphNodeId()));
 		const unique_inputs = input_graph_ids.map((graph_id) =>
 			this._graph.node_from_id(graph_id)
 		) as NodeTypeMap[NC][];
 		if (unique_inputs.length > 0) {
 			for (let input of unique_inputs) {
-				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, input.graph_node_id, node.graph_node_id);
+				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
 				this.find_leaves(input);
 			}
 		} else {
-			this._leaves_graph_id.get(this._shader_name)!.set(node.graph_node_id, true);
+			this._leaves_graph_id.get(this._shader_name)!.set(node.graphNodeId(), true);
 		}
 	}
 
@@ -246,7 +246,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			return node.parent?.io.inputs.inputs() || [];
 		} else {
 			if (node.children_allowed()) {
-				// this._subnets_by_id.set(node.graph_node_id, node);
+				// this._subnets_by_id.set(node.graphNodeId(), node);
 				const output_node = node.children_controller?.output_node();
 				return [output_node];
 			} else {

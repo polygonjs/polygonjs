@@ -117,7 +117,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					face = faces[fi];
 					face.center(face_center);
 
-					points = face.points;
+					points = face.points();
 					for (let pi = 0; pi < points.length; pi++) {
 						point = points[pi];
 						point.setAttribValue(attrib_name, face_center);
@@ -143,7 +143,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 
 				for (let i = 0; i < faces.length; i++) {
 					const face = faces[i];
-					const points = face.points;
+					const points = face.points();
 					for (let j = 0; j < points.length; j++) {
 						const point = points[j];
 						point.setAttribValue(attrib_name, i);
@@ -173,7 +173,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					face = faces[fi];
 					face.center(face_center);
 
-					points = face.points;
+					points = face.points();
 					for (let pi = 0; pi < points.length; pi++) {
 						point = points[pi];
 						const position = point.position();

@@ -173,13 +173,13 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		if (do_update.value) {
 			if (param.has_expression() && param.expression_controller) {
 				await param.expression_controller.compute_expression_for_points(points, (point, value) => {
-					tmp_array[point.index] = value;
+					tmp_array[point.index()] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					tmp_array[point.index] = param_value;
+					tmp_array[point.index()] = param_value;
 				}
 			}
 		}

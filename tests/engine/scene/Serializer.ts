@@ -30,7 +30,7 @@ QUnit.test('scene save simple', async (assert) => {
 	const new_geo1 = scene2.node('/geo1')! as GeoObjNode;
 	assert.ok(new_geo1.p.r.y.has_expression());
 	assert.equal(new_geo1.p.r.y.raw_input, '$F+20');
-	assert.equal(new_geo1.p.r.y.expression_controller?.expression, '$F+20');
+	assert.equal(new_geo1.p.r.y.expression_controller?.expression(), '$F+20');
 	scene2.setFrame(12);
 	await new_geo1.p.r.y.compute();
 	assert.equal(new_geo1.p.r.y.value, 32);

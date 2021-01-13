@@ -26,7 +26,8 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	toJSON(): PersistedConfigBaseMaterialData | undefined {
-		if (!this.node.assembler_controller) {
+		const assemblerController = this.node.assemblerController;
+		if (!assemblerController) {
 			return;
 		}
 
@@ -45,15 +46,15 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		// params updating uniforms
 		const param_uniform_pairs: [string, string][] = [];
-		const param_configs = this.node.assembler_controller.assembler.param_configs();
+		const param_configs = assemblerController.assembler.param_configs();
 		for (let param_config of param_configs) {
 			param_uniform_pairs.push([param_config.name, param_config.uniform_name]);
 		}
 
 		const data = {
 			material: this._material_to_json(this.node.material),
-			uniforms_time_dependent: this.node.assembler_controller.assembler.uniforms_time_dependent(),
-			uniforms_resolution_dependent: this.node.assembler_controller.assembler.resolution_dependent(),
+			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
+			uniforms_resolution_dependent: assemblerController.assembler.resolution_dependent(),
 			param_uniform_pairs: param_uniform_pairs,
 			custom_materials: custom_materials_data,
 		};
@@ -78,16 +79,20 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		}
 
 		if (data.uniforms_time_dependent) {
-			this.node.scene.uniforms_controller.add_time_dependent_uniform_owner(
-				this._material.uuid,
-				this._material.uniforms as IUniformsWithTime
-			);
+			this.node
+				.scene()
+				.uniforms_controller.add_time_dependent_uniform_owner(
+					this._material.uuid,
+					this._material.uniforms as IUniformsWithTime
+				);
 		}
 		if (data.uniforms_resolution_dependent) {
-			this.node.scene.uniforms_controller.add_resolution_dependent_uniform_owner(
-				this._material.uuid,
-				this._material.uniforms as IUniformsWithResolution
-			);
+			this.node
+				.scene()
+				.uniforms_controller.add_resolution_dependent_uniform_owner(
+					this._material.uuid,
+					this._material.uniforms as IUniformsWithResolution
+				);
 		}
 		if (data.param_uniform_pairs) {
 			for (let pair of data.param_uniform_pairs) {

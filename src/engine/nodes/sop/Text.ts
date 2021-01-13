@@ -253,7 +253,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		}
 	}
 	async required_modules() {
-		if (this.p.font.is_dirty) {
+		if (this.p.font.isDirty()) {
 			await this.p.font.compute();
 		}
 		const ext = this.get_extension();

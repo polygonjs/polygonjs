@@ -7,6 +7,6 @@ QUnit.test('event code simple', async (assert) => {
 	assert.equal(box2.name, 'box2');
 
 	const box2_sibbling = box2.nodeSibbling('box1')!;
-	assert.equal(box2_sibbling.graph_node_id, box1.graph_node_id);
+	assert.equal(box2_sibbling.graphNodeId(), box1.graphNodeId());
 	// TODO: this test isn't complete at all
 });

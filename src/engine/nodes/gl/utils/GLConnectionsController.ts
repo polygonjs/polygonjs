@@ -63,13 +63,13 @@
 // 			this._update_signature_if_required_bound
 // 		);
 // 		this.node.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-// 		this.node.add_post_dirty_hook('_update_signature_if_required', this._update_signature_if_required_bound);
+// 		this.node.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 // 	}
 
 // 	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 // 		if (!this.node.lifecycle.creation_completed || !this._connections_match_inputs()) {
 // 			this.update_connection_types();
-// 			this.node.remove_dirty_state();
+// 			this.node.removeDirtyState();
 // 			this.make_successors_update_signatures();
 // 		}
 // 	}

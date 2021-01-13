@@ -48,7 +48,7 @@ export class ViewerControlsController {
 	}
 
 	dispose() {
-		this._graph_node?.graph_disconnect_predecessors();
+		this._graph_node?.graphDisconnectPredecessors();
 		this.dispose_controls();
 	}
 	dispose_controls() {
@@ -83,12 +83,12 @@ export class ViewerControlsController {
 		if (!this._graph_node) {
 			return;
 		}
-		this._graph_node.graph_disconnect_predecessors();
-		this._graph_node.add_graph_input(controls_param);
+		this._graph_node.graphDisconnectPredecessors();
+		this._graph_node.addGraphInput(controls_param);
 	}
 	private _create_graph_node() {
-		const node = new CoreGraphNode(this.viewer.cameraNode().scene, 'viewer-controls');
-		node.add_post_dirty_hook('this.viewer.controls_controller', async () => {
+		const node = new CoreGraphNode(this.viewer.cameraNode().scene(), 'viewer-controls');
+		node.addPostDirtyHook('this.viewer.controls_controller', async () => {
 			await this.viewer.controlsController.create_controls();
 		});
 		return node;

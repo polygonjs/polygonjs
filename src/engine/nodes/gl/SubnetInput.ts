@@ -39,7 +39,7 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 	// private _connect_to_parent_connections_controller() {
 	// 	// this will make the node update its connections when the parent changes them
 	// 	if (this.parent) {
-	// 		this.add_graph_input(this.parent);
+	// 		this.addGraphInput(this.parent);
 	// 	}
 	// }
 

@@ -82,7 +82,7 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 		await scene2.waitForCooksCompleted();
 
 		const new_volume1 = scene2.node('/MAT/volumeBuilder1') as VolumeBuilderMatNode;
-		assert.notOk(new_volume1.assembler_controller);
+		assert.notOk(new_volume1.assemblerController);
 		assert.ok(new_volume1.persisted_config);
 		const float_param = new_volume1.params.get('float_param') as FloatParam;
 		const vec3_param = new_volume1.params.get('vec3_param') as Vector3Param;

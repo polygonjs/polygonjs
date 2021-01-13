@@ -36,7 +36,7 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 		this.object.add(this._helper);
 		this._helper.matrixAutoUpdate = false;
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active;
+			this._helper.visible = this.flags.display.active();
 		});
 	}
 	cook() {

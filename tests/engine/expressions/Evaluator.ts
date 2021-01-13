@@ -42,10 +42,10 @@ QUnit.test('simple expression with errors', async (assert) => {
 	tx.set('3+');
 	await tx.compute();
 	assert.equal(tx.value, 0);
-	assert.equal(tx.states.error.message, 'expression error: "3+" (cannot parse expression)');
+	assert.equal(tx.states.error.message(), 'expression error: "3+" (cannot parse expression)');
 
 	tx.set('3+bla');
 	await tx.compute();
 	assert.equal(tx.value, 0);
-	assert.equal(tx.states.error.message, 'expression error: "3+bla" (bla is not defined)');
+	assert.equal(tx.states.error.message(), 'expression error: "3+bla" (bla is not defined)');
 });

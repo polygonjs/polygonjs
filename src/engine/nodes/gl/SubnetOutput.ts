@@ -19,8 +19,8 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_create_spare_params_from_inputs(false);
 
-		this.add_post_dirty_hook('set_parent_dirty', () => {
-			this.parent?.set_dirty(this);
+		this.addPostDirtyHook('set_parent_dirty', () => {
+			this.parent?.setDirty(this);
 		});
 	}
 	get parent() {

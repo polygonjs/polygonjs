@@ -81,7 +81,7 @@ export class RaycastGPUController {
 
 			// find renderer and use it
 			const threejs_camera = camera_node as BaseThreejsCameraObjNodeType;
-			const scene = renderer_controller.resolved_scene || camera_node.scene.defaultScene;
+			const scene = renderer_controller.resolved_scene || camera_node.scene().defaultScene;
 			const renderer = renderer_controller.renderer(canvas);
 			this._modify_scene_and_renderer(scene, renderer);
 			renderer.setRenderTarget(this._render_target);

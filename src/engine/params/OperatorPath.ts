@@ -58,7 +58,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	protected process_raw_input() {
 		if (this._value != this._raw_input) {
 			this._value = this._raw_input;
-			this.set_dirty();
+			this.setDirty();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
@@ -73,11 +73,11 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		let node: BaseNodeType | null = null;
 		let param: BaseParamType | null = null;
 		const path_non_empty = path != null && path !== '';
-		const mode: OperatorPathMode = this.options.param_selection_options
+		const mode: OperatorPathMode = this.options.param_selection_options()
 			? OperatorPathMode.PARAM
 			: OperatorPathMode.NODE;
 
-		this.scene.referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.scene().referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			if (mode == OperatorPathMode.PARAM) {
@@ -90,17 +90,17 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		const current_found_entity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
 		const newly_found_entity = mode == OperatorPathMode.PARAM ? param : node;
 
-		this.scene.referencesController.set_named_nodes_from_param(this);
+		this.scene().referencesController.set_named_nodes_from_param(this);
 		if (node) {
-			this.scene.referencesController.set_reference_from_param(this, node);
+			this.scene().referencesController.set_reference_from_param(this, node);
 		}
 
-		if (current_found_entity?.graph_node_id !== newly_found_entity?.graph_node_id) {
+		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependent_on_found_node();
 
 			if (this._found_node) {
 				if (dependent_on_found_node) {
-					this.remove_graph_input(this._found_node);
+					this.removeGraphInput(this._found_node);
 				} else {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
 				}
@@ -122,7 +122,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 
 			this.options.execute_callback();
 		}
-		this.remove_dirty_state();
+		this.removeDirtyState();
 	}
 
 	private _assign_found_node(node: BaseNodeType) {
@@ -131,7 +131,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			if (this._is_node_expected_type(node)) {
 				this._found_node_with_expected_type = node;
 				if (dependent_on_found_node) {
-					this.add_graph_input(node);
+					this.addGraphInput(node);
 				}
 			} else {
 				this.states.error.set(
@@ -213,7 +213,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return this._found_node_with_expected_type;
 	}
 	private _expected_context() {
-		return this.options.node_selection_context;
+		return this.options.node_selection_context();
 	}
 	private _is_node_expected_context(node: BaseNodeType) {
 		const expected_context = this._expected_context();
@@ -224,10 +224,10 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return expected_context == node_context;
 	}
 	private _expected_node_types() {
-		return this.options.node_selection_types;
+		return this.options.node_selection_types();
 	}
 	private _expected_param_type() {
-		return this.options.param_selection_type;
+		return this.options.param_selection_type();
 	}
 	private _is_node_expected_type(node: BaseNodeType) {
 		const expected_types = this._expected_node_types();
@@ -250,6 +250,6 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		this.set(new_path);
 	}
 	notify_target_param_owner_params_updated(node: BaseNodeType) {
-		this.set_dirty();
+		this.setDirty();
 	}
 }
