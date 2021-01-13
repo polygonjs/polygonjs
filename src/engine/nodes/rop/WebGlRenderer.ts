@@ -296,17 +296,19 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 	}
 
 	private _traverse_scene_and_update_materials() {
-		this.scene().defaultScene.traverse((object) => {
-			const material = (object as Mesh).material;
-			if (material) {
-				if (CoreType.isArray(material)) {
-					for (let mat of material) {
-						mat.needsUpdate = true;
+		this.scene()
+			.threejsScene()
+			.traverse((object) => {
+				const material = (object as Mesh).material;
+				if (material) {
+					if (CoreType.isArray(material)) {
+						for (let mat of material) {
+							mat.needsUpdate = true;
+						}
+					} else {
+						material.needsUpdate = true;
 					}
-				} else {
-					material.needsUpdate = true;
 				}
-			}
-		});
+			});
 	}
 }

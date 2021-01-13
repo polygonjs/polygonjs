@@ -143,7 +143,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (this.assemblerController) {
 			return super.childrenAllowed();
 		}
-		this.scene().mark_as_read_only(this);
+		this.scene().markAsReadOnly(this);
 		return false;
 	}
 
@@ -157,7 +157,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	is_on_frame_start(): boolean {
-		return this.scene().frame == this.pv.startFrame;
+		return this.scene().frame() == this.pv.startFrame;
 	}
 
 	async cook(input_contents: CoreGroup[]) {

@@ -186,7 +186,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 		assert.ok(test_param2);
 
 		assert.deepEqual(test_param2.value.toArray(), [1, 0, 0], 'test param is read back with expected value');
-		assert.equal(scene2.frame, 1);
+		assert.equal(scene2.frame(), 1);
 		new_particles1.p.reset.pressButton();
 		await new_particles1.requestContainer();
 

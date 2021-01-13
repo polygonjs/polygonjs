@@ -92,7 +92,7 @@ export class PostProcessController {
 	private _create_composer(canvas: HTMLCanvasElement) {
 		const renderer = this.node.renderController.renderer(canvas);
 		if (renderer) {
-			const scene = this.node.renderController.resolved_scene || this.node.scene().defaultScene;
+			const scene = this.node.renderController.resolved_scene || this.node.scene().threejsScene();
 			const camera = this.node.object;
 
 			const found_node = this.node.p.postProcessNode.value.node();

@@ -121,7 +121,7 @@ export class RenderController {
 				this._resolved_scene = node.object;
 			}
 		} else {
-			this._resolved_scene = this.node.scene().defaultScene;
+			this._resolved_scene = this.node.scene().threejsScene();
 		}
 	}
 

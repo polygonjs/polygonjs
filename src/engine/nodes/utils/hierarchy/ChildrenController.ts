@@ -169,9 +169,9 @@ export class HierarchyChildrenController {
 	}
 
 	add_node(child_node: BaseNodeType) {
-		child_node.set_parent(this.node);
+		child_node.setParent(this.node);
 		child_node.params.init();
-		child_node.parentController.on_set_parent();
+		child_node.parentController.onSetParent();
 		child_node.nameController.run_post_set_fullPath_hooks();
 		if (child_node.childrenAllowed() && child_node.childrenController) {
 			for (let child of child_node.childrenController.children()) {
@@ -229,7 +229,7 @@ export class HierarchyChildrenController {
 			}
 
 			// remove from children
-			child_node.set_parent(null);
+			child_node.setParent(null);
 			delete this._children[child_node.name()];
 			this._remove_from_nodesByType(child_node);
 			this.node.scene().nodesController.removeFromInstanciatedNode(child_node);

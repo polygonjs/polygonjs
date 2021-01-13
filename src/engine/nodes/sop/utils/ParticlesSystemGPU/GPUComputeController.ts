@@ -85,14 +85,14 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	compute_similation_if_required() {
-		const frame = this.node.scene().frame;
+		const frame = this.node.scene().frame();
 		const start_frame: number = this.node.pv.startFrame;
 		if (frame >= start_frame) {
 			if (this._last_simulated_frame == null) {
 				this._last_simulated_frame = start_frame - 1;
 			}
 			if (this._last_simulated_time == null) {
-				this._last_simulated_time = this.node.scene().time;
+				this._last_simulated_time = this.node.scene().time();
 			}
 			if (frame > this._last_simulated_frame) {
 				this._compute_simulation(frame - this._last_simulated_frame);
@@ -111,9 +111,9 @@ export class ParticlesSystemGpuComputeController {
 			this._gpu_compute.compute();
 		}
 		this.node.render_controller.update_render_material_uniforms();
-		this._last_simulated_frame = this.node.scene().frame;
+		this._last_simulated_frame = this.node.scene().frame();
 
-		const time = this.node.scene().time;
+		const time = this.node.scene().time();
 		this._delta_time = time - this._last_simulated_time;
 		this._last_simulated_time = time;
 	}
@@ -257,8 +257,8 @@ export class ParticlesSystemGpuComputeController {
 			all_materials.push(variable.material);
 		});
 		for (let material of all_materials) {
-			material.uniforms[GlConstant.TIME] = {value: this.node.scene().time};
-			material.uniforms[GlConstant.DELTA_TIME] = {value: this.node.scene().time};
+			material.uniforms[GlConstant.TIME] = {value: this.node.scene().time()};
+			material.uniforms[GlConstant.DELTA_TIME] = {value: this.node.scene().time()};
 		}
 
 		if (assembler) {
@@ -295,7 +295,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 	private update_simulation_material_uniforms() {
 		for (let variable of this._all_variables) {
-			variable.material.uniforms[GlConstant.TIME].value = this.node.scene().time;
+			variable.material.uniforms[GlConstant.TIME].value = this.node.scene().time();
 			variable.material.uniforms[GlConstant.DELTA_TIME].value = this._delta_time;
 		}
 	}

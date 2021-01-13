@@ -70,7 +70,7 @@ QUnit.test(
 
 		// and use an expression on the param as well
 		mesh_basic1.params.get(param_name)!.set('$F');
-		assert.equal(scene.frame, 1);
+		assert.equal(scene.frame(), 1);
 		await CoreSleep.sleep(100);
 		assert.equal(
 			mesh_basic1.material.uniforms[uniform_name].value,
@@ -103,7 +103,7 @@ QUnit.test(
 		assert.notOk(spare_param.isDirty(), 'param not dirty');
 		scene.setFrame(35);
 		assert.ok(spare_param.isDirty(), 'param is dirty');
-		assert.equal(scene.frame, 35, 'scene frame is 35');
+		assert.equal(scene.frame(), 35, 'scene frame is 35');
 		await spare_param.compute();
 		assert.equal(spare_param.value, 35, 'param is 35');
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 35, 'uniforrm is 35');

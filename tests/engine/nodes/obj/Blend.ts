@@ -11,7 +11,7 @@ QUnit.test('blend obj simple', async (assert) => {
 
 	await scene.waitForCooksCompleted();
 
-	scene.defaultScene.updateMatrixWorld(true);
+	scene.threejsScene().updateMatrixWorld(true);
 
 	const blend1 = root.createNode('blend');
 	blend1.p.blend.set(0.5);

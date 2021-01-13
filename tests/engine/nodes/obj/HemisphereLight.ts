@@ -2,7 +2,7 @@ import {Color} from 'three/src/math/Color';
 
 QUnit.test('hemisphere light simple', async (assert) => {
 	const scene = window.scene;
-	const main_group = scene.defaultScene.children[0];
+	const main_group = scene.threejsScene().children[0];
 	assert.equal(main_group.name, '_WORLD_');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());

@@ -33,12 +33,12 @@ export class TimelineBuilder {
 
 	add_timeline_builder(timeline_builder: TimelineBuilder) {
 		this._timeline_builders.push(timeline_builder);
-		timeline_builder.set_parent(this);
+		timeline_builder.setParent(this);
 	}
 	timeline_builders() {
 		return this._timeline_builders;
 	}
-	set_parent(parent: TimelineBuilder) {
+	setParent(parent: TimelineBuilder) {
 		this._parent = parent;
 	}
 	parent() {

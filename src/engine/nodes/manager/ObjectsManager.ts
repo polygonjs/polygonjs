@@ -33,7 +33,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	init_default_scene() {
 		this._object.name = '_WORLD_';
-		this._scene.defaultScene.add(this._object);
+		this._scene.threejsScene().add(this._object);
 	}
 
 	object() {

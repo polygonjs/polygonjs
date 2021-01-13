@@ -48,7 +48,7 @@ export class UniformsController {
 	// 	this._time_dependent_uniform_owners_ids = Object.keys(this._time_dependent_uniform_owners);
 	// }
 	public update_time_dependent_uniform_owners() {
-		const time = this.scene.time;
+		const time = this.scene.time();
 		if (this._time_dependent_uniform_owners_ids) {
 			for (let id of this._time_dependent_uniform_owners_ids) {
 				const uniforms = this._time_dependent_uniform_owners[id];

@@ -51,13 +51,13 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	output1.setInput('color', float_to_vec31);
 	float_to_vec31.setInput('x', globals1, 'time');
 	scene.setFrame(30);
-	assert.equal(scene.time, 0.5);
+	assert.equal(scene.time(), 0.5);
 	await CoreSleep.sleep(10);
 	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0.5, 0, 0, 1].join(':'));
 
 	scene.setFrame(60);
-	assert.equal(scene.time, 1);
+	assert.equal(scene.time(), 1);
 	await CoreSleep.sleep(10);
 	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [1.0, 0, 0, 1].join(':'));
@@ -91,12 +91,12 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	output1.setInput('color', float_to_vec31);
 	float_to_vec31.setInput('x', globals1, 'time');
 	scene.setFrame(30);
-	assert.equal(scene.time, 0.5);
+	assert.equal(scene.time(), 0.5);
 	await CoreSleep.sleep(10);
 	assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [0.5, 0, 0, 1].join(':'));
 
 	scene.setFrame(60);
-	assert.equal(scene.time, 1);
+	assert.equal(scene.time(), 1);
 	await CoreSleep.sleep(10);
 	assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [1.0, 0, 0, 1].join(':'));
 });

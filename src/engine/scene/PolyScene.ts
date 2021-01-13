@@ -22,9 +22,9 @@ import {SceneAssetsController} from './utils/AssetsController';
 import {BaseNodeType} from '../nodes/_Base';
 
 export class PolyScene {
-	protected _defaultScene = new Scene();
-	get defaultScene() {
-		return this._defaultScene;
+	protected _threejsScene = new Scene();
+	threejsScene() {
+		return this._threejsScene;
 	}
 	_uuid!: string;
 	setUuid(uuid: string) {
@@ -138,13 +138,13 @@ export class PolyScene {
 		this.timeController.setFrame(frame);
 	}
 
-	get frame() {
+	frame() {
 		return this.timeController.frame;
 	}
-	get time() {
+	time() {
 		return this.timeController.time;
 	}
-	get frame_range() {
+	frameRange() {
 		return this.timeController.frame_range;
 	}
 	play() {
@@ -168,17 +168,17 @@ export class PolyScene {
 	}
 	private _read_only = false;
 	private _read_only_requester: BaseNodeType | undefined;
-	mark_as_read_only(requester: BaseNodeType) {
+	markAsReadOnly(requester: BaseNodeType) {
 		if (this._read_only) {
 			return;
 		}
 		this._read_only_requester = requester;
 		this._read_only = true;
 	}
-	read_only() {
+	readOnly() {
 		return this._read_only;
 	}
-	read_only_requester() {
+	readOnlyRequester() {
 		return this._read_only_requester;
 	}
 
@@ -208,8 +208,8 @@ export class PolyScene {
 	//
 	//
 	constructor() {
-		this._defaultScene.name = 'defaultScene';
-		this._defaultScene.matrixAutoUpdate = false;
+		this._threejsScene.name = 'defaultScene';
+		this._threejsScene.matrixAutoUpdate = false;
 		// this.mark_as_loaded()
 		this._graph.set_scene(this);
 		// this.time_controller.init();

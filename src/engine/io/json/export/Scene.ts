@@ -32,8 +32,8 @@ export class SceneJsonExporter {
 			// __js_version: this._scene.js_version(),
 			properties: {
 				// name: this._scene.name(), // this conflicts with saving the name from the admin page
-				frame: this._scene.frame || 1,
-				frame_range: this._scene.frame_range,
+				frame: this._scene.frame() || 1,
+				frame_range: this._scene.frameRange(),
 				frameRangeLocked: this._scene.timeController.frameRangeLocked,
 				realtimeState: this._scene.timeController.realtimeState,
 				// fps: this._scene.time_controller.fps,

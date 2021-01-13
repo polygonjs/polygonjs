@@ -97,7 +97,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 	}
 
 	private on_frame_update() {
-		if (this.scene().time >= this.pv.reachedTime) {
+		if (this.scene().time() >= this.pv.reachedTime) {
 			this.dispatch_event_to_output(SceneNodeOutput.TIME_REACHED, {});
 		}
 	}

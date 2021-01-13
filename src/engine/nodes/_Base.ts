@@ -191,8 +191,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return c.require_webgl2();
 	}
 
-	set_parent(parent: BaseNodeType | null) {
-		this.parentController.set_parent(parent);
+	setParent(parent: BaseNodeType | null) {
+		this.parentController.setParent(parent);
 	}
 	parent() {
 		return this.parentController.parent();

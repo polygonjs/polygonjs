@@ -14,7 +14,7 @@ export class WebGLController {
 	}
 
 	protected _on_webglcontextlost() {
-		console.warn('context lost at frame', this.viewer.scene().frame);
+		console.warn('context lost at frame', this.viewer.scene().frame());
 		// event.preventDefault();
 		if (this.request_animation_frame_id) {
 			cancelAnimationFrame(this.request_animation_frame_id);

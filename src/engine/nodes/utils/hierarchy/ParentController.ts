@@ -14,7 +14,7 @@ export class HierarchyParentController {
 		return this._parent;
 	}
 
-	set_parent(parent: BaseNodeType | null) {
+	setParent(parent: BaseNodeType | null) {
 		if (parent != this.node.parentController.parent()) {
 			this._parent = parent;
 			if (this._parent) {
@@ -43,7 +43,7 @@ export class HierarchyParentController {
 		}
 	}
 
-	on_set_parent() {
+	onSetParent() {
 		if (this._on_set_parent_hooks) {
 			for (let hook of this._on_set_parent_hooks) {
 				hook();

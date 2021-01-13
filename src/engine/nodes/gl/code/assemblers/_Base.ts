@@ -129,7 +129,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		if (this.uniforms_time_dependent()) {
 			current_uniforms['time'] = {
 				// type: '1f',
-				value: this._gl_parent_node.scene().time,
+				value: this._gl_parent_node.scene().time(),
 			};
 		}
 		if (this.resolution_dependent()) {

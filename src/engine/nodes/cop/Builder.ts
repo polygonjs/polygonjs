@@ -139,7 +139,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (this.assemblerController) {
 			return super.childrenAllowed();
 		}
-		this.scene().mark_as_read_only(this);
+		this.scene().markAsReadOnly(this);
 		return false;
 	}
 

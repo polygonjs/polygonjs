@@ -29,7 +29,7 @@ export class PropertyTarget {
 		if (!mask) {
 			return;
 		}
-		scene.defaultScene.traverse((object) => {
+		scene.threejsScene().traverse((object) => {
 			if (CoreString.matchMask(object.name, mask)) {
 				objects.push(object);
 			}

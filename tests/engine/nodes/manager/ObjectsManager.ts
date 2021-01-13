@@ -28,12 +28,14 @@ QUnit.test('root adds objects to hierarchy when created with api', async (assert
 	assert.ok(!scene.loadingController.isLoading());
 
 	await scene.waitForCooksCompleted();
-	assert.equal(scene.defaultScene.children[0].children.length, 3);
-	assert.deepEqual(scene.defaultScene.children[0].children.map((n) => n.name).sort(), [
-		'/ambientLight1',
-		'/geo1',
-		'/perspectiveCamera1',
-	]);
+	assert.equal(scene.threejsScene().children[0].children.length, 3);
+	assert.deepEqual(
+		scene
+			.threejsScene()
+			.children[0].children.map((n) => n.name)
+			.sort(),
+		['/ambientLight1', '/geo1', '/perspectiveCamera1']
+	);
 });
 
 QUnit.test('root adds objects to hierarchy when loaded from json', async (assert) => {
@@ -47,10 +49,12 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 	scene2.setName('from_load');
 
 	await CoreSleep.sleep(2000);
-	assert.equal(scene2.defaultScene.children[0].children.length, 3);
-	assert.deepEqual(scene2.defaultScene.children[0].children.map((n) => n.name).sort(), [
-		'/ambientLight1',
-		'/geo1',
-		'/perspectiveCamera1',
-	]);
+	assert.equal(scene2.threejsScene().children[0].children.length, 3);
+	assert.deepEqual(
+		scene2
+			.threejsScene()
+			.children[0].children.map((n) => n.name)
+			.sort(),
+		['/ambientLight1', '/geo1', '/perspectiveCamera1']
+	);
 });
