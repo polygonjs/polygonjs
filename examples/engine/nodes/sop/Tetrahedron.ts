@@ -7,10 +7,10 @@ export function SopTetrahedron() {
 	// create a box
 	const geo = scene.root.createNode('geo');
 	const tetrahedron = geo.createNode('tetrahedron');
-	tetrahedron.p.radius;
-	tetrahedron.p.center;
-	tetrahedron.p.detail;
-	tetrahedron.p.points_only;
+	tetrahedron.p.radius.set(1);
+	tetrahedron.p.center.set([0, 0, 0]);
+	tetrahedron.p.detail.set(5);
+	tetrahedron.p.pointsOnly.set(false);
 
 	// add a light
 	scene.root.createNode('hemisphereLight');

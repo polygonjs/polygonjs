@@ -40,7 +40,7 @@ if (TYPESCRIPT_TRANSPILE_ONLY) {
 }
 
 module.exports = (env = {}) => {
-	const dist_path = path.resolve(__dirname, env.DIST_PATH ? env.DIST_PATH : '../../dist');
+	// const dist_path = path.resolve(__dirname, env.DIST_PATH ? env.DIST_PATH : '../../dist');
 
 	return {
 		context: path.resolve(__dirname, '../../'), // to automatically find tsconfig.json

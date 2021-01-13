@@ -96,7 +96,7 @@
  */
 
 import {Camera} from 'three/src/cameras/Camera';
-import {ClampToEdgeWrapping, FloatType, HalfFloatType, NearestFilter, RGBAFormat} from 'three/src/constants';
+import {ClampToEdgeWrapping, FloatType, NearestFilter, RGBAFormat} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {Mesh} from 'three/src/objects/Mesh';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';

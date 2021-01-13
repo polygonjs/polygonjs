@@ -581,7 +581,7 @@ export class OptionsController {
 			const params = this.visibility_predecessors();
 			const promises = params.map((p) => {
 				if (p.is_dirty) {
-					p.compute();
+					return p.compute();
 				}
 			});
 			this._programatic_visible_state = false;

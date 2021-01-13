@@ -265,9 +265,7 @@ export class RaycastCPUController {
 		}
 
 		if (camera_node && !this._node.pv.overrideRay) {
-			if (camera_node) {
-				camera_node.prepare_raycaster(this._mouse, this._raycaster);
-			}
+			camera_node.prepare_raycaster(this._mouse, this._raycaster);
 		}
 	}
 

@@ -1,6 +1,7 @@
 import {TypedJsNode, BaseJsNodeType} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 import {LinesController} from './code/utils/LinesController';
+import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connections/Js';
 
 const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 	JsConnectionPointType.FLOAT,
@@ -10,7 +11,6 @@ const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 ];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connections/Js';
 class AttributeJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {

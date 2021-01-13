@@ -1,5 +1,5 @@
 const argv = require('yargs').argv;
-const FAST_COMPILE = argv.env.FAST_COMPILE || false;
+// const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
 const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
 const MINIFY = true;
@@ -28,7 +28,7 @@ module.exports = (env) => {
 		common_options.entry['engine/Poly'] = './src/engine/Poly.ts';
 		common_options.entry['engine/scene/PolyScene'] = './src/engine/scene/PolyScene.ts';
 
-		contexts = ['anim', 'cop', 'event', 'gl', 'js', 'manager', 'mat', 'obj', 'post', 'rop', 'sop'];
+		const contexts = ['anim', 'cop', 'event', 'gl', 'js', 'manager', 'mat', 'obj', 'post', 'rop', 'sop'];
 		const dir = './src/engine/nodes';
 		for (let context of contexts) {
 			const node_class_names = [];

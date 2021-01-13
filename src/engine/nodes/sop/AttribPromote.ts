@@ -8,6 +8,7 @@
 import {TypedSopNode} from './_Base';
 import {AttribClassMenuEntries} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {AttribPromoteSopOperation, AttribPromoteMode} from '../../../core/operations/sop/AttribPromote';
 
 const PromoteModeMenuEntries = [
 	{name: 'min', value: AttribPromoteMode.MIN},
@@ -15,7 +16,6 @@ const PromoteModeMenuEntries = [
 	{name: 'first_found', value: AttribPromoteMode.FIRST_FOUND},
 ];
 
-import {AttribPromoteSopOperation, AttribPromoteMode} from '../../../core/operations/sop/AttribPromote';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {

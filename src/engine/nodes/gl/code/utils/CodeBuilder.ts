@@ -13,7 +13,7 @@ import {GlParamConfig} from './ParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
-import { ArrayUtils } from '../../../../../core/ArrayUtils';
+import {ArrayUtils} from '../../../../../core/ArrayUtils';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName) => BaseGlNodeType[];
 export class CodeBuilder {
@@ -81,7 +81,7 @@ export class CodeBuilder {
 		);
 		this.reset();
 		for (let shader_name of this.shader_names()) {
-			let nodes = nodes_by_shader_name.get(shader_name) || []
+			let nodes = nodes_by_shader_name.get(shader_name) || [];
 			nodes = ArrayUtils.uniq(nodes);
 			this._shaders_collection_controller.set_current_shader_name(shader_name);
 			if (nodes) {

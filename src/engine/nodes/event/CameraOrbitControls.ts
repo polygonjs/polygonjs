@@ -178,7 +178,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 			controls.maxAzimuthAngle = this.pv.azimuthAngleRange.y;
 		} else {
 			controls.minAzimuthAngle = Infinity;
-			controls.minAzimuthAngle = Infinity;
+			controls.maxAzimuthAngle = Infinity;
 		}
 	}
 
