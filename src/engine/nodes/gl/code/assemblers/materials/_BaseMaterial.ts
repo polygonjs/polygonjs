@@ -239,7 +239,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			if (variable_config.default_from_attribute()) {
 				const connection_point = output_node.io.inputs.named_input_connection_points_by_name(input_name);
 				if (connection_point) {
-					const gl_type = connection_point.type;
+					const gl_type = connection_point.type();
 					const attr_read = this.globals_handler?.read_attribute(
 						output_node,
 						gl_type,

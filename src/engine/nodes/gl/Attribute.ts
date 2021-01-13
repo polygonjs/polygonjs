@@ -122,7 +122,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		return this.pv.name.trim();
 	}
 	gl_type(): GlConnectionPointType {
-		return this.io.outputs.named_output_connection_points[0].type;
+		return this.io.outputs.named_output_connection_points[0].type();
 	}
 	set_gl_type(type: GlConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(type));
@@ -180,7 +180,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	//
 	private _on_create_set_name_if_none() {
 		if (this.pv.name == '') {
-			this.p.name.set(this.name);
+			this.p.name.set(this.name());
 		}
 	}
 

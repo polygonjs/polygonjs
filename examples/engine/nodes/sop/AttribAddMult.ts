@@ -3,9 +3,10 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function SopAttribAddMult() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
 	// build a geometry that will use an attribute called 'height'
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	const plane = geo.createNode('plane');
 	plane.p.size.set([4, 4]);
 	//let's increase the resolution of the plane
@@ -35,10 +36,10 @@ export function SopAttribAddMult() {
 	point.flags.display.set(true);
 
 	// add a light
-	scene.root.createNode('hemisphereLight');
+	root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

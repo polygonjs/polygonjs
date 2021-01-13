@@ -276,7 +276,7 @@ export class OptionsController {
 		if (callback != null) {
 			// not running the callback when a node is cooking prevents some event nodes from behaving as expected.
 			// It may also prevent files such as the sop/file to reload correctly if its reload callback was called while it loads a file
-			// if (!this.node.cook_controller.is_cooking) {
+			// if (!this.node.cookController.is_cooking) {
 			const parent_param = this.param().parent_param;
 			if (parent_param) {
 				// if the param is a component of a MultipleParam,
@@ -513,7 +513,7 @@ export class OptionsController {
 		return this._options[LABEL];
 	}
 	is_label_hidden(): boolean {
-		const type = this.param().type;
+		const type = this.param().type();
 		return (
 			// this._options[SHOW_LABEL_OPTION] === false ||
 			type === ParamType.BUTTON ||
@@ -548,9 +548,7 @@ export class OptionsController {
 					return param;
 				} else {
 					console.error(
-						`param ${name} not found as visibility condition for ${this.param().name} in node ${
-							this.param().node.type
-						}`
+						`param ${name} not found as visibility condition for ${this.param().name()} in node ${this.param().node.type()}`
 					);
 				}
 			})
@@ -597,13 +595,13 @@ export class OptionsController {
 
 			if (CoreType.isArray(options)) {
 				for (let options_set of options) {
-					const satisfied_values = params.filter((param) => param.value == options_set[param.name]);
+					const satisfied_values = params.filter((param) => param.value == options_set[param.name()]);
 					if (satisfied_values.length == params.length) {
 						this._programatic_visible_state = true;
 					}
 				}
 			} else {
-				const satisfied_values = params.filter((param) => param.value == options[param.name]);
+				const satisfied_values = params.filter((param) => param.value == options[param.name()]);
 				this._programatic_visible_state = satisfied_values.length == params.length;
 			}
 

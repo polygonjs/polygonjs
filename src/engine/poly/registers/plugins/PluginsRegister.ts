@@ -32,7 +32,7 @@ export class PluginsRegister {
 		if (!this._current_plugin) {
 			return;
 		}
-		const context = node.node_context();
+		const context = node.nodeContext();
 		const type = node.type();
 		let map_for_context = this._plugin_name_by_node_context_by_type.get(context);
 		if (!map_for_context) {

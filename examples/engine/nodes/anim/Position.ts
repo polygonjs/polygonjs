@@ -3,9 +3,10 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function AnimPosition() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
 	// create a objects to animate
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	const roundedBox = geo.createNode('roundedBox');
 	const objectProperties = geo.createNode('objectProperties');
 	const plane = geo.createNode('plane');
@@ -27,7 +28,7 @@ export function AnimPosition() {
 	transformReset.flags.display.set(true);
 
 	// setup the animation
-	const animations = scene.root.createNode('animations');
+	const animations = root.createNode('animations');
 	// set the target of the animation.
 	// In this case, we target all objects of the THREE scene graph
 	// which care called "anim_target" (which is how we call them with the objectProperties above)
@@ -67,10 +68,10 @@ export function AnimPosition() {
 	null1.setInput(0, position);
 
 	// add a light
-	scene.root.createNode('hemisphereLight');
+	root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

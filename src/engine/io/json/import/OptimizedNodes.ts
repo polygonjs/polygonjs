@@ -31,7 +31,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		if (!(this._node.children_allowed() && this._node.children_controller)) {
+		if (!(this._node.childrenAllowed() && this._node.childrenController)) {
 			return;
 		}
 
@@ -60,7 +60,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					scene_importer,
 					node as OperationsComposerSopNode,
 					node_data,
-					node.name
+					node.name()
 				);
 				(node as OperationsComposerSopNode).set_output_operation_container(
 					operation_container as SopOperationContainer
@@ -76,7 +76,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					scene_importer,
 					node as OperationsComposerSopNode,
 					data,
-					node.name,
+					node.name(),
 					operation_container
 				);
 				node.io.inputs.set_count(this._node_inputs.length);
@@ -131,7 +131,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 						current_operation_container.add_input(operation_container);
 					} else {
 						// if the input is NOT an optimized node, we set the input to the node
-						const input_node = node.parent?.node(input_data);
+						const input_node = node.parent()?.node(input_data);
 						if (input_node) {
 							this._node_inputs.push(input_node);
 							const node_input_index = this._node_inputs.length - 1;

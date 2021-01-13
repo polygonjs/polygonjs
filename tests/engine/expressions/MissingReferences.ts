@@ -14,7 +14,7 @@ QUnit.test('an expression refers to a node that is later added', async (assert) 
 
 	assert.ok(!param.isDirty());
 	const transform2 = geo1.createNode('transform');
-	assert.equal(transform2.name, 'transform2');
+	assert.equal(transform2.name(), 'transform2');
 	assert.ok(param.isDirty(), 'param is now dirty');
 	transform2.p.t.x.set(5);
 	await param.compute();
@@ -29,7 +29,7 @@ QUnit.test('a node referenced in an expression gets renamed involves updating th
 	transform1.setInput(0, box1);
 
 	const transform2 = geo1.createNode('transform');
-	assert.equal(transform2.name, 'transform2');
+	assert.equal(transform2.name(), 'transform2');
 
 	transform1.p.t.x.set("ch('../transform2/tx')");
 	await transform1.requestContainer();
@@ -49,7 +49,7 @@ QUnit.test('a node referenced in an expression gets renamed involves updating th
 
 QUnit.test('a top node referenced in an expression gets renamed involves updating the expression', async (assert) => {
 	const scene = window.scene;
-	const root = scene.root;
+	const root = scene.root();
 	const geo1 = window.geo1;
 
 	const camera = root.createNode('perspectiveCamera');
@@ -59,7 +59,7 @@ QUnit.test('a top node referenced in an expression gets renamed involves updatin
 	const transform1 = geo1.createNode('transform');
 	transform1.setInput(0, box1);
 	const param = transform1.p.t.x;
-	param.set(`ch('/${camera.name}/tx')`);
+	param.set(`ch('/${camera.name()}/tx')`);
 
 	await param.compute();
 	assert.equal(param.value, 1);
@@ -104,14 +104,14 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 
 QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
-	const root = scene.root;
+	const root = scene.root();
 	const geo = window.geo1;
 	const box = geo.createNode('box');
 	const event = root.createNode('events');
 	const raycast = event.createNode('raycast');
 	const param = raycast.p.target;
 
-	assert.equal(param.type, ParamType.OPERATOR_PATH);
+	assert.equal(param.type(), ParamType.OPERATOR_PATH);
 
 	await scene.waitForCooksCompleted();
 
@@ -147,12 +147,12 @@ QUnit.test('an absolute path in a operator path param gets updated when ref chan
 
 QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
-	const root = scene.root;
+	const root = scene.root();
 	const event = root.createNode('events');
 	const orbit = event.createNode('cameraOrbitControls');
 	const camera = root.createNode('perspectiveCamera');
 	const controls_param = camera.p.controls;
-	assert.equal(controls_param.type, ParamType.NODE_PATH);
+	assert.equal(controls_param.type(), ParamType.NODE_PATH);
 
 	await scene.waitForCooksCompleted();
 
@@ -190,7 +190,7 @@ QUnit.test(
 	'an operator path param referencing a param gets updated when the param is deleted or added',
 	async (assert) => {
 		const scene = window.scene;
-		const root = scene.root;
+		const root = scene.root();
 		const MAT = window.MAT;
 		const event = root.createNode('events');
 		const set_param1 = event.createNode('setParam');
@@ -210,12 +210,12 @@ QUnit.test(
 		const param1 = mesh_basic_builder1.createNode('param');
 		await mesh_basic_builder1.requestContainer();
 		assert.equal(mesh_basic_builder1.params.all.length, 14);
-		assert.equal(mesh_basic_builder1.params.all[13].name, 'param1');
+		assert.equal(mesh_basic_builder1.params.all[13].name(), 'param1');
 		assert.notOk(param_operator_path_param.value.param());
 
 		param1.p.name.set('test_param');
 		await mesh_basic_builder1.requestContainer();
-		assert.equal(mesh_basic_builder1.params.all[13].name, 'test_param', 'last param is called test_param');
+		assert.equal(mesh_basic_builder1.params.all[13].name(), 'test_param', 'last param is called test_param');
 		assert.ok(param_operator_path_param.value.param(), 'a param is found');
 		assert.equal(
 			param_operator_path_param.value.param()!.graphNodeId(),

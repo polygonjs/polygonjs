@@ -52,7 +52,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		const variable = this._texture_allocations_controller.variable(output_name);
 
 		if (variable && connection_point) {
-			const gl_type = connection_point.type;
+			const gl_type = connection_point.type();
 			const new_value = this.read_attribute(globals_node, gl_type, output_name, shaders_collection_controller);
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
 			shaders_collection_controller.add_body_lines(globals_node, [body_line]);

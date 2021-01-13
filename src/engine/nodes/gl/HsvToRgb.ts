@@ -32,7 +32,7 @@ export class HsvToRgbGlNode extends TypedGlNode<HsvToRgbGlParamsConfig> {
 
 		function_declaration_lines.push(new FunctionGLDefinition(this, Hsv2Rgb));
 
-		const value = ThreeToGl.vector3(this.variable_for_input(this.p.hsv.name));
+		const value = ThreeToGl.vector3(this.variable_for_input(this.p.hsv.name()));
 
 		const rgb = this.gl_var_name(OUTPUT_NAME);
 		body_lines.push(`vec3 ${rgb} = hsv2rgb(${value})`);

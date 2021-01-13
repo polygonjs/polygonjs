@@ -56,7 +56,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			component.set_init_value(default_val);
 
 			// component.set_scene(this.scene);
-			component.setName(`${this.name}${component_name}`);
+			component.setName(`${this.name()}${component_name}`);
 			component.set_parent_param(this);
 
 			// this.addGraphInput(component, false); // already called in set_parent_param

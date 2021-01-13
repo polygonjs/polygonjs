@@ -148,7 +148,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		// return this._root_nodes
 		const list = [];
 		for (let node of this._root_nodes) {
-			switch (node.type) {
+			switch (node.type()) {
 				case OutputGlNode.type(): {
 					list.push(node);
 					break;
@@ -180,7 +180,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
 		const list = [];
 		for (let node of this._leaf_nodes) {
-			switch (node.type) {
+			switch (node.type()) {
 				case GlobalsGlNode.type(): {
 					list.push(node);
 					break;

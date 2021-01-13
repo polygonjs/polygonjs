@@ -60,7 +60,7 @@ export class SceneEventsDispatcher {
 	private _find_or_create_controller_for_node<T extends BaseEventNodeType>(
 		node: T
 	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
-		switch (node.type) {
+		switch (node.type()) {
 			case KeyboardEventNode.type():
 				return this.keyboardEventsController;
 			case MouseEventNode.type():

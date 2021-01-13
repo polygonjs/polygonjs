@@ -33,7 +33,7 @@ export const PostParamOptions: ParamOptions = {
 };
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.POST;
 	}
 
@@ -48,7 +48,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.flags.display.set(false);
 		this.flags.display.add_hook(() => {
 			if (this.flags.display.active()) {
-				const parent = this.parent;
+				const parent = this.parent();
 				if (parent && parent.display_node_controller) {
 					parent.display_node_controller.set_display_node(this);
 				}
@@ -60,10 +60,10 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 
 	set_render_pass(render_pass: any) {
-		this.set_container(render_pass);
+		this.setContainer(render_pass);
 	}
 	cook() {
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 	setup_composer(context: TypedPostNodeContext): void {
 		this._add_pass_from_input(0, context);

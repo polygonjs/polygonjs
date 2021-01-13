@@ -10,7 +10,7 @@ QUnit.test('data_url json', async (assert) => {
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
-	await window.scene.root.process_queue();
+	await window.scene.root().processQueue();
 
 	data_url1.p.url.set('/examples/sop/data_url/default.json');
 	container = await data_url1.requestContainer();

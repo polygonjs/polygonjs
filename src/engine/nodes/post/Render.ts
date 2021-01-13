@@ -65,7 +65,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 			}
 			const obj_node = this.p.camera.found_node_with_context(NodeContext.OBJ);
 			if (obj_node) {
-				if (obj_node.type == CameraNodeType.PERSPECTIVE || obj_node.type == CameraNodeType.ORTHOGRAPHIC) {
+				if (obj_node.type() == CameraNodeType.PERSPECTIVE || obj_node.type() == CameraNodeType.ORTHOGRAPHIC) {
 					const camera = (obj_node as PerspectiveCameraObjNode).object;
 					pass.camera = camera;
 				}
@@ -82,7 +82,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 			}
 			const obj_node = this.p.scene.found_node_with_context(NodeContext.OBJ);
 			if (obj_node) {
-				if (obj_node.type == SceneObjNode.type()) {
+				if (obj_node.type() == SceneObjNode.type()) {
 					const scene = (obj_node as SceneObjNode).object;
 					pass.scene = scene;
 				}

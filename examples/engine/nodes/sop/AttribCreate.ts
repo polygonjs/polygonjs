@@ -3,8 +3,9 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function SopAttribCreate() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	// create a line
 	const line = geo.createNode('line');
 	line.p.pointsCount.set(50);
@@ -31,7 +32,7 @@ export function SopAttribCreate() {
 	noise.p.computeNormals.set(false);
 
 	// add a material to see the line
-	const materials = scene.root.createNode('materials');
+	const materials = root.createNode('materials');
 	const lineBasic = materials.createNode('lineBasic');
 	lineBasic.p.color.set([0, 0, 1]);
 	// assign the material
@@ -41,7 +42,7 @@ export function SopAttribCreate() {
 	material.flags.display.set(true);
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

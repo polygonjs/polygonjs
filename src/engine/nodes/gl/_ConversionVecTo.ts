@@ -32,7 +32,7 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 			);
 		}
 		create_params() {
-			this.add_param(param_type, 'vec', components.map((c) => 0) as Number2);
+			this.addParam(param_type, 'vec', components.map((c) => 0) as Number2);
 		}
 
 		set_lines(shaders_collection_controller: ShadersCollectionController) {
@@ -81,7 +81,7 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 		]);
 	}
 	create_params() {
-		this.add_param(ParamType.VECTOR4, Vec4ToVec3GlNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
+		this.addParam(ParamType.VECTOR4, Vec4ToVec3GlNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
@@ -121,7 +121,7 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 		]);
 	}
 	create_params() {
-		this.add_param(ParamType.VECTOR3, Vec3ToVec2GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
+		this.addParam(ParamType.VECTOR3, Vec3ToVec2GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
@@ -159,8 +159,8 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 		]);
 	}
 	create_params() {
-		this.add_param(ParamType.VECTOR2, Vec2ToVec3GlNode.INPUT_NAME_VEC2, components_v2.map((c) => 0) as Number2);
-		this.add_param(ParamType.FLOAT, Vec2ToVec3GlNode.INPUT_NAME_Z, 0);
+		this.addParam(ParamType.VECTOR2, Vec2ToVec3GlNode.INPUT_NAME_VEC2, components_v2.map((c) => 0) as Number2);
+		this.addParam(ParamType.FLOAT, Vec2ToVec3GlNode.INPUT_NAME_Z, 0);
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
@@ -191,8 +191,8 @@ export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 		]);
 	}
 	create_params() {
-		this.add_param(ParamType.VECTOR3, Vec3ToVec4GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
-		this.add_param(ParamType.FLOAT, Vec3ToVec4GlNode.INPUT_NAME_W, 0);
+		this.addParam(ParamType.VECTOR3, Vec3ToVec4GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
+		this.addParam(ParamType.FLOAT, Vec3ToVec4GlNode.INPUT_NAME_W, 0);
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {

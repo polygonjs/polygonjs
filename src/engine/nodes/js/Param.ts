@@ -77,7 +77,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	}
 	uniform_name() {
 		const output_connection_point = this.io.outputs.named_output_connection_points[0];
-		const var_name = this.js_var_name(output_connection_point.name);
+		const var_name = this.js_var_name(output_connection_point.name());
 		return var_name;
 	}
 	set_gl_type(type: JsConnectionPointType) {
@@ -92,7 +92,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	//
 	private _on_create_set_name_if_none() {
 		if (this.pv.name == '') {
-			this.p.name.set(this.name);
+			this.p.name.set(this.name());
 		}
 	}
 }

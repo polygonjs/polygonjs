@@ -19,7 +19,7 @@ export class NameController {
 	}
 
 	static base_name(node: BaseNodeType) {
-		let base: string = node.type;
+		let base: string = node.type();
 		const last_char = base[base.length - 1];
 		if (!CoreType.isNaN(parseInt(last_char))) {
 			base += '_';
@@ -28,15 +28,15 @@ export class NameController {
 	}
 
 	request_name_to_parent(new_name: string) {
-		const parent = this.node.parent;
-		if (parent && parent.children_allowed() && parent.children_controller) {
-			parent.children_controller.set_child_name(this.node, new_name);
+		const parent = this.node.parent();
+		if (parent && parent.childrenAllowed() && parent.childrenController) {
+			parent.childrenController.set_child_name(this.node, new_name);
 		} else {
 			console.warn('request_name_to_parent failed, no parent found');
 		}
 	}
 	setName(new_name: string) {
-		if (new_name != this.node.name) {
+		if (new_name != this.node.name()) {
 			this.request_name_to_parent(new_name);
 		}
 	}
@@ -44,11 +44,11 @@ export class NameController {
 		this.node._set_core_name(new_name);
 		this.post_setName();
 		this.run_post_set_fullPath_hooks();
-		if (this.node.children_allowed()) {
-			const children = this.node.children_controller?.children();
+		if (this.node.childrenAllowed()) {
+			const children = this.node.childrenController?.children();
 			if (children) {
 				for (let child_node of children) {
-					child_node.name_controller.run_post_set_fullPath_hooks();
+					child_node.nameController.run_post_set_fullPath_hooks();
 				}
 			}
 		}

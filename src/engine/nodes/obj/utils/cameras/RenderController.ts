@@ -116,7 +116,7 @@ export class RenderController {
 			if (node) {
 				// it's probably weird to cook the node here, but that works for now
 				if (node.isDirty()) {
-					node.cook_controller.cook_main_without_inputs();
+					node.cookController.cook_main_without_inputs();
 				}
 				this._resolved_scene = node.object;
 			}

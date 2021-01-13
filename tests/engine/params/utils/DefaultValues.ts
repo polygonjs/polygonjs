@@ -14,7 +14,7 @@ function ensure_default_value<T extends ParamType>(
 		expected_value = expected_default_value;
 	}
 
-	const param = geo1.add_param(param_type, 'test', given_default_value, options);
+	const param = geo1.addParam(param_type, 'test', given_default_value, options);
 	if (param) {
 		assert.deepEqual(param.default_value, expected_default_value);
 		assert.deepEqual(param.value, expected_value);

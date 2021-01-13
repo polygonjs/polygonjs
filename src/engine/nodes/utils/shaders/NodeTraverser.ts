@@ -152,10 +152,11 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			node_id_used_state.set(node.graphNodeId(), true);
 		}
 
-		if (node.type == NetworkChildNodeType.INPUT) {
-			if (node.parent) {
+		if (node.type() == NetworkChildNodeType.INPUT) {
+			const parent = node.parent();
+			if (parent) {
 				const nodes_with_same_parent_as_subnet_input = this.sorted_nodes_for_shader_name_for_parent(
-					node.parent,
+					parent,
 					shader_name
 				);
 				for (let child_node of nodes_with_same_parent_as_subnet_input) {
@@ -183,7 +184,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 						: true;
 					if (is_present) {
 						const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
-						if (node.parent == parent) {
+						if (node.parent() == parent) {
 							nodes.push(node);
 						}
 					}
@@ -191,7 +192,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			}
 		});
 		const first_node = nodes[0];
-		if (parent.node_context() == first_node.node_context()) {
+		if (parent.nodeContext() == first_node.nodeContext()) {
 			nodes.push(parent as NodeTypeMap[NC]);
 		}
 
@@ -242,12 +243,12 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private _find_inputs_or_children(node: NodeTypeMap[NC]) {
-		if (node.type == NetworkChildNodeType.INPUT) {
-			return node.parent?.io.inputs.inputs() || [];
+		if (node.type() == NetworkChildNodeType.INPUT) {
+			return node.parent()?.io.inputs.inputs() || [];
 		} else {
-			if (node.children_allowed()) {
+			if (node.childrenAllowed()) {
 				// this._subnets_by_id.set(node.graphNodeId(), node);
-				const output_node = node.children_controller?.output_node();
+				const output_node = node.childrenController?.output_node();
 				return [output_node];
 			} else {
 				return node.io.inputs.inputs();

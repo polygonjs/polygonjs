@@ -149,7 +149,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	// private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	// private async _cook_main_without_inputs_when_dirty() {
 	// 	// if (this.used_in_scene) {
-	// 	await this.cook_controller.cook_main_without_inputs();
+	// 	await this.cookController.cook_main_without_inputs();
 	// 	// }
 	// }
 
@@ -163,7 +163,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		this._update_enviromment();
 		this._update_material_override();
 
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 
 	//
@@ -180,7 +180,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 			} else {
 				const node = this.p.bgTexture.found_node();
 				if (node) {
-					if (node.node_context() == NodeContext.COP) {
+					if (node.nodeContext() == NodeContext.COP) {
 						(node as BaseCopNodeType).requestContainer().then((container) => {
 							this.object.background = container.texture();
 						});
@@ -234,7 +234,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		if (this.pv.useEnvironment) {
 			const node = this.p.environment.found_node();
 			if (node) {
-				if (node.node_context() == NodeContext.COP) {
+				if (node.nodeContext() == NodeContext.COP) {
 					(node as BaseCopNodeType).requestContainer().then((container) => {
 						this.object.environment = container.texture();
 					});
@@ -258,7 +258,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		if (this.pv.useOverrideMaterial) {
 			const node = this.p.overrideMaterial.found_node();
 			if (node) {
-				if (node.node_context() == NodeContext.MAT) {
+				if (node.nodeContext() == NodeContext.MAT) {
 					(node as BaseMatNodeType).requestContainer().then((container) => {
 						this.object.overrideMaterial = container.material();
 					});

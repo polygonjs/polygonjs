@@ -26,10 +26,10 @@ export abstract class BaseConnectionPoint {
 	get init_value() {
 		return this._init_value;
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
-	get type() {
+	type() {
 		return this._type;
 	}
 	are_types_matched(src_type: string, dest_type: string): boolean {

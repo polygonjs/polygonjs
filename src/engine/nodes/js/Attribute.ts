@@ -48,7 +48,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	}
 	create_params() {
 		if (this.function_node?.assembler_controller.allow_attribute_exports()) {
-			this.add_param(ParamType.BOOLEAN, 'export_when_connected', 0);
+			this.addParam(ParamType.BOOLEAN, 'export_when_connected', 0);
 		}
 	}
 	// inputless_params_names(): string[] {
@@ -92,7 +92,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		return this.pv.name.trim();
 	}
 	gl_type() {
-		return this.io.outputs.named_output_connection_points[0].type;
+		return this.io.outputs.named_output_connection_points[0].type();
 	}
 	set_gl_type(type: JsConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_JS_TYPES.indexOf(type));
@@ -148,7 +148,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	//
 	private _on_create_set_name_if_none() {
 		if (this.pv.name == '') {
-			this.p.name.set(this.name);
+			this.p.name.set(this.name());
 		}
 	}
 }

@@ -272,7 +272,7 @@ export class RaycastCPUController {
 	update_target() {
 		const node = this._node.p.target.found_node() as BaseObjNodeType;
 		if (node) {
-			if (node.node_context() == NodeContext.OBJ) {
+			if (node.nodeContext() == NodeContext.OBJ) {
 				this._resolved_target = this._node.pv.traverseChildren
 					? node.object
 					: (node as GeoObjNode).children_display_controller.sop_group;

@@ -4,11 +4,11 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkAnimParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ANIM, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.ANIM;
 	}
 	cook() {
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }
 export class ParamLessBaseNetworkAnimNode extends BaseNetworkAnimNode<ParamLessNetworkAnimParamsConfig> {}

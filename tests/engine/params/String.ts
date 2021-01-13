@@ -6,8 +6,8 @@ QUnit.test('a string is set dirty if it refers another param with ch and it chan
 	const text1_param = text1.p.text;
 	const text2_param = text2.p.text;
 	const text3_param = text3.p.text;
-	const text1_name = text1.name;
-	const text2_name = text2.name;
+	const text1_name = text1.name();
+	const text2_name = text2.name();
 	text1_param.set('this is a test');
 	text2_param.set('another');
 
@@ -59,7 +59,7 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	const text2 = geo1.createNode('text');
 	const text1_param = text1.p.text;
 	const text2_param = text2.p.text;
-	const text1_name = text1.name;
+	const text1_name = text1.name();
 	text1_param.set('this is a test');
 	text2_param.set('ok `ch("../' + text1_name + '/text")` middle `pow($F*3,2)` end');
 	await text2_param.compute();
@@ -75,7 +75,7 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	// test updating the string param
 	const text3 = geo1.createNode('text');
 	text3.p.text.set(' - this is text3 - ');
-	const text3_name = text3.name;
+	const text3_name = text3.name();
 	text2_param.set('text3: `ch("../' + text3_name + '/text")` middle `$F*3` end');
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'text3:  - this is text3 -  middle 9 end');

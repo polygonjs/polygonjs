@@ -7,7 +7,14 @@ import {TypedEventNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
 
-export type CameraControls = any;
+export interface CameraControls {
+	name?: string;
+	enabled: boolean;
+	dispose: () => void;
+	update: () => void;
+	addEventListener: (eventName: string, callback: () => void) => void;
+	removeEventListener: (eventName: string, callback: () => void) => void;
+}
 // export interface CameraControls extends OrbitControls {
 // 	name?: string;
 // 	// this_is_a_control: any;

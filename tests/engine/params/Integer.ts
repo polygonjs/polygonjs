@@ -24,7 +24,7 @@ QUnit.test('int has_expression() returns false when removing the expression', as
 
 	const box1 = geo1.createNode('box');
 	const param = box1.p.divisions;
-	assert.equal(param.type, ParamType.INTEGER);
+	assert.equal(param.type(), ParamType.INTEGER);
 
 	param.set(2);
 	assert.notOk(param.has_expression());

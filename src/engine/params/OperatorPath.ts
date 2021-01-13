@@ -135,14 +135,14 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 				}
 			} else {
 				this.states.error.set(
-					`node type is ${node.type} but the params expects one of ${(this._expected_node_types() || []).join(
-						', '
-					)}`
+					`node type is ${node.type()} but the params expects one of ${(
+						this._expected_node_types() || []
+					).join(', ')}`
 				);
 			}
 		} else {
 			this.states.error.set(
-				`node context is ${node.node_context()} but the params expects a ${this._expected_context()}`
+				`node context is ${node.nodeContext()} but the params expects a ${this._expected_context()}`
 			);
 		}
 	}
@@ -151,7 +151,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			this._found_param_with_expected_type = param;
 		} else {
 			this.states.error.set(
-				`param type is ${param.type} but the params expects a ${this._expected_param_type()}`
+				`param type is ${param.type()} but the params expects a ${this._expected_param_type()}`
 			);
 		}
 	}
@@ -186,19 +186,19 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		if (node) {
 			if (CoreType.isArray(type_or_types)) {
 				for (let type of type_or_types) {
-					if (node.type == type) {
+					if (node.type() == type) {
 						return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
 					}
 				}
 				this.states.error.set(
-					`expected node type to be ${type_or_types.join(', ')}, but was instead ${node.type}`
+					`expected node type to be ${type_or_types.join(', ')}, but was instead ${node.type()}`
 				);
 			} else {
 				const type = type_or_types;
-				if (node.type == type) {
+				if (node.type() == type) {
 					return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
 				} else {
-					this.states.error.set(`expected node type to be ${type}, but was instead ${node.type}`);
+					this.states.error.set(`expected node type to be ${type}, but was instead ${node.type()}`);
 				}
 			}
 		}
@@ -220,7 +220,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		if (expected_context == null) {
 			return true;
 		}
-		const node_context = node.parent?.children_controller?.context;
+		const node_context = node.parent()?.childrenController?.context;
 		return expected_context == node_context;
 	}
 	private _expected_node_types() {
@@ -234,14 +234,14 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		if (expected_types == null) {
 			return true;
 		}
-		return expected_types?.includes(node.type);
+		return expected_types?.includes(node.type());
 	}
 	private _is_param_expected_type(param: BaseParamType) {
 		const expected_types = this._expected_node_types();
 		if (expected_types == null) {
 			return true;
 		}
-		return expected_types.includes(param.type);
+		return expected_types.includes(param.type());
 	}
 
 	notify_path_rebuild_required(node: BaseNodeType) {

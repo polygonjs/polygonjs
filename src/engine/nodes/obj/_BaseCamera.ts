@@ -134,7 +134,7 @@ export abstract class TypedCameraObjNode<
 	async cook() {
 		this.update_camera();
 		this._object.dispatchEvent(EVENT_CHANGE);
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 
 	on_create() {}
@@ -164,7 +164,7 @@ export abstract class TypedCameraObjNode<
 	abstract createViewer(element: HTMLElement): BaseViewerType;
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
-		(node.object as any)[param.name] = (node.pv as any)[param.name];
+		(node.object as any)[param.name()] = (node.pv as any)[param.name()];
 	}
 }
 
@@ -251,7 +251,7 @@ export class TypedThreejsCameraObjNode<
 		// and we can run this here instead of inside the update_transform and update_camera
 		// this._object.dispatchEvent( EVENT_CHANGE )
 		this._object.dispatchEvent(EVENT_CHANGE);
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 
 	static PARAM_CALLBACK_update_near_far_from_param(node: BaseThreejsCameraObjNodeType, param: BaseParamType) {

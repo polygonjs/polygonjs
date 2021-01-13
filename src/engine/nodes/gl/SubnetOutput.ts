@@ -20,25 +20,26 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		this.io.connection_points.set_create_spare_params_from_inputs(false);
 
 		this.addPostDirtyHook('set_parent_dirty', () => {
-			this.parent?.setDirty(this);
+			this.parent()?.setDirty(this);
 		});
 	}
-	get parent() {
-		return super.parent as SubnetGlNode | null;
+	parent() {
+		return super.parent() as SubnetGlNode | null;
 	}
 
 	protected _expected_input_name(index: number) {
-		const parent = this.parent;
+		const parent = this.parent();
 		return parent?.child_expected_output_connection_point_name(index) || `in${index}`;
 	}
 
 	protected _expected_input_types() {
-		const parent = this.parent;
+		const parent = this.parent();
 		return parent?.child_expected_output_connection_point_types() || [];
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		if (!this.parent) {
+		const parent = this.parent();
+		if (!parent) {
 			return;
 		}
 		const body_lines: string[] = [];
@@ -49,9 +50,9 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 				if (connection) {
 					const connection_point = connection.dest_connection_point();
 
-					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name));
+					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 					// const gl_type = connection_point.type;
-					const out = (this.parent as BaseGlNodeType).gl_var_name(connection_point.name);
+					const out = (parent as BaseGlNodeType).gl_var_name(connection_point.name());
 					// const body_line = `${gl_type} ${out} = ${in_value}`;
 					// do not use the type, to avoid re-defining a variable that should be defined in the parent node
 					const body_line = `	${out} = ${in_value}`;
@@ -61,7 +62,6 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		}
 
 		shaders_collection_controller.add_body_lines(this, body_lines);
-
-		this.parent.set_lines_block_end(shaders_collection_controller, this);
+		parent.set_lines_block_end(shaders_collection_controller, this);
 	}
 }

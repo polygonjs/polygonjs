@@ -133,7 +133,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	// 	if (expected_context == null) {
 	// 		return true;
 	// 	}
-	// 	const node_context = node.parent?.children_controller?.context;
+	// 	const node_context = node.parent?.childrenController?.context;
 	// 	return expected_context == node_context;
 	// }
 	// private _expected_node_types() {

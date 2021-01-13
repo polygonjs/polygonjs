@@ -44,30 +44,30 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 
 		function_declaration_lines.push(new FunctionGLDefinition(this, QuaternionMethods));
 
-		const input_position = this.io.inputs.named_input(this.p.position.name);
+		const input_position = this.io.inputs.named_input(this.p.position.name());
 		const position = input_position
-			? ThreeToGl.float(this.variable_for_input(this.p.position.name))
+			? ThreeToGl.float(this.variable_for_input(this.p.position.name()))
 			: this._default_position();
 
-		const input_normal = this.io.inputs.named_input(this.p.normal.name);
+		const input_normal = this.io.inputs.named_input(this.p.normal.name());
 		const normal = input_normal
-			? ThreeToGl.float(this.variable_for_input(this.p.normal.name))
+			? ThreeToGl.float(this.variable_for_input(this.p.normal.name()))
 			: this._default_normal();
 
-		const input_instancePosition = this.io.inputs.named_input(this.p.instancePosition.name);
+		const input_instancePosition = this.io.inputs.named_input(this.p.instancePosition.name());
 		const instancePosition = input_instancePosition
-			? ThreeToGl.float(this.variable_for_input(this.p.instancePosition.name))
+			? ThreeToGl.float(this.variable_for_input(this.p.instancePosition.name()))
 			: this._default_instancePosition(shaders_collection_controller);
 		// const instancePosition = ThreeToGl.float(this.variable_for_input('instancePosition'))
 
-		const input_instanceOrientation = this.io.inputs.named_input(this.p.instanceOrientation.name);
+		const input_instanceOrientation = this.io.inputs.named_input(this.p.instanceOrientation.name());
 		const instanceOrientation = input_instanceOrientation
-			? ThreeToGl.float(this.variable_for_input(this.p.instanceOrientation.name))
+			? ThreeToGl.float(this.variable_for_input(this.p.instanceOrientation.name()))
 			: this._default_input_instanceOrientation(shaders_collection_controller);
 
-		const input_instanceScale = this.io.inputs.named_input(this.p.instanceScale.name);
+		const input_instanceScale = this.io.inputs.named_input(this.p.instanceScale.name());
 		const instanceScale = input_instanceScale
-			? ThreeToGl.float(this.variable_for_input(this.p.instanceScale.name))
+			? ThreeToGl.float(this.variable_for_input(this.p.instanceScale.name()))
 			: this._default_input_instanceScale(shaders_collection_controller);
 
 		const result_position = this.gl_var_name(this.gl_output_name_position());

@@ -356,7 +356,7 @@ export class ParticlesSystemGpuComputeController {
 
 			for (let texture_variable of texture_variables) {
 				const texture_position = texture_variable.position;
-				let variable_name = texture_variable.name;
+				let variable_name = texture_variable.name();
 
 				const first_point = this._points[0];
 				if (first_point) {

@@ -21,7 +21,7 @@ export enum ObjNodeRenderOrder {
 }
 
 export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<NodeContext.OBJ, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.OBJ;
 	}
 	static displayed_input_names(): string[] {
@@ -76,7 +76,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 	initialize_base_node() {
 		this._object = this._create_object_with_attributes();
-		this.name_controller.add_post_set_fullPath_hook(this.set_object_name.bind(this));
+		this.nameController.add_post_set_fullPath_hook(this.set_object_name.bind(this));
 		this.set_object_name();
 	}
 
@@ -109,7 +109,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	is_display_node_cooking(): boolean {
 		if (this.display_node_controller) {
 			if (this.display_node_controller.display_node) {
-				return this.display_node_controller.display_node.cook_controller.is_cooking;
+				return this.display_node_controller.display_node.cookController.is_cooking;
 			}
 		}
 		return false;

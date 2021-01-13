@@ -49,9 +49,9 @@ export class LoadingController {
 				// if this.env_is_development()
 				// 	this.performance().start()
 
-				const root = this.scene.root;
+				const root = this.scene.root();
 				if (root) {
-					await root.process_queue();
+					await root.processQueue();
 				}
 			}
 		}

@@ -143,7 +143,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
 	private make_successors_update_signatures() {
 		const successors = this.node.graphAllSuccessors();
-		if (this.node.children_allowed()) {
+		if (this.node.childrenAllowed()) {
 			const subnet_inputs = this.node.nodesByType(NetworkChildNodeType.INPUT);
 			const subnet_outputs = this.node.nodesByType(NetworkChildNodeType.OUTPUT);
 			for (let subnet_input of subnet_inputs) {
@@ -194,8 +194,8 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	protected _connections_match_inputs(): boolean {
-		const current_input_types = this.node.io.inputs.named_input_connection_points.map((c) => c?.type);
-		const current_output_types = this.node.io.outputs.named_output_connection_points.map((c) => c?.type);
+		const current_input_types = this.node.io.inputs.named_input_connection_points.map((c) => c?.type());
+		const current_output_types = this.node.io.outputs.named_output_connection_points.map((c) => c?.type());
 		const expected_input_types = this._wrapped_expected_input_types_function();
 		const expected_output_types = this._wrapped_expected_output_types_function();
 
@@ -282,7 +282,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		if (connections) {
 			const connection = connections[index];
 			if (connection) {
-				return connection.src_connection_point()!.type as ConnectionPointEnumMap[NC];
+				return connection.src_connection_point()!.type() as ConnectionPointEnumMap[NC];
 			}
 		}
 	}

@@ -11,7 +11,7 @@ export class CoreGraphNode {
 		_scene.graph.add_node(this);
 		this._graph = _scene.graph;
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
 	setName(name: string) {

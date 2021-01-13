@@ -85,7 +85,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// if (this.is_on_frame_start()) {
 		// 	this.setCoreGroup(core_group);
 		// } else {
-		// 	this.cook_controller.end_cook();
+		// 	this.cookController.end_cook();
 		// }
 		this.setCoreGroup(core_group);
 	}

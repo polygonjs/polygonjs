@@ -33,5 +33,5 @@ export function createPolySopNode(node_type: string, definition: PolyNodeDefinit
 	return BasePolySopNode;
 }
 
-const BasePolySopNode = createPolySopNode('poly', {node_context: NodeContext.SOP, inputs: [0, 4]});
+const BasePolySopNode = createPolySopNode('poly', {nodeContext: NodeContext.SOP, inputs: [0, 4]});
 export class PolySopNode extends BasePolySopNode {}

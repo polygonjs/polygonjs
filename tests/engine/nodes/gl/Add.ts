@@ -17,38 +17,38 @@ QUnit.test('gl add updates its output type correctly when created', async (asser
 	constant2.set_gl_type(GlConnectionPointType.VEC2);
 
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.FLOAT);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.FLOAT);
 
 	add1.setInput(0, constant1);
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
 
 	add1.setInput(1, constant2);
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 3);
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
 
 	// remove inputs
 	add1.setInput(1, null);
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
 
 	add1.setInput(0, null);
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 2);
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.FLOAT);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.FLOAT);
 
 	// add inputs again to have one empty in the middle
 	add1.setInput(0, constant1);
 	add1.setInput(1, constant1);
 	add1.setInput(2, constant2);
 	assert.equal(add1.io.inputs.named_input_connection_points.length, 4, 'should be 4 connections when 3 inputs +++');
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
 	add1.setInput(1, null);
 	assert.equal(
 		add1.io.inputs.named_input_connection_points.length,
 		4,
 		'should be 4 connections 2 inputs with one missing in the middle +-+'
 	);
-	assert.equal(add1.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(add1.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
 });
 
 QUnit.test('gl add updates its output type correctly when scene is loaded', async (assert) => {
@@ -76,6 +76,6 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	const add2 = material_basic_builder1.node('add1')!;
 	add2.setInput(0, constant1);
 	assert.equal(add2.io.inputs.named_input_connection_points.length, 2);
-	assert.equal(add2.io.inputs.named_input_connection_points[0].type, GlConnectionPointType.VEC2);
+	assert.equal(add2.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
 	assert.deepEqual(add2.params.get('add1')?.value_serialized, [1, 2]);
 });

@@ -16,13 +16,13 @@ export class ParamConfig<T extends ParamType> {
 	constructor(protected _type: T, protected _name: string, protected _default_value: ParamInitValuesTypeMap[T]) {}
 
 	static from_param<K extends ParamType>(param: TypedParam<K>): ParamConfig<K> {
-		return new ParamConfig<K>(param.type, param.name, param.default_value);
+		return new ParamConfig<K>(param.type(), param.name(), param.default_value);
 	}
 
-	get type() {
+	type() {
 		return this._type;
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
 	get default_value() {

@@ -41,7 +41,7 @@ QUnit.testStart(async () => {
 
 	window.scene.loadingController.markAsLoading();
 	window.scene.cooker.block();
-	const root = window.scene.root;
+	const root = window.scene.root();
 	window.root = root;
 	window.perspective_camera1 = root.createNode('perspectiveCamera');
 	window.geo1 = root.createNode('geo');

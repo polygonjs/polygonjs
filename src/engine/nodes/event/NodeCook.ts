@@ -88,7 +88,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 	cook() {
 		this._update_resolved_nodes();
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 
 	private process_event_trigger(event_context: EventContext<Event>) {
@@ -142,7 +142,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 		this._resolved_nodes = this.scene().nodesController.nodesFromMask(this.pv.mask || '');
 		for (let node of this._resolved_nodes) {
-			node.cook_controller.add_on_cook_complete_hook(this, this._on_node_cook_complete_bound);
+			node.cookController.add_on_cook_complete_hook(this, this._on_node_cook_complete_bound);
 			this._cook_state_by_node_id.set(node.graphNodeId(), false);
 		}
 	}
@@ -154,7 +154,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		this._dispatched_first_node_cooked = false;
 		this._cook_state_by_node_id.clear();
 		for (let node of this._resolved_nodes) {
-			node.cook_controller.remove_on_cook_complete_hook(this);
+			node.cookController.remove_on_cook_complete_hook(this);
 		}
 		this._resolved_nodes = [];
 	}

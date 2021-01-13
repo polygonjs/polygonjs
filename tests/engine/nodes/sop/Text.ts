@@ -77,7 +77,7 @@ QUnit.test('text as different types', async (assert) => {
 
 	const text1 = geo1.createNode('text');
 	text1.p.text.set('some text to test');
-	await scene.root.process_queue();
+	await scene.root().processQueue();
 	let container;
 
 	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.MESH));
@@ -111,7 +111,7 @@ QUnit.test('text can recover from generation errors', async (assert) => {
 	geo1.flags.display.set(false); // cancels geo node display_node_controller
 
 	const text1 = geo1.createNode('text');
-	await scene.root.process_queue();
+	await scene.root().processQueue();
 	let container;
 
 	text1.p.font.set('/fonts/Absolute.ttf');

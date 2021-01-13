@@ -24,11 +24,11 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 		box1.container_controller.container.coreContent()?.objects()[0].uuid
 	);
 
-	assert.equal(box1.cook_controller.cooks_count, 1);
+	assert.equal(box1.cookController.cooks_count, 1);
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
-	assert.equal(box1.cook_controller.cooks_count, 2, 'box has cooked once more');
+	assert.equal(box1.cookController.cooks_count, 2, 'box has cooked once more');
 	assert.ok(geo1.children_display_controller.sop_group.visible);
 
 	geo1.flags.display.set(false);
@@ -38,12 +38,12 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
-	assert.equal(box1.cook_controller.cooks_count, 2, 'box has not cooked again');
+	assert.equal(box1.cookController.cooks_count, 2, 'box has not cooked again');
 	assert.ok(!geo1.children_display_controller.sop_group.visible);
 
 	assert.equal(main_group.children.length, 2);
 
-	assert.equal(geo1.cook_controller.cooks_count, 0, 'cooks count is 0');
+	assert.equal(geo1.cookController.cooks_count, 0, 'cooks count is 0');
 	geo1.p.t.x.set(2);
 	await scene.waitForCooksCompleted();
 	assert.deepEqual(
@@ -51,7 +51,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 		new Matrix4().makeTranslation(2, 0, 0).toArray(),
 		'matrix should be translated'
 	);
-	assert.equal(geo1.cook_controller.cooks_count, 1, 'should have cooked once');
+	assert.equal(geo1.cookController.cooks_count, 1, 'should have cooked once');
 
 	window.scene.performance.stop();
 });
@@ -95,16 +95,16 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	await scene.waitForCooksCompleted();
 	assert.ok(box1.flags.display.active(), 'display flag is set on');
 	assert.equal(geo1.display_node_controller.display_node?.graphNodeId(), box1.graphNodeId(), 'display node is box');
-	assert.equal(box1.cook_controller.cooks_count, 0, 'box has not cooked');
+	assert.equal(box1.cookController.cooks_count, 0, 'box has not cooked');
 	assert.equal(geo1.children_display_controller.sop_group.children.length, 0, 'sop_group is empty');
 
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.waitForCooksCompleted();
-	assert.equal(box1.cook_controller.cooks_count, 0, 'box has still not cooked');
+	assert.equal(box1.cookController.cooks_count, 0, 'box has still not cooked');
 
 	geo1.flags.display.set(true);
 	await scene.waitForCooksCompleted();
-	assert.equal(box1.cook_controller.cooks_count, 1);
+	assert.equal(box1.cookController.cooks_count, 1);
 	assert.equal(
 		geo1.children_display_controller.sop_group.children[0].uuid,
 		box1.container_controller.container.coreContent()?.objects()[0].uuid

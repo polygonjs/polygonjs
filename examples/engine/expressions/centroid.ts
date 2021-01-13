@@ -3,9 +3,10 @@ import {PolyScene} from '../../../src/engine/scene/PolyScene';
 export function ExpressionCentroid() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
 	// create a box and a sphere
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	const box = geo.createNode('box');
 	const torus = geo.createNode('torus');
 	const transform = geo.createNode('transform');
@@ -28,14 +29,14 @@ export function ExpressionCentroid() {
 
 	box.p.size.set(0.25);
 
-	transform.p.t.x.set(`centroid('../${noise.name}').x`);
-	transform.p.t.z.set(`centroid('../${noise.name}').z`);
+	transform.p.t.x.set(`centroid('../${noise.name()}').x`);
+	transform.p.t.z.set(`centroid('../${noise.name()}').z`);
 
 	// add a light
-	scene.root.createNode('hemisphereLight');
+	root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

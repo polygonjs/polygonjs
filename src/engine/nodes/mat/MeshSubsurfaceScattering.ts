@@ -197,7 +197,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	async update_map(param: OperatorPathParam, uniform_name: string) {
 		const node = param.found_node();
 		if (node) {
-			if (node.node_context() == NodeContext.COP) {
+			if (node.nodeContext() == NodeContext.COP) {
 				const texture_node = node as BaseCopNodeType;
 				const container = await texture_node.requestContainer();
 				this.material.uniforms[uniform_name].value = container.texture();

@@ -37,7 +37,7 @@ export class PolyScene {
 	setName(name: string) {
 		return (this._name = name);
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
 
@@ -63,9 +63,9 @@ export class PolyScene {
 		return (this._assets_controller = this._assets_controller || new SceneAssetsController());
 	}
 
-	public readonly cook_controller = new CookController();
+	public readonly cookController = new CookController();
 	async waitForCooksCompleted() {
-		return this.cook_controller.waitForCooksCompleted();
+		return this.cookController.waitForCooksCompleted();
 	}
 
 	private _dispatch_controller: DispatchController | undefined;
@@ -237,7 +237,7 @@ export class PolyScene {
 	node(path: string) {
 		return this.nodesController.node(path);
 	}
-	get root() {
-		return this.nodesController.root;
+	root() {
+		return this.nodesController.root();
 	}
 }

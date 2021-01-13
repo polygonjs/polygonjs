@@ -58,9 +58,9 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	assert.ok(operator_path_spare_param1);
 	assert.ok(float_spare_param1);
 	// check that the spare paramsare the expected type
-	assert.equal(ramp_spare_param1.type, ParamType.RAMP);
-	assert.equal(operator_path_spare_param1.type, ParamType.OPERATOR_PATH);
-	assert.equal(float_spare_param1.type, ParamType.FLOAT);
+	assert.equal(ramp_spare_param1.type(), ParamType.RAMP);
+	assert.equal(operator_path_spare_param1.type(), ParamType.OPERATOR_PATH);
+	assert.equal(float_spare_param1.type(), ParamType.FLOAT);
 	// check that the uniforms are present
 	assert.ok(mesh_basic1.material.uniforms['ramp_texture_v_POLY_ramp1_val']);
 	assert.ok(mesh_basic1.material.uniforms['v_POLY_texture1_textureMap']);

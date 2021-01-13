@@ -13,9 +13,9 @@ QUnit.test('walker from a box', (assert) => {
 	assert.notOk(CoreWalker.find_node(box1, '/test'));
 	assert.notEqual(CoreWalker.find_node(box1, '/size'), box1.p.size);
 
-	assert.equal(window.scene.root.node('/geo1'), window.geo1);
-	assert.equal(window.scene.root.node('.'), window.scene.root);
-	assert.equal(window.scene.node('.'), scene.root);
+	assert.equal(window.scene.root().node('/geo1'), window.geo1);
+	assert.equal(window.scene.root().node('.'), window.scene.root());
+	assert.equal(window.scene.node('.'), scene.root());
 	assert.equal(window.scene.node('/geo1'), window.geo1);
 	assert.notEqual(window.scene.node('/geo10'), window.geo1);
 });
@@ -28,7 +28,7 @@ QUnit.test('a param to another', (assert) => {
 
 	console.log(box1.fullPath(), box2.fullPath());
 
-	const geo2 = scene.root.createNode('geo');
+	const geo2 = scene.root().createNode('geo');
 	const box3 = geo2.createNode('box');
 
 	assert.equal(box1.p.size.path_relative_to(box1.p.divisions), 'size');

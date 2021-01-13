@@ -32,7 +32,7 @@ export class NodesRegister {
 	constructor(private poly: PolyEngine) {}
 
 	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
-		const context = node.node_context();
+		const context = node.nodeContext();
 		const node_type = node.type();
 		let current_nodes_for_context = this._node_register.get(context);
 		if (!current_nodes_for_context) {

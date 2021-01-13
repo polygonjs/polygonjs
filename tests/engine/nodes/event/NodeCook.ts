@@ -9,7 +9,7 @@ import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 QUnit.test('event node_cook simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
-	const events = scene.root.createNode('events');
+	const events = scene.root().createNode('events');
 
 	const box1 = geo1.createNode('box');
 	const scatter1 = geo1.createNode('scatter');

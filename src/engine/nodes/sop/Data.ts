@@ -63,7 +63,7 @@ export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 				this.states.error.set('could not build geometry from json');
 			}
 		} else {
-			this.cook_controller.end_cook();
+			this.cookController.end_cook();
 		}
 	}
 }

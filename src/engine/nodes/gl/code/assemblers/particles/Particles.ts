@@ -46,7 +46,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		// return this._root_nodes
 		const list = [];
 		for (let node of this._root_nodes) {
-			switch (node.type) {
+			switch (node.type()) {
 				case OutputGlNode.type(): {
 					list.push(node);
 					break;
@@ -70,7 +70,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
 		const list = [];
 		for (let node of this._leaf_nodes) {
-			switch (node.type) {
+			switch (node.type()) {
 				case GlobalsGlNode.type(): {
 					list.push(node);
 					break;
@@ -356,7 +356,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	) {
 		const output_connection_point = globals_node.io.outputs.named_output_connection_points_by_name(output_name);
 		if (output_connection_point) {
-			const gl_type = output_connection_point.type;
+			const gl_type = output_connection_point.type();
 
 			const attrib_read = this.globals_handler?.read_attribute(
 				globals_node,

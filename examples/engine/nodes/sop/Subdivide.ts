@@ -3,9 +3,10 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function SopSubdivide() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
 	// create a box
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	const box = geo.createNode('box');
 
 	// add a subdivide node
@@ -14,10 +15,10 @@ export function SopSubdivide() {
 	subdivide.flags.display.set(true);
 
 	// add a light
-	scene.root.createNode('hemisphereLight');
+	root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

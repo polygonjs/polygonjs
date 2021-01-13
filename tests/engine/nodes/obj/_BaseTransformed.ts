@@ -5,7 +5,7 @@ QUnit.test('obj nodes can be parented to each other', async (assert) => {
 	assert.equal(world_root.children.length, 2);
 	assert.equal(geo1.object.children[0].children.length, 0);
 
-	const geo2 = scene.root.createNode('geo');
+	const geo2 = scene.root().createNode('geo');
 
 	await scene.waitForCooksCompleted();
 	assert.equal(world_root.children.length, 3);
@@ -26,8 +26,8 @@ QUnit.test('obj nodes can keep their position on input change', async (assert) =
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const null1 = scene.root.createNode('null');
-	const null2 = scene.root.createNode('null');
+	const null1 = scene.root().createNode('null');
+	const null2 = scene.root().createNode('null');
 
 	null2.setInput(0, null1);
 	geo1.setInput(0, null1);

@@ -28,9 +28,9 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		}
 		set_lines(shaders_collection_controller: ShadersCollectionController) {
-			const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type;
+			const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
 			const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
-				const name = connection.name;
+				const name = connection.name();
 				const variable = this.variable_for_input(name);
 				if (variable) {
 					return ThreeToGl.any(variable);
@@ -59,7 +59,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 					// or use the default if there is none
 					const first_connection = this.io.inputs.named_input_connection_points[0];
 					if (first_connection) {
-						first_input_type = first_connection.type;
+						first_input_type = first_connection.type();
 					}
 				}
 			}
@@ -134,7 +134,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 				// this.io.inputs.named_input_connection_points[
 				// 	first_connection.input_index
 				// ];
-				const type = connection_point_for_first_connection.type;
+				const type = connection_point_for_first_connection.type();
 				const expected_count = Math.max(input_connections.length + 1, 2);
 				const empty_array = new Array(expected_count);
 
@@ -145,7 +145,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 							second_connection.node_src.io.outputs.named_output_connection_points[
 								second_connection.output_index
 							];
-						const second_type = connection_point_for_second_connection.type;
+						const second_type = connection_point_for_second_connection.type();
 						if (second_type == GlConnectionPointType.FLOAT) {
 							// if first 2 inputs are float: n+1 float inputs
 							return empty_array.fill(type);

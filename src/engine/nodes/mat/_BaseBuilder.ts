@@ -63,9 +63,9 @@ export abstract class TypedBuilderMatNode<
 	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
-	children_allowed() {
+	childrenAllowed() {
 		if (this.assemblerController) {
-			return super.children_allowed();
+			return super.childrenAllowed();
 		}
 		this.scene().mark_as_read_only(this);
 		return false;

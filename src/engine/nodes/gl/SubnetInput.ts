@@ -22,17 +22,17 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 		// });
 	}
 
-	get parent() {
-		return super.parent as SubnetGlNode | null;
+	parent() {
+		return super.parent() as SubnetGlNode | null;
 	}
 
 	private _expected_output_names(index: number) {
-		const parent = this.parent;
+		const parent = this.parent();
 		return parent?.child_expected_input_connection_point_name(index) || `out${index}`;
 	}
 
 	protected _expected_output_types() {
-		const parent = this.parent;
+		const parent = this.parent();
 		return parent?.child_expected_input_connection_point_types() || [];
 	}
 
@@ -44,10 +44,11 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 	// }
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		if (!this.parent) {
+		const parent = this.parent();
+		if (!parent) {
 			return;
 		}
 
-		this.parent.set_lines_block_start(shaders_collection_controller, this);
+		parent.set_lines_block_start(shaders_collection_controller, this);
 	}
 }

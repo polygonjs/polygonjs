@@ -78,7 +78,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		if (event_context.value) {
 			const node = event_context.value.node;
 			if (node) {
-				const parent = node.parent;
+				const parent = node.parent();
 				if (parent) {
 					mask = `${parent.fullPath()}/${mask}`;
 				}

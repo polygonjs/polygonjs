@@ -88,7 +88,7 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	const scene = window.scene;
 	scene.timeController.setFrameRange(-10, 10);
 
-	const spare_boolean = geo1.add_param(ParamType.BOOLEAN, 'spare_boolean', '$F', {spare: true})!;
+	const spare_boolean = geo1.addParam(ParamType.BOOLEAN, 'spare_boolean', '$F', {spare: true})!;
 	assert.deepEqual(
 		spare_boolean.graphAllPredecessors().map((n: CoreGraphNode) => n.graphNodeId()),
 		[scene.timeController.graph_node.graphNodeId()]

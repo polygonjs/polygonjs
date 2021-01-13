@@ -97,7 +97,7 @@ export class PostProcessController {
 
 			const found_node = this.node.p.postProcessNode.value.node();
 			if (found_node) {
-				if (found_node.type == NetworkNodeType.POST) {
+				if (found_node.type() == NetworkNodeType.POST) {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;
 					const resolution = this.node.renderController.canvas_resolution(canvas);
 

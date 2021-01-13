@@ -28,7 +28,7 @@ export class ParamsLabelController {
 			this._callback = callback;
 		} else {
 			const param = this._params[0];
-			switch (param.type) {
+			switch (param.type()) {
 				case ParamType.STRING:
 					return this._handle_string_param(param as StringParam);
 				case ParamType.OPERATOR_PATH:

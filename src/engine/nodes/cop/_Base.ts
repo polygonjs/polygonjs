@@ -25,7 +25,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	// 	return this._data_texture;
 	// }
 
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.COP;
 	}
 	static displayed_input_names(): string[] {
@@ -50,10 +50,10 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	set_texture(texture: Texture) {
 		// this._copy_texture(texture);
 		texture.name = this.fullPath();
-		this.set_container(texture);
+		this.setContainer(texture);
 	}
 	clear_texture() {
-		this.set_container(EMPTY_DATA_TEXTURE);
+		this.setContainer(EMPTY_DATA_TEXTURE);
 	}
 
 	// private _copy_texture(texture: Texture) {

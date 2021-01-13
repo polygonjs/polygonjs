@@ -37,7 +37,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 	}
 
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name));
+		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name()));
 
 		const rgba = this.gl_var_name(TextureGlNode.OUTPUT_NAME);
 		const map = this._uniform_name();

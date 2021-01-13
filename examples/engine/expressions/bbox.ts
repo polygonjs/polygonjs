@@ -3,9 +3,10 @@ import {PolyScene} from '../../../src/engine/scene/PolyScene';
 export function ExpressionBbox() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
 	// create a box and a sphere
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	const sphere = geo.createNode('sphere');
 	const box = geo.createNode('box');
 	const torus = geo.createNode('torus');
@@ -20,17 +21,17 @@ export function ExpressionBbox() {
 	merge2.setInput(1, torus);
 	merge2.flags.display.set(true);
 
-	torus.p.radius.set(`bbox('../${merge1.name}').max.x`);
+	torus.p.radius.set(`bbox('../${merge1.name()}').max.x`);
 	torus.p.radiusTube.set(0.15);
 	torus.p.segmentsRadial.set(5);
 	torus.p.segmentsTube.set(60);
 	torus.p.direction.set([0, 0, 1]);
 
 	// add a light
-	scene.root.createNode('hemisphereLight');
+	root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

@@ -10,32 +10,32 @@ export class HierarchyParentController {
 
 	constructor(protected node: BaseNodeType) {}
 
-	get parent() {
+	parent() {
 		return this._parent;
 	}
 
 	set_parent(parent: BaseNodeType | null) {
-		if (parent != this.node.parent_controller.parent) {
+		if (parent != this.node.parentController.parent()) {
 			this._parent = parent;
 			if (this._parent) {
-				this.node.name_controller.request_name_to_parent(NameController.base_name(this.node));
+				this.node.nameController.request_name_to_parent(NameController.base_name(this.node));
 			}
 		}
 	}
 	is_selected(): boolean {
-		return this.parent?.children_controller?.selection?.contains(this.node) || false;
+		return this.parent()?.childrenController?.selection?.contains(this.node) || false;
 	}
 	fullPath(relative_to_parent?: BaseNodeType): string {
 		const separator = CoreWalker.SEPARATOR;
 		if (this._parent != null) {
 			if (this._parent == relative_to_parent) {
-				return this.node.name;
+				return this.node.name();
 			} else {
 				const parent_fullPath = this._parent.fullPath(relative_to_parent);
 				if (parent_fullPath === separator) {
-					return parent_fullPath + this.node.name;
+					return parent_fullPath + this.node.name();
 				} else {
-					return parent_fullPath + separator + this.node.name;
+					return parent_fullPath + separator + this.node.name();
 				}
 			}
 		} else {
@@ -58,7 +58,7 @@ export class HierarchyParentController {
 			return this.node;
 		}
 		if (path == CoreWalker.PARENT || path == CoreWalker.PARENT_WITH_SLASH) {
-			return this.node.parent;
+			return this.node.parent();
 		}
 
 		const separator = CoreWalker.SEPARATOR;
@@ -71,8 +71,8 @@ export class HierarchyParentController {
 			const elements = path.split(separator);
 			if (elements.length === 1) {
 				const name = elements[0];
-				if (this.node.children_controller) {
-					return this.node.children_controller.child_by_name(name);
+				if (this.node.childrenController) {
+					return this.node.childrenController.child_by_name(name);
 				} else {
 					return null;
 				}

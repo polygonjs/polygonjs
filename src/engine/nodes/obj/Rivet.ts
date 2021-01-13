@@ -108,7 +108,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// 	this._remove_render_hook();
 		// 	// this.scene.rivets_register.deregister_rivet(this);
 		// });
-		// this.name_controller.add_post_set_name_hook(() => {
+		// this.nameController.add_post_set_name_hook(() => {
 		// 	this.scene.rivets_register.sort_rivets();
 		// });
 
@@ -119,7 +119,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// 	}, 0);
 		// });
 		this.addPostDirtyHook('rivet_on_dirty', () => {
-			this.cook_controller.cook_main_without_inputs();
+			this.cookController.cook_main_without_inputs();
 		});
 		// this.params.set_post_create_params_hook(() => {
 		// 	this._update_render_hook();
@@ -135,7 +135,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		await this._update_resolved_object();
 		this._update_render_hook();
 		// this._update_updateMode();
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 	// private _remove_render_hook() {
 	// 	if (this._previous_on_before_render) {
@@ -241,7 +241,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 
 		const node = this.p.object.found_node();
 		if (node) {
-			if (node.node_context() == NodeContext.OBJ && node.type == GeoObjNode.type()) {
+			if (node.nodeContext() == NodeContext.OBJ && node.type() == GeoObjNode.type()) {
 				const geo_node = node as GeoObjNode;
 				// this._remove_render_hook();
 				this._resolved_sop_group = geo_node.children_display_controller.sop_group;

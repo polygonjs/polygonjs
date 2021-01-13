@@ -27,8 +27,8 @@ export class ParamSerializer {
 
 	toJSON(): ParamSerializerData {
 		const data: ParamSerializerData = {
-			name: this.param.name,
-			type: this.param.type,
+			name: this.param.name(),
+			type: this.param.type(),
 			raw_input: this.raw_input(),
 			value: this.value(),
 			value_pre_conversion: this.value_pre_conversion(),

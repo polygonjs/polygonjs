@@ -151,7 +151,7 @@ export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConn
 		this._init_value = JsConnectionPointInitValueMap[this._type];
 		// }
 	}
-	get type() {
+	type() {
 		return this._type;
 	}
 	are_types_matched(src_type: string, dest_type: string): boolean {

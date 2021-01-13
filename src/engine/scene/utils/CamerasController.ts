@@ -27,7 +27,7 @@ export class CamerasController {
 	}
 
 	private _find_any_camera(): BaseCameraObjNodeType | null {
-		const root = this.scene.root;
+		const root = this.scene.root();
 		return root.nodesByType('perspectiveCamera')[0] || root.nodesByType('orthographicCamera')[0];
 	}
 }

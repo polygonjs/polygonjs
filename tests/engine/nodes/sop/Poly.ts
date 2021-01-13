@@ -5,7 +5,7 @@ import {Poly} from '../../../../src/engine/Poly';
 import {GeoNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Sop';
 
 const definition: PolyNodeDefinition = {
-	node_context: NodeContext.SOP,
+	nodeContext: NodeContext.SOP,
 	inputs: [0, 4],
 	params: [
 		{
@@ -44,7 +44,7 @@ QUnit.test('poly sop simple', async (assert) => {
 	const poly1 = geo1.createNode('poly_sop_test' as keyof GeoNodeChildrenMap);
 	assert.equal(poly1.children().length, 4);
 	assert.ok(poly1.params.has('id'));
-	assert.equal(poly1.params.get('id')!.type, ParamType.INTEGER);
+	assert.equal(poly1.params.get('id')!.type(), ParamType.INTEGER);
 	let container = await poly1.requestContainer();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;

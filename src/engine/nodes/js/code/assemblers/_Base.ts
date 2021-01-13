@@ -73,7 +73,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 		// return this._root_nodes
 		const list = [];
 		for (let node of this._root_nodes) {
-			switch (node.type) {
+			switch (node.type()) {
 				case OutputJsNode.type(): {
 					list.push(node);
 					break;
@@ -101,7 +101,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	leaf_nodes(): BaseJsNodeType[] {
 		const list = [];
 		for (let node of this._leaf_nodes) {
-			switch (node.type) {
+			switch (node.type()) {
 				case GlobalsJsNode.type(): {
 					list.push(node);
 					break;

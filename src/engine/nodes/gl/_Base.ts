@@ -13,7 +13,7 @@ import {ParamType} from '../../poly/ParamType';
 const REGEX_PATH_SANITIZE = /\/+/g;
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.GL;
 	}
 
@@ -35,11 +35,12 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		this.material_node?.assemblerController?.set_compilation_required_and_dirty(this);
 	}
 	get material_node(): AssemblerControllerNode | undefined {
-		if (this.parent) {
-			if (this.parent.node_context() == NodeContext.GL) {
-				return (this.parent as BaseGlNodeType)?.material_node;
+		const parent = this.parent();
+		if (parent) {
+			if (parent.nodeContext() == NodeContext.GL) {
+				return (parent as BaseGlNodeType)?.material_node;
 			} else {
-				return this.parent as AssemblerControllerNode;
+				return parent as AssemblerControllerNode;
 			}
 		}
 	}
@@ -62,7 +63,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 			const output_connection_point =
 				input_node.io.outputs.named_output_connection_points[connection.output_index];
 			if (output_connection_point) {
-				const output_name = output_connection_point.name;
+				const output_name = output_connection_point.name();
 				return input_node.gl_var_name(output_name);
 			} else {
 				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);

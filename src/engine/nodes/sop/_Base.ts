@@ -31,13 +31,13 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 // 	// 	this.children_controller?.init({dependent: false});
 // 	// }
 // 	cook() {
-// 		this.cook_controller.end_cook();
+// 		this.cookController.end_cook();
 // 	}
 // }
 // export class ParamLessBaseNetworkSopNode extends BaseNetworkSopNode<ParamLessNetworkSopParamsConfig> {}
 
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.SOP;
 	}
 	public readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
@@ -50,7 +50,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.flags.display.set(false);
 		this.flags.display.add_hook(() => {
 			if (this.flags.display.active()) {
-				const parent = this.parent;
+				const parent = this.parent();
 				if (parent && parent.display_node_controller) {
 					parent.display_node_controller.set_display_node(this);
 				}
@@ -64,7 +64,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		// for (let object of objects) {
 		// 	this._set_object_attributes(object);
 		// }
-		this.set_container(core_group, MESSAGE.FROM_SET_CORE_GROUP);
+		this.setContainer(core_group, MESSAGE.FROM_SET_CORE_GROUP);
 	}
 
 	setObject(object: Object3D) {
@@ -98,7 +98,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		const core_group = this.container_controller.container.coreContent() || new CoreGroup();
 		core_group.setObjects(objects);
 		core_group.touch();
-		this.set_container(core_group);
+		this.setContainer(core_group);
 	}
 
 	static create_object<OT extends ObjectType>(

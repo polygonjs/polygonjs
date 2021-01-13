@@ -30,8 +30,8 @@ export class OpdigitsExpression extends BaseMethod {
 		const graph_node = this.find_referenced_graph_node(index_or_path);
 		if (graph_node) {
 			const node = graph_node as BaseNodeType;
-			if (node.name_controller) {
-				const name_node = node.name_controller.graph_node;
+			if (node.nameController) {
+				const name_node = node.nameController.graph_node;
 				return this.create_dependency(name_node, index_or_path);
 			}
 		}
@@ -44,7 +44,7 @@ export class OpdigitsExpression extends BaseMethod {
 				const index_or_path = args[0];
 				const node = this.get_referenced_node(index_or_path);
 				if (node) {
-					const name = node.name;
+					const name = node.name();
 					const value = CoreString.tailDigits(name);
 					resolve(value);
 				} else {

@@ -33,7 +33,7 @@ export class ExpressionManager {
 		this.parsed_tree = this.parsed_tree || new ParsedTree();
 
 		this.reset();
-		if (this.param.type == ParamType.STRING) {
+		if (this.param.type() == ParamType.STRING) {
 			this.parsed_tree.parse_expression_for_string_param(expression);
 		} else {
 			this.parsed_tree.parse_expression(expression);

@@ -14,7 +14,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	assert.ok(renderer);
 
 	// start test
-	const camera = scene.root.nodesByType('perspectiveCamera')[0];
+	const camera = scene.root().nodesByType('perspectiveCamera')[0];
 	const post_process1 = camera.createNode('postProcess');
 	const horizontal_blur1 = post_process1.createNode('horizontalBlur');
 

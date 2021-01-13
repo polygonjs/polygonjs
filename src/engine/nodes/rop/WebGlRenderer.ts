@@ -275,7 +275,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 
 		this._traverse_scene_and_update_materials();
 
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 	_update_renderer(renderer: WebGLRendererWithSampling) {
 		// this._renderer.setClearAlpha(this.pv.alpha);

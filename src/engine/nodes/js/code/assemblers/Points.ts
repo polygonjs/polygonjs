@@ -6,10 +6,10 @@ import {GlobalsJsNode} from '../../Globals';
 
 export class PointsJsFunctionAssembler extends BaseJsFunctionAssembler {
 	static add_output_inputs(output_child: OutputJsNode) {
-		output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
-		output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		output_child.params.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
+		output_child.params.addParam(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
+		output_child.params.addParam(ParamType.VECTOR3, 'normal', [0, 0, 0], {hidden: true});
+		output_child.params.addParam(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
+		output_child.params.addParam(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
 	add_output_inputs(output_child: OutputJsNode) {
 		PointsJsFunctionAssembler.add_output_inputs(output_child);

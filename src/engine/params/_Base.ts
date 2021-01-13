@@ -80,7 +80,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	static type(): ParamType {
 		return ParamType.FLOAT; // adding a type here, but just to not have a compile error
 	}
-	get type(): T {
+	type(): T {
 		return (this.constructor as typeof BaseParamClass).type() as T;
 	}
 	get is_numeric(): boolean {
@@ -99,10 +99,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	abstract get raw_input_serialized(): ParamInitValueSerializedTypeMap[T];
 	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
 	copy_value(param: BaseParamType) {
-		if (param.type == this.type) {
+		if (param.type() == this.type()) {
 			this._copy_value(param as TypedParam<T>);
 		} else {
-			console.warn(`cannot copy value from ${param.type} to ${this.type}`);
+			console.warn(`cannot copy value from ${param.type()} to ${this.type()}`);
 		}
 	}
 	protected _copy_value(param: TypedParam<T>) {
@@ -216,7 +216,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get node() {
 		return this._node;
 	}
-	get parent() {
+	parent() {
 		return this.node;
 	}
 
@@ -232,7 +232,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this._parent_param != null;
 	}
 	fullPath(): string {
-		return this.node?.fullPath() + '/' + this.name;
+		return this.node?.fullPath() + '/' + this.name();
 	}
 	path_relative_to(node: BaseNodeType | BaseParamType): string {
 		return CoreWalker.relative_path(node, this);

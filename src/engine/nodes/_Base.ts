@@ -75,7 +75,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	copy_param_values(node: TypedNode<NC, K>) {
 		const non_spare = this.params.non_spare;
 		for (let param of non_spare) {
-			const other_param = node.params.get(param.name);
+			const other_param = node.params.get(param.name());
 			if (other_param) {
 				param.copy_value(other_param);
 			}
@@ -83,7 +83,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	private _name_controller: NameController | undefined;
-	get parent_controller(): HierarchyParentController {
+	get parentController(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
 	static displayed_input_names(): string[] {
@@ -92,7 +92,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _children_controller: HierarchyChildrenController | undefined;
 	protected _children_controller_context: NodeContext | undefined;
-	get children_controller_context() {
+	get childrenControllerContext() {
 		return this._children_controller_context;
 	}
 	private _create_children_controller(): HierarchyChildrenController | undefined {
@@ -100,10 +100,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 			return new HierarchyChildrenController(this, this._children_controller_context);
 		}
 	}
-	get children_controller(): HierarchyChildrenController | undefined {
+	get childrenController(): HierarchyChildrenController | undefined {
 		return (this._children_controller = this._children_controller || this._create_children_controller());
 	}
-	children_allowed(): boolean {
+	childrenAllowed(): boolean {
 		return this._children_controller_context != null;
 	}
 
@@ -121,18 +121,18 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return (this._serializer = this._serializer || new NodeSerializer(this));
 	}
 
-	get cook_controller(): NodeCookController<NC> {
+	get cookController(): NodeCookController<NC> {
 		return (this._cook_controller = this._cook_controller || new NodeCookController(this));
 	}
 	protected _io: IOController<NC> | undefined;
 	get io(): IOController<NC> {
 		return (this._io = this._io || new IOController(this));
 	}
-	get name_controller(): NameController {
+	get nameController(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
 	}
 	setName(name: string) {
-		this.name_controller.setName(name);
+		this.nameController.setName(name);
 	}
 	_set_core_name(name: string) {
 		this._name = name;
@@ -170,17 +170,17 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	static type(): string {
 		throw 'type to be overriden';
 	}
-	get type() {
+	type() {
 		const c = this.constructor as typeof BaseNodeClass;
 		return c.type();
 	}
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		console.error('node has no node_context', this);
 		throw 'node_context requires override';
 	}
-	node_context(): NodeContext {
+	nodeContext(): NodeContext {
 		const c = this.constructor as typeof BaseNodeClass;
-		return c.node_context();
+		return c.nodeContext();
 	}
 
 	static require_webgl2(): boolean {
@@ -192,27 +192,27 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	set_parent(parent: BaseNodeType | null) {
-		this.parent_controller.set_parent(parent);
+		this.parentController.set_parent(parent);
 	}
-	get parent() {
-		return this.parent_controller.parent;
+	parent() {
+		return this.parentController.parent();
 	}
-	get root() {
-		return this._scene.root;
+	root() {
+		return this._scene.root();
 	}
 	fullPath(relative_to_parent?: BaseNodeType): string {
-		return this.parent_controller.fullPath(relative_to_parent);
+		return this.parentController.fullPath(relative_to_parent);
 	}
 
 	// params
 	create_params() {}
-	add_param<T extends ParamType>(
+	addParam<T extends ParamType>(
 		type: T,
 		name: string,
 		default_value: ParamInitValuesTypeMap[T],
 		options?: ParamOptions
 	): ParamConstructorMap[T] | undefined {
-		return this._params_controller?.add_param(type, name, default_value, options);
+		return this._params_controller?.addParam(type, name, default_value, options);
 	}
 	param_default_value(name: string): ParamInitValueSerialized {
 		return null;
@@ -231,7 +231,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 			return await this.container_controller.requestContainer();
 		}
 	}
-	set_container(content: ContainableMap[NC], message: string | null = null) {
+	setContainer(content: ContainableMap[NC], message: string | null = null) {
 		// TODO: typescript: why is this a type of never
 		this.container_controller.container.set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
@@ -242,36 +242,37 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 				(content as any).node = this;
 			}
 		}
-		this.cook_controller.end_cook(message);
+		this.cookController.end_cook(message);
 	}
 
 	// hierarchy
 	createNode(node_class: any, params_init_value_overrides?: ParamsInitData) {
-		return this.children_controller?.createNode(node_class, params_init_value_overrides);
+		return this.childrenController?.createNode(node_class, params_init_value_overrides);
 	}
 	create_operation_container(
 		type: string,
 		operation_container_name: string,
 		params_init_value_overrides?: ParamsInitData
 	) {
-		return this.children_controller?.create_operation_container(
+		return this.childrenController?.create_operation_container(
 			type,
 			operation_container_name,
 			params_init_value_overrides
 		);
 	}
 	removeNode(node: BaseNodeType) {
-		this.children_controller?.removeNode(node);
+		this.childrenController?.removeNode(node);
 	}
 	children() {
-		return this.children_controller?.children() || [];
+		return this.childrenController?.children() || [];
 	}
 	node(path: string) {
-		return this.parent_controller?.find_node(path) || null;
+		return this.parentController?.find_node(path) || null;
 	}
 	nodeSibbling(name: string): NodeTypeMap[NC] | null {
-		if (this.parent) {
-			const node = this.parent.children_controller?.child_by_name(name);
+		const parent = this.parent();
+		if (parent) {
+			const node = parent.childrenController?.child_by_name(name);
 			if (node) {
 				return node as NodeTypeMap[NC];
 			}
@@ -279,7 +280,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return null;
 	}
 	nodesByType(type: string) {
-		return this.children_controller?.nodesByType(type) || [];
+		return this.childrenController?.nodesByType(type) || [];
 	}
 
 	// inputs

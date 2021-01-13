@@ -5,7 +5,7 @@ QUnit.test('delay simple', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const delay1 = geo1.createNode('delay');
 
-	await scene.root.process_queue();
+	await scene.root().processQueue();
 
 	delay1.setInput(0, box1);
 

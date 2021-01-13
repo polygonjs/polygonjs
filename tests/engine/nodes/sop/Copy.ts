@@ -45,8 +45,8 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 	copy1.setInput(1, line1);
 
 	attrib_create1.p.name.set('test');
-	attrib_create1.p.value1.set(`1+2*copy('../${copy1.name}', 0)`);
-	switch1.p.input.set(`copy('../${copy1.name}', 0)`);
+	attrib_create1.p.value1.set(`1+2*copy('../${copy1.name()}', 0)`);
+	switch1.p.input.set(`copy('../${copy1.name()}', 0)`);
 	assert.ok(switch1.graphAllPredecessors().includes(copy1.stamp_node));
 
 	let container = await copy1.requestContainer();
@@ -80,7 +80,7 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 	copy1.setInput(0, switch1);
 	copy1.p.count.set(3);
 
-	switch1.p.input.set(`copy('../${copy1.name}', 0) % 2`);
+	switch1.p.input.set(`copy('../${copy1.name()}', 0) % 2`);
 
 	let container = await copy1.requestContainer();
 	// let core_group = container.coreContent();
@@ -112,7 +112,7 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	copy1.p.useCopyExpr.set(1);
 
 	attrib_create1.p.name.set('test');
-	attrib_create1.p.value1.set(`copy('../${copy1.name}', 0)`);
+	attrib_create1.p.value1.set(`copy('../${copy1.name()}', 0)`);
 
 	let container = await copy1.requestContainer();
 	// let core_group = container.coreContent();

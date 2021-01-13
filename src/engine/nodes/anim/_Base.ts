@@ -10,7 +10,7 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ANIM, K> {
 	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
 
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.ANIM;
 	}
 
@@ -22,7 +22,7 @@ export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeCon
 		this.io.outputs.set_has_one_output();
 	}
 	set_timeline_builder(timeline_builder: TimelineBuilder) {
-		this.set_container(timeline_builder);
+		this.setContainer(timeline_builder);
 	}
 }
 

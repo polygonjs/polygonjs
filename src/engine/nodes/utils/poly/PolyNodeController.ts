@@ -12,7 +12,7 @@ import {createPolyObjNode} from '../../obj/Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export interface PolyNodeDefinition {
-	node_context: NodeContext;
+	nodeContext: NodeContext;
 	inputs?: [number, number];
 	params?: ParamOptionToAdd<ParamType>[];
 	nodes?: PolyDictionary<NodeJsonExporterData>;
@@ -91,7 +91,7 @@ export class PolyNodeController {
 			const nodes_data = root_exporter.data({showPolyNodesData: true});
 			const ui_data = root_exporter.ui_data({showPolyNodesData: true});
 			const data: PolyNodeDefinition = {
-				node_context: node.node_context(),
+				nodeContext: node.nodeContext(),
 				inputs: [0, 0],
 				params: [],
 				nodes: nodes_data.nodes,

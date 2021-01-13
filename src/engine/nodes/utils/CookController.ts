@@ -62,7 +62,7 @@ export class NodeCookController<NC extends NodeContext> {
 		}
 		this._init_cooking_state();
 		this.node.states.error.clear();
-		this.node.scene().cook_controller.add_node(this.node);
+		this.node.scene().cookController.add_node(this.node);
 
 		let input_contents: ContainableMap[NC][];
 		if (this._inputs_evaluation_required) {
@@ -76,7 +76,7 @@ export class NodeCookController<NC extends NodeContext> {
 		this._start_cook_if_no_errors(input_contents);
 	}
 	async cook_main_without_inputs() {
-		this.node.scene().cook_controller.add_node(this.node);
+		this.node.scene().cookController.add_node(this.node);
 		if (this.is_cooking) {
 			// TODO:
 			// this seems to happen because when we flush the cooker queue,

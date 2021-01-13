@@ -19,12 +19,12 @@ export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 
 		for (let definition of this._definitions) {
 			if (!this._errored) {
-				const name = definition.name;
+				const name = definition.name();
 				const existing = definitions_by_name.get(name);
 				if (existing) {
 					if (existing.data_type != definition.data_type) {
 						this._errored = true;
-						this._error_message = `attempt to create '${definition.name}' with types '${
+						this._error_message = `attempt to create '${definition.name()}' with types '${
 							definition.data_type
 						}' by node '${definition.node.fullPath()}', when there is already an existing with type ${
 							existing.data_type

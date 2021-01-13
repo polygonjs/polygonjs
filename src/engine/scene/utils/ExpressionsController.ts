@@ -18,6 +18,6 @@ export class ExpressionsController {
 	//
 	//
 	regenerate_referring_expressions(node: BaseNodeType) {
-		node.name_controller.graph_node.setSuccessorsDirty(node);
+		node.nameController.graph_node.setSuccessorsDirty(node);
 	}
 }

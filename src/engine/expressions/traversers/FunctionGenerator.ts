@@ -521,7 +521,7 @@ export class FunctionGenerator extends BaseTraverser {
 		return `param.scene().timeController.time`;
 	}
 	protected traverse_Identifier_CH(): string {
-		return `${QUOTE}${this.param.name}${QUOTE}`;
+		return `${QUOTE}${this.param.name()}${QUOTE}`;
 	}
 	protected traverse_Identifier_CEX(): string {
 		return this._method_centroid('x');

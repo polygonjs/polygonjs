@@ -29,7 +29,7 @@ export abstract class TypedGLDefinition<T extends GLDefinitionType> {
 	get node() {
 		return this._node;
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
 	// get id() {
@@ -47,7 +47,7 @@ export class AttributeGLDefinition extends TypedGLDefinition<GLDefinitionType.AT
 		super(GLDefinitionType.ATTRIBUTE, _data_type, _node, _name);
 	}
 	get line() {
-		return `attribute ${this.data_type} ${this.name}`;
+		return `attribute ${this.data_type} ${this.name()}`;
 	}
 }
 
@@ -56,7 +56,7 @@ export class FunctionGLDefinition extends TypedGLDefinition<GLDefinitionType.FUN
 		super(GLDefinitionType.FUNCTION, GlConnectionPointType.FLOAT, _node, _name);
 	}
 	get line() {
-		return this.name;
+		return this.name();
 	}
 }
 
@@ -65,7 +65,7 @@ export class UniformGLDefinition extends TypedGLDefinition<GLDefinitionType.UNIF
 		super(GLDefinitionType.UNIFORM, _data_type, _node, _name);
 	}
 	get line() {
-		return `uniform ${this.data_type} ${this.name}`;
+		return `uniform ${this.data_type} ${this.name()}`;
 	}
 }
 
@@ -74,7 +74,7 @@ export class VaryingGLDefinition extends TypedGLDefinition<GLDefinitionType.VARY
 		super(GLDefinitionType.VARYING, _data_type, _node, _name);
 	}
 	get line() {
-		return `varying ${this.data_type} ${this.name}`;
+		return `varying ${this.data_type} ${this.name()}`;
 	}
 }
 export type BaseGLDefinition = TypedGLDefinition<GLDefinitionType>;

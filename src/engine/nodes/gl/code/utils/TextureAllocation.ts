@@ -44,14 +44,14 @@ export class TextureAllocation {
 	input_names_for_node(root_node: BaseGlNodeType): string[] | undefined {
 		const variables = this.variables_for_input_node(root_node);
 		if (variables) {
-			if (root_node.type == GlNodeType.ATTRIBUTE) {
+			if (root_node.type() == GlNodeType.ATTRIBUTE) {
 				// if the AttributeGlNode exports an attribute called restP,
 				// the variable will be named also restP.
 				// And the input of the AttributeGlNode will not be called restP,
 				// so I need to make sure I only return the actual name of its input here
 				return [AttributeGlNode.INPUT_NAME];
 			} else {
-				return variables.map((v) => v.name);
+				return variables.map((v) => v.name());
 			}
 		}
 		// return ?.map((v) => v.name);
@@ -65,7 +65,7 @@ export class TextureAllocation {
 	variable(variable_name: string) {
 		if (this._variables) {
 			for (let variable of this._variables) {
-				if (variable.name == variable_name) {
+				if (variable.name() == variable_name) {
 					return variable;
 				}
 			}

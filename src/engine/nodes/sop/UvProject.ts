@@ -74,10 +74,10 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 		// 	old_aspect = this._camera_object.aspect;
 		// 	this._camera_node.setup_for_aspect_ratio(this.pv.aspect);
 		// }
-
-		if (this._processed_core_group && this.parent) {
+		const parent = this.parent();
+		if (this._processed_core_group && parent) {
 			const points = this._processed_core_group.points();
-			const obj_world_matrix = (this.parent as BaseObjNodeType).object.matrixWorld;
+			const obj_world_matrix = (parent as BaseObjNodeType).object.matrixWorld;
 			points.forEach((point) => {
 				const position = point.position();
 				const uvw = this._vector_in_camera_space(position, obj_world_matrix);

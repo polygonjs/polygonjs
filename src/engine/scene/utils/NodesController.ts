@@ -20,7 +20,7 @@ export class NodesController {
 		this._root.init_default_scene();
 	}
 
-	get root() {
+	root() {
 		return this._root;
 	}
 	private _traverseNode(parent: BaseNodeType, callback: (node: BaseNodeType) => void) {
@@ -32,7 +32,7 @@ export class NodesController {
 		for (let node of nodes) {
 			callback(node);
 
-			if (node.children_controller) {
+			if (node.childrenController) {
 				this._traverseNode(node, callback);
 			}
 		}
@@ -52,9 +52,9 @@ export class NodesController {
 	// 	return objects;
 	// }
 	clear() {
-		const children = this.root.children();
+		const children = this.root().children();
 		for (let child of children) {
-			this.root.children_controller?.removeNode(child);
+			this.root().childrenController?.removeNode(child);
 		}
 		// return children.forEach(child=> {
 		// 	return this.root().removeNode(child);
@@ -63,19 +63,19 @@ export class NodesController {
 
 	node(path: string) {
 		if (path === '/') {
-			return this.root;
+			return this.root();
 		} else {
-			return this.root.node(path);
+			return this.root().node(path);
 		}
 	}
 	allNodes() {
-		let nodes: BaseNodeType[] = [this.root];
-		let current_parents: BaseNodeType[] = [this.root];
+		let nodes: BaseNodeType[] = [this.root()];
+		let current_parents: BaseNodeType[] = [this.root()];
 		let cmptr = 0;
 		while (current_parents.length > 0 && cmptr < 10) {
 			const children = current_parents
 				.map((current_parent) => {
-					if (current_parent.children_allowed()) {
+					if (current_parent.childrenAllowed()) {
 						return current_parent.children();
 					} else {
 						return [];
@@ -104,8 +104,8 @@ export class NodesController {
 		this._node_context_signatures = {};
 	}
 	register_node_context_signature(node: BaseNodeType) {
-		if (node.children_allowed() && node.children_controller) {
-			this._node_context_signatures[node.children_controller.node_context_signature()] = true;
+		if (node.childrenAllowed() && node.childrenController) {
+			this._node_context_signatures[node.childrenController.node_context_signature()] = true;
 		}
 	}
 	node_context_signatures() {
@@ -115,8 +115,8 @@ export class NodesController {
 	}
 
 	addToInstanciatedNode(node: BaseNodeType) {
-		const context = node.node_context();
-		const node_type = node.type;
+		const context = node.nodeContext();
+		const node_type = node.type();
 		this._instanciated_nodes_by_context_and_type[context] =
 			this._instanciated_nodes_by_context_and_type[context] || {};
 		this._instanciated_nodes_by_context_and_type[context][node_type] =
@@ -125,15 +125,15 @@ export class NodesController {
 	}
 
 	removeFromInstanciatedNode(node: BaseNodeType) {
-		const context = node.node_context();
-		const node_type = node.type;
+		const context = node.nodeContext();
+		const node_type = node.type();
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()];
 	}
 	nodesByType(type: string): BaseNodeType[] {
 		const list: BaseNodeType[] = [];
 
-		this._traverseNode(this.scene.root, (node) => {
-			if (node.type == type) {
+		this._traverseNode(this.scene.root(), (node) => {
+			if (node.type() == type) {
 				list.push(node);
 			}
 		});

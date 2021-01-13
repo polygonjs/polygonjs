@@ -131,7 +131,7 @@ export class RaycastGPUController {
 	update_material() {
 		const node = this._node.p.material.found_node();
 		if (node) {
-			if (node.node_context() == NodeContext.MAT) {
+			if (node.nodeContext() == NodeContext.MAT) {
 				this._resolved_material = (node as BaseMatNodeType).material;
 			} else {
 				this._node.states.error.set('target is not an obj');

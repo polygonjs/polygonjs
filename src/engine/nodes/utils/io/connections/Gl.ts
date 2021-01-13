@@ -260,7 +260,7 @@ export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConn
 		this._init_value = this._init_value || GlConnectionPointInitValueMap[this._type];
 		// }
 	}
-	get type() {
+	type() {
 		return this._type;
 	}
 	are_types_matched(src_type: string, dest_type: string): boolean {

@@ -34,7 +34,7 @@ export class TextureVariable {
 		this._graph_node_ids = this._graph_node_ids || new Map();
 		this._graph_node_ids.set(id, true);
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
 	get size() {
@@ -59,7 +59,7 @@ export class TextureVariable {
 		const names: string[] = [];
 		if (this._graph_node_ids) {
 			this._graph_node_ids.forEach((boolean, node_id) => {
-				const name = scene.graph.node_from_id(node_id)?.name;
+				const name = scene.graph.node_from_id(node_id)?.name();
 				if (name) {
 					names.push(name);
 				}
@@ -67,7 +67,7 @@ export class TextureVariable {
 		}
 
 		return {
-			name: this.name,
+			name: this.name(),
 			size: this.size,
 			nodes: names.sort(),
 		};

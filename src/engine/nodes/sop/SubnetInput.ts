@@ -40,7 +40,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 
 	async cook() {
 		const input_index = this.pv.input;
-		const parent = this.parent;
+		const parent = this.parent();
 		if (parent) {
 			if (parent.io.inputs.has_input(input_index)) {
 				const container = await parent.container_controller.requestInputContainer(input_index);
@@ -54,7 +54,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 			} else {
 				this.states.error.set(`parent has no input ${input_index}`);
 			}
-			this.cook_controller.end_cook();
+			this.cookController.end_cook();
 		} else {
 			this.states.error.set(`subnet input has no parent`);
 		}
@@ -68,7 +68,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 			this.removeGraphInput(this._current_parent_input_graph_node);
 		}
 
-		const parent = this.parent;
+		const parent = this.parent();
 		if (parent) {
 			this._current_parent_input_graph_node = parent.io.inputs.input_graph_node(this.pv.input);
 			this.addGraphInput(this._current_parent_input_graph_node);

@@ -37,7 +37,7 @@ export class ThreejsCameraControlsController {
 			}
 			const node = controls_param.value.node();
 			if (node) {
-				if (CAMERA_CONTROLS_NODE_TYPES.includes(node.type)) {
+				if (CAMERA_CONTROLS_NODE_TYPES.includes(node.type())) {
 					return node as BaseCameraControlsEventNodeType;
 				} else {
 					this.node.states.error.set('found node is not of a camera control type');
@@ -83,6 +83,9 @@ export class ThreejsCameraControlsController {
 				// requestContainer forces a cook
 				//controls_node.requestContainer (controls_container)=>
 				const controls = await controls_node.apply_controls(this.node.object, viewer);
+				if (!controls) {
+					return;
+				}
 				const config = new CameraControlsConfig(this.node.graphNodeId(), controls_node, controls);
 				// controls_node.set_from_camera_node(controls, this.node);
 				this.set_controls_events(controls);

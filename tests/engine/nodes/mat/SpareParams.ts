@@ -41,17 +41,17 @@ QUnit.test(
 
 		// param should already exist, and also uniform on mat
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
-		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.FLOAT);
+		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.FLOAT);
 
 		// changing the param type updates the spare param type
 		param1.set_gl_type(GlConnectionPointType.INT);
 		await mesh_basic1.requestContainer();
-		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.INTEGER);
+		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.INTEGER);
 
 		// we revert back to float for the rest of the test
 		param1.set_gl_type(GlConnectionPointType.FLOAT);
 		await mesh_basic1.requestContainer();
-		assert.equal(mesh_basic1.params.get(param_name)!.type, ParamType.FLOAT);
+		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.FLOAT);
 
 		// updating the param updates the uniform, without having to cook the material node
 		output1.setInput('alpha', param1);
@@ -97,7 +97,7 @@ QUnit.test(
 		param1.set_gl_type(GlConnectionPointType.INT);
 		await mesh_basic1.requestContainer();
 		let spare_param = mesh_basic1.params.get(param_name)!;
-		assert.equal(spare_param.type, ParamType.INTEGER);
+		assert.equal(spare_param.type(), ParamType.INTEGER);
 		await CoreSleep.sleep(10);
 		assert.equal(spare_param.raw_input, '$F');
 		assert.notOk(spare_param.isDirty(), 'param not dirty');
@@ -116,7 +116,7 @@ QUnit.test(
 		param1.set_gl_type(GlConnectionPointType.FLOAT);
 		await mesh_basic1.requestContainer();
 		spare_param = mesh_basic1.params.get(param_name)!;
-		assert.equal(spare_param.type, ParamType.FLOAT);
+		assert.equal(spare_param.type(), ParamType.FLOAT);
 		assert.equal(mesh_basic1.params.get(param_name)!.raw_input, '$F');
 
 		const data = new SceneJsonExporter(scene).data();
@@ -179,7 +179,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	param1.set_gl_type(GlConnectionPointType.FLOAT);
 	await CoreSleep.sleep(100);
 	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
-	assert.equal(float_spare_param.type, ParamType.FLOAT, 'param is float');
+	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
 	float_spare_param.set(0.25);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0.25);
@@ -188,7 +188,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	param1.set_gl_type(GlConnectionPointType.VEC3);
 	await CoreSleep.sleep(100);
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as Vector3Param;
-	assert.equal(vec3_spare_param.type, ParamType.VECTOR3, 'param is vec3');
+	assert.equal(vec3_spare_param.type(), ParamType.VECTOR3, 'param is vec3');
 	assert.deepEqual(vec3_spare_param.value_serialized, [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
 	assert.deepEqual(vec3_spare_param.default_value_serialized, [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
@@ -208,9 +208,9 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
-	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name}`)! as MeshBasicBuilderMatNode;
+	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name()}`)! as MeshBasicBuilderMatNode;
 	const vec3_spare_param2 = mesh_basic2.params.get(param_name)! as Vector3Param;
-	assert.equal(vec3_spare_param2.type, ParamType.VECTOR3);
+	assert.equal(vec3_spare_param2.type(), ParamType.VECTOR3);
 	assert.deepEqual(vec3_spare_param2.value_serialized, [0.1, 0.8, 0.3], 'after load value_serialized is 0.1,0.8,0.3');
 	assert.deepEqual(
 		vec3_spare_param2.default_value_serialized,
@@ -256,7 +256,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	param1.set_gl_type(GlConnectionPointType.FLOAT);
 	await mesh_basic1.requestContainer();
 	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
-	assert.equal(float_spare_param.type, ParamType.FLOAT, 'param is float');
+	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
 	float_spare_param.set(0.25);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0.25);
@@ -266,7 +266,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	param1.p.as_color.set(1);
 	await mesh_basic1.requestContainer();
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as ColorParam;
-	assert.equal(vec3_spare_param.type, ParamType.COLOR, 'param is color');
+	assert.equal(vec3_spare_param.type(), ParamType.COLOR, 'param is color');
 	assert.deepEqual(vec3_spare_param.value_serialized, [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
 	assert.deepEqual(vec3_spare_param.default_value_serialized, [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
@@ -286,9 +286,9 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
-	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name}`)! as MeshBasicBuilderMatNode;
+	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name()}`)! as MeshBasicBuilderMatNode;
 	const vec3_spare_param2 = mesh_basic2.params.get(param_name)! as ColorParam;
-	assert.equal(vec3_spare_param2.type, ParamType.COLOR);
+	assert.equal(vec3_spare_param2.type(), ParamType.COLOR);
 	assert.deepEqual(vec3_spare_param2.value_serialized, [0.1, 0.8, 0.3], 'after load value_serialized is 0.1,0.8,0.3');
 	assert.deepEqual(
 		vec3_spare_param2.default_value_serialized,

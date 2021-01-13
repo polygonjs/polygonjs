@@ -277,7 +277,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	private fbm_method_name() {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name];
-		return `fbm_${method_name}_${this.name}`;
+		return `fbm_${method_name}_${this.name()}`;
 	}
 
 	private fbm_function() {
@@ -350,7 +350,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 			return `float ${noise}${output_name_suffix} = (${right_hand}).${component}`;
 		} else {
 			// it looks like we never go here with the current set of noises
-			const output_type = this.io.outputs.named_output_connection_points[0].type;
+			const output_type = this.io.outputs.named_output_connection_points[0].type();
 			return `${output_type} ${noise} = ${right_hand}`;
 		}
 	}

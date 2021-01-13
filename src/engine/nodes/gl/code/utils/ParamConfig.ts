@@ -50,7 +50,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	}
 
 	static callback(param: BaseParamType, uniform: IUniform) {
-		switch (param.type) {
+		switch (param.type()) {
 			case ParamType.RAMP:
 				uniform.value = (param as RampParam).ramp_texture();
 				return;

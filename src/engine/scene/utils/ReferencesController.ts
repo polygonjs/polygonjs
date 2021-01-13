@@ -76,7 +76,7 @@ export class ReferencesController {
 		const path_param_types: Readonly<Set<ParamType>> = new Set([ParamType.OPERATOR_PATH, ParamType.NODE_PATH]);
 		const path_params: BasePathParam[] = [];
 		for (let param of node.params.all) {
-			if (path_param_types.has(param.type)) {
+			if (path_param_types.has(param.type())) {
 				path_params.push(param as BasePathParam);
 			}
 		}

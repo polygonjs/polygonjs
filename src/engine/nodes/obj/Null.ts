@@ -41,6 +41,6 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	}
 	cook() {
 		this.transform_controller.update();
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }

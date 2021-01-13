@@ -22,7 +22,7 @@ export class DecomposedPath {
 
 	add_node(name: string, node: NodeOrParam) {
 		this._index += 1;
-		if (name == node.name) {
+		if (name == node.name()) {
 			this._named_nodes[this._index] = node;
 		}
 
@@ -42,7 +42,7 @@ export class DecomposedPath {
 		for (let graph_node of this._named_nodes) {
 			if (graph_node) {
 				const node = graph_node as BaseNodeType;
-				if (node.name_controller) {
+				if (node.nameController) {
 					nodes.push(node);
 				}
 			}
@@ -54,7 +54,7 @@ export class DecomposedPath {
 		const named_graph_node_ids = this._named_nodes.map((n) => n?.graphNodeId());
 
 		if (named_graph_node_ids.includes(node.graphNodeId())) {
-			this._node_element_by_graph_node_id.set(node.graphNodeId(), node.name);
+			this._node_element_by_graph_node_id.set(node.graphNodeId(), node.name());
 		}
 	}
 

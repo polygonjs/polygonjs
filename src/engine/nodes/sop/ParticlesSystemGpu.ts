@@ -139,9 +139,9 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
-	children_allowed() {
+	childrenAllowed() {
 		if (this.assemblerController) {
-			return super.children_allowed();
+			return super.childrenAllowed();
 		}
 		this.scene().mark_as_read_only(this);
 		return false;
@@ -185,7 +185,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (this.is_on_frame_start()) {
 			this.setCoreGroup(core_group);
 		} else {
-			this.cook_controller.end_cook();
+			this.cookController.end_cook();
 		}
 	}
 	async compile_if_required() {

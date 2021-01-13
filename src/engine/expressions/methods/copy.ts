@@ -37,7 +37,7 @@ export class CopyExpression extends BaseMethod {
 		const node = this.find_referenced_graph_node(index_or_path) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode)
 		// but tslib generates an error when doing so
-		if (node && node.type == 'copy') {
+		if (node && node.type() == 'copy') {
 			const stamp_node = (node as CopySopNode).stamp_node;
 			return this.create_dependency(stamp_node, index_or_path);
 		}
@@ -60,7 +60,7 @@ export class CopyExpression extends BaseMethod {
 				const node = current_node ? CoreWalker.find_node(current_node, path) : null;
 
 				let value;
-				if (node && node.type == CopySopNode.type()) {
+				if (node && node.type() == CopySopNode.type()) {
 					value = (node as CopySopNode).stamp_value(attribute_name);
 				}
 				// if (node && node instanceof CopySopNode) {

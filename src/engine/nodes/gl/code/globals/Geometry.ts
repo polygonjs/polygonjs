@@ -53,7 +53,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		}
 
 		const var_name = globals_node.gl_var_name(output_name);
-		const gl_type = connection_point.type;
+		const gl_type = connection_point.type();
 		const definition = new VaryingGLDefinition(globals_node, gl_type, var_name);
 
 		// MapUtils.push_on_array_at_entry(definitions_by_shader_name, shader_name, definition);

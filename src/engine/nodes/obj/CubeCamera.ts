@@ -103,7 +103,7 @@
 // 			}
 // 		}
 
-// 		this.cook_controller.end_cook();
+// 		this.cookController.end_cook();
 // 	}
 
 // 	render_target() {

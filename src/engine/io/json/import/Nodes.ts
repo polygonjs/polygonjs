@@ -19,7 +19,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		if (!(this._node.children_allowed() && this._node.children_controller)) {
+		if (!(this._node.childrenAllowed() && this._node.childrenController)) {
 			return;
 		}
 
@@ -63,19 +63,19 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		const importers_by_node_name: Map<string, PolyNodeJsonImporter | NodeJsonImporter<BaseNodeType>> = new Map();
 		for (let node of nodes) {
-			const child_data = data[node.name];
+			const child_data = data[node.name()];
 			if (child_data) {
 				const importer = JsonImportDispatcher.dispatch_node(node);
-				importers_by_node_name.set(node.name, importer);
-				importer.process_data(scene_importer, data[node.name]);
+				importers_by_node_name.set(node.name(), importer);
+				importer.process_data(scene_importer, data[node.name()]);
 			} else {
-				Poly.warn(`possible import error for node ${node.name}`);
+				Poly.warn(`possible import error for node ${node.name()}`);
 			}
 		}
 		for (let node of nodes) {
-			const importer = importers_by_node_name.get(node.name);
+			const importer = importers_by_node_name.get(node.name());
 			if (importer) {
-				importer.process_inputs_data(data[node.name]);
+				importer.process_inputs_data(data[node.name()]);
 			}
 		}
 	}

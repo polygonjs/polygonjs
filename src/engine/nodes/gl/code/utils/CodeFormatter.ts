@@ -24,7 +24,7 @@ export class CodeFormatter {
 		if (line_type == LineType.BODY) {
 			let distance = this.node_distance_to_material(node);
 			// special case for subnet_output, so that the comment is offset correctly
-			if (node.type == NetworkChildNodeType.OUTPUT) {
+			if (node.type() == NetworkChildNodeType.OUTPUT) {
 				distance += 1;
 			}
 			prefix = prefix.repeat(distance);
@@ -58,19 +58,20 @@ export class CodeFormatter {
 	}
 
 	static node_distance_to_material(node: BaseNodeType): number {
-		if (!node.parent) {
+		const parent = node.parent();
+		if (!parent) {
 			return 0;
 		}
-		if (node.parent.node_context() != node.node_context()) {
+		if (parent.nodeContext() != node.nodeContext()) {
 			return 1;
 		} else {
 			// we do not have an offset of 1 for subnet_input and subnet_output
 			// so that those nodes can control the tabs themselves in set_lines()
 			let offset = 1;
-			if (node.type == NetworkChildNodeType.INPUT || node.type == NetworkChildNodeType.OUTPUT) {
+			if (node.type() == NetworkChildNodeType.INPUT || node.type() == NetworkChildNodeType.OUTPUT) {
 				offset = 0;
 			}
-			return offset + this.node_distance_to_material(node.parent);
+			return offset + this.node_distance_to_material(parent);
 		}
 	}
 }

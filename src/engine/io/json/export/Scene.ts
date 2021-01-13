@@ -24,7 +24,7 @@ export class SceneJsonExporter {
 
 	data(): SceneJsonExporterData {
 		this._scene.nodesController.reset_node_context_signatures();
-		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root);
+		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root());
 		const nodes_data = root_exporter.data();
 		const ui_data = root_exporter.ui_data();
 

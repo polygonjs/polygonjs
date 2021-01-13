@@ -40,7 +40,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 
 		const node = this.p.texture.found_node();
 		if (node) {
-			const node_context = node.node_context();
+			const node_context = node.nodeContext();
 			if (node_context == NodeContext.COP) {
 				const texture_node = node as BaseCopNodeType;
 				const container = await texture_node.requestContainer();

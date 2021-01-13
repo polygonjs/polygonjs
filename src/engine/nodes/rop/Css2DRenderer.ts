@@ -78,7 +78,7 @@ export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsCon
 			this._update_renderer(renderer);
 		});
 
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 
 	private _update_renderer(renderer: CSS2DRenderer) {

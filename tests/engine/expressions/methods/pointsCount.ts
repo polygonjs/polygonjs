@@ -6,7 +6,7 @@ QUnit.test('expression pointsCount works with path', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
 
-	box2.p.size.set(`pointsCount('../${box1.name}')`);
+	box2.p.size.set(`pointsCount('../${box1.name()}')`);
 
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 24);
@@ -208,7 +208,7 @@ QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (as
 
 	assert.equal(box2.p.size.graphAllPredecessors().length, 10, 'has 10 predecessors');
 	assert.equal(box2.p.size.graphPredecessors().length, 1);
-	assert.equal(box2.p.size.graphPredecessors()[0].name, 'box1');
+	assert.equal(box2.p.size.graphPredecessors()[0].name(), 'box1');
 
 	geo1.removeNode(box1);
 	assert.ok(box2.p.size.isDirty());

@@ -204,7 +204,7 @@ export class TimelineBuilderProperty {
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
 	) {
-		switch (param.type) {
+		switch (param.type()) {
 			case ParamType.FLOAT: {
 				this._populate_vars_for_param_float(param as FloatParam, timeline_builder, timeline);
 			}

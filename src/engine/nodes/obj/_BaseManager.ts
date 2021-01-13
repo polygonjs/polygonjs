@@ -12,7 +12,7 @@ export class BaseManagerObjNode<K extends NodeParamsConfig> extends TypedObjNode
 	}
 
 	cook() {
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }
 

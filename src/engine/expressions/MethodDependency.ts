@@ -45,8 +45,8 @@ export class MethodDependency extends CoreGraphNode {
 			for (let node_in_path of this.decomposed_path.named_nodes()) {
 				if (node_in_path) {
 					const node = node_in_path as BaseNodeType;
-					if (node.name_controller) {
-						this.addGraphInput(node.name_controller.graph_node);
+					if (node.nameController) {
+						this.addGraphInput(node.nameController.graph_node);
 					}
 				}
 			}

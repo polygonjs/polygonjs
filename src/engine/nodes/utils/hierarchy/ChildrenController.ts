@@ -56,7 +56,7 @@ export class HierarchyChildrenController {
 
 		if ((current_child_with_name = this._children[new_name]) != null) {
 			// only return if found node is same as argument node, and if new_name is same as current_name
-			if (node.name === new_name && current_child_with_name.graphNodeId() === node.graphNodeId()) {
+			if (node.name() === new_name && current_child_with_name.graphNodeId() === node.graphNodeId()) {
 				return;
 			}
 
@@ -65,7 +65,7 @@ export class HierarchyChildrenController {
 
 			return this.set_child_name(node, new_name);
 		} else {
-			const current_name = node.name;
+			const current_name = node.name();
 
 			// delete old entry if node was in _children with old name
 			const current_child = this._children[current_name];
@@ -75,18 +75,18 @@ export class HierarchyChildrenController {
 
 			// add to new name
 			this._children[new_name] = node;
-			node.name_controller.update_name_from_parent(new_name);
+			node.nameController.update_name_from_parent(new_name);
 			this._add_to_nodesByType(node);
 			this.node.scene().nodesController.addToInstanciatedNode(node);
 		}
 	}
 
 	node_context_signature() {
-		return `${this.node.node_context()}/${this.node.type}`;
+		return `${this.node.nodeContext()}/${this.node.type()}`;
 	}
 
 	available_children_classes() {
-		return Poly.registeredNodes(this._context, this.node.type);
+		return Poly.registeredNodes(this._context, this.node.type());
 	}
 
 	is_valid_child_type(node_type: string): boolean {
@@ -140,7 +140,7 @@ export class HierarchyChildrenController {
 		if (node_class == null) {
 			const message = `child node type '${node_type}' not found for node '${this.node.fullPath()}'. Available types are: ${Object.keys(
 				this.available_children_classes()
-			).join(', ')}, ${this._context}, ${this.node.type}`;
+			).join(', ')}, ${this._context}, ${this.node.type()}`;
 			console.error(message);
 			throw message;
 		}
@@ -171,11 +171,11 @@ export class HierarchyChildrenController {
 	add_node(child_node: BaseNodeType) {
 		child_node.set_parent(this.node);
 		child_node.params.init();
-		child_node.parent_controller.on_set_parent();
-		child_node.name_controller.run_post_set_fullPath_hooks();
-		if (child_node.children_allowed() && child_node.children_controller) {
-			for (let child of child_node.children_controller.children()) {
-				child.name_controller.run_post_set_fullPath_hooks();
+		child_node.parentController.on_set_parent();
+		child_node.nameController.run_post_set_fullPath_hooks();
+		if (child_node.childrenAllowed() && child_node.childrenController) {
+			for (let child of child_node.childrenController.children()) {
+				child.nameController.run_post_set_fullPath_hooks();
 			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
@@ -196,8 +196,8 @@ export class HierarchyChildrenController {
 	}
 
 	removeNode(child_node: BaseNodeType): void {
-		if (child_node.parent != this.node) {
-			return console.warn(`node ${child_node.name} not under parent ${this.node.fullPath()}`);
+		if (child_node.parent() != this.node) {
+			return console.warn(`node ${child_node.name()} not under parent ${this.node.fullPath()}`);
 		} else {
 			if (this.selection.contains(child_node)) {
 				this.selection.remove([child_node]);
@@ -230,7 +230,7 @@ export class HierarchyChildrenController {
 
 			// remove from children
 			child_node.set_parent(null);
-			delete this._children[child_node.name];
+			delete this._children[child_node.name()];
 			this._remove_from_nodesByType(child_node);
 			this.node.scene().nodesController.removeFromInstanciatedNode(child_node);
 
@@ -252,7 +252,7 @@ export class HierarchyChildrenController {
 
 	_add_to_nodesByType(node: BaseNodeType) {
 		const node_id = node.graphNodeId();
-		const type = node.type;
+		const type = node.type();
 		this._children_by_type[type] = this._children_by_type[type] || [];
 		if (!this._children_by_type[type].includes(node_id)) {
 			this._children_by_type[type].push(node_id);
@@ -261,7 +261,7 @@ export class HierarchyChildrenController {
 	}
 	_remove_from_nodesByType(node: BaseNodeType) {
 		const node_id = node.graphNodeId();
-		const type = node.type;
+		const type = node.type();
 		if (this._children_by_type[type]) {
 			const index = this._children_by_type[type].indexOf(node_id);
 			if (index >= 0) {
@@ -275,18 +275,19 @@ export class HierarchyChildrenController {
 	}
 	add_to_children_and_grandchildren_by_context(node: BaseNodeType) {
 		const node_id = node.graphNodeId();
-		const type = node.node_context();
+		const type = node.nodeContext();
 		this._children_and_grandchildren_by_context[type] = this._children_and_grandchildren_by_context[type] || [];
 		if (!this._children_and_grandchildren_by_context[type].includes(node_id)) {
 			this._children_and_grandchildren_by_context[type].push(node_id);
 		}
-		if (this.node.parent && this.node.parent.children_allowed()) {
-			this.node.parent.children_controller?.add_to_children_and_grandchildren_by_context(node);
+		const parent = this.node.parent();
+		if (parent && parent.childrenAllowed()) {
+			parent.childrenController?.add_to_children_and_grandchildren_by_context(node);
 		}
 	}
 	remove_from_children_and_grandchildren_by_context(node: BaseNodeType) {
 		const node_id = node.graphNodeId();
-		const type = node.node_context();
+		const type = node.nodeContext();
 		if (this._children_and_grandchildren_by_context[type]) {
 			const index = this._children_and_grandchildren_by_context[type].indexOf(node_id);
 			if (index >= 0) {
@@ -296,8 +297,9 @@ export class HierarchyChildrenController {
 				}
 			}
 		}
-		if (this.node.parent && this.node.parent.children_allowed()) {
-			this.node.parent.children_controller?.remove_from_children_and_grandchildren_by_context(node);
+		const parent = this.node.parent();
+		if (parent && parent.childrenAllowed()) {
+			parent.childrenController?.remove_from_children_and_grandchildren_by_context(node);
 		}
 	}
 
@@ -332,7 +334,7 @@ export class HierarchyChildrenController {
 		for (let child of this.children()) {
 			callback(child);
 
-			child.children_controller?.traverse_children(callback);
+			child.childrenController?.traverse_children(callback);
 		}
 	}
 }

@@ -26,7 +26,7 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
 		// this.uiData.set_icon('code-branch');
 
-		this.cook_controller.disallow_inputs_evaluation();
+		this.cookController.disallow_inputs_evaluation();
 	}
 
 	async cook() {
@@ -40,6 +40,6 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 		} else {
 			this.states.error.set(`no input ${input_index}`);
 		}
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }

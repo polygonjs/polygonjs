@@ -25,7 +25,7 @@ export class AssemblerNodeSpareParamsController {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 		const param_configs = this.assembler.param_configs();
-		const assembler_param_names = param_configs.map((c) => c.name);
+		const assembler_param_names = param_configs.map((c) => c.name());
 		const spare_param_names_to_add = ObjectUtils.clone(assembler_param_names);
 		const validation_result = this._validate_names(spare_param_names_to_add);
 		if (validation_result == false) {
@@ -43,12 +43,12 @@ export class AssemblerNodeSpareParamsController {
 			// this allows expressions to be kept in memory
 			const param = this._node.params.get(param_name);
 			if (param) {
-				this._raw_input_serialized_by_param_name.set(param.name, param.raw_input_serialized);
-				this._init_value_serialized_by_param_name.set(param.name, param.default_value_serialized);
+				this._raw_input_serialized_by_param_name.set(param.name(), param.raw_input_serialized);
+				this._init_value_serialized_by_param_name.set(param.name(), param.default_value_serialized);
 				const param_exporter = JsonExportDispatcher.dispatch_param(param);
 				if (param_exporter.required()) {
 					const params_data = param_exporter.data();
-					this._deleted_params_data.set(param.name, params_data);
+					this._deleted_params_data.set(param.name(), params_data);
 				}
 			}
 
@@ -58,7 +58,7 @@ export class AssemblerNodeSpareParamsController {
 
 		// this.within_param_folder('spare_params', () => {
 		for (let param_config of param_configs) {
-			if (spare_param_names_to_add.indexOf(param_config.name) >= 0) {
+			if (spare_param_names_to_add.indexOf(param_config.name()) >= 0) {
 				const config_options = ObjectUtils.clone(param_config.param_options);
 				const default_options: ParamOptions = {
 					spare: true,
@@ -68,19 +68,19 @@ export class AssemblerNodeSpareParamsController {
 				const options = ObjectUtils.merge(config_options, default_options);
 
 				// set init_value and raw_input to the previous param's
-				let init_value = this._init_value_serialized_by_param_name.get(param_config.name);
+				let init_value = this._init_value_serialized_by_param_name.get(param_config.name());
 				if (init_value == null) {
 					init_value = param_config.default_value as any;
 				}
-				let raw_input = this._raw_input_serialized_by_param_name.get(param_config.name);
+				let raw_input = this._raw_input_serialized_by_param_name.get(param_config.name());
 				if (raw_input == null) {
 					raw_input = param_config.default_value as any;
 				}
 
 				params_update_options.to_add = params_update_options.to_add || [];
 				params_update_options.to_add.push({
-					name: param_config.name,
-					type: param_config.type,
+					name: param_config.name(),
+					type: param_config.type(),
 					init_value: init_value as any,
 					raw_input: raw_input as any,
 					options: options,
@@ -95,13 +95,13 @@ export class AssemblerNodeSpareParamsController {
 		// This seems better than running the parameter options callback, since it would check
 		// if the scene is loading or the node cooking, which is unnecessary for uniforms
 		for (let param_config of param_configs) {
-			const param = this._node.params.get(param_config.name);
+			const param = this._node.params.get(param_config.name());
 			if (param) {
 				param_config.execute_callback(this._node, param);
 
 				// we also have a special case for operator path,
 				// since they would not have found their node at load time
-				if (param.type == ParamType.OPERATOR_PATH) {
+				if (param.type() == ParamType.OPERATOR_PATH) {
 					setTimeout(async () => {
 						if (param.isDirty()) {
 							await param.compute();

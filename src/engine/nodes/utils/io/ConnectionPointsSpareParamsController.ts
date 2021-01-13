@@ -63,11 +63,11 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				if (this.node.params.has(param_name)) {
 					const param = this.node.params.get(param_name);
 					if (param && !param.parent_param) {
-						const connection_type = connection_type_map[param.type] as ConnectionPointEnumMap[NC];
+						const connection_type = connection_type_map[param.type()] as ConnectionPointEnumMap[NC];
 						if (connection_type) {
 							const connection_point = create_connection_point(
 								this._context,
-								param.name,
+								param.name(),
 								connection_type
 							) as ConnectionPointTypeMap[NC];
 							if (connection_point) {
@@ -110,7 +110,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 
 		for (let connection_point of this.node.io.inputs.named_input_connection_points) {
 			if (connection_point) {
-				const param_name = connection_point.name;
+				const param_name = connection_point.name();
 				const param_type: ParamType = connection_point.param_type;
 				let init_value = connection_point.init_value;
 
@@ -168,7 +168,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 
 		for (let spare_param of this.node.params.spare) {
 			if (!spare_param.parent_param) {
-				const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name);
+				const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name());
 				if (raw_input) {
 					spare_param.set(raw_input as any);
 				}

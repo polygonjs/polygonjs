@@ -40,11 +40,11 @@ export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
 			new FunctionGLDefinition(this, Impostor),
 		]);
 
-		const center = ThreeToGl.vector3(this.variable_for_input(this.p.center.name));
-		const cameraPos = ThreeToGl.vector3(this.variable_for_input(this.p.cameraPos.name));
-		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name));
-		const tilesCount = ThreeToGl.float(this.variable_for_input(this.p.tilesCount.name));
-		const offset = ThreeToGl.float(this.variable_for_input(this.p.offset.name));
+		const center = ThreeToGl.vector3(this.variable_for_input(this.p.center.name()));
+		const cameraPos = ThreeToGl.vector3(this.variable_for_input(this.p.cameraPos.name()));
+		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name()));
+		const tilesCount = ThreeToGl.float(this.variable_for_input(this.p.tilesCount.name()));
+		const offset = ThreeToGl.float(this.variable_for_input(this.p.offset.name()));
 
 		const impostor_uv = this.gl_var_name(OUTPUT_NAME);
 		const args = [center, cameraPos, uv, tilesCount, offset].join(', ');

@@ -54,7 +54,7 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 		// this._init_value = null
 		// }
 	}
-	get type() {
+	type() {
 		return this._type;
 	}
 	get param_type() {

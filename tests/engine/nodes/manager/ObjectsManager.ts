@@ -6,15 +6,15 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 function create_scene() {
 	const scene = new PolyScene();
 	scene.setName('create_scene');
-	scene.root.createNode('ambientLight');
+	scene.root().createNode('ambientLight');
 
 	scene.loadingController.markAsLoaded();
 
-	const perspective_camera1 = scene.root.createNode('perspectiveCamera');
+	const perspective_camera1 = scene.root().createNode('perspectiveCamera');
 	scene.camerasController.setMasterCameraNodePath(perspective_camera1.fullPath());
 	perspective_camera1.p.t.z.set(10);
 
-	const geo1 = scene.root.createNode('geo');
+	const geo1 = scene.root().createNode('geo');
 	geo1.flags.display.set(true);
 	const box1 = geo1.createNode('box');
 	box1.flags.display.set(true);

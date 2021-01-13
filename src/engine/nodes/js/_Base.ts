@@ -12,7 +12,7 @@ import {ParamType} from '../../poly/ParamType';
 // import {IOController} from '../utils/io/IOController';
 
 export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.JS, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.JS;
 	}
 
@@ -31,11 +31,12 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		this.function_node?.assembler_controller.set_compilation_required_and_dirty(this);
 	}
 	get function_node(): AssemblerControllerNode | undefined {
-		if (this.parent) {
-			if (this.parent.type == this.type) {
-				return (this.parent as BaseJsNodeType)?.function_node;
+		const parent = this.parent();
+		if (parent) {
+			if (parent.type() == this.type()) {
+				return (parent as BaseJsNodeType)?.function_node;
 			} else {
-				return this.parent as AssemblerControllerNode;
+				return parent as AssemblerControllerNode;
 			}
 		}
 	}
@@ -46,7 +47,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	//
 	//
 	js_var_name(name: string) {
-		return `v_POLY_${this.name}_${name}`;
+		return `v_POLY_${this.name()}_${name}`;
 	}
 
 	variable_for_input(name: string): string {
@@ -57,7 +58,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 			const output_connection_point =
 				input_node.io.outputs.named_output_connection_points[connection.output_index];
 			if (output_connection_point) {
-				const output_name = output_connection_point.name;
+				const output_name = output_connection_point.name();
 				return input_node.js_var_name(output_name);
 			} else {
 				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);

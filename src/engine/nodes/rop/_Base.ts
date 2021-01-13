@@ -4,7 +4,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsController} from '../utils/FlagsController';
 
 export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ROP, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.ROP;
 	}
 
@@ -13,7 +13,7 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 
 	initialize_base_node() {
 		this.dirtyController.addPostDirtyHook('cook_immediately', () => {
-			this.cook_controller.cook_main_without_inputs();
+			this.cookController.cook_main_without_inputs();
 		});
 	}
 
@@ -23,7 +23,7 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	// }
 
 	cook() {
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }
 

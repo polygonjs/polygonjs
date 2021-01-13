@@ -60,7 +60,7 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 					// or use the default if there is none
 					const first_connection = this.io.inputs.named_input_connection_points[0];
 					if (first_connection) {
-						first_input_type = first_connection.type;
+						first_input_type = first_connection.type();
 					} else {
 						first_input_type = default_in_type;
 					}

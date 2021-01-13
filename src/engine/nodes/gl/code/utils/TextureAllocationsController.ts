@@ -27,16 +27,16 @@ export class TextureAllocationsController {
 		// TODO: let's go through the output node first, in case there is a name conflict, it will have priority
 		for (let node of root_nodes) {
 			const node_id = node.graphNodeId();
-			switch (node.type) {
+			switch (node.type()) {
 				case OutputGlNode.type(): {
 					for (let connection_point of node.io.inputs.named_input_connection_points) {
-						const input = node.io.inputs.named_input(connection_point.name);
+						const input = node.io.inputs.named_input(connection_point.name());
 						if (input) {
 							// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
 							// connections_by_node_id[node_id].push(named_input)
 							const variable = new TextureVariable(
-								connection_point.name,
-								GlConnectionPointComponentsCountMap[connection_point.type]
+								connection_point.name(),
+								GlConnectionPointComponentsCountMap[connection_point.type()]
 							);
 							variable.add_graph_node_id(node_id);
 							variables.push(variable);
@@ -55,7 +55,7 @@ export class TextureAllocationsController {
 						// connections_by_node_id[node_id].push(named_input)
 						const variable = new TextureVariable(
 							attrib_node.attribute_name,
-							GlConnectionPointComponentsCountMap[connection_point.type]
+							GlConnectionPointComponentsCountMap[connection_point.type()]
 						);
 						variable.add_graph_node_id(node_id);
 						variables.push(variable);
@@ -66,7 +66,7 @@ export class TextureAllocationsController {
 		}
 		for (let node of leaf_nodes) {
 			const node_id = node.graphNodeId();
-			switch (node.type) {
+			switch (node.type()) {
 				case GlobalsGlNode.type(): {
 					const globals_node = node as GlobalsGlNode;
 					// const output_names_not_attributes = ['frame', 'gl_FragCoord', 'gl_PointCoord'];
@@ -79,7 +79,7 @@ export class TextureAllocationsController {
 								output_name
 							);
 							if (connection_point) {
-								const gl_type = connection_point.type;
+								const gl_type = connection_point.type();
 								const variable = new TextureVariable(
 									output_name,
 									GlConnectionPointComponentsCountMap[gl_type]
@@ -99,7 +99,7 @@ export class TextureAllocationsController {
 						// connections_by_node_id[node_id].push(named_output)
 						const variable = new TextureVariable(
 							attribute_node.attribute_name,
-							GlConnectionPointComponentsCountMap[connection_point.type]
+							GlConnectionPointComponentsCountMap[connection_point.type()]
 						);
 						variable.add_graph_node_id(node_id);
 						variables.push(variable);
@@ -120,9 +120,9 @@ export class TextureAllocationsController {
 		}
 	}
 	private allocate_variable(new_variable: TextureVariable) {
-		let allocated = this.has_variable(new_variable.name);
+		let allocated = this.has_variable(new_variable.name());
 		if (allocated) {
-			const allocated_variable = this.variables().filter((v) => v.name == new_variable.name)[0];
+			const allocated_variable = this.variables().filter((v) => v.name() == new_variable.name())[0];
 			new_variable.graph_node_ids?.forEach((boolean, graph_node_id) => {
 				allocated_variable.add_graph_node_id(graph_node_id);
 			});
@@ -199,7 +199,7 @@ export class TextureAllocationsController {
 		return this._allocations.map((a) => a.variables || []).flat();
 	}
 	has_variable(name: string): boolean {
-		const names = this.variables().map((v) => v.name);
+		const names = this.variables().map((v) => v.name());
 		return names.includes(name);
 	}
 	// allocation_for_variable(name:string):TextureAllocation{

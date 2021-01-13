@@ -50,7 +50,7 @@ export class InputsController<NC extends NodeContext> {
 	named_input_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_input_connection_points) {
 			for (let connection_point of this._named_input_connection_points) {
-				if (connection_point && connection_point.name == name) {
+				if (connection_point && connection_point.name() == name) {
 					return connection_point;
 				}
 			}
@@ -248,7 +248,7 @@ export class InputsController<NC extends NodeContext> {
 	get_named_input_index(name: string): number {
 		if (this._named_input_connection_points) {
 			for (let i = 0; i < this._named_input_connection_points.length; i++) {
-				if (this._named_input_connection_points[i]?.name == name) {
+				if (this._named_input_connection_points[i]?.name() == name) {
 					return i;
 				}
 			}
@@ -285,7 +285,7 @@ export class InputsController<NC extends NodeContext> {
 				output_index = node.io.outputs.get_output_index(output_index_or_name);
 				if (output_index == null || output_index < 0) {
 					const connection_points = node.io.outputs.named_output_connection_points as BaseConnectionPoint[];
-					const names = connection_points.map((cp) => cp.name);
+					const names = connection_points.map((cp) => cp.name());
 					console.warn(
 						`node ${node.fullPath()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
 							', '
@@ -303,7 +303,7 @@ export class InputsController<NC extends NodeContext> {
 			throw new Error(message);
 		}
 
-		if (node && this.node.parent != node.parent) {
+		if (node && this.node.parent() != node.parent()) {
 			return;
 		}
 

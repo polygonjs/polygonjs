@@ -60,7 +60,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 		const active_node_event_types_state: Map<string, boolean> = new Map();
 
 		this._nodes_by_graph_node_id.forEach((node) => {
-			if (node.parent) {
+			if (node.parent()) {
 				const node_active_event_names = node.active_event_names();
 				for (let name of node_active_event_names) {
 					active_node_event_types_state.set(name, true);

@@ -80,7 +80,7 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 		return INPUT_DEFAULT_VALUE[name];
 	}
 	set_lines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type = this.io.outputs.named_output_connection_points[0].type;
+		const var_type = this.io.outputs.named_output_connection_points[0].type();
 		const delta_definition = new UniformGLDefinition(this, GlConnectionPointType.FLOAT, GlConstant.DELTA_TIME);
 		const function_definition = new FunctionGLDefinition(this, Physics);
 		shaders_collection_controller.add_definitions(this, [delta_definition, function_definition]);

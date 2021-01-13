@@ -110,7 +110,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		const first_connection = this.io.inputs.named_input_connection_points[0];
 		let components_count = 1;
 		if (first_connection) {
-			components_count = GlConnectionPointComponentsCountMap[first_connection.type] || 1;
+			components_count = GlConnectionPointComponentsCountMap[first_connection.type()] || 1;
 		}
 
 		if (components_count > 1) {
@@ -118,12 +118,11 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 			// body_lines.push(`bool ${value} = (distance(${value0}) ${operator} distance(${value1})`)
 			// instead, comparing components one by one
 			let tmp_values: string[] = [];
-			for(let i=0; i<components_count; i++){
+			for (let i = 0; i < components_count; i++) {
 				const tmp_value = this.gl_var_name(`tmp_value_${i}`);
 				const component = COMPONENTS[i];
 				tmp_values.push(tmp_value);
 				body_lines.push(`bool ${tmp_value} = (${value0}.${component} ${operator} ${value1}.${component})`);
-
 			}
 			body_lines.push(`bool ${value} = (${tmp_values.join(AND_SEPARATOR)})`);
 		} else {

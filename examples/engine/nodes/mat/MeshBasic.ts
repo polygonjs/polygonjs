@@ -3,9 +3,10 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function MatMeshBasic() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
 	// create a few objects
-	const geo = scene.root.createNode('geo');
+	const geo = .createNode('geo');
 	const sphere = geo.createNode('sphere');
 	sphere.p.center.x.set(-2);
 	const box = geo.createNode('box');
@@ -23,7 +24,7 @@ export function MatMeshBasic() {
 	merge.setInput(3, torusKnot);
 
 	// create the material
-	const materials = scene.root.createNode('materials');
+	const materials = root.createNode('materials');
 	const meshBasic = materials.createNode('meshBasic');
 	meshBasic.p.color.set([0, 0.5, 1]);
 
@@ -38,7 +39,7 @@ export function MatMeshBasic() {
 	// scene.root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

@@ -44,8 +44,8 @@ export class NodeSerializer {
 		// });
 
 		const data = {
-			name: this.node.name,
-			type: this.node.type,
+			name: this.node.name(),
+			type: this.node.type(),
 			graph_node_id: this.node.graphNodeId(),
 			is_dirty: this.node.isDirty(),
 			ui_data_json: this.node.uiData.toJSON(),
@@ -68,8 +68,8 @@ export class NodeSerializer {
 			selection: undefined as CoreGraphNodeId[] | undefined,
 		};
 
-		if (this.node.children_allowed() && this.node.children_controller) {
-			data['selection'] = this.node.children_controller.selection.toJSON();
+		if (this.node.childrenAllowed() && this.node.childrenController) {
+			data['selection'] = this.node.childrenController.selection.toJSON();
 		}
 
 		return data;

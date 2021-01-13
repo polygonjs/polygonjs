@@ -32,7 +32,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
 		// if (this.used_in_scene) {
-		await this.cook_controller.cook_main_without_inputs();
+		await this.cookController.cook_main_without_inputs();
 		// }
 	}
 
@@ -86,7 +86,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	cook() {
 		this.update_light_params();
 		this.update_shadow_params();
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 
 	update_shadow_params() {

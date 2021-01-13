@@ -10,7 +10,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	protected _container: ContainerMap[NC];
 
 	constructor(protected node: TypedNode<NC, any>) {
-		const container_class = ContainerClassMap[node.node_context()];
+		const container_class = ContainerClassMap[node.nodeContext()];
 		this._container = new container_class(this.node as any) as ContainerMap[NC];
 	}
 
@@ -25,7 +25,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		if (this.node.isDirty()) {
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve);
-				this.node.cook_controller.cook_main();
+				this.node.cookController.cook_main();
 			});
 		}
 		return this._container;
@@ -36,7 +36,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	// 		return container || this._container;
 	// 	}
 	// 	if (this.node.isDirty()) {
-	// 		await this.node.cook_controller.cook_main();
+	// 		await this.node.cookController.cook_main();
 	// 	}
 	// 	return this._container;
 	// }
@@ -55,7 +55,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	// 		});
 	// 	} else {
 	// 		if (this.node.isDirty()) {
-	// 			this.node.cook_controller.cook_main();
+	// 			this.node.cookController.cook_main();
 	// 		} else {
 	// 			this.notify_requesters();
 	// 		}
@@ -87,7 +87,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		while ((callback = this._callbacks_tmp.pop())) {
 			callback(container);
 		}
-		this.node.scene().cook_controller.remove_node(this.node);
+		this.node.scene().cookController.remove_node(this.node);
 	}
 }
 

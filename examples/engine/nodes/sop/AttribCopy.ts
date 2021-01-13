@@ -3,8 +3,9 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function SopAttribCopy() {
 	// create a scene
 	const scene = new PolyScene();
+	const root = scene.root();
 
-	const geo = scene.root.createNode('geo');
+	const geo = root.createNode('geo');
 	// create a sphere
 	const sphere = geo.createNode('sphere');
 	sphere.p.radius.set(0.5);
@@ -29,10 +30,10 @@ export function SopAttribCopy() {
 	blend.flags.display.set(true);
 
 	// add a light
-	scene.root.createNode('hemisphereLight');
+	root.createNode('hemisphereLight');
 
 	// create a camera
-	const perspectiveCamera1 = scene.root.createNode('perspectiveCamera');
+	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
 	const events1 = perspectiveCamera1.createNode('events');

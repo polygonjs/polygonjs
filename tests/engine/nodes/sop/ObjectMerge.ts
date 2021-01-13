@@ -1,6 +1,6 @@
 QUnit.test('object_merge simple', async (assert) => {
 	const geo1 = window.geo1;
-	const geo2 = window.scene.root.createNode('geo');
+	const geo2 = window.scene.root().createNode('geo');
 
 	const plane1 = geo2.createNode('plane');
 	const object_merge1 = geo1.createNode('objectMerge');

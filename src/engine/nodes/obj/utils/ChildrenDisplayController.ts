@@ -30,7 +30,7 @@ export class ChildrenDisplayController {
 		return this._sop_group;
 	}
 	set_sop_group_name() {
-		this._sop_group.name = `${this.node.name}:sop_group`;
+		this._sop_group.name = `${this.node.name()}:sop_group`;
 	}
 
 	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
@@ -53,7 +53,7 @@ export class ChildrenDisplayController {
 
 	initialize_node() {
 		this.node.object.add(this.sop_group);
-		this.node.name_controller.add_post_set_fullPath_hook(this.set_sop_group_name.bind(this));
+		this.node.nameController.add_post_set_fullPath_hook(this.set_sop_group_name.bind(this));
 		this._create_sop_group();
 
 		const display_flag = this.node.flags?.display;
@@ -103,7 +103,7 @@ export class ChildrenDisplayController {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
 		const display_node = this.node.display_node_controller.display_node;
-		if (display_node && display_node.parent?.graphNodeId() == this.node.graphNodeId()) {
+		if (display_node && display_node.parent()?.graphNodeId() == this.node.graphNodeId()) {
 			const container = await display_node.requestContainer();
 			const core_group = container.coreContent();
 			if (core_group) {

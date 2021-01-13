@@ -16,6 +16,13 @@ export class TypedNodeConnection<NC extends NodeContext> {
 		private _output_index: number = 0,
 		private _input_index: number = 0
 	) {
+		if (this._output_index == null) {
+			throw 'bad output index';
+		}
+		if (this._input_index == null) {
+			throw 'bad input index';
+		}
+
 		this._id = TypedNodeConnection._next_id++;
 
 		if (this._node_src.io.connections && this._node_dest.io.connections) {

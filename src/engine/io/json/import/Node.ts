@@ -27,9 +27,9 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
 		this.set_connection_points(data['connection_points']);
 
-		// rather than having the children creation dependent on the persisted config and player mode, use the children_allowed() method
+		// rather than having the children creation dependent on the persisted config and player mode, use the childrenAllowed() method
 		// const skip_create_children = Poly.playerMode() && data.persisted_config;
-		if (this._node.children_allowed()) {
+		if (this._node.childrenAllowed()) {
 			this.create_nodes(scene_importer, data['nodes']);
 		}
 		this.set_selection(data['selection']);
@@ -79,7 +79,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (comment) {
 			ui_data.setComment(comment);
 		}
-		if (this._node.children_allowed()) {
+		if (this._node.childrenAllowed()) {
 			this.process_nodes_ui_data(scene_importer, data['nodes']);
 		}
 	}
@@ -92,7 +92,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		nodes_importer.process_data(scene_importer, data);
 	}
 	set_selection(data?: string[]) {
-		if (this._node.children_allowed() && this._node.children_controller) {
+		if (this._node.childrenAllowed() && this._node.childrenController) {
 			if (data && data.length > 0) {
 				const selected_nodes: BaseNodeTypeWithIO[] = [];
 				data.forEach((node_name) => {
@@ -101,7 +101,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 						selected_nodes.push(node);
 					}
 				});
-				this._node.children_controller.selection.set(selected_nodes);
+				this._node.childrenController.selection.set(selected_nodes);
 			}
 		}
 	}
@@ -148,7 +148,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		let input_data: InputData;
 		for (let i = 0; i < inputs_data.length; i++) {
 			input_data = inputs_data[i];
-			if (input_data && this._node.parent) {
+			if (input_data && this._node.parent()) {
 				if (CoreType.isString(input_data)) {
 					const input_node_name = input_data;
 					const input_node = this._node.nodeSibbling(input_node_name);
@@ -210,7 +210,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (has_param) {
 				param = this._node.params.get(param_name);
 				// we can safely consider same type if param_type is not mentioned
-				if ((param && param.type == param_type) || param_type == null) {
+				if ((param && param.type() == param_type) || param_type == null) {
 					has_param_and_same_type = true;
 				}
 			}
@@ -260,14 +260,14 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			this._node.params.update_params(params_update_options);
 			// update them based on the imported data
 			for (let spare_param of this._node.params.spare) {
-				const param_data = data[spare_param.name] as ComplexParamJsonExporterData<ParamType>;
+				const param_data = data[spare_param.name()] as ComplexParamJsonExporterData<ParamType>;
 				// JsonImportDispatcher.dispatch_param(spare_param).process_data(param_data);
 				if (!spare_param.parent_param && param_data) {
 					if (this._is_param_data_complex(param_data)) {
-						this._process_param_data_complex(spare_param.name, param_data);
+						this._process_param_data_complex(spare_param.name(), param_data);
 					} else {
 						this._process_param_data_simple(
-							spare_param.name,
+							spare_param.name(),
 							param_data as SimpleParamJsonExporterData<ParamType>
 						);
 					}

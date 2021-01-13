@@ -9,7 +9,7 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const color = geo1.add_param(ParamType.COLOR, 'color_debug', [1, 1, 1], {spare: true})!;
+	const color = geo1.addParam(ParamType.COLOR, 'color_debug', [1, 1, 1], {spare: true})!;
 	assert.deepEqual(color.value.toArray(), [1, 1, 1]);
 
 	color.r.set(0);
@@ -40,7 +40,7 @@ QUnit.test('color is_default', async (assert) => {
 	const geo1 = window.geo1;
 	scene.timeController.setFrameRange(0, 10);
 
-	const color = geo1.add_param(ParamType.COLOR, 'color_debug', [1, 1, '$F'], {spare: true})!;
+	const color = geo1.addParam(ParamType.COLOR, 'color_debug', [1, 1, '$F'], {spare: true})!;
 	await color.compute();
 	assert.ok(color.is_default);
 	assert.deepEqual(color.value.toArray(), [1, 1, 1]);
@@ -87,7 +87,7 @@ QUnit.test(
 		const scene = window.scene;
 		const geo1 = window.geo1;
 		const color1 = geo1.createNode('color');
-		const param1 = color1.add_param(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
+		const param1 = color1.addParam(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
 		color1.params.post_create_spare_params();
 
 		assert.ok(param1.options.color_conversion() == null);

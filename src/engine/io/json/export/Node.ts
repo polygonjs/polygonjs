@@ -62,7 +62,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			this._node.scene().nodesController.register_node_context_signature(this._node);
 		}
 		this._data = {
-			type: this._node.type,
+			type: this._node.type(),
 		} as NodeJsonExporterData;
 
 		// const required_imports = this._node.required_imports()
@@ -76,7 +76,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 
 			// required by the Store::Scene::Exporter.rb
 			// Update: removed as there should be a better way
-			// const context = this._node.children_controller?.context;
+			// const context = this._node.childrenController?.context;
 			// if (context) {
 			// 	this._data['children_context'] = context;
 			// }
@@ -110,7 +110,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 					// only save the display flag if it is true, or if the parent does not have a display_node_controller
 					// This will then always save it for OBJ
 					// And only if true for SOP
-					if (this._node.flags.display?.active() || !this._node.parent?.display_node_controller) {
+					if (this._node.flags.display?.active() || !this._node.parent()?.display_node_controller) {
 						flags_data['display'] = this._node.flags.display?.active();
 					}
 				}
@@ -125,8 +125,8 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			}
 		}
 
-		if (this._node.children_allowed()) {
-			const selection = this._node.children_controller?.selection;
+		if (this._node.childrenAllowed()) {
+			const selection = this._node.childrenController?.selection;
 			if (selection && this._node.children().length > 0) {
 				// only save the nodes that are still present, in case the selection just got deleted
 				const selected_children: BaseNodeTypeWithIO[] = [];
@@ -139,7 +139,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 						selected_children.push(child);
 					}
 				}
-				const selection_data = selected_children.map((n) => n.name);
+				const selection_data = selected_children.map((n) => n.name());
 				if (selection_data.length > 0) {
 					this._data['selection'] = selection_data;
 				}
@@ -175,7 +175,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			data['nodes'] = {};
 			children.forEach((child) => {
 				const node_exporter = JsonExportDispatcher.dispatch_node(child); //.visit(JsonExporterVisitor); //.json_exporter()
-				data['nodes'][child.name] = node_exporter.ui_data(options);
+				data['nodes'][child.name()] = node_exporter.ui_data(options);
 			});
 		}
 
@@ -195,7 +195,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	}
 
 	private is_root() {
-		return this._node.parent === null && this._node.graphNodeId() == this._node.root.graphNodeId();
+		return this._node.parent() === null && this._node.graphNodeId() == this._node.root().graphNodeId();
 	}
 
 	protected inputs_data() {
@@ -206,16 +206,16 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				if (this._node.io.inputs.has_named_inputs) {
 					// const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
 					const output_index = connection.output_index;
-					const output_name = input.io.outputs.named_output_connection_points[output_index]?.name;
+					const output_name = input.io.outputs.named_output_connection_points[output_index]?.name();
 					if (output_name) {
 						data[input_index] = {
 							index: input_index,
-							node: input.name,
+							node: input.name(),
 							output: output_name,
 						};
 					}
 				} else {
-					data[input_index] = input.name;
+					data[input_index] = input.name();
 				}
 			}
 		});
@@ -262,7 +262,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				const param_exporter = JsonExportDispatcher.dispatch_param(param);
 				if (param_exporter.required()) {
 					const params_data = param_exporter.data();
-					data[param.name] = params_data;
+					data[param.name()] = params_data;
 				}
 			}
 		}
@@ -274,7 +274,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
 			const node_exporter = JsonExportDispatcher.dispatch_node(child); //.json_exporter()
-			data[child.name] = node_exporter.data(options);
+			data[child.name()] = node_exporter.data(options);
 		}
 		return data;
 	}

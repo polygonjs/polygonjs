@@ -58,7 +58,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 			if (current_connections) {
 				const connection = current_connections[i];
 				if (connection) {
-					const type = connection.src_connection_point().type;
+					const type = connection.src_connection_point().type();
 					types.push(type);
 				} else {
 					types.push(default_type);
@@ -89,7 +89,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		// 	default: {
 		const connection = this.io.connections.input_connection(index);
 		if (connection) {
-			const name = connection.src_connection_point().name;
+			const name = connection.src_connection_point().name();
 			return name;
 		} else {
 			return `in${index}`;
@@ -128,9 +128,9 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		const connection_points = this.io.inputs.named_input_connection_points;
 		for (let i = OFFSET; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
-			const gl_type = connection_point.type;
-			const out = this.gl_var_name(connection_point.name);
-			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name));
+			const gl_type = connection_point.type();
+			const out = this.gl_var_name(connection_point.name());
+			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
 		}
@@ -140,9 +140,9 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 				if (connection) {
 					if (connection.input_index >= OFFSET) {
 						const connection_point = connection.dest_connection_point();
-						const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name));
-						const gl_type = connection_point.type;
-						const out = this.gl_var_name(connection_point.name);
+						const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
+						const gl_type = connection_point.type();
+						const out = this.gl_var_name(connection_point.name());
 						const body_line = `${gl_type} ${out} = ${in_value}`;
 						body_lines.push(body_line);
 					}
@@ -170,9 +170,9 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 				if (connection) {
 					if (connection.input_index >= OFFSET) {
 						const connection_point = connection.dest_connection_point();
-						const in_value = this.gl_var_name(connection_point.name);
-						const gl_type = connection_point.type;
-						const out = child_node.gl_var_name(connection_point.name);
+						const in_value = this.gl_var_name(connection_point.name());
+						const gl_type = connection_point.type();
+						const out = child_node.gl_var_name(connection_point.name());
 						const body_line = `	${gl_type} ${out} = ${in_value}`;
 						body_lines.push(body_line);
 					}

@@ -48,7 +48,7 @@ export class TypedNodePathParamValue {
 			error_state?.set(`no node found at ${this.path()}`);
 			return;
 		}
-		const node_context = found_node.node_context();
+		const node_context = found_node.nodeContext();
 		if (node_context == context) {
 			return found_node as BaseNodeByContextMap[N];
 		} else {
@@ -112,12 +112,12 @@ export class CoreWalker {
 		let next_node: BaseNodeType | null = null;
 		if (path[0] === CoreWalker.SEPARATOR) {
 			const path_from_root = path.substr(1);
-			next_node = this.find_node(node_src.root, path_from_root, decomposed_path);
+			next_node = this.find_node(node_src.root(), path_from_root, decomposed_path);
 		} else {
 			switch (first_element) {
 				case CoreWalker.PARENT:
 					decomposed_path?.add_path_element(first_element);
-					next_node = node_src.parent;
+					next_node = node_src.parent();
 					break;
 				case CoreWalker.CURRENT:
 					decomposed_path?.add_path_element(first_element);
@@ -229,10 +229,10 @@ export class CoreWalker {
 	}
 	static parents(graph_node: Readonly<NodeOrParam>): BaseNodeType[] {
 		const parents = [];
-		let parent = graph_node.parent;
+		let parent = graph_node.parent();
 		while (parent) {
 			parents.push(parent);
-			parent = parent.parent;
+			parent = parent.parent();
 		}
 		return parents;
 	}
@@ -242,7 +242,7 @@ export class CoreWalker {
 		const dest_id = dest.graphNodeId();
 		while (current && current.graphNodeId() != dest_id) {
 			distance += 1;
-			current = current.parent;
+			current = current.parent();
 		}
 		if (current && current.graphNodeId() == dest_id) {
 			return distance;
@@ -262,8 +262,9 @@ export class CoreWalker {
 		if (first_element) {
 			switch (first_element) {
 				case '..': {
-					if (node_src.parent) {
-						return this.make_absolute_path(node_src.parent, path_elements.join(CoreWalker.SEPARATOR));
+					const parent = node_src.parent();
+					if (parent) {
+						return this.make_absolute_path(parent, path_elements.join(CoreWalker.SEPARATOR));
 					} else {
 						return null;
 					}

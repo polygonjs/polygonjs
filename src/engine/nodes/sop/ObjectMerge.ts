@@ -34,7 +34,7 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 	async cook(input_containers: CoreGroup[]) {
 		const geometry_node = this.p.geometry.found_node();
 		if (geometry_node) {
-			if (geometry_node.node_context() == NodeContext.SOP) {
+			if (geometry_node.nodeContext() == NodeContext.SOP) {
 				const container = await geometry_node.requestContainer();
 				this.import_input(geometry_node as BaseSopNodeType, container);
 			} else {

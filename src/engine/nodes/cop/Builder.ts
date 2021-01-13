@@ -135,9 +135,9 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
-	children_allowed() {
+	childrenAllowed() {
 		if (this.assemblerController) {
-			return super.children_allowed();
+			return super.childrenAllowed();
 		}
 		this.scene().mark_as_read_only(this);
 		return false;
@@ -145,7 +145,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		await this.cook_controller.cook_main_without_inputs();
+		await this.cookController.cook_main_without_inputs();
 	}
 
 	// private _reset_if_resolution_changed(trigger?: CoreGraphNode) {
@@ -261,7 +261,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				this.set_texture(data_texture);
 			}
 		} else {
-			this.cook_controller.end_cook();
+			this.cookController.end_cook();
 		}
 	}
 

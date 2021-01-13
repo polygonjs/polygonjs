@@ -4,11 +4,11 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkPostParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkPostNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.POST;
 	}
 	cook() {
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }
 export class ParamLessBaseNetworkPostNode extends BaseNetworkPostNode<ParamLessNetworkPostParamsConfig> {}

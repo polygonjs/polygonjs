@@ -32,7 +32,7 @@ export class HsluvToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 
 		function_declaration_lines.push(new FunctionGLDefinition(this, ColorGlslLib));
 
-		const value = ThreeToGl.vector3(this.variable_for_input(this.p.hsluv.name));
+		const value = ThreeToGl.vector3(this.variable_for_input(this.p.hsluv.name()));
 
 		const rgb = this.gl_var_name(OUTPUT_NAME);
 		body_lines.push(`vec3 ${rgb} = hsluvToRgb(${value}.x * 360.0, ${value}.y * 100.0, ${value}.z * 100.0)`);

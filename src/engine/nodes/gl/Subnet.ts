@@ -13,7 +13,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
 	protected _children_controller_context = NodeContext.GL;
 	initialize_node() {
-		this.children_controller?.set_output_node_find_method(() => {
+		this.childrenController?.set_output_node_find_method(() => {
 			return this.nodesByType(SubnetOutputGlNode.type())[0];
 		});
 
@@ -39,7 +39,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 			if (current_connections) {
 				const connection = current_connections[i];
 				if (connection) {
-					const type = connection.src_connection_point().type;
+					const type = connection.src_connection_point().type();
 					types.push(type);
 				} else {
 					types.push(default_type);
@@ -62,7 +62,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	protected _expected_input_name(index: number) {
 		const connection = this.io.connections.input_connection(index);
 		if (connection) {
-			const name = connection.src_connection_point().name;
+			const name = connection.src_connection_point().name();
 			return name;
 		} else {
 			return `in${index}`;
@@ -126,9 +126,9 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 		const connection_points = this.io.inputs.named_input_connection_points;
 		for (let i = 0; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
-			const gl_type = connection_point.type;
-			const out = this.gl_var_name(connection_point.name);
-			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name));
+			const gl_type = connection_point.type();
+			const out = this.gl_var_name(connection_point.name());
+			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
 		}
@@ -140,9 +140,9 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 			for (let connection of connections) {
 				if (connection) {
 					const connection_point = connection.dest_connection_point();
-					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name));
-					const gl_type = connection_point.type;
-					const out = child_node.gl_var_name(connection_point.name);
+					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
+					const gl_type = connection_point.type();
+					const out = child_node.gl_var_name(connection_point.name());
 					const body_line = `	${gl_type} ${out} = ${in_value}`;
 					body_lines.push(body_line);
 				}

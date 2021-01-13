@@ -118,6 +118,6 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.transform_controller.update();
 		this.object.visible = this.pv.display;
 		this.object.renderOrder = this.pv.renderOrder;
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }

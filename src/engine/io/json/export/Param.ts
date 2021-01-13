@@ -41,7 +41,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 		this._complex_data = {};
 
 		if (this._param.options.is_spare() && !this._param.parent_param) {
-			this._complex_data['type'] = this._param.type;
+			this._complex_data['type'] = this._param.type();
 			this._complex_data['default_value'] = this._param.default_value_serialized;
 			this._complex_data['options'] = this._param.options.current();
 		}

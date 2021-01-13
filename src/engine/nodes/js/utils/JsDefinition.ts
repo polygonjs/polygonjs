@@ -27,7 +27,7 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 	get node() {
 		return this._node;
 	}
-	get name() {
+	name() {
 		return this._name;
 	}
 
@@ -42,7 +42,7 @@ export class AttributeGLDefinition extends TypedJsDefinition<JsDefinitionType.AT
 		super(JsDefinitionType.ATTRIBUTE, _data_type, _node, _name);
 	}
 	get line() {
-		return `attribute ${this.data_type} ${this.name}`;
+		return `attribute ${this.data_type} ${this.name()}`;
 	}
 }
 
@@ -51,7 +51,7 @@ export class FunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.FUN
 		super(JsDefinitionType.FUNCTION, JsConnectionPointType.FLOAT, _node, _name);
 	}
 	get line() {
-		return this.name;
+		return this.name();
 	}
 }
 
@@ -60,7 +60,7 @@ export class UniformJsDefinition extends TypedJsDefinition<JsDefinitionType.UNIF
 		super(JsDefinitionType.UNIFORM, _data_type, _node, _name);
 	}
 	get line() {
-		return `uniform ${this.data_type} ${this.name}`;
+		return `uniform ${this.data_type} ${this.name()}`;
 	}
 }
 

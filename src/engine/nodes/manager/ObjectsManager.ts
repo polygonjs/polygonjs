@@ -72,7 +72,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return node;
 	}
 
-	async process_queue() {
+	async processQueue() {
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
 		this._queued_nodes_by_id.forEach((node, id) => {
@@ -135,7 +135,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	private _add_to_scene(node: BaseObjNodeType): void {
 		if (node.attachable_to_hierarchy) {
-			const parent_object = node.root.get_parent_for_node(node);
+			const parent_object = node.root().get_parent_for_node(node);
 			if (parent_object) {
 				// await node.params.eval_all().then((params_eval_key) => {
 				// 	node.requestContainer();
@@ -178,7 +178,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	are_children_cooking(): boolean {
 		const children = this.children();
 		for (let child of children) {
-			if (child.cook_controller.is_cooking || child.is_display_node_cooking()) {
+			if (child.cookController.is_cooking || child.is_display_node_cooking()) {
 				return true;
 			}
 		}

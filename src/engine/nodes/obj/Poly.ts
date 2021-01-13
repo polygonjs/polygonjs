@@ -90,7 +90,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		//
 		cook() {
 			this.object.visible = this.pv.display;
-			this.cook_controller.end_cook();
+			this.cookController.end_cook();
 		}
 
 		//
@@ -116,5 +116,5 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 	return BasePolyObjNode;
 }
 
-const BasePolyObjNode = createPolyObjNode('poly', {node_context: NodeContext.OBJ});
+const BasePolyObjNode = createPolyObjNode('poly', {nodeContext: NodeContext.OBJ});
 export class PolyObjNode extends BasePolyObjNode {}

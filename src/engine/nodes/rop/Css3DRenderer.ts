@@ -49,6 +49,6 @@ export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsCon
 	// }
 
 	cook() {
-		this.cook_controller.end_cook();
+		this.cookController.end_cook();
 	}
 }

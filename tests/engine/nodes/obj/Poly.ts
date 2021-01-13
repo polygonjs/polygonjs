@@ -5,7 +5,7 @@ import {Poly} from '../../../../src/engine/Poly';
 import {ObjNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Obj';
 
 const definition: PolyNodeDefinition = {
-	node_context: NodeContext.OBJ,
+	nodeContext: NodeContext.OBJ,
 	params: [
 		{
 			name: 'id',
@@ -32,10 +32,10 @@ if (node_class) {
 QUnit.test('poly obj simple', async (assert) => {
 	const root = window.root;
 	const poly1 = root.createNode('poly_obj_test' as keyof ObjNodeChildrenMap);
-	console.log(poly1, poly1.type, poly1.node_context());
+	console.log(poly1, poly1.type(), poly1.nodeContext());
 	assert.equal(poly1.children().length, 2);
 	assert.ok(poly1.params.has('id'));
-	assert.equal(poly1.params.get('id')!.type, ParamType.INTEGER);
+	assert.equal(poly1.params.get('id')!.type(), ParamType.INTEGER);
 });
 
 QUnit.skip('poly obj params are preserved in copy/paste', async (assert) => {});

@@ -7,7 +7,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	NodeContext.MAT,
 	K
 > {
-	static node_context(): NodeContext {
+	static nodeContext(): NodeContext {
 		return NodeContext.MAT;
 	}
 
@@ -16,7 +16,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	initialize_base_node() {
 		super.initialize_base_node();
 
-		this.name_controller.add_post_set_fullPath_hook(this.set_material_name.bind(this));
+		this.nameController.add_post_set_fullPath_hook(this.set_material_name.bind(this));
 
 		this.addPostDirtyHook('_cook_main_without_inputs_when_dirty', () => {
 			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
@@ -25,7 +25,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		await this.cook_controller.cook_main_without_inputs();
+		await this.cookController.cook_main_without_inputs();
 	}
 
 	private set_material_name() {
@@ -41,7 +41,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	//
 
 	set_material(material: Material) {
-		this.set_container(material);
+		this.setContainer(material);
 	}
 
 	// add_update_method(method, arg?: any) {

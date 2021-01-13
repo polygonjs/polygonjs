@@ -272,7 +272,7 @@ export class BaseTextureMapController extends BaseController {
 
 			const found_node = path_param.found_node();
 			if (found_node) {
-				if (found_node.node_context() == NodeContext.COP) {
+				if (found_node.nodeContext() == NodeContext.COP) {
 					const texture_node = found_node as BaseCopNodeType;
 
 					const container = await texture_node.requestContainer();
@@ -288,7 +288,9 @@ export class BaseTextureMapController extends BaseController {
 					this.node.states.error.set(`found map node is not a COP node`);
 				}
 			} else {
-				this.node.states.error.set(`could not find map node ${path_param.name} with path ${path_param.value}`);
+				this.node.states.error.set(
+					`could not find map node ${path_param.name()} with path ${path_param.value}`
+				);
 			}
 		}
 		// this is not wrapped in an else clause after the "if (use_map) {"
