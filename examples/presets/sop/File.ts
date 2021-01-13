@@ -3,6 +3,9 @@ import {FileSopNode} from '../../../src/engine/nodes/sop/File';
 
 export function FileSopNodePresets() {
 	return {
+		bunny: function (node: FileSopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/stanford-bunny.fbx`);
+		},
 		deer_obj: function (node: FileSopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/deer.obj`);
 		},

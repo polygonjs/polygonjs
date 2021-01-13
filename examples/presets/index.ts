@@ -17,6 +17,8 @@ import {TextSopNode} from '../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../src/engine/nodes/sop/Transform';
 import {TextSopNodePresets} from './sop/Text';
 import {TransformSopNodePresets} from './sop/Transform';
+import {MeshSubsurfaceScatteringMatNodePresets} from './mat/MeshSubsurfaceScattering';
+import {MeshSubsurfaceScatteringMatNode} from '../../src/engine/nodes/mat/MeshSubsurfaceScattering';
 
 // TODO: it may be easier when there are many presets
 // to use a BasePreset class that knows how to register itself
@@ -28,6 +30,9 @@ export const presetsLibrary = {
 	},
 	[NodeContext.GL]: {
 		[AttributeGlNode.type()]: AttributeGlNodePresets,
+	},
+	[NodeContext.MAT]: {
+		[MeshSubsurfaceScatteringMatNode.type()]: MeshSubsurfaceScatteringMatNodePresets,
 	},
 	[NodeContext.SOP]: {
 		[ColorSopNode.type()]: ColorSopNodePresets,
