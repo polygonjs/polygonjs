@@ -18,6 +18,7 @@ import {RectAreaLightObjNodeHelper} from './utils/helpers/AreaLightHelper';
 
 export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		light = ParamConfig.FOLDER();
 		/** @param light color */
 		color = ParamConfig.COLOR([1, 1, 1], {
 			conversion: ColorConversion.SRGB_TO_LINEAR,
