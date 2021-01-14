@@ -33,12 +33,20 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	initialize_node() {
 		this.hierarchy_controller.initialize_node();
 		this.transform_controller.initialize_node();
-		this.object.add(this._helper);
+		this._updateHelperHierarchy();
 		this._helper.matrixAutoUpdate = false;
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active();
+			this._updateHelperHierarchy();
 		});
 	}
+	private _updateHelperHierarchy() {
+		if (this.flags.display.active()) {
+			this.object.add(this._helper);
+		} else {
+			this.object.remove(this._helper);
+		}
+	}
+
 	cook() {
 		this.transform_controller.update();
 		this.cookController.end_cook();

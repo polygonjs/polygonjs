@@ -126,11 +126,19 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// });
 
 		// helper
-		this.object.add(this._helper);
+		this._updateHelperHierarchy();
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active();
+			this._updateHelperHierarchy();
 		});
 	}
+	private _updateHelperHierarchy() {
+		if (this.flags.display.active()) {
+			this.object.add(this._helper);
+		} else {
+			this.object.remove(this._helper);
+		}
+	}
+
 	async cook() {
 		await this._update_resolved_object();
 		this._update_render_hook();

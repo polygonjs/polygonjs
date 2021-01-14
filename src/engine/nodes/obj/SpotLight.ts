@@ -30,11 +30,24 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	distance = ParamConfig.FLOAT(100, {range: [0, 100]});
 	// target = ParamConfig.OPERATOR_PATH('');
 
+	// helper
+	/** @param toggle on to show helper */
+	showHelper = ParamConfig.BOOLEAN(0);
+	/** @param helper size */
+	helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
+
 	// shadows
+	shadow = ParamConfig.FOLDER();
 	/** @param toggle on to cast shadows */
 	castShadows = ParamConfig.BOOLEAN(1);
 	/** @param shadows res */
-	shadowRes = ParamConfig.VECTOR2([1024, 1024], {
+	shadowAutoUpdate = ParamConfig.BOOLEAN(1, {
+		visibleIf: {castShadows: 1},
+	});
+	shadowNeedsUpdate = ParamConfig.BOOLEAN(0, {
+		visibleIf: {castShadows: 1, shadowAutoUpdate: 0},
+	});
+	shadowRes = ParamConfig.VECTOR2([256, 256], {
 		visibleIf: {castShadows: 1},
 	});
 	/** @param shadows bias */
@@ -53,12 +66,6 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	// 	range: [0, 100],
 	// 	rangeLocked: [true, false],
 	// });
-
-	// helper
-	/** @param toggle on to show helper */
-	showHelper = ParamConfig.BOOLEAN(0);
-	/** @param helper size */
-	helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 
@@ -83,9 +90,10 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;
+		// light.shadow.focus = 1;
 		light.shadow.bias = -0.001;
-		light.shadow.mapSize.x = 1024;
-		light.shadow.mapSize.y = 1024;
+		light.shadow.mapSize.x = 256;
+		light.shadow.mapSize.y = 256;
 		light.shadow.camera.near = 0.1;
 
 		this._target_target = light.target;
@@ -114,11 +122,17 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this.light.penumbra = this.pv.penumbra;
 		this.light.decay = this.pv.decay;
 		this.light.distance = this.pv.distance;
+		// TODO: consider allow power to be edited
+		// (maybe it will need a setting to toggle physicallyCorrect, which would then show the power param)
+		// this.light.power = 1;
 
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
 		this.light.castShadow = this.pv.castShadows;
+		this.light.shadow.autoUpdate = this.pv.shadowAutoUpdate;
+		this.light.shadow.needsUpdate = this.pv.shadowNeedsUpdate;
+
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		// that doesn't seem to have any effect
 		// this.light.shadow.camera.near = this.pv.shadow_near;

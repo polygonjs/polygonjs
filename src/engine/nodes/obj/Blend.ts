@@ -80,11 +80,19 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		});
 
 		// helper
-		this.object.add(this._helper);
+		this._updateHelperHierarchy();
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active();
+			this._updateHelperHierarchy();
 		});
 	}
+	private _updateHelperHierarchy() {
+		if (this.flags.display.active()) {
+			this.object.add(this._helper);
+		} else {
+			this.object.remove(this._helper);
+		}
+	}
+
 	cook() {
 		const obj_node0 = this.p.object0.found_node_with_context(NodeContext.OBJ);
 		const obj_node1 = this.p.object1.found_node_with_context(NodeContext.OBJ);

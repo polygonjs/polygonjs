@@ -54,12 +54,20 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 			this.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
 		}
 
-		this.object.add(this._helper);
+		this._updateHelperHierarchy();
 		this._helper.matrixAutoUpdate = false;
 		this.flags.display.add_hook(() => {
-			this._helper.visible = this.flags.display.active();
+			this._updateHelperHierarchy();
 		});
 	}
+	private _updateHelperHierarchy() {
+		if (this.flags.display.active()) {
+			this.object.add(this._helper);
+		} else {
+			this.object.remove(this._helper);
+		}
+	}
+
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {

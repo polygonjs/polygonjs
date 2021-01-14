@@ -59,19 +59,31 @@ export class ChildrenDisplayController {
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
 			display_flag.add_hook(() => {
-				this._sop_group.visible = this.used_in_scene;
+				this._updateSopGroupHierarchy();
 				if (display_flag.active()) {
 					this.request_display_node_container();
 				}
 			});
 		}
 	}
+	private _updateSopGroupHierarchy() {
+		const display_flag = this.node.flags?.display;
+		if (display_flag) {
+			if (this.usedInScene()) {
+				this.sop_group.visible = true;
+				this.node.object.add(this.sop_group);
+			} else {
+				this.sop_group.visible = false;
+				this.node.object.remove(this.sop_group);
+			}
+		}
+	}
 
-	get used_in_scene(): boolean {
+	usedInScene(): boolean {
 		const has_active_param = this.node.params.has(DISPLAY_PARAM_NAME);
 		const is_active_param_on = this.node.params.boolean(DISPLAY_PARAM_NAME);
 
-		const used_in_scene = this.node.used_in_scene;
+		const used_in_scene = this.node.usedInScene();
 		const display_flag_on = this.node.flags?.display?.active() || false;
 		const param_active_on = !has_active_param || is_active_param_on;
 
@@ -82,7 +94,7 @@ export class ChildrenDisplayController {
 		if (!this.node.scene().loadingController.loaded()) {
 			return;
 		}
-		if (this.used_in_scene) {
+		if (this.usedInScene()) {
 			await this._set_content_under_sop_group();
 		}
 	}

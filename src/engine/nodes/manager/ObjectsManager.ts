@@ -141,7 +141,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 				// 	node.requestContainer();
 				// });
 
-				if (node.used_in_scene) {
+				if (node.usedInScene()) {
 					// I need to query the display_node_controller here,
 					// for geo obj whose display_node is a node without inputs.
 					// Since that node will not be made dirty, it seems that there is

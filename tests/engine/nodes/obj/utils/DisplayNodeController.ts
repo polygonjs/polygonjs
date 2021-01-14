@@ -78,7 +78,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/geo1:/perspectiveCamera1'
+		'/perspectiveCamera1'
 	);
 	assert.ok(!geo1.children_display_controller.sop_group.visible);
 });
