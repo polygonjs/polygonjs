@@ -7,11 +7,15 @@ import {Quaternion} from 'three/src/math/Quaternion';
 import {Vector3} from 'three/src/math/Vector3';
 import {BaseLightHelper} from './_BaseLightHelper';
 import {HemisphereLight} from 'three/src/lights/HemisphereLight';
+import {Mesh} from 'three/src/objects/Mesh';
 
-export class HemisphereLightHelper extends BaseLightHelper<HemisphereLight, HemisphereLightObjNode> {
+export class HemisphereLightHelper extends BaseLightHelper<Mesh, HemisphereLight, HemisphereLightObjNode> {
+	createObject() {
+		return new Mesh();
+	}
 	private _geometry = new OctahedronBufferGeometry(1);
 
-	protected build_helper() {
+	protected buildHelper() {
 		this._geometry.rotateZ(Math.PI * 0.5);
 
 		this._material.vertexColors = true;

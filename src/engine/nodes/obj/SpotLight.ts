@@ -10,6 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {SpotLightHelper} from './utils/helpers/SpotLightHelper';
 import {Object3D} from 'three/src/core/Object3D';
+import {Mesh} from 'three/src/objects/Mesh';
 import {ColorConversion} from '../../../core/Color';
 class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
@@ -67,9 +68,9 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		return 'spotLight';
 	}
 	private _target_target!: Object3D;
-	private _helper_controller = new HelperController<SpotLight>(
+	private _helper_controller = new HelperController<Mesh, SpotLight>(
 		this,
-		(<unknown>SpotLightHelper) as HelperConstructor<SpotLight>,
+		(<unknown>SpotLightHelper) as HelperConstructor<Mesh, SpotLight>,
 		'SpotLightHelper'
 	);
 	initialize_node() {

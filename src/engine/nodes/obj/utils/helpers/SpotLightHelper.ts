@@ -1,6 +1,4 @@
 import {SpotLightObjNode} from '../../SpotLight';
-// import {Mesh} from 'three/src/objects/Mesh';
-// import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {BaseLightHelper} from './_BaseLightHelper';
 import {SpotLight} from 'three/src/lights/SpotLight';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -8,11 +6,15 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Vector3} from 'three/src/math/Vector3';
+import {Mesh} from 'three/src/objects/Mesh';
 
-export class SpotLightHelper extends BaseLightHelper<SpotLight, SpotLightObjNode> {
+export class SpotLightHelper extends BaseLightHelper<Mesh, SpotLight, SpotLightObjNode> {
+	createObject() {
+		return new Mesh();
+	}
 	private _cone = new LineSegments();
 	private _line_material = new LineBasicMaterial({fog: false});
-	protected build_helper() {
+	protected buildHelper() {
 		const geometry = new BufferGeometry();
 
 		const positions = [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, -1, 1];

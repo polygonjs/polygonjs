@@ -3,9 +3,13 @@ import {SphereBufferGeometry} from 'three/src/geometries/SphereBufferGeometry';
 import {BaseLightHelper} from './_BaseLightHelper';
 import {PointLight} from 'three/src/lights/PointLight';
 import {Vector3} from 'three/src/math/Vector3';
+import {Mesh} from 'three/src/objects/Mesh';
 
-export class PointLightHelper extends BaseLightHelper<PointLight, PointLightObjNode> {
-	protected build_helper() {
+export class PointLightHelper extends BaseLightHelper<Mesh, PointLight, PointLightObjNode> {
+	createObject() {
+		return new Mesh();
+	}
+	protected buildHelper() {
 		const size = 1;
 		this._object.geometry = new SphereBufferGeometry(size, 4, 2);
 		this._object.matrixAutoUpdate = false;

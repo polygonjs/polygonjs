@@ -10,6 +10,7 @@ import {TransformedParamConfig} from './utils/TransformController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
+import {Mesh} from 'three/src/objects/Mesh';
 class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
 	/** @param light color */
@@ -47,9 +48,9 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 	static type() {
 		return 'pointLight';
 	}
-	private _helper_controller = new HelperController<PointLight>(
+	private _helper_controller = new HelperController<Mesh, PointLight>(
 		this,
-		(<unknown>PointLightHelper) as HelperConstructor<PointLight>,
+		(<unknown>PointLightHelper) as HelperConstructor<Mesh, PointLight>,
 		'PointLightHelper'
 	);
 	initialize_node() {

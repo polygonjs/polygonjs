@@ -6,11 +6,15 @@ import {DirectionalLightObjNode} from '../../DirectionalLight';
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {BaseLightHelper} from './_BaseLightHelper';
 import {Line} from 'three/src/objects/Line';
+import {Mesh} from 'three/src/objects/Mesh';
 
-export class DirectionalLightHelper extends BaseLightHelper<DirectionalLight, DirectionalLightObjNode> {
+export class DirectionalLightHelper extends BaseLightHelper<Mesh, DirectionalLight, DirectionalLightObjNode> {
+	createObject() {
+		return new Mesh();
+	}
 	private _square = new Line();
 	private _line_material = new LineBasicMaterial({fog: false});
-	protected build_helper() {
+	protected buildHelper() {
 		const geometry = new BufferGeometry();
 		const size = 1;
 		geometry.setAttribute(

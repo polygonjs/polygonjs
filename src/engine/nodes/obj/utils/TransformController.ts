@@ -22,7 +22,7 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		/** @param toggle on to keep world position when adding a parent or removing from one */
 		keepPosWhenParenting = ParamConfig.BOOLEAN(0);
 		/** @param rotation order */
-		rotation_order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
+		rotationOrder = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
 			menu: {
 				entries: ROTATION_ORDERS.map((order, v) => {
 					return {name: order, value: v};
@@ -112,7 +112,7 @@ export class TransformController {
 			this.node.pv.r,
 			this.node.pv.s,
 			this.node.pv.scale,
-			ROTATION_ORDERS[this.node.pv.rotation_order]
+			ROTATION_ORDERS[this.node.pv.rotationOrder]
 		);
 		object.matrix.identity();
 		object.applyMatrix4(matrix);

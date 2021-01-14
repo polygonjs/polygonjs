@@ -106,6 +106,7 @@ import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Blend';
 import './engine/nodes/obj/Geo';
 import './engine/nodes/obj/HemisphereLight';
+import './engine/nodes/obj/PolarTransform';
 import './engine/nodes/obj/Poly';
 import './engine/nodes/obj/SpotLight';
 

@@ -1,19 +1,20 @@
 import {Light} from 'three/src/lights/Light';
+import {Object3D} from 'three/src/core/Object3D';
 import {BaseLightHelper, BaseLightHelperObjNode} from './helpers/_BaseLightHelper';
 
 // interface Helper<L extends Light> extends BaseLightHelper<L> {
 // 	dispose: () => void;
 // 	update: () => void;
 // }
-export interface HelperConstructor<L extends Light> {
-	new (node: BaseLightHelperObjNode<L>, name: string): BaseLightHelper<L, BaseLightHelperObjNode<L>>;
+export interface HelperConstructor<O extends Object3D, L extends Light> {
+	new (node: BaseLightHelperObjNode<L>, name: string): BaseLightHelper<O, L, BaseLightHelperObjNode<L>>;
 }
 
-export class HelperController<L extends Light> {
-	private _helper: BaseLightHelper<L, BaseLightHelperObjNode<L>> | undefined;
+export class HelperController<O extends Object3D, L extends Light> {
+	private _helper: BaseLightHelper<O, L, BaseLightHelperObjNode<L>> | undefined;
 	constructor(
 		private node: BaseLightHelperObjNode<L>,
-		private _helper_constructor: HelperConstructor<L>,
+		private _helper_constructor: HelperConstructor<O, L>,
 		private _name: string
 	) {}
 
@@ -32,9 +33,8 @@ export class HelperController<L extends Light> {
 		return this.node.flags.display.active() && this.node.pv.showHelper;
 	}
 
-	private _create_helper(): BaseLightHelper<L, BaseLightHelperObjNode<L>> {
+	private _create_helper(): BaseLightHelper<O, L, BaseLightHelperObjNode<L>> {
 		const helper = new this._helper_constructor(this.node, this._name);
-		helper.object.matrixAutoUpdate = false;
 		helper.build();
 		return helper;
 	}
