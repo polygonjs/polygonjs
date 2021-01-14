@@ -207,7 +207,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param physically correct lights */
 	physicallyCorrectLights = ParamConfig.BOOLEAN(1);
-	/** @param sort objects, which can be necessary when rendering transparent obejcts */
+	/** @param sort objects, which can be necessary when rendering transparent objects */
 	sortObjects = ParamConfig.BOOLEAN(1);
 	/** @param sampling will increase the renderer size */
 	sampling = ParamConfig.INTEGER(1, {

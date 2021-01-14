@@ -6,7 +6,7 @@ export function MatMeshBasic() {
 	const root = scene.root();
 
 	// create a few objects
-	const geo = .createNode('geo');
+	const geo = root.createNode('geo');
 	const sphere = geo.createNode('sphere');
 	sphere.p.center.x.set(-2);
 	const box = geo.createNode('box');
