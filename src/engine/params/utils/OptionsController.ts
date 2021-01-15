@@ -262,7 +262,15 @@ export class OptionsController {
 		return this._options[CALLBACK_OPTION] != null || this._options[CALLBACK_STRING_OPTION] != null;
 	}
 
+	private _callbackAllowed = false;
+	allowCallback() {
+		this._callbackAllowed = true;
+	}
+
 	execute_callback() {
+		if (!this._callbackAllowed) {
+			return;
+		}
 		if (!this.node()) {
 			return;
 		}

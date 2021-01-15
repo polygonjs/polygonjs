@@ -23,7 +23,7 @@ export class SceneJsonImporter {
 		const properties = this._data['properties'];
 		if (properties) {
 			// scene.setName(properties['name'])
-			const frame_range = properties['frame_range'] || [];
+			const frame_range = properties['frameRange'] || [];
 			scene.timeController.setFrameRange(frame_range[0] || 1, frame_range[1] || 100);
 			const frameRangeLocked = properties['frameRangeLocked'];
 			if (frameRangeLocked) {

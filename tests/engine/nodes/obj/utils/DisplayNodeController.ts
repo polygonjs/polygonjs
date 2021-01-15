@@ -70,6 +70,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 		'/geo1:/perspectiveCamera1'
 	);
 	assert.ok(geo1.children_display_controller.sop_group.visible);
+	assert.equal(main_group.children.find((o) => o.name == '/geo1')?.children.length, 2);
 
 	geo1.flags.display.set(false);
 	assert.equal(main_group.children.length, 2);
@@ -78,8 +79,9 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 			.map((c) => c.name)
 			.sort()
 			.join(':'),
-		'/perspectiveCamera1'
+		'/geo1:/perspectiveCamera1'
 	);
+	assert.equal(main_group.children.find((o) => o.name == '/geo1')?.children.length, 1);
 	assert.ok(!geo1.children_display_controller.sop_group.visible);
 });
 

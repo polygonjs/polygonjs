@@ -26,7 +26,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _default_value!: ParamInitValuesTypeMap[T];
 	protected _raw_input!: ParamInitValuesTypeMap[T];
 	protected _value!: ParamValuesTypeMap[T];
-	protected _node!: BaseNodeType;
+	protected _node: BaseNodeType;
 	protected _parent_param: TypedMultipleParam<any> | undefined;
 	protected _components: FloatParam[] | undefined;
 	protected _compute_resolves: ComputeCallback[] | undefined;
@@ -57,8 +57,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	return (this._ui_data = this._ui_data || new UIData(this.scene, this));
 	// }
 
-	constructor(scene: PolyScene) {
+	constructor(scene: PolyScene, node: BaseNodeType) {
 		super(scene, 'BaseParam');
+		this._node = node;
 		this.initialize_param();
 	}
 	initialize_param() {}
@@ -195,13 +196,16 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// }
 
 	// node
-	_set_node_owner(node: BaseNodeType | null) {
+	_setup_node_dependencies(node: BaseNodeType | null) {
 		if (!node) {
 			if (this._node) {
 				this._node.params.params_node?.removeGraphInput(this);
 			}
 		} else {
-			this._node = node;
+			// allow callbacks after the value is set,
+			// so that the param does not trigger the node to recompute
+			// before all params are added
+			this.options.allowCallback();
 			if (this.options.makes_node_dirty_when_dirty() && !this.parent_param) {
 				node.params.params_node?.addGraphInput(this, false);
 			}
@@ -209,7 +213,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 		if (this.components) {
 			for (let c of this.components) {
-				c._set_node_owner(node);
+				c._setup_node_dependencies(node);
 			}
 		}
 	}

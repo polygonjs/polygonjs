@@ -6,7 +6,7 @@ import {JsonExportDispatcher} from './Dispatcher';
 
 export interface SceneJsonExporterDataProperties {
 	frame: number;
-	frame_range: Number2;
+	frameRange: Number2;
 	frameRangeLocked: Boolean2;
 	realtimeState: boolean;
 	// fps: number;
@@ -33,7 +33,7 @@ export class SceneJsonExporter {
 			properties: {
 				// name: this._scene.name(), // this conflicts with saving the name from the admin page
 				frame: this._scene.frame() || 1,
-				frame_range: this._scene.frameRange(),
+				frameRange: this._scene.frameRange(),
 				frameRangeLocked: this._scene.timeController.frameRangeLocked,
 				realtimeState: this._scene.timeController.realtimeState,
 				// fps: this._scene.time_controller.fps,

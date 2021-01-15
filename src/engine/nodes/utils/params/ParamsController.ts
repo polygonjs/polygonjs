@@ -346,7 +346,7 @@ export class ParamsController {
 			if (this._params_node) {
 				this._params_node.removeGraphInput(this._params_by_name[param_name]);
 			}
-			param._set_node_owner(null);
+			param._setup_node_dependencies(null);
 			delete this._params_by_name[param_name];
 			if (param.is_multiple && param.components) {
 				for (let component of param.components) {
@@ -397,12 +397,15 @@ export class ParamsController {
 					Poly.warn(`a param named ${param_name} already exists`, this.node);
 				}
 			}
-			const param: ParamConstructorMap[T] = new constructor(this.node.scene());
+			const param: ParamConstructorMap[T] = new constructor(this.node.scene(), this.node);
 			param.options.set(options);
 
 			param.setName(param_name);
 			param.set_init_value(default_value as never);
 			param.init_components();
+
+			// set param value
+			// and overriden options
 			if (init_data == null) {
 				param.set(default_value as never);
 			} else {
@@ -436,7 +439,7 @@ export class ParamsController {
 					}
 				}
 			}
-			param._set_node_owner(this.node);
+			param._setup_node_dependencies(this.node);
 
 			this._params_by_name[param.name()] = param as BaseParamType;
 

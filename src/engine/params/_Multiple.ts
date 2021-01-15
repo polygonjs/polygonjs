@@ -45,7 +45,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		let index = 0;
 		this._components = new Array(this.component_names.length);
 		for (let component_name of this.component_names) {
-			const component = new this._components_contructor(this.scene()); //, `${this.name}${name}`);
+			const component = new this._components_contructor(this.scene(), this._node); //, `${this.name}${name}`);
 			let default_val;
 			if (CoreType.isArray(this._default_value)) {
 				default_val = this._default_value[index];
