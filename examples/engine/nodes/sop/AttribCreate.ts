@@ -20,7 +20,7 @@ export function SopAttribCreate() {
 	const attribCreate = geo.createNode('attribCreate');
 	attribCreate.setInput(0, line);
 	attribCreate.p.name.set('amp');
-	attribCreate.p.value1.set('@ptnum / (points_count(0)-1)');
+	attribCreate.p.value1.set('@ptnum / (pointsCount(0)-1)');
 
 	// create a noise SOP
 	const noise = geo.createNode('noise');

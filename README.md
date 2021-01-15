@@ -72,3 +72,8 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 [lgtm-url]: https://lgtm.com/projects/g/polygonjs/polygonjs-engine/
 [twitter-img]: https://img.shields.io/twitter/follow/polygonjs.svg?style=social&label=Follow
 [twitter-url]: https://twitter.com/intent/follow?screen_name=polygonjs
+
+## View the examples
+
+Make sure to have node and yarn installed, then run `yarn install` and `yarn start`.
+Once the dev server has compiled the files, you can open `http://localhost:8080/example` and see the various examples.

@@ -7,19 +7,22 @@ const common = require('./common.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
+const html = require('./loaders/html');
+
 module.exports = (env) => {
 	const common_options = common(env);
 
 	if (CREATE_EXAMPLE_INDEX) {
-		common_options.entry.example = './src/engine/examples.ts';
+		common_options.entry.example = './src/engine/example.ts';
 		common_options.plugins.push(
 			new HtmlWebpackPlugin({
-				title: 'Examples',
-				filename: 'examples',
-				template: './src/engine/examples.html',
-				chunks: ['examples'],
+				title: 'Example',
+				filename: 'example',
+				template: './src/engine/example.html',
+				chunks: ['example'],
 			})
 		);
+		common_options.module.rules.push(html);
 	}
 
 	// load test index file
