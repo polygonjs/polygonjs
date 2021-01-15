@@ -11,13 +11,13 @@ module.exports = (env) => {
 	const common_options = common(env);
 
 	if (CREATE_EXAMPLE_INDEX) {
-		common_options.entry.example = './src/engine/example.ts';
+		common_options.entry.example = './src/engine/examples.ts';
 		common_options.plugins.push(
 			new HtmlWebpackPlugin({
-				title: 'Example',
-				filename: 'example',
-				template: './src/engine/example.html',
-				chunks: ['example'],
+				title: 'Examples',
+				filename: 'examples',
+				template: './src/engine/examples.html',
+				chunks: ['examples'],
 			})
 		);
 	}
