@@ -164,7 +164,6 @@ export class CoreObject extends CoreEntity {
 		if (name === PTNUM) {
 			return index;
 		}
-
 		if (object.userData && object.userData[ATTRIBUTES]) {
 			const val = object.userData[ATTRIBUTES][name] as AttribValue;
 			if (val == null) {

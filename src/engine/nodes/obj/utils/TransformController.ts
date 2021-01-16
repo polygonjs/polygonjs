@@ -187,9 +187,9 @@ export class TransformController {
 	update_node_transform_params_from_object(update_matrix = false) {
 		const object = this.node.object;
 		if (update_matrix) {
-			object.updateMatrixWorld(true);
+			object.updateMatrix();
 		}
-		CoreTransform.set_params_from_matrix(object.matrixWorld, this.node, {scale: true});
+		CoreTransform.set_params_from_matrix(object.matrix, this.node, {scale: true});
 	}
 
 	//
