@@ -12,6 +12,7 @@ import {Texture} from 'three/src/textures/Texture';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {CoreObject} from '../../geometry/Object';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
@@ -69,15 +70,20 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 			await material_node.requestContainer();
 			if (material) {
-				for (let object of core_group.objectsFromGroup(params.group)) {
-					if (params.applyToChildren) {
+				if (params.applyToChildren) {
+					// if we apply to children, the group will be tested inside _apply_material
+					for (let object of core_group.objects()) {
 						object.traverse((grand_child) => {
 							this._apply_material(grand_child, material, params);
 						});
-					} else {
+					}
+				} else {
+					// if we apply to children, the group is tested here
+					for (let object of core_group.objectsFromGroup(params.group)) {
 						this._apply_material(object, material, params);
 					}
 				}
+
 				return core_group;
 			} else {
 				this.states?.error.set(`material invalid. (error: '${material_node.states.error.message()}')`);
@@ -114,6 +120,12 @@ export class MaterialSopOperation extends BaseSopOperation {
 	}
 
 	private _apply_material(object: Object3D, src_material: Material, params: MaterialSopParams) {
+		if (params.group) {
+			if (!CoreObject.isInGroup(params.group, object)) {
+				return;
+			}
+		}
+
 		const used_material = params.cloneMat ? CoreMaterial.clone(src_material) : src_material;
 
 		if (src_material instanceof ShaderMaterial && used_material instanceof ShaderMaterial) {

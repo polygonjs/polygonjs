@@ -83,6 +83,21 @@ export class CoreObject extends CoreEntity {
 			return this.points();
 		}
 	}
+	static isInGroup(groupString: string, object: Object3D) {
+		const group = groupString.trim();
+		if (group.length == 0) {
+			return true;
+		}
+		const elements = group.split('=');
+		const attribNameWithPrefix = elements[0];
+		if (attribNameWithPrefix[0] == '@') {
+			const attribName = attribNameWithPrefix.substr(1);
+			const expectedAttribValue = elements[1];
+			const currentAttribValue = this.attribValue(object, attribName);
+			return expectedAttribValue == currentAttribValue;
+		}
+		return false;
+	}
 
 	computeVertexNormals() {
 		this.coreGeometry()?.computeVertexNormals();
@@ -148,21 +163,24 @@ export class CoreObject extends CoreEntity {
 	): AttribValue | undefined {
 		if (name === PTNUM) {
 			return index;
-		} else {
-			if (object.userData && object.userData[ATTRIBUTES]) {
-				const val = object.userData[ATTRIBUTES][name] as AttribValue;
-				if (val == null) {
-					if (name == NAME_ATTR) {
-						return object.name;
-					}
-				} else {
-					if (CoreType.isArray(val) && target) {
-						target.fromArray(val);
-						return target;
-					}
+		}
+
+		if (object.userData && object.userData[ATTRIBUTES]) {
+			const val = object.userData[ATTRIBUTES][name] as AttribValue;
+			if (val == null) {
+				if (name == NAME_ATTR) {
+					return object.name;
 				}
-				return val;
+			} else {
+				if (CoreType.isArray(val) && target) {
+					target.fromArray(val);
+					return target;
+				}
 			}
+			return val;
+		}
+		if (name == NAME_ATTR) {
+			return object.name;
 		}
 	}
 	static stringAttribValue(object: Object3D, name: string, index: number = 0): string | undefined {
