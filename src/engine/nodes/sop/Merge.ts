@@ -17,7 +17,7 @@ const INPUT_NAME = 'geometry to merge';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = MergeSopOperation.DEFAULT_PARAMS;
 class MergeSopParamsConfig extends NodeParamsConfig {
-	/** @param compact mode */
+	/** @param When off, input objects remain separate. When on, they are merged together by type (mesh, points and lines). In order to merge them correctly, you'll have to make sure they have the same attributes */
 	compact = ParamConfig.BOOLEAN(DEFAULT.compact);
 }
 const ParamsConfig = new MergeSopParamsConfig();
