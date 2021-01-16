@@ -104,12 +104,10 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 
 QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
-	const root = scene.root();
 	const geo = window.geo1;
 	const box = geo.createNode('box');
-	const event = root.createNode('events');
-	const raycast = event.createNode('raycast');
-	const param = raycast.p.target;
+	const material = window.MAT.createNode('meshBasic');
+	const param = material.p.map;
 
 	assert.equal(param.type(), ParamType.OPERATOR_PATH);
 
