@@ -23,14 +23,14 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 	}
 	static readonly OUTPUT_NAME = 'rgba';
 
-	initialize_node() {
+	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.paramName]);
 			});
 		});

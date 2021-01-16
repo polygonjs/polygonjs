@@ -19,8 +19,8 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 		static type() {
 			return type;
 		}
-		initialize_node() {
-			super.initialize_node();
+		initializeNode() {
+			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 
@@ -112,8 +112,8 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 		return 1;
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}

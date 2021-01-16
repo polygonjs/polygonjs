@@ -36,7 +36,7 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 	constructor(protected node: TextureAlphaMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
-	initialize_node() {
+	initializeNode() {
 		this.add_hooks(this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
 	async update() {

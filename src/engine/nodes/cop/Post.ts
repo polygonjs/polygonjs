@@ -129,8 +129,8 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	);
 
 	protected _children_controller_context = NodeContext.POST;
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 
 		// init scene
 		this._texture_mesh.name = 'cop/post';

@@ -35,15 +35,15 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 		return 'instance';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to be instanciated', 'points to instance to'];
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
-		this.io.inputs.set_count(2);
-		this.io.inputs.init_inputs_cloned_state(InstanceSopOperation.INPUT_CLONED_STATE);
+		this.io.inputs.setCount(2);
+		this.io.inputs.initInputsClonedState(InstanceSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: InstanceSopOperation | undefined;

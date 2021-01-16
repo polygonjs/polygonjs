@@ -32,13 +32,13 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 	private _previous_time: number | undefined;
 	private _mixer: AnimationMixer | undefined;
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to be animated'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	async cook(input_contents: CoreGroup[]) {

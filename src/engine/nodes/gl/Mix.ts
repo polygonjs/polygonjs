@@ -16,8 +16,8 @@ export class MixGlNode extends BaseGlMathFunctionGlNode {
 		return DefaultValues[name];
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['value0', 'value1', 'blend'][index]);
 		this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));

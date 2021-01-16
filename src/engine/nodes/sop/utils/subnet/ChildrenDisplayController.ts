@@ -11,9 +11,9 @@ import {ParamsInitData} from '../../../utils/io/IOController';
 import {Constructor, valueof} from '../../../../../types/GlobalTypes';
 
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
-	initialize_base_node() {
-		super.initialize_base_node();
-		this.children_display_controller.initialize_node();
+	initializeBaseNode() {
+		super.initializeBaseNode();
+		this.children_display_controller.initializeNode();
 		// the inputs will be evaluated by the child input nodes
 		this.cookController.disallow_inputs_evaluation();
 	}
@@ -98,7 +98,7 @@ export class SopSubnetChildrenDisplayController {
 		return this._output_node;
 	}
 
-	initialize_node() {
+	initializeNode() {
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
 			display_flag.add_hook(() => {

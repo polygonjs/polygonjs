@@ -122,23 +122,23 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 		return 'transformMulti';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['objects to transform', 'objects to copy initial transform from'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1, 2);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
+	initializeNode() {
+		this.io.inputs.setCount(1, 2);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.applyOn], () => {
 					return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 				});
 			});
 		});
 
-		this.params.on_params_created('cache param pairs', () => {
+		this.params.onParamsCreated('cache param pairs', () => {
 			this._rot_and_index_pairs = [
 				[this.p.r0, this.p.rotationOrder0],
 				[this.p.r1, this.p.rotationOrder1],

@@ -22,11 +22,11 @@ export interface PolyNodeDefinition {
 export class PolyNodeController {
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
 
-	initialize_node() {
+	initializeNode() {
 		this.init_inputs();
 
 		// add hooks
-		this.node.params.on_params_created('poly_node_init', () => {
+		this.node.params.onParamsCreated('poly_node_init', () => {
 			this.create_params_from_definition();
 		});
 
@@ -41,7 +41,7 @@ export class PolyNodeController {
 		if (!inputs_data) {
 			return;
 		}
-		this.node.io.inputs.set_count(inputs_data[0], inputs_data[1]);
+		this.node.io.inputs.setCount(inputs_data[0], inputs_data[1]);
 	}
 
 	create_params_from_definition() {

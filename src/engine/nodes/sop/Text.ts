@@ -92,7 +92,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private _font_loader: FontLoader = new FontLoader();
 	private _loaded_fonts: FontByUrl = {};
 
-	initialize_node() {}
+	initializeNode() {}
 
 	async cook() {
 		try {

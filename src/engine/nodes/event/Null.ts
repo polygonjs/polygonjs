@@ -24,7 +24,7 @@ export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
 		return 'null';
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
 				NullEventInput.TRIGGER,

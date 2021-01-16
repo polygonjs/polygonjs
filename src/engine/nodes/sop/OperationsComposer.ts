@@ -21,13 +21,13 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 		return OPERATIONS_COMPOSER_NODE_TYPE;
 	}
 
-	initialize_node() {
+	initializeNode() {
 		// the number of inputs will be set from the JsonImporter, when the node is created
 		// since this is when we can know the number of inputs
 		// and creating a large number of max inputs in advance
 		// will result is creating many CoreGraphNodes
-		// this.io.inputs.set_count(0, 2);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+		// this.io.inputs.setCount(0, 2);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	private _output_operation_container: SopOperationContainer | undefined;

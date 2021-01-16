@@ -15,9 +15,9 @@ export class NullCopNode extends TypedCopNode<NodeParamsConfig> {
 		return 'null';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	async cook(input_contents: Texture[]) {

@@ -33,7 +33,7 @@ export class DisplayNodeController {
 		return this._display_node;
 	}
 
-	initialize_node() {
+	initializeNode() {
 		if (this._initialized) {
 			console.error('display node controller already initialed', this.node);
 			return;

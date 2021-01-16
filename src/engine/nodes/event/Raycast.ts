@@ -280,7 +280,7 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	public readonly cpu_controller: RaycastCPUController = new RaycastCPUController(this);
 	public readonly gpu_controller: RaycastGPUController = new RaycastGPUController(this);
 
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
 				'trigger',

@@ -517,7 +517,7 @@ export class ParamsController {
 	// HOOKS
 	//
 	//
-	on_params_created(hook_name: string, hook: PostCreateParamsHook) {
+	onParamsCreated(hook_name: string, hook: PostCreateParamsHook) {
 		if (this._params_created) {
 			hook();
 		} else {

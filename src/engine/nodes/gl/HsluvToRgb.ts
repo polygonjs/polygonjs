@@ -18,8 +18,8 @@ export class HsluvToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 		return 'hsluvToRgb';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),

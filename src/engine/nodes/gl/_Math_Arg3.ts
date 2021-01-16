@@ -22,8 +22,8 @@ export function MathFunctionArg3Factory(type: string, options: MathArg3Options =
 		static type() {
 			return type;
 		}
-		initialize_node() {
-			super.initialize_node();
+		initializeNode() {
+			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 			this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));

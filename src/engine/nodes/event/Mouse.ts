@@ -57,7 +57,7 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 	protected accepted_event_types() {
 		return ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`);
 	}
-	initialize_node() {
+	initializeNode() {
 		this.io.outputs.set_named_output_connection_points(
 			ACCEPTED_MOUSE_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.MOUSE);

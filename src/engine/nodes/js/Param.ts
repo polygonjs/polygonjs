@@ -36,10 +36,10 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	}
 	protected _allow_inputs_created_from_params: boolean = false;
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	initialize_node() {
+	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_function_node_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.io.connection_points.initialize_node();
+		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(() => [JS_CONNECTION_POINT_TYPES[this.pv.type]]);

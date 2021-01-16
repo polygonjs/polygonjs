@@ -47,7 +47,7 @@
 
 // 	private _update_signature_if_required_bound = this.update_signature_if_required.bind(this);
 // 	private _initialized: boolean = false;
-// 	initialize_node() {
+// 	initializeNode() {
 // 		if (this._initialized) {
 // 			console.warn('already initialized', this.node);
 // 			return;

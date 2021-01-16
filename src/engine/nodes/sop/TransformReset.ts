@@ -49,15 +49,15 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 		return 'transformReset';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['objects to reset transform', 'optional reference for center'];
 	}
 	private _bbox_center = new Vector3();
 	private _translate_matrix = new Matrix4();
 
-	initialize_node() {
-		this.io.inputs.set_count(1, 2);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(1, 2);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	setMode(mode: TransformResetMode) {

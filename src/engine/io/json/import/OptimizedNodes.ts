@@ -79,7 +79,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					node.name(),
 					operation_container
 				);
-				node.io.inputs.set_count(this._node_inputs.length);
+				node.io.inputs.setCount(this._node_inputs.length);
 				for (let i = 0; i < this._node_inputs.length; i++) {
 					node.setInput(i, this._node_inputs[i]);
 				}

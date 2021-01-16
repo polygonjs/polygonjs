@@ -39,11 +39,11 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		return 'merge';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 4);
+	initializeNode() {
+		this.io.inputs.setCount(0, 4);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.mode], () => {
 					const mode = MERGE_MODES[this.pv.mode];
 					return mode;

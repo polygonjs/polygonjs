@@ -41,12 +41,12 @@ export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		return 'split';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to split in multiple objects'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 	}
 
 	private _new_objects: Object3D[] = [];

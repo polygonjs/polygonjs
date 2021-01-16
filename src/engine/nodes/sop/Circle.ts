@@ -36,8 +36,8 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 		return 'circle';
 	}
 
-	initialize_node() {
-		// this.io.inputs.set_count(0);
+	initializeNode() {
+		// this.io.inputs.setCount(0);
 		// this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}
 

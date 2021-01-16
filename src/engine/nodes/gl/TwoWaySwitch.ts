@@ -18,9 +18,9 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 	}
 
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initialize_node() {
-		super.initialize_node();
-		this.io.connection_points.initialize_node();
+	initializeNode() {
+		super.initializeNode();
+		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));

@@ -64,9 +64,9 @@ export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 		return 'sphere';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(SphereSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(SphereSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: SphereSopOperation | undefined;

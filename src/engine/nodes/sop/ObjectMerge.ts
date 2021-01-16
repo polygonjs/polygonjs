@@ -29,7 +29,7 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 	}
 
 	// _param_apply_parent_transform: boolean
-	initialize_node() {}
+	initializeNode() {}
 
 	async cook(input_containers: CoreGroup[]) {
 		const geometry_node = this.p.geometry.found_node();

@@ -64,11 +64,11 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		(<unknown>DirectionalLightHelper) as HelperConstructor<Mesh, DirectionalLight>,
 		'DirectionalLightHelper'
 	);
-	initialize_node() {
-		// this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		// this.io.inputs.setCount(0, 1);
 		// this.io.inputs.set_depends_on_inputs(false);
 
-		this._helper_controller.initialize_node();
+		this._helper_controller.initializeNode();
 	}
 
 	create_light() {

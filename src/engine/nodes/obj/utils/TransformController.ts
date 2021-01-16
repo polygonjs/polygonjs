@@ -67,7 +67,7 @@ const HOOK_NAME = '_cook_main_without_inputs_when_dirty';
 export class TransformController {
 	constructor(private node: TransformedObjNode) {}
 
-	initialize_node() {
+	initializeNode() {
 		if (!this.node.dirtyController.has_hook(HOOK_NAME)) {
 			this.node.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
 		}

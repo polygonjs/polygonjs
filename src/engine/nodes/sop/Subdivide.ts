@@ -23,8 +23,8 @@ export class SubdivideSopNode extends TypedSopNode<SubdivideSopParamsConfig> {
 		return 'subdivide';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 	}
 
 	private _operation: SubdivideSopOperation | undefined;

@@ -45,10 +45,10 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initialize_node() {
+	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.io.connection_points.initialize_node();
+		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => {
 			if (this.material_node?.assemblerController?.allow_attribute_exports()) {
@@ -67,7 +67,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name, this.p.export_when_connected], () => {
 					return this.pv.export_when_connected ? `${this.pv.name} (EXPORTED)` : this.pv.name;
 				});

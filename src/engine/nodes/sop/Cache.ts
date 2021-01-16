@@ -31,12 +31,12 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 		return 'cache';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to cache'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 	}
 
 	cook(input_contents: CoreGroup[]) {

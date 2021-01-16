@@ -31,13 +31,13 @@ export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 		return 'box';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to create bounding box from (optional)'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(BoxSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(BoxSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: BoxSopOperation | undefined;

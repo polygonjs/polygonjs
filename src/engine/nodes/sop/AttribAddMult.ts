@@ -30,9 +30,9 @@ export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsCon
 		return 'attribAddMult';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(AttribAddMultSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(AttribAddMultSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: AttribAddMultSopOperation | undefined;

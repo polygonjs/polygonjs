@@ -72,9 +72,9 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 		return 'circle3Points';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.NEVER]);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState([InputCloneMode.NEVER]);
 	}
 
 	cook(input_contents: CoreGroup[]) {

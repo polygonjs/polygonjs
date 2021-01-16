@@ -6,8 +6,8 @@ export class RefractGlNode extends BaseGlMathFunctionGlNode {
 		return 'refract';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['I', 'N', 'eta'][index]);
 		this.io.connection_points.set_output_name_function((index: number) => 'refract');

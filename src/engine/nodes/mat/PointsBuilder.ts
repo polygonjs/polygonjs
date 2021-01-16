@@ -32,7 +32,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	}
 
 	readonly depth_controller: DepthController = new DepthController(this);
-	initialize_node() {}
+	initializeNode() {}
 
 	async cook() {
 		this.compile_if_required();

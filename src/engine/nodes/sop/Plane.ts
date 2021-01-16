@@ -36,13 +36,13 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 		return 'plane';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to create plane from (optional)'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(PlaneSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(PlaneSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: PlaneSopOperation | undefined;

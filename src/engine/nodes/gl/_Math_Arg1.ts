@@ -14,8 +14,8 @@ function MathFunctionArg1Factory(type: string, options: MathArg1Options = {}) {
 		static type() {
 			return type;
 		}
-		initialize_node() {
-			super.initialize_node();
+		initializeNode() {
+			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 		}

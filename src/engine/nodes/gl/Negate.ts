@@ -7,8 +7,8 @@ export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		return 'negate';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['in'][index]);
 	}

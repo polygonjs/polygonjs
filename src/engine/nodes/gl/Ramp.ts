@@ -22,8 +22,8 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		return 'ramp';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.io.outputs.set_named_output_connection_points([
@@ -31,7 +31,7 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		]);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
 		});

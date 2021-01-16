@@ -39,7 +39,7 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 
 	private _core_transform = new CoreTransform();
 
-	initialize_node() {}
+	initializeNode() {}
 
 	cook() {
 		if (this.pv.hexagonRadius > 0) {

@@ -41,15 +41,15 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 		return 'polywire';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['lines to create tubes from'];
 	}
 
 	private _core_transform = new CoreTransform();
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	private _geometries: BufferGeometry[] = [];

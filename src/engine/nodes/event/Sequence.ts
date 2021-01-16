@@ -29,7 +29,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 	static type() {
 		return 'sequence';
 	}
-	initialize_node() {
+	initializeNode() {
 		// this.io.inputs.set_named_input_connection_points([
 		// 	new EventConnectionPoint(INPUT_NAME, EventConnectionPointType.BASE),
 		// ]);

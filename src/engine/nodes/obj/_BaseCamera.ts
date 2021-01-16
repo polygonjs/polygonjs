@@ -201,13 +201,13 @@ export class TypedThreejsCameraObjNode<
 	//
 	protected _children_controller_context = NodeContext.SOP;
 
-	initialize_base_node() {
-		super.initialize_base_node();
+	initializeBaseNode() {
+		super.initializeBaseNode();
 		this.io.outputs.set_has_one_output();
-		this.hierarchy_controller.initialize_node();
-		this.transform_controller.initialize_node();
+		this.hierarchy_controller.initializeNode();
+		this.transform_controller.initializeNode();
 
-		this.children_display_controller.initialize_node();
+		this.children_display_controller.initializeNode();
 	}
 
 	createNode<S extends keyof GeoNodeChildrenMap>(

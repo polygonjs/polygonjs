@@ -57,13 +57,13 @@ export class TexturePropertiesSopNode extends TypedSopNode<TexturePropertiesSopP
 		return 'textureProperties';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['objects with textures to change properties of'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(TexturePropertiesSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(TexturePropertiesSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: TexturePropertiesSopOperation | undefined;

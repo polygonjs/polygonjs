@@ -15,8 +15,8 @@ export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
 		return 'luminance';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),

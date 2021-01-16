@@ -19,11 +19,11 @@ export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfi
 		return NetworkChildNodeType.OUTPUT;
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 		this.io.outputs.set_has_no_output();
 
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	cook(input_contents: CoreGroup[]) {

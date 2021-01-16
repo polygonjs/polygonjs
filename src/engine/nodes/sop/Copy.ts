@@ -50,13 +50,13 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private _objects: Object3D[] = [];
 	private _stamp_node!: CopyStamp;
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to be copied', 'points to copy to'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1, 2);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
+	initializeNode() {
+		this.io.inputs.setCount(1, 2);
+		this.io.inputs.initInputsClonedState([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
 	}
 
 	async cook(input_contents: CoreGroup[]) {

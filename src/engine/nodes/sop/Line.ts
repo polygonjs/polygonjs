@@ -29,7 +29,7 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 		return 'line';
 	}
 
-	initialize_node() {}
+	initializeNode() {}
 
 	cook() {
 		const pointsCount = Math.max(2, this.pv.pointsCount);

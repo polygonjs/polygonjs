@@ -20,7 +20,7 @@ export class FloatToIntGlNode extends TypedGlNode<FloatToIntGlParamsConfig> {
 		return 'floatToInt';
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME_INT, GlConnectionPointType.INT),
 		]);
@@ -51,7 +51,7 @@ export class IntToFloatGlNode extends TypedGlNode<IntToFloatGlParamsConfig> {
 		return 'intToFloat';
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(OUTPUT_NAME_FLOAT, GlConnectionPointType.FLOAT),
 		]);

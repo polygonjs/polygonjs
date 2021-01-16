@@ -47,8 +47,8 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		group.matrixAutoUpdate = false;
 		return group;
 	}
-	initialize_node() {
-		this.hierarchy_controller.initialize_node();
+	initializeNode() {
+		this.hierarchy_controller.initializeNode();
 
 		if (!this.dirtyController.has_hook(HOOK_NAME)) {
 			this.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);

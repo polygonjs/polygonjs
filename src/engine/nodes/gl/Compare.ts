@@ -76,12 +76,12 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		return 'compare';
 	}
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.spare_params.set_inputless_param_names(['test']);
 
-		this.io.connection_points.initialize_node();
+		this.io.connection_points.initializeNode();
 		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 		this.io.connection_points.set_output_name_function((index: number) => OUTPUT_NAME);
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_type.bind(this));

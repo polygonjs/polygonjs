@@ -40,14 +40,14 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		return 'lod';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['high res', 'mid res', 'low res'];
 	}
 	private _lod = this._create_LOD();
 
-	initialize_node() {
-		this.io.inputs.set_count(1, 3);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(1, 3);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	private _create_LOD() {

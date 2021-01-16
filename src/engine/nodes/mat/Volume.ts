@@ -49,7 +49,7 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 		return mat;
 	}
 
-	initialize_node() {}
+	initializeNode() {}
 	async cook() {
 		this._volume_controller.update_uniforms_from_params();
 

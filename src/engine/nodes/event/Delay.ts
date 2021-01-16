@@ -23,7 +23,7 @@ export class DelayEventNode extends TypedEventNode<TimerEventParamsConfig> {
 	static type() {
 		return 'delay';
 	}
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(INPUT_NAME, EventConnectionPointType.BASE, this._process_input.bind(this)),
 		]);

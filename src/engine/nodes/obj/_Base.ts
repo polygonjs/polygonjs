@@ -24,7 +24,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	static nodeContext(): NodeContext {
 		return NodeContext.OBJ;
 	}
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
@@ -74,7 +74,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 	public readonly children_display_controller: ChildrenDisplayController | undefined;
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this._object = this._create_object_with_attributes();
 		this.nameController.add_post_set_fullPath_hook(this.set_object_name.bind(this));
 		this.set_object_name();

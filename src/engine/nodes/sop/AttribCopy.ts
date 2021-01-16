@@ -50,16 +50,16 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		return 'attribCopy';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to copy attributes to', 'geometry to copy attributes from'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1, 2);
-		this.io.inputs.init_inputs_cloned_state(AttribCopySopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1, 2);
+		this.io.inputs.initInputsClonedState(AttribCopySopOperation.INPUT_CLONED_STATE);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name, this.p.tnewName, this.p.newName], () => {
 					return this.pv.tnewName ? `${this.pv.name} -> ${this.pv.newName}` : this.pv.name;
 				});

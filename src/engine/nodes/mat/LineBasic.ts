@@ -34,7 +34,7 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 	}
 
 	readonly depth_controller: DepthController = new DepthController(this);
-	initialize_node() {}
+	initializeNode() {}
 	async cook() {
 		this.material.color.copy(this.pv.color);
 		this.material.linewidth = this.pv.lineWidth;

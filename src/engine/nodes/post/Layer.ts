@@ -87,9 +87,9 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 		return 'layer';
 	}
 
-	initialize_node() {
-		super.initialize_node();
-		this.io.inputs.set_count(2);
+	initializeNode() {
+		super.initializeNode();
+		this.io.inputs.setCount(2);
 	}
 
 	setup_composer(context: TypedPostNodeContext): void {

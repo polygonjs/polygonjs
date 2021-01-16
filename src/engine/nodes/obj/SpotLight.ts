@@ -82,9 +82,9 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		(<unknown>SpotLightHelper) as HelperConstructor<Mesh, SpotLight>,
 		'SpotLightHelper'
 	);
-	initialize_node() {
-		// this.io.inputs.set_count(0, 1);
-		this._helper_controller.initialize_node();
+	initializeNode() {
+		// this.io.inputs.setCount(0, 1);
+		this._helper_controller.initializeNode();
 	}
 
 	create_light() {

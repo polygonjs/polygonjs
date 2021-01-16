@@ -33,16 +33,16 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 		return 'attribDelete';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to delete attributes from'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
 		});

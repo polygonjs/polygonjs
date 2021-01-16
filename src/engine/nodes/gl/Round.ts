@@ -11,8 +11,8 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		return 'round';
 	}
 
-	// initialize_node() {
-	// 	super.initialize_node();
+	// initializeNode() {
+	// 	super.initializeNode();
 	// 	this.set_named_outputs([new TypedConnectionFloat(v)]);
 	// }
 

@@ -20,8 +20,8 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		return 'output';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 
 		this.lifecycle.add_on_add_hook(() => {

@@ -34,7 +34,7 @@ export class TorusKnotSopNode extends TypedSopNode<TorusKnotSopParamsConfig> {
 	static type() {
 		return 'torusKnot';
 	}
-	initialize_node() {}
+	initializeNode() {}
 
 	private _operation: TorusKnotSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {

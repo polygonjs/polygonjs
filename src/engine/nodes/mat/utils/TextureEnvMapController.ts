@@ -36,7 +36,7 @@ export class TextureEnvMapController extends BaseTextureMapController {
 	constructor(protected node: TextureEnvMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
-	initialize_node() {
+	initializeNode() {
 		this.add_hooks(this.node.p.useEnvMap, this.node.p.envMap);
 	}
 	async update() {

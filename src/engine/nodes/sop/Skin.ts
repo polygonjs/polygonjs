@@ -22,12 +22,12 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		return 'skin';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['lines to create polygons from', 'if used, lines from both inputs will be used'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1, 2);
+	initializeNode() {
+		this.io.inputs.setCount(1, 2);
 	}
 
 	cook(input_contents: CoreGroup[]) {

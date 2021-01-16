@@ -177,9 +177,9 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	}
 
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initialize_node() {
-		super.initialize_node();
-		this.io.connection_points.initialize_node();
+	initializeNode() {
+		super.initializeNode();
+		this.io.connection_points.initializeNode();
 		this.io.connection_points.spare_params.set_inputless_param_names(['octaves', 'ampAttenuation', 'freqIncrease']);
 
 		this.io.outputs.set_named_output_connection_points([

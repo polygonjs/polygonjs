@@ -48,8 +48,8 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		RectAreaLightObjNodeHelper as any,
 		'RectAreaLightObjNodeHelper'
 	);
-	initialize_node() {
-		this._helper_controller.initialize_node();
+	initializeNode() {
+		this._helper_controller.initializeNode();
 	}
 
 	create_light() {

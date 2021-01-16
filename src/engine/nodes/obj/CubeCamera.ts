@@ -30,7 +30,7 @@
 // 	private _cube_camera_objects: Object3D[];
 // 	private _cube_camera: CubeCamera;
 
-// 	initialize_node() {
+// 	initializeNode() {
 // 		// this._init_display_flag({
 // 		// 	has_display_flag: false,
 // 		// });

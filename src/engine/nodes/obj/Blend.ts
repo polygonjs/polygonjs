@@ -71,9 +71,9 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		group.matrixAutoUpdate = false;
 		return group;
 	}
-	initialize_node() {
-		this.hierarchy_controller.initialize_node();
-		this.io.inputs.set_count(0);
+	initializeNode() {
+		this.hierarchy_controller.initializeNode();
+		this.io.inputs.setCount(0);
 
 		this.addPostDirtyHook('blend_on_dirty', () => {
 			this.cookController.cook_main_without_inputs();

@@ -54,11 +54,11 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		return 'target';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.type, this.p.nodePath, this.p.objectMask], () => {
 					const type = TARGET_TYPES[this.pv.type];
 					switch (type) {

@@ -23,7 +23,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// private _process_queue_start: number = -1;
 
 	protected _children_controller_context = NodeContext.OBJ;
-	initialize_node() {
+	initializeNode() {
 		// this.children_controller?.init({dependent: false});
 		this._object.matrixAutoUpdate = false;
 

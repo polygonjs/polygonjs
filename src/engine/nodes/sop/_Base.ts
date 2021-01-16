@@ -27,7 +27,7 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 // 	static node_context(): NodeContext {
 // 		return NodeContext.SOP;
 // 	}
-// 	// initialize_base_node() {
+// 	// initializeBaseNode() {
 // 	// 	this.children_controller?.init({dependent: false});
 // 	// }
 // 	cook() {
@@ -42,11 +42,11 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 	public readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this.flags.display.set(false);
 		this.flags.display.add_hook(() => {
 			if (this.flags.display.active()) {

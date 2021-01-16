@@ -48,13 +48,13 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 		return 'attribPromote';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(AttribPromoteSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(AttribPromoteSopOperation.INPUT_CLONED_STATE);
 		// this.uiData.set_icon('sort-amount-up');
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name, this.p.classFrom, this.p.classTo], () => {
 					if (this.pv.name != '') {
 						const from_s = AttribClassMenuEntries.filter((entry) => entry.value == this.pv.classFrom)[0]

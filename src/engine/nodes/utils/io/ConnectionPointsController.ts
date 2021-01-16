@@ -85,7 +85,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 
 	private _update_signature_if_required_bound = this.update_signature_if_required.bind(this);
 	private _initialized: boolean = false;
-	initialize_node() {
+	initializeNode() {
 		// I don't want this check here, as I should refactor to have the has_named_inputs
 		// be initialized from here
 		// if (!this.node.io.inputs.has_named_inputs) {
@@ -108,19 +108,19 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			'_update_signature_if_required',
 			this._update_signature_if_required_bound
 		);
-		this.node.params.on_params_created(
+		this.node.params.onParamsCreated(
 			'_update_signature_if_required_bound',
 			this._update_signature_if_required_bound
 		);
 		this.node.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 
 		if (!this._spare_params_controller.initialized()) {
-			this._spare_params_controller.initialize_node();
+			this._spare_params_controller.initializeNode();
 		}
 	}
 	private _initialize_if_required() {
 		if (!this._initialized) {
-			this.initialize_node();
+			this.initializeNode();
 		}
 	}
 

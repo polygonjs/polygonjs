@@ -30,16 +30,16 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 		return 'hierarchy';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to add or remove parents to/from'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(HierarchySopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(HierarchySopOperation.INPUT_CLONED_STATE);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.mode, this.p.levels], () => {
 					return `${HIERARCHY_MODES[this.pv.mode]} ${this.pv.levels}`;
 				});

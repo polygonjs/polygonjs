@@ -17,7 +17,7 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 	}
 	static INPUT_INDEX = 'index';
 
-	initialize_node() {
+	initializeNode() {
 		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 		// this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 

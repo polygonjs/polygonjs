@@ -83,8 +83,8 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 	// private _objects: Object3D
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 	}
 
 	cook(input_contents: CoreGroup[]) {

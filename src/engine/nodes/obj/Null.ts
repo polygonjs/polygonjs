@@ -30,9 +30,9 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 		group.matrixAutoUpdate = false;
 		return group;
 	}
-	initialize_node() {
-		this.hierarchy_controller.initialize_node();
-		this.transform_controller.initialize_node();
+	initializeNode() {
+		this.hierarchy_controller.initializeNode();
+		this.transform_controller.initializeNode();
 		this._updateHelperHierarchy();
 		this._helper.matrixAutoUpdate = false;
 		this.flags.display.add_hook(() => {

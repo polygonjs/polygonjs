@@ -65,7 +65,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 	private _resolved_nodes: BaseNodeType[] = [];
 
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
 				NodeCookEventNode.INPUT_TRIGGER,

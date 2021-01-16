@@ -104,17 +104,17 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.gpu_controller.reset_gpu_compute_and_set_dirty();
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['points to emit particles from'];
 	}
 
 	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	protected _children_controller_context = NodeContext.GL;
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 
 		this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 	}

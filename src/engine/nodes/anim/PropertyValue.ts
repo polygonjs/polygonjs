@@ -83,8 +83,8 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		return 'propertyValue';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 	}
 
 	async cook(input_contents: TimelineBuilder[]) {

@@ -15,8 +15,8 @@ export class OutputJsNode extends TypedJsNode<OutputJsParamsConfig> {
 		return 'output';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_function_node_to_recompile.bind(this));
 	}
 

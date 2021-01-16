@@ -29,7 +29,7 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatPara
 			opacity: 1,
 		});
 	}
-	initialize_node() {}
+	initializeNode() {}
 	async cook() {
 		ColorsController.update(this);
 		SideController.update(this);

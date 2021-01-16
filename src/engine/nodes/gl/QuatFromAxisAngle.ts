@@ -25,8 +25,8 @@ export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		return 'quatFromAxisAngle';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => InputNames[index]);
 		this.io.connection_points.set_expected_input_types_function(() => [

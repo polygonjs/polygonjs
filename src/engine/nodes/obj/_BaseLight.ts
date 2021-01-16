@@ -15,8 +15,8 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	}
 	protected abstract create_light(): L;
 	protected _used_in_scene: boolean = true;
-	initialize_base_node() {
-		super.initialize_base_node();
+	initializeBaseNode() {
+		super.initializeBaseNode();
 
 		this._light = this.create_light();
 		this.object.add(this._light);

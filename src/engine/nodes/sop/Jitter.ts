@@ -26,13 +26,13 @@ export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
 		return 'jitter';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to jitter points of'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(JitterSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(JitterSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: JitterSopOperation | undefined;

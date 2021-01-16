@@ -134,7 +134,7 @@ export class InputsController<NC extends NodeContext> {
 		return this._graph_node_inputs[input_index];
 	}
 
-	set_count(min: number, max?: number) {
+	setCount(min: number, max?: number) {
 		if (max == null) {
 			max = min;
 		}
@@ -409,7 +409,7 @@ export class InputsController<NC extends NodeContext> {
 	//
 	//
 	private _cloned_states_controller: ClonedStatesController<NC> | undefined;
-	init_inputs_cloned_state(states: InputCloneMode | InputCloneMode[]) {
+	initInputsClonedState(states: InputCloneMode | InputCloneMode[]) {
 		if (!this._cloned_states_controller) {
 			this._cloned_states_controller = new ClonedStatesController(this);
 			this._cloned_states_controller.init_inputs_cloned_state(states);

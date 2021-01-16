@@ -19,9 +19,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseJsFunctionAssembler | undefined;
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
-		this.io.connection_points.initialize_node();
+		this.io.connection_points.initializeNode();
 	}
 	cook() {
 		console.warn('js nodes should never cook');

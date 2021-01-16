@@ -12,7 +12,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		return NodeContext.EVENT;
 	}
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
 		// this.addPostDirtyHook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 		// cook is required for some nodes like event/animation
@@ -20,7 +20,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 
 		this.io.inputs.set_depends_on_inputs(false);
 		this.io.connections.init_inputs();
-		this.io.connection_points.spare_params.initialize_node();
+		this.io.connection_points.spare_params.initializeNode();
 	}
 
 	// ensures that event nodes are cooked when scene is loaded

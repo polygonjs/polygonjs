@@ -37,12 +37,12 @@ export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
 		return 'add';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to create polygons from (optional)'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 	}
 
 	private _operation: AddSopOperation | undefined;

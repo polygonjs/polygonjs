@@ -34,11 +34,11 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	// private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	protected _children_controller_context = NodeContext.JS;
 	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 
 		// this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 

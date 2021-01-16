@@ -31,10 +31,10 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	static readonly OUTPUT_NAME = 'fragment';
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	initialize_node() {
+	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.io.connection_points.initialize_node();
+		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_output_name_function(() => {
 			return this.output_name;
@@ -45,7 +45,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 			VARYING_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
 		});

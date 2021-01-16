@@ -28,13 +28,13 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 	// }
 
 	private _initialized = false;
-	initialize_node() {
+	initializeNode() {
 		if (this._initialized) {
 			console.warn('already initialized', this.node);
 			return;
 		}
 		this._initialized = true;
-		this.node.params.on_params_created('create_inputs_from_params', this.create_inputs_from_params.bind(this));
+		this.node.params.onParamsCreated('create_inputs_from_params', this.create_inputs_from_params.bind(this));
 	}
 	initialized() {
 		return this._initialized;

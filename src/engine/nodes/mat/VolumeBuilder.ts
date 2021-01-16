@@ -35,7 +35,7 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVol
 
 	private _volume_controller = new VolumeController(this);
 
-	initialize_node() {}
+	initializeNode() {}
 	async cook() {
 		this.compile_if_required();
 

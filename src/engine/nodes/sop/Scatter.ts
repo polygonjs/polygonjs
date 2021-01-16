@@ -39,13 +39,13 @@ export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 		return 'scatter';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to scatter points onto'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	private _operation: ScatterSopOperation | undefined;

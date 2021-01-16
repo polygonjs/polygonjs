@@ -48,8 +48,8 @@ export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig>
 		return 'css2DObject';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 	}
 
 	private _operation: Css2DObjectSopOperation | undefined;

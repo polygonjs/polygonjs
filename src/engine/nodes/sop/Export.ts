@@ -41,11 +41,11 @@
 
 // 	private _exporter: GLTFExporter = new GLTFExporter();
 
-// 	static displayed_input_names(): string[] {
+// 	static displayedInputNames(): string[] {
 // 		return ['geometry to export'];
 // 	}
-// 	initialize_node() {
-// 		this.io.inputs.set_count(1);
+// 	initializeNode() {
+// 		this.io.inputs.setCount(1);
 // 		this.io.inputs.init_inputs_clonable_state([InputCloneMode.ALWAYS]);
 // 	}
 

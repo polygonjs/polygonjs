@@ -53,8 +53,8 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		(<unknown>PointLightHelper) as HelperConstructor<Mesh, PointLight>,
 		'PointLightHelper'
 	);
-	initialize_node() {
-		this._helper_controller.initialize_node();
+	initializeNode() {
+		this._helper_controller.initializeNode();
 	}
 
 	create_light() {

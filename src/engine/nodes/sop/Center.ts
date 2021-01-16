@@ -18,9 +18,9 @@ export class CenterSopNode extends TypedSopNode<CenterSopParamsConfig> {
 		return 'center';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(CenterSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(CenterSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: CenterSopOperation | undefined;

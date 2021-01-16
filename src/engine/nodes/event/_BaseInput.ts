@@ -12,8 +12,8 @@ export const EVENT_PARAM_OPTIONS: ParamOptions = {
 };
 
 export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends TypedEventNode<K> {
-	initialize_base_node() {
-		super.initialize_base_node();
+	initializeBaseNode() {
+		super.initializeBaseNode();
 
 		const register = () => {
 			this.scene().eventsDispatcher.registerEventNode(this);
@@ -25,7 +25,7 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 		// this.lifecycle.add_on_creation_completed_hook(register);
 		this.lifecycle.add_delete_hook(unregister);
 
-		this.params.on_params_created('update_register', () => {
+		this.params.onParamsCreated('update_register', () => {
 			this._update_register();
 		});
 	}

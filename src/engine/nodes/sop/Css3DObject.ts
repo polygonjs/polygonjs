@@ -41,8 +41,8 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 		return 'css3DObject';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 	}
 
 	cook(input_contents: CoreGroup[]) {

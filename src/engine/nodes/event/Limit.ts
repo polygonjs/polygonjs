@@ -41,7 +41,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 
 	private _process_count: number = 0;
 	private _last_dispatched: boolean = false;
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
 				LimitEventInput.TRIGGER,

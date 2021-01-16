@@ -14,8 +14,8 @@ export class SubnetSopNode extends SubnetSopNodeLike<SubnetSopParamsConfig> {
 		return 'subnet';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 4);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+	initializeNode() {
+		this.io.inputs.setCount(0, 4);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 }

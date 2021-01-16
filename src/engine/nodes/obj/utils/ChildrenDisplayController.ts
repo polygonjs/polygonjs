@@ -51,7 +51,7 @@ export class ChildrenDisplayController {
 		};
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.node.object.add(this.sop_group);
 		this.node.nameController.add_post_set_fullPath_hook(this.set_sop_group_name.bind(this));
 		this._create_sop_group();

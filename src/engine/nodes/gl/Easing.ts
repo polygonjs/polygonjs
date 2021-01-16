@@ -164,8 +164,8 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		return 'easing';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.spare_params.set_inputless_param_names(['type']);
 

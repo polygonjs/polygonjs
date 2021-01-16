@@ -41,10 +41,10 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	protected _passes_by_requester_id: Map<CoreGraphNodeId, P> = new Map();
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
-	initialize_node() {
+	initializeNode() {
 		this.flags.display.set(false);
 		this.flags.display.add_hook(() => {
 			if (this.flags.display.active()) {
@@ -55,7 +55,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			}
 		});
 
-		this.io.inputs.set_count(0, 1);
+		this.io.inputs.setCount(0, 1);
 		this.io.outputs.set_has_one_output();
 	}
 

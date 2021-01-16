@@ -24,12 +24,12 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 		return 'bboxScatter';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to create points from'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 	}
 
 	cook(input_contents: CoreGroup[]) {

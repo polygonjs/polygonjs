@@ -12,7 +12,7 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 		return NetworkChildNodeType.INPUT;
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.io.connection_points.set_output_name_function(this._expected_output_names.bind(this));
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));

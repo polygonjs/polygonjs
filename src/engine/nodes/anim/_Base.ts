@@ -14,11 +14,11 @@ export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeCon
 		return NodeContext.ANIM;
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this.io.outputs.set_has_one_output();
 	}
 	set_timeline_builder(timeline_builder: TimelineBuilder) {

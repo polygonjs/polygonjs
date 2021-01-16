@@ -7,7 +7,7 @@ export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<No
 	static nodeContext(): NodeContext {
 		return NodeContext.SOP;
 	}
-	// initialize_base_node() {
+	// initializeBaseNode() {
 	// 	this.children_controller?.init({dependent: false});
 	// }
 	cook() {

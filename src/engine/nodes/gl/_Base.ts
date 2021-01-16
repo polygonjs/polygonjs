@@ -20,11 +20,11 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
 		this.io.connections.init_inputs();
 
-		this.io.connection_points.spare_params.initialize_node();
+		this.io.connection_points.spare_params.initializeNode();
 	}
 
 	cook() {

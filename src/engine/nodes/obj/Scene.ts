@@ -135,14 +135,14 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		return scene;
 	}
 
-	initialize_node() {
+	initializeNode() {
 		// this.dirtyController.addPostDirtyHook(
 		// 	'_cook_main_without_inputs_when_dirty',
 		// 	this._cook_main_without_inputs_when_dirty_bound
 		// );
 
-		// super.initialize_node();
-		this.hierarchy_controller.initialize_node();
+		// super.initializeNode();
+		this.hierarchy_controller.initializeNode();
 		// this.io.outputs.set_has_one_output();
 	}
 	// TODO: I may be able to swap those methods to param callbacks for most params

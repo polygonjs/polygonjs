@@ -44,13 +44,13 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 		return MAT_DOUBLE_SIDED;
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to move', 'geometry to ray onto'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(2);
-		this.io.inputs.init_inputs_cloned_state([
+	initializeNode() {
+		this.io.inputs.setCount(2);
+		this.io.inputs.initInputsClonedState([
 			InputCloneMode.FROM_NODE,
 			InputCloneMode.ALWAYS, // to assign double sided mat
 		]);

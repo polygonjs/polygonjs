@@ -30,8 +30,8 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 
 	private _current_parent_input_graph_node: CoreGraphNode | undefined;
 
-	initialize_node() {
-		this.io.inputs.set_count(0);
+	initializeNode() {
+		this.io.inputs.setCount(0);
 
 		this.lifecycle.add_on_add_hook(() => {
 			this.set_parent_input_dependency();

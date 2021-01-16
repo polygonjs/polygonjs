@@ -24,7 +24,7 @@
 // 		this._allow_inputs_created_from_params = false;
 // 	}
 
-// 	initialize_node() {
+// 	initializeNode() {
 // 		this.node.params.set_post_create_params_hook(this.create_inputs_from_params.bind(this));
 // 	}
 

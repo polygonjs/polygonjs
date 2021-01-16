@@ -95,12 +95,12 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	private _z_arrays_by_geometry_uuid: ValueArrayByName = {};
 	private _w_arrays_by_geometry_uuid: ValueArrayByName = {};
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(AttribCreateSopOperation.INPUT_CLONED_STATE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(AttribCreateSopOperation.INPUT_CLONED_STATE);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
 		});

@@ -31,9 +31,9 @@ export class RestAttributesSopNode extends TypedSopNode<RestAttributesSopParamsC
 		return 'restAttributes';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE]);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
 	}
 
 	private _operation: RestAttributesSopOperation | undefined;

@@ -17,10 +17,10 @@ export abstract class BaseLightTransformedObjNode<
 	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
 	readonly transform_controller: TransformController = new TransformController(this);
 
-	initialize_base_node() {
-		super.initialize_base_node();
-		this.hierarchy_controller.initialize_node();
-		this.transform_controller.initialize_node();
+	initializeBaseNode() {
+		super.initializeBaseNode();
+		this.hierarchy_controller.initializeNode();
+		this.transform_controller.initializeNode();
 	}
 
 	cook() {

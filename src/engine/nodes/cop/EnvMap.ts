@@ -23,11 +23,11 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
+	initializeNode() {
+		this.io.inputs.setCount(1);
 
 		// for now, if I clone the input, it gets messed up
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	async cook(input_contents: Texture[]) {

@@ -29,7 +29,7 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 	static type() {
 		return 'any';
 	}
-	initialize_node() {
+	initializeNode() {
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_input_name_function(this._input_name.bind(this));
 		this.io.connection_points.set_output_name_function(() => OUTPUT_NAME);

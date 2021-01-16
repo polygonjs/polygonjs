@@ -59,9 +59,9 @@
 // 		return 'code';
 // 	}
 
-// 	initialize_node() {
-// 		this.io.inputs.set_count(0, 4);
-// 		this.io.inputs.init_inputs_cloned_state([
+// 	initializeNode() {
+// 		this.io.inputs.setCount(0, 4);
+// 		this.io.inputs.initInputsClonedState([
 // 			InputCloneMode.FROM_NODE,
 // 			InputCloneMode.NEVER,
 // 			InputCloneMode.NEVER,

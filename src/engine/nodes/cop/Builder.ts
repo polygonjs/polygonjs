@@ -94,7 +94,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _renderer_controller: CopRendererController | undefined;
 
 	protected _children_controller_context = NodeContext.GL;
-	initialize_node() {
+	initializeNode() {
 		this._texture_mesh.material = this.texture_material;
 		this._texture_mesh.scale.multiplyScalar(0.25);
 		this._texture_scene.add(this._texture_mesh);
@@ -110,7 +110,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		// 	'_reset_if_resolution_changed',
 		// 	this._reset_if_resolution_changed.bind(this)
 		// );
-		// this.params.on_params_created('reset', () => {
+		// this.params.onParamsCreated('reset', () => {
 		// 	this._reset();
 		// });
 	}

@@ -31,9 +31,9 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 		return 'null';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	cook(input_contents: TimelineBuilder[]) {

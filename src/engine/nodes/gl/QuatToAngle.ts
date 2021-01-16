@@ -8,8 +8,8 @@ export class QuatToAngleGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		return 'quatToAngle';
 	}
 
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['quat'][index]);
 		this.io.connection_points.set_expected_input_types_function(() => [GlConnectionPointType.VEC4]);

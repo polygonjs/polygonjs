@@ -48,9 +48,9 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 
 		protected _children_controller_context = NodeContext.SOP;
 
-		initialize_node() {
-			this.hierarchy_controller.initialize_node();
-			this.children_display_controller.initialize_node();
+		initializeNode() {
+			this.hierarchy_controller.initializeNode();
+			this.children_display_controller.initializeNode();
 		}
 
 		is_display_node_cooking(): boolean {

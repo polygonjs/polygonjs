@@ -23,7 +23,7 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 		return 'viewer';
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			// class
 			new EventConnectionPoint('set', EventConnectionPointType.BASE, this._process_trigger_setClass.bind(this)),

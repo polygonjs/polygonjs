@@ -59,13 +59,13 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	private _y_arrays_by_geometry_uuid: ValueArrayByName = new Map();
 	private _z_arrays_by_geometry_uuid: ValueArrayByName = new Map();
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['points to move'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 		// this.uiData.set_icon('dot-circle');
 	}
 

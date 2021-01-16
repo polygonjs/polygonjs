@@ -15,8 +15,8 @@
 
 // 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 
-// 	initialize_node() {
-// 		super.initialize_node();
-// 		// this.gl_connections_controller.initialize_node();
+// 	initializeNode() {
+// 		super.initializeNode();
+// 		// this.gl_connections_controller.initializeNode();
 // 	}
 // }

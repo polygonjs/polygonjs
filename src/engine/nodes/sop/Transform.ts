@@ -57,17 +57,17 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		return 'transform';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometries or objects to transform'];
 	}
 
-	initialize_node() {
+	initializeNode() {
 		// this.uiData.set_param_label(this.p.applyOn, (v)=>TARGET_TYPES[v])
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(TransformSopOperation.INPUT_CLONED_STATE);
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(TransformSopOperation.INPUT_CLONED_STATE);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.applyOn], () => {
 					return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 				});

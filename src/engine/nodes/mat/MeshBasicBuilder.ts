@@ -39,10 +39,10 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		uniforms: true,
 	});
 	readonly depth_controller: DepthController = new DepthController(this);
-	initialize_node() {
-		this.params.on_params_created('init controllers', () => {
-			this.texture_map_controller.initialize_node();
-			this.texture_alpha_map_controller.initialize_node();
+	initializeNode() {
+		this.params.onParamsCreated('init controllers', () => {
+			this.texture_map_controller.initializeNode();
+			this.texture_alpha_map_controller.initializeNode();
 		});
 	}
 

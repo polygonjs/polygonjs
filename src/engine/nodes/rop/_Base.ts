@@ -11,7 +11,7 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	public readonly flags: FlagsController = new FlagsController(this);
 	// protected _renderer: R = this._create_renderer();
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		this.dirtyController.addPostDirtyHook('cook_immediately', () => {
 			this.cookController.cook_main_without_inputs();
 		});

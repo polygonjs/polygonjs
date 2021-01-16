@@ -71,7 +71,7 @@
 // 	static type() {
 // 		return 'code';
 // 	}
-// 	initialize_node() {
+// 	initializeNode() {
 // 		this.io.inputs.set_named_input_connection_points([
 // 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 // 		]);

@@ -22,9 +22,9 @@ export class TexturePropertiesCopNode extends TypedCopNode<TexturePropertiesCopP
 	}
 
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE]);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
 	}
 	async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];

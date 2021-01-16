@@ -98,12 +98,12 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	private _rest_value2 = new Vector2();
 	private _noise_value_v = new Vector3();
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to add noise to'];
 	}
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE]);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
 	}
 
 	async cook(input_contents: CoreGroup[]) {

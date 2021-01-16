@@ -32,10 +32,10 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 	static readonly INPUT_NAME = 'vertex';
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	initialize_node() {
+	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
-		this.io.connection_points.initialize_node();
+		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_input_name_function(() => {
 			return this.input_name;
@@ -46,7 +46,7 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 		]);
 		this.io.connection_points.set_expected_output_types_function(() => []);
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.name]);
 			});
 		});

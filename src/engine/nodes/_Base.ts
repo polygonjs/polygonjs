@@ -86,7 +86,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get parentController(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return [];
 	}
 
@@ -153,19 +153,19 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		if (!this._initialized) {
 			this._initialized = true;
 
-			this.display_node_controller?.initialize_node();
+			this.display_node_controller?.initializeNode();
 
-			this.initialize_base_node(); // for base classes of Sop, Obj...
-			this.initialize_node(); // for Derivated node clases, like BoxSop, TransformSop...
+			this.initializeBaseNode(); // for base classes of Sop, Obj...
+			this.initializeNode(); // for Derivated node clases, like BoxSop, TransformSop...
 			if (this.polyNodeController) {
-				this.polyNodeController.initialize_node();
+				this.polyNodeController.initializeNode();
 			}
 		} else {
 			console.warn('node already initialized');
 		}
 	}
-	protected initialize_base_node() {}
-	protected initialize_node() {}
+	protected initializeBaseNode() {}
+	protected initializeNode() {}
 
 	static type(): string {
 		throw 'type to be overriden';

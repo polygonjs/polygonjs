@@ -34,7 +34,7 @@ export class TextureMapController extends BaseTextureMapController {
 	constructor(protected node: TextureMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
-	initialize_node() {
+	initializeNode() {
 		this.add_hooks(this.node.p.useMap, this.node.p.map);
 	}
 	async update() {

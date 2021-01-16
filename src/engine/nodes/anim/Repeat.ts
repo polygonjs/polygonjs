@@ -28,11 +28,11 @@ export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
 		return 'repeat';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 1);
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.unlimited, this.p.count, this.p.yoyo], () => {
 					const count = `${this.p.unlimited ? 'unlimited' : this.pv.count}`;
 					return `${count} (yoyo: ${this.pv.yoyo})`;

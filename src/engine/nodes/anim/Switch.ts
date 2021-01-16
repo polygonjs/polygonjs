@@ -22,8 +22,8 @@ export class SwitchAnimNode extends TypedAnimNode<SwitchAnimParamsConfig> {
 		return 'switch';
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(0, 4);
+	initializeNode() {
+		this.io.inputs.setCount(0, 4);
 	}
 
 	cook(input_contents: TimelineBuilder[]) {

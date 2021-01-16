@@ -71,7 +71,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 	protected accepted_event_types() {
 		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
 	}
-	initialize_node() {
+	initializeNode() {
 		this.io.inputs.set_named_input_connection_points([
 			new EventConnectionPoint(
 				SceneNodeInput.SET_FRAME,
@@ -87,7 +87,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 		);
 		this.io.outputs.set_named_output_connection_points(out_connection_points);
 
-		this.params.on_params_created('update_time_dependency', () => {
+		this.params.onParamsCreated('update_time_dependency', () => {
 			this.update_time_dependency();
 		});
 	}

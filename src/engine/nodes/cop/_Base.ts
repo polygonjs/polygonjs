@@ -28,7 +28,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	static nodeContext(): NodeContext {
 		return NodeContext.COP;
 	}
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 
@@ -36,7 +36,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		super(scene, 'BaseCopNode');
 	}
 
-	initialize_base_node() {
+	initializeBaseNode() {
 		// this.flags.add_bypass();
 
 		// this.flags.add_display();

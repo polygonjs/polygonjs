@@ -52,7 +52,7 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 	static INPUT_NAME = 'color';
 	static INPUT_GAMMA_FACTOR = 'gamma_factor';
 	static OUTPUT_NAME = 'out';
-	initialize_node() {
+	initializeNode() {
 		this.io.connection_points.spare_params.set_inputless_param_names(['to', 'from']);
 		this.io.outputs.set_named_output_connection_points([
 			new GlConnectionPoint(ColorCorrectGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),

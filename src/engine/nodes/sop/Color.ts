@@ -55,13 +55,13 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	private _g_arrays_by_geometry_uuid: ValueArrayByName = {};
 	private _b_arrays_by_geometry_uuid: ValueArrayByName = {};
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to update color of'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 		// this.uiData.set_icon('palette');
 	}
 

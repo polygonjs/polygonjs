@@ -7,8 +7,8 @@ export class QuatMultGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	static type() {
 		return 'quatMult';
 	}
-	initialize_node() {
-		super.initialize_node();
+	initializeNode() {
+		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['quat0', 'quat1'][index]);
 		this.io.connection_points.set_expected_input_types_function(() => [

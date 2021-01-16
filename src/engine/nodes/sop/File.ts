@@ -42,9 +42,9 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		return CoreLoaderGeometry.module_names(ext);
 	}
 
-	initialize_node() {
+	initializeNode() {
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.on_params_created('params_label', () => {
+			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.url], () => {
 					const url = this.pv.url;
 					if (url) {

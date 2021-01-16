@@ -50,7 +50,7 @@ export class PostProcessController {
 		if (this.node.p.postProcessNode) {
 			this._add_param_dirty_hook();
 		} else {
-			this.node.params.on_params_created('post process add param dirty hook', () => {
+			this.node.params.onParamsCreated('post process add param dirty hook', () => {
 				this._add_param_dirty_hook();
 			});
 		}

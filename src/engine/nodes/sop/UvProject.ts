@@ -46,9 +46,9 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 	// private _camera_node: BaseCameraObjNodeType | undefined;
 	private _camera_object: Camera | undefined;
 
-	initialize_node() {
-		this.io.inputs.set_count(1);
-		this.io.inputs.init_inputs_cloned_state(InputCloneMode.FROM_NODE);
+	initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	cook(core_groups: CoreGroup[]) {

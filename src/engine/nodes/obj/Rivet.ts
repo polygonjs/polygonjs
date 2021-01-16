@@ -93,8 +93,8 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		mesh.matrixAutoUpdate = false;
 		return mesh;
 	}
-	initialize_node() {
-		this.hierarchy_controller.initialize_node();
+	initializeNode() {
+		this.hierarchy_controller.initializeNode();
 		// this.io.inputs.add_on_set_input_hook('on_input_updated:update_object_position', () => {
 		// 	this.update_object_position();
 		// });

@@ -19,13 +19,13 @@ export class AnimationCopySopNode extends TypedSopNode<AnimationCopySopParamsCon
 		return 'animationCopy';
 	}
 
-	static displayed_input_names(): string[] {
+	static displayedInputNames(): string[] {
 		return ['geometry to copy animation to', 'geometry to copy animation from'];
 	}
 
-	initialize_node() {
-		this.io.inputs.set_count(2);
-		this.io.inputs.init_inputs_cloned_state([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
+	initializeNode() {
+		this.io.inputs.setCount(2);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
 	cook(input_contents: CoreGroup[]) {

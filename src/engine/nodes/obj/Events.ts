@@ -18,7 +18,7 @@ export class EventsObjNode extends ParamLessBaseManagerObjNode {
 	}
 
 	protected _children_controller_context = NodeContext.EVENT;
-	// initialize_node() {
+	// initializeNode() {
 	// 	this.children_controller?.init({dependent: false});
 	// }
 
