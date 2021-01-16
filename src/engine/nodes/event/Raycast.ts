@@ -41,6 +41,12 @@ function visible_for_gpu(options: VisibleIfParamOptions = {}): ParamOptions {
 	return {visibleIf: options};
 }
 
+export enum TargetType {
+	SCENE_GRAPH = 'scene graph',
+	NODE = 'node',
+}
+export const TARGET_TYPES: TargetType[] = [TargetType.SCENE_GRAPH, TargetType.NODE];
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 class RaycastParamsConfig extends NodeParamsConfig {
@@ -163,8 +169,15 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// CPU GEOMETRY
 	//
 	//
-	/** @param objects to test hit against, when testing against geometries */
-	target = ParamConfig.OPERATOR_PATH('/geo1', {
+	targetType = ParamConfig.INTEGER(0, {
+		menu: {
+			entries: TARGET_TYPES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
+	/** @param node whose objects to test hit against, when testing against geometries */
+	targetNode = ParamConfig.NODE_PATH('/geo1', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
@@ -172,7 +185,14 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
-		...visible_for_cpu_geometry(),
+		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.NODE)}),
+	});
+	/** @param objects to test hit against, when testing against geometries */
+	objectMask = ParamConfig.STRING('*geo1*', {
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
+		},
+		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
 	});
 	/** @param toggle to hit is tested against children */
 	traverseChildren = ParamConfig.BOOLEAN(0, {
@@ -289,6 +309,11 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			),
 			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
 			new EventConnectionPoint(
+				'update_objects',
+				EventConnectionPointType.BASE,
+				this._process_trigger_update_objects.bind(this)
+			),
+			new EventConnectionPoint(
 				'trigger_vel_reset',
 				EventConnectionPointType.BASE,
 				this._process_trigger_vel_reset.bind(this)
@@ -334,6 +359,12 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			this.cpu_controller.process_event(context);
 		} else {
 			this.gpu_controller.process_event(context);
+		}
+	}
+
+	private _process_trigger_update_objects(context: EventContext<MouseEvent>) {
+		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
+			this.cpu_controller.update_target();
 		}
 	}
 

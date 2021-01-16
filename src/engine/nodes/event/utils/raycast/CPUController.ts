@@ -1,6 +1,6 @@
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
-import {RaycastEventNode} from '../../Raycast';
+import {RaycastEventNode, TargetType, TARGET_TYPES} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
@@ -24,6 +24,7 @@ import {Vector3Param} from '../../../../params/Vector3';
 import {Poly} from '../../../../Poly';
 import {RaycastCPUVelocityController} from './VelocityController';
 import {CoreType} from '../../../../../core/Type';
+import { CoreString } from '../../../../../core/String';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -35,7 +36,7 @@ export class RaycastCPUController {
 	private _mouse: Vector2 = new Vector2();
 	private _mouse_array: Number2 = [0, 0];
 	private _raycaster = new Raycaster();
-	private _resolved_target: Object3D | undefined;
+	private _resolved_targets: Object3D[] | undefined;
 
 	public readonly velocity_controller: RaycastCPUVelocityController;
 	constructor(private _node: RaycastEventNode) {
@@ -83,12 +84,12 @@ export class RaycastCPUController {
 	}
 
 	private _intersect_with_geometry(context: EventContext<MouseEvent>) {
-		if (!this._resolved_target) {
+		if (!this._resolved_targets) {
 			this.update_target();
 		}
 
-		if (this._resolved_target) {
-			const intersections = this._raycaster.intersectObject(this._resolved_target, true);
+		if (this._resolved_targets) {
+			const intersections = this._raycaster.intersectObjects(this._resolved_targets, true);
 			const intersection = intersections[0];
 			if (intersection) {
 				this._set_position_param(intersection.point);
@@ -270,17 +271,44 @@ export class RaycastCPUController {
 	}
 
 	update_target() {
-		const node = this._node.p.target.found_node() as BaseObjNodeType;
+		const targetType = TARGET_TYPES[this._node.pv.targetType]
+		switch(targetType){
+			case TargetType.NODE: {
+				return this._update_target_from_node()
+			}
+			case TargetType.SCENE_GRAPH: {
+				return this._update_target_from_scene_graph()
+			}
+		}
+		TypeAssert.unreachable(targetType)
+	}
+	private _update_target_from_node(){
+		const node = this._node.p.targetNode.value.ensure_node_context(NodeContext.OBJ) as BaseObjNodeType;
 		if (node) {
-			if (node.nodeContext() == NodeContext.OBJ) {
-				this._resolved_target = this._node.pv.traverseChildren
-					? node.object
-					: (node as GeoObjNode).children_display_controller.sop_group;
+			 const found_obj = this._node.pv.traverseChildren
+				? node.object
+				: (node as GeoObjNode).children_display_controller.sop_group;
+			if(found_obj){
+				this._resolved_targets = [found_obj]
 			} else {
-				this._node.states.error.set('target is not an obj');
+				this._resolved_targets = undefined
 			}
 		} else {
-			this._node.states.error.set('no target found');
+			this._node.states.error.set('node is not an object');
+		}
+	}
+	private _update_target_from_scene_graph(){
+		const mask = this._node.pv.objectMask;
+		const objects: Object3D[] = []
+		this._node.scene().threejsScene().traverse((object) => {
+			if (CoreString.matchMask(object.name, mask)) {
+				objects.push(object);
+			}
+		});
+		if(objects.length > 0){
+			this._resolved_targets = objects
+		} else {
+			this._resolved_targets = undefined
 		}
 	}
 
