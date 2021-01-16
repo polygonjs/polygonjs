@@ -65,7 +65,7 @@ export interface EventNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class EventRegister {
 	static run(poly: PolyEngine) {
-		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.ANIMATION);
+		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(AnyEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ButtonEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
@@ -77,13 +77,13 @@ export class EventRegister {
 		poly.registerNode(LimitEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(MessageEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(MouseEventNode, CATEGORY_EVENT.INPUT);
-		poly.registerNode(NodeCookEventNode, CATEGORY_EVENT.INPUT);
-		poly.registerNode(NullEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(NodeCookEventNode, CATEGORY_EVENT.SCENE);
+		poly.registerNode(NullEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(PointerEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(RaycastEventNode, CATEGORY_EVENT.MISC);
-		poly.registerNode(SceneEventNode, CATEGORY_EVENT.INPUT);
-		poly.registerNode(SetFlagEventNode, CATEGORY_EVENT.MISC);
-		poly.registerNode(SetParamEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(SceneEventNode, CATEGORY_EVENT.SCENE);
+		poly.registerNode(SetFlagEventNode, CATEGORY_EVENT.SCENE);
+		poly.registerNode(SetParamEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);

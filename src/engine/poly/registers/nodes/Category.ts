@@ -16,11 +16,10 @@ export const CATEGORY_COP = {
 	NETWORK,
 };
 export const CATEGORY_EVENT = {
-	ADVANCED: 'advanced',
-	ANIMATION: 'animation',
 	CAMERA: 'cameras',
 	INPUT: 'inputs',
 	MISC: 'misc',
+	SCENE: 'scene',
 	NETWORK,
 };
 export const CATEGORY_GL = {

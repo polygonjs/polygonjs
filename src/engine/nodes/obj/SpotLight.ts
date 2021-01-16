@@ -39,33 +39,35 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 	// shadows
 	shadow = ParamConfig.FOLDER();
 	/** @param toggle on to cast shadows */
-	castShadows = ParamConfig.BOOLEAN(1);
-	/** @param shadows res */
+	castShadow = ParamConfig.BOOLEAN(1);
+	/** @param toggle off if the shadows do not need to be regenerated */
 	shadowAutoUpdate = ParamConfig.BOOLEAN(1, {
-		visibleIf: {castShadows: 1},
+		visibleIf: {castShadow: 1},
 	});
-	shadowNeedsUpdate = ParamConfig.BOOLEAN(0, {
-		visibleIf: {castShadows: 1, shadowAutoUpdate: 0},
+	/** @param press button to update the shadows on next render */
+	shadowUpdateOnNextRender = ParamConfig.BOOLEAN(0, {
+		visibleIf: {castShadow: 1, shadowAutoUpdate: 0},
 	});
+	/** @param shadows res */
 	shadowRes = ParamConfig.VECTOR2([256, 256], {
-		visibleIf: {castShadows: 1},
+		visibleIf: {castShadow: 1},
 	});
 	/** @param shadows bias */
 	shadowBias = ParamConfig.FLOAT(0.001, {
-		visibleIf: {castShadows: 1},
+		visibleIf: {castShadow: 1},
 		range: [-0.01, 0.01],
 		rangeLocked: [false, false],
 	});
-	// shadow_near = ParamConfig.FLOAT(0.1, {
-	// 	visibleIf: {castShadows: 1},
-	// 	range: [0, 100],
-	// 	rangeLocked: [true, false],
-	// });
-	// shadow_far = ParamConfig.FLOAT(100, {
-	// 	visibleIf: {castShadows: 1},
-	// 	range: [0, 100],
-	// 	rangeLocked: [true, false],
-	// });
+	shadowNear = ParamConfig.FLOAT(0.1, {
+		visibleIf: {castShadow: 1},
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
+	shadowFar = ParamConfig.FLOAT(100, {
+		visibleIf: {castShadow: 1},
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 
@@ -103,17 +105,6 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 
 		return light;
 	}
-	// add_object_to_parent(parent: Object3D) {
-	// 	super.add_object_to_parent(parent);
-	// 	parent.add(this._target_target);
-	// }
-	// remove_object_from_parent() {
-	// 	super.remove_object_from_parent();
-	// 	const parent = this._target_target.parent;
-	// 	if (parent) {
-	// 		parent.remove(this._target_target);
-	// 	}
-	// }
 
 	update_light_params() {
 		this.light.color = this.pv.color;
@@ -129,14 +120,14 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
-		this.light.castShadow = this.pv.castShadows;
+		this.light.castShadow = this.pv.castShadow;
 		this.light.shadow.autoUpdate = this.pv.shadowAutoUpdate;
-		this.light.shadow.needsUpdate = this.pv.shadowNeedsUpdate;
+		this.light.shadow.needsUpdate = this.pv.shadowUpdateOnNextRender;
 
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
-		// that doesn't seem to have any effect
-		// this.light.shadow.camera.near = this.pv.shadow_near;
-		// this.light.shadow.camera.far = this.pv.shadow_far;
+		// near/far don't seem to have any effect
+		this.light.shadow.camera.near = this.pv.shadowNear;
+		this.light.shadow.camera.far = this.pv.shadowFar;
 		this.light.shadow.bias = this.pv.shadowBias;
 	}
 }
