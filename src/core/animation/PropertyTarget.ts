@@ -1,6 +1,4 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {CoreString} from '../String';
-import {Object3D} from 'three/src/core/Object3D';
 
 export class PropertyTarget {
 	private _node_path: string | undefined;
@@ -24,17 +22,11 @@ export class PropertyTarget {
 		this._object_mask = object_mask;
 	}
 	objects(scene: PolyScene) {
-		const objects: Object3D[] = [];
 		const mask = this._object_mask;
 		if (!mask) {
 			return;
 		}
-		scene.threejsScene().traverse((object) => {
-			if (CoreString.matchMask(object.name, mask)) {
-				objects.push(object);
-			}
-		});
-		return objects;
+		return scene.objectsByMask(mask);
 	}
 	node(scene: PolyScene) {
 		if (!this._node_path) {

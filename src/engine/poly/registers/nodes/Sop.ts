@@ -295,7 +295,9 @@ export class SopRegister {
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
+		if(process.env.NODE_ENV == 'development'){
 		poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
+		}
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);

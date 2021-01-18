@@ -7,7 +7,6 @@ import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {CoreType} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
-import {CoreString} from '../../../core/String';
 import {Object3D} from 'three/src/core/Object3D';
 import {Quaternion} from 'three/src/math/Quaternion';
 
@@ -123,25 +122,12 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 			return;
 		}
 
-		const mask = this.pv.objectMask;
-		let found_object: Object3D | undefined = undefined;
-		try {
-			this.scene()
-				.threejsScene()
-				.traverse((object) => {
-					if (CoreString.matchMask(object.name, mask)) {
-						found_object = object;
-						// we throw an exception here to not have to traverse the whole scene
-						throw 'found object';
-					}
-				});
-		} catch (error) {
-			if (found_object) {
-				const value: any = found_object[property_name as keyof Object3D];
-				if (value) {
-					if (CoreType.isNumber(value) || CoreType.isVector(value) || value instanceof Quaternion) {
-						timeline_builder.setPropertyValue(value);
-					}
+		const found_object = this.scene().findObjectByMask(this.pv.objectMask);
+		if (found_object) {
+			const value: any = found_object[property_name as keyof Object3D];
+			if (value) {
+				if (CoreType.isNumber(value) || CoreType.isVector(value) || value instanceof Quaternion) {
+					timeline_builder.setPropertyValue(value);
 				}
 			}
 		}

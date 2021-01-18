@@ -6,6 +6,7 @@ import {Material} from 'three/src/materials/Material';
 import {MapUtils} from '../../MapUtils';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {Object3D} from 'three/src/core/Object3D';
+import {Group} from 'three/src/objects/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
@@ -22,15 +23,26 @@ export class MergeSopOperation extends BaseSopOperation {
 		return 'merge';
 	}
 
+	// TODO: improvement:
+	// for compact, I should really keep track of geometry ids,
+	// to make sure I am not including a geometry twice, if there is a hierarchy
 	cook(input_contents: CoreGroup[], params: MergeSopParams) {
-		let all_objects: Object3DWithGeometry[] = [];
+		let all_objects: Object3D[] = [];
 		for (let input_core_group of input_contents) {
 			if (input_core_group) {
 				const objects = input_core_group.objects();
-				for (let object of objects) {
-					object.traverse((child) => {
-						all_objects.push(child as Object3DWithGeometry);
-					});
+				if (params.compact) {
+					for (let object of objects) {
+						object.traverse((child) => {
+							all_objects.push(child as Object3DWithGeometry);
+						});
+					}
+				} else {
+					// if we are not compact,
+					// we only use the current level, not children
+					for (let object of input_core_group.objects()) {
+						all_objects.push(object);
+					}
 				}
 			}
 		}
@@ -44,16 +56,21 @@ export class MergeSopOperation extends BaseSopOperation {
 		}
 		return this.create_core_group_from_objects(all_objects);
 	}
-	_make_compact(all_objects: Object3DWithGeometry[]): Object3DWithGeometry[] {
+	_make_compact(all_objects: Object3D[]): Object3DWithGeometry[] {
 		const materials_by_object_type: Map<ObjectType, Material> = new Map();
 		const objects_by_type: Map<ObjectType, Object3DWithGeometry[]> = new Map();
-		objects_by_type.set(ObjectType.MESH, []);
-		objects_by_type.set(ObjectType.POINTS, []);
-		objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
+		// objects_by_type.set(ObjectType.MESH, []);
+		// objects_by_type.set(ObjectType.POINTS, []);
+		// objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
 		const ordered_object_types: ObjectType[] = [];
 
 		for (let object of all_objects) {
 			object.traverse((object3d: Object3D) => {
+				if (object3d instanceof Group) {
+					// we do not want groups,
+					// as their children will end up being duplicated
+					return;
+				}
 				const object = object3d as Object3DWithGeometry;
 				if (object.geometry) {
 					const object_type = objectTypeFromConstructor(object.constructor);
@@ -70,7 +87,6 @@ export class MergeSopOperation extends BaseSopOperation {
 				}
 			});
 		}
-
 		const merged_objects: Object3DWithGeometry[] = [];
 		ordered_object_types.forEach((object_type) => {
 			const objects = objects_by_type.get(object_type);

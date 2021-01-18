@@ -11,6 +11,7 @@ import {MissingReferencesController} from './utils/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
 import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
+import {ObjectsController} from './utils/ObjectsController';
 import {ReferencesController} from './utils/ReferencesController';
 import {TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
@@ -108,6 +109,13 @@ export class PolyScene {
 	}
 	nodesByType(type: string) {
 		return this.nodesController.nodesByType(type);
+	}
+	protected _objects_controller = new ObjectsController(this);
+	findObjectByMask(mask: string) {
+		return this._objects_controller.findObjectByMask(mask);
+	}
+	objectsByMask(mask: string) {
+		return this._objects_controller.objectsByMask(mask);
 	}
 
 	protected _references_controller = new ReferencesController(this);

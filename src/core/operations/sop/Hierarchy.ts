@@ -42,23 +42,15 @@ export class HierarchySopOperation extends BaseSopOperation {
 		if (params.levels == 0) {
 			return core_group.objects();
 		} else {
-			const new_objects: Object3D[] = [];
-			let new_object;
-			for (let object of core_group.objects()) {
-				new_object = this._add_parent_to_object(object, params);
-				if (new_object) {
-					new_objects.push(new_object);
-				}
-			}
-
-			return new_objects;
+			const new_object = this._add_parent_to_object(core_group.objects(), params);
+			return [new_object];
 		}
 	}
-	private _add_parent_to_object(object: THREE.Object3D, params: HierarchySopParams): THREE.Object3D {
+	private _add_parent_to_object(objects: THREE.Object3D[], params: HierarchySopParams): THREE.Object3D {
 		let new_parent = new Group();
 		new_parent.matrixAutoUpdate = false;
 
-		new_parent.add(object);
+		new_parent.add(...objects);
 
 		if (params.levels > 0) {
 			for (let i = 0; i < params.levels - 1; i++) {

@@ -129,9 +129,14 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 	}
 	async process_event(event_context: EventContext<Event>) {
 		if (this.p.param.isDirty()) {
+			// TODO: investigate occasions
+			// where the referenced param is recomputed
+			// (such as in a material builder)
+			// and this node refers to an old param
 			await this.p.param.compute();
 		}
 		const param = this.p.param.value.param();
+
 		if (param) {
 			const new_value = await this._new_param_value(param);
 			if (new_value != null) {

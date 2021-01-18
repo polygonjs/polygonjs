@@ -1,8 +1,6 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {OutlinePass} from '../../../modules/three/examples/jsm/postprocessing/OutlinePass';
-import {Object3D} from 'three/src/core/Object3D';
-import {CoreString} from '../../../core/String';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class OutlinePostParamsConfig extends NodeParamsConfig {
@@ -67,16 +65,6 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 		this._set_selected_objects(pass);
 	}
 	private _set_selected_objects(pass: OutlinePass) {
-		const objects: Object3D[] = [];
-		const mask = this.pv.objectsMask;
-		this.scene()
-			.threejsScene()
-			.traverse((object) => {
-				if (CoreString.matchMask(object.name, mask)) {
-					objects.push(object);
-				}
-			});
-
-		pass.selectedObjects = objects;
+		pass.selectedObjects = this.scene().objectsByMask(this.pv.objectsMask);
 	}
 }

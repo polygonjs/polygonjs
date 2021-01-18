@@ -24,7 +24,6 @@ import {Vector3Param} from '../../../../params/Vector3';
 import {Poly} from '../../../../Poly';
 import {RaycastCPUVelocityController} from './VelocityController';
 import {CoreType} from '../../../../../core/Type';
-import { CoreString } from '../../../../../core/String';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -271,44 +270,38 @@ export class RaycastCPUController {
 	}
 
 	update_target() {
-		const targetType = TARGET_TYPES[this._node.pv.targetType]
-		switch(targetType){
+		const targetType = TARGET_TYPES[this._node.pv.targetType];
+		switch (targetType) {
 			case TargetType.NODE: {
-				return this._update_target_from_node()
+				return this._update_target_from_node();
 			}
 			case TargetType.SCENE_GRAPH: {
-				return this._update_target_from_scene_graph()
+				return this._update_target_from_scene_graph();
 			}
 		}
-		TypeAssert.unreachable(targetType)
+		TypeAssert.unreachable(targetType);
 	}
-	private _update_target_from_node(){
+	private _update_target_from_node() {
 		const node = this._node.p.targetNode.value.ensure_node_context(NodeContext.OBJ) as BaseObjNodeType;
 		if (node) {
-			 const found_obj = this._node.pv.traverseChildren
+			const found_obj = this._node.pv.traverseChildren
 				? node.object
 				: (node as GeoObjNode).children_display_controller.sop_group;
-			if(found_obj){
-				this._resolved_targets = [found_obj]
+			if (found_obj) {
+				this._resolved_targets = [found_obj];
 			} else {
-				this._resolved_targets = undefined
+				this._resolved_targets = undefined;
 			}
 		} else {
 			this._node.states.error.set('node is not an object');
 		}
 	}
-	private _update_target_from_scene_graph(){
-		const mask = this._node.pv.objectMask;
-		const objects: Object3D[] = []
-		this._node.scene().threejsScene().traverse((object) => {
-			if (CoreString.matchMask(object.name, mask)) {
-				objects.push(object);
-			}
-		});
-		if(objects.length > 0){
-			this._resolved_targets = objects
+	private _update_target_from_scene_graph() {
+		const objects: Object3D[] = this._node.scene().objectsByMask(this._node.pv.objectMask);
+		if (objects.length > 0) {
+			this._resolved_targets = objects;
 		} else {
-			this._resolved_targets = undefined
+			this._resolved_targets = undefined;
 		}
 	}
 
