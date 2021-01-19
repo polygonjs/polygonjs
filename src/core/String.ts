@@ -173,6 +173,9 @@ export class CoreString {
 		if (mask === '*') {
 			return true;
 		}
+		if (word == mask) {
+			return true;
+		}
 		const elements = mask.split(SPACE);
 		if (elements.length > 1) {
 			for (let element of elements) {

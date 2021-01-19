@@ -6,15 +6,20 @@ export class ObjectsController {
 	constructor(private scene: PolyScene) {}
 
 	findObjectByMask(mask: string): Object3D | undefined {
-		return this.findObjectsByMaskInObject(mask, this.scene.threejsScene());
+		return this.findObjectByMaskInObject(mask, this.scene.threejsScene());
 	}
-	findObjectsByMaskInObject(mask: string, object: Object3D, objectPath: string = ''): Object3D | undefined {
+	findObjectByMaskInObject(mask: string, object: Object3D, objectPath: string = ''): Object3D | undefined {
 		for (let child of object.children) {
-			const path = `${objectPath}/${child.name}`;
+			const childName = child.name;
+			const separator = childName[0] == '/' ? '' : '/';
+			const path = `${objectPath}${separator}${child.name}`;
 			if (CoreString.matchMask(path, mask)) {
 				return child;
 			}
-			this.findObjectsByMaskInObject(mask, child, path);
+			const grandChild = this.findObjectByMaskInObject(mask, child, path);
+			if (grandChild) {
+				return grandChild;
+			}
 		}
 	}
 

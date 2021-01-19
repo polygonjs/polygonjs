@@ -36,7 +36,7 @@ export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
 		]);
 	}
 
-	trigger_output(context: EventContext<MouseEvent>) {
+	private trigger_output(context: EventContext<MouseEvent>) {
 		this.dispatch_event_to_output(MessageEventNode.OUTPUT, context);
 	}
 
@@ -45,7 +45,7 @@ export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
 			alert(context);
 		}
 		if (this.pv.console) {
-			console.log(context);
+			console.log(this.fullPath(), Date.now(), context);
 		}
 		this.trigger_output(context);
 	}
