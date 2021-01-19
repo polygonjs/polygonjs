@@ -12,11 +12,8 @@ export class ObjectsController {
 	}
 	findObjectByMaskInObject(mask: string, object: Object3D, objectPath: string = ''): Object3D | undefined {
 		for (let child of object.children) {
-			let childName = child.name;
-			if (childName[0] == '/') {
-				childName = childName.substr(1);
-			}
-			objectPath = objectPath[objectPath.length - 1] == '/' ? '' : objectPath;
+			const childName = this._removeTrailingOrHeadingSlash(child.name);
+			objectPath = this._removeTrailingOrHeadingSlash(objectPath);
 			const path = `${objectPath}/${childName}`;
 			if (CoreString.matchMask(path, mask)) {
 				return child;
@@ -33,12 +30,24 @@ export class ObjectsController {
 	}
 	objectsByMaskInObject(mask: string, object: Object3D, list: Object3D[] = [], objectPath: string = '') {
 		for (let child of object.children) {
-			const path = `${objectPath}/${child.name}`;
+			const childName = this._removeTrailingOrHeadingSlash(child.name);
+			objectPath = this._removeTrailingOrHeadingSlash(objectPath);
+			const path = `${objectPath}/${childName}`;
 			if (CoreString.matchMask(path, mask)) {
 				list.push(child);
 			}
 			this.objectsByMaskInObject(mask, child, list, path);
 		}
 		return list;
+	}
+
+	private _removeTrailingOrHeadingSlash(objectName: string) {
+		if (objectName[0] == '/') {
+			objectName = objectName.substr(1);
+		}
+		if (objectName[objectName.length - 1] == '/') {
+			objectName = objectName.substr(0, objectName.length - 1);
+		}
+		return objectName;
 	}
 }
