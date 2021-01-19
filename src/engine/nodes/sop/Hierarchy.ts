@@ -6,8 +6,8 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {HierarchySopOperation, HIERARCHY_MODES} from '../../../core/operations/sop/Hierarchy';
-
+import {HierarchyMode, HierarchySopOperation, HIERARCHY_MODES} from '../../../core/operations/sop/Hierarchy';
+const modesWithLevel = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = HierarchySopOperation.DEFAULT_PARAMS;
 class HierarchySopParamsConfig extends NodeParamsConfig {
@@ -20,7 +20,21 @@ class HierarchySopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param defines how many parent objects will be added or removed */
-	levels = ParamConfig.INTEGER(DEFAULT.levels, {range: [0, 5]});
+	levels = ParamConfig.INTEGER(DEFAULT.levels, {
+		range: [0, 5],
+		visibleIf: [
+			{mode: HIERARCHY_MODES.indexOf(HierarchyMode.ADD_PARENT)},
+			{mode: HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT)},
+		],
+	});
+	/** @param when the mode is set to add_child, the mask defines which parent the children are added to. If the mask is an empty string, the children will be added to the objects at the top of the hierarchy. Also, the children are taken from the second input. */
+	objectMask = ParamConfig.STRING('', {
+		visibleIf: {mode: HIERARCHY_MODES.indexOf(HierarchyMode.ADD_CHILD)},
+	});
+	/** @param when the mode is set to add_child, the objects used as parent will be printed to the console */
+	debugObjectMask = ParamConfig.BOOLEAN(0, {
+		visibleIf: {mode: HIERARCHY_MODES.indexOf(HierarchyMode.ADD_CHILD)},
+	});
 }
 const ParamsConfig = new HierarchySopParamsConfig();
 
@@ -31,17 +45,22 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 	}
 
 	static displayedInputNames(): string[] {
-		return ['geometry to add or remove parents to/from'];
+		return ['geometry to add or remove parents to/from', 'objects to use as parent or children (optional)'];
 	}
 
 	initializeNode() {
-		this.io.inputs.setCount(1);
+		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(HierarchySopOperation.INPUT_CLONED_STATE);
 
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.mode, this.p.levels], () => {
-					return `${HIERARCHY_MODES[this.pv.mode]} ${this.pv.levels}`;
+				this.params.label.init([this.p.mode, this.p.levels, this.p.objectMask], () => {
+					const mode = HIERARCHY_MODES[this.pv.mode];
+					if (modesWithLevel.includes(mode)) {
+						return `${mode} ${this.pv.levels}`;
+					} else {
+						return `${mode} (with mask: ${this.pv.objectMask})`;
+					}
 				});
 			});
 		});

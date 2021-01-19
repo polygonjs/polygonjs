@@ -25,11 +25,7 @@ import {Poly} from '../../../../Poly';
 import {RaycastCPUVelocityController} from './VelocityController';
 import {CoreType} from '../../../../../core/Type';
 
-export enum CPUIntersectWith {
-	GEOMETRY = 'geometry',
-	PLANE = 'plane',
-}
-export const CPU_INTERSECT_WITH_OPTIONS: CPUIntersectWith[] = [CPUIntersectWith.GEOMETRY, CPUIntersectWith.PLANE];
+import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 
 export class RaycastCPUController {
 	private _mouse: Vector2 = new Vector2();
@@ -316,4 +312,12 @@ export class RaycastCPUController {
 	// static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
 	// 	node.cpu_controller.update_position_target();
 	// }
+
+	static PARAM_CALLBACK_print_resolve(node: RaycastEventNode) {
+		node.cpu_controller.print_resolve();
+	}
+	private print_resolve() {
+		this.update_target();
+		console.log(this._resolved_targets);
+	}
 }

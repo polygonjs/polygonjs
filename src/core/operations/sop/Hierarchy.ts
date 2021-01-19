@@ -4,22 +4,32 @@ import {CoreGroup} from '../../geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
 import {Group} from 'three/src/objects/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {TypeAssert} from '../../../engine/poly/Assert';
 
 interface HierarchySopParams extends DefaultOperationParams {
 	mode: number;
 	levels: number;
+	objectMask: string;
+	debugObjectMask: boolean;
 }
 
 export enum HierarchyMode {
 	ADD_PARENT = 'add_parent',
 	REMOVE_PARENT = 'remove_parent',
+	ADD_CHILD = 'add_child',
 }
-export const HIERARCHY_MODES: Array<HierarchyMode> = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
+export const HIERARCHY_MODES: Array<HierarchyMode> = [
+	HierarchyMode.ADD_PARENT,
+	HierarchyMode.REMOVE_PARENT,
+	HierarchyMode.ADD_CHILD,
+];
 
 export class HierarchySopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: HierarchySopParams = {
 		mode: 0,
 		levels: 1,
+		objectMask: '',
+		debugObjectMask: false,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'hierarchy'> {
@@ -29,15 +39,29 @@ export class HierarchySopOperation extends BaseSopOperation {
 	cook(input_contents: CoreGroup[], params: HierarchySopParams) {
 		const core_group = input_contents[0];
 
-		if (HIERARCHY_MODES[params.mode] == HierarchyMode.ADD_PARENT) {
-			const objects = this._add_parent_to_core_group(core_group, params);
-			return this.create_core_group_from_objects(objects);
-		} else {
-			const objects = this._remove_parent_from_core_group(core_group, params);
-			return this.create_core_group_from_objects(objects);
+		const mode = HIERARCHY_MODES[params.mode];
+		switch (mode) {
+			case HierarchyMode.ADD_PARENT: {
+				const objects = this._add_parent_to_core_group(core_group, params);
+				return this.create_core_group_from_objects(objects);
+			}
+			case HierarchyMode.REMOVE_PARENT: {
+				const objects = this._remove_parent_from_core_group(core_group, params);
+				return this.create_core_group_from_objects(objects);
+			}
+			case HierarchyMode.ADD_CHILD: {
+				const objects = this._add_child_to_core_group(core_group, input_contents[1], params);
+				return this.create_core_group_from_objects(objects);
+			}
 		}
+		TypeAssert.unreachable(mode);
 	}
 
+	//
+	//
+	// ADD PARENT
+	//
+	//
 	private _add_parent_to_core_group(core_group: CoreGroup, params: HierarchySopParams): THREE.Object3D[] {
 		if (params.levels == 0) {
 			return core_group.objects();
@@ -68,6 +92,11 @@ export class HierarchySopOperation extends BaseSopOperation {
 		return new_parent2;
 	}
 
+	//
+	//
+	// REMOVE PARENT
+	//
+	//
 	private _remove_parent_from_core_group(core_group: CoreGroup, params: HierarchySopParams): THREE.Object3D[] {
 		if (params.levels == 0) {
 			return core_group.objects();
@@ -104,5 +133,52 @@ export class HierarchySopOperation extends BaseSopOperation {
 			}
 		}
 		return children;
+	}
+
+	//
+	//
+	// ADD CHILD
+	//
+	//
+	private _add_child_to_core_group(
+		core_group: CoreGroup,
+		child_core_group: CoreGroup | undefined,
+		params: HierarchySopParams
+	): THREE.Object3D[] {
+		const objects = core_group.objects();
+
+		if (!child_core_group) {
+			this.states?.error.set('input 1 is invalid');
+			return [];
+		}
+
+		const childObjects = child_core_group.objects();
+		const mask = params.objectMask.trim();
+		const maskValid = mask != '';
+
+		const parentObjects = maskValid ? this._findObjectsByMaskFromObjects(mask, objects) : objects;
+		if (params.debugObjectMask) {
+			console.log(parentObjects);
+		}
+
+		for (let i = 0; i < parentObjects.length; i++) {
+			const parentObject = parentObjects[i];
+			// if there is no mask, we use the objects directly under the coreGroup
+			const childObject = childObjects[i] || childObjects[0];
+			if (!childObject) {
+				this.states?.error.set('no objects found in input 1');
+				return [];
+			}
+
+			parentObject.add(childObject);
+		}
+		return objects;
+	}
+	private _findObjectsByMaskFromObjects(mask: string, objects: Object3D[]) {
+		const list: Object3D[] = [];
+		for (let object of objects) {
+			this.scene.objectsController.objectsByMaskInObject(mask, object, list);
+		}
+		return list;
 	}
 }

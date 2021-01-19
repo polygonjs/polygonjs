@@ -22,7 +22,7 @@ export class FloatToVec2GlNode extends TypedGlNode<FloatToVec2GlParamsConfig> {
 	static readonly OUTPUT_NAME = 'vec2';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(FloatToVec2GlNode.OUTPUT_NAME, GlConnectionPointType.VEC2),
 		]);
 	}
@@ -56,7 +56,7 @@ export class FloatToVec3GlNode extends TypedGlNode<FloatToVec3GlParamsConfig> {
 	static readonly OUTPUT_NAME = 'vec3';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(FloatToVec3GlNode.OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
@@ -92,7 +92,7 @@ export class FloatToVec4GlNode extends TypedGlNode<FloatToVec4GlParamsConfig> {
 	static readonly OUTPUT_NAME = 'vec4';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(FloatToVec4GlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}

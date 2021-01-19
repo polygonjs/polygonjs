@@ -110,7 +110,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 
 	// update_output_type() {
 	// 	const set_dirty = false;
-	// 	this.io.outputs.set_named_output_connection_points(
+	// 	this.io.outputs.setNamedOutputConnectionPoints(
 	// 		[new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointTypes[this.pv.type])],
 	// 		set_dirty
 	// 	);

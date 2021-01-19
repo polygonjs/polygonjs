@@ -57,7 +57,7 @@ export class InputsController<NC extends NodeContext> {
 		}
 	}
 
-	set_named_input_connection_points(connection_points: ConnectionPointTypeMap[NC][]) {
+	setNamedInputConnectionPoints(connection_points: ConnectionPointTypeMap[NC][]) {
 		this._has_named_inputs = true;
 
 		const connections = this.node.io.connections.input_connections();

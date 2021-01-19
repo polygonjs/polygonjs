@@ -25,14 +25,14 @@ export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
 	}
 
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				NullEventInput.TRIGGER,
 				EventConnectionPointType.BASE,
 				this.process_event_trigger.bind(this)
 			),
 		]);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(NullEventOutput.OUT, EventConnectionPointType.BASE),
 		]);
 	}

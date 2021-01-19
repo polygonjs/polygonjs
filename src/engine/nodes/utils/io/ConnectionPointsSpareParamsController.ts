@@ -78,7 +78,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				}
 			}
 		}
-		this.node.io.inputs.set_named_input_connection_points(connection_points);
+		this.node.io.inputs.setNamedInputConnectionPoints(connection_points);
 	}
 
 	set_inputless_param_names(names: string[]) {

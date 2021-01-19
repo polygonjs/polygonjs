@@ -114,10 +114,10 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		return 'setParam';
 	}
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 

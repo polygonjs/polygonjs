@@ -101,12 +101,12 @@
 // 			return new GlConnectionPoint(this._wrapped_output_name_function(i), type);
 // 		});
 
-// 		this.node.io.inputs.set_named_input_connection_points(named_input_connection_points);
+// 		this.node.io.inputs.setNamedInputConnectionPoints(named_input_connection_points);
 // 		console.log(
 // 			this.node.fullPath(),
 // 			named_output_connect_points.map((cp) => cp.name)
 // 		);
-// 		this.node.io.outputs.set_named_output_connection_points(named_output_connect_points, set_dirty);
+// 		this.node.io.outputs.setNamedOutputConnectionPoints(named_output_connect_points, set_dirty);
 // 		this.node.spare_params_controller.create_spare_parameters();
 // 	}
 

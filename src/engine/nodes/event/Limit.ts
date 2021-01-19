@@ -42,7 +42,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 	private _process_count: number = 0;
 	private _last_dispatched: boolean = false;
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				LimitEventInput.TRIGGER,
 				EventConnectionPointType.BASE,
@@ -55,7 +55,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 			),
 		]);
 
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(LimitEventOutput.OUT, EventConnectionPointType.BASE),
 			new EventConnectionPoint(LimitEventOutput.LAST, EventConnectionPointType.BASE),
 		]);

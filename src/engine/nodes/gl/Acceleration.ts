@@ -50,7 +50,7 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 	initializeNode() {
 		super.initializeNode();
 
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(AccelerationGlOutput.POSITION, GlConnectionPointType.VEC3),
 			new GlConnectionPoint(AccelerationGlOutput.VELOCITY, GlConnectionPointType.VEC3),
 		]);

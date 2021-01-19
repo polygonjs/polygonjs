@@ -185,9 +185,9 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			named_output_connect_points.push(point);
 		}
 
-		this.node.io.inputs.set_named_input_connection_points(named_input_connection_points);
+		this.node.io.inputs.setNamedInputConnectionPoints(named_input_connection_points);
 
-		this.node.io.outputs.set_named_output_connection_points(named_output_connect_points, set_dirty);
+		this.node.io.outputs.setNamedOutputConnectionPoints(named_output_connect_points, set_dirty);
 		if (this._create_spare_params_from_inputs) {
 			this._spare_params_controller.create_spare_parameters();
 		}

@@ -25,7 +25,7 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 		}
 
 		initializeNode() {
-			this.io.outputs.set_named_output_connection_points(
+			this.io.outputs.setNamedOutputConnectionPoints(
 				components.map((c) => {
 					return new GlConnectionPoint(c, GlConnectionPointType.FLOAT);
 				})
@@ -75,7 +75,7 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 	static readonly OUTPUT_NAME_W = 'w';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec4ToVec3GlNode.OUTPUT_NAME_VEC3, GlConnectionPointType.VEC3),
 			new GlConnectionPoint(Vec4ToVec3GlNode.OUTPUT_NAME_W, GlConnectionPointType.FLOAT),
 		]);
@@ -115,7 +115,7 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 	static readonly OUTPUT_NAME_Z = 'z';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec3ToVec2GlNode.OUTPUT_NAME_VEC2, GlConnectionPointType.VEC2),
 			new GlConnectionPoint(Vec3ToVec2GlNode.OUTPUT_NAME_Z, GlConnectionPointType.FLOAT),
 		]);
@@ -154,7 +154,7 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 	static readonly OUTPUT_NAME_VEC3 = 'vec3';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec2ToVec3GlNode.OUTPUT_NAME_VEC3, GlConnectionPointType.VEC3),
 		]);
 	}
@@ -186,7 +186,7 @@ export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 	static readonly OUTPUT_NAME_VEC4 = 'vec4';
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec3ToVec4GlNode.OUTPUT_NAME_VEC4, GlConnectionPointType.VEC4),
 		]);
 	}

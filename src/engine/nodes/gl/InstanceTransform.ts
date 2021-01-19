@@ -32,7 +32,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	initializeNode() {
 		super.initializeNode();
 
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(this.gl_output_name_position(), GlConnectionPointType.VEC3),
 			new GlConnectionPoint(this.gl_output_name_normal(), GlConnectionPointType.VEC3),
 		]);

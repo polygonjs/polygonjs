@@ -192,7 +192,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 		return BaseJsFunctionAssembler.create_globals_node_output_connections();
 	}
 	add_globals_outputs(globals_node: GlobalsJsNode) {
-		globals_node.io.outputs.set_named_output_connection_points(this.create_globals_node_output_connections());
+		globals_node.io.outputs.setNamedOutputConnectionPoints(this.create_globals_node_output_connections());
 	}
 	allow_attribute_exports() {
 		return true;

@@ -111,6 +111,9 @@ export class PolyScene {
 		return this.nodesController.nodesByType(type);
 	}
 	protected _objects_controller = new ObjectsController(this);
+	get objectsController() {
+		return this._objects_controller;
+	}
 	findObjectByMask(mask: string) {
 		return this._objects_controller.findObjectByMask(mask);
 	}

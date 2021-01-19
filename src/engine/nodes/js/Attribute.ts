@@ -65,7 +65,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// private create_inputs_from_params() {
 	// 	if (this.material_node.allow_attribute_exports) {
 	// 		// this.set_named_inputs([new TypedConnectionFloat(AttributeGlNode.input_name())]);
-	// 		this.io.inputs.set_named_input_connection_points([
+	// 		this.io.inputs.setNamedInputConnectionPoints([
 	// 			new TypedNamedConnectionPoint(INPUT_NAME, ConnectionPointTypes[this.pv.type]),
 	// 		]);
 	// 		// this._init_graph_node_inputs();

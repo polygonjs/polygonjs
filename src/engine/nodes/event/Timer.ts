@@ -27,11 +27,11 @@ export class TimerEventNode extends TypedEventNode<TimerEventParamsConfig> {
 		return 'timer';
 	}
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(INPUT_START_NAME, EventConnectionPointType.BASE, this._start_timer.bind(this)),
 			new EventConnectionPoint(INPUT_END_NAME, EventConnectionPointType.BASE, this._stop_timer.bind(this)),
 		]);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}

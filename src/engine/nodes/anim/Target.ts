@@ -39,7 +39,7 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 	updateMatrix = ParamConfig.BOOLEAN(0, {
 		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
 	});
-	/** @param prints which objects are targeted by this node, for debuggin */
+	/** @param prints which objects are targeted by this node, for debugging */
 	printResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			TargetAnimNode.PARAM_CALLBACK_print_resolve(node as TargetAnimNode);

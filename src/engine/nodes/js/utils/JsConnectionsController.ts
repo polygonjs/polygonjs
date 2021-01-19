@@ -101,8 +101,8 @@
 // 			return new JsConnectionPoint(this._output_name_function(i), type);
 // 		});
 
-// 		this.node.io.inputs.set_named_input_connection_points(named_input_connections);
-// 		this.node.io.outputs.set_named_output_connection_points(named_outputs, set_dirty);
+// 		this.node.io.inputs.setNamedInputConnectionPoints(named_input_connections);
+// 		this.node.io.outputs.setNamedOutputConnectionPoints(named_outputs, set_dirty);
 // 		this.node.spare_params_controller.create_spare_parameters();
 // 	}
 

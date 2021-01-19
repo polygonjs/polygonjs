@@ -56,7 +56,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 	// 	// output_child.params.add_param(ParamType.FLOAT, 'density', 1, {hidden: true});
 	// }
 	add_output_inputs(output_child: OutputGlNode) {
-		output_child.io.inputs.set_named_input_connection_points([
+		output_child.io.inputs.setNamedInputConnectionPoints([
 			new GlConnectionPoint('density', GlConnectionPointType.FLOAT, 1),
 		]);
 	}

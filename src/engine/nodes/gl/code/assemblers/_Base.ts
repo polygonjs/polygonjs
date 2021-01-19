@@ -275,9 +275,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		];
 	}
 	add_output_inputs(output_child: OutputGlNode) {
-		output_child.io.inputs.set_named_input_connection_points(
-			BaseGlShaderAssembler.output_input_connection_points()
-		);
+		output_child.io.inputs.setNamedInputConnectionPoints(BaseGlShaderAssembler.output_input_connection_points());
 	}
 	static create_globals_node_output_connections() {
 		// TODO: move this in material only, to use the enum GlobalsOutput
@@ -298,7 +296,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return BaseGlShaderAssembler.create_globals_node_output_connections();
 	}
 	add_globals_outputs(globals_node: GlobalsGlNode) {
-		globals_node.io.outputs.set_named_output_connection_points(this.create_globals_node_output_connections());
+		globals_node.io.outputs.setNamedOutputConnectionPoints(this.create_globals_node_output_connections());
 	}
 	allow_attribute_exports() {
 		return false;

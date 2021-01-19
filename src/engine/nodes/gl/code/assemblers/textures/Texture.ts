@@ -71,13 +71,13 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	add_output_inputs(output_child: OutputGlNode) {
 		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
 		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
-		output_child.io.inputs.set_named_input_connection_points([
+		output_child.io.inputs.setNamedInputConnectionPoints([
 			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
 		]);
 	}
 	add_globals_outputs(globals_node: GlobalsGlNode) {
-		globals_node.io.outputs.set_named_output_connection_points([
+		globals_node.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 			// new Connection.Vec2('resolution'),

@@ -24,10 +24,10 @@ export class DelayEventNode extends TypedEventNode<TimerEventParamsConfig> {
 		return 'delay';
 	}
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(INPUT_NAME, EventConnectionPointType.BASE, this._process_input.bind(this)),
 		]);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}

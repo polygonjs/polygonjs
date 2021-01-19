@@ -55,7 +55,7 @@
 // 				}
 // 			}
 // 		}
-// 		this.node.io.inputs.set_named_input_connection_points(connections);
+// 		this.node.io.inputs.setNamedInputConnectionPoints(connections);
 // 	}
 
 // 	set_inputless_param_names(names: string[]) {

@@ -6,31 +6,29 @@ export class ObjectsController {
 	constructor(private scene: PolyScene) {}
 
 	findObjectByMask(mask: string): Object3D | undefined {
-		return this._findObjectsByMaskInObject(mask, this.scene.threejsScene(), '');
+		return this.findObjectsByMaskInObject(mask, this.scene.threejsScene());
 	}
-	private _findObjectsByMaskInObject(mask: string, object: Object3D, objectPath: string): Object3D | undefined {
+	findObjectsByMaskInObject(mask: string, object: Object3D, objectPath: string = ''): Object3D | undefined {
 		for (let child of object.children) {
 			const path = `${objectPath}/${child.name}`;
 			if (CoreString.matchMask(path, mask)) {
 				return child;
 			}
-			this._findObjectsByMaskInObject(mask, child, path);
+			this.findObjectsByMaskInObject(mask, child, path);
 		}
 	}
 
 	objectsByMask(mask: string): Object3D[] {
-		const list: Object3D[] = [];
-		const root = this.scene.threejsScene();
-		this._objectsByMaskInObject(mask, root, '', list);
-		return list;
+		return this.objectsByMaskInObject(mask, this.scene.threejsScene(), [], '');
 	}
-	private _objectsByMaskInObject(mask: string, object: Object3D, objectPath: string, list: Object3D[]) {
+	objectsByMaskInObject(mask: string, object: Object3D, list: Object3D[] = [], objectPath: string = '') {
 		for (let child of object.children) {
 			const path = `${objectPath}/${child.name}`;
 			if (CoreString.matchMask(path, mask)) {
 				list.push(child);
 			}
-			this._objectsByMaskInObject(mask, child, path, list);
+			this.objectsByMaskInObject(mask, child, list, path);
 		}
+		return list;
 	}
 }

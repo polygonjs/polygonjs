@@ -8,7 +8,8 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsController';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {RaycastCPUController, CPU_INTERSECT_WITH_OPTIONS, CPUIntersectWith} from './utils/raycast/CPUController';
+import {RaycastCPUController} from './utils/raycast/CPUController';
+import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './utils/raycast/CpuConstants';
 import {RaycastGPUController} from './utils/raycast/GPUController';
 import {AttribType, ATTRIBUTE_TYPES, AttribTypeMenuEntries} from '../../../core/geometry/Constant';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
@@ -194,7 +195,14 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
 	});
-	/** @param toggle to hit is tested against children */
+	/** @param prints which objects are targeted by this node, for debugging */
+	printFoundObjectsFromMask = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			RaycastCPUController.PARAM_CALLBACK_print_resolve(node as RaycastEventNode);
+		},
+		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
+	});
+	/** @param toggle to hit if tested against children */
 	traverseChildren = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
@@ -301,7 +309,7 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	public readonly gpu_controller: RaycastGPUController = new RaycastGPUController(this);
 
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				'trigger',
 				EventConnectionPointType.BASE,
@@ -319,7 +327,7 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 				this._process_trigger_vel_reset.bind(this)
 			),
 		]);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(RaycastEventNode.OUTPUT_HIT, EventConnectionPointType.BASE),
 			new EventConnectionPoint(RaycastEventNode.OUTPUT_MISS, EventConnectionPointType.BASE),
 		]);

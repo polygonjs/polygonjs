@@ -54,7 +54,7 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 	static OUTPUT_NAME = 'out';
 	initializeNode() {
 		this.io.connection_points.spare_params.set_inputless_param_names(['to', 'from']);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(ColorCorrectGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}

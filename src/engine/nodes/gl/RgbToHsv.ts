@@ -19,7 +19,7 @@ export class RgbToHsvGlNode extends TypedGlNode<RgbToHsvGlParamsConfig> {
 	}
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}

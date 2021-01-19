@@ -32,7 +32,7 @@ export class ButtonEventNode extends TypedEventNode<ButtonEventParamsConfig> {
 	}
 
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(ButtonEventOutput.OUT, EventConnectionPointType.BASE),
 		]);
 	}

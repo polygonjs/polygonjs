@@ -53,12 +53,12 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 	private _timeline: gsap.core.Timeline | undefined;
 
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(AnimationEventInput.START, EventConnectionPointType.BASE, this._play.bind(this)),
 			new EventConnectionPoint(AnimationEventInput.STOP, EventConnectionPointType.BASE, this._pause.bind(this)),
 		]);
 
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(AnimationEventOutput.START, EventConnectionPointType.BASE),
 			new EventConnectionPoint(AnimationEventOutput.COMPLETE, EventConnectionPointType.BASE),
 		]);

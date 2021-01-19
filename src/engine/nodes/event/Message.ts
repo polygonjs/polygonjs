@@ -28,10 +28,10 @@ export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
 	static readonly OUTPUT = 'output';
 
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE, this._process_trigger_event.bind(this)),
 		]);
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(MessageEventNode.OUTPUT, EventConnectionPointType.BASE),
 		]);
 	}

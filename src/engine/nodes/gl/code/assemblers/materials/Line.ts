@@ -94,7 +94,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 		// output_child.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
 	add_output_inputs(output_child: OutputGlNode) {
-		output_child.io.inputs.set_named_input_connection_points(ShaderAssemblerLine.output_input_connection_points());
+		output_child.io.inputs.setNamedInputConnectionPoints(ShaderAssemblerLine.output_input_connection_points());
 	}
 	static create_globals_node_output_connections() {
 		return [

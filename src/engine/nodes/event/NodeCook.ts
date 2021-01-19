@@ -66,7 +66,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	private _resolved_nodes: BaseNodeType[] = [];
 
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				NodeCookEventNode.INPUT_TRIGGER,
 				EventConnectionPointType.BASE,
@@ -74,7 +74,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 			),
 		]);
 
-		this.io.outputs.set_named_output_connection_points([
+		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(NodeCookEventNode.OUTPUT_FIRST_NODE, EventConnectionPointType.BASE),
 			new EventConnectionPoint(NodeCookEventNode.OUTPUT_EACH_NODE, EventConnectionPointType.BASE),
 			new EventConnectionPoint(NodeCookEventNode.OUTPUT_ALL_NODES, EventConnectionPointType.BASE),

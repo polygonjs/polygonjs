@@ -72,7 +72,7 @@
 // 		return 'code';
 // 	}
 // 	initializeNode() {
-// 		this.io.inputs.set_named_input_connection_points([
+// 		this.io.inputs.setNamedInputConnectionPoints([
 // 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 // 		]);
 // 	}

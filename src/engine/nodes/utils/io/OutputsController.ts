@@ -72,7 +72,7 @@ export class OutputsController<NC extends NodeContext> {
 		}
 	}
 
-	set_named_output_connection_points(connection_points: ConnectionPointTypeMap[NC][], set_dirty: boolean = true) {
+	setNamedOutputConnectionPoints(connection_points: ConnectionPointTypeMap[NC][], set_dirty: boolean = true) {
 		this._has_named_outputs = true;
 
 		const connections = this.node.io.connections.output_connections();

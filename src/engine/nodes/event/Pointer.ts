@@ -34,7 +34,7 @@ export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConf
 		return ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`);
 	}
 	initializeNode() {
-		this.io.outputs.set_named_output_connection_points(
+		this.io.outputs.setNamedOutputConnectionPoints(
 			ACCEPTED_POINTER_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.POINTER);
 			})

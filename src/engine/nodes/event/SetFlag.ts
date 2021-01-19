@@ -69,7 +69,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		return 'setFlag';
 	}
 	initializeNode() {
-		this.io.inputs.set_named_input_connection_points([
+		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
 	}

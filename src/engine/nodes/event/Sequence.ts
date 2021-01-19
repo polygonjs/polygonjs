@@ -30,7 +30,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 		return 'sequence';
 	}
 	initializeNode() {
-		// this.io.inputs.set_named_input_connection_points([
+		// this.io.inputs.setNamedInputConnectionPoints([
 		// 	new EventConnectionPoint(INPUT_NAME, EventConnectionPointType.BASE),
 		// ]);
 		this.io.connection_points.set_input_name_function(() => INPUT_NAME);
@@ -40,7 +40,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 		// for (let i = 0; i < OUTPUTS_COUNT; i++) {
 		// 	list[i] = new EventConnectionPoint(`trigger${i}`, EventConnectionPointType.BASE);
 		// }
-		// this.io.outputs.set_named_output_connection_points(list);
+		// this.io.outputs.setNamedOutputConnectionPoints(list);
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		this.io.connection_points.set_output_name_function(this._output_name.bind(this));
 	}

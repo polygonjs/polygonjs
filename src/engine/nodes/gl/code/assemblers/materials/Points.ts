@@ -77,7 +77,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	add_output_inputs(output_child: OutputGlNode) {
 		const list = BaseGlShaderAssembler.output_input_connection_points();
 		list.push(new GlConnectionPoint('gl_PointSize', GlConnectionPointType.FLOAT));
-		output_child.io.inputs.set_named_input_connection_points(list);
+		output_child.io.inputs.setNamedInputConnectionPoints(list);
 	}
 	create_globals_node_output_connections() {
 		return BaseGlShaderAssembler.create_globals_node_output_connections().concat([

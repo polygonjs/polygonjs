@@ -81,7 +81,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		const list = BaseGlShaderAssembler.output_input_connection_points();
 		list.push(new GlConnectionPoint('metalness', GlConnectionPointType.FLOAT, 1));
 		list.push(new GlConnectionPoint('roughness', GlConnectionPointType.FLOAT, 1));
-		output_child.io.inputs.set_named_input_connection_points(list);
+		output_child.io.inputs.setNamedInputConnectionPoints(list);
 		// those defaults should be 1. If they were 0, using the params
 		// at the material level would appear not to work
 		// output_child.add_param(ParamType.FLOAT, 'metalness', 1);
