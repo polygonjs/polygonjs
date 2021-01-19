@@ -37,7 +37,7 @@
 		"copy_threejs_examples_to_dist": "cp -rf src/modules/three/* dist/src/modules/three/"
 	},
 	"dependencies": {
-		"gsap": "3.5.1",
+		"gsap": "3.6.0",
 		"jsep": "0.3.5",
 		"lodash": "4.17.20",
 		"opentype.js": "1.3.3",
