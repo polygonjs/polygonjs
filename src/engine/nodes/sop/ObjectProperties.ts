@@ -14,11 +14,12 @@ const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to apply recursively to children */
 	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren);
-	separator = ParamConfig.SEPARATOR();
+	separator1 = ParamConfig.SEPARATOR();
 	/** @param toggle on to set a new name */
 	tname = ParamConfig.BOOLEAN(DEFAULT.tname);
 	/** @param new name */
 	name = ParamConfig.STRING(DEFAULT.name, {visibleIf: {tname: true}});
+	separatorName = ParamConfig.SEPARATOR(null, {visibleIf: {tname: true}});
 	/** @param toggle on to set a new render order */
 	trenderOrder = ParamConfig.BOOLEAN(DEFAULT.trenderOrder);
 	/** @param render order */
@@ -27,14 +28,25 @@ class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 		range: [0, 10],
 		rangeLocked: [false, false],
 	});
+	separatorRenderOrder = ParamConfig.SEPARATOR(null, {visibleIf: {trenderOrder: true}});
+	/** @param toggle on to allow to set frustrumCulled */
+	tfrustumCulled = ParamConfig.BOOLEAN(DEFAULT.tfrustumCulled);
 	/** @param sets frustrumCulled */
 	frustumCulled = ParamConfig.BOOLEAN(DEFAULT.frustumCulled);
+	/** @param toggle on to allow to set matrixAutoUpdate */
+	tmatrixAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.tmatrixAutoUpdate);
 	/** @param sets matrixAutoUpdate */
 	matrixAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.matrixAutoUpdate);
+	/** @param toggle on to allow to set visible */
+	tvisible = ParamConfig.BOOLEAN(DEFAULT.tvisible);
 	/** @param sets visible */
 	visible = ParamConfig.BOOLEAN(DEFAULT.visible);
+	/** @param toggle on to allow to set castShadow */
+	tcastShadow = ParamConfig.BOOLEAN(DEFAULT.tcastShadow);
 	/** @param sets castShadow */
 	castShadow = ParamConfig.BOOLEAN(DEFAULT.castShadow);
+	/** @param toggle on to allow to set receiveShadow */
+	treceiveShadow = ParamConfig.BOOLEAN(DEFAULT.treceiveShadow);
 	/** @param sets receiveShadow */
 	receiveShadow = ParamConfig.BOOLEAN(DEFAULT.receiveShadow);
 }

@@ -6,28 +6,52 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
+	// name
 	tname: boolean;
 	name: string;
+	// renderOrder
 	trenderOrder: boolean;
 	renderOrder: number;
+	// frustumCulled
+	tfrustumCulled: boolean;
 	frustumCulled: boolean;
+	// matrixAutoUpdate
+	tmatrixAutoUpdate: boolean;
 	matrixAutoUpdate: boolean;
+	// visible
+	tvisible: boolean;
 	visible: boolean;
+	// castShadow
+	tcastShadow: boolean;
 	castShadow: boolean;
+	// receiveShadow
+	treceiveShadow: boolean;
 	receiveShadow: boolean;
 }
 
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
 		applyToChildren: false,
+		// name
 		tname: false,
 		name: '',
+		// renderOrder
 		trenderOrder: false,
 		renderOrder: 0,
+		// frustrumCulled
+		tfrustumCulled: false,
 		frustumCulled: true,
+		// matrixAutoUpdate
+		tmatrixAutoUpdate: false,
 		matrixAutoUpdate: false,
+		// visible
+		tvisible: false,
 		visible: true,
+		// castShadow
+		tcastShadow: false,
 		castShadow: true,
+		// receiveShadow
+		treceiveShadow: false,
 		receiveShadow: true,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
@@ -57,10 +81,20 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		if (params.trenderOrder) {
 			object.renderOrder = params.renderOrder;
 		}
-		object.frustumCulled = params.frustumCulled;
-		object.matrixAutoUpdate = params.matrixAutoUpdate;
-		object.visible = params.visible;
-		object.castShadow = params.castShadow;
-		object.receiveShadow = params.receiveShadow;
+		if (params.tfrustumCulled) {
+			object.frustumCulled = params.frustumCulled;
+		}
+		if (params.tmatrixAutoUpdate) {
+			object.matrixAutoUpdate = params.matrixAutoUpdate;
+		}
+		if (params.tvisible) {
+			object.visible = params.visible;
+		}
+		if (params.tcastShadow) {
+			object.castShadow = params.castShadow;
+		}
+		if (params.treceiveShadow) {
+			object.receiveShadow = params.receiveShadow;
+		}
 	}
 }
