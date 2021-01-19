@@ -108,7 +108,8 @@ export class PolyEngine {
 	setEnv(env: string) {
 		this._env = env;
 	}
-	get env() {
+	env() {
+		console.log('************', this._env);
 		return this._env;
 	}
 

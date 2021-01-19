@@ -4,7 +4,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 QUnit.test('geo obj simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene().children[0];
-	assert.equal(main_group.name, '_WORLD_');
+	assert.equal(main_group.name, '/');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
@@ -36,7 +36,7 @@ QUnit.test('geo obj creates node sop on create', async (assert) => {
 QUnit.test('geo obj is removed from scene when node is deleted', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene().children[0];
-	assert.equal(main_group.name, '_WORLD_');
+	assert.equal(main_group.name, '/');
 	assert.equal(main_group.children.length, 2);
 	assert.equal(
 		main_group.children
@@ -62,7 +62,7 @@ QUnit.test('geo obj is removed from scene when node is deleted', async (assert) 
 QUnit.test('geo obj cooks only once when multiple params are updated', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene().children[0];
-	assert.equal(main_group.name, '_WORLD_');
+	assert.equal(main_group.name, '/');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
@@ -91,7 +91,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 QUnit.test('geo obj: only the top group from a file sop with hierarchy is added to the geo object', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene().children[0];
-	assert.equal(main_group.name, '_WORLD_');
+	assert.equal(main_group.name, '/');
 	assert.equal(main_group.children.length, 2);
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 

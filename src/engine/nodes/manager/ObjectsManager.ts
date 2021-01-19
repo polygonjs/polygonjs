@@ -8,6 +8,7 @@ import {BaseNodeType} from '../_Base';
 import {HierarchyObjNode} from '../obj/utils/HierarchyController';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {ROOT_NAME} from '../../scene/utils/ObjectsController';
 class ObjectsManagerParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -32,7 +33,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	init_default_scene() {
-		this._object.name = '_WORLD_';
+		this._object.name = ROOT_NAME;
 		this._scene.threejsScene().add(this._object);
 	}
 
