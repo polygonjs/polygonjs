@@ -3,6 +3,9 @@ import {PolyEngine} from '../../../Poly';
 type PolyPluginCallback = (poly: PolyEngine) => void;
 interface PolyPluginOptions {
 	libraryName: string;
+	// no need yet to have a CND entry
+	// as using the plugins is currently only possible
+	// when doing js or ts export, NOT with html export
 }
 export interface PolyPluginData {
 	name: string;

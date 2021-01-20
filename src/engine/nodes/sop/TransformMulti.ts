@@ -15,11 +15,11 @@ import {
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Vector3} from 'three/src/math/Vector3';
-import {ParamOptions, MenuParamOptions, VisibleIfParamOptions} from '../../params/utils/OptionsController';
+import {ParamOptions, MenuNumericParamOptions, VisibleIfParamOptions} from '../../params/utils/OptionsController';
 
 const max_transform_count = 6;
 const ROT_ORDER_DEFAULT = ROTATION_ORDERS.indexOf(RotationOrder.XYZ);
-const ROT_ORDER_MENU_ENTRIES: MenuParamOptions = {
+const ROT_ORDER_MENU_ENTRIES: MenuNumericParamOptions = {
 	menu: {
 		entries: ROTATION_ORDERS.map((order, v) => {
 			return {name: order, value: v};

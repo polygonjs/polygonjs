@@ -45,9 +45,23 @@ const FIELD_OPTION = 'field';
 const VISIBLE_IF_OPTION = 'visibleIf';
 const COLOR_CONVERSION = 'conversion';
 
-export interface ParamOptionsMenuEntry {
+export interface NumericParamOptionsMenuEntry {
 	name: string;
 	value: number;
+}
+export interface StringParamOptionsMenuEntry {
+	name: string;
+	value: string;
+}
+export interface MenuNumericParamOptions {
+	menu?: {
+		entries: NumericParamOptionsMenuEntry[];
+	};
+}
+export interface MenuStringParamOptions {
+	menu?: {
+		entries: StringParamOptionsMenuEntry[];
+	};
 }
 export enum StringParamLanguage {
 	// JAVASCRIPT = 'javascript',
@@ -72,11 +86,7 @@ interface BaseParamOptions {
 	field?: boolean;
 	visibleIf?: VisibleIfParamOptions | VisibleIfParamOptions[];
 }
-export interface MenuParamOptions {
-	menu?: {
-		entries: ParamOptionsMenuEntry[];
-	};
-}
+
 interface ExpressionParamOptions {
 	expression?: {
 		forEntities?: boolean;
@@ -112,7 +122,7 @@ interface ColorConversionOptions {
 export interface BooleanParamOptions
 	extends BaseParamOptions,
 		ComputeOnDirtyParamOptions,
-		MenuParamOptions,
+		MenuNumericParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
 export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions, LabelParamOptions {}
@@ -124,14 +134,14 @@ export interface ColorParamOptions
 		ComputeOnDirtyParamOptions {}
 export interface FloatParamOptions
 	extends NumberParamOptions,
-		MenuParamOptions,
+		MenuNumericParamOptions,
 		ComputeOnDirtyParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
 export interface FolderParamOptions extends BaseParamOptions {
 	level?: number;
 }
-export interface IntegerParamOptions extends NumberParamOptions, MenuParamOptions, CallbackParamOptions {}
+export interface IntegerParamOptions extends NumberParamOptions, MenuNumericParamOptions, CallbackParamOptions {}
 export interface OperatorPathParamOptions
 	extends BaseParamOptions,
 		FileParamOptions,
@@ -171,7 +181,7 @@ export interface ParamOptions
 		ExpressionParamOptions,
 		ButtonParamOptions,
 		FileParamOptions,
-		MenuParamOptions,
+		MenuNumericParamOptions,
 		StringParamOptions,
 		OperatorPathParamOptions {
 	texture?: {
