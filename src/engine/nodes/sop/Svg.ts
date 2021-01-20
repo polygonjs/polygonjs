@@ -1,8 +1,6 @@
 /**
- * Loads a geometry from a url.
+ * Loads an svg file from a url.
  *
- * @remarks
- * Note that this node will automatically use a specific loader depending on the extension of the url.
  *
  */
 import {TypedSopNode} from './_Base';
@@ -26,11 +24,13 @@ class SvgSopParamsConfig extends NodeParamsConfig {
 			SvgSopNode.PARAM_CALLBACK_reload(node as SvgSopNode);
 		},
 	});
-	// fill
+	/** @param toggle on to draw the fillShapes */
 	drawFillShapes = ParamConfig.BOOLEAN(DEFAULT.drawFillShapes);
+	/** @param toggle on to draw the fillShapes as wireframe */
 	fillShapesWireframe = ParamConfig.BOOLEAN(DEFAULT.fillShapesWireframe);
-	// strokes
+	/** @param toggle on to draw the strokes */
 	drawStrokes = ParamConfig.BOOLEAN(DEFAULT.drawStrokes);
+	/** @param toggle on to draw the strokes as wireframe */
 	strokesWireframe = ParamConfig.BOOLEAN(DEFAULT.strokesWireframe);
 }
 const ParamsConfig = new SvgSopParamsConfig();
