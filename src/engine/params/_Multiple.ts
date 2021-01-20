@@ -94,6 +94,11 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		await Promise.all(promises);
 		this.removeDirtyState();
 	}
+	// TODO: refactor this, so that nodes with vector or color params
+	// can be initialized with DEFAULT.color
+	// and not DEFAULT.color.toArray()
+	// and this could also maybe fix the .set() calls
+	// where an array currently needs to be used
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {
 			const number_or_string = raw_input as number | string;

@@ -8,6 +8,7 @@ import {CorePoint} from '../../geometry/Point';
 import {CoreString} from '../../String';
 import {ArrayUtils} from '../../ArrayUtils';
 import {NumericAttribValue, PolyDictionary} from '../../../types/GlobalTypes';
+import {CoreAttribute} from '../../geometry/Attribute';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	classFrom: number;
 	classTo: number;
@@ -133,8 +134,10 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		if (this._core_group && this._core_object) {
 			const attribute_exists = this._core_group.hasAttrib(attrib_name);
 			if (!attribute_exists) {
-				const param_size = 1; // TODO: allow size with larger params
-				this._core_group.addNumericVertexAttrib(attrib_name, param_size, new_value);
+				const attribSize = CoreAttribute.attribSizeFromValue(new_value);
+				if (attribSize) {
+					this._core_group.addNumericVertexAttrib(attrib_name, attribSize, new_value);
+				}
 			}
 
 			const points = this._core_object.points();

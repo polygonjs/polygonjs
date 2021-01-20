@@ -1,7 +1,10 @@
-import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {PolyDictionary} from '../../types/GlobalTypes';
+import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
+import {CoreType} from '../Type';
+import {AttribSize} from './Constant';
 
 export enum Attribute {
 	POSITION = 'position',
@@ -75,5 +78,24 @@ export class CoreAttribute {
 				dest.needsUpdate = true;
 			}
 		}
+	}
+
+	static attribSizeFromValue(val: AttribValue): number | null {
+		if (CoreType.isString(val) || CoreType.isNumber(val)) {
+			return AttribSize.FLOAT;
+		}
+		if (CoreType.isArray(val)) {
+			return val.length;
+		}
+
+		switch (val.constructor) {
+			case Vector2:
+				return AttribSize.VECTOR2;
+			case Vector3:
+				return AttribSize.VECTOR3;
+			case Vector4:
+				return AttribSize.VECTOR4;
+		}
+		return 0;
 	}
 }

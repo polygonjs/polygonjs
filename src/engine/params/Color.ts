@@ -53,6 +53,11 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
+	// protected _prefilter_invalid_raw_input(
+	// 	raw_input: ParamInitValuesTypeMap[ParamType.COLOR]
+	// ): ParamInitValuesTypeMap[ParamType.COLOR] {
+	// 	return raw_input;
+	// }
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
 		if (raw_input instanceof Color) {
 			return raw_input.clone();

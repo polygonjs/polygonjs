@@ -27,19 +27,19 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		super.set_content(content);
 	}
 
-	private first_object() {
+	private firstObject() {
 		if (this._content) {
 			return this._content.objects()[0];
 		}
 	}
-	private first_core_object() {
-		const object = this.first_object();
+	private firstCoreObject() {
+		const object = this.firstObject();
 		if (object) {
 			return new CoreObject(object, 0);
 		}
 	}
-	private first_geometry(): BufferGeometry | null {
-		const object = this.first_object();
+	private firstGeometry(): BufferGeometry | null {
+		const object = this.firstObject();
 		if (object) {
 			return (object as Mesh).geometry as BufferGeometry;
 		} else {
@@ -47,20 +47,20 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 	}
 
-	objects_count(): number {
+	objectsCount(): number {
 		if (this._content) {
 			return this._content.objects().length;
 		} else {
 			return 0;
 		}
 	}
-	objects_visible_count(): number {
+	objectsVisibleCount(): number {
 		let count = 0;
 		if (this._content) {
 		}
 		return count;
 	}
-	objects_count_by_type() {
+	objectsCountByType() {
 		const count_by_type: PolyDictionary<number> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
@@ -74,7 +74,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return count_by_type;
 	}
-	objects_names_by_type() {
+	objectsNamesByType() {
 		const names_by_type: PolyDictionary<string[]> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
@@ -87,17 +87,17 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return names_by_type;
 	}
 
-	point_attribute_names() {
+	pointAttributeNames() {
 		let names: string[] = [];
-		const geometry = this.first_geometry();
+		const geometry = this.firstGeometry();
 		if (geometry) {
 			names = Object.keys(geometry.attributes);
 		}
 		return names;
 	}
-	point_attribute_sizes_by_name() {
+	pointAttributeSizesByName() {
 		let sizes_by_name: PolyDictionary<number> = {};
-		const geometry = this.first_geometry();
+		const geometry = this.firstGeometry();
 		if (geometry) {
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
 				const attrib = geometry.attributes[attrib_name];
@@ -106,11 +106,12 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return sizes_by_name;
 	}
-	object_attribute_sizes_by_name() {
+	objectAttributeSizesByName() {
 		let sizes_by_name: PolyDictionary<number> = {};
-		const core_object = this.first_core_object();
+		const core_object = this.firstCoreObject();
 		if (core_object) {
-			for (let name of core_object.attribNames()) {
+			const attribNames = core_object.attribNames();
+			for (let name of attribNames) {
 				const size = core_object.attribSize(name);
 				if (size != null) {
 					sizes_by_name[name] = size;
@@ -119,9 +120,9 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return sizes_by_name;
 	}
-	point_attribute_types_by_name() {
+	pointAttributeTypesByName() {
 		let types_by_name: PolyDictionary<AttribType> = {};
-		const geometry = this.first_geometry();
+		const geometry = this.firstGeometry();
 		if (geometry) {
 			const core_geo = new CoreGeometry(geometry);
 			Object.keys(geometry.attributes).forEach((attrib_name) => {
@@ -130,9 +131,9 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return types_by_name;
 	}
-	object_attribute_types_by_name() {
+	objectAttributeTypesByName() {
 		let types_by_name: PolyDictionary<AttribType> = {};
-		const core_object = this.first_core_object();
+		const core_object = this.firstCoreObject();
 		if (core_object) {
 			for (let name of core_object.attribNames()) {
 				types_by_name[name] = core_object.attribType(name);
@@ -140,9 +141,9 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return types_by_name;
 	}
-	object_attribute_names() {
+	objectAttributeNames() {
 		let names: string[] = [];
-		const object = this.first_object();
+		const object = this.firstObject();
 		if (object) {
 			names = Object.keys(object.userData['attributes'] || {});
 		}

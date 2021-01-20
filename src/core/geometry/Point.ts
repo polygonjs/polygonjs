@@ -6,6 +6,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
+import {CoreType} from '../Type';
 
 const ATTRIB_NAMES = {
 	POSITION: 'position',
@@ -179,6 +180,13 @@ export class CorePoint extends CoreEntity {
 		const attrib = this._geometry.getAttribute(name);
 		const array = attrib.array as number[];
 		const attrib_size = attrib.itemSize;
+
+		if (CoreType.isArray(value)) {
+			for (let i = 0; i < attrib_size; i++) {
+				array[this._index * attrib_size + i] = value[i];
+			}
+			return;
+		}
 
 		switch (attrib_size) {
 			case 1:

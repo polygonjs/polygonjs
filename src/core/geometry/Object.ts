@@ -237,21 +237,7 @@ export class CoreObject extends CoreEntity {
 		if (val == null) {
 			return null;
 		}
-
-		if (CoreType.isString(val) || CoreType.isNumber(val)) {
-			return AttribSize.FLOAT;
-		} else {
-			switch (val.constructor) {
-				case Vector2:
-					return AttribSize.VECTOR2;
-				case Vector3:
-					return AttribSize.VECTOR3;
-				case Vector4:
-					return AttribSize.VECTOR4;
-				default:
-					return null;
-			}
-		}
+		return CoreAttribute.attribSizeFromValue(val);
 	}
 
 	clone() {

@@ -43,7 +43,7 @@ export class ObjectsCountExpression extends BaseMethod {
 				}
 
 				if (container) {
-					const value = container.objects_count();
+					const value = container.objectsCount();
 					resolve(value);
 				}
 			} else {

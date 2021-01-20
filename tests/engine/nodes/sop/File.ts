@@ -75,10 +75,10 @@ QUnit.test('SOP file simple', async (assert) => {
 QUnit.test('SOP file obj wolf', async (assert) => {
 	const container = await with_file('/models/wolf.obj');
 	const core_content = container.coreContent()!;
-	assert.equal(container.objects_count(), 1);
+	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.pointsCount(), 0);
-	console.log(container.objects_count_by_type());
-	assert.deepEqual(container.objects_count_by_type(), {Object3D: 1});
+	console.log(container.objectsCountByType());
+	assert.deepEqual(container.objectsCountByType(), {Object3D: 1});
 	assert.equal(core_content.objects().length, 1);
 	assert.equal(core_content.pointsCount(), 0);
 	const first_object = core_content.objects()[0];
