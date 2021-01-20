@@ -318,9 +318,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// modules
-	public async required_modules(): Promise<ModuleName[] | void> {}
-	public used_assembler(): AssemblerName | void {}
-	public integration_data(): IntegrationData | void {}
+	public async requiredModules(): Promise<ModuleName[] | void> {}
+	public usedAssembler(): AssemblerName | void {}
+	public integrationData(): IntegrationData | void {}
 
 	// poly nodes
 	public readonly polyNodeController: PolyNodeController | undefined;

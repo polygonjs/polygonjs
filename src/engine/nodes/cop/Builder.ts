@@ -63,11 +63,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
 	protected _assembler_controller = this._create_assembler_controller();
 
-	public used_assembler(): Readonly<AssemblerName.GL_TEXTURE> {
+	public usedAssembler(): Readonly<AssemblerName.GL_TEXTURE> {
 		return AssemblerName.GL_TEXTURE;
 	}
 	protected _create_assembler_controller() {
-		const assembler_controller = Poly.assemblersRegister.assembler(this, this.used_assembler());
+		const assembler_controller = Poly.assemblersRegister.assembler(this, this.usedAssembler());
 		if (assembler_controller) {
 			const globals_handler = new GlobalsGeometryHandler();
 			assembler_controller.set_assembler_globals_handler(globals_handler);

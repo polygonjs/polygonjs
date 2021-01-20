@@ -82,7 +82,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	static type() {
 		return 'video';
 	}
-	async required_modules() {
+	async requiredModules() {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}

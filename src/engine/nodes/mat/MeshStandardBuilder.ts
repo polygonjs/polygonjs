@@ -50,11 +50,11 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	static type() {
 		return 'meshStandardBuilder';
 	}
-	public used_assembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
+	public usedAssembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
 		return AssemblerName.GL_MESH_STANDARD;
 	}
 	protected _create_assembler_controller() {
-		return Poly.assemblersRegister.assembler(this, this.used_assembler());
+		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
 	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {uniforms: true});

@@ -27,7 +27,7 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	await AssemblersUtils.with_unregistered_assembler(mesh_standard1.used_assembler(), async () => {
+	await AssemblersUtils.with_unregistered_assembler(mesh_standard1.usedAssembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();

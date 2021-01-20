@@ -82,6 +82,7 @@ import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
 import {SubnetSopNode} from '../../../nodes/sop/Subnet';
 import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
 import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
+import {SvgSopNode} from '../../../nodes/sop/Svg';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
 import {TextSopNode} from '../../../nodes/sop/Text';
@@ -173,6 +174,7 @@ export interface GeoNodeChildrenMap {
 	subnet: SubnetSopNode;
 	subnetInput: SubnetInputSopNode;
 	subnetOutput: SubnetOutputSopNode;
+	svg: SvgSopNode;
 	switch: SwitchSopNode;
 	tetrahedron: TetrahedronSopNode;
 	text: TextSopNode;
@@ -214,6 +216,7 @@ import {RoundedBoxSopOperation} from '../../../../core/operations/sop/RoundedBox
 import {ScatterSopOperation} from '../../../../core/operations/sop/Scatter';
 import {SphereSopOperation} from '../../../../core/operations/sop/Sphere';
 import {SubdivideSopOperation} from '../../../../core/operations/sop/Subdivide';
+import {SvgSopOperation} from '../../../../core/operations/sop/Svg';
 import {TexturePropertiesSopOperation} from '../../../../core/operations/sop/TextureProperties';
 import {TorusSopOperation} from '../../../../core/operations/sop/Torus';
 import {TorusKnotSopOperation} from '../../../../core/operations/sop/TorusKnot';
@@ -249,6 +252,7 @@ export class SopRegister {
 		poly.registerOperation(ScatterSopOperation);
 		poly.registerOperation(SphereSopOperation);
 		poly.registerOperation(SubdivideSopOperation);
+		poly.registerOperation(SvgSopOperation);
 		poly.registerOperation(TexturePropertiesSopOperation);
 		poly.registerOperation(TorusSopOperation);
 		poly.registerOperation(TorusKnotSopOperation);
@@ -295,8 +299,8 @@ export class SopRegister {
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
-		if(process.env.NODE_ENV == 'development'){
-		poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
 		}
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -338,6 +342,7 @@ export class SopRegister {
 			// only: [`${NodeContext.SOP}/${SubnetSopNode.type()}`, `${NodeContext.SOP}/poly`],
 		}*/
 		);
+		poly.registerNode(SvgSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(SwitchSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);

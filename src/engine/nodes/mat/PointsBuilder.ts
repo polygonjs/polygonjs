@@ -24,11 +24,11 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	static type() {
 		return 'pointsBuilder';
 	}
-	public used_assembler(): Readonly<AssemblerName.GL_POINTS> {
+	public usedAssembler(): Readonly<AssemblerName.GL_POINTS> {
 		return AssemblerName.GL_POINTS;
 	}
 	protected _create_assembler_controller() {
-		return Poly.assemblersRegister.assembler(this, this.used_assembler());
+		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
 	readonly depth_controller: DepthController = new DepthController(this);

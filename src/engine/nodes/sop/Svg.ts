@@ -6,16 +6,16 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {FileType} from '../../params/utils/OptionsController';
-import {FileSopOperation} from '../../../core/operations/sop/File';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-const DEFAULT = FileSopOperation.DEFAULT_PARAMS;
-class FileSopParamsConfig extends NodeParamsConfig {
+import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
+import {SvgSopOperation} from '../../../core/operations/sop/Svg';
+const DEFAULT = SvgSopOperation.DEFAULT_PARAMS;
+
+class SvgSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
 		fileBrowse: {type: [FileType.GEOMETRY]},
@@ -23,23 +23,25 @@ class FileSopParamsConfig extends NodeParamsConfig {
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			FileSopNode.PARAM_CALLBACK_reload(node as FileSopNode);
+			SvgSopNode.PARAM_CALLBACK_reload(node as SvgSopNode);
 		},
 	});
+	// fill
+	drawFillShapes = ParamConfig.BOOLEAN(DEFAULT.drawFillShapes);
+	fillShapesWireframe = ParamConfig.BOOLEAN(DEFAULT.fillShapesWireframe);
+	// strokes
+	drawStrokes = ParamConfig.BOOLEAN(DEFAULT.drawStrokes);
+	strokesWireframe = ParamConfig.BOOLEAN(DEFAULT.strokesWireframe);
 }
-const ParamsConfig = new FileSopParamsConfig();
+const ParamsConfig = new SvgSopParamsConfig();
 
-export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
+export class SvgSopNode extends TypedSopNode<SvgSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'file';
+		return 'svg';
 	}
 	async requiredModules() {
-		if (this.p.url.isDirty()) {
-			await this.p.url.compute();
-		}
-		const ext = CoreLoaderGeometry.get_extension(this.pv.url || '');
-		return CoreLoaderGeometry.module_names(ext);
+		return [ModuleName.SVGLoader];
 	}
 
 	initializeNode() {
@@ -59,19 +61,18 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 
 	// TODO: no error when trying to load a non existing zip file??
-	private _operation: FileSopOperation | undefined;
+	private _operation: SvgSopOperation | undefined;
 	async cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new FileSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new SvgSopOperation(this.scene(), this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}
 
-	static PARAM_CALLBACK_reload(node: FileSopNode) {
+	static PARAM_CALLBACK_reload(node: SvgSopNode) {
 		node.param_callback_reload();
 	}
 	private param_callback_reload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		this.p.url.setDirty();
-		// this.setDirty()
 	}
 }

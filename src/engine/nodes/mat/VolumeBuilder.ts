@@ -26,11 +26,11 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVol
 	static type() {
 		return 'volumeBuilder';
 	}
-	public used_assembler(): Readonly<AssemblerName.GL_VOLUME> {
+	public usedAssembler(): Readonly<AssemblerName.GL_VOLUME> {
 		return AssemblerName.GL_VOLUME;
 	}
 	protected _create_assembler_controller() {
-		return Poly.assemblersRegister.assembler(this, this.used_assembler());
+		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
 	private _volume_controller = new VolumeController(this);
