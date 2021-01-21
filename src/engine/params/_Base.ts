@@ -18,6 +18,7 @@ import {
 	ParamValuePreConversionSerializedTypeMap,
 } from '../params/types/ParamValueSerializedTypeMap';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
+import {MethodDependency} from '../expressions/MethodDependency';
 
 type ComputeCallback = (value: void) => void;
 const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
@@ -61,6 +62,19 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		super(scene, 'BaseParam');
 		this._node = node;
 		this.initialize_param();
+	}
+	dispose() {
+		// if any direct predecessor is a MethodDependency,
+		// it must be disposed here
+		const predecessors = this.graphPredecessors();
+		for (let predecessor of predecessors) {
+			if (predecessor instanceof MethodDependency) {
+				predecessor.dispose();
+			}
+		}
+		this._expression_controller?.dispose();
+		super.dispose();
+		this._options?.dispose();
 	}
 	initialize_param() {}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))

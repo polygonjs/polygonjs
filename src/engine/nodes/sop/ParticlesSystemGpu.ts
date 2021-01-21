@@ -74,6 +74,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	static type() {
 		return 'particlesSystemGpu';
 	}
+
+	dispose() {
+		super.dispose();
+		this.gpu_controller.dispose();
+	}
+
 	get assemblerController() {
 		return this._assembler_controller;
 	}

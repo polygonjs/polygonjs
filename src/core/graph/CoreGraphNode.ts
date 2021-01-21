@@ -11,6 +11,12 @@ export class CoreGraphNode {
 		_scene.graph.add_node(this);
 		this._graph = _scene.graph;
 	}
+
+	dispose() {
+		this._dirty_controller.dispose();
+		this.graphRemove();
+	}
+
 	name() {
 		return this._name;
 	}

@@ -71,6 +71,12 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 	protected accepted_event_types() {
 		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
 	}
+
+	dispose() {
+		this.graph_node?.dispose();
+		super.dispose();
+	}
+
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(

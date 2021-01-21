@@ -48,6 +48,12 @@ export class ParticlesSystemGpuComputeController {
 
 	constructor(private node: ParticlesSystemGpuSopNode) {}
 
+	dispose() {
+		if (this._graph_node) {
+			this._graph_node.dispose();
+		}
+	}
+
 	set_persisted_texture_allocation_controller(controller: TextureAllocationsController) {
 		this._persisted_texture_allocations_controller = controller;
 	}

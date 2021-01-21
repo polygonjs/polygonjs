@@ -1,4 +1,5 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
+// import {MapUtils} from '../MapUtils';
 import {CoreGraphNode} from './CoreGraphNode';
 
 export type CoreGraphNodeId = number;
@@ -9,7 +10,26 @@ export class CoreGraph {
 	private _scene: PolyScene | undefined;
 	private _successors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
 	private _predecessors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
+	// private _successorsCount: Map<CoreGraphNodeId, number> = new Map();
+	// private _predecessorsCount: Map<CoreGraphNodeId, number> = new Map();
 	private _nodes_by_id: Map<number, CoreGraphNode> = new Map();
+	private _nodesCount = 0;
+
+	private _debugging = false;
+	private _addedNodesDuringDebugging: Map<CoreGraphNodeId, CoreGraphNode> = new Map();
+	startDebugging() {
+		this._debugging = true;
+		console.log('CoreGraph.startDebugging', this._next_id);
+	}
+	stopDebugging() {
+		this._debugging = false;
+		console.log('CoreGraph.stopDebugging', this._next_id);
+	}
+	printDebug() {
+		this._addedNodesDuringDebugging.forEach((node, nodeId) => {
+			console.log(nodeId, node, node.graphPredecessors(), node.graphSuccessors());
+		});
+	}
 
 	set_scene(scene: PolyScene) {
 		this._scene = scene;
@@ -43,6 +63,10 @@ export class CoreGraph {
 	}
 	add_node(node: CoreGraphNode) {
 		this._nodes_by_id.set(node.graphNodeId(), node);
+		this._nodesCount += 1;
+		if (this._debugging) {
+			this._addedNodesDuringDebugging.set(node.graphNodeId(), node);
+		}
 		// this._successors.set(node.graphNodeId(), new Set());
 		// this._predecessors.set(node.graphNodeId(), new Set());
 	}
@@ -50,6 +74,14 @@ export class CoreGraph {
 		this._nodes_by_id.delete(node.graphNodeId());
 		this._successors.delete(node.graphNodeId());
 		this._predecessors.delete(node.graphNodeId());
+		this._nodesCount -= 1;
+
+		if (this._debugging) {
+			this._addedNodesDuringDebugging.delete(node.graphNodeId());
+		}
+	}
+	nodesCount() {
+		return this._nodesCount;
 	}
 	connect(src: CoreGraphNode, dest: CoreGraphNode, check_if_graph_may_have_cycle = true): boolean {
 		const src_id = src.graphNodeId();
@@ -162,6 +194,8 @@ export class CoreGraph {
 			return;
 		}
 		node_successors.add(dest_id);
+		// MapUtils.decrementEntry(this._successorsCount, src_id);
+
 		// set predecessors
 		let node_predecessors = this._predecessors.get(dest_id);
 		if (!node_predecessors) {
@@ -169,12 +203,14 @@ export class CoreGraph {
 			this._predecessors.set(dest_id, node_predecessors);
 		}
 		node_predecessors.add(src_id);
+		// MapUtils.decrementEntry(this._successorsCount, dest_id);
 	}
 	private _remove_connection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
 		// remove successors
 		let node_successors = this._successors.get(src_id);
 		if (node_successors) {
 			node_successors.delete(dest_id);
+			// MapUtils.decrementEntry(this._successorsCount, src_id);
 			if (node_successors.size == 0) {
 				this._successors.delete(src_id);
 			}
@@ -183,6 +219,7 @@ export class CoreGraph {
 		let node_predecessors = this._predecessors.get(dest_id);
 		if (node_predecessors) {
 			node_predecessors.delete(src_id);
+			// MapUtils.decrementEntry(this._successorsCount, dest_id);
 			if (node_predecessors.size == 0) {
 				this._predecessors.delete(dest_id);
 			}

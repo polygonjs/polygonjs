@@ -196,6 +196,11 @@ export class OptionsController {
 	constructor(private _param: BaseParamType) {
 		// this._options = lodash_cloneDeep(this._default_options);
 	}
+	dispose() {
+		this._options[CALLBACK_OPTION] = undefined;
+		this._options[CALLBACK_STRING_OPTION] = undefined;
+		this._visibility_graph_node?.dispose();
+	}
 
 	set(options: ParamOptions) {
 		this._default_options = options;

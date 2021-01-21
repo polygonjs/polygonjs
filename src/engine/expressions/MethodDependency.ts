@@ -18,6 +18,8 @@ export class MethodDependency extends CoreGraphNode {
 	) {
 		super(param.scene(), 'MethodDependency');
 
+		param.expression_controller?.registerMethodDependency(this)
+
 		this.addPostDirtyHook('_update_from_name_change', this._update_from_name_change_bound);
 	}
 	_update_from_name_change(trigger?: CoreGraphNode) {

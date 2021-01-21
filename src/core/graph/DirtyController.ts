@@ -16,6 +16,12 @@ export class DirtyController {
 
 	constructor(private node: CoreGraphNode) {}
 
+	dispose() {
+		this._cached_successors = undefined;
+		this._post_dirty_hooks = undefined;
+		this._post_dirty_hook_names = undefined;
+	}
+
 	isDirty(): boolean {
 		return this._dirty === true;
 	}

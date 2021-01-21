@@ -24,6 +24,15 @@ export class HierarchyChildrenController {
 		return (this._selection = this._selection || new CoreNodeSelection(this.node));
 	}
 	constructor(protected node: BaseNodeType, private _context: NodeContext) {}
+
+	dispose() {
+		const children = this.children();
+		for (let child of children) {
+			this.node.removeNode(child);
+		}
+		this._selection = undefined;
+	}
+
 	get context() {
 		return this._context;
 	}
@@ -246,6 +255,7 @@ export class HierarchyChildrenController {
 
 			this.node.lifecycle.run_on_child_remove_hooks(child_node);
 			child_node.lifecycle.run_on_delete_hooks();
+			child_node.dispose();
 			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graphNodeId()});
 		}
 	}

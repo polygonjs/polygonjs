@@ -14,6 +14,13 @@ export class NameController {
 		this._graph_node = new CoreGraphNode(node.scene(), 'node_name_controller');
 		// this._graph_node.set_scene(this.node.scene);
 	}
+
+	dispose() {
+		this._graph_node.dispose();
+		this._on_set_name_hooks = undefined;
+		this._on_set_fullPath_hooks = undefined;
+	}
+
 	get graph_node() {
 		return this._graph_node;
 	}

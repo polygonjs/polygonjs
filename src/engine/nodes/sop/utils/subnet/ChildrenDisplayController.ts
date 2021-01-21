@@ -77,6 +77,10 @@ export class SopSubnetChildrenDisplayController {
 	private _graph_node: CoreGraphNode | undefined;
 	constructor(private node: SubnetSopNodeLike<any>) {}
 
+	dispose() {
+		this._graph_node?.dispose();
+	}
+
 	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
 		return {
 			on_display_node_remove: () => {

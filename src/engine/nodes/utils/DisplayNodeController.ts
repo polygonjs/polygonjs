@@ -1,10 +1,11 @@
 import {BaseNodeClassWithDisplayFlag, BaseNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
+type DisplayControllerCallback = () => void;
 export interface DisplayNodeControllerCallbacks {
-	on_display_node_remove: () => void;
-	on_display_node_set: () => void;
-	on_display_node_update: () => void;
+	on_display_node_remove: DisplayControllerCallback;
+	on_display_node_set: DisplayControllerCallback;
+	on_display_node_update: DisplayControllerCallback;
 }
 
 /*
@@ -14,9 +15,9 @@ export class DisplayNodeController {
 	private _initialized: boolean = false;
 	private _graph_node: CoreGraphNode;
 	private _display_node: BaseNodeClassWithDisplayFlag | undefined = undefined;
-	private _on_display_node_remove_callback: () => void;
-	private _on_display_node_set_callback: () => void;
-	private _on_display_node_update_callback: () => void;
+	private _on_display_node_remove_callback: DisplayControllerCallback | undefined;
+	private _on_display_node_set_callback: DisplayControllerCallback | undefined;
+	private _on_display_node_update_callback: DisplayControllerCallback | undefined;
 
 	// TODO: the node could be a different than BaseNodeType
 	// at least there should be a way to infer that it is a node
@@ -27,6 +28,10 @@ export class DisplayNodeController {
 		this._on_display_node_remove_callback = callbacks.on_display_node_remove;
 		this._on_display_node_set_callback = callbacks.on_display_node_set;
 		this._on_display_node_update_callback = callbacks.on_display_node_update;
+	}
+
+	dispose() {
+		this._graph_node.dispose();
 	}
 
 	get display_node() {
@@ -57,7 +62,9 @@ export class DisplayNodeController {
 			}
 		});
 		this._graph_node.dirtyController.addPostDirtyHook('_request_display_node_container', () => {
-			this._on_display_node_update_callback();
+			if (this._on_display_node_update_callback) {
+				this._on_display_node_update_callback();
+			}
 		});
 	}
 
@@ -71,12 +78,16 @@ export class DisplayNodeController {
 			if (old_display_node) {
 				old_display_node.flags.display.set(false);
 				this._graph_node.removeGraphInput(old_display_node);
-				this._on_display_node_remove_callback();
+				if (this._on_display_node_remove_callback) {
+					this._on_display_node_remove_callback();
+				}
 			}
 			this._display_node = new_display_node;
 			if (this._display_node) {
 				this._graph_node.addGraphInput(this._display_node);
-				this._on_display_node_set_callback();
+				if (this._on_display_node_set_callback) {
+					this._on_display_node_set_callback();
+				}
 			}
 		}
 	}

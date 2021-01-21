@@ -15,6 +15,10 @@ export class ParamsLabelController {
 	// private _graph_node: CoreGraphNode | undefined;
 	constructor() {}
 
+	dispose() {
+		this._callback = undefined;
+	}
+
 	params() {
 		return this._params;
 	}

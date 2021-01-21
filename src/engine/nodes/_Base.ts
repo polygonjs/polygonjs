@@ -263,6 +263,17 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	removeNode(node: BaseNodeType) {
 		this.childrenController?.removeNode(node);
 	}
+	dispose() {
+		super.dispose();
+		this.setParent(null);
+		this.io.inputs.dispose();
+		this.lifecycle.dispose();
+		this.display_node_controller?.dispose();
+		this.nameController.dispose();
+		this.childrenController?.dispose();
+		this.params.dispose();
+	}
+
 	children() {
 		return this.childrenController?.children() || [];
 	}

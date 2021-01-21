@@ -28,6 +28,20 @@ export class InputsController<NC extends NodeContext> {
 
 	// clonable
 
+	dispose() {
+		if (this._graph_node) {
+			this._graph_node.dispose();
+		}
+		for (let graph_node of this._graph_node_inputs) {
+			if (graph_node) {
+				graph_node.dispose();
+			}
+		}
+		// hooks
+		this._on_update_hooks = undefined;
+		this._on_update_hook_names = undefined;
+	}
+
 	// private _user_inputs_clonable_states: InputCloneMode[] | undefined;
 	// private _inputs_clonable_states: InputCloneMode[] | undefined;
 	// private _inputs_cloned_state: boolean[] = [];

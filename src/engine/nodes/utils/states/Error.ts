@@ -8,7 +8,7 @@ export class ErrorState extends BaseState {
 	set(message: string | undefined) {
 		if (this._message != message) {
 			if (message) {
-				Poly.warn('error', message, this.node.fullPath());
+				Poly.warn(`[${this.node.fullPath()}] error: '${message}'`);
 			}
 			this._message = message;
 			this.on_update();

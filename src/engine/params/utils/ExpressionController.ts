@@ -5,6 +5,8 @@ import {CoreEntity} from '../../../core/geometry/Entity';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
 import {CoreObject} from '../../../core/geometry/Object';
+import {MethodDependency} from '../../expressions/MethodDependency';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 // type ParamTypeElem = ParamType;
 type EntityCallback<T extends ParamType> = (
@@ -25,6 +27,7 @@ export class ExpressionController<T extends ParamType> {
 	protected _entities: CoreEntity[] | undefined;
 	protected _entity_callback: EntityCallback<T> | undefined;
 	protected _manager: ExpressionManager | undefined;
+	protected _method_dependencies_by_graph_node_id: Map<CoreGraphNodeId, MethodDependency> | undefined;
 	// private _reset_bound = this.reset.bind(this);
 	constructor(protected param: BaseParamType) {
 		// this.param.dirtyController.addPostDirtyHook('expression_controller_reset', this._reset_bound);
@@ -32,6 +35,19 @@ export class ExpressionController<T extends ParamType> {
 	// remove_dirty_hook() {
 	// 	// this.param.dirtyController.removePostDirtyHook('expression_controller_reset');
 	// }
+	dispose() {
+		this._resetMethodDependencies();
+	}
+	private _resetMethodDependencies() {
+		this._method_dependencies_by_graph_node_id?.forEach((method_dependency) => {
+			method_dependency.dispose();
+		});
+		this._method_dependencies_by_graph_node_id?.clear();
+	}
+	registerMethodDependency(method_dependency: MethodDependency) {
+		this._method_dependencies_by_graph_node_id = this._method_dependencies_by_graph_node_id || new Map();
+		this._method_dependencies_by_graph_node_id.set(method_dependency.graphNodeId(), method_dependency);
+	}
 
 	active() {
 		return this._expression != null;
@@ -63,6 +79,7 @@ export class ExpressionController<T extends ParamType> {
 		this.param.scene().expressionsController.deregister_param(this.param);
 
 		if (this._expression != expression) {
+			this._resetMethodDependencies();
 			this._expression = expression;
 
 			if (this._expression) {

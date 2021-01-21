@@ -72,6 +72,26 @@ export class ParamsController {
 
 	constructor(public readonly node: BaseNodeType) {}
 
+	dispose() {
+		if (this._params_node) {
+			this._params_node.dispose();
+		}
+
+		// dispose params
+		for (let param of this.all) {
+			param.dispose();
+		}
+
+		// hooks
+		this._post_create_params_hook_names = undefined;
+		this._post_create_params_hooks = undefined;
+		this._on_scene_load_hooks = undefined;
+		this._on_scene_load_hook_names = undefined;
+
+		//
+		this._label_controller?.dispose();
+	}
+
 	private init_dependency_node() {
 		if (!this._params_node) {
 			// TODO: consider not having a params_node for nodes which have no parameters

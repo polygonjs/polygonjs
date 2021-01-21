@@ -57,6 +57,7 @@ import './engine/params/utils/TimeDependent';
 
 QUnit.module('nodes utils');
 import './engine/nodes/utils/ChildrenContext';
+import './engine/nodes/utils/Memory';
 
 QUnit.module('anim');
 import './engine/nodes/anim/Track';

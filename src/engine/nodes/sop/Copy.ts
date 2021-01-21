@@ -233,6 +233,12 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.dirtyController.set_forbidden_trigger_nodes([stamp_node]);
 		return stamp_node;
 	}
+	dispose() {
+		super.dispose();
+		if (this._stamp_node) {
+			this._stamp_node.dispose();
+		}
+	}
 
 	// private set_dirty_allowed(original_trigger_graph_node: CoreGraphNode): boolean {
 	// 	return original_trigger_graph_node.graphNodeId() !== this.stamp_node.graphNodeId();

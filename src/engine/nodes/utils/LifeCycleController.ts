@@ -14,6 +14,14 @@ export class LifeCycleController {
 	private _on_delete_hooks: Callback[] | undefined;
 	constructor(protected node: BaseNodeType) {}
 
+	dispose() {
+		this._on_child_add_hooks = undefined;
+		this._on_child_remove_hooks = undefined;
+		this._on_create_hooks = undefined;
+		this._on_add_hooks = undefined;
+		this._on_delete_hooks = undefined;
+	}
+
 	set_creation_completed() {
 		if (!this._creation_completed) {
 			this._creation_completed = true;
