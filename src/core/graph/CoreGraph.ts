@@ -1,17 +1,13 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
-// import {MapUtils} from '../MapUtils';
 import {CoreGraphNode} from './CoreGraphNode';
 
 export type CoreGraphNodeId = number;
 
 export class CoreGraph {
-	// private _graph: Graph;
 	private _next_id: CoreGraphNodeId = 0;
 	private _scene: PolyScene | undefined;
 	private _successors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
 	private _predecessors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
-	// private _successorsCount: Map<CoreGraphNodeId, number> = new Map();
-	// private _predecessorsCount: Map<CoreGraphNodeId, number> = new Map();
 	private _nodes_by_id: Map<number, CoreGraphNode> = new Map();
 	private _nodesCount = 0;
 
@@ -53,9 +49,7 @@ export class CoreGraph {
 		}
 		return nodes;
 	}
-	// TODO: this should return CoreGraphNodeId|null
 	node_from_id(id: number): CoreGraphNode | undefined {
-		// return this._graph.node(id);
 		return this._nodes_by_id.get(id);
 	}
 	has_node(node: CoreGraphNode): boolean {
@@ -67,8 +61,6 @@ export class CoreGraph {
 		if (this._debugging) {
 			this._addedNodesDuringDebugging.set(node.graphNodeId(), node);
 		}
-		// this._successors.set(node.graphNodeId(), new Set());
-		// this._predecessors.set(node.graphNodeId(), new Set());
 	}
 	remove_node(node: CoreGraphNode) {
 		this._nodes_by_id.delete(node.graphNodeId());
@@ -194,7 +186,6 @@ export class CoreGraph {
 			return;
 		}
 		node_successors.add(dest_id);
-		// MapUtils.decrementEntry(this._successorsCount, src_id);
 
 		// set predecessors
 		let node_predecessors = this._predecessors.get(dest_id);
@@ -203,14 +194,12 @@ export class CoreGraph {
 			this._predecessors.set(dest_id, node_predecessors);
 		}
 		node_predecessors.add(src_id);
-		// MapUtils.decrementEntry(this._successorsCount, dest_id);
 	}
 	private _remove_connection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
 		// remove successors
 		let node_successors = this._successors.get(src_id);
 		if (node_successors) {
 			node_successors.delete(dest_id);
-			// MapUtils.decrementEntry(this._successorsCount, src_id);
 			if (node_successors.size == 0) {
 				this._successors.delete(src_id);
 			}
@@ -219,7 +208,6 @@ export class CoreGraph {
 		let node_predecessors = this._predecessors.get(dest_id);
 		if (node_predecessors) {
 			node_predecessors.delete(src_id);
-			// MapUtils.decrementEntry(this._successorsCount, dest_id);
 			if (node_predecessors.size == 0) {
 				this._predecessors.delete(dest_id);
 			}
@@ -241,7 +229,6 @@ export class CoreGraph {
 
 			for (let id of next_ids) {
 				ids_by_id.set(id, true);
-				// ids.push(id);
 			}
 			for (let id of next_next_ids) {
 				next_ids.push(id);

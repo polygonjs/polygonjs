@@ -36,21 +36,4 @@ export class MapUtils {
 			map.set(key, new_elements);
 		}
 	}
-
-	// static incrementEntry<K>(map: Map<K, number>, key: K) {
-	// 	const entry = map.get(key);
-	// 	if (entry != null) {
-	// 		map.set(key, entry + 1);
-	// 	} else {
-	// 		map.set(key, 1);
-	// 	}
-	// }
-	// static decrementEntry<K>(map: Map<K, number>, key: K) {
-	// 	const entry = map.get(key);
-	// 	if (entry != null) {
-	// 		map.set(key, entry - 1);
-	// 	} else {
-	// 		map.set(key, 0);
-	// 	}
-	// }
 }
