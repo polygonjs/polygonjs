@@ -13,7 +13,7 @@ import {BaseNodeType} from '../_Base';
 import {CsvLoader} from '../../../core/loader/geometry/Csv';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {ASSETS_ROOT} from '../../../../tests/helpers/AssetsUtils';
+import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 
 export enum DataType {
 	JSON = 'json',

@@ -5,7 +5,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreLoaderGeometry} from '../../loader/Geometry';
-import {ASSETS_ROOT} from '../../../../tests/helpers/AssetsUtils';
+import {ASSETS_ROOT} from '../../loader/AssetsUtils';
 
 interface FileSopParams extends DefaultOperationParams {
 	url: string;

@@ -4,7 +4,7 @@ import {CoreGroup} from '../../geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
-import {ASSETS_ROOT} from '../../../../tests/helpers/AssetsUtils';
+import {ASSETS_ROOT} from '../../loader/AssetsUtils';
 import {CoreSVGLoader} from '../../loader/SVG';
 
 interface SvgSopParams extends DefaultOperationParams {

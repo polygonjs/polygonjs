@@ -1,7 +1,7 @@
 import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/core/operations/sop/Hierarchy';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {ASSETS_ROOT} from '../../../helpers/AssetsUtils';
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
 async function with_file(path: string) {
 	const geo1 = window.geo1;

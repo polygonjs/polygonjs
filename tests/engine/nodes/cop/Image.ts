@@ -1,5 +1,5 @@
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {ASSETS_ROOT} from '../../../helpers/AssetsUtils';
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
 QUnit.test('COP image simple default', async (assert) => {
 	const COP = window.COP;
