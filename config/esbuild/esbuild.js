@@ -50,9 +50,8 @@ function has_allowed_extension(file_path) {
 }
 function is_glsl(file_path) {
     var elements = file_path.split('.');
-    elements.shift();
-    var ext = elements.join('.');
-    return ext == 'glsl';
+    var short_ext = elements[elements.length - 1];
+    return short_ext == 'glsl';
 }
 function walk(dir, filter_callback) {
     var files_list = [];

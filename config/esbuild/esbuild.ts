@@ -15,9 +15,8 @@ function has_allowed_extension(file_path: string) {
 }
 function is_glsl(file_path: string) {
 	const elements = file_path.split('.');
-	elements.shift();
-	const ext = elements.join('.');
-	return ext == 'glsl';
+	const short_ext = elements[elements.length - 1];
+	return short_ext == 'glsl';
 }
 
 type FileCallback = (path: string) => boolean;
