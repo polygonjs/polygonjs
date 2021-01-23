@@ -39,12 +39,14 @@ exports.__esModule = true;
 var esbuild_1 = require("esbuild");
 var fs = require("fs");
 var path = require("path");
+var disallowed_long_extensions = ['d.ts'];
 var allowed_extensions = ['js', 'ts', 'glsl'];
 function has_allowed_extension(file_path) {
     var elements = file_path.split('.');
     elements.shift();
-    var ext = elements.join('.');
-    return allowed_extensions.includes(ext);
+    var long_ext = elements.join('.');
+    var short_ext = elements[elements.length - 1];
+    return allowed_extensions.includes(short_ext) && !disallowed_long_extensions.includes(long_ext);
 }
 function is_glsl(file_path) {
     var elements = file_path.split('.');

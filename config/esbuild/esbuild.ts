@@ -4,12 +4,14 @@ import {BuildOptions} from 'esbuild/lib/main';
 import * as fs from 'fs';
 import * as path from 'path';
 
+const disallowed_long_extensions = ['d.ts'];
 const allowed_extensions = ['js', 'ts', 'glsl'];
 function has_allowed_extension(file_path: string) {
 	const elements = file_path.split('.');
 	elements.shift();
-	const ext = elements.join('.');
-	return allowed_extensions.includes(ext);
+	const long_ext = elements.join('.');
+	const short_ext = elements[elements.length - 1];
+	return allowed_extensions.includes(short_ext) && !disallowed_long_extensions.includes(long_ext);
 }
 function is_glsl(file_path: string) {
 	const elements = file_path.split('.');
