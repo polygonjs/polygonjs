@@ -85,7 +85,8 @@ module.exports = (env) => {
 	// currently not using contenthash since we will fetch the generated file with a version anyway
 	// ie: https://unpkg.com/polygonjs-engine@1.1.23/dist/polygonjs-engine.js
 	common_options.output.chunkFilename = '[name].js'; //'[name].[contenthash].js';
-	common_options.output.publicPath = `https://unpkg.com/polygonjs-engine@${POLYGONJS_VERSION}/dist/`; // a default is needed
+	// common_options.output.publicPath = `https://unpkg.com/polygonjs-engine@${POLYGONJS_VERSION}/dist/`; // a default
+	common_options.output.publicPath = `https://unpkg.com/@polygonjs/polygonjs@${POLYGONJS_VERSION}/dist/`; // a default is neededis needed
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}
