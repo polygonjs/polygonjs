@@ -7,6 +7,10 @@ export function AttributeGlNodePresets() {
 			node.p.name.set('color');
 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
 		},
+		instanceColor: function (node: AttributeGlNode) {
+			node.p.name.set('instanceColor');
+			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
+		},
 		instanceOrientation: function (node: AttributeGlNode) {
 			node.p.name.set('instanceOrientation');
 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));

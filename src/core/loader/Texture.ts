@@ -10,7 +10,7 @@ import {TextureContainer} from '../../engine/containers/Texture';
 import {Poly} from '../../engine/Poly';
 import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
 import {CoreUserAgent} from '../UserAgent';
-
+import {ASSETS_ROOT} from './AssetsUtils';
 interface VideoSourceTypeByExt {
 	ogg: string;
 	ogv: string;
@@ -33,8 +33,8 @@ enum Extension {
 }
 
 export class CoreTextureLoader {
-	static PARAM_DEFAULT = '/examples/textures/uv.jpg';
-	static PARAM_ENV_DEFAULT = '/examples/textures/piz_compressed.exr';
+	static PARAM_DEFAULT = `${ASSETS_ROOT}/textures/uv.jpg`;
+	static PARAM_ENV_DEFAULT = `${ASSETS_ROOT}/textures/piz_compressed.exr`;
 
 	static VIDEO_EXTENSIONS = ['mp4', 'webm', 'ogv'];
 	static VIDEO_SOURCE_TYPE_BY_EXT: VideoSourceTypeByExt = {

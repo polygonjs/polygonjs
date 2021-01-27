@@ -10,6 +10,7 @@ import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
 import {AnimationsSopNode} from '../../../nodes/sop/Animations';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
+import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
 import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
 import {AttribCreateSopNode} from '../../../nodes/sop/AttribCreate';
 import {AttribDeleteSopNode} from '../../../nodes/sop/AttribDelete';
@@ -102,6 +103,7 @@ export interface GeoNodeChildrenMap {
 	animationMixer: AnimationMixerSopNode;
 	animations: AnimationsSopNode;
 	attribAddMult: AttribAddMultSopNode;
+	attribCast: AttribCastSopNode;
 	attribCopy: AttribCopySopNode;
 	attribCreate: AttribCreateSopNode;
 	attribDelete: AttribDeleteSopNode;
@@ -191,6 +193,7 @@ export interface GeoNodeChildrenMap {
 
 import {AddSopOperation} from '../../../../core/operations/sop/Add';
 import {AttribAddMultSopOperation} from '../../../../core/operations/sop/AttribAddMult';
+import {AttribCastSopOperation} from '../../../../core/operations/sop/AttribCast';
 import {AttribCopySopOperation} from '../../../../core/operations/sop/AttribCopy';
 import {AttribCreateSopOperation} from '../../../../core/operations/sop/AttribCreate';
 import {AttribNormalizeSopOperation} from '../../../../core/operations/sop/AttribNormalize';
@@ -227,6 +230,7 @@ export class SopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerOperation(AddSopOperation);
 		poly.registerOperation(AttribAddMultSopOperation);
+		poly.registerOperation(AttribCastSopOperation);
 		poly.registerOperation(AttribCopySopOperation);
 		poly.registerOperation(AttribCreateSopOperation);
 		poly.registerOperation(AttribNormalizeSopOperation);
@@ -262,6 +266,7 @@ export class SopRegister {
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
 		poly.registerNode(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
+		poly.registerNode(AttribCastSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribDeleteSopNode, CATEGORY_SOP.ATTRIBUTE);

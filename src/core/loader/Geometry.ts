@@ -251,7 +251,7 @@ export class CoreLoaderGeometry {
 
 	private static gltf_loader: GLTFLoader | undefined;
 	private static draco_loader: DRACOLoader | undefined;
-	static async loader_for_glb(scene: PolyScene) {
+	static async loader_for_glb() {
 		const gltf_module = await Poly.modulesRegister.module(ModuleName.GLTFLoader);
 		const draco_module = await Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (gltf_module && draco_module) {
@@ -267,7 +267,7 @@ export class CoreLoaderGeometry {
 		}
 	}
 	async loader_for_glb() {
-		return CoreLoaderGeometry.loader_for_glb(this.scene);
+		return CoreLoaderGeometry.loader_for_glb();
 	}
 
 	async loader_for_obj() {

@@ -120,6 +120,7 @@ import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AnimationCopy';
 import './engine/nodes/sop/AnimationMixer';
 import './engine/nodes/sop/AttribAddMult';
+import './engine/nodes/sop/AttribCast';
 import './engine/nodes/sop/AttribCopy';
 import './engine/nodes/sop/AttribCreate';
 import './engine/nodes/sop/AttribDelete';

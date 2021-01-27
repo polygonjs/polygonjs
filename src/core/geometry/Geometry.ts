@@ -24,6 +24,8 @@ import {TypeAssert} from '../../engine/poly/Assert';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
+import {CoreString} from '../String';
+import {GroupString} from './Group';
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -100,9 +102,27 @@ export class CoreGeometry {
 		}
 	}
 
-	attribNames(): string[] {
-		return Object.keys(this._geometry.attributes);
+	static attribNames(geometry: BufferGeometry): string[] {
+		return Object.keys(geometry.attributes);
 	}
+	attribNames(): string[] {
+		return CoreGeometry.attribNames(this._geometry);
+	}
+	static attribNamesMatchingMask(geometry: BufferGeometry, masks_string: GroupString) {
+		const masks = CoreString.attribNames(masks_string);
+
+		const matching_attrib_names: string[] = [];
+		for (let attrib_name of this.attribNames(geometry)) {
+			for (let mask of masks) {
+				if (CoreString.matchMask(attrib_name, mask)) {
+					matching_attrib_names.push(attrib_name);
+				}
+			}
+		}
+
+		return ArrayUtils.uniq(matching_attrib_names);
+	}
+
 	attribSizes() {
 		const h: PolyDictionary<AttribSize> = {};
 		for (let attrib_name of this.attribNames()) {
