@@ -38,6 +38,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					nodes.push(node);
 				}
 			} catch (e) {
+				console.error(`error importing node: cannot create with type ${node_type}`, e);
 				const nodeType = CoreString.camelCase(node_type);
 				try {
 					// try with camelCased type

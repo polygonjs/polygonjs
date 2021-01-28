@@ -54,22 +54,47 @@ console.log(`esbuild: transpiling ${files_list.length} files`);
 const outdir = './dist/src';
 const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 
-const options: BuildOptions = {
-	// entryPoints: ['./src/engine/index.ts'],
-	entryPoints: files_list,
-	target: 'esnext',
-	outdir: outdir,
-	// minify: true,
-	// minifyWhitespace: false,
-	// minifyIdentifiers: false,
-	// minifySyntax: false,
-	// bundle: true,
-	// external: ['require', 'fs', 'path'],
-	define: {__POLYGONJS_VERSION__: POLYGONJS_VERSION},
-	loader: {
-		'.glsl': 'text',
-	},
-};
+function getTarget() {
+	const tsconfig = fs.readFileSync(path.resolve(process.cwd(), './tsconfig.json'), 'utf-8');
+	const lines = tsconfig.split('\n');
+	let target: string = '2020';
+	for (let line of lines) {
+		if (line.includes('target')) {
+			const new_target = line.split(': "')[1].split(',')[0].replace('"', '');
+			target = new_target.toLowerCase();
+		}
+	}
+	console.log('target', target);
+
+	return target;
+}
+
+function getOptions() {
+	const target = getTarget();
+	if (!target) {
+		throw 'no target found in tsconfig.json. is the file present?';
+	}
+	if (typeof target != 'string') {
+		throw 'target is not a string';
+	}
+	const options: BuildOptions = {
+		// entryPoints: ['./src/engine/index.ts'],
+		entryPoints: files_list,
+		target: target, //'ES2019', //'esnext', // make sure to have same target as in tsconfig.json
+		outdir: outdir,
+		// minify: true,
+		// minifyWhitespace: false,
+		// minifyIdentifiers: false,
+		// minifySyntax: false,
+		// bundle: true,
+		// external: ['require', 'fs', 'path'],
+		define: {__POLYGONJS_VERSION__: POLYGONJS_VERSION},
+		loader: {
+			'.glsl': 'text',
+		},
+	};
+	return options;
+}
 
 function fix_glsl_files() {
 	// then we rename the glsl files that have been transpile from bla.glsl to bla.js into bla.glsl.js:
@@ -91,6 +116,8 @@ function fix_glsl_files() {
 }
 
 async function start() {
+	const options = getOptions();
+	console.log('options', options);
 	await build(options).catch(() => {
 		console.log('IN CATCH');
 		process.exit(1);

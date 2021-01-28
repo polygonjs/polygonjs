@@ -85,22 +85,46 @@ console.log("esbuild: transpiling " + files_list.length + " files");
 // // const out = './dist/out.js';
 var outdir = './dist/src';
 var POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
-var options = {
-    // entryPoints: ['./src/engine/index.ts'],
-    entryPoints: files_list,
-    target: 'esnext',
-    outdir: outdir,
-    // minify: true,
-    // minifyWhitespace: false,
-    // minifyIdentifiers: false,
-    // minifySyntax: false,
-    // bundle: true,
-    // external: ['require', 'fs', 'path'],
-    define: { __POLYGONJS_VERSION__: POLYGONJS_VERSION },
-    loader: {
-        '.glsl': 'text'
+function getTarget() {
+    var tsconfig = fs.readFileSync(path.resolve(process.cwd(), './tsconfig.json'), 'utf-8');
+    var lines = tsconfig.split('\n');
+    var target = '2020';
+    for (var _i = 0, lines_1 = lines; _i < lines_1.length; _i++) {
+        var line = lines_1[_i];
+        if (line.includes('target')) {
+            var new_target = line.split(': "')[1].split(',')[0].replace('"', '');
+            target = new_target.toLowerCase();
+        }
     }
-};
+    console.log('target', target);
+    return target;
+}
+function getOptions() {
+    var target = getTarget();
+    if (!target) {
+        throw 'no target found in tsconfig.json. is the file present?';
+    }
+    if (typeof target != 'string') {
+        throw 'target is not a string';
+    }
+    var options = {
+        // entryPoints: ['./src/engine/index.ts'],
+        entryPoints: files_list,
+        target: target,
+        outdir: outdir,
+        // minify: true,
+        // minifyWhitespace: false,
+        // minifyIdentifiers: false,
+        // minifySyntax: false,
+        // bundle: true,
+        // external: ['require', 'fs', 'path'],
+        define: { __POLYGONJS_VERSION__: POLYGONJS_VERSION },
+        loader: {
+            '.glsl': 'text'
+        }
+    };
+    return options;
+}
 function fix_glsl_files() {
     // then we rename the glsl files that have been transpile from bla.glsl to bla.js into bla.glsl.js:
     var glsl_files = find_glsl_files();
@@ -123,12 +147,16 @@ function fix_glsl_files() {
 }
 function start() {
     return __awaiter(this, void 0, void 0, function () {
+        var options;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, esbuild_1.build(options)["catch"](function () {
-                        console.log('IN CATCH');
-                        process.exit(1);
-                    })];
+                case 0:
+                    options = getOptions();
+                    console.log('options', options);
+                    return [4 /*yield*/, esbuild_1.build(options)["catch"](function () {
+                            console.log('IN CATCH');
+                            process.exit(1);
+                        })];
                 case 1:
                     _a.sent();
                     fix_glsl_files();
