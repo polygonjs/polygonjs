@@ -1,7 +1,6 @@
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {TextureLoader} from 'three/src/loaders/TextureLoader';
 import {Texture} from 'three/src/textures/Texture';
-import {UnsignedByteType} from 'three/src/constants';
 import {CoreWalker} from '../Walker';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
@@ -32,6 +31,10 @@ enum Extension {
 	HDR = 'hdr',
 }
 
+interface TextureLoadOptions {
+	tdataType: boolean;
+	dataType: number;
+}
 export class CoreTextureLoader {
 	static PARAM_DEFAULT = `${ASSETS_ROOT}/textures/uv.jpg`;
 	static PARAM_ENV_DEFAULT = `${ASSETS_ROOT}/textures/piz_compressed.exr`;
@@ -45,7 +48,10 @@ export class CoreTextureLoader {
 
 	constructor(private _node: BaseNodeType, private _param: BaseParamType) {}
 
-	async load_texture_from_url_or_op(url: string): Promise<Texture | VideoTexture | null> {
+	async load_texture_from_url_or_op(
+		url: string,
+		options: TextureLoadOptions
+	): Promise<Texture | VideoTexture | null> {
 		let texture: Texture | null = null;
 		let found_node;
 
@@ -65,7 +71,7 @@ export class CoreTextureLoader {
 				this._node.states.error.set(`no node found in path '${node_path}'`);
 			}
 		} else {
-			texture = await this.load_url(url);
+			texture = await this.load_url(url, options);
 			if (texture) {
 				// param.mark_as_referencing_asset(url)
 				if (this._param.options.texture_as_env()) {
@@ -89,7 +95,7 @@ export class CoreTextureLoader {
 		return texture;
 	}
 
-	async load_url(url: string): Promise<Texture> {
+	async load_url(url: string, options: TextureLoadOptions): Promise<Texture> {
 		return new Promise(async (resolve, reject) => {
 			// url = this._resolve_url(url)
 			const ext = CoreTextureLoader.get_extension(url);
@@ -104,7 +110,7 @@ export class CoreTextureLoader {
 				const texture: VideoTexture = await this._load_as_video(url);
 				resolve(texture);
 			} else {
-				this.loader_for_ext(ext).then(async (loader) => {
+				this.loader_for_ext(ext, options).then(async (loader) => {
 					if (loader) {
 						CoreTextureLoader.increment_in_progress_loads_count();
 						await CoreTextureLoader.wait_for_max_concurrent_loads_queue_freed();
@@ -140,14 +146,14 @@ export class CoreTextureLoader {
 		}
 	}
 
-	async loader_for_ext(ext: string) {
+	async loader_for_ext(ext: string, options: TextureLoadOptions) {
 		const ext_lowercase = ext.toLowerCase() as keyof ThreeLoaderByExt;
 		switch (ext_lowercase) {
 			case Extension.EXR: {
-				return await this._exr_loader();
+				return await this._exr_loader(options);
 			}
 			case Extension.HDR: {
-				return await this._hdr_loader();
+				return await this._hdr_loader(options);
 			}
 			case Extension.BASIS: {
 				return await this._basis_loader();
@@ -156,17 +162,23 @@ export class CoreTextureLoader {
 		return new TextureLoader();
 	}
 
-	private async _exr_loader() {
+	private async _exr_loader(options: TextureLoadOptions) {
 		const module = await Poly.modulesRegister.module(ModuleName.EXRLoader);
 		if (module) {
-			return new module.EXRLoader();
+			const loader = new module.EXRLoader();
+			if (options.tdataType) {
+				loader.setDataType(options.dataType);
+			}
+			return loader;
 		}
 	}
-	private async _hdr_loader() {
+	private async _hdr_loader(options: TextureLoadOptions) {
 		const module = await Poly.modulesRegister.module(ModuleName.RGBELoader);
 		if (module) {
 			const loader = new module.RGBELoader();
-			loader.setDataType(UnsignedByteType);
+			if (options.tdataType) {
+				loader.setDataType(options.dataType);
+			}
 			return loader;
 		}
 	}
@@ -301,7 +313,8 @@ export class CoreTextureLoader {
 	// }
 
 	static get_extension(url: string) {
-		const elements = url.split('.');
+		const url_without_params = url.split('?')[0];
+		const elements = url_without_params.split('.');
 		return elements[elements.length - 1].toLowerCase();
 	}
 	static replace_extension(url: string, new_extension: string) {

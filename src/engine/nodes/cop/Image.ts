@@ -108,7 +108,10 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		const url_param = this.p.url;
 		this._texture_loader = this._texture_loader || new CoreTextureLoader(this, url_param);
 		try {
-			texture = await this._texture_loader.load_texture_from_url_or_op(url);
+			texture = await this._texture_loader.load_texture_from_url_or_op(url, {
+				tdataType: this.pv.ttype && this.pv.tadvanced,
+				dataType: this.pv.type,
+			});
 			if (texture) {
 				texture.matrixAutoUpdate = false;
 			}

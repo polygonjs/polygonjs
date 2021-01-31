@@ -27,12 +27,18 @@ import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {PolyDictionary} from '../../../types/GlobalTypes';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+
+type VectorComponent = 'x' | 'y' | 'z' | 'w';
+const COMPONENT_NAMES: Array<VectorComponent> = ['x', 'y', 'z', 'w'];
 
 type ValueArrayByName = PolyDictionary<number[]>;
 
 import {AttribCreateSopOperation} from '../../../core/operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NumericAttribValueAsArray, PolyDictionary} from '../../../types/GlobalTypes';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	/** @param the group this applies to */
@@ -254,36 +260,52 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
 				let params = vparam.components;
-				let values_by_core_object_index: PolyDictionary<NumericAttribValueAsArray> = {};
+				let values_by_core_object_index: PolyDictionary<Vector2 | Vector3 | Vector4> = {};
 				// for (let component_param of params) {
 				// 	values.push(component_param.value);
 				// }
-				for (let core_object of core_objects) {
-					values_by_core_object_index[core_object.index()] = (<unknown>[]) as NumericAttribValueAsArray;
-				}
-				for (let component_index = 0; component_index < params.length; component_index++) {
-					const component_param = params[component_index];
-					if (component_param.has_expression() && component_param.expression_controller) {
-						await component_param.expression_controller.compute_expression_for_objects(
-							core_objects,
-							(core_object, value) => {
-								values_by_core_object_index[core_object.index()][component_index] = value;
+				const init_vector = this._vector_by_attrib_size(this.pv.size);
+				if (init_vector) {
+					for (let core_object of core_objects) {
+						values_by_core_object_index[core_object.index()] = init_vector;
+					}
+					for (let component_index = 0; component_index < params.length; component_index++) {
+						const component_param = params[component_index];
+						const component_name = COMPONENT_NAMES[component_index];
+						if (component_param.has_expression() && component_param.expression_controller) {
+							await component_param.expression_controller.compute_expression_for_objects(
+								core_objects,
+								(core_object, value) => {
+									const vector = values_by_core_object_index[core_object.index()] as Vector4;
+									vector[component_name] = value;
+								}
+							);
+						} else {
+							for (let core_object of core_objects) {
+								const vector = values_by_core_object_index[core_object.index()] as Vector4;
+								vector[component_name] = component_param.value;
 							}
-						);
-					} else {
-						for (let core_object of core_objects) {
-							values_by_core_object_index[core_object.index()][component_index] = component_param.value;
 						}
 					}
-				}
-				for (let i = 0; i < core_objects.length; i++) {
-					const core_object = core_objects[i];
-					const value = values_by_core_object_index[core_object.index()];
-					core_object.setAttribValue(this.pv.name, value);
+					for (let i = 0; i < core_objects.length; i++) {
+						const core_object = core_objects[i];
+						const value = values_by_core_object_index[core_object.index()];
+						core_object.setAttribValue(this.pv.name, value);
+					}
 				}
 			}
 		} else {
 			// no need to do work here, as this will be done in the operation
+		}
+	}
+	private _vector_by_attrib_size(size: number) {
+		switch (size) {
+			case 2:
+				return new Vector2(0, 0);
+			case 3:
+				return new Vector3(0, 0, 0);
+			case 4:
+				return new Vector4(0, 0, 0, 0);
 		}
 	}
 

@@ -2,37 +2,36 @@ import {Constructor, PolyDictionary} from '../../../../types/GlobalTypes';
 import {TypedCopNode} from '../_Base';
 import {Texture} from 'three/src/textures/Texture';
 import {
-	UVMapping,
-	CubeReflectionMapping,
-	CubeRefractionMapping,
-	EquirectangularReflectionMapping,
-	EquirectangularRefractionMapping,
-	CubeUVReflectionMapping,
-	CubeUVRefractionMapping,
-	ClampToEdgeWrapping,
-	RepeatWrapping,
-	MirroredRepeatWrapping,
+	// formats
+	AlphaFormat,
+	RedFormat,
+	RedIntegerFormat,
+	RGFormat,
+	RGIntegerFormat,
+	RGBFormat,
+	RGBIntegerFormat,
+	RGBAFormat,
+	RGBAIntegerFormat,
+	LuminanceFormat,
+	LuminanceAlphaFormat,
+	// RGBEFormat, //  removing as it is set to same value as RGBAFormat, so can be confusing
+	DepthFormat,
+	DepthStencilFormat,
 
-	// UnsignedByteType,
-	// ByteType,
-	// ShortType,
-	// UnsignedShortType,
-	// IntType,
-	// UnsignedIntType,
-	// FloatType,
-	// HalfFloatType,
-	// UnsignedShort4444Type,
-	// UnsignedShort5551Type,
-	// UnsignedShort565Type,
-	// UnsignedInt248Type,
-	// AlphaFormat,
-	// RGBFormat,
-	// RGBAFormat,
-	// LuminanceFormat,
-	// LuminanceAlphaFormat,
-	// RGBEFormat,
-	// DepthFormat,
-	// DepthStencilFormat,
+	// types
+	UnsignedByteType,
+	ByteType,
+	ShortType,
+	UnsignedShortType,
+	IntType,
+	UnsignedIntType,
+	FloatType,
+	HalfFloatType,
+	UnsignedShort4444Type,
+	UnsignedShort5551Type,
+	UnsignedShort565Type,
+	UnsignedInt248Type,
+
 	// encodings
 	LinearEncoding,
 	sRGBEncoding,
@@ -44,6 +43,17 @@ import {
 	RGBDEncoding,
 	BasicDepthPacking,
 	RGBADepthPacking,
+	// other
+	UVMapping,
+	CubeReflectionMapping,
+	CubeRefractionMapping,
+	EquirectangularReflectionMapping,
+	EquirectangularRefractionMapping,
+	CubeUVReflectionMapping,
+	CubeUVRefractionMapping,
+	ClampToEdgeWrapping,
+	RepeatWrapping,
+	MirroredRepeatWrapping,
 } from 'three/src/constants';
 import {
 	MAG_FILTER_DEFAULT_VALUE,
@@ -51,6 +61,37 @@ import {
 	MIN_FILTER_DEFAULT_VALUE,
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../../core/cop/ConstantFilter';
+
+const FORMATS = [
+	{AlphaFormat},
+	{RedFormat},
+	{RedIntegerFormat},
+	{RGFormat},
+	{RGIntegerFormat},
+	{RGBFormat},
+	{RGBIntegerFormat},
+	{RGBAFormat},
+	{RGBAIntegerFormat},
+	{LuminanceFormat},
+	{LuminanceAlphaFormat},
+	// {RGBEFormat},
+	{DepthFormat},
+	{DepthStencilFormat},
+];
+const TYPES = [
+	{UnsignedByteType},
+	{ByteType},
+	{ShortType},
+	{UnsignedShortType},
+	{IntType},
+	{UnsignedIntType},
+	{FloatType},
+	{HalfFloatType},
+	{UnsignedShort4444Type},
+	{UnsignedShort5551Type},
+	{UnsignedShort565Type},
+	{UnsignedInt248Type},
+];
 
 const MAPPINGS = [
 	{UVMapping},
@@ -96,6 +137,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				}),
 			},
 		});
+
 		/** @param toggle on to allow updating the texture mapping */
 		tmapping = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture mapping */
@@ -180,6 +222,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		tflipY = ParamConfig.BOOLEAN(0);
 		/** @param sets the flipY */
 		flipY = ParamConfig.BOOLEAN(0, {visibleIf: {tflipY: 1}});
+
 		/** @param toggle on to update the texture transform */
 		ttransform = ParamConfig.BOOLEAN(0);
 		/** @param updates the texture offset */
@@ -215,6 +258,42 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 				TextureParamsController.PARAM_CALLBACK_update_center(node as TextureCopNode);
 			},
 		});
+
+		/** @param toggle on to display advanced parameters */
+		tadvanced = ParamConfig.BOOLEAN(0);
+		/** @param toggle on to allow overriding the texture format */
+		tformat = ParamConfig.BOOLEAN(0, {
+			visibleIf: {tadvanced: 1},
+		});
+		/** @param sets the texture format */
+		format = ParamConfig.INTEGER(RGBAFormat, {
+			visibleIf: {tadvanced: 1, tformat: 1},
+			menu: {
+				entries: FORMATS.map((m) => {
+					return {
+						name: Object.keys(m)[0],
+						value: Object.values(m)[0] as number,
+					};
+				}),
+			},
+		});
+
+		/** @param toggle on to allow overriding the texture type */
+		ttype = ParamConfig.BOOLEAN(0, {
+			visibleIf: {tadvanced: 1},
+		});
+		/** @param sets the texture ty[e] */
+		type = ParamConfig.INTEGER(UnsignedByteType, {
+			visibleIf: {tadvanced: 1, ttype: 1},
+			menu: {
+				entries: TYPES.map((m) => {
+					return {
+						name: Object.keys(m)[0],
+						value: Object.values(m)[0] as number,
+					};
+				}),
+			},
+		});
 	};
 }
 
@@ -231,6 +310,14 @@ export class TextureParamsController {
 		const pv = this.node.pv;
 		if (pv.tencoding) {
 			texture.encoding = pv.encoding;
+		}
+		if (pv.tadvanced) {
+			if (pv.tformat) {
+				texture.format = pv.format;
+			}
+			if (pv.ttype) {
+				texture.type = pv.type;
+			}
 		}
 		if (pv.tmapping) {
 			texture.mapping = pv.mapping;

@@ -6,7 +6,7 @@ import {DoubleSide} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShapeBufferGeometry} from 'three/src/geometries/ShapeBufferGeometry';
 import {ShapePath} from 'three/src/extras/core/ShapePath';
-import {PolyScene} from '../../engine/index_all';
+import {PolyScene} from '../../engine/scene/PolyScene';
 
 interface CoreSVGLoaderOptions {
 	// fill

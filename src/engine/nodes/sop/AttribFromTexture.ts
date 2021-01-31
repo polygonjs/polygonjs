@@ -22,6 +22,11 @@ class AttribFromTextureSopParamsConfig extends NodeParamsConfig {
 	uvAttrib = ParamConfig.STRING(DEFAULT.uvAttrib);
 	/** @param attribute to set the value to */
 	attrib = ParamConfig.STRING(DEFAULT.attrib);
+	/** @param target attribute size */
+	attribSize = ParamConfig.INTEGER(DEFAULT.attribSize, {
+		range: [1, 3],
+		rangeLocked: [true, true],
+	});
 	/** @param value to add to the attribute */
 	add = ParamConfig.FLOAT(DEFAULT.add);
 	/** @param value to multiply the attribute with */

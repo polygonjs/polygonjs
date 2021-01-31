@@ -1,5 +1,5 @@
 import {Box3} from 'three/src/math/Box3';
-import {SceneJsonImporter} from '../../../../src/engine/index_all';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {TextSopNode} from '../../../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../../../src/engine/nodes/sop/Transform';

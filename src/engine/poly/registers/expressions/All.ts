@@ -4,6 +4,7 @@ import {ChExpression} from '../../../expressions/methods/ch';
 import {CopyExpression} from '../../../expressions/methods/copy';
 import {CopResExpression} from '../../../expressions/methods/copRes';
 import {JsExpression} from '../../../expressions/methods/js';
+import {ObjectExpression} from '../../../expressions/methods/object';
 import {ObjectsCountExpression} from '../../../expressions/methods/objectsCount';
 import {OpdigitsExpression} from '../../../expressions/methods/opdigits';
 import {PadzeroExpression} from '../../../expressions/methods/padzero';
@@ -22,6 +23,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	copy: typeof CopyExpression;
 	copRes: typeof CopResExpression;
 	js: typeof JsExpression;
+	object: typeof ObjectExpression;
 	objectsCount: typeof ObjectsCountExpression;
 	opdigits: typeof OpdigitsExpression;
 	padzero: typeof PadzeroExpression;
@@ -43,6 +45,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(CopyExpression, 'copy');
 		poly.expressionsRegister.register(CopResExpression, 'copRes');
 		poly.expressionsRegister.register(JsExpression, 'js');
+		poly.expressionsRegister.register(ObjectExpression, 'object');
 		poly.expressionsRegister.register(ObjectsCountExpression, 'objectsCount');
 		poly.expressionsRegister.register(OpdigitsExpression, 'opdigits');
 		poly.expressionsRegister.register(PadzeroExpression, 'padzero');

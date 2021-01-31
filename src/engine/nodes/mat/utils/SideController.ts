@@ -33,9 +33,10 @@ export class SideController extends BaseController {
 	static update(node: SideMatNode) {
 		const single_side = node.pv.front ? FrontSide : BackSide;
 		const new_side = node.pv.doubleSided ? DoubleSide : single_side;
-		if (new_side != node.material.side) {
-			node.material.side = new_side;
-			node.material.needsUpdate = true;
+		const mat = node.material;
+		if (new_side != mat.side) {
+			mat.side = new_side;
+			mat.needsUpdate = true;
 		}
 	}
 }

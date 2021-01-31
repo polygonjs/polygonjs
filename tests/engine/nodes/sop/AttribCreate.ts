@@ -1,3 +1,5 @@
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
 import {CoreConstant, AttribType} from '../../../../src/core/geometry/Constant';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -263,7 +265,7 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(object);
 
-	assert.deepEqual(object.userData, {attributes: {test: [3.5, 12]}});
+	assert.deepEqual(object.userData, {attributes: {test: new Vector2(3.5, 12)}});
 
 	attrib_create1.p.value2.x.set('$F*2+1.5');
 	scene.setFrame(10);
@@ -273,7 +275,7 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 	container = await attrib_create1.requestContainer();
 	core_group = container.coreContent()!;
 	object = core_group.objects()[0];
-	assert.deepEqual(object.userData, {attributes: {test: [21.5, 12]}});
+	assert.deepEqual(object.userData, {attributes: {test: new Vector2(21.5, 12)}});
 });
 
 QUnit.test('attrib create simple vector object', async (assert) => {
@@ -293,7 +295,7 @@ QUnit.test('attrib create simple vector object', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(object);
 
-	assert.deepEqual(object.userData, {attributes: {test: [3.5, 12, 17]}});
+	assert.deepEqual(object.userData, {attributes: {test: new Vector3(3.5, 12, 17)}});
 });
 
 QUnit.test('attrib create simple string object', async (assert) => {

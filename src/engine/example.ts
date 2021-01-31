@@ -1,5 +1,5 @@
 import {PolyDictionary} from '../types/GlobalTypes';
-import {PolyScene} from './index_all';
+import {PolyScene} from './scene/PolyScene';
 import {BaseNodeType} from './nodes/_Base';
 import {PerspectiveCameraObjNode} from './nodes/obj/PerspectiveCamera';
 

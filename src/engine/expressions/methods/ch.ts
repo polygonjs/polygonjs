@@ -35,22 +35,26 @@ export class ChExpression extends BaseMethod {
 	}
 
 	async process_arguments(args: any[]): Promise<any> {
-		let val: any = 0;
-		if (args.length == 1) {
-			const path = args[0];
-			const ref = this.get_referenced_param(path);
-			if (ref) {
-				if (ref.isDirty()) {
-					await ref.compute();
-				}
-				const result = ref.value;
-				if (result != null) {
-					// if (CoreType.isNumber(result)) {
-					val = result;
-					// }
+		return new Promise(async (resolve, reject) => {
+			let val: any = 0;
+			if (args.length == 1) {
+				const path = args[0];
+				const ref = this.get_referenced_param(path);
+				if (ref) {
+					if (ref.isDirty()) {
+						await ref.compute();
+					}
+					const result = ref.value;
+					if (result != null) {
+						// if (CoreType.isNumber(result)) {
+						val = result;
+						resolve(val);
+						// }
+					}
+				} else {
+					reject(0);
 				}
 			}
-		}
-		return val;
+		});
 	}
 }

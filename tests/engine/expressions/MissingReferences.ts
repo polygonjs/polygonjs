@@ -1,6 +1,6 @@
 import {ParamType} from '../../../src/engine/poly/ParamType';
 
-QUnit.test('an expression refers to a node that is later added', async (assert) => {
+QUnit.test('expression ch refers to a node that is later added', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
@@ -11,14 +11,45 @@ QUnit.test('an expression refers to a node that is later added', async (assert) 
 	await transform1.requestContainer();
 	await param.compute();
 	assert.equal(param.value, 0);
+	assert.ok(param.states.error.active());
+	assert.equal(
+		param.states.error.message(),
+		"expression returns an invalid type (undefined) (ch('../transform2/tx'))"
+	);
+	assert.ok(param.isDirty());
 
-	assert.ok(!param.isDirty());
 	const transform2 = geo1.createNode('transform');
 	assert.equal(transform2.name(), 'transform2');
 	assert.ok(param.isDirty(), 'param is now dirty');
 	transform2.p.t.x.set(5);
 	await param.compute();
 	assert.equal(param.value, 5);
+	assert.ok(!param.isDirty(), 'param is not dirty anymore');
+});
+
+QUnit.test('expression point refers to a node that is later added', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+	transform1.setInput(0, box1);
+	const param = transform1.p.t.x;
+	param.set("0.1*point('../data1', 'value', 0)");
+
+	await transform1.requestContainer();
+	await param.compute();
+	assert.equal(param.value, 0);
+	assert.ok(param.states.error.active());
+	assert.equal(
+		param.states.error.message(),
+		"expression error: \"0.1*point('../data1', 'value', 0)\" (invalid input (../data1))"
+	);
+	assert.ok(param.isDirty());
+
+	const data = geo1.createNode('data');
+	assert.equal(data.name(), 'data1');
+	assert.ok(param.isDirty(), 'param is now dirty');
+	await param.compute();
+	assert.equal(param.value, -4);
 	assert.ok(!param.isDirty(), 'param is not dirty anymore');
 });
 

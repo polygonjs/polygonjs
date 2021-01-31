@@ -1,18 +1,18 @@
 /**
- * Returns the value of a vertex attribute
+ * Returns the value of an object attribute
  *
  * @remarks
  * It takes 3 arguments.
  *
- * point(<input_index_or_node_path\>, <attrib_name\>, <point_index\>)
+ * object(<input_index_or_node_path\>, <attrib_name\>, <object_index\>)
  *
  * - **<input_index_or_node_path\>** is a number or a string
  * - **<attrib_name\>** is a string, the name of the attribute
- * - **<point_index\>** index of the point to fetch
+ * - **<object_index\>** index of the object to fetch
  *
  * ## Usage
  *
- * - `point(0, 'position', 0)` - returns the position of the first point of the first input, as a THREE.Vector3
+ * - `object(0, 'pscale', 0)` - returns the pscale attribute value of the first object of the first input
  *
  */
 import {BaseMethod} from './_Base';
@@ -20,13 +20,13 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
 const EXPECTED_ARGS_COUNT = 3;
-export class PointExpression extends BaseMethod {
+export class ObjectExpression extends BaseMethod {
 	protected _require_dependency = true;
 	static required_arguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'attribute name'],
-			['index', 'point index'],
+			['index', 'object index'],
 		];
 	}
 
@@ -39,7 +39,7 @@ export class PointExpression extends BaseMethod {
 			if (args.length == EXPECTED_ARGS_COUNT) {
 				const index_or_path = args[0];
 				const attrib_name = args[1];
-				const point_index = args[2];
+				const object_index = args[2];
 				let container: GeometryContainer | null = null;
 				try {
 					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
@@ -47,7 +47,7 @@ export class PointExpression extends BaseMethod {
 					reject(e);
 				}
 				if (container) {
-					const value = this._get_value_from_container(container, attrib_name, point_index);
+					const value = this._get_value_from_container(container, attrib_name, object_index);
 					resolve(value);
 				}
 			} else {
@@ -60,10 +60,10 @@ export class PointExpression extends BaseMethod {
 	_get_value_from_container(container: GeometryContainer, attrib_name: string, point_index: number) {
 		const core_group = container.coreContent();
 		if (core_group) {
-			const point = core_group.points()[point_index];
+			const coreObject = core_group.coreObjects()[point_index];
 
-			if (point) {
-				return point.attribValue(attrib_name);
+			if (coreObject) {
+				return coreObject.attribValue(attrib_name);
 			} else {
 				return 0;
 			}

@@ -7,9 +7,6 @@ import {PolyScene} from '../PolyScene';
 import {CoreWalker} from '../../../core/Walker';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
-// type MissingExpressionReferenceById = Map<number, MissingExpressionReference>;
-// type MissingExpressionReferenceByIdByPath = Map<string, MissingExpressionReferenceById>;
-
 export class MissingReferencesController {
 	private references: Map<CoreGraphNodeId, MissingExpressionReference[]> = new Map();
 

@@ -12,6 +12,7 @@ interface AttribFromTextureSopParams extends DefaultOperationParams {
 	texture: TypedNodePathParamValue;
 	uvAttrib: string;
 	attrib: string;
+	attribSize: number;
 	add: number;
 	mult: number;
 }
@@ -21,6 +22,7 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		texture: new TypedNodePathParamValue(NODE_PATH_DEFAULT.NODE.UV),
 		uvAttrib: 'uv',
 		attrib: 'pscale',
+		attribSize: 1,
 		add: 0,
 		mult: 1,
 	};
@@ -54,19 +56,19 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const uvAttrib = geometry.getAttribute('uv');
+		const uvAttrib = geometry.getAttribute(params.uvAttrib);
 
 		if (uvAttrib == null) {
-			this.states?.error.set('uvs are required');
+			this.states?.error.set(`param '${params.uvAttrib} not found'`);
 			return;
 		}
 		const operation = new AttribFromTexture();
 		operation.set_attrib({
 			geometry: geometry,
 			texture: texture,
-			uvAttribName: 'uv',
+			uvAttribName: params.uvAttrib,
 			targetAttribName: params.attrib,
-			targetAttribSize: 1,
+			targetAttribSize: params.attribSize,
 			add: params.add,
 			mult: params.mult,
 		});

@@ -377,7 +377,7 @@ export class FunctionGenerator extends BaseTraverser {
 				return `${direct_function_name}(${arguments_joined})`;
 			}
 
-			// indirect methods (points_count, asset...)
+			// indirect methods (pointsCount, asset...)
 			const expressionRegister = Poly.expressionsRegister;
 			const indirect_method = expressionRegister.getMethod(method_name);
 			if (indirect_method) {
@@ -396,7 +396,6 @@ export class FunctionGenerator extends BaseTraverser {
 					// This means that the dependencies have been generated already
 					// so we may not need to do it now
 				}
-
 				this._create_method_and_dependencies(method_name, path_argument, path_node);
 				return `(await methods[${this.method_index}].process_arguments([${arguments_joined}]))`;
 			} else {

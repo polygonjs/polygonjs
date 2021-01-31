@@ -1,15 +1,17 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {CoreImage} from '../../../core/Image';
+import {CoreImage} from '../../Image';
 import {Texture} from 'three/src/textures/Texture';
 import {DataTexture} from 'three/src/textures/DataTexture';
+import {CoreAttribute} from '../../geometry/Attribute';
+import {CoreMath} from '../../math/_Module';
 
 interface AttribFromTextureParams {
 	geometry: BufferGeometry;
 	texture: Texture;
 	uvAttribName: string;
 	targetAttribName: string;
-	targetAttribSize: 1 | 2 | 3;
+	targetAttribSize: number;
 	add: number;
 	mult: number;
 }
@@ -19,8 +21,11 @@ export class AttribFromTexture {
 	set_attrib(params: AttribFromTextureParams) {
 		const geometry = params.geometry;
 		const targetAttribSize = params.targetAttribSize;
+		if (targetAttribSize < 1 || targetAttribSize > 4) {
+			return;
+		}
 		const add = params.add;
-		const mult = params.mult / 255.0;
+		const mult = params.mult; // / 255.0;
 		const texture_data = this._data_from_texture(params.texture);
 		if (!texture_data) {
 			return;
@@ -32,25 +37,38 @@ export class AttribFromTexture {
 		const uvs = uv_attrib.array;
 
 		const points_count = uvs.length / 2;
-		const values: number[] = new Array(points_count);
+		const values: number[] = new Array(points_count * targetAttribSize);
 
-		let uv_stride: number, uvx: number, uvy: number, x: number, y: number, j: number, val: number;
-		let index: number = 0;
-		for (let i = 0; i < points_count; i++) {
+		let uv_stride: number,
+			uvx: number,
+			uvy: number,
+			x: number,
+			y: number,
+			i: number,
+			j: number,
+			val: number,
+			c: number;
+		const clamp = CoreMath.clamp;
+
+		for (i = 0; i < points_count; i++) {
 			uv_stride = i * 2;
-			uvx = uvs[uv_stride];
-			uvy = uvs[uv_stride + 1];
+			uvx = clamp(uvs[uv_stride], 0, 1);
+			uvy = clamp(uvs[uv_stride + 1], 0, 1);
 			x = Math.floor((resx - 1) * uvx);
 			y = Math.floor((resy - 1) * (1 - uvy));
 			j = y * resx + x;
-			val = data[texture_component_size * j];
 
-			index = i * targetAttribSize;
-			values[index] = mult * val + add;
+			for (c = 0; c < targetAttribSize; c++) {
+				val = data[texture_component_size * j + c];
+
+				// index = i * targetAttribSize;
+				values[i * targetAttribSize + c] = mult * val + add;
+			}
 		}
 
+		const attribName = CoreAttribute.remap_name(params.targetAttribName);
 		const array = new Float32Array(values);
-		geometry.setAttribute(params.targetAttribName, new BufferAttribute(array, targetAttribSize));
+		geometry.setAttribute(attribName, new BufferAttribute(array, targetAttribSize));
 	}
 
 	private _data_from_texture(texture: Texture) {

@@ -50,7 +50,7 @@ QUnit.test('expression ch can be resolved if no node exist at first with absolut
 
 	box1.p.size.set("ch('/geo1/box2/size')");
 	await box1.p.size.compute();
-	assert.equal(box1.p.size.value, 0);
+	assert.equal(box1.p.size.value, 1);
 
 	// create box2 after setting the expression
 	const box2 = geo1.createNode('box');
@@ -69,7 +69,7 @@ QUnit.test('expression ch can be resolved if no node exist at first with relativ
 
 	box1.p.size.set("ch('../box2/size')");
 	await box1.p.size.compute();
-	assert.equal(box1.p.size.value, 0);
+	assert.equal(box1.p.size.value, 1);
 
 	// create box2 after setting the expression
 	const box2 = geo1.createNode('box');

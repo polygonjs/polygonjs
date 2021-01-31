@@ -1,4 +1,4 @@
-import {Number3, AttribValue, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
+import {AttribValue, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
@@ -18,7 +18,6 @@ import {CorePoint} from './Point';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
 import {CoreEntity} from './Entity';
-import {ParamInitValueSerialized} from '../../engine/params/types/ParamInitValueSerialized';
 import {CoreType} from '../Type';
 import {ObjectUtils} from '../ObjectUtils';
 const PTNUM = 'ptnum';
@@ -103,13 +102,36 @@ export class CoreObject extends CoreEntity {
 		this.coreGeometry()?.computeVertexNormals();
 	}
 
-	static addAttribute(object: Object3D, attrib_name: string, value: AttribValue) {
-		let data: ParamInitValueSerialized;
-		if (value != null && !CoreType.isNumber(value) && !CoreType.isArray(value) && !CoreType.isString(value)) {
-			data = (value as Vector3).toArray() as Number3;
-		} else {
-			data = value;
+	private static _convert_array_to_vector(value: number[]) {
+		switch (value.length) {
+			case 1:
+				return value[0];
+			case 2:
+				return new Vector2(value[0], value[1]);
+			case 3:
+				return new Vector3(value[0], value[1], value[2]);
+			case 4:
+				return new Vector4(value[0], value[1], value[2], value[3]);
 		}
+	}
+
+	static addAttribute(object: Object3D, attrib_name: string, value: AttribValue) {
+		if (CoreType.isArray(value)) {
+			const converted_value = this._convert_array_to_vector(value);
+			if (!converted_value) {
+				const message = `attribute_value invalid`;
+				console.error(message, value);
+				throw new Error(message);
+			}
+		}
+
+		// let data: ParamInitValueSerialized;
+		// if (value != null && !CoreType.isNumber(value) && !CoreType.isArray(value) && !CoreType.isString(value)) {
+		// 	data = (value as Vector3).toArray() as Number3;
+		// } else {
+		// 	data = value;
+		// }
+		const data = value;
 		const user_data = object.userData;
 		user_data[ATTRIBUTES] = user_data[ATTRIBUTES] || {};
 		user_data[ATTRIBUTES][attrib_name] = data;
