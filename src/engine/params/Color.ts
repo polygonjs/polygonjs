@@ -22,17 +22,17 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	static type() {
 		return ParamType.COLOR;
 	}
-	get component_names(): Readonly<string[]> {
+	componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_COLOR;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
 			return this.default_value.toArray() as Number3;
 		}
 	}
-	// get raw_input_serialized() {
+	// rawInputSerialized() {
 	// 	if (this._raw_input instanceof Color) {
 	// 		return this._raw_input.toArray() as Number3;
 	// 	} else {
@@ -40,11 +40,11 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// 		return new_array;
 	// 	}
 	// }
-	get value_serialized() {
+	valueSerialized() {
 		this._update_value_serialized_if_required();
 		return this._value_serialized;
 	}
-	get value_pre_conversion_serialized() {
+	valuePreConversionSerialized() {
 		this._update_value_serialized_if_required();
 		return this._value_pre_conversion_serialized;
 	}
@@ -89,8 +89,8 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
 		return val1.equals(val2);
 	}
-	init_components() {
-		super.init_components();
+	initComponents() {
+		super.initComponents();
 		this.r = this.components[0];
 		this.g = this.components[1];
 		this.b = this.components[2];
@@ -127,7 +127,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// 		this._raw_input[2] = this.b.raw_input;
 	// 	}
 	// }
-	get value_pre_conversion() {
+	valuePreConversion() {
 		return this._value_pre_conversion;
 	}
 

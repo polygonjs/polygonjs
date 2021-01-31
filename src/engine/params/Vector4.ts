@@ -17,10 +17,10 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	static type() {
 		return ParamType.VECTOR4;
 	}
-	get component_names(): Readonly<string[]> {
+	componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_VECTOR4;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
@@ -40,7 +40,7 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	// 		return new_array;
 	// 	}
 	// }
-	get value_serialized() {
+	valueSerialized() {
 		return this.value.toArray() as Number4;
 	}
 	private _copied_value: Number4 = [0, 0, 0, 0];
@@ -92,8 +92,8 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR4], val2: ParamValuesTypeMap[ParamType.VECTOR4]) {
 		return val1.equals(val2);
 	}
-	init_components() {
-		super.init_components();
+	initComponents() {
+		super.initComponents();
 		this.x = this.components[0];
 		this.y = this.components[1];
 		this.z = this.components[2];

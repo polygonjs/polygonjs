@@ -105,7 +105,7 @@ export class NodeSerializer {
 		// 	if (param) {
 		// 		params_json_by_name[param_name] = param.graphNodeId();
 
-		// 		if (include_components && param.is_multiple && param.components) {
+		// 		if (include_components && param.isMultiple() && param.components) {
 		// 			for (let component of param.components) {
 		// 				params_json_by_name[component.name] = component.graphNodeId();
 		// 			}

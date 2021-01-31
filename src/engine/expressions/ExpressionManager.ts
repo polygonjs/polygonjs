@@ -119,7 +119,7 @@ export class ExpressionManager {
 		} else {
 			console.warn('failed to regenerate expression');
 		}
-		// this.param.expression_controller?.set_expression(new_expression_string);
+		// this.param.expressionController?.set_expression(new_expression_string);
 
 		// this.reset()
 		// if (new_expression_string) {

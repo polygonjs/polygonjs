@@ -13,12 +13,12 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	get components() {
 		return this._components;
 	}
-	get is_numeric() {
+	isNumeric() {
 		return true;
 	}
-	get is_default() {
+	isDefault() {
 		for (let c of this.components) {
-			if (!c.is_default) {
+			if (!c.isDefault()) {
 				return false;
 			}
 		}
@@ -27,7 +27,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	get raw_input() {
 		return this._components.map((c) => c.raw_input) as ParamInitValueSerializedTypeMap[T];
 	}
-	get raw_input_serialized() {
+	rawInputSerialized() {
 		return this.raw_input;
 	}
 	protected _copy_value(param: TypedMultipleParam<T>) {
@@ -38,13 +38,13 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 	}
 
-	init_components() {
+	initComponents() {
 		if (this._components != null) {
 			return;
 		}
 		let index = 0;
-		this._components = new Array(this.component_names.length);
-		for (let component_name of this.component_names) {
+		this._components = new Array(this.componentNames().length);
+		for (let component_name of this.componentNames()) {
 			const component = new this._components_contructor(this.scene(), this._node); //, `${this.name}${name}`);
 			let default_val;
 			if (CoreType.isArray(this._default_value)) {
@@ -53,7 +53,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 				default_val = (this._default_value as any)[component_name];
 			}
 			component.options.copy(this.options);
-			component.set_init_value(default_val);
+			component.setInitValue(default_val);
 
 			// component.set_scene(this.scene);
 			component.setName(`${this.name()}${component_name}`);
@@ -74,9 +74,9 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	set_value_from_components() {}
 	// set_raw_input_from_components() {}
 
-	has_expression() {
+	hasExpression() {
 		for (let c of this.components) {
-			if (c.expression_controller?.active()) {
+			if (c.expressionController?.active()) {
 				return true;
 			}
 		}
@@ -102,7 +102,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {
 			const number_or_string = raw_input as number | string;
-			const raw_input_wrapped_in_array: StringOrNumber[] = this.component_names.map(() => number_or_string);
+			const raw_input_wrapped_in_array: StringOrNumber[] = this.componentNames().map(() => number_or_string);
 			return raw_input_wrapped_in_array as ParamInitValuesTypeMap[T];
 		} else {
 			return raw_input as ParamInitValuesTypeMap[T];
@@ -132,7 +132,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			}
 		} else {
 			for (let i = 0; i < components.length; i++) {
-				const component_name = this.component_names[i];
+				const component_name = this.componentNames()[i];
 				let component_value = (value as any)[component_name];
 				// use the prev value, in case we give a vec2 instead of vec3
 				if (component_value == null) {
@@ -143,7 +143,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			}
 		}
 		// } else {
-		// 	const component_names = this.component_names()
+		// 	const component_names = this.componentNames()()
 		// 	for (let i = 0; i < components.length; i++) {
 		// 		components[i].set(values[component_names[i]])
 		// 	}

@@ -7,10 +7,10 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {CoreType} from '../../core/Type';
 
 export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<T> {
-	get is_numeric() {
+	isNumeric() {
 		return true;
 	}
-	get is_default(): boolean {
+	isDefault(): boolean {
 		return this._raw_input == this.default_value;
 	}
 
@@ -48,11 +48,11 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		}
 	}
 	protected async process_computation(): Promise<void> {
-		if (this.expression_controller?.active() && !this.expression_controller.requires_entities()) {
-			const expression_result = await this.expression_controller.compute_expression();
-			if (this.expression_controller.is_errored()) {
+		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
+			const expression_result = await this.expressionController.compute_expression();
+			if (this.expressionController.is_errored()) {
 				this.states.error.set(
-					`expression error: "${this.expression_controller.expression()}" (${this.expression_controller.error_message()})`
+					`expression error: "${this.expressionController.expression()}" (${this.expressionController.error_message()})`
 				);
 			} else {
 				const converted = this.convert(expression_result);
@@ -63,7 +63,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 					this._update_value(converted);
 				} else {
 					this.states.error.set(
-						`expression returns an invalid type (${expression_result}) (${this.expression_controller.expression()})`
+						`expression returns an invalid type (${expression_result}) (${this.expressionController.expression()})`
 					);
 				}
 			}

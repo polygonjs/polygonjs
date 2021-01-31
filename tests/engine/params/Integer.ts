@@ -19,7 +19,7 @@ QUnit.test('int eval correctly when set to different values', async (assert) => 
 	assert.equal(param.value, 2);
 });
 
-QUnit.test('int has_expression() returns false when removing the expression', async (assert) => {
+QUnit.test('int hasExpression() returns false when removing the expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -27,16 +27,16 @@ QUnit.test('int has_expression() returns false when removing the expression', as
 	assert.equal(param.type(), ParamType.INTEGER);
 
 	param.set(2);
-	assert.notOk(param.has_expression());
+	assert.notOk(param.hasExpression());
 
 	param.set('2+2');
-	assert.ok(param.has_expression());
+	assert.ok(param.hasExpression());
 
 	param.set(2);
-	assert.notOk(param.has_expression());
+	assert.notOk(param.hasExpression());
 
 	param.set('-2');
-	assert.notOk(param.has_expression());
+	assert.notOk(param.hasExpression());
 	assert.equal(param.value, 1); // set to 1 because of the param range constraints
 });
 
@@ -99,5 +99,5 @@ QUnit.test('serialized value is integer if numerical value entered as a string',
 	// as there was an issue with the icosahedron being saved with details='44' as a string
 	// and that created a much larger points count
 	// for optimized nodes, as the string was not converted to an int
-	assert.equal(param.raw_input_serialized, 12);
+	assert.equal(param.rawInputSerialized(), 12);
 });

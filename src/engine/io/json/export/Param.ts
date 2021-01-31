@@ -15,7 +15,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 
 		// we should not need to check if it has an expression anymore,
 		// as it could have an expression AND be of default value
-		const value_changed = !this._param.is_default; //|| this._param.has_expression();
+		const value_changed = !this._param.isDefault(); //|| this._param.has_expression();
 		// const referencing_asset = this._param.is_referencing_asset()
 		return is_spare_and_not_component || value_changed || this._param.options.has_options_overridden();
 	}
@@ -34,7 +34,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	}
 
 	private _data_simple() {
-		return this._param.raw_input_serialized;
+		return this._param.rawInputSerialized();
 	}
 
 	private _data_complex() {
@@ -42,12 +42,12 @@ export class ParamJsonExporter<T extends BaseParamType> {
 
 		if (this._param.options.is_spare() && !this._param.parent_param) {
 			this._complex_data['type'] = this._param.type();
-			this._complex_data['default_value'] = this._param.default_value_serialized;
+			this._complex_data['default_value'] = this._param.defaultValueSerialized();
 			this._complex_data['options'] = this._param.options.current();
 		}
 
-		if (!this._param.is_default) {
-			this._complex_data['raw_input'] = this._param.raw_input_serialized;
+		if (!this._param.isDefault()) {
+			this._complex_data['raw_input'] = this._param.rawInputSerialized();
 		}
 
 		if (this._param.options.has_options_overridden()) {
@@ -77,7 +77,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	}
 
 	// default_value(): ParamValueSerialized {
-	// 	return this._param.default_value_serialized;
+	// 	return this._param.defaultValueSerialized();
 	// }
 
 	// cannot remember why this is useful, but it messes up

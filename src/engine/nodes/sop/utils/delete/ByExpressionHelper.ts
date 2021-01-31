@@ -5,7 +5,7 @@ export class ByExpressionHelper {
 	constructor(private node: DeleteSopNode) {}
 	async eval_for_entities(entities: CoreEntity[]) {
 		const param = this.node.p.expression;
-		if (this.node.p.expression.has_expression() && param.expression_controller) {
+		if (this.node.p.expression.hasExpression() && param.expressionController) {
 			await this.eval_expressions_for_points_with_expression(entities);
 		} else {
 			this.eval_expressions_without_expression(entities);
@@ -14,8 +14,8 @@ export class ByExpressionHelper {
 
 	private async eval_expressions_for_points_with_expression(entities: CoreEntity[]) {
 		const param = this.node.p.expression;
-		if (param.expression_controller) {
-			await param.expression_controller.compute_expression_for_entities(entities, (entity, value) => {
+		if (param.expressionController) {
+			await param.expressionController.compute_expression_for_entities(entities, (entity, value) => {
 				if (value) {
 					this.node.entity_selection_helper.select(entity);
 				}

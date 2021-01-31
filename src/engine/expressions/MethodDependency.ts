@@ -18,7 +18,7 @@ export class MethodDependency extends CoreGraphNode {
 	) {
 		super(param.scene(), 'MethodDependency');
 
-		param.expression_controller?.registerMethodDependency(this)
+		param.expressionController?.registerMethodDependency(this);
 
 		this.addPostDirtyHook('_update_from_name_change', this._update_from_name_change_bound);
 	}
@@ -33,8 +33,8 @@ export class MethodDependency extends CoreGraphNode {
 				literal.value = `${literal.value}`.replace(`${this.path_argument}`, new_path);
 				literal.raw = literal.raw.replace(`${this.path_argument}`, new_path);
 			}
-			if (this.param.expression_controller) {
-				this.param.expression_controller.update_from_method_dependency_name_change();
+			if (this.param.expressionController) {
+				this.param.expressionController.update_from_method_dependency_name_change();
 			}
 		}
 	}

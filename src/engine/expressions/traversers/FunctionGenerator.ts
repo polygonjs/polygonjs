@@ -296,11 +296,11 @@ export class FunctionGenerator extends BaseTraverser {
 	function_body() {
 		if (this.param.options.is_expression_for_entities()) {
 			return `
-			const entities = param.expression_controller.entities();
+			const entities = param.expressionController.entities();
 			if(entities){
 				return new Promise( async (resolve, reject)=>{
 					let entity;
-					const entity_callback = param.expression_controller.entity_callback();
+					const entity_callback = param.expressionController.entity_callback();
 					${this._attribute_requirements_controller.assign_attributes_lines()}
 					if( ${this._attribute_requirements_controller.attribute_presence_check_line()} ){
 						${this._attribute_requirements_controller.assign_arrays_lines()}

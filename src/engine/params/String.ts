@@ -11,16 +11,16 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 	static type() {
 		return ParamType.STRING;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		return this.default_value;
 	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.STRING]) {
 		return `${raw_input}`;
 	}
-	get raw_input_serialized() {
+	rawInputSerialized() {
 		return `${this._raw_input}`;
 	}
-	get value_serialized() {
+	valueSerialized() {
 		return `${this.value}`;
 	}
 	protected _copy_value(param: StringParam) {
@@ -36,7 +36,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.STRING], val2: ParamValuesTypeMap[ParamType.STRING]) {
 		return val1 == val2;
 	}
-	get is_default(): boolean {
+	isDefault(): boolean {
 		return this._raw_input == this.default_value;
 	}
 
@@ -75,10 +75,10 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 		}
 	}
 	protected async process_computation(): Promise<void> {
-		if (this.expression_controller?.active() && !this.expression_controller.requires_entities()) {
-			const expression_result = await this.expression_controller.compute_expression();
-			if (this.expression_controller.is_errored()) {
-				this.states.error.set(`expression error: ${this.expression_controller.error_message()}`);
+		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
+			const expression_result = await this.expressionController.compute_expression();
+			if (this.expressionController.is_errored()) {
+				this.states.error.set(`expression error: ${this.expressionController.error_message()}`);
 			} else {
 				const converted = this.convert(expression_result);
 				// we need to check if equal nulls explicitely

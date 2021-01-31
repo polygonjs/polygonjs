@@ -73,8 +73,8 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			if (this.pv.fromAttribute) {
 				this._set_fromAttribute(core_object);
 			} else {
-				const has_expression = this.p.color.has_expression();
-				if (has_expression) {
+				const hasExpression = this.p.color.hasExpression();
+				if (hasExpression) {
 					await this._eval_expressions(core_object);
 				} else {
 					this._eval_simple_values(core_object);
@@ -259,9 +259,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		][offset];
 
 		let tmp_array: number[] | undefined;
-		if (param.has_expression() && param.expression_controller) {
+		if (param.hasExpression() && param.expressionController) {
 			tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length);
-			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
+			await param.expressionController.compute_expression_for_points(points, (point, value) => {
 				// array[point.index()*3+2] = value
 				(tmp_array as number[])[point.index()] = value;
 			});

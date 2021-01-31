@@ -16,10 +16,10 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		return ParamType.VECTOR2;
 	}
 
-	get component_names(): Readonly<string[]> {
+	componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_VECTOR2;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
@@ -34,7 +34,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 	// 		return new_array;
 	// 	}
 	// }
-	get value_serialized() {
+	valueSerialized() {
 		return this.value.toArray() as Number2;
 	}
 	private _copied_value: Number2 = [0, 0];
@@ -72,8 +72,8 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR2], val2: ParamValuesTypeMap[ParamType.VECTOR2]) {
 		return val1.equals(val2);
 	}
-	init_components() {
-		super.init_components();
+	initComponents() {
+		super.initComponents();
 		this.x = this.components[0];
 		this.y = this.components[1];
 	}

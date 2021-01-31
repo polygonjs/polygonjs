@@ -189,8 +189,8 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	await CoreSleep.sleep(100);
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as Vector3Param;
 	assert.equal(vec3_spare_param.type(), ParamType.VECTOR3, 'param is vec3');
-	assert.deepEqual(vec3_spare_param.value_serialized, [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
-	assert.deepEqual(vec3_spare_param.default_value_serialized, [0, 0, 0], 'default_value_serialized is 0,0,0');
+	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
+	assert.deepEqual(vec3_spare_param.defaultValueSerialized(), [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.x, 0.1);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.y, 0.2);
@@ -211,9 +211,13 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name()}`)! as MeshBasicBuilderMatNode;
 	const vec3_spare_param2 = mesh_basic2.params.get(param_name)! as Vector3Param;
 	assert.equal(vec3_spare_param2.type(), ParamType.VECTOR3);
-	assert.deepEqual(vec3_spare_param2.value_serialized, [0.1, 0.8, 0.3], 'after load value_serialized is 0.1,0.8,0.3');
 	assert.deepEqual(
-		vec3_spare_param2.default_value_serialized,
+		vec3_spare_param2.valueSerialized(),
+		[0.1, 0.8, 0.3],
+		'after load value_serialized is 0.1,0.8,0.3'
+	);
+	assert.deepEqual(
+		vec3_spare_param2.defaultValueSerialized(),
 		[0, 0, 0],
 		'after load default_value_serialized is 0,0,0'
 	);
@@ -267,8 +271,8 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	await mesh_basic1.requestContainer();
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as ColorParam;
 	assert.equal(vec3_spare_param.type(), ParamType.COLOR, 'param is color');
-	assert.deepEqual(vec3_spare_param.value_serialized, [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
-	assert.deepEqual(vec3_spare_param.default_value_serialized, [0, 0, 0], 'default_value_serialized is 0,0,0');
+	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
+	assert.deepEqual(vec3_spare_param.defaultValueSerialized(), [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.r, 0.1);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.g, 0.2);
@@ -289,9 +293,13 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	const mesh_basic2 = scene2.node(`/MAT/${mesh_basic1.name()}`)! as MeshBasicBuilderMatNode;
 	const vec3_spare_param2 = mesh_basic2.params.get(param_name)! as ColorParam;
 	assert.equal(vec3_spare_param2.type(), ParamType.COLOR);
-	assert.deepEqual(vec3_spare_param2.value_serialized, [0.1, 0.8, 0.3], 'after load value_serialized is 0.1,0.8,0.3');
 	assert.deepEqual(
-		vec3_spare_param2.default_value_serialized,
+		vec3_spare_param2.valueSerialized(),
+		[0.1, 0.8, 0.3],
+		'after load value_serialized is 0.1,0.8,0.3'
+	);
+	assert.deepEqual(
+		vec3_spare_param2.defaultValueSerialized(),
 		[0, 0, 0],
 		'after load default_value_serialized is 0,0,0'
 	);

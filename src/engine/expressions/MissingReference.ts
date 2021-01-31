@@ -12,11 +12,11 @@ export class MissingExpressionReference {
 	}
 
 	update_from_method_dependency_name_change() {
-		this.param.expression_controller?.update_from_method_dependency_name_change();
+		this.param.expressionController?.update_from_method_dependency_name_change();
 	}
 
 	resolve_missing_dependencies() {
-		const input = this.param.raw_input_serialized;
+		const input = this.param.rawInputSerialized();
 		this.param.set(this.param.default_value);
 		this.param.set(input);
 	}

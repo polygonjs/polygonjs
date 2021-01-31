@@ -16,10 +16,10 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	static type() {
 		return ParamType.VECTOR3;
 	}
-	get component_names(): Readonly<string[]> {
+	componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_VECTOR3;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		if (CoreType.isArray(this.default_value)) {
 			return this.default_value;
 		} else {
@@ -34,7 +34,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	// 		return new_array;
 	// 	}
 	// }
-	get value_serialized() {
+	valueSerialized() {
 		return this.value.toArray() as Number3;
 	}
 	private _copied_value: Number3 = [0, 0, 0];
@@ -75,8 +75,8 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR3], val2: ParamValuesTypeMap[ParamType.VECTOR3]) {
 		return val1.equals(val2);
 	}
-	init_components() {
-		super.init_components();
+	initComponents() {
+		super.initComponents();
 		this.x = this.components[0];
 		this.y = this.components[1];
 		this.z = this.components[2];

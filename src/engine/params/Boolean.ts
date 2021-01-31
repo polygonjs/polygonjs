@@ -10,17 +10,17 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 		return ParamType.BOOLEAN;
 	}
 	// TODO: be careful as this does not allow serialization of expressions as default value
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		if (CoreType.isString(this.default_value)) {
 			return this.default_value;
 		} else {
 			return this.convert(this.default_value) || false;
 		}
 	}
-	get raw_input_serialized() {
+	rawInputSerialized() {
 		return this._raw_input;
 	}
-	get value_serialized() {
+	valueSerialized() {
 		return this.value;
 	}
 	protected _copy_value(param: BooleanParam) {

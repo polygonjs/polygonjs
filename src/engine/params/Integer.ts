@@ -9,17 +9,17 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	static type() {
 		return ParamType.INTEGER;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		return this.default_value;
 	}
-	get raw_input_serialized() {
+	rawInputSerialized() {
 		return this.raw_input;
 	}
-	get value_serialized() {
+	valueSerialized() {
 		return this.value;
 	}
 	protected _copy_value(param: IntegerParam) {
-		this.set(param.value_serialized);
+		this.set(param.valueSerialized());
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
 		if (CoreType.isArray(raw_input)) {

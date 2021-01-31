@@ -83,5 +83,5 @@ QUnit.test('gl dot updates its output type and param correctly when scene is loa
 		input_connection_points.map((c) => c.type()),
 		[GlConnectionPointType.VEC2, GlConnectionPointType.VEC2]
 	);
-	assert.deepEqual(dot2.params.get('vec1')!.value_serialized, [1, 2]);
+	assert.deepEqual(dot2.params.get('vec1')!.valueSerialized(), [1, 2]);
 });

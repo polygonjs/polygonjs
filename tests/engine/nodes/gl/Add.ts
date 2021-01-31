@@ -77,5 +77,5 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	add2.setInput(0, constant1);
 	assert.equal(add2.io.inputs.named_input_connection_points.length, 2);
 	assert.equal(add2.io.inputs.named_input_connection_points[0].type(), GlConnectionPointType.VEC2);
-	assert.deepEqual(add2.params.get('add1')?.value_serialized, [1, 2]);
+	assert.deepEqual(add2.params.get('add1')?.valueSerialized(), [1, 2]);
 });

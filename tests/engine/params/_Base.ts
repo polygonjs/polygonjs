@@ -52,15 +52,15 @@ QUnit.test('sets the node to recook if set expression', async (assert) => {
 	assert.ok(!box1.states.error.active());
 
 	param.set('1+1'); // set to same expression
-	assert.ok(param.has_expression());
+	assert.ok(param.hasExpression());
 	assert.ok(!box1.isDirty());
 
 	param.set(3); // set to value with different
-	assert.ok(!param.has_expression());
+	assert.ok(!param.hasExpression());
 	assert.ok(box1.isDirty());
 
 	param.set('1+1'); // reset expression
-	assert.ok(param.has_expression());
+	assert.ok(param.hasExpression());
 	assert.ok(box1.isDirty());
 	await box1.requestContainer();
 	assert.ok(!param.isDirty());
@@ -68,7 +68,7 @@ QUnit.test('sets the node to recook if set expression', async (assert) => {
 	assert.equal(param.value, 2);
 
 	param.set(2); // set to value with same result
-	assert.ok(!param.has_expression(), 'param has no expression');
+	assert.ok(!param.hasExpression(), 'param has no expression');
 	assert.ok(!param.isDirty());
 	assert.ok(!box1.isDirty());
 });

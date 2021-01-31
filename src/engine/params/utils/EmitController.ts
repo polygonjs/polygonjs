@@ -26,7 +26,7 @@ export class EmitController {
 
 	blockEmit() {
 		this._blocked_emit = true;
-		if (this.param.is_multiple && this.param.components) {
+		if (this.param.isMultiple() && this.param.components) {
 			for (let component of this.param.components) {
 				component.emitController.blockEmit();
 			}
@@ -35,7 +35,7 @@ export class EmitController {
 	}
 	unblockEmit() {
 		this._blocked_emit = false;
-		if (this.param.is_multiple && this.param.components) {
+		if (this.param.isMultiple() && this.param.components) {
 			for (let component of this.param.components) {
 				component.emitController.unblockEmit();
 			}

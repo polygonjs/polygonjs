@@ -368,7 +368,7 @@ export class ParamsController {
 			}
 			param._setup_node_dependencies(null);
 			delete this._params_by_name[param_name];
-			if (param.is_multiple && param.components) {
+			if (param.isMultiple() && param.components) {
 				for (let component of param.components) {
 					const child_name = component.name();
 					delete this._params_by_name[child_name];
@@ -421,8 +421,8 @@ export class ParamsController {
 			param.options.set(options);
 
 			param.setName(param_name);
-			param.set_init_value(default_value as never);
-			param.init_components();
+			param.setInitValue(default_value as never);
+			param.initComponents();
 
 			// set param value
 			// and overriden options
@@ -464,7 +464,7 @@ export class ParamsController {
 			this._params_by_name[param.name()] = param as BaseParamType;
 
 			// we add the components, so that we can access them with expressions like ch('ty')
-			if (param.is_multiple && param.components) {
+			if (param.isMultiple() && param.components) {
 				for (let component of param.components) {
 					this._params_by_name[component.name()] = component as BaseParamType;
 				}

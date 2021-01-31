@@ -43,8 +43,8 @@ export class AssemblerNodeSpareParamsController {
 			// this allows expressions to be kept in memory
 			const param = this._node.params.get(param_name);
 			if (param) {
-				this._raw_input_serialized_by_param_name.set(param.name(), param.raw_input_serialized);
-				this._init_value_serialized_by_param_name.set(param.name(), param.default_value_serialized);
+				this._raw_input_serialized_by_param_name.set(param.name(), param.rawInputSerialized());
+				this._init_value_serialized_by_param_name.set(param.name(), param.defaultValueSerialized());
 				const param_exporter = JsonExportDispatcher.dispatch_param(param);
 				if (param_exporter.required()) {
 					const params_data = param_exporter.data();

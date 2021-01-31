@@ -35,6 +35,6 @@ QUnit.test('gl rotate is created with correct defaults', async (assert) => {
 	assert.equal(material_basic_builder1.children().length, 2);
 
 	const rotate1 = material_basic_builder1.createNode('rotate');
-	assert.deepEqual(rotate1.p.vector.value_serialized, [0, 0, 1]);
-	assert.deepEqual(rotate1.p.axis.value_serialized, [0, 1, 0]);
+	assert.deepEqual(rotate1.p.vector.valueSerialized(), [0, 0, 1]);
+	assert.deepEqual(rotate1.p.axis.valueSerialized(), [0, 1, 0]);
 });

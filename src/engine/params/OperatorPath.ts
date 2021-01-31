@@ -25,17 +25,17 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	static type() {
 		return ParamType.OPERATOR_PATH;
 	}
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		return this.default_value;
 	}
-	get raw_input_serialized() {
+	rawInputSerialized() {
 		return `${this._raw_input}`;
 	}
-	get value_serialized() {
+	valueSerialized() {
 		return `${this.value}`;
 	}
 	protected _copy_value(param: OperatorPathParam) {
-		this.set(param.value_serialized);
+		this.set(param.valueSerialized());
 	}
 	static are_raw_input_equal(
 		raw_input1: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
@@ -49,7 +49,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	) {
 		return val1 == val2;
 	}
-	get is_default(): boolean {
+	isDefault(): boolean {
 		return this._value == this.default_value;
 	}
 	setNode(node: BaseNodeType) {

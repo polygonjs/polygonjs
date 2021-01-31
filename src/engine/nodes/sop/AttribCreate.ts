@@ -182,7 +182,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
 
-		if (param.has_expression()) {
+		if (param.hasExpression()) {
 			if (!core_geometry.hasAttrib(this.pv.name)) {
 				core_geometry.addNumericAttrib(this.pv.name, this.pv.size, param.value);
 			}
@@ -190,8 +190,8 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			const geometry = core_geometry.geometry();
 			const array = geometry.getAttribute(this.pv.name).array as number[];
 			if (this.pv.size == 1) {
-				if (this.p.value1.expression_controller) {
-					await this.p.value1.expression_controller.compute_expression_for_points(points, (point, value) => {
+				if (this.p.value1.expressionController) {
+					await this.p.value1.expressionController.compute_expression_for_points(points, (point, value) => {
 						array[point.index() * this.pv.size + 0] = value;
 					});
 				}
@@ -210,13 +210,13 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 				for (let i = 0; i < params.length; i++) {
 					component_param = params[i];
-					if (component_param.has_expression() && component_param.expression_controller) {
+					if (component_param.hasExpression() && component_param.expressionController) {
 						tmp_arrays[i] = this._init_array_if_required(
 							geometry,
 							arrays_by_geometry_uuid[i],
 							points.length
 						);
-						await component_param.expression_controller.compute_expression_for_points(
+						await component_param.expressionController.compute_expression_for_points(
 							points,
 							(point, value) => {
 								// array[point.index()*this.pv.size+i] = value
@@ -247,10 +247,10 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 	async add_numeric_attribute_to_object(core_objects: CoreObject[]) {
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
-		if (param.has_expression()) {
+		if (param.hasExpression()) {
 			if (this.pv.size == 1) {
-				if (this.p.value1.expression_controller) {
-					await this.p.value1.expression_controller.compute_expression_for_objects(
+				if (this.p.value1.expressionController) {
+					await this.p.value1.expressionController.compute_expression_for_objects(
 						core_objects,
 						(core_object, value) => {
 							core_object.setAttribValue(this.pv.name, value);
@@ -272,8 +272,8 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					for (let component_index = 0; component_index < params.length; component_index++) {
 						const component_param = params[component_index];
 						const component_name = COMPONENT_NAMES[component_index];
-						if (component_param.has_expression() && component_param.expression_controller) {
-							await component_param.expression_controller.compute_expression_for_objects(
+						if (component_param.hasExpression() && component_param.expressionController) {
+							await component_param.expressionController.compute_expression_for_objects(
 								core_objects,
 								(core_object, value) => {
 									const vector = values_by_core_object_index[core_object.index()] as Vector4;
@@ -337,8 +337,8 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const param = this.p.string;
 
 		const string_values: string[] = new Array(points.length);
-		if (param.has_expression() && param.expression_controller) {
-			await param.expression_controller.compute_expression_for_points(points, (point, value) => {
+		if (param.hasExpression() && param.expressionController) {
+			await param.expressionController.compute_expression_for_points(points, (point, value) => {
 				string_values[point.index()] = value;
 			});
 		} else {
@@ -354,8 +354,8 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 
 	async add_string_attribute_to_object(core_objects: CoreObject[]) {
 		const param = this.p.string;
-		if (param.has_expression() && param.expression_controller) {
-			await param.expression_controller.compute_expression_for_objects(core_objects, (core_object, value) => {
+		if (param.hasExpression() && param.expressionController) {
+			await param.expressionController.compute_expression_for_objects(core_objects, (core_object, value) => {
 				core_object.setAttribValue(this.pv.name, value);
 			});
 		} else {
@@ -398,9 +398,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		switch (attrib_type) {
 			case AttribType.NUMERIC:
 				const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
-				return param.has_expression();
+				return param.hasExpression();
 			case AttribType.STRING:
-				return this.p.string.has_expression();
+				return this.p.string.hasExpression();
 		}
 	}
 }

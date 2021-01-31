@@ -6,7 +6,7 @@
 // export class ParamMultipleJsonExporter extends ParamJsonExporter<TypedMultipleParam<any>> {
 // 	add_main() {
 // 		const components_data: ParamJsonExporterDataByName = {};
-// 		// const component_names = this._param.component_names;
+// 		// const component_names = this._param.componentNames();
 // 		// this._param.components?.forEach((component, i) => {
 // 		// 	const exporter = JsonExportDispatcher.dispatch_param(component); //.accepts_visitor();
 // 		// 	if (exporter.required) {

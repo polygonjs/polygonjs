@@ -26,8 +26,8 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 	color.r.set('5*2');
 	assert.ok(color.r.isDirty());
 	assert.ok(color.isDirty());
-	assert.ok(color.r.has_expression());
-	assert.ok(color.has_expression());
+	assert.ok(color.r.hasExpression());
+	assert.ok(color.hasExpression());
 	await color.compute();
 	assert.notOk(color.r.isDirty(), 'red is dirty');
 	assert.notOk(color.isDirty(), 'color is dirty');
@@ -42,20 +42,20 @@ QUnit.test('color is_default', async (assert) => {
 
 	const color = geo1.addParam(ParamType.COLOR, 'color_debug', [1, 1, '$F'], {spare: true})!;
 	await color.compute();
-	assert.ok(color.is_default);
+	assert.ok(color.isDefault());
 	assert.deepEqual(color.value.toArray(), [1, 1, 1]);
-	assert.equal(color.default_value_serialized.join(':'), '1:1:$F');
+	assert.equal(color.defaultValueSerialized().join(':'), '1:1:$F');
 
 	scene.setFrame(2);
 	await color.compute();
-	assert.ok(color.is_default);
+	assert.ok(color.isDefault());
 	assert.deepEqual(color.value.toArray(), [1, 1, 2]);
-	assert.equal(color.default_value_serialized.join(':'), '1:1:$F');
+	assert.equal(color.defaultValueSerialized().join(':'), '1:1:$F');
 
 	color.b.set(3);
-	assert.ok(!color.is_default);
+	assert.ok(!color.isDefault());
 	assert.deepEqual(color.value.toArray(), [1, 1, 3]);
-	assert.equal(color.default_value_serialized.join(':'), '1:1:$F');
+	assert.equal(color.defaultValueSerialized().join(':'), '1:1:$F');
 });
 
 QUnit.test(

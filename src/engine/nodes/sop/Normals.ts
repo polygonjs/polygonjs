@@ -107,8 +107,8 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 
 		// x
 		if (this.pv.updateX) {
-			if (this.p.x.has_expression() && this.p.x.expression_controller) {
-				await this.p.x.expression_controller.compute_expression_for_points(points, (point, value) => {
+			if (this.p.x.hasExpression() && this.p.x.expressionController) {
+				await this.p.x.expressionController.compute_expression_for_points(points, (point, value) => {
 					array[point.index() * 3 + 0] = value;
 				});
 			} else {
@@ -121,8 +121,8 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		}
 		// y
 		if (this.pv.updateY) {
-			if (this.p.y.has_expression() && this.p.y.expression_controller) {
-				await this.p.y.expression_controller.compute_expression_for_points(points, (point, value) => {
+			if (this.p.y.hasExpression() && this.p.y.expressionController) {
+				await this.p.y.expressionController.compute_expression_for_points(points, (point, value) => {
 					array[point.index() * 3 + 1] = value;
 				});
 			} else {
@@ -135,8 +135,8 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		}
 		// z
 		if (this.pv.updateZ) {
-			if (this.p.z.has_expression() && this.p.z.expression_controller) {
-				await this.p.z.expression_controller.compute_expression_for_points(points, (point, value) => {
+			if (this.p.z.hasExpression() && this.p.z.expressionController) {
+				await this.p.z.expressionController.compute_expression_for_points(points, (point, value) => {
 					array[point.index() * 3 + 2] = value;
 				});
 			} else {

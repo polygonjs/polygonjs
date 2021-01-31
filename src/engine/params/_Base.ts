@@ -41,7 +41,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return (this._emit_controller = this._emit_controller || new EmitController(this));
 	}
 	protected _expression_controller: ExpressionController<T> | undefined;
-	get expression_controller(): ExpressionController<T> | undefined {
+	get expressionController(): ExpressionController<T> | undefined {
 		return this._expression_controller; // =
 		//this._expression_controller || new ExpressionController(this);
 	}
@@ -80,7 +80,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {
-	// 	this.init_components();
+	// 	this.initComponents();
 	// 	// this.init_expression()
 	// 	// this._init_ui_data()
 	// }
@@ -98,7 +98,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	type(): T {
 		return (this.constructor as typeof BaseParamClass).type() as T;
 	}
-	get is_numeric(): boolean {
+	isNumeric(): boolean {
 		return false;
 	}
 
@@ -110,9 +110,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get value(): ParamValuesTypeMap[T] {
 		return this._value;
 	}
-	abstract get default_value_serialized(): ParamInitValueSerializedTypeMap[T];
-	abstract get raw_input_serialized(): ParamInitValueSerializedTypeMap[T];
-	abstract get value_serialized(): ParamValueSerializedTypeMap[T];
+	abstract defaultValueSerialized(): ParamInitValueSerializedTypeMap[T];
+	abstract rawInputSerialized(): ParamInitValueSerializedTypeMap[T];
+	abstract valueSerialized(): ParamValueSerializedTypeMap[T];
 	copy_value(param: BaseParamType) {
 		if (param.type() == this.type()) {
 			this._copy_value(param as TypedParam<T>);
@@ -123,7 +123,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _copy_value(param: TypedParam<T>) {
 		throw 'abstract method param._copy_value';
 	}
-	get value_pre_conversion_serialized(): ParamValuePreConversionSerializedTypeMap[T] {
+	valuePreConversionSerialized(): ParamValuePreConversionSerializedTypeMap[T] {
 		return undefined as never;
 	}
 	convert(raw_val: any): ParamValuesTypeMap[T] | null {
@@ -155,7 +155,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get default_value() {
 		return this._default_value;
 	}
-	get is_default(): boolean {
+	isDefault(): boolean {
 		return this._raw_input == this.default_value;
 	}
 	get raw_input() {
@@ -193,12 +193,12 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// set_default_value(default_value: ParamValuesTypeMap[T]) {
 	// 	this._default_value = default_value;
 	// }
-	set_init_value(init_value: ParamInitValuesTypeMap[T]) {
+	setInitValue(init_value: ParamInitValuesTypeMap[T]) {
 		this._default_value = this._clone_raw_input(this._prefilter_invalid_raw_input(init_value));
 		// this._raw_input = this._clone_raw_input(init_value);
 
-		// if (this.is_multiple) {
-		// 	this.init_components();
+		// if (this.isMultiple()) {
+		// 	this.initComponents();
 		// }
 
 		// this.set(init_value);
@@ -268,21 +268,21 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get components() {
 		return this._components;
 	}
-	get component_names(): Readonly<string[]> {
+	componentNames(): Readonly<string[]> {
 		return TYPED_PARAM_DEFAULT_COMPONENT_NAMES;
 	}
-	get is_multiple(): boolean {
-		return this.component_names.length > 0;
+	isMultiple(): boolean {
+		return this.componentNames().length > 0;
 	}
 	// create_components() {}
-	init_components() {}
+	initComponents() {}
 
 	// expression
 	// set_expression(expression: string | null) {
-	// 	this.expression_controller.set_expression(expression);
+	// 	this.expressionController.set_expression(expression);
 	// }
-	has_expression(): boolean {
-		return this.expression_controller != null && this.expression_controller.active(); // use this._expression_controller to avoid creating it
+	hasExpression(): boolean {
+		return this.expressionController != null && this.expressionController.active(); // use this._expression_controller to avoid creating it
 	}
 
 	// serialize
@@ -292,13 +292,13 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 }
 export type BaseParamType = TypedParam<ParamType>;
 export class BaseParamClass extends TypedParam<ParamType> {
-	get default_value_serialized() {
-		return 'BaseParamClass.default_value_serialized overriden';
+	defaultValueSerialized() {
+		return 'BaseParamClass.defaultValueSerialized overriden';
 	}
-	get raw_input_serialized() {
-		return 'BaseParamClass.raw_input_serialized overriden';
+	rawInputSerialized() {
+		return 'BaseParamClass.rawInputSerialized overriden';
 	}
-	get value_serialized() {
-		return 'BaseParamClass.value_serialized overriden';
+	valueSerialized() {
+		return 'BaseParamClass.valueSerialized overriden';
 	}
 }

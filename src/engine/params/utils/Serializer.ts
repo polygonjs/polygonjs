@@ -41,7 +41,7 @@ export class ParamSerializer {
 			components: undefined,
 		};
 
-		if (this.param.is_multiple && this.param.components) {
+		if (this.param.isMultiple() && this.param.components) {
 			data['components'] = this.param.components.map((component) => component.graphNodeId());
 		}
 
@@ -49,16 +49,16 @@ export class ParamSerializer {
 	}
 
 	raw_input() {
-		return this.param.raw_input_serialized;
+		return this.param.rawInputSerialized();
 	}
 	value() {
-		return this.param.value_serialized;
+		return this.param.valueSerialized();
 	}
 	value_pre_conversion() {
-		return this.param.value_pre_conversion_serialized;
+		return this.param.valuePreConversionSerialized();
 	}
 	expression() {
-		return this.param.has_expression() ? this.param.expression_controller?.expression() : undefined;
+		return this.param.hasExpression() ? this.param.expressionController?.expression() : undefined;
 	}
 	error_message() {
 		return this.param.states.error.message();

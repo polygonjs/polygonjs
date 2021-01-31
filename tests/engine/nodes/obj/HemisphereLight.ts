@@ -11,18 +11,18 @@ QUnit.test('hemisphere light simple', async (assert) => {
 	assert.equal(hemisphere_light1.name(), 'hemisphereLight1');
 	assert.equal(main_group.children.length, 3);
 
-	assert.deepEqual(hemisphere_light1.p.skyColor.value_pre_conversion_serialized, [1, 1, 1]);
-	assert.deepEqual(hemisphere_light1.p.groundColor.value_pre_conversion_serialized, [0, 0, 0]);
+	assert.deepEqual(hemisphere_light1.p.skyColor.valuePreConversionSerialized(), [1, 1, 1]);
+	assert.deepEqual(hemisphere_light1.p.groundColor.valuePreConversionSerialized(), [0, 0, 0]);
 
 	hemisphere_light1.p.skyColor.set([0.2, 0.7, 1]);
 	hemisphere_light1.p.groundColor.set([0.1, 0.1, 0.25]);
-	assert.deepEqual(hemisphere_light1.p.skyColor.value_pre_conversion_serialized, [0.2, 0.7, 1]);
-	assert.deepEqual(hemisphere_light1.p.groundColor.value_pre_conversion_serialized, [0.1, 0.1, 0.25]);
+	assert.deepEqual(hemisphere_light1.p.skyColor.valuePreConversionSerialized(), [0.2, 0.7, 1]);
+	assert.deepEqual(hemisphere_light1.p.groundColor.valuePreConversionSerialized(), [0.1, 0.1, 0.25]);
 	const tmp = new Color();
-	tmp.copy(hemisphere_light1.p.skyColor.value_pre_conversion);
+	tmp.copy(hemisphere_light1.p.skyColor.valuePreConversion());
 	tmp.convertSRGBToLinear();
 	assert.deepEqual(hemisphere_light1.pv.skyColor.toArray(), tmp.toArray());
-	tmp.copy(hemisphere_light1.p.groundColor.value_pre_conversion);
+	tmp.copy(hemisphere_light1.p.groundColor.valuePreConversion());
 	tmp.convertSRGBToLinear();
 	assert.deepEqual(hemisphere_light1.pv.groundColor.toArray(), tmp.toArray());
 

@@ -28,7 +28,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	static DEFAULT_VALUE = new RampValue(RampInterpolation.LINEAR, [new RampPoint(0, 0), new RampPoint(1, 1)]);
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
 
-	get default_value_serialized() {
+	defaultValueSerialized() {
 		if (this.default_value instanceof RampValue) {
 			return this.default_value.toJSON();
 		} else {
@@ -42,18 +42,18 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			return RampValue.from_json(raw_input).toJSON();
 		}
 	}
-	get raw_input_serialized() {
+	rawInputSerialized() {
 		if (this._raw_input instanceof RampValue) {
 			return this._raw_input.toJSON();
 		} else {
 			return RampValue.from_json(this._raw_input).toJSON();
 		}
 	}
-	get value_serialized() {
+	valueSerialized() {
 		return this.value.toJSON();
 	}
 	protected _copy_value(param: RampParam) {
-		this.set(param.value_serialized);
+		this.set(param.valueSerialized());
 	}
 
 	static are_raw_input_equal(
@@ -86,7 +86,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// accepts_visitor(visitor: RampParamVisitor) {
 	// 	return visitor.visit_ramp_param(this);
 	// }
-	get is_default(): boolean {
+	isDefault(): boolean {
 		if (this.default_value instanceof RampValue) {
 			return this.value.is_equal(this.default_value);
 		} else {
@@ -140,7 +140,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// 	return this.convert_value(v)
 	// }
 
-	has_expression() {
+	hasExpression() {
 		return false;
 	}
 

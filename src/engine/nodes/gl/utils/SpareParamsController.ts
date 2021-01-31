@@ -77,7 +77,7 @@
 // 				const param = this.node.params.get(param_name);
 // 				if (param) {
 // 					this._raw_input_serialized_by_param_name.set(param_name, param.raw_input_serialized);
-// 					this._default_value_serialized_by_param_name.set(param_name, param.default_value_serialized);
+// 					this._default_value_serialized_by_param_name.set(param_name, param.defaultValueSerialized());
 // 					params_update_options.names_to_delete = params_update_options.names_to_delete || [];
 // 					params_update_options.names_to_delete.push(param_name);
 // 				}
