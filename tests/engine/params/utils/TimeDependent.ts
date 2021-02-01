@@ -57,7 +57,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 
 	// sets the node as dirty
 	assert.ok(!box1.isDirty());
-	scene.timeController.increment_time();
+	scene.timeController.incrementTime();
 	assert.ok(!box1.isDirty());
 
 	size.set('$F+1');
@@ -65,7 +65,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	assert.ok(box1.states.time_dependent.active());
 	await box1.requestContainer();
 	assert.ok(!box1.isDirty());
-	scene.timeController.increment_time();
+	scene.timeController.incrementTime();
 	assert.ok(box1.isDirty());
 
 	size.set('17');
@@ -74,7 +74,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	assert.ok(!box1.states.time_dependent.active());
 	await box1.requestContainer();
 	assert.ok(!box1.isDirty());
-	scene.timeController.increment_time();
+	scene.timeController.incrementTime();
 	assert.ok(!box1.isDirty());
 });
 
@@ -88,9 +88,9 @@ QUnit.test('a param value is updated is it is time dependent', async (assert) =>
 
 	size.set('2*$T');
 	assert.equal(size.graphAllPredecessors().length, 1);
-	assert.equal(size.graphAllPredecessors()[0].graphNodeId(), scene.timeController.graph_node.graphNodeId());
-	assert.equal(scene.timeController.graph_node.graphSuccessors().length, 1);
-	assert.equal(scene.timeController.graph_node.graphSuccessors()[0].graphNodeId(), size.graphNodeId());
+	assert.equal(size.graphAllPredecessors()[0].graphNodeId(), scene.timeController.graphNode.graphNodeId());
+	assert.equal(scene.timeController.graphNode.graphSuccessors().length, 1);
+	assert.equal(scene.timeController.graphNode.graphSuccessors()[0].graphNodeId(), size.graphNodeId());
 	await size.compute();
 	assert.equal(size.value, 0);
 
@@ -104,7 +104,7 @@ QUnit.test('a param value is updated is it is time dependent', async (assert) =>
 
 	size.set('2');
 	assert.equal(size.graphAllPredecessors().length, 0);
-	assert.equal(scene.timeController.graph_node.graphSuccessors().length, 0);
+	assert.equal(scene.timeController.graphNode.graphSuccessors().length, 0);
 });
 
 QUnit.test('a node with 2 params can be time dependent', async (assert) => {
@@ -114,7 +114,7 @@ QUnit.test('a node with 2 params can be time dependent', async (assert) => {
 
 	const rx = geo1.p.r.x;
 	const ry = geo1.p.r.y;
-	const time_graph_node = scene.timeController.graph_node;
+	const time_graph_node = scene.timeController.graphNode;
 
 	rx.set('5*sin($T*0.5+687) + 2.5*cos($T-12)');
 	assert.equal(rx.graphAllPredecessors().length, 1);

@@ -27,11 +27,11 @@ export class SceneJsonImporter {
 			scene.timeController.setFrameRange(frame_range[0] || 1, frame_range[1] || 100);
 			const frameRangeLocked = properties['frameRangeLocked'];
 			if (frameRangeLocked) {
-				scene.timeController.setFrameRange_locked(frameRangeLocked[0], frameRangeLocked[1]);
+				scene.timeController.setFrameRangeLocked(frameRangeLocked[0], frameRangeLocked[1]);
 			}
 			const realtimeState = properties['realtimeState'];
 			if (realtimeState != null) {
-				scene.timeController.set_realtimeState(realtimeState);
+				scene.timeController.setRealtimeState(realtimeState);
 			}
 			// set frame after the range has been set, to avoid clamping
 			scene.setFrame(properties['frame'] || 1);

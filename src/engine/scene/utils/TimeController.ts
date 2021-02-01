@@ -18,7 +18,7 @@ export class TimeController {
 	private _graph_node: CoreGraphNode;
 	private _frame_range: FrameRange = [1, 600];
 	private _realtimeState = true;
-	private _frameRangeLocked: [boolean, boolean] = [true, true];
+	private _frameRangeLocked: [boolean, boolean] = [true, false];
 	private _playing: boolean = false;
 
 	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
@@ -37,23 +37,23 @@ export class TimeController {
 	constructor(private scene: PolyScene) {
 		this._graph_node = new CoreGraphNode(scene, 'time controller');
 	}
-	get graph_node() {
+	get graphNode() {
 		return this._graph_node;
 	}
 
-	get frame(): number {
+	frame(): number {
 		return this._frame;
 	}
-	get time(): number {
+	time(): number {
 		return this._time;
 	}
-	get frame_range(): FrameRange {
+	frameRange(): FrameRange {
 		return this._frame_range;
 	}
-	get frameRangeLocked(): [boolean, boolean] {
+	frameRangeLocked(): [boolean, boolean] {
 		return this._frameRangeLocked;
 	}
-	get realtimeState() {
+	realtimeState() {
 		return this._realtimeState;
 	}
 	setFrameRange(start_frame: number, end_frame: number) {
@@ -61,12 +61,12 @@ export class TimeController {
 		this._frame_range[1] = Math.floor(end_frame);
 		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
-	setFrameRange_locked(start_locked: boolean, end_locked: boolean) {
+	setFrameRangeLocked(start_locked: boolean, end_locked: boolean) {
 		this._frameRangeLocked[0] = start_locked;
 		this._frameRangeLocked[1] = end_locked;
 		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	}
-	set_realtimeState(state: boolean) {
+	setRealtimeState(state: boolean) {
 		this._realtimeState = state;
 		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.REALTIME_STATUS_UPDATED);
 	}
@@ -81,7 +81,7 @@ export class TimeController {
 
 			if (update_frame) {
 				const new_frame = Math.floor(this._time * FPS);
-				const bounded_frame = this._ensure_frame_within_bounds(new_frame);
+				const bounded_frame = this._ensureFrameWithinBounds(new_frame);
 				if (new_frame != bounded_frame) {
 					this.setFrame(bounded_frame, true);
 				} else {
@@ -95,7 +95,7 @@ export class TimeController {
 
 			// we block updates here, so that dependent nodes only cook once
 			this.scene.cooker.block();
-			this.graph_node.setSuccessorsDirty();
+			this.graphNode.setSuccessorsDirty();
 			this.scene.cooker.unblock();
 
 			// dispatch events after nodes have cooked
@@ -105,7 +105,7 @@ export class TimeController {
 
 	setFrame(frame: number, update_time = true) {
 		if (frame != this._frame) {
-			frame = this._ensure_frame_within_bounds(frame);
+			frame = this._ensureFrameWithinBounds(frame);
 			if (frame != this._frame) {
 				this._frame = frame;
 				if (update_time) {
@@ -114,14 +114,14 @@ export class TimeController {
 			}
 		}
 	}
-	increment_time_if_playing() {
+	incrementTimeIfPlaying() {
 		if (this._playing) {
 			if (!this.scene.root().are_children_cooking()) {
-				this.increment_time();
+				this.incrementTime();
 			}
 		}
 	}
-	increment_time() {
+	incrementTime() {
 		if (this._realtimeState) {
 			const performance_now = performance.now();
 			const delta = (performance_now - this._prev_performance_now) / 1000.0;
@@ -129,11 +129,11 @@ export class TimeController {
 			this._prev_performance_now = performance_now;
 			this.setTime(new_time);
 		} else {
-			this.setFrame(this.frame + 1);
+			this.setFrame(this.frame() + 1);
 		}
 	}
 
-	_ensure_frame_within_bounds(frame: number): number {
+	_ensureFrameWithinBounds(frame: number): number {
 		if (this._frameRangeLocked[0] && frame < this._frame_range[0]) {
 			return this._frame_range[1];
 		}
@@ -161,7 +161,7 @@ export class TimeController {
 			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.PLAY_EVENT_CONTEXT);
 		}
 	}
-	toggle_play_pause() {
+	togglePlayPause() {
 		if (this.playing) {
 			this.pause();
 		} else {

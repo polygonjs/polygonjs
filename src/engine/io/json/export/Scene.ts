@@ -34,8 +34,8 @@ export class SceneJsonExporter {
 				// name: this._scene.name(), // this conflicts with saving the name from the admin page
 				frame: this._scene.frame() || 1,
 				frameRange: this._scene.frameRange(),
-				frameRangeLocked: this._scene.timeController.frameRangeLocked,
-				realtimeState: this._scene.timeController.realtimeState,
+				frameRangeLocked: this._scene.timeController.frameRangeLocked(),
+				realtimeState: this._scene.timeController.realtimeState(),
 				// fps: this._scene.time_controller.fps,
 				masterCameraNodePath: this._scene.camerasController.masterCameraNodePath(),
 			},

@@ -150,13 +150,13 @@ export class PolyScene {
 	}
 
 	frame() {
-		return this.timeController.frame;
+		return this.timeController.frame();
 	}
 	time() {
-		return this.timeController.time;
+		return this.timeController.time();
 	}
 	frameRange() {
-		return this.timeController.frame_range;
+		return this.timeController.frameRange();
 	}
 	play() {
 		this.timeController.play();

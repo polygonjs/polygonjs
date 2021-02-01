@@ -134,7 +134,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	animate() {
 		if (this._do_render) {
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
-			this._scene.timeController.increment_time_if_playing();
+			this._scene.timeController.incrementTimeIfPlaying();
 			this.render();
 			this._controls_controller?.update();
 		}

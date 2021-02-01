@@ -489,7 +489,7 @@ export class FunctionGenerator extends BaseTraverser {
 				return direct_constant_name;
 			}
 
-			// scene or node globals: $F, $FPS, $T, $CH, $OS
+			// scene or node globals: $F, $T, $CH, $OS
 			const method_name = `traverse_Identifier_${identifier_name_without_dollar_sign}`;
 			const method = (this as any)[method_name];
 			if (method) {
@@ -508,16 +508,16 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	//
 	protected traverse_Identifier_F(): string {
-		this.immutable_dependencies.push(this.param.scene().timeController.graph_node);
-		return `param.scene().timeController.frame`;
+		this.immutable_dependencies.push(this.param.scene().timeController.graphNode);
+		return `param.scene().timeController.frame()`;
 	}
-	protected traverse_Identifier_FPS(): string {
-		this.immutable_dependencies.push(this.param.scene().timeController.graph_node);
-		return `param.scene().timeController.fps`;
-	}
+	// protected traverse_Identifier_FPS(): string {
+	// 	this.immutable_dependencies.push(this.param.scene().timeController.graphNode);
+	// 	return `param.scene().timeController.fps`;
+	// }
 	protected traverse_Identifier_T(): string {
-		this.immutable_dependencies.push(this.param.scene().timeController.graph_node);
-		return `param.scene().timeController.time`;
+		this.immutable_dependencies.push(this.param.scene().timeController.graphNode);
+		return `param.scene().timeController.time()`;
 	}
 	protected traverse_Identifier_CH(): string {
 		return `${QUOTE}${this.param.name()}${QUOTE}`;

@@ -238,7 +238,7 @@ export class ParticlesSystemGpuComputeController {
 		// this.node.states.time_dependent.force_time_dependent();
 		if (!this._graph_node) {
 			this._graph_node = new CoreGraphNode(this.node.scene(), 'gpu_compute');
-			this._graph_node.addGraphInput(this.node.scene().timeController.graph_node);
+			this._graph_node.addGraphInput(this.node.scene().timeController.graphNode);
 			this._graph_node.addPostDirtyHook('on_time_change', this._on_graph_node_dirty.bind(this));
 		}
 	}
