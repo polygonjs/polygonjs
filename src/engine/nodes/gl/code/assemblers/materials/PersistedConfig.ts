@@ -39,7 +39,10 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			for (let name of custom_material_names) {
 				const custom_material = custom_materials[name];
 				if (custom_material) {
-					custom_materials_data[name] = this._material_to_json(custom_material);
+					const material_data = this._material_to_json(custom_material);
+					if (material_data) {
+						custom_materials_data[name] = material_data;
+					}
 				}
 			}
 		}
@@ -51,8 +54,13 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			param_uniform_pairs.push([param_config.name(), param_config.uniform_name]);
 		}
 
+		const material_data = this._material_to_json(this.node.material);
+		if (!material_data) {
+			console.warn('failed to save material from node', this.node.fullPath());
+		}
+
 		const data = {
-			material: this._material_to_json(this.node.material),
+			material: material_data || {},
 			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
 			uniforms_resolution_dependent: assemblerController.assembler.resolution_dependent(),
 			param_uniform_pairs: param_uniform_pairs,

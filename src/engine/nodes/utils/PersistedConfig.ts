@@ -21,12 +21,18 @@ export class BasePersistedConfig {
 	// SAVE MAT
 	//
 	//
-	protected _material_to_json(material: ShaderMaterial): object {
+	protected _material_to_json(material: ShaderMaterial): object | undefined {
 		this._unassign_textures(material);
 
-		const material_data = material.toJSON({});
-		if (material.lights != null) {
-			material_data.lights = material.lights;
+		let material_data: object | undefined = undefined;
+		try {
+			material_data = material.toJSON({});
+		} catch (err) {
+			console.error('failed to save material data');
+			console.log(material);
+		}
+		if (material_data && material.lights != null) {
+			(material_data as any).lights = material.lights;
 		}
 
 		this._reassign_textures(material);
