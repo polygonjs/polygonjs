@@ -8,7 +8,6 @@ import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {Poly} from '../../../../Poly';
 import {
 	WebGlRendererRopNode,
-	WebGLRendererWithSampling,
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
@@ -179,7 +178,7 @@ export class RenderController {
 			return;
 		}
 
-		let renderer: WebGLRendererWithSampling | undefined;
+		let renderer: WebGLRenderer | undefined;
 		if (this.node.pv.setRenderer) {
 			this.update_renderer();
 			if (this._resolved_renderer_rop) {
@@ -204,24 +203,25 @@ export class RenderController {
 		Poly.renderersController.registerRenderer(renderer);
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		this._super_sampling_size.copy(size);
-		if (renderer.sampling) {
-			this._super_sampling_size.multiplyScalar(renderer.sampling);
-		}
 		this.set_renderer_size(canvas, this._super_sampling_size);
 		// remove devicePixelRatio for now, as this seems to double the size
 		// of the canvas on high dpi screens
 		// or if this is used, make sure to have the canvas at 100% width and height
 		// renderer.setPixelRatio(window.devicePixelRatio);
+		// UPDATE: favor using devicePixelRatio
+		// to have nice subsampling feel, without needing antialias
 
 		return renderer;
 	}
 	private static _create_default_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const renderer = new WebGLRenderer({
 			canvas: canvas,
-			antialias: true,
+			antialias: false, // no anti alias with a pixel ratio of 2 is better
 			alpha: true,
 			context: gl,
 		});
+		renderer.setPixelRatio(2 * window.devicePixelRatio);
+
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
 

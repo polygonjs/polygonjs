@@ -172,10 +172,6 @@ const DEFAULT_PARAMS: WebGLRendererParameters = {
 	logarithmicDepthBuffer: false,
 };
 
-export interface WebGLRendererWithSampling extends WebGLRenderer {
-	sampling?: number;
-}
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
@@ -244,7 +240,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 	}
 
 	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
-	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRendererWithSampling {
+	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
@@ -277,7 +273,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 
 		this.cookController.end_cook();
 	}
-	_update_renderer(renderer: WebGLRendererWithSampling) {
+	_update_renderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
 		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
 		renderer.outputEncoding = this.pv.outputEncoding;
@@ -292,7 +288,7 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 
 		renderer.sortObjects = this.pv.sortObjects;
 
-		renderer.sampling = this.pv.sampling;
+		renderer.setPixelRatio(this.pv.sampling * window.devicePixelRatio);
 	}
 
 	private _traverse_scene_and_update_materials() {
