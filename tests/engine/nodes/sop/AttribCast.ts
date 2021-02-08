@@ -1,5 +1,5 @@
-import {AttribType, ATTRIB_TYPES} from '../../../../src/core/operations/sop/AttribCast';
-import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/core/operations/sop/Hierarchy';
+import {AttribType, ATTRIB_TYPES} from '../../../../src/engine/operations/sop/AttribCast';
+import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/sop/Hierarchy';
 
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BufferAttribute, Uint16BufferAttribute} from 'three/src/core/BufferAttribute';

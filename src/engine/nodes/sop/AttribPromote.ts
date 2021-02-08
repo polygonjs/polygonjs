@@ -8,7 +8,7 @@
 import {TypedSopNode} from './_Base';
 import {AttribClassMenuEntries} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {AttribPromoteSopOperation, AttribPromoteMode} from '../../../core/operations/sop/AttribPromote';
+import {AttribPromoteSopOperation, AttribPromoteMode} from '../../operations/sop/AttribPromote';
 
 const PromoteModeMenuEntries = [
 	{name: 'min', value: AttribPromoteMode.MIN},

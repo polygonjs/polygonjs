@@ -1,5 +1,5 @@
 import {BaseNodeClass} from '../../../nodes/_Base';
-import {BaseOperation} from '../../../../core/operations/_Base';
+import {BaseOperation} from '../../../operations/_Base';
 import {NodeContext} from '../../NodeContext';
 import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';

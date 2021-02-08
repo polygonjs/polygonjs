@@ -1,8 +1,8 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {SopOperationContainer, OperationInputsMap} from '../../../core/operations/container/sop';
-import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../core/operations/_Base';
-import {BaseOperationContainer} from '../../../core/operations/container/_Base';
+import {SopOperationContainer, OperationInputsMap} from '../../operations/container/sop';
+import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../operations/_Base';
+import {BaseOperationContainer} from '../../operations/container/_Base';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 

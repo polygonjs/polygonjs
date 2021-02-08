@@ -8,7 +8,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDBO} from '../utils/FlagsController';
-import {BaseSopOperation} from '../../../core/operations/sop/_Base';
+import {BaseSopOperation} from '../../operations/sop/_Base';
 
 enum MESSAGE {
 	FROM_SET_CORE_GROUP = 'from set_core_group',

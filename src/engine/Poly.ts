@@ -13,7 +13,7 @@ import {NodeContext} from './poly/NodeContext';
 import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
-import {BaseOperation} from '../core/operations/_Base';
+import {BaseOperation} from './operations/_Base';
 import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
 import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPlugin} from './poly/registers/plugins/Plugin';

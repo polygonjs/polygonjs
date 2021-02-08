@@ -10,7 +10,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {AddSopOperation} from '../../../core/operations/sop/Add';
+import {AddSopOperation} from '../../operations/sop/Add';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AddSopOperation.DEFAULT_PARAMS;
 class AddSopParamsConfig extends NodeParamsConfig {

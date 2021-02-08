@@ -1,4 +1,4 @@
-import {HIERARCHY_MODES, HierarchyMode} from '../../../../src/core/operations/sop/Hierarchy';
+import {HIERARCHY_MODES, HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 QUnit.test('hierarchy simple', async (assert) => {
 	const geo1 = window.geo1;

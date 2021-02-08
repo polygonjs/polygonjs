@@ -5,7 +5,7 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {AttribCastSopOperation, ATTRIB_TYPES} from '../../../core/operations/sop/AttribCast';
+import {AttribCastSopOperation, ATTRIB_TYPES} from '../../operations/sop/AttribCast';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribCastSopOperation.DEFAULT_PARAMS;

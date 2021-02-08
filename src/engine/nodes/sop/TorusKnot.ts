@@ -7,7 +7,7 @@
  */
 
 import {TypedSopNode} from './_Base';
-import {TorusKnotSopOperation} from '../../../core/operations/sop/TorusKnot';
+import {TorusKnotSopOperation} from '../../operations/sop/TorusKnot';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TorusKnotSopOperation.DEFAULT_PARAMS;

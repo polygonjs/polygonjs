@@ -10,7 +10,7 @@ import {FileType} from '../../params/utils/OptionsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
-import {SvgSopOperation} from '../../../core/operations/sop/Svg';
+import {SvgSopOperation} from '../../operations/sop/Svg';
 const DEFAULT = SvgSopOperation.DEFAULT_PARAMS;
 
 class SvgSopParamsConfig extends NodeParamsConfig {

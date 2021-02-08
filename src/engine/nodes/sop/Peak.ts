@@ -10,7 +10,7 @@ import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {PeakSopOperation} from '../../../core/operations/sop/Peak';
+import {PeakSopOperation} from '../../operations/sop/Peak';
 const DEFAULT = PeakSopOperation.DEFAULT_PARAMS;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 

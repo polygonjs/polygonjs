@@ -5,7 +5,7 @@
  * This is similar to a sphere, but with hexagonal patterns
  */
 import {TypedSopNode} from './_Base';
-import {IcosahedronSopOperation} from '../../../core/operations/sop/Icosahedron';
+import {IcosahedronSopOperation} from '../../operations/sop/Icosahedron';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = IcosahedronSopOperation.DEFAULT_PARAMS;

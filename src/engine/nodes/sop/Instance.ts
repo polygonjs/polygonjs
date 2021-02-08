@@ -10,7 +10,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeContext} from '../../poly/NodeContext';
-import {InstanceSopOperation} from '../../../core/operations/sop/Instance';
+import {InstanceSopOperation} from '../../operations/sop/Instance';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = InstanceSopOperation.DEFAULT_PARAMS;
 class InstanceSopParamsConfig extends NodeParamsConfig {

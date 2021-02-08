@@ -10,7 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
-import {AttribFromTextureSopOperation} from '../../../core/operations/sop/AttribFromTexture';
+import {AttribFromTextureSopOperation} from '../../operations/sop/AttribFromTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribFromTextureSopOperation.DEFAULT_PARAMS;
 class AttribFromTextureSopParamsConfig extends NodeParamsConfig {

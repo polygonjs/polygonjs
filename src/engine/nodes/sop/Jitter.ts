@@ -6,7 +6,7 @@
  */
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedSopNode} from './_Base';
-import {JitterSopOperation} from '../../../core/operations/sop/Jitter';
+import {JitterSopOperation} from '../../operations/sop/Jitter';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT = JitterSopOperation.DEFAULT_PARAMS;

@@ -5,7 +5,7 @@
  */
 
 import {TypedSopNode} from './_Base';
-import {TorusSopOperation} from '../../../core/operations/sop/Torus';
+import {TorusSopOperation} from '../../operations/sop/Torus';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TorusSopOperation.DEFAULT_PARAMS;

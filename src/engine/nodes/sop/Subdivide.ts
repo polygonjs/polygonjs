@@ -6,7 +6,7 @@
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {SubdivideSopOperation} from '../../../core/operations/sop/Subdivide';
+import {SubdivideSopOperation} from '../../operations/sop/Subdivide';
 const DEFAULT = SubdivideSopOperation.DEFAULT_PARAMS;
 class SubdivideSopParamsConfig extends NodeParamsConfig {
 	/** @param number of subdivisions */

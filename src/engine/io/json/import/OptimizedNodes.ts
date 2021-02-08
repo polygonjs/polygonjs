@@ -5,8 +5,8 @@ import {NodeJsonExporterData} from '../export/Node';
 import {ParamJsonImporter} from './Param';
 import {Poly} from '../../../Poly';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
-import {SopOperationContainer} from '../../../../core/operations/container/sop';
-import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../../core/operations/_Base';
+import {SopOperationContainer} from '../../../../engine/operations/container/sop';
+import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../operations/_Base';
 import {CoreType} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 

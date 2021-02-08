@@ -7,7 +7,7 @@
  */
 
 import {TypedSopNode} from './_Base';
-import {SphereSopOperation, SPHERE_TYPES, SPHERE_TYPE} from '../../../core/operations/sop/Sphere';
+import {SphereSopOperation, SPHERE_TYPES, SPHERE_TYPE} from '../../operations/sop/Sphere';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

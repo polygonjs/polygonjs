@@ -22,7 +22,7 @@ const COLOR_ATTRIB_NAME = 'color';
 
 type ValueArrayByName = PolyDictionary<number[]>;
 
-import {ColorSopOperation} from '../../../core/operations/sop/Color';
+import {ColorSopOperation} from '../../operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;

@@ -5,7 +5,7 @@
  */
 
 import {TypedSopNode} from './_Base';
-import {CircleSopOperation} from '../../../core/operations/sop/Circle';
+import {CircleSopOperation} from '../../operations/sop/Circle';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = CircleSopOperation.DEFAULT_PARAMS;

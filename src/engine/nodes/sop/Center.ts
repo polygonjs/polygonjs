@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {CenterSopOperation} from '../../../core/operations/sop/Center';
+import {CenterSopOperation} from '../../operations/sop/Center';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class CenterSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CenterSopParamsConfig();

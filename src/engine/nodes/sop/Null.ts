@@ -7,7 +7,7 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {NullSopOperation} from '../../../core/operations/sop/Null';
+import {NullSopOperation} from '../../operations/sop/Null';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class NullSopParamsConfig extends NodeParamsConfig {}

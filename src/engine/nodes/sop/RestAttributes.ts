@@ -6,7 +6,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
-import {RestAttributesSopOperation} from '../../../core/operations/sop/RestAttributes';
+import {RestAttributesSopOperation} from '../../operations/sop/RestAttributes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = RestAttributesSopOperation.DEFAULT_PARAMS;
 class RestAttributesSopParamsConfig extends NodeParamsConfig {

@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ROTATION_ORDERS, TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
-import {TransformSopOperation} from '../../../core/operations/sop/Transform';
+import {TransformSopOperation} from '../../operations/sop/Transform';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;

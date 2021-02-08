@@ -10,7 +10,7 @@ import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {FileType} from '../../params/utils/OptionsController';
-import {FileSopOperation} from '../../../core/operations/sop/File';
+import {FileSopOperation} from '../../operations/sop/File';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';

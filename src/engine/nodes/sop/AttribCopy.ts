@@ -19,7 +19,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {AttribCopySopOperation} from '../../../core/operations/sop/AttribCopy';
+import {AttribCopySopOperation} from '../../operations/sop/AttribCopy';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribCopySopOperation.DEFAULT_PARAMS;
 class AttribCopySopParamsConfig extends NodeParamsConfig {

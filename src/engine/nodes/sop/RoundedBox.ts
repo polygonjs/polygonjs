@@ -4,7 +4,7 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {RoundedBoxSopOperation} from '../../../core/operations/sop/RoundedBox';
+import {RoundedBoxSopOperation} from '../../operations/sop/RoundedBox';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = RoundedBoxSopOperation.DEFAULT_PARAMS;

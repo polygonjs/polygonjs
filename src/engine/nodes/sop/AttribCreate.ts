@@ -37,7 +37,7 @@ const COMPONENT_NAMES: Array<VectorComponent> = ['x', 'y', 'z', 'w'];
 
 type ValueArrayByName = PolyDictionary<number[]>;
 
-import {AttribCreateSopOperation} from '../../../core/operations/sop/AttribCreate';
+import {AttribCreateSopOperation} from '../../operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {

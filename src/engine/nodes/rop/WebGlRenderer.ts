@@ -206,7 +206,7 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param sort objects, which can be necessary when rendering transparent objects */
 	sortObjects = ParamConfig.BOOLEAN(1);
 	/** @param sampling will increase the renderer size */
-	sampling = ParamConfig.INTEGER(1, {
+	sampling = ParamConfig.INTEGER(2, {
 		range: [1, 4],
 		rangeLocked: [true, false],
 	});

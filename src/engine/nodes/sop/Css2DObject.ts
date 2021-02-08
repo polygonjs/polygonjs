@@ -10,7 +10,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {Css2DObjectSopOperation} from '../../../core/operations/sop/Css2DObject';
+import {Css2DObjectSopOperation} from '../../operations/sop/Css2DObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = Css2DObjectSopOperation.DEFAULT_PARAMS;
 class Css2DObjectSopParamsConfig extends NodeParamsConfig {

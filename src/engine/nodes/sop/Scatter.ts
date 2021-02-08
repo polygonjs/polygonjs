@@ -6,7 +6,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
-import {ScatterSopOperation} from '../../../core/operations/sop/Scatter';
+import {ScatterSopOperation} from '../../operations/sop/Scatter';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = ScatterSopOperation.DEFAULT_PARAMS;
 class ScatterSopParamsConfig extends NodeParamsConfig {
