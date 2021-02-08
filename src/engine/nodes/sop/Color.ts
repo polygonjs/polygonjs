@@ -83,7 +83,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		}
 
 		// needs update required for when no cloning
-		if (!this.io.inputs.clone_required(0)) {
+		if (!this.io.inputs.cloneRequired(0)) {
 			const geometries = core_group.geometries();
 			for (let geometry of geometries) {
 				(geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).needsUpdate = true;

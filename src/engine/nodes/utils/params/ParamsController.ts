@@ -66,7 +66,7 @@ export class ParamsController {
 	get label(): ParamsLabelController {
 		return (this._label_controller = this._label_controller || new ParamsLabelController());
 	}
-	has_label_controller(): boolean {
+	hasLabelController(): boolean {
 		return this._label_controller != null;
 	}
 
@@ -508,9 +508,9 @@ export class ParamsController {
 
 	async eval_params(params: BaseParamType[]) {
 		const promises = [];
-		for (let i = 0; i < params.length; i++) {
-			if (params[i].isDirty()) {
-				promises.push(this._eval_param(params[i]));
+		for (let param of params) {
+			if (param.isDirty()) {
+				promises.push(this._eval_param(param));
 			}
 		}
 		await Promise.all(promises);
@@ -551,7 +551,7 @@ export class ParamsController {
 			this._post_create_params_hooks.push(hook);
 		}
 	}
-	add_on_scene_load_hook(param_name: string, method: OnSceneLoadHook) {
+	addOnSceneLoadHook(param_name: string, method: OnSceneLoadHook) {
 		this._on_scene_load_hook_names = this._on_scene_load_hook_names || [];
 		this._on_scene_load_hooks = this._on_scene_load_hooks || [];
 
@@ -569,7 +569,7 @@ export class ParamsController {
 			}
 		}
 	}
-	run_on_scene_load_hooks() {
+	runOnSceneLoadHooks() {
 		if (this._on_scene_load_hooks) {
 			for (let hook of this._on_scene_load_hooks) {
 				hook();

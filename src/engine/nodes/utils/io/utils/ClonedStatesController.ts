@@ -17,7 +17,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 	constructor(private inputs_controller: InputsController<NC>) {
 		this.node = inputs_controller.node;
 	}
-	init_inputs_cloned_state(states: InputCloneMode | InputCloneMode[]) {
+	initInputsClonedState(states: InputCloneMode | InputCloneMode[]) {
 		// if (values) {
 		// 	this._user_inputs_clonable_states = values;
 		// }
@@ -30,7 +30,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 		this._update_clone_required_state();
 	}
 
-	override_cloned_state_allowed() {
+	overrideClonedStateAllowed() {
 		if (this._cloned_states) {
 			for (let state of this._cloned_states) {
 				if (state == InputCloneMode.FROM_NODE) {
@@ -47,10 +47,10 @@ export class ClonedStatesController<NC extends NodeContext> {
 	// private get inputs_clonable_state(): InputCloneMode[] {
 	// 	return (this._inputs_clonable_states = this._inputs_clonable_states || this.init_inputs_clonable_state());
 	// }
-	clone_required_state(index: number): boolean {
+	cloneRequiredState(index: number): boolean {
 		return this._clone_required_states[index];
 	}
-	clone_required_states(): boolean | boolean[] {
+	cloneRequiredStates(): boolean | boolean[] {
 		return this._clone_required_states;
 	}
 	// inputs_clonable_state_with_override(): boolean[] {
@@ -95,7 +95,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 	// 	return list;
 	// }
 
-	override_cloned_state(state: boolean) {
+	overrideClonedState(state: boolean) {
 		this._overridden = state;
 		this._update_clone_required_state();
 		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);

@@ -73,7 +73,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 				});
 			});
 		});
-		this.params.add_on_scene_load_hook('prepare params', () => {
+		this.params.addOnSceneLoadHook('prepare params', () => {
 			if (this.material_node?.assemblerController?.allow_attribute_exports()) {
 				this.p.texport_when_connected.set(1);
 			}

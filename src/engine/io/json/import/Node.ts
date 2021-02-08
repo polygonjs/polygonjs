@@ -35,10 +35,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		this.set_selection(data['selection']);
 
 		// inputs clone
-		if (this._node.io.inputs.override_cloned_state_allowed()) {
+		if (this._node.io.inputs.overrideClonedStateAllowed()) {
 			const override = data['cloned_state_overriden'];
 			if (override) {
-				this._node.io.inputs.override_cloned_state(override);
+				this._node.io.inputs.overrideClonedState(override);
 			}
 		}
 
@@ -277,7 +277,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		// those hooks are useful for some gl nodes,
 		// such as the constant, which needs to update its connections
 		// based on another parameter, which will be set just before
-		this._node.params.run_on_scene_load_hooks();
+		this._node.params.runOnSceneLoadHooks();
 	}
 
 	private _process_param_data_simple(param_name: string, param_data: SimpleParamJsonExporterData<ParamType>) {

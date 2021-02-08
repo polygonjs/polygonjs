@@ -426,27 +426,27 @@ export class InputsController<NC extends NodeContext> {
 	initInputsClonedState(states: InputCloneMode | InputCloneMode[]) {
 		if (!this._cloned_states_controller) {
 			this._cloned_states_controller = new ClonedStatesController(this);
-			this._cloned_states_controller.init_inputs_cloned_state(states);
+			this._cloned_states_controller.initInputsClonedState(states);
 		}
 	}
-	override_cloned_state_allowed(): boolean {
-		return this._cloned_states_controller?.override_cloned_state_allowed() || false;
+	overrideClonedStateAllowed(): boolean {
+		return this._cloned_states_controller?.overrideClonedStateAllowed() || false;
 	}
-	override_cloned_state(state: boolean) {
-		this._cloned_states_controller?.override_cloned_state(state);
+	overrideClonedState(state: boolean) {
+		this._cloned_states_controller?.overrideClonedState(state);
 	}
-	cloned_state_overriden() {
+	clonedStateOverriden() {
 		return this._cloned_states_controller?.overriden() || false;
 	}
-	clone_required(index: number) {
-		const state = this._cloned_states_controller?.clone_required_state(index);
+	cloneRequired(index: number) {
+		const state = this._cloned_states_controller?.cloneRequiredState(index);
 		if (state != null) {
 			return state;
 		}
 		return true;
 	}
-	clone_required_states(): boolean | boolean[] {
-		const states = this._cloned_states_controller?.clone_required_states();
+	cloneRequiredStates(): boolean | boolean[] {
+		const states = this._cloned_states_controller?.cloneRequiredStates();
 		if (states != null) {
 			return states;
 		}

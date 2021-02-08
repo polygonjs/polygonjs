@@ -136,7 +136,7 @@ export class NodeCookController<NC extends NodeContext> {
 		for (let i = 0; i < inputs.length; i++) {
 			input_container = input_containers[i];
 			if (input_container) {
-				if (io_inputs.clone_required(i)) {
+				if (io_inputs.cloneRequired(i)) {
 					input_contents[i] = input_container.coreContentCloned() as ContainableMap[NC];
 				} else {
 					input_contents[i] = input_container.coreContent() as ContainableMap[NC];

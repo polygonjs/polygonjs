@@ -178,7 +178,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			}
 		}
 
-		if (!this.io.inputs.clone_required(0)) {
+		if (!this.io.inputs.cloneRequired(0)) {
 			for (let geometry of core_group.geometries()) {
 				(geometry.getAttribute(dest_attribName) as BufferAttribute).needsUpdate = true;
 			}

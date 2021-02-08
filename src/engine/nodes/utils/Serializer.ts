@@ -57,8 +57,8 @@ export class NodeSerializer {
 			named_output_connection_points: this.named_output_connection_points(),
 			param_ids: this.to_json_params(include_param_components),
 			// spare_params: this.to_json_spare_params(include_param_components),
-			override_cloned_state_allowed: this.node.io.inputs.override_cloned_state_allowed(),
-			inputs_clone_required_states: this.node.io.inputs.clone_required_states(),
+			override_cloned_state_allowed: this.node.io.inputs.overrideClonedStateAllowed(),
+			inputs_clone_required_states: this.node.io.inputs.cloneRequiredStates(),
 			flags: {
 				//has_display: this.has_display_flag()
 				display: this.node.flags?.display?.active(),

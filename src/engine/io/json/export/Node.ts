@@ -147,8 +147,8 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		// inputs clone
-		if (this._node.io.inputs.override_cloned_state_allowed()) {
-			const overriden = this._node.io.inputs.cloned_state_overriden();
+		if (this._node.io.inputs.overrideClonedStateAllowed()) {
+			const overriden = this._node.io.inputs.clonedStateOverriden();
 			if (overriden) {
 				this._data['cloned_state_overriden'] = overriden;
 			}

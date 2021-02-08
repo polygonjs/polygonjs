@@ -104,10 +104,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			this._update_signature_if_required_bound
 		);
 		// this.node.lifecycle.add_on_add_hook(this._update_signature_if_required_bound);
-		this.node.params.add_on_scene_load_hook(
-			'_update_signature_if_required',
-			this._update_signature_if_required_bound
-		);
+		this.node.params.addOnSceneLoadHook('_update_signature_if_required', this._update_signature_if_required_bound);
 		this.node.params.onParamsCreated(
 			'_update_signature_if_required_bound',
 			this._update_signature_if_required_bound
