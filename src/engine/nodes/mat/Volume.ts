@@ -34,7 +34,7 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 
 	private _volume_controller = new VolumeController(this);
 
-	create_material() {
+	createMaterial() {
 		const mat = new ShaderMaterial({
 			vertexShader: VERTEX,
 			fragmentShader: FRAGMENT,

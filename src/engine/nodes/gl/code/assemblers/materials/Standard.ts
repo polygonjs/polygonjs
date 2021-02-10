@@ -27,7 +27,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		};
 	}
 
-	create_material() {
+	createMaterial() {
 		const template_shader = this._template_shader;
 
 		const options = {

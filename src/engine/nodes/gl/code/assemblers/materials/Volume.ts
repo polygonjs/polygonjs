@@ -32,7 +32,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 			uniforms: UniformsUtils.clone(VOLUME_UNIFORMS),
 		};
 	}
-	create_material() {
+	createMaterial() {
 		const template_shader = this._template_shader;
 		const material = new ShaderMaterial({
 			vertexShader: template_shader.vertexShader,

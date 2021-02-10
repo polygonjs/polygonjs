@@ -28,7 +28,7 @@ class DepthParamsConfig extends DepthParamConfig(NodeParamsConfig) {}
 
 abstract class DepthMapMatNode extends TypedMatNode<Material, DepthParamsConfig> {
 	depth_controller!: DepthController;
-	abstract create_material(): Material;
+	abstract createMaterial(): Material;
 }
 
 export class DepthController extends BaseController {

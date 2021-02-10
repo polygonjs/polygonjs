@@ -55,7 +55,7 @@ interface HandleGlobalsOutputOptions {
 export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
 
-	create_material(): ShaderMaterial {
+	createMaterial(): ShaderMaterial {
 		return new ShaderMaterial();
 	}
 
@@ -88,7 +88,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			this._assemblers_by_custom_name.set(custom_name, custom_assembler);
 		}
 		material.custom_materials = material.custom_materials || {};
-		material.custom_materials[custom_name] = custom_assembler.create_material();
+		material.custom_materials[custom_name] = custom_assembler.createMaterial();
 	}
 
 	compile_custom_materials(material: ShaderMaterialWithCustomMaterials) {

@@ -33,7 +33,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 		return 'meshBasic';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new MeshBasicMaterial({
 			vertexColors: false,
 			side: FrontSide,

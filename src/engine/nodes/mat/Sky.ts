@@ -41,7 +41,7 @@ export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyM
 		return 'sky';
 	}
 
-	create_material() {
+	createMaterial() {
 		const object = new Sky();
 		const mat = object.material as ShaderMaterialWithSkyUniforms;
 		mat.depthWrite = true;

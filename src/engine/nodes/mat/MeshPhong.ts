@@ -29,7 +29,7 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 		return 'meshPhong';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new MeshPhongMaterial({
 			vertexColors: false,
 			side: FrontSide,

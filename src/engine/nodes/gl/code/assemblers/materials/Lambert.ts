@@ -14,7 +14,7 @@ export class ShaderAssemblerLambert extends ShaderAssemblerMesh {
 			uniforms: template.uniforms,
 		};
 	}
-	create_material() {
+	createMaterial() {
 		const template_shader = this._template_shader;
 		const material = new ShaderMaterial({
 			lights: true,

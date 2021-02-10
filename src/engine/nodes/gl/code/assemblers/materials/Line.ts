@@ -36,7 +36,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			uniforms: template.uniforms,
 		};
 	}
-	create_material() {
+	createMaterial() {
 		const template_shader = this._template_shader;
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )

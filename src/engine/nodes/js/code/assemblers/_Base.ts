@@ -43,7 +43,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 		return true;
 	}
 
-	// protected create_material(): ShaderMaterial | undefined {
+	// protected createMaterial(): ShaderMaterial | undefined {
 	// 	return undefined;
 	// }
 	protected _build_lines() {

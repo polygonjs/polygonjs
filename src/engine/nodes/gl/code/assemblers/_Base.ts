@@ -70,10 +70,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	compile() {}
 
 	// private get material() {
-	// 	return (this._material = this._material || this._create_material());
+	// 	return (this._material = this._material || this._createMaterial());
 	// }
 	// async get_material(/*master_assembler?: BaseGlShaderAssembler*/) {
-	// 	this._material = this._material || this._create_material();
+	// 	this._material = this._material || this._createMaterial();
 
 	// 	await this._update_material(/*master_assembler*/);
 	// 	return this._material;
@@ -97,7 +97,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return this._shaders_by_name;
 	}
 
-	// protected create_material(): ShaderMaterial | undefined {
+	// protected createMaterial(): ShaderMaterial | undefined {
 	// 	return undefined;
 	// }
 	protected _build_lines() {

@@ -26,7 +26,7 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 		return 'lineBasic';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new LineBasicMaterial({
 			color: 0xffffff,
 			linewidth: 1,

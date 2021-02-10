@@ -15,7 +15,7 @@ class SkinnedMaterial extends Material {
 }
 class SkinningParamsConfig extends SkinningParamConfig(NodeParamsConfig) {}
 class SkinningMatNode extends TypedMatNode<SkinnedMaterial, SkinningParamsConfig> {
-	create_material() {
+	createMaterial() {
 		return new SkinnedMaterial();
 	}
 }

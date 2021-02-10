@@ -51,7 +51,7 @@ class WireframedMaterial extends Material {
 }
 class WireframeParamsConfig extends WireframeParamConfig(NodeParamsConfig) {}
 class WireframedMatNode extends TypedMatNode<WireframedMaterial, WireframeParamsConfig> {
-	create_material() {
+	createMaterial() {
 		return new WireframedMaterial();
 	}
 }

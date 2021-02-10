@@ -21,7 +21,7 @@ class SidedMaterial extends Material {
 }
 class SideParamsConfig extends SideParamConfig(NodeParamsConfig) {}
 class SideMatNode extends TypedMatNode<SidedMaterial, SideParamsConfig> {
-	create_material() {
+	createMaterial() {
 		return new SidedMaterial();
 	}
 }

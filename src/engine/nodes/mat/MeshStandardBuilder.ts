@@ -13,6 +13,10 @@ import {SkinningParamConfig, SkinningController} from './utils/SkinningControlle
 import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
+import {
+	TextureDisplacementMapController,
+	TextureDisplacementMapParamConfig,
+} from './utils/TextureDisplacementMapController';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerStandard} from '../gl/code/assemblers/materials/Standard';
 import {BaseParamType} from '../../params/_Base';
@@ -22,10 +26,12 @@ import {Poly} from '../../Poly';
 
 import {SHADER_DEFAULTS} from './MeshStandard';
 
-class MeshStandardMatParamsConfig extends TextureEnvMapParamConfig(
-	TextureAlphaMapParamConfig(
-		TextureMapParamConfig(
-			SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+class MeshStandardMatParamsConfig extends TextureDisplacementMapParamConfig(
+	TextureEnvMapParamConfig(
+		TextureAlphaMapParamConfig(
+			TextureMapParamConfig(
+				SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+			)
 		)
 	)
 ) {
@@ -66,6 +72,14 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		direct_params: true,
 		// define: false,
 	});
+	readonly texture_displacement_map_controller: TextureDisplacementMapController = new TextureDisplacementMapController(
+		this,
+		{
+			uniforms: true,
+			direct_params: true,
+			// define: false,
+		}
+	);
 	readonly depth_controller: DepthController = new DepthController(this);
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
@@ -84,10 +98,10 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		TextureMapController.update(this);
 		TextureAlphaMapController.update(this);
 		TextureEnvMapController.update(this);
+		TextureDisplacementMapController.update(this);
 		this.depth_controller.update();
 
 		if (this._material) {
-			this._material.uniforms.envMapIntensity.value = this.pv.envMapIntensity;
 			MeshStandardBuilderMatNode._update_metalness(this);
 			MeshStandardBuilderMatNode._update_roughness(this);
 		}

@@ -29,7 +29,7 @@ type CurrentMaterial = TextureAlphaMaterial | ShaderMaterial;
 class TextureAlphaMapParamsConfig extends TextureAlphaMapParamConfig(NodeParamsConfig) {}
 abstract class TextureAlphaMapMatNode extends TypedMatNode<CurrentMaterial, TextureAlphaMapParamsConfig> {
 	texture_alpha_map_controller!: TextureAlphaMapController;
-	abstract create_material(): CurrentMaterial;
+	abstract createMaterial(): CurrentMaterial;
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {

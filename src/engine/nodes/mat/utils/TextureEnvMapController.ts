@@ -1,6 +1,4 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
 import {
 	BaseTextureMapController,
@@ -12,6 +10,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
+import {MeshStandardMaterial} from 'three';
 export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
@@ -22,14 +21,15 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 	};
 }
-class TextureEnvMaterial extends Material {
-	envMap!: Texture | null;
-}
-type CurrentMaterial = TextureEnvMaterial | ShaderMaterial;
+// class TextureEnvMaterial extends Material {
+// 	envMap!: Texture | null;
+// 	envMapIntensity!: number;
+// }
+type CurrentMaterial = MeshStandardMaterial | ShaderMaterial;
 class TextureEnvMapParamsConfig extends TextureEnvMapParamConfig(NodeParamsConfig) {}
 abstract class TextureEnvMapMatNode extends TypedMatNode<CurrentMaterial, TextureEnvMapParamsConfig> {
 	texture_env_map_controller!: TextureEnvMapController;
-	abstract create_material(): CurrentMaterial;
+	abstract createMaterial(): CurrentMaterial;
 }
 
 export class TextureEnvMapController extends BaseTextureMapController {
@@ -41,6 +41,14 @@ export class TextureEnvMapController extends BaseTextureMapController {
 	}
 	async update() {
 		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
+		if (this._update_options.uniforms) {
+			const mat = this.node.material as ShaderMaterial;
+			mat.uniforms.envMapIntensity.value = this.node.pv.envMapIntensity;
+		}
+		if (this._update_options.direct_params) {
+			const mat = this.node.material as MeshStandardMaterial;
+			mat.envMapIntensity = this.node.pv.envMapIntensity;
+		}
 	}
 	static async update(node: TextureEnvMapMatNode) {
 		node.texture_env_map_controller.update();

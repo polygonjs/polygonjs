@@ -33,7 +33,7 @@ class ColoredMaterial extends Material {
 }
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
 class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
-	create_material() {
+	createMaterial() {
 		return new ColoredMaterial();
 	}
 }

@@ -26,7 +26,7 @@ export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // }
 // class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
 // class TextureMapMatNode extends TypedMatNode<TextureMapMaterial, TextureMapParamsConfig> {
-// 	create_material() {
+// 	createMaterial() {
 // 		return new TextureMapMaterial();
 // 	}
 // }

@@ -28,7 +28,7 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 		return 'meshLambert';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new MeshLambertMaterial({
 			vertexColors: false,
 			side: FrontSide,

@@ -121,7 +121,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	static type() {
 		return 'meshSubsurfaceScattering';
 	}
-	create_material() {
+	createMaterial() {
 		const uniforms = UniformsUtils.clone(SubsurfaceScatteringShader.uniforms);
 		const material: ShaderMaterialWithUniforms = new ShaderMaterial({
 			uniforms: uniforms,

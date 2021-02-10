@@ -17,16 +17,22 @@ import {SkinningController, SkinningParamConfig} from './utils/SkinningControlle
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
+import {
+	TextureDisplacementMapController,
+	TextureDisplacementMapParamConfig,
+} from './utils/TextureDisplacementMapController';
 
 export const SHADER_DEFAULTS = {
 	metalness: 1,
 	roughness: 0.5,
 };
 
-class MeshStandardMatParamsConfig extends TextureEnvMapParamConfig(
-	TextureAlphaMapParamConfig(
-		TextureMapParamConfig(
-			SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+class MeshStandardMatParamsConfig extends TextureDisplacementMapParamConfig(
+	TextureEnvMapParamConfig(
+		TextureAlphaMapParamConfig(
+			TextureMapParamConfig(
+				SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+			)
 		)
 	)
 ) {
@@ -51,7 +57,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		return 'meshStandard';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new MeshStandardMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -69,6 +75,12 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 	readonly texture_env_map_controller: TextureEnvMapController = new TextureEnvMapController(this, {
 		direct_params: true,
 	});
+	readonly texture_displacement_map_controller: TextureDisplacementMapController = new TextureDisplacementMapController(
+		this,
+		{
+			direct_params: true,
+		}
+	);
 	readonly depth_controller: DepthController = new DepthController(this);
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
@@ -85,9 +97,9 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 		this.texture_env_map_controller.update();
+		this.texture_displacement_map_controller.update();
 
 		if (this._material) {
-			this._material.envMapIntensity = this.pv.envMapIntensity;
 			this._material.roughness = this.pv.roughness;
 			this._material.metalness = this.pv.metalness;
 		}

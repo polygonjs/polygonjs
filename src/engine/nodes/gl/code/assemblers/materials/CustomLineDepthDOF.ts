@@ -34,7 +34,7 @@ export class ShaderAssemblerCustomLineDepthDOF extends ShaderAssemblerMaterial {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
 
-	create_material() {
+	createMaterial() {
 		const template_shader = this._template_shader;
 		return new ShaderMaterial({
 			// defines: {

@@ -23,13 +23,13 @@ export abstract class TypedBuilderMatNode<
 	// MATERIAL
 	//
 	//
-	create_material() {
+	createMaterial() {
 		let material: ShaderMaterialWithCustomMaterials | undefined;
 		if (this.persisted_config) {
 			material = this.persisted_config.material();
 		}
 		if (!material) {
-			material = this.assemblerController?.assembler.create_material() as ShaderMaterialWithCustomMaterials;
+			material = this.assemblerController?.assembler.createMaterial() as ShaderMaterialWithCustomMaterials;
 		}
 		return material;
 	}

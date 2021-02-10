@@ -27,7 +27,7 @@ type CurrentMaterial = TextureMapMaterial | ShaderMaterial;
 class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
 abstract class TextureMapMatNode extends TypedMatNode<CurrentMaterial, TextureMapParamsConfig> {
 	texture_map_controller!: TextureMapController;
-	abstract create_material(): CurrentMaterial;
+	abstract createMaterial(): CurrentMaterial;
 }
 
 export class TextureMapController extends BaseTextureMapController {

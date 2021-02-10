@@ -35,7 +35,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		return 'points';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new PointsMaterial({
 			vertexColors: false,
 			side: FrontSide,

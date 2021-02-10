@@ -21,7 +21,7 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatPara
 		return 'shadow';
 	}
 
-	create_material() {
+	createMaterial() {
 		return new ShadowMaterial({
 			vertexColors: false,
 			side: FrontSide,

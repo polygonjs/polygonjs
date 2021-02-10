@@ -34,9 +34,9 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 		}
 	}
 
-	abstract create_material(): M;
+	abstract createMaterial(): M;
 	get material() {
-		return (this._material = this._material || this.create_material());
+		return (this._material = this._material || this.createMaterial());
 	}
 	//
 
@@ -56,7 +56,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 export type BaseMatNodeType = TypedMatNode<Material, any>;
 export class BaseMatNodeClass extends TypedMatNode<Material, any> {
-	create_material() {
+	createMaterial() {
 		return new Material();
 	}
 }
