@@ -1,8 +1,6 @@
 # Polygonjs
 
 [![NPM package][npm]][npm-url]
-[![Dependencies][dependencies]][dependencies-url]
-[![Dev Dependencies][dev-dependencies]][dev-dependencies-url]
 [![Language Grade][lgtm]][lgtm-url]
 [![Twitter][twitter-img]][twitter-url]
 
@@ -10,20 +8,22 @@ Polygonjs is a node-based 3D Webgl engine. [Try our examples](https://polygonjs.
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/screenshots/screenshot.001.jpg)
 
-Install: `npm install polygonjs-engine` or `yarn add polygonjs-engine`.
+Install: `npm install @polygonjs/polygonjs` or `yarn add @polygonjs/polygonjs`.
 
-Or use from the CDN: `https://unpkg.com/polygonjs-engine@latest/dist/all.js`.
+Or use from the CDN: `https://unpkg.com/@polygonjs/polygonjs@1.1.61/dist/all.js`.
 
 The API is designed to be very simple. Here is how you create a minimal scene with a box:
 
 ```javascript
-import {PolyScene} from 'polygonjs-engine/dist/src/engine/scene/PolyScene';
+import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
 
 // create a scene
 const scene = new PolyScene();
+// or if you are importing from the CDN:
+// const scene = new POLY.PolyScene();
 
 // create a box
-const geo = scene.root.createNode('geo');
+const geo = scene.root().createNode('geo');
 const box = geo.createNode('box');
 
 // add a light
@@ -62,14 +62,10 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 -   [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get a nicer lighting.
 -   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create rigid bodies.
 
-[npm]: https://img.shields.io/npm/v/polygonjs-engine.svg
-[npm-url]: https://www.npmjs.com/package/polygonjs-engine
-[dependencies]: https://img.shields.io/david/polygonjs/polygonjs-engine.svg
-[dependencies-url]: https://david-dm.org/polygonjs/polygonjs-engine
-[dev-dependencies]: https://img.shields.io/david/dev/polygonjs/polygonjs-engine.svg
-[dev-dependencies-url]: https://david-dm.org/polygonjs/polygonjs-engine#info=devDependencies
-[lgtm]: https://img.shields.io/lgtm/grade/javascript/g/polygonjs/polygonjs-engine.svg?label=code%20quality
-[lgtm-url]: https://lgtm.com/projects/g/polygonjs/polygonjs-engine/
+[npm]: https://img.shields.io/npm/v/@polygonjs/polygonjs.svg
+[npm-url]: https://www.npmjs.com/package/@polygonjs/polygonjs
+[lgtm]: https://img.shields.io/lgtm/grade/javascript/g/polygonjs/polygonjs.svg?label=code%20quality
+[lgtm-url]: https://lgtm.com/projects/g/polygonjs/polygonjs/
 [twitter-img]: https://img.shields.io/twitter/follow/polygonjs.svg?style=social&label=Follow
 [twitter-url]: https://twitter.com/intent/follow?screen_name=polygonjs
 
