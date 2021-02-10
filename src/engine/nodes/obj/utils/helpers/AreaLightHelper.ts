@@ -9,7 +9,6 @@ export class RectAreaLightObjNodeHelper extends BaseLightHelper<RectAreaLightHel
 	}
 	buildHelper() {}
 	update() {
-		this._object.update();
-		this._object.updateMatrix();
+		this._object.updateMatrixWorld();
 	}
 }
