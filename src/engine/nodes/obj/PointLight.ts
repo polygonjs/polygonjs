@@ -71,6 +71,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 	}
 
 	update_light_params() {
+		console.log('this.pv.color', this.pv.color);
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.decay = this.pv.decay;

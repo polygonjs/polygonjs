@@ -21,6 +21,17 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {TypeAssert} from '../../poly/Assert';
+
+enum TransformMode {
+	OBJECT = 0,
+	GEOMETRY = 1,
+}
+const TRANSFORM_MODES: TransformMode[] = [TransformMode.OBJECT, TransformMode.GEOMETRY];
+const TransformModeMenuEntries = [
+	{name: 'object', value: TransformMode.OBJECT},
+	{name: 'geometry', value: TransformMode.GEOMETRY},
+];
 class CopySopParamsConfig extends NodeParamsConfig {
 	/** @param copies count, used when the second input is not given */
 	count = ParamConfig.INTEGER(1, {
@@ -29,6 +40,12 @@ class CopySopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param transforms every input object each on a single input point */
 	transformOnly = ParamConfig.BOOLEAN(0);
+	/** @param transforms every input object each on a single input point */
+	transformMode = ParamConfig.INTEGER(0, {
+		menu: {
+			entries: TransformModeMenuEntries,
+		},
+	});
 	/** @param toggles on to copy attributes from the input points to the created objects. Note that the vertex attributes from the points become object attributes */
 	copyAttributes = ParamConfig.BOOLEAN(0);
 	/** @param names of attributes to copy */
@@ -133,29 +150,55 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			if (this.pv.transformOnly) {
 				moved_object.applyMatrix4(matrix);
 			} else {
-				const geometry = moved_object.geometry;
-				if (geometry) {
-					moved_object.geometry.applyMatrix4(matrix);
-				} //else {
-				//moved_object.applyMatrix4(matrix);
-				//}
+				this._apply_matrix_to_object_or_geometry(moved_object, matrix);
 			}
 
 			this._objects.push(moved_object);
 		}
 	}
 
+	private _apply_matrix_to_object_or_geometry(object: Object3D, matrix: Matrix4) {
+		const transformMode = TRANSFORM_MODES[this.pv.transformMode];
+		switch (transformMode) {
+			case TransformMode.OBJECT: {
+				this._apply_matrix_to_object(object, matrix);
+				return;
+			}
+			case TransformMode.GEOMETRY: {
+				const geometry = (object as Object3DWithGeometry).geometry;
+				if (geometry) {
+					geometry.applyMatrix4(matrix);
+				}
+				return;
+			}
+		}
+		TypeAssert.unreachable(transformMode);
+	}
+
+	private _object_position = new Vector3();
+	private _apply_matrix_to_object(object: Object3D, matrix: Matrix4) {
+		// center to origin
+		this._object_position.copy(object.position);
+		object.position.multiplyScalar(0);
+		object.updateMatrix();
+		// apply matrix
+		object.applyMatrix4(matrix);
+		// revert to position
+		object.position.add(this._object_position);
+		object.updateMatrix();
+	}
+
 	private async _get_moved_objects_for_template_point(
 		instance_core_group: CoreGroup,
 		point_index: number
-	): Promise<Object3DWithGeometry[]> {
+	): Promise<Object3D[]> {
 		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 		if (stamped_instance_core_group) {
 			// duplicate or select from instance children
 			const moved_objects = this.pv.transformOnly
 				? // TODO: why is doing a transform slower than cloning the input??
-				  ArrayUtils.compact([stamped_instance_core_group.objectsWithGeo()[point_index]])
-				: stamped_instance_core_group.clone().objectsWithGeo();
+				  ArrayUtils.compact([stamped_instance_core_group.objects()[point_index]])
+				: stamped_instance_core_group.clone().objects();
 
 			return moved_objects;
 		} else {

@@ -44,7 +44,7 @@ export class TransformSopOperation extends BaseSopOperation {
 
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: TransformSopParams) {
-		const objects = input_contents[0].objectsWithGeo();
+		const objects = input_contents[0].objects();
 		const matrix = this._core_transform.matrix(
 			params.t,
 			params.r,
@@ -57,43 +57,42 @@ export class TransformSopOperation extends BaseSopOperation {
 
 		return input_contents[0];
 	}
-	private _apply_transform(objects: Object3DWithGeometry[], params: TransformSopParams, matrix: Matrix4) {
+	private _apply_transform(objects: Object3D[], params: TransformSopParams, matrix: Matrix4) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRIES: {
 				return this._apply_matrix_to_geometries(objects, params, matrix);
 			}
 			case TransformTargetType.OBJECTS: {
-				return this._apply_matrix_to_objects(objects, params, matrix);
+				return this._apply_matrix_to_objects(objects, matrix);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
 
-	private _apply_matrix_to_geometries(objects: Object3DWithGeometry[], params: TransformSopParams, matrix: Matrix4) {
-		if (params.group === '') {
+	private _point_pos = new Vector3();
+	private _apply_matrix_to_geometries(objects: Object3D[], params: TransformSopParams, matrix: Matrix4) {
+		if (params.group.trim() === '') {
 			for (let object of objects) {
-				let geometry;
-				if ((geometry = object.geometry) != null) {
+				const geometry = (object as Object3DWithGeometry).geometry;
+				if (geometry) {
 					geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
 					geometry.applyMatrix4(matrix);
 					geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
-				} else {
-					object.applyMatrix4(matrix);
 				}
 			}
 		} else {
 			const core_group = CoreGroup._fromObjects(objects);
 			const points = core_group.pointsFromGroup(params.group);
 			for (let point of points) {
-				const position = point.position().sub(params.pivot);
+				const position = point.position(this._point_pos).sub(params.pivot);
 				position.applyMatrix4(matrix);
 				point.setPosition(position.add(params.pivot));
 			}
 		}
 	}
 	private _object_position = new Vector3();
-	private _apply_matrix_to_objects(objects: Object3D[], params: TransformSopParams, matrix: Matrix4) {
+	private _apply_matrix_to_objects(objects: Object3D[], matrix: Matrix4) {
 		for (let object of objects) {
 			// center to origin
 			this._object_position.copy(object.position);
@@ -101,7 +100,7 @@ export class TransformSopOperation extends BaseSopOperation {
 			object.updateMatrix();
 			// apply matrix
 			object.applyMatrix4(matrix);
-			// revert to positoin
+			// revert to position
 			object.position.add(this._object_position);
 			object.updateMatrix();
 		}

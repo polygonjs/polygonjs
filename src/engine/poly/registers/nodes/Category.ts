@@ -78,6 +78,7 @@ export const CATEGORY_SOP = {
 	ATTRIBUTE: 'attributes',
 	DYNAMICS: 'dynamics',
 	INPUT: 'inputs',
+	LIGHTS: 'lights',
 	MAP: 'maps',
 	MISC: 'misc',
 	MODIFIER: 'modifiers',

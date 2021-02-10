@@ -170,6 +170,7 @@ import './engine/nodes/sop/ParticlesSystemGpu';
 import './engine/nodes/sop/Peak';
 import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/Point';
+import './engine/nodes/sop/PointLight';
 import './engine/nodes/sop/Poly';
 import './engine/nodes/sop/Polywire';
 import './engine/nodes/sop/Ray';
