@@ -22,6 +22,7 @@ enum GeometryExtension {
 	OBJ = 'obj',
 	PDB = 'pdb',
 	PLY = 'ply',
+	STL = 'stl',
 }
 interface PdbObject {
 	geometryAtoms: BufferGeometry;
@@ -204,6 +205,8 @@ export class CoreLoaderGeometry {
 				return [ModuleName.PDBLoader];
 			case GeometryExtension.PLY:
 				return [ModuleName.PLYLoader];
+			case GeometryExtension.STL:
+				return [ModuleName.STLLoader];
 		}
 	}
 
@@ -223,6 +226,8 @@ export class CoreLoaderGeometry {
 				return this.loader_for_pdb();
 			case GeometryExtension.PLY:
 				return this.loader_for_ply();
+			case GeometryExtension.STL:
+				return this.loader_for_stl();
 		}
 	}
 	async loader_for_drc() {
@@ -286,6 +291,12 @@ export class CoreLoaderGeometry {
 		const module = await Poly.modulesRegister.module(ModuleName.PLYLoader);
 		if (module) {
 			return new module.PLYLoader();
+		}
+	}
+	async loader_for_stl() {
+		const module = await Poly.modulesRegister.module(ModuleName.STLLoader);
+		if (module) {
+			return new module.STLLoader();
 		}
 	}
 

@@ -8,8 +8,9 @@ export enum ModuleName {
 	PDBLoader = 'PDBLoader',
 	PLYLoader = 'PLYLoader',
 	RGBELoader = 'RGBELoader',
-	TTFLoader = 'TTFLoader',
 	SVGLoader = 'SVGLoader',
+	STLLoader = 'STLLoader',
+	TTFLoader = 'TTFLoader',
 }
 
 export class BaseModulesRegister {

@@ -131,3 +131,7 @@ QUnit.test('SOP file format ply', async (assert) => {
 	const container = await with_file('/models/dolphins_be.ply');
 	assert.equal(container.pointsCount(), 855);
 });
+QUnit.test('SOP file format stl', async (assert) => {
+	const container = await with_file('/models/warrior.stl');
+	assert.equal(container.pointsCount(), 154059);
+});

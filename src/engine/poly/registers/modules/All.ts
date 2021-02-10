@@ -9,8 +9,9 @@ import {OBJLoader} from '../../../../modules/three/examples/jsm/loaders/OBJLoade
 import {PDBLoader} from '../../../../modules/three/examples/jsm/loaders/PDBLoader';
 import {PLYLoader} from '../../../../modules/three/examples/jsm/loaders/PLYLoader';
 import {RGBELoader} from '../../../../modules/three/examples/jsm/loaders/RGBELoader';
-import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
+import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
+import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
 
 export interface ModulesMap extends PolyDictionary<any> {
 	[ModuleName.BasisTextureLoader]: {BasisTextureLoader: typeof BasisTextureLoader};
@@ -22,8 +23,9 @@ export interface ModulesMap extends PolyDictionary<any> {
 	[ModuleName.PDBLoader]: {PDBLoader: typeof PDBLoader};
 	[ModuleName.PLYLoader]: {PLYLoader: typeof PLYLoader};
 	[ModuleName.RGBELoader]: {RGBELoader: typeof RGBELoader};
-	[ModuleName.TTFLoader]: {TTFLoader: typeof TTFLoader};
 	[ModuleName.SVGLoader]: {SVGLoader: typeof SVGLoader};
+	[ModuleName.STLLoader]: {STLLoader: typeof STLLoader};
+	[ModuleName.TTFLoader]: {TTFLoader: typeof TTFLoader};
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -67,10 +69,14 @@ export class AllModulesRegister {
 			ModuleName.RGBELoader,
 			import('../../../../modules/three/examples/jsm/loaders/RGBELoader')
 		);
-		poly.modulesRegister.register(ModuleName.TTFLoader, import('../../../../modules/core/loaders/TTFLoader'));
 		poly.modulesRegister.register(
 			ModuleName.SVGLoader,
 			import('../../../../modules/three/examples/jsm/loaders/SVGLoader')
 		);
+		poly.modulesRegister.register(
+			ModuleName.STLLoader,
+			import('../../../../modules/three/examples/jsm/loaders/STLLoader')
+		);
+		poly.modulesRegister.register(ModuleName.TTFLoader, import('../../../../modules/core/loaders/TTFLoader'));
 	}
 }
