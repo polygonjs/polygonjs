@@ -74,8 +74,8 @@ var DeviceOrientationControls = function ( object ) {
 
 				if ( response == 'granted' ) {
 
-					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
+					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 
 				}
 
@@ -87,8 +87,8 @@ var DeviceOrientationControls = function ( object ) {
 
 		} else {
 
-			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
+			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 
 		}
 
@@ -98,8 +98,8 @@ var DeviceOrientationControls = function ( object ) {
 
 	this.disconnect = function () {
 
-		window.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-		window.removeEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+		window.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent );
+		window.removeEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 
 		scope.enabled = false;
 

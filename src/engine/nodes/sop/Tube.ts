@@ -6,7 +6,7 @@
 import {TypedSopNode} from './_Base';
 
 import {Vector3} from 'three/src/math/Vector3';
-import {CylinderBufferGeometry} from 'three/src/geometries/CylinderBufferGeometry';
+import {CylinderBufferGeometry} from 'three/src/geometries/CylinderGeometry';
 import {CoreTransform} from '../../../core/Transform';
 
 const DEFAULT_UP = new Vector3(0, 1, 0);

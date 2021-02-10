@@ -2,7 +2,7 @@ import {Clock} from 'three/src/core/Clock';
 import {LinearFilter} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
+import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
 import {RGBAFormat} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
@@ -274,7 +274,7 @@ Object.assign( Pass.prototype, {
 Pass.FullScreenQuad = ( function () {
 
 	var camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
-	var geometry = new PlaneBufferGeometry( 2, 2 );
+	var geometry = new PlaneGeometry( 2, 2 );
 
 	var FullScreenQuad = function ( material ) {
 

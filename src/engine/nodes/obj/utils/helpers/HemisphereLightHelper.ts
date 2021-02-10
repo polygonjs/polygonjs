@@ -1,5 +1,5 @@
 import {Color} from 'three/src/math/Color';
-import {OctahedronBufferGeometry} from 'three/src/geometries/OctahedronBufferGeometry';
+import {OctahedronBufferGeometry} from 'three/src/geometries/OctahedronGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 
 import {HemisphereLightObjNode} from '../../HemisphereLight';

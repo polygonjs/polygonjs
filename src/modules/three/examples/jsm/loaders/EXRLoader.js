@@ -10,7 +10,7 @@ import {RGBEEncoding} from 'three/src/constants';
 import {RGBEFormat} from 'three/src/constants';
 import {RGBFormat} from 'three/src/constants';
 import {UnsignedByteType} from 'three/src/constants';
-import { Inflate } from '../libs/inflate.module.min.js';
+import * as fflate from '../libs/fflate.module.min.js';
 
 /**
  * OpenEXR loader currently supports uncompressed, ZIP(S), RLE, PIZ and DWA/B compression.
@@ -1290,15 +1290,13 @@ EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype 
 
 			var compressed = info.array.slice( info.offset.value, info.offset.value + info.size );
 
-			if ( typeof Inflate === 'undefined' ) {
+			if ( typeof fflate === 'undefined' ) {
 
-				console.error( 'THREE.EXRLoader: External library Inflate.min.js required, obtain or import from https://github.com/imaya/zlib.js' );
+				console.error( 'THREE.EXRLoader: External library fflate.min.js required.' );
 
 			}
 
-			var inflate = new Inflate( compressed, { resize: true, verify: true } ); // eslint-disable-line no-undef
-
-			var rawBuffer = new Uint8Array( inflate.decompress().buffer );
+			var rawBuffer = fflate.unzlibSync( compressed ); // eslint-disable-line no-undef
 			var tmpBuffer = new Uint8Array( rawBuffer.length );
 
 			predictor( rawBuffer ); // revert predictor
@@ -1415,14 +1413,13 @@ EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype 
 
 			var compressed = info.array.slice( info.offset.value, info.offset.value + info.size );
 
-			if ( typeof Inflate === 'undefined' ) {
+			if ( typeof fflate === 'undefined' ) {
 
-				console.error( 'THREE.EXRLoader: External library Inflate.min.js required, obtain or import from https://github.com/imaya/zlib.js' );
+				console.error( 'THREE.EXRLoader: External library fflate.min.js required.' );
 
 			}
 
-			const inflate = new Inflate( compressed, { resize: true, verify: true } ); // eslint-disable-line no-undef
-			const rawBuffer = new Uint8Array( inflate.decompress().buffer );
+			var rawBuffer = fflate.unzlibSync( compressed ); // eslint-disable-line no-undef
 
 			const sz = info.lines * info.channels * info.width;
 			const tmpBuffer = ( info.type == 1 ) ? new Uint16Array( sz ) : new Uint32Array( sz );
@@ -1601,8 +1598,8 @@ EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype 
 					case DEFLATE:
 
 						var compressed = info.array.slice( inOffset.value, inOffset.value + dwaHeader.totalAcUncompressedCount );
-						var inflate = new Inflate( compressed, { resize: true, verify: true } ); // eslint-disable-line no-undef
-						var acBuffer = new Uint16Array( inflate.decompress().buffer );
+						var data = fflate.unzlibSync( compressed ); // eslint-disable-line no-undef
+						var acBuffer = new Uint16Array( data.buffer );
 						inOffset.value += dwaHeader.totalAcUncompressedCount;
 						break;
 
@@ -1628,8 +1625,8 @@ EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype 
 			if ( dwaHeader.rleRawSize > 0 ) {
 
 				var compressed = info.array.slice( inOffset.value, inOffset.value + dwaHeader.rleCompressedSize );
-				var inflate = new Inflate( compressed, { resize: true, verify: true } ); // eslint-disable-line no-undef
-				var rleBuffer = decodeRunLength( inflate.decompress().buffer );
+				var data = fflate.unzlibSync( compressed ); // eslint-disable-line no-undef
+				var rleBuffer = decodeRunLength( data.buffer );
 
 				inOffset.value += dwaHeader.rleCompressedSize;
 

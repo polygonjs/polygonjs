@@ -4,7 +4,7 @@ import {Group} from 'three/src/objects/Group';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {DoubleSide} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
-import {ShapeBufferGeometry} from 'three/src/geometries/ShapeBufferGeometry';
+import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
 import {ShapePath} from 'three/src/extras/core/ShapePath';
 import {PolyScene} from '../../engine/scene/PolyScene';
 

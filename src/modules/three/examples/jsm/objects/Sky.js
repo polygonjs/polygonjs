@@ -1,5 +1,5 @@
 import {BackSide} from 'three/src/constants';
-import {BoxBufferGeometry} from 'three/src/geometries/BoxBufferGeometry';
+import {BoxGeometry} from 'three/src/geometries/BoxGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
@@ -32,7 +32,7 @@ var Sky = function () {
 		depthWrite: false
 	} );
 
-	Mesh.call( this, new BoxBufferGeometry( 1, 1, 1 ), material );
+	Mesh.call( this, new BoxGeometry( 1, 1, 1 ), material );
 
 };
 

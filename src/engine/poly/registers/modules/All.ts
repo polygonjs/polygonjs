@@ -5,7 +5,7 @@ import {DRACOLoader} from '../../../../modules/three/examples/jsm/loaders/DRACOL
 import {EXRLoader} from '../../../../modules/three/examples/jsm/loaders/EXRLoader';
 import {FBXLoader} from '../../../../modules/three/examples/jsm/loaders/FBXLoader';
 import {GLTFLoader} from '../../../../modules/three/examples/jsm/loaders/GLTFLoader';
-import {OBJLoader2} from '../../../../modules/three/examples/jsm/loaders/OBJLoader2';
+import {OBJLoader} from '../../../../modules/three/examples/jsm/loaders/OBJLoader';
 import {PDBLoader} from '../../../../modules/three/examples/jsm/loaders/PDBLoader';
 import {PLYLoader} from '../../../../modules/three/examples/jsm/loaders/PLYLoader';
 import {RGBELoader} from '../../../../modules/three/examples/jsm/loaders/RGBELoader';
@@ -18,7 +18,7 @@ export interface ModulesMap extends PolyDictionary<any> {
 	[ModuleName.EXRLoader]: {EXRLoader: typeof EXRLoader};
 	[ModuleName.FBXLoader]: {FBXLoader: typeof FBXLoader};
 	[ModuleName.GLTFLoader]: {GLTFLoader: typeof GLTFLoader};
-	[ModuleName.OBJLoader2]: {OBJLoader2: typeof OBJLoader2};
+	[ModuleName.OBJLoader]: {OBJLoader: typeof OBJLoader};
 	[ModuleName.PDBLoader]: {PDBLoader: typeof PDBLoader};
 	[ModuleName.PLYLoader]: {PLYLoader: typeof PLYLoader};
 	[ModuleName.RGBELoader]: {RGBELoader: typeof RGBELoader};
@@ -52,8 +52,8 @@ export class AllModulesRegister {
 			import('../../../../modules/three/examples/jsm/loaders/GLTFLoader')
 		);
 		poly.modulesRegister.register(
-			ModuleName.OBJLoader2,
-			import('../../../../modules/three/examples/jsm/loaders/OBJLoader2')
+			ModuleName.OBJLoader,
+			import('../../../../modules/three/examples/jsm/loaders/OBJLoader')
 		);
 		poly.modulesRegister.register(
 			ModuleName.PDBLoader,

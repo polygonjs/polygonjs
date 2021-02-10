@@ -38,14 +38,12 @@ function RectAreaLightHelper( light, color ) {
 
 	this.add( new Mesh( geometry2, new MeshBasicMaterial( { side: BackSide, fog: false } ) ) );
 
-	this.update();
-
 }
 
 RectAreaLightHelper.prototype = Object.create( Line.prototype );
 RectAreaLightHelper.prototype.constructor = RectAreaLightHelper;
 
-RectAreaLightHelper.prototype.update = function () {
+RectAreaLightHelper.prototype.updateMatrixWorld = function () {
 
 	this.scale.set( 0.5 * this.light.width, 0.5 * this.light.height, 1 );
 
@@ -66,6 +64,9 @@ RectAreaLightHelper.prototype.update = function () {
 		this.children[ 0 ].material.color.copy( this.material.color );
 
 	}
+
+	this.matrixWorld.copy( this.light.matrixWorld ).scale( this.scale );
+	this.children[ 0 ].matrixWorld.copy( this.matrixWorld );
 
 };
 

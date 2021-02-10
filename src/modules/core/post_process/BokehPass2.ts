@@ -4,7 +4,7 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Scene} from 'three/src/scenes/Scene';
 import {RGBFormat} from 'three/src/constants';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LinearFilter} from 'three/src/constants';

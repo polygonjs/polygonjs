@@ -15,7 +15,7 @@ import {
 	LinearFilter,
 	ClampToEdgeWrapping,
 } from 'three/src/constants';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneBufferGeometry';
+import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCopNode} from './_Base';

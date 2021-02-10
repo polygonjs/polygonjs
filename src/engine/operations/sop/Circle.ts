@@ -5,7 +5,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreTransform} from '../../../core/Transform';
-import {CircleBufferGeometry} from 'three/src/geometries/CircleBufferGeometry';
+import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
 
 interface CircleSopParams extends DefaultOperationParams {
 	radius: number;

@@ -7,7 +7,7 @@ import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Geometry} from 'three/src/core/Geometry';
+import {Geometry} from '../../../../modules/three/examples/jsm/deprecated/Geometry';
 import {Group} from 'three/src/objects/Group';
 import {Box3} from 'three/src/math/Box3';
 import {Object3D} from 'three/src/core/Object3D';

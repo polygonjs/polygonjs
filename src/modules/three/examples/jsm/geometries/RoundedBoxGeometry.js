@@ -1,4 +1,4 @@
-import {BoxBufferGeometry} from 'three/src/geometries/BoxBufferGeometry';
+import {BoxGeometry} from 'three/src/geometries/BoxGeometry';
 import {Vector3} from 'three/src/math/Vector3';
 
 const tempNormal = new Vector3();
@@ -35,7 +35,7 @@ function getUv( faceDirVector, normal, uvAxis, projectionAxis, radius, sideLengt
 
 }
 
-class RoundedBoxBufferGeometry extends BoxBufferGeometry {
+class RoundedBoxGeometry extends BoxGeometry {
 
 	constructor( width = 1, height = 1, depth = 1, segments = 2, radius = 0.1 ) {
 
@@ -149,4 +149,4 @@ class RoundedBoxBufferGeometry extends BoxBufferGeometry {
 
 }
 
-export { RoundedBoxBufferGeometry };
+export { RoundedBoxGeometry };

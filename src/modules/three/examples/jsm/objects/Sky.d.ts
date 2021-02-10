@@ -1,5 +1,5 @@
 import {
-	BoxBufferGeometry,
+	BoxGeometry,
 	Mesh,
 	ShaderMaterial
 } from 'three';
@@ -8,7 +8,7 @@ export class Sky extends Mesh {
 
 	constructor();
 
-	geometry: BoxBufferGeometry;
+	geometry: BoxGeometry;
 	material: ShaderMaterial;
 
 	static SkyShader: object;

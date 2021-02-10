@@ -7,6 +7,7 @@ QUnit.test('subdivide simple', async (assert) => {
 	subdivide1.setInput(0, box1);
 
 	let container = await subdivide1.requestContainer();
+	console.log(subdivide1.states.error);
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 144);
 

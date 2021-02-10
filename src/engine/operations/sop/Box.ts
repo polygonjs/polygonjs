@@ -3,7 +3,7 @@ import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreTransform} from '../../../core/Transform';
-import {BoxBufferGeometry} from 'three/src/geometries/BoxBufferGeometry';
+import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface BoxSopParams extends DefaultOperationParams {

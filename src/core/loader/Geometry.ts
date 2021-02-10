@@ -199,7 +199,7 @@ export class CoreLoaderGeometry {
 			case GeometryExtension.GLB:
 				return [ModuleName.GLTFLoader, ModuleName.DRACOLoader];
 			case GeometryExtension.OBJ:
-				return [ModuleName.OBJLoader2];
+				return [ModuleName.OBJLoader];
 			case GeometryExtension.PDB:
 				return [ModuleName.PDBLoader];
 			case GeometryExtension.PLY:
@@ -271,9 +271,9 @@ export class CoreLoaderGeometry {
 	}
 
 	async loader_for_obj() {
-		const module = await Poly.modulesRegister.module(ModuleName.OBJLoader2);
+		const module = await Poly.modulesRegister.module(ModuleName.OBJLoader);
 		if (module) {
-			return new module.OBJLoader2();
+			return new module.OBJLoader();
 		}
 	}
 	async loader_for_pdb() {
