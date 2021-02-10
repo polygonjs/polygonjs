@@ -58,9 +58,10 @@ The nodes are grouped in contexts, each for a specific type of task:
 
 Polygonjs is designed to be extensible. You can create your own plugins to add custom nodes. There are currently 3 official plugins:
 
--   [Mapbox](https://github.com/polygonjs/polygonjs-plugin-mapbox) to allow to add 3D elements to Mapbox maps.
--   [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get a nicer lighting.
--   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create rigid bodies.
+-   [Mapbox](https://github.com/polygonjs/polygonjs-plugin-mapbox) to add 3D objects to Mapbox maps.
+-   [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get more pleasant lighting.
+-   [Palette](https://github.com/polygonjs/polygonjs-plugin-palette) to add matching colors based on curated palettes.
+-   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create and simulate rigid bodies.
 
 [npm]: https://img.shields.io/npm/v/@polygonjs/polygonjs.svg
 [npm-url]: https://www.npmjs.com/package/@polygonjs/polygonjs

@@ -40,7 +40,7 @@ class CopySopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param transforms every input object each on a single input point */
 	transformOnly = ParamConfig.BOOLEAN(0);
-	/** @param transforms every input object each on a single input point */
+	/** @param defines if the objects or the geometries are transformed */
 	transformMode = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: TransformModeMenuEntries,
