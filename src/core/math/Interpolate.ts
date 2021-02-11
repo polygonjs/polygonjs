@@ -13,7 +13,7 @@ export class CoreInterpolate {
 	): number {
 		switch (points_src.length) {
 			case 0:
-				return 0;
+				return point_dest.attribValue(attrib_name) as number;
 			case 1:
 				return this._interpolate_with_1_point(
 					point_dest,

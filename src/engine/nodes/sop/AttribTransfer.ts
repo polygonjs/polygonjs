@@ -96,12 +96,12 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	}
 
 	private _add_attribute_if_required() {
-		this._attrib_names.forEach((attrib_name) => {
+		for (let attrib_name of this._attrib_names) {
 			if (!this._core_group_dest.hasAttrib(attrib_name)) {
 				const attrib_size = this._core_group_src.attribSize(attrib_name);
 				this._core_group_dest.addNumericVertexAttrib(attrib_name, attrib_size, 0);
 			}
-		});
+		}
 	}
 
 	private async _transfer_attributes(dest_points: CorePoint[]) {
