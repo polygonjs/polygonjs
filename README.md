@@ -173,14 +173,14 @@ Polygonjs is based on the powerful webgl library [Threejs](https://threejs.org/)
 
 For this, you can directly access the threejs objects. There are 2 ways to do so:
 
--   1. **From the scene**
+-   **From the scene**
 
 ```javascript
 const scene = new POLY.PolyScene();
 const threejsScene = scene.threejsScene();
 ```
 
--   2. **From any node**
+-   **From any node**
 
 ```javascript
 const scene = new POLY.PolyScene();
