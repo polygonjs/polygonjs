@@ -20,6 +20,24 @@
 		</style>
 	</head>
 	<body>
+		<div style="position: fixed; top: 10px; left: 10px; padding:10px; border: 1px solid gray; border-radius: 3px;">
+			<p>
+				<label>Box Size</label>
+				<input id='boxInput' type='range' min=0 max=2 step=0.01 value=1></input>
+			</p>
+			<p>
+				<label>Boxes Count</label>
+				<input id="boxesCountInput" type='range' min=0 max=100 step=1 value=10></input>
+			</p>
+			<p>
+				<label>Sphere Size</label>
+				<input id='sphereInput' type='range' min=0 max=0.5 step=0.01 value=0.1></input>
+			</p>
+			<p>
+				<label>Spheres Count</label>
+				<input id='spheresCountInput' type='range' min=0 max=1000 step=1 value=400></input>
+			</p>
+		</div>
 		<div id="app"></div>
 
 		<script src="https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js"></script>
@@ -33,7 +51,7 @@
 
 			// create a plane
 			const plane = geo.createNode('plane');
-			plane.p.size.set([4, 4]); // make the plane larger
+			plane.p.size.set([10, 10]); // make the plane larger
 			plane.p.stepSize.set(0.1); // increase the plane resolution
 
 			// add noise to the plane
@@ -56,9 +74,12 @@
 			// add a 2nd scatter to create points on the boxes
 			const scatter2 = geo.createNode('scatter');
 			scatter2.setInput(0, copy);
+			scatter2.p.pointsCount.set(500);
 
 			// copy spheres on those points
 			const sphere = geo.createNode('sphere');
+			sphere.p.resolution.set([8, 8]);
+			sphere.p.radius.set(0.1);
 			const copy2 = geo.createNode('copy');
 			copy2.setInput(0, sphere);
 			copy2.setInput(1, scatter2);
@@ -76,6 +97,20 @@
 			perspectiveCamera1.p.controls.setNode(orbitsControls);
 
 			perspectiveCamera1.createViewer(document.getElementById('app'));
+
+			// add events to the inputs
+			document.getElementById('boxInput').addEventListener('input', function (event) {
+				box.p.size.set([event.target.value, event.target.value]);
+			});
+			document.getElementById('boxesCountInput').addEventListener('input', function (event) {
+				scatter.p.pointsCount.set(event.target.value);
+			});
+			document.getElementById('sphereInput').addEventListener('input', function (event) {
+				sphere.p.radius.set(event.target.value);
+			});
+			document.getElementById('spheresCountInput').addEventListener('input', function (event) {
+				scatter2.p.pointsCount.set(event.target.value);
+			});
 		</script>
 	</body>
 </html>

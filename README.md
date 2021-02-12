@@ -4,7 +4,7 @@
 [![Language Grade][lgtm]][lgtm-url]
 [![Twitter][twitter-img]][twitter-url]
 
-Polygonjs is a node-based 3D Webgl engine. [Try our examples](https://polygonjs.com/).
+Polygonjs is a node-based 3D Webgl engine. [Learn more](https://polygonjs.com/).
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.001.jpg)
 
@@ -41,7 +41,94 @@ perspectiveCamera1.p.controls.setNode(orbitsControls);
 perspectiveCamera1.createViewer(document.getElementById('app'));
 ```
 
-which should give you this:
+which should give you this (you can try it on [this page](https://github.com/polygonjs/polygonjs)):
+
+<a href="https://github.com/polygonjs/polygonjs"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start.gif" /></a>
+
+Let's now look at an example that demonstrates how powerful a node-based engine can be:
+
+```javascript
+// create a scene
+const scene = new POLY.PolyScene();
+const rootNode = scene.root();
+
+// create a geo node to add the geometry nodes we will need
+const geo = rootNode.createNode('geo');
+
+// create a plane
+const plane = geo.createNode('plane');
+plane.p.size.set([10, 10]); // make the plane larger
+plane.p.stepSize.set(0.1); // increase the plane resolution
+
+// add noise to the plane
+const noise = geo.createNode('noise');
+noise.setInput(0, plane);
+noise.p.amplitude.set(0.25); // lower the noise amount
+noise.p.useNormals.set(1); // have the noise in the direction of the normals
+
+// scatter points on the plane
+const scatter = geo.createNode('scatter');
+scatter.setInput(0, noise);
+scatter.p.pointsCount.set(10);
+
+// copy boxes on the points
+const box = geo.createNode('box');
+const copy = geo.createNode('copy');
+copy.setInput(0, box);
+copy.setInput(1, scatter);
+
+// add a 2nd scatter to create points on the boxes
+const scatter2 = geo.createNode('scatter');
+scatter2.setInput(0, copy);
+scatter2.p.pointsCount.set(500);
+
+// copy spheres on those points
+const sphere = geo.createNode('sphere');
+sphere.p.resolution.set([8, 8]);
+sphere.p.radius.set(0.1);
+const copy2 = geo.createNode('copy');
+copy2.setInput(0, sphere);
+copy2.setInput(1, scatter2);
+copy2.flags.display.set(true);
+
+// add a light
+rootNode.createNode('hemisphereLight');
+
+// create a camera
+const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
+perspectiveCamera1.p.t.set([5, 5, 5]);
+// add OrbitControls
+const events1 = perspectiveCamera1.createNode('events');
+const orbitsControls = events1.createNode('cameraOrbitControls');
+perspectiveCamera1.p.controls.setNode(orbitsControls);
+
+perspectiveCamera1.createViewer(document.getElementById('app'));
+```
+
+And we can also create some input html inputs:
+
+```html
+<p>
+  <label>Box Size</label>
+  <input id='boxInput' type='range' min=0 max=2 step=0.01 value=1></input>
+</p>
+```
+
+and add them some events:
+
+```javascript
+document.getElementById('boxInput').addEventListener('input', function (event) {
+	box.p.size.set([event.target.value, event.target.value]);
+});
+```
+
+And by updating the parameter size of the box, every node that depends on it will recook and update the geometry displayed on screen.
+
+By adding a few more events, we get the following:
+
+<a href="https://github.com/polygonjs/polygonjs"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start2.gif" /></a>
+
+What we've done is essentially create a procedural network, where nodes depend on their inputs. If the inputs update, the dependent nodes will also update accordingly. This allows us to **create complex 3D scenes in no time**.
 
 ## Node-based
 
@@ -80,7 +167,31 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 [twitter-img]: https://img.shields.io/twitter/follow/polygonjs.svg?style=social&label=Follow
 [twitter-url]: https://twitter.com/intent/follow?screen_name=polygonjs
 
-## View the examples
+## Based on Threejs
 
-Make sure to have node and yarn installed, then run `yarn install` and `yarn start`.
-Once the dev server has compiled the files, you can open `http://localhost:8080/example` and see the various examples.
+Polygonjs is based on the powerful webgl library [Threejs](https://threejs.org/). While Polygonjs offers many nodes for many different types of 3D scenes, there are times where you may want to dig deeper and update the scenes in specific ways.
+
+For this, you can directly access the threejs objects. There are 2 ways to do so:
+
+-   1. **From the scene**
+
+```javascript
+const scene = new POLY.PolyScene();
+const threejsScene = scene.threejsScene();
+```
+
+-   2. **From any node**
+
+```javascript
+const scene = new POLY.PolyScene();
+const rootNode = scene.root();
+const geo = rootNode.createNode('geo');
+const plane = geo.createNode('plane');
+
+// now let's get the content of the plane node
+const container = await plane.requestContainer();
+// the container is an envelope that contains a coreGroup
+const coreGroup = container.coreContent();
+// and we can now get an array of THREE.Object3D:
+const objects = coreGroup.objects();
+```
