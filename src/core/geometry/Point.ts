@@ -7,6 +7,7 @@ import {CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
+import {Matrix4} from 'three/src/math/Matrix4';
 
 const ATTRIB_NAMES = {
 	POSITION: 'position',
@@ -43,6 +44,9 @@ export class CorePoint extends CoreEntity {
 	constructor(private _core_geometry: CoreGeometry, _index: number) {
 		super(_index);
 		this._geometry = this._core_geometry.geometry();
+	}
+	applyMatrix4(matrix: Matrix4) {
+		this.position().applyMatrix4(matrix);
 	}
 
 	core_geometry() {
@@ -146,14 +150,16 @@ export class CorePoint extends CoreEntity {
 		return this._core_geometry.isAttribIndexed(name);
 	}
 
-	position(target?: Vector3): Vector3 {
+	position() {
+		return this._position || (this._position = this._findPosition(new Vector3()));
+	}
+	private _findPosition(target: Vector3): Vector3 {
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION);
-		if (target) {
-			return target.fromArray(array, this._index * 3);
-		} else {
-			this._position = this._position || new Vector3();
-			return this._position.fromArray(array, this._index * 3);
-		}
+		return target.fromArray(array, this._index * 3);
+	}
+	getPosition(target: Vector3): Vector3 {
+		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION);
+		return target.fromArray(array, this._index * 3);
 	}
 	setPosition(new_position: Vector3) {
 		this.setAttribValueVector3(ATTRIB_NAMES.POSITION, new_position);

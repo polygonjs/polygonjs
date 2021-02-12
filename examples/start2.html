@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Polygonjs Example</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+		<style>
+			html,
+			body,
+			#app {
+				margin: 0px;
+				height: 100%;
+				overflow: hidden;
+			}
+
+			canvas {
+				display: block;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app"></div>
+
+		<script src="https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js"></script>
+		<script type="module">
+			// create a scene
+			const scene = new POLY.PolyScene();
+			const rootNode = scene.root();
+
+			// create a geo node to add the geometry nodes we will need
+			const geo = rootNode.createNode('geo');
+
+			// create a plane
+			const plane = geo.createNode('plane');
+			plane.p.size.set([4, 4]); // make the plane larger
+			plane.p.stepSize.set(0.1); // increase the plane resolution
+
+			// add noise to the plane
+			const noise = geo.createNode('noise');
+			noise.setInput(0, plane);
+			noise.p.amplitude.set(0.25); // lower the noise amount
+			noise.p.useNormals.set(1); // have the noise in the direction of the normals
+
+			// scatter points on the plane
+			const scatter = geo.createNode('scatter');
+			scatter.setInput(0, noise);
+			scatter.p.pointsCount.set(10);
+
+			// copy boxes on the points
+			const box = geo.createNode('box');
+			const copy = geo.createNode('copy');
+			copy.setInput(0, box);
+			copy.setInput(1, scatter);
+
+			// add a 2nd scatter to create points on the boxes
+			const scatter2 = geo.createNode('scatter');
+			scatter2.setInput(0, copy);
+
+			// copy spheres on those points
+			const sphere = geo.createNode('sphere');
+			const copy2 = geo.createNode('copy');
+			copy2.setInput(0, sphere);
+			copy2.setInput(1, scatter2);
+			copy2.flags.display.set(true);
+
+			// add a light
+			rootNode.createNode('hemisphereLight');
+
+			// create a camera
+			const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
+			perspectiveCamera1.p.t.set([5, 5, 5]);
+			// add OrbitControls
+			const events1 = perspectiveCamera1.createNode('events');
+			const orbitsControls = events1.createNode('cameraOrbitControls');
+			perspectiveCamera1.p.controls.setNode(orbitsControls);
+
+			perspectiveCamera1.createViewer(document.getElementById('app'));
+		</script>
+	</body>
+</html>

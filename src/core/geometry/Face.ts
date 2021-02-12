@@ -8,6 +8,7 @@ import {CorePoint} from './Point';
 import {CoreGeometry} from './Geometry';
 import {CoreMath} from '../math/_Module';
 import {ArrayUtils} from '../ArrayUtils';
+import {Matrix4} from 'three/src/math/Matrix4';
 
 interface FaceLike {
 	a: number;
@@ -34,6 +35,11 @@ export class CoreFace {
 	}
 	points() {
 		return (this._points = this._points || this._get_points());
+	}
+	applyMatrix4(matrix: Matrix4) {
+		for (let point of this.points()) {
+			point.applyMatrix4(matrix);
+		}
 	}
 	private _get_points(): CorePointArray3 {
 		const index_array = this._geometry.index?.array || [];
@@ -85,7 +91,6 @@ export class CoreFace {
 			weights[0] = 1 - weights[0];
 			weights[1] = 1 - weights[1];
 		}
-
 		return this.positions()[0]
 			.clone()
 			.add(this.deltas()[0].clone().multiplyScalar(weights[0]))

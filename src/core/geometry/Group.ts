@@ -14,6 +14,7 @@ import {CoreString} from '../String';
 import {CoreConstant, AttribClass, AttribSize, ObjectData, objectTypeFromConstructor} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
+import {CoreFace} from './Face';
 export type GroupString = string;
 
 export interface Object3DWithGeometry extends Object3D {
@@ -190,9 +191,18 @@ export class CoreGroup {
 		return null;
 	}
 	faces() {
-		return this.coreGeometries()
-			.map((g) => g.faces())
-			.flat();
+		const faces: CoreFace[] = [];
+		for (let object of this.objectsWithGeo()) {
+			if (object.geometry) {
+				const coreGeo = new CoreGeometry(object.geometry);
+				const geoFaces = coreGeo.faces();
+				for (let geoFace of geoFaces) {
+					geoFace.applyMatrix4(object.matrix);
+					faces.push(geoFace);
+				}
+			}
+		}
+		return faces;
 	}
 	points() {
 		return this.coreGeometries()

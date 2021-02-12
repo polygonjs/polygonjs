@@ -103,9 +103,9 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 			addIdAttribute: this.pv.addIdAttribute,
 			addIdnAttribute: this.pv.addIdnAttribute,
 		});
-		points[0].position(this.a);
-		points[1].position(this.b);
-		points[2].position(this.c);
+		points[0].getPosition(this.a);
+		points[1].getPosition(this.b);
+		points[2].getPosition(this.c);
 		circle3points.create(this.a, this.b, this.c);
 
 		const objects: Object3D[] = [];

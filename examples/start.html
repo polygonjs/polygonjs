@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Polygonjs Example</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+		<style>
+			html,
+			body,
+			#app {
+				margin: 0px;
+				height: 100%;
+				overflow: hidden;
+			}
+
+			canvas {
+				display: block;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app"></div>
+
+		<script src="https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js"></script>
+		<script type="module">
+			// create a scene
+			const scene = new POLY.PolyScene();
+			const rootNode = scene.root();
+
+			// create a box
+			const geo = rootNode.createNode('geo');
+			const box = geo.createNode('box');
+
+			// add a light
+			rootNode.createNode('hemisphereLight');
+
+			// create a camera
+			const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
+			perspectiveCamera1.p.t.set([5, 5, 5]);
+			// add OrbitControls
+			const events1 = perspectiveCamera1.createNode('events');
+			const orbitsControls = events1.createNode('cameraOrbitControls');
+			perspectiveCamera1.p.controls.setNode(orbitsControls);
+
+			perspectiveCamera1.createViewer(document.getElementById('app'));
+		</script>
+	</body>
+</html>

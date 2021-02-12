@@ -9,7 +9,7 @@ export class ByBboxHelper {
 	constructor(private node: DeleteSopNode) {}
 	eval_for_points(points: CorePoint[]) {
 		for (let point of points) {
-			const in_bbox = this._bbox.containsPoint(point.position(this._point_position));
+			const in_bbox = this._bbox.containsPoint(point.getPosition(this._point_position));
 
 			if (in_bbox) {
 				this.node.entity_selection_helper.select(point);
