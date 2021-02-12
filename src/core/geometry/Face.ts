@@ -85,7 +85,7 @@ export class CoreFace {
 	}
 
 	random_position(seed: number) {
-		let weights = [CoreMath.rand_float(seed), CoreMath.rand_float(seed * 6541)];
+		let weights = [CoreMath.randFloat(seed), CoreMath.randFloat(seed * 6541)];
 
 		if (weights[0] + weights[1] > 1) {
 			weights[0] = 1 - weights[0];

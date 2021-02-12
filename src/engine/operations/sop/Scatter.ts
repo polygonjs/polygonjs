@@ -69,9 +69,9 @@ export class ScatterSopOperation extends BaseSopOperation {
 		}
 
 		const iterator = new CoreIterator();
-		// await iterator.start_with_count(params.pointsCount, this._add_point.bind(this))
+		const baseSeed = (2454 * params.seed) % Number.MAX_SAFE_INTEGER;
 		await iterator.start_with_count(params.pointsCount, (point_index: number) => {
-			const rand = CoreMath.rand_float(params.seed + point_index) * area_sum;
+			const rand = CoreMath.randFloat(baseSeed + point_index) * area_sum;
 
 			for (let face_index = 0; face_index < areas_thresholds.length; face_index++) {
 				const areas_threshold = areas_thresholds[face_index];

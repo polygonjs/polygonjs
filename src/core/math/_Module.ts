@@ -59,9 +59,9 @@ export class CoreMath {
 	// from threejs glsl rand
 	static rand(number: number): number {
 		if (CoreType.isNumber(number)) {
-			return this.rand_float(number);
+			return this.randFloat(number);
 		} else {
-			return this.rand_vec2(number);
+			return this.randVec2(number);
 		}
 	}
 
@@ -76,13 +76,13 @@ export class CoreMath {
 	}
 
 	private static _vec = {x: 0, y: 136574};
-	static rand_float(x: number, y: number = 136574): number {
+	static randFloat(x: number, y: number = 136574): number {
 		this._vec.x = x;
 		this._vec.y = y;
-		return this.rand_vec2(this._vec);
+		return this.randVec2(this._vec);
 	}
 
-	static rand_vec2(uv: Vector2Like) {
+	static randVec2(uv: Vector2Like) {
 		const dt = uv.x * RAND_A + uv.y * RAND_B; //dot( uv.xy, vec2( a,b ) )
 		const sn = dt % Math.PI;
 		return this.fract(Math.sin(sn) * RAND_C);

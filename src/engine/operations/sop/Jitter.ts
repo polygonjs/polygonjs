@@ -33,12 +33,12 @@ export class JitterSopOperation extends BaseSopOperation {
 			point = points[i];
 			// TODO: replace by a pseudo random
 			const offset = new Vector3(
-				2 * params.mult.x * (CoreMath.rand_float(i * 75 + 764 + params.seed) - 0.5),
-				2 * params.mult.y * (CoreMath.rand_float(i * 5678 + 3653 + params.seed) - 0.5),
-				2 * params.mult.z * (CoreMath.rand_float(i * 657 + 48464 + params.seed) - 0.5)
+				2 * params.mult.x * (CoreMath.randFloat(i * 75 + 764 + params.seed) - 0.5),
+				2 * params.mult.y * (CoreMath.randFloat(i * 5678 + 3653 + params.seed) - 0.5),
+				2 * params.mult.z * (CoreMath.randFloat(i * 657 + 48464 + params.seed) - 0.5)
 			);
 			offset.normalize();
-			offset.multiplyScalar(params.amount * CoreMath.rand_float(i * 78 + 54 + params.seed));
+			offset.multiplyScalar(params.amount * CoreMath.randFloat(i * 78 + 54 + params.seed));
 
 			const new_position = point.position().clone().add(offset);
 			point.setPosition(new_position);

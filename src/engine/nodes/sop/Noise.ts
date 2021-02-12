@@ -347,7 +347,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const seed = this.pv.seed;
 		const random_generator = {
 			random: function () {
-				return CoreMath.rand_float(seed);
+				return CoreMath.randFloat(seed);
 			},
 		};
 		const simplex = new SimplexNoise(random_generator);
