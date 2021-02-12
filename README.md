@@ -43,7 +43,7 @@ perspectiveCamera1.createViewer(document.getElementById('app'));
 
 which should give you this (you can try it on [this page](https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start.html)):
 
-<a href="https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start.html"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start.gif" /></a>
+<a href="https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start.gif" /></a>
 
 Let's now look at an example that demonstrates how powerful a node-based engine can be:
 
@@ -105,7 +105,7 @@ perspectiveCamera1.p.controls.setNode(orbitsControls);
 perspectiveCamera1.createViewer(document.getElementById('app'));
 ```
 
-And we can also create some input html inputs:
+And we can also create some html inputs:
 
 ```html
 <p>
@@ -122,11 +122,11 @@ document.getElementById('boxInput').addEventListener('input', function (event) {
 });
 ```
 
-And by updating the parameter size of the box, every node that depends on it will recook and update the geometry displayed on screen.
+And by updating the parameter size of the box, **every node that depends on it will recook** and update the geometry displayed on screen.
 
 By adding a few more events, we get the following (you can try it on [this page](https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start2.html)):
 
-<a href="https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start2.html"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start2.gif" /></a>
+<a href="https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start2.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start2.gif" /></a>
 
 What we've done is essentially create a procedural network, where nodes depend on their inputs. If the inputs update, the dependent nodes will also update accordingly. This allows us to **create complex 3D scenes in no time**.
 
@@ -154,10 +154,10 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 -   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create and simulate rigid bodies.
 
 <p align="center">
-  <a href="https://github.com/polygonjs/polygonjs-plugin-mapbox"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-mapbox/main/doc/mapbox_examples.256.jpg" /></a>
-  <a href="https://github.com/polygonjs/polygonjs-plugin-occlusion"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-occlusion/main/doc/occlusion_examples.256.jpg" /></a>
-  <a href="https://github.com/polygonjs/polygonjs-plugin-palette"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-palette/main/doc/palette_examples.256.jpg" /></a>
-  <a href="https://github.com/polygonjs/polygonjs-plugin-physics"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-physics/main/doc/physics_examples.256.jpg" /></a>
+  <a href="https://github.com/polygonjs/polygonjs-plugin-mapbox" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-mapbox/main/doc/mapbox_examples.256.jpg" /></a>
+  <a href="https://github.com/polygonjs/polygonjs-plugin-occlusion" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-occlusion/main/doc/occlusion_examples.256.jpg" /></a>
+  <a href="https://github.com/polygonjs/polygonjs-plugin-palette" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-palette/main/doc/palette_examples.256.jpg" /></a>
+  <a href="https://github.com/polygonjs/polygonjs-plugin-physics" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-physics/main/doc/physics_examples.256.jpg" /></a>
 </p>
 
 [npm]: https://img.shields.io/npm/v/@polygonjs/polygonjs.svg
