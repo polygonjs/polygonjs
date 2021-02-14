@@ -173,17 +173,17 @@ export class CoreWalker {
 			}
 		}
 	}
-	static relative_path(src_graph_node: Readonly<NodeOrParam>, dest_graph_node: Readonly<NodeOrParam>): string {
+	static relativePath(src_graph_node: Readonly<BaseNodeType>, dest_graph_node: Readonly<BaseNodeType>): string {
 		const parent = this.closest_common_parent(src_graph_node, dest_graph_node);
 		if (!parent) {
 			return dest_graph_node.fullPath();
 		} else {
-			const distance = this.distance_to_parent(src_graph_node, parent);
+			const distance = this.distanceToParent(src_graph_node, parent);
 			let up = '';
-			if (distance - 1 > 0) {
+			if (distance > 0) {
 				let i = 0;
 				const ups = [];
-				while (i++ < distance - 1) {
+				while (i++ < distance) {
 					ups.push(CoreWalker.PARENT);
 				}
 				up = ups.join(CoreWalker.SEPARATOR) + CoreWalker.SEPARATOR;
@@ -211,11 +211,11 @@ export class CoreWalker {
 	}
 
 	static closest_common_parent(
-		graph_node1: Readonly<NodeOrParam>,
-		graph_node2: Readonly<NodeOrParam>
-	): BaseNodeType | null {
-		const parents1 = this.parents(graph_node1).reverse();
-		const parents2 = this.parents(graph_node2).reverse();
+		graph_node1: Readonly<BaseNodeType>,
+		graph_node2: Readonly<BaseNodeType>
+	): Readonly<BaseNodeType> | null {
+		const parents1 = this.parents(graph_node1).reverse().concat([graph_node1]);
+		const parents2 = this.parents(graph_node2).reverse().concat([graph_node2]);
 
 		const min_depth = Math.min(parents1.length, parents2.length);
 		let found_parent = null;
@@ -227,7 +227,7 @@ export class CoreWalker {
 		}
 		return found_parent;
 	}
-	static parents(graph_node: Readonly<NodeOrParam>): BaseNodeType[] {
+	static parents(graph_node: Readonly<NodeOrParam>): Readonly<BaseNodeType>[] {
 		const parents = [];
 		let parent = graph_node.parent();
 		while (parent) {
@@ -236,7 +236,7 @@ export class CoreWalker {
 		}
 		return parents;
 	}
-	static distance_to_parent(graph_node: Readonly<NodeOrParam>, dest: Readonly<BaseNodeType>): number {
+	static distanceToParent(graph_node: Readonly<NodeOrParam>, dest: Readonly<BaseNodeType>): number {
 		let distance = 0;
 		let current: Readonly<NodeOrParam | null> = graph_node;
 		const dest_id = dest.graphNodeId();

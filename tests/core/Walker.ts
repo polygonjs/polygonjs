@@ -31,7 +31,16 @@ QUnit.test('a param to another', (assert) => {
 	const geo2 = scene.root().createNode('geo');
 	const box3 = geo2.createNode('box');
 
-	assert.equal(box1.p.size.path_relative_to(box1.p.divisions), 'size');
-	assert.equal(box2.p.size.path_relative_to(box1.p.size), '../box2/size');
-	assert.equal(box2.p.size.path_relative_to(box3.p.size), '../../geo1/box2/size');
+	assert.equal(box1.p.size.pathRelativeTo(box1), 'size');
+	assert.equal(box2.p.size.pathRelativeTo(box1), '../box2/size');
+	assert.equal(box2.p.size.pathRelativeTo(box3), '../../geo1/box2/size');
+});
+
+QUnit.test('CoreWalker.relativePath', (assert) => {
+	const geo1 = window.geo1;
+	const material = geo1.createNode('material');
+	const materials = geo1.createNode('materials');
+	const meshBasic = materials.createNode('meshBasic');
+
+	assert.equal(CoreWalker.relativePath(material, meshBasic), '../materials1/meshBasic1');
 });

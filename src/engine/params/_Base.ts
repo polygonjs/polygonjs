@@ -252,8 +252,14 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	fullPath(): string {
 		return this.node?.fullPath() + '/' + this.name();
 	}
-	path_relative_to(node: BaseNodeType | BaseParamType): string {
-		return CoreWalker.relative_path(node, this);
+	pathRelativeTo(node: BaseNodeType): string {
+		const nodeRelativePath = CoreWalker.relativePath(node, this.node);
+
+		if (nodeRelativePath.length > 0) {
+			return `${nodeRelativePath}${CoreWalker.SEPARATOR}${this.name()}`;
+		} else {
+			return this.name();
+		}
 	}
 
 	// emit
