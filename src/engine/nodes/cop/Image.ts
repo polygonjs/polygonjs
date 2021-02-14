@@ -21,7 +21,7 @@ export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the image from */
 		url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
-			fileBrowse: {type: [FileType.TEXTURE]},
+			fileBrowse: {type: [FileType.TEXTURE_IMAGE]},
 		});
 		/** @param reload the image */
 		reload = ParamConfig.BUTTON(null, {

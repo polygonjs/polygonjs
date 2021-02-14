@@ -24,6 +24,16 @@ enum GeometryExtension {
 	PLY = 'ply',
 	STL = 'stl',
 }
+export const GEOMETRY_EXTENSIONS: GeometryExtension[] = [
+	GeometryExtension.DRC,
+	GeometryExtension.FBX,
+	GeometryExtension.GLTF,
+	GeometryExtension.GLB,
+	GeometryExtension.OBJ,
+	GeometryExtension.PDB,
+	GeometryExtension.PLY,
+	GeometryExtension.STL,
+];
 interface PdbObject {
 	geometryAtoms: BufferGeometry;
 	geometryBonds: BufferGeometry;

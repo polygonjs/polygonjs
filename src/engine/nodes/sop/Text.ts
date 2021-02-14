@@ -38,9 +38,12 @@ interface FontByUrl {
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {FileType} from '../../params/utils/OptionsController';
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
-	font = ParamConfig.STRING(DEFAULT_FONT_URL);
+	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
+		fileBrowse: {type: [FileType.FONT]},
+	});
 	/** @param text created */
 	text = ParamConfig.STRING('polygonjs', {multiline: true});
 	/** @param type of geometry created */

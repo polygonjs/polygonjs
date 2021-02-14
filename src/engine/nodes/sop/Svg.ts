@@ -16,7 +16,7 @@ const DEFAULT = SvgSopOperation.DEFAULT_PARAMS;
 class SvgSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
-		fileBrowse: {type: [FileType.GEOMETRY]},
+		fileBrowse: {type: [FileType.SVG]},
 	});
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {

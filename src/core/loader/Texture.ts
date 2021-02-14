@@ -26,10 +26,22 @@ interface ThreeLoaderByExt {
 }
 
 enum Extension {
+	JPG = 'jpg',
+	JPEG = 'jpeg',
+	PNG = 'png',
 	EXR = 'exr',
 	BASIS = 'basis',
 	HDR = 'hdr',
 }
+export const TEXTURE_IMAGE_EXTENSIONS: Extension[] = [
+	Extension.JPEG,
+	Extension.JPG,
+	Extension.PNG,
+	Extension.EXR,
+	Extension.BASIS,
+	Extension.HDR,
+];
+export const TEXTURE_VIDEO_EXTENSIONS: string[] = ['ogg', 'ogv', 'mp4'];
 
 interface TextureLoadOptions {
 	tdataType: boolean;

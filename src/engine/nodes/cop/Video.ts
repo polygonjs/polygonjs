@@ -29,7 +29,7 @@ export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the video from */
 		url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
-			fileBrowse: {type: [FileType.TEXTURE]},
+			fileBrowse: {type: [FileType.TEXTURE_VIDEO]},
 		});
 		/** @param reload the video */
 		reload = ParamConfig.BUTTON(null, {

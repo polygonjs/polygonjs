@@ -70,8 +70,11 @@ export enum StringParamLanguage {
 }
 
 export enum FileType {
-	TEXTURE = 'texture',
+	TEXTURE_IMAGE = 'texture_image',
+	TEXTURE_VIDEO = 'texture_video',
 	GEOMETRY = 'geometry',
+	FONT = 'font',
+	SVG = 'svg',
 }
 
 export type VisibleIfParamOptions = PolyDictionary<number | boolean>;
