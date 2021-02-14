@@ -1,6 +1,6 @@
 QUnit.test('box simple', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box1 = geo1.createNode('box');
 
@@ -20,7 +20,7 @@ QUnit.test('box simple', async (assert) => {
 
 QUnit.test('box with input', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
@@ -50,7 +50,7 @@ QUnit.test('box with input', async (assert) => {
 QUnit.test('box with expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	let container;
 	const box1 = geo1.createNode('box');

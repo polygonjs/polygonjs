@@ -53,7 +53,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 			this.childrenDisplayController.initializeNode();
 		}
 
-		is_display_node_cooking(): boolean {
+		isDisplayNodeCooking(): boolean {
 			if (this.flags.display.active()) {
 				const display_node = this.displayNodeController.displayNode();
 				return display_node ? display_node.isDirty() : false;

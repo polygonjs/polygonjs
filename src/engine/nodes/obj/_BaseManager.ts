@@ -3,7 +3,7 @@ import {Group} from 'three/src/objects/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 export class BaseManagerObjNode<K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
-	protected _attachable_to_hierarchy: boolean = false;
+	protected _attachableToHierarchy: boolean = false;
 
 	create_object() {
 		const group = new Group();

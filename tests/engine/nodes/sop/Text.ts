@@ -73,7 +73,7 @@ QUnit.test('text with multiline', async (assert) => {
 QUnit.test('text as different types', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const text1 = geo1.createNode('text');
 	text1.p.text.set('some text to test');
@@ -108,7 +108,7 @@ QUnit.test('text as different types', async (assert) => {
 QUnit.test('text can recover from generation errors', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const text1 = geo1.createNode('text');
 	await scene.root().processQueue();

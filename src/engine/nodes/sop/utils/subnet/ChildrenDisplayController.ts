@@ -105,7 +105,7 @@ export class SopSubnetChildrenDisplayController {
 	initializeNode() {
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
-			display_flag.add_hook(() => {
+			display_flag.onUpdate(() => {
 				if (display_flag.active()) {
 					this.node.setDirty();
 				}

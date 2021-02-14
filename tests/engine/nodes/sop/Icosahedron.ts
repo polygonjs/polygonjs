@@ -1,6 +1,6 @@
 QUnit.test('icosahedron simple', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const icosahedron1 = geo1.createNode('icosahedron');
 	icosahedron1.p.pointsOnly.set(0);

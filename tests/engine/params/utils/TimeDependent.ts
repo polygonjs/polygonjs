@@ -46,7 +46,7 @@ QUnit.skip('a param sets its node to timedependent and back', (assert) => {});
 QUnit.test('a param sets its node to timedependent and a scene time change sets the node to dirty', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box1 = geo1.createNode('box');
 
@@ -81,7 +81,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 QUnit.test('a param value is updated is it is time dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box1 = geo1.createNode('box');
 	const size = box1.p.size;
@@ -110,7 +110,7 @@ QUnit.test('a param value is updated is it is time dependent', async (assert) =>
 QUnit.test('a node with 2 params can be time dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const rx = geo1.p.r.x;
 	const ry = geo1.p.r.y;

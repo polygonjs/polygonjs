@@ -96,7 +96,12 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
+	console.log(
+		main_group.children,
+		main_group.children.map((o) => o.name)
+	);
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
+	assert.ok(obj);
 	assert.equal(obj.uuid, geo1.object.uuid);
 	const file1 = geo1.createNode('file');
 	file1.p.url.set('/examples/models/wolf.obj');
@@ -136,4 +141,23 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);
 
 	window.scene.performance.stop();
+});
+
+QUnit.test('geo obj: display node can update and still inherit geo transform', async (assert) => {
+	const geo1 = window.geo1;
+	const box = geo1.createNode('box');
+
+	geo1.p.t.x.set(10);
+	await geo1.requestContainer();
+	await box.requestContainer();
+
+	await CoreSleep.sleep(100);
+
+	let obj = box.containerController.container.coreContent()!.objects()[0];
+	if (obj.matrixWorldNeedsUpdate) {
+		// TODO: this isn't a great test.
+		// maybe a better one would be to render one frame first?
+		obj.updateWorldMatrix(true, true);
+	}
+	assert.equal(obj.matrixWorld.elements[12], 10);
 });

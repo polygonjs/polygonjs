@@ -19,7 +19,7 @@ export class HelperController<O extends Object3D, L extends Light> {
 	) {}
 
 	initializeNode() {
-		this.node.flags.display.add_hook(() => {
+		this.node.flags.display.onUpdate(() => {
 			this.update();
 		});
 	}

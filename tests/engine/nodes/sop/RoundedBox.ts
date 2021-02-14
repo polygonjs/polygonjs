@@ -1,6 +1,6 @@
 QUnit.test('rounded_box simple', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const rounded_box1 = geo1.createNode('roundedBox');
 
@@ -26,7 +26,7 @@ QUnit.test('rounded_box simple', async (assert) => {
 
 QUnit.test('rounded_box with input', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const rounded_box1 = geo1.createNode('roundedBox');
 	const transform1 = geo1.createNode('transform');

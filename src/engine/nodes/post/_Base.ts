@@ -46,7 +46,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 	initializeNode() {
 		this.flags.display.set(false);
-		this.flags.display.add_hook(() => {
+		this.flags.display.onUpdate(() => {
 			if (this.flags.display.active()) {
 				const parent = this.parent();
 				if (parent && parent.displayNodeController) {

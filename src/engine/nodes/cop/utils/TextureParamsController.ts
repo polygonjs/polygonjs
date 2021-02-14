@@ -392,19 +392,19 @@ export class TextureParamsController {
 		}
 	}
 	static PARAM_CALLBACK_update_offset(node: TextureCopNode) {
-		const texture = node.container_controller.container.texture();
+		const texture = node.containerController.container.texture();
 		node.texture_params_controller._update_offset(texture, true);
 	}
 	static PARAM_CALLBACK_update_repeat(node: TextureCopNode) {
-		const texture = node.container_controller.container.texture();
+		const texture = node.containerController.container.texture();
 		node.texture_params_controller._update_repeat(texture, true);
 	}
 	static PARAM_CALLBACK_update_rotation(node: TextureCopNode) {
-		const texture = node.container_controller.container.texture();
+		const texture = node.containerController.container.texture();
 		node.texture_params_controller._update_rotation(texture, true);
 	}
 	static PARAM_CALLBACK_update_center(node: TextureCopNode) {
-		const texture = node.container_controller.container.texture();
+		const texture = node.containerController.container.texture();
 		node.texture_params_controller._update_center(texture, true);
 	}
 }

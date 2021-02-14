@@ -208,7 +208,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
 		if (this.pv.useCopyExpr) {
-			const container0 = await this.container_controller.requestInputContainer(0);
+			const container0 = await this.containerController.requestInputContainer(0);
 			if (container0) {
 				const core_group0 = container0.coreContent();
 				if (core_group0) {

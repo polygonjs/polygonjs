@@ -40,9 +40,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return group;
 	}
 
-	protected _attachable_to_hierarchy: boolean = true;
-	get attachable_to_hierarchy() {
-		return this._attachable_to_hierarchy;
+	protected _attachableToHierarchy: boolean = true;
+	attachableToHierarchy() {
+		return this._attachableToHierarchy;
 	}
 	protected _used_in_scene: boolean = true;
 	usedInScene() {
@@ -58,13 +58,13 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	// 		}
 	// 	}
 	// }
-	add_object_to_parent(parent: Object3D) {
-		if (this.attachable_to_hierarchy) {
+	addObjectToParent(parent: Object3D) {
+		if (this.attachableToHierarchy()) {
 			parent.add(this.object);
 		}
 	}
-	remove_object_from_parent() {
-		if (this.attachable_to_hierarchy) {
+	removeObjectFromParent() {
+		if (this.attachableToHierarchy()) {
 			const parent = this.object.parent;
 			if (parent) {
 				parent.remove(this.object);
@@ -106,7 +106,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return object;
 	}
 
-	is_display_node_cooking(): boolean {
+	isDisplayNodeCooking(): boolean {
 		if (this.displayNodeController) {
 			const displayNode = this.displayNodeController.displayNode();
 			if (displayNode) {
@@ -116,7 +116,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		return false;
 	}
 
-	is_displayed(): boolean {
+	isDisplayed(): boolean {
 		return this.flags?.display?.active() || false;
 	}
 }

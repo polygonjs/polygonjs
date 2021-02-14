@@ -32,7 +32,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		this.lifecycle.add_on_child_remove_hook(this._on_child_remove.bind(this));
 	}
 
-	init_default_scene() {
+	initDefaultScene() {
 		this._object.name = ROOT_NAME;
 		this._scene.threejsScene().add(this._object);
 	}
@@ -61,11 +61,11 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return super.nodesByType(type) as ObjNodeChildrenMap[K][];
 	}
 
-	multiple_display_flags_allowed() {
-		return true;
-	}
+	// multiple_display_flags_allowed() {
+	// 	return true;
+	// }
 
-	private _add_to_queue(node: BaseObjNodeType) {
+	private _addToQueue(node: BaseObjNodeType) {
 		const id = node.graphNodeId();
 		if (!this._queued_nodes_by_id.has(id)) {
 			this._queued_nodes_by_id.set(id, node);
@@ -88,7 +88,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 			const node = queued_nodes_by_path.get(path_id);
 			if (node) {
 				queued_nodes_by_path.delete(path_id);
-				this._add_to_scene(node);
+				this._addToScene(node);
 				// promises.push();
 			}
 		}
@@ -110,9 +110,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 
 	private _update_object(node: BaseObjNodeType) {
 		if (!this.scene().loadingController.autoUpdating()) {
-			return this._add_to_queue(node);
+			return this._addToQueue(node);
 		} else {
-			return this._add_to_scene(node);
+			return this._addToScene(node);
 		}
 	}
 
@@ -121,8 +121,8 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// OBJ PARENTING
 	//
 	//
-	get_parent_for_node(node: BaseObjNodeType) {
-		if (node.attachable_to_hierarchy) {
+	getParentForNode(node: BaseObjNodeType) {
+		if (node.attachableToHierarchy()) {
 			const node_input = node.io.inputs.input(0);
 			if (node_input) {
 				return node_input.children_group;
@@ -134,9 +134,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		}
 	}
 
-	private _add_to_scene(node: BaseObjNodeType): void {
-		if (node.attachable_to_hierarchy) {
-			const parent_object = node.root().get_parent_for_node(node);
+	private _addToScene(node: BaseObjNodeType): void {
+		if (node.attachableToHierarchy()) {
+			const parent_object = this.getParentForNode(node);
 			if (parent_object) {
 				// await node.params.eval_all().then((params_eval_key) => {
 				// 	node.requestContainer();
@@ -152,9 +152,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 					// to take care of it itself.
 					// node.requestContainer();
 					node.childrenDisplayController?.request_display_node_container();
-					node.add_object_to_parent(parent_object);
+					node.addObjectToParent(parent_object);
 				} else {
-					node.remove_object_from_parent();
+					node.removeObjectFromParent();
 					// parent_object.remove(node.object);
 				}
 
@@ -173,13 +173,13 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		}
 	}
 
-	remove_from_scene(node: BaseObjNodeType) {
-		node.remove_object_from_parent();
+	private _removeFromScene(node: BaseObjNodeType) {
+		node.removeObjectFromParent();
 	}
-	are_children_cooking(): boolean {
+	areChildrenCooking(): boolean {
 		const children = this.children();
 		for (let child of children) {
-			if (child.cookController.isCooking() || child.is_display_node_cooking()) {
+			if (child.cookController.isCooking() || child.isDisplayNodeCooking()) {
 				return true;
 			}
 		}
@@ -190,19 +190,19 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// 	const geo_nodes = this.nodesByType('geo');
 	// 	const node_by_id: PolyDictionary<GeoObjNode> = {};
 	// 	for (let geo_node of geo_nodes) {
-	// 		const is_displayed = await geo_node.is_displayed();
-	// 		if (is_displayed) {
+	// 		const isDisplayed = await geo_node.isDisplayed();
+	// 		if (isDisplayed) {
 	// 			node_by_id[geo_node.graphNodeId()] = geo_node;
 	// 		}
 	// 	}
 	// 	return node_by_id;
 	// }
 
-	add_to_parent_transform(node: HierarchyObjNode) {
+	addToParentTransform(node: HierarchyObjNode) {
 		this._update_object(node);
 	}
 
-	remove_from_parent_transform(node: HierarchyObjNode) {
+	removeFromParentTransform(node: HierarchyObjNode) {
 		this._update_object(node);
 	}
 
@@ -213,7 +213,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 	private _on_child_remove(node?: BaseNodeType) {
 		if (node) {
-			this.remove_from_scene(node as BaseObjNodeType);
+			this._removeFromScene(node as BaseObjNodeType);
 		}
 	}
 }

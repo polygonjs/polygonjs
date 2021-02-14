@@ -116,7 +116,7 @@ export class TimeController {
 	}
 	incrementTimeIfPlaying() {
 		if (this._playing) {
-			if (!this.scene.root().are_children_cooking()) {
+			if (!this.scene.root().areChildrenCooking()) {
 				this.incrementTime();
 			}
 		}

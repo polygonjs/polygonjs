@@ -6,7 +6,7 @@ QUnit.test('LOD simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera_node = window.perspective_camera1;
 	const camera_object = camera_node.object;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box0 = geo1.createNode('box');
 	const box1 = geo1.createNode('box');

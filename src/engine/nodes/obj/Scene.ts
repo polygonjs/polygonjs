@@ -123,7 +123,6 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	static type(): Readonly<'scene'> {
 		return 'scene';
 	}
-	// protected _attachable_to_hierarchy: boolean = false;
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 
 	private _fog: Fog | undefined;

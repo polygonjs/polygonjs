@@ -21,15 +21,15 @@ export class HierarchyController {
 	}
 
 	static on_input_updated(node: BaseObjNodeType) {
-		const parent_object = node.root().get_parent_for_node(node);
+		const parent_object = node.root().getParentForNode(node);
 		if (node.transformController && parent_object) {
 			TransformController.update_node_transform_params_if_required(node as TransformedObjNode, parent_object);
 		}
 
 		if (node.io.inputs.input(0) != null) {
-			node.root().add_to_parent_transform(node as HierarchyObjNode);
+			node.root().addToParentTransform(node as HierarchyObjNode);
 		} else {
-			node.root().remove_from_parent_transform(node as HierarchyObjNode);
+			node.root().removeFromParentTransform(node as HierarchyObjNode);
 		}
 	}
 	on_input_updated() {

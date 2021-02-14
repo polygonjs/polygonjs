@@ -6,7 +6,7 @@ import {SceneEvent} from '../../../src/engine/poly/SceneEvent';
 
 QUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box1 = geo1.createNode('box');
 	const param = box1.p.size;
@@ -31,7 +31,7 @@ QUnit.test('sets the node to update if set value', async (assert) => {
 
 QUnit.test('sets the node to recook if set expression', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const box1 = geo1.createNode('box');
 	const param = box1.p.size;

@@ -81,7 +81,7 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 
 		// helper
 		this._updateHelperHierarchy();
-		this.flags.display.add_hook(() => {
+		this.flags.display.onUpdate(() => {
 			this._updateHelperHierarchy();
 		});
 	}

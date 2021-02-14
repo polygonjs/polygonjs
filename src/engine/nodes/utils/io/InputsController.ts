@@ -215,7 +215,7 @@ export class InputsController<NC extends NodeContext> {
 							// I tried here to only use a promise for dirty inputs,
 							// but that messes up with the order
 							// if (input.isDirty()) {
-							// 	containers.push(input.container_controller.container as ContainerMap[NC]);
+							// 	containers.push(input.containerController.container as ContainerMap[NC]);
 							// } else {
 							promises.push(this.eval_required_input(i) as Promise<ContainerMap[NC]>);
 							// }
@@ -234,9 +234,9 @@ export class InputsController<NC extends NodeContext> {
 		let container: ContainerMap[NC] | undefined = undefined;
 		const input_node = this.input(input_index);
 		// if (input_node && !input_node.isDirty()) {
-		// 	container = input_node.container_controller.container as ContainerMap[NC] | null;
+		// 	container = input_node.containerController.container as ContainerMap[NC] | null;
 		// } else {
-		// 	container = await this.node.container_controller.requestInputContainer(input_index);
+		// 	container = await this.node.containerController.requestInputContainer(input_index);
 		// 	this._graph_node_inputs[input_index].removeDirtyState();
 		// }
 		if (input_node) {

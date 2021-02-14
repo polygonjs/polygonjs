@@ -87,12 +87,12 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 
 		return light;
 	}
-	// add_object_to_parent(parent: Object3D) {
-	// 	super.add_object_to_parent(parent);
+	// addObjectToParent(parent: Object3D) {
+	// 	super.addObjectToParent(parent);
 	// 	parent.add(this._target_target);
 	// }
-	// remove_object_from_parent() {
-	// 	super.remove_object_from_parent();
+	// removeObjectFromParent() {
+	// 	super.removeObjectFromParent();
 	// 	const parent = this._target_target.parent;
 	// 	if (parent) {
 	// 		parent.remove(this._target_target);

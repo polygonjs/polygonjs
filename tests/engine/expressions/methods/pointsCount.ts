@@ -134,7 +134,7 @@ QUnit.test('expression pointsCount fails with bad input index 0', async (assert)
 	const dummy = geo1.createNode('plane');
 	dummy.flags.display.set(true);
 
-	assert.equal(geo1.display_node_controller.display_node?.graphNodeId(), dummy.graphNodeId());
+	assert.equal(geo1.displayNodeController.displayNode()?.graphNodeId(), dummy.graphNodeId());
 
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');

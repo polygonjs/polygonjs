@@ -44,7 +44,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		// 	this.flags.display.set(false);
 		// }
 		this.io.outputs.set_has_one_output();
-		// this.container_controller.init(CONTAINER_CLASS);
+		// this.containerController.init(CONTAINER_CLASS);
 	}
 
 	set_texture(texture: Texture) {

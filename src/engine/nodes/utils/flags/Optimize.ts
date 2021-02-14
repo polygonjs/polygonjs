@@ -3,7 +3,7 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 
 export class OptimizeFlag extends BaseFlag {
 	protected _state: boolean = false;
-	on_update() {
+	protected _on_update() {
 		this.node.emit(NodeEvent.FLAG_OPTIMIZE_UPDATED);
 	}
 }

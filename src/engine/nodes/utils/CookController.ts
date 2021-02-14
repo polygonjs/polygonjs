@@ -111,8 +111,8 @@ export class NodeCookController<NC extends NodeContext> {
 	private _terminate_cook_process() {
 		if (this.isCooking()) {
 			this._cooking = false;
-			// setTimeout(this.node.container_controller.notify_requesters.bind(this.node.container_controller), 0);
-			this.node.container_controller.notify_requesters();
+			// setTimeout(this.node.containerController.notify_requesters.bind(this.node.containerController), 0);
+			this.node.containerController.notify_requesters();
 			this._run_on_cook_complete_hooks();
 		}
 	}

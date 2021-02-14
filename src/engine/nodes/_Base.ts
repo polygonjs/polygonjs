@@ -53,7 +53,7 @@ import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
-	container_controller: TypedContainerController<NC> = new TypedContainerController<NC>(this);
+	containerController: TypedContainerController<NC> = new TypedContainerController<NC>(this);
 
 	private _parent_controller: HierarchyParentController | undefined;
 
@@ -226,14 +226,14 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// container
 	async requestContainer() {
 		if (!this.isDirty()) {
-			return this.container_controller.container;
+			return this.containerController.container;
 		} else {
-			return await this.container_controller.requestContainer();
+			return await this.containerController.requestContainer();
 		}
 	}
 	setContainer(content: ContainableMap[NC], message: string | null = null) {
 		// TODO: typescript: why is this a type of never
-		this.container_controller.container.set_content(content as never); //, this.self.cook_eval_key());
+		this.containerController.container.set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
 			if (!(content as any).name) {
 				(content as any).name = this.fullPath();

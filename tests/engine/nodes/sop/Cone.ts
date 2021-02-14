@@ -1,6 +1,6 @@
 QUnit.test('cone simple', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const cone1 = geo1.createNode('cone');
 

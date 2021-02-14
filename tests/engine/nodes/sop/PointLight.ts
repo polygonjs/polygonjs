@@ -3,7 +3,7 @@ import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/
 
 QUnit.test('pointLight simple', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const pointLight = geo1.createNode('pointLight');
 
@@ -15,7 +15,7 @@ QUnit.test('pointLight simple', async (assert) => {
 
 QUnit.test('pointLight with transform', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const pointLight = geo1.createNode('pointLight');
 	const transform = geo1.createNode('transform');
@@ -33,7 +33,7 @@ QUnit.test('pointLight with transform', async (assert) => {
 
 QUnit.test('pointLight with copy SOP', async (assert) => {
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node display_node_controller
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
 	const pointLight = geo1.createNode('pointLight');
 	const plane = geo1.createNode('plane');

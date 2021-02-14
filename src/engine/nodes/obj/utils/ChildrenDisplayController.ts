@@ -3,6 +3,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {Group} from 'three/src/objects/Group';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {BaseSopNodeType} from '../../sop/_Base';
 
 const DISPLAY_PARAM_NAME = 'display';
 
@@ -58,7 +59,7 @@ export class ChildrenDisplayController {
 
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
-			display_flag.add_hook(() => {
+			display_flag.onUpdate(() => {
 				this._updateSopGroupHierarchy();
 				if (display_flag.active()) {
 					this.request_display_node_container();
@@ -115,7 +116,7 @@ export class ChildrenDisplayController {
 	async _set_content_under_sop_group() {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
-		const display_node = this.node.displayNodeController.displayNode();
+		const display_node = this.node.displayNodeController.displayNode() as BaseSopNodeType;
 		if (display_node && display_node.parent()?.graphNodeId() == this.node.graphNodeId()) {
 			const container = await display_node.requestContainer();
 			const core_group = container.coreContent();
@@ -135,11 +136,13 @@ export class ChildrenDisplayController {
 					this.remove_children();
 					for (let object of new_objects) {
 						this._sop_group.add(object);
+						// ensure the matrix of the parent is used
+						object.updateMatrix();
 						this._children_uuids_dict[object.uuid] = true;
 					}
 					this._children_length = new_objects.length;
-					return;
 				}
+				return;
 			}
 		}
 		this.remove_children();

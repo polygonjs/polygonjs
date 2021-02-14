@@ -20,7 +20,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 
 		this._light = this.create_light();
 		this.object.add(this._light);
-		this.flags.display.add_hook(() => {
+		this.flags.display.onUpdate(() => {
 			this.update_light_attachment();
 		});
 		this.dirtyController.addPostDirtyHook(

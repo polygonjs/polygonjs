@@ -127,7 +127,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 
 		// helper
 		this._updateHelperHierarchy();
-		this.flags.display.add_hook(() => {
+		this.flags.display.onUpdate(() => {
 			this._updateHelperHierarchy();
 		});
 	}

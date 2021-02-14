@@ -48,7 +48,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 
 	initializeBaseNode() {
 		this.flags.display.set(false);
-		this.flags.display.add_hook(() => {
+		this.flags.display.onUpdate(() => {
 			if (this.flags.display.active()) {
 				const parent = this.parent();
 				if (parent && parent.displayNodeController) {
@@ -95,7 +95,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	set_container_objects(objects: Object3D[], message: MESSAGE) {
-		const core_group = this.container_controller.container.coreContent() || new CoreGroup();
+		const core_group = this.containerController.container.coreContent() || new CoreGroup();
 		core_group.setObjects(objects);
 		core_group.touch();
 		this.setContainer(core_group);

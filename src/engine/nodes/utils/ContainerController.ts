@@ -81,7 +81,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		this._callbacks.splice(0, this._callbacks.length); // empty
 
 		if (!container) {
-			container = this.node.container_controller.container;
+			container = this.node.containerController.container;
 		}
 		let callback: Callback<NC> | undefined;
 		while ((callback = this._callbacks_tmp.pop())) {
