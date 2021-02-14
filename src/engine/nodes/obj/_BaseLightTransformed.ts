@@ -14,17 +14,17 @@ export abstract class BaseLightTransformedObjNode<
 	K extends TransformedObjParamConfig
 > extends TypedLightObjNode<L, K> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
-	readonly transform_controller: TransformController = new TransformController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	readonly transformController: TransformController = new TransformController(this);
 
 	initializeBaseNode() {
 		super.initializeBaseNode();
-		this.hierarchy_controller.initializeNode();
-		this.transform_controller.initializeNode();
+		this.hierarchyController.initializeNode();
+		this.transformController.initializeNode();
 	}
 
 	cook() {
-		this.transform_controller.update();
+		this.transformController.update();
 		this.update_light_params();
 		this.update_shadow_params();
 		this.cookController.end_cook();

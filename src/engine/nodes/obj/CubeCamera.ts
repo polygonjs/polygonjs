@@ -65,7 +65,7 @@
 // 		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
 
 // 		// const group = this.group();
-// 		this.transform_controller.update(matrix);
+// 		this.transformController.update(matrix);
 
 // 		this._cube_camera_scene = this._cube_camera_scene || new Scene();
 // 		this._cube_camera_objects = this.scene.nodesController.objectsFromMask(this._param_object_mask);

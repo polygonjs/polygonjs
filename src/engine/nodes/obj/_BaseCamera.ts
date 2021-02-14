@@ -124,7 +124,7 @@ export abstract class TypedCameraObjNode<
 	K extends BaseCameraObjParamsConfig
 > extends TypedObjNode<O, K> {
 	// public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	public readonly render_order: number = ObjNodeRenderOrder.CAMERA;
+	public readonly renderOrder: number = ObjNodeRenderOrder.CAMERA;
 	protected _object!: O;
 	protected _aspect: number = -1;
 	get object() {
@@ -173,8 +173,8 @@ export class TypedThreejsCameraObjNode<
 	K extends BaseThreejsCameraObjParamsConfig
 > extends TypedCameraObjNode<O, K> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
-	readonly transform_controller: TransformController = new TransformController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	readonly transformController: TransformController = new TransformController(this);
 	protected _controls_controller: ThreejsCameraControlsController | undefined;
 	get controls_controller(): ThreejsCameraControlsController {
 		return (this._controls_controller = this._controls_controller || new ThreejsCameraControlsController(this));
@@ -193,10 +193,10 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	// display_node and children_display controllers
-	public readonly children_display_controller: ChildrenDisplayController = new ChildrenDisplayController(this);
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+	public readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
-		this.children_display_controller.display_node_controller_callbacks()
+		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
 	protected _children_controller_context = NodeContext.SOP;
@@ -204,10 +204,10 @@ export class TypedThreejsCameraObjNode<
 	initializeBaseNode() {
 		super.initializeBaseNode();
 		this.io.outputs.set_has_one_output();
-		this.hierarchy_controller.initializeNode();
-		this.transform_controller.initializeNode();
+		this.hierarchyController.initializeNode();
+		this.transformController.initializeNode();
 
-		this.children_display_controller.initializeNode();
+		this.childrenDisplayController.initializeNode();
 	}
 
 	createNode<S extends keyof GeoNodeChildrenMap>(
@@ -236,7 +236,7 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	async cook() {
-		this.transform_controller.update();
+		this.transformController.update();
 		this.layers_controller.update();
 		// await this.background_controller.update();
 

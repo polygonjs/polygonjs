@@ -12,7 +12,7 @@ import {BaseRopNodeType} from '../rop/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
 export class RenderersObjNode extends ParamLessBaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
 	static type() {
 		return NetworkNodeType.ROP;
 	}

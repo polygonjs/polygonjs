@@ -32,7 +32,7 @@ export class NodeCookController<NC extends NodeContext> {
 		this._inputs_evaluation_required = false;
 	}
 
-	get is_cooking(): boolean {
+	isCooking(): boolean {
 		return this._cooking === true;
 	}
 
@@ -57,7 +57,7 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 
 	async cook_main() {
-		if (this.is_cooking) {
+		if (this.isCooking()) {
 			return;
 		}
 		this._init_cooking_state();
@@ -77,7 +77,7 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 	async cook_main_without_inputs() {
 		this.node.scene().cookController.add_node(this.node);
-		if (this.is_cooking) {
+		if (this.isCooking()) {
 			// TODO:
 			// this seems to happen because when we flush the cooker queue,
 			// some graph nodes will trigger more updates, which will then make dependent nodes
@@ -109,7 +109,7 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 
 	private _terminate_cook_process() {
-		if (this.is_cooking) {
+		if (this.isCooking()) {
 			this._cooking = false;
 			// setTimeout(this.node.container_controller.notify_requesters.bind(this.node.container_controller), 0);
 			this.node.container_controller.notify_requesters();

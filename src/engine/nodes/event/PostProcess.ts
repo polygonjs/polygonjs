@@ -16,10 +16,10 @@ export class PostProcessEventNode extends BaseNetworkEventNode<PostProcessNetwor
 	static type() {
 		return NetworkNodeType.POST;
 	}
-	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
+	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
-		this.effects_composer_controller.display_node_controller_callbacks()
+		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
 	protected _children_controller_context = NodeContext.POST;

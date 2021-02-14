@@ -12,7 +12,7 @@ import {BaseMatNodeType} from '../mat/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
 export class MaterialsObjNode extends ParamLessBaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
 	static type(): Readonly<NetworkNodeType.MAT> {
 		return NetworkNodeType.MAT;
 	}

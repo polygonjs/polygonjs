@@ -3,9 +3,9 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
 type DisplayControllerCallback = () => void;
 export interface DisplayNodeControllerCallbacks {
-	on_display_node_remove: DisplayControllerCallback;
-	on_display_node_set: DisplayControllerCallback;
-	on_display_node_update: DisplayControllerCallback;
+	onDisplayNodeRemove: DisplayControllerCallback;
+	onDisplayNodeSet: DisplayControllerCallback;
+	onDisplayNodeUpdate: DisplayControllerCallback;
 }
 
 /*
@@ -25,16 +25,16 @@ export class DisplayNodeController {
 	constructor(protected node: BaseNodeType, callbacks: DisplayNodeControllerCallbacks) {
 		this._graph_node = new CoreGraphNode(node.scene(), 'DisplayNodeController');
 		(this._graph_node as any).node = node;
-		this._on_display_node_remove_callback = callbacks.on_display_node_remove;
-		this._on_display_node_set_callback = callbacks.on_display_node_set;
-		this._on_display_node_update_callback = callbacks.on_display_node_update;
+		this._on_display_node_remove_callback = callbacks.onDisplayNodeRemove;
+		this._on_display_node_set_callback = callbacks.onDisplayNodeSet;
+		this._on_display_node_update_callback = callbacks.onDisplayNodeUpdate;
 	}
 
 	dispose() {
 		this._graph_node.dispose();
 	}
 
-	get display_node() {
+	displayNode() {
 		return this._display_node;
 	}
 
@@ -57,7 +57,7 @@ export class DisplayNodeController {
 				if (last_child) {
 					last_child.flags?.display?.set(true);
 				} else {
-					this.set_display_node(undefined);
+					this.setDisplayNode(undefined);
 				}
 			}
 		});
@@ -68,7 +68,7 @@ export class DisplayNodeController {
 		});
 	}
 
-	async set_display_node(new_display_node: BaseNodeClassWithDisplayFlag | undefined) {
+	async setDisplayNode(new_display_node: BaseNodeClassWithDisplayFlag | undefined) {
 		if (!this._initialized) {
 			console.error('display node controller not initialized', this.node);
 		}

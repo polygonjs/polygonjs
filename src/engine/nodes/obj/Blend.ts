@@ -62,7 +62,7 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	static type() {
 		return 'blend';
 	}
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
@@ -72,7 +72,7 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		return group;
 	}
 	initializeNode() {
-		this.hierarchy_controller.initializeNode();
+		this.hierarchyController.initializeNode();
 		this.io.inputs.setCount(0);
 
 		this.addPostDirtyHook('blend_on_dirty', () => {

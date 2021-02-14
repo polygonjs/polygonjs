@@ -12,7 +12,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export class EventsObjNode extends ParamLessBaseManagerObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
 	static type() {
 		return NetworkNodeType.EVENT;
 	}

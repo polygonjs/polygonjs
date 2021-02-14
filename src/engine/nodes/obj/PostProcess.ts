@@ -17,11 +17,11 @@ export class PostProcessObjNode extends BaseManagerObjNode<PostProcessNetworkPar
 	static type() {
 		return NetworkNodeType.POST;
 	}
-	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
+	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
 
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
-		this.effects_composer_controller.display_node_controller_callbacks()
+		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
 	protected _children_controller_context = NodeContext.POST;

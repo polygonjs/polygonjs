@@ -124,10 +124,10 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		return 'scene';
 	}
 	// protected _attachable_to_hierarchy: boolean = false;
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 
 	private _fog: Fog | undefined;
-	private _fog_exp2: FogExp2 | undefined;
+	private _fogExp2: FogExp2 | undefined;
 
 	create_object() {
 		const scene = new Scene();
@@ -142,7 +142,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		// );
 
 		// super.initializeNode();
-		this.hierarchy_controller.initializeNode();
+		this.hierarchyController.initializeNode();
 		// this.io.outputs.set_has_one_output();
 	}
 	// TODO: I may be able to swap those methods to param callbacks for most params
@@ -202,14 +202,16 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	private _update_fog() {
 		if (this.pv.useFog) {
 			if (this.pv.fogType == FOG_TYPES.indexOf(FogType.LINEAR)) {
-				this.object.fog = this.fog;
-				this.fog.color = this.pv.fogColor;
-				this.fog.near = this.pv.fogNear;
-				this.fog.far = this.pv.fogFar;
+				const fog = this.fog2();
+				this.object.fog = fog;
+				fog.color = this.pv.fogColor;
+				fog.near = this.pv.fogNear;
+				fog.far = this.pv.fogFar;
 			} else {
-				this.object.fog = this.fog_exp2;
-				this.fog_exp2.color = this.pv.fogColor;
-				this.fog_exp2.density = this.pv.fogDensity;
+				const fogExp2 = this.fogExp2();
+				this.object.fog = this.fogExp2();
+				fogExp2.color = this.pv.fogColor;
+				fogExp2.density = this.pv.fogDensity;
 			}
 		} else {
 			const current_fog = this.object.fog;
@@ -218,11 +220,11 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 			}
 		}
 	}
-	get fog() {
+	fog2() {
 		return (this._fog = this._fog || new Fog(0xffffff, this.pv.fogNear, this.pv.fogFar));
 	}
-	get fog_exp2() {
-		return (this._fog_exp2 = this._fog_exp2 || new FogExp2(0xffffff, this.pv.fogDensity));
+	fogExp2() {
+		return (this._fogExp2 = this._fogExp2 || new FogExp2(0xffffff, this.pv.fogDensity));
 	}
 
 	//

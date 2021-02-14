@@ -7,7 +7,7 @@ import {PolyDictionary} from '../../../../types/GlobalTypes';
 const DISPLAY_PARAM_NAME = 'display';
 
 interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
-	display_node_controller: DisplayNodeController;
+	displayNodeController: DisplayNodeController;
 }
 
 export class ChildrenDisplayController {
@@ -26,33 +26,33 @@ export class ChildrenDisplayController {
 		group.matrixAutoUpdate = false;
 		return group;
 	}
-	get sop_group() {
+	sopGroup() {
 		return this._sop_group;
 	}
 	set_sop_group_name() {
 		this._sop_group.name = `${this.node.name()}:sop_group`;
 	}
 
-	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
+	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
 		return {
-			on_display_node_remove: () => {
+			onDisplayNodeRemove: () => {
 				this.remove_children();
 			},
-			on_display_node_set: () => {
+			onDisplayNodeSet: () => {
 				// use a timeout here, so that the node isn't cooked too early when being copy/pasted, if it had the display flag on.
 				// This would make nodes error
 				setTimeout(() => {
 					this.request_display_node_container();
 				}, 0);
 			},
-			on_display_node_update: () => {
+			onDisplayNodeUpdate: () => {
 				this.request_display_node_container();
 			},
 		};
 	}
 
 	initializeNode() {
-		this.node.object.add(this.sop_group);
+		this.node.object.add(this.sopGroup());
 		this.node.nameController.add_post_set_fullPath_hook(this.set_sop_group_name.bind(this));
 		this._create_sop_group();
 
@@ -69,12 +69,13 @@ export class ChildrenDisplayController {
 	private _updateSopGroupHierarchy() {
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
+			const sopGroup = this.sopGroup();
 			if (this.usedInScene()) {
-				this.sop_group.visible = true;
-				this.node.object.add(this.sop_group);
+				sopGroup.visible = true;
+				this.node.object.add(sopGroup);
 			} else {
-				this.sop_group.visible = false;
-				this.node.object.remove(this.sop_group);
+				sopGroup.visible = false;
+				this.node.object.remove(sopGroup);
 			}
 		}
 	}
@@ -114,7 +115,7 @@ export class ChildrenDisplayController {
 	async _set_content_under_sop_group() {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
-		const display_node = this.node.display_node_controller.display_node;
+		const display_node = this.node.displayNodeController.displayNode();
 		if (display_node && display_node.parent()?.graphNodeId() == this.node.graphNodeId()) {
 			const container = await display_node.requestContainer();
 			const core_group = container.coreContent();
@@ -137,12 +138,10 @@ export class ChildrenDisplayController {
 						this._children_uuids_dict[object.uuid] = true;
 					}
 					this._children_length = new_objects.length;
+					return;
 				}
-			} else {
-				this.remove_children();
 			}
-		} else {
-			this.remove_children();
 		}
+		this.remove_children();
 	}
 }

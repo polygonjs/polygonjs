@@ -60,7 +60,7 @@ export function TransformedParamConfig<TBase extends Constructor>(
 }
 class TransformedParamsConfig extends TransformedParamConfig(NodeParamsConfig) {}
 export class TransformedObjNode extends TypedObjNode<Object3D, TransformedParamsConfig> {
-	readonly transform_controller: TransformController = new TransformController(this);
+	readonly transformController: TransformController = new TransformController(this);
 }
 
 const HOOK_NAME = '_cook_main_without_inputs_when_dirty';
@@ -156,7 +156,7 @@ export class TransformController {
 	//
 	//
 	static update_node_transform_params_if_required(node: TransformedObjNode, new_parent_object: Object3D) {
-		node.transform_controller.update_node_transform_params_if_required(new_parent_object);
+		node.transformController.update_node_transform_params_if_required(new_parent_object);
 	}
 	// private _keep_pos_when_parenting_t = new Vector3();
 	// private _keep_pos_when_parenting_q = new Quaternion();
@@ -198,6 +198,6 @@ export class TransformController {
 	//
 	//
 	static PARAM_CALLBACK_update_transform_from_object(node: TransformedObjNode) {
-		node.transform_controller.update_node_transform_params_from_object();
+		node.transformController.update_node_transform_params_from_object();
 	}
 }

@@ -282,7 +282,7 @@ export class RaycastCPUController {
 		if (node) {
 			const found_obj = this._node.pv.traverseChildren
 				? node.object
-				: (node as GeoObjNode).children_display_controller.sop_group;
+				: (node as GeoObjNode).childrenDisplayController.sopGroup();
 			if (found_obj) {
 				this._resolved_targets = [found_obj];
 			} else {

@@ -107,10 +107,10 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 					}
 				}
 				if (this._node.flags.has_display()) {
-					// only save the display flag if it is true, or if the parent does not have a display_node_controller
+					// only save the display flag if it is true, or if the parent does not have a displayNodeController
 					// This will then always save it for OBJ
 					// And only if true for SOP
-					if (this._node.flags.display?.active() || !this._node.parent()?.display_node_controller) {
+					if (this._node.flags.display?.active() || !this._node.parent()?.displayNodeController) {
 						flags_data['display'] = this._node.flags.display?.active();
 					}
 				}

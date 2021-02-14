@@ -51,8 +51,8 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.flags.display.add_hook(() => {
 			if (this.flags.display.active()) {
 				const parent = this.parent();
-				if (parent && parent.display_node_controller) {
-					parent.display_node_controller.set_display_node(this);
+				if (parent && parent.displayNodeController) {
+					parent.displayNodeController.setDisplayNode(this);
 				}
 			}
 		});

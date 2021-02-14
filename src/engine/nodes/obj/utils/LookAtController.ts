@@ -37,7 +37,7 @@
 // 			//this._remove_camera_event()
 // 			this._camera_controller.remove_target();
 
-// 			this.node.transform_controller.update_transform_with_matrix();
+// 			this.node.transformController.update_transform_with_matrix();
 // 		}
 // 	}
 

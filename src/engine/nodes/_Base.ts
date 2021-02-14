@@ -64,7 +64,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	private _serializer: NodeSerializer | undefined;
 	private _cook_controller: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
-	public readonly display_node_controller: DisplayNodeController | undefined;
+	public readonly displayNodeController: DisplayNodeController | undefined;
 	public readonly persisted_config: BasePersistedConfig | undefined;
 
 	private _params_controller: ParamsController | undefined;
@@ -153,7 +153,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		if (!this._initialized) {
 			this._initialized = true;
 
-			this.display_node_controller?.initializeNode();
+			this.displayNodeController?.initializeNode();
 
 			this.initializeBaseNode(); // for base classes of Sop, Obj...
 			this.initializeNode(); // for Derivated node clases, like BoxSop, TransformSop...
@@ -268,7 +268,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.setParent(null);
 		this.io.inputs.dispose();
 		this.lifecycle.dispose();
-		this.display_node_controller?.dispose();
+		this.displayNodeController?.dispose();
 		this.nameController.dispose();
 		this.childrenController?.dispose();
 		this.params.dispose();

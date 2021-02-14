@@ -77,7 +77,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
 		this._queued_nodes_by_id.forEach((node, id) => {
-			const fullPath = `_____${node.render_order}__${node.fullPath()}`;
+			const fullPath = `_____${node.renderOrder}__${node.fullPath()}`;
 			paths.push(fullPath);
 			queued_nodes_by_path.set(fullPath, node);
 		});
@@ -143,15 +143,15 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 				// });
 
 				if (node.usedInScene()) {
-					// I need to query the display_node_controller here,
+					// I need to query the displayNodeController here,
 					// for geo obj whose display_node is a node without inputs.
 					// Since that node will not be made dirty, it seems that there is
 					// nothing triggering the obj to request it itself.
 					// TODO: investigate if it has a performance cost, or if it could be done
-					// only when scene loads. Or if the display_node_controller itself could be improved
+					// only when scene loads. Or if the displayNodeController itself could be improved
 					// to take care of it itself.
 					// node.requestContainer();
-					node.children_display_controller?.request_display_node_container();
+					node.childrenDisplayController?.request_display_node_container();
 					node.add_object_to_parent(parent_object);
 				} else {
 					node.remove_object_from_parent();
@@ -179,7 +179,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	are_children_cooking(): boolean {
 		const children = this.children();
 		for (let child of children) {
-			if (child.cookController.is_cooking || child.is_display_node_cooking()) {
+			if (child.cookController.isCooking() || child.is_display_node_cooking()) {
 				return true;
 			}
 		}

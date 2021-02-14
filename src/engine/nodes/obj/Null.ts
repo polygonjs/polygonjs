@@ -20,8 +20,8 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	static type() {
 		return 'null';
 	}
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
-	readonly transform_controller: TransformController = new TransformController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	readonly transformController: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
@@ -31,8 +31,8 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 		return group;
 	}
 	initializeNode() {
-		this.hierarchy_controller.initializeNode();
-		this.transform_controller.initializeNode();
+		this.hierarchyController.initializeNode();
+		this.transformController.initializeNode();
 		this._updateHelperHierarchy();
 		this._helper.matrixAutoUpdate = false;
 		this.flags.display.add_hook(() => {
@@ -48,7 +48,7 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	}
 
 	cook() {
-		this.transform_controller.update();
+		this.transformController.update();
 		this.cookController.end_cook();
 	}
 }

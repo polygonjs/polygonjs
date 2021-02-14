@@ -82,7 +82,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	static type(): Readonly<'rivet'> {
 		return 'rivet';
 	}
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 	private _resolved_sop_group: Group | undefined;
@@ -94,7 +94,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		return mesh;
 	}
 	initializeNode() {
-		this.hierarchy_controller.initializeNode();
+		this.hierarchyController.initializeNode();
 		// this.io.inputs.add_on_set_input_hook('on_input_updated:update_object_position', () => {
 		// 	this.update_object_position();
 		// });
@@ -252,7 +252,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 			if (node.nodeContext() == NodeContext.OBJ && node.type() == GeoObjNode.type()) {
 				const geo_node = node as GeoObjNode;
 				// this._remove_render_hook();
-				this._resolved_sop_group = geo_node.children_display_controller.sop_group;
+				this._resolved_sop_group = geo_node.childrenDisplayController.sopGroup();
 				// I can't really use _resolved_sop_group_child
 				// because it may not exist when this method is execute
 				// this._resolved_sop_group_child = this._resolved_sop_group.children[0] as Object3DWithGeometry;

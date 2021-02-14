@@ -5,7 +5,7 @@ import {TransformController, TransformedObjNode} from './TransformController';
 
 class HierarchyParamsConfig extends NodeParamsConfig {}
 export class HierarchyObjNode extends TypedObjNode<Object3D, HierarchyParamsConfig> {
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 }
 
 export class HierarchyController {
@@ -22,7 +22,7 @@ export class HierarchyController {
 
 	static on_input_updated(node: BaseObjNodeType) {
 		const parent_object = node.root().get_parent_for_node(node);
-		if (node.transform_controller && parent_object) {
+		if (node.transformController && parent_object) {
 			TransformController.update_node_transform_params_if_required(node as TransformedObjNode, parent_object);
 		}
 

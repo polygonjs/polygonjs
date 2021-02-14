@@ -51,13 +51,13 @@ export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 	});
 }
 export interface BaseNetworkPostProcessNodeType extends TypedNode<any, PostProcessNetworkParamsConfig> {
-	readonly display_node_controller: DisplayNodeController;
+	readonly displayNodeController: DisplayNodeController;
 	createNode<S extends keyof PostNodeChildrenMap>(node_class: S): PostNodeChildrenMap[S];
 	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>): K;
 	children(): BasePostProcessNodeType[];
 	nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];
 
-	readonly effects_composer_controller: EffectsComposerController;
+	readonly effectsComposerController: EffectsComposerController;
 }
 
 interface CreateEffectsComposerOptions {
@@ -75,19 +75,19 @@ interface CreateEffectsComposerOptions {
 export class EffectsComposerController {
 	constructor(private node: BaseNetworkPostProcessNodeType) {}
 
-	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
+	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
 		return {
-			on_display_node_remove: () => {},
-			on_display_node_set: () => {
+			onDisplayNodeRemove: () => {},
+			onDisplayNodeSet: () => {
 				this.node.setDirty();
 			},
-			on_display_node_update: () => {
+			onDisplayNodeUpdate: () => {
 				this.node.setDirty();
 			},
 		};
 	}
 
-	create_effects_composer(options: CreateEffectsComposerOptions) {
+	createEffectsComposer(options: CreateEffectsComposerOptions) {
 		const renderer = options.renderer;
 
 		let composer: EffectComposer;
@@ -137,7 +137,7 @@ export class EffectsComposerController {
 			composer.addPass(render_pass);
 		}
 
-		const post_node = this.node.display_node_controller.display_node as BasePostProcessNodeType;
+		const post_node = this.node.displayNodeController.displayNode() as BasePostProcessNodeType;
 		if (post_node) {
 			post_node.setup_composer({
 				composer: composer,

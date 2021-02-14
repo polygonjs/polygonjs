@@ -35,8 +35,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	static type() {
 		return 'geo';
 	}
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
-	readonly transform_controller: TransformController = new TransformController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	readonly transformController: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	create_object() {
 		const group = new Group();
@@ -45,10 +45,10 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	}
 
 	// display_node and children_display controllers
-	public readonly children_display_controller: ChildrenDisplayController = new ChildrenDisplayController(this);
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+	public readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
-		this.children_display_controller.display_node_controller_callbacks()
+		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
 
@@ -59,15 +59,15 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		// this.lifecycle.add_on_create_hook(this._on_create_bound);
 		this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
 
-		this.hierarchy_controller.initializeNode();
-		this.transform_controller.initializeNode();
+		this.hierarchyController.initializeNode();
+		this.transformController.initializeNode();
 
-		this.children_display_controller.initializeNode();
+		this.childrenDisplayController.initializeNode();
 	}
 
 	is_display_node_cooking(): boolean {
 		if (this.flags.display.active()) {
-			const display_node = this.display_node_controller.display_node;
+			const display_node = this.displayNodeController.displayNode();
 			return display_node ? display_node.isDirty() : false;
 		} else {
 			return false;
@@ -115,7 +115,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	//
 	//
 	cook() {
-		this.transform_controller.update();
+		this.transformController.update();
 		this.object.visible = this.pv.display;
 		this.object.renderOrder = this.pv.renderOrder;
 		this.cookController.end_cook();

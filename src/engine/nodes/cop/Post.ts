@@ -122,10 +122,10 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
-	readonly effects_composer_controller: EffectsComposerController = new EffectsComposerController(this);
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
+	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
-		this.effects_composer_controller.display_node_controller_callbacks()
+		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
 	protected _children_controller_context = NodeContext.POST;
@@ -255,7 +255,7 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	}
 
 	protected _create_composer(renderer: WebGLRenderer, render_target: WebGLRenderTarget) {
-		const composer = this.effects_composer_controller.create_effects_composer({
+		const composer = this.effectsComposerController.createEffectsComposer({
 			renderer,
 			scene: this._texture_scene,
 			camera: this._texture_camera,

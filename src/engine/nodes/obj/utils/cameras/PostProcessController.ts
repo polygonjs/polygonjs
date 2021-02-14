@@ -101,7 +101,7 @@ export class PostProcessController {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;
 					const resolution = this.node.renderController.canvas_resolution(canvas);
 
-					const composer = post_process_network.effects_composer_controller.create_effects_composer({
+					const composer = post_process_network.effectsComposerController.createEffectsComposer({
 						renderer,
 						scene,
 						camera,

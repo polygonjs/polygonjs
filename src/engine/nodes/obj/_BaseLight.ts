@@ -7,7 +7,7 @@ import {Group} from 'three/src/objects/Group';
 
 export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	public readonly render_order: number = ObjNodeRenderOrder.LIGHT;
+	public readonly renderOrder: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
 	protected _light!: L;
 	get light() {

@@ -40,5 +40,5 @@ class BaseAnimationsObjNode extends ParamLessBaseManagerObjNode {
 	}
 }
 export class AnimationsObjNode extends BaseAnimationsObjNode {
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
+	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
 }

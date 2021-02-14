@@ -38,7 +38,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 	static type() {
 		return 'polarTransform';
 	}
-	readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
@@ -48,7 +48,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		return group;
 	}
 	initializeNode() {
-		this.hierarchy_controller.initializeNode();
+		this.hierarchyController.initializeNode();
 
 		if (!this.dirtyController.has_hook(HOOK_NAME)) {
 			this.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);

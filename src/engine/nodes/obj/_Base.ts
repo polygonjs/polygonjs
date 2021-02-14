@@ -27,9 +27,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
-	public readonly render_order: number = ObjNodeRenderOrder.MANAGER;
-	readonly transform_controller: TransformController | undefined;
-	readonly hierarchy_controller: HierarchyController | undefined;
+	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
+	readonly transformController: TransformController | undefined;
+	readonly hierarchyController: HierarchyController | undefined;
 
 	protected _children_group = this._create_children_group();
 	protected _object!: O;
@@ -72,7 +72,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		}
 	}
 
-	public readonly children_display_controller: ChildrenDisplayController | undefined;
+	public readonly childrenDisplayController: ChildrenDisplayController | undefined;
 
 	initializeBaseNode() {
 		this._object = this._create_object_with_attributes();
@@ -107,9 +107,10 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 
 	is_display_node_cooking(): boolean {
-		if (this.display_node_controller) {
-			if (this.display_node_controller.display_node) {
-				return this.display_node_controller.display_node.cookController.is_cooking;
+		if (this.displayNodeController) {
+			const displayNode = this.displayNodeController.displayNode();
+			if (displayNode) {
+				return displayNode.cookController.isCooking();
 			}
 		}
 		return false;

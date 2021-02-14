@@ -30,7 +30,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		static type() {
 			return node_type;
 		}
-		readonly hierarchy_controller: HierarchyController = new HierarchyController(this);
+		readonly hierarchyController: HierarchyController = new HierarchyController(this);
 		public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 		create_object() {
 			const group = new Group();
@@ -39,23 +39,23 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		}
 
 		// display_node and children_display controllers
-		public readonly children_display_controller: ChildrenDisplayController = new ChildrenDisplayController(this);
-		public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+		public readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+		public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 			this,
-			this.children_display_controller.display_node_controller_callbacks()
+			this.childrenDisplayController.displayNodeControllerCallbacks()
 		);
 		//
 
 		protected _children_controller_context = NodeContext.SOP;
 
 		initializeNode() {
-			this.hierarchy_controller.initializeNode();
-			this.children_display_controller.initializeNode();
+			this.hierarchyController.initializeNode();
+			this.childrenDisplayController.initializeNode();
 		}
 
 		is_display_node_cooking(): boolean {
 			if (this.flags.display.active()) {
-				const display_node = this.display_node_controller.display_node;
+				const display_node = this.displayNodeController.displayNode();
 				return display_node ? display_node.isDirty() : false;
 			} else {
 				return false;

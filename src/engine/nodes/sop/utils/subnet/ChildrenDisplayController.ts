@@ -13,18 +13,18 @@ import {Constructor, valueof} from '../../../../../types/GlobalTypes';
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
 	initializeBaseNode() {
 		super.initializeBaseNode();
-		this.children_display_controller.initializeNode();
+		this.childrenDisplayController.initializeNode();
 		// the inputs will be evaluated by the child input nodes
 		this.cookController.disallow_inputs_evaluation();
 	}
 
 	// display_node and children_display controllers
-	public readonly children_display_controller: SopSubnetChildrenDisplayController = new SopSubnetChildrenDisplayController(
+	public readonly childrenDisplayController: SopSubnetChildrenDisplayController = new SopSubnetChildrenDisplayController(
 		this
 	);
-	public readonly display_node_controller: DisplayNodeController = new DisplayNodeController(
+	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
-		this.children_display_controller.display_node_controller_callbacks()
+		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
 
@@ -52,7 +52,7 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	}
 
 	async cook(input_contents: CoreGroup[]) {
-		const child_output_node = this.children_display_controller.output_node();
+		const child_output_node = this.childrenDisplayController.output_node();
 		if (child_output_node) {
 			const container = await child_output_node.requestContainer();
 			const core_content = container.coreContent();
@@ -81,15 +81,15 @@ export class SopSubnetChildrenDisplayController {
 		this._graph_node?.dispose();
 	}
 
-	display_node_controller_callbacks(): DisplayNodeControllerCallbacks {
+	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
 		return {
-			on_display_node_remove: () => {
+			onDisplayNodeRemove: () => {
 				this.node.setDirty();
 			},
-			on_display_node_set: () => {
+			onDisplayNodeSet: () => {
 				this.node.setDirty();
 			},
-			on_display_node_update: () => {
+			onDisplayNodeUpdate: () => {
 				this.node.setDirty();
 			},
 		};
@@ -144,8 +144,8 @@ export class SopSubnetChildrenDisplayController {
 	}
 
 	private _create_graph_node() {
-		const graph_node = new CoreGraphNode(this.node.scene(), 'subnet_children_display_controller');
-		graph_node.addPostDirtyHook('subnet_children_display_controller', () => {
+		const graph_node = new CoreGraphNode(this.node.scene(), 'subnetChildrenDisplayController');
+		graph_node.addPostDirtyHook('subnetChildrenDisplayController', () => {
 			this.node.setDirty();
 		});
 		return graph_node;
