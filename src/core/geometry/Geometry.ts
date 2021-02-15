@@ -27,9 +27,10 @@ import {ObjectUtils} from '../ObjectUtils';
 import {CoreString} from '../String';
 import {GroupString} from './Group';
 
+const IS_INSTANCE_KEY = 'isInstance';
+
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
-	private _points: CorePoint[] | undefined;
 
 	constructor(private _geometry: BufferGeometry) {}
 
@@ -51,10 +52,10 @@ export class CoreGeometry {
 	}
 
 	markAsInstance() {
-		this._geometry.userData['is_instance'] = true;
+		this._geometry.userData[IS_INSTANCE_KEY] = true;
 	}
 	static markedAsInstance(geometry: BufferGeometry): boolean {
-		return geometry.userData['is_instance'] === true;
+		return geometry.userData[IS_INSTANCE_KEY] === true;
 	}
 	markedAsInstance(): boolean {
 		return CoreGeometry.markedAsInstance(this._geometry);
@@ -318,10 +319,9 @@ export class CoreGeometry {
 	}
 
 	points(): CorePoint[] {
-		return (this._points = this._points || this.pointsFromGeometry());
-	}
-	resetPoints() {
-		this._points = undefined;
+		// do not cache, as this gives unexpected results
+		// when the points are updated internaly
+		return this.pointsFromGeometry();
 	}
 	pointsFromGeometry(): CorePoint[] {
 		const points = [];
