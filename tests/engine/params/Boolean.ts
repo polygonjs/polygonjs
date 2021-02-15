@@ -86,7 +86,7 @@ QUnit.test('boolean isDefault', async (assert) => {
 QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
-	scene.timeController.setFrameRange(-10, 10);
+	scene.timeController.setMaxFrame(10);
 
 	const spare_boolean = geo1.addParam(ParamType.BOOLEAN, 'spare_boolean', '$F', {spare: true})!;
 	assert.deepEqual(

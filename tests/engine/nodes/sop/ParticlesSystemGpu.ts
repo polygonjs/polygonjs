@@ -64,24 +64,24 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 1, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 2, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(2);
 	let render_target2 = particles1.gpu_controller.getCurrentRenderTarget(ShaderName.PARTICLES_0)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 2, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(3);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 4, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(4);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 4, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 5, -1, 0].join(':'), 'point moved up');
 
 	RendererUtils.dispose();
 });
@@ -140,37 +140,37 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 1, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 2, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(2);
 	let render_target2 = particles1.gpu_controller.getCurrentRenderTarget(ShaderName.PARTICLES_0)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 2, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(3);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 4, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 0.5, 0]);
 	scene.setFrame(4);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 3.5, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 4.5, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 2, 0]);
 	scene.setFrame(5);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [-1, 5.5, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [-1, 6.5, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([1, 0, 0]);
 	scene.setFrame(6);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.deepEqual(pixelBuffer.join(':'), [0, 5.5, -1, 0].join(':'), 'point moved up');
+	assert.deepEqual(pixelBuffer.join(':'), [0, 6.5, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(1);
 	const data = new SceneJsonExporter(scene).data();
@@ -194,7 +194,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.array_with_precision(pixelBuffer),
-			[0, 0, -1, 0].join(':'),
+			[1, 0, -1, 0].join(':'),
 			'point with persisted config moved x'
 		);
 
@@ -203,7 +203,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 		renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.array_with_precision(pixelBuffer),
-			[1, 0, -1, 0].join(':'),
+			[2, 0, -1, 0].join(':'),
 			'point with persisted config moved x'
 		);
 
@@ -213,7 +213,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.array_with_precision(pixelBuffer),
-			[1, 2, -1, 0].join(':'),
+			[2, 2, -1, 0].join(':'),
 			'point with persisted config moved y'
 		);
 	});

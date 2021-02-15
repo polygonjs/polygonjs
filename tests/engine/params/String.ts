@@ -27,6 +27,7 @@ QUnit.test('a string is set dirty if it refers another param with ch and it chan
 });
 QUnit.test('a string of `$F` will make the param frame dependent', async (assert) => {
 	const scene = window.scene;
+	scene.setFrame(1);
 	const geo1 = window.geo1;
 	const text = geo1.createNode('text');
 	const text_param = text.p.text;
@@ -54,6 +55,7 @@ QUnit.test('set as a number will convert to string', async (assert) => {
 
 QUnit.test('a string can have multiple expression and maintain dependencies', async (assert) => {
 	const scene = window.scene;
+	scene.setFrame(1);
 	const geo1 = window.geo1;
 	const text1 = geo1.createNode('text');
 	const text2 = geo1.createNode('text');

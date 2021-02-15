@@ -155,8 +155,8 @@ export class PolyScene {
 	time() {
 		return this.timeController.time();
 	}
-	frameRange() {
-		return this.timeController.frameRange();
+	maxFrame() {
+		return this.timeController.maxFrame();
 	}
 	play() {
 		this.timeController.play();

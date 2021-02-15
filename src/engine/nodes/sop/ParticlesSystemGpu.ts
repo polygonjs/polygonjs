@@ -35,10 +35,14 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/PersistedConfig';
 import {ParamsInitData} from '../utils/io/IOController';
+import {TimeController} from '../../scene/utils/TimeController';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param frame the particles simulation starts */
-	startFrame = ParamConfig.FLOAT(1, {range: [1, 100]});
+	startFrame = ParamConfig.FLOAT(TimeController.START_FRAME, {
+		range: [0, 1000],
+		rangeLocked: [true, false],
+	});
 	/** @param auto sets the resolution of the textures used by the GPU shaders */
 	autoTexturesSize = ParamConfig.BOOLEAN(1);
 	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */

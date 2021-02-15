@@ -4,6 +4,7 @@ import {SceneJsonExporterData} from '../export/Scene';
 import {JsonImportDispatcher} from './Dispatcher';
 import {ImportReport} from './ImportReport';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
+import {TimeController} from '../../../scene/utils/TimeController';
 
 export class SceneJsonImporter {
 	public readonly report = new ImportReport(this);
@@ -23,18 +24,18 @@ export class SceneJsonImporter {
 		const properties = this._data['properties'];
 		if (properties) {
 			// scene.setName(properties['name'])
-			const frame_range = properties['frameRange'] || [];
-			scene.timeController.setFrameRange(frame_range[0] || 1, frame_range[1] || 100);
-			const frameRangeLocked = properties['frameRangeLocked'];
-			if (frameRangeLocked) {
-				scene.timeController.setFrameRangeLocked(frameRangeLocked[0], frameRangeLocked[1]);
+			const maxFrame = properties['maxFrame'] || 600;
+			scene.timeController.setMaxFrame(maxFrame);
+			const maxFrameLocked = properties['maxFrameLocked'];
+			if (maxFrameLocked) {
+				scene.timeController.setMaxFrameLocked(maxFrameLocked);
 			}
 			const realtimeState = properties['realtimeState'];
 			if (realtimeState != null) {
 				scene.timeController.setRealtimeState(realtimeState);
 			}
 			// set frame after the range has been set, to avoid clamping
-			scene.setFrame(properties['frame'] || 1);
+			scene.setFrame(properties['frame'] || TimeController.START_FRAME);
 
 			// scene.time_controller.set_fps(properties['fps'] || 30);
 			if (properties['masterCameraNodePath']) {

@@ -1,13 +1,13 @@
-import {Number2, Boolean2} from '../../../../types/GlobalTypes';
 import {PolyScene} from '../../../scene/PolyScene';
 import {CoreString} from '../../../../core/String';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
+import {TimeController} from '../../../scene/utils/TimeController';
 
 export interface SceneJsonExporterDataProperties {
 	frame: number;
-	frameRange: Number2;
-	frameRangeLocked: Boolean2;
+	maxFrame: number;
+	maxFrameLocked: boolean;
 	realtimeState: boolean;
 	// fps: number;
 	masterCameraNodePath: string | null;
@@ -32,9 +32,9 @@ export class SceneJsonExporter {
 			// __js_version: this._scene.js_version(),
 			properties: {
 				// name: this._scene.name(), // this conflicts with saving the name from the admin page
-				frame: this._scene.frame() || 1,
-				frameRange: this._scene.frameRange(),
-				frameRangeLocked: this._scene.timeController.frameRangeLocked(),
+				frame: this._scene.frame() || TimeController.START_FRAME,
+				maxFrame: this._scene.maxFrame(),
+				maxFrameLocked: this._scene.timeController.maxFrameLocked(),
 				realtimeState: this._scene.timeController.realtimeState(),
 				// fps: this._scene.time_controller.fps,
 				masterCameraNodePath: this._scene.camerasController.masterCameraNodePath(),

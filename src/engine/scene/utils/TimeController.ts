@@ -1,24 +1,22 @@
-import {Number2} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {SceneEventType} from './events/SceneEventsController';
 import {EventContext} from './events/_BaseEventsController';
 
-type FrameRange = Number2;
-
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
 
 export class TimeController {
-	private _frame: number = 1;
+	static START_FRAME: Readonly<number> = 0;
+	private _frame: number = 0;
 	private _time: number = 0;
 	private _prev_performance_now: number = 0;
 	private _graph_node: CoreGraphNode;
-	private _frame_range: FrameRange = [1, 600];
 	private _realtimeState = true;
-	private _frameRangeLocked: [boolean, boolean] = [true, false];
+	private _maxFrame = 600;
+	private _maxFrameLocked = false;
 	private _playing: boolean = false;
 
 	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
@@ -47,24 +45,22 @@ export class TimeController {
 	time(): number {
 		return this._time;
 	}
-	frameRange(): FrameRange {
-		return this._frame_range;
+	maxFrame() {
+		return this._maxFrame;
 	}
-	frameRangeLocked(): [boolean, boolean] {
-		return this._frameRangeLocked;
+	maxFrameLocked() {
+		return this._maxFrameLocked;
 	}
 	realtimeState() {
 		return this._realtimeState;
 	}
-	setFrameRange(start_frame: number, end_frame: number) {
-		this._frame_range[0] = Math.floor(start_frame);
-		this._frame_range[1] = Math.floor(end_frame);
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
+	setMaxFrame(maxFrame: number) {
+		this._maxFrame = Math.floor(maxFrame);
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.MAX_FRAME_UPDATED);
 	}
-	setFrameRangeLocked(start_locked: boolean, end_locked: boolean) {
-		this._frameRangeLocked[0] = start_locked;
-		this._frameRangeLocked[1] = end_locked;
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
+	setMaxFrameLocked(state: boolean) {
+		this._maxFrameLocked = state;
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.MAX_FRAME_UPDATED);
 	}
 	setRealtimeState(state: boolean) {
 		this._realtimeState = state;
@@ -134,15 +130,21 @@ export class TimeController {
 	}
 
 	_ensureFrameWithinBounds(frame: number): number {
-		if (this._frameRangeLocked[0] && frame < this._frame_range[0]) {
-			return this._frame_range[1];
-		}
-		if (this._frameRangeLocked[1] && frame > this._frame_range[1]) {
-			return this._frame_range[0];
+		if (this._playing) {
+			if (this._maxFrameLocked && frame > this._maxFrame) {
+				return TimeController.START_FRAME;
+			}
+		} else {
+			if (this._maxFrameLocked && frame > this._maxFrame) {
+				return this._maxFrame;
+			}
+			if (frame < TimeController.START_FRAME) {
+				return TimeController.START_FRAME;
+			}
 		}
 		return frame;
 	}
-	get playing() {
+	playing() {
 		return this._playing === true;
 	}
 	pause() {
@@ -162,7 +164,7 @@ export class TimeController {
 		}
 	}
 	togglePlayPause() {
-		if (this.playing) {
+		if (this.playing()) {
 			this.pause();
 		} else {
 			this.play();

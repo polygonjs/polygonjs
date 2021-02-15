@@ -300,6 +300,7 @@ QUnit.test('attrib create simple vector object', async (assert) => {
 
 QUnit.test('attrib create simple string object', async (assert) => {
 	const scene = window.scene;
+	scene.setFrame(1);
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');

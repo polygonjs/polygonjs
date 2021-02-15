@@ -38,7 +38,8 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 QUnit.test('color is_default', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
-	scene.timeController.setFrameRange(0, 10);
+	scene.timeController.setMaxFrame(10);
+	scene.setFrame(1);
 
 	const color = geo1.addParam(ParamType.COLOR, 'color_debug', [1, 1, '$F'], {spare: true})!;
 	await color.compute();
