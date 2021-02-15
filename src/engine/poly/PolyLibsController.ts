@@ -1,13 +1,10 @@
 export class PolyLibsController {
-	private _root: string | null = '/three/js/libs';
+	private _root: string = '/three/js/libs';
 
 	root() {
 		return this._root;
 	}
-	setRoot(url: string | null) {
-		if (url == '') {
-			url = null;
-		}
+	setRoot(url: string) {
 		this._root = url;
 	}
 }

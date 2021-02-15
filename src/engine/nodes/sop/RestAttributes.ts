@@ -21,7 +21,7 @@ class RestAttributesSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the normal attribute */
 	normal = ParamConfig.STRING(DEFAULT.normal, {visibleIf: {tnormal: true}});
 	/** @param name of the rest normal attribute, on which the normal will be copied on */
-	restN = ParamConfig.STRING(DEFAULT.restN, {visibleIf: {tposition: true}});
+	restN = ParamConfig.STRING(DEFAULT.restN, {visibleIf: {tnormal: true}});
 }
 const ParamsConfig = new RestAttributesSopParamsConfig();
 
