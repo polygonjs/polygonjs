@@ -14,6 +14,7 @@ QUnit.test('skin simple with 2 curves', async (assert) => {
 	transform2.setInput(0, line2);
 	merge1.setInput(0, transform1);
 	merge1.setInput(1, transform2);
+	merge1.p.compact.set(true);
 	attrib_create1.setInput(0, merge1);
 	skin1.setInput(0, attrib_create1);
 	attrib_copy1.setInput(0, skin1);

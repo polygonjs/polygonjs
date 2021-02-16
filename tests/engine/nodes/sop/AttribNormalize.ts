@@ -24,6 +24,8 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 
 	const merge1 = geo1.createNode('merge');
 	const merge2 = geo1.createNode('merge');
+	merge1.p.compact.set(true);
+	merge2.p.compact.set(true);
 
 	merge1.setInput(0, attrib_create1);
 	merge1.setInput(1, attrib_create2);
@@ -82,6 +84,8 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	const merge1 = geo1.createNode('merge');
 	const merge2 = geo1.createNode('merge');
+	merge1.p.compact.set(true);
+	merge2.p.compact.set(true);
 
 	merge1.setInput(0, attrib_create1);
 	merge1.setInput(1, attrib_create2);

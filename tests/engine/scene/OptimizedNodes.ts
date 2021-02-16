@@ -75,6 +75,8 @@ QUnit.test(
 		transform1.setInput(0, box1);
 		jitter1.setInput(0, transform1);
 		transform2.setInput(0, sphere1);
+		merge1.p.compact.set(true);
+		merge2.p.compact.set(true);
 		merge1.setInput(0, jitter1);
 		merge1.setInput(1, transform2);
 		merge2.setInput(0, merge1);
