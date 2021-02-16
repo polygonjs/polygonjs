@@ -26,10 +26,10 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		return COMPONENT_NAMES_COLOR;
 	}
 	defaultValueSerialized() {
-		if (CoreType.isArray(this.default_value)) {
-			return this.default_value;
+		if (CoreType.isArray(this._default_value)) {
+			return this._default_value;
 		} else {
-			return this.default_value.toArray() as Number3;
+			return this._default_value.toArray() as Number3;
 		}
 	}
 	// rawInputSerialized() {

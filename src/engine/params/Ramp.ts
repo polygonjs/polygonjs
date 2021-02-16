@@ -29,10 +29,10 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
 
 	defaultValueSerialized() {
-		if (this.default_value instanceof RampValue) {
-			return this.default_value.toJSON();
+		if (this._default_value instanceof RampValue) {
+			return this._default_value.toJSON();
 		} else {
-			return this.default_value;
+			return this._default_value;
 		}
 	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
@@ -87,13 +87,13 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// 	return visitor.visit_ramp_param(this);
 	// }
 	isDefault(): boolean {
-		if (this.default_value instanceof RampValue) {
-			return this.value.is_equal(this.default_value);
+		if (this._default_value instanceof RampValue) {
+			return this.value.is_equal(this._default_value);
 		} else {
-			return this.value.is_equal_json(this.default_value);
+			return this.value.is_equal_json(this._default_value);
 		}
 	}
-	protected process_raw_input() {
+	protected processRawInput() {
 		if (this._raw_input instanceof RampValue) {
 			if (!this._value) {
 				this._value = this._raw_input;

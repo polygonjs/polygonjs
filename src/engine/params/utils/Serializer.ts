@@ -29,7 +29,7 @@ export class ParamSerializer<T extends ParamType> {
 		const data: ParamSerializerData<T> = {
 			name: this.param.name(),
 			type: this.param.type(),
-			raw_input: this.raw_input(),
+			raw_input: this.rawInput(),
 			value: this.value(),
 			value_pre_conversion: this.value_pre_conversion(),
 			expression: this.expression(),
@@ -48,7 +48,7 @@ export class ParamSerializer<T extends ParamType> {
 		return data;
 	}
 
-	raw_input() {
+	rawInput() {
 		return this.param.rawInputSerialized();
 	}
 	value() {

@@ -6,6 +6,7 @@ import {GeoObjNode} from '../../../src/engine/nodes/obj/Geo';
 
 QUnit.test('scene save simple', async (assert) => {
 	const scene = new PolyScene();
+	scene.setFrame(1);
 	scene.root().createNode('ambientLight');
 
 	scene.loadingController.markAsLoaded();
@@ -29,7 +30,7 @@ QUnit.test('scene save simple', async (assert) => {
 
 	const new_geo1 = scene2.node('/geo1')! as GeoObjNode;
 	assert.ok(new_geo1.p.r.y.hasExpression());
-	assert.equal(new_geo1.p.r.y.raw_input, '$F+20');
+	assert.equal(new_geo1.p.r.y.rawInput(), '$F+20');
 	assert.equal(new_geo1.p.r.y.expressionController?.expression(), '$F+20');
 	scene2.setFrame(12);
 	await new_geo1.p.r.y.compute();

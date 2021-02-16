@@ -18,7 +18,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	}
 
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
 		return `${this._raw_input}`;
@@ -42,12 +42,12 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		return val1 == val2;
 	}
 	isDefault(): boolean {
-		return this._raw_input == this.default_value;
+		return this._raw_input == this._default_value;
 	}
 	setNode(node: BaseNodeType) {
 		this.set(node.fullPath());
 	}
-	protected process_raw_input() {
+	protected processRawInput() {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
 			this.find_target();

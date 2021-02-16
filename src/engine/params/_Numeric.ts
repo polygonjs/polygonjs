@@ -11,7 +11,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		return true;
 	}
 	isDefault(): boolean {
-		return this._raw_input == this.default_value;
+		return this._raw_input == this._default_value;
 	}
 
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
@@ -22,7 +22,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		}
 	}
 
-	protected process_raw_input() {
+	protected processRawInput() {
 		this.states.error.clear();
 
 		const converted = this.convert(this._raw_input);

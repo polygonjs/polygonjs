@@ -12,7 +12,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 		return ParamType.STRING;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.STRING]) {
 		return `${raw_input}`;
@@ -37,7 +37,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 		return val1 == val2;
 	}
 	isDefault(): boolean {
-		return this._raw_input == this.default_value;
+		return this._raw_input == this._default_value;
 	}
 
 	convert(raw_val: any): string {
@@ -47,10 +47,10 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 		return `${raw_val}`;
 	}
 
-	get raw_input() {
+	rawInput() {
 		return this._raw_input;
 	}
-	protected process_raw_input() {
+	protected processRawInput() {
 		this.states.error.clear();
 
 		if (this._value_elements(this._raw_input).length >= 3) {

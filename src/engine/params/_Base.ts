@@ -147,22 +147,22 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
 		this._raw_input = this._clone_raw_input(this._prefilter_invalid_raw_input(raw_input));
 		this.emitController.emit(ParamEvent.RAW_INPUT_UPDATED);
-		this.process_raw_input();
+		this.processRawInput();
 	}
 	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
 		return raw_input as ParamInitValuesTypeMap[T];
 	}
-	get default_value() {
+	defaultValue() {
 		return this._default_value;
 	}
 	isDefault(): boolean {
-		return this._raw_input == this.default_value;
+		return this._raw_input == this._default_value;
 	}
-	get raw_input() {
+	rawInput() {
 		return this._raw_input;
 	}
 
-	protected process_raw_input() {}
+	protected processRawInput() {}
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
 		if (this.scene().loadingController.isLoading()) {

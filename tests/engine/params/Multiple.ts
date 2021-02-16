@@ -14,7 +14,7 @@ QUnit.test('multiple keep their default and also for their components', async (a
 	assert.equal(param.x.value, 0.4);
 
 	// reset the multiple param to default
-	param.set(param.default_value);
+	param.set(param.defaultValue());
 	assert.deepEqual(param.value.toArray(), [0, 0, 0]);
 	assert.equal(param.x.value, 0);
 	assert.equal(param.y.value, 0);
@@ -28,7 +28,7 @@ QUnit.test('multiple keep their default and also for their components', async (a
 	assert.equal(param.z.value, 0);
 
 	// reset the component to default
-	param.x.set(param.x.default_value);
+	param.x.set(param.x.defaultValue());
 	assert.deepEqual(param.value.toArray(), [0, 0, 0]);
 	assert.equal(param.x.value, 0);
 	assert.equal(param.y.value, 0);
@@ -60,7 +60,7 @@ QUnit.test('color keep their default and also for their components', async (asse
 	assert.in_delta(param.value.b, 1, 0.1);
 
 	// reset the component to default
-	param.r.set(param.r.default_value);
+	param.r.set(param.r.defaultValue());
 	assert.deepEqual(param.valuePreConversion().toArray(), [1, 1, 1]);
 	assert.equal(param.valuePreConversion().r, 1);
 	assert.equal(param.valuePreConversion().g, 1);

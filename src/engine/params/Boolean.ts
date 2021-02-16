@@ -11,10 +11,10 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	}
 	// TODO: be careful as this does not allow serialization of expressions as default value
 	defaultValueSerialized() {
-		if (CoreType.isString(this.default_value)) {
-			return this.default_value;
+		if (CoreType.isString(this._default_value)) {
+			return this._default_value;
 		} else {
-			return this.convert(this.default_value) || false;
+			return this.convert(this._default_value) || false;
 		}
 	}
 	rawInputSerialized() {

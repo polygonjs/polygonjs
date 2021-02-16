@@ -67,15 +67,15 @@ QUnit.test('a node referenced in an expression gets renamed involves updating th
 
 	assert.includes(transform1.p.t.x.graphPredecessors(), transform2.p.t.x);
 
-	assert.equal(transform1.p.t.x.raw_input, "ch('../transform2/tx')");
+	assert.equal(transform1.p.t.x.rawInput(), "ch('../transform2/tx')");
 	transform2.setName('transform_RENAMED_TO TEST');
-	assert.equal(transform1.p.t.x.raw_input, "ch('../transform_RENAMED_TO_TEST/tx')");
+	assert.equal(transform1.p.t.x.rawInput(), "ch('../transform_RENAMED_TO_TEST/tx')");
 
 	transform2.setName('transform_MASTER');
-	assert.equal(transform1.p.t.x.raw_input, "ch('../transform_MASTER/tx')");
+	assert.equal(transform1.p.t.x.rawInput(), "ch('../transform_MASTER/tx')");
 
 	transform2.setName('transform_MASTER2');
-	assert.equal(transform1.p.t.x.raw_input, "ch('../transform_MASTER2/tx')");
+	assert.equal(transform1.p.t.x.rawInput(), "ch('../transform_MASTER2/tx')");
 });
 
 QUnit.test('a top node referenced in an expression gets renamed involves updating the expression', async (assert) => {
@@ -100,7 +100,7 @@ QUnit.test('a top node referenced in an expression gets renamed involves updatin
 	assert.equal(param.value, 2);
 
 	camera.setName('new_camera');
-	assert.equal(param.raw_input, "ch('/new_camera/tx')");
+	assert.equal(param.rawInput(), "ch('/new_camera/tx')");
 	await param.compute();
 	assert.equal(param.value, 2);
 

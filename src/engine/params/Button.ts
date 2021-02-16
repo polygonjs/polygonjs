@@ -8,7 +8,7 @@ export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 		return ParamType.BUTTON;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
 		return this._raw_input;

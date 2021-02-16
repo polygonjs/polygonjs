@@ -16,7 +16,7 @@ interface MergeSopParams extends DefaultOperationParams {
 
 export class MergeSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MergeSopParams = {
-		compact: true,
+		compact: false,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'merge'> {

@@ -24,11 +24,11 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 		return true;
 	}
-	get raw_input() {
-		return this._components.map((c) => c.raw_input) as ParamInitValueSerializedTypeMap[T];
+	rawInput() {
+		return this._components.map((c) => c.rawInput()) as ParamInitValueSerializedTypeMap[T];
 	}
 	rawInputSerialized() {
-		return this.raw_input;
+		return this._components.map((c) => c.rawInputSerialized()) as ParamInitValueSerializedTypeMap[T];
 	}
 	protected _copy_value(param: TypedMultipleParam<T>) {
 		for (let i = 0; i < this.components.length; i++) {
@@ -109,7 +109,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 	}
 
-	protected process_raw_input() {
+	protected processRawInput() {
 		const cooker = this.scene().cooker;
 		cooker.block();
 		const components = this.components;

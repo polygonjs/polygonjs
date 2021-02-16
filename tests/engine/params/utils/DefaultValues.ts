@@ -16,7 +16,7 @@ function ensure_default_value<T extends ParamType>(
 
 	const param = geo1.addParam(param_type, 'test', given_default_value, options);
 	if (param) {
-		assert.deepEqual(param.default_value, expected_default_value);
+		assert.deepEqual(param.defaultValue(), expected_default_value);
 		assert.deepEqual(param.value, expected_value);
 		geo1.params.update_params({names_to_delete: ['test']});
 	} else {

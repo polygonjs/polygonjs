@@ -20,10 +20,10 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		return COMPONENT_NAMES_VECTOR2;
 	}
 	defaultValueSerialized() {
-		if (CoreType.isArray(this.default_value)) {
-			return this.default_value;
+		if (CoreType.isArray(this._default_value)) {
+			return this._default_value;
 		} else {
-			return this.default_value.toArray() as Number2;
+			return this._default_value.toArray() as Number2;
 		}
 	}
 	// get raw_input_serialized() {

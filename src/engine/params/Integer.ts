@@ -10,10 +10,10 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		return ParamType.INTEGER;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
-		return this.raw_input;
+		return this._raw_input;
 	}
 	valueSerialized() {
 		return this.value;

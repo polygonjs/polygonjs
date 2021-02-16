@@ -9,7 +9,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 		return ParamType.FLOAT;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
 		return this._raw_input;

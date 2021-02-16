@@ -21,10 +21,10 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		return COMPONENT_NAMES_VECTOR4;
 	}
 	defaultValueSerialized() {
-		if (CoreType.isArray(this.default_value)) {
-			return this.default_value;
+		if (CoreType.isArray(this._default_value)) {
+			return this._default_value;
 		} else {
-			return this.default_value.toArray() as Number4;
+			return this._default_value.toArray() as Number4;
 		}
 	}
 	// get raw_input_serialized() {

@@ -26,7 +26,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return ParamType.OPERATOR_PATH;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
 		return `${this._raw_input}`;
@@ -50,12 +50,12 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return val1 == val2;
 	}
 	isDefault(): boolean {
-		return this._value == this.default_value;
+		return this._value == this._default_value;
 	}
 	setNode(node: BaseNodeType) {
 		this.set(node.fullPath());
 	}
-	protected process_raw_input() {
+	protected processRawInput() {
 		if (this._value != this._raw_input) {
 			this._value = this._raw_input;
 			this.setDirty();

@@ -8,7 +8,7 @@ export class SeparatorParam extends TypedParam<ParamType.SEPARATOR> {
 		return ParamType.SEPARATOR;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
 		return this._raw_input;

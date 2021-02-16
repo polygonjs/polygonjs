@@ -30,7 +30,7 @@ export class ThreejsCameraControlsController {
 
 	async controls_node(): Promise<BaseCameraControlsEventNodeType | null> {
 		const controls_param = this.node.p.controls;
-		const raw_input = controls_param.raw_input;
+		const raw_input = controls_param.rawInput();
 		if (raw_input && raw_input != '') {
 			if (controls_param.isDirty()) {
 				await controls_param.compute();

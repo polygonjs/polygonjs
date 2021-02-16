@@ -100,7 +100,7 @@ QUnit.test(
 		let spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type(), ParamType.INTEGER);
 		await CoreSleep.sleep(10);
-		assert.equal(spare_param.raw_input, '$F');
+		assert.equal(spare_param.rawInput(), '$F');
 		assert.notOk(spare_param.isDirty(), 'param not dirty');
 		scene.setFrame(35);
 		assert.ok(spare_param.isDirty(), 'param is dirty');
@@ -118,7 +118,7 @@ QUnit.test(
 		await mesh_basic1.requestContainer();
 		spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type(), ParamType.FLOAT);
-		assert.equal(mesh_basic1.params.get(param_name)!.raw_input, '$F');
+		assert.equal(mesh_basic1.params.get(param_name)!.rawInput(), '$F');
 
 		const data = new SceneJsonExporter(scene).data();
 
@@ -133,7 +133,7 @@ QUnit.test(
 		assert.ok(new_mesh_basic1.assemblerController, 'assembler_controller is present');
 		assert.notOk(new_mesh_basic1.assemblerController?.compile_required(), 'compile is not required');
 		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
-		assert.equal(new_mesh_basic1.params.get(param_name)?.raw_input, '$F', 'param raw input is $F');
+		assert.equal(new_mesh_basic1.params.get(param_name)?.rawInput(), '$F', 'param raw input is $F');
 		await CoreSleep.sleep(100);
 		assert.equal(new_mesh_basic1.params.get(param_name)?.value, 124, 'param value is 124');
 		assert.equal(new_mesh_basic1.material.uniforms[uniform_name].value, 124, 'uniform is 124');

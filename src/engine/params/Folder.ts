@@ -8,7 +8,7 @@ export class FolderParam extends TypedParam<ParamType.FOLDER> {
 		return ParamType.FOLDER;
 	}
 	defaultValueSerialized() {
-		return this.default_value;
+		return this._default_value;
 	}
 	rawInputSerialized() {
 		return this._raw_input;

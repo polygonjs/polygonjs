@@ -17,7 +17,7 @@ export class MissingExpressionReference {
 
 	resolve_missing_dependencies() {
 		const input = this.param.rawInputSerialized();
-		this.param.set(this.param.default_value);
+		this.param.set(this.param.defaultValue());
 		this.param.set(input);
 	}
 }

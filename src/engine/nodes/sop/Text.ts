@@ -95,7 +95,15 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private _font_loader: FontLoader = new FontLoader();
 	private _loaded_fonts: FontByUrl = {};
 
-	initializeNode() {}
+	initializeNode() {
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				this.params.label.init([this.p.url], () => {
+					return this.p.text.rawInput();
+				});
+			});
+		});
+	}
 
 	async cook() {
 		try {
