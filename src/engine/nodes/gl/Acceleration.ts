@@ -1,4 +1,4 @@
-import {AttribValue, PolyDictionary} from '../../../types/GlobalTypes';
+import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import {TypedGlNode} from './_Base';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -25,7 +25,7 @@ const INPUT_NAMES: AccelerationGlInput[] = [
 	AccelerationGlInput.FORCE,
 ];
 const OUTPUT_NAMES: AccelerationGlOutput[] = [AccelerationGlOutput.POSITION, AccelerationGlOutput.VELOCITY];
-const INPUT_DEFAULT_VALUE: PolyDictionary<AttribValue> = {
+const INPUT_DEFAULT_VALUE: PolyDictionary<number | Number3> = {
 	[AccelerationGlInput.POSITION]: [0, 0, 0],
 	[AccelerationGlInput.VELOCITY]: [0, 0, 0],
 	[AccelerationGlInput.MASS]: 1,

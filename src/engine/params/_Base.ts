@@ -45,8 +45,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this._expression_controller; // =
 		//this._expression_controller || new ExpressionController(this);
 	}
-	private _serializer: ParamSerializer | undefined;
-	get serializer(): ParamSerializer {
+	private _serializer: ParamSerializer<T> | undefined;
+	get serializer(): ParamSerializer<T> {
 		return (this._serializer = this._serializer || new ParamSerializer(this));
 	}
 	private _states: StatesController | undefined;

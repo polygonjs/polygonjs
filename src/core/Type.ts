@@ -21,4 +21,8 @@ export class CoreType {
 	static isArray(value: any): value is any[] {
 		return Array.isArray(value);
 	}
+	static isObject(value: any): value is object {
+		var type = typeof value;
+		return value != null && (type == 'object' || type == 'function');
+	}
 }

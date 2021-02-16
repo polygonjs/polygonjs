@@ -32,6 +32,8 @@ export interface ParamOptionsByTypeMap extends ParamOptionsByTypeMapGeneric {
 	[ParamType.FOLDER]: FolderParamOptions;
 	[ParamType.INTEGER]: IntegerParamOptions;
 	[ParamType.OPERATOR_PATH]: OperatorPathParamOptions;
+	[ParamType.NODE_PATH]: OperatorPathParamOptions;
+	[ParamType.PARAM_PATH]: OperatorPathParamOptions;
 	[ParamType.RAMP]: RampParamOptions;
 	[ParamType.SEPARATOR]: SeparatorParamOptions;
 	[ParamType.STRING]: StringParamOptions;

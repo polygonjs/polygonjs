@@ -15,8 +15,8 @@ import {RampValueJson} from '../ramp/RampValue';
 import {ParamType} from '../../poly/ParamType';
 import {ParamInitValuesTypeMap} from './ParamInitValuesTypeMap';
 
-type ParamInitValueSerializedTypeMapGeneric = {[key in ParamType]: any};
-export interface ParamInitValueSerializedTypeMap extends ParamInitValueSerializedTypeMapGeneric {
+// type ParamInitValueSerializedTypeMapGeneric = {[key in ParamType]: any};
+export interface ParamInitValueSerializedTypeMap /*extends ParamInitValueSerializedTypeMapGeneric*/ {
 	[ParamType.BOOLEAN]: ParamInitValuesTypeMap[ParamType.BOOLEAN];
 	[ParamType.BUTTON]: ParamInitValuesTypeMap[ParamType.BUTTON];
 	[ParamType.COLOR]: StringOrNumber3;
@@ -24,6 +24,8 @@ export interface ParamInitValueSerializedTypeMap extends ParamInitValueSerialize
 	[ParamType.FOLDER]: ParamInitValuesTypeMap[ParamType.FOLDER];
 	[ParamType.INTEGER]: ParamInitValuesTypeMap[ParamType.INTEGER];
 	[ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
+	[ParamType.NODE_PATH]: ParamInitValuesTypeMap[ParamType.NODE_PATH];
+	[ParamType.PARAM_PATH]: ParamInitValuesTypeMap[ParamType.PARAM_PATH];
 	[ParamType.RAMP]: RampValueJson;
 	[ParamType.SEPARATOR]: ParamInitValuesTypeMap[ParamType.SEPARATOR];
 	[ParamType.STRING]: ParamInitValuesTypeMap[ParamType.STRING];

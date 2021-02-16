@@ -1,5 +1,5 @@
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
-import {BaseParamType} from '../_Base';
+import {TypedParam} from '../_Base';
 import {
 	ParamValueSerializedTypeMap,
 	ParamValuePreConversionSerializedTypeMap,
@@ -7,12 +7,12 @@ import {
 import {ParamType} from '../../poly/ParamType';
 import {ParamInitValueSerializedTypeMap} from '../types/ParamInitValueSerializedTypeMap';
 
-export interface ParamSerializerData {
+export interface ParamSerializerData<T extends ParamType> {
 	name: string;
-	type: ParamType;
-	raw_input: ParamInitValueSerializedTypeMap[ParamType];
-	value: ParamValueSerializedTypeMap[ParamType];
-	value_pre_conversion: ParamValuePreConversionSerializedTypeMap[ParamType];
+	type: T;
+	raw_input: ParamInitValueSerializedTypeMap[T];
+	value: ParamValueSerializedTypeMap[T];
+	value_pre_conversion: ParamValuePreConversionSerializedTypeMap[T];
 	expression?: string;
 	graph_node_id: CoreGraphNodeId;
 	// is_dirty: boolean;
@@ -22,11 +22,11 @@ export interface ParamSerializerData {
 	components?: CoreGraphNodeId[];
 }
 
-export class ParamSerializer {
-	constructor(protected param: BaseParamType) {}
+export class ParamSerializer<T extends ParamType> {
+	constructor(protected param: TypedParam<T>) {}
 
-	toJSON(): ParamSerializerData {
-		const data: ParamSerializerData = {
+	toJSON(): ParamSerializerData<T> {
+		const data: ParamSerializerData<T> = {
 			name: this.param.name(),
 			type: this.param.type(),
 			raw_input: this.raw_input(),

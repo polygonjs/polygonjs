@@ -15,8 +15,8 @@ import {RampValueJson} from '../ramp/RampValue';
 import {ParamType} from '../../poly/ParamType';
 import {ParamInitValuesTypeMap} from './ParamInitValuesTypeMap';
 
-type ParamValueSerializedTypeMapGeneric = {[key in ParamType]: any};
-export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMapGeneric {
+// type ParamValueSerializedTypeMapGeneric = {[key in ParamType]: any};
+export interface ParamValueSerializedTypeMap /*extends ParamValueSerializedTypeMapGeneric*/ {
 	[ParamType.BOOLEAN]: boolean;
 	[ParamType.BUTTON]: ParamInitValuesTypeMap[ParamType.BUTTON];
 	[ParamType.COLOR]: Number3;
@@ -24,6 +24,8 @@ export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMap
 	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: number;
 	[ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
+	[ParamType.NODE_PATH]: ParamInitValuesTypeMap[ParamType.NODE_PATH];
+	[ParamType.PARAM_PATH]: ParamInitValuesTypeMap[ParamType.PARAM_PATH];
 	[ParamType.RAMP]: RampValueJson;
 	[ParamType.SEPARATOR]: ParamInitValuesTypeMap[ParamType.SEPARATOR];
 	[ParamType.STRING]: ParamInitValuesTypeMap[ParamType.STRING];
@@ -32,8 +34,8 @@ export interface ParamValueSerializedTypeMap extends ParamValueSerializedTypeMap
 	[ParamType.VECTOR4]: Number4;
 }
 
-type ParamValuePreConversionSerializedTypeMapGeneric = {[key in ParamType]: any};
-export interface ParamValuePreConversionSerializedTypeMap extends ParamValuePreConversionSerializedTypeMapGeneric {
+// type ParamValuePreConversionSerializedTypeMapGeneric = {[key in ParamType]: any};
+export interface ParamValuePreConversionSerializedTypeMap /*extends ParamValuePreConversionSerializedTypeMapGeneric*/ {
 	[ParamType.BOOLEAN]: undefined;
 	[ParamType.BUTTON]: undefined;
 	[ParamType.COLOR]: Number3;
@@ -41,6 +43,8 @@ export interface ParamValuePreConversionSerializedTypeMap extends ParamValuePreC
 	[ParamType.FOLDER]: undefined;
 	[ParamType.INTEGER]: undefined;
 	[ParamType.OPERATOR_PATH]: undefined;
+	[ParamType.NODE_PATH]: undefined;
+	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
 	[ParamType.SEPARATOR]: undefined;
 	[ParamType.STRING]: undefined;

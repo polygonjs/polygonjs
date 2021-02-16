@@ -11,7 +11,6 @@ import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {Poly} from '../../../engine/Poly';
 import {CoreType} from '../../Type';
-import {ObjectUtils} from '../../ObjectUtils';
 import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
@@ -187,6 +186,6 @@ export class JsonDataLoader {
 	}
 
 	_value_has_subentries(value: any): boolean {
-		return ObjectUtils.isObject(value) && !CoreType.isArray(value);
+		return CoreType.isObject(value) && !CoreType.isArray(value);
 	}
 }

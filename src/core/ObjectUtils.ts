@@ -1,14 +1,15 @@
 import {ArrayUtils} from './ArrayUtils';
+import {CoreType} from './Type';
 import lodash_cloneDeep from 'lodash/cloneDeep';
 import lodash_clone from 'lodash/clone';
 
 export class ObjectUtils {
-	static isObject(value: any): boolean {
-		var type = typeof value;
-		return value != null && (type == 'object' || type == 'function');
-	}
+	// static isObject(value: any): boolean {
+	// 	var type = typeof value;
+	// 	return value != null && (type == 'object' || type == 'function');
+	// }
 	static isEqual(object0: any, object1: any): boolean {
-		if (this.isObject(object0) && this.isObject(object1)) {
+		if (CoreType.isObject(object0) && CoreType.isObject(object1)) {
 			const keys0 = Object.keys(object0);
 			const keys1 = Object.keys(object1);
 			if (!ArrayUtils.isEqual(keys0, keys1)) {

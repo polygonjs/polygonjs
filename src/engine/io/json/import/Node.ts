@@ -14,7 +14,6 @@ import {
 import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
 import {CoreType} from '../../../../core/Type';
-import {ObjectUtils} from '../../../../core/ObjectUtils';
 import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
@@ -336,7 +335,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			return false;
 		}
 
-		if (ObjectUtils.isObject(param_data)) {
+		if (CoreType.isObject(param_data)) {
 			const keys = Object.keys(param_data);
 			for (let complex_key of COMPLEX_PARAM_DATA_KEYS) {
 				if (keys.includes(complex_key)) {
