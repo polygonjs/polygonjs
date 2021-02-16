@@ -8,17 +8,11 @@
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerVolume} from '../gl/code/assemblers/materials/Volume';
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {VolumeController} from './utils/VolumeController';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-class VolumeMatParamsConfig extends NodeParamsConfig {
-	color = ParamConfig.COLOR([1, 1, 1]);
-	stepSize = ParamConfig.FLOAT(0.01);
-	density = ParamConfig.FLOAT(1);
-	shadowDensity = ParamConfig.FLOAT(1);
-	lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
-}
+class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVolume, VolumeMatParamsConfig> {

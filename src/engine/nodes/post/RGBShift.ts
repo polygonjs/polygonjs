@@ -8,7 +8,7 @@ import {RGBShiftShader} from '../../../modules/three/examples/jsm/shaders/RGBShi
 import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 import {IUniformN} from '../utils/code/gl/Uniforms';
 
-interface RgbShiftPassWithUniforms extends ShaderPass {
+interface RGBShiftPassWithUniforms extends ShaderPass {
 	uniforms: {
 		amount: IUniformN;
 		angle: IUniformN;
@@ -16,7 +16,7 @@ interface RgbShiftPassWithUniforms extends ShaderPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class RgbShiftPostParamsConfig extends NodeParamsConfig {
+class RGBShiftPostParamsConfig extends NodeParamsConfig {
 	/** @param effect amount */
 	amount = ParamConfig.FLOAT(0.005, {
 		range: [0, 1],
@@ -30,20 +30,20 @@ class RgbShiftPostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 }
-const ParamsConfig = new RgbShiftPostParamsConfig();
-export class RgbShiftPostNode extends TypedPostProcessNode<ShaderPass, RgbShiftPostParamsConfig> {
+const ParamsConfig = new RGBShiftPostParamsConfig();
+export class RGBShiftPostNode extends TypedPostProcessNode<ShaderPass, RGBShiftPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'rgbShift';
+		return 'RGBShift';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {
-		const pass = new ShaderPass(RGBShiftShader) as RgbShiftPassWithUniforms;
+		const pass = new ShaderPass(RGBShiftShader) as RGBShiftPassWithUniforms;
 		this.update_pass(pass);
 
 		return pass;
 	}
-	update_pass(pass: RgbShiftPassWithUniforms) {
+	update_pass(pass: RGBShiftPassWithUniforms) {
 		pass.uniforms.amount.value = this.pv.amount;
 		pass.uniforms.angle.value = this.pv.angle;
 	}

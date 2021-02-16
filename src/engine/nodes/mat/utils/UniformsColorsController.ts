@@ -7,10 +7,13 @@ import {IUniforms} from '../../../../core/geometry/Material';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		// color = ParamConfig.COLOR([1, 1, 1]);
+		/** @param sets the material to transparent */
 		transparent = ParamConfig.BOOLEAN(0);
+		/** @param sets the material opacity */
 		opacity = ParamConfig.FLOAT(1);
+		/** @param sets the min alpha below which the material is invisible */
 		alphaTest = ParamConfig.FLOAT(0);
+		/** @param toggle on if you have a fog in the scene and the material should be affected by it */
 		useFog = ParamConfig.BOOLEAN(0);
 	};
 }

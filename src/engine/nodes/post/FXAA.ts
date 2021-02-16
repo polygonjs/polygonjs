@@ -19,10 +19,10 @@ class FXAAPostParamsConfig extends NodeParamsConfig {
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new FXAAPostParamsConfig();
-export class FxaaPostNode extends TypedPostProcessNode<ShaderPass, FXAAPostParamsConfig> {
+export class FXAAPostNode extends TypedPostProcessNode<ShaderPass, FXAAPostParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'fxaa';
+		return 'FXAA';
 	}
 
 	protected _create_pass(context: TypedPostNodeContext) {

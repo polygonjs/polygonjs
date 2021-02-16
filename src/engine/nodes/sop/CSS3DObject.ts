@@ -11,7 +11,7 @@ import {TypedSopNode} from './_Base';
 import {CSS3DObject} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-interface Css2DObjectParams {
+interface CSS3DObjectParams {
 	className: string;
 	text: string;
 }
@@ -20,12 +20,12 @@ const ATTRIBUTE_NAME = {
 	text: 'text',
 };
 const DEFAULT_VALUE = {
-	className: 'css2DObject',
+	className: 'CSS2DObject',
 	text: 'default text',
 };
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class Css3DObjectSopParamsConfig extends NodeParamsConfig {
+class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param html class */
 	className = ParamConfig.STRING(DEFAULT_VALUE.className);
 	/** @param text content */
@@ -33,12 +33,12 @@ class Css3DObjectSopParamsConfig extends NodeParamsConfig {
 		multiline: true,
 	});
 }
-const ParamsConfig = new Css3DObjectSopParamsConfig();
+const ParamsConfig = new CSS3DObjectSopParamsConfig();
 
-export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig> {
+export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'css3DObject';
+		return 'CSS3DObject';
 	}
 
 	initializeNode() {
@@ -61,7 +61,7 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 			const className = (point.attribValue(ATTRIBUTE_NAME.className) as string) || DEFAULT_VALUE.className;
 			const text = (point.attribValue(ATTRIBUTE_NAME.text) as string) || DEFAULT_VALUE.text;
 
-			const object = Css3DObjectSopNode.create_css_object({
+			const object = CSS3DObjectSopNode.create_css_object({
 				className,
 				text,
 			});
@@ -75,17 +75,17 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 	}
 
 	private _create_object_from_scratch() {
-		const object = Css3DObjectSopNode.create_css_object({
+		const object = CSS3DObjectSopNode.create_css_object({
 			className: this.pv.className,
 			text: this.pv.text,
 		});
 
-		Css3DObjectSopNode._assign_clone_method(object);
+		CSS3DObjectSopNode._assign_clone_method(object);
 
 		this.setObjects([object]);
 	}
 
-	private static create_css_object(params: Css2DObjectParams) {
+	private static create_css_object(params: CSS3DObjectParams) {
 		const element = document.createElement('div');
 		element.className = params.className;
 		element.textContent = params.text;
@@ -93,12 +93,12 @@ export class Css3DObjectSopNode extends TypedSopNode<Css3DObjectSopParamsConfig>
 
 		object.matrixAutoUpdate = true;
 
-		Css3DObjectSopNode._assign_clone_method(object);
+		CSS3DObjectSopNode._assign_clone_method(object);
 		return object;
 	}
 
 	private static _assign_clone_method(css_object: CSS3DObject) {
-		css_object.clone = () => Css3DObjectSopNode.clone_css_object(css_object);
+		css_object.clone = () => CSS3DObjectSopNode.clone_css_object(css_object);
 	}
 
 	static clone_css_object(css_object: CSS3DObject) {

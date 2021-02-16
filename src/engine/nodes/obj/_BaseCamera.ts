@@ -63,11 +63,13 @@ export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: T
 export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		camera = ParamConfig.FOLDER();
+		/** @param controls node to allow the camera to be moved by user input */
 		controls = ParamConfig.NODE_PATH('', {
 			nodeSelection: {
 				context: NodeContext.EVENT,
 			},
 		});
+		/** @param define when the camera node transform parameters are updated after the controls have moved the internal camera object */
 		updateFromControlsMode = ParamConfig.INTEGER(
 			UPDATE_FROM_CONTROLS_MODES.indexOf(UpdateFromControlsMode.ON_END),
 			{
@@ -80,7 +82,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		);
 		// allowUpdateFromControls = ParamConfig.BOOLEAN(1);
 
-		// target = ParamConfig.VECTOR3([0, 0, 0], {cook: false});
+		/** @param near */
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
 			range: [0, 100],
 			cook: false,
@@ -92,6 +94,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 				);
 			},
 		});
+		/** @param far */
 		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {
 			range: [0, 100],
 			cook: false,
@@ -106,6 +109,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		// aspect = ParamConfig.FLOAT(1);
 		// lock_width = ParamConfig.BOOLEAN(1);
 		// look_at = ParamConfig.OPERATOR_PATH('');
+		/** @param display */
 		display = ParamConfig.BOOLEAN(1);
 	};
 }

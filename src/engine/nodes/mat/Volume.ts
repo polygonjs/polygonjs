@@ -14,16 +14,10 @@ import FRAGMENT from '../gl/gl/volume/frag.glsl';
 import {VOLUME_UNIFORMS} from '../gl/gl/volume/uniforms';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreMaterial} from '../../../core/geometry/Material';
-import {VolumeController} from './utils/VolumeController';
-class VolumeMatParamsConfig extends NodeParamsConfig {
-	color = ParamConfig.COLOR([1, 1, 1]);
-	stepSize = ParamConfig.FLOAT(0.01);
-	density = ParamConfig.FLOAT(1);
-	shadowDensity = ParamConfig.FLOAT(1);
-	lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
-}
+import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
+class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsConfig> {

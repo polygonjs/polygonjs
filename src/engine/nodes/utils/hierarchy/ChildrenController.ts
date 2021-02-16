@@ -144,7 +144,7 @@ export class HierarchyChildrenController {
 		return child_node;
 	}
 	private _find_node_class(node_type: string) {
-		const node_class = this.available_children_classes()[node_type];
+		const node_class = this.available_children_classes()[node_type.toLowerCase()];
 
 		if (node_class == null) {
 			const message = `child node type '${node_type}' not found for node '${this.node.fullPath()}'. Available types are: ${Object.keys(

@@ -7,7 +7,7 @@ import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 export function DepthParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		/** @param defines if the objects using this material will be rendered in the depth buffer. This can often helps transparent objects */
+		/** @param defines if the objects using this material will be rendered in the depth buffer. This can often help transparent objects */
 		depthWrite = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType, param: BaseParamType) => {

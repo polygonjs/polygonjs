@@ -8,20 +8,20 @@ import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 
-export function WebcamCopParamConfig<TBase extends Constructor>(Base: TBase) {
+export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param texture resolution */
 		res = ParamConfig.VECTOR2([1024, 1024]);
 	};
 }
-class WebcamCopParamsConfig extends TextureParamConfig(WebcamCopParamConfig(NodeParamsConfig)) {}
+class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(NodeParamsConfig)) {}
 
-const ParamsConfig = new WebcamCopParamsConfig();
+const ParamsConfig = new WebCamCopParamsConfig();
 
-export class WebcamCopNode extends TypedCopNode<WebcamCopParamsConfig> {
+export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'webcam';
+		return 'webCam';
 	}
 
 	private _video: HTMLVideoElement | undefined;

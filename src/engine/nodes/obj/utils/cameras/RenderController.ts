@@ -11,9 +11,9 @@ import {
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
-} from '../../../rop/WebGlRenderer';
-import {Css2DRendererRopNode} from '../../../rop/Css2DRenderer';
-import {Css3DRendererRopNode} from '../../../rop/Css3DRenderer';
+} from '../../../rop/WebGLRenderer';
+import {Css2DRendererRopNode} from '../../../rop/CSS2DRenderer';
+import {Css3DRendererRopNode} from '../../../rop/CSS3DRenderer';
 import {RopType} from '../../../../poly/registers/nodes/Rop';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
@@ -21,6 +21,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 	return class Mixin extends Base {
 		render = ParamConfig.FOLDER();
 
+		/** @param toggle on to override rendered scene */
 		setScene = ParamConfig.BOOLEAN(0);
 		/** @param override rendered scene */
 		scene = ParamConfig.OPERATOR_PATH('/scene1', {
@@ -31,9 +32,10 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			},
 		});
 
+		/** @param toggle on to override the renderer */
 		setRenderer = ParamConfig.BOOLEAN(0);
 		/** @param override renderer used */
-		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webGlRenderer1', {
+		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webGLRenderer1', {
 			visibleIf: {setRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
@@ -41,9 +43,10 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			},
 		});
 
-		setCssRenderer = ParamConfig.BOOLEAN(0);
+		/** @param toggle on to add a CSSRenderer to have html elements on top of the 3D objects */
+		setCSSRenderer = ParamConfig.BOOLEAN(0);
 		/** @param add a css renderer */
-		cssRenderer = ParamConfig.OPERATOR_PATH('./renderers1/css2DRenderer1', {
+		CSSRenderer = ParamConfig.OPERATOR_PATH('./renderers1/CSS2DRenderer1', {
 			visibleIf: {setCssRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
@@ -142,7 +145,7 @@ export class RenderController {
 	}
 	private update_cssRenderer() {
 		if (this.node.pv.setCssRenderer) {
-			const param = this.node.p.cssRenderer;
+			const param = this.node.p.CSSRenderer;
 			if (param.isDirty()) {
 				param.find_target();
 			}

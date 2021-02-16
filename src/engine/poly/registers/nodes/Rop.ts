@@ -2,24 +2,24 @@ import {CATEGORY_ROP} from './Category';
 
 import {AnimationsRopNode} from '../../../nodes/rop/Animations';
 import {CopRopNode} from '../../../nodes/rop/Cop';
-import {Css2DRendererRopNode} from '../../../nodes/rop/Css2DRenderer';
-import {Css3DRendererRopNode} from '../../../nodes/rop/Css3DRenderer';
+import {Css2DRendererRopNode} from '../../../nodes/rop/CSS2DRenderer';
+import {Css3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
 import {EventsRopNode} from '../../../nodes/rop/Events';
 import {MaterialsRopNode} from '../../../nodes/rop/Materials';
 import {PostProcessRopNode} from '../../../nodes/rop/PostProcess';
 import {RenderersRopNode} from '../../../nodes/rop/Renderers';
-import {WebGlRendererRopNode} from '../../../nodes/rop/WebGlRenderer';
+import {WebGlRendererRopNode} from '../../../nodes/rop/WebGLRenderer';
 
 export enum RopType {
-	CSS2D = 'css2DRenderer',
-	CSS3D = 'css3DRenderer',
-	WEBGL = 'webGlRenderer',
+	CSS2D = 'CSS2DRenderer',
+	CSS3D = 'CSS3DRenderer',
+	WEBGL = 'WebGLRenderer',
 }
 
 export interface RopNodeChildrenMap {
-	css2DRenderer: Css2DRendererRopNode;
-	css3DRenderer: Css3DRendererRopNode;
-	webGlRenderer: WebGlRendererRopNode;
+	CSS2DRenderer: Css2DRendererRopNode;
+	CSS3DRenderer: Css3DRendererRopNode;
+	WebGLRenderer: WebGlRendererRopNode;
 	// networks
 	animations: AnimationsRopNode;
 	cop: CopRopNode;

@@ -10,10 +10,10 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {Css2DObjectSopOperation} from '../../operations/sop/Css2DObject';
+import {CSS2DObjectSopOperation} from '../../operations/sop/CSS2DObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-const DEFAULT = Css2DObjectSopOperation.DEFAULT_PARAMS;
-class Css2DObjectSopParamsConfig extends NodeParamsConfig {
+const DEFAULT = CSS2DObjectSopOperation.DEFAULT_PARAMS;
+class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the vertex id attribute is used to create the html id attribute */
 	useIdAttrib = ParamConfig.BOOLEAN(DEFAULT.useIdAttrib);
 	/** @param value of the html element id attribute */
@@ -40,21 +40,21 @@ class Css2DObjectSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {copyAttributes: true},
 	});
 }
-const ParamsConfig = new Css2DObjectSopParamsConfig();
+const ParamsConfig = new CSS2DObjectSopParamsConfig();
 
-export class Css2DObjectSopNode extends TypedSopNode<Css2DObjectSopParamsConfig> {
+export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'css2DObject';
+		return 'CSS2DObject';
 	}
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	private _operation: Css2DObjectSopOperation | undefined;
+	private _operation: CSS2DObjectSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new Css2DObjectSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new CSS2DObjectSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

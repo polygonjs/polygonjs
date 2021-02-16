@@ -1,6 +1,9 @@
 /**
  * Creates a Sky Material
  *
+ * @remarks
+ *
+ * For best result, assign this material to a very large box.
  *
  */
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
@@ -21,16 +24,23 @@ interface ShaderMaterialWithSkyUniforms extends ShaderMaterial {
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 class SkyMatParamsConfig extends NodeParamsConfig {
+	/** @param turbidity */
 	turbidity = ParamConfig.FLOAT(2, {
 		range: [0, 20],
 	});
+	/** @param rayleigh */
 	rayleigh = ParamConfig.FLOAT(1, {
 		range: [0, 4],
 	});
+	/** @param mieCoefficient */
 	mieCoefficient = ParamConfig.FLOAT(0.005);
+	/** @param mieDirectional */
 	mieDirectional = ParamConfig.FLOAT(0.8);
+	/** @param inclination */
 	inclination = ParamConfig.FLOAT(0.5);
+	/** @param azimuth */
 	azimuth = ParamConfig.FLOAT(0.25);
+	/** @param up */
 	up = ParamConfig.VECTOR3([0, 1, 0]);
 }
 const ParamsConfig = new SkyMatParamsConfig();

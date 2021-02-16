@@ -1,12 +1,12 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
-import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CSS2DObject} from '../../../modules/core/objects/CSS2DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreType} from '../../../core/Type';
 
-interface Css2DObjectParams {
+interface CSS2DObjectParams {
 	id: string;
 	className: string;
 	html: string;
@@ -17,7 +17,7 @@ const ATTRIBUTE_NAME = {
 	html: 'html',
 };
 
-interface Css2DObjectSopParams extends DefaultOperationParams {
+interface CSS2DObjectSopParams extends DefaultOperationParams {
 	useIdAttrib: boolean;
 	id: string;
 	useClassAttrib: boolean;
@@ -28,23 +28,23 @@ interface Css2DObjectSopParams extends DefaultOperationParams {
 	attributesToCopy: string;
 }
 
-export class Css2DObjectSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: Css2DObjectSopParams = {
+export class CSS2DObjectSopOperation extends BaseSopOperation {
+	static readonly DEFAULT_PARAMS: CSS2DObjectSopParams = {
 		useIdAttrib: false,
 		id: 'my_css_object',
 		useClassAttrib: false,
-		className: 'css2DObject',
+		className: 'CSS2DObject',
 		useHtmlAttrib: false,
 		html: '<div>default html</div>',
 		copyAttributes: false,
 		attributesToCopy: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'css2DObject'> {
-		return 'css2DObject';
+	static type(): Readonly<'CSS2DObject'> {
+		return 'CSS2DObject';
 	}
 
-	cook(input_contents: CoreGroup[], params: Css2DObjectSopParams) {
+	cook(input_contents: CoreGroup[], params: CSS2DObjectSopParams) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			const objects = this._create_objects_from_input_points(core_group, params);
@@ -54,7 +54,7 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 			return this.create_core_group_from_objects([object]);
 		}
 	}
-	private _create_objects_from_input_points(core_group: CoreGroup, params: Css2DObjectSopParams) {
+	private _create_objects_from_input_points(core_group: CoreGroup, params: CSS2DObjectSopParams) {
 		const points = core_group.points();
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
@@ -64,7 +64,7 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 				: params.className;
 			const html = params.useHtmlAttrib ? (point.attribValue(ATTRIBUTE_NAME.html) as string) : params.html;
 
-			const object = Css2DObjectSopOperation.create_css_object({
+			const object = CSS2DObjectSopOperation.create_css_object({
 				id,
 				className,
 				html,
@@ -92,8 +92,8 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 		return objects;
 	}
 
-	private _create_object_from_scratch(params: Css2DObjectSopParams) {
-		const object = Css2DObjectSopOperation.create_css_object({
+	private _create_object_from_scratch(params: CSS2DObjectSopParams) {
+		const object = CSS2DObjectSopOperation.create_css_object({
 			id: params.id,
 			className: params.className,
 			html: params.html,
@@ -102,7 +102,7 @@ export class Css2DObjectSopOperation extends BaseSopOperation {
 		return object;
 	}
 
-	private static create_css_object(params: Css2DObjectParams) {
+	private static create_css_object(params: CSS2DObjectParams) {
 		const element = document.createElement('div');
 		element.id = params.id;
 		element.className = params.className;

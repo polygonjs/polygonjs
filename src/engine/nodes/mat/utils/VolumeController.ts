@@ -12,19 +12,24 @@ import {Group} from 'three/src/objects/Group';
 import {Box3} from 'three/src/math/Box3';
 import {Object3D} from 'three/src/core/Object3D';
 
-export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function VolumeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param color */
 		color = ParamConfig.COLOR([1, 1, 1]);
+		/** @param stepSize. The smaller the value the more step the shader will make */
 		stepSize = ParamConfig.FLOAT(0.01);
+		/** @param volume density */
 		density = ParamConfig.FLOAT(1);
+		/** @param volume shadow density */
 		shadowDensity = ParamConfig.FLOAT(1);
+		/** @param this volume material currently can only use a single white light, whose direction is defined by this parameter */
 		lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
 	};
 }
 class VolumeMaterial extends ShaderMaterial {}
-class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
+class VolumeParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 
-abstract class VolumeMatNode extends TypedMatNode<VolumeMaterial, TextureMapParamsConfig> {}
+abstract class VolumeMatNode extends TypedMatNode<VolumeMaterial, VolumeParamsConfig> {}
 
 export class VolumeController {
 	constructor(private node: VolumeMatNode) {}

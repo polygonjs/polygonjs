@@ -32,8 +32,8 @@ import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
 import {CopSopNode} from '../../../nodes/sop/Cop';
 import {CopySopNode} from '../../../nodes/sop/Copy';
-import {Css2DObjectSopNode} from '../../../nodes/sop/Css2DObject';
-import {Css3DObjectSopNode} from '../../../nodes/sop/Css3DObject';
+import {CSS2DObjectSopNode} from '../../../nodes/sop/CSS2DObject';
+import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
 import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
@@ -126,8 +126,8 @@ export interface GeoNodeChildrenMap {
 	cone: ConeSopNode;
 	cop: CopSopNode;
 	copy: CopySopNode;
-	css2DObject: Css2DObjectSopNode;
-	css3DObject: Css3DObjectSopNode;
+	CSS2DObject: CSS2DObjectSopNode;
+	CSS3DObject: CSS3DObjectSopNode;
 	data: DataSopNode;
 	dataUrl: DataUrlSopNode;
 	delay: DelaySopNode;
@@ -204,7 +204,7 @@ import {AttribPromoteSopOperation} from '../../../operations/sop/AttribPromote';
 import {BoxSopOperation} from '../../../operations/sop/Box';
 import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
-import {Css2DObjectSopOperation} from '../../../operations/sop/Css2DObject';
+import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
 import {FileSopOperation} from '../../../operations/sop/File';
 import {HierarchySopOperation} from '../../../operations/sop/Hierarchy';
 import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
@@ -242,7 +242,7 @@ export class SopRegister {
 		poly.registerOperation(BoxSopOperation);
 		poly.registerOperation(CenterSopOperation);
 		poly.registerOperation(CircleSopOperation);
-		poly.registerOperation(Css2DObjectSopOperation);
+		poly.registerOperation(CSS2DObjectSopOperation);
 		poly.registerOperation(FileSopOperation);
 		poly.registerOperation(HierarchySopOperation);
 		poly.registerOperation(IcosahedronSopOperation);
@@ -291,7 +291,7 @@ export class SopRegister {
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(Css2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(CSS2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DataUrlSopNode, CATEGORY_SOP.INPUT);
@@ -321,7 +321,7 @@ export class SopRegister {
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(OperationsComposerSopNode, CATEGORY_SOP.ADVANCED, {user_allowed: false});
+		poly.registerNode(OperationsComposerSopNode, CATEGORY_SOP.ADVANCED, {userAllowed: false});
 		poly.registerNode(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
