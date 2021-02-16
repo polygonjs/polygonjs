@@ -110,6 +110,9 @@ export class TimeController {
 			}
 		}
 	}
+	setFrameToStart() {
+		this.setFrame(TimeController.START_FRAME, true);
+	}
 	incrementTimeIfPlaying() {
 		if (this._playing) {
 			if (!this.scene.root().areChildrenCooking()) {

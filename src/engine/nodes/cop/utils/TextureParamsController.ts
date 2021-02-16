@@ -182,19 +182,19 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 			visibleIf: {twrap: 1},
 		});
 		/** @param toggle on to allow updating the texture min filter */
-		tminfilter = ParamConfig.BOOLEAN(0);
+		tminFilter = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture min filter */
 		minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
-			visibleIf: {tminfilter: 1},
+			visibleIf: {tminFilter: 1},
 			menu: {
 				entries: MIN_FILTER_MENU_ENTRIES,
 			},
 		});
 		/** @param toggle on to allow updating the texture mag filter */
-		tmagfilter = ParamConfig.BOOLEAN(0);
+		tmagFilter = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture mag filter */
 		magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
-			visibleIf: {tmagfilter: 1},
+			visibleIf: {tmagFilter: 1},
 			menu: {
 				entries: MAG_FILTER_MENU_ENTRIES,
 			},
@@ -326,10 +326,10 @@ export class TextureParamsController {
 			texture.wrapS = pv.wrapS;
 			texture.wrapT = pv.wrapT;
 		}
-		if (pv.tminfilter) {
+		if (pv.tminFilter) {
 			texture.minFilter = pv.minFilter;
 		}
-		if (pv.tminfilter) {
+		if (pv.tminFilter) {
 			texture.magFilter = pv.magFilter;
 		}
 		this._update_anisotropy(texture);

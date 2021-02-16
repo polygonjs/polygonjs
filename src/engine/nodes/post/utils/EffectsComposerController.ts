@@ -119,10 +119,10 @@ export class EffectsComposerController {
 			format: RGBFormat,
 			stencilBuffer: this.node.pv.stencilBuffer,
 		};
-		if (this.node.pv.tminfilter) {
+		if (this.node.pv.tminFilter) {
 			parameters.minFilter = this.node.pv.minFilter;
 		}
-		if (this.node.pv.tminfilter) {
+		if (this.node.pv.tminFilter) {
 			parameters.magFilter = this.node.pv.magFilter;
 		}
 

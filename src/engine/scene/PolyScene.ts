@@ -148,6 +148,9 @@ export class PolyScene {
 	setFrame(frame: number) {
 		this.timeController.setFrame(frame);
 	}
+	setFrameToStart() {
+		this.timeController.setFrameToStart();
+	}
 
 	frame() {
 		return this.timeController.frame();
