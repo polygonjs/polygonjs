@@ -98,7 +98,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	initializeNode() {
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
+				this.params.label.init([this.p.text], () => {
 					return this.p.text.rawInput();
 				});
 			});
