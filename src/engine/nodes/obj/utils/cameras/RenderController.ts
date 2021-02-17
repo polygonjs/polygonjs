@@ -217,15 +217,17 @@ export class RenderController {
 
 		return renderer;
 	}
+	static defaultPixelRatio() {
+		return CoreUserAgent.isMobile() ? 1 : Math.max(2, window.devicePixelRatio);
+	}
 	private static _create_default_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const renderer = new WebGLRenderer({
 			canvas: canvas,
-			antialias: false, // no anti alias with a pixel ratio of 2 is better
+			antialias: false, // no anti alias with a pixel ratio of 2 is more performant
 			alpha: true,
 			context: gl,
 		});
-		const multiplier = CoreUserAgent.isMobile() ? 1 : 2;
-		renderer.setPixelRatio(multiplier * window.devicePixelRatio);
+		renderer.setPixelRatio(this.defaultPixelRatio());
 
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;

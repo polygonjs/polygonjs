@@ -175,6 +175,7 @@ const DEFAULT_PARAMS: WebGLRendererParameters = {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {RenderController} from '../obj/utils/cameras/RenderController';
 class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
@@ -205,8 +206,11 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 	physicallyCorrectLights = ParamConfig.BOOLEAN(1);
 	/** @param sort objects, which can be necessary when rendering transparent objects */
 	sortObjects = ParamConfig.BOOLEAN(1);
-	/** @param sampling will increase the renderer size */
-	sampling = ParamConfig.INTEGER(2, {
+	/** @param toggle to override the default pixel ratio, which is 1 for mobile devices, and Math.max(2, window.devicePixelRatio) for other devices */
+	tpixelRatio = ParamConfig.BOOLEAN(0);
+	/** @param higher pixelRatio improves render sharpness but reduces performance */
+	pixelRatio = ParamConfig.INTEGER(2, {
+		visibleIf: {tpixelRatio: true},
 		range: [1, 4],
 		rangeLocked: [true, false],
 	});
@@ -288,7 +292,8 @@ export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsCon
 
 		renderer.sortObjects = this.pv.sortObjects;
 
-		renderer.setPixelRatio(this.pv.sampling * window.devicePixelRatio);
+		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : RenderController.defaultPixelRatio();
+		renderer.setPixelRatio(pixelRatio);
 	}
 
 	private _traverse_scene_and_update_materials() {
