@@ -40,7 +40,7 @@ class ColorCorrectParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	gamma_factor = ParamConfig.FLOAT(2.2);
+	gammaFactor = ParamConfig.FLOAT(2.2);
 }
 
 const ParamsConfig = new ColorCorrectParamsConfig();
@@ -50,7 +50,7 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 		return 'colorCorrect';
 	}
 	static INPUT_NAME = 'color';
-	static INPUT_GAMMA_FACTOR = 'gamma_factor';
+	static INPUT_GAMMA_FACTOR = 'gammaFactor';
 	static OUTPUT_NAME = 'out';
 	initializeNode() {
 		this.io.connection_points.spare_params.set_inputless_param_names(['to', 'from']);

@@ -29,7 +29,7 @@ class ParamGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	as_color = ParamConfig.BOOLEAN(0, {
+	asColor = ParamConfig.BOOLEAN(0, {
 		visibleIf: {type: GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.VEC3)},
 	});
 }
@@ -87,7 +87,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 
 		if (
 			param_type == ParamType.VECTOR3 &&
-			this.p.as_color.value &&
+			this.p.asColor.value &&
 			CoreType.isArray(default_value) &&
 			default_value.length == 3
 		) {

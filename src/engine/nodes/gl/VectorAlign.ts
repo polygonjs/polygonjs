@@ -11,7 +11,7 @@ const DefaultValues: PolyDictionary<Number3> = {
 
 export class VectorAlignGlNode extends MathFunctionArg3Factory('vectorAlign', {
 	in: ['start', 'end', 'up'],
-	method: 'vector_align_with_up',
+	method: 'vectorAlignWithUp',
 	functions: [Quaternion],
 }) {
 	protected _expected_input_types() {

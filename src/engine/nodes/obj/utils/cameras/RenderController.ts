@@ -47,7 +47,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		setCSSRenderer = ParamConfig.BOOLEAN(0);
 		/** @param add a css renderer */
 		CSSRenderer = ParamConfig.OPERATOR_PATH('./renderers1/CSS2DRenderer1', {
-			visibleIf: {setCssRenderer: 1},
+			visibleIf: {setCSSRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
 				types: [RopType.CSS2D, RopType.CSS3D],

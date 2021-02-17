@@ -268,7 +268,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 
 	// now change to vec3
 	param1.set_gl_type(GlConnectionPointType.VEC3);
-	param1.p.as_color.set(1);
+	param1.p.asColor.set(1);
 	await mesh_basic1.requestContainer();
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as ColorParam;
 	assert.equal(vec3_spare_param.type(), ParamType.COLOR, 'param is color');

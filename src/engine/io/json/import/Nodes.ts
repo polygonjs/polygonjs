@@ -27,7 +27,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		const nodes: BaseNodeTypeWithIO[] = [];
 		for (let node_name of non_optimized_names) {
 			const node_data = data[node_name];
-			let node_type = node_data['type'];
+			let node_type = node_data['type'].toLowerCase();
 			const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 
 			try {
