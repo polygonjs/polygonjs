@@ -17,11 +17,15 @@ export interface ThreejsViewerProperties {
 	autoRender: boolean;
 }
 
+type onTimeTickHook = () => void;
 type onRenderHook = () => void;
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
 	private _do_render: boolean = true;
-	private _onRender: onRenderHook | undefined;
+	private _onBeforeTick: onTimeTickHook | undefined;
+	private _onAfterTick: onTimeTickHook | undefined;
+	private _onBeforeRender: onRenderHook | undefined;
+	private _onAfterRender: onRenderHook | undefined;
 
 	private _animate_method: () => void = this.animate.bind(this);
 
@@ -54,6 +58,19 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	public _build() {
 		this._init_display();
 		this.activate();
+	}
+
+	onBeforeTick(callback: onTimeTickHook | undefined) {
+		this._onBeforeTick = callback;
+	}
+	onAfterTick(callback: onTimeTickHook | undefined) {
+		this._onAfterTick = callback;
+	}
+	onBeforeRender(callback: onRenderHook | undefined) {
+		this._onBeforeRender = callback;
+	}
+	onAfterRender(callback: onRenderHook | undefined) {
+		this._onAfterRender = callback;
 	}
 
 	dispose() {
@@ -136,7 +153,13 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	animate() {
 		if (this._do_render) {
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
+			if (this._onBeforeTick) {
+				this._onBeforeTick();
+			}
 			this._scene.timeController.incrementTimeIfPlaying();
+			if (this._onAfterTick) {
+				this._onAfterTick();
+			}
 			this.render();
 			this._controls_controller?.update();
 		}
@@ -154,12 +177,15 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	render() {
 		if (this.camerasController.cameraNode && this._canvas) {
-			if (this._onRender) {
-				this._onRender();
+			if (this._onBeforeRender) {
+				this._onBeforeRender();
 			}
 			const size = this.camerasController.size;
 			const aspect = this.camerasController.aspect;
 			this._camera_node.renderController.render(this._canvas, size, aspect);
+			if (this._onAfterRender) {
+				this._onAfterRender();
+			}
 		} else {
 			console.warn('no camera to render with');
 		}
