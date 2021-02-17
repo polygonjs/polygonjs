@@ -379,7 +379,7 @@ export class CoreTextureLoader {
 	private static in_progress_loads_count: number = 0;
 	private static _queue: Array<() => void> = [];
 	private static _init_max_concurrent_loads_count(): number {
-		return CoreUserAgent.is_chrome() ? 10 : 4;
+		return CoreUserAgent.isChrome() ? 10 : 4;
 		// const parser = new UAParser();
 		// const name = parser.getBrowser().name;
 		// // limit to 4 for non chrome,
@@ -398,7 +398,7 @@ export class CoreTextureLoader {
 		// return 1;
 	}
 	private static _init_concurrent_loads_delay(): number {
-		return CoreUserAgent.is_chrome() ? 0 : 10;
+		return CoreUserAgent.isChrome() ? 0 : 10;
 		// const parser = new UAParser();
 		// const name = parser.getBrowser().name;
 		// // add a delay for browsers other than Chrome and Firefox

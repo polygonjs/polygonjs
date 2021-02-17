@@ -17,6 +17,7 @@ import {Css3DRendererRopNode} from '../../../rop/CSS3DRenderer';
 import {RopType} from '../../../../poly/registers/nodes/Rop';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
+import {CoreUserAgent} from '../../../../../core/UserAgent';
 export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		render = ParamConfig.FOLDER();
@@ -223,7 +224,8 @@ export class RenderController {
 			alpha: true,
 			context: gl,
 		});
-		renderer.setPixelRatio(2 * window.devicePixelRatio);
+		const multiplier = CoreUserAgent.isMobile() ? 1 : 2;
+		renderer.setPixelRatio(multiplier * window.devicePixelRatio);
 
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;

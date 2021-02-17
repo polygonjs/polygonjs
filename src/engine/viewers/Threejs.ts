@@ -17,9 +17,11 @@ export interface ThreejsViewerProperties {
 	autoRender: boolean;
 }
 
+type onRenderHook = () => void;
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
 	private _do_render: boolean = true;
+	private _onRender: onRenderHook | undefined;
 
 	private _animate_method: () => void = this.animate.bind(this);
 
@@ -152,6 +154,9 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	render() {
 		if (this.camerasController.cameraNode && this._canvas) {
+			if (this._onRender) {
+				this._onRender();
+			}
 			const size = this.camerasController.size;
 			const aspect = this.camerasController.aspect;
 			this._camera_node.renderController.render(this._canvas, size, aspect);
