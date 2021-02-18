@@ -20,6 +20,7 @@ import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {NullEventNode} from '../../../nodes/event/Null';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
+import {FirstPersonControlsEventNode} from '../../../nodes/event/FirstPersonControls';
 import {PostProcessEventNode} from '../../../nodes/event/PostProcess';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {RenderersEventNode} from '../../../nodes/event/Renderers';
@@ -47,6 +48,7 @@ export interface EventNodeChildrenMap {
 	nodeCook: NodeCookEventNode;
 	null: NullEventNode;
 	pointer: PointerEventNode;
+	firstPersonControls: FirstPersonControlsEventNode;
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
 	setFlag: SetFlagEventNode;
@@ -83,6 +85,7 @@ export class EventRegister {
 		poly.registerNode(NodeCookEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(NullEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(PointerEventNode, CATEGORY_EVENT.INPUT);
+		poly.registerNode(FirstPersonControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(SceneEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SetFlagEventNode, CATEGORY_EVENT.SCENE);

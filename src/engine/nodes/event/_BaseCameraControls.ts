@@ -9,7 +9,7 @@ import {BaseViewerType} from '../../viewers/_Base';
 
 export interface CameraControls {
 	name?: string;
-	enabled: boolean;
+	enabled?: boolean;
 	dispose: () => void;
 	update: () => void;
 	addEventListener: (eventName: string, callback: () => void) => void;

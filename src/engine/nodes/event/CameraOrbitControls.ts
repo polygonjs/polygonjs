@@ -182,7 +182,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		}
 	}
 
-	update_required() {
+	update_required(): boolean {
 		return this.pv.tdamping;
 	}
 

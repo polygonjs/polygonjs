@@ -72,11 +72,13 @@ export enum CameraControlsNodeType {
 	DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',
 	MAP = 'cameraMapControls',
 	ORBIT = 'cameraOrbitControls',
+	FIRST_PERSON = 'firstPersonControls',
 }
 export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
 	CameraControlsNodeType.DEVICE_ORIENTATION,
 	CameraControlsNodeType.MAP,
 	CameraControlsNodeType.ORBIT,
+	CameraControlsNodeType.FIRST_PERSON,
 ];
 
 export interface BaseNodeByContextMap {
