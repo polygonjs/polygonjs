@@ -115,9 +115,8 @@ export class BaseOperationContainer {
 				if (default_param instanceof TypedParamPathParamValue) {
 					return default_param.set_path(param_data);
 				}
-			} else {
-				return param_data;
 			}
+			return param_data;
 		}
 		if (CoreType.isArray(param_data)) {
 			(this.params[param_name] as Vector3).fromArray(param_data as number[]);

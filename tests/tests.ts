@@ -56,6 +56,9 @@ import './engine/params/utils/Expression';
 import './engine/params/utils/ReferencedAssets';
 import './engine/params/utils/TimeDependent';
 
+QUnit.module('operations');
+import './engine/operations/sop/AttribFromTexture';
+
 QUnit.module('nodes utils');
 import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/utils/Memory';
