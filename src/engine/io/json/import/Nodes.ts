@@ -60,6 +60,36 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			const optimized_nodes_importer = new OptimizedNodesJsonImporter(this._node);
 			optimized_nodes_importer.process_data(scene_importer, data);
 			nodes.concat(optimized_nodes_importer.nodes());
+
+			// ensure that the display node is still created
+			// as it may not be if the display flag is set to a node that will
+			// be part of an optimized series of nodes
+			// for instance
+			// A -> B > C
+			// D -> E
+			// if A, B and C are optimized,
+			// and D, E are not
+			// And B has the display flag,
+			// what will happen is that B will not exist anymore
+			// and the display flag will end up in either C, D or E
+			// which can lead to unexpected display in the player
+			if (this._node.childrenController.context == NodeContext.SOP) {
+				const nodeNames = Object.keys(data);
+				let nodeNameWithDisplayFlag: string | undefined = undefined;
+				for (let nodeName of nodeNames) {
+					const nodeData = data[nodeName];
+					if (nodeData.flags?.display) {
+						nodeNameWithDisplayFlag = nodeName;
+					}
+				}
+				if (nodeNameWithDisplayFlag) {
+					const existingNodeNames = nodes.map((n) => n.name());
+					if (!existingNodeNames.includes(nodeNameWithDisplayFlag)) {
+						const message = `node '${nodeNameWithDisplayFlag}' with display flag has been optimized and does not exist in player mode`;
+						console.error(message);
+					}
+				}
+			}
 		}
 
 		const importers_by_node_name: Map<string, PolyNodeJsonImporter | NodeJsonImporter<BaseNodeType>> = new Map();
