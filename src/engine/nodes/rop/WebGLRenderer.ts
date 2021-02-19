@@ -176,7 +176,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {RenderController} from '../obj/utils/cameras/RenderController';
-class WebGlRendererRopParamsConfig extends NodeParamsConfig {
+class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to have antialias on (change requires page reload) */
@@ -235,9 +235,9 @@ class WebGlRendererRopParamsConfig extends NodeParamsConfig {
 
 	// preserve_drawing_buffer = ParamConfig.BOOLEAN(0);
 }
-const ParamsConfig = new WebGlRendererRopParamsConfig();
+const ParamsConfig = new WebGLRendererRopParamsConfig();
 
-export class WebGlRendererRopNode extends TypedRopNode<WebGlRendererRopParamsConfig> {
+export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsConfig> {
 	params_config = ParamsConfig;
 	static type(): Readonly<RopType.WEBGL> {
 		return RopType.WEBGL;

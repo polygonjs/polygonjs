@@ -10,7 +10,7 @@ import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-class Css2DRendererRopParamsConfig extends NodeParamsConfig {
+class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
 		multiline: true,
@@ -32,9 +32,9 @@ class Css2DRendererRopParamsConfig extends NodeParamsConfig {
 		visibleIf: {useFog: 1},
 	});
 }
-const ParamsConfig = new Css2DRendererRopParamsConfig();
+const ParamsConfig = new CSS2DRendererRopParamsConfig();
 
-export class Css2DRendererRopNode extends TypedRopNode<Css2DRendererRopParamsConfig> {
+export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsConfig> {
 	params_config = ParamsConfig;
 	static type(): Readonly<RopType.CSS2D> {
 		return RopType.CSS2D;

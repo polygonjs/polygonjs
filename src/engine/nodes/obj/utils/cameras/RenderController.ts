@@ -7,12 +7,12 @@ import {SceneObjNode} from '../../Scene';
 import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {Poly} from '../../../../Poly';
 import {
-	WebGlRendererRopNode,
+	WebGLRendererRopNode,
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_OUTPUT_ENCODING,
 	DEFAULT_TONE_MAPPING,
 } from '../../../rop/WebGLRenderer';
-import {Css2DRendererRopNode} from '../../../rop/CSS2DRenderer';
+import {CSS2DRendererRopNode} from '../../../rop/CSS2DRenderer';
 import {Css3DRendererRopNode} from '../../../rop/CSS3DRenderer';
 import {RopType} from '../../../../poly/registers/nodes/Rop';
 
@@ -40,7 +40,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			visibleIf: {setRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
-				types: [WebGlRendererRopNode.type()],
+				types: [WebGLRendererRopNode.type()],
 			},
 		});
 
@@ -61,8 +61,8 @@ export class RenderController {
 	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
 	private _resolution_by_canvas_id: PolyDictionary<Vector2> = {};
 	private _resolved_scene: Scene | undefined;
-	private _resolved_renderer_rop: WebGlRendererRopNode | undefined;
-	private _resolved_cssRenderer_rop: Css2DRendererRopNode | Css3DRendererRopNode | undefined;
+	private _resolved_renderer_rop: WebGLRendererRopNode | undefined;
+	private _resolved_cssRenderer_rop: CSS2DRendererRopNode | Css3DRendererRopNode | undefined;
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
@@ -190,7 +190,7 @@ export class RenderController {
 			}
 		}
 		if (!renderer) {
-			renderer = RenderController._create_default_renderer(canvas, gl);
+			renderer = RenderController._createDefaultRenderer(canvas, gl);
 		}
 
 		// https://github.com/mrdoob/js/issues/15493
@@ -220,7 +220,7 @@ export class RenderController {
 	static defaultPixelRatio() {
 		return CoreUserAgent.isMobile() ? 1 : Math.max(2, window.devicePixelRatio);
 	}
-	private static _create_default_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
+	private static _createDefaultRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const renderer = new WebGLRenderer({
 			canvas: canvas,
 			antialias: false, // no anti alias with a pixel ratio of 2 is more performant
