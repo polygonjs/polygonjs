@@ -5,6 +5,7 @@ import {CSS2DObject} from '../../../modules/core/objects/CSS2DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreType} from '../../../core/Type';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface CSS2DObjectParams {
 	id: string;
@@ -58,11 +59,15 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		const points = core_group.points();
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
-			const id = params.useIdAttrib ? (point.attribValue(ATTRIBUTE_NAME.id) as string) : params.className;
-			const className = params.useClassAttrib
+			const id = isBooleanTrue(params.useIdAttrib)
+				? (point.attribValue(ATTRIBUTE_NAME.id) as string)
+				: params.className;
+			const className = isBooleanTrue(params.useClassAttrib)
 				? (point.attribValue(ATTRIBUTE_NAME.className) as string)
 				: params.className;
-			const html = params.useHtmlAttrib ? (point.attribValue(ATTRIBUTE_NAME.html) as string) : params.html;
+			const html = isBooleanTrue(params.useHtmlAttrib)
+				? (point.attribValue(ATTRIBUTE_NAME.html) as string)
+				: params.html;
 
 			const object = CSS2DObjectSopOperation.create_css_object({
 				id,
@@ -70,7 +75,7 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 				html,
 			});
 			const element = object.element;
-			if (params.copyAttributes) {
+			if (isBooleanTrue(params.copyAttributes)) {
 				const attrib_names = CoreString.attribNames(params.attributesToCopy);
 				for (let attrib_name of attrib_names) {
 					const attrib_value = point.attribValue(attrib_name);

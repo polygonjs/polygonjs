@@ -11,6 +11,7 @@ import {DeviceOrientationControls} from '../../../modules/three/examples/jsm/con
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class CameraDeviceOrientationControlsEventParamsConfig extends NodeParamsConfig {
 	/** @param enable/disable */
 	enabled = ParamConfig.BOOLEAN(1);
@@ -33,7 +34,7 @@ export class CameraDeviceOrientationControlsEventNode extends TypedCameraControl
 	}
 
 	setup_controls(controls: CameraControls) {
-		controls.enabled = this.pv.enabled;
+		controls.enabled = isBooleanTrue(this.pv.enabled);
 	}
 
 	update_required() {

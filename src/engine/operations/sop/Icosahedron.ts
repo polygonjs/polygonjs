@@ -4,6 +4,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {IcosahedronBufferGeometry} from '../../../core/geometry/operation/Icosahedron';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface IcosahedronSopParams extends DefaultOperationParams {
 	radius: number;
@@ -24,7 +25,7 @@ export class IcosahedronSopOperation extends BaseSopOperation {
 	}
 
 	cook(input_contents: CoreGroup[], params: IcosahedronSopParams) {
-		const pointsOnly = params.pointsOnly;
+		const pointsOnly = isBooleanTrue(params.pointsOnly);
 		const geometry = new IcosahedronBufferGeometry(params.radius, params.detail, pointsOnly);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		if (pointsOnly) {

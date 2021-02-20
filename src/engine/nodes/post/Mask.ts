@@ -19,6 +19,7 @@ interface MaskPassWithContext extends MaskPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class MaskPostParamsConfig extends NodeParamsConfig {
 	overrideScene = ParamConfig.BOOLEAN(0, PostParamOptions);
 	scene = ParamConfig.OPERATOR_PATH('/scene1', {
@@ -57,12 +58,12 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 		return pass;
 	}
 	update_pass(pass: MaskPassWithContext) {
-		pass.inverse = this.pv.inverse;
+		pass.inverse = isBooleanTrue(this.pv.inverse);
 		this._update_scene(pass);
 		this._update_camera(pass);
 	}
 	private async _update_scene(pass: MaskPassWithContext) {
-		if (this.pv.overrideScene) {
+		if (isBooleanTrue(this.pv.overrideScene)) {
 			if (this.p.scene.isDirty()) {
 				await this.p.scene.compute();
 			}
@@ -75,7 +76,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 		pass.scene = pass.context.scene;
 	}
 	private async _update_camera(pass: MaskPassWithContext) {
-		if (this.pv.overrideCamera) {
+		if (isBooleanTrue(this.pv.overrideCamera)) {
 			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
 			}

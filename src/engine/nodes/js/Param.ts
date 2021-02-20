@@ -14,6 +14,7 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {LinesController} from './code/utils/LinesController';
 import {JsParamConfig} from './code/utils/ParamConfig';
 import {CoreType} from '../../../core/Type';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class ParamJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
@@ -64,7 +65,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 
 		if (
 			param_type == ParamType.VECTOR3 &&
-			this.p.asColor.value &&
+			isBooleanTrue(this.p.asColor.value) &&
 			CoreType.isArray(default_value) &&
 			default_value.length == 3
 		) {

@@ -3,6 +3,7 @@ import {BaseController} from './_BaseController';
 import {Material} from 'three/src/materials/Material';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 export function SkinningParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param activates skinning for objects animated via a skeleton */
@@ -25,7 +26,7 @@ export class SkinningController extends BaseController {
 		super(node);
 	}
 	static update(node: SkinningMatNode) {
-		const new_skinning = node.pv.skinning;
+		const new_skinning = isBooleanTrue(node.pv.skinning);
 		if (new_skinning != node.material.skinning) {
 			node.material.skinning = new_skinning;
 			node.material.needsUpdate = true;

@@ -24,7 +24,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		const {optimized_names, non_optimized_names} = OptimizedNodesJsonImporter.child_names_by_optimized_state(data);
-		const nodes: BaseNodeTypeWithIO[] = [];
+		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
 		for (let node_name of non_optimized_names) {
 			const node_data = data[node_name];
 			let node_type = node_data['type'].toLowerCase();
@@ -35,7 +35,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				const node = this._node.createNode(node_type, non_spare_params_data);
 				if (node) {
 					node.setName(node_name);
-					nodes.push(node);
+					nonOptimizedNodes.push(node);
 				}
 			} catch (e) {
 				console.error(`error importing node: cannot create with type ${node_type}`, e);
@@ -45,7 +45,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					const node = this._node.createNode(nodeType, non_spare_params_data);
 					if (node) {
 						node.setName(node_name);
-						nodes.push(node);
+						nonOptimizedNodes.push(node);
 					}
 				} catch (e) {
 					scene_importer.report.add_warning(
@@ -59,7 +59,6 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (optimized_names.length > 0) {
 			const optimized_nodes_importer = new OptimizedNodesJsonImporter(this._node);
 			optimized_nodes_importer.process_data(scene_importer, data);
-			nodes.concat(optimized_nodes_importer.nodes());
 
 			// ensure that the display node is still created
 			// as it may not be if the display flag is set to a node that will
@@ -83,9 +82,15 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 					}
 				}
 				if (nodeNameWithDisplayFlag) {
-					const existingNodeNames = nodes.map((n) => n.name());
+					const existingNodeNames = nonOptimizedNodes.map((n) => n.name());
+					const optimizedNodes = optimized_nodes_importer.nodes();
+					for (let optimizedNode of optimizedNodes) {
+						existingNodeNames.push(optimizedNode.name());
+					}
 					if (!existingNodeNames.includes(nodeNameWithDisplayFlag)) {
-						const message = `node '${nodeNameWithDisplayFlag}' with display flag has been optimized and does not exist in player mode`;
+						const parentFullPath = this._node.fullPath();
+						const nodeFullPath = `${parentFullPath}/${nodeNameWithDisplayFlag}`;
+						const message = `node '${nodeFullPath}' with display flag has been optimized and does not exist in player mode`;
 						console.error(message);
 					}
 				}
@@ -93,7 +98,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		const importers_by_node_name: Map<string, PolyNodeJsonImporter | NodeJsonImporter<BaseNodeType>> = new Map();
-		for (let node of nodes) {
+		for (let node of nonOptimizedNodes) {
 			const child_data = data[node.name()];
 			if (child_data) {
 				const importer = JsonImportDispatcher.dispatch_node(node);
@@ -103,7 +108,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				Poly.warn(`possible import error for node ${node.name()}`);
 			}
 		}
-		for (let node of nodes) {
+		for (let node of nonOptimizedNodes) {
 			const importer = importers_by_node_name.get(node.name());
 			if (importer) {
 				importer.process_inputs_data(data[node.name()]);

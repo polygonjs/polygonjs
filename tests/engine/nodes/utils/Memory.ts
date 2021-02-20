@@ -15,7 +15,7 @@ QUnit.test('nodes can dispose themselves when removed by their parents', async (
 	console.log(scatter.p.pointsCount.graphPredecessors());
 
 	const maxGraphNodesCount = scene.graph.nodesCount();
-	assert.equal(maxGraphNodesCount, startGraphNodesCount + 79);
+	assert.equal(maxGraphNodesCount, startGraphNodesCount + 74);
 
 	root.removeNode(geo);
 

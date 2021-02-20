@@ -6,6 +6,7 @@ import {IcosahedronBufferGeometry} from 'three/src/geometries/IcosahedronGeometr
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface SphereSopParams extends DefaultOperationParams {
 	type: number;
@@ -83,7 +84,7 @@ export class SphereSopOperation extends BaseSopOperation {
 	}
 
 	private _create_default_sphere(params: SphereSopParams) {
-		if (params.open) {
+		if (isBooleanTrue(params.open)) {
 			return new SphereBufferGeometry(
 				params.radius,
 				params.resolution.x,

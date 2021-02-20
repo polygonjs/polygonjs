@@ -1,6 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 interface RestAttributesSopParams extends DefaultOperationParams {
 	tposition: boolean;
 	position: string;
@@ -26,10 +27,10 @@ export class RestAttributesSopOperation extends BaseSopOperation {
 	cook(input_contents: CoreGroup[], params: RestAttributesSopParams) {
 		const core_group = input_contents[0];
 		const objects = core_group.objectsWithGeo();
-		if (params.tposition) {
+		if (isBooleanTrue(params.tposition)) {
 			this._create_rest_attribute(objects, params.position, params.restP);
 		}
-		if (params.tnormal) {
+		if (isBooleanTrue(params.tnormal)) {
 			this._create_rest_attribute(objects, params.normal, params.restN);
 		}
 

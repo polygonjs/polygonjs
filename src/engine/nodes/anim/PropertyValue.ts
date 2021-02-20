@@ -25,6 +25,7 @@ const PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH = PROPERTY_VALUE_MODES.indexOf(Proper
 const PROPERTY_VALUE_MODE_FROM_NODE = PROPERTY_VALUE_MODES.indexOf(PropertyValueMode.FROM_NODE);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	/** @param mode */
 	mode = ParamConfig.INTEGER(PROPERTY_VALUE_MODE_CUSTOM, {
@@ -116,7 +117,9 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		timeline_builder.setPropertyValue(target_value);
 	}
 	private _prepare_timebuilder_from_scene_graph(timeline_builder: TimelineBuilder) {
-		const property_name = this.pv.overridePropertyName ? this.pv.propertyName : timeline_builder.propertyName();
+		const property_name = isBooleanTrue(this.pv.overridePropertyName)
+			? this.pv.propertyName
+			: timeline_builder.propertyName();
 
 		if (!property_name) {
 			return;
@@ -134,7 +137,9 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 	}
 
 	private async _prepare_timebuilder_from_node(timeline_builder: TimelineBuilder) {
-		const property_name = this.pv.overridePropertyName ? this.pv.propertyName : timeline_builder.propertyName();
+		const property_name = isBooleanTrue(this.pv.overridePropertyName)
+			? this.pv.propertyName
+			: timeline_builder.propertyName();
 		if (!property_name) {
 			return;
 		}

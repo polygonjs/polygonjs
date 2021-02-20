@@ -13,6 +13,7 @@ import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geom
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {CoreObject} from '../../../core/geometry/Object';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
@@ -56,7 +57,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	}
 
 	private async _apply_materials(core_group: CoreGroup, params: MaterialSopParams) {
-		if (!params.assignMat) {
+		if (!isBooleanTrue(params.assignMat)) {
 			return;
 		}
 
@@ -70,7 +71,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 			await material_node.requestContainer();
 			if (material) {
-				if (params.applyToChildren) {
+				if (isBooleanTrue(params.applyToChildren)) {
 					// if we apply to children, the group will be tested inside _apply_material
 					for (let object of core_group.objects()) {
 						object.traverse((grand_child) => {
@@ -96,7 +97,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	private _old_mat_by_old_new_id: Map<string, Material> = new Map();
 	private _materials_by_uuid: Map<string, Material> = new Map();
 	private _swap_textures(core_group: CoreGroup, params: MaterialSopParams) {
-		if (!params.swapCurrentTex) {
+		if (!isBooleanTrue(params.swapCurrentTex)) {
 			return;
 		}
 
@@ -126,7 +127,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 			}
 		}
 
-		const used_material = params.cloneMat ? CoreMaterial.clone(src_material) : src_material;
+		const used_material = isBooleanTrue(params.cloneMat) ? CoreMaterial.clone(src_material) : src_material;
 
 		if (src_material instanceof ShaderMaterial && used_material instanceof ShaderMaterial) {
 			for (let uniform_name in src_material.uniforms) {

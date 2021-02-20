@@ -4,6 +4,7 @@ import {TypedCopNode} from '../_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Poly} from '../../../Poly';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 class BaseCopRendererCopParamsConfig extends NodeParamsConfig {
 	useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
@@ -18,7 +19,7 @@ export class CopRendererController {
 	constructor(private node: BaseCopRendererCopNode) {}
 
 	async renderer() {
-		if (this.node.pv.useCameraRenderer) {
+		if (isBooleanTrue(this.node.pv.useCameraRenderer)) {
 			return await this.camera_renderer();
 		} else {
 			return (this._renderer = this._renderer || this._create_renderer());

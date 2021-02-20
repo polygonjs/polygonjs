@@ -18,6 +18,7 @@ const MAT_DOUBLE_SIDED = new MeshBasicMaterial({
 });
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class RaySopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to use the normals as the ray direction */
 	useNormals = ParamConfig.BOOLEAN(1);
@@ -71,13 +72,13 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 
 		let direction: Vector3, first_intersect: Intersection;
 		for (let point of core_group.points()) {
-			direction = this.pv.useNormals ? point.normal() : this.pv.direction;
+			direction = isBooleanTrue(this.pv.useNormals) ? point.normal() : this.pv.direction;
 			this._raycaster.set(point.position(), direction);
 
 			first_intersect = this._raycaster.intersectObjects(core_group_collision.objects(), true)[0];
 			if (first_intersect) {
 				point.setPosition(first_intersect.point);
-				if (this.pv.transferFaceNormals && first_intersect.face) {
+				if (isBooleanTrue(this.pv.transferFaceNormals) && first_intersect.face) {
 					point.setNormal(first_intersect.face.normal);
 				}
 			}

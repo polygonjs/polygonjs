@@ -24,6 +24,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {FileType} from '../../params/utils/OptionsController';
 import {CopFileTypeController} from './utils/FileTypeController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -162,18 +163,18 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	}
 	private video_update_muted() {
 		if (this._video) {
-			this._video.muted = this.pv.muted;
+			this._video.muted = isBooleanTrue(this.pv.muted);
 		}
 	}
 	private video_update_loop() {
 		if (this._video) {
-			this._video.loop = this.pv.loop;
+			this._video.loop = isBooleanTrue(this.pv.loop);
 		}
 	}
 
 	private video_update_play() {
 		if (this._video) {
-			if (this.pv.play) {
+			if (isBooleanTrue(this.pv.play)) {
 				this._video.play();
 			} else {
 				this._video.pause();

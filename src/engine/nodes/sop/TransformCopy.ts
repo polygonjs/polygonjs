@@ -11,6 +11,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class TransformCopySopParamConfig extends NodeParamsConfig {
 	/** @param toggle on if the second input should be used */
 	useSecondInput = ParamConfig.BOOLEAN(1);
@@ -40,7 +41,7 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 	}
 
 	cook(input_contents: CoreGroup[]) {
-		if (this.pv.useSecondInput == true && input_contents[1]) {
+		if (isBooleanTrue(this.pv.useSecondInput) && input_contents[1]) {
 			this._copy_from_src_objects(input_contents[0].objects(), input_contents[1].objects());
 		} else {
 			this._copy_from_found_node(input_contents[0].objects());

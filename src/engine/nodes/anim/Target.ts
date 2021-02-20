@@ -18,6 +18,7 @@ import {PropertyTarget} from '../../../core/animation/PropertyTarget';
 import {AnimationUpdateCallback} from '../../../core/animation/UpdateCallback';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class TargetAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets if the target is a Polygonjs node, or a THREE object */
 	type = ParamConfig.INTEGER(0, {
@@ -105,7 +106,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 				return;
 			}
 			case TargetType.SCENE_GRAPH: {
-				if (this.pv.updateMatrix) {
+				if (isBooleanTrue(this.pv.updateMatrix)) {
 					update_callback = update_callback || new AnimationUpdateCallback();
 					update_callback.set_update_matrix(this.pv.updateMatrix);
 					timeline_builder.set_update_callback(update_callback);

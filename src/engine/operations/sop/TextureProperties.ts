@@ -8,6 +8,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Poly} from '../../../engine/Poly';
 
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/ConstantFilter';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
 	// anisotropy
@@ -44,7 +45,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 
 		const objects: Mesh[] = [];
 		for (let object of core_group.objects() as Mesh[]) {
-			if (params.applyToChildren) {
+			if (isBooleanTrue(params.applyToChildren)) {
 				object.traverse((child) => {
 					objects.push(child as Mesh);
 				});
@@ -69,16 +70,16 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		}
 	}
 	private async _update_texture(texture: Texture, params: TexturePropertiesSopParams) {
-		if (params.tanisotropy) {
+		if (isBooleanTrue(params.tanisotropy)) {
 			await this._update_anisotropy(texture, params);
 		}
-		if (params.tminFilter || params.tmagFilter) {
+		if (isBooleanTrue(params.tminFilter) || isBooleanTrue(params.tmagFilter)) {
 			this._update_filter(texture, params);
 		}
 	}
 
 	private async _update_anisotropy(texture: Texture, params: TexturePropertiesSopParams) {
-		if (params.useRendererMaxAnisotropy) {
+		if (isBooleanTrue(params.useRendererMaxAnisotropy)) {
 			const renderer = await Poly.renderersController.firstRenderer();
 			if (renderer) {
 				texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -88,10 +89,10 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		}
 	}
 	private _update_filter(texture: Texture, params: TexturePropertiesSopParams) {
-		if (params.tminFilter) {
+		if (isBooleanTrue(params.tminFilter)) {
 			texture.minFilter = params.minFilter;
 		}
-		if (params.tmagFilter) {
+		if (isBooleanTrue(params.tmagFilter)) {
 			texture.magFilter = params.magFilter;
 		}
 	}

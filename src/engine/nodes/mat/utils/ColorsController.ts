@@ -5,6 +5,7 @@ import {Material} from 'three/src/materials/Material';
 import {Color} from 'three/src/math/Color';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -47,16 +48,16 @@ export class ColorsController extends BaseController {
 		const pv = node.pv;
 
 		material.color.copy(pv.color);
-		const newVertexColor = pv.useVertexColors; // ? VertexColors : NoColors;
+		const newVertexColor = isBooleanTrue(pv.useVertexColors); // ? VertexColors : NoColors;
 		if (newVertexColor != material.vertexColors) {
 			material.vertexColors = newVertexColor;
 			material.needsUpdate = true;
 		}
 
 		material.opacity = pv.opacity;
-		material.transparent = pv.transparent || pv.opacity < 1;
+		material.transparent = isBooleanTrue(pv.transparent) || pv.opacity < 1;
 		material.depthTest = true;
 		material.alphaTest = pv.alphaTest;
-		material.fog = pv.useFog;
+		material.fog = isBooleanTrue(pv.useFog);
 	}
 }

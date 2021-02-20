@@ -45,6 +45,7 @@ import {Poly} from '../../Poly';
 import {TexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {ParamsInitData} from '../utils/io/IOController';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
@@ -245,7 +246,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		renderer.setRenderTarget(prev_target);
 
 		if (this._render_target.texture) {
-			if (this.pv.useCameraRenderer) {
+			if (isBooleanTrue(this.pv.useCameraRenderer)) {
 				this.set_texture(this._render_target.texture);
 			} else {
 				// const w = this.pv.resolution.x;

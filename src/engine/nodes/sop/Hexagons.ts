@@ -14,6 +14,7 @@ import {CoreGeometryOperationHexagon} from '../../../core/geometry/operation/Hex
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class HexagonsSopParamsConfig extends NodeParamsConfig {
 	/** @param plane size */
 	size = ParamConfig.VECTOR2([1, 1]);
@@ -48,7 +49,7 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 
 			this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
 
-			if (this.pv.pointsOnly) {
+			if (isBooleanTrue(this.pv.pointsOnly)) {
 				this.setGeometry(geometry, ObjectType.POINTS);
 			} else {
 				this.setGeometry(geometry);

@@ -12,6 +12,7 @@ import {EventConnectionPointType} from '../utils/io/connections/Event';
 const OUTPUT_NAME = 'event';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class AnyEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to ensure events are transfered */
 	active = ParamConfig.BOOLEAN(1);
@@ -48,7 +49,7 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 		if (this.p.active.isDirty()) {
 			await this.p.active.compute();
 		}
-		if (this.pv.active) {
+		if (isBooleanTrue(this.pv.active)) {
 			this.dispatch_event_to_output(OUTPUT_NAME, event_context);
 		}
 	}

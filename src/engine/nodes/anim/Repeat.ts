@@ -7,6 +7,7 @@ import {TypedAnimNode} from './_Base';
 import {TimelineBuilder, AnimationRepeatParams} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class RepeatAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets if it should repeat indefinitely */
 	unlimited = ParamConfig.BOOLEAN(0);
@@ -43,9 +44,9 @@ export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
 
 	private _repeat_params(): AnimationRepeatParams {
 		return {
-			count: this.pv.unlimited ? -1 : this.pv.count,
+			count: isBooleanTrue(this.pv.unlimited) ? -1 : this.pv.count,
 			delay: this.pv.delay,
-			yoyo: this.pv.yoyo,
+			yoyo: isBooleanTrue(this.pv.yoyo),
 		};
 	}
 

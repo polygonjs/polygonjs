@@ -21,8 +21,9 @@ import {
 	MIN_FILTER_DEFAULT_VALUE,
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../../core/cop/ConstantFilter';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
-	prepend_render_pass = ParamConfig.BOOLEAN(1);
+	prependRenderPass = ParamConfig.BOOLEAN(1);
 	useRenderTarget = ParamConfig.BOOLEAN(1);
 	tmagFilter = ParamConfig.BOOLEAN(0, {
 		visibleIf: {useRenderTarget: 1},
@@ -91,7 +92,7 @@ export class EffectsComposerController {
 		const renderer = options.renderer;
 
 		let composer: EffectComposer;
-		if (this.node.pv.useRenderTarget) {
+		if (isBooleanTrue(this.node.pv.useRenderTarget)) {
 			const render_target = this._create_render_target(renderer);
 			composer = new EffectComposer(renderer, render_target);
 		} else {
@@ -117,12 +118,12 @@ export class EffectsComposerController {
 		const parameters: WebGLRenderTargetOptions = {
 			// format: RGBFormat,
 			format: RGBFormat,
-			stencilBuffer: this.node.pv.stencilBuffer,
+			stencilBuffer: isBooleanTrue(this.node.pv.stencilBuffer),
 		};
-		if (this.node.pv.tminFilter) {
+		if (isBooleanTrue(this.node.pv.tminFilter)) {
 			parameters.minFilter = this.node.pv.minFilter;
 		}
-		if (this.node.pv.tminFilter) {
+		if (isBooleanTrue(this.node.pv.tmagFilter)) {
 			parameters.magFilter = this.node.pv.magFilter;
 		}
 
@@ -132,7 +133,7 @@ export class EffectsComposerController {
 	}
 
 	private _build_passes(composer: EffectComposer, options: CreateEffectsComposerOptions) {
-		if (this.node.pv.prepend_render_pass == true) {
+		if (isBooleanTrue(this.node.pv.prependRenderPass)) {
 			const render_pass = new RenderPass(options.scene, options.camera);
 			composer.addPass(render_pass);
 		}

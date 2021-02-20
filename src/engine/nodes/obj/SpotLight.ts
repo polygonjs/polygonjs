@@ -12,6 +12,7 @@ import {SpotLightHelper} from './utils/helpers/SpotLightHelper';
 import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ColorConversion} from '../../../core/Color';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
 	/** @param light color */
@@ -120,9 +121,9 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
-		this.light.castShadow = this.pv.castShadow;
-		this.light.shadow.autoUpdate = this.pv.shadowAutoUpdate;
-		this.light.shadow.needsUpdate = this.pv.shadowUpdateOnNextRender;
+		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
+		this.light.shadow.autoUpdate = isBooleanTrue(this.pv.shadowAutoUpdate);
+		this.light.shadow.needsUpdate = isBooleanTrue(this.pv.shadowUpdateOnNextRender);
 
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		// near/far don't seem to have any effect

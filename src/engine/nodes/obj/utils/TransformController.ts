@@ -7,6 +7,7 @@ import {Object3D} from 'three/src/core/Object3D';
 // import {Quaternion} from 'three/src/math/Quaternion';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 interface TransformedParamConfigDefaultParams {
 	matrixAutoUpdate?: boolean;
@@ -45,10 +46,10 @@ export function TransformedParamConfig<TBase extends Constructor>(
 				TransformController.PARAM_CALLBACK_update_transform_from_object(node as TransformedObjNode);
 			},
 		});
-		tlookAt = ParamConfig.BOOLEAN(0);
-		lookAtPos = ParamConfig.VECTOR3([0, 0, 0], {
-			visibleIf: {tlookAt: 1},
-		});
+		// tlookAt = ParamConfig.BOOLEAN(0);
+		// lookAtPos = ParamConfig.VECTOR3([0, 0, 0], {
+		// 	visibleIf: {tlookAt: 1},
+		// });
 		// look_at = ParamConfig.OPERATOR_PATH('', {
 		// 	visibleIf: {tlookAt: 1},
 		// 	nodeSelection: {context: NodeContext.OBJ},
@@ -81,7 +82,7 @@ export class TransformController {
 	update() {
 		this.update_transform_with_matrix();
 		const object = this.node.object;
-		object.matrixAutoUpdate = this.node.pv.matrixAutoUpdate;
+		object.matrixAutoUpdate = isBooleanTrue(this.node.pv.matrixAutoUpdate);
 	}
 
 	update_transform_with_matrix(matrix?: Matrix4) {
@@ -130,12 +131,12 @@ export class TransformController {
 	// private _look_at_target_q = new Quaternion();
 	// private _look_at_target_s = new Vector3();
 	private _apply_look_at() {
-		const pv = this.node.pv;
-		if (!pv.tlookAt) {
-			return;
-		}
-		this.node.object.up.copy(pv.up);
-		this.node.object.lookAt(pv.lookAtPos);
+		// const pv = this.node.pv;
+		// if (!pv.tlookAt) {
+		// 	return;
+		// }
+		// this.node.object.up.copy(pv.up);
+		// this.node.object.lookAt(pv.lookAtPos);
 		// const target_node = this.node.p.look_at.found_node_with_context(NodeContext.OBJ);
 		// if (target_node) {
 		// 	const target_object = target_node.object;
@@ -164,7 +165,7 @@ export class TransformController {
 	private _keep_pos_when_parenting_m_object = new Matrix4();
 	private _keep_pos_when_parenting_m_new_parent_inv = new Matrix4();
 	update_node_transform_params_if_required(new_parent_object: Object3D) {
-		if (!this.node.pv.keepPosWhenParenting) {
+		if (!isBooleanTrue(this.node.pv.keepPosWhenParenting)) {
 			return;
 		}
 		if (!this.node.scene().loadingController.loaded()) {

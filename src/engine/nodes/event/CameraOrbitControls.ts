@@ -14,6 +14,7 @@ import {BaseNodeType} from '../_Base';
 // import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
@@ -140,18 +141,18 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	}
 
 	setup_controls(controls: OrbitControls) {
-		controls.enabled = this.pv.enabled;
+		controls.enabled = isBooleanTrue(this.pv.enabled);
 
-		controls.enablePan = this.pv.allowPan;
-		controls.enableRotate = this.pv.allowRotate;
-		controls.enableZoom = this.pv.allowZoom;
+		controls.enablePan = isBooleanTrue(this.pv.allowPan);
+		controls.enableRotate = isBooleanTrue(this.pv.allowRotate);
+		controls.enableZoom = isBooleanTrue(this.pv.allowZoom);
 
-		controls.enableDamping = this.pv.tdamping;
+		controls.enableDamping = isBooleanTrue(this.pv.tdamping);
 		controls.dampingFactor = this.pv.damping;
 
 		controls.rotateSpeed = this.pv.rotateSpeed;
 
-		controls.screenSpacePanning = this.pv.screenSpacePanning;
+		controls.screenSpacePanning = isBooleanTrue(this.pv.screenSpacePanning);
 
 		controls.minDistance = this.pv.minDistance;
 		controls.maxDistance = this.pv.maxDistance;
@@ -164,7 +165,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 			controls.update(); // necessary if target is not 0,0,0
 		}
 
-		controls.enableKeys = this.pv.enableKeys;
+		controls.enableKeys = isBooleanTrue(this.pv.enableKeys);
 		if (controls.enableKeys) {
 			controls.keyMode = KEYS_MODES[this.pv.keysMode];
 			controls.keyRotateSpeedVertical = this.pv.keysRotateSpeedVertical;
@@ -173,7 +174,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		}
 	}
 	private _set_azimuth_angle(controls: OrbitControls) {
-		if (this.pv.limitAzimuthAngle) {
+		if (isBooleanTrue(this.pv.limitAzimuthAngle)) {
 			controls.minAzimuthAngle = this.pv.azimuthAngleRange.x;
 			controls.maxAzimuthAngle = this.pv.azimuthAngleRange.y;
 		} else {
@@ -183,7 +184,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	}
 
 	update_required(): boolean {
-		return this.pv.tdamping;
+		return isBooleanTrue(this.pv.tdamping);
 	}
 
 	// set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void {
@@ -194,7 +195,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 
 	private _target_array: Number3 = [0, 0, 0];
 	private _on_controls_end(controls: OrbitControls) {
-		if (!this.pv.allowPan) {
+		if (!isBooleanTrue(this.pv.allowPan)) {
 			// target should not be updated if pan is not allowed
 			return;
 		}

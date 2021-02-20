@@ -118,6 +118,7 @@ export class CSS2DRenderer {
 	}
 
 	render(scene: Scene, camera: Camera) {
+		console.log('css render');
 		if (scene.autoUpdate === true) scene.updateMatrixWorld();
 		if (camera.parent === null) camera.updateMatrixWorld();
 

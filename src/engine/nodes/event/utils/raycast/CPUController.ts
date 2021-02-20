@@ -26,6 +26,7 @@ import {RaycastCPUVelocityController} from './VelocityController';
 import {CoreType} from '../../../../../core/Type';
 
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
+import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
 export class RaycastCPUController {
 	private _mouse: Vector2 = new Vector2();
@@ -89,7 +90,7 @@ export class RaycastCPUController {
 			if (intersection) {
 				this._set_position_param(intersection.point);
 
-				if (this._node.pv.geoAttribute == true) {
+				if (isBooleanTrue(this._node.pv.geoAttribute)) {
 					this._resolve_geometry_attribute(intersection);
 				}
 				context.value = {intersect: intersection};
@@ -219,7 +220,7 @@ export class RaycastCPUController {
 	private _hit_position_array: Number3 = [0, 0, 0];
 	private _set_position_param(hit_position: Vector3) {
 		hit_position.toArray(this._hit_position_array);
-		if (this._node.pv.tpositionTarget) {
+		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
 			if (Poly.playerMode()) {
 				this._found_position_target_param =
 					this._found_position_target_param ||
@@ -248,8 +249,8 @@ export class RaycastCPUController {
 		}
 
 		let camera_node: Readonly<BaseCameraObjNodeType> | undefined = context.cameraNode;
-		if (this._node.pv.overrideCamera) {
-			if (this._node.pv.overrideRay) {
+		if (isBooleanTrue(this._node.pv.overrideCamera)) {
+			if (isBooleanTrue(this._node.pv.overrideRay)) {
 				this._raycaster.ray.origin.copy(this._node.pv.rayOrigin);
 				this._raycaster.ray.direction.copy(this._node.pv.rayDirection);
 			} else {
@@ -260,7 +261,7 @@ export class RaycastCPUController {
 			}
 		}
 
-		if (camera_node && !this._node.pv.overrideRay) {
+		if (camera_node && !isBooleanTrue(this._node.pv.overrideRay)) {
 			camera_node.prepare_raycaster(this._mouse, this._raycaster);
 		}
 	}
@@ -280,7 +281,7 @@ export class RaycastCPUController {
 	private _update_target_from_node() {
 		const node = this._node.p.targetNode.value.ensure_node_context(NodeContext.OBJ) as BaseObjNodeType;
 		if (node) {
-			const found_obj = this._node.pv.traverseChildren
+			const found_obj = isBooleanTrue(this._node.pv.traverseChildren)
 				? node.object
 				: (node as GeoObjNode).childrenDisplayController.sopGroup();
 			if (found_obj) {

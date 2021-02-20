@@ -5,6 +5,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {PointLight} from 'three/src/lights/PointLight';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface PointLightSopParams extends DefaultOperationParams {
 	color: Color;
@@ -49,7 +50,7 @@ export class PointLightSopOperation extends BaseSopOperation {
 		light.decay = params.decay;
 		light.distance = params.distance;
 
-		light.castShadow = params.castShadows;
+		light.castShadow = isBooleanTrue(params.castShadows);
 		light.shadow.mapSize.copy(params.shadowRes);
 		light.shadow.camera.near = params.shadowNear;
 		light.shadow.camera.far = params.shadowFar;

@@ -10,6 +10,7 @@ import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 class MessageParamsConfig extends NodeParamsConfig {
 	/** @param toggle on for the message to be displayed in a popup */
@@ -41,10 +42,10 @@ export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
 	}
 
 	private _process_trigger_event(context: EventContext<MouseEvent>) {
-		if (this.pv.alert) {
+		if (isBooleanTrue(this.pv.alert)) {
 			alert(context);
 		}
-		if (this.pv.console) {
+		if (isBooleanTrue(this.pv.console)) {
 			console.log(this.fullPath(), Date.now(), context);
 		}
 		this.trigger_output(context);

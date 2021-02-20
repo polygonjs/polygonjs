@@ -17,10 +17,11 @@ import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapCon
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1);
-		size_attenuation = ParamConfig.BOOLEAN(1);
+		sizeAttenuation = ParamConfig.BOOLEAN(1);
 	};
 }
 
@@ -63,7 +64,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		this.depth_controller.update();
 
 		this.material.size = this.pv.size;
-		this.material.sizeAttenuation = this.pv.size_attenuation;
+		this.material.sizeAttenuation = isBooleanTrue(this.pv.sizeAttenuation);
 
 		this.set_material(this.material);
 	}

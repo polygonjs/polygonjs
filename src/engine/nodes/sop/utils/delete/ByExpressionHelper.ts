@@ -1,5 +1,6 @@
 import {DeleteSopNode} from '../../Delete';
 import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
 export class ByExpressionHelper {
 	constructor(private node: DeleteSopNode) {}
@@ -23,7 +24,7 @@ export class ByExpressionHelper {
 		}
 	}
 	private eval_expressions_without_expression(entities: CoreEntity[]) {
-		const value = this.node.pv.expression;
+		const value = isBooleanTrue(this.node.pv.expression);
 		if (value) {
 			for (let entity of entities) {
 				this.node.entity_selection_helper.select(entity);

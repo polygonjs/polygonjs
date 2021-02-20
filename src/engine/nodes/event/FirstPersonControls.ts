@@ -47,6 +47,9 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		return CameraControlsNodeType.FIRST_PERSON;
 	}
 	initializeNode() {
+		this.io.inputs.setNamedInputConnectionPoints([
+			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE, this.lock_controls.bind(this)),
+		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE),
 			new EventConnectionPoint(EVENT_CHANGE, EventConnectionPointType.BASE),
@@ -63,6 +66,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		this._bind_listeners_to_controls_instance(controls);
 		return controls;
 	}
+
 	protected _bind_listeners_to_controls_instance(controls: PointerLockControls) {
 		controls.addEventListener(EVENT_LOCK, () => {
 			this._createKeysEvents(controls);

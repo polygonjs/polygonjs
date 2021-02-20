@@ -6,6 +6,7 @@ import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface PlaneSopParams extends DefaultOperationParams {
 	size: Vector2;
@@ -78,7 +79,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 	private _create_plane(size: Vector2, params: PlaneSopParams) {
 		let segments_count = new Vector2(1, 1);
 		size = size.clone();
-		if (params.useSegmentsCount) {
+		if (isBooleanTrue(params.useSegmentsCount)) {
 			segments_count.x = Math.floor(params.segments.x);
 			segments_count.y = Math.floor(params.segments.y);
 		} else {

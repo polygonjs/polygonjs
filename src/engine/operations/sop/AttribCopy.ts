@@ -5,6 +5,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 interface AttribCopySopParams extends DefaultOperationParams {
 	name: string;
 	tnewName: boolean;
@@ -72,7 +73,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 				this.states?.error.set('not enough points in second input');
 			}
 
-			const dest_name = params.tnewName ? params.newName : attrib_name;
+			const dest_name = isBooleanTrue(params.tnewName) ? params.newName : attrib_name;
 			let dest_attribute = dest_geometry.getAttribute(dest_name);
 			if (dest_attribute) {
 				this._fill_dest_array(dest_attribute as BufferAttribute, src_attrib as BufferAttribute, params);

@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	focalDepth = ParamConfig.FLOAT(10, {
 		range: [0, 50],
@@ -145,10 +146,10 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		pass.bokeh_uniforms['dithering'].value = this.pv.dithering;
 
 		// booleans
-		pass.bokeh_uniforms['noise'].value = this.pv.noise ? 1 : 0;
-		pass.bokeh_uniforms['pentagon'].value = this.pv.pentagon ? 1 : 0;
-		pass.bokeh_uniforms['vignetting'].value = this.pv.vignetting ? 1 : 0;
-		pass.bokeh_uniforms['depthblur'].value = this.pv.depthBlur ? 1 : 0;
+		pass.bokeh_uniforms['noise'].value = isBooleanTrue(this.pv.noise) ? 1 : 0;
+		pass.bokeh_uniforms['pentagon'].value = isBooleanTrue(this.pv.pentagon) ? 1 : 0;
+		pass.bokeh_uniforms['vignetting'].value = isBooleanTrue(this.pv.vignetting) ? 1 : 0;
+		pass.bokeh_uniforms['depthblur'].value = isBooleanTrue(this.pv.depthBlur) ? 1 : 0;
 
 		// debug
 		pass.bokeh_uniforms['shaderFocus'].value = 0;

@@ -20,6 +20,7 @@ import {
 } from '../../../core/geometry/operation/Circle3Points';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to create the arc */
 	arc = ParamConfig.BOOLEAN(1);
@@ -93,15 +94,15 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 
 	private _create_circle(points: CorePoint[]) {
 		const circle3points = new Circle3Points({
-			arc: this.pv.arc,
-			center: this.pv.center,
+			arc: isBooleanTrue(this.pv.arc),
+			center: isBooleanTrue(this.pv.center),
 			pointsCountMode: POINTS_COUNT_MODE[this.pv.pointsCountMode],
 			segmentsLength: this.pv.segmentsLength,
 			segmentsCount: this.pv.segmentsCount,
-			full: this.pv.full,
+			full: isBooleanTrue(this.pv.full),
 			joinMode: JOIN_MODES[this.pv.joinMode],
-			addIdAttribute: this.pv.addIdAttribute,
-			addIdnAttribute: this.pv.addIdnAttribute,
+			addIdAttribute: isBooleanTrue(this.pv.addIdAttribute),
+			addIdnAttribute: isBooleanTrue(this.pv.addIdnAttribute),
 		});
 		points[0].getPosition(this.a);
 		points[1].getPosition(this.b);

@@ -7,6 +7,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CorePoint} from '../../../core/geometry/Point';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 interface AddSopParams extends DefaultOperationParams {
 	// create point
 	createPoint: boolean;
@@ -38,7 +39,7 @@ export class AddSopOperation extends BaseSopOperation {
 		return this.create_core_group_from_objects(objects);
 	}
 	private _create_point(objects: Object3D[], params: AddSopParams) {
-		if (!params.createPoint) {
+		if (!isBooleanTrue(params.createPoint)) {
 			return;
 		}
 		const geometry = new BufferGeometry();
@@ -55,7 +56,7 @@ export class AddSopOperation extends BaseSopOperation {
 	}
 
 	private _create_polygon(core_group: CoreGroup, objects: Object3D[], params: AddSopParams) {
-		if (!params.connectInputPoints) {
+		if (!isBooleanTrue(params.connectInputPoints)) {
 			return;
 		}
 		const points = core_group.points();

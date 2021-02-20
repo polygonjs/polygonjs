@@ -12,6 +12,7 @@ import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition) {
 	class PolyObjParamConfig extends NodeParamsConfig {
@@ -89,7 +90,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		//
 		//
 		cook() {
-			this.object.visible = this.pv.display;
+			this.object.visible = isBooleanTrue(this.pv.display);
 			this.cookController.end_cook();
 		}
 

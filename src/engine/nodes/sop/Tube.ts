@@ -12,6 +12,7 @@ import {CoreTransform} from '../../../core/Transform';
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class TubeSopParamsConfig extends NodeParamsConfig {
 	/** @param tube radius */
 	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
@@ -45,7 +46,7 @@ export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 			this.pv.height,
 			this.pv.segmentsRadial,
 			this.pv.segmentsHeight,
-			!this.pv.cap
+			!isBooleanTrue(this.pv.cap)
 		);
 
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);

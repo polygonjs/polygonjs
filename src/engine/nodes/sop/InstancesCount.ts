@@ -10,6 +10,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class InstancesCountSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if max is used */
 	useMax = ParamConfig.BOOLEAN(0);
@@ -39,7 +40,7 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 			const geometry = object.geometry;
 			if (geometry) {
 				if (geometry instanceof InstancedBufferGeometry) {
-					if (this.pv.useMax) {
+					if (isBooleanTrue(this.pv.useMax)) {
 						geometry.instanceCount = this.pv.max;
 					} else {
 						geometry.instanceCount = Infinity;

@@ -120,6 +120,7 @@ const WRAPPINGS: PolyDictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapp
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {CopRendererController} from './RendererController';
 import {BaseNodeType} from '../../_Base';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -308,28 +309,28 @@ export class TextureParamsController {
 	constructor(protected node: TextureCopNode) {}
 	update(texture: Texture) {
 		const pv = this.node.pv;
-		if (pv.tencoding) {
+		if (isBooleanTrue(pv.tencoding)) {
 			texture.encoding = pv.encoding;
 		}
-		if (pv.tadvanced) {
-			if (pv.tformat) {
+		if (isBooleanTrue(pv.tadvanced)) {
+			if (isBooleanTrue(pv.tformat)) {
 				texture.format = pv.format;
 			}
-			if (pv.ttype) {
+			if (isBooleanTrue(pv.ttype)) {
 				texture.type = pv.type;
 			}
 		}
-		if (pv.tmapping) {
+		if (isBooleanTrue(pv.tmapping)) {
 			texture.mapping = pv.mapping;
 		}
-		if (pv.twrap) {
+		if (isBooleanTrue(pv.twrap)) {
 			texture.wrapS = pv.wrapS;
 			texture.wrapT = pv.wrapT;
 		}
-		if (pv.tminFilter) {
+		if (isBooleanTrue(pv.tminFilter)) {
 			texture.minFilter = pv.minFilter;
 		}
-		if (pv.tminFilter) {
+		if (isBooleanTrue(pv.tminFilter)) {
 			texture.magFilter = pv.magFilter;
 		}
 		this._update_anisotropy(texture);
@@ -343,14 +344,14 @@ export class TextureParamsController {
 	private _renderer_controller: CopRendererController | undefined;
 	private async _update_anisotropy(texture: Texture) {
 		const pv = this.node.pv;
-		if (!pv.tanisotropy) {
+		if (!isBooleanTrue(pv.tanisotropy)) {
 			return;
 		}
 		this._renderer_controller = this._renderer_controller || new CopRendererController(this.node);
 		const renderer = await this._renderer_controller.renderer();
 		const max_anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-		if (pv.useRendererMaxAnisotropy) {
+		if (isBooleanTrue(pv.useRendererMaxAnisotropy)) {
 			texture.anisotropy = max_anisotropy;
 		} else {
 			texture.anisotropy = Math.min(pv.anisotropy, max_anisotropy);
@@ -358,7 +359,7 @@ export class TextureParamsController {
 	}
 
 	private _update_texture_transform(texture: Texture) {
-		if (!this.node.pv.ttransform) {
+		if (!isBooleanTrue(this.node.pv.ttransform)) {
 			return;
 		}
 		this._update_offset(texture, false);

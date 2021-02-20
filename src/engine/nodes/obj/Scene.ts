@@ -35,6 +35,7 @@ enum FogType {
 const FOG_TYPES: FogType[] = [FogType.LINEAR, FogType.EXPONENTIAL];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class SceneObjParamConfig extends NodeParamsConfig {
 	/** @param autoUpdate */
 	autoUpdate = ParamConfig.BOOLEAN(1);
@@ -153,8 +154,8 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	// }
 
 	cook() {
-		if (this.pv.autoUpdate != this.object.autoUpdate) {
-			this.object.autoUpdate = this.pv.autoUpdate;
+		if (isBooleanTrue(this.pv.autoUpdate) != this.object.autoUpdate) {
+			this.object.autoUpdate = isBooleanTrue(this.pv.autoUpdate);
 		}
 
 		this._update_background();
@@ -199,7 +200,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_fog() {
-		if (this.pv.useFog) {
+		if (isBooleanTrue(this.pv.useFog)) {
 			if (this.pv.fogType == FOG_TYPES.indexOf(FogType.LINEAR)) {
 				const fog = this.fog2();
 				this.object.fog = fog;
@@ -232,7 +233,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_enviromment() {
-		if (this.pv.useEnvironment) {
+		if (isBooleanTrue(this.pv.useEnvironment)) {
 			const node = this.p.environment.found_node();
 			if (node) {
 				if (node.nodeContext() == NodeContext.COP) {
@@ -256,7 +257,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	//
 	//
 	private _update_material_override() {
-		if (this.pv.useOverrideMaterial) {
+		if (isBooleanTrue(this.pv.useOverrideMaterial)) {
 			const node = this.p.overrideMaterial.found_node();
 			if (node) {
 				if (node.nodeContext() == NodeContext.MAT) {

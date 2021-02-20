@@ -3,6 +3,7 @@ import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
@@ -75,25 +76,25 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		return core_group;
 	}
 	private _update_object(object: Object3D, params: ObjectPropertiesSopParams) {
-		if (params.tname) {
+		if (isBooleanTrue(params.tname)) {
 			object.name = params.name;
 		}
-		if (params.trenderOrder) {
+		if (isBooleanTrue(params.trenderOrder)) {
 			object.renderOrder = params.renderOrder;
 		}
-		if (params.tfrustumCulled) {
+		if (isBooleanTrue(params.tfrustumCulled)) {
 			object.frustumCulled = params.frustumCulled;
 		}
-		if (params.tmatrixAutoUpdate) {
+		if (isBooleanTrue(params.tmatrixAutoUpdate)) {
 			object.matrixAutoUpdate = params.matrixAutoUpdate;
 		}
-		if (params.tvisible) {
+		if (isBooleanTrue(params.tvisible)) {
 			object.visible = params.visible;
 		}
-		if (params.tcastShadow) {
+		if (isBooleanTrue(params.tcastShadow)) {
 			object.castShadow = params.castShadow;
 		}
-		if (params.treceiveShadow) {
+		if (isBooleanTrue(params.treceiveShadow)) {
 			object.receiveShadow = params.receiveShadow;
 		}
 	}

@@ -15,6 +15,7 @@ enum MergeMode {
 }
 const MERGE_MODES: MergeMode[] = [MergeMode.ALL_TOGETHER, MergeMode.ONE_AT_A_TIME];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class MergeAnimParamsConfig extends NodeParamsConfig {
 	/** @param mode (at the same time or one after the other) */
 	mode = ParamConfig.INTEGER(0, {
@@ -82,7 +83,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 	}
 	private _set_play_all_together(timeline_builder: TimelineBuilder) {
 		let position = timeline_builder.position();
-		if (!position || this.pv.overridePositions) {
+		if (!position || isBooleanTrue(this.pv.overridePositions)) {
 			position = new AnimationPosition();
 			position.set_mode(AnimationPositionMode.RELATIVE);
 			position.set_relative_to(AnimationPositionRelativeTo.START);
@@ -92,7 +93,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 	}
 	private _set_play_one_at_a_time(timeline_builder: TimelineBuilder) {
 		let position = timeline_builder.position();
-		if (!position || this.pv.overridePositions) {
+		if (!position || isBooleanTrue(this.pv.overridePositions)) {
 			position = new AnimationPosition();
 			position.set_mode(AnimationPositionMode.RELATIVE);
 			position.set_relative_to(AnimationPositionRelativeTo.END);

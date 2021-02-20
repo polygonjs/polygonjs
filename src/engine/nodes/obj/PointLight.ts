@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
 import {Mesh} from 'three/src/objects/Mesh';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
 	/** @param light color */
@@ -80,7 +81,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
-		this.light.castShadow = this.pv.castShadows;
+		this.light.castShadow = isBooleanTrue(this.pv.castShadows);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		this.light.shadow.camera.near = this.pv.shadowNear;
 		this.light.shadow.camera.far = this.pv.shadowFar;

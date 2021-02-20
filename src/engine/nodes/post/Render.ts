@@ -6,6 +6,7 @@ import {SceneObjNode} from '../obj/Scene';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface RenderPassWithContext extends RenderPass {
 	context: {
@@ -59,7 +60,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 	}
 
 	private async _update_camera(pass: RenderPassWithContext) {
-		if (this.pv.overrideCamera) {
+		if (isBooleanTrue(this.pv.overrideCamera)) {
 			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
 			}
@@ -76,7 +77,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 	}
 
 	private async _update_scene(pass: RenderPassWithContext) {
-		if (this.pv.overrideScene) {
+		if (isBooleanTrue(this.pv.overrideScene)) {
 			if (this.p.camera.isDirty()) {
 				await this.p.scene.compute();
 			}

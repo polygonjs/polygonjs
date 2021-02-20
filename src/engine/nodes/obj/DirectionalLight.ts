@@ -13,6 +13,7 @@ import {HelperController, HelperConstructor} from './utils/HelperController';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
 import {ColorConversion} from '../../../core/Color';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -108,7 +109,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		this._helper_controller.update();
 	}
 	update_shadow_params() {
-		this.light.castShadow = this.pv.castShadows;
+		this.light.castShadow = isBooleanTrue(this.pv.castShadows);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		// object.shadow.camera.near = this.pv.shadow_near
 		// object.shadow.camera.far = this.pv.shadow_far

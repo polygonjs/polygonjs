@@ -12,6 +12,7 @@ import {CoreTransform} from '../../../core/Transform';
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class ConeSopParamsConfig extends NodeParamsConfig {
 	/** @param cone radius */
 	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
@@ -48,7 +49,7 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 			this.pv.height,
 			this.pv.segmentsRadial,
 			this.pv.segmentsHeight,
-			!this.pv.cap,
+			!isBooleanTrue(this.pv.cap),
 			this.pv.thetaStart,
 			this.pv.thetaLength
 		);

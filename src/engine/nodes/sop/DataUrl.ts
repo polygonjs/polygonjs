@@ -14,6 +14,7 @@ import {CsvLoader} from '../../../core/loader/geometry/Csv';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export enum DataType {
 	JSON = 'json',
@@ -118,7 +119,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		const loader = new JsonDataLoader({
 			dataKeysPrefix: this.pv.jsonDataKeysPrefix,
 			skipEntries: this.pv.skipEntries,
-			doConvert: this.pv.convert,
+			doConvert: isBooleanTrue(this.pv.convert),
 			convertToNumeric: this.pv.convertToNumeric,
 		});
 
@@ -139,7 +140,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	//
 	//
 	async _load_csv() {
-		const attribNames = this.pv.readAttribNamesFromFile ? undefined : this.pv.attribNames.split(' ');
+		const attribNames = isBooleanTrue(this.pv.readAttribNamesFromFile) ? undefined : this.pv.attribNames.split(' ');
 		const loader = new CsvLoader(attribNames);
 		const geometry = await loader.load(this._url());
 		if (geometry) {

@@ -6,6 +6,7 @@ import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreTransform} from '../../../core/Transform';
 import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface CircleSopParams extends DefaultOperationParams {
 	radius: number;
@@ -30,7 +31,7 @@ export class CircleSopOperation extends BaseSopOperation {
 
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: CircleSopParams) {
-		if (params.open) {
+		if (isBooleanTrue(params.open)) {
 			return this._create_circle(params);
 		} else {
 			return this._create_disk(params);

@@ -19,6 +19,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	/** @param toggle off to hide */
 	display = ParamConfig.BOOLEAN(1);
@@ -116,7 +117,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	//
 	cook() {
 		this.transformController.update();
-		this.object.visible = this.pv.display;
+		this.object.visible = isBooleanTrue(this.pv.display);
 		this.object.renderOrder = this.pv.renderOrder;
 		this.cookController.end_cook();
 	}

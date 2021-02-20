@@ -10,6 +10,7 @@ import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 class BlockParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to block incoming events */
@@ -36,7 +37,7 @@ export class BlockEventNode extends TypedEventNode<BlockParamsConfig> {
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.blocking], () => {
-					return this.pv.blocking ? 'blocking (X)' : 'pass-through (-->)';
+					return isBooleanTrue(this.pv.blocking) ? 'blocking (X)' : 'pass-through (-->)';
 				});
 			});
 		});
@@ -47,7 +48,7 @@ export class BlockEventNode extends TypedEventNode<BlockParamsConfig> {
 	}
 
 	private _process_incoming_event(context: EventContext<MouseEvent>) {
-		if (!this.pv.blocking) {
+		if (!isBooleanTrue(this.pv.blocking)) {
 			this.trigger_output(context);
 		}
 	}

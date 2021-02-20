@@ -18,6 +18,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class NodeCookEventParamsConfig extends NodeParamsConfig {
 	/** @param mask to select which nodes this will cook or listen to */
 	mask = ParamConfig.STRING('/geo*', {
@@ -128,7 +129,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		return await Promise.all(promises);
 	}
 	private _cook_node(node: BaseNodeType) {
-		if (this.pv.force) {
+		if (isBooleanTrue(this.pv.force)) {
 			node.setDirty(this);
 		}
 		return node.requestContainer();

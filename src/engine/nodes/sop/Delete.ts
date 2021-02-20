@@ -38,6 +38,7 @@ import {ByExpressionHelper} from './utils/delete/ByExpressionHelper';
 import {ByBboxHelper} from './utils/delete/ByBboxHelper';
 import {Object3D} from 'three/src/core/Object3D';
 import {ByObjectTypeHelper} from './utils/delete/ByObjectTypeHelper';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
@@ -220,22 +221,22 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			this._marked_for_deletion_per_object_index.set(core_object.index(), false);
 		}
 
-		if (this.pv.byExpression) {
+		if (isBooleanTrue(this.pv.byExpression)) {
 			await this.byExpression_helper.eval_for_entities(core_objects);
 		}
 
-		if (this.pv.byObjectType) {
+		if (isBooleanTrue(this.pv.byObjectType)) {
 			this.byObjectType_helper.eval_for_objects(core_objects);
 		}
 
-		if (this.pv.byAttrib && this.pv.attribName != '') {
+		if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
 			this.byAttribute_helper.eval_for_entities(core_objects);
 		}
 
 		const core_objects_to_keep = this.entity_selection_helper.entities_to_keep() as CoreObject[];
 		const objects_to_keep = core_objects_to_keep.map((co) => co.object());
 
-		if (this.pv.keepPoints) {
+		if (isBooleanTrue(this.pv.keepPoints)) {
 			const core_objects_to_delete = this.entity_selection_helper.entities_to_delete() as CoreObject[];
 			for (let core_object_to_delete of core_objects_to_delete) {
 				const point_object = this._point_object(core_object_to_delete);
@@ -261,15 +262,15 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				this.entity_selection_helper.init(points);
 
 				const init_points_count = points.length;
-				if (this.pv.byExpression) {
+				if (isBooleanTrue(this.pv.byExpression)) {
 					await this.byExpression_helper.eval_for_entities(points);
 				}
 				// TODO: the helpers do not yet take into account if an entity has been selected or not.
 				// This could really speed up iterating through them, as I could skip the ones that have already been
-				if (this.pv.byAttrib && this.pv.attribName != '') {
+				if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
 					this.byAttribute_helper.eval_for_entities(points);
 				}
-				if (this.pv.byBbox) {
+				if (isBooleanTrue(this.pv.byBbox)) {
 					this.byBbox_helper.eval_for_points(points);
 				}
 				const kept_points = this.entity_selection_helper.entities_to_keep() as CorePoint[];

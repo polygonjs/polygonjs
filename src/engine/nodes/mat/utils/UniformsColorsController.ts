@@ -4,6 +4,7 @@ import {TypedMatNode} from '../_Base';
 import {Material} from 'three/src/materials/Material';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {IUniforms} from '../../../../core/geometry/Material';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -45,9 +46,9 @@ export class ColorsController extends BaseController {
 		if (material.uniforms.opacity) {
 			material.uniforms.opacity.value = pv.opacity;
 		}
-		material.transparent = pv.transparent || pv.opacity < 1;
+		material.transparent = isBooleanTrue(pv.transparent) || pv.opacity < 1;
 		material.depthTest = true;
 		material.alphaTest = pv.alphaTest;
-		material.fog = pv.useFog;
+		material.fog = isBooleanTrue(pv.useFog);
 	}
 }

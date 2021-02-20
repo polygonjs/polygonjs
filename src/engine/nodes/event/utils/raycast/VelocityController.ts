@@ -4,6 +4,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../../../../poly/ParamType';
 import {Vector3Param} from '../../../../params/Vector3';
 import {Poly} from '../../../../Poly';
+import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
 export enum CPUIntersectWith {
 	GEOMETRY = 'geometry',
@@ -20,7 +21,7 @@ export class RaycastCPUVelocityController {
 	private _hit_velocity: Vector3 = new Vector3(0, 0, 0);
 	private _hit_velocity_array: Number3 = [0, 0, 0];
 	process(hit_position: Vector3) {
-		if (!this._node.pv.tvelocity) {
+		if (!isBooleanTrue(this._node.pv.tvelocity)) {
 			return;
 		}
 
@@ -37,7 +38,7 @@ export class RaycastCPUVelocityController {
 		this._hit_velocity.copy(hit_position).sub(this._prev_position).divideScalar(delta).multiplyScalar(1000);
 		this._hit_velocity.toArray(this._hit_velocity_array);
 
-		if (this._node.pv.tvelocityTarget) {
+		if (isBooleanTrue(this._node.pv.tvelocityTarget)) {
 			if (Poly.playerMode()) {
 				this._found_velocity_target_param =
 					this._found_velocity_target_param ||

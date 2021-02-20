@@ -38,6 +38,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreType} from '../../../core/Type';
 import {NumericAttribValue} from '../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
@@ -111,13 +112,13 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const dest_points = core_group.points();
 
 		const simplex = this._get_simplex();
-		const useNormals = this.pv.useNormals && core_group.hasAttrib(ATTRIB_NORMAL);
+		const useNormals = isBooleanTrue(this.pv.useNormals) && core_group.hasAttrib(ATTRIB_NORMAL);
 		const target_attrib_size = core_group.attribSize(this.pv.attribName);
 		const operation = Operations[this.pv.operation];
 		const dest_attribName = this.pv.attribName;
-		const useRestAttributes: boolean = this.pv.useRestAttributes;
+		const useRestAttributes: boolean = isBooleanTrue(this.pv.useRestAttributes);
 		const base_amplitude: number = this.pv.amplitude;
-		const use_amplitudeAttrib: boolean = this.pv.tamplitudeAttrib;
+		const use_amplitudeAttrib: boolean = isBooleanTrue(this.pv.tamplitudeAttrib);
 
 		let restP: Vector3 | undefined;
 		let restN: Vector3 | undefined;
@@ -184,7 +185,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			}
 		}
 
-		if (this.pv.computeNormals) {
+		if (isBooleanTrue(this.pv.computeNormals)) {
 			core_group.computeVertexNormals();
 		}
 		this.setCoreGroup(core_group);

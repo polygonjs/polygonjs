@@ -12,6 +12,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {TypeAssert} from '../../poly/Assert';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 enum FlagUpdateMode {
 	SET = 'set',
@@ -95,7 +96,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		this._update_node_bypass_flag(node);
 	}
 	private _update_node_display_flag(node: BaseNodeType) {
-		if (!this.pv.tdisplay) {
+		if (!isBooleanTrue(this.pv.tdisplay)) {
 			return;
 		}
 		if (!node.flags?.has_display()) {
@@ -108,7 +109,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		const mode = FLAG_UPDATE_MODES[this.pv.displayMode];
 		switch (mode) {
 			case FlagUpdateMode.SET: {
-				display_flag.set(this.pv.display);
+				display_flag.set(isBooleanTrue(this.pv.display));
 				return;
 			}
 			case FlagUpdateMode.TOGGLE: {
@@ -119,7 +120,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		TypeAssert.unreachable(mode);
 	}
 	private _update_node_bypass_flag(node: BaseNodeType) {
-		if (!this.pv.tbypass) {
+		if (!isBooleanTrue(this.pv.tbypass)) {
 			return;
 		}
 		if (!node.flags?.has_bypass()) {
@@ -132,7 +133,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		const mode = FLAG_UPDATE_MODES[this.pv.bypassMode];
 		switch (mode) {
 			case FlagUpdateMode.SET: {
-				bypass_flag.set(this.pv.bypass);
+				bypass_flag.set(isBooleanTrue(this.pv.bypass));
 				return;
 			}
 			case FlagUpdateMode.TOGGLE: {

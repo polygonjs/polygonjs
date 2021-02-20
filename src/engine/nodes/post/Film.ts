@@ -18,6 +18,7 @@ interface FilmPassWithUniforms extends FilmPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class FilmPostParamsConfig extends NodeParamsConfig {
 	/** @param noise intensity */
 	noiseIntensity = ParamConfig.FLOAT(0.5, {
@@ -54,7 +55,7 @@ export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsC
 			this.pv.noiseIntensity,
 			this.pv.scanlinesIntensity,
 			this.pv.scanlinesCount,
-			this.pv.grayscale ? 1 : 0
+			isBooleanTrue(this.pv.grayscale) ? 1 : 0
 		) as FilmPassWithUniforms;
 		this.update_pass(pass);
 
@@ -64,6 +65,6 @@ export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsC
 		pass.uniforms.nIntensity.value = this.pv.noiseIntensity;
 		pass.uniforms.sIntensity.value = this.pv.scanlinesIntensity;
 		pass.uniforms.sCount.value = this.pv.scanlinesCount;
-		pass.uniforms.grayscale.value = this.pv.grayscale ? 1 : 0;
+		pass.uniforms.grayscale.value = isBooleanTrue(this.pv.grayscale) ? 1 : 0;
 	}
 }

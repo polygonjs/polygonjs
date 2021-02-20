@@ -15,6 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreFace} from '../../../core/geometry/Face';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class FaceSopParamsConfig extends NodeParamsConfig {
 	/** @param makes faces unique */
 	makeFacesUnique = ParamConfig.BOOLEAN(0);
@@ -51,19 +52,19 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 	cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		if (this.pv.makeFacesUnique) {
+		if (isBooleanTrue(this.pv.makeFacesUnique)) {
 			this._makeFacesUnique(core_group);
 
 			// we can only add face_center attrib
 			// if the faces have been split
 			// otherwise a point may belong to multiple faces
-			if (this.pv.addFaceCenterAttribute) {
+			if (isBooleanTrue(this.pv.addFaceCenterAttribute)) {
 				this._addFaceCenterAttribute(core_group);
 			}
-			if (this.pv.addFaceId) {
+			if (isBooleanTrue(this.pv.addFaceId)) {
 				this._addFaceId(core_group);
 			}
-			if (this.pv.transform) {
+			if (isBooleanTrue(this.pv.transform)) {
 				this._transform_faces(core_group);
 			}
 		}

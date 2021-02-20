@@ -9,6 +9,7 @@ import {CoreIterator} from '../../../core/Iterator';
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreType} from '../../../core/Type';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface ScatterSopParams extends DefaultOperationParams {
 	pointsCount: number;
@@ -57,7 +58,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 
 		const positions: number[] = [];
 		let attrib_names: string[] = [];
-		if (params.transferAttributes) {
+		if (isBooleanTrue(params.transferAttributes)) {
 			attrib_names = core_group.attribNamesMatchingMask(params.attributesToTransfer);
 		}
 
@@ -142,14 +143,14 @@ export class ScatterSopOperation extends BaseSopOperation {
 			);
 		}
 
-		if (params.addIdAttribute || params.addIdnAttribute) {
+		if (isBooleanTrue(params.addIdAttribute) || isBooleanTrue(params.addIdnAttribute)) {
 			const pointsCount = params.pointsCount;
 			const ids = ArrayUtils.range(pointsCount);
-			if (params.addIdAttribute) {
+			if (isBooleanTrue(params.addIdAttribute)) {
 				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
 			}
 			const idns = ids.map((id) => id / (pointsCount - 1));
-			if (params.addIdnAttribute) {
+			if (isBooleanTrue(params.addIdnAttribute)) {
 				geometry.setAttribute('idn', new BufferAttribute(new Float32Array(idns), 1));
 			}
 		}

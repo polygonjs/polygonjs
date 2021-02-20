@@ -15,6 +15,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
@@ -72,14 +73,14 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		if (this.pv.edit) {
+		if (isBooleanTrue(this.pv.edit)) {
 			await this._eval_expressions_for_core_group(core_group);
 		} else {
 			if (this.pv.recompute) {
 				core_group.computeVertexNormals();
 			}
 		}
-		if (this.pv.invert) {
+		if (isBooleanTrue(this.pv.invert)) {
 			this._invert_normals(core_group);
 		}
 
@@ -106,7 +107,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const array = attrib.array as number[];
 
 		// x
-		if (this.pv.updateX) {
+		if (isBooleanTrue(this.pv.updateX)) {
 			if (this.p.x.hasExpression() && this.p.x.expressionController) {
 				await this.p.x.expressionController.compute_expression_for_points(points, (point, value) => {
 					array[point.index() * 3 + 0] = value;
@@ -120,7 +121,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			}
 		}
 		// y
-		if (this.pv.updateY) {
+		if (isBooleanTrue(this.pv.updateY)) {
 			if (this.p.y.hasExpression() && this.p.y.expressionController) {
 				await this.p.y.expressionController.compute_expression_for_points(points, (point, value) => {
 					array[point.index() * 3 + 1] = value;
@@ -134,7 +135,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			}
 		}
 		// z
-		if (this.pv.updateZ) {
+		if (isBooleanTrue(this.pv.updateZ)) {
 			if (this.p.z.hasExpression() && this.p.z.expressionController) {
 				await this.p.z.expressionController.compute_expression_for_points(points, (point, value) => {
 					array[point.index() * 3 + 2] = value;

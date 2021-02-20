@@ -13,6 +13,7 @@ import {BaseNodeType} from '../_Base';
 import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param distance when switching between high res and mid res (first input and second input) */
 	distance0 = ParamConfig.FLOAT(1);
@@ -63,7 +64,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		this._add_level(input_contents[1], this.pv.distance0);
 		this._add_level(input_contents[2], this.pv.distance1);
 
-		this._lod.autoUpdate = this.pv.autoUpdate;
+		this._lod.autoUpdate = isBooleanTrue(this.pv.autoUpdate);
 
 		this.setObject(this._lod);
 	}

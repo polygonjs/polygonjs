@@ -11,6 +11,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class DrawRangeSopParamsConfig extends NodeParamsConfig {
 	/** @param start of the draw range */
 	start = ParamConfig.INTEGER(0, {
@@ -46,7 +47,7 @@ export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
 			if (geometry) {
 				const draw_range = geometry.drawRange;
 				draw_range.start = this.pv.start;
-				if (this.pv.useCount) {
+				if (isBooleanTrue(this.pv.useCount)) {
 					draw_range.count = this.pv.count;
 				} else {
 					draw_range.count = Infinity;

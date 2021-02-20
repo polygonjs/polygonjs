@@ -7,6 +7,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
 import {ShapePath} from 'three/src/extras/core/ShapePath';
 import {PolyScene} from '../../engine/scene/PolyScene';
+import {isBooleanTrue} from '../BooleanValue';
 
 interface CoreSVGLoaderOptions {
 	// fill
@@ -63,13 +64,13 @@ export class CoreSVGLoader {
 
 			const userData: SVGPathUserData = (path as any).userData;
 			const fillColor = userData.style.fill;
-			if (options.drawFillShapes && fillColor !== undefined && fillColor !== 'none') {
+			if (isBooleanTrue(options.drawFillShapes) && fillColor !== undefined && fillColor !== 'none') {
 				this._drawShapes(group, path, options);
 			}
 
 			const strokeColor = userData.style.stroke;
 
-			if (options.drawStrokes && strokeColor !== undefined && strokeColor !== 'none') {
+			if (isBooleanTrue(options.drawStrokes) && strokeColor !== undefined && strokeColor !== 'none') {
 				this._drawStrokes(group, path, options);
 			}
 		}

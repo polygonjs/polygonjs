@@ -17,6 +17,7 @@ import {
 } from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export enum AttribType {
 	Float64BufferAttribute = 'Float64BufferAttribute',
@@ -102,7 +103,7 @@ export class AttribCastSopOperation extends BaseSopOperation {
 		const attrib_class = ATTRIB_CLASS_BY_TYPE[type];
 		const array_class = ARRAY_CLASS_BY_TYPE[type];
 
-		if (params.castAttributes) {
+		if (isBooleanTrue(params.castAttributes)) {
 			const attrib_names = CoreGeometry.attribNamesMatchingMask(geometry, params.mask);
 			for (let attrib_name of attrib_names) {
 				const attrib: BufferAttribute = geometry.attributes[attrib_name] as BufferAttribute;

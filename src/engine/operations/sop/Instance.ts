@@ -12,6 +12,7 @@ import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface InstanceSopParams extends DefaultOperationParams {
 	attributesToCopy: string;
@@ -51,7 +52,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 			if (type) {
 				const object = this.create_object(this._geometry, type);
 
-				if (params.applyMaterial) {
+				if (isBooleanTrue(params.applyMaterial)) {
 					const material = await this._get_material(params);
 					if (material) {
 						await this._applyMaterial(object as Mesh, material);
@@ -65,7 +66,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 	}
 
 	private async _get_material(params: InstanceSopParams) {
-		if (params.applyMaterial) {
+		if (isBooleanTrue(params.applyMaterial)) {
 			const material_node = params.material.ensure_node_context(NodeContext.MAT, this.states?.error);
 			if (material_node) {
 				this._globals_handler = this._globals_handler || new GlobalsGeometryHandler();

@@ -4,6 +4,7 @@ import {TypedMatNode} from '../_Base';
 import {Material} from 'three/src/materials/Material';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 enum LineCapType {
 	ROUND = 'round',
@@ -64,7 +65,7 @@ export class WireframeController extends BaseController {
 		const material = node.material;
 		const pv = node.pv;
 
-		material.wireframe = pv.wireframe;
+		material.wireframe = isBooleanTrue(pv.wireframe);
 		material.wireframeLinecap = LINE_CAP_TYPES[pv.wireframeLinecap];
 		material.wireframeLinejoin = LINE_JOIN_TYPES[pv.wireframeLinejoin];
 		material.needsUpdate = true;

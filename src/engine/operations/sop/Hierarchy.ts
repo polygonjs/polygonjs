@@ -5,6 +5,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Group} from 'three/src/objects/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface HierarchySopParams extends DefaultOperationParams {
 	mode: number;
@@ -157,7 +158,7 @@ export class HierarchySopOperation extends BaseSopOperation {
 		const maskValid = mask != '';
 
 		const parentObjects = maskValid ? this._findObjectsByMaskFromObjects(mask, objects) : objects;
-		if (params.debugObjectMask) {
+		if (isBooleanTrue(params.debugObjectMask)) {
 			console.log(parentObjects);
 		}
 

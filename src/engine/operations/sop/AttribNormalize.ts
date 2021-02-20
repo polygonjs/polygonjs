@@ -5,6 +5,7 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreString} from '../../../core/String';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 interface AttribNormalizeSopParams extends DefaultOperationParams {
 	mode: number;
 	name: string;
@@ -40,7 +41,7 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 				const src_attrib = geometry.getAttribute(attrib_name) as BufferAttribute;
 				if (src_attrib) {
 					let dest_attrib: BufferAttribute | undefined = src_attrib;
-					if (params.changeName && params.newName != '') {
+					if (isBooleanTrue(params.changeName) && params.newName != '') {
 						dest_attrib = geometry.getAttribute(params.newName) as BufferAttribute;
 						if (dest_attrib) {
 							dest_attrib.needsUpdate = true;

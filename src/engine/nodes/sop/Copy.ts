@@ -22,6 +22,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {TypeAssert} from '../../poly/Assert';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 enum TransformMode {
 	OBJECT = 0,
@@ -139,7 +140,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
 
 		for (let moved_object of moved_objects) {
-			if (this.pv.copyAttributes) {
+			if (isBooleanTrue(this.pv.copyAttributes)) {
 				this._copyAttributes_from_template(moved_object, template_point);
 			}
 
@@ -147,7 +148,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			// should I always only move the object?
 			// and have a toggle to bake back to the geo?
 			// or just enfore the use of a merge?
-			if (this.pv.transformOnly) {
+			if (isBooleanTrue(this.pv.transformOnly)) {
 				moved_object.applyMatrix4(matrix);
 			} else {
 				this._apply_matrix_to_object_or_geometry(moved_object, matrix);
@@ -195,7 +196,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 		if (stamped_instance_core_group) {
 			// duplicate or select from instance children
-			const moved_objects = this.pv.transformOnly
+			const moved_objects = isBooleanTrue(this.pv.transformOnly)
 				? // TODO: why is doing a transform slower than cloning the input??
 				  ArrayUtils.compact([stamped_instance_core_group.objects()[point_index]])
 				: stamped_instance_core_group.clone().objects();
@@ -207,7 +208,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
-		if (this.pv.useCopyExpr) {
+		if (isBooleanTrue(this.pv.useCopyExpr)) {
 			const container0 = await this.containerController.requestInputContainer(0);
 			if (container0) {
 				const core_group0 = container0.coreContent();

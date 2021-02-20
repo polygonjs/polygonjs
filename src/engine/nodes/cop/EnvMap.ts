@@ -10,6 +10,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {CopRendererController} from './utils/RendererController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
 	useCameraRenderer = ParamConfig.BOOLEAN(0);
@@ -49,7 +50,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			// pmremGenerator.dispose();
 			// texture.dispose();
 
-			if (this.pv.useCameraRenderer) {
+			if (isBooleanTrue(this.pv.useCameraRenderer)) {
 				this.set_texture(exrCubeRenderTarget.texture);
 			} else {
 				this._data_texture_controller =

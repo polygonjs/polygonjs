@@ -25,6 +25,7 @@ type ValueArrayByName = PolyDictionary<number[]>;
 import {ColorSopOperation} from '../../operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if the color should be copied from another attribute */
@@ -70,7 +71,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const core_objects = core_group.coreObjects();
 
 		for (let core_object of core_objects) {
-			if (this.pv.fromAttribute) {
+			if (isBooleanTrue(this.pv.fromAttribute)) {
 				this._set_fromAttribute(core_object);
 			} else {
 				const hasExpression = this.p.color.hasExpression();
@@ -159,7 +160,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this._create_init_color(core_geometry, DEFAULT_COLOR);
 
 		let new_color: Color;
-		if (this.pv.asHsv) {
+		if (isBooleanTrue(this.pv.asHsv)) {
 			new_color = new Color();
 			CoreColor.set_hsv(this.pv.color.r, this.pv.color.g, this.pv.color.b, new_color);
 		} else {
@@ -194,7 +195,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			}
 
 			// to hsv
-			if (this.pv.asHsv) {
+			if (isBooleanTrue(this.pv.asHsv)) {
 				let current = new Color();
 				let target = new Color();
 				let index;

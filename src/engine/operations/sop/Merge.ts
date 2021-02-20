@@ -9,6 +9,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Group} from 'three/src/objects/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;
@@ -31,7 +32,7 @@ export class MergeSopOperation extends BaseSopOperation {
 		for (let input_core_group of input_contents) {
 			if (input_core_group) {
 				const objects = input_core_group.objects();
-				if (params.compact) {
+				if (isBooleanTrue(params.compact)) {
 					for (let object of objects) {
 						object.traverse((child) => {
 							all_objects.push(child as Object3DWithGeometry);
@@ -46,7 +47,7 @@ export class MergeSopOperation extends BaseSopOperation {
 				}
 			}
 		}
-		if (params.compact) {
+		if (isBooleanTrue(params.compact)) {
 			all_objects = this._make_compact(all_objects);
 		}
 		for (let object of all_objects) {

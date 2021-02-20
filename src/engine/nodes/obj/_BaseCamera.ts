@@ -192,7 +192,7 @@ export class TypedThreejsCameraObjNode<
 		return (this._render_controller = this._render_controller || new RenderController(this));
 	}
 	protected _post_process_controller: PostProcessController | undefined;
-	get post_process_controller(): PostProcessController {
+	get postProcessController(): PostProcessController {
 		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
 	}
 
@@ -283,7 +283,7 @@ export class TypedThreejsCameraObjNode<
 		return new ThreejsViewer(element, this.scene(), this, viewer_properties);
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
-		node.post_process_controller.reset();
+		node.postProcessController.reset();
 	}
 }
 

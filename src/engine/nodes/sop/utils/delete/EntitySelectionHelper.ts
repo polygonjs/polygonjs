@@ -1,6 +1,7 @@
 import {DeleteSopNode} from '../../Delete';
 
 import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
 export class EntitySelectionHelper {
 	public readonly selected_state: Map<CoreEntity, boolean> = new Map();
@@ -26,10 +27,10 @@ export class EntitySelectionHelper {
 		}
 	}
 	entities_to_keep(): CoreEntity[] {
-		return this._entities_for_state(this.node.pv.invert);
+		return this._entities_for_state(isBooleanTrue(this.node.pv.invert));
 	}
 	entities_to_delete(): CoreEntity[] {
-		return this._entities_for_state(!this.node.pv.invert);
+		return this._entities_for_state(!isBooleanTrue(this.node.pv.invert));
 	}
 	private _entities_for_state(state: boolean): CoreEntity[] {
 		const required_state = state ? true : false;

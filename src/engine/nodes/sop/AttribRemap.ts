@@ -15,6 +15,7 @@ import {TypeAssert} from '../../poly/Assert';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to remap */
 	name = ParamConfig.STRING();
@@ -59,7 +60,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		this._get_remaped_values(attrib_size, values, remaped_values);
 
 		let target_name = this.pv.name;
-		if (this.pv.changeName) {
+		if (isBooleanTrue(this.pv.changeName)) {
 			target_name = this.pv.newName;
 			if (!core_group.hasAttrib(target_name)) {
 				core_group.addNumericVertexAttrib(target_name, attrib_size, 0);

@@ -16,6 +16,7 @@ import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class MeshPhongMatParamsConfig extends TextureAlphaMapParamConfig(
 	TextureMapParamConfig(SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))))
 ) {
@@ -55,8 +56,8 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 
-		if (this.material.flatShading != this.pv.flatShading) {
-			this.material.flatShading = this.pv.flatShading;
+		if (this.material.flatShading != isBooleanTrue(this.pv.flatShading)) {
+			this.material.flatShading = isBooleanTrue(this.pv.flatShading);
 			this.material.needsUpdate = true;
 		}
 		this.depth_controller.update();

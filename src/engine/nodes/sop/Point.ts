@@ -22,6 +22,7 @@ type ValueArrayByName = Map<string, number[]>;
 type ComponentOffset = 0 | 1 | 2;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class PointSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the x component */
 	updateX = ParamConfig.BOOLEAN(0);
@@ -87,7 +88,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			await this._eval_expressions_for_core_object(core_objects[i]);
 		}
 
-		if (this.pv.updateNormals) {
+		if (isBooleanTrue(this.pv.updateNormals)) {
 			core_group.computeVertexNormals();
 		}
 
