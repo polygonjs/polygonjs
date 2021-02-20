@@ -23,6 +23,9 @@ export class CameraDeviceOrientationControlsEventNode extends TypedCameraControl
 	static type() {
 		return CameraControlsNodeType.DEVICE_ORIENTATION;
 	}
+	endEventName() {
+		return 'end';
+	}
 
 	private _controls_by_element_id: Map<string, DeviceOrientationControls> = new Map();
 

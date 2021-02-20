@@ -4,6 +4,8 @@
  * @param
  * If you want to display HTML elements that follow the 3D objects, you will need to create this node, and set the camera css renderer to it. If you can CSSObjects in your scene, they will then be displayed.
  *
+ * Note that the CSS2DRenderer currently requires the WebGLRenderer to have a pixelRatio of 1. Since the default is 2 for desktop, you would need to assign your own WebGLRenderer node to the camera and set its pixelRatio to 1.
+ *
  */
 import {TypedRopNode} from './_Base';
 import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';

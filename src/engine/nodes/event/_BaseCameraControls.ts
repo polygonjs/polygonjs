@@ -65,6 +65,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 
 	abstract async create_controls_instance(camera: Camera, element: HTMLElement): Promise<CameraControls>;
 	// abstract set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void;
+	abstract endEventName(): string;
 }
 
 export type BaseCameraControlsEventNodeType = TypedCameraControlsEventNode<any>;

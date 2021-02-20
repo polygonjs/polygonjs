@@ -46,6 +46,10 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	static type() {
 		return CameraControlsNodeType.FIRST_PERSON;
 	}
+	endEventName() {
+		return 'unlock';
+	}
+
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE, this.lock_controls.bind(this)),

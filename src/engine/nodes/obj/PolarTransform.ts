@@ -4,6 +4,8 @@
  * @remarks
  * This node transforms its children with latitude and longitude controls, instead of typical translate and rotate. It makes it more intuitive to position objects such as lights.
  *
+ * Note that there is an equivalent node at the SOP level
+ *
  */
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
@@ -16,13 +18,17 @@ import {MathUtils} from 'three/src/math/MathUtils';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PolarTransformObjParamConfig extends NodeParamsConfig {
+	/** @param center of the transform */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
+	/** @param moves the objects along the longitude, which is equivalent to a rotation on the y axis */
 	longitude = ParamConfig.FLOAT(0, {
 		range: [0, 360],
 	});
+	/** @param moves the objects along the latitude, which is equivalent to a rotation on the z or x axis */
 	latitude = ParamConfig.FLOAT(0, {
 		range: [-180, 180],
 	});
+	/** @param moves the point aways from the center */
 	depth = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 	});

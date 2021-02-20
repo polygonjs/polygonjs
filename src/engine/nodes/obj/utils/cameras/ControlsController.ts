@@ -60,6 +60,7 @@ export class ThreejsCameraControlsController {
 		this._controls_node = controls_node;
 	}
 
+	private _controlsEndEventName: string | undefined;
 	async apply_controls(viewer: BaseViewerType) {
 		const canvas = viewer.canvas();
 		if (!canvas) {
@@ -67,6 +68,7 @@ export class ThreejsCameraControlsController {
 		}
 		const controls_node = await this.controls_node();
 		if (controls_node) {
+			this._controlsEndEventName = controls_node.endEventName();
 			const controls_id = controls_node.controls_id();
 			let controls_aleady_applied = false;
 
@@ -99,6 +101,7 @@ export class ThreejsCameraControlsController {
 		});
 
 		this._applied_controls_by_element_id.clear();
+		this._controlsEndEventName = undefined;
 	}
 	private _dispose_controls_for_element_id(html_element_id: string) {
 		const map_for_element = this._applied_controls_by_element_id.get(html_element_id);
@@ -159,17 +162,20 @@ export class ThreejsCameraControlsController {
 			controls.removeEventListener('change', this.controls_change_listener);
 			this.controls_change_listener = undefined;
 		}
-		if (this.controls_end_listener) {
-			controls.removeEventListener('end', this.controls_end_listener);
+		if (this.controls_end_listener && this._controlsEndEventName) {
+			controls.removeEventListener(this._controlsEndEventName, this.controls_end_listener);
 			this.controls_end_listener = undefined;
 		}
 	}
 	private _set_controls_events_to_update_on_end(controls: CameraControls) {
 		this._reset(controls);
+		if (!this._controlsEndEventName) {
+			return;
+		}
 		this.controls_end_listener = () => {
 			this.node.update_transform_params_from_object();
 		};
-		controls.addEventListener('end', this.controls_end_listener);
+		controls.addEventListener(this._controlsEndEventName, this.controls_end_listener);
 	}
 	private _set_controls_events_to_update_always(controls: CameraControls) {
 		this._reset(controls);

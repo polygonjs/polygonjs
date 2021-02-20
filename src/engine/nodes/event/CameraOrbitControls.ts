@@ -108,6 +108,9 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	static type() {
 		return CameraControlsNodeType.ORBIT;
 	}
+	endEventName() {
+		return 'end';
+	}
 	initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(OUTPUT_START, EventConnectionPointType.BASE),
