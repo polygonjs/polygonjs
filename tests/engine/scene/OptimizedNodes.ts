@@ -96,7 +96,7 @@ QUnit.test(
 
 		Poly.setPlayerMode(true);
 		const scene_player = await SceneJsonImporter.loadData(data);
-		assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 70);
+		assert.equal(scene_player.graph.next_id(), scene_no_player.graph.next_id() - 74);
 		assert.equal(
 			scene_player.nodesController.allNodes().length,
 			scene_no_player.nodesController.allNodes().length - 4
