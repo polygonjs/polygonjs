@@ -15,13 +15,13 @@ Or use from the CDN: `https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js`
 The API is designed to be very simple. Here is how you create a minimal scene with a box:
 
 ```javascript
-import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
+// import from the CDN
+import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
+// or from the npm module
+// import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
 
 // create a scene
 const scene = new PolyScene();
-// or if you are importing from the CDN:
-// const scene = new POLY.PolyScene();
-const rootNode = scene.root();
 
 // create a box
 const geo = rootNode.createNode('geo');
@@ -48,6 +48,7 @@ which should give you this (you can try it on [this page](https://rawcdn.githack
 Let's now look at an example that demonstrates how powerful a node-based engine can be:
 
 ```javascript
+import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
 // create a scene
 const scene = new POLY.PolyScene();
 const rootNode = scene.root();

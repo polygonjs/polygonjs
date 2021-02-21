@@ -11,6 +11,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
+const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
 // loaders
 const glsl = require('./loaders/glsl');
@@ -31,6 +32,7 @@ const plugins = [
 	new webpack.DefinePlugin({
 		__POLYGONJS_VERSION__: POLYGONJS_VERSION,
 	}),
+	new EsmWebpackPlugin(), //https://github.com/purtuga/esm-webpack-plugin
 ];
 
 if (TYPESCRIPT_TRANSPILE_ONLY) {
@@ -51,27 +53,30 @@ module.exports = (env = {}) => {
 			fs: 'empty', // to attempt bundling ammo-typed without error in prod
 		},
 		plugins: plugins,
+
 		output: {
-			// library: 'POLY',
-			// libraryTarget: 'umd',
+			// filename: '[name].js',
+			// // library: 'POLY',
+			// // libraryTarget: 'window',
 
-			// libraryTarget: 'window',
-			// globalObject: 'this',
-
-			// // filename: '[name].bundle.js'
-			filename: '[name].js',
-			// path: dist_path,
-			// library: 'POLY',
-
-			// 			path: dist_path,
-			// filename: "POLY.[name].js",
-			// library: ["POLY", "[name]"],
-			// libraryTarget: "umd"
-
-			libraryTarget: 'window',
-			// globalObject: 'this',
 			// libraryExport: 'default',
+			// libraryTarget: 'commonjs2',
+			// auxiliaryComment: {
+			// 	root: 'Root Comment',
+			// 	commonjs: 'CommonJS Comment',
+			// 	commonjs2: 'CommonJS2 Comment',
+			// 	amd: 'AMD Comment',
+			// },
+
+			// iife: false,
+			// libraryTarget: 'module',
+			// scriptType: 'module',
+
+			// libraryTarget: 'commonjs',
+
+			// options for https://github.com/purtuga/esm-webpack-plugin
 			library: 'POLY',
+			libraryTarget: 'var',
 		},
 		resolve: {
 			// modules: [path.resolve(__dirname, '../../node_modules')],

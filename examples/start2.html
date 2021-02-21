@@ -40,10 +40,10 @@
 		</div>
 		<div id="app"></div>
 
-		<script src="https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js"></script>
 		<script type="module">
+			import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
 			// create a scene
-			const scene = new POLY.PolyScene();
+			const scene = new PolyScene();
 			const rootNode = scene.root();
 
 			// create a geo node to add the geometry nodes we will need

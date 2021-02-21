@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Consume Library Test</title>
+		<style>
+			html,
+			body,
+			#app {
+				margin: 0px;
+				height: 100%;
+			}
 
-<head>
-	<meta charset="utf-8" />
-	<title>Consume Library Test</title>
-	<style>
-		html,
-		body,
-		#app {
-			margin: 0px;
-			height: 100%;
-		}
+			canvas {
+				display: block;
+				height: 100%;
+			}
+		</style>
+	</head>
 
-		canvas {
-			display: block;
-			height: 100%;
-		}
-	</style>
-</head>
+	<body>
+		<div id="app"></div>
+	</body>
+	<p>
+		In order to only require specific nodes, you would currently need to use a bundler, as there is not yet a
+		separate export per node.
+	</p>
 
-<body>
-	<div id="app"></div>
-</body>
-<script src="/dist/engine/scene/PolyScene.js"></script>
+	<!-- <script src="/dist/engine/scene/PolyScene.js"></script>
 <script src="/dist/engine/nodes/obj/Geo.js"></script>
 <script src="/dist/engine/nodes/obj/HemisphereLight.js"></script>
 <script src="/dist/engine/nodes/obj/PerspectiveCamera.js"></script>
@@ -53,6 +57,5 @@
 	} else {
 		console.error('element #app not found');
 	}
-</script>
-
+</script> -->
 </html>
