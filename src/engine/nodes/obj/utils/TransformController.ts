@@ -54,9 +54,9 @@ export function TransformedParamConfig<TBase extends Constructor>(
 		// 	visibleIf: {tlookAt: 1},
 		// 	nodeSelection: {context: NodeContext.OBJ},
 		// });
-		up = ParamConfig.VECTOR3([0, 1, 0], {
-			visibleIf: {tlookAt: 1},
-		});
+		// up = ParamConfig.VECTOR3([0, 1, 0], {
+		// 	visibleIf: {tlookAt: 1},
+		// });
 	};
 }
 class TransformedParamsConfig extends TransformedParamConfig(NodeParamsConfig) {}
