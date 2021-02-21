@@ -41,9 +41,9 @@ perspectiveCamera1.p.controls.setNode(orbitsControls);
 perspectiveCamera1.createViewer(document.getElementById('app'));
 ```
 
-which should give you this (you can try it on [this page](https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start.html)):
+which should give you this (you can try it on [this page](https://polygonjs.com/examples/start.html)):
 
-<a href="https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start.gif" /></a>
+<a href="https://polygonjs.com/examples/start.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start.gif" /></a>
 
 Let's now look at an example that demonstrates how powerful a node-based engine can be:
 
@@ -125,9 +125,9 @@ document.getElementById('boxInput').addEventListener('input', function (event) {
 
 And by updating the parameter size of the box, **every node that depends on it will recook** and update the geometry displayed on screen.
 
-By adding a few more events, we get the following (you can try it on [this page](https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start2.html)):
+By adding a few more events, we get the following (you can try it on [this page](https://polygonjs.com/examples/start2.html)):
 
-<a href="https://rawcdn.githack.com/polygonjs/polygonjs/c294ba1083086d25b5d8aaa2b0254d293b0e2f3e/examples/start2.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start2.gif" /></a>
+<a href="https://polygonjs.com/examples/start2.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start2.gif" /></a>
 
 What we've done is essentially create a procedural network, where nodes depend on their inputs. If the inputs update, the dependent nodes will also update accordingly. This allows us to **create complex 3D scenes in no time**.
 
