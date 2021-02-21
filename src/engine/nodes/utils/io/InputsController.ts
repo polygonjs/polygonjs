@@ -12,6 +12,7 @@ import {CoreType} from '../../../../core/Type';
 
 type OnUpdateHook = () => void;
 
+const MAX_INPUTS_COUNT_UNSET = 0;
 export class InputsController<NC extends NodeContext> {
 	private _graph_node: CoreGraphNode | undefined;
 	private _graph_node_inputs: CoreGraphNode[] = [];
@@ -19,7 +20,8 @@ export class InputsController<NC extends NodeContext> {
 	private _has_named_inputs: boolean = false;
 	private _named_input_connection_points: ConnectionPointTypeMap[NC][] | undefined;
 	private _min_inputs_count: number = 0;
-	private _max_inputs_count: number = 0;
+	private _max_inputs_count: number = MAX_INPUTS_COUNT_UNSET;
+	private _maxInputsCountOnInput: number = MAX_INPUTS_COUNT_UNSET;
 	private _depends_on_inputs: boolean = true;
 
 	// hooks
@@ -57,6 +59,9 @@ export class InputsController<NC extends NodeContext> {
 	}
 
 	private set_max_inputs_count(max_inputs_count: number) {
+		if (this._max_inputs_count == MAX_INPUTS_COUNT_UNSET) {
+			this._maxInputsCountOnInput = max_inputs_count;
+		}
 		this._max_inputs_count = max_inputs_count;
 		this.init_graph_node_inputs();
 	}
@@ -141,8 +146,11 @@ export class InputsController<NC extends NodeContext> {
 		return graph_input_node;
 	}
 
-	get max_inputs_count(): number {
+	maxInputsCount(): number {
 		return this._max_inputs_count || 0;
+	}
+	maxInputsCountOverriden(): boolean {
+		return this._max_inputs_count != this._maxInputsCountOnInput;
 	}
 	input_graph_node(input_index: number): CoreGraphNode {
 		return this._graph_node_inputs[input_index];

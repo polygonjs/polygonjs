@@ -9,7 +9,7 @@ export interface NodeUIDataJson {
 	y: number;
 	comment?: string;
 }
-const NODE_WIDTH_UNIT = 50;
+
 export class UIData {
 	private _position: Vector2 = new Vector2();
 	protected _width: number = 50;
@@ -28,21 +28,6 @@ export class UIData {
 		this._position.y = y;
 	}
 
-	// set_border_radius(radius: number) {
-	// 	this._border_radius = radius;
-	// }
-	// border_radius() {
-	// 	return this._border_radius;
-	// }
-
-	width() {
-		if (this._layout_vertical) {
-			const available_inputs = this.node.io.inputs.max_inputs_count || 0;
-			return Math.max(NODE_WIDTH_UNIT, NODE_WIDTH_UNIT * Math.ceil(available_inputs / 2));
-		} else {
-			return NODE_WIDTH_UNIT;
-		}
-	}
 	setComment(comment: string | undefined) {
 		this._comment = comment;
 		this.node.emit(NodeEvent.UI_DATA_COMMENT_UPDATED);

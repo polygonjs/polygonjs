@@ -1,7 +1,7 @@
 import {TypedNodeConnection} from './NodeConnection';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
-import { ArrayUtils } from '../../../../core/ArrayUtils';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 export class ConnectionsController<NC extends NodeContext> {
 	private _input_connections: Array<TypedNodeConnection<NC> | undefined> | undefined;
@@ -10,7 +10,7 @@ export class ConnectionsController<NC extends NodeContext> {
 	constructor(protected _node: TypedNode<NC, any>) {}
 
 	init_inputs() {
-		const count = this._node.io.inputs.max_inputs_count;
+		const count = this._node.io.inputs.maxInputsCount();
 		this._input_connections = new Array(count);
 	}
 
@@ -56,11 +56,11 @@ export class ConnectionsController<NC extends NodeContext> {
 			return this._input_connections[index];
 		}
 	}
-	first_input_connection(): TypedNodeConnection<NC>|null {
-		if(this._input_connections){
+	first_input_connection(): TypedNodeConnection<NC> | null {
+		if (this._input_connections) {
 			return ArrayUtils.compact(this._input_connections)[0];
 		} else {
-			return null
+			return null;
 		}
 	}
 	input_connections() {

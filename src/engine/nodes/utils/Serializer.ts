@@ -11,6 +11,7 @@ export interface NodeSerializerData {
 	ui_data_json: NodeUIDataJson;
 	error_message: string | undefined;
 	children: CoreGraphNodeId[];
+	maxInputsCount: number;
 	inputs: Array<CoreGraphNodeId | undefined>;
 	input_connection_output_indices: Array<number | undefined> | undefined;
 	named_input_connection_points: BaseConnectionPointData[];
@@ -43,15 +44,16 @@ export class NodeSerializer {
 		// 	spare_params_json_by_name[param_name] = param.graphNodeId();
 		// });
 
-		const data = {
+		const data: NodeSerializerData = {
 			name: this.node.name(),
 			type: this.node.type(),
 			graph_node_id: this.node.graphNodeId(),
 			is_dirty: this.node.isDirty(),
 			ui_data_json: this.node.uiData.toJSON(),
 			error_message: this.node.states.error.message(),
-			children: this.children_ids(),
-			inputs: this.input_ids(),
+			children: this.childrenIds(),
+			maxInputsCount: this.maxInputsCount(),
+			inputs: this.inputIds(),
 			input_connection_output_indices: this.input_connection_output_indices(),
 			named_input_connection_points: this.named_input_connection_points(),
 			named_output_connection_points: this.named_output_connection_points(),
@@ -75,11 +77,15 @@ export class NodeSerializer {
 		return data;
 	}
 
-	children_ids() {
+	childrenIds() {
 		return this.node.children().map((node) => node.graphNodeId());
 	}
 
-	input_ids(): (CoreGraphNodeId | undefined)[] {
+	maxInputsCount() {
+		return this.node.io.inputs.maxInputsCount();
+	}
+
+	inputIds(): (CoreGraphNodeId | undefined)[] {
 		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graphNodeId() : undefined));
 	}
 

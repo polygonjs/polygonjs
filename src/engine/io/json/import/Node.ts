@@ -58,6 +58,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		// this._node.lifecycle.set_creation_completed();
 	}
 	process_inputs_data(data: NodeJsonExporterData) {
+		const maxInputsCount = data.maxInputsCount;
+		if (maxInputsCount != null) {
+			this._node.io.inputs.setCount(1, maxInputsCount);
+		}
+
 		this.setInputs(data['inputs']);
 	}
 
@@ -139,7 +144,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	setInputs(inputs_data?: InputData[]) {
+	private setInputs(inputs_data?: InputData[]) {
 		if (!inputs_data) {
 			return;
 		}

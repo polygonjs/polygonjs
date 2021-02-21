@@ -33,6 +33,7 @@ export interface NodeJsonExporterData {
 	nodes?: PolyDictionary<NodeJsonExporterData>;
 	children_context?: NodeContext;
 	params?: PolyDictionary<ParamJsonExporterData<ParamType>>;
+	maxInputsCount?: number;
 	inputs?: InputData[];
 	connection_points?: IoConnectionPointsData;
 	selection?: string[];
@@ -88,6 +89,10 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 				this._data['params'] = params_data;
 			}
 			//data['custom'] = []
+			if (this._node.io.inputs.maxInputsCountOverriden()) {
+				this._data['maxInputsCount'] = this._node.io.inputs.maxInputsCount();
+			}
+
 			const inputs_data = this.inputs_data();
 			if (inputs_data.length > 0) {
 				this._data['inputs'] = inputs_data;

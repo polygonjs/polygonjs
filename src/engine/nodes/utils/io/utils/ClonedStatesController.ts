@@ -114,7 +114,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 			return;
 		}
 		if (this._cloned_state) {
-			const max_inputs = this.inputs_controller.max_inputs_count;
+			const max_inputs = this.inputs_controller.maxInputsCount();
 			const states: boolean[] = [];
 			for (let i = 0; i < max_inputs; i++) {
 				states[i] = this._get_clone_required_state(i);
