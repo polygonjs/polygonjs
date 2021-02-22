@@ -19,7 +19,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		this.addPostDirtyHook('cook_without_inputs_on_dirty', this._cook_without_inputs_bound);
 
 		this.io.inputs.set_depends_on_inputs(false);
-		this.io.connections.init_inputs();
+		this.io.connections.initInputs();
 		this.io.connection_points.spare_params.initializeNode();
 	}
 
@@ -62,7 +62,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		this.run_on_dispatch_hook(output_name, event_context);
 		const index = this.io.outputs.get_output_index(output_name);
 		if (index >= 0) {
-			const connections = this.io.connections.output_connections();
+			const connections = this.io.connections.outputConnections();
 			const current_connections = connections.filter((connection) => connection.output_index == index);
 			let dest_node: BaseEventNodeType;
 			for (let connection of current_connections) {

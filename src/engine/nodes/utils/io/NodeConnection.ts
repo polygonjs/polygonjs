@@ -26,8 +26,8 @@ export class TypedNodeConnection<NC extends NodeContext> {
 		this._id = TypedNodeConnection._next_id++;
 
 		if (this._node_src.io.connections && this._node_dest.io.connections) {
-			this._node_src.io.connections.add_output_connection(this);
-			this._node_dest.io.connections.add_input_connection(this);
+			this._node_src.io.connections.addOutputConnection(this);
+			this._node_dest.io.connections.addInputConnection(this);
 		}
 	}
 	get id() {
@@ -59,8 +59,8 @@ export class TypedNodeConnection<NC extends NodeContext> {
 
 	disconnect(options: DisconnectionOptions = {}) {
 		if (this._node_src.io.connections && this._node_dest.io.connections) {
-			this._node_src.io.connections.remove_output_connection(this);
-			this._node_dest.io.connections.remove_input_connection(this);
+			this._node_src.io.connections.removeOutputConnection(this);
+			this._node_dest.io.connections.removeInputConnection(this);
 		}
 
 		if (options.setInput === true) {

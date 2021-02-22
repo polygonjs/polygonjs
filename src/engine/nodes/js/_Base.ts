@@ -52,7 +52,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 
 	variable_for_input(name: string): string {
 		const input_index = this.io.inputs.get_input_index(name);
-		const connection = this.io.connections.input_connection(input_index);
+		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseJsNodeType;
 			const output_connection_point =

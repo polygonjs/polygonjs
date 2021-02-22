@@ -91,7 +91,7 @@ export class NodeSerializer {
 
 	input_connection_output_indices() {
 		return this.node.io.connections
-			.input_connections()
+			.inputConnections()
 			?.map((connection) => (connection != null ? connection.output_index : undefined));
 	}
 	named_input_connection_points() {

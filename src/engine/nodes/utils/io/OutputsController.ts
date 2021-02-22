@@ -75,7 +75,7 @@ export class OutputsController<NC extends NodeContext> {
 	setNamedOutputConnectionPoints(connection_points: ConnectionPointTypeMap[NC][], set_dirty: boolean = true) {
 		this._has_named_outputs = true;
 
-		const connections = this.node.io.connections.output_connections();
+		const connections = this.node.io.connections.outputConnections();
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {
@@ -101,7 +101,7 @@ export class OutputsController<NC extends NodeContext> {
 	used_output_names(): string[] {
 		const connections_controller = this.node.io.connections;
 		if (connections_controller) {
-			const output_connections = connections_controller.output_connections();
+			const output_connections = connections_controller.outputConnections();
 			let output_indices = output_connections.map((connection) => (connection ? connection.output_index : null));
 			output_indices = ArrayUtils.uniq(output_indices);
 			const used_output_indices: number[] = [];

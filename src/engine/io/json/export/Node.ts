@@ -207,7 +207,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		const data: InputData[] = [];
 		this._node.io.inputs.inputs().forEach((input, input_index) => {
 			if (input) {
-				const connection = this._node.io.connections.input_connection(input_index)!;
+				const connection = this._node.io.connections.inputConnection(input_index)!;
 				if (this._node.io.inputs.has_named_inputs) {
 					// const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
 					const output_index = connection.output_index;

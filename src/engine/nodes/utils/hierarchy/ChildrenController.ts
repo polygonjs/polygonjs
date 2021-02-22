@@ -212,9 +212,9 @@ export class HierarchyChildrenController {
 				this.selection.remove([child_node]);
 			}
 
-			const first_connection = child_node.io.connections.first_input_connection();
-			const input_connections = child_node.io.connections.input_connections();
-			const output_connections = child_node.io.connections.output_connections();
+			const first_connection = child_node.io.connections.firstInputConnection();
+			const input_connections = child_node.io.connections.inputConnections();
+			const output_connections = child_node.io.connections.outputConnections();
 			if (input_connections) {
 				for (let input_connection of input_connections) {
 					if (input_connection) {

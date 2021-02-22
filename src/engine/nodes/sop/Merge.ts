@@ -53,12 +53,14 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 					return this.pv.compact ? 'compact' : 'separate objects';
 				});
 			});
+			this.params.addOnSceneLoadHook('update inputs', () => {
+				this._callbackUpdateInputsCount();
+			});
 		});
 	}
 
 	private _operation: MergeSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
-		this._callbackUpdateInputsCount();
 		this._operation = this._operation || new MergeSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

@@ -9,9 +9,15 @@ export class ConnectionsController<NC extends NodeContext> {
 
 	constructor(protected _node: TypedNode<NC, any>) {}
 
-	init_inputs() {
+	initInputs() {
 		const count = this._node.io.inputs.maxInputsCount();
-		this._input_connections = new Array(count);
+		this._input_connections = this._input_connections || new Array(count);
+		// adjust the array if this method is called more than once
+		// which can be the case for nodes that have adjustable input counts
+		// such as sop/merge
+		while (this._input_connections.length < count) {
+			this._input_connections.push(undefined);
+		}
 	}
 
 	//
@@ -19,7 +25,7 @@ export class ConnectionsController<NC extends NodeContext> {
 	// INPUT CONNECTIONS
 	//
 	//
-	add_input_connection(connection: TypedNodeConnection<NC>) {
+	addInputConnection(connection: TypedNodeConnection<NC>) {
 		if (this._input_connections) {
 			// if (connection.input_index < this._input_connections.length) {
 			this._input_connections[connection.input_index] = connection;
@@ -30,7 +36,7 @@ export class ConnectionsController<NC extends NodeContext> {
 			console.warn(`input connections array not initialized`);
 		}
 	}
-	remove_input_connection(connection: TypedNodeConnection<NC>) {
+	removeInputConnection(connection: TypedNodeConnection<NC>) {
 		if (this._input_connections) {
 			if (connection.input_index < this._input_connections.length) {
 				this._input_connections[connection.input_index] = undefined;
@@ -51,19 +57,19 @@ export class ConnectionsController<NC extends NodeContext> {
 			console.warn(`input connections array not initialized`);
 		}
 	}
-	input_connection(index: number): TypedNodeConnection<NC> | undefined {
+	inputConnection(index: number): TypedNodeConnection<NC> | undefined {
 		if (this._input_connections) {
 			return this._input_connections[index];
 		}
 	}
-	first_input_connection(): TypedNodeConnection<NC> | null {
+	firstInputConnection(): TypedNodeConnection<NC> | null {
 		if (this._input_connections) {
 			return ArrayUtils.compact(this._input_connections)[0];
 		} else {
 			return null;
 		}
 	}
-	input_connections() {
+	inputConnections() {
 		return this._input_connections;
 	}
 
@@ -72,7 +78,7 @@ export class ConnectionsController<NC extends NodeContext> {
 	// OUTPUT CONNECTIONS
 	//
 	//
-	add_output_connection(connection: TypedNodeConnection<NC>) {
+	addOutputConnection(connection: TypedNodeConnection<NC>) {
 		const output_index = connection.output_index;
 		const id = connection.id;
 		let connections_by_id = this._output_connections.get(output_index);
@@ -84,7 +90,7 @@ export class ConnectionsController<NC extends NodeContext> {
 		// this._output_connections[output_index] = this._output_connections[output_index] || {};
 		// this._output_connections[output_index][id] = connection;
 	}
-	remove_output_connection(connection: TypedNodeConnection<NC>) {
+	removeOutputConnection(connection: TypedNodeConnection<NC>) {
 		const output_index = connection.output_index;
 		const id = connection.id;
 		let connections_by_id = this._output_connections.get(output_index);
@@ -94,7 +100,7 @@ export class ConnectionsController<NC extends NodeContext> {
 		// delete this._output_connections[output_index][id];
 	}
 
-	output_connections() {
+	outputConnections() {
 		let list: TypedNodeConnection<NC>[] = [];
 
 		this._output_connections.forEach((connections_by_id, output_index) => {

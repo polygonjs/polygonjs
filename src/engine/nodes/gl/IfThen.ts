@@ -17,7 +17,7 @@ export class IfThenGlNode extends SubnetGlNode {
 	}
 
 	protected _expected_inputs_count() {
-		const current_connections = this.io.connections.input_connections();
+		const current_connections = this.io.connections.inputConnections();
 		return current_connections ? Math.max(current_connections.length + 1, 2) : 2;
 	}
 
@@ -25,7 +25,7 @@ export class IfThenGlNode extends SubnetGlNode {
 		const types: GlConnectionPointType[] = [GlConnectionPointType.BOOL];
 
 		const default_type = GlConnectionPointType.FLOAT;
-		const current_connections = this.io.connections.input_connections();
+		const current_connections = this.io.connections.inputConnections();
 
 		const expected_count = this._expected_inputs_count();
 		for (let i = 1; i < expected_count; i++) {
@@ -56,7 +56,7 @@ export class IfThenGlNode extends SubnetGlNode {
 		if (index == 0) {
 			return CONDITION_INPUT_NAME;
 		} else {
-			const connection = this.io.connections.input_connection(index);
+			const connection = this.io.connections.inputConnection(index);
 			if (connection) {
 				const name = connection.src_connection_point().name();
 				return name;
@@ -106,7 +106,7 @@ export class IfThenGlNode extends SubnetGlNode {
 		const open_if_line = `if(${condition_value}){`;
 		body_lines.push(open_if_line);
 
-		const connections = this.io.connections.input_connections();
+		const connections = this.io.connections.inputConnections();
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {

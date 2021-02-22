@@ -233,7 +233,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			return false;
 		}
 
-		const output_nodes = node.io.connections.output_connections().map((c) => c.node_dest);
+		const output_nodes = node.io.connections.outputConnections().map((c) => c.node_dest);
 		let non_optimized_count = 0;
 		for (let output_node of output_nodes) {
 			if (!output_node.flags?.optimize?.active()) {

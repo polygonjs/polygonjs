@@ -39,7 +39,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 	}
 
 	protected _expected_inputs_count() {
-		const current_connections = this.io.connections.input_connections();
+		const current_connections = this.io.connections.inputConnections();
 		return current_connections ? current_connections.length + 1 : 1;
 	}
 
@@ -51,7 +51,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		];
 
 		const default_type = GlConnectionPointType.FLOAT;
-		const current_connections = this.io.connections.input_connections();
+		const current_connections = this.io.connections.inputConnections();
 
 		const expected_count = this._expected_inputs_count();
 		for (let i = OFFSET; i < expected_count; i++) {
@@ -87,7 +87,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		// 	case 2:
 		// 		return ForLoopInput.STEP;
 		// 	default: {
-		const connection = this.io.connections.input_connection(index);
+		const connection = this.io.connections.inputConnection(index);
 		if (connection) {
 			const name = connection.src_connection_point().name();
 			return name;
@@ -134,7 +134,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
 		}
-		const connections = this.io.connections.input_connections();
+		const connections = this.io.connections.inputConnections();
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {

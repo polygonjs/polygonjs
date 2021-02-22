@@ -275,7 +275,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this.input_connection_type(0);
 	}
 	input_connection_type(index: number): ConnectionPointEnumMap[NC] | undefined {
-		const connections = this.node.io.connections.input_connections();
+		const connections = this.node.io.connections.inputConnections();
 		if (connections) {
 			const connection = connections[index];
 			if (connection) {

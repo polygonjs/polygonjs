@@ -79,7 +79,7 @@ export class InputsController<NC extends NodeContext> {
 	setNamedInputConnectionPoints(connection_points: ConnectionPointTypeMap[NC][]) {
 		this._has_named_inputs = true;
 
-		const connections = this.node.io.connections.input_connections();
+		const connections = this.node.io.connections.inputConnections();
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {
@@ -167,7 +167,7 @@ export class InputsController<NC extends NodeContext> {
 		this.init_connections_controller_inputs();
 	}
 	private init_connections_controller_inputs() {
-		this.node.io.connections.init_inputs();
+		this.node.io.connections.initInputs();
 	}
 
 	is_any_input_dirty() {
@@ -333,7 +333,7 @@ export class InputsController<NC extends NodeContext> {
 		let old_output_index: number | null = null;
 		let old_connection: TypedNodeConnection<NC> | undefined = undefined;
 		if (this.node.io.connections) {
-			old_connection = this.node.io.connections.input_connection(input_index);
+			old_connection = this.node.io.connections.inputConnection(input_index);
 		}
 		if (old_connection) {
 			old_output_index = old_connection.output_index;

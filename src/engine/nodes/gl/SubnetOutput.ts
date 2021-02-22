@@ -44,7 +44,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		}
 		const body_lines: string[] = [];
 
-		const connections = this.io.connections.input_connections();
+		const connections = this.io.connections.inputConnections();
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {
