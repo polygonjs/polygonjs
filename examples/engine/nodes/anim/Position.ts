@@ -19,13 +19,7 @@ export function AnimPosition() {
 	plane.p.size.set([3, 3]);
 	objectProperties.p.tname.set(true);
 	objectProperties.p.name.set('animTarget');
-
-	// resets the transform of the objects
-	// to ensure that their pivot is at the center of the box
-	const transformReset = geo.createNode('transformReset');
-	transformReset.setInput(0, copy);
-	transformReset.p.mode.set(2);
-	transformReset.flags.display.set(true);
+	copy.flags.display.set(true);
 
 	// setup the animation
 	const animations = root.createNode('animations');
@@ -33,13 +27,13 @@ export function AnimPosition() {
 	// In this case, we target all objects of the THREE scene graph
 	// which care called "anim_target" (which is how we call them with the objectProperties above)
 	const target = animations.createNode('target');
-	target.p.objectMask.set('animTarget');
+	target.p.objectMask.set('*animTarget');
 	target.p.updateMatrix.set(1);
 	// set the name of the property updated by the animation.
 	// In this case, we will update the Y axis of the rotation
 	const propertyName = animations.createNode('propertyName');
 	propertyName.setInput(0, target);
-	propertyName.p.name.set('rotation.y');
+	propertyName.p.name.set('rotation.z');
 	// set the name of the property value we will animate to
 	const propertyValue = animations.createNode('propertyValue');
 	propertyValue.setInput(0, propertyName);

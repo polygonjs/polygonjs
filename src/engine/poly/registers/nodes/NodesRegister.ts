@@ -43,7 +43,8 @@ export class NodesRegister {
 
 		const already_registered_node = current_nodes_for_context.get(nodeType);
 		if (already_registered_node) {
-			throw new Error(`node ${context}/${nodeType} already registered`);
+			console.error(`node ${context}/${nodeType} already registered`);
+			return;
 		}
 		current_nodes_for_context.set(nodeType, node);
 
@@ -143,7 +144,7 @@ export class OperationsRegister {
 		if (already_registered_operation) {
 			const message = `operation ${context}/${operationType} already registered`;
 			console.error(message);
-			throw new Error(message);
+			return;
 		}
 		current_operations_for_context.set(operationType, operation);
 		this.poly.pluginsRegister.registerOperation(operation);

@@ -19,6 +19,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 var {AggressiveMergingPlugin} = require('webpack').optimize;
+const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
 module.exports = (env) => {
 	const common_options = common(env);
@@ -90,6 +91,10 @@ module.exports = (env) => {
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}
+	// options for https://github.com/purtuga/esm-webpack-plugin
+	common_options.plugins.push(new EsmWebpackPlugin());
+	common_options.output.library = 'POLY';
+	common_options.output.libraryTarget = 'var';
 
 	const config = merge(common_options, {
 		mode: 'production',

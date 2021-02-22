@@ -9,20 +9,29 @@ export function SopBlend() {
 	const geo = root.createNode('geo');
 	const box = geo.createNode('box');
 	const sphere = geo.createNode('sphere');
-	sphere.p.resolution.set([50, 50]);
+	box.p.size.set(1);
+	box.p.divisions.set(10);
+
+	// use a normals SOP to have the normals pointing outwards like a sphere
+	const normals = geo.createNode('normals');
+	normals.setInput(0, box);
+	normals.p.edit.set(true);
+	normals.p.updateX.set(true);
+	normals.p.updateY.set(true);
+	normals.p.updateZ.set(true);
+	normals.p.x.set('@P.x');
+	normals.p.y.set('@P.y');
+	normals.p.z.set('@P.z');
 
 	// use a transform ray SOP to snap the points of the sphere to the box
-	const transform = geo.createNode('transform');
 	const ray = geo.createNode('ray');
-	transform.setInput(0, sphere);
-	transform.p.scale.set(0.2);
-	ray.setInput(0, transform);
-	ray.setInput(1, box);
+	ray.setInput(0, normals);
+	ray.setInput(1, sphere);
 
 	// create a blend,
 	// to blend between the sphere and its projected version
 	const blend = geo.createNode('blend');
-	blend.setInput(0, sphere);
+	blend.setInput(0, box);
 	blend.setInput(1, ray);
 	blend.flags.display.set(true);
 

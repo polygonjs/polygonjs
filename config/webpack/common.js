@@ -11,7 +11,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
 // loaders
 const glsl = require('./loaders/glsl');
@@ -32,7 +31,6 @@ const plugins = [
 	new webpack.DefinePlugin({
 		__POLYGONJS_VERSION__: POLYGONJS_VERSION,
 	}),
-	new EsmWebpackPlugin(), //https://github.com/purtuga/esm-webpack-plugin
 ];
 
 if (TYPESCRIPT_TRANSPILE_ONLY) {
@@ -58,7 +56,6 @@ module.exports = (env = {}) => {
 			// filename: '[name].js',
 			// // library: 'POLY',
 			// // libraryTarget: 'window',
-
 			// libraryExport: 'default',
 			// libraryTarget: 'commonjs2',
 			// auxiliaryComment: {
@@ -67,16 +64,14 @@ module.exports = (env = {}) => {
 			// 	commonjs2: 'CommonJS2 Comment',
 			// 	amd: 'AMD Comment',
 			// },
-
 			// iife: false,
 			// libraryTarget: 'module',
 			// scriptType: 'module',
-
 			// libraryTarget: 'commonjs',
-
+			// this has been moved to prod.js
 			// options for https://github.com/purtuga/esm-webpack-plugin
-			library: 'POLY',
-			libraryTarget: 'var',
+			// library: 'POLY',
+			// libraryTarget: 'var',
 		},
 		resolve: {
 			// modules: [path.resolve(__dirname, '../../node_modules')],

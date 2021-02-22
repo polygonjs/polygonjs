@@ -21,5 +21,8 @@ export function FileSopNodePresets() {
 		wolf_obj: function (node: FileSopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/wolf.obj`);
 		},
+		dolphin_obj: function (node: FileSopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/dolphin.obj`);
+		},
 	};
 }

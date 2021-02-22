@@ -74,7 +74,6 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 		for (let point of core_group.points()) {
 			direction = isBooleanTrue(this.pv.useNormals) ? point.normal() : this.pv.direction;
 			this._raycaster.set(point.position(), direction);
-
 			first_intersect = this._raycaster.intersectObjects(core_group_collision.objects(), true)[0];
 			if (first_intersect) {
 				point.setPosition(first_intersect.point);

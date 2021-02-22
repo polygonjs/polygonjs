@@ -7,18 +7,18 @@ export class PropertyTarget {
 	clone() {
 		const property_target = new PropertyTarget();
 		if (this._node_path) {
-			property_target.set_node_path(this._node_path);
+			property_target.setNodePath(this._node_path);
 		}
 		if (this._object_mask) {
-			property_target.set_object_mask(this._object_mask);
+			property_target.setObjectMask(this._object_mask);
 		}
 		return property_target;
 	}
 
-	set_node_path(node_path: string) {
+	setNodePath(node_path: string) {
 		this._node_path = node_path;
 	}
-	set_object_mask(object_mask: string) {
+	setObjectMask(object_mask: string) {
 		this._object_mask = object_mask;
 	}
 	objects(scene: PolyScene) {

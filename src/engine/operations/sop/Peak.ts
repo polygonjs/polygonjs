@@ -15,7 +15,7 @@ interface PeakSopParams extends DefaultOperationParams {
 
 export class PeakSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: PeakSopParams = {
-		amount: 1,
+		amount: 0,
 	};
 	static type(): Readonly<'peak'> {
 		return 'peak';

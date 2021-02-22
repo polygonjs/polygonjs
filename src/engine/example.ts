@@ -24,6 +24,8 @@ import {SopBlend} from '../../examples/engine/nodes/sop/Blend';
 import SopBlendHTML from '../../examples/engine/nodes/sop/Blend.html';
 import {SopBox} from '../../examples/engine/nodes/sop/Box';
 import {SopFile} from '../../examples/engine/nodes/sop/File';
+import SopInstanceHTML from '../../examples/engine/nodes/sop/Instance.html';
+import {SopInstance} from '../../examples/engine/nodes/sop/Instance';
 import {SopNoise} from '../../examples/engine/nodes/sop/Noise';
 import SopNoiseHTML from '../../examples/engine/nodes/sop/Noise.html';
 import {SopRoundedBox} from '../../examples/engine/nodes/sop/RoundedBox';
@@ -65,9 +67,10 @@ const examples = {
 			AttribCopy: [SopAttribCopy, SopAttribCopyHTML],
 			AttribCreate: [SopAttribCreate, SopAttribCreateHTML],
 			Blend: [SopBlend, SopBlendHTML],
-			Box: [SopBox, SopNoiseHTML],
+			Box: [SopBox],
 			File: SopFile,
-			Noise: SopNoise,
+			Instance: [SopInstance, SopInstanceHTML],
+			Noise: [SopNoise, SopNoiseHTML],
 			RoundedBox: [SopRoundedBox, SopRoundedBoxHTML],
 			Sphere: [SopSphere, SopSphereHTML],
 			SphereIcosahedron: [SopSphereIcosahedron, SopSphereIcosahedronHTML],

@@ -3,7 +3,7 @@ QUnit.test('peak simple', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const peak1 = geo1.createNode('peak');
-
+	peak1.p.amount.set(1);
 	peak1.setInput(0, box1);
 
 	let container, size;

@@ -88,11 +88,11 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		const property_target = new PropertyTarget();
 		switch (type) {
 			case TargetType.NODE: {
-				property_target.set_node_path(this.pv.nodePath);
+				property_target.setNodePath(this.pv.nodePath);
 				return property_target;
 			}
 			case TargetType.SCENE_GRAPH: {
-				property_target.set_object_mask(this.pv.objectMask);
+				property_target.setObjectMask(this.pv.objectMask);
 				return property_target;
 			}
 		}

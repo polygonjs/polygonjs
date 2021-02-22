@@ -8,7 +8,7 @@ export function SopFile() {
 	// create a file node
 	const geo = root.createNode('geo');
 	const file = geo.createNode('file');
-	file.p.url.set('https://polygonjs.com/examples/models/wolf.obj');
+	file.p.url.set('https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/wolf.obj');
 
 	// add a light
 	root.createNode('hemisphereLight');
