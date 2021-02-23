@@ -6,7 +6,7 @@
 
 Polygonjs is a node-based 3D Webgl engine. [Learn more](https://polygonjs.com/).
 
-![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.001.jpg)
+![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.002.png?v=2)
 
 Install: `npm install @polygonjs/polygonjs` or `yarn add @polygonjs/polygonjs`.
 
