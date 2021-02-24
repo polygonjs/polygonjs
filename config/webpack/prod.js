@@ -100,6 +100,9 @@ module.exports = (env) => {
 		mode: 'production',
 		devtool: 'source-map',
 		optimization: {
+			// Currently the chunks are mostly the loaders, which are loaded via lazy imports.
+			// And those do not seem to be part of the chunks webpack detects via this function.
+			// Therefore they remain named 0.js, 1.js...
 			chunkIds: 'named',
 			// { automaticNameDelimiter?, automaticNameMaxLength?, cacheGroups?, chunks?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxInitialRequests?, maxSize?, minChunks?, minSize?, name? }
 			splitChunks: {
