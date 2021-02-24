@@ -112,19 +112,6 @@ export class RenderersController {
 		}
 		(renderer as POLYWebGLRenderer)._polygon_id = this._next_renderer_id += 1;
 
-		// there is a bug where 2 renderers are created from the beginning
-		// because the from_json of the viewer_component is called after
-		// the camera being set for the first time
-		// console.log("register renderer", renderer, renderer._polygon_id)
-
-		// this is being tested in PostProcess
-		// const canvas = renderer.domElement
-		// const gl = canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' )
-		// const extension_exist = gl.getExtension('OES_standard_derivatives')
-		// if(!extension_exist){
-		// 	console.warn("renderers controller: gl extension not available")
-		// }
-
 		this._renderers[(renderer as POLYWebGLRenderer)._polygon_id] = renderer;
 
 		if (Object.keys(this._renderers).length == 1) {
