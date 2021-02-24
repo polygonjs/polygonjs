@@ -48,7 +48,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
-	create_object() {
+	createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
@@ -113,6 +113,6 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		object.scale.copy(this._decomposed.s);
 		object.updateMatrix();
 
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }

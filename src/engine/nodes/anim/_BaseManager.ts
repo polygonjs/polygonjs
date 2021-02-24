@@ -8,7 +8,7 @@ export class BaseNetworkAnimNode<K extends NodeParamsConfig> extends TypedNode<N
 		return NodeContext.ANIM;
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 export class ParamLessBaseNetworkAnimNode extends BaseNetworkAnimNode<ParamLessNetworkAnimParamsConfig> {}

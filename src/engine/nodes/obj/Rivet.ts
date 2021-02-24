@@ -88,7 +88,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	private _resolved_sop_group: Group | undefined;
 	private _found_point_post = new Vector3();
 
-	create_object() {
+	createObject() {
 		const mesh = new Mesh();
 		mesh.matrixAutoUpdate = false;
 		return mesh;
@@ -143,7 +143,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		await this._update_resolved_object();
 		this._update_render_hook();
 		// this._update_updateMode();
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 	// private _remove_render_hook() {
 	// 	if (this._previous_on_before_render) {

@@ -14,6 +14,7 @@ import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
 import {ColorConversion} from '../../../core/Color';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 
 export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -57,7 +58,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 > {
 	params_config = ParamsConfig;
 	static type() {
-		return 'directionalLight';
+		return LightType.DIRECTIONAL;
 	}
 	private _target_target!: Object3D;
 	private _helper_controller = new HelperController<Mesh, DirectionalLight>(

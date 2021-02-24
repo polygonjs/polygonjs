@@ -14,7 +14,7 @@ import {
 } from '../../../rop/WebGLRenderer';
 import {CSS2DRendererRopNode} from '../../../rop/CSS2DRenderer';
 import {Css3DRendererRopNode} from '../../../rop/CSS3DRenderer';
-import {RopType} from '../../../../poly/registers/nodes/Rop';
+import {RopType} from '../../../../poly/registers/nodes/types/Rop';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {CoreUserAgent} from '../../../../../core/UserAgent';

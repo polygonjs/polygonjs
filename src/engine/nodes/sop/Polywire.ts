@@ -69,7 +69,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			geometry.dispose();
 		}
 		if (merged_geometry) {
-			const object = this.create_object(merged_geometry, ObjectType.MESH);
+			const object = this.createObject(merged_geometry, ObjectType.MESH);
 
 			this.setObject(object);
 		} else {

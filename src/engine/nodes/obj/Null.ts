@@ -25,7 +25,7 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
-	create_object() {
+	createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
@@ -49,6 +49,6 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 
 	cook() {
 		this.transformController.update();
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }

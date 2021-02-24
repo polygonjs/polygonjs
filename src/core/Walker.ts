@@ -39,7 +39,7 @@ export class TypedNodePathParamValue {
 		return cloned;
 	}
 
-	ensure_node_context<N extends NodeContext>(
+	ensureNodeContext<N extends NodeContext>(
 		context: N,
 		error_state?: ErrorState
 	): BaseNodeByContextMap[N] | undefined {

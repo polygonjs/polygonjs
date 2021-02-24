@@ -89,7 +89,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 	cook() {
 		this._update_resolved_nodes();
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	private process_event_trigger(event_context: EventContext<Event>) {

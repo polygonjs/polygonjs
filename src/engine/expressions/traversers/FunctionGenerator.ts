@@ -5,6 +5,7 @@
  *
  * - $F: current frame
  * - $T: current time
+ * - $OS: current node name
  * - $CH: current param name
  * - $CEX: input centroid x component
  * - $CEY: input centroid y component
@@ -489,7 +490,7 @@ export class FunctionGenerator extends BaseTraverser {
 				return direct_constant_name;
 			}
 
-			// scene or node globals: $F, $T, $CH, $OS
+			// scene or node globals: $F, $T, $OS, $CH, $OS
 			const method_name = `traverse_Identifier_${identifier_name_without_dollar_sign}`;
 			const method = (this as any)[method_name];
 			if (method) {
@@ -518,6 +519,9 @@ export class FunctionGenerator extends BaseTraverser {
 	protected traverse_Identifier_T(): string {
 		this.immutable_dependencies.push(this.param.scene().timeController.graphNode);
 		return `param.scene().timeController.time()`;
+	}
+	protected traverse_Identifier_OS(): string {
+		return `${QUOTE}${this.param.node.name()}${QUOTE}`;
 	}
 	protected traverse_Identifier_CH(): string {
 		return `${QUOTE}${this.param.name()}${QUOTE}`;

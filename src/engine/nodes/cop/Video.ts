@@ -132,7 +132,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			this.texture_params_controller.update(texture);
 			this.set_texture(texture);
 		} else {
-			this.cookController.end_cook();
+			this.cookController.endCook();
 		}
 	}
 

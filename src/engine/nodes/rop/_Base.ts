@@ -23,7 +23,7 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	// }
 
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 

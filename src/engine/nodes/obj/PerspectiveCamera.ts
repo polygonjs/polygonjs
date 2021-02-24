@@ -56,7 +56,7 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 		return CameraNodeType.PERSPECTIVE;
 	}
 
-	create_object() {
+	createObject() {
 		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}
 

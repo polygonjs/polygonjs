@@ -39,7 +39,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	readonly transformController: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	create_object() {
+	createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
@@ -119,6 +119,6 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.transformController.update();
 		this.object.visible = isBooleanTrue(this.pv.display);
 		this.object.renderOrder = this.pv.renderOrder;
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }

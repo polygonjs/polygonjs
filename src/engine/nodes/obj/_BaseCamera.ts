@@ -138,7 +138,7 @@ export abstract class TypedCameraObjNode<
 	async cook() {
 		this.update_camera();
 		this._object.dispatchEvent(EVENT_CHANGE);
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	on_create() {}
@@ -255,7 +255,7 @@ export class TypedThreejsCameraObjNode<
 		// and we can run this here instead of inside the update_transform and update_camera
 		// this._object.dispatchEvent( EVENT_CHANGE )
 		this._object.dispatchEvent(EVENT_CHANGE);
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	static PARAM_CALLBACK_update_near_far_from_param(node: BaseThreejsCameraObjNodeType, param: BaseParamType) {

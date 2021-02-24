@@ -8,7 +8,7 @@ export class BaseNetworkRopNode<K extends NodeParamsConfig> extends TypedNode<No
 		return NodeContext.ROP;
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 export class ParamLessBaseNetworkRopNode extends BaseNetworkRopNode<ParamLessNetworkRopParamsConfig> {}

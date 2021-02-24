@@ -13,6 +13,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ColorConversion} from '../../../core/Color';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
 	/** @param light color */
@@ -75,7 +76,7 @@ const ParamsConfig = new SpotLightObjParamsConfig();
 export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, SpotLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'spotLight';
+		return LightType.SPOT;
 	}
 	private _target_target!: Object3D;
 	private _helper_controller = new HelperController<Mesh, SpotLight>(

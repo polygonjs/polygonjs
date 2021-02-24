@@ -8,7 +8,7 @@ export class BaseNetworkEventNode<K extends NodeParamsConfig> extends TypedNode<
 		return NodeContext.EVENT;
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 export class ParamLessBaseNetworkEventNode extends BaseNetworkEventNode<ParamLessNetworkEventParamsConfig> {}

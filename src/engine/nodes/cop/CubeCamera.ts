@@ -1,42 +1,44 @@
-// // import NodeBase from '../_Base'
+/**
+ * Creates a Texture from a CubeCamera
+ *
+ *	@remarks
+ *
+ * See the [COP/CubeCamera](https://polygonjs.com/docs/nodes/cop/CubeCamera) on how to use it as a texture.
+ */
 
-// import {BaseNodeCop} from './_Base';
-// import {CubeCameraObj} from '../obj/CubeCamera';
-// // import {BaseParam} from '../../../Engine/Param/_Base'
-// // import {CoreTextureLoader} from '../../../Core/Loader/Texture'
-// // import {CoreScriptLoader} from '../../../Core/Loader/Script'
+import {TypedCopNode} from './_Base';
+import {CubeCameraObjNode} from '../obj/CubeCamera';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeContext} from '../../poly/NodeContext';
+import {ObjType} from '../../poly/registers/nodes/types/Obj';
 
-// // import {PMREMGenerator} from 'three/src/extras/PMREMGenerator'
-// // const THREE = {PMREMGenerator}
+class EnvMapCopParamsConfig extends NodeParamsConfig {
+	/** @param cube camera OBJ node */
+	cubeCamera = ParamConfig.NODE_PATH('/cubeCamera1', {
+		nodeSelection: {
+			context: NodeContext.OBJ,
+			types: [ObjType.CUBE_CAMERA],
+		},
+	});
+}
+const ParamsConfig = new EnvMapCopParamsConfig();
+export class CubeCameraCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return 'cubeCamera';
+	}
 
-// export class CubeCamera extends BaseNodeCop {
-// 	@ParamS('cube_camera') _param_cube_camera: string;
-// 	static type() {
-// 		return 'cube_camera';
-// 	}
-
-// 	// private _texture_loader: CoreTextureLoader
-
-// 	create_params() {
-// 		this.add_param(ParamType.OPERATOR_PATH, 'cube_camera', '/cube_camera1', {
-// 			nodeSelection: {
-// 				context: NodeContext.OBJ,
-// 			},
-// 			dependentOnFoundNode: true,
-// 		});
-// 		this.add_param(ParamType.BUTTON, 'update', null, {
-// 			callback: this.cook.bind(this),
-// 		});
-// 	}
-
-// 	async cook() {
-// 		const cube_camera_node = this.params.get_operator_path('cube_camera').found_node();
-// 		if (cube_camera_node != null) {
-// 			const render_target = (cube_camera_node as CubeCameraObj).render_target();
-
-// 			this.set_texture(render_target.texture);
-// 		} else {
-// 			this.states.error.set(`cube camera linked to non existing node '${this._param_cube_camera}'`);
-// 		}
-// 	}
-// }
+	async cook() {
+		const cubeCameraNode = this.pv.cubeCamera.ensureNodeContext(NodeContext.OBJ, this.states.error);
+		if (!cubeCameraNode) {
+			this.states.error.set(`cubeCamera not found at '${this.pv.cubeCamera.path()}'`);
+			return this.cookController.endCook();
+		}
+		const renderTarget = (cubeCameraNode as CubeCameraObjNode).renderTarget();
+		if (!renderTarget) {
+			this.states.error.set(`cubeCamera has no render target'`);
+			return this.cookController.endCook();
+		}
+		this.set_texture(renderTarget.texture);
+	}
+}

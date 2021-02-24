@@ -9,7 +9,7 @@
  */
 import {TypedRopNode} from './_Base';
 import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';
-import {RopType} from '../../poly/registers/nodes/Rop';
+import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
@@ -80,7 +80,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 			this._update_renderer(renderer);
 		});
 
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	private _update_renderer(renderer: CSS2DRenderer) {

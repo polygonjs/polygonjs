@@ -131,7 +131,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	}
 	_on_error(error: ErrorEvent) {
 		this.states.error.set(`could not load geometry from ${this._url()} (${error})`);
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	//

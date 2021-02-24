@@ -1,6 +1,6 @@
 import {TypedRopNode} from './_Base';
 import {CSS3DRenderer} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
-import {RopType} from '../../poly/registers/nodes/Rop';
+import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PolyDictionary} from '../../../types/GlobalTypes';
@@ -49,6 +49,6 @@ export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsCon
 	// }
 
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }

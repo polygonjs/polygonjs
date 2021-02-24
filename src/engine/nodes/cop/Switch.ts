@@ -40,6 +40,6 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 		} else {
 			this.states.error.set(`no input ${input_index}`);
 		}
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }

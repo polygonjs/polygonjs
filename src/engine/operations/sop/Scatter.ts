@@ -155,7 +155,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 			}
 		}
 
-		const object = this.create_object(geometry, ObjectType.POINTS);
+		const object = this.createObject(geometry, ObjectType.POINTS);
 
 		return this.create_core_group_from_objects([object]);
 	}

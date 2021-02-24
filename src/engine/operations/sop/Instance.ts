@@ -50,7 +50,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		if (this._geometry) {
 			const type = ObjectTypeByObject(object_to_instance);
 			if (type) {
-				const object = this.create_object(this._geometry, type);
+				const object = this.createObject(this._geometry, type);
 
 				if (isBooleanTrue(params.applyMaterial)) {
 					const material = await this._get_material(params);
@@ -67,7 +67,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 
 	private async _get_material(params: InstanceSopParams) {
 		if (isBooleanTrue(params.applyMaterial)) {
-			const material_node = params.material.ensure_node_context(NodeContext.MAT, this.states?.error);
+			const material_node = params.material.ensureNodeContext(NodeContext.MAT, this.states?.error);
 			if (material_node) {
 				this._globals_handler = this._globals_handler || new GlobalsGeometryHandler();
 				const mat_builder_node = material_node as BaseBuilderMatNodeType;

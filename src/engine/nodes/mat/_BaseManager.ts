@@ -8,7 +8,7 @@ export class BaseNetworkMatNode<K extends NodeParamsConfig> extends TypedNode<No
 		return NodeContext.MAT;
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 export class ParamLessBaseNetworkMatNode extends BaseNetworkMatNode<ParamLessNetworkMatParamsConfig> {}

@@ -112,10 +112,10 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 		const objects: Object3D[] = [];
 		const created_geometries = circle3points.created_geometries();
 		if (created_geometries.arc) {
-			objects.push(this.create_object(created_geometries.arc, ObjectType.LINE_SEGMENTS));
+			objects.push(this.createObject(created_geometries.arc, ObjectType.LINE_SEGMENTS));
 		}
 		if (created_geometries.center) {
-			objects.push(this.create_object(created_geometries.center, ObjectType.POINTS));
+			objects.push(this.createObject(created_geometries.center, ObjectType.POINTS));
 		}
 
 		this.setObjects(objects);

@@ -33,7 +33,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		}
 		readonly hierarchyController: HierarchyController = new HierarchyController(this);
 		public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-		create_object() {
+		createObject() {
 			const group = new Group();
 			group.matrixAutoUpdate = false;
 			return group;
@@ -91,7 +91,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		//
 		cook() {
 			this.object.visible = isBooleanTrue(this.pv.display);
-			this.cookController.end_cook();
+			this.cookController.endCook();
 		}
 
 		//

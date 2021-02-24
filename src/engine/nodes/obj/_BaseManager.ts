@@ -5,14 +5,14 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 export class BaseManagerObjNode<K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	protected _attachableToHierarchy: boolean = false;
 
-	create_object() {
+	createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
 	}
 
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 

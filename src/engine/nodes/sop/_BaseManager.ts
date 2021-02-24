@@ -11,7 +11,7 @@ export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<No
 	// 	this.children_controller?.init({dependent: false});
 	// }
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 export class ParamLessBaseNetworkSopNode extends BaseNetworkSopNode<ParamLessNetworkSopParamsConfig> {}

@@ -33,7 +33,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		this.cookController.cook_main_without_inputs();
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 	// eval_params_and_process_event(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
 	// 	// not evaluation params now, since we are evaluating them on dirty

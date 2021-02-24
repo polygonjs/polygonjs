@@ -129,7 +129,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	private _fog: Fog | undefined;
 	private _fogExp2: FogExp2 | undefined;
 
-	create_object() {
+	createObject() {
 		const scene = new Scene();
 		scene.matrixAutoUpdate = false;
 		return scene;
@@ -163,7 +163,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		this._update_enviromment();
 		this._update_material_override();
 
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	//

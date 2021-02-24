@@ -29,17 +29,17 @@ export class BaseSopOperation extends BaseOperation {
 		return core_group;
 	}
 	protected create_core_group_from_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
-		const object = BaseSopOperation.create_object(geometry, type);
+		const object = BaseSopOperation.createObject(geometry, type);
 		return this.create_core_group_from_objects([object]);
 	}
-	protected create_object<OT extends ObjectType>(
+	protected createObject<OT extends ObjectType>(
 		geometry: BufferGeometry,
 		type: OT,
 		material?: Material
 	): ObjectByObjectType[OT] {
-		return BaseSopOperation.create_object(geometry, type, material);
+		return BaseSopOperation.createObject(geometry, type, material);
 	}
-	static create_object<OT extends ObjectType>(
+	static createObject<OT extends ObjectType>(
 		geometry: BufferGeometry,
 		type: OT,
 		material?: Material

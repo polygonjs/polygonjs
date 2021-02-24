@@ -262,7 +262,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				this.set_texture(data_texture);
 			}
 		} else {
-			this.cookController.end_cook();
+			this.cookController.endCook();
 		}
 	}
 

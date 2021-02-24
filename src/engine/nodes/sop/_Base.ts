@@ -79,7 +79,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	setGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
-		const object = this.create_object(geometry, type);
+		const object = this.createObject(geometry, type);
 		this.set_container_objects([object], MESSAGE.FROM_SET_GEOMETRY);
 	}
 
@@ -87,7 +87,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		const objects: Object3D[] = [];
 		let object;
 		for (let geometry of geometries) {
-			object = this.create_object(geometry, type);
+			object = this.createObject(geometry, type);
 			// this._set_object_attributes(object);
 			objects.push(object);
 		}
@@ -101,20 +101,20 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.setContainer(core_group);
 	}
 
-	static create_object<OT extends ObjectType>(
+	static createObject<OT extends ObjectType>(
 		geometry: BufferGeometry,
 		type: OT,
 		material?: Material
 	): ObjectByObjectType[OT] {
-		return BaseSopOperation.create_object(geometry, type, material);
+		return BaseSopOperation.createObject(geometry, type, material);
 	}
 
-	create_object<OT extends ObjectType>(
+	createObject<OT extends ObjectType>(
 		geometry: BufferGeometry,
 		type: OT,
 		material?: Material
 	): ObjectByObjectType[OT] {
-		return TypedSopNode.create_object(geometry, type, material);
+		return TypedSopNode.createObject(geometry, type, material);
 	}
 
 	static create_index_if_none(geometry: BufferGeometry) {

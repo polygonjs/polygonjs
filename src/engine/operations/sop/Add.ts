@@ -48,7 +48,7 @@ export class AddSopOperation extends BaseSopOperation {
 			params.position.toArray(positions, i * 3);
 		}
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-		const object = this.create_object(geometry, ObjectType.POINTS);
+		const object = this.createObject(geometry, ObjectType.POINTS);
 
 		if (objects) {
 			objects.push(object);
@@ -74,7 +74,7 @@ export class AddSopOperation extends BaseSopOperation {
 	// 	const points = core_group.points();
 
 	// 	const geometry = CoreGeometryUtilShape.geometryFromPoints(points.map((p) => p.position()));
-	// 	const object = this.create_object(geometry, ObjectType.MESH);
+	// 	const object = this.createObject(geometry, ObjectType.MESH);
 	// 	objects.push(object);
 	// }
 
@@ -104,7 +104,7 @@ export class AddSopOperation extends BaseSopOperation {
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 		geometry.setIndex(indices);
-		const object = this.create_object(geometry, ObjectType.LINE_SEGMENTS);
+		const object = this.createObject(geometry, ObjectType.LINE_SEGMENTS);
 		objects.push(object);
 	}
 }

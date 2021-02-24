@@ -242,7 +242,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 				(content as any).node = this;
 			}
 		}
-		this.cookController.end_cook(message);
+		this.cookController.endCook(message);
 	}
 
 	// hierarchy

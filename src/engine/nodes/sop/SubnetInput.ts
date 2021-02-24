@@ -54,7 +54,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 			} else {
 				this.states.error.set(`parent has no input ${input_index}`);
 			}
-			this.cookController.end_cook();
+			this.cookController.endCook();
 		} else {
 			this.states.error.set(`subnet input has no parent`);
 		}

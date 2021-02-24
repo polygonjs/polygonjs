@@ -4,6 +4,7 @@ import {AnimationsCopNode} from '../../../nodes/cop/Animations';
 import {BuilderCopNode} from '../../../nodes/cop/Builder';
 import {ColorCopNode} from '../../../nodes/cop/Color';
 import {CopCopNode} from '../../../nodes/cop/Cop';
+import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {EventsCopNode} from '../../../nodes/cop/Events';
 import {ImageCopNode} from '../../../nodes/cop/Image';
@@ -20,6 +21,7 @@ import {WebCamCopNode} from '../../../nodes/cop/WebCam';
 export interface CopNodeChildrenMap {
 	builder: BuilderCopNode;
 	color: ColorCopNode;
+	cubeCamera: CubeCameraCopNode;
 	envMap: EnvMapCopNode;
 	image: ImageCopNode;
 	post: PostCopNode;
@@ -42,6 +44,7 @@ export class CopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(BuilderCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(CubeCameraCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);

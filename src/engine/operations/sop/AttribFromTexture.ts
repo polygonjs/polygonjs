@@ -34,7 +34,7 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 	async cook(input_contents: CoreGroup[], params: AttribFromTextureSopParams) {
 		const core_group = input_contents[0];
 
-		const texture_node = params.texture.ensure_node_context(NodeContext.COP, this.states?.error);
+		const texture_node = params.texture.ensureNodeContext(NodeContext.COP, this.states?.error);
 		if (!texture_node) {
 			return core_group;
 		}

@@ -43,7 +43,7 @@ export class NodeCookController<NC extends NodeContext> {
 
 	private _start_cook_if_no_errors(input_contents: ContainableMap[NC][]) {
 		if (this.node.states.error.active()) {
-			this.end_cook();
+			this.endCook();
 		} else {
 			try {
 				this._performance_controller.record_cook_start();
@@ -51,7 +51,7 @@ export class NodeCookController<NC extends NodeContext> {
 			} catch (e) {
 				this.node.states.error.set(`node internal error: '${e}'.`);
 				Poly.warn(e);
-				this.end_cook();
+				this.endCook();
 			}
 		}
 	}
@@ -94,7 +94,7 @@ export class NodeCookController<NC extends NodeContext> {
 		this._start_cook_if_no_errors([]);
 	}
 
-	end_cook(message?: string | null) {
+	endCook(message?: string | null) {
 		this._finalize_cook_performance();
 
 		const dirty_timestamp = this.node.dirtyController.dirtyTimestamp();

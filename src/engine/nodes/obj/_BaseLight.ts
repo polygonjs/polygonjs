@@ -86,7 +86,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	cook() {
 		this.update_light_params();
 		this.update_shadow_params();
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	update_shadow_params() {

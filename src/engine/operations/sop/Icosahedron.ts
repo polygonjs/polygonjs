@@ -29,7 +29,7 @@ export class IcosahedronSopOperation extends BaseSopOperation {
 		const geometry = new IcosahedronBufferGeometry(params.radius, params.detail, pointsOnly);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		if (pointsOnly) {
-			const object = this.create_object(geometry, ObjectType.POINTS);
+			const object = this.createObject(geometry, ObjectType.POINTS);
 			return this.create_core_group_from_objects([object]);
 		} else {
 			geometry.computeVertexNormals();

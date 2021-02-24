@@ -66,7 +66,7 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
-	create_object() {
+	createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
@@ -100,7 +100,7 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 			this._blend(obj_node0.object, obj_node1.object);
 		}
 
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 
 	private _blend(object0: Object3D, object1: Object3D) {

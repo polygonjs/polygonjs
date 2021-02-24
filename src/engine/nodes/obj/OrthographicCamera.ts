@@ -62,7 +62,7 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 		return CameraNodeType.ORTHOGRAPHIC;
 	}
 
-	create_object() {
+	createObject() {
 		return new OrthographicCamera(
 			DEFAULT.left * 2,
 			DEFAULT.right * 2,

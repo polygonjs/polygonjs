@@ -54,7 +54,7 @@ export class JsonDataLoader {
 				if (this._options.dataKeysPrefix != null && this._options.dataKeysPrefix != '') {
 					this._json = this.get_prefixed_json(this._json, this._options.dataKeysPrefix.split('.'));
 				}
-				const object = this.create_object();
+				const object = this.createObject();
 				success_callback(object);
 			})
 			.catch((error: ErrorEvent) => {
@@ -79,7 +79,7 @@ export class JsonDataLoader {
 		return (this._json = json);
 	}
 
-	create_object() {
+	createObject() {
 		const geometry = new THREE.BufferGeometry();
 		const core_geo = new CoreGeometry(geometry);
 

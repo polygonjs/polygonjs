@@ -8,7 +8,7 @@ export class BaseNetworkPostNode<K extends NodeParamsConfig> extends TypedNode<N
 		return NodeContext.POST;
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }
 export class ParamLessBaseNetworkPostNode extends BaseNetworkPostNode<ParamLessNetworkPostParamsConfig> {}

@@ -1,161 +1,199 @@
-// import {Scene} from 'three/src/scenes/Scene';
-// import {Group} from 'three/src/objects/Group';
-// import {Object3D} from 'three/src/core/Object3D';
-// import {CubeCamera} from 'three/src/cameras/CubeCamera';
-// import {sRGBEncoding} from 'three/src/constants';
-// import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
-// import {WebGLRenderTargetCube} from 'three/src/renderers/WebGLRenderTargetCube';
+/**
+ * Creates a CubeCamera
+ *
+ *	@remarks
+ *
+ * A Cube Camera is rendering the scene 6 times, once for each side of a cube. Those renders are then combined to create a texture which can be used as environment map.
+ *
+ * See the [OBJ/CubeCamera](https://polygonjs.com/docs/nodes/obj/CubeCamera) on how to use it as a texture.
+ */
 
-// import {CoreTransform} from '../../../core/Transform';
+import {Constructor} from '../../../types/GlobalTypes';
+import {Group} from 'three/src/objects/Group';
+import {Object3D} from 'three/src/core/Object3D';
+import {CubeCamera} from 'three/src/cameras/CubeCamera';
+import {sRGBEncoding} from 'three/src/constants';
+import {WebGLCubeRenderTarget} from 'three/src/renderers/WebGLCubeRenderTarget';
+import {TransformController, TransformedParamConfig} from './utils/TransformController';
+import {TypedObjNode} from './_Base';
+import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {Poly} from '../../Poly';
+import {BaseNodeType} from '../_Base';
+import {ObjType} from '../../poly/registers/nodes/types/Obj';
+import {AxesHelper} from 'three/src/helpers/AxesHelper';
 
-// import {BaseObjNode} from './_Base';
-// import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-// import {ParamType} from '../../poly/ParamType';
-// import {PolyScene} from '../../scene/PolyScene';
-// // import {Transformed} from './Concerns/Transformed';
+export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param render resolution of each of the 6 faces */
+		resolution = ParamConfig.INTEGER(256);
+		/** @param objects to exclude in the render */
+		excludedObjects = ParamConfig.STRING('*`$OS`');
+		/** @param object masks to select what will be visible in the scene */
+		printResolve = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType) => {
+				CubeCameraObjNode.PARAM_CALLBACK_printResolve(node as CubeCameraObjNode);
+			},
+		});
+		/** @param camera near */
+		near = ParamConfig.FLOAT(1);
+		/** @param camera far */
+		far = ParamConfig.FLOAT(100);
+		/** @param render button */
+		render = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType) => {
+				CubeCameraObjNode.PARAM_CALLBACK_render(node as CubeCameraObjNode);
+			},
+		});
+	};
+}
 
-// const LIGHT_TYPES = ['HemisphereLight', 'SpotLight', 'PointLight'];
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {HierarchyController} from './utils/HierarchyController';
+import {FlagsControllerD} from '../utils/FlagsController';
 
-// export class CubeCameraObjNode extends BaseObjNode {
-// 	static type() {
-// 		return 'cube_camera';
-// 	}
+class CubeCameraObjParamsConfig extends CubeCameraParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
+const ParamsConfig = new CubeCameraObjParamsConfig();
+export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsConfig> {
+	params_config = ParamsConfig;
+	static type() {
+		return ObjType.CUBE_CAMERA;
+	}
+	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	readonly transformController: TransformController = new TransformController(this);
+	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
-// 	private _param_near: number;
-// 	private _param_far: number;
-// 	private _param_resolution: number;
-// 	private _param_object_mask: string;
+	private _excludedObjects: Object3D[] = [];
+	private _cubeCamera: CubeCamera | undefined;
+	private _previousVisibleStateByUuid: Map<string, boolean> = new Map();
+	private _helper = new AxesHelper(1);
 
-// 	private _cube_camera_scene: Scene;
-// 	private _cube_camera_objects: Object3D[];
-// 	private _cube_camera: CubeCamera;
+	initializeNode() {
+		this.hierarchyController.initializeNode();
+		this.transformController.initializeNode();
+		this._updateHelperHierarchy();
+		this._helper.matrixAutoUpdate = false;
+		this.flags.display.onUpdate(() => {
+			this._updateHelperHierarchy();
+		});
 
-// 	initializeNode() {
-// 		// this._init_display_flag({
-// 		// 	has_display_flag: false,
-// 		// });
+		this.io.inputs.setCount(0, 1);
+	}
 
-// 		this._init_dirtyable_hook();
+	createObject() {
+		const group = new Group();
+		group.matrixAutoUpdate = true;
+		return group;
+	}
 
-// 		this.io.inputs.set_count_to_one_max();
-// 	}
+	cook() {
+		this.transformController.update();
 
-// 	create_object() {
-// 		return new Group();
-// 	}
+		this._resolveObjects();
 
-// 	//base_layers_included: -> false
+		const cameraRecreateRequired = this._setupCubeCamera();
+		if (!this._cubeCamera || cameraRecreateRequired) {
+			this._createCubeCamera();
+		}
 
-// 	create_params() {
-// 		CoreTransform.create_params(this);
-// 		this.within_param_folder('cube_camera', () => {
-// 			this.add_param(ParamType.FLOAT, 'near', 0.1, {range: [0, 1], rangeLocked: [true, false]});
-// 			this.add_param(ParamType.FLOAT, 'far', 10, {range: [0, 100], rangeLocked: [true, false]});
+		this.cookController.endCook();
+	}
 
-// 			this.add_param(ParamType.INTEGER, 'resolution', 256);
-// 			this.add_param(ParamType.STRING, 'object_mask', '*light* *'); // ensure lights are in it too
+	private _updateHelperHierarchy() {
+		if (this.flags.display.active()) {
+			this.object.add(this._helper);
+		} else {
+			this.object.remove(this._helper);
+		}
+	}
 
-// 			this.add_param(ParamType.BUTTON, 'render', null, {
-// 				callback: this.render.bind(this),
-// 			});
-// 		});
-// 	}
+	private _setupCubeCamera() {
+		let cameraRecreateRequired = false;
+		if (this._cubeCamera) {
+			const firstCamera = this._cubeCamera.children[0] as PerspectiveCamera;
+			const currentNear = firstCamera.near;
+			const currentFar = firstCamera.far;
+			const currentRes = this._cubeCamera.renderTarget.width;
+			if (currentNear != this.pv.near || currentFar != this.pv.far || currentRes != this.pv.resolution) {
+				cameraRecreateRequired = true;
+			}
 
-// 	cook() {
-// 		const matrix = CoreTransform.matrix_from_node_with_transform_params(this);
+			if (cameraRecreateRequired) {
+				this.object.remove(this._cubeCamera);
+			}
+		}
+		return cameraRecreateRequired;
+	}
 
-// 		// const group = this.group();
-// 		this.transformController.update(matrix);
+	private _createCubeCamera() {
+		const renderTarget = new WebGLCubeRenderTarget(this.pv.resolution, {encoding: sRGBEncoding});
+		this._cubeCamera = new CubeCamera(this.pv.near, this.pv.far, renderTarget);
+		this._cubeCamera.matrixAutoUpdate = true;
+		this.object.add(this._cubeCamera);
+	}
 
-// 		this._cube_camera_scene = this._cube_camera_scene || new Scene();
-// 		this._cube_camera_objects = this.scene.nodesController.objectsFromMask(this._param_object_mask);
+	renderTarget() {
+		if (this._cubeCamera) {
+			return this._cubeCamera.renderTarget;
+		}
+	}
 
-// 		// re-create the cube_camera
-// 		let camera_recreate_required = false;
-// 		if (this._cube_camera) {
-// 			const first_camera = this._cube_camera.children[0] as PerspectiveCamera;
-// 			const current_near = first_camera.near;
-// 			const current_far = first_camera.far;
-// 			const current_resolution = this._cube_camera.renderTarget.width;
-// 			if (
-// 				current_near != this._param_near ||
-// 				current_far != this._param_far ||
-// 				current_resolution != this._param_resolution
-// 			) {
-// 				console.log(current_near, this._param_near);
-// 				console.log(current_far, this._param_far);
-// 				console.log(current_resolution, this._param_resolution, this._cube_camera.renderTarget);
-// 				camera_recreate_required = true;
-// 			}
+	render() {
+		const renderer = Poly.renderersController.firstRenderer();
+		if (!renderer) {
+			console.warn(`no renderer found for ${this.fullPath()}`);
+			return;
+		}
+		if (!this._cubeCamera) {
+			console.warn(`no cubeCamera for ${this.fullPath()}`);
+			return;
+		}
 
-// 			if (camera_recreate_required) {
-// 				this.object.remove(this._cube_camera);
-// 			}
-// 		}
-// 		if (!this._cube_camera || camera_recreate_required) {
-// 			this._cube_camera = new CubeCamera(this._param_near, this._param_far, this._param_resolution, {
-// 				encoding: sRGBEncoding,
-// 			} as any); // TODO: typescript, check conversion
-// 			this.object.add(this._cube_camera);
-// 			// update nodes
-// 			for (let node of this.dependencies_controller.param_nodes_referree()) {
-// 				node.setDirty();
-// 			}
-// 		}
+		for (let object of this._excludedObjects) {
+			this._previousVisibleStateByUuid.set(object.uuid, object.visible);
+			object.visible = false;
+		}
 
-// 		this.cookController.end_cook();
-// 	}
+		this._cubeCamera.update(renderer, this.scene().threejsScene());
 
-// 	render_target() {
-// 		if (this._cube_camera) {
-// 			return this._cube_camera.renderTarget;
-// 		}
-// 	}
+		// re-add objects back to their original parent
+		for (let object of this._excludedObjects) {
+			const previousVisibleState = this._previousVisibleStateByUuid.get(object.uuid);
+			if (previousVisibleState) {
+				object.visible = previousVisibleState;
+			}
+		}
+		this._previousVisibleStateByUuid.clear();
+	}
 
-// 	render() {
-// 		const renderer = POLY.renderers_controller.first_renderer();
-// 		if (renderer) {
-// 			// add objects to this._cube_camera_scene
-// 			const parent_by_child_uuid: PolyDictionary<Object3D> = {};
-// 			let light_given = false;
-// 			for (let object of this._cube_camera_objects) {
-// 				if (!light_given && this.object_is_light(object)) {
-// 					light_given = true;
-// 				}
-// 				if (object.parent) {
-// 					parent_by_child_uuid[object.uuid] = object.parent;
-// 					this._cube_camera_scene.add(object);
-// 				}
-// 			}
-// 			if (!light_given) {
-// 				console.warn('no light is present in the objects rendered by the cubemap');
-// 			}
+	private _resolveObjects() {
+		const objectsMatchingMask = this.scene().objectsByMask(this.pv.excludedObjects);
+		const objectsByUuid: Map<string, Object3D> = new Map();
+		for (let object of objectsMatchingMask) {
+			objectsByUuid.set(object.uuid, object);
+		}
+		this._excludedObjects = [];
+		// only add the object to the list if the parent is not in there
+		for (let object of objectsMatchingMask) {
+			const parent = object.parent;
+			if (parent) {
+				if (!objectsByUuid.get(parent.uuid)) {
+					this._excludedObjects.push(object);
+				}
+			}
+		}
+	}
 
-// 			// Currently still using the cube_camera, which cannot be blurred.
-// 			// The pmremGenerator.fromScene allows to have an env map that can be blurred
-// 			// But the COP node, and then the material node are not yet updated accordingly
-// 			const dependencies_solved = false;
-// 			if (dependencies_solved) {
-// 				var pmremGenerator = new PMREMGenerator(renderer);
-// 				// 0.04 from the threejs examples
-// 				const render_target = pmremGenerator.fromScene(this._cube_camera_scene, 0.04);
-// 				pmremGenerator.dispose();
-// 				this._cube_camera.renderTarget = render_target as WebGLRenderTargetCube; // TODO: typescript, check conversion
-// 				console.log('render_target1', render_target);
-// 			} else {
-// 				this._cube_camera.update(renderer, this._cube_camera_scene);
-// 			}
-
-// 			// re-add objects back to their original parent
-// 			for (let object of this._cube_camera_objects) {
-// 				parent_by_child_uuid[object.uuid].add(object);
-// 			}
-// 		} else {
-// 			console.warn(`no renderer found for ${this.fullPath()}`);
-// 		}
-// 	}
-
-// 	private object_is_light(object: Object3D): boolean {
-// 		return LIGHT_TYPES.includes(object.type);
-// 	}
-// }
+	static PARAM_CALLBACK_printResolve(node: CubeCameraObjNode) {
+		node.param_callback_printResolve();
+	}
+	private param_callback_printResolve() {
+		this._resolveObjects();
+		console.log(this._excludedObjects);
+	}
+	static PARAM_CALLBACK_render(node: CubeCameraObjNode) {
+		node.param_callback_render();
+	}
+	private param_callback_render() {
+		this.render();
+	}
+}

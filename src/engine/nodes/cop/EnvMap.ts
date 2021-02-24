@@ -61,7 +61,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			}
 		} else {
 			this.states.error.set('no renderer found to convert the texture to an env map');
-			this.cookController.end_cook();
+			this.cookController.endCook();
 		}
 	}
 }

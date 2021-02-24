@@ -63,7 +63,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.setContainer(render_pass);
 	}
 	cook() {
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 	setup_composer(context: TypedPostNodeContext): void {
 		this._add_pass_from_input(0, context);

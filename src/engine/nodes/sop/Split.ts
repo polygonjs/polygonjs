@@ -100,7 +100,7 @@ export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			points_by_value.forEach((points, value) => {
 				const new_geometry = CoreGeometry.geometryFromPoints(points, object_type);
 				if (new_geometry) {
-					const object = this.create_object(new_geometry, object_type);
+					const object = this.createObject(new_geometry, object_type);
 					CoreObject.addAttribute(object, attribName, value);
 					this._new_objects.push(object);
 				}

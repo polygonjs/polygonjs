@@ -27,6 +27,6 @@ export abstract class BaseLightTransformedObjNode<
 		this.transformController.update();
 		this.update_light_params();
 		this.update_shadow_params();
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 }

@@ -10,12 +10,6 @@ import {PostProcessRopNode} from '../../../nodes/rop/PostProcess';
 import {RenderersRopNode} from '../../../nodes/rop/Renderers';
 import {WebGLRendererRopNode} from '../../../nodes/rop/WebGLRenderer';
 
-export enum RopType {
-	CSS2D = 'CSS2DRenderer',
-	CSS3D = 'CSS3DRenderer',
-	WEBGL = 'WebGLRenderer',
-}
-
 export interface RopNodeChildrenMap {
 	CSS2DRenderer: CSS2DRendererRopNode;
 	CSS3DRenderer: Css3DRendererRopNode;

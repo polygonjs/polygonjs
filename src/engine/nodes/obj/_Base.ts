@@ -88,7 +88,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 
 	_create_object_with_attributes(): O {
-		const object = this.create_object();
+		const object = this.createObject();
 		(object as Object3DWithNode).node = this;
 		object.add(this._children_group);
 		return object as O;
@@ -100,7 +100,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		}
 	}
 
-	create_object(): Object3D {
+	createObject(): Object3D {
 		const object = new Object3D();
 		object.matrixAutoUpdate = false;
 		return object;

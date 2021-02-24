@@ -125,7 +125,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			}
 		}
 		const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
-		const object = this.create_object(merged_geometry, ObjectType.LINE_SEGMENTS);
+		const object = this.createObject(merged_geometry, ObjectType.LINE_SEGMENTS);
 		return object;
 	}
 

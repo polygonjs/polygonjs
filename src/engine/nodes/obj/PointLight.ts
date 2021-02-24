@@ -12,6 +12,7 @@ import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
 import {Mesh} from 'three/src/objects/Mesh';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
 	/** @param light color */
@@ -47,7 +48,7 @@ const ParamsConfig = new PointLightObjParamsConfig();
 export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, PointLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'pointLight';
+		return LightType.POINT;
 	}
 	private _helper_controller = new HelperController<Mesh, PointLight>(
 		this,

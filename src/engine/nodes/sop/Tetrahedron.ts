@@ -34,7 +34,7 @@ export class TetrahedronSopNode extends TypedSopNode<TetrahedronSopParamsConfig>
 		const geometry = new TetrahedronBufferGeometry(this.pv.radius, this.pv.detail, pointsOnly);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 		if (pointsOnly) {
-			const object = this.create_object(geometry, ObjectType.POINTS);
+			const object = this.createObject(geometry, ObjectType.POINTS);
 			this.setObject(object);
 		} else {
 			geometry.computeVertexNormals();

@@ -195,7 +195,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (this.is_on_frame_start()) {
 			this.setCoreGroup(core_group);
 		} else {
-			this.cookController.end_cook();
+			this.cookController.endCook();
 		}
 	}
 	async compile_if_required() {

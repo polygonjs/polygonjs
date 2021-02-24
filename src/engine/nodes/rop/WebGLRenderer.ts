@@ -7,7 +7,7 @@
  */
 import {TypedRopNode} from './_Base';
 import {Mesh} from 'three/src/objects/Mesh';
-import {RopType} from '../../poly/registers/nodes/Rop';
+import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {
 	// encoding
@@ -283,7 +283,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 
 		this._traverse_scene_and_update_materials();
 
-		this.cookController.end_cook();
+		this.cookController.endCook();
 	}
 	_update_renderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);

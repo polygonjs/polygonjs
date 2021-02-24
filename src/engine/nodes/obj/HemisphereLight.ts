@@ -11,6 +11,7 @@ import {HelperController, HelperConstructor} from './utils/HelperController';
 import {ColorConversion} from '../../../core/Color';
 import {Color} from 'three/src/math/Color';
 import {Mesh} from 'three/src/objects/Mesh';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 
 const DEFAULT = {
 	skyColor: new Color(1, 1, 1),
@@ -39,7 +40,7 @@ const ParamsConfig = new HemisphereLightObjParamsConfig();
 export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, HemisphereLightObjParamsConfig> {
 	params_config = ParamsConfig;
 	static type() {
-		return 'hemisphereLight';
+		return LightType.HEMISPHERE;
 	}
 	private _helper_controller = new HelperController<Mesh, HemisphereLight>(
 		this,
