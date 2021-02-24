@@ -1,5 +1,5 @@
 import {Constructor, PolyDictionary} from '../../../../../types/GlobalTypes';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {Vector2} from 'three/src/math/Vector2';
 import {Scene} from 'three/src/scenes/Scene';
 import {NodeContext} from '../../../../poly/NodeContext';
@@ -222,13 +222,15 @@ export class RenderController {
 		return CoreUserAgent.isMobile() ? 1 : Math.max(2, window.devicePixelRatio);
 	}
 	private static _createDefaultRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
-		const renderer = new WebGLRenderer({
+		const params: WebGLRendererParameters = {
 			canvas: canvas,
 			antialias: false, // no anti alias with a pixel ratio of 2 is more performant
 			alpha: true,
 			context: gl,
-		});
-		renderer.setPixelRatio(this.defaultPixelRatio());
+		};
+		const renderer = new WebGLRenderer(params);
+		const pixelRatio = this.defaultPixelRatio();
+		renderer.setPixelRatio(pixelRatio);
 
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
@@ -239,6 +241,15 @@ export class RenderController {
 		renderer.toneMapping = DEFAULT_TONE_MAPPING;
 		renderer.toneMappingExposure = 1;
 		renderer.outputEncoding = DEFAULT_OUTPUT_ENCODING;
+
+		if (Poly.renderersController.printDebug()) {
+			Poly.renderersController.printDebugMessage('create default renderer');
+			Poly.renderersController.printDebugMessage({
+				params: params,
+				pixelRatio: pixelRatio,
+			});
+		}
+
 		return renderer;
 	}
 

@@ -176,6 +176,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {RenderController} from '../obj/utils/cameras/RenderController';
+import {Poly} from '../../Poly';
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
@@ -253,12 +254,19 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		for (k of keys) {
 			(params[k] as any) = DEFAULT_PARAMS[k];
 		}
-		(params as WebGLRendererParameters).antialias = this.pv.antialias;
-		(params as WebGLRendererParameters).alpha = this.pv.alpha;
-		(params as WebGLRendererParameters).canvas = canvas;
-		(params as WebGLRendererParameters).context = gl;
+		params.antialias = this.pv.antialias;
+		params.alpha = this.pv.alpha;
+		params.canvas = canvas;
+		params.context = gl;
 		// (params as WebGLRendererParameters).preserveDrawingBuffer = this.pv.preserve_drawing_buffer;
 		const renderer = new WebGLRenderer(params);
+
+		if (Poly.renderersController.printDebug()) {
+			Poly.renderersController.printDebugMessage(`create renderer from node '${this.fullPath()}'`);
+			Poly.renderersController.printDebugMessage({
+				params: params,
+			});
+		}
 
 		this._update_renderer(renderer);
 
@@ -293,6 +301,14 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		renderer.sortObjects = this.pv.sortObjects;
 
 		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : RenderController.defaultPixelRatio();
+
+		if (Poly.renderersController.printDebug()) {
+			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.fullPath()}'`);
+			Poly.renderersController.printDebugMessage({
+				pixelRatio: pixelRatio,
+			});
+		}
+
 		renderer.setPixelRatio(pixelRatio);
 	}
 

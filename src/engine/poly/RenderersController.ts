@@ -33,11 +33,25 @@ export class RenderersController {
 	_next_env_map_id: number = 0;
 	_renderers: RendererByString = {};
 	_env_maps: TextureByString = {};
+	_printDebug = false;
 	private _require_webgl2: boolean = false;
 	private _resolves: Callback[] = [];
 	private _webgl2_available: boolean | undefined;
 
 	constructor() {}
+
+	setPrintDebug(state: boolean = true) {
+		this._printDebug = state;
+	}
+	printDebug() {
+		return this._printDebug;
+	}
+	printDebugMessage(message: any) {
+		if (!this._printDebug) {
+			return;
+		}
+		console.log('[Poly debug]', message);
+	}
 
 	setRequireWebGL2() {
 		if (!this._require_webgl2) {
@@ -82,8 +96,11 @@ export class RenderersController {
 			context_name = webgl2 ? WebGLContext.WEBGL2 : WebGLContext.WEBGL;
 		}
 		let gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
-		if (!gl) {
+		if (gl) {
+			this.printDebugMessage(`create gl context: ${context_name}.`);
+		} else {
 			context_name = webgl2 ? WebGLContext.EXPERIMENTAL_WEBGL2 : WebGLContext.EXPERIMENTAL_WEBGL;
+			this.printDebugMessage(`create gl context: ${context_name}.`);
 			gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
 		}
 		return gl as WebGLRenderingContext | null;
