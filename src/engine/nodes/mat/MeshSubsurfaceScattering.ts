@@ -14,6 +14,9 @@ import {SkinningController, SkinningParamConfig} from './utils/SkinningControlle
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
 function ParamOptionsFactoryColor(uniform_name: string) {
 	return {
@@ -58,44 +61,68 @@ import {IUniformN, IUniformTexture, IUniformColor} from '../utils/code/gl/Unifor
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseCopNodeType} from '../cop/_Base';
-
+import {DepthController, DepthParamConfig} from './utils/DepthController';
+import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {FogController, FogParamConfig} from './utils/FogController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {OperatorPathParam} from '../../params/OperatorPath';
 import {NODE_PATH_DEFAULT} from '../../../core/Walker';
-class MeshSubsurfaceScatteringMatParamsConfig extends TextureMapParamConfig(
-	TextureAlphaMapParamConfig(SkinningParamConfig(SideParamConfig(NodeParamsConfig)))
-) {
-	diffuse = ParamConfig.COLOR([1, 1, 1], {
-		...ParamOptionsFactoryColor('diffuse'),
-	});
-	shininess = ParamConfig.FLOAT(1, {
-		range: [0, 1000],
-	});
-	thicknessMap = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
-		nodeSelection: {context: NodeContext.COP},
-		...ParamOptionsFactoryTexture('thicknessMap'),
-	});
-	thicknessColor = ParamConfig.COLOR([0.5, 0.3, 0.0], {
-		...ParamOptionsFactoryColor('thicknessColor'),
-	});
-	thicknessDistortion = ParamConfig.FLOAT(0.1, {
-		...ParamOptionsFactoryN('thicknessDistortion'),
-	});
-	thicknessAmbient = ParamConfig.FLOAT(0.4, {
-		...ParamOptionsFactoryN('thicknessAmbient'),
-	});
-	thicknessAttenuation = ParamConfig.FLOAT(0.8, {
-		...ParamOptionsFactoryN('thicknessAttenuation'),
-	});
-	thicknessPower = ParamConfig.FLOAT(2.0, {
-		range: [0, 10],
-		...ParamOptionsFactoryN('thicknessPower'),
-	});
-	thicknessScale = ParamConfig.FLOAT(16.0, {
-		range: [0, 100],
-		...ParamOptionsFactoryN('thicknessScale'),
-	});
+import {Constructor} from '../../../types/GlobalTypes';
+
+export function SubsurfaceParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		diffuse = ParamConfig.COLOR([1, 1, 1], {
+			...ParamOptionsFactoryColor('diffuse'),
+		});
+		shininess = ParamConfig.FLOAT(1, {
+			range: [0, 1000],
+		});
+		thicknessMap = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
+			nodeSelection: {context: NodeContext.COP},
+			...ParamOptionsFactoryTexture('thicknessMap'),
+		});
+		thicknessColor = ParamConfig.COLOR([0.5, 0.3, 0.0], {
+			...ParamOptionsFactoryColor('thicknessColor'),
+		});
+		thicknessDistortion = ParamConfig.FLOAT(0.1, {
+			...ParamOptionsFactoryN('thicknessDistortion'),
+		});
+		thicknessAmbient = ParamConfig.FLOAT(0.4, {
+			...ParamOptionsFactoryN('thicknessAmbient'),
+		});
+		thicknessAttenuation = ParamConfig.FLOAT(0.8, {
+			...ParamOptionsFactoryN('thicknessAttenuation'),
+		});
+		thicknessPower = ParamConfig.FLOAT(2.0, {
+			range: [0, 10],
+			...ParamOptionsFactoryN('thicknessPower'),
+		});
+		thicknessScale = ParamConfig.FLOAT(16.0, {
+			range: [0, 100],
+			...ParamOptionsFactoryN('thicknessScale'),
+		});
+	};
 }
+class MeshSubsurfaceScatteringMatParamsConfig extends FogParamConfig(
+	SkinningParamConfig(
+		WireframeParamConfig(
+			DepthParamConfig(
+				SideParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						TextureMapParamConfig(
+							TextureAlphaMapParamConfig(
+								TexturesFolderParamConfig(
+									SubsurfaceParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+) {}
 const ParamsConfig = new MeshSubsurfaceScatteringMatParamsConfig();
 
 interface ShaderMaterialWithUniforms extends ShaderMaterial {
@@ -142,6 +169,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		// define: false,
 		// define_uv: false,
 	});
+	readonly depth_controller: DepthController = new DepthController(this);
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			this.texture_map_controller.initializeNode();
@@ -151,6 +179,9 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	async cook() {
 		SideController.update(this);
 		SkinningController.update(this);
+		DepthController.update(this);
+		WireframeController.update(this);
+		FogController.update(this);
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 

@@ -19,8 +19,6 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 		opacity = ParamConfig.FLOAT(1);
 		/** @param sets the min alpha below which the material is invisible */
 		alphaTest = ParamConfig.FLOAT(0);
-		/** @param toggle on if you have a fog in the scene and the material should be affected by it */
-		useFog = ParamConfig.BOOLEAN(0);
 	};
 }
 
@@ -30,7 +28,6 @@ class ColoredMaterial extends Material {
 	transparent!: boolean;
 	depthTest!: boolean;
 	alphaTest!: number;
-	fog!: boolean;
 }
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
 class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
@@ -58,6 +55,5 @@ export class ColorsController extends BaseController {
 		material.transparent = isBooleanTrue(pv.transparent) || pv.opacity < 1;
 		material.depthTest = true;
 		material.alphaTest = pv.alphaTest;
-		material.fog = isBooleanTrue(pv.useFog);
 	}
 }

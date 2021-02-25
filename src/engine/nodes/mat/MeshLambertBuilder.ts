@@ -16,9 +16,30 @@ import {TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerLambert} from '../gl/code/assemblers/materials/Lambert';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
+import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
-class MeshLambertMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))))
+class MeshLambertMatParamsConfig extends FogParamConfig(
+	SkinningParamConfig(
+		WireframeParamConfig(
+			DepthParamConfig(
+				SideParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						TextureAlphaMapParamConfig(
+							TextureMapParamConfig(
+								/* textures */
+								TexturesFolderParamConfig(ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+							)
+						)
+					)
+				)
+			)
+		)
+	)
 ) {}
 const ParamsConfig = new MeshLambertMatParamsConfig();
 
@@ -55,6 +76,8 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		TextureMapController.update(this);
 		TextureAlphaMapController.update(this);
 		this.depth_controller.update();
+		WireframeController.update(this);
+		FogController.update(this);
 
 		this.set_material(this.material);
 	}

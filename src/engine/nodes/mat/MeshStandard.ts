@@ -21,24 +21,54 @@ import {
 	TextureDisplacementMapController,
 	TextureDisplacementMapParamConfig,
 } from './utils/TextureDisplacementMapController';
+import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
+import {FogController, FogParamConfig} from './utils/FogController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {Constructor} from '../../../types/GlobalTypes';
 
 export const SHADER_DEFAULTS = {
 	metalness: 1,
 	roughness: 0.5,
 };
 
-class MeshStandardMatParamsConfig extends TextureDisplacementMapParamConfig(
-	TextureEnvMapParamConfig(
-		TextureAlphaMapParamConfig(
-			TextureMapParamConfig(
-				SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+export function MeshStandardParamConfigMixin<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param metalness. It's recommended to either set this value to 0 or to 1, as objects are either metallic or not. Any value in between tends to look like an alien plastic */
+		metalness = ParamConfig.FLOAT(SHADER_DEFAULTS.metalness);
+		/** @param roughness. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */
+		roughness = ParamConfig.FLOAT(SHADER_DEFAULTS.roughness);
+	};
+}
+
+class MeshStandardMatParamsConfig extends FogParamConfig(
+	SkinningParamConfig(
+		WireframeParamConfig(
+			DepthParamConfig(
+				SideParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						MeshStandardParamConfigMixin(
+							TextureDisplacementMapParamConfig(
+								TextureEnvMapParamConfig(
+									TextureAlphaMapParamConfig(
+										TextureMapParamConfig(
+											/* textures */
+											TexturesFolderParamConfig(
+												ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+				)
 			)
 		)
 	)
-) {
-	metalness = ParamConfig.FLOAT(SHADER_DEFAULTS.metalness);
-	roughness = ParamConfig.FLOAT(SHADER_DEFAULTS.roughness);
-}
+) {}
 // TODO: add the following texture params:
 // - aoMap+aoMapIntensity
 // - bumpMap+bumpScale
@@ -94,6 +124,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		ColorsController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
+		FogController.update(this);
 		this.texture_map_controller.update();
 		this.texture_alpha_map_controller.update();
 		this.texture_env_map_controller.update();
@@ -104,6 +135,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 			this._material.metalness = this.pv.metalness;
 		}
 		this.depth_controller.update();
+		WireframeController.update(this);
 
 		this.set_material(this.material);
 	}

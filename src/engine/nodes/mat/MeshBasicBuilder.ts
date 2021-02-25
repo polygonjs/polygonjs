@@ -17,8 +17,29 @@ import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {Poly} from '../../Poly';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
-class MeshBasicMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))))
+import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+class MeshBasicMatParamsConfig extends FogParamConfig(
+	SkinningParamConfig(
+		WireframeParamConfig(
+			DepthParamConfig(
+				SideParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						TextureAlphaMapParamConfig(
+							TextureMapParamConfig(
+								/* textures */
+								TexturesFolderParamConfig(ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+							)
+						)
+					)
+				)
+			)
+		)
+	)
 ) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
@@ -54,7 +75,9 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		SkinningController.update(this);
 		TextureMapController.update(this);
 		TextureAlphaMapController.update(this);
+		WireframeController.update(this);
 		this.depth_controller.update();
+		FogController.update(this);
 
 		this.set_material(this.material);
 	}

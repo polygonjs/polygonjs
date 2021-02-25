@@ -23,14 +23,35 @@ import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
+import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
 import {SHADER_DEFAULTS} from './MeshStandard';
 
-class MeshStandardMatParamsConfig extends TextureDisplacementMapParamConfig(
-	TextureEnvMapParamConfig(
-		TextureAlphaMapParamConfig(
-			TextureMapParamConfig(
-				SkinningParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig))))
+class MeshStandardMatParamsConfig extends FogParamConfig(
+	SkinningParamConfig(
+		WireframeParamConfig(
+			DepthParamConfig(
+				SideParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						TextureDisplacementMapParamConfig(
+							TextureEnvMapParamConfig(
+								TextureAlphaMapParamConfig(
+									TextureMapParamConfig(
+										/* textures */
+										TexturesFolderParamConfig(
+											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+										)
+									)
+								)
+							)
+						)
+					)
+				)
 			)
 		)
 	)
@@ -100,6 +121,8 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		TextureEnvMapController.update(this);
 		TextureDisplacementMapController.update(this);
 		this.depth_controller.update();
+		FogController.update(this);
+		WireframeController.update(this);
 
 		if (this._material) {
 			MeshStandardBuilderMatNode._update_metalness(this);
