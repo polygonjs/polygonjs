@@ -11,9 +11,26 @@ import {DataTextureController, DataTextureControllerBufferType} from './utils/Da
 import {CopRendererController} from './utils/RendererController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+
+import {CubeUVReflectionMapping, CubeUVRefractionMapping} from 'three/src/constants';
+
+enum MapMode {
+	REFLECTION = 'reflection',
+	REFRACTION = 'refraction',
+}
+const MAP_MODES: MapMode[] = [MapMode.REFLECTION, MapMode.REFRACTION];
+
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(1);
+	/** @param defines if the texture is used for reflection or refraction */
+	mode = ParamConfig.INTEGER(0, {
+		menu: {
+			entries: MAP_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
@@ -37,9 +54,6 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	}
 
 	private async convert_texture_to_env_map(input_texture: Texture) {
-		// texture.minFilter = NearestFilter;
-		// texture.encoding = LinearEncoding;
-
 		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
 		const renderer = await this._renderer_controller.renderer();
 
@@ -51,17 +65,26 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			// texture.dispose();
 
 			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this.set_texture(exrCubeRenderTarget.texture);
+				this._set_mapping(exrCubeRenderTarget.texture);
+				this.setTexture(exrCubeRenderTarget.texture);
 			} else {
 				this._data_texture_controller =
 					this._data_texture_controller ||
 					new DataTextureController(DataTextureControllerBufferType.Uint8Array);
 				const texture = this._data_texture_controller.from_render_target(renderer, exrCubeRenderTarget);
-				this.set_texture(texture);
+				this._set_mapping(texture);
+				this.setTexture(texture);
 			}
 		} else {
 			this.states.error.set('no renderer found to convert the texture to an env map');
 			this.cookController.endCook();
+		}
+	}
+	private _set_mapping(texture: Texture) {
+		if (MAP_MODES[this.pv.mode] == MapMode.REFLECTION) {
+			texture.mapping = CubeUVReflectionMapping;
+		} else {
+			texture.mapping = CubeUVRefractionMapping;
 		}
 	}
 }

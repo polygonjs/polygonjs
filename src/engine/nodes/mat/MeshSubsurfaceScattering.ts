@@ -55,6 +55,15 @@ function ParamOptionsFactoryN(uniform_name: string) {
 	};
 }
 
+const CONTROLLER_OPTIONS = {
+	uniforms: true,
+};
+interface Controllers {
+	alphaMap: TextureAlphaMapController;
+	depth: DepthController;
+	map: TextureMapController;
+}
+
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {IUniformN, IUniformTexture, IUniformColor} from '../utils/code/gl/Uniforms';
@@ -159,31 +168,29 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		material.extensions.derivatives = true;
 		return material;
 	}
-	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {
-		uniforms: true,
-		// define: false,
-		// define_uv: false,
-	});
-	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
-		uniforms: true,
-		// define: false,
-		// define_uv: false,
-	});
-	readonly depth_controller: DepthController = new DepthController(this);
+	readonly controllers: Controllers = {
+		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
+		depth: new DepthController(this),
+		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+	};
+	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+
+	readonly depthController: DepthController = new DepthController(this);
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
-			this.texture_map_controller.initializeNode();
-			this.texture_alpha_map_controller.initializeNode();
+			for (let controllerName of this.controllerNames) {
+				this.controllers[controllerName].initializeNode();
+			}
 		});
 	}
 	async cook() {
+		for (let controllerName of this.controllerNames) {
+			this.controllers[controllerName].update();
+		}
+		FogController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
-		DepthController.update(this);
 		WireframeController.update(this);
-		FogController.update(this);
-		this.texture_map_controller.update();
-		this.texture_alpha_map_controller.update();
 
 		this.update_map(this.p.thicknessMap, 'thicknessMap');
 		this.material.uniforms.diffuse.value.copy(this.pv.diffuse);
@@ -196,7 +203,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		this.material.uniforms.thicknessPower.value = this.pv.thicknessPower;
 		this.material.uniforms.thicknessScale.value = this.pv.thicknessScale;
 
-		this.set_material(this.material);
+		this.setMaterial(this.material);
 	}
 
 	// static PARAM_CALLBACK_update_thickness_map(node: MeshTranslucentMatNode) {

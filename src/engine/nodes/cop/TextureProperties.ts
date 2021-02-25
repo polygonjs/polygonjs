@@ -29,6 +29,6 @@ export class TexturePropertiesCopNode extends TypedCopNode<TexturePropertiesCopP
 	async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
 		this.texture_params_controller.update(texture);
-		this.set_texture(texture);
+		this.setTexture(texture);
 	}
 }

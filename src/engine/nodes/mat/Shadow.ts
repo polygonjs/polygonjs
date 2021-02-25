@@ -34,6 +34,6 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatPara
 		ColorsController.update(this);
 		SideController.update(this);
 
-		this.set_material(this.material);
+		this.setMaterial(this.material);
 	}
 }

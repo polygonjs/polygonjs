@@ -49,10 +49,17 @@ export function BooleanParamOptions(controller_class: typeof BaseTextureMapContr
 		},
 	};
 }
-export function OperatorPathOptions(controller: typeof BaseTextureMapController, use_map_name: string) {
+interface OperatorPathOptionsOptions {
+	types?: string[];
+}
+export function OperatorPathOptions(
+	controller: typeof BaseTextureMapController,
+	use_map_name: string,
+	options?: OperatorPathOptionsOptions
+) {
 	return {
 		visibleIf: {[use_map_name]: 1},
-		nodeSelection: {context: NodeContext.COP},
+		nodeSelection: {context: NodeContext.COP, types: options?.types},
 		cook: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			controller.update(node as BaseMatNodeType);
@@ -75,7 +82,7 @@ type TextureRemoveCallback<O extends Object> = (
 type CurrentMaterial = Material | ShaderMaterial;
 
 export interface UpdateOptions {
-	direct_params?: boolean;
+	directParams?: boolean;
 	uniforms?: boolean;
 	// define?: boolean;
 	// define_uv?: boolean;
@@ -112,7 +119,7 @@ export class BaseTextureMapController extends BaseController {
 			const attr_name = mat_attrib_name as keyof SubType<IUniforms, Texture | null>;
 			await this._update_texture_on_uniforms(shader_material, attr_name, use_map_param, path_param);
 		}
-		if (this._update_options.direct_params) {
+		if (this._update_options.directParams) {
 			const mat = material as Material;
 			const attr_name = mat_attrib_name as keyof SubType<Material, Texture | null>;
 			await this._update_texture_on_material(mat, attr_name, use_map_param, path_param);
@@ -282,14 +289,14 @@ export class BaseTextureMapController extends BaseController {
 						update_callback(material, texture_owner, mat_attrib_name, texture);
 						return;
 					} else {
-						this.node.states.error.set(`found node has no texture`);
+						this.node.states.error.set(`${path_param.fullPath()}: found node has no texture`);
 					}
 				} else {
-					this.node.states.error.set(`found map node is not a COP node`);
+					this.node.states.error.set(`${path_param.fullPath()}: found map node is not a COP node`);
 				}
 			} else {
 				this.node.states.error.set(
-					`could not find map node ${path_param.name()} with path ${path_param.value}`
+					`could not find map node '${path_param.name()}' with path '${path_param.value}'`
 				);
 			}
 		}

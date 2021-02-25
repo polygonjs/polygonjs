@@ -47,7 +47,7 @@ export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
 		}
 		this._data_texture.needsUpdate = true;
 
-		this.set_texture(this._data_texture);
+		this.setTexture(this._data_texture);
 	}
 
 	private _create_data_texture(width: number, height: number) {

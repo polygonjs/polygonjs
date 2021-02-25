@@ -14,8 +14,21 @@ import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-class PointsMatParamsConfig extends SkinningParamConfig(
-	DepthParamConfig(SideParamConfig(ColorParamConfig(NodeParamsConfig)))
+import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+
+interface Controllers {
+	depth: DepthController;
+}
+class PointsMatParamsConfig extends FogParamConfig(
+	SkinningParamConfig(
+		DepthParamConfig(
+			SideParamConfig(
+				/* advanced */ AdvancedFolderParamConfig(ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+			)
+		)
+	)
 ) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
@@ -30,18 +43,30 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	protected _create_assembler_controller() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	readonly controllers: Controllers = {
+		depth: new DepthController(this),
+	};
+	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	readonly depth_controller: DepthController = new DepthController(this);
-	initializeNode() {}
-
+	readonly depthController: DepthController = new DepthController(this);
+	initializeNode() {
+		this.params.onParamsCreated('init controllers', () => {
+			for (let controllerName of this.controllerNames) {
+				this.controllers[controllerName].initializeNode();
+			}
+		});
+	}
 	async cook() {
 		this.compile_if_required();
+		for (let controllerName of this.controllerNames) {
+			this.controllers[controllerName].update();
+		}
 
 		ColorsController.update(this);
+		FogController.update(this);
 		SideController.update(this);
 		SkinningController.update(this);
-		this.depth_controller.update();
 
-		this.set_material(this.material);
+		this.setMaterial(this.material);
 	}
 }

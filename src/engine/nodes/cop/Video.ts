@@ -100,7 +100,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.url], () => {
-					const url = this.pv.url;
+					const url = this.p.url.rawInput();
 					if (url) {
 						const elements = url.split('/');
 						return elements[elements.length - 1];
@@ -130,7 +130,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			this.video_update_play();
 			this.video_update_time();
 			this.texture_params_controller.update(texture);
-			this.set_texture(texture);
+			this.setTexture(texture);
 		} else {
 			this.cookController.endCook();
 		}

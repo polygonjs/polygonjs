@@ -209,10 +209,10 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		this._composer.render();
 
 		if (this.pv.use_camera_renderer) {
-			this.set_texture(this._render_target.texture);
+			this.setTexture(this._render_target.texture);
 		} else {
 			const data_texture = this._copy_to_data_texture(renderer, this._render_target);
-			this.set_texture(data_texture);
+			this.setTexture(data_texture);
 		}
 
 		//

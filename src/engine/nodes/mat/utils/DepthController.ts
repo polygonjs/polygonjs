@@ -51,9 +51,11 @@ export function DepthParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class DepthParamsConfig extends DepthParamConfig(NodeParamsConfig) {}
-
+interface Controllers {
+	depth: DepthController;
+}
 abstract class DepthMapMatNode extends TypedMatNode<Material, DepthParamsConfig> {
-	depth_controller!: DepthController;
+	controllers!: Controllers;
 	abstract createMaterial(): Material;
 }
 
@@ -62,6 +64,8 @@ export class DepthController extends BaseController {
 		super(node);
 	}
 
+	initializeNode() {}
+
 	async update() {
 		this.node.material.colorWrite = this.node.pv.colorWrite;
 		this.node.material.depthWrite = this.node.pv.depthWrite;
@@ -69,6 +73,6 @@ export class DepthController extends BaseController {
 		this.node.material.blending = this.node.pv.blending;
 	}
 	static async update(node: DepthMapMatNode) {
-		node.depth_controller.update();
+		node.controllers.depth.update();
 	}
 }

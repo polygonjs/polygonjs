@@ -22,6 +22,6 @@ export class NullCopNode extends TypedCopNode<NodeParamsConfig> {
 
 	async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
-		this.set_texture(texture);
+		this.setTexture(texture);
 	}
 }

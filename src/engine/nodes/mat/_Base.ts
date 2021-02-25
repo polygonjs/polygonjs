@@ -40,7 +40,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	}
 	//
 
-	set_material(material: Material) {
+	setMaterial(material: Material) {
 		this.setContainer(material);
 	}
 

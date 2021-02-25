@@ -55,7 +55,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.url], () => {
-					const url = this.pv.url;
+					const url = this.p.url.rawInput();
 					if (url) {
 						const elements = url.split('/');
 						return elements[elements.length - 1];
@@ -79,7 +79,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 
 		if (texture) {
 			this.texture_params_controller.update(texture);
-			this.set_texture(texture);
+			this.setTexture(texture);
 		} else {
 			this.clear_texture();
 		}

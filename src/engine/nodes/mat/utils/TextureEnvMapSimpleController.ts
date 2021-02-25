@@ -6,22 +6,46 @@ import {
 	OperatorPathOptions,
 	UpdateOptions,
 } from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+
+import {MultiplyOperation, MixOperation, AddOperation} from 'three/src/constants';
+import {CopType} from '../../../poly/registers/nodes/types/Cop';
+enum CombineOperation {
+	MULT = 'mult',
+	ADD = 'add',
+	MIX = 'mix',
+}
+const COMBINE_OPERATIONS: CombineOperation[] = [CombineOperation.MULT, CombineOperation.ADD, CombineOperation.MIX];
+const OperationByName = {
+	[CombineOperation.MULT]: MultiplyOperation,
+	[CombineOperation.ADD]: AddOperation,
+	[CombineOperation.MIX]: MixOperation,
+};
+
 export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an environment map */
 		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
-		/** @param specify the environment map COP node */
+		/** @param specify the environment map COP node. Note that this only works with CubeCamera */
 		envMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.ENV_MAP,
-			OperatorPathOptions(TextureEnvMapController, 'useEnvMap')
+			NODE_PATH_DEFAULT.NODE.CUBE_MAP,
+			OperatorPathOptions(TextureEnvMapController, 'useEnvMap', {types: [CopType.CUBE_CAMERA]})
 		);
+		/** @param defines how the env map is combined with the color */
+		combine = ParamConfig.INTEGER(0, {
+			visibleIf: {useEnvMap: 1},
+			menu: {
+				entries: COMBINE_OPERATIONS.map((name, value) => {
+					return {name, value};
+				}),
+			},
+		});
 		/** @param environment intensity */
-		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
+		reflectivity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 		/** @param refraction ratio */
 		refractionRatio = ParamConfig.FLOAT(0.98, {
 			range: [-1, 1],
@@ -34,7 +58,7 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 // 	envMap!: Texture | null;
 // 	envMapIntensity!: number;
 // }
-type CurrentMaterial = MeshStandardMaterial | ShaderMaterial;
+type CurrentMaterial = MeshBasicMaterial | ShaderMaterial;
 class TextureEnvMapParamsConfig extends TextureEnvMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	envMap: TextureEnvMapController;
@@ -53,14 +77,17 @@ export class TextureEnvMapController extends BaseTextureMapController {
 	}
 	async update() {
 		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
+		const combine = OperationByName[COMBINE_OPERATIONS[this.node.pv.combine]];
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.envMapIntensity.value = this.node.pv.envMapIntensity;
+			// mat.uniforms.combine.value = combine; // combine is not present in the uniforms
+			mat.uniforms.reflectivity.value = this.node.pv.reflectivity;
 			mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
 		}
 		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshStandardMaterial;
-			mat.envMapIntensity = this.node.pv.envMapIntensity;
+			const mat = this.node.material as MeshBasicMaterial;
+			mat.combine = combine;
+			mat.reflectivity = this.node.pv.reflectivity;
 			mat.refractionRatio = this.node.pv.refractionRatio;
 		}
 	}

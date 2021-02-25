@@ -27,8 +27,11 @@ class TextureAlphaMaterial extends Material {
 }
 type CurrentMaterial = TextureAlphaMaterial | ShaderMaterial;
 class TextureAlphaMapParamsConfig extends TextureAlphaMapParamConfig(NodeParamsConfig) {}
+interface Controllers {
+	alphaMap: TextureAlphaMapController;
+}
 abstract class TextureAlphaMapMatNode extends TypedMatNode<CurrentMaterial, TextureAlphaMapParamsConfig> {
-	texture_alpha_map_controller!: TextureAlphaMapController;
+	controllers!: Controllers;
 	abstract createMaterial(): CurrentMaterial;
 }
 
@@ -43,6 +46,6 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'alphaMap', this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
 	static async update(node: TextureAlphaMapMatNode) {
-		node.texture_alpha_map_controller.update();
+		node.controllers.alphaMap.update();
 	}
 }

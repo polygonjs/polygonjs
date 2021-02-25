@@ -9,6 +9,9 @@ import {TypedMatNode} from './_Base';
 import {DepthController, DepthParamConfig} from './utils/DepthController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
+interface Controllers {
+	depth: DepthController;
+}
 class LineBasicMatParamsConfig extends DepthParamConfig(NodeParamsConfig) {
 	/** @param line color */
 	color = ParamConfig.COLOR([1, 1, 1]);
@@ -32,14 +35,25 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 			linewidth: 1,
 		});
 	}
-
-	readonly depth_controller: DepthController = new DepthController(this);
-	initializeNode() {}
+	readonly controllers: Controllers = {
+		depth: new DepthController(this),
+	};
+	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	initializeNode() {
+		this.params.onParamsCreated('init controllers', () => {
+			for (let controllerName of this.controllerNames) {
+				this.controllers[controllerName].initializeNode();
+			}
+		});
+	}
 	async cook() {
+		for (let controllerName of this.controllerNames) {
+			this.controllers[controllerName].update();
+		}
+
 		this.material.color.copy(this.pv.color);
 		this.material.linewidth = this.pv.lineWidth;
-		this.depth_controller.update();
 
-		this.set_material(this.material);
+		this.setMaterial(this.material);
 	}
 }

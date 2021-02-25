@@ -18,6 +18,20 @@ import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/Tex
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+
+const CONTROLLER_OPTIONS = {
+	directParams: true,
+};
+interface Controllers {
+	alphaMap: TextureAlphaMapController;
+	depth: DepthController;
+	map: TextureMapController;
+}
+
 export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1);
@@ -25,8 +39,22 @@ export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class PointsMatParamsConfig extends TextureAlphaMapParamConfig(
-	TextureMapParamConfig(DepthParamConfig(SideParamConfig(ColorParamConfig(PointsParamConfig(NodeParamsConfig)))))
+class PointsMatParamsConfig extends FogParamConfig(
+	DepthParamConfig(
+		SideParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				TextureAlphaMapParamConfig(
+					TextureMapParamConfig(
+						/* textures */
+						TexturesFolderParamConfig(
+							ColorParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+						)
+					)
+				)
+			)
+		)
+	)
 ) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
@@ -44,28 +72,32 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 			opacity: 1,
 		});
 	}
-	readonly texture_map_controller: TextureMapController = new TextureMapController(this, {direct_params: true});
-	readonly texture_alpha_map_controller: TextureAlphaMapController = new TextureAlphaMapController(this, {
-		direct_params: true,
-	});
-	readonly depth_controller: DepthController = new DepthController(this);
+	readonly controllers: Controllers = {
+		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
+		depth: new DepthController(this),
+		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+	};
+	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
-			this.texture_map_controller.initializeNode();
-			this.texture_alpha_map_controller.initializeNode();
+			for (let controllerName of this.controllerNames) {
+				this.controllers[controllerName].initializeNode();
+			}
 		});
 	}
 
 	async cook() {
+		for (let controllerName of this.controllerNames) {
+			this.controllers[controllerName].update();
+		}
 		ColorsController.update(this);
+		FogController.update(this);
 		SideController.update(this);
-		this.texture_map_controller.update();
-		this.texture_alpha_map_controller.update();
-		this.depth_controller.update();
 
 		this.material.size = this.pv.size;
 		this.material.sizeAttenuation = isBooleanTrue(this.pv.sizeAttenuation);
 
-		this.set_material(this.material);
+		this.setMaterial(this.material);
 	}
 }

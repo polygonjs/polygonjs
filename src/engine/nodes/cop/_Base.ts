@@ -47,7 +47,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		// this.containerController.init(CONTAINER_CLASS);
 	}
 
-	set_texture(texture: Texture) {
+	setTexture(texture: Texture) {
 		// this._copy_texture(texture);
 		texture.name = this.fullPath();
 		this.setContainer(texture);

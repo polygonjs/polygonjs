@@ -25,8 +25,11 @@ class TextureMapMaterial extends Material {
 }
 type CurrentMaterial = TextureMapMaterial | ShaderMaterial;
 class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
+interface Controllers {
+	map: TextureMapController;
+}
 abstract class TextureMapMatNode extends TypedMatNode<CurrentMaterial, TextureMapParamsConfig> {
-	texture_map_controller!: TextureMapController;
+	controllers!: Controllers;
 	abstract createMaterial(): CurrentMaterial;
 }
 
@@ -41,6 +44,6 @@ export class TextureMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'map', this.node.p.useMap, this.node.p.map);
 	}
 	static async update(node: TextureMapMatNode) {
-		node.texture_map_controller.update();
+		node.controllers.map.update();
 	}
 }

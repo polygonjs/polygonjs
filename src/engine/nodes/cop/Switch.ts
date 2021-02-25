@@ -34,7 +34,7 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 		if (this.io.inputs.has_input(input_index)) {
 			const container = await this.containerController.requestInputContainer(input_index);
 			if (container) {
-				this.set_texture(container.texture());
+				this.setTexture(container.texture());
 				return;
 			}
 		} else {

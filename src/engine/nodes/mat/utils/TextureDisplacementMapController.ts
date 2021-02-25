@@ -9,6 +9,8 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Material} from 'three/src/materials/Material';
+import {Texture} from 'three/src/textures/Texture';
 export function TextureDisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a displacement map */
@@ -32,10 +34,18 @@ export function TextureDisplacementMapParamConfig<TBase extends Constructor>(Bas
 		});
 	};
 }
-type CurrentMaterial = MeshStandardMaterial | ShaderMaterial;
+class TextureDisplacementMaterial extends Material {
+	displacementMap!: Texture | null;
+	displacementScale!: number;
+	displacementBias!: number;
+}
+type CurrentMaterial = TextureDisplacementMaterial | ShaderMaterial;
 class TextureDisplacementMapParamsConfig extends TextureDisplacementMapParamConfig(NodeParamsConfig) {}
+interface Controllers {
+	displacementMap: TextureDisplacementMapController;
+}
 abstract class TextureDisplacementMapMatNode extends TypedMatNode<CurrentMaterial, TextureDisplacementMapParamsConfig> {
-	texture_displacement_map_controller!: TextureDisplacementMapController;
+	controllers!: Controllers;
 	abstract createMaterial(): CurrentMaterial;
 }
 
@@ -58,13 +68,13 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 			mat.uniforms.displacementScale.value = this.node.pv.displacementScale;
 			mat.uniforms.displacementBias.value = this.node.pv.displacementBias;
 		}
-		if (this._update_options.direct_params) {
+		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;
 			mat.displacementScale = this.node.pv.displacementScale;
 			mat.displacementBias = this.node.pv.displacementBias;
 		}
 	}
 	static async update(node: TextureDisplacementMapMatNode) {
-		node.texture_displacement_map_controller.update();
+		node.controllers.displacementMap.update();
 	}
 }

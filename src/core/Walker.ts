@@ -10,6 +10,7 @@ export const NODE_PATH_DEFAULT = {
 	NODE: {
 		UV: '/COP/imageUv',
 		ENV_MAP: '/COP/envMap',
+		CUBE_MAP: '/COP/cubeCamera',
 	},
 };
 

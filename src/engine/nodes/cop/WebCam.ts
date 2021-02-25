@@ -54,7 +54,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 					}
 					this._video.srcObject = stream;
 					this._video.play();
-					this.set_texture(texture);
+					this.setTexture(texture);
 				})
 				.catch((error) => {
 					this.states.error.set('Unable to access the camera/webcam');

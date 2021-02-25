@@ -73,6 +73,6 @@ export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyM
 		uniforms.sunPosition.value.y = Math.sin(phi) * Math.sin(theta);
 		uniforms.sunPosition.value.z = Math.sin(phi) * Math.cos(theta);
 
-		this.set_material(this.material);
+		this.setMaterial(this.material);
 	}
 }

@@ -247,7 +247,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 		if (this._render_target.texture) {
 			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this.set_texture(this._render_target.texture);
+				this.setTexture(this._render_target.texture);
 			} else {
 				// const w = this.pv.resolution.x;
 				// const h = this.pv.resolution.y;
@@ -259,7 +259,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 					new DataTextureController(DataTextureControllerBufferType.Float32Array);
 				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
 
-				this.set_texture(data_texture);
+				this.setTexture(data_texture);
 			}
 		} else {
 			this.cookController.endCook();
