@@ -11,14 +11,14 @@ import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {SideController, SideParamConfig} from './utils/SideController';
-import {DepthController, DepthParamConfig} from './utils/DepthController';
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
 import {TextureBumpMapController, TextureBumpMapParamConfig} from './utils/TextureBumpMapController';
 import {TextureNormalMapController, TextureNormalMapParamConfig} from './utils/TextureNormalMapController';
+import {TextureEmissiveMapController, TextureEmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
 import {TextureRoughnessMapController, TextureRoughnessMapParamConfig} from './utils/TextureRoughnessMapController';
 import {TextureMetalnessMapController, TextureMetalnessMapParamConfig} from './utils/TextureMetalnessMapController';
 import {TextureLightMapController, TextureLightMapParamConfig} from './utils/TextureLightMapController';
@@ -37,11 +37,12 @@ const CONTROLLER_OPTIONS = {
 	directParams: true,
 };
 interface Controllers {
+	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
 	bumpMap: TextureBumpMapController;
-	depth: DepthController;
 	displacementMap: TextureDisplacementMapController;
+	emissiveMap: TextureEmissiveMapController;
 	envMap: TextureEnvMapController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
@@ -52,18 +53,18 @@ interface Controllers {
 class MeshStandardMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
-			DepthParamConfig(
-				SideParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						TextureMetalnessMapParamConfig(
-							TextureRoughnessMapParamConfig(
-								TextureEnvMapParamConfig(
-									TextureLightMapParamConfig(
-										TextureNormalMapParamConfig(
-											TextureBumpMapParamConfig(
-												TextureDisplacementMapParamConfig(
-													TextureAOMapParamConfig(
+			AdvancedCommonParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					TextureMetalnessMapParamConfig(
+						TextureRoughnessMapParamConfig(
+							TextureEnvMapParamConfig(
+								TextureLightMapParamConfig(
+									TextureNormalMapParamConfig(
+										TextureBumpMapParamConfig(
+											TextureDisplacementMapParamConfig(
+												TextureAOMapParamConfig(
+													TextureEmissiveMapParamConfig(
 														TextureAlphaMapParamConfig(
 															TextureMapParamConfig(
 																/* textures */
@@ -88,10 +89,6 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 		)
 	)
 ) {}
-// TODO: add the following texture params:
-// - bumpMap+bumpScale
-// - emissiveMap
-// - lightMap
 const ParamsConfig = new MeshStandardMatParamsConfig();
 
 export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, MeshStandardMatParamsConfig> {
@@ -112,11 +109,12 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 	}
 
 	readonly controllers: Controllers = {
+		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
 		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
 		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
-		depth: new DepthController(this),
 		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
+		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
@@ -139,7 +137,6 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SideController.update(this);
 		SkinningController.update(this);
 		WireframeController.update(this);
 

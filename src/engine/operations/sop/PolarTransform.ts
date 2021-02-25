@@ -9,7 +9,7 @@ import {DefaultOperationParams} from '../_Base';
 import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Quaternion} from 'three/src/math/Quaternion';
-import {MathUtils} from 'three';
+import {MathUtils} from 'three/src/math/MathUtils';
 
 const AXIS_VERTICAL = new Vector3(0, 1, 0);
 const AXIS_HORIZONTAL = new Vector3(-1, 0, 0);

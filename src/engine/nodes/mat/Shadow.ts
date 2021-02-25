@@ -9,8 +9,13 @@ import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {SideController, SideParamConfig} from './utils/SideController';
-class MeshBasicMatParamsConfig extends SideParamConfig(ColorParamConfig(NodeParamsConfig)) {}
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
+
+interface Controllers {
+	advancedCommon: AdvancedCommonController;
+}
+
+class MeshBasicMatParamsConfig extends AdvancedCommonParamConfig(ColorParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
 // TODO: allow to add customDepthMaterial: https://stackoverflow.com/questions/43848330/three-js-shadows-cast-by-partially-transparent-mesh
@@ -29,10 +34,23 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatPara
 			opacity: 1,
 		});
 	}
-	initializeNode() {}
+	readonly controllers: Controllers = {
+		advancedCommon: new AdvancedCommonController(this),
+	};
+	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+
+	initializeNode() {
+		this.params.onParamsCreated('init controllers', () => {
+			for (let controllerName of this.controllerNames) {
+				this.controllers[controllerName].initializeNode();
+			}
+		});
+	}
 	async cook() {
+		for (let controllerName of this.controllerNames) {
+			this.controllers[controllerName].update();
+		}
 		ColorsController.update(this);
-		SideController.update(this);
 
 		this.setMaterial(this.material);
 	}

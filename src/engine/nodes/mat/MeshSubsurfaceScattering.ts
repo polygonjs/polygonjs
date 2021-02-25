@@ -7,9 +7,8 @@
  */
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {TypedMatNode} from './_Base';
-
 import {SubsurfaceScatteringShader} from '../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
-import {SideController, SideParamConfig} from './utils/SideController';
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
@@ -17,6 +16,18 @@ import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/Tex
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {BaseNodeType} from '../_Base';
+import {BaseParamType} from '../../params/_Base';
+import {IUniformN, IUniformTexture, IUniformColor} from '../utils/code/gl/Uniforms';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {NodeContext} from '../../poly/NodeContext';
+import {BaseCopNodeType} from '../cop/_Base';
+import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {FogController, FogParamConfig} from './utils/FogController';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {OperatorPathParam} from '../../params/OperatorPath';
+import {NODE_PATH_DEFAULT} from '../../../core/Walker';
+import {Constructor} from '../../../types/GlobalTypes';
 
 function ParamOptionsFactoryColor(uniform_name: string) {
 	return {
@@ -59,24 +70,10 @@ const CONTROLLER_OPTIONS = {
 	uniforms: true,
 };
 interface Controllers {
+	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
-	depth: DepthController;
 	map: TextureMapController;
 }
-
-import {BaseNodeType} from '../_Base';
-import {BaseParamType} from '../../params/_Base';
-import {IUniformN, IUniformTexture, IUniformColor} from '../utils/code/gl/Uniforms';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {NodeContext} from '../../poly/NodeContext';
-import {BaseCopNodeType} from '../cop/_Base';
-import {DepthController, DepthParamConfig} from './utils/DepthController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
-import {FogController, FogParamConfig} from './utils/FogController';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {OperatorPathParam} from '../../params/OperatorPath';
-import {NODE_PATH_DEFAULT} from '../../../core/Walker';
-import {Constructor} from '../../../types/GlobalTypes';
 
 export function SubsurfaceParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -115,16 +112,12 @@ export function SubsurfaceParamConfig<TBase extends Constructor>(Base: TBase) {
 class MeshSubsurfaceScatteringMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
-			DepthParamConfig(
-				SideParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						TextureMapParamConfig(
-							TextureAlphaMapParamConfig(
-								TexturesFolderParamConfig(
-									SubsurfaceParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-								)
-							)
+			AdvancedCommonParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					TextureMapParamConfig(
+						TextureAlphaMapParamConfig(
+							TexturesFolderParamConfig(SubsurfaceParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
 						)
 					)
 				)
@@ -169,13 +162,12 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		return material;
 	}
 	readonly controllers: Controllers = {
+		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		depth: new DepthController(this),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	readonly depthController: DepthController = new DepthController(this);
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
@@ -188,7 +180,6 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 			this.controllers[controllerName].update();
 		}
 		FogController.update(this);
-		SideController.update(this);
 		SkinningController.update(this);
 		WireframeController.update(this);
 

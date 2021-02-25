@@ -42,7 +42,8 @@ export function TextureNormalMapParamConfig<TBase extends Constructor>(Base: TBa
 					return {name, value};
 				}),
 			},
-		}); /** @param How much the normal map affects the material. Typical ranges are 0-1 */
+		});
+		/** @param How much the normal map affects the material. Typical ranges are 0-1 */
 		normalScale = ParamConfig.VECTOR2([1, 1], {visibleIf: {useNormalMap: 1}});
 	};
 }

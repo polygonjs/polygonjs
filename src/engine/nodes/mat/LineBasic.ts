@@ -6,13 +6,13 @@
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {TypedMatNode} from './_Base';
 
-import {DepthController, DepthParamConfig} from './utils/DepthController';
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 interface Controllers {
-	depth: DepthController;
+	advancedCommon: AdvancedCommonController;
 }
-class LineBasicMatParamsConfig extends DepthParamConfig(NodeParamsConfig) {
+class LineBasicMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {
 	/** @param line color */
 	color = ParamConfig.COLOR([1, 1, 1]);
 	/** @param line width */
@@ -36,7 +36,7 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 		});
 	}
 	readonly controllers: Controllers = {
-		depth: new DepthController(this),
+		advancedCommon: new AdvancedCommonController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 	initializeNode() {

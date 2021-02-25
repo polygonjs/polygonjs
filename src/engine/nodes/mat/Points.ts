@@ -11,8 +11,7 @@ import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
 
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {SideController, SideParamConfig} from './utils/SideController';
-import {DepthController, DepthParamConfig} from './utils/DepthController';
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
 
@@ -27,8 +26,8 @@ const CONTROLLER_OPTIONS = {
 	directParams: true,
 };
 interface Controllers {
+	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
-	depth: DepthController;
 	map: TextureMapController;
 }
 
@@ -40,16 +39,14 @@ export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class PointsMatParamsConfig extends FogParamConfig(
-	DepthParamConfig(
-		SideParamConfig(
-			/* advanced */
-			AdvancedFolderParamConfig(
-				TextureAlphaMapParamConfig(
-					TextureMapParamConfig(
-						/* textures */
-						TexturesFolderParamConfig(
-							ColorParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
-						)
+	AdvancedCommonParamConfig(
+		/* advanced */
+		AdvancedFolderParamConfig(
+			TextureAlphaMapParamConfig(
+				TextureMapParamConfig(
+					/* textures */
+					TexturesFolderParamConfig(
+						ColorParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
 					)
 				)
 			)
@@ -73,8 +70,8 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		});
 	}
 	readonly controllers: Controllers = {
+		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		depth: new DepthController(this),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
@@ -93,7 +90,6 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SideController.update(this);
 
 		this.material.size = this.pv.size;
 		this.material.sizeAttenuation = isBooleanTrue(this.pv.sizeAttenuation);

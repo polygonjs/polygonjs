@@ -7,8 +7,7 @@
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
-import {SideParamConfig, SideController} from './utils/SideController';
-import {DepthController, DepthParamConfig} from './utils/DepthController';
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode} from './_BaseBuilder';
@@ -19,14 +18,12 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
 interface Controllers {
-	depth: DepthController;
+	advancedCommon: AdvancedCommonController;
 }
 class PointsMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
-		DepthParamConfig(
-			SideParamConfig(
-				/* advanced */ AdvancedFolderParamConfig(ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
-			)
+		AdvancedCommonParamConfig(
+			/* advanced */ AdvancedFolderParamConfig(ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
 		)
 	)
 ) {}
@@ -44,11 +41,10 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {
-		depth: new DepthController(this),
+		advancedCommon: new AdvancedCommonController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	readonly depthController: DepthController = new DepthController(this);
 	initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
@@ -64,7 +60,6 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 
 		ColorsController.update(this);
 		FogController.update(this);
-		SideController.update(this);
 		SkinningController.update(this);
 
 		this.setMaterial(this.material);

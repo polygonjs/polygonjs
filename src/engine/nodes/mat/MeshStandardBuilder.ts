@@ -7,8 +7,7 @@
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
-import {SideParamConfig, SideController} from './utils/SideController';
-import {DepthController, DepthParamConfig} from './utils/DepthController';
+import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
@@ -36,9 +35,9 @@ const CONTROLLER_OPTIONS = {
 	uniforms: true,
 };
 interface Controllers {
+	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
-	depth: DepthController;
 	displacementMap: TextureDisplacementMapController;
 	envMap: TextureEnvMapController;
 	lightMap: TextureLightMapController;
@@ -50,25 +49,21 @@ interface Controllers {
 class MeshStandardMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
-			DepthParamConfig(
-				SideParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						TextureMetalnessMapParamConfig(
-							TextureRoughnessMapParamConfig(
-								TextureEnvMapParamConfig(
-									TextureLightMapParamConfig(
-										TextureNormalMapParamConfig(
-											TextureDisplacementMapParamConfig(
-												TextureAOMapParamConfig(
-													TextureAlphaMapParamConfig(
-														TextureMapParamConfig(
-															/* textures */
-															TexturesFolderParamConfig(
-																ColorParamConfig(
-																	DefaultFolderParamConfig(NodeParamsConfig)
-																)
-															)
+			AdvancedCommonParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					TextureMetalnessMapParamConfig(
+						TextureRoughnessMapParamConfig(
+							TextureEnvMapParamConfig(
+								TextureLightMapParamConfig(
+									TextureNormalMapParamConfig(
+										TextureDisplacementMapParamConfig(
+											TextureAOMapParamConfig(
+												TextureAlphaMapParamConfig(
+													TextureMapParamConfig(
+														/* textures */
+														TexturesFolderParamConfig(
+															ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 														)
 													)
 												)
@@ -101,9 +96,9 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {
+		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
 		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		depth: new DepthController(this),
 		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
@@ -130,7 +125,6 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SideController.update(this);
 		SkinningController.update(this);
 		WireframeController.update(this);
 
