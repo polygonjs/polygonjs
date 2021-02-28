@@ -14,7 +14,7 @@ export class HierarchyController {
 	initializeNode() {
 		this.node.io.inputs.setCount(0, 1);
 		this.node.io.inputs.set_depends_on_inputs(false);
-		this.node.io.outputs.set_has_one_output();
+		this.node.io.outputs.setHasOneOutput();
 		this.node.io.inputs.add_on_set_input_hook('on_input_updated:update_parent', () => {
 			this.on_input_updated();
 		});

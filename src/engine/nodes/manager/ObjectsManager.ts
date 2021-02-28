@@ -1,4 +1,3 @@
-import {Group} from 'three/src/objects/Group';
 import {TypedBaseManagerNode} from './_Base';
 import {BaseObjNodeType} from '../obj/_Base';
 import {NodeContext} from '../../poly/NodeContext';
@@ -9,7 +8,20 @@ import {HierarchyObjNode} from '../obj/utils/HierarchyController';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {ROOT_NAME} from '../../scene/utils/ObjectsController';
-class ObjectsManagerParamsConfig extends NodeParamsConfig {}
+import {Scene} from 'three/src/scenes/Scene';
+
+import {SceneAutoUpdateParamConfig, SceneAutoUpdateController} from '../manager/utils/Scene/AutoUpdate';
+import {SceneBackgroundParamConfig, SceneBackgroundController} from '../manager/utils/Scene/Background';
+import {SceneEnvParamConfig, SceneEnvController} from '../manager/utils/Scene/Env';
+import {SceneFogParamConfig, SceneFogController} from '../manager/utils/Scene/Fog';
+import {
+	SceneMaterialOverrideParamConfig,
+	SceneMaterialOverrideController,
+} from '../manager/utils/Scene/MaterialOverride';
+
+class ObjectsManagerParamsConfig extends SceneMaterialOverrideParamConfig(
+	SceneEnvParamConfig(SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig))))
+) {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
 export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsConfig> {
@@ -18,10 +30,17 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		return 'obj';
 	}
 
-	private _object: Group = new Group();
+	protected _object: Scene = this._createScene();
 	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
 	// private _expected_geo_nodes: PolyDictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
+	readonly SceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
+	readonly sceneBackgroundController: SceneBackgroundController = new SceneBackgroundController(this as any);
+	readonly SceneEnvController: SceneEnvController = new SceneEnvController(this as any);
+	readonly sceneFogController: SceneFogController = new SceneFogController(this as any);
+	readonly sceneMaterialOverrideController: SceneMaterialOverrideController = new SceneMaterialOverrideController(
+		this as any
+	);
 
 	protected _children_controller_context = NodeContext.OBJ;
 	initializeNode() {
@@ -32,12 +51,14 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		this.lifecycle.add_on_child_remove_hook(this._on_child_remove.bind(this));
 	}
 
-	initDefaultScene() {
-		this._object.name = ROOT_NAME;
-		this._scene.threejsScene().add(this._object);
+	private _createScene() {
+		const scene = new Scene();
+		scene.name = ROOT_NAME;
+		scene.matrixAutoUpdate = false;
+		return scene;
 	}
 
-	object() {
+	get object() {
 		return this._object;
 	}
 	createNode<S extends keyof ObjNodeChildrenMap>(
@@ -64,6 +85,13 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// multiple_display_flags_allowed() {
 	// 	return true;
 	// }
+	private _updateScene() {
+		this.SceneAutoUpdateController.update();
+		this.sceneBackgroundController.update();
+		this.SceneEnvController.update();
+		this.sceneFogController.update();
+		this.sceneMaterialOverrideController.update();
+	}
 
 	private _addToQueue(node: BaseObjNodeType) {
 		const id = node.graphNodeId();
@@ -74,6 +102,8 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	}
 
 	async processQueue() {
+		this._updateScene();
+
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
 		this._queued_nodes_by_id.forEach((node, id) => {

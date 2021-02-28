@@ -17,24 +17,25 @@ import {TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {ViewersRegister} from './utils/ViewersRegister';
 import {WebGLController} from './utils/WebGLController';
-
-import {Scene} from 'three/src/scenes/Scene';
 import {SceneAssetsController} from './utils/AssetsController';
 import {BaseNodeType} from '../nodes/_Base';
+import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
+import {ParamsInitData} from '../nodes/utils/io/IOController';
+import {Constructor, valueof} from '../../types/GlobalTypes';
+import {Scene} from 'three/src/scenes/Scene';
 
 export class PolyScene {
-	protected _threejsScene = new Scene();
-	threejsScene() {
-		return this._threejsScene;
+	threejsScene(): Scene {
+		return this.root().object;
 	}
-	_uuid!: string;
+	private _uuid!: string;
 	setUuid(uuid: string) {
 		return (this._uuid = uuid);
 	}
 	get uuid() {
 		return this._uuid;
 	}
-	_name: string | undefined;
+	private _name: string | undefined;
 	setName(name: string) {
 		return (this._name = name);
 	}
@@ -106,6 +107,20 @@ export class PolyScene {
 	protected _nodes_controller = new NodesController(this);
 	get nodesController() {
 		return this._nodes_controller;
+	}
+	createNode<S extends keyof ObjNodeChildrenMap>(
+		node_class: S,
+		params_init_value_overrides?: ParamsInitData
+	): ObjNodeChildrenMap[S];
+	createNode<K extends valueof<ObjNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K;
+	createNode<K extends valueof<ObjNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		params_init_value_overrides?: ParamsInitData
+	): K {
+		return this.root().createNode(node_class, params_init_value_overrides) as K;
 	}
 	nodesByType(type: string) {
 		return this.nodesController.nodesByType(type);
@@ -222,10 +237,8 @@ export class PolyScene {
 	//
 	//
 	constructor() {
-		this._threejsScene.name = 'defaultScene';
-		this._threejsScene.matrixAutoUpdate = false;
 		// this.mark_as_loaded()
-		this._graph.set_scene(this);
+		this._graph.setScene(this);
 		// this.time_controller.init();
 		this.nodesController.init();
 	}

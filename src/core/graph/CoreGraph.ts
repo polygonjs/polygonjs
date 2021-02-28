@@ -27,7 +27,7 @@ export class CoreGraph {
 		});
 	}
 
-	set_scene(scene: PolyScene) {
+	setScene(scene: PolyScene) {
 		this._scene = scene;
 	}
 	scene() {

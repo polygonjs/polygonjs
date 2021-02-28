@@ -83,11 +83,11 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			// }
 		}
 
+		const params_data = this.params_data();
+		if (Object.keys(params_data).length > 0) {
+			this._data['params'] = params_data;
+		}
 		if (!this.is_root()) {
-			const params_data = this.params_data();
-			if (Object.keys(params_data).length > 0) {
-				this._data['params'] = params_data;
-			}
 			//data['custom'] = []
 			if (this._node.io.inputs.maxInputsCountOverriden()) {
 				this._data['maxInputsCount'] = this._node.io.inputs.maxInputsCount();

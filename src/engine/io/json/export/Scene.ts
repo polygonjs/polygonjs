@@ -3,6 +3,7 @@ import {CoreString} from '../../../../core/String';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
 import {TimeController} from '../../../scene/utils/TimeController';
+import {Poly} from '../../../Poly';
 
 export interface SceneJsonExporterDataProperties {
 	frame: number;
@@ -11,6 +12,9 @@ export interface SceneJsonExporterDataProperties {
 	realtimeState: boolean;
 	// fps: number;
 	masterCameraNodePath: string | null;
+	versions: {
+		polygonjs: string;
+	};
 }
 export interface SceneJsonExporterData {
 	properties?: SceneJsonExporterDataProperties;
@@ -38,6 +42,9 @@ export class SceneJsonExporter {
 				realtimeState: this._scene.timeController.realtimeState(),
 				// fps: this._scene.time_controller.fps,
 				masterCameraNodePath: this._scene.camerasController.masterCameraNodePath(),
+				versions: {
+					polygonjs: Poly.version(),
+				},
 			},
 			root: nodes_data,
 			ui: ui_data,

@@ -43,7 +43,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		// if (this.flags.display) {
 		// 	this.flags.display.set(false);
 		// }
-		this.io.outputs.set_has_one_output();
+		this.io.outputs.setHasOneOutput();
 		// this.containerController.init(CONTAINER_CLASS);
 	}
 

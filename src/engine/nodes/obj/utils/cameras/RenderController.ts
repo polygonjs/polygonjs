@@ -26,7 +26,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle on to override rendered scene */
 		setScene = ParamConfig.BOOLEAN(0);
 		/** @param override rendered scene */
-		scene = ParamConfig.OPERATOR_PATH('/scene1', {
+		scene = ParamConfig.OPERATOR_PATH('', {
 			visibleIf: {setScene: 1},
 			nodeSelection: {
 				context: NodeContext.OBJ,
@@ -37,7 +37,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle on to override the renderer */
 		setRenderer = ParamConfig.BOOLEAN(0);
 		/** @param override renderer used */
-		renderer = ParamConfig.OPERATOR_PATH('./renderers1/webGLRenderer1', {
+		renderer = ParamConfig.OPERATOR_PATH('', {
 			visibleIf: {setRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
@@ -48,7 +48,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle on to add a CSSRenderer to have html elements on top of the 3D objects */
 		setCSSRenderer = ParamConfig.BOOLEAN(0);
 		/** @param add a css renderer */
-		CSSRenderer = ParamConfig.OPERATOR_PATH('./renderers1/CSS2DRenderer1', {
+		CSSRenderer = ParamConfig.OPERATOR_PATH('', {
 			visibleIf: {setCSSRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,

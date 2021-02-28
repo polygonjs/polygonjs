@@ -136,7 +136,7 @@ export class InputsController<NC extends NodeContext> {
 	}
 	private _create_graph_node_input(index: number): CoreGraphNode {
 		const graph_input_node = new CoreGraphNode(this.node.scene(), `input_${index}`);
-		// graph_input_node.set_scene(this.node.scene);
+		// graph_input_node.setScene(this.node.scene);
 		if (!this._graph_node) {
 			this._graph_node = new CoreGraphNode(this.node.scene(), 'inputs');
 			this.node.addGraphInput(this._graph_node, false);

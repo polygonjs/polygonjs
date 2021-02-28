@@ -16,8 +16,8 @@ export class NodesController {
 	init() {
 		this._root = new ObjectsManagerNode(this.scene);
 		this._root.initialize_base_and_node();
-		// this._root.set_scene(this.scene);
-		this._root.initDefaultScene();
+		// this._root.setScene(this.scene);
+		this._root.params.init();
 	}
 
 	root() {

@@ -207,7 +207,7 @@ export class TypedThreejsCameraObjNode<
 
 	initializeBaseNode() {
 		super.initializeBaseNode();
-		this.io.outputs.set_has_one_output();
+		this.io.outputs.setHasOneOutput();
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 

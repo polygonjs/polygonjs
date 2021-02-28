@@ -96,7 +96,7 @@ export class ParamsController {
 		if (!this._params_node) {
 			// TODO: consider not having a params_node for nodes which have no parameters
 			this._params_node = new CoreGraphNode(this.node.scene(), NODE_SIMPLE_NAME);
-			// this._params_node.set_scene(this.node.scene);
+			// this._params_node.setScene(this.node.scene);
 			this.node.addGraphInput(this._params_node, false);
 		}
 	}

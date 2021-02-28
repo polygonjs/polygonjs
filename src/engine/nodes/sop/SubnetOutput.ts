@@ -21,7 +21,7 @@ export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfi
 
 	initializeNode() {
 		this.io.inputs.setCount(1);
-		this.io.outputs.set_has_no_output();
+		this.io.outputs.setHasNoOutput();
 
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}

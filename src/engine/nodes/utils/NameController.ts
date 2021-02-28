@@ -12,7 +12,7 @@ export class NameController {
 
 	constructor(protected node: BaseNodeType) {
 		this._graph_node = new CoreGraphNode(node.scene(), 'node_name_controller');
-		// this._graph_node.set_scene(this.node.scene);
+		// this._graph_node.setScene(this.node.scene);
 	}
 
 	dispose() {

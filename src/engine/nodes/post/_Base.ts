@@ -56,7 +56,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		});
 
 		this.io.inputs.setCount(0, 1);
-		this.io.outputs.set_has_one_output();
+		this.io.outputs.setHasOneOutput();
 	}
 
 	set_render_pass(render_pass: any) {

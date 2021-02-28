@@ -144,7 +144,11 @@ export interface FloatParamOptions
 export interface FolderParamOptions extends BaseParamOptions {
 	level?: number;
 }
-export interface IntegerParamOptions extends NumberParamOptions, MenuNumericParamOptions, CallbackParamOptions {}
+export interface IntegerParamOptions
+	extends NumberParamOptions,
+		MenuNumericParamOptions,
+		CallbackParamOptions,
+		ComputeOnDirtyParamOptions {}
 export interface OperatorPathParamOptions
 	extends BaseParamOptions,
 		FileParamOptions,

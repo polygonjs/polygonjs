@@ -22,9 +22,11 @@ import {PolyDictionary} from '../types/GlobalTypes';
 declare global {
 	interface Window {
 		__POLYGONJS_POLY_INSTANCE__: PolyEngine;
+		__POLYGONJS_VERSION__: string;
 	}
 }
-
+declare var __POLYGONJS_VERSION__: string;
+const POLYGONJS_VERSION = __POLYGONJS_VERSION__;
 export class PolyEngine {
 	// static _instance: Poly | undefined;
 	public readonly renderersController: RenderersController = new RenderersController();
@@ -83,6 +85,10 @@ export class PolyEngine {
 	}
 	registeredCameraTypes() {
 		return this.camerasRegister.registeredTypes();
+	}
+
+	version() {
+		return POLYGONJS_VERSION;
 	}
 
 	inWorkerThread() {

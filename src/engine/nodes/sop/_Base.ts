@@ -56,7 +56,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 				}
 			}
 		});
-		this.io.outputs.set_has_one_output();
+		this.io.outputs.setHasOneOutput();
 	}
 
 	setCoreGroup(core_group: CoreGroup) {

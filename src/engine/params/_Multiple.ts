@@ -55,7 +55,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			component.options.copy(this.options);
 			component.setInitValue(default_val);
 
-			// component.set_scene(this.scene);
+			// component.setScene(this.scene);
 			component.setName(`${this.name()}${component_name}`);
 			component.set_parent_param(this);
 

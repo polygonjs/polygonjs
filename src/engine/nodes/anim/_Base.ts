@@ -19,7 +19,7 @@ export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeCon
 	}
 
 	initializeBaseNode() {
-		this.io.outputs.set_has_one_output();
+		this.io.outputs.setHasOneOutput();
 	}
 	set_timeline_builder(timeline_builder: TimelineBuilder) {
 		this.setContainer(timeline_builder);

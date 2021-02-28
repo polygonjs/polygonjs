@@ -11,10 +11,10 @@ export class OutputsController<NC extends NodeContext> {
 
 	constructor(private node: TypedNode<NC, any>) {}
 
-	set_has_one_output() {
+	setHasOneOutput() {
 		this._has_outputs = true;
 	}
-	set_has_no_output() {
+	setHasNoOutput() {
 		this._has_outputs = false;
 	}
 
